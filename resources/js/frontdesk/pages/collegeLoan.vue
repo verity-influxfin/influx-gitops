@@ -5,9 +5,9 @@
       <div class="a-hr">
         <div class="a-s">
           <!-- <h3>「夢想與生活的資金需求，普匯投資借給你！」</h3> -->
+          <p>「普匯．你的手機ATM」</p>
+          <p>「3分鐘申請，10分鐘核准，1小時到帳」</p>
           <p>集結了各大學校友、老師，專門投資借貸同學在學期間的資金需求。</p>
-          <p>不論是夢想實現，還是生活急需，只要下載普匯App，「3分鐘申請，10分鐘核准，1小時到帳」，全程AI線上媒合為你快速找到投資人！</p>
-          <p>超過50000人都在使用普匯完成夢想、解決生活資金問題，同學都只找「普匯．你的手機ATM 」，提供簡單快速、隱私又安全的急用資金！</p>
         </div>
       </div>
     </div>
@@ -98,12 +98,12 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "college" }).then((res) => {
+      axios.post(`${location.origin}/getBannerData`, { filter: "college" }).then((res) => {
         this.bannerData = res.data;
       });
     },
     getPartnerData() {
-      axios.post("getPartnerData").then((res) => {
+      axios.post(`${location.origin}/getPartnerData`).then((res) => {
         res.data.forEach((item) => {
           if (item.type === "edu") {
             this.partner.push(item);
@@ -112,12 +112,12 @@ export default {
       });
     },
     getApplydata() {
-      axios.post("getApplydata", { filter: "college" }).then((res) => {
+      axios.post(`${location.origin}/getApplydata`, { filter: "college" }).then((res) => {
         this.applyData = res.data;
       });
     },
     getQaData() {
-      axios.post("getQaData", { filter: "college" }).then((res) => {
+      axios.post(`${location.origin}/getQaData`, { filter: "college" }).then((res) => {
         this.qaData = res.data;
       });
     },

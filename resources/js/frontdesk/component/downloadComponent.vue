@@ -8,37 +8,31 @@
         <div v-if="$props.isLoan" class="d-loan">
           <p>借款</p>
           <a class="d-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
-            <appleApp type="loan" />
+            <img src="../asset/images/apple-logo_loan.svg">
           </a>
           <a class="d-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
-            <googleApp type="loan" />
+            <img src="../asset/images/android-logo_loan.svg">
           </a>
         </div>
         <div v-if="$props.isInvest" class="d-invest">
           <p>投資</p>
           <a class="d-link" target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">
-            <appleApp type="invest" />
+            <img src="../asset/images/apple-logo_invest.svg">
           </a>
           <a class="d-link" target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">
-            <googleApp type="invest" />
+            <img src="../asset/images/android-logo_invest.svg">
           </a>
         </div>
       </div>
     </div>
     <div class="img">
-      <img :src="'./images/phone.png'" class="img-fluid" />
+      <img :src="'/images/phone.png'" class="img-fluid" />
     </div>
   </div>
 </template>
 
 <script>
-import googleApp from "../component/svg/googleAppComponent";
-import appleApp from "../component/svg/appleAppComponent";
 export default {
-  components: {
-    googleApp,
-    appleApp,
-  },
   props: ["isLoan","isInvest"],
 };
 </script>

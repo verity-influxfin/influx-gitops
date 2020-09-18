@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <div id="error" style="background-image: url('./images/404.jpg')">
+    <div id="error" style="background-image: url('/images/404.jpg')">
     <a href="{{ asset('') }}"><< back</a>
 </div>
 </body>

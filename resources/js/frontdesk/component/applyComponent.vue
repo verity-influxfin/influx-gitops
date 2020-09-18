@@ -16,7 +16,7 @@
     <div class="tips" v-if="$props.requiredDocuments.length !== 0">
       <div class="pu-say">
         <div class="img">
-          <img :src="'./images/ah-pu.svg'" class="img-fluid" />
+          <img :src="'/images/ah-pu.svg'" class="img-fluid" />
         </div>
         <p class="dailog">先把下列資料準備好可以加快申貸速度喔！</p>
       </div>

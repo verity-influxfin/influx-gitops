@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Exports\StatementExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Session;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -18,7 +20,7 @@ class Membercentrecontroller extends BaseController
 
     public function __construct()
     {
-        $this->apiGetway = config('api.developer');
+        $this->apiGetway = config('api.apiGetway');
     }
 
     public function getMyRepayment(Request $request)
@@ -120,5 +122,34 @@ class Membercentrecontroller extends BaseController
         $data = json_decode($curlScrapedPage, true);
 
         return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
+
+
+    public function downloadStatement(Request $request)
+    {
+        $input = $request->all();
+        $function = $input['isInvest'] ? 'recoveries' : 'repayment';
+
+        $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . $function . '/passbook" -H "' . "request_token:" . Session::get('token') . '"');
+        $result = json_decode($curlScrapedPage, true);
+
+        $data = [[
+            '科目',
+            '現金流量',
+            '虛擬帳戶餘額',
+            '帳務日期'
+        ]];
+        $i = 1;
+
+        foreach ($result['data']['list'] as $row) {
+            if ($input['start'] <= $row['created_at'] . '000' && $row['created_at'] . '000' <= $input['end']) {
+                $data[$i]['remark'] = $row['remark'];
+                $data[$i]['amount'] = $row['amount'];
+                $data[$i]['bank_amount'] = $row['bank_amount'];
+                $data[$i]['tx_datetime'] = $row['tx_datetime'];
+                $i++;
+            }
+        }
+        return Excel::download(new StatementExport($data), '對帳單.xlsx');
     }
 }

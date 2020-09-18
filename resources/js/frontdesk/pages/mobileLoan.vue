@@ -51,8 +51,8 @@
     <div class="recommend-card">
       <div class="banner-text">優良店家推薦</div>
       <div class="mobile-footer">
-        <img :src="'./images/mobile_banner_web.jpg'" class="img-fluid desktop" />
-        <img :src="'./images/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
+        <img :src="'/images/mobile_banner_web.jpg'" class="img-fluid desktop" />
+        <img :src="'/images/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
       </div>
     </div>
   </div>
@@ -146,12 +146,12 @@ export default {
       });
     },
     getBannerData() {
-      axios.post("getBannerData", { filter: "mobile" }).then((res) => {
+      axios.post(`${location.origin}/getBannerData`, { filter: "mobile" }).then((res) => {
         this.bannerData = res.data;
       });
     },
     async getMobileData() {
-      let res = await axios.post("getMobileData");
+      let res = await axios.post(`${location.origin}/getMobileData`);
 
       this.mobileData = res.data.data.list.reverse();
       this.filterMobileData = res.data.data.list.reverse();
@@ -164,7 +164,7 @@ export default {
       this.makes.sort();
     },
     async getApplydata() {
-      let res = await axios.post("getApplydata", { filter: "mobile" });
+      let res = await axios.post(`${location.origin}/getApplydata`, { filter: "mobile" });
       this.applyData = res.data;
     },
     pagination() {
@@ -284,7 +284,6 @@ export default {
         transform: translate(0, -50%);
         font-size: 20px;
         color: #083a6e;
-        text-shadow: 0 0 4px #083a6e;
       }
 
       .fa-search {

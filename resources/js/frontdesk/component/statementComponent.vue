@@ -1,129 +1,148 @@
 <template>
   <div class="income-detail-card">
+    <button
+      type="button"
+      class="down-csv btn btn-success btn-sm"
+      @click="$emit('download',range);"
+    >匯出CSV</button>
     <div class="input-group">
       <v-date-picker
         mode="range"
         v-model="range"
-        style="width: 65%;"
+        class="date-picker"
         :popover="{ visibility: 'click' }"
+        :key="new Date()"
       />
-      <button class="btn btn-custom" type="button" @click="search('range')">
+      <button class="btn btn-custom" type="button" @click="type='range';search()">
         <i class="fas fa-search"></i>
       </button>
 
-      <button
-        class="btn btn-info btn-sm btn-rel"
-        type="button"
-        style="left: -13px;"
-        @click="search('month')"
-      >本月</button>
-      <button class="btn btn-primary btn-sm btn-rel" type="button" @click="search('all')">全部</button>
+      <label class="btn-rel" @click="search()">
+        <input type="radio" name="radio" value="month" v-model="type" />
+        <span>本月</span>
+      </label>
+
+      <label class="btn-rel" @click="search()">
+        <input type="radio" name="radio" value="all" v-model="type" />
+        <span>全部</span>
+      </label>
     </div>
     <div class="no-passbook-table" v-if="passbook.length ===0">
       <div class="no-passbook">
-        <img :src="'./images/no_passbook.svg'" class="img-fluid" />
+        <img src="../asset/images/empty.svg" class="img-fluid" />
       </div>
     </div>
     <div class="passbook-table" v-else>
-      <scrollingTable :syncHeaderScroll="false" :scrollHorizontal="false">
-        <template slot="thead">
-          <tr class="header-center">
-            <th class="remark">科目</th>
-            <th class="amount">現金流量</th>
-            <th class="bank_amount">虛擬帳戶餘額</th>
-          </tr>
-        </template>
-        <template slot="tbody">
-          <tr v-for="(item,index) in passbook" :key="index">
-            <td v-for="(text,colIndex) in item" :class="colIndex" v-html="text" :key="colIndex"></td>
-          </tr>
-        </template>
-      </scrollingTable>
+      <div class="s-title">
+        <div class="remark">科目</div>
+        <div class="amount">現金流量</div>
+        <div class="bank_amount">虛擬帳戶餘額</div>
+      </div>
+      <div class="statement-cnt">
+        <div class="statement-row" v-for="(item,index) in passbook" :key="index">
+          <div v-for="(text,colIndex) in item" :class="colIndex" v-html="text" :key="colIndex"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import scrollingTable from "./scrollingTableComponent";
-
 export default {
-  components: {
-    scrollingTable
-  },
-  props: {
-    list: {
-      type: Array,
-      default: []
-    }
-  },
+  props: ["list"],
   data: () => ({
+    type: "",
     range: {
       start: new Date(),
-      end: new Date()
+      end: new Date(),
     },
-    passbook: []
+    passbook: [],
   }),
   watch: {
     "$props.list"(newData) {
-      let $this = this;
-
+      this.passbook = [];
       let date = new Date();
-      if ($this.type === "month") {
-        $this.range.start = new Date(date.getFullYear(), date.getMonth(), 1);
-        $this.range.end = new Date(
+      if (this.type === "month") {
+        this.range["start"] = new Date(date.getFullYear(), date.getMonth(), 1);
+        this.range["end"] = new Date(
           date.getFullYear(),
           date.getMonth(),
           date.getDate()
         );
       }
 
-      $this.list.forEach((row, index) => {
-        $this.passbook.push({
-          remark: `${row.remark}<br>${row.tx_datetime.substr(2)}`,
-          amount: `<span style="color:${
-            row.amount > 0 ? "#5192E5" : "#FF4758"
-          }">${$this.format(row.amount)}</span>`,
-          bank_amount: $this.format(row.bank_amount)
-        });
-        if ($this.type !== "all") {
-          if (
-            row.created_at + "000" >= $this.range.end.getTime() ||
-            $this.range.start.getTime() >= row.created_at + "000"
-          ) {
-            $this.passbook.splice(-1, 1);
-          }
+      if (this.type === "all") {
+        let startdate = new Date(
+          parseInt(
+            `${this.$props.list[this.$props.list.length - 1].created_at}000`
+          )
+        );
+        this.range["start"] = new Date(
+          startdate.getFullYear(),
+          startdate.getMonth(),
+          startdate.getDate()
+        );
+        this.range["end"] = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        );
+      }
+
+      this.$props.list.forEach((row, index) => {
+        if (
+          this.range.start.getTime() <= row.created_at + "000" &&
+          row.created_at + "000" <= this.range.end.getTime()
+        ) {
+          this.passbook.push({
+            remark: `${row.remark}<br>${row.tx_datetime.substr(2)}`,
+            amount: `<span style="color:${
+              row.amount > 0 ? "#5192E5" : "#FF4758"
+            }">${this.format(row.amount)}</span>`,
+            bank_amount: this.format(row.bank_amount),
+          });
         }
       });
-    }
+    },
   },
   methods: {
     format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
     },
-    search(type) {
-      this.type = type;
+    search() {
       this.$emit("searchDteail");
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .income-detail-card {
-  padding: 10px;
-  box-shadow: 0 0 5px #848484;
-  border-radius: 10px;
-  background: #efefef;
-  width: 400px;
-  height: 455px;
+  .down-csv {
+    float: right;
+    margin-bottom: 5px;
+  }
 
   .input-group {
     margin-bottom: 10px;
+
+    .date-picker {
+      width: 65%;
+    }
   }
 
   .btn-rel {
-    position: relative;
+    display: flex;
+    margin: 0px 6px;
+
+    input {
+      margin: 12px 0px;
+    }
+
+    span {
+      line-height: 38px;
+    }
   }
 
   .btn-custom {
@@ -131,25 +150,63 @@ export default {
     background: none;
     padding: 2px 5px;
     margin-top: 2px;
-    position: relative;
-    left: -28px;
+    margin-left: -28px;
     margin-bottom: 0;
     border-radius: 3px;
+    color: #cacaca;
   }
 
   .passbook-table {
-    height: 385px;
+    height: 380px;
     overflow: hidden;
     position: relative;
-    padding: 5px;
-    background: #545454;
-    color: #ffffff;
-    box-shadow: 0 0 5px #000000;
-    border-radius: 12px;
+
+    %flex {
+      display: flex;
+
+      .remark {
+        width: 140px;
+        padding: 4px;
+      }
+
+      .amount {
+        width: 80px;
+        padding: 4px;
+      }
+
+      .bank_amount {
+        width: 120px;
+        padding: 4px;
+      }
+    }
+
+    .s-title {
+      @extend %flex;
+      text-align: center;
+    }
+
+    .statement-cnt {
+      height: 348px;
+      overflow: scroll;
+
+      .statement-row {
+        @extend %flex;
+
+        &:not(:last-of-type) {
+          border-bottom: 1px solid #cacaca;
+        }
+
+        .amount,
+        .bank_amount {
+          text-align: center;
+          line-height: 56px;
+        }
+      }
+    }
   }
 
   .no-passbook-table {
-    height: 385px;
+    height: 380px;
     overflow: hidden;
     position: relative;
 
@@ -162,42 +219,49 @@ export default {
       opacity: 0.3;
     }
   }
-
-  .header-center {
-    .remark,
-    .amount,
-    .bank_amount {
-      text-align: center !important;
-    }
-  }
-
-  .remark {
-    width: 160px;
-    max-width: 160px;
-    min-width: 160px;
-  }
-
-  .amount {
-    width: 90px;
-    max-width: 90px;
-    min-width: 90px;
-    text-align: end;
-  }
-
-  .bank_amount {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-    text-align: end;
-  }
 }
 
-@media screen and (max-width: 1023px) {
-  .detail-card {
-    .remark {
-      width: 135px;
-      min-width: 135px;
-      max-width: 135px;
+@media screen and (max-width: 767px) {
+  .income-detail-card {
+    .input-group {
+      .date-picker {
+        width: 64%;
+      }
+    }
+
+    .passbook-table {
+      %flex {
+        .remark {
+          width: 170px;
+        }
+
+        .amount {
+          width: 75px;
+        }
+
+        .bank_amount {
+          width: 75px;
+        }
+      }
+    }
+
+    .passbook-table {
+      .s-title {
+        .remark,
+        .amount {
+          line-height: 48px;
+        }
+      }
+    }
+
+    .statement-cnt {
+      .statement-row {
+        .amount,
+        .bank_amount {
+          text-align: center;
+          line-height: 48px;
+        }
+      }
     }
   }
 }

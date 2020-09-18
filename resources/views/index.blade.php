@@ -231,7 +231,7 @@
                 <div v-if="!isReset" id="loginModal" class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" @click="clearInterval(timer);">✕</button>
-                        <div class="login-logo"><img src="./images/logo_puhey.svg" class="img-fluid"></div>
+                        <div class="login-logo"><img src="/images/logo_puhey.svg" class="img-fluid"></div>
                     </div>
                     <div class="modal-body">
                         <div class="input-group">
@@ -276,6 +276,9 @@
     </div>
 </body>
 
+<script>
+    window._locale = "";
+</script> 
 <!-- recaptcha-->
 <script src="https://www.google.com/recaptcha/api.js?render=6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3"></script>
 

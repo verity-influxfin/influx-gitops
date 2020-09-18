@@ -7,7 +7,7 @@
       </div>
       <div class="main-content" v-if="this.articleHtml" v-html="this.articleHtml"></div>
     </div>
-    <div class="comments" v-if="$route.params.type.indexOf('news') === -1">
+    <div class="comments" v-if="search.indexOf('news') === -1">
       <fb:comments
         :href="this.link"
         num_posts="10"
@@ -24,40 +24,42 @@ import shareBtnComponent from "../component/shareBtnComponent";
 
 export default {
   components: {
-    shareBtn: shareBtnComponent
+    shareBtn: shareBtnComponent,
   },
   data: () => ({
     width: window.outerWidth,
-    link: window.location.toString().replace("#", "%23"),
+    link: window.location.toString(),
     articleTitle: "",
     articleImg: "",
-    articleHtml: ""
+    articleHtml: "",
+    search:''
   }),
   created() {
     this.getArticleData();
   },
   mounted() {
-    this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
-    });
+    this.$nextTick(() => {});
   },
   methods: {
     async getArticleData() {
-      let type = this.$route.params.type.split("-");
+      const urlParams = new URLSearchParams(window.location.search);
+      this.search =  urlParams.get("q");
+      let type = urlParams.get("q").split("-");
       if (type[0] == "news") {
         await this.$store.dispatch("getNewsData");
 
         let news = this.$store.getters.NewsData[type[1]];
-            $("title").text(`${news.title} - inFlux普匯金融科技`);
-            FB.XFBML.parse();
-            this.articleTitle = news.title;
-            this.articleImg = news.image_url ? news.image_url : "";
-            this.articleHtml = news.content;
+        $("title").text(`${news.title} - inFlux普匯金融科技`);
+        FB.XFBML.parse();
+        this.articleTitle = news.title;
+        this.articleImg = news.image_url ? news.image_url : "";
+        this.articleHtml = news.content;
       } else {
         axios
-          .post("getArticleData", { filter: this.$route.params.type })
-          .then(res => {
+          .post(`${location.origin}/getArticleData`, {
+            filter: this.search,
+          })
+          .then((res) => {
             $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
             FB.XFBML.parse();
             this.articleTitle = res.data.post_title;
@@ -65,8 +67,8 @@ export default {
             this.articleHtml = res.data.post_content;
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

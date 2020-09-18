@@ -16,13 +16,20 @@ class Backendcontroller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public $apiGetway;
+
+    public function __construct()
+    {
+        $this->apiGetway = config('api.apiGetway');
+    }
+
     public function verifyemail(Request $request)
     {
         $input = $request->all();
         $input['email'] = strpos($input['email'], '@') ? base64_encode($input['email']) : $input['email'];
         $params = http_build_query($input);
 
-        $curlScrapedPage = shell_exec('curl -X POST "https://stage-api.influxfin.com/api/v2/certification/verifyemail" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec("curl -X POST " . $this->apiGetway . "certification/verifyemail -d " . $params);
         $data = json_decode($curlScrapedPage, true);
 
         if ($data['result'] === 'SUCCESS') {
@@ -479,14 +486,14 @@ class Backendcontroller extends BaseController
         return response()->json($feedbackData, 200);
     }
 
-    
+
     public function readFeedbackData(Request $request)
     {
         $this->inputs = $request->all();
 
         try {
             $exception = DB::transaction(function () {
-                    DB::table('feedback')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                DB::table('feedback')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {
@@ -525,7 +532,7 @@ class Backendcontroller extends BaseController
             return response()->json($e, 400);
         }
     }
-    
+
     public function getCooperationData(Request $request)
     {
         $cooperationData = DB::table('cooperation')->select('*')->get();
@@ -539,7 +546,7 @@ class Backendcontroller extends BaseController
 
         try {
             $exception = DB::transaction(function () {
-                    DB::table('cooperation')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                DB::table('cooperation')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {

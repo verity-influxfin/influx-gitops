@@ -40,7 +40,8 @@
               <img
                 :src="item.imageSrc"
                 class="img-fluid"
-                @click="isShow=!isShow;showPartner(index,$event)"
+                @mouseenter="isShow = true;showPartner(index,$event)"
+                @mouseleave="isShow = false;partnerData = {}"
               />
             </div>
             <p>{{item.name}}</p>
@@ -59,7 +60,8 @@
               <img
                 :src="item.imageSrc"
                 class="img-fluid"
-                @click="isShow=!isShow;showPartner(index+6,$event)"
+                @mouseenter="isShow = true;showPartner(index+6,$event)"
+                @mouseleave="isShow = false;partnerData = {}"
               />
             </div>
             <p>{{item.name}}</p>
@@ -157,29 +159,29 @@ export default {
         title: "簡單",
         text:
           "直覺化UIUX介面設計，讓操作使用更簡單便利，第一次開啟使用就能上手",
-        imageSrc: "./images/easy.svg",
+        imageSrc: "/images/easy.svg",
       },
       {
         title: "快速",
         text:
           "全程手機線上申請，AI系統24小時不間斷驗證，提升作業速度與效率，加快用戶取得資金",
-        imageSrc: "./images/fast.svg",
+        imageSrc: "/images/fast.svg",
       },
       {
         title: "安全",
         text: "使用 Amazon Web Services雲端服務平台，個資絕不外洩",
-        imageSrc: "./images/security.svg",
+        imageSrc: "/images/security.svg",
       },
       {
         title: "隱私",
         text:
           "全程無人系統驗證操作，從申請到取得款項，資訊完全不外洩，保障投資人與借款人各資隱密與隱私",
-        imageSrc: "./images/privacy.svg",
+        imageSrc: "/images/privacy.svg",
       },
       {
         title: "低風險高報酬",
         text: "小額分散、分期還款、降低風險、複利效果，創造最高報酬",
-        imageSrc: "./images/reward.svg",
+        imageSrc: "/images/reward.svg",
       },
     ],
     media: [],
@@ -211,17 +213,19 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "company" }).then((res) => {
-        this.bannerData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getBannerData`, { filter: "company" })
+        .then((res) => {
+          this.bannerData = res.data;
+        });
     },
     getMilestoneData() {
-      axios.post("getMilestoneData").then((res) => {
+      axios.post(`${location.origin}/getMilestoneData`).then((res) => {
         this.milestone = res.data;
       });
     },
     getMediaData() {
-      axios.post("getMediaData").then((res) => {
+      axios.post(`${location.origin}/getMediaData`).then((res) => {
         this.media = res.data;
       });
     },
@@ -232,7 +236,7 @@ export default {
       });
     },
     getPartnerData() {
-      axios.post("getPartnerData").then((res) => {
+      axios.post(`${location.origin}/getPartnerData`).then((res) => {
         this.partner = res.data;
       });
     },

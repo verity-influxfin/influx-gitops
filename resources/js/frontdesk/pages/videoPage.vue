@@ -32,30 +32,30 @@ import shareBtnComponent from "../component/shareBtnComponent";
 
 export default {
   components: {
-    shareBtn: shareBtnComponent
+    shareBtn: shareBtnComponent,
   },
   data: () => ({
     width: window.outerWidth,
-    link: window.location.toString().replace("#", "%23"),
+    link: window.location.toString(),
     videoTitle: "",
     videoImg: "",
     videoLink: "",
-    videoHtml: ""
+    videoHtml: "",
   }),
   created() {
     this.getVideoPage();
   },
   mounted() {
-    this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
-    });
+    this.$nextTick(() => {});
   },
   methods: {
     getVideoPage() {
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      let type = urlParams.get("q");
       axios
-        .post("getVideoPage", { filter: this.$route.params.type })
-        .then(res => {
+        .post(`${location.origin}/getVideoPage`, { filter: type })
+        .then((res) => {
           $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
           FB.XFBML.parse();
           this.videoTitle = res.data.post_title;
@@ -63,8 +63,8 @@ export default {
           this.videoLink = res.data.video_link;
           this.videoHtml = res.data.post_content;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 

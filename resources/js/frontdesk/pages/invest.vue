@@ -4,7 +4,8 @@
     <div class="text-card">
       <div class="a-hr">
         <div class="a-s">
-          <p>年化報酬率5~20% 穩定獲利低風險</p>
+          <p>小額分散，穩定報酬首選</p>
+          <p>1,000元開始投資創造你的被動收入</p>
         </div>
       </div>
     </div>
@@ -115,15 +116,38 @@
       </div>
     </div>
     <div class="advantage-card">
-      <div class="web hidden-desktop">
-        <img src="../asset/images/web_invest_type.png" class="img-fluid" />
+      <h2>投資工具比一比</h2>
+      <div class="hr" />
+      <div class="adv-box">
+        <div class="puhey">
+          <div class="adv-item">
+            <div class="i-b">
+              <img src="../asset/images/invest_chart_a.svg" class="img-fluid" />
+            </div>
+            <div class="i-m" data-aos="fade-left" data-aos-duration="1000">
+              <img src="../asset/images/invest_chart_a1.svg" class="img-fluid" />
+            </div>
+          </div>
+        </div>
+        <div class="other">
+          <div class="adv-item">
+            <div class="i-b">
+              <img src="../asset/images/invest_chart_b.svg" class="img-fluid" />
+            </div>
+            <div class="i-m" data-aos="fade-left" data-aos-delay="900" data-aos-duration="1000">
+              <img src="../asset/images/invest_chart_b1.svg" class="img-fluid" />
+            </div>
+          </div>
+          <div class="adv-item">
+            <div class="i-b">
+              <img src="../asset/images/invest_chart_c.svg" class="img-fluid" />
+            </div>
+            <div class="i-m" data-aos="fade-left" data-aos-delay="1200" data-aos-duration="1000">
+              <img src="../asset/images/invest_chart_c1.svg" class="img-fluid" />
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="hidden-phone" ref="type_slick">
-        <img src="../asset/images/web_invest_type_puhey.png" class="img-fluid" />
-        <img src="../asset/images/web_invest_type_fund.png" class="img-fluid" />
-        <img src="../asset/images/web_invest_type_stock.png" class="img-fluid" />
-      </div>
-      <!--加債轉連結-->
     </div>
     <experience :experiences="experiences" />
     <div class="video-card">
@@ -142,7 +166,7 @@
           <p>{{item.post_title}}</p>
         </div>
       </div>
-      <router-link class="btn link" to="/vlog/invest">影音列表</router-link>
+      <router-link class="btn link" to="vlog/?q=invest">影音列表</router-link>
     </div>
     <download :isLoan="false" :isInvest="true" />
     <qa :qaData="qaData" />
@@ -226,9 +250,11 @@ export default {
         });
     },
     getQaData() {
-      axios.post("getQaData", { filter: "invest" }).then((res) => {
-        this.qaData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getQaData`, { filter: "invest" })
+        .then((res) => {
+          this.qaData = res.data;
+        });
     },
   },
 };
@@ -280,10 +306,8 @@ export default {
         position: absolute;
         bottom: 0;
         left: 0;
-        height: 214px;
         width: 80%;
         background-color: #083a6e;
-        font-size: 29.5px;
         font-weight: bold;
         color: #ffffff;
 
@@ -295,20 +319,73 @@ export default {
         }
 
         p {
-          line-height: 1.7;
-          position: absolute;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          left: 50%;
+          width: 80%;
+          margin: 25px auto;
         }
       }
     }
   }
 
   .advantage-card {
-    .web {
-      width: 80%;
+    padding: 20px;
+    overflow: hidden;
+
+    .adv-box {
+      display: flex;
+      width: fit-content;
       margin: 0px auto;
+
+      .puhey {
+        width: 530px;
+        margin: 20px;
+        position: relative;
+
+        .adv-item {
+          position: absolute;
+          top: 40%;
+          transform: translateY(-50%);
+          width: 530px;
+          margin: 30px auto;
+
+          .i-b {
+            width: inherit;
+            height: inherit;
+          }
+
+          .i-m {
+            top: 28%;
+            right: 0%;
+            position: absolute;
+            width: 260px;
+            z-index: 1;
+          }
+        }
+      }
+
+      .other {
+        width: fit-content;
+        margin: 20px;
+
+        .adv-item {
+          position: relative;
+          width: 330px;
+          height: 330px;
+          margin: 30px auto;
+
+          .i-b {
+            width: inherit;
+            height: inherit;
+          }
+
+          .i-m {
+            top: 28%;
+            right: 0%;
+            position: absolute;
+            width: 155px;
+            z-index: 1;
+          }
+        }
+      }
     }
   }
 
@@ -470,6 +547,10 @@ export default {
     }
   }
 
+  [data-aos="fade-left"] {
+    transform: translate3d(40px, 0, 0);
+  }
+
   @media screen and (max-width: 767px) {
     h2 {
       font-size: 25px;
@@ -482,6 +563,47 @@ export default {
 
     .text-card {
       display: none;
+    }
+
+    .advantage-card {
+      padding: 10px;
+      .adv-box {
+        flex-direction: column;
+        width: 100%;
+
+        .puhey {
+          width: initial;
+          margin: 10px 0px;
+
+          .adv-item {
+            width: 100%;
+            margin: 10px auto;
+            position: initial;
+            transform: inherit;
+
+            .i-m {
+              width: 170px;
+            }
+          }
+        }
+
+        .other {
+          margin: 10px 0px;
+          display: flex;
+          width: initial;
+
+          .adv-item {
+            width: 170px;
+            height: 170px;
+            margin: 0px auto;
+
+            .i-m {
+              width: 80px;
+              transition-delay: 0.5s;
+            }
+          }
+        }
+      }
     }
 
     .step-card {
@@ -518,6 +640,12 @@ export default {
 
       .video-row {
         width: 100%;
+
+        .item {
+          iframe {
+            width: 100%;
+          }
+        }
       }
     }
   }

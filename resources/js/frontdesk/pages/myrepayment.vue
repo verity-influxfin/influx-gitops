@@ -1,97 +1,58 @@
 <template>
-  <div class="myrepayment-wrapper">
-    <div class="accound-card">
-      <p class="legend">
-        親愛的用戶您好：
-        <br />還款請以約定金融卡轉帳至以下專屬帳戶內，中午12點後為隔日帳，為避免銀行作業影響普匯入帳時間及計息天數，請儘早匯款。
-      </p>
-      <h3>專屬還款帳號</h3>
-      <div>
-        <span class="title">銀行名稱：</span>
-        <span
-          class="des"
-        >({{$parent.myRepayment.virtual_account.bank_code}}){{$parent.myRepayment.virtual_account.bank_name}}</span>
-      </div>
-      <div>
-        <span class="title">分行名稱：</span>
-        <span
-          class="des"
-        >({{$parent.myRepayment.virtual_account.branch_code}}){{$parent.myRepayment.virtual_account.branch_name}}</span>
-      </div>
-      <div>
-        <span class="title">銀行帳號：</span>
-        <span class="des">{{$parent.myRepayment.virtual_account.virtual_account}}</span>
-      </div>
-      <hr />
-      <div>
-        次還款日&emsp;
-        <strong class="des green">{{$parent.myRepayment.next_repayment.date}}</strong>
-      </div>
-      <p class="sm">
-        請於還款日前匯入
-        <strong class="green">{{repaymentNumber}}</strong>元
-      </p>
-    </div>
-
+  <div class="repayment-wrapper">
     <div class="repayment-card">
       <div v-if="installment.length === 0" class="no-data">
-        <img :src="'./images/empty.svg'" class="img-fluid" />
+        <img :src="'/images/empty.svg'" class="img-fluid" />
         <a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q">請往APP了解更多 >></a>
       </div>
-      <div v-else>
+      <template v-else>
         <div class="info-card" v-for="(item,index) in installment" :key="index">
-          <div style="display: flex;">
-            <div class="circle">
-              <circle-progress
-                key="animation-model"
-                :width="circleWidth"
-                radius="6"
-                barColor="#ff6767"
-                duration="1000"
-                delay="20"
-                timeFunction="cubic-bezier(0.99, 0.01, 0.22, 0.94)"
-                backgroundColor="#ffffff"
-                :progress="progress(item)"
-                :isAnimation="true"
-                :isRound="true"
-              ></circle-progress>
-              <div class="period">
-                {{item.next_repayment.instalment}}&nbsp;/&nbsp;{{item.instalment}}
-                <br />期
-              </div>
+          <div class="title">
+            {{item.product_name}}
+            <br />
+            {{item.target_no}}
+          </div>
+          <div class="circle">
+            <circle-progress
+              key="animation-model"
+              :width="circleWidth"
+              radius="6"
+              barColor="#4493C2"
+              duration="1000"
+              delay="20"
+              timeFunction="cubic-bezier(0.99, 0.01, 0.22, 0.94)"
+              backgroundColor="#f5f5f5"
+              :progress="progress(item)"
+              :isAnimation="true"
+              :isRound="true"
+            ></circle-progress>
+            <div class="period">{{item.next_repayment.instalment}}&nbsp;/&nbsp;{{item.instalment}}</div>
+          </div>
+          <div class="payment">
+            <div class="p-d">
+              <div class="pd-l">{{item.next_repayment.date}}</div>
+              <div class="pd-m">本期還款日期</div>
             </div>
-            <div class="head-title">
-              <p class="detail">
-                {{item.product_name}}
-                <br />
-                {{item.target_no}}
-              </p>
-              <div style="color: #797979;">
-                <div>
-                  本期還款日期
-                  <span class="float-right">{{item.next_repayment.date}}</span>
-                </div>
-                <div>
-                  本期還款金額
-                  <span
-                    class="float-right"
-                    :style="{'color':item.delay_days >0 ? 'red' : ''}"
-                  >${{format(item.next_repayment.amount)}}</span>
-                </div>
-              </div>
-              <detailBtn :data="item" :left="true" @sendinfo="getInfo(item.id,item.status)"></detailBtn>
-              <a
-                class="btn btn-secondary btn-sm float-right"
-                target="_blank"
-                href="https://line.me/R/ti/p/%40kvd1654s"
-              >聯繫克服</a>
+            <div class="p-d">
+              <div
+                class="pd-l"
+                :style="{'color':item.delay_days >0 ? 'red' : ''}"
+              >${{format(item.next_repayment.amount)}}元</div>
+              <div class="pd-m">本期還款金額</div>
             </div>
+          </div>
+          <div class="link">
+            <detailBtn :data="item" :left="true" @sendinfo="getInfo(item.id,item.status)"></detailBtn>
+            <a
+              class="btn btn-secondary btn-sm float-right"
+              target="_blank"
+              href="https://line.me/R/ti/p/%40kvd1654s"
+            >聯繫克服</a>
           </div>
           <div class="delay-memo" v-if="item.delay_days >0">您已逾期，請至APP全額清償或申請產品轉換</div>
         </div>
-      </div>
+      </template>
     </div>
-    <statement :list="list" @searchDteail="search" />
     <div
       ref="detailModal"
       class="detail-modal modal"
@@ -269,7 +230,6 @@
 <script>
 import circleProgress from "../component/circleProgressComponent";
 import detailBtn from "../component/detailBtnComponent";
-import statement from "../component/statementComponent";
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -280,16 +240,15 @@ export default {
     }
   },
   components: {
-    statement,
     detailBtn,
-    circleProgress
+    circleProgress,
   },
   data: () => ({
-    circleWidth: $(window.document).outerWidth() < 1023 ? 90 : 120,
+    circleWidth: 200,
     detailData: {},
     repaymentDeatilRow: [],
     list: [],
-    isDelay: false
+    isDelay: false,
   }),
   computed: {
     repaymentNumber() {
@@ -303,9 +262,9 @@ export default {
     },
     repaymentMethod() {
       let methodText = {
-        "1": "等額本息",
-        "2": "先息後本",
-        "3": "以日計息"
+        1: "等額本息",
+        2: "先息後本",
+        3: "以日計息",
       };
 
       return methodText[this.detailData.repayment];
@@ -314,11 +273,11 @@ export default {
       let applyingList = ["0", "1", "2", "3", "4"];
       let subStatus = ["1", "2", "3", "4", "8"];
       let subText = {
-        "1": "產品轉換申請中",
-        "2": "產品轉換完成",
-        "3": "提前還款申請中",
-        "4": "提前還款完成",
-        "8": "產品轉換案件還款中"
+        1: "產品轉換申請中",
+        2: "產品轉換完成",
+        3: "提前還款申請中",
+        4: "提前還款完成",
+        8: "產品轉換案件還款中",
       };
 
       if (applyingList.indexOf(this.detailData.status) !== -1) {
@@ -341,13 +300,13 @@ export default {
         }
       } else {
         let textList = {
-          "8": "申請取消",
-          "9": "申請失敗"
+          8: "申請取消",
+          9: "申請失敗",
         };
 
         return textList[this.detailData.status];
       }
-    }
+    },
   },
   methods: {
     format(data) {
@@ -364,10 +323,10 @@ export default {
       if (showDetail.indexOf(status) !== -1) {
         axios
           .post("getDetail", { id })
-          .then(res => {
+          .then((res) => {
             this.showDetail(res.data.data);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log("getDetail 發生錯誤，請稍後在試");
           });
       }
@@ -408,25 +367,25 @@ export default {
           left: 60,
           top: 60,
           right: 60,
-          bottom: 30
+          bottom: 30,
         },
         legend: {
           selectedMode: false,
           textStyle: {
-            color: "#ffffff"
+            color: "#ffffff",
           },
           left: 20,
           top: 20,
           data: [
             {
               name: "每月還款本金",
-              icon: "path://M15,25A5,5,0,1,1,30,25A5,5,0,1,1,15,25"
+              icon: "path://M15,25A5,5,0,1,1,30,25A5,5,0,1,1,15,25",
             },
             {
               name: "每月還款利息",
-              icon: "path://M15,25A5,5,0,1,1,30,25A5,5,0,1,1,15,25"
-            }
-          ]
+              icon: "path://M15,25A5,5,0,1,1,30,25A5,5,0,1,1,15,25",
+            },
+          ],
         },
         tooltip: {
           trigger: "axis",
@@ -435,42 +394,43 @@ export default {
             let res = `<span>日期：${params[0].axisValue}</span><br>`;
 
             $.each(params.reverse(), (index, row) => {
-              res += `<span>${row.marker +
-                row.seriesName}：<span style="float:right;">$${$this.format(
+              res += `<span>${
+                row.marker + row.seriesName
+              }：<span style="float:right;">$${$this.format(
                 row.value
               )}</span></span><br>`;
             });
 
             return res;
-          }
+          },
         },
         xAxis: {
           type: "category",
           boundaryGap: false,
           axisLine: {
             lineStyle: {
-              color: "#ffffff"
-            }
+              color: "#ffffff",
+            },
           },
           axisTick: {
-            show: false
+            show: false,
           },
           splitLine: {
             show: true,
             lineStyle: {
-              color: "#ffffff"
-            }
+              color: "#ffffff",
+            },
           },
           axisLabel: {
             formatter(value, index) {
               return value;
-            }
+            },
           },
-          data: axisData
+          data: axisData,
         },
         yAxis: {
           type: "value",
-          show: false
+          show: false,
         },
         series: [
           {
@@ -481,12 +441,12 @@ export default {
             legendHoverLink: false,
             legendHoverLink: false,
             lineStyle: {
-              width: 0
+              width: 0,
             },
             itemStyle: {
-              color: "#fff"
+              color: "#fff",
             },
-            data: totalData
+            data: totalData,
           },
           {
             name: "每月還款利息",
@@ -494,13 +454,13 @@ export default {
             symbol: "circle",
             symbolSize: 6,
             itemStyle: {
-              color: "lightblue"
+              color: "lightblue",
             },
             lineStyle: {
-              color: "lightblue"
+              color: "lightblue",
             },
             type: "line",
-            data: interestData
+            data: interestData,
           },
           {
             name: "每月還款本金",
@@ -508,15 +468,15 @@ export default {
             symbol: "circle",
             symbolSize: 6,
             itemStyle: {
-              color: "orange"
+              color: "orange",
             },
             lineStyle: {
-              color: "orange"
+              color: "orange",
             },
             type: "line",
-            data: principalData
-          }
-        ]
+            data: principalData,
+          },
+        ],
       };
 
       repayment_charts.setOption(option);
@@ -541,12 +501,20 @@ export default {
       let $this = this;
       axios
         .post("getTansactionDetails", { isInvest: false })
-        .then(res => {
+        .then((res) => {
           $this.list = res.data.data.list;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("getTansactionDetails 發生錯誤，請稍後在試");
         });
+    },
+    downloadCSV(range){
+      let start = range.start.getTime();
+      let end = range.end.getTime();
+      $("#csvDownloadIframe").remove();
+      $("body").append(
+        `<iframe id="csvDownloadIframe" src="${location.origin}/downloadStatement?start=${start}&end=${end}&isInvest=1" style="display: none"></iframe>`
+      );
     },
     closeModal($el) {
       $($el).modal("hide");
@@ -554,138 +522,122 @@ export default {
       setTimeout(() => {
         $("body").addClass("modal-open");
       }, 500);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-.myrepayment-wrapper {
+.repayment-wrapper {
   display: flex;
-
-  %back {
-    padding: 10px;
-    box-shadow: 0 0 5px #848484;
-    border-radius: 10px;
-    background: #efefef;
-  }
-
-  .accound-card {
-    @extend %back;
-    width: 300px;
-    height: fit-content;
-    margin-right: 10px;
-
-    .legend {
-      font-size: 13px;
-      font-weight: bolder;
-      background: #cfe9ff;
-      border-radius: 5px;
-      padding: 5px;
-      color: #5167ff;
-    }
-
-    .title {
-      color: #757575;
-      font-weight: bolder;
-    }
-
-    .des {
-      float: right;
-      color: #ad5000;
-    }
-
-    .green {
-      color: #159159;
-    }
-
-    .sm {
-      font-size: 13px;
-      color: #868686;
-    }
-  }
+  position: relative;
 
   .repayment-card {
-    @extend %back;
-    width: 900px;
-    margin-right: 10px;
-  }
+    width: 73%;
+    margin: 0px auto;
+    padding: 0px 25px 25px 25px;
+    overflow: auto;
+    position: relative;
+    .info-card {
+      border-radius: 9px;
+      box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+      background-color: #ffffff;
+      margin: 10px;
+      padding: 10px;
+      width: calc(100% / 3 - 20px);
+      float: left;
+      height: 400px;
 
-  .detail-card {
-    @extend %back;
-    width: 400px;
-    height: 455px;
+      .title {
+        text-align: center;
+        font-weight: bolder;
+      }
 
-    .input-group {
-      margin-bottom: 10px;
+      .circle {
+        position: relative;
+        margin: 0px auto;
+        width: fit-content;
+        height: 200px;
+
+        .period {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          font-size: 40px;
+          color: #6c8e9a;
+          font-weight: bolder;
+        }
+      }
+
+      .payment {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0px;
+
+        .p-d {
+          width: 50%;
+          padding: 0px 25px;
+
+          &:nth-of-type(1) {
+            border-right: 2px dashed #c8c8c8;
+          }
+
+          .pd-l {
+            font-size: 20px;
+          }
+
+          .pd-m {
+            font-size: 14px;
+          }
+        }
+      }
+
+      .link {
+        margin: 10px 0px;
+        overflow: auto;
+      }
+
+      .delay-memo {
+        border-left: 2px solid red;
+        margin: 10px 0px 0px 0px;
+        padding: 0px 5px;
+        font-size: 10px;
+        color: red;
+      }
     }
 
-    .btn-rel {
-      position: relative;
-    }
-
-    .btn-custom {
-      border: 0;
-      background: none;
-      padding: 2px 5px;
-      margin-top: 2px;
-      position: relative;
-      left: -28px;
-      margin-bottom: 0;
-      border-radius: 3px;
-    }
-
-    .passbook-table {
-      height: 385px;
-      overflow: hidden;
-      position: relative;
-      padding: 5px;
+    .head-title {
+      margin: 10px 10px 10px 0px;
+      overflow: auto;
+      padding: 8px;
       background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 0 2px #5b9dff;
-    }
+      border-radius: 6px;
+      width: 245px;
 
-    .no-passbook-table {
-      height: 385px;
-      overflow: hidden;
-      position: relative;
-
-      .no-passbook {
-        width: 60%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 0.3;
+      .detail {
+        color: #000a82;
+        font-weight: bolder;
       }
     }
 
-    .header-center {
-      .remark,
-      .amount,
-      .bank_amount {
-        text-align: center !important;
+    .no-data {
+      display: grid;
+      width: 45%;
+      margin: 0px auto;
+
+      img {
+        opacity: 0.5;
       }
-    }
 
-    .remark {
-      width: 160px;
-      max-width: 160px;
-      min-width: 160px;
-    }
-
-    .amount {
-      width: 90px;
-      max-width: 90px;
-      min-width: 90px;
-      text-align: end;
-    }
-
-    .bank_amount {
-      width: 100px;
-      min-width: 100px;
-      max-width: 100px;
-      text-align: end;
+      a {
+        text-align: center;
+        color: #000000;
+        font-weight: bolder;
+        font-size: 22px;
+        margin-top: 15px;
+      }
     }
   }
 
@@ -807,7 +759,7 @@ export default {
     .detail-row-container {
       overflow: auto;
       height: 295px;
-      background: #dae9ff;
+      background: #f5f5f5;
     }
 
     .repayment-charts {
@@ -821,7 +773,7 @@ export default {
       margin: 10px;
       border-radius: 10px;
       padding: 10px;
-      box-shadow: 0 0 5px black;
+      box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
 
       .row1 {
         padding-left: 20px;
@@ -843,7 +795,10 @@ export default {
     }
   }
 
-  @media screen and (max-width: 1023px) {
+}
+
+@media screen and (max-width: 767px) {
+  .repayment-wrapper {
     display: block;
 
     %back {
@@ -851,25 +806,24 @@ export default {
       width: 97%;
     }
 
-    .charts-modal {
-      .repayment-detail-item {
-        .row1 {
-          padding-left: 0px;
+    .repayment-card {
+      width: 100%;
+
+      .info {
+        width: calc(100%);
+        margin: 10px 0px;
+      }
+
+      .info-card {
+        width: 100%;
+        margin: 10px 0px;
+
+        .payment {
+          .p-d {
+            padding: 0px 10px;
+          }
         }
       }
-    }
-
-    .detail-card {
-      .remark {
-        width: 135px;
-        min-width: 135px;
-        max-width: 135px;
-      }
-    }
-
-    .income-detail-card {
-      margin: 0px 10px 10px 10px;
-      width: 96%;
     }
   }
 }

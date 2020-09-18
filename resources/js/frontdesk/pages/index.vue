@@ -257,21 +257,21 @@
       <div class="content" ref="advantage_slick">
         <div class="item">
           <div class="img">
-            <img :src="'./images/expert.svg'" class="img-fluid" />
+            <img :src="'/images/expert.svg'" class="img-fluid" />
           </div>
           <p>最專業的金融專家</p>
           <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
         </div>
         <div class="item">
           <div class="img">
-            <img :src="'./images/ai.svg'" class="img-fluid" />
+            <img :src="'/images/ai.svg'" class="img-fluid" />
           </div>
           <p>最先進的AI科技系統</p>
           <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
         </div>
         <div class="item">
           <div class="img">
-            <img :src="'./images/safe.svg'" class="img-fluid" />
+            <img :src="'/images/safe.svg'" class="img-fluid" />
           </div>
           <p>簡單、快速、安全、隱私</p>
           <span>視覺化簡潔好用的操作介面，運用先進科技與AWS 安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span>
@@ -307,7 +307,7 @@
             <a
               class="slick-item hvr-float-shadow"
               v-for="(item,index) in news"
-              :href="item.url.indexOf('influxfin') !== -1 ? '#'+item.link : item.url"
+              :href="item.url.indexOf('influxfin') !== -1 ? item.link : item.url"
               :key="index"
             >
               <div class="img">
@@ -374,7 +374,7 @@
       </p>
       <div class="slogan">普匯．你的手機ATM</div>
       <div class="img">
-        <img :src="'./images/846.png'" class="img-fluid" />
+        <img :src="'/images/846.png'" class="img-fluid" />
       </div>
     </div>
     <download :isLoan="true" :isInvest="true"/>
@@ -406,55 +406,61 @@ export default {
     creditRatingItem: [
       {
         text: "實名認證",
-        img: "./images/icon_cert_rev2_identity.svg",
+        img: "/images/icon_cert_rev2_identity.svg",
         checked: true,
         money: 10000,
       },
       {
         text: "金融帳號",
-        img: "./images/icon_cert_rev2_bank.svg",
+        img: "/images/icon_cert_rev2_bank.svg",
         checked: false,
         money: 10000,
       },
       {
         text: "社交認證",
-        img: "./images/icon_cert_rev2_social.svg",
+        img: "/images/icon_cert_rev2_social.svg",
         checked: false,
         money: 20000,
       },
       {
+        text: "緊急聯絡人",
+        img: "/images/icon_cert_rev2_emergency.svg",
+        checked: false,
+        money: 10000,
+      },
+      {
         text: "電子信箱",
-        img: "./images/icon_cert_rev2_mail.svg",
+        img: "/images/icon_cert_rev2_mail.svg",
         checked: false,
         money: 10000,
       },
       {
         text: "財力證明",
-        img: "./images/icon_cert_rev2_income.svg",
+        img: "/images/icon_cert_rev2_income.svg",
         checked: false,
         money: 20000,
       },
       {
         text: "學生身分",
-        img: "./images/icon_cert_rev2_student.svg",
+        img: "/images/icon_cert_rev2_student.svg",
         checked: true,
         money: 40000,
       },
       {
         text: "最高學歷",
-        img: "./images/icon_cert_rev2_diploma.svg",
+        img: "/images/icon_cert_rev2_diploma.svg",
         checked: false,
         money: 30000,
       },
       {
         text: "工作認證",
-        img: "./images/icon_cert_rev2_worker.svg",
+        img: "/images/icon_cert_rev2_worker.svg",
         checked: false,
         money: 40000,
       },
       {
         text: "聯合徵信",
-        img: "./images/icon_cert_rev2_icri.svg",
+        img: "/images/icon_cert_rev2_icri.svg",
         checked: true,
         money: 50000,
       },
@@ -556,11 +562,11 @@ export default {
       return l10nEN.format(data.toFixed(0));
     },
     async getBannerPic() {
-      let res = await axios.get("getBannerPic");
+      let res = await axios.get(`${location.origin}/getBannerPic`);
       this.bannerPic = res.data;
     },
     getServiceData() {
-      axios.post("getServiceData").then((res) => {
+      axios.post(`${location.origin}/getServiceData`).then((res) => {
         this.services = res.data;
       });
     },
@@ -1279,7 +1285,7 @@ export default {
 
     .invest-game {
       @extend %layout;
-      width: 918px;
+      width: 1020px;
 
       .chart {
         color: #000000;

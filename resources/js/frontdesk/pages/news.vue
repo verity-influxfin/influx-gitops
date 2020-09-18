@@ -48,7 +48,7 @@ let newsRow = Vue.extend({
             <span class="date">{{item.updated_at}}</span>
             <p class="title">{{item.title}}</p>
           </div>
-        <a :href="item.url.indexOf('influxfin') !== -1 ? '#'+item.link : item.url">Read more+</a>
+        <a :href="item.url.indexOf('influxfin') !== -1 ? item.link : item.url">Read more+</a>
       </li>
   `,
 });
@@ -145,8 +145,8 @@ export default {
         centerPadding: "5rem",
         slidesToShow: 1,
         slidesToScroll: 1,
-        prevArrow: '<img src="./images/icon_pre.svg" class="pre">',
-        nextArrow: '<img src="./images/icon_next.svg" class="next">',
+        prevArrow: '<img src="/images/icon_pre.svg" class="pre">',
+        nextArrow: '<img src="/images/icon_next.svg" class="next">',
         responsive: [
           {
             breakpoint: 768,
@@ -298,7 +298,6 @@ export default {
           transform: translate(0, -50%);
           font-size: 20px;
           color: #083a6e;
-          text-shadow: 0 0 4px #083a6e;
         }
 
         .fa-search {

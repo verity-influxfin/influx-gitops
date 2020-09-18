@@ -311,10 +311,6 @@ export default {
           }
         }
       });
-
-      console.log(this.borrow.length);
-      console.log(this.invest.length);
-      console.log(this.default.length);
     },
   },
   methods: {
@@ -376,7 +372,6 @@ export default {
         transform: translate(0, -50%);
         font-size: 20px;
         color: #083a6e;
-        text-shadow: 0 0 4px #083a6e;
       }
 
       .fa-search {

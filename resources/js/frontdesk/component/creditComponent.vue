@@ -15,11 +15,14 @@
           :class="['level-item',{light:item.isChecked}]"
           @click="rotate(item.isChecked,index)"
         >
-          <img :src="`./images/${item.href}`" class="img-fluid" />
+          <img :src="`/images/${item.href}`" class="img-fluid" />
         </div>
       </div>
       <span class="license">*利率會依每位用戶個別狀況而有所不同</span>
-      <template v-if="$props.license"><br><span class="license">*{{$props.license}}</span></template>
+      <template v-if="$props.license">
+        <br />
+        <span class="license">*{{$props.license}}</span>
+      </template>
     </div>
     <div class="credit-board">
       <creditBoard :credit="$props.creditList" :deg="deg" :index="index" @move="movePointer" />
@@ -32,7 +35,7 @@ import creditBoard from "./svg/creditBoardComponent";
 
 export default {
   components: { creditBoard },
-  props: ["creditList", "amount","license"],
+  props: ["creditList", "amount", "license"],
   data: () => ({
     deg: "",
     index: "0",
@@ -78,7 +81,7 @@ export default {
 
   .credit-box {
     width: 60%;
-    padding: 0px 0px 0px 7rem;
+    padding: 0px 0px 0px 12rem;
 
     p {
       font-size: 16px;
@@ -90,7 +93,7 @@ export default {
 
     .credit-level-list {
       overflow: auto;
-      width: 53%;
+      width: 60%;
 
       .level-item {
         filter: opacity(0.5);

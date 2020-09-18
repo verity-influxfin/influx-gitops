@@ -15,6 +15,13 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public $apiGetway;
+
+    public function __construct()
+    {
+        $this->apiGetway = config('api.apiGetway');
+    }
+
     public function getListData(Request $request)
     {
         $data = json_decode(file_get_contents('data/listData.json'), true);
@@ -46,10 +53,10 @@ class Controller extends BaseController
     public function getNewsData(Request $request)
     {
 
-        $curlScrapedNewsPage = shell_exec('curl -X GET "https://stage-api.influxfin.com/api/v2/article/news"');
+        $curlScrapedNewsPage = shell_exec("curl -X GET " . $this->apiGetway . "article/news");
         $newsdata = json_decode($curlScrapedNewsPage, true);
 
-        $curlScrapedEventPage = shell_exec('curl -X GET "https://stage-api.influxfin.com/api/v2/article/event"');
+        $curlScrapedEventPage = shell_exec("curl -X GET " . $this->apiGetway . "article/event");
         $eventdata = json_decode($curlScrapedEventPage, true);
 
         $result = array();

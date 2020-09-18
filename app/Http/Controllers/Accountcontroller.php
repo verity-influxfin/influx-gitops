@@ -18,7 +18,7 @@ class Accountcontroller extends BaseController
 
     public function __construct()
     {
-        $this->apiGetway = config('api.developer');
+        $this->apiGetway = config('api.apiGetway');
     }
 
     public function getTerms(Request $request)

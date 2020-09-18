@@ -68,14 +68,13 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
+      
       AOS.init();
     });
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "feedback" }).then(res => {
+      axios.post(`${location.origin}/getBannerData`, { filter: "feedback" }).then(res => {
         this.bannerData = res.data;
       });
     },

@@ -4,10 +4,9 @@
     <div class="text-card">
       <div class="a-hr">
         <div class="a-s">
-          <!-- <h3>「普匯・你的手機ATM，隨時online滿足您的資金需求」</h3> -->
-          <p>進入社會工作了，臨時有急缺，礙於面子不好意思跟家人、朋友、同事開口，怎麼辦？</p>
-          <p>找銀行，又怕一筆不大不小的小錢，被行員「另眼相看，特別招待」，這時候，找普匯就對了！</p>
-          <p>沒有煩人的「專員」打擾，免抵押免擔保，只需要一隻可以上網的手機，尋找普匯，AI 24hr online滿足您的資金需求，大到買房、買車、裝潢、結婚，小至生活食衣住行育樂，使用「普匯inFlux 」APP享有「高度隱私金融科技」借貸服務，讓你一邊辦著貸款，一邊喝著咖啡，既簡單快速、又安全有隱私！</p>
+          <p>「普匯・你的手機ATM」</p>
+          <p>沒有煩人的「專員」打擾，只需要一隻可以上網的手機</p>
+          <p>AI 24hr online滿足您的資金需求</p>
         </div>
       </div>
     </div>
@@ -29,7 +28,7 @@
           <p>{{item.post_title}}</p>
         </div>
       </div>
-      <router-link class="btn link" to="/vlog/loan">
+      <router-link class="btn link" to="vlog/?q=loan">
         影音列表
         <i class="fas fa-external-link-alt"></i>
       </router-link>
@@ -115,17 +114,17 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "freshgraduate" }).then((res) => {
+      axios.post(`${location.origin}/getBannerData`, { filter: "freshgraduate" }).then((res) => {
         this.bannerData = res.data;
       });
     },
     getApplydata() {
-      axios.post("getApplydata", { filter: "freshgraduate" }).then((res) => {
+      axios.post(`${location.origin}/getApplydata`, { filter: "freshgraduate" }).then((res) => {
         this.applyData = res.data;
       });
     },
     getQaData() {
-      axios.post("getQaData", { filter: "freshgraduate" }).then((res) => {
+      axios.post(`${location.origin}/getQaData`, { filter: "freshgraduate" }).then((res) => {
         this.qaData = res.data;
       });
     },

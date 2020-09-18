@@ -79,8 +79,8 @@
                     "isActive": true
                 },
                 {
-                    "name": "小學影音",
-                    "href": "/vlog/share",
+                    "name": "小學堂影音",
+                    "href": "/vlog?q=share",
                     "isActive": true
                 }
             ]

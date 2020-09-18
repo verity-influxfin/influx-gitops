@@ -25,7 +25,7 @@
 
 <body>
   <div id="event_wrapper">
-    <div class="game" style="background-image: url('./images/3253525.jpg');">
+    <div class="game" style="background-image: url('/images/3253525.jpg');">
       <div id="wheel-content" ref="wheel_content">
         <div class="wheel" :style="`transform: rotate(${wheelDeg}deg)`">
           <div id="prize-box">
@@ -126,7 +126,7 @@
         <div id="loginModal" v-else class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">✕</button>
-            <div class="login-logo"><img src="./images/logo_puhey.svg" class="img-fluid"></div>
+            <div class="login-logo"><img src="/images/logo_puhey.svg" class="img-fluid"></div>
           </div>
           <div class="modal-body">
             <div class="input-group">

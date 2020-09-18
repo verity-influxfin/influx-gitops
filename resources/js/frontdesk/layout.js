@@ -20,7 +20,9 @@ $(() => {
     const timeLineMax = new TimelineMax({ paused: true, reversed: true });
 
     const router = new VueRouter({
-        routes: routers
+        routes: routers,
+        mode: 'history',
+        base: `/${window._locale}/`
     });
 
     router.beforeEach((to, from, next) => {
@@ -29,16 +31,11 @@ $(() => {
             next('/index');
         } else {
             gtag("config", "UA-117279688-9", { page_path: to.path });
-            $(".page-header").show();
-            $(".page-footer").show();
-            $(".back-top").show();
-            $(".blog-quiklink").show();
-
             $(window).scrollTop(0);
             next();
         }
-        
-        if($('.navbar-toggler').attr('aria-expanded') === 'true'){
+
+        if ($('.navbar-toggler').attr('aria-expanded') === 'true') {
             $('.navbar-toggler').click();
         }
     });
@@ -108,7 +105,7 @@ $(() => {
         },
         methods: {
             getListData() {
-                axios.post('getListData')
+                axios.post(`${location.origin}/getListData`)
                     .then((res) => {
                         this.menuList = res.data.menuList;
                         this.actionList = res.data.actionList;
@@ -154,7 +151,7 @@ $(() => {
             doLogin() {
                 grecaptcha.ready(() => {
                     grecaptcha.execute('6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3', { action: 'submit' }).then((token) => {
-                        axios.post('recaptcha', { token }).then((res) => {
+                        axios.post(`${location.origin}/recaptcha`, { token }).then((res) => {
                             if (this.isRememberAccount) {
                                 $cookies.set('account', this.account);
                                 $cookies.set('businessNum', this.businessNum);
@@ -174,7 +171,7 @@ $(() => {
                                 Object.assign(params, { tax_id });
                             }
 
-                            axios.post('doLogin', params)
+                            axios.post(`${location.origin}/doLogin`, params)
                                 .then((res) => {
                                     this.$store.commit('mutationUserData', res.data);
                                     if (this.$router.history.pending) {
@@ -205,7 +202,7 @@ $(() => {
 
             },
             logout() {
-                axios.post('logout').then((res) => {
+                axios.post(`${location.origin}/logout`).then((res) => {
                     this.$store.commit('mutationUserData', {});
                     location.reload();
                 });
@@ -228,7 +225,7 @@ $(() => {
 
                 this.counter = 180;
 
-                axios.post('getCaptcha', { phone, type })
+                axios.post(`${location.origin}/getCaptcha`, { phone, type })
                     .then((res) => {
                         this.isSended = true;
                         this.timer = setInterval(() => { $this.reciprocal() }, 1000);
@@ -244,7 +241,7 @@ $(() => {
                 let new_password_confirmation = this.confirmPassword;
                 let code = this.code;
 
-                axios.post('resetPassword', { phone, new_password, new_password_confirmation, code })
+                axios.post(`${location.origin}/resetPassword`, { phone, new_password, new_password_confirmation, code })
                     .then((res) => {
                         alert('修改成功，請以新密碼登入');
                         location.reload();
@@ -295,6 +292,7 @@ $(() => {
 
     $(document).scroll(function () {
         AOS.refresh();
+        window.dispatchEvent(new Event("resize"));
         var y = $(this).scrollTop();
         if (y > 800) {
             $('.back-top').fadeIn();

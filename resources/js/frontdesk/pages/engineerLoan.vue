@@ -4,10 +4,9 @@
     <div class="text-card">
       <div class="a-hr">
         <div class="a-s">
-          <!-- <h3>「夢想與生活的資金需求，普匯投資借給你！」</h3> -->
-          <p>集結了各大學校友、老師，專門投資借貸同學在學期間的資金需求。</p>
-          <p>不論是夢想實現，還是生活急需，只要下載普匯App，「3分鐘申請，10分鐘核准，1小時到帳」，全程AI線上媒合為你快速找到投資人！</p>
-          <p>超過50,000人都在使用普匯完成夢想、解決生活資金問題，同學都只找「普匯．你的手機ATM 」，提供簡單快速、隱私又安全的急用資金！</p>
+          <p>「普匯・你的手機ATM」</p>
+          <p>無論是學生/上班族，只要是資訊/資工/資管相關科系，我們特別提供給您優惠利率。</p>
+          <p>隨時隨地，只要打開APP，資金到手。</p>
         </div>
       </div>
     </div>
@@ -67,17 +66,17 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "engineer" }).then((res) => {
+      axios.post(`${location.origin}/getBannerData`, { filter: "engineer" }).then((res) => {
         this.bannerData = res.data;
       });
     },
     getApplydata() {
-      axios.post("getApplydata", { filter: "engineer" }).then((res) => {
+      axios.post(`${location.origin}/getApplydata`, { filter: "engineer" }).then((res) => {
         this.applyData = res.data;
       });
     },
     getQaData() {
-      axios.post("getQaData", { filter: "engineer" }).then((res) => {
+      axios.post(`${location.origin}/getQaData`, { filter: "engineer" }).then((res) => {
         this.qaData = res.data;
       });
     },

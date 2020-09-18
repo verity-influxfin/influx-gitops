@@ -1,53 +1,27 @@
 <template>
   <div class="transfer-wrapper">
-    <div class="transfer-header">
-      <div class="header-title">
-        <img :src="'./images/child_banner.jpg'" />
-        <div class="title">債權轉讓</div>
-      </div>
-      <div class="header-img">
-        <img :src="'./images/transfer_banner_web.jpg'" class="img-fluid desktop" />
-        <img :src="'./images/transfer_banner_mobile.jpg'" class="img-fluid mobile" />
-      </div>
-      <div class="header-footer">
-        <p>滾石不生苔 , 隨時靈活轉換您的資金</p>
-        <h2>如何使用債權轉讓?</h2>
+    <banner :data="bannerData"></banner>
+    <div class="text-card">
+      <div class="a-hr">
+        <div class="a-s">
+          <p>滾石不生苔 , 隨時靈活轉換您的資金</p>
+        </div>
       </div>
     </div>
-    <div class="transfer-content" data-aos="zoom-in">
-      <img :src="'./images/transfer_web.png'" class="img-fluid desktop" />
+    <div class="transfer-card">
+      <h2>如何使用債權轉讓</h2>
+      <div class="hr"></div>
       <div class="transfer-slick mobile" ref="transfer_slick">
         <div v-for="(imgSrc,index) in this.transferFlow" class="slick-item" :key="index">
           <img :src="imgSrc" class="img-fluid" />
         </div>
       </div>
     </div>
-    <div class="qa-card">
-      <h2>還有其他問題嗎?</h2>
-      <div class="row">
-        <div class="qa-item" v-for="(item,index) in qaData.slice(0, 3)" :key="index">
-          <p>{{item.title}}</p>
-          <hr />
-          <span v-html="item.content"></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="qa-item" v-for="(item,index) in qaData.slice(3)" :key="index">
-          <p>Q：{{item.title}}</p>
-          <hr />
-          <span v-html="item.content"></span>
-        </div>
-      </div>
-      <div class="row">
-        <router-link class="btn link" style="margin:0px auto;" to="qa">
-          更多問題
-          <i class="fas fa-angle-double-right" />
-        </router-link>
-      </div>
-    </div>
-    <div class="transfer-footer">
+    <qa :qaData="qaData" />
+    <div class="invest-tonic-card">
       <h2>投資理財大補帖</h2>
-      <div class="investTonic-slick" ref="investTonic_slick" data-aos="flip-left">
+      <div class="hr"></div>
+      <div class="invest-tonic-slick" ref="investTonic_slick">
         <div v-for="(item,index) in this.investTonic" class="content-row" :key="index">
           <div class="img">
             <img :src="item.media_link" class="img-fluid" />
@@ -62,29 +36,37 @@
 </template>
 
 <script>
+import qa from "../component/qaComponent";
+import banner from "../component/bannerComponent";
+
 export default {
+  components: {
+    qa,
+    banner,
+  },
   data: () => ({
     qaData: [],
     transferFlow: [
-      "./images/transfer_flow1.png",
-      "./images/transfer_flow2.png",
-      "./images/transfer_flow3.png",
-      "./images/transfer_flow4.png",
-      "./images/transfer_flow5.png",
-      "./images/transfer_flow6.png"
+      "/images/transfer_flow1.png",
+      "/images/transfer_flow2.png",
+      "/images/transfer_flow3.png",
+      "/images/transfer_flow4.png",
+      "/images/transfer_flow5.png",
+      "/images/transfer_flow6.png",
     ],
-    investTonic: []
+    investTonic: [],
+    bannerData: {},
   }),
   created() {
     this.getQaData();
+    this.getBannerData();
     this.getInvestTonicData();
     $("title").text(`債權轉讓 - inFlux普匯金融科技`);
   },
   mounted() {
     this.$nextTick(() => {
       this.createTransferSlick();
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
+
       AOS.init();
     });
   },
@@ -93,27 +75,37 @@ export default {
       this.$nextTick(() => {
         this.createInvestTonicSlick();
       });
-    }
+    },
   },
   methods: {
     getInvestTonicData() {
-      axios.post("getInvestTonicData").then(res => {
+      axios.post(`${location.origin}/getInvestTonicData`).then((res) => {
         let data = res.data;
         $.each(data, (index, row) => {
-          data[index].link = `/articlepage/investtonic-${row.ID}`;
+          data[index].link = `/articlepage/?q=investtonic-${row.ID}`;
         });
         this.investTonic = data;
       });
     },
+    getBannerData() {
+      axios
+        .post(`${location.origin}/getBannerData`, { filter: "transfer" })
+        .then((res) => {
+          this.bannerData = res.data;
+        })
+        .catch((error) => {
+          console.error("getBannerData 發生錯誤，請稍後再試");
+        });
+    },
     getQaData() {
-      axios.post("getQaData", { filter: "transfer" }).then(res => {
+      axios.post(`${location.origin}/getQaData`, { filter: "transfer" }).then((res) => {
         this.qaData = res.data;
       });
     },
     createTransferSlick() {
       $(this.$refs.transfer_slick).slick({
         infinite: true,
-        slidesToShow: 3,
+        slidesToShow: 6,
         slidesToScroll: 1,
         autoplay: true,
         dots: true,
@@ -128,10 +120,10 @@ export default {
             breakpoint: 767,
             settings: {
               slidesToShow: 1,
-              slidesToScroll: 1
-            }
-          }
-        ]
+              slidesToScroll: 1,
+            },
+          },
+        ],
       });
     },
     createInvestTonicSlick() {
@@ -147,33 +139,38 @@ export default {
             breakpoint: 1023,
             settings: {
               slidesToShow: 3,
-              slidesToScroll: 1
-            }
+              slidesToScroll: 1,
+            },
           },
           {
             breakpoint: 767,
             settings: {
               slidesToShow: 1,
-              slidesToScroll: 1
-            }
-          }
-        ]
+              slidesToScroll: 1,
+            },
+          },
+        ],
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-@import "../asset/scss/slick";
-
-%position {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
 .transfer-wrapper {
+  h2 {
+    font-weight: bolder;
+    text-align: center;
+    color: #083a6e;
+  }
+
+  .hr {
+    width: 130px;
+    height: 2px;
+    background-image: linear-gradient(to right, #71008b, #ffffff);
+    margin: 0px auto;
+  }
+
   .link {
     display: block;
     background: #006bda;
@@ -193,166 +190,100 @@ export default {
     }
   }
 
-  .transfer-header {
-    .header-title {
-      @extend %position;
-      height: 160px;
+  .text-card {
+    .a-hr {
+      height: 125px;
+      background-color: #6591be;
+      position: relative;
 
-      img {
-        min-width: 100%;
+      .a-s {
         position: absolute;
-        height: 210%;
-      }
-
-      .title {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        bottom: 0;
+        left: 0;
+        height: 214px;
+        width: 80%;
+        background-color: #083a6e;
+        font-size: 29.5px;
+        font-weight: bold;
         color: #ffffff;
-        font-weight: bolder;
-        font-size: 33px;
-      }
-    }
 
-    .header-img {
-      text-align: center;
-
-      @media (min-width: 767px) {
-        padding: 10px;
-        img {
-          width: 80%;
+        h3 {
+          color: #ffffff;
+          text-align: center;
+          font-weight: bold;
+          margin: 25px auto;
         }
-      }
-    }
 
-    .header-footer {
-      @extend %position;
-      background-color: #f7f7f7;
-      height: 200px;
-      text-align: center;
-      padding-top: 40px;
-      font-weight: bolder;
-
-      h2 {
-        font-weight: bolder;
-      }
-
-      @media (max-width: 767px) {
-        height: 150px;
+        p {
+          line-height: 1.7;
+          position: absolute;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          left: 50%;
+        }
       }
     }
   }
 
-  .transfer-content {
+  .transfer-card {
     img {
       min-width: 100%;
     }
-  }
 
-  .transfer-slick {
-    padding: 50px 0px;
+    .transfer-slick {
+      padding: 50px 0px;
 
-    @extend %slick-style;
-
-    .slick-item {
-      margin: 0px 10px;
-      cursor: default;
-    }
-
-    .slick-list {
-      width: 100%;
-    }
-
-    @media (min-width: 767px) {
-      .slick-custom-dots {
-        display: none;
+      .slick-item {
+        margin: 0px 10px;
+        cursor: default;
       }
-    }
-  }
 
-  .investTonic-slick {
-    @extend %slick-style;
-    width: 75%;
-    margin: 0px auto;
-
-    .content-row {
-      margin: 0px 10px;
-      cursor: default;
-
-      .img {
+      .slick-list {
         width: 100%;
-        height: 190px;
-        overflow: hidden;
       }
-    }
 
-    .slick-list {
-      width: 100%;
-      margin: 0px auto;
+      .slick-custom-dots {
+        position: absolute;
+        padding: 15px 0px;
+        text-align: center;
+        color: #a0a0a0;
+        display: none;
+        list-style-type: none;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 13px;
 
-      .slick-slide {
-        padding: 14px;
+        li {
+          margin: 0px 3px;
+        }
+
+        .slick-active {
+          color: #000000;
+        }
       }
-    }
 
-    @media (max-width: 1023px) {
+      %arrow {
+        position: absolute;
+        top: 50%;
+        transform: translatey(-50%);
+        font-size: 23px;
+        z-index: 1;
+        cursor: pointer;
+      }
+
       .arrow-left {
-        left: -20px;
+        @extend %arrow;
+        left: 0px;
       }
-      .arrow-right {
-        right: -20px;
-      }
-    }
 
-    @media (max-width: 767px) {
-      .arrow-left {
-        left: 0;
-      }
       .arrow-right {
-        right: 0;
+        @extend %arrow;
+        right: 0px;
       }
     }
   }
 
-  .qa-card {
-    padding: 30px;
-    background: #ececec;
-    overflow: hidden;
-
-    h2 {
-      text-align: center;
-      color: #006bda;
-    }
-
-    .row {
-      overflow: hidden;
-      display: flex;
-
-      .qa-item {
-        background: #ffffff;
-        padding: 10px;
-        margin: 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 5px #0069ff;
-        width: 31.5%;
-
-        p {
-          color: #000000;
-        }
-
-        hr {
-          color: #000000;
-        }
-
-        span {
-          color: #000000;
-        }
-      }
-    }
-  }
-
-  .transfer-footer {
+  .invest-tonic-card {
     padding: 20px;
 
     h2 {
@@ -360,17 +291,80 @@ export default {
       text-align: center;
       font-weight: bolder;
     }
-  }
 
-  @media (max-width: 767px) {
-    .desktop {
-      display: none;
+    .invest-tonic-slick {
+      width: 75%;
+      margin: 0px auto;
+
+      .content-row {
+        margin: 0px 10px;
+        cursor: default;
+
+        .img {
+          width: 100%;
+          height: 190px;
+          overflow: hidden;
+        }
+      }
+
+      .slick-list {
+        width: 100%;
+        margin: 0px auto;
+
+        .slick-slide {
+          padding: 14px;
+        }
+      }
+
+      %arrow {
+        position: absolute;
+        top: 50%;
+        transform: translatey(-50%);
+        font-size: 23px;
+        z-index: 1;
+        cursor: pointer;
+      }
+
+      .arrow-left {
+        @extend %arrow;
+        left: 0px;
+      }
+
+      .arrow-right {
+        @extend %arrow;
+        right: 0px;
+      }
     }
   }
 
-  @media (min-width: 767px) {
-    .mobile {
+  @media (max-width: 767px) {
+    .text-card {
       display: none;
+    }
+
+    h2 {
+      font-size: 25px;
+      margin-bottom: 20px;
+    }
+
+    .link {
+      width: 50%;
+    }
+
+    .transfer-card {
+      .transfer-slick {
+        .slick-custom-dots {
+          display: flex;
+        }
+      }
+    }
+
+    .invest-tonic-card {
+      padding: 10px;
+
+      .invest-tonic-slick {
+        width: 100%;
+      }
     }
   }
 }
