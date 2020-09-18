@@ -137,14 +137,15 @@ class Profit_and_loss_account
                     if (!$set && $key == 'normal' && isset($amortizationTables['normal']['date'])
                         && date('d', strtotime($amortizationTables['normal']['date'])) != 10) {
                         $repaying = $amortizationTables['normal']['instalment'] - count($amortizationTables['normal']['rows']) - 1 > 2;
+                        $trasferIn = $amortizationTables['normal']['transferDate'] != null;
                         $trasferOut = $amortizationTables['normal']['transferOut'] != null;
-                        if (!$repaying || $trasferOut) {
-                            $odate = isset($amortizationTables['normal']['transferDate']) ? $amortizationTables['normal']['transferDate'] : $amortizationTables['normal']['date'];
+                        if ((!$repaying || $trasferOut) && isset($amortizationTables['normal']['rows'][1])) {
+                            $odate = $trasferIn ? $amortizationTables['normal']['transferDate'] : $amortizationTables['normal']['date'];
                             $ym = date('Y-m', strtotime($odate));
                             $pay_date = date('Y-m-', strtotime($ym)) . REPAYMENT_DAY;
                             if ($odate > $pay_date) {
                                 $ndate = date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY;
-                                if ($v['repayment_date'] != $ndate && isset($amortizationTables['normal']['rows'][1])) {
+                                if ($v['repayment_date'] != $ndate) {
                                     !isset($rows[$key][$ndate]) ? $rows[$key][$ndate] = $this->initRow() : '';
                                     $rows[$key][$ndate]['remaining_principal'] += $amortizationTables['normal']['amount'];
                                 }
@@ -157,7 +158,7 @@ class Profit_and_loss_account
 
                                 if (!isset($amortizationTables['normal']['transferDate'])) {
                                     $ndate = date('Y-m-', strtotime($ym . ' + 1 month')) . REPAYMENT_DAY;
-                                    if ($v['repayment_date'] != $ndate && isset($amortizationTables['normal']['rows'][1])) {
+                                    if ($v['repayment_date'] != $ndate) {
                                         !isset($rows[$key][$ndate]) ? $rows[$key][$ndate] = $this->initRow() : '';
                                         $rows[$key][$ndate]['remaining_principal'] += $amortizationTables['normal']['amount'];
                                     }
