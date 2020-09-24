@@ -243,7 +243,7 @@ export default {
     }
   }
 
-  .share-btn{
+  .share-btn {
     display: none;
   }
 }
@@ -254,6 +254,7 @@ export default {
 
     .title {
       font-size: 24px;
+      margin-bottom: 1rem;
     }
 
     .flex {
@@ -262,7 +263,7 @@ export default {
 
     .main-view {
       width: 100%;
-      margin: 0px;
+      margin: 0px auto;
 
       .contenier {
         .video-container {
@@ -280,7 +281,7 @@ export default {
       display: none;
     }
 
-    .share-btn{
+    .share-btn {
       display: block;
     }
   }

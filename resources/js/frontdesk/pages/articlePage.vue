@@ -2,7 +2,7 @@
   <div class="article-wrapper">
     <h3 class="title" v-if="this.articleTitle">{{this.articleTitle}}</h3>
     <div class="flex">
-      <div class="main-view">
+      <div :class="[{'main-view':!search.includes('news'),'news-view':search.includes('news')}]">
         <div class="contenier">
           <div class="title-img" v-if="this.articleImg">
             <img :src="this.articleImg" class="img-fluid" />
@@ -179,6 +179,11 @@ export default {
     display: flex;
   }
 
+  .news-view {
+    width: 80%;
+    margin: 0px auto;
+  }
+
   .main-view {
     width: 70%;
     margin-left: 7rem;
@@ -243,15 +248,21 @@ export default {
 
     .title {
       font-size: 24px;
+      margin-bottom: 1rem;
     }
 
     .flex {
       flex-direction: column;
     }
 
+    .news-view {
+      width: 100%;
+      margin: 0px auto;
+    }
+
     .main-view {
       width: 100%;
-      margin: 0px;
+      margin: 0px auto;
     }
 
     .sub {
