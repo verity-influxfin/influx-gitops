@@ -4,10 +4,9 @@
       <h2 v-if="category == 'share'">小學堂影音</h2>
       <h2 v-if="category == 'invest'">投資人專訪</h2>
       <h2 v-if="category == 'loan'">借款人專訪</h2>
-      <div class="hr"></div>
       <div class="input-custom">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
+        <input type="text" class="form-control" placeholder="Search" v-model="filter" />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
@@ -29,7 +28,7 @@
 
 <script>
 let postRow = Vue.extend({
-  props: ["item"],
+  props: ["item", "category"],
   template: `
     <li class="video">
       <div class="video-iframe">
@@ -40,13 +39,13 @@ let postRow = Vue.extend({
           allowfullscreen
         ></iframe>
       </div>
-      <div class="video-info">
-        <h5>{{item.post_title}}</h5>
+      <div class="chunk">
+        <p class="title">{{item.post_title}}</p>
         <a
           v-if="item.type === 'video'"
-          :href="'/videopage/?q='+item.ID"
+          :href="'/videopage/?&q=' + item.ID +'&category='+$props.category"
           class="read"
-        >閱讀內容</a>
+        >閱讀更多<img src="/images/a_arrow.png"></a>
         <a
           v-if="item.category === 'loan'"
           href="https://event.influxfin.com/R/url?p=webbanner"
@@ -104,21 +103,21 @@ export default {
     },
   },
   created() {
-    let urlParams = new URLSearchParams(window.location.search);
-    this.category = urlParams.get("q");
-    this.refresh(this.category);
-
+    this.refresh();
     $("title").text(`影音分享 - inFlux普匯金融科技`);
   },
   mounted() {
     this.$nextTick(() => {
       AOS.init();
-      particlesJS.load("vlog-wrapper", "data/mobile.json");
+      particlesJS.load("vlog-wrapper", `${location.origin}/data/mobile.json`);
     });
   },
   methods: {
     refresh(category) {
-      this.$store.dispatch("getVideoData", { category });
+      let urlParams = new URLSearchParams(window.location.search);
+      console.log(urlParams);
+      this.category = urlParams.get("q");
+      this.$store.dispatch("getVideoData", { category: this.category });
     },
     pagination() {
       let $this = this;
@@ -132,6 +131,7 @@ export default {
               let component = new postRow({
                 propsData: {
                   item,
+                  category: $this.category,
                 },
               }).$mount();
 
@@ -164,28 +164,29 @@ export default {
     width: 80%;
     margin: 20px auto;
     position: relative;
+    padding: 10px 20px;
+    border-radius: 40px;
+    box-shadow: 0 2px 5px 0 #6ab0f2;
+    background-color: #ffffff;
 
     h2 {
       font-weight: bolder;
-      text-align: center;
       color: #061164;
-    }
-
-    .hr {
-      width: 130px;
-      height: 2px;
-      background-image: linear-gradient(to right, #71008b, #ffffff);
-      margin: 0px auto;
+      margin: 0px;
     }
 
     .input-custom {
       width: 300px;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 50%;
+      right: 25px;
+      transform: translate(0px, -50%);
 
       .form-control {
         padding: 5px 35px;
+        border: 0px;
+        border-bottom: 1px solid #061164;
+        border-radius: 0px;
       }
 
       %iStyle {
@@ -210,7 +211,7 @@ export default {
   }
 
   .pagination {
-    margin: 0px auto;
+    margin: 2rem auto 0px auto;
     width: fit-content;
   }
 
@@ -239,13 +240,53 @@ export default {
       float: left;
       width: calc(100% / 3 - 20px);
       list-style: none;
-      box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+      box-shadow: 0 2px 5px 0 #6ab0f2;
       background: #ffffff;
 
       .video-iframe {
         iframe {
           width: 100%;
           height: 210px;
+        }
+      }
+
+      .chunk {
+        padding: 10px;
+
+        .title {
+          font-size: 20px;
+          color: #061164;
+          font-weight: 900;
+          font-size: 16px;
+          height: 48px;
+        }
+
+        .read {
+          color: #8629a5;
+        }
+
+        .loan {
+          color: #ffc107;
+        }
+
+        .invest {
+          color: #4172fd;
+        }
+
+        .sponsor {
+          color: #177300;
+        }
+
+        a {
+          display: block;
+          font-weight: bolder;
+          transition-duration: 0.5s;
+          text-align: center;
+
+          &:hover {
+            filter: hue-rotate(30deg);
+            text-decoration: none;
+          }
         }
       }
 
@@ -260,29 +301,6 @@ export default {
           font-weight: bolder;
           height: 38px;
         }
-
-        a {
-          display: block;
-          width: fit-content;
-          font-weight: bolder;
-          float: right;
-        }
-
-        .read {
-          color: #007bff;
-        }
-
-        .loan {
-          color: #ffc107;
-        }
-
-        .invest {
-          color: #00207b;
-        }
-
-        .sponsor {
-          color: #177300;
-        }
       }
     }
   }
@@ -292,11 +310,15 @@ export default {
 
     .header {
       width: 100%;
+      box-shadow: 0 0 black;
 
       .input-custom {
         width: 100%;
         position: relative;
         margin: 10px auto;
+        top: 0;
+        right: 0px;
+        transform: initial;
       }
     }
 

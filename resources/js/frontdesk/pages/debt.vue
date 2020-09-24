@@ -8,7 +8,7 @@
       <div class="c-title">
         <div class="p-type">案件類型</div>
         <div class="p-count">案件件數</div>
-        <div class="p-total">應收本金</div>
+        <div class="p-total">應收本息</div>
       </div>
       <div class="card" v-for="(product,key) in groupList" :key="key">
         <div

@@ -8,7 +8,7 @@ export default {
     },
     mutationKnowledgeData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/articlepage/?q=knowledge-${row.ID}`;
+            data[index].link = `/articlepage?q=knowledge-${row.ID}`;
         });
         
         state.knowledge = data;
@@ -16,9 +16,9 @@ export default {
     mutationVideoData(state, data) {
         $.each(data, (index, row) => {
             if(row.category){
-                data[index].link = `/vlog/?q=${row.category}`;
+                data[index].link = `/vlog?q=${row.category}`;
             }else{
-                data[index].link = `/videopage/?q=${row.ID}`;
+                data[index].link = `/videopage?q=${row.ID}&category=share`;
             }
         });
 
@@ -29,7 +29,7 @@ export default {
     },
     mutationNewsData(state, data) {
         $.each(data, (index, row) => {
-            data[index].link = `/articlepage/?q=news-${index}`;
+            data[index].link = `/articlepage?q=news-${index}`;
         });
 
         state.news = data;

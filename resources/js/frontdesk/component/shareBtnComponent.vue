@@ -47,7 +47,7 @@ export default {
   props: ["link"],
   data: () => ({
     copyLink: "",
-    isCopyed: false
+    isCopyed: false,
   }),
   methods: {
     addToFB() {
@@ -103,8 +103,8 @@ export default {
       document.execCommand("selectAll");
       document.execCommand("Copy");
       this.isCopyed = true;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -135,7 +135,8 @@ export default {
 
   .add-to {
     display: flex;
-    float: right;
+    filter: opacity(0.7);
+    justify-content: space-between;
 
     div {
       cursor: pointer;

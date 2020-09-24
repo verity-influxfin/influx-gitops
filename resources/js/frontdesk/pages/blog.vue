@@ -2,10 +2,9 @@
   <div class="blog-wrapper" id="blog-wrapper">
     <div class="header">
       <h2>金融小學堂</h2>
-      <div class="hr"></div>
       <div class="input-custom">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
+        <input type="text" class="form-control" placeholder="Search" v-model="filter" />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
@@ -31,8 +30,12 @@ let postRow = Vue.extend({
   template: `
     <li class="article">
         <div class="img"><img class="img-fluid" :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
-        <p>{{item.post_modified.substr(0,10)}}</p>
-        <a class="link" :href="item.link">{{item.post_title}}</a>
+        <div class="chunk">
+          <p class="title">{{item.post_title}}</p>
+          <p class="date">{{item.post_modified.substr(0,10)}}</p>
+          <p class="cnt">{{item.post_content}}</p>
+          <a class="link" :href="item.link">閱讀更多<img src="/images/a_arrow.png"></a>
+        </div>
     </li>
   `,
 });
@@ -51,7 +54,7 @@ export default {
           index
         ].post_content = `${row.post_content
           .replace(/(<([^>]+)>)/gi, "")
-          .substr(0, 80)}...`;
+          .substr(0, 50)}...`;
       });
       return $this.$store.getters.KnowledgeData;
     },
@@ -128,28 +131,29 @@ export default {
     width: 80%;
     margin: 20px auto;
     position: relative;
+    padding: 10px 20px;
+    border-radius: 40px;
+    box-shadow: 0 2px 5px 0 #6ab0f2;
+    background-color: #ffffff;
 
     h2 {
       font-weight: bolder;
-      text-align: center;
       color: #061164;
-    }
-
-    .hr {
-      width: 130px;
-      height: 2px;
-      background-image: linear-gradient(to right, #71008b, #ffffff);
-      margin: 0px auto;
+      margin: 0px;
     }
 
     .input-custom {
       width: 300px;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 50%;
+      right: 25px;
+      transform: translate(0px, -50%);
 
       .form-control {
         padding: 5px 35px;
+        border: 0px;
+        border-bottom: 1px solid #061164;
+        border-radius: 0px;
       }
 
       %iStyle {
@@ -184,18 +188,13 @@ export default {
       float: left;
       width: calc(100% / 3 - 20px);
       list-style: none;
-      box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
       background: #ffffff;
-
-      p {
-        text-align: right;
-        padding: 0px 10px;
-        margin-bottom: 5px;
-      }
+      box-shadow: 0 2px 5px 0 #6ab0f2;
 
       .img {
         width: 100%;
-        height: 300px;
+        height: 250px;
+        overflow: hidden;
         text-align: center;
         padding-bottom: 10px;
 
@@ -207,24 +206,48 @@ export default {
         }
       }
 
+      .chunk {
+        padding: 10px;
+
+        .title {
+          font-size: 20px;
+          color: #061164;
+          font-weight: 900;
+          height: 60px;
+        }
+
+        .date {
+          font-size: 14px;
+          font-weight: initial;
+          color: #9b9b9b;
+        }
+
+        .cnt {
+          font-size: 15px;
+          font-weight: 500;
+          line-height: 1.8;
+          color: #797979;
+          height: 80px;
+        }
+
+        .link {
+          display: block;
+          font-weight: bolder;
+          transition-duration: 0.5s;
+          text-align: center;
+          color: #8629a5;
+
+          &:hover {
+            filter: hue-rotate(30deg);
+            text-decoration: none;
+          }
+        }
+      }
+
       h6 {
         padding: 0px 10px;
         font-size: 15px;
         height: 35px;
-      }
-
-      .link {
-        display: block;
-        font-weight: bolder;
-        transition-duration: 0.5s;
-        text-align: justify;
-        margin: 10px;
-        height: 48px;
-
-        &:hover {
-          color: #9c9c9c;
-          text-decoration: none;
-        }
       }
     }
   }
@@ -244,7 +267,7 @@ export default {
   }
 
   .pagination {
-    margin: 0px auto;
+    margin: 2rem auto 0px auto;
     width: fit-content;
   }
 
@@ -253,11 +276,19 @@ export default {
 
     .header {
       width: 100%;
+      box-shadow: 0 0 black;
+
+      h2 {
+        text-align: center;
+      }
 
       .input-custom {
         position: relative;
         width: initial;
         margin: 10px auto;
+        top: 0;
+        right: 0px;
+        transform: initial;
       }
     }
 

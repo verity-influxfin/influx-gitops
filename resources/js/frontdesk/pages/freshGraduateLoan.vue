@@ -28,9 +28,8 @@
           <p>{{item.post_title}}</p>
         </div>
       </div>
-      <router-link class="btn link" to="vlog/?q=loan">
+      <router-link class="btn link" to="vlog?q=loan">
         影音列表
-        <i class="fas fa-external-link-alt"></i>
       </router-link>
     </div>
     <apply
