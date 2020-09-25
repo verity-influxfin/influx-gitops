@@ -35,7 +35,7 @@
             <div class="invert-deatil-container" v-if="investData.length !==0">
               <div class="invert-deatil-card" v-for="(item,index) in investData" :key="index">
                 <div class="card-title">
-                  <img :src="'./images/icon_step_ok_blue.svg'" />
+                  <img :src="'/images/icon_step_ok_blue.svg'" />
                   <span>{{item.target.product_name}} - {{category}}</span>
                 </div>
                 <div>
@@ -51,10 +51,12 @@
                 >{{getText(item)}}</div>
                 <transition name="fade">
                   <div class="detail-card" v-if="showMore">
-                    <div class="label-color">最近一期應收本息（{{item.next_repayment.date}}）</div>
-                    <span
-                      :style="{color:getColor(item.target.delay_days,item.next_repayment.date)}"
-                    >{{format(item.next_repayment.amount)}}元</span>
+                    <div style="margin-bottom: 30px;">
+                      <div class="label-color">最近一期應收本息（{{item.next_repayment.date}}）</div>
+                      <span
+                        :style="{color:getColor(item.target.delay_days,item.next_repayment.date)}"
+                      >{{format(item.next_repayment.amount)}}元</span>
+                    </div>
                     <div style="display:flex">
                       <div class="card-col">
                         <p class="label-color">預期收益總額</p>
@@ -76,12 +78,12 @@
                   v-if="$props.showDetailBtn"
                   @click="send(item.id)"
                 >查看詳情</button>
-                <div style="height:38px">
+                <div style="height:24px">
                   <div class="transfer" v-if="item.transfer_status == 1">
                     <img
-                      :src="item.isLocked ? `./images/icon_lock.svg` : `./images/icon_unlock.svg`"
+                      :src="item.isLocked ? `/images/icon_lock.svg` : `/images/icon_unlock.svg`"
                       class="img-fluid"
-                      style="height: 36px;"
+                      style="height: 26px;"
                     />
                     <span>債權轉換申請中</span>
                   </div>
@@ -374,20 +376,20 @@ export default {
     investData: [],
     infoData: {},
     levelColor: {
-      "1": "#a4d040",
-      "2": "#83bb39",
-      "3": "#6dbea2",
-      "4": "#77afde",
-      "5": "#688edc",
-      "6": "#4569c3",
-      "7": "#f0cb43",
-      "8": "#e1aa41",
-      "9": "#e17528",
-      "10": "#e17528",
-      "11": "#df6362",
-      "12": "#ce2f1c",
-      "13": "#b22821"
-    }
+      1: "#a4d040",
+      2: "#83bb39",
+      3: "#6dbea2",
+      4: "#77afde",
+      5: "#688edc",
+      6: "#4569c3",
+      7: "#f0cb43",
+      8: "#e1aa41",
+      9: "#e17528",
+      10: "#e17528",
+      11: "#df6362",
+      12: "#ce2f1c",
+      13: "#b22821",
+    },
   }),
   watch: {
     "$props.detailData"(newData) {
@@ -400,7 +402,7 @@ export default {
       let target = ["credit_level", "interest_rate", "loan_date"];
       let accounts_receivable = ["principal"];
 
-      this.investData = this.investData.sort(function(a, b) {
+      this.investData = this.investData.sort(function (a, b) {
         if (target.indexOf(newVal) !== -1) {
           if (newVal === "credit_level") {
             return a.target[newVal] > b.target[newVal] ? 1 : -1;
@@ -417,7 +419,7 @@ export default {
           return aLeft < bLeft ? 1 : -1;
         }
       });
-    }
+    },
   },
   methods: {
     format(data) {
@@ -426,9 +428,9 @@ export default {
     },
     returnTypeText(data) {
       let methodText = {
-        "1": "等額本息",
-        "2": "先息後本",
-        "3": "以日計息"
+        1: "等額本息",
+        2: "先息後本",
+        3: "以日計息",
       };
 
       return methodText[data];
@@ -443,7 +445,7 @@ export default {
         day: (dateObj.getDate() < 10 ? "0" : "") + dateObj.getDate(),
         hour: (dateObj.getHours() < 10 ? "0" : "") + dateObj.getHours(),
         min: (dateObj.getMinutes() < 10 ? "0" : "") + dateObj.getMinutes(),
-        sec: (dateObj.getSeconds() < 10 ? "0" : "") + dateObj.getSeconds()
+        sec: (dateObj.getSeconds() < 10 ? "0" : "") + dateObj.getSeconds(),
       };
 
       return `${date_item.year}/${date_item.month}/${date_item.day} ${date_item.hour}:${date_item.min}`;
@@ -572,9 +574,7 @@ export default {
     },
     changeTab($event) {
       $("li.nav-item").removeClass("active");
-      $($event.target)
-        .parent("li")
-        .addClass("active");
+      $($event.target).parent("li").addClass("active");
     },
     showContract(contract, title) {
       this.contractTitle = title;
@@ -587,8 +587,8 @@ export default {
       setTimeout(() => {
         $("body").addClass("modal-open");
       }, 500);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -604,11 +604,10 @@ export default {
   }
 
   .modal-content {
-    background: #feffd1;
-    border: 2px solid rgb(255, 239, 129);
+    background: #f5f5f5;
 
     .btn-close {
-      color: #ffb100;
+      color: #000000;
       position: absolute;
       font-size: 27px;
       font-weight: bolder;
@@ -637,11 +636,11 @@ export default {
       .invert-deatil-card {
         padding: 10px;
         margin: 10px;
-        border-radius: 17px;
-        box-shadow: 0 0 7px #315eff;
+        border-radius: 9px;
+        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
         background: #ffffff;
         float: left;
-        width: 23%;
+        width: calc(25% - 20px);
 
         .card-title {
           color: #000fb1;
@@ -650,14 +649,13 @@ export default {
         }
 
         .detail-card {
-          border-radius: 5px;
-          background: #f4ffd3;
-          padding: 5px;
-          box-shadow: 0 0 4px #ada000;
-          margin: 10px 5px 0px 5px;
+          border-radius: 9.5px;
+          background: #f0fafb;
+          padding: 10px;
+          margin: 10px 5px;
 
           .label-color {
-            color: #757575;
+            color: #98a2b2;
           }
 
           .card-col {
@@ -679,7 +677,7 @@ export default {
           text-align: center;
 
           span {
-            line-height: 36px;
+            line-height: 31px;
             color: #696969;
           }
         }
@@ -754,7 +752,7 @@ export default {
 
         &.open,
         &:hover {
-          border-bottom: 4px solid #fbcdcf;
+          border-bottom: 4px solid #9cc3ea;
 
           a {
             border: 0;
@@ -768,7 +766,7 @@ export default {
         }
 
         &.active {
-          border-bottom: 4px solid #f3565d;
+          border-bottom: 4px solid #083a6e;
           position: relative;
 
           a {
@@ -788,7 +786,7 @@ export default {
       background-color: #fff;
       border: 0;
       border-top: 1px solid #eee;
-      padding: 15px 0;
+      padding-top: 15px;
     }
   }
 
@@ -799,9 +797,9 @@ export default {
   .block {
     padding: 10px;
     border-radius: 14px;
-    box-shadow: 0 0 6px #310bff;
     margin-bottom: 9px;
-    background: #f3f4ff;
+    background: #f5f5f5;
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
 
     div {
       overflow: auto;
@@ -816,10 +814,10 @@ export default {
   .invest-detail-row {
     display: flex;
     border-radius: 5px;
-    box-shadow: 0 0 4px #888888;
     padding: 5px;
-    background: #f3f3f3;
+    background: #f5f5f5;
     margin-bottom: 10px;
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
 
     div {
       padding: 0px 15px;

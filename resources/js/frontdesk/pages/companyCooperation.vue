@@ -51,7 +51,7 @@ export default {
   methods: {
     getBannerData() {
       axios
-        .post("getBannerData", { filter: "companycooperation" })
+        .post(`${location.origin}/getBannerData`, { filter: "companycooperation" })
         .then((res) => {
           this.bannerData = res.data;
         });
@@ -60,7 +60,7 @@ export default {
       data["type"] = "company";
 
       axios
-        .post("action", data)
+        .post(`${location.origin}/action`, data)
         .then((res) => {
           this.componentKey += 1;
           this.errorMessage = "";

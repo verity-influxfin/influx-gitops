@@ -1,70 +1,80 @@
 <template>
   <div class="closedcase-wrapper">
     <div class="no-data" v-if="groupList.length === 0">
-      <img :src="'./images/invest_empty.svg'" class="img-fluid" />
+      <img src="../asset/images/empty.svg" class="img-fluid" />
       <a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">目前沒有投資標的，點我立即前往 >></a>
     </div>
     <div id="accordion" role="tablist" v-else>
+      <div class="c-title">
+        <div class="p-type">案件類型</div>
+        <div class="p-count">案件件數</div>
+        <div class="p-total">應收本金</div>
+      </div>
       <div class="card" v-for="(product,key) in groupList" :key="key">
         <div
-          class="card-header product-card-header collapsed"
-          role="button"
+          class="header collapsed"
           data-parent="#accordion"
           data-toggle="collapse"
           :data-target="`#collapse${key}`"
-          aria-expanded="true"
+          aria-expanded="false"
         >
-          <div class="float-left header-title">
-            <div class="gap item1">{{product}}</div>
-            <div class="gap count item2">{{finishedData[product].length}}件</div>
-            <div class="gap item3">
-              應收本金
-              <span class="total">${{getTotal(finishedData[product])}}</span>
+          <div class="h-t">
+            <div class="p-type">{{product}}</div>
+            <div class="p-count">{{finishedData[product].length}}件</div>
+            <div class="p-total">
+              <!-- <span>應收本金</span> -->
+              <span>${{getTotal(finishedData[product])}}</span>
             </div>
           </div>
+          <span class="accicon">
+            <i class="fas fa-angle-down rotate-icon"></i>
+          </span>
         </div>
         <div :id="`collapse${key}`" class="collapse" data-parent="#accordion">
-          <div class="card-body">
-            <div v-for="(item,age) in groupByAge(finishedData[product])" :key="age">
-              <div v-if="item.length !==0">
-                <div
-                  class="card-header age-card-header collapsed"
-                  role="button"
-                  :data-parent="`#collapse${key}`"
-                  data-toggle="collapse"
-                  :data-target="`#collapse${age}`"
-                  aria-expanded="true"
-                >
-                  <div class="float-left header-title">
-                    <div class="gap item1">{{ageTextList[age]}}</div>
-                    <div class="gap count item2">{{item.length}}件</div>
-                    <div class="gap item3">
-                      應收本金
-                      <span class="total">${{getTotal(item)}}</span>
-                    </div>
+          <template v-for="(item,age) in groupByAge(finishedData[product])">
+            <div class="mc-body" v-if="item.length !==0" :key="age">
+              <div
+                class="m-header collapsed"
+                :data-parent="`#collapse${key}`"
+                data-toggle="collapse"
+                :data-target="`#collapse${age}`"
+                aria-expanded="false"
+              >
+                <div class="h-t">
+                  <div class="p-type">{{ageTextList[age]}}</div>
+                  <div class="p-count">{{item.length}}件</div>
+                  <div class="p-total">
+                    <!-- <span>應收本金</span> -->
+                    <span>${{getTotal(item)}}</span>
                   </div>
                 </div>
-                <div :id="`collapse${age}`" class="collapse" :data-parent="`collapse${key}`">
-                  <div class="card-body">
-                    <div v-for="(row,type) in groupByType(item)" :key="type">
-                      <div
-                        class="group-row"
-                        v-if="item.length !==0"
-                        @click="showCases(row,typeTextList[type])"
-                      >
-                        <div class="gap item1">{{typeTextList[type]}}</div>
-                        <div class="gap count item2">{{row.length}}件</div>
-                        <div class="gap item3">
-                          回收總額
+                <span class="accicon">
+                  <i class="fas fa-angle-down rotate-icon"></i>
+                </span>
+              </div>
+              <div :id="`collapse${age}`" class="collapse" :data-parent="`collapse${key}`">
+                <div class="c-body">
+                  <template v-for="(row,type) in groupByType(item)">
+                    <div
+                      class="case-row"
+                      v-if="item.length !==0"
+                      @click="showCases(row,typeTextList[type])"
+                      :key="type"
+                    >
+                      <div class="d-bg">
+                        <div class="p-type">{{typeTextList[type]}}</div>
+                        <div class="p-count">{{row.length}}件</div>
+                        <div class="p-total">
+                          <!-- <span>回收總額</span> -->
                           <span class="total">${{getTotal(row)}}</span>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </template>
                 </div>
               </div>
             </div>
-          </div>
+          </template>
         </div>
       </div>
     </div>
@@ -73,8 +83,8 @@
 
 <script>
 // groupby
-Array.prototype.groupBy = function(key1, key2 = "") {
-  return this.reduce(function(groups, item) {
+Array.prototype.groupBy = function (key1, key2 = "") {
+  return this.reduce(function (groups, item) {
     const val = key2 ? item[key1][key2] : item[key1];
     groups[val] = groups[val] || [];
     groups[val].push(item);
@@ -86,7 +96,7 @@ import investDeatil from "../component/investDetailComponent";
 
 export default {
   components: {
-    investDeatil
+    investDeatil,
   },
   data: () => ({
     category: "",
@@ -98,16 +108,19 @@ export default {
       observed: "觀察案",
       attention: "關注案",
       secondary: "次級案",
-      bad: "不良案"
+      bad: "不良案",
     },
     typeTextList: {
       normal: "正常",
       advance: "提前清償",
       transfer: "產品轉換",
-      sell: "債權出讓"
-    }
+      sell: "債權出讓",
+    },
   }),
   created() {
+    this.$parent.pageIcon = "/images/icon_closed_b.svg";
+    this.$parent.pageTitle = "結案總攬";
+    this.$parent.pagedesc = "您已結案的債權";
     this.getFinishedData();
   },
   methods: {
@@ -117,8 +130,8 @@ export default {
     },
     getFinishedData() {
       axios
-        .post("getRecoveriesFinished")
-        .then(res => {
+        .post(`${location.origin}/getRecoveriesFinished`)
+        .then((res) => {
           this.finishedData = res.data.data.list.groupBy(
             "target",
             "product_id"
@@ -126,7 +139,7 @@ export default {
 
           this.groupList = Object.keys(this.finishedData);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("getRecoveriesFinished 發生錯誤，請稍後再試");
         });
     },
@@ -211,107 +224,90 @@ export default {
     showCases(data, category) {
       this.detailData = data;
       this.category = category;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .closedcase-wrapper {
-  margin-right: 10px;
-  padding: 10px;
-  box-shadow: 0 0 5px #848484;
-  border-radius: 10px;
-  background: #efefef;
+  width: 73%;
+  margin: 0px auto;
+  padding: 25px 35px;
 
   #accordion {
-    .card {
-      margin-bottom: 20px;
-
-      .product-card-header {
-        background: linear-gradient(45deg, #0014ff, #7cc3ff);
-        color: #ffffff;
-        font-weight: bolder;
-        cursor: pointer;
-
-        .header-title {
-          .count {
-            color: #ffa500;
-            text-decoration: underline;
-          }
-
-          .total {
-            color: #000000;
-            margin-left: 5px;
-            float: right;
-          }
-        }
-      }
-
-      .age-card-header {
-        background: linear-gradient(45deg, #9b5cff, #fdddff);
-        color: #ffffff;
-        font-weight: bolder;
-        cursor: pointer;
-        overflow: auto;
-
-        .header-title {
-          .count {
-            color: #ffa500;
-            text-decoration: underline;
-          }
-
-          .total {
-            color: #000000;
-            margin-left: 5px;
-            float: right;
-          }
-        }
-      }
-
-      .group-row {
-        border-bottom: 2px solid #12a700;
-        padding: 10px 0px;
-        cursor: pointer;
-        font-weight: bolder;
-        overflow: auto;
-
-        &:hover {
-          background: #c1c1c1;
-        }
-
-        span {
-          margin: 0px 10px;
-        }
-
-        .count {
-          color: #ffa500;
-          text-decoration: underline;
-        }
-
-        .total {
-          color: #000000;
-          margin-left: 5px;
-          float: right;
-        }
-      }
-    }
-
-    .gap {
-      margin: 0px 20px;
-      float: left;
-    }
-
-    .item1 {
-      width: 100px;
-    }
-
-    .item2 {
-      width: 70px;
-    }
-
-    .item3 {
+    .p-type {
       width: 200px;
+    }
+    .p-count {
+      width: 200px;
+    }
+    .p-total {
+      width: 200px;
+      /* display: flex; */
+      /* justify-content: space-between; */
+      text-align: end;
+    }
+
+    .c-title {
+      background-color: #37bbc6;
+      color: #ffffff;
+      display: flex;
+      padding: 15px;
+    }
+
+    .card {
+      margin: 5px 0px;
+      border: 0px;
+      border-radius: 0px;
+
+      .m-header {
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+
+        .h-t {
+          display: flex;
+        }
+      }
+
+      .header {
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        cursor: pointer;
+
+        .h-t {
+          display: flex;
+        }
+      }
+
+      .case-row {
+        padding: 5px;
+        margin: 5px;
+        border-top: 2px dashed #b3b3b3;
+
+        .d-bg {
+          padding: 5px;
+          display: flex;
+          color: #083a6e;
+
+          &:hover {
+            background: #f5f5f5;
+          }
+        }
+      }
+
+      .close-row {
+        display: flex;
+        padding: 15px;
+      }
+
+      .mc-body {
+        border-top: 2px solid #d2d2d2;
+      }
     }
   }
 
@@ -333,48 +329,38 @@ export default {
       color: #ff1212;
     }
   }
+}
 
-  @media screen and (max-width: 767px) {
+@media screen and (max-width: 767px) {
+  .closedcase-wrapper {
+    width: 100%;
+    padding: 10px;
+
     .no-data {
-      width: auto;
-
-      a {
-        font-size: 16px;
-      }
+      padding: 10px;
+      width: 100%;
     }
+
     #accordion {
-      .header-title {
-        display: flex;
+      .p-type {
+        width: 120px;
+      }
+      .p-count {
+        width: 70px;
+      }
+      .p-total {
+        width: 120px;
+        /* display: flex; */
+        /* justify-content: space-between; */
+        text-align: end;
+      }
 
-        .item1 {
-          width: 75px;
+      .card {
+        .header {
+          .h-t {
+            width: 100%;
+          }
         }
-      }
-
-      .group-row {
-        .item1 {
-          width: 70px;
-        }
-
-        .item2{
-          width: 40px;
-        }
-      }
-
-      .gap {
-        margin: 0px;
-      }
-
-      .item1 {
-        width: 100px;
-      }
-
-      .item2 {
-        width: 50px;
-      }
-
-      .item3 {
-        width: 150px;
       }
     }
   }

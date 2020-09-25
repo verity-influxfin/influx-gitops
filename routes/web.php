@@ -98,6 +98,8 @@ Route::post('/getRecoveriesFinished', 'Membercentrecontroller@getRecoveriesFinis
 
 Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
+Route::get('/downloadStatement', 'Membercentrecontroller@downloadStatement');
+
 
 // backstage
 

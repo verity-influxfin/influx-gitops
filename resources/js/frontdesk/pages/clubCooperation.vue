@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "clubcooperation" }).then((res) => {
+      axios.post(`${location.origin}/getBannerData`, { filter: "clubcooperation" }).then((res) => {
         this.bannerData = res.data;
       });
     },
@@ -53,7 +53,7 @@ export default {
       data["type"] = "club";
 
       axios
-        .post("action", data)
+        .post(`${location.origin}/action`, data)
         .then((res) => {
           this.componentKey += 1;
           this.errorMessage = "";

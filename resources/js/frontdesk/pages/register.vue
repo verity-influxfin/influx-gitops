@@ -1,99 +1,106 @@
 <template>
   <div class="register-wrapper">
     <div class="register-dialog">
-      <div class="dialog-header">
-        <router-link to="/index" class="header-img">
-          <img :src="'./images/logo.png'" class="img-fluid" />
-        </router-link>
+      <div class="ic">
+        <h3>會員註冊</h3>
       </div>
-      <div v-if="isRegisterSuccess">
-        <div class="dialog-success">
-          <p>註冊成功！</p>
-          <p>請至APP平台完成認證開始實現你的目標吧！</p>
-          <router-link class="btn btn-primary fa-pull-right" to="/index">回首頁</router-link>
-          <a
-            class="btn btn-success fa-pull-left"
-            href="https://event.influxfin.com/R/url?p=webbanner"
-            target="_blank"
-          >點我前往</a>
+      <div class="re-form">
+        <div class="dialog-header">
+          <router-link to="index" class="header-img">
+            <img :src="'/images/logo.png'" class="img-fluid" />
+          </router-link>
         </div>
-      </div>
-      <div v-else>
-        <div class="dialog-content">
-          <div class="input-group">
-            <span class="input-group-addon label-text">手機：</span>
-            <input
-              type="text"
-              class="form-control label-input"
-              placeholder="請輸入手機號碼"
-              v-model="phone"
-              maxlength="10"
-            />
+        <template v-if="isRegisterSuccess">
+          <div class="dialog-success">
+            <p>註冊成功！</p>
+            <p>請至APP平台完成認證開始實現你的目標吧！</p>
+            <div class="link-box">
+              <a
+                class="btn btn-go"
+                href="https://event.influxfin.com/R/url?p=webbanner"
+                target="_blank"
+              >點我前往</a>
+              <router-link class="btn btn-home" to="/index">回首頁</router-link>
+            </div>
           </div>
-          <div class="input-group">
-            <span class="input-group-addon label-text">密碼：</span>
-            <input
-              type="password"
-              class="form-control label-input"
-              placeholder="請輸入密碼"
-              v-model="password"
-            />
-          </div>
-          <div class="input-group">
-            <span class="input-group-addon label-text">確認密碼：</span>
-            <input
-              type="password"
-              class="form-control label-input"
-              placeholder="請再次輸入密碼"
-              v-model="confirmPassword"
-            />
-          </div>
-          <div class="input-group">
-            <span class="input-group-addon label-text">驗證碼：</span>
-            <div class="captcha-row">
+        </template>
+        <template v-else>
+          <div class="dialog-content">
+            <div class="input-group">
+              <span class="input-group-addon label-text">手機：</span>
               <input
                 type="text"
                 class="form-control label-input"
-                placeholder="請輸入6位數驗證碼"
-                v-model="code"
-                maxlength="6"
+                placeholder="請輸入手機號碼"
+                v-model="phone"
+                maxlength="10"
               />
-              <button
-                class="btn btn-captcha"
-                @click="getCaptcha('registerphone')"
-                v-if="!isSended"
-              >取得驗證碼</button>
-              <div class="btn btn-disable" v-if="isSended">{{counter}}S有效</div>
-              <span class="tip" v-if="isSended">驗證碼已寄出</span>
             </div>
-          </div>
-          <div class="input-group">
-            <div class="chiller_cb" style="margin:0px auto">
+            <div class="input-group">
+              <span class="input-group-addon label-text">密碼：</span>
               <input
-                id="confirmTerms"
-                type="checkbox"
-                @click="isAgree = !isAgree"
-                :checked="isAgree"
+                type="password"
+                class="form-control label-input"
+                placeholder="請輸入密碼"
+                v-model="password"
               />
-              <label for="confirmTerms" class="block"></label>
-              <span></span>
-              <div class="row">
-                我同意
-                <div class="terms" @click="getTerms('user')">貸款人服務條款</div>、
-                <div class="terms" @click="getTerms('privacy_policy')">隱私權條款</div>
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon label-text">確認密碼：</span>
+              <input
+                type="password"
+                class="form-control label-input"
+                placeholder="請再次輸入密碼"
+                v-model="confirmPassword"
+              />
+            </div>
+            <div class="input-group">
+              <span class="input-group-addon label-text">驗證碼：</span>
+              <div class="captcha-row" style="display:flex">
+                <input
+                  type="text"
+                  class="form-control label-input"
+                  placeholder="請輸入驗證碼"
+                  v-model="code"
+                  maxlength="6"
+                />
+                <button
+                  class="btn btn-captcha"
+                  @click="getCaptcha('registerphone')"
+                  v-if="!isSended"
+                >取得驗證碼</button>
+                <div class="btn btn-disable" v-if="isSended">{{counter}}S有效</div>
+                <span class="tip" v-if="isSended">驗證碼已寄出</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="chiller_cb" style="margin:0px auto">
+                <input
+                  id="confirmTerms"
+                  type="checkbox"
+                  @click="isAgree = !isAgree"
+                  :checked="isAgree"
+                />
+                <label for="confirmTerms" class="block"></label>
+                <span></span>
+                <div class="row">
+                  我同意
+                  <div class="terms" @click="getTerms('user')">貸款人服務條款</div>、
+                  <div class="terms" @click="getTerms('privacy_policy')">隱私權條款</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="message" v-if="message">{{message}}</div>
-        <div class="dialog-footer">
-          <div
-            v-if="(phone && password && confirmPassword && code && isAgree) ? false : true"
-            class="btn btn-disable"
-            disable
-          >送出</div>
-          <button type="button" v-else class="btn btn-submit" @click="doRegister">送出</button>
-        </div>
+          <div class="message" v-if="message">{{message}}</div>
+          <div class="dialog-footer">
+            <div
+              v-if="(phone && password && confirmPassword && code && isAgree) ? false : true"
+              class="btn btn-disable"
+              disable
+            >送出</div>
+            <button type="button" v-else class="btn btn-submit" @click="doRegister">送出</button>
+          </div>
+        </template>
       </div>
     </div>
     <div
@@ -134,21 +141,14 @@ export default {
     termsContent: "",
     message: "",
     timer: null,
-    counter: 180
+    counter: 180,
   }),
   created() {
     this.isRegisterSuccess = false;
     $("title").text(`註冊帳號 - inFlux普匯金融科技`);
   },
   mounted() {
-    this.$nextTick(() => {
-      $(".page-header").hide();
-      $(".page-footer").hide();
-      $(".back-top").hide();
-      $(".afc_popup").hide();
-      $(".blog-quiklink").hide();
-      $(this.$root.$refs.banner).hide();
-    });
+    this.$nextTick(() => {});
   },
   watch: {
     phone(newdata) {
@@ -156,7 +156,7 @@ export default {
     },
     code(newdata) {
       this.code = newdata.replace(/[^\d]/g, "");
-    }
+    },
   },
   methods: {
     getCaptcha(type) {
@@ -170,15 +170,15 @@ export default {
       this.counter = 180;
 
       axios
-        .post("getCaptcha", { phone, type })
-        .then(res => {
+        .post(`${location.origin}/getCaptcha`, { phone, type })
+        .then((res) => {
           this.isSended = true;
           this.registerMessage = "";
           this.timer = setInterval(() => {
             this.reciprocal();
           }, 1000);
         })
-        .catch(error => {
+        .catch((error) => {
           let errorsData = error.response.data;
           this.pwdMessage = `${
             this.$store.state.smsErrorCode[errorsData.error]
@@ -189,15 +189,15 @@ export default {
       let $this = this;
 
       axios
-        .post("getTerms", { termsType })
-        .then(res => {
+        .post(`${location.origin}/getTerms`, { termsType })
+        .then((res) => {
           let { content, name } = res.data.data;
           this.termsContent = content;
           this.termsTitle = name;
 
           $(this.$refs.termsForm).modal("show");
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("getTerms 發生錯誤，請稍後再試");
         });
     },
@@ -208,11 +208,16 @@ export default {
       let code = this.code;
 
       axios
-        .post("doRegister", { phone, password, password_confirmation, code })
-        .then(res => {
+        .post(`${location.origin}/doRegister`, {
+          phone,
+          password,
+          password_confirmation,
+          code,
+        })
+        .then((res) => {
           this.isRegisterSuccess = true;
         })
-        .catch(error => {
+        .catch((error) => {
           let errorsData = error.response.data;
           if (errorsData.message) {
             let messages = [];
@@ -237,144 +242,198 @@ export default {
         alert("驗證碼失效，請重新申請");
         location.reload();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .register-wrapper {
   position: relative;
-  height: 100vh;
-  background: linear-gradient(180deg, #619eff, #adcdff);
-  font-family: Arial, "微軟正黑體", "Helvetica Neue", Helvetica, sans-serif;
+  height: 90vh;
 
   .register-dialog {
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
     position: absolute;
-    width: 35%;
+    width: 60%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: #ffffff;
-    padding: 10px;
-    border-radius: 50px;
-    box-shadow: 0 0 9px black;
+    display: flex;
 
-    .dialog-header {
-      width: 35%;
-      margin: 0px auto;
-      margin-bottom: 20px;
-    }
+    .ic {
+      background-image: url("../asset/images/4058371.png");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: 50%;
+      position: relative;
 
-    .dialog-success {
-      width: 80%;
-      margin: 20px auto;
-      text-align: center;
-      color: #6d6d6d;
-      font-size: 18px;
-      font-weight: bolder;
-    }
-
-    .dialog-content {
-      width: 80%;
-      margin: 20px auto;
-
-      .input-group {
-        margin: 10px;
-        width: auto;
-      }
-
-      .label-text {
-        line-height: 30px;
-        background-color: #ffffff00 !important;
-        border: none !important;
-        border-radius: 0px !important;
-        text-align: end !important;
-        width: 80px;
-      }
-
-      .label-input {
-        border-radius: 39px;
-        font-size: 14px;
-        height: 30px;
-      }
-
-      .btn-captcha {
-        background: #00adff;
-        border-radius: 50px;
-        line-height: 15px;
+      h3 {
+        font-size: 36px;
+        font-weight: 600;
         color: #ffffff;
-        font-size: 16px;
-        margin-left: 20px;
-        width: 175px;
-
-        &:hover {
-          background: #0040d0;
-        }
-      }
-
-      .btn-disable {
-        border-radius: 50px;
-        width: 175px;
-        height: 30px;
-        line-height: 15px;
-        font-size: 18px;
-        background: #d5d5d5;
-        color: #969696;
-        cursor: default;
-        margin-left: 20px;
-      }
-
-      .terms {
-        color: #0072ff;
-        text-decoration: underline;
-        cursor: pointer;
-      }
-
-      .tip {
         position: absolute;
-        bottom: -17px;
-        right: 13px;
-        font-size: small;
-        color: red;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
 
-    .dialog-footer {
-      text-align: center;
-      margin: 10px 0px;
+    .re-form {
+      width: 50%;
+      height: 478px;
+      margin: 5rem 0px;
+      padding: 20px;
 
       %basic {
         border-radius: 50px;
-        width: 60%;
         height: 30px;
         line-height: 19px;
         font-size: 18px;
         font-weight: bolder;
       }
 
-      .btn-submit {
-        @extend %basic;
-        background: #005aff;
-        color: #ffffff;
+      .dialog-header {
+        width: 35%;
+        margin: 0px auto;
+        margin-bottom: 20px;
+      }
 
-        &:hover {
-          background: #003cab;
+      .dialog-success {
+        margin: 20px 0px;
+        text-align: center;
+        color: #000000;
+        font-size: 16px;
+        font-weight: bolder;
+
+        .link-box {
+          width: 80%;
+          margin: 30px auto;
+          display: flex;
+          justify-content: space-between;
+
+          .btn-go {
+            @extend %basic;
+            width: 40%;
+            border: solid 0.5px #083a6e;
+            background: #083a6e;
+            color: #ffffff;
+
+            &:hover {
+              background: #ffffff;
+              color: #083a6e;
+            }
+          }
+
+          .btn-home {
+            @extend %basic;
+            width: 40%;
+            border: solid 0.5px #083a6e;
+            color: #083a6e;
+
+            &:hover {
+              background: #083a6e;
+              color: #ffffff;
+            }
+          }
         }
       }
 
-      .btn-disable {
-        @extend %basic;
-        background: #d5d5d5;
-        color: #969696;
-        cursor: default;
-      }
-    }
+      .dialog-content {
+        margin: 20px auto;
 
-    .captcha-row {
-      position: relative;
-      display: flex;
-      width: 79%;
+        .input-group {
+          margin: 25px 10px;
+          width: auto;
+        }
+
+        .label-text {
+          line-height: 30px;
+          background-color: #ffffff00 !important;
+          border: none !important;
+          border-radius: 0px !important;
+          text-align: end !important;
+          width: 80px;
+        }
+
+        .label-input {
+          font-size: 14px;
+          height: 30px;
+        }
+
+        .captcha-row {
+          display: flex;
+          width: 290px;
+        }
+
+        .btn-captcha {
+          background: #083a6e;
+          border-radius: 50px;
+          line-height: 15px;
+          color: #ffffff;
+          font-size: 16px;
+          margin-left: 20px;
+          width: 190px;
+
+          &:hover {
+            background: #0040d0;
+          }
+        }
+
+        .btn-disable {
+          border-radius: 50px;
+          width: 190px;
+          height: 30px;
+          line-height: 15px;
+          font-size: 18px;
+          background: #d5d5d5;
+          color: #969696;
+          cursor: default;
+          margin-left: 20px;
+        }
+
+        .terms {
+          color: #0072ff;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+
+        .tip {
+          position: absolute;
+          bottom: -17px;
+          right: 13px;
+          font-size: small;
+          color: red;
+        }
+      }
+
+      .dialog-footer {
+        text-align: center;
+        margin: 10px 0px;
+
+        .btn-submit {
+          @extend %basic;
+          width: 60%;
+          border: solid 0.5px #083a6e;
+          color: #083a6e;
+
+          &:hover {
+            background: #083a6e;
+            color: #ffffff;
+          }
+        }
+
+        .btn-disable {
+          @extend %basic;
+          width: 60%;
+          background: #d5d5d5;
+          color: #969696;
+          cursor: default;
+        }
+      }
     }
   }
 
@@ -401,10 +460,27 @@ export default {
     font-weight: bolder;
     margin-top: 20px;
   }
+}
 
-  @media screen and (max-width: 767px) {
+@media screen and (max-width: 767px) {
+  .register-wrapper {
+    height: 95vh;
+
     .register-dialog {
-      width: 98%;
+      width: fit-content;
+      margin: 0px;
+      flex-direction: column;
+
+      .ic {
+        width: initial;
+        height: 200px;
+      }
+
+      .re-form {
+        width: initial;
+        height: initial;
+        margin: 1rem;
+      }
 
       .dialog-content {
         width: 100%;

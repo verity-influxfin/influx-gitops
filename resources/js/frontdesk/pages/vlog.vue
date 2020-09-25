@@ -1,33 +1,34 @@
 <template>
-  <div class="vlog-wrapper">
+  <div class="vlog-wrapper" id="vlog-wrapper">
     <div class="header">
-      <h2 v-if="$route.params.category === 'share'">小學堂影音</h2>
-      <h2 v-if="$route.params.category === 'invest'">投資人專訪</h2>
-      <h2 v-if="$route.params.category === 'loan'">借款人專訪</h2>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: 75%"
-          aria-valuenow="75"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
+      <h2 v-if="category == 'share'">小學堂影音</h2>
+      <h2 v-if="category == 'invest'">投資人專訪</h2>
+      <h2 v-if="category == 'loan'">借款人專訪</h2>
       <div class="input-custom">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
+        <input type="text" class="form-control" placeholder="Search" v-model="filter" />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
-    <ul class="video-content" ref="content"></ul>
-    <div class="pagination" ref="pagination"></div>
+    <template v-if="filterVideo.length === 0">
+      <div class="empty">
+        <div class="empty-img">
+          <img src="../asset/images/empty.svg" class="img-fluid" />
+        </div>
+        <h3>沒有結果</h3>
+        <p>根據您的搜索，我們似乎找不到結果</p>
+      </div>
+    </template>
+    <template v-else>
+      <ul class="video-content" ref="content"></ul>
+      <div class="pagination" ref="pagination"></div>
+    </template>
   </div>
 </template>
 
 <script>
 let postRow = Vue.extend({
-  props: ["item"],
+  props: ["item", "category"],
   template: `
     <li class="video">
       <div class="video-iframe">
@@ -38,46 +39,47 @@ let postRow = Vue.extend({
           allowfullscreen
         ></iframe>
       </div>
-      <div class="video-info">
-        <h5>{{item.post_title}}</h5>
+      <div class="chunk">
+        <p class="title">{{item.post_title}}</p>
         <a
           v-if="item.type === 'video'"
-          :href="'#/videopage/'+item.ID"
-          class="btn btn-link"
-        >閱讀內容</a>
+          :href="'/videopage/?&q=' + item.ID +'&category='+$props.category"
+          class="read"
+        >閱讀更多<img src="/images/a_arrow.png"></a>
         <a
           v-if="item.category === 'loan'"
           href="https://event.influxfin.com/R/url?p=webbanner"
           target="_blank"
-          class="btn btn-warning"
+          class="loan"
         >立即借款</a>
         <a
           v-if="item.category === 'invest'"
           href="https://event.influxfin.com/r/iurl?p=webinvest"
           target="_blank"
-          class="btn btn-primary"
+          class="invest"
         >立即投資</a>
         <a
           v-if="item.category === 'sponsor'"
           href="https://docs.google.com/forms/d/1Pp02TNm2wtWZdUwJpuW1J_ZCjx2QR_h8pgU5PNiE6ks/viewform?edit_requested=true"
           target="_blank"
-          class="btn btn-success"
+          class="sponsor"
         >贊助申請</a>
       </div>
     </li>
-  `
+  `,
 });
 
 export default {
   data: () => ({
     filter: "",
     pageHtml: "",
-    filterVideo: []
+    category: "",
+    filterVideo: [],
   }),
   computed: {
     video() {
       return this.$store.getters.VideoData;
-    }
+    },
   },
   watch: {
     $route(to, from) {
@@ -94,8 +96,11 @@ export default {
           this.filterVideo.push(row);
         }
       });
+    },
+    filterVideo() {
+      window.dispatchEvent(new Event("resize"));
       this.pagination();
-    }
+    },
   },
   created() {
     this.refresh();
@@ -103,14 +108,16 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
       AOS.init();
+      particlesJS.load("vlog-wrapper", `${location.origin}/data/mobile.json`);
     });
   },
   methods: {
-    refresh() {
-      let category = this.$route.params.category;
-      this.$store.dispatch("getVideoData", { category });
+    refresh(category) {
+      let urlParams = new URLSearchParams(window.location.search);
+      console.log(urlParams);
+      this.category = urlParams.get("q");
+      this.$store.dispatch("getVideoData", { category: this.category });
     },
     pagination() {
       let $this = this;
@@ -123,43 +130,63 @@ export default {
             data.forEach((item, index) => {
               let component = new postRow({
                 propsData: {
-                  item
-                }
+                  item,
+                  category: $this.category,
+                },
               }).$mount();
 
               $($this.$refs.content).append(component.$el);
             });
-          }
+          },
         });
+
+        window.dispatchEvent(new Event("resize"));
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .vlog-wrapper {
   padding: 30px;
-  overflow: auto;
+  overflow: hidden;
   width: 100%;
+  position: relative;
 
-  .progress {
-    height: 4px;
+  .particles-js-canvas-el {
+    position: absolute;
+    top: 0;
+    z-index: -1;
   }
 
   .header {
     width: 80%;
     margin: 20px auto;
     position: relative;
+    padding: 10px 20px;
+    border-radius: 40px;
+    box-shadow: 0 2px 5px 0 #6ab0f2;
+    background-color: #ffffff;
+
+    h2 {
+      font-weight: bolder;
+      color: #061164;
+      margin: 0px;
+    }
 
     .input-custom {
       width: 300px;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 50%;
+      right: 25px;
+      transform: translate(0px, -50%);
 
       .form-control {
         padding: 5px 35px;
+        border: 0px;
+        border-bottom: 1px solid #061164;
+        border-radius: 0px;
       }
 
       %iStyle {
@@ -167,8 +194,7 @@ export default {
         top: 50%;
         transform: translate(0, -50%);
         font-size: 20px;
-        color: #002bff;
-        text-shadow: 0 0 4px #002bff;
+        color: #083a6e;
       }
 
       .fa-search {
@@ -185,12 +211,26 @@ export default {
   }
 
   .pagination {
-    margin: 0px auto;
+    margin: 2rem auto 0px auto;
     width: fit-content;
   }
 
+  .empty {
+    text-align: center;
+    margin: 30px auto;
+
+    .empty-img {
+      width: 200px;
+      margin: 20px auto;
+    }
+
+    h3 {
+      font-weight: bold;
+    }
+  }
+
   .video-content {
-    width: 75%;
+    width: 80%;
     overflow: auto;
     margin: 0px auto;
     padding: 0px;
@@ -198,38 +238,68 @@ export default {
     .video {
       margin: 10px;
       float: left;
-      width: 48%;
+      width: calc(100% / 3 - 20px);
       list-style: none;
+      box-shadow: 0 2px 5px 0 #6ab0f2;
+      background: #ffffff;
 
       .video-iframe {
         iframe {
           width: 100%;
-          height: 300px;
+          height: 210px;
+        }
+      }
+
+      .chunk {
+        padding: 10px;
+
+        .title {
+          font-size: 20px;
+          color: #061164;
+          font-weight: 900;
+          font-size: 16px;
+          height: 48px;
+        }
+
+        .read {
+          color: #8629a5;
+        }
+
+        .loan {
+          color: #ffc107;
+        }
+
+        .invest {
+          color: #4172fd;
+        }
+
+        .sponsor {
+          color: #177300;
+        }
+
+        a {
+          display: block;
+          font-weight: bolder;
+          transition-duration: 0.5s;
+          text-align: center;
+
+          &:hover {
+            filter: hue-rotate(30deg);
+            text-decoration: none;
+          }
         }
       }
 
       .video-info {
         margin: 10px;
         text-align: center;
+        overflow: hidden;
 
         h5 {
           text-align: initial;
-        }
-
-        a {
-          width: 100%;
-        }
-
-        .btn-link {
-          background: #0072ff;
-          transition-duration: 0.5s;
-          color: #ffffff;
+          font-size: 16px;
           font-weight: bolder;
-
-          &:hover {
-            background: #ff7818;
-            text-decoration: none;
-          }
+          height: 38px;
         }
       }
     }
@@ -240,11 +310,15 @@ export default {
 
     .header {
       width: 100%;
+      box-shadow: 0 0 black;
 
       .input-custom {
         width: 100%;
         position: relative;
         margin: 10px auto;
+        top: 0;
+        right: 0px;
+        transform: initial;
       }
     }
 
@@ -252,7 +326,8 @@ export default {
       width: 100%;
 
       .video {
-        width: initial;
+        width: 100%;
+        margin: 10px 0px;
 
         .video-iframe {
           iframe {

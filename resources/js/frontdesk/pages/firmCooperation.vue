@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post("getBannerData", { filter: "firmcooperation" }).then((res) => {
+      axios.post(`${location.origin}/getBannerData`, { filter: "firmcooperation" }).then((res) => {
         this.bannerData = res.data;
       });
     },

@@ -1,7 +1,7 @@
 export default {
     async getExperiencesData({ commit },type =''){
         try{
-            let res = await axios.post('getExperiencesData',{type});
+            let res = await axios.post(`${location.origin}/getExperiencesData`,{type});
             commit('mutationExperiencesData',res.data);
         } catch(error){
             console.error('getExperiencesData 發生錯誤');
@@ -9,7 +9,7 @@ export default {
     },
     async getKnowledgeData({ commit }){
         try{
-            let res = await axios.post('getKnowledgeData');
+            let res = await axios.post(`${location.origin}/getKnowledgeData`);
             commit('mutationKnowledgeData',res.data);
         } catch(error){
             console.error('getKnowledgeData 發生錯誤');
@@ -17,7 +17,7 @@ export default {
     },
     async getVideoData({ commit },params){
         try{
-            let res = await axios.post('getVideoData',{filter:params.category});
+            let res = await axios.post(`${location.origin}/getVideoData`,{filter:params.category});
             commit('mutationVideoData',res.data);
         } catch(error){
             console.error('getVideoData 發生錯誤');
@@ -25,7 +25,7 @@ export default {
     },
     async getNewsData({ commit }){
         try{
-            let res = await axios.post('getNewsData');
+            let res = await axios.post(`${location.origin}/getNewsData`);
             commit('mutationNewsData',res.data);
         } catch(error){
             console.error('getNewsData 發生錯誤');
@@ -33,7 +33,7 @@ export default {
     },
     async getRepaymentList({ commit }){
         try{
-            let res = await axios.post('getRepaymentList');
+            let res = await axios.post(`${location.origin}/getRepaymentList`);
             commit('mutationRepaymentData',res.data);
         } catch(error){
             console.error('getRepaymentList 發生錯誤');
@@ -41,7 +41,7 @@ export default {
     },
     async getMyInvestment({ commit }){
         try{
-            let res = await axios.get('getMyInvestment');
+            let res = await axios.get(`${location.origin}/getMyInvestment`);
             commit('mutationInvestmentData',res.data);
         } catch(error){
             console.error('getMyInvestment 發生錯誤');

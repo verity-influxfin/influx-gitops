@@ -35,7 +35,7 @@
         </template>
         <template v-else>
           <div id="loan" class="qa-wrapper">
-            <h2>借款常見問題</h2>
+            <h2>借款相關</h2>
             <div class="qa-accordion" id="qa_contentloanData">
               <div class="card" v-for="(item,index) in borrow" :key="index">
                 <div
@@ -72,7 +72,7 @@
             </div>
           </div>
           <div id="invest" class="qa-wrapper">
-            <h2>投資常見問題</h2>
+            <h2>投資相關</h2>
             <div class="qa-accordion" id="qa_contentinvestData">
               <div class="card" v-for="(item,index) in invest" :key="index">
                 <div
@@ -109,7 +109,7 @@
             </div>
           </div>
           <div id="afterLoan" class="qa-wrapper">
-            <h2>貸後常見問題</h2>
+            <h2>還款相關</h2>
             <div class="qa-accordion" id="qa_contentafterLoanDataData">
               <div class="card" v-for="(item,index) in this.default" :key="index">
                 <div
@@ -149,7 +149,7 @@
       </template>
       <template v-else>
         <div id="loan" class="qa-wrapper tab-pane fade active show">
-          <h2>借款常見問題</h2>
+          <h2>借款相關</h2>
           <div class="qa-accordion" id="qa_contentloanData">
             <div class="card" v-for="(item,index) in borrow" :key="index">
               <div
@@ -186,7 +186,7 @@
           </div>
         </div>
         <div id="invest" class="qa-wrapper tab-pane fade">
-          <h2>投資常見問題</h2>
+          <h2>投資相關</h2>
           <div class="qa-accordion" id="qa_contentinvestData">
             <div class="card" v-for="(item,index) in invest" :key="index">
               <div
@@ -223,7 +223,7 @@
           </div>
         </div>
         <div id="afterLoan" class="qa-wrapper tab-pane fade">
-          <h2>貸後常見問題</h2>
+          <h2>還款相關</h2>
           <div class="qa-accordion" id="qa_contentafterLoanDataData">
             <div class="card" v-for="(item,index) in this.default" :key="index">
               <div
@@ -311,10 +311,6 @@ export default {
           }
         }
       });
-
-      console.log(this.borrow.length);
-      console.log(this.invest.length);
-      console.log(this.default.length);
     },
   },
   methods: {
@@ -376,7 +372,6 @@ export default {
         transform: translate(0, -50%);
         font-size: 20px;
         color: #083a6e;
-        text-shadow: 0 0 4px #083a6e;
       }
 
       .fa-search {

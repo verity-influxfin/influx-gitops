@@ -1,63 +1,149 @@
 <template>
   <div class="article-wrapper">
-    <div class="contenier">
-      <h3 class="title" v-if="this.articleTitle">{{this.articleTitle}}</h3>
-      <div class="title-img" v-if="this.articleImg">
-        <img :src="this.articleImg" class="img-fluid" />
+    <h3 class="title" v-if="this.articleTitle">{{this.articleTitle}}</h3>
+    <div class="flex">
+      <div :class="[{'main-view':!search.includes('news'),'news-view':search.includes('news')}]">
+        <div class="contenier">
+          <div class="title-img" v-if="this.articleImg">
+            <img :src="this.articleImg" class="img-fluid" />
+          </div>
+          <div class="main-content" v-if="this.articleHtml" v-html="this.articleHtml"></div>
+        </div>
+        <div class="comments" v-if="!search.includes('news')">
+          <fb:comments
+            :href="this.link"
+            num_posts="10"
+            notify="true"
+            :width="(this.width*0.99).toFixed(0)"
+          ></fb:comments>
+
+          <div class="shere-btn">
+            <shareBtn :link="this.link"></shareBtn>
+          </div>
+        </div>
       </div>
-      <div class="main-content" v-if="this.articleHtml" v-html="this.articleHtml"></div>
-    </div>
-    <div class="comments" v-if="$route.params.type.indexOf('news') === -1">
-      <fb:comments
-        :href="this.link"
-        num_posts="10"
-        notify="true"
-        :width="(this.width*0.99).toFixed(0)"
-      ></fb:comments>
-      <shareBtn :link="this.link"></shareBtn>
+      <div class="sub" v-if="!search.includes('news')">
+        <div class="box">
+          <h4>最新文章</h4>
+          <div>
+            <div class="latest" v-for="(item,index) in latest" :key="index">
+              <a :href="item.link">{{item.post_title}}</a>
+              <div class="float-right">－{{item.post_modified.substr(0,10)}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="box">
+          <h4>分享文章</h4>
+          <shareBtn :link="this.link"></shareBtn>
+        </div>
+        <div class="box">
+          <h4>時間排序</h4>
+          {{group}}
+          <tree :data="list" :key="new Date()">
+            <span class="tree-text" slot-scope="{ node }">
+              <template v-if="!node.hasChildren()">
+                －
+                <a
+                  :title="node.text.text"
+                  :href="node.text.link"
+                >{{`${node.text.text.substr(0, 10)}...`}}</a>
+              </template>
+              <template v-else>
+                <i :class="[node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder']"></i>
+                {{node.text}}
+              </template>
+            </span>
+          </tree>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import shareBtnComponent from "../component/shareBtnComponent";
+import LiquorTree from "liquor-tree";
 
 export default {
   components: {
-    shareBtn: shareBtnComponent
+    shareBtn: shareBtnComponent,
+    tree: LiquorTree,
   },
   data: () => ({
     width: window.outerWidth,
-    link: window.location.toString().replace("#", "%23"),
+    link: window.location.toString(),
     articleTitle: "",
     articleImg: "",
-    articleHtml: ""
+    articleHtml: "",
+    search: "",
   }),
   created() {
     this.getArticleData();
+    this.$store.dispatch("getKnowledgeData");
   },
-  mounted() {
-    this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
-    });
+  computed: {
+    latest() {
+      return this.$store.getters.KnowledgeData.splice(0, 3);
+    },
+    list() {
+      let groups = [];
+      this.$store.getters.KnowledgeData.forEach((kItem) => {
+        let dateItem = kItem.post_modified.substr(0, 7).split("-");
+        if (groups.filter((gItem) => gItem.text === dateItem[0]).length === 0) {
+          groups.push({ text: dateItem[0], children: [] });
+        }
+      });
+
+      this.$store.getters.KnowledgeData.forEach((kItem) => {
+        let dateItem = kItem.post_modified.substr(0, 7).split("-");
+        groups.forEach((gItem) => {
+          if (
+            gItem.text === dateItem[0] &&
+            gItem.children.filter((iItem) => iItem.text === dateItem[1])
+              .length === 0
+          ) {
+            gItem.children.push({ text: dateItem[1], children: [] });
+          }
+        });
+      });
+
+      this.$store.getters.KnowledgeData.forEach((kItem) => {
+        groups.forEach((gItem, gindex) => {
+          gItem.children.forEach((iItem, rindex) => {
+            if (
+              kItem.post_modified.substr(0, 7) === `${gItem.text}-${iItem.text}`
+            ) {
+              groups[gindex].children[rindex].children.push({
+                text: { text: kItem.post_title, link: kItem.link },
+              });
+            }
+          });
+        });
+      });
+
+      return groups;
+    },
   },
   methods: {
     async getArticleData() {
-      let type = this.$route.params.type.split("-");
+      const urlParams = new URLSearchParams(window.location.search);
+      this.search = urlParams.get("q");
+      let type = urlParams.get("q").split("-");
       if (type[0] == "news") {
         await this.$store.dispatch("getNewsData");
 
         let news = this.$store.getters.NewsData[type[1]];
-            $("title").text(`${news.title} - inFlux普匯金融科技`);
-            FB.XFBML.parse();
-            this.articleTitle = news.title;
-            this.articleImg = news.image_url ? news.image_url : "";
-            this.articleHtml = news.content;
+        $("title").text(`${news.title} - inFlux普匯金融科技`);
+        FB.XFBML.parse();
+        this.articleTitle = news.title;
+        this.articleImg = news.image_url ? news.image_url : "";
+        this.articleHtml = news.content;
       } else {
         axios
-          .post("getArticleData", { filter: this.$route.params.type })
-          .then(res => {
+          .post(`${location.origin}/getArticleData`, {
+            filter: this.search,
+          })
+          .then((res) => {
             $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
             FB.XFBML.parse();
             this.articleTitle = res.data.post_title;
@@ -65,8 +151,8 @@ export default {
             this.articleHtml = res.data.post_content;
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -74,78 +160,43 @@ export default {
 .article-wrapper {
   width: 100%;
   overflow: hidden;
-  background: #dbe6ff;
-  padding: 100px 30px 30px 30px;
+  padding: 50px 30px 30px 30px;
+  background-image: url("../asset/images/article.png");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 
-  %bg {
+  .title {
+    font-size: 40px;
+    font-weight: bold;
+    line-height: normal;
+    text-align: center;
+    color: #061164;
+    margin-bottom: 4rem;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .news-view {
     width: 80%;
     margin: 0px auto;
-    background: #ffffff;
-    padding: 20px;
-    box-shadow: 0px 0px 20px black;
   }
 
-  .contenier {
-    @extend %bg;
-
-    .title,
-    .title-img {
-      text-align: center;
-    }
-
-    .main-content {
-      padding: 20px;
-
-      img {
-        width: 100% !important;
-        height: auto !important;
-      }
-    }
-  }
-
-  .comments {
-    @extend %bg;
-    margin-top: 50px;
-    position: relative;
-
-    &:before {
-      content: "";
-      transform: rotate(157deg);
-      background-image: url("../asset/images/rings.svg");
-      background-repeat: no-repeat;
-      background-size: cover;
-      position: absolute;
-      top: -74px;
-      width: 100px;
-      height: 100px;
-      left: 60px;
-    }
-
-    &:after {
-      content: "";
-      transform: rotate(157deg);
-      background-image: url("../asset/images/rings.svg");
-      background-repeat: no-repeat;
-      background-size: cover;
-      position: absolute;
-      top: -74px;
-      width: 100px;
-      height: 100px;
-      right: 60px;
-    }
-  }
-
-  @media screen and (max-width: 767px) {
-    padding: 10px;
-
-    %bg {
-      width: 100%;
-      padding: 10px;
-    }
-
+  .main-view {
+    width: 70%;
+    margin-left: 7rem;
+    margin-right: 2rem;
     .contenier {
+      .title,
+      .title-img {
+        text-align: center;
+      }
+
       .main-content {
-        padding: 0px;
+        padding: 20px;
+
         img {
           width: 100% !important;
           height: auto !important;
@@ -154,21 +205,72 @@ export default {
     }
 
     .comments {
-      margin-top: 30px;
+      margin-top: 50px;
+      position: relative;
+      border-radius: 10px;
+      box-shadow: 0px 2px 5px 0 #6ab0f2;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 15px;
+    }
+  }
 
-      &:before {
-        top: -40px;
-        width: 50px;
-        height: 50px;
-        left: 20px;
-      }
+  .sub {
+    width: 30%;
+    margin-right: 6rem;
 
-      &:after {
-        top: -40px;
-        width: 50px;
-        height: 50px;
-        right: 20px;
+    .box {
+      margin-bottom: 3rem;
+
+      .latest {
+        $gray: #9b9b9b;
+
+        overflow: auto;
+        margin-bottom: 5px;
+        a {
+          color: $gray;
+          text-align: justify;
+          display: block;
+        }
+
+        color: $gray;
       }
+    }
+  }
+
+  .share-btn {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .article-wrapper {
+    padding: 20px 10px 10px 10px;
+
+    .title {
+      font-size: 24px;
+      margin-bottom: 1rem;
+    }
+
+    .flex {
+      flex-direction: column;
+    }
+
+    .news-view {
+      width: 100%;
+      margin: 0px auto;
+    }
+
+    .main-view {
+      width: 100%;
+      margin: 0px auto;
+    }
+
+    .sub {
+      display: none;
+    }
+
+    .share-btn {
+      display: block;
     }
   }
 }

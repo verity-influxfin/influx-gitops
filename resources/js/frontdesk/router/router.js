@@ -29,6 +29,7 @@ import myLoan from '../pages/myLoan';
 import notification from '../pages/notification';
 import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
+import shanghai from '../pages/shanghai';
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -42,23 +43,23 @@ let routers = [
     { path: '/company', component: company },
     { path: '/news', component: news },
     { path: '/blog', component: blog },
-    { path: '/vlog/:category', component: vlog },
+    { path: '/vlog', component: vlog },
     { path: '/qa', component: qa },
-    { path: '/videopage/:type', component: videoPage },
-    { path: '/articlepage/:type', component: articlePage },
+    { path: '/videopage', component: videoPage },
+    { path: '/articlepage', component: articlePage },
     { path: '/userTerms', component: userTerms },
     { path: '/privacyTerms', component: privacyTerms },
     { path: '/loanerTerms', component: loanerTerms },
     { path: '/register', component: register },
     {
         path: '/myloan', component: myLoan, children: [
-            { path: '/loannotification', component: notification },
+            { path: '/loannotification', component: notification,name:'loan-notification' },
             { path: '/myrepayment', component: myrepayment }
         ]
     },
     {
         path: '/myinvestment', component: myInvestment, children: [
-            { path: '/investnotification', component: notification },
+            { path: '/investnotification', component: notification,name:'invest-notification' },
             { path: '/debt', component: debt },
             { path: '/closedcase', component: closedcase },
             { path: '/detail', component: detail }
@@ -69,7 +70,8 @@ let routers = [
     { path: '/clubcooperation', component: clubCooperation },
     { path: '/firmcooperation', component: firmCooperation },
     { path: '/companycooperation', component: companyCooperation },
-    { path: '/feedback', component: feedback }
+    { path: '/feedback', component: feedback },
+    { path: '/shanghaipage', component: shanghai },
 ];
 
 export default routers;

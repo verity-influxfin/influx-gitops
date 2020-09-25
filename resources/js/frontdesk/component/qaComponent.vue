@@ -66,6 +66,7 @@ export default {
 
     .qa-item {
       margin: 0px 20px;
+      pointer-events: none;
       
       .qa-title {
         box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
@@ -90,7 +91,7 @@ export default {
         label {
           margin: 0px;
           font-weight: 600;
-          font-size: 15px;
+          font-size: 13px;
         }
       }
 

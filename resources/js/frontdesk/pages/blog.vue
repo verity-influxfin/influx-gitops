@@ -1,25 +1,26 @@
 <template>
-  <div class="blog-wrapper">
+  <div class="blog-wrapper" id="blog-wrapper">
     <div class="header">
       <h2>金融小學堂</h2>
-      <div class="progress">
-        <div
-          class="progress-bar"
-          role="progressbar"
-          style="width: 75%"
-          aria-valuenow="75"
-          aria-valuemin="0"
-          aria-valuemax="100"
-        ></div>
-      </div>
       <div class="input-custom">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" v-model="filter" />
+        <input type="text" class="form-control" placeholder="Search" v-model="filter" />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
-    <ul class="blog-content" ref="content"></ul>
-    <div class="pagination" ref="pagination"></div>
+    <template v-if="filterKnowledge.length === 0">
+      <div class="empty">
+        <div class="empty-img">
+          <img src="../asset/images/empty.svg" class="img-fluid" />
+        </div>
+        <h3>沒有結果</h3>
+        <p>根據您的搜索，我們似乎找不到結果</p>
+      </div>
+    </template>
+    <template v-else>
+      <ul class="blog-content" ref="content"></ul>
+      <div class="pagination" ref="pagination"></div>
+    </template>
   </div>
 </template>
 
@@ -28,19 +29,24 @@ let postRow = Vue.extend({
   props: ["item"],
   template: `
     <li class="article">
-        <div class="img"><img :src="item.media_link ? item.media_link : './images/default-image.png'"></div>
-        <p>{{item.post_modified.substr(0,10)}}</p>
-        <h6>{{item.post_title}}</h6>
-        <a class="btn link" :href="'#'+item.link">閱讀內容</a>
+        <a :href="item.link">
+          <div class="img"><img class="img-fluid" :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
+          <div class="chunk">
+            <p class="title">{{item.post_title}}</p>
+            <p class="date">{{item.post_modified.substr(0,10)}}</p>
+            <p class="cnt">{{item.post_content}}</p>
+            <div class="link">閱讀更多<img src="/images/a_arrow.png"></a>
+          </div>
+        </a>
     </li>
-  `
+  `,
 });
 
 export default {
   data: () => ({
     filter: "",
     pageHtml: "",
-    filterKnowledge: []
+    filterKnowledge: [],
   }),
   computed: {
     knowledge() {
@@ -50,10 +56,10 @@ export default {
           index
         ].post_content = `${row.post_content
           .replace(/(<([^>]+)>)/gi, "")
-          .substr(0, 80)}...`;
+          .substr(0, 50)}...`;
       });
       return $this.$store.getters.KnowledgeData;
-    }
+    },
   },
   created() {
     $("title").text(`influx 小學堂 - inFlux普匯金融科技`);
@@ -61,9 +67,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      $(this.$root.$refs.banner).hide();
-      this.$root.pageHeaderOffsetTop = 0;
       AOS.init();
+      particlesJS.load("blog-wrapper", "data/mobile.json");
     });
   },
   watch: {
@@ -78,8 +83,11 @@ export default {
           this.filterKnowledge.push(row);
         }
       });
+    },
+    filterKnowledge() {
+      window.dispatchEvent(new Event("resize"));
       this.pagination();
-    }
+    },
   },
   methods: {
     pagination() {
@@ -87,49 +95,67 @@ export default {
       $this.$nextTick(() => {
         $($this.$refs.pagination).pagination({
           dataSource: $this.filterKnowledge,
-          pageSize: 8,
+          pageSize: 9,
           callback(data, pagination) {
             $($this.$refs.content).html("");
             data.forEach((item, index) => {
               let component = new postRow({
                 propsData: {
-                  item
-                }
+                  item,
+                },
               }).$mount();
 
               $($this.$refs.content).append(component.$el);
             });
-          }
+          },
         });
+
+        window.dispatchEvent(new Event("resize"));
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .blog-wrapper {
-  width: 100%;
   padding: 30px;
-  overflow: auto;
+  overflow: hidden;
+  position: relative;
 
-  .progress {
-    height: 4px;
+  .particles-js-canvas-el {
+    position: absolute;
+    top: 0;
+    z-index: -1;
   }
 
   .header {
     width: 80%;
     margin: 20px auto;
     position: relative;
+    padding: 10px 20px;
+    border-radius: 40px;
+    box-shadow: 0 2px 5px 0 #6ab0f2;
+    background-color: #ffffff;
+
+    h2 {
+      font-weight: bolder;
+      color: #061164;
+      margin: 0px;
+    }
 
     .input-custom {
       width: 300px;
       position: absolute;
-      top: 0;
-      right: 0;
+      top: 50%;
+      right: 25px;
+      transform: translate(0px, -50%);
 
       .form-control {
         padding: 5px 35px;
+        border: 0px;
+        border-bottom: 1px solid #061164;
+        border-radius: 0px;
       }
 
       %iStyle {
@@ -137,8 +163,7 @@ export default {
         top: 50%;
         transform: translate(0, -50%);
         font-size: 20px;
-        color: #002bff;
-        text-shadow: 0 0 4px #002bff;
+        color: #083a6e;
       }
 
       .fa-search {
@@ -155,60 +180,91 @@ export default {
   }
 
   .blog-content {
-    width: 75%;
+    width: 80%;
     overflow: auto;
     margin: 0px auto;
     padding: 0px;
 
     .article {
-      border: 1px solid;
       margin: 10px;
       float: left;
-      width: 48%;
+      width: calc(100% / 3 - 20px);
       list-style: none;
-
-      p {
-        text-align: right;
-        padding: 0px 10px;
-        margin-bottom: 5px;
-      }
+      background: #ffffff;
+      box-shadow: 0 2px 5px 0 #6ab0f2;
 
       .img {
         width: 100%;
-        height: 300px;
+        height: 250px;
+        overflow: hidden;
         text-align: center;
+        padding-bottom: 10px;
+
+        &:hover {
+          img {
+            filter: brightness(0.5);
+            transition-duration: 0.5s;
+          }
+        }
+      }
+
+      .chunk {
         padding: 10px;
 
-        img {
-          width: 100%;
-          height: 100%;
+        .title {
+          font-size: 20px;
+          color: #061164;
+          font-weight: 900;
+          height: 60px;
+        }
+
+        .date {
+          font-size: 14px;
+          font-weight: initial;
+          color: #9b9b9b;
+        }
+
+        .cnt {
+          font-size: 15px;
+          font-weight: 500;
+          line-height: 1.8;
+          color: #797979;
+          height: 80px;
+        }
+
+        
+        .link {
+          display: block;
+          font-weight: bolder;
+          text-align: center;
+          color: #8629a5;
         }
       }
 
       h6 {
         padding: 0px 10px;
-        font-size: 18px;
-      }
-
-      .link {
-        margin-bottom: 10px;
-        width: 100%;
-        background: #0072ff;
-        border-radius: 0px;
-        color: #ffffff;
-        font-weight: bolder;
-        transition-duration: 0.5s;
-
-        &:hover {
-          background: #ff7818;
-          text-decoration: none;
-        }
+        font-size: 15px;
+        height: 35px;
       }
     }
   }
 
+  .empty {
+    text-align: center;
+    margin: 30px auto;
+
+    .empty-img {
+      width: 200px;
+      margin: 20px auto;
+    }
+
+    h3 {
+      font-weight: bold;
+    }
+  }
+
   .pagination {
-    margin: 0px auto;
+    margin: 2rem auto 0px auto;
     width: fit-content;
   }
 
@@ -217,11 +273,19 @@ export default {
 
     .header {
       width: 100%;
+      box-shadow: 0 0 black;
+
+      h2 {
+        text-align: center;
+      }
 
       .input-custom {
         position: relative;
         width: initial;
         margin: 10px auto;
+        top: 0;
+        right: 0px;
+        transform: initial;
       }
     }
 
@@ -229,9 +293,10 @@ export default {
       width: 100%;
 
       .article {
-        width: initial;
+        width: calc(100% - 2px);
+        margin: 10px 1px;
 
-        .img{
+        .img {
           height: auto;
         }
       }

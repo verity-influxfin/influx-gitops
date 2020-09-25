@@ -1,57 +1,59 @@
 <template>
   <div class="invest-detail-wrapper">
-    <div class="assets-card">
-      <div class="pieChart-container">
-        <div class="pie-chart" ref="pie_chart"></div>
-      </div>
-      <div class="income-table" v-if="Object.keys(invsetmentData).length !==0">
-        <div class="table-col">
-          累計收益&ensp;
-          <i class="far fa-question-circle" ref="income_tip" @click="showTip"></i>
-          <span class="float-right">
-            <span class="nmber">
-              {{format(invsetmentData.income.interest
-              +invsetmentData.income.delay_interest
-              +invsetmentData.income.other)}}
-            </span>$
-          </span>
+    <div class="assets-card" v-if="Object.keys(invsetmentData).length !==0">
+      <div class="statistics-date">結算至{{invsetmentData.funds.last_recharge_date}}</div>
+      <div class="assets">
+        <div class="pieChart-container">
+          <div class="pie-chart" ref="pie_chart"></div>
         </div>
-        <hr />
-        <div class="table-col">
-          可用餘額
-          <span class="float-right">
-            <span class="nmber" style="color:#1E88E5">{{format(tweenedBalance)}}</span>$
-          </span>
-        </div>
-        <div class="table-col">
-          待交易賬戶餘額
-          <span class="float-right">
-            <span class="nmber" style="color:#616161">{{format(tweendeTotalFrozen)}}</span>$
-          </span>
-        </div>
-        <div class="table-col">
-          待回收本金
-          <span class="float-right">
-            <span class="nmber" style="color:#FFC107">{{format(tweenedPrincipal)}}</span>$
-          </span>
-        </div>
-        <div class="table-col">
-          待回收利息
-          <span class="float-right">
-            <span class="nmber" style="color:#F57C00">{{format(tweenedInterest)}}</span>$
-          </span>
-        </div>
-        <div class="table-col">
-          待回收延滯息
-          <span class="float-right">
-            <span class="nmber" style="color:#F44336">{{format(tweenedDelayInterest)}}</span>$
-          </span>
-        </div>
-        <div class="table-col">
-          資產總額
-          <span class="float-right">
-            <span class="nmber" style="color:#558B2F">{{format(tweenedTotal)}}</span>$
-          </span>
+        <div class="assets-container">
+          <div class="table-col">
+            累計收益&ensp;
+            <i class="far fa-question-circle" ref="income_tip" @click="showTip"></i>
+            <span class="float-right">
+              <span class="nmber">
+                {{format(invsetmentData.income.interest
+                +invsetmentData.income.delay_interest
+                +invsetmentData.income.other)}}
+              </span>$
+            </span>
+          </div>
+          <div class="table-col">
+            可用餘額
+            <span class="float-right">
+              <span class="nmber" style="color:#1E88E5">{{format(tweenedBalance)}}</span>$
+            </span>
+          </div>
+          <div class="table-col">
+            待交易賬戶餘額
+            <span class="float-right">
+              <span class="nmber" style="color:#616161">{{format(tweendeTotalFrozen)}}</span>$
+            </span>
+          </div>
+          <div class="table-col">
+            待回收本金
+            <span class="float-right">
+              <span class="nmber" style="color:#FFC107">{{format(tweenedPrincipal)}}</span>$
+            </span>
+          </div>
+          <div class="table-col">
+            待回收利息
+            <span class="float-right">
+              <span class="nmber" style="color:#F57C00">{{format(tweenedInterest)}}</span>$
+            </span>
+          </div>
+          <div class="table-col">
+            待回收延滯息
+            <span class="float-right">
+              <span class="nmber" style="color:#F44336">{{format(tweenedDelayInterest)}}</span>$
+            </span>
+          </div>
+          <div class="table-col">
+            資產總額
+            <span class="float-right">
+              <span class="nmber" style="color:#558B2F">{{format(tweenedTotal)}}</span>$
+            </span>
+          </div>
         </div>
       </div>
 
@@ -71,7 +73,9 @@
         </div>
       </div>
     </div>
-    <statement :list="list" @searchDteail="search" />
+    <div class="statement-card">
+      <statement :list="list" @searchDteail="search" @download="downloadCSV" />
+    </div>
   </div>
 </template>
 
@@ -80,7 +84,7 @@ import statement from "../component/statementComponent";
 
 export default {
   components: {
-    statement
+    statement,
   },
   data: () => ({
     totalFrozen: 0,
@@ -91,7 +95,7 @@ export default {
     tweenedPrincipal: 0,
     tweenedInterest: 0,
     tweenedDelayInterest: 0,
-    tweenedTotal: 0
+    tweenedTotal: 0,
   }),
   computed: {
     balance() {
@@ -121,9 +125,12 @@ export default {
             this.invsetmentData.accounts_receivable.interest +
             this.invsetmentData.accounts_receivable.delay_interest
         : 0;
-    }
+    },
   },
   created() {
+    this.$parent.pageIcon = "/images/icon_getmoney_b.svg";
+    this.$parent.pageTitle = "資產明細";
+    this.$parent.pagedesc = "您現在的總資產明細";
     this.invsetmentData = this.$store.getters.InvestAccountData;
   },
   watch: {
@@ -148,7 +155,7 @@ export default {
     },
     total(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedTotal: newValue });
-    }
+    },
   },
   methods: {
     format(data) {
@@ -166,36 +173,32 @@ export default {
       pieData.push({
         value: $this.invsetmentData.funds.total - $this.totalFrozen,
         name: "可用餘額",
-        itemStyle: { color: "#1E88E5" }
+        itemStyle: { color: "#1E88E5" },
       });
       pieData.push({
         value: $this.totalFrozen,
         name: "待交易賬戶餘額",
-        itemStyle: { color: "#616161" }
+        itemStyle: { color: "#616161" },
       });
       pieData.push({
         value: $this.invsetmentData.accounts_receivable.principal,
         name: "待回收本金",
-        itemStyle: { color: "#FFC107" }
+        itemStyle: { color: "#FFC107" },
       });
       pieData.push({
         value: $this.invsetmentData.accounts_receivable.interest,
         name: "待回收利息",
-        itemStyle: { color: "#F57C00" }
+        itemStyle: { color: "#F57C00" },
       });
       pieData.push({
         value: $this.invsetmentData.accounts_receivable.delay_interest,
         name: "待回收延滯息",
-        itemStyle: { color: "#F44336" }
+        itemStyle: { color: "#F44336" },
       });
 
       let pie_chart = echarts.init($this.$refs.pie_chart);
 
       let option = {
-        title: {
-          subtext: `結算至${$this.invsetmentData.funds.last_recharge_date}`,
-          left: "center"
-        },
         tooltip: {
           trigger: "item",
           confine: true,
@@ -203,30 +206,30 @@ export default {
             return `<span>${params.name}：$<span style="font-size:30px;color:${
               params.color
             }">${$this.format(params.value)}</span> (${params.percent}%)`;
-          }
+          },
         },
         series: [
           {
             type: "pie",
             radius: "80%",
             label: {
-              show: false
+              show: false,
             },
             emphasis: {
               label: {
-                show: false
-              }
+                show: false,
+              },
             },
             animationType: "scale",
             animationEasing: "elasticOut",
-            animationDelay: function(idx) {
+            animationDelay: function (idx) {
               return 500;
             },
-            data: pieData.sort(function(a, b) {
+            data: pieData.sort(function (a, b) {
               return a.value > b.value;
-            })
-          }
-        ]
+            }),
+          },
+        ],
       };
 
       pie_chart.setOption(option);
@@ -238,67 +241,80 @@ export default {
         .toggle();
     },
     search() {
-      let $this = this;
       axios
         .post("getTansactionDetails", { isInvest: true })
-        .then(res => {
-          $this.list = res.data.data.list;
+        .then((res) => {
+          this.list = res.data.data.list;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("getTansactionDetails 發生錯誤，請稍後在試");
         });
+    },
+    downloadCSV(range){
+      let start = range.start.getTime();
+      let end = range.end.getTime();
+      $("#csvDownloadIframe").remove();
+      $("body").append(
+        `<iframe id="csvDownloadIframe" src="${location.origin}/downloadStatement?start=${start}&end=${end}&isInvest=1" style="display: none"></iframe>`
+      );
     }
-  }
+  },
 };
 </script>
 
 <style lang="scss">
 .invest-detail-wrapper {
+  width: 85%;
+  margin: 0px auto;
+  padding: 25px 35px;
   display: flex;
 
   .assets-card {
-    padding: 10px;
-    box-shadow: 0 0 5px #848484;
-    border-radius: 10px;
-    background: #efefef;
-    margin-right: 20px;
-    display: flex;
+    border-radius: 9px;
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    width: 65%;
 
-    %bg {
-      box-shadow: 0 0 8px black;
-      padding: 10px;
-      border-radius: 11px;
-      margin: 10px;
-      background: #545454;
+    .statistics-date {
+      color: rgba(0, 0, 0, 0.61);
+      padding: 15px 6rem;
     }
 
-    .pieChart-container {
-      @extend %bg;
+    .assets {
+      display: flex;
 
-      .pie-chart {
-        width: 500px;
-        height: 500px;
-      }
-    }
-
-    .income-table {
-      width: fit-content;
-      height: fit-content;
-      @extend %bg;
-
-      .table-col {
-        width: 400px;
-        margin: 5px;
-        color: #ffffff;
-        font-weight: 600;
-        padding: 5px;
-        overflow: auto;
-        line-height: 28px;
-
-        .nmber {
-          font-size: 30px;
+      .pieChart-container {
+        width: 60%;
+        .pie-chart {
+          width: 400px;
+          height: 400px;
         }
       }
+
+      .assets-container {
+        width: 40%;
+        .table-col {
+          margin: 5px;
+          font-weight: 600;
+          padding: 5px;
+          overflow: auto;
+          line-height: 28px;
+        }
+      }
+    }
+  }
+
+  .statement-card {
+    border-radius: 9px;
+    box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+    background-color: #ffffff;
+    width: 35%;
+    margin-left: 20px;
+    padding: 10px;
+
+    .s-title {
+      background-color: #37bbc6;
+      color: #ffffff;
     }
   }
 
@@ -307,54 +323,50 @@ export default {
     background: #ffffff;
     padding: 10px;
     border-radius: 9px;
-    box-shadow: 2px 2px 0 0px #110057;
+    box-shadow: 2px 2px 4px 0px #110057;
     position: absolute;
     display: none;
     top: 0;
     left: 0;
   }
+}
 
-  @media screen and(max-width:767px) {
-    .assets-card {
-      .pieChart-container {
-        .pie-chart {
-          width: 310px !important;
-          height: 310px;
-        }
-      }
-
-      .income-table {
-        width: 93%;
-      }
-    }
-  }
-
-  @media screen and (max-width: 1023px) {
-    display: block;
+@media screen and (max-width: 767px) {
+  .invest-detail-wrapper {
+    width: 100%;
+    padding: 10px;
+    flex-direction: column;
 
     .assets-card {
-      width: 95%;
-      display: block;
-      margin: 0px 10px 10px 10px;
+      width: 100%;
 
-      .pieChart-container {
-        .pie-chart {
-          width: 690px;
-        }
+      .statistics-date {
+        padding: 10px;
+        text-align: center;
       }
 
-      .income-table {
-        width: 97%;
+      .assets {
+        flex-direction: column;
 
-        .table-col {
+        .pieChart-container {
+          width: 100%;
+
+          .pie-chart {
+            margin: 0px auto;
+            width: 330px;
+            height: 330px;
+          }
+        }
+
+        .assets-container {
           width: 100%;
         }
       }
     }
 
-    .income-detail-card {
-      margin: 0px 10px 10px 10px;
-      width: 96%;
+    .statement-card {
+      width: 100%;
+      margin: 10px 0px;
     }
   }
 }

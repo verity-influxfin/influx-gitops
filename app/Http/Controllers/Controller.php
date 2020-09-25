@@ -15,6 +15,13 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    public $apiGetway;
+
+    public function __construct()
+    {
+        $this->apiGetway = config('api.apiGetway');
+    }
+
     public function getListData(Request $request)
     {
         $data = json_decode(file_get_contents('data/listData.json'), true);
@@ -46,10 +53,10 @@ class Controller extends BaseController
     public function getNewsData(Request $request)
     {
 
-        $curlScrapedNewsPage = shell_exec('curl -X GET "https://stage-api.influxfin.com/api/v2/article/news"');
+        $curlScrapedNewsPage = shell_exec("curl -X GET " . $this->apiGetway . "article/news");
         $newsdata = json_decode($curlScrapedNewsPage, true);
 
-        $curlScrapedEventPage = shell_exec('curl -X GET "https://stage-api.influxfin.com/api/v2/article/event"');
+        $curlScrapedEventPage = shell_exec("curl -X GET " . $this->apiGetway . "article/event");
         $eventdata = json_decode($curlScrapedEventPage, true);
 
         $result = array();
@@ -107,17 +114,15 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/experiencesData.json'), true);
+        $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
 
-        if ($input['type']) {
-            foreach ($data as $index => $row) {
-                if ($row['type'] !== $input['type']) {
-                    unset($data[$index]);
-                }
-            }
+        if($input['type']){
+            $filter[] = ['type','=',$input['type']];
         }
 
-        return response()->json($data, 200);
+        $knowledge = DB::table('feedback')->select(['feedback', 'imageSrc', 'name', 'rank','type'])->where($filter)->orderBy('date', 'desc')->get();
+
+        return response()->json($knowledge, 200);
     }
 
     public function getServiceData(Request $request)

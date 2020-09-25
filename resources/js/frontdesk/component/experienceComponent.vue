@@ -3,22 +3,35 @@
     <h2>用戶回饋</h2>
     <div class="hr"></div>
     <div class="comment-box" ref="comment_slick">
-      <div class="item" v-for="(item,index) in $props.experiences" :key="index">
+      <div
+        class="item"
+        v-for="(item, index) in $props.experiences"
+        :key="index"
+      >
         <div
-          :class="['memo',{'laod-s-b':item.type === 'loan'} , {'invest-s-b':item.type === 'invest'}]"
+          :class="[
+            'memo',
+            { 'laod-s-b': item.type === 'loan' },
+            { 'invest-s-b': item.type === 'invest' },
+          ]"
         >
           <h5
-            :class="[{'laod-s':item.type === 'loan'} , {'invest-s':item.type === 'invest'}]"
-          >{{item.type === 'loan' ? "借款" : "投資"}}回饋</h5>
-          <span>{{item.memo}}</span>
+            :class="[
+              { 'laod-s': item.type === 'loan' },
+              { 'invest-s': item.type === 'invest' },
+            ]"
+          >
+            {{ item.type === "loan" ? "借款" : "投資" }}回饋
+          </h5>
+          <span>{{ item.memo }}</span>
         </div>
         <div class="img">
           <img :src="item.imageSrc" class="img-fluid" />
         </div>
         <label class="c-pel">
-          {{item.name}}
+          {{ item.name }}
           <br />
-          {{item.unit}}
+          {{ item.rank === "student" ? "在學生" : "上班族" }}
         </label>
       </div>
     </div>
@@ -32,7 +45,8 @@
 export default {
   props: ["experiences"],
   watch: {
-    "$props.experiences"() {
+    "$props.experiences"(xzc) {
+      console.log(xzc);
       this.$nextTick(() => {
         this.createSlick(this.$refs.comment_slick);
       });
@@ -92,8 +106,12 @@ export default {
   }
 
   .comment-box {
+    width: 90%;
+    margin: 0px auto;
+
     .item {
       margin: 20px;
+      pointer-events: none;
 
       .laod-s-b {
         border: solid 1.5px #880ca2;
@@ -162,6 +180,7 @@ export default {
 @media screen and (max-width: 767px) {
   .experience-card {
     padding: 10px;
+    width: 100%;
 
     .comment-box {
       .item {

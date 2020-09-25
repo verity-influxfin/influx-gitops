@@ -1,31 +1,38 @@
 <template>
   <div class="applyFlow-card">
-    <h2>{{$props.title}}</h2>
+    <h2>{{ $props.title }}</h2>
     <div class="flow" ref="flow_slick">
-      <div class="box" v-for="(item,index) in $props.step" :key="index">
+      <div class="box" v-for="(item, index) in $props.step" :key="index">
         <div class="step">
           <div class="img">
             <img :src="item.imgSrc" class="img-fluid" />
+            <div :class="`sub-img${index}`" v-if="item.subImgSrc">
+              <img :src="item.subImgSrc" class="img-fluid" />
+            </div>
           </div>
-          <div class="num">{{index+1}}</div>
-          <h5 v-html="item.stepTitle.replace(',','<br>')"></h5>
-          <p v-html="item.stepDesc.replace(',','<br>')"></p>
+          <div class="num">{{ index + 1 }}</div>
+          <h5 v-html="item.stepTitle.replace(',', '<br>')"></h5>
+          <p v-html="item.stepDesc.replace(',', '<br>')"></p>
         </div>
       </div>
     </div>
     <div class="tips" v-if="$props.requiredDocuments.length !== 0">
       <div class="pu-say">
         <div class="img">
-          <img :src="'./images/ah-pu.svg'" class="img-fluid" />
+          <img :src="'/images/ah-pu.svg'" class="img-fluid" />
         </div>
         <p class="dailog">先把下列資料準備好可以加快申貸速度喔！</p>
       </div>
       <div class="required">
-        <div class="item" v-for="(item,index) in $props.requiredDocuments" :key="index">
+        <div
+          class="item"
+          v-for="(item, index) in $props.requiredDocuments"
+          :key="index"
+        >
           <div class="img">
             <img class="img-fluid" :src="item.imgSrc" />
           </div>
-          <p>{{item.text}}</p>
+          <p>{{ item.text }}</p>
           <div class="other" v-if="item.memo" v-html="item.memo"></div>
         </div>
       </div>
@@ -49,7 +56,7 @@ export default {
         infinite: true,
         slidesToShow: 5,
         slidesToScroll: 1,
-        autoplay: true,
+        autoplay: false,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
@@ -84,6 +91,7 @@ export default {
 
     .box {
       margin: 20% 15px 0px 15px;
+      pointer-events: none;
 
       .step {
         border-radius: 10px;
@@ -95,6 +103,21 @@ export default {
 
         .img {
           margin-top: -100%;
+          position: relative;
+
+          .sub-img1 {
+            position: absolute;
+            width: 90%;
+            top: 90px;
+            right: -40px;
+          }
+
+          .sub-img2 {
+            position: absolute;
+            width: 80%;
+            top: 100px;
+            right: -40px;
+          }
         }
 
         .num {
@@ -224,6 +247,14 @@ export default {
         .step {
           .img {
             margin: initial;
+
+            .sub-img1 {
+              right: -30px;
+            }
+
+            .sub-img2 {
+              right: -30px;
+            }
           }
 
           h5,
