@@ -1,9 +1,12 @@
 <template>
-  <div class="product-banner" :style="`background-image:url(${$props.data.bannerHref})`">
+  <div
+    class="product-banner"
+    :style="`background-image:url(${$props.data.bannerHref})`"
+  >
     <div class="phone-img">
       <img :src="$props.data.bannerPhone" class="img-fluid" />
     </div>
-    <h1 class="banner-title">{{$props.data.productName}}</h1>
+    <h1 class="banner-title">{{ $props.data.productName }}</h1>
   </div>
 </template>
 
@@ -16,11 +19,11 @@ export default {
 <style lang="scss">
 .product-banner {
   width: 100%;
-  height: 590px;
+  height: 75vh;
   overflow: hidden;
   position: relative;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
   padding: 0px 10%;
 
   .banner-title {
@@ -45,9 +48,8 @@ export default {
 
 @media (max-width: 767px) {
   .product-banner {
-    background-size: cover;
     background-position: 50% 50%;
-
+    
     .phone-img {
       display: none;
     }

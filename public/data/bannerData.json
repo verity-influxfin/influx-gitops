@@ -5,9 +5,7 @@
         "productName": "學生貸"
     },
     "engineer": {
-        "bannerHref": "./images/engineer_banner.png",
-        "bannerPhone": "./images/worker_phone.png",
-        "productName": "工程師貸"
+        "bannerHref": "./images/engineer_banner.png"
     },
     "freshgraduate": {
         "bannerHref": "./images/worker_banner.png",

@@ -9,11 +9,20 @@
         </div>
         <div class="option-row" ref="option_row">
           <button
-            :class="['btn',{'btn-secondary' : now === index},{'btn-outline-secondary' : now !== index} ]"
-            v-for="(make,index) in makes"
-            @click="filter.make = make;now = index"
+            :class="[
+              'btn',
+              { 'btn-secondary': now === index },
+              { 'btn-outline-secondary': now !== index },
+            ]"
+            v-for="(make, index) in makes"
+            @click="
+              filter.make = make;
+              now = index;
+            "
             :key="index"
-          >{{make ? make : 'ALL'}}</button>
+          >
+            {{ make ? make : "ALL" }}
+          </button>
         </div>
         <div class="scroll right" @click="scroll('right')">
           <i class="fas fa-chevron-right"></i>
@@ -21,8 +30,17 @@
       </div>
       <div class="input-custom float-right">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" placeholder="手機型號" v-model="filter.mobileName" />
-        <i class="fas fa-times" v-if="filter.mobileName" @click="filter.mobileName = ''"></i>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="手機型號"
+          v-model="filter.mobileName"
+        />
+        <i
+          class="fas fa-times"
+          v-if="filter.mobileName"
+          @click="filter.mobileName = ''"
+        ></i>
       </div>
     </div>
     <div class="hr"></div>
@@ -48,13 +66,7 @@
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
-    <div class="recommend-card">
-      <div class="banner-text">優良店家推薦</div>
-      <div class="mobile-footer">
-        <img :src="'/images/mobile_banner_web.jpg'" class="img-fluid desktop" />
-        <img :src="'/images/mobile_banner_mobile.jpg'" class="img-fluid mobile" />
-      </div>
-    </div>
+    <download :isLoan="true" :isInvest="false" />
   </div>
 </template>
 
@@ -89,11 +101,13 @@ let productRow = Vue.extend({
 
 import banner from "../component/bannerComponent";
 import apply from "../component/applyComponent";
+import download from "../component/downloadComponent";
 
 export default {
   components: {
     banner,
     apply,
+    download
   },
   data: () => ({
     now: 0,
@@ -146,9 +160,11 @@ export default {
       });
     },
     getBannerData() {
-      axios.post(`${location.origin}/getBannerData`, { filter: "mobile" }).then((res) => {
-        this.bannerData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getBannerData`, { filter: "mobile" })
+        .then((res) => {
+          this.bannerData = res.data;
+        });
     },
     async getMobileData() {
       let res = await axios.post(`${location.origin}/getMobileData`);
@@ -164,7 +180,9 @@ export default {
       this.makes.sort();
     },
     async getApplydata() {
-      let res = await axios.post(`${location.origin}/getApplydata`, { filter: "mobile" });
+      let res = await axios.post(`${location.origin}/getApplydata`, {
+        filter: "mobile",
+      });
       this.applyData = res.data;
     },
     pagination() {
@@ -340,6 +358,7 @@ export default {
         .text {
           h5 {
             font-weight: bold;
+            font-size: 18px;
           }
 
           span {
@@ -373,23 +392,6 @@ export default {
 
     h3 {
       font-weight: bold;
-    }
-  }
-
-  .recommend-card {
-    .banner-text {
-      font-size: 25px;
-      font-weight: bolder;
-      text-align: center;
-      padding: 30px 0px;
-      background: #492f78;
-      color: #ffffff;
-    }
-
-    .mobile-footer {
-      img {
-        min-width: 100%;
-      }
     }
   }
 

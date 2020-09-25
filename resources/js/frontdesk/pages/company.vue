@@ -5,8 +5,12 @@
       <div class="a-hr">
         <div class="a-s">
           <!-- <h3>金融服務「普」及大眾，人才「匯」流。</h3> -->
-          <p>普匯金融科技不是銀行，我們是專業的Fintech金融科技顧問，由具備深厚的風險管控、金融產品設計經驗的金融團隊組成，致力提供互信互利的平台，將借款人與投資者聯繫起來，共創雙贏機會。</p>
-          <p>運用AI智能科技與安全風控模組，將專業金融產品與線上簡易方式搭起投資人與借款人的橋梁。以「金融專業」為核心，「科技工具」為輔助，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化並串起社會閒置資源，幫助年輕人完成自我學習成長與創業夢想！</p>
+          <p>
+            普匯金融科技不是銀行，我們是專業的Fintech金融科技顧問，由具備深厚的風險管控、金融產品設計經驗的金融團隊組成，致力提供互信互利的平台，將借款人與投資者聯繫起來，共創雙贏機會。
+          </p>
+          <p>
+            運用AI智能科技與安全風控模組，將專業金融產品與線上簡易方式搭起投資人與借款人的橋梁。以「金融專業」為核心，「科技工具」為輔助，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化並串起社會閒置資源，幫助年輕人完成自我學習成長與創業夢想！
+          </p>
         </div>
       </div>
     </div>
@@ -15,12 +19,16 @@
         <h2>我們堅持</h2>
         <div class="hr"></div>
         <div class="advantage-cnt" ref="advantage_slick">
-          <div v-for="(item,index) in regulations" class="item hvr-bob" :key="index">
+          <div
+            v-for="(item, index) in regulations"
+            class="item hvr-bob"
+            :key="index"
+          >
             <div class="img">
               <img class="img-fluid" :src="item.imageSrc" />
             </div>
-            <h5>{{item.title}}</h5>
-            <p>{{item.text}}</p>
+            <h5>{{ item.title }}</h5>
+            <p>{{ item.text }}</p>
           </div>
         </div>
       </div>
@@ -31,45 +39,60 @@
           <div
             class="item"
             data-aos="fade-down"
-            :data-aos-delay="100*index"
+            :data-aos-delay="100 * index"
             data-aos-duration="500"
-            v-for="(item,index) in partner.slice(0,6)"
+            v-for="(item, index) in partner.slice(0, 6)"
             :key="index"
           >
             <div class="photo hvr-bob">
               <img
                 :src="item.imageSrc"
                 class="img-fluid"
-                @mouseenter="isShow = true;showPartner(index,$event)"
-                @mouseleave="isShow = false;partnerData = {}"
+                @mouseenter="
+                  isShow = true;
+                  showPartner(index, $event);
+                "
+                @mouseleave="
+                  isShow = false;
+                  partnerData = {};
+                "
               />
             </div>
-            <p>{{item.name}}</p>
+            <p>{{ item.name }}</p>
           </div>
         </div>
         <div class="list">
           <div
             class="item"
             data-aos="fade-down"
-            :data-aos-delay="100*(index+6)"
+            :data-aos-delay="100 * (index + 6)"
             data-aos-duration="500"
-            v-for="(item,index) in partner.slice(6)"
+            v-for="(item, index) in partner.slice(6)"
             :key="index"
           >
             <div class="photo hvr-bob">
               <img
                 :src="item.imageSrc"
                 class="img-fluid"
-                @mouseenter="isShow = true;showPartner(index+6,$event)"
-                @mouseleave="isShow = false;partnerData = {}"
+                @mouseenter="
+                  isShow = true;
+                  showPartner(index + 6, $event);
+                "
+                @mouseleave="
+                  isShow = false;
+                  partnerData = {};
+                "
               />
             </div>
-            <p>{{item.name}}</p>
+            <p>{{ item.name }}</p>
           </div>
         </div>
-        <div v-if="Object.keys(partnerData).length !==0 && isShow" class="content">
-          <h5>{{partnerData.title}}</h5>
-          <p>{{partnerData.subTitle}}</p>
+        <div
+          v-if="Object.keys(partnerData).length !== 0 && isShow"
+          class="content"
+        >
+          <h5>{{ partnerData.title }}</h5>
+          <p>{{ partnerData.subTitle }}</p>
           <hr />
           <p v-html="partnerData.text"></p>
         </div>
@@ -83,15 +106,15 @@
           <div class="press">媒體</div>
         </div>
         <div class="list">
-          <div style="height: 325px;overflow: auto;">
-            <div v-for="(item,index) in media" class="report-row" :key="index">
-              <div class="date">{{item.date}}</div>
+          <div style="height: 325px; overflow: auto">
+            <div v-for="(item, index) in media" class="report-row" :key="index">
+              <div class="date">{{ item.date }}</div>
               <div class="news-title" @click="openModel(item)">
-                <p>{{item.title}}</p>
+                <p>{{ item.title }}</p>
               </div>
               <div class="press">
                 <a :href="item.link" target="_blank">
-                  {{item.media}}
+                  {{ item.media }}
                   <i class="fas fa-external-link-alt"></i>
                 </a>
               </div>
@@ -106,7 +129,7 @@
       <div class="hr"></div>
       <div class="timeline">
         <div
-          v-for="(item,index) in milestone"
+          v-for="(item, index) in milestone"
           class="block"
           data-aos="fade-up"
           data-aos-duration="500"
@@ -114,9 +137,9 @@
         >
           <label class="icon"></label>
           <div class="event">
-            <span class="date">{{item.hook_date}}</span>
-            <h3 class="title">{{item.title}}</h3>
-            <div class="content">{{item.content}}</div>
+            <span class="date">{{ item.hook_date }}</span>
+            <h3 class="title">{{ item.title }}</h3>
+            <div class="content">{{ item.content }}</div>
           </div>
         </div>
       </div>
@@ -136,7 +159,7 @@
           </div>
           <div class="modal-body">
             <h4 class="report-title" v-html="reportData.title"></h4>
-            <p calss="report-date">{{reportData.date}}</p>
+            <p calss="report-date">{{ reportData.date }}</p>
             <div class="report-contert" v-html="reportData.content"></div>
           </div>
         </div>
@@ -463,12 +486,12 @@ export default {
     }
 
     .date {
-      width: 10%;
+      width: 12%;
       border-right: 1px solid #6ab0f2;
     }
 
     .news-title {
-      width: 75%;
+      width: 71%;
       border-right: 1px solid #6ab0f2;
 
       p {
@@ -477,7 +500,7 @@ export default {
     }
 
     .press {
-      width: 15%;
+      width: 17%;
     }
   }
 
@@ -504,11 +527,12 @@ export default {
           height: 100px;
           background: #ffffff;
           padding: 10px;
-          border-radius: 20px;
+          border-radius: 25%;
           overflow: hidden;
           box-shadow: 0 0 10px #6ab0f2;
           cursor: pointer;
           position: relative;
+          margin-bottom: 10px;
 
           img {
             position: absolute;
@@ -521,6 +545,7 @@ export default {
 
         p {
           color: #828282;
+          font-size: 13px;
         }
       }
     }
@@ -540,10 +565,12 @@ export default {
         font-weight: bold;
         color: #083a6e;
         text-align: center;
+        font-size: 15px;
       }
 
       p {
         text-align: justify;
+        font-size: 13px;
       }
 
       &:before {

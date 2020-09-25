@@ -264,7 +264,7 @@ export default {
 
 <style lang="scss">
 .invest-detail-wrapper {
-  width: 73%;
+  width: 85%;
   margin: 0px auto;
   padding: 25px 35px;
   display: flex;

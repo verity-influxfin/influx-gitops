@@ -114,17 +114,15 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/experiencesData.json'), true);
+        $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
 
-        if ($input['type']) {
-            foreach ($data as $index => $row) {
-                if ($row['type'] !== $input['type']) {
-                    unset($data[$index]);
-                }
-            }
+        if($input['type']){
+            $filter[] = ['type','=',$input['type']];
         }
 
-        return response()->json($data, 200);
+        $knowledge = DB::table('feedback')->select(['feedback', 'imageSrc', 'name', 'rank','type'])->where($filter)->orderBy('date', 'desc')->get();
+
+        return response()->json($knowledge, 200);
     }
 
     public function getServiceData(Request $request)

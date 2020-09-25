@@ -3,11 +3,14 @@
     <div class="invest-header">
       <userInfo :userData="userData"></userInfo>
       <div class="menu-card">
-        <div style="width:max-content;overflow: hidden;">
+        <div style="width: max-content; overflow: hidden">
           <router-link class="menu-item" to="/investnotification">
             <div class="img">
-              <img src="../asset/images/icon_notification.svg" class="img-fluid" />
-              <span v-if="unreadCount !== 0">{{unreadCount}}</span>
+              <img
+                src="../asset/images/icon_notification.svg"
+                class="img-fluid"
+              />
+              <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
             </div>
             <p>通知</p>
           </router-link>
@@ -71,9 +74,9 @@
           <div class="icon">
             <img :src="pageIcon" />
           </div>
-          <h3>{{pageTitle}}</h3>
+          <h3>{{ pageTitle }}</h3>
         </div>
-        <p>{{pagedesc}}</p>
+        <p>{{ pagedesc }}</p>
       </div>
     </div>
     <div class="main-content">
@@ -274,7 +277,7 @@ export default {
   }
 
   .member-menu {
-    width: 73%;
+    width: 85%;
     margin: 0px auto;
     display: flex;
     padding: 25px;

@@ -57,7 +57,7 @@ export default {
     this.getApplydata();
     this.getBannerData();
     this.getQaData();
-    $("title").text(`工程師專案 - inFlux普匯金融科技`);
+    $("title").text(`資訊工程師專案 - inFlux普匯金融科技`);
   },
   mounted() {
     this.$nextTick(() => {

@@ -29,13 +29,15 @@ let postRow = Vue.extend({
   props: ["item"],
   template: `
     <li class="article">
-        <div class="img"><img class="img-fluid" :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
-        <div class="chunk">
-          <p class="title">{{item.post_title}}</p>
-          <p class="date">{{item.post_modified.substr(0,10)}}</p>
-          <p class="cnt">{{item.post_content}}</p>
-          <a class="link" :href="item.link">閱讀更多<img src="/images/a_arrow.png"></a>
-        </div>
+        <a :href="item.link">
+          <div class="img"><img class="img-fluid" :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
+          <div class="chunk">
+            <p class="title">{{item.post_title}}</p>
+            <p class="date">{{item.post_modified.substr(0,10)}}</p>
+            <p class="cnt">{{item.post_content}}</p>
+            <div class="link">閱讀更多<img src="/images/a_arrow.png"></a>
+          </div>
+        </a>
     </li>
   `,
 });
@@ -230,17 +232,12 @@ export default {
           height: 80px;
         }
 
+        
         .link {
           display: block;
           font-weight: bolder;
-          transition-duration: 0.5s;
           text-align: center;
           color: #8629a5;
-
-          &:hover {
-            filter: hue-rotate(30deg);
-            text-decoration: none;
-          }
         }
       }
 

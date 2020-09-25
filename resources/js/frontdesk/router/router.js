@@ -29,6 +29,7 @@ import myLoan from '../pages/myLoan';
 import notification from '../pages/notification';
 import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
+import shanghai from '../pages/shanghai';
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -69,7 +70,8 @@ let routers = [
     { path: '/clubcooperation', component: clubCooperation },
     { path: '/firmcooperation', component: firmCooperation },
     { path: '/companycooperation', component: companyCooperation },
-    { path: '/feedback', component: feedback }
+    { path: '/feedback', component: feedback },
+    { path: '/shanghaipage', component: shanghai },
 ];
 
 export default routers;

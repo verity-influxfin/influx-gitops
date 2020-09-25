@@ -3,14 +3,20 @@
     <div class="repayment-card">
       <div v-if="installment.length === 0" class="no-data">
         <img :src="'/images/empty.svg'" class="img-fluid" />
-        <a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q">請往APP了解更多 >></a>
+        <a target="_blank" href="https://event.influxfin.com/R/url?p=17K5591Q"
+          >請往APP了解更多 >></a
+        >
       </div>
       <template v-else>
-        <div class="info-card" v-for="(item,index) in installment" :key="index">
+        <div
+          class="info-card"
+          v-for="(item, index) in installment"
+          :key="index"
+        >
           <div class="title">
-            {{item.product_name}}
+            {{ item.product_name }}
             <br />
-            {{item.target_no}}
+            {{ item.target_no }}
           </div>
           <div class="circle">
             <circle-progress
@@ -26,30 +32,43 @@
               :isAnimation="true"
               :isRound="true"
             ></circle-progress>
-            <div class="period">{{item.next_repayment.instalment}}&nbsp;/&nbsp;{{item.instalment}}</div>
+            <div class="period">
+              {{ item.next_repayment.instalment }}&nbsp;/&nbsp;{{
+                item.instalment
+              }}
+            </div>
           </div>
           <div class="payment">
             <div class="p-d">
-              <div class="pd-l">{{item.next_repayment.date}}</div>
+              <div class="pd-l">{{ item.next_repayment.date }}</div>
               <div class="pd-m">本期還款日期</div>
             </div>
             <div class="p-d">
               <div
                 class="pd-l"
-                :style="{'color':item.delay_days >0 ? 'red' : ''}"
-              >${{format(item.next_repayment.amount)}}元</div>
+                :style="{ color: item.delay_days > 0 ? 'red' : '' }"
+              >
+                ${{ format(item.next_repayment.amount) }}元
+              </div>
               <div class="pd-m">本期還款金額</div>
             </div>
           </div>
           <div class="link">
-            <detailBtn :data="item" :left="true" @sendinfo="getInfo(item.id,item.status)"></detailBtn>
+            <detailBtn
+              :data="item"
+              :left="true"
+              @sendinfo="getInfo(item.id, item.status)"
+            ></detailBtn>
             <a
               class="btn btn-secondary btn-sm float-right"
               target="_blank"
               href="https://line.me/R/ti/p/%40kvd1654s"
-            >聯繫克服</a>
+              >聯繫克服</a
+            >
           </div>
-          <div class="delay-memo" v-if="item.delay_days >0">您已逾期，請至APP全額清償或申請產品轉換</div>
+          <div class="delay-memo" v-if="item.delay_days > 0">
+            您已逾期，請至APP全額清償或申請產品轉換
+          </div>
         </div>
       </template>
     </div>
@@ -65,74 +84,102 @@
       <div class="modal-dialog" v-if="Object.keys(detailData).length !== 0">
         <div class="modal-content">
           <div class="modal-body">
-            <div :class="['detail-banner', {'delay' : isDelay}]">
-              <span>{{isDelay ? "逾期總額" : "本金餘額"}}</span>
-              <span
-                class="amount"
-              >{{format(isDelay ? detailData.amortization_schedule.total_payment : detailData.amortization_schedule.remaining_principal)}}</span>
+            <div :class="['detail-banner', { delay: isDelay }]">
+              <span>{{ isDelay ? "逾期總額" : "本金餘額" }}</span>
+              <span class="amount">{{
+                format(
+                  isDelay
+                    ? detailData.amortization_schedule.total_payment
+                    : detailData.amortization_schedule.remaining_principal
+                )
+              }}</span>
               <span>$</span>
             </div>
             <div class="detail-title">
-              <label>{{detailData.product_name}}</label>
-              <span :class="{'delay' : isDelay}">{{statusText}}</span>
+              <label>{{ detailData.product_name }}</label>
+              <span :class="{ delay: isDelay }">{{ statusText }}</span>
             </div>
             <div class="detail-subtitle">
               <label>案件編號</label>
-              <span>{{detailData.target_no}}</span>
+              <span>{{ detailData.target_no }}</span>
             </div>
             <div class="delay-info" v-if="isDelay">
               <div class="delay-row">
                 <div class="card-item">
                   <label>當期還款日</label>
                   <br />
-                  <span class="delay">{{detailData.next_repayment.date}}</span>
+                  <span class="delay">{{
+                    detailData.next_repayment.date
+                  }}</span>
                 </div>
                 <div class="card-item">
                   <label>逾期日數</label>
                   <br />
-                  <span class="delay">{{detailData.delay_days}}日</span>
+                  <span class="delay">{{ detailData.delay_days }}日</span>
                 </div>
               </div>
               <div class="delay-row">
                 <div class="card-item">
                   <label>逾期本金</label>
                   <br />
-                  <span>{{format(detailData.loan_amount)}}</span>
+                  <span>{{ format(detailData.loan_amount) }}</span>
                 </div>
                 <div class="card-item">
                   <label>逾期利息</label>
                   <br />
-                  <span>{{format(detailData.next_repayment.interest)}}</span>
+                  <span>{{ format(detailData.next_repayment.interest) }}</span>
                 </div>
               </div>
               <div class="delay-row">
                 <div class="card-item">
                   <label>逾期違約金</label>
                   <br />
-                  <span class="delay">{{format(detailData.next_repayment.liquidated_damages)}}</span>
+                  <span class="delay">{{
+                    format(detailData.next_repayment.liquidated_damages)
+                  }}</span>
                 </div>
                 <div class="card-item">
                   <label>逾期延滯息</label>
                   <br />
-                  <span class="delay">{{format(detailData.next_repayment.delay_interest)}}</span>
+                  <span class="delay">{{
+                    format(detailData.next_repayment.delay_interest)
+                  }}</span>
                 </div>
               </div>
-              <div class="delay-row" v-if="detailData.targetDatas.virtual_account">
+              <div
+                class="delay-row"
+                v-if="detailData.targetDatas.virtual_account"
+              >
                 <div class="card-item">
                   <label>案件還款行</label>
                   <br />
-                  <span>({{detailData.targetDatas.virtual_account.bank_code}}){{detailData.targetDatas.virtual_account.bank_name}}</span>
+                  <span
+                    >({{ detailData.targetDatas.virtual_account.bank_code }}){{
+                      detailData.targetDatas.virtual_account.bank_name
+                    }}</span
+                  >
                 </div>
                 <div class="card-item">
                   <label>案件還款分行</label>
                   <br />
-                  <span>({{detailData.targetDatas.virtual_account.branch_code}}){{detailData.targetDatas.virtual_account.branch_name}}</span>
+                  <span
+                    >({{
+                      detailData.targetDatas.virtual_account.branch_code
+                    }}){{
+                      detailData.targetDatas.virtual_account.branch_name
+                    }}</span
+                  >
                 </div>
               </div>
-              <div class="delay-row" v-if="detailData.targetDatas.virtual_account">
+              <div
+                class="delay-row"
+                v-if="detailData.targetDatas.virtual_account"
+              >
                 <div class="card-item">
                   <label>案件還款帳號</label>
-                  <span>{{detailData.targetDatas.virtual_account.virtual_account}}</span>
+                  <span>{{
+                    detailData.targetDatas.virtual_account.virtual_account
+                  }}</span>
                 </div>
                 <div class="card-item"></div>
               </div>
@@ -141,34 +188,45 @@
               <div class="card-item">
                 <label>本期還款日</label>
                 <br />
-                <span>{{detailData.next_repayment.date}}</span>
+                <span>{{ detailData.next_repayment.date }}</span>
               </div>
               <div class="card-item">
                 <label>本期還款金額</label>
                 <br />
-                <span>{{format(detailData.next_repayment.amount)}}$</span>
+                <span>{{ format(detailData.next_repayment.amount) }}$</span>
               </div>
             </div>
             <div class="detail-row">
               <label>還款方式</label>
-              <span>{{repaymentMethod}}</span>
+              <span>{{ repaymentMethod }}</span>
             </div>
             <div class="detail-row">
               <label>借款總額</label>
-              <span>{{format(detailData.loan_amount)}}</span>
+              <span>{{ format(detailData.loan_amount) }}</span>
             </div>
             <div class="detail-row">
               <label>借款期間</label>
-              <span>{{detailData.amortization_schedule.date}} - {{detailData.amortization_schedule.end_date}}</span>
+              <span
+                >{{ detailData.amortization_schedule.date }} -
+                {{ detailData.amortization_schedule.end_date }}</span
+              >
             </div>
             <div class="detail-row">
               <label>帳期</label>
-              <span>{{detailData.next_repayment.instalment}}/{{detailData.instalment}}期</span>
+              <span
+                >{{ detailData.next_repayment.instalment }}/{{
+                  detailData.instalment
+                }}期</span
+              >
             </div>
           </div>
-          <div class="modal-footer" style="display:block;">
-            <button class="btn btn-info float-left" @click="open">查看還款明細</button>
-            <button class="btn btn-primary float-right" data-dismiss="modal">確認</button>
+          <div class="modal-footer" style="display: block">
+            <button class="btn btn-info float-left" @click="open">
+              查看還款明細
+            </button>
+            <button class="btn btn-primary float-right" data-dismiss="modal">
+              確認
+            </button>
           </div>
         </div>
       </div>
@@ -192,24 +250,34 @@
             <div class="detail-row-container">
               <div
                 class="repayment-detail-item"
-                v-for="(item,index) in repaymentDeatilRow"
+                v-for="(item, index) in repaymentDeatilRow"
                 :key="index"
               >
                 <div class="row1">
-                  <p>{{item.repayment_date}}</p>
-                  <span>第{{item.instalment}}/{{detailData.instalment}}期</span>
+                  <p>{{ item.repayment_date }}</p>
+                  <span
+                    >第{{ item.instalment }}/{{ detailData.instalment }}期</span
+                  >
                 </div>
                 <div class="row2">
-                  <p style="color:orange">${{format(item.total_payment)}}</p>
+                  <p style="color: orange">${{ format(item.total_payment) }}</p>
                   <span v-if="isDelay">逾期清償</span>
                   <span v-else>
                     含利息
-                    <span style="color:lightblue">${{format(item.interest)}}</span>
+                    <span style="color: lightblue"
+                      >${{ format(item.interest) }}</span
+                    >
                   </span>
                 </div>
                 <div
                   class="row3"
-                  v-html="ckeckStatus(item.repayment,item.delay_interest,item.total_payment)"
+                  v-html="
+                    ckeckStatus(
+                      item.repayment,
+                      item.delay_interest,
+                      item.total_payment
+                    )
+                  "
                 ></div>
               </div>
             </div>
@@ -217,9 +285,11 @@
           <div class="modal-footer">
             <button
               class="btn btn-success"
-              style="width:100%"
+              style="width: 100%"
               @click="closeModal($refs.openModal)"
-            >確認</button>
+            >
+              確認
+            </button>
           </div>
         </div>
       </div>
@@ -508,7 +578,7 @@ export default {
           console.log("getTansactionDetails 發生錯誤，請稍後在試");
         });
     },
-    downloadCSV(range){
+    downloadCSV(range) {
       let start = range.start.getTime();
       let end = range.end.getTime();
       $("#csvDownloadIframe").remove();
@@ -533,7 +603,7 @@ export default {
   position: relative;
 
   .repayment-card {
-    width: 73%;
+    width: 85%;
     margin: 0px auto;
     padding: 0px 25px 25px 25px;
     overflow: auto;
@@ -794,7 +864,6 @@ export default {
       }
     }
   }
-
 }
 
 @media screen and (max-width: 767px) {

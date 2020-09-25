@@ -3,11 +3,14 @@
     <div class="loan-header">
       <userInfo :userData="userData"></userInfo>
       <div class="menu-card">
-        <div style="width: max-content;overflow: hidden;">
+        <div style="width: max-content; overflow: hidden">
           <router-link class="menu-item" to="loannotification">
             <div class="img">
-              <img src="../asset/images/icon_notification.svg" class="img-fluid" />
-              <span v-if="unreadCount !== 0">{{unreadCount}}</span>
+              <img
+                src="../asset/images/icon_notification.svg"
+                class="img-fluid"
+              />
+              <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
             </div>
             <p>通知</p>
           </router-link>
@@ -38,31 +41,32 @@
           <div class="detial-row">
             <div>
               <span>{{ format(tweenedRepayment) }}$</span>
-              <label>本期({{repaymentDate}})待還本息</label>
+              <label>本期({{ repaymentDate }})待還本息</label>
             </div>
           </div>
         </div>
         <div class="balance-row">
           <label>可用餘額</label>
-          <span style="font-size: 20px;">{{ format(tweenedFunds) }}$</span>
+          <span style="font-size: 20px">{{ format(tweenedFunds) }}$</span>
         </div>
       </div>
       <div class="financial-card">
         <div class="account-card">
           <h4>專屬還款帳號</h4>
           <div class="repay-account">
-            <p
-              class="des"
-              v-if="Object.keys(myRepayment).length !==0"
-            >({{myRepayment.virtual_account.bank_code}}){{myRepayment.virtual_account.bank_name}}</p>
-            <p
-              class="des"
-              v-if="Object.keys(myRepayment).length !==0"
-            >({{myRepayment.virtual_account.branch_code}}){{myRepayment.virtual_account.branch_name}}</p>
-            <p
-              class="des"
-              v-if="Object.keys(myRepayment).length !==0"
-            >{{myRepayment.virtual_account.virtual_account}}</p>
+            <p class="des" v-if="Object.keys(myRepayment).length !== 0">
+              ({{ myRepayment.virtual_account.bank_code }}){{
+                myRepayment.virtual_account.bank_name
+              }}
+            </p>
+            <p class="des" v-if="Object.keys(myRepayment).length !== 0">
+              ({{ myRepayment.virtual_account.branch_code }}){{
+                myRepayment.virtual_account.branch_name
+              }}
+            </p>
+            <p class="des" v-if="Object.keys(myRepayment).length !== 0">
+              {{ myRepayment.virtual_account.virtual_account }}
+            </p>
           </div>
         </div>
         <div class="repay-s">
@@ -71,9 +75,7 @@
             <span class="yellow">次還款日</span>
           </p>
           <p class="sm">
-            <b>
-              <strong>10000</strong>元
-            </b>
+            <b> <strong>10000</strong>元 </b>
             <span class="yellow">請於還款日前匯入</span>
           </p>
         </div>
@@ -273,7 +275,7 @@ export default {
   }
 
   .member-menu {
-    width: 73%;
+    width: 85%;
     margin: 0px auto;
     display: flex;
     padding: 25px;
@@ -420,7 +422,7 @@ export default {
   }
 }
 
-.loan-notification{
+.loan-notification {
   .pagination {
     width: fit-content;
     margin: 0px auto;
@@ -443,7 +445,8 @@ export default {
         }
       }
     }
-  }}
+  }
+}
 
 @media screen and (max-width: 767px) {
   .membercentre-wrapper {

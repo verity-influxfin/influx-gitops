@@ -2,29 +2,35 @@
   <div class="index-wrapper">
     <div class="banner" ref="banner">
       <div class="puhey-banner">
-        <img :src="'images/index-banner.jpg'" style="width:100%" />
+        <img :src="'images/index-banner.jpg'" style="width: 100%" />
         <div class="content">
           <p>最貼近年輕人的金融科技平台</p>
           <span>普匯．你的手機ATM</span>
         </div>
       </div>
-      <div class="puhey-banner" v-for="(item,index) in bannerPic" :key="index">
-        <img :src="item.img" style="width:100%" />
+      <div class="puhey-banner" v-for="(item, index) in bannerPic" :key="index">
+        <img :src="item.img" style="width: 100%" />
       </div>
     </div>
     <div class="count-card">
       <div class="content">
         <div class="item">
           <label>成功交易筆數：</label>
-          <div class="count">${{format(parseInt(tweenedTransactionCount))}}</div>
+          <div class="count">
+            ${{ format(parseInt(tweenedTransactionCount)) }}
+          </div>
         </div>
         <div class="item">
           <label>交易金額：</label>
-          <div class="count">${{format(parseInt(tweenedTransactionAmount))}}</div>
+          <div class="count">
+            ${{ format(parseInt(tweenedTransactionAmount)) }}
+          </div>
         </div>
         <div class="item">
           <label>APP下載次數：</label>
-          <div class="count">{{format(parseInt(tweenedDownloadCount))}}次</div>
+          <div class="count">
+            {{ format(parseInt(tweenedDownloadCount)) }}次
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +58,11 @@
               <investUp />
             </div>
             <div class="l-img">
-              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 220 100">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                viewBox="0 0 220 100"
+              >
                 <defs>
                   <linearGradient id="L" x1="0%" y1="50%" x2="100%" y2="50%">
                     <stop offset="0%" stop-color="#B3FAFF">
@@ -91,7 +101,11 @@
               <img src="../asset/images/logo_puhey.svg" class="img-fluid" />
             </div>
             <div class="r-img">
-              <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 220 100">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                version="1.1"
+                viewBox="0 0 220 100"
+              >
                 <defs>
                   <linearGradient id="R" x1="0%" y1="50%" x2="100%" y2="50%">
                     <stop offset="0%" stop-color="#2bafc3">
@@ -153,8 +167,8 @@
         <div class="hr"></div>
         <div class="product-list">
           <router-link
-            :class="['card-item',{'hvr-grow-shadow':item.isActive}]"
-            v-for="(item,index) in this.services"
+            :class="['card-item', { 'hvr-grow-shadow': item.isActive }]"
+            v-for="(item, index) in this.services"
             :to="item.link"
             :key="index"
           >
@@ -162,7 +176,7 @@
               <img :src="item.imageSrc" />
             </div>
             <div class="cv">
-              <h3>{{item.title}}</h3>
+              <h3>{{ item.title }}</h3>
               <p v-html="item.desc"></p>
             </div>
             <div class="cover" v-if="!item.isActive">
@@ -173,7 +187,7 @@
       </div>
     </div>
     <div class="game-card" id="game-card">
-      <div style="z-index:2;position: relative;">
+      <div style="z-index: 2; position: relative">
         <h2>額度試算</h2>
         <div class="hr"></div>
         <div class="loan-game">
@@ -182,16 +196,19 @@
               class="item"
               data-aos="fade-down"
               :data-aos-delay="100 * index"
-              v-for="(item,index) in creditRatingItem"
+              v-for="(item, index) in creditRatingItem"
               :key="index"
             >
               <div
-                :class="['circle',{'gary':!item.checked}]"
-                @click="item.checked = !item.checked;changeCredit(index);"
+                :class="['circle', { gary: !item.checked }]"
+                @click="
+                  item.checked = !item.checked;
+                  changeCredit(index);
+                "
               >
                 <img :src="item.img" class="img-fluid" />
               </div>
-              <span>{{item.text}}</span>
+              <span>{{ item.text }}</span>
             </div>
           </div>
           <div class="credit-num">
@@ -199,7 +216,7 @@
               <div class="total">
                 <p>最高可達：</p>
                 <strong>5,000～</strong>
-                <span :class="moneyClass">{{format(tweenedMoney)}}</span>
+                <span :class="moneyClass">{{ format(tweenedMoney) }}</span>
               </div>
             </div>
           </div>
@@ -212,11 +229,15 @@
           </div>
           <div class="option">
             <div class="item">
-              <label>每期{{amount >= 0 ? `投入` :`領出`}}金額：{{format(parseInt(amount))}}</label>
+              <label
+                >每期{{ amount >= 0 ? `投入` : `領出` }}金額：{{
+                  format(parseInt(amount))
+                }}</label
+              >
               <div>
                 <i
                   class="fas fa-minus-circle pointer"
-                  @click="amount > -100000 ? amount -= 1000 : ''"
+                  @click="amount > -100000 ? (amount -= 1000) : ''"
                 ></i>
                 <input
                   type="range"
@@ -228,16 +249,29 @@
                 />
                 <i
                   class="fas fa-plus-circle pointer"
-                  @click="amount < 100000 ? amount -= -1000 :''"
+                  @click="amount < 100000 ? (amount -= -1000) : ''"
                 ></i>
               </div>
             </div>
             <div class="item">
-              <label>投資操作時間(年)：{{format(parseInt(time))}}</label>
+              <label>投資操作時間(年)：{{ format(parseInt(time)) }}</label>
               <div>
-                <i class="fas fa-minus-circle pointer" @click="time > 1 ? time -= 1 : ''"></i>
-                <input type="range" step="1" min="1" max="20" class="slider" v-model="time" />
-                <i class="fas fa-plus-circle pointer" @click="time < 20 ? time -= -1 : ''"></i>
+                <i
+                  class="fas fa-minus-circle pointer"
+                  @click="time > 1 ? (time -= 1) : ''"
+                ></i>
+                <input
+                  type="range"
+                  step="1"
+                  min="1"
+                  max="20"
+                  class="slider"
+                  v-model="time"
+                />
+                <i
+                  class="fas fa-plus-circle pointer"
+                  @click="time < 20 ? (time -= -1) : ''"
+                ></i>
               </div>
             </div>
           </div>
@@ -260,25 +294,35 @@
             <img :src="'/images/expert.svg'" class="img-fluid" />
           </div>
           <p>最專業的金融專家</p>
-          <span>普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span>
+          <span
+            >普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span
+          >
         </div>
         <div class="item">
           <div class="img">
             <img :src="'/images/ai.svg'" class="img-fluid" />
           </div>
           <p>最先進的AI科技系統</p>
-          <span>普匯擁有完善的金融科技技術，包含: 反詐欺反洗錢系統、競標即時撮合系統、 風控信評/線上對保、自動撥貸/貸後管理、 分秒計息等，不斷與時俱進迭代優化。</span>
+          <span
+            >普匯擁有完善的金融科技技術，包含:
+            反詐欺反洗錢系統、競標即時撮合系統、
+            風控信評/線上對保、自動撥貸/貸後管理、
+            分秒計息等，不斷與時俱進迭代優化。</span
+          >
         </div>
         <div class="item">
           <div class="img">
             <img :src="'/images/safe.svg'" class="img-fluid" />
           </div>
           <p>簡單、快速、安全、隱私</p>
-          <span>視覺化簡潔好用的操作介面，運用先進科技與AWS 安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span>
+          <span
+            >視覺化簡潔好用的操作介面，運用先進科技與AWS
+            安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span
+          >
         </div>
       </div>
     </div>
-    <experience :experiences="experiences"/>
+    <experience :experiences="experiences" />
     <div class="information-card">
       <ul class="nav" role="tablist">
         <li class="nav-item">
@@ -287,7 +331,8 @@
             data-toggle="tab"
             href="#news"
             @click="reSlick('news_slick')"
-          >最新消息</a>
+            >最新消息</a
+          >
         </li>
         <li class="nav-item">
           <a
@@ -295,10 +340,17 @@
             data-toggle="tab"
             href="#knowledge"
             @click="reSlick('knowledge_slick')"
-          >小學堂</a>
+            >小學堂</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#video" @click="reSlick('video_slick')">小學堂影音</a>
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#video"
+            @click="reSlick('video_slick')"
+            >小學堂影音</a
+          >
         </li>
       </ul>
       <div class="tab-content">
@@ -306,15 +358,17 @@
           <div class="news-slick" ref="news_slick">
             <a
               class="slick-item hvr-float-shadow"
-              v-for="(item,index) in news"
-              :href="item.url.indexOf('influxfin') !== -1 ? item.link : item.url"
+              v-for="(item, index) in news"
+              :href="
+                item.url.indexOf('influxfin') !== -1 ? item.link : item.url
+              "
               :key="index"
             >
               <div class="img">
                 <img :src="item.image_url" class="img-fluid" />
               </div>
-              <p>{{item.title}}</p>
-              <span>{{item.updated_at}}</span>
+              <p>{{ item.title }}</p>
+              <span>{{ item.updated_at }}</span>
             </a>
           </div>
           <router-link class="btn btn-warning btn-to" to="news">
@@ -325,15 +379,15 @@
           <div class="knowledge-slick" ref="knowledge_slick">
             <router-link
               class="slick-item hvr-float-shadow"
-              v-for="(item,index) in knowledge"
+              v-for="(item, index) in knowledge"
               :key="index"
               :to="item.link"
             >
               <div class="img">
                 <img :src="item.media_link" class="img-fluid" />
               </div>
-              <p>{{item.post_title}}</p>
-              <span>{{item.post_date}}</span>
+              <p>{{ item.post_title }}</p>
+              <span>{{ item.post_date }}</span>
             </router-link>
           </div>
           <router-link class="btn btn-warning btn-to" to="blog">
@@ -344,11 +398,11 @@
           <div class="video-slick" ref="video_slick">
             <router-link
               class="slick-item hvr-float-shadow"
-              v-for="(item,index) in video"
+              v-for="(item, index) in video"
               :to="item.link"
               :key="index"
             >
-              <div style="width:fit-content;margin:0px auto">
+              <div style="width: fit-content; margin: 0px auto">
                 <iframe
                   :src="item.video_link"
                   frameborder="0"
@@ -356,8 +410,8 @@
                   allowfullscreen
                 ></iframe>
               </div>
-              <p>{{item.post_title}}</p>
-              <span>{{item.post_date}}</span>
+              <p>{{ item.post_title }}</p>
+              <span>{{ item.post_date }}</span>
             </router-link>
           </div>
           <router-link class="btn btn-warning btn-to" to="vlog/share">
@@ -377,7 +431,7 @@
         <img :src="'/images/846.png'" class="img-fluid" />
       </div>
     </div>
-    <download :isLoan="true" :isInvest="true"/>
+    <download :isLoan="true" :isInvest="true" />
   </div>
 </template>
 
@@ -868,6 +922,7 @@ export default {
 
     .puhey-banner {
       position: relative;
+      height: 77vh;
 
       .content {
         position: absolute;
@@ -1241,7 +1296,7 @@ export default {
         .circle {
           background-image: linear-gradient(129deg, #00aeff 3%, #00d9d5 102%);
           border-radius: 26px;
-          width: 500px;
+          width: 45%;
           height: 170px;
           position: relative;
           color: #ffffff;
@@ -1253,6 +1308,10 @@ export default {
             left: 45%;
             transform: translate(-50%, -50%);
             width: 100%;
+
+            strong {
+              font-size: 24px;
+            }
 
             span {
               font-size: 65px;
@@ -1285,7 +1344,7 @@ export default {
 
     .invest-game {
       @extend %layout;
-      width: 1020px;
+      width: 66.5%;
 
       .chart {
         color: #000000;
@@ -1293,7 +1352,7 @@ export default {
         border-radius: 20px;
         box-shadow: 0 0 8px #ffffff;
         margin: 10px 5px;
-        height: 500px;
+        height: 350px;
 
         .invest-chart {
           text-align: start;
@@ -1334,11 +1393,11 @@ export default {
     .header {
       background-image: url("../asset/images/why_bg.png");
       background-repeat: no-repeat;
-      background-size: 100% 100%;
+      background-size: cover;
       font-size: 17px;
       font-weight: bold;
       overflow: hidden;
-      min-height: 500px;
+      min-height: 350px;
       position: relative;
 
       .slg {
@@ -1505,10 +1564,13 @@ export default {
           color: #083a6e;
           font-size: 15px;
           margin: 0.5rem 0px;
+          pointer-events: none;
         }
 
         span {
           float: right;
+          color: #8c8c8c;
+          font-weight: 100;
         }
 
         &:hover {

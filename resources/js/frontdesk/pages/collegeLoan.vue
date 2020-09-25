@@ -16,10 +16,8 @@
       <div class="partner-box">
         <p>我們服務了超過140所學校的同學</p>
       </div>
-      <div class="partner-row">
-        <div class="item hvr-grow-shadow" v-for="(item,index) in partner" :key="index">
-          <img class="img-fluid" :src="item.imageSrc" />
-        </div>
+      <div class="partner-map">
+        <img class="img-fluid" src="../asset/images/taiwan.svg" />
       </div>
     </div>
     <experience :experiences="experiences" />
@@ -52,7 +50,6 @@ export default {
   },
   data: () => ({
     qaData: [],
-    partner: [],
     bannerData: {},
     applyData: {},
     creditList: {
@@ -72,10 +69,12 @@ export default {
       let $this = this;
       let data = [];
       $.each($this.$store.getters.ExperiencesData, (index, row) => {
-        if (row.category === "college") {
+        if (row.rank === "student") {
           data.push(row);
         }
       });
+
+      console.log();
 
       return data;
     },
@@ -86,7 +85,6 @@ export default {
   created() {
     this.$store.dispatch("getExperiencesData", "loan");
     this.getBannerData();
-    this.getPartnerData();
     this.getQaData();
     this.getApplydata();
     $("title").text(`學生貸款 - inFlux普匯金融科技`);
@@ -98,28 +96,25 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post(`${location.origin}/getBannerData`, { filter: "college" }).then((res) => {
-        this.bannerData = res.data;
-      });
-    },
-    getPartnerData() {
-      axios.post(`${location.origin}/getPartnerData`).then((res) => {
-        res.data.forEach((item) => {
-          if (item.type === "edu") {
-            this.partner.push(item);
-          }
+      axios
+        .post(`${location.origin}/getBannerData`, { filter: "college" })
+        .then((res) => {
+          this.bannerData = res.data;
         });
-      });
     },
     getApplydata() {
-      axios.post(`${location.origin}/getApplydata`, { filter: "college" }).then((res) => {
-        this.applyData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getApplydata`, { filter: "college" })
+        .then((res) => {
+          this.applyData = res.data;
+        });
     },
     getQaData() {
-      axios.post(`${location.origin}/getQaData`, { filter: "college" }).then((res) => {
-        this.qaData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getQaData`, { filter: "college" })
+        .then((res) => {
+          this.qaData = res.data;
+        });
     },
   },
 };
@@ -215,23 +210,9 @@ export default {
       }
     }
 
-    .partner-row {
+    .partner-map {
       overflow: hidden;
       width: 55%;
-      background-image: url("../asset/images/429.png");
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      padding: 20px;
-
-      .item {
-        float: left;
-        width: calc(100% / 4 - 60px);
-        margin: 20px 30px;
-        border-radius: 50%;
-        overflow: auto;
-        padding: 10px;
-        background: #ffffff;
-      }
     }
   }
 
@@ -252,6 +233,7 @@ export default {
     .partner-card {
       flex-direction: column;
       padding: 0px;
+      overflow: hidden;
 
       .partner-box {
         width: 100%;
@@ -264,15 +246,11 @@ export default {
         }
       }
 
-      .partner-row {
-        width: 100%;
-        padding: 0px;
-
-        .item {
-          margin: 10px;
-          width: calc(33% - 20px);
-          float: initial;
-        }
+      .partner-map {
+        width: 125%;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
   }

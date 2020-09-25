@@ -431,7 +431,7 @@ export default {
         display: flex;
 
         .i-box {
-          width: 60%;
+          width: 65%;
           display: flex;
 
           %center {
@@ -467,7 +467,7 @@ export default {
         }
 
         .i-m-pic {
-          width: 40%;
+          width: 35%;
         }
 
         &:hover {
@@ -475,7 +475,7 @@ export default {
             .icon {
               .poly-fill {
                 transition-duration: 0.5s;
-                fill: #ffeb6d;
+                fill: #fffbb4;
               }
             }
 

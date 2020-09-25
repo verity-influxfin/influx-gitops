@@ -8,57 +8,69 @@
         </div>
       </div>
     </div>
-    <div class="transfer-card">
-      <h2>如何使用債權轉讓</h2>
-      <div class="hr"></div>
-      <div class="transfer-slick mobile" ref="transfer_slick">
-        <div v-for="(imgSrc,index) in this.transferFlow" class="slick-item" :key="index">
-          <img :src="imgSrc" class="img-fluid" />
+    <div class="tra-bg">
+      <div class="intro-card">
+        <h2>什麼是債權轉讓？</h2>
+        <div class="hr"></div>
+        <div class="cont">
+          <p>
+            漢皇重色思傾國，御宇多年求不得。楊家有女初長成，養在深閨人未識。天生麗質難自棄，一朝選在君王側。回眸一笑百媚生，六宮粉黛無顏色。春寒賜浴華清池，溫泉水滑洗凝脂。侍兒扶起嬌無力，始是新承恩澤時。
+          </p>
+          <p>
+            雲鬢花顏金步搖，芙蓉帳暖度春宵。春宵苦短日高起，從此君王不早朝。承歡侍宴無閒暇，春從春遊夜專夜。後宮佳麗三千人，三千寵愛在一身。金屋妝成嬌侍夜，玉樓宴罷醉和春。姊妹弟兄皆列土，可憐光彩生門戶。
+          </p>
         </div>
       </div>
+      <apply
+        title="如何使用債權轉讓"
+        :requiredDocuments="applyData.requiredDocuments"
+        :step="applyData.step"
+      />
     </div>
-    <qa :qaData="qaData" />
     <div class="invest-tonic-card">
       <h2>投資理財大補帖</h2>
       <div class="hr"></div>
       <div class="invest-tonic-slick" ref="investTonic_slick">
-        <div v-for="(item,index) in this.investTonic" class="content-row" :key="index">
+        <router-link
+          v-for="(item, index) in this.investTonic"
+          class="content-row hvr-float-shadow"
+          :to="item.link"
+          :key="index"
+        >
           <div class="img">
             <img :src="item.media_link" class="img-fluid" />
           </div>
-          <p>{{item.post_title}}</p>
-          <br />
-          <router-link :to="item.link" class="btn btn-danger">觀看大補帖</router-link>
-        </div>
+          <p>{{ item.post_title }}</p>
+        </router-link>
       </div>
     </div>
+    <download :isLoan="false" :isInvest="true" />
+    <qa :qaData="qaData" />
   </div>
 </template>
 
 <script>
 import qa from "../component/qaComponent";
 import banner from "../component/bannerComponent";
+import apply from "../component/applyComponent";
+import download from "../component/downloadComponent";
 
 export default {
   components: {
     qa,
+    apply,
     banner,
+    download,
   },
   data: () => ({
     qaData: [],
-    transferFlow: [
-      "/images/transfer_flow1.png",
-      "/images/transfer_flow2.png",
-      "/images/transfer_flow3.png",
-      "/images/transfer_flow4.png",
-      "/images/transfer_flow5.png",
-      "/images/transfer_flow6.png",
-    ],
+    applyData: {},
     investTonic: [],
     bannerData: {},
   }),
   created() {
     this.getQaData();
+    this.getApplydata();
     this.getBannerData();
     this.getInvestTonicData();
     $("title").text(`債權轉讓 - inFlux普匯金融科技`);
@@ -97,10 +109,19 @@ export default {
           console.error("getBannerData 發生錯誤，請稍後再試");
         });
     },
+    getApplydata() {
+      axios
+        .post(`${location.origin}/getApplydata`, { filter: "transfer" })
+        .then((res) => {
+          this.applyData = res.data;
+        });
+    },
     getQaData() {
-      axios.post(`${location.origin}/getQaData`, { filter: "transfer" }).then((res) => {
-        this.qaData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getQaData`, { filter: "transfer" })
+        .then((res) => {
+          this.qaData = res.data;
+        });
     },
     createTransferSlick() {
       $(this.$refs.transfer_slick).slick({
@@ -129,7 +150,7 @@ export default {
     createInvestTonicSlick() {
       $(this.$refs.investTonic_slick).slick({
         infinite: true,
-        slidesToShow: 3,
+        slidesToShow: 4,
         slidesToScroll: 1,
         autoplay: true,
         prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
@@ -169,6 +190,13 @@ export default {
     height: 2px;
     background-image: linear-gradient(to right, #71008b, #ffffff);
     margin: 0px auto;
+  }
+
+  .tra-bg {
+    background-image: url("../asset/images/transfer_bg.png");
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   .link {
@@ -225,61 +253,12 @@ export default {
     }
   }
 
-  .transfer-card {
-    img {
-      min-width: 100%;
-    }
+  .intro-card {
+    padding: 20px;
 
-    .transfer-slick {
-      padding: 50px 0px;
-
-      .slick-item {
-        margin: 0px 10px;
-        cursor: default;
-      }
-
-      .slick-list {
-        width: 100%;
-      }
-
-      .slick-custom-dots {
-        position: absolute;
-        padding: 15px 0px;
-        text-align: center;
-        color: #a0a0a0;
-        display: none;
-        list-style-type: none;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 13px;
-
-        li {
-          margin: 0px 3px;
-        }
-
-        .slick-active {
-          color: #000000;
-        }
-      }
-
-      %arrow {
-        position: absolute;
-        top: 50%;
-        transform: translatey(-50%);
-        font-size: 23px;
-        z-index: 1;
-        cursor: pointer;
-      }
-
-      .arrow-left {
-        @extend %arrow;
-        left: 0px;
-      }
-
-      .arrow-right {
-        @extend %arrow;
-        right: 0px;
-      }
+    .cont {
+      width: 80%;
+      margin: 30px auto;
     }
   }
 
@@ -293,23 +272,34 @@ export default {
     }
 
     .invest-tonic-slick {
-      width: 75%;
+      width: 90%;
       margin: 0px auto;
 
       .content-row {
         margin: 0px 10px;
-        cursor: default;
+        cursor: pointer;
+        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
 
         .img {
           width: 100%;
           height: 190px;
           overflow: hidden;
         }
+
+        p {
+          text-align: center;
+          color: #083a6e;
+          font-size: 15px;
+          margin: 0.5rem 0px;
+          font-weight: bolder;
+          height: 45px;
+        }
       }
 
       .slick-list {
         width: 100%;
         margin: 0px auto;
+        padding: 10px 0px;
 
         .slick-slide {
           padding: 14px;
@@ -327,12 +317,12 @@ export default {
 
       .arrow-left {
         @extend %arrow;
-        left: 0px;
+        left: -2%;
       }
 
       .arrow-right {
         @extend %arrow;
-        right: 0px;
+        right: -2%;
       }
     }
   }
@@ -351,11 +341,10 @@ export default {
       width: 50%;
     }
 
-    .transfer-card {
-      .transfer-slick {
-        .slick-custom-dots {
-          display: flex;
-        }
+    .intro-card {
+      .cont {
+        width: 100%;
+        margin: 30px auto;
       }
     }
 

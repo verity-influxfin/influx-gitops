@@ -5,17 +5,17 @@
             "subMenu": [
                 {
                     "name": "學生貸款",
-                    "href": "/collegeLoan",
+                    "href": "collegeLoan",
                     "isActive": true
                 },
                 {
                     "name": "上班族貸款",
-                    "href": "/freshGraduateLoan",
+                    "href": "freshGraduateLoan",
                     "isActive": true
                 },
                 {
                     "name": "資訊工程師專案",
-                    "href": "/engineerLoan",
+                    "href": "engineerLoan",
                     "isActive": true
                 },
                 {
@@ -35,12 +35,12 @@
             "subMenu": [
                 {
                     "name": "債權投資",
-                    "href": "/invest",
+                    "href": "invest",
                     "isActive": true
                 },
                 {
                     "name": "債權轉讓",
-                    "href": "/transfer",
+                    "href": "transfer",
                     "isActive": true
                 }
             ]
@@ -50,7 +50,7 @@
             "subMenu": [
                 {
                     "name": "手機分期",
-                    "href": "/mobileLoan",
+                    "href": "mobileLoan",
                     "isActive": true
                 }
             ]
@@ -60,12 +60,12 @@
             "subMenu": [
                 {
                     "name": "公司介紹",
-                    "href": "/company",
+                    "href": "company",
                     "isActive": true
                 },
                 {
                     "name": "最新消息",
-                    "href": "/news",
+                    "href": "news",
                     "isActive": true
                 }
             ]
@@ -75,42 +75,42 @@
             "subMenu": [
                 {
                     "name": "小學堂",
-                    "href": "/blog",
+                    "href": "blog",
                     "isActive": true
                 },
                 {
                     "name": "小學堂影音",
-                    "href": "/vlog?q=share",
+                    "href": "vlog?q=share",
                     "isActive": true
                 }
             ]
         },
         {
             "title": "常見問題",
-            "href": "/qa",
+            "href": "qa",
             "subMenu": []
         }
     ],
     "actionList": [
         {
             "text": "徵才服務",
-            "href": "/recruiting"
+            "href": "recruiting"
         },
         {
             "text": "校園大使",
-            "href": "/campuspartner"
+            "href": "campuspartner"
         },
         {
             "text": "社團合作",
-            "href": "/clubcooperation"
+            "href": "clubcooperation"
         },
         {
             "text": "商行合作",
-            "href": "/firmcooperation"
+            "href": "firmcooperation"
         },
         {
             "text": "企業合作",
-            "href": "/companycooperation"
+            "href": "companycooperation"
         }
     ]
 }

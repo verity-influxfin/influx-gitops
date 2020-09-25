@@ -80,7 +80,7 @@ export default {
       let $this = this;
       let data = [];
       $.each($this.$store.getters.ExperiencesData, (index, row) => {
-        if (row.category === "worker") {
+        if (row.category === "officeWorker") {
           data.push(row);
         }
       });

@@ -4,12 +4,12 @@
             {
                 "imgSrc": "./images/invest_student_1.png",
                 "stepTitle": "選擇額度",
-                "stepDesc": "提供完整資訊，有助提高額度"
+                "stepDesc": "提供完整資訊,有助提高額度"
             },
             {
                 "imgSrc": "./images/invest_student_2.png",
-                "stepTitle": "上傳身分,驗證資料",
-                "stepDesc": "AI數據分析審核，全程無人打擾"
+                "stepTitle": "上傳資料,驗證身分",
+                "stepDesc": "AI數據分析審核,全程無人打擾"
             },
             {
                 "imgSrc": "./images/invest_student_3.png",
@@ -51,7 +51,7 @@
                 "num": 1,
                 "imgSrc": "./images/invest_engineer_1.png",
                 "stepTitle": "選擇額度",
-                "stepDesc": "提供完整資訊，有助提高額度"
+                "stepDesc": "提供完整資訊,有助提高額度"
             },
             {
                 "num": 2,
@@ -62,8 +62,8 @@
             {
                 "num": 3,
                 "imgSrc": "./images/invest_engineer_3.png",
-                "stepTitle": "上傳身分,驗證資料",
-                "stepDesc": "AI數據分析審核，全程無人打擾"
+                "stepTitle": "上傳資料,驗證身分",
+                "stepDesc": "AI數據分析審核,全程無人打擾"
             },
             {
                 "num": 4,
@@ -85,13 +85,13 @@
                 "memo": ""
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "金融帳號",
+                "imgSrc": "./images/icon_cert_rev2_identity.svg",
+                "text": "健保卡",
                 "memo": ""
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_social.svg",
-                "text": "常用社群",
+                "imgSrc": "./images/icon_cert_rev2_bank.svg",
+                "text": "金融帳號",
                 "memo": ""
             },
             {
@@ -117,13 +117,13 @@
                 "num": 1,
                 "imgSrc": "./images/invest_worker_1.png",
                 "stepTitle": "選擇額度",
-                "stepDesc": "提供完整資訊，有助提高額度"
+                "stepDesc": "提供完整資訊,有助提高額度"
             },
             {
                 "num": 2,
                 "imgSrc": "./images/invest_worker_2.png",
-                "stepTitle": "上傳身分,驗證資料",
-                "stepDesc": "AI數據分析審核，全程無人打擾"
+                "stepTitle": "上傳資料,驗證身分",
+                "stepDesc": "AI數據分析審核,全程無人打擾"
             },
             {
                 "num": 3,
@@ -145,23 +145,18 @@
                 "memo": ""
             },
             {
+                "imgSrc": "./images/icon_cert_rev2_identity.svg",
+                "text": "健保卡",
+                "memo": ""
+            },
+            {
                 "imgSrc": "./images/icon_cert_rev2_bank.svg",
                 "text": "金融卡",
                 "memo": ""
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_income.svg",
-                "text": "財力證明",
-                "memo": ""
-            },
-            {
-                "imgSrc": "./images/icon_cert_rev2_diploma.svg",
-                "text": "畢業證書",
-                "memo": ""
-            },
-            {
                 "imgSrc": "./images/icon_cert_rev2_worker.svg",
-                "text": "工作認證",
+                "text": "工作證明",
                 "memo": ""
             },
             {
@@ -177,7 +172,7 @@
                 "num": 1,
                 "imgSrc": "./images/invest_mobile_1.png",
                 "stepTitle": "進入分期超市",
-                "stepDesc": "提供完整資訊，有助提高額度"
+                "stepDesc": "提供完整資訊,有助提高額度"
             },
             {
                 "num": 2,
@@ -189,7 +184,7 @@
                 "num": 3,
                 "imgSrc": "./images/invest_mobile_3.png",
                 "stepTitle": "選擇手機型號廠牌",
-                "stepDesc": "選擇廠牌，系統立即為您處理訂單"
+                "stepDesc": "選擇廠牌,系統立即為您處理訂單"
             },
             {
                 "num": 4,
@@ -202,6 +197,37 @@
                 "imgSrc": "./images/invest_mobile_5.png",
                 "stepTitle": "申請成功",
                 "stepDesc": "24小時款項收到款項"
+            }
+        ],
+        "requiredDocuments": []
+    },
+    "transfer": {
+        "step": [
+            {
+                "num": 1,
+                "imgSrc": "./images/transfer_1.png",
+                "stepTitle": "進入我的資產",
+                "stepDesc": ""
+            },
+            {
+                "num": 2,
+                "imgSrc": "./images/transfer_2.png",
+                "subImgSrc":"./images/transfer_2-p.png",
+                "stepTitle": "選擇單筆/打包出售",
+                "stepDesc": ""
+            },
+            {
+                "num": 3,
+                "imgSrc": "./images/transfer_3.png",
+                "subImgSrc":"./images/transfer_3-p.png",
+                "stepTitle": "調整出讓金額,並點選出讓",
+                "stepDesc": "詳閱轉讓協議書"
+            },
+            {
+                "num": 4,
+                "imgSrc": "./images/transfer_4.png",
+                "stepTitle": "上架成功,等待媒合",
+                "stepDesc": ""
             }
         ],
         "requiredDocuments": []

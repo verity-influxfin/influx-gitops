@@ -43,12 +43,14 @@ let newsRow = Vue.extend({
   props: ["item", "index"],
   template: `
       <li class="news-card" data-aos="zoom-in" :data-aos-delay="100 * index">
+        <a :href="item.url.indexOf('influxfin') !== -1 ? item.link : item.url">
           <div class="img"><img :src="item.image_url" class="img-custom" /></div>
           <div class="cnt">
             <span class="date">{{item.updated_at}}</span>
             <p class="title">{{item.title}}</p>
           </div>
-        <a :href="item.url.indexOf('influxfin') !== -1 ? item.link : item.url">Read more+</a>
+          <div class="read">Read more+</div>
+        </a>
       </li>
   `,
 });
@@ -145,8 +147,8 @@ export default {
         centerPadding: "5rem",
         slidesToShow: 1,
         slidesToScroll: 1,
-        prevArrow: '<img src="/images/icon_pre.svg" class="pre">',
-        nextArrow: '<img src="/images/icon_next.svg" class="next">',
+        prevArrow: '<img src="/images/n_a_pre.svg" class="pre">',
+        nextArrow: '<img src="/images/n_a_next.svg" class="next">',
         responsive: [
           {
             breakpoint: 768,
@@ -197,18 +199,21 @@ export default {
         .slick-arrow {
           position: absolute;
           z-index: 1;
-          width: 50px;
+          width: 36px;
           top: 50%;
           transform: translate(0px, -50%);
           cursor: pointer;
           border-radius: 50%;
+          background: #ffffff;
+          padding: 7px;
+          box-shadow: 0 0 15px 0 0 0 15px 0 rgb(152 152 152 / 50%);
 
           &.pre {
-            left: 4%;
+            left: 6%;
           }
 
           &.next {
-            right: 4%;
+            right: 6%;
           }
         }
 
@@ -358,15 +363,22 @@ export default {
         box-shadow: 0 0 2px 2px #b4b4b4;
         background: #ffffff;
 
-        a {
+        a{
+          &:hover {
+            text-decoration: none;
+            color: #000000;
+
+            .read{
+              text-decoration: none;
+            }
+          }
+        }
+
+        .read {
           display: block;
           color: #8629a5;
           text-decoration: underline;
           float: right;
-
-          &:hover {
-            text-decoration: none;
-          }
         }
 
         .img {

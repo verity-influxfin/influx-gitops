@@ -1,19 +1,19 @@
 <template>
   <div class="credit-card">
     <div class="credit-box">
-      <h2>「額度最高{{$props.amount}}萬，那利率呢？」</h2>
+      <h2>「額度最高{{ $props.amount }}萬，那利率呢？」</h2>
       <div class="hr"></div>
       <p>
         您的貸款利率由信用評等決定
-        <br />信用評等則由您的整體信用評估及收入(財力)狀況決定。
-        <br />公開透明的平等，讓您對利率一目瞭然！
+        <br />信用評等決定利率
+        <br />小普提醒您，資料提供的越完整，對信評越有幫助！
       </p>
       <div class="credit-level-list">
         <div
-          v-for="(item,index) in creditLevelList"
+          v-for="(item, index) in creditLevelList"
           :key="index"
-          :class="['level-item',{light:item.isChecked}]"
-          @click="rotate(item.isChecked,index)"
+          :class="['level-item', { light: item.isChecked }]"
+          @click="rotate(item.isChecked, index)"
         >
           <img :src="`/images/${item.href}`" class="img-fluid" />
         </div>
@@ -21,11 +21,16 @@
       <span class="license">*利率會依每位用戶個別狀況而有所不同</span>
       <template v-if="$props.license">
         <br />
-        <span class="license">*{{$props.license}}</span>
+        <span class="license">*{{ $props.license }}</span>
       </template>
     </div>
     <div class="credit-board">
-      <creditBoard :credit="$props.creditList" :deg="deg" :index="index" @move="movePointer" />
+      <creditBoard
+        :credit="$props.creditList"
+        :deg="deg"
+        :index="index"
+        @move="movePointer"
+      />
     </div>
   </div>
 </template>
@@ -80,8 +85,8 @@ export default {
   padding: 4rem 0px 0px 0px;
 
   .credit-box {
-    width: 60%;
-    padding: 0px 0px 0px 12rem;
+    width: 65%;
+    padding: 0px 0px 0px 15rem;
 
     p {
       font-size: 16px;
@@ -93,7 +98,7 @@ export default {
 
     .credit-level-list {
       overflow: auto;
-      width: 60%;
+      width: 48%;
 
       .level-item {
         filter: opacity(0.5);
@@ -118,7 +123,7 @@ export default {
   }
 
   .credit-board {
-    width: 40%;
+    width: 35%;
   }
 }
 
