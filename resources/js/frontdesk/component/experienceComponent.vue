@@ -23,7 +23,7 @@
           >
             {{ item.type === "loan" ? "借款" : "投資" }}回饋
           </h5>
-          <span>{{ item.memo }}</span>
+          <span>{{ item.feedback }}</span>
         </div>
         <div class="img">
           <img :src="item.imageSrc" class="img-fluid" />

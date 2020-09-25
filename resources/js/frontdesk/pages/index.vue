@@ -1433,6 +1433,7 @@ export default {
       .item {
         padding: 3rem;
         height: 380px;
+        pointer-events: none;
 
         $bgColor: #005ec1, #16528f, #083a6e;
 
