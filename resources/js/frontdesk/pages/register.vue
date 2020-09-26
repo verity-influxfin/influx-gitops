@@ -19,7 +19,8 @@
                 class="btn btn-go"
                 href="https://event.influxfin.com/R/url?p=webbanner"
                 target="_blank"
-              >點我前往</a>
+                >點我前往</a
+              >
               <router-link class="btn btn-home" to="/index">回首頁</router-link>
             </div>
           </div>
@@ -56,7 +57,7 @@
             </div>
             <div class="input-group">
               <span class="input-group-addon label-text">驗證碼：</span>
-              <div class="captcha-row" style="display:flex">
+              <div class="captcha-row" style="display: flex">
                 <input
                   type="text"
                   class="form-control label-input"
@@ -68,13 +69,17 @@
                   class="btn btn-captcha"
                   @click="getCaptcha('registerphone')"
                   v-if="!isSended"
-                >取得驗證碼</button>
-                <div class="btn btn-disable" v-if="isSended">{{counter}}S有效</div>
+                >
+                  取得驗證碼
+                </button>
+                <div class="btn btn-disable" v-if="isSended">
+                  {{ counter }}S有效
+                </div>
                 <span class="tip" v-if="isSended">驗證碼已寄出</span>
               </div>
             </div>
             <div class="input-group">
-              <div class="chiller_cb" style="margin:0px auto">
+              <div class="chiller_cb" style="margin: 0px auto">
                 <input
                   id="confirmTerms"
                   type="checkbox"
@@ -85,20 +90,38 @@
                 <span></span>
                 <div class="row">
                   我同意
-                  <div class="terms" @click="getTerms('user')">貸款人服務條款</div>、
-                  <div class="terms" @click="getTerms('privacy_policy')">隱私權條款</div>
+                  <div class="terms" @click="getTerms('user')">
+                    貸款人服務條款
+                  </div>
+                  、
+                  <div class="terms" @click="getTerms('privacy_policy')">
+                    隱私權條款
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="message" v-if="message">{{message}}</div>
+          <div class="message" v-if="message">{{ message }}</div>
           <div class="dialog-footer">
             <div
-              v-if="(phone && password && confirmPassword && code && isAgree) ? false : true"
+              v-if="
+                phone && password && confirmPassword && code && isAgree
+                  ? false
+                  : true
+              "
               class="btn btn-disable"
               disable
-            >送出</div>
-            <button type="button" v-else class="btn btn-submit" @click="doRegister">送出</button>
+            >
+              送出
+            </div>
+            <button
+              type="button"
+              v-else
+              class="btn btn-submit"
+              @click="doRegister"
+            >
+              送出
+            </button>
           </div>
         </template>
       </div>
@@ -114,7 +137,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <div class="terms-title">{{termsTitle}}</div>
+            <div class="terms-title">{{ termsTitle }}</div>
             <button type="button" class="close" data-dismiss="modal">✕</button>
           </div>
           <div class="modal-body terms-content">
@@ -250,17 +273,14 @@ export default {
 <style lang="scss">
 .register-wrapper {
   position: relative;
-  height: 90vh;
+  margin-top: 84px;
+  overflow: hidden;
 
   .register-dialog {
     box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
     background-color: #ffffff;
-    position: absolute;
-    width: 60%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #ffffff;
+    width: 880px;
+    margin: 45px auto;
     display: flex;
 
     .ic {

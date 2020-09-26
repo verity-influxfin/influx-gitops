@@ -2,10 +2,26 @@
   <div class="index-wrapper">
     <div class="banner" ref="banner">
       <div class="puhey-banner">
-        <img :src="'images/index-banner.jpg'" />
         <div class="content">
           <p>最貼近年輕人的金融科技平台</p>
-          <span>普匯．你的手機ATM</span>
+          <div class="box">
+            <a
+              class="loan"
+              href="https://event.influxfin.com/r/iurl?p=webinvest"
+              target="_blank"
+              ><img src="../asset/images/loan.svg" class="img-fluid" /><span
+                >我要投資</span
+              ></a
+            >
+            <a
+              class="borrow"
+              href="https://event.influxfin.com/R/url?p=webbanner"
+              target="_blank"
+              ><img src="../asset/images/borrow.svg" class="img-fluid" /><span
+                >我要借款</span
+              ></a
+            >
+          </div>
         </div>
       </div>
       <shanghuiBanner />
@@ -13,23 +29,19 @@
     <div class="count-card">
       <div class="content">
         <div class="item">
+          <label>會員數：</label>
+          <div class="count">{{ format(parseInt(tweenedMemberAmount)) }}</div>
+        </div>
+        <div class="item">
           <label>成功交易筆數：</label>
-          <div class="count">
-            ${{ format(parseInt(tweenedTransactionCount)) }}
-          </div>
+          <div class="count">{{ format(parseInt(tweenedTransactionCount)) }}</div>
         </div>
-        <div class="item">
-          <label>交易金額：</label>
-          <div class="count">
-            ${{ format(parseInt(tweenedTransactionAmount)) }}
-          </div>
-        </div>
-        <div class="item">
+        <!-- <div class="item">
           <label>APP下載次數：</label>
           <div class="count">
             {{ format(parseInt(tweenedDownloadCount)) }}次
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="product-card">
@@ -460,7 +472,7 @@ export default {
     money: 100000,
     tweenedMoney: 100000,
     tweenedTransactionCount: 0,
-    tweenedTransactionAmount: 0,
+    tweenedMemberAmount: 0,
     tweenedDownloadCount: 0,
     moneyClass: "ordinary",
     creditRatingItem: [
@@ -566,9 +578,9 @@ export default {
     });
     AOS.init();
 
-    gsap.to(this.$data, { duration: 0.5, tweenedTransactionCount: 10000 });
-    gsap.to(this.$data, { duration: 0.5, tweenedTransactionAmount: 50000000 });
-    gsap.to(this.$data, { duration: 0.5, tweenedDownloadCount: 20000 });
+    gsap.to(this.$data, { duration: 0.5, tweenedTransactionCount: 31559 });
+    gsap.to(this.$data, { duration: 0.5, tweenedMemberAmount: 54188 });
+    // gsap.to(this.$data, { duration: 0.5, tweenedDownloadCount: 20000 });
   },
   watch: {
     news() {
@@ -923,6 +935,10 @@ export default {
     .puhey-banner {
       position: relative;
       height: 77vh;
+      background-image: url("../asset/images/index-banner.png");
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      background-size: cover;
 
       img {
         height: inherit;
@@ -934,23 +950,43 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        text-align: center;
-        color: #083a6e;
-        font-size: 36px;
-        font-weight: bolder;
-        text-shadow: 0 0 7px #ffffff;
-      }
-    }
 
-    @media (max-width: 767px) {
-      .puhey-banner {
-        .content {
-          font-size: 16px;
+        p {
+          font-size: 40px;
+          font-weight: bold;
+          color: #ffffff;
+          text-align: center;
+          text-shadow: 0 0 5px white;
         }
 
-        .app-entrance {
-          width: 70%;
-          top: 80%;
+        .box {
+          display: flex;
+          justify-content: space-around;
+          margin-top: 5rem;
+
+          %link {
+            width: 80px;
+            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 0 6px #3cffe4;
+
+            img {
+              margin-bottom: 10px;
+            }
+          }
+
+          .loan {
+            @extend %link;
+            img {
+              filter: drop-shadow(0px 0px 6px #f6d949);
+            }
+          }
+          .borrow {
+            @extend %link;
+            img {
+              filter: drop-shadow(0px 0px 6px #65dab3);
+            }
+          }
         }
       }
     }
@@ -1628,28 +1664,28 @@ export default {
   }
 
   @media screen and (max-width: 767px) {
-    
-  .banner {
-    .puhey-banner {
-      img {
-        height: inherit;
-        width: initial;
-      }
-    }
-
-    @media (max-width: 767px) {
+    .banner {
       .puhey-banner {
+        img {
+          height: inherit;
+          width: initial;
+        }
+
         .content {
           font-size: 16px;
-        }
+          width: 100%;
+          top: 65%;
 
-        .app-entrance {
-          width: 70%;
-          top: 80%;
+          p {
+            font-size: 25px;
+          }
+
+          .box {
+            margin-top: 10rem;
+          }
         }
       }
     }
-  }
     .count-card {
       display: none;
     }

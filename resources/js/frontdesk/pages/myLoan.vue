@@ -71,11 +71,11 @@
         </div>
         <div class="repay-s">
           <p class="sm">
-            <strong>2020-09-11</strong>
+            <strong>{{myRepayment.next_repayment.date}}</strong>
             <span class="yellow">次還款日</span>
           </p>
           <p class="sm">
-            <b> <strong>10000</strong>元 </b>
+            <b> <strong>{{repaymentAmount}}</strong>元 </b>
             <span class="yellow">請於還款日前匯入</span>
           </p>
         </div>

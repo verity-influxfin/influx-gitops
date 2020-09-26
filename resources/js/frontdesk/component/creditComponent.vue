@@ -4,8 +4,7 @@
       <h2>「額度最高{{ $props.amount }}萬，那利率呢？」</h2>
       <div class="hr"></div>
       <p>
-        您的貸款利率由信用評等決定
-        <br />信用評等決定利率
+        信用評等決定您的利率
         <br />小普提醒您，資料提供的越完整，對信評越有幫助！
       </p>
       <div class="credit-level-list">
