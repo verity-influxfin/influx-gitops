@@ -161,6 +161,7 @@ $ci-color: #083a6e;
 
             .text {
                 width: 75%;
+                text-align: justify;
 
                 p {
                     line-height: 30px;
@@ -170,17 +171,17 @@ $ci-color: #083a6e;
 
         .loan-card {
             @extend %card;
-            width: 13%;
+            width: fit-content;
         }
 
         .invest-card {
             @extend %card;
-            width: 13%;
+            width: fit-content;
         }
 
         .about-card {
             @extend %card;
-            width: 13%;
+            width: fit-content;
         }
     }
 
@@ -533,7 +534,7 @@ $ci-color: #083a6e;
     display: none !important;
 }
 .hidden-desktop {
-    display: block !important; 
+    display: block !important;
 }
 
 .fade-enter-active,

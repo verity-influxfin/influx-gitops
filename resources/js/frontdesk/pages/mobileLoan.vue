@@ -169,8 +169,12 @@ export default {
     async getMobileData() {
       let res = await axios.post(`${location.origin}/getMobileData`);
 
-      this.mobileData = res.data.data.list.reverse();
-      this.filterMobileData = res.data.data.list.reverse();
+       let mobile = res.data.data.list.filter((item)=>{
+        return item.price !== 0;
+      });
+
+      this.mobileData = mobile.reverse();
+      this.filterMobileData = mobile.reverse();
 
       this.mobileData.forEach((item) => {
         if (!this.makes.includes(item.brand)) {

@@ -16,21 +16,19 @@
       <h2>聽聽借款人怎麼說</h2>
       <div class="hr" />
       <div class="video-row" ref="video_slick">
-        <div class="item" v-for="(item,index) in shares" :key="index">
+        <div class="item" v-for="(item, index) in shares" :key="index">
           <iframe
             :src="item.video_link"
             frameborder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
-            style="height:180px;"
+            style="height: 180px"
           ></iframe>
           <hr />
-          <p>{{item.post_title}}</p>
+          <p>{{ item.post_title }}</p>
         </div>
       </div>
-      <router-link class="btn link" to="vlog?q=loan">
-        影音列表
-      </router-link>
+      <router-link class="btn link" to="vlog?q=loan"> 影音列表 </router-link>
     </div>
     <apply
       title="「不知道該如何申貸嗎？」"
@@ -113,19 +111,33 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post(`${location.origin}/getBannerData`, { filter: "freshgraduate" }).then((res) => {
-        this.bannerData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getBannerData`, { filter: "freshgraduate" })
+        .then((res) => {
+          this.bannerData = res.data;
+          this.bannerData.downloadhtml = `
+          <a class="b-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
+            <img src="/images/apple-logo_invest.svg">
+          </a>
+          <a class="b-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
+            <img src="/images/android-logo_invest.svg">
+          </a>
+        `;
+        });
     },
     getApplydata() {
-      axios.post(`${location.origin}/getApplydata`, { filter: "freshgraduate" }).then((res) => {
-        this.applyData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getApplydata`, { filter: "freshgraduate" })
+        .then((res) => {
+          this.applyData = res.data;
+        });
     },
     getQaData() {
-      axios.post(`${location.origin}/getQaData`, { filter: "freshgraduate" }).then((res) => {
-        this.qaData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getQaData`, { filter: "freshgraduate" })
+        .then((res) => {
+          this.qaData = res.data;
+        });
     },
     createSlick() {
       $(this.$refs.video_slick).slick({

@@ -63,7 +63,7 @@
               class="btn btn-secondary btn-sm float-right"
               target="_blank"
               href="https://line.me/R/ti/p/%40kvd1654s"
-              >聯繫克服</a
+              >聯繫客服</a
             >
           </div>
           <div class="delay-memo" v-if="item.delay_days > 0">

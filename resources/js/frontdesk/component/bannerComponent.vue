@@ -7,6 +7,7 @@
       <img :src="$props.data.bannerPhone" class="img-fluid" />
     </div>
     <h1 class="banner-title">{{ $props.data.productName }}</h1>
+    <div class="banner-download" v-html="$props.data.downloadhtml"></div>
   </div>
 </template>
 
@@ -25,6 +26,21 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   padding: 0px 10%;
+
+  .banner-download {
+    position: absolute;
+    top: 60%;
+    left: 42%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+
+    .b-link {
+      width: 200px;
+      display: block;
+    }
+  }
 
   .banner-title {
     color: #ffffff;
@@ -57,6 +73,15 @@ export default {
 
     .banner-title {
       left: 50%;
+    }
+
+    .banner-download {
+      left: 50%;
+      width: 90%;
+
+      .b-link {
+        width: 150px;
+      }
     }
 
     .banner-content {

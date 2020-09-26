@@ -100,6 +100,14 @@ export default {
         .post(`${location.origin}/getBannerData`, { filter: "college" })
         .then((res) => {
           this.bannerData = res.data;
+          this.bannerData.downloadhtml = `
+          <a class="b-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
+            <img src="/images/apple-logo_invest.svg">
+          </a>
+          <a class="b-link" target="_blank" href="https://event.influxfin.com/R/url?p=webbanner">
+            <img src="/images/android-logo_invest.svg">
+          </a>
+        `;
         });
     },
     getApplydata() {
