@@ -16,7 +16,7 @@ $ci-color: #083a6e;
 
     .web-logo {
         width: 12%;
-        margin: 5px 30px;
+        margin: 5px;
     }
 
     .event {
@@ -26,6 +26,7 @@ $ci-color: #083a6e;
         font-weight: 900;
         padding: 5px;
         border-radius: 10px;
+        margin-left: 20px;
 
         &:hover {
             text-decoration: none;
@@ -529,10 +530,10 @@ $ci-color: #083a6e;
 }
 
 .hidden-phone {
-    display: none;
+    display: none !important;
 }
 .hidden-desktop {
-    display: block;
+    display: block !important; 
 }
 
 .fade-enter-active,
@@ -567,10 +568,10 @@ $ci-color: #083a6e;
 
 @media (max-width: 767px) {
     .hidden-phone {
-        display: block;
+        display: block !important;
     }
     .hidden-desktop {
-        display: none;
+        display: none !important;
     }
 
     .blog-quiklink {
@@ -579,14 +580,6 @@ $ci-color: #083a6e;
 
     .back-top {
         top: 45%;
-    }
-}
-
-@media (min-width: 1537px) {
-    body,
-    .sticky {
-        width: 1536px !important;
-        margin: 0px auto;
     }
 }
 

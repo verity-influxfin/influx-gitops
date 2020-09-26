@@ -4,6 +4,8 @@
     <div class="text-card">
       <div class="a-hr">
         <div class="a-s">
+          <p>全台唯一，安心轉讓，折價出售</p>
+          <p>資金快速轉讓，創造高報酬！</p>
           <p>滾石不生苔 , 隨時靈活轉換您的資金</p>
         </div>
       </div>
@@ -14,10 +16,7 @@
         <div class="hr"></div>
         <div class="cont">
           <p>
-            漢皇重色思傾國，御宇多年求不得。楊家有女初長成，養在深閨人未識。天生麗質難自棄，一朝選在君王側。回眸一笑百媚生，六宮粉黛無顏色。春寒賜浴華清池，溫泉水滑洗凝脂。侍兒扶起嬌無力，始是新承恩澤時。
-          </p>
-          <p>
-            雲鬢花顏金步搖，芙蓉帳暖度春宵。春宵苦短日高起，從此君王不早朝。承歡侍宴無閒暇，春從春遊夜專夜。後宮佳麗三千人，三千寵愛在一身。金屋妝成嬌侍夜，玉樓宴罷醉和春。姊妹弟兄皆列土，可憐光彩生門戶。
+            您隨時可以將以投資的債權標的，以折價或溢價的方式轉讓予其他投資人，隨時擁有靈活的資金。
           </p>
         </div>
       </div>
@@ -228,10 +227,8 @@ export default {
         position: absolute;
         bottom: 0;
         left: 0;
-        height: 214px;
         width: 80%;
         background-color: #083a6e;
-        font-size: 29.5px;
         font-weight: bold;
         color: #ffffff;
 
@@ -243,11 +240,9 @@ export default {
         }
 
         p {
-          line-height: 1.7;
-          position: absolute;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          left: 50%;
+          width: 80%;
+          margin: 25px auto;
+          word-break: keep-all;
         }
       }
     }
@@ -259,6 +254,7 @@ export default {
     .cont {
       width: 80%;
       margin: 30px auto;
+      text-align: center;
     }
   }
 
@@ -329,7 +325,14 @@ export default {
 
   @media (max-width: 767px) {
     .text-card {
-      display: none;
+      .a-hr {
+        height: initial;
+        .a-s {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
+      }
     }
 
     h2 {

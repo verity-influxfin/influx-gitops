@@ -17,9 +17,18 @@
         <div class="box">
           <div class="i-box">
             <div class="icon">
-              <svg viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                viewBox="0 0 60 60"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <defs>
-                  <pattern id="optional" patternUnits="userSpaceOnUse" width="60" height="60">
+                  <pattern
+                    id="optional"
+                    patternUnits="userSpaceOnUse"
+                    width="60"
+                    height="60"
+                  >
                     <image
                       x="10"
                       y="10"
@@ -29,7 +38,10 @@
                     />
                   </pattern>
                 </defs>
-                <polygon class="poly-fill" points="15 4 1 30 15 56 45 56 59 30 45 4" />
+                <polygon
+                  class="poly-fill"
+                  points="15 4 1 30 15 56 45 56 59 30 45 4"
+                />
                 <polygon
                   points="15 4 1 30 15 56 45 56 59 30 45 4"
                   fill="url(#optional)"
@@ -40,7 +52,7 @@
             </div>
             <div class="text">
               <h4>自選標的</h4>
-              <p>進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。</p>
+              <p>隨時隨地，自由選擇您喜好的投資標的。</p>
             </div>
           </div>
           <div class="i-m-pic">
@@ -53,9 +65,18 @@
           </div>
           <div class="i-box">
             <div class="icon">
-              <svg viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                viewBox="0 0 60 60"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <defs>
-                  <pattern id="smart" patternUnits="userSpaceOnUse" width="60" height="60">
+                  <pattern
+                    id="smart"
+                    patternUnits="userSpaceOnUse"
+                    width="60"
+                    height="60"
+                  >
                     <image
                       x="10"
                       y="10"
@@ -65,7 +86,10 @@
                     />
                   </pattern>
                 </defs>
-                <polygon class="poly-fill" points="15 4 1 30 15 56 45 56 59 30 45 4" />
+                <polygon
+                  class="poly-fill"
+                  points="15 4 1 30 15 56 45 56 59 30 45 4"
+                />
                 <polygon
                   points="15 4 1 30 15 56 45 56 59 30 45 4"
                   fill="url(#smart)"
@@ -76,16 +100,25 @@
             </div>
             <div class="text">
               <h4>智能投資</h4>
-              <p>進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。</p>
+              <p>設定您的投資偏好，24小時不錯失優質案件！</p>
             </div>
           </div>
         </div>
         <div class="box">
           <div class="i-box">
             <div class="icon">
-              <svg viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+              <svg
+                viewBox="0 0 60 60"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <defs>
-                  <pattern id="quick" patternUnits="userSpaceOnUse" width="60" height="60">
+                  <pattern
+                    id="quick"
+                    patternUnits="userSpaceOnUse"
+                    width="60"
+                    height="60"
+                  >
                     <image
                       x="10"
                       y="10"
@@ -95,7 +128,10 @@
                     />
                   </pattern>
                 </defs>
-                <polygon class="poly-fill" points="15 4 1 30 15 56 45 56 59 30 45 4" />
+                <polygon
+                  class="poly-fill"
+                  points="15 4 1 30 15 56 45 56 59 30 45 4"
+                />
                 <polygon
                   points="15 4 1 30 15 56 45 56 59 30 45 4"
                   fill="url(#quick)"
@@ -106,7 +142,7 @@
             </div>
             <div class="text">
               <h4>檢審速貸</h4>
-              <p>進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。</p>
+              <p>申請人無提供最高學歷，同時您可以獲得更好的報酬率。</p>
             </div>
           </div>
           <div class="i-m-pic">
@@ -125,7 +161,10 @@
               <img src="../asset/images/invest_chart_a.svg" class="img-fluid" />
             </div>
             <div class="i-m" data-aos="fade-left" data-aos-duration="1000">
-              <img src="../asset/images/invest_chart_a1.svg" class="img-fluid" />
+              <img
+                src="../asset/images/invest_chart_a1.svg"
+                class="img-fluid"
+              />
             </div>
           </div>
         </div>
@@ -134,16 +173,32 @@
             <div class="i-b">
               <img src="../asset/images/invest_chart_b.svg" class="img-fluid" />
             </div>
-            <div class="i-m" data-aos="fade-left" data-aos-delay="900" data-aos-duration="1000">
-              <img src="../asset/images/invest_chart_b1.svg" class="img-fluid" />
+            <div
+              class="i-m"
+              data-aos="fade-left"
+              data-aos-delay="900"
+              data-aos-duration="1000"
+            >
+              <img
+                src="../asset/images/invest_chart_b1.svg"
+                class="img-fluid"
+              />
             </div>
           </div>
           <div class="adv-item">
             <div class="i-b">
               <img src="../asset/images/invest_chart_c.svg" class="img-fluid" />
             </div>
-            <div class="i-m" data-aos="fade-left" data-aos-delay="1200" data-aos-duration="1000">
-              <img src="../asset/images/invest_chart_c1.svg" class="img-fluid" />
+            <div
+              class="i-m"
+              data-aos="fade-left"
+              data-aos-delay="1200"
+              data-aos-duration="1000"
+            >
+              <img
+                src="../asset/images/invest_chart_c1.svg"
+                class="img-fluid"
+              />
             </div>
           </div>
         </div>
@@ -154,16 +209,16 @@
       <h2>聽聽投資人怎麼說</h2>
       <div class="hr" />
       <div class="video-row" ref="video_slick">
-        <div class="item" v-for="(item,index) in video" :key="index">
+        <div class="item" v-for="(item, index) in video" :key="index">
           <iframe
             :src="item.video_link"
             frameborder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
-            style="height:180px;"
+            style="height: 180px"
           ></iframe>
           <hr />
-          <p>{{item.post_title}}</p>
+          <p>{{ item.post_title }}</p>
         </div>
       </div>
       <router-link class="btn link" to="vlog/?q=invest">影音列表</router-link>
@@ -321,6 +376,7 @@ export default {
         p {
           width: 80%;
           margin: 25px auto;
+          word-break: keep-all;
         }
       }
     }
@@ -562,7 +618,14 @@ export default {
     }
 
     .text-card {
-      display: none;
+      .a-hr {
+        height: initial;
+        .a-s {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
+      }
     }
 
     .advantage-card {

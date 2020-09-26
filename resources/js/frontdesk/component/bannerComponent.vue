@@ -49,7 +49,8 @@ export default {
 @media (max-width: 767px) {
   .product-banner {
     background-position: 50% 50%;
-    
+    height: 65vh;
+
     .phone-img {
       display: none;
     }

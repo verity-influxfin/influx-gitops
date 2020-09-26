@@ -45,8 +45,7 @@
 export default {
   props: ["experiences"],
   watch: {
-    "$props.experiences"(xzc) {
-      console.log(xzc);
+    "$props.experiences"() {
       this.$nextTick(() => {
         this.createSlick(this.$refs.comment_slick);
       });

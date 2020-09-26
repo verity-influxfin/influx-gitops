@@ -108,7 +108,7 @@ export default {
         box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         background-color: #ffffff;
         margin: 20px;
-        padding: 15px;
+        padding: 10px;
 
         &.light {
           filter: initial;
