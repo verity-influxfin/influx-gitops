@@ -29,13 +29,13 @@
                 "memo": ""
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "金融帳號",
+                "imgSrc": "./images/icon_cert_rev2_identity.svg",
+                "text": "健保卡",
                 "memo": ""
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_social.svg",
-                "text": "常用社群",
+                "imgSrc": "./images/icon_cert_rev2_bank.svg",
+                "text": "金融帳號",
                 "memo": ""
             },
             {

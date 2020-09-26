@@ -1,7 +1,7 @@
 <template>
   <div class="video-wrapper">
-    <h3 class="title">{{this.videoTitle}}</h3>
-    <div style="display: flex;">
+    <h3 class="title">{{ this.videoTitle }}</h3>
+    <div style="display: flex">
       <div class="main-view">
         <div class="contenier">
           <div class="title-img">
@@ -22,7 +22,7 @@
             :href="this.link"
             num_posts="10"
             notify="true"
-            :width="(this.width*0.99).toFixed(0)"
+            :width="(this.width * 0.99).toFixed(0)"
           ></fb:comments>
 
           <div class="share-btn">
@@ -35,9 +35,11 @@
         <div class="box">
           <h4>最新文章</h4>
           <div>
-            <div class="latest" v-for="(item,index) in latest" :key="index">
-              <a :href="item.link">{{item.post_title}}</a>
-              <div class="float-right">－{{item.post_modified.substr(0,10)}}</div>
+            <div class="latest" v-for="(item, index) in latest" :key="index">
+              <a :href="item.link">{{ item.post_title }}</a>
+              <div class="float-right">
+                －{{ item.post_modified.substr(0, 10) }}
+              </div>
             </div>
           </div>
         </div>
@@ -47,19 +49,22 @@
         </div>
         <div class="box">
           <h4>時間排序</h4>
-          {{group}}
+          {{ group }}
           <tree :data="list" :key="new Date()">
             <span class="tree-text" slot-scope="{ node }">
               <template v-if="!node.hasChildren()">
                 －
-                <a
-                  :title="node.text.text"
-                  :href="node.text.link"
-                >{{`${node.text.text.substr(0, 10)}...`}}</a>
+                <a :title="node.text.text" :href="node.text.link">{{
+                  `${node.text.text.substr(0, 10)}...`
+                }}</a>
               </template>
               <template v-else>
-                <i :class="[node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder']"></i>
-                {{node.text}}
+                <i
+                  :class="[
+                    node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder',
+                  ]"
+                ></i>
+                {{ node.text }}
               </template>
             </span>
           </tree>

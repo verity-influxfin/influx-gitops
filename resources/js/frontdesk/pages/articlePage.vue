@@ -1,20 +1,31 @@
 <template>
   <div class="article-wrapper">
-    <h3 class="title" v-if="this.articleTitle">{{this.articleTitle}}</h3>
+    <h3 class="title" v-if="this.articleTitle">{{ this.articleTitle }}</h3>
     <div class="flex">
-      <div :class="[{'main-view':!search.includes('news'),'news-view':search.includes('news')}]">
+      <div
+        :class="[
+          {
+            'main-view': !search.includes('news'),
+            'news-view': search.includes('news'),
+          },
+        ]"
+      >
         <div class="contenier">
           <div class="title-img" v-if="this.articleImg">
             <img :src="this.articleImg" class="img-fluid" />
           </div>
-          <div class="main-content" v-if="this.articleHtml" v-html="this.articleHtml"></div>
+          <div
+            class="main-content"
+            v-if="this.articleHtml"
+            v-html="this.articleHtml"
+          ></div>
         </div>
         <div class="comments" v-if="!search.includes('news')">
           <fb:comments
             :href="this.link"
             num_posts="10"
             notify="true"
-            :width="(this.width*0.99).toFixed(0)"
+            :width="(this.width * 0.99).toFixed(0)"
           ></fb:comments>
 
           <div class="shere-btn">
@@ -26,9 +37,11 @@
         <div class="box">
           <h4>最新文章</h4>
           <div>
-            <div class="latest" v-for="(item,index) in latest" :key="index">
-              <a :href="item.link">{{item.post_title}}</a>
-              <div class="float-right">－{{item.post_modified.substr(0,10)}}</div>
+            <div class="latest" v-for="(item, index) in latest" :key="index">
+              <a :href="item.link">{{ item.post_title }}</a>
+              <div class="float-right">
+                －{{ item.post_modified.substr(0, 10) }}
+              </div>
             </div>
           </div>
         </div>
@@ -38,19 +51,22 @@
         </div>
         <div class="box">
           <h4>時間排序</h4>
-          {{group}}
+          {{ group }}
           <tree :data="list" :key="new Date()">
             <span class="tree-text" slot-scope="{ node }">
               <template v-if="!node.hasChildren()">
                 －
-                <a
-                  :title="node.text.text"
-                  :href="node.text.link"
-                >{{`${node.text.text.substr(0, 10)}...`}}</a>
+                <a :title="node.text.text" :href="node.text.link">{{
+                  `${node.text.text.substr(0, 10)}...`
+                }}</a>
               </template>
               <template v-else>
-                <i :class="[node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder']"></i>
-                {{node.text}}
+                <i
+                  :class="[
+                    node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder',
+                  ]"
+                ></i>
+                {{ node.text }}
               </template>
             </span>
           </tree>
@@ -80,6 +96,9 @@ export default {
   created() {
     this.getArticleData();
     this.$store.dispatch("getKnowledgeData");
+  },
+  mounted() {
+    this.$nextTick(() => {});
   },
   computed: {
     latest() {

@@ -377,6 +377,7 @@ export default {
         p {
           width: 80%;
           margin: 25px auto;
+          word-break: keep-all;
         }
       }
     }
@@ -699,7 +700,14 @@ export default {
     }
 
     .text-card {
-      display: none;
+      .a-hr {
+        height: initial;
+        .a-s {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
+      }
     }
 
     .advantage-card {

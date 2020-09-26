@@ -2,15 +2,13 @@
   <div class="index-wrapper">
     <div class="banner" ref="banner">
       <div class="puhey-banner">
-        <img :src="'images/index-banner.jpg'" style="width: 100%" />
+        <img :src="'images/index-banner.jpg'" />
         <div class="content">
           <p>最貼近年輕人的金融科技平台</p>
           <span>普匯．你的手機ATM</span>
         </div>
       </div>
-      <div class="puhey-banner" v-for="(item, index) in bannerPic" :key="index">
-        <img :src="item.img" style="width: 100%" />
-      </div>
+      <shanghuiBanner />
     </div>
     <div class="count-card">
       <div class="content">
@@ -167,7 +165,11 @@
         <div class="hr"></div>
         <div class="product-list">
           <router-link
-            :class="['card-item', { 'hvr-grow-shadow': item.isActive }]"
+            :class="[
+              'card-item',
+              { 'hvr-grow-shadow': item.isActive },
+              { disable: !item.isActive },
+            ]"
             v-for="(item, index) in this.services"
             :to="item.link"
             :key="index"
@@ -440,6 +442,8 @@ import investUp from "../component/svg/investDotUpComponent";
 import investDown from "../component/svg/investDotDownComponent";
 import download from "../component/downloadComponent";
 import experience from "../component/experienceComponent";
+//banner
+import shanghuiBanner from "../component/banner/shanghuiBanner";
 
 export default {
   components: {
@@ -447,6 +451,8 @@ export default {
     experience,
     investUp,
     investDown,
+    //banner
+    shanghuiBanner,
   },
   data: () => ({
     amount: 10000,
@@ -519,7 +525,6 @@ export default {
         money: 50000,
       },
     ],
-    bannerPic: [],
     services: [],
   }),
   computed: {
@@ -550,7 +555,6 @@ export default {
     this.$store.dispatch("getNewsData");
     this.$store.dispatch("getVideoData", { category: "share" });
     this.getServiceData();
-    this.getBannerPic();
     $("title").text(`首頁 - inFlux普匯金融科技`);
   },
   mounted() {
@@ -558,6 +562,7 @@ export default {
       this.createChart();
       particlesJS.load("game-card", "data/game.json");
       this.createSlick(this.$refs.advantage_slick, 3, false);
+      this.createSlick(this.$refs.banner, 1, false);
     });
     AOS.init();
 
@@ -579,11 +584,6 @@ export default {
     video() {
       this.$nextTick(() => {
         this.createSlick(this.$refs.video_slick);
-      });
-    },
-    bannerPic() {
-      this.$nextTick(() => {
-        this.createSlick(this.$refs.banner, 1, false);
       });
     },
     amount(data) {
@@ -924,6 +924,11 @@ export default {
       position: relative;
       height: 77vh;
 
+      img {
+        height: inherit;
+        width: 100%;
+      }
+
       .content {
         position: absolute;
         top: 50%;
@@ -1202,11 +1207,10 @@ export default {
 
           .cover {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: -webkit-fill-available;
-            background: #7075afb3;
+            top: 50%;
+            left: 50%;
+            transform: translate(50%, 50%);
+            filter: invert(1);
 
             span {
               position: absolute;
@@ -1221,6 +1225,10 @@ export default {
             color: #ffffff;
             text-decoration: none;
           }
+        }
+
+        .disable {
+          filter: contrast(0.5);
         }
       }
     }
@@ -1620,6 +1628,28 @@ export default {
   }
 
   @media screen and (max-width: 767px) {
+    
+  .banner {
+    .puhey-banner {
+      img {
+        height: inherit;
+        width: initial;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .puhey-banner {
+        .content {
+          font-size: 16px;
+        }
+
+        .app-entrance {
+          width: 70%;
+          top: 80%;
+        }
+      }
+    }
+  }
     .count-card {
       display: none;
     }
@@ -1746,6 +1776,10 @@ export default {
 
             .total {
               left: 50%;
+
+              p {
+                margin-top: 15px;
+              }
             }
           }
         }

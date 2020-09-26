@@ -80,7 +80,7 @@ export default {
       let $this = this;
       let data = [];
       $.each($this.$store.getters.ExperiencesData, (index, row) => {
-        if (row.category === "officeWorker") {
+        if (row.rank === "officeWorker") {
           data.push(row);
         }
       });
@@ -211,6 +211,7 @@ export default {
         p {
           width: 80%;
           margin: 25px auto;
+          word-break: keep-all;
         }
       }
     }
@@ -249,7 +250,14 @@ export default {
     }
 
     .text-card {
-      display: none;
+      .a-hr {
+        height: initial;
+        .a-s {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
+      }
     }
 
     .video-card {

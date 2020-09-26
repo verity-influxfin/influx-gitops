@@ -4,21 +4,21 @@
         "desc":"不論是夢想實現，還是生活急需，我們集結了各大學校友、老師，專門投資借貸同學在學期間的資金需求。",
         "imageSrc": "./images/college_loan.png",
         "isActive": true,
-        "link": "/collegeLoan"
+        "link": "collegeLoan"
     },
     {
         "title": "上班族貸",
         "desc":"進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。",
         "imageSrc": "./images/office_loan.png",
         "isActive": true,
-        "link": "/freshGraduateLoan"
+        "link": "freshGraduateLoan"
     },
     {
         "title": "工程師貸",
         "desc":"無論是學生/上班族，只要是資訊/資工/資管相關科系，我們特別提供給您優惠利率，隨時隨地，只要打開APP，資金到手。",
         "imageSrc": "./images/engineer_loan.png",
         "isActive": true,
-        "link": "/engineerLoan"
+        "link": "engineerLoan"
     },
     {
         "title": "新創企業貸",

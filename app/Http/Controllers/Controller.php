@@ -116,11 +116,11 @@ class Controller extends BaseController
 
         $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
 
-        if($input['type']){
-            $filter[] = ['type','=',$input['type']];
+        if ($input['type']) {
+            $filter[] = ['type', '=', $input['type']];
         }
 
-        $knowledge = DB::table('feedback')->select(['feedback', 'imageSrc', 'name', 'rank','type'])->where($filter)->orderBy('date', 'desc')->get();
+        $knowledge = DB::table('feedback')->select(['feedback', 'imageSrc', 'name', 'rank', 'type'])->where($filter)->orderBy('date', 'desc')->get();
 
         return response()->json($knowledge, 200);
     }
@@ -236,18 +236,5 @@ class Controller extends BaseController
         } catch (Exception $e) {
             return response()->json($e, 400);
         }
-    }
-
-    public function getBannerPic(Request $request)
-    {
-
-        return [
-            [
-                "img" => 'images/index-banner.jpg'
-            ],
-            [
-                "img" => 'images/index-banner.jpg'
-            ]
-        ];
     }
 }
