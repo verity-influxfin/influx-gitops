@@ -18,6 +18,42 @@ class Target extends REST_Controller
 
     public function list_get()
     {
+        $input = $this->input->get(NULL, TRUE);
+
+        $serarch = isset($input['search']) ? $input['search'] : false;
+        if($serarch){
+            if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $serarch))
+            {
+                $name = $this->user_model->get_many_by(array(
+                    'name like '    => '%'.$serarch.'%',
+                    'status'	    => 1
+                ));
+                if($name){
+                    foreach($name as $k => $v){
+                        $where['user_id'][] = $v->id;
+                    }
+                }
+            }else{
+                if(preg_match('/[A-Za-z]/', substr($serarch, 0, 1))==1){
+                    $id_number	= $this->user_model->get_many_by(array(
+                        'id_number  like'	=> '%'.$serarch.'%',
+                        'status'	        => 1
+                    ));
+                    if($id_number){
+                        foreach($id_number as $k => $v){
+                            $where['user_id'][] = $v->id;
+                        }
+                    }
+                }
+                elseif(preg_match_all('/\D/', $serarch)==0){
+                    $where['user_id'] = $serarch;
+                }
+                else{
+                    $where['target_no like'] = '%'.$serarch.'%';
+                }
+            }
+        }
+
 //        $res = $this->loan_manager_target_model->get_delayUser_list(['user.id']);
 //        foreach($res as $key => $value){
 //            $delayUserList[] = $value->id;
@@ -26,8 +62,7 @@ class Target extends REST_Controller
 
 //        $res = $this->loan_manager_target_model->get_target_list();
 
-        $res = $this->loan_manager_target_model->get_target_list(
-        [
+        $select = [
             'target.id',
             'target.product_id',
             'target.sub_product_id',
@@ -44,21 +79,26 @@ class Target extends REST_Controller
             'target.delay_days',
             'processing.admin_id',
             'processing.push_by',
+            'processing.push_type',
             'processing.result',
             'processing.remark',
             'processing.updated_at',
             'admin.name as adminName',
             'push.status as pushStatus',
-        ], [
+            'push.user_status as pushUserStatus',
+        ];
+
+        $param = [
 //                'target.status' => 5,
-                'push.status' => 2,
-                'delay_days >' => 7,
+            'push.status' => 2,
+            'delay_days >' => 7,
 //                'user_id' => 1364,
 //            'user_id' => 44302,
 //            'user.id <=' => 700,
 //            'user.id' => 294,
-        ], 0, 1000
-        );
+        ];
+
+        $res = $this->loan_manager_target_model->get_target_list($select, $param, 0, 1000);
 
         $data = [];
         if($res){
@@ -84,6 +124,8 @@ class Target extends REST_Controller
                 $datas[$key]->productName = $productName;
                 $datas[$key]->delayStatus = $this->loantarget_lib->targetStatus($value->delay_days) . ($value->delay_days > 0 ? '('.$value->delay_days.'天)' : '');
                 $datas[$key]->repaymentType = $repayment_type[$value->repayment];
+                $datas[$key]->instalment = $value->instalment;
+                $datas[$key]->interest_rate = $value->interest_rate;
                 $datas[$key]->total_payment = $amortization_schedule['total_payment'];
                 $datas[$key]->remaining_principal = $amortization_schedule['remaining_principal'];
                 $datas[$key]->status = $value->targetStatus;
@@ -96,13 +138,13 @@ class Target extends REST_Controller
                     if(isset($value->pushStatus)){
                         if(isset($value->result)){
                             $userTargets[$value->user_id]['debtProcess'] = [
-                                'lastContactStatus' => $loanmanagerConfig['pushTool'][$value->push_by] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result],
+                                'lastContactStatus' => $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result],
                                 'lastContactRemark' => $value->remark,
                             ];
                             $userTargets[$value->user_id]['debtProcess']['lastContact'] = date('Y/m/d H:i:s', $value->updated_at);
                             $userTargets[$value->user_id]['debtProcess']['lastContactAdmin'] = $value->adminName;
                             $userTargets[$value->user_id]['debtProcess']['pushStatus'] = $value->pushStatus;
-                            $userTargets[$value->user_id]['debtProcess']['pushStatusName'] = $loanmanagerConfig['pushDataStatus'][$value->pushStatus];
+                            $userTargets[$value->user_id]['debtProcess']['pushUserStatus'] = $loanmanagerConfig['pushDataUserStatus'][$value->pushUserStatus];
                         }
                     }
                     $userTargets[$value->user_id]['debtProcess']['userTotalPayment'] = 0;
