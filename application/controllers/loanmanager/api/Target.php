@@ -19,6 +19,8 @@ class Target extends REST_Controller
     public function list_get()
     {
         $input = $this->input->get(NULL, TRUE);
+        $or_where = [];
+        $where = [];
 
         $serarch = isset($input['search']) ? $input['search'] : false;
         if($serarch){
@@ -26,30 +28,31 @@ class Target extends REST_Controller
             {
                 $name = $this->user_model->get_many_by(array(
                     'name like '    => '%'.$serarch.'%',
-                    'status'	    => 1
                 ));
                 if($name){
                     foreach($name as $k => $v){
-                        $where['user_id'][] = $v->id;
+                        $k == 0 ? $where['target.user_id'] = $v->id : $or_where['target.user_id'][] = $v->id ;
                     }
                 }
             }else{
-                if(preg_match('/[A-Za-z]/', substr($serarch, 0, 1))==1){
+                if (preg_match('/[A-Za-z]/', substr($serarch, 0, 1)) == 1
+                    && is_numeric(substr($serarch, 1, 9))
+                ){
                     $id_number	= $this->user_model->get_many_by(array(
-                        'id_number  like'	=> '%'.$serarch.'%',
+                        'id_number like'	=> '%'.$serarch.'%',
                         'status'	        => 1
                     ));
                     if($id_number){
                         foreach($id_number as $k => $v){
-                            $where['user_id'][] = $v->id;
+                            $k == 0 ? $where['target.user_id'] = $v->id : $or_where['target.user_id'][] = $v->id ;
                         }
                     }
                 }
                 elseif(preg_match_all('/\D/', $serarch)==0){
-                    $where['user_id'] = $serarch;
+                    $where['user.id'] = $serarch;
                 }
                 else{
-                    $where['target_no like'] = '%'.$serarch.'%';
+                    $where['target.target_no like'] = '%'.$serarch.'%';
                 }
             }
         }
@@ -98,7 +101,7 @@ class Target extends REST_Controller
 //            'user.id' => 294,
         ];
 
-        $res = $this->loan_manager_target_model->get_target_list($select, $param, 0, 1000);
+        $res = $this->loan_manager_target_model->get_target_list($select, $where, $or_where, 0, 1000);
 
         $data = [];
         if($res){

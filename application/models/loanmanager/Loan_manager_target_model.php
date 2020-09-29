@@ -63,7 +63,7 @@ class Loan_manager_target_model extends MY_Model
         return $data;
     }
 
-    public function get_target_list($select, $where = [],  $offset = 0, $limit = false)
+    public function get_target_list($select, $where = [], $orWhere = [],  $offset = 0, $limit = false)
     {
         is_array($select) ? $select = implode(',', $select) : '*';
 
@@ -81,18 +81,26 @@ class Loan_manager_target_model extends MY_Model
         );
         $this->db->join(
             'loan_manager.push_data as push',
-            'push.user_id = user.id'
+            'push.user_id = user.id',
+            'left'
         );
         $this->db->join(
             'loan_manager.users as admin',
-            'processing.admin_id = admin.id'
+            'processing.admin_id = admin.id',
+            'left'
         );
 
         if(count($where) > 0){
             $this->db->where($where);
         }
 
-        $this->db->order_by("processing.updated_at",'desc');
+        if(count($orWhere) > 0){
+            foreach ($orWhere as $key => $value){
+                $this->db->or_where($value);
+            }
+        }
+
+//        $this->db->order_by("processing.updated_at",'desc');
         $limit ? $this->db->limit($limit, $offset) : '';
         $query = $this->db->get();
         return $query->result();
