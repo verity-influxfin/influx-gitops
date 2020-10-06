@@ -100,17 +100,17 @@ export default {
       width: 48%;
 
       .level-item {
-        filter: opacity(0.5);
+        filter: opacity(0.4);
         width: calc(33% - 40px);
         float: left;
         border-radius: 50%;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
         background-color: #ffffff;
         margin: 20px;
         padding: 10px;
 
         &.light {
           filter: initial;
+          box-shadow: 0 0 20px 0 #6ab0f2;
         }
       }
     }
@@ -135,12 +135,16 @@ export default {
       width: 100%;
       padding: 10px;
 
+      p {
+        margin: 10px 20px;
+      }
+
       .credit-level-list {
         width: 100%;
 
         .level-item {
           margin: 5px;
-          width: calc(25% - 10px);
+          width: calc(20% - 10px);
         }
       }
 

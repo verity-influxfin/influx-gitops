@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
-
+use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -216,17 +216,25 @@ class Controller extends BaseController
     public function sendFeedback(Request $request)
     {
         $this->inputs = $request->all();
-        $this->inputs['datetime'] = date('Y-m-d H:i:s');
 
         $this->validate($request, [
             'name' => 'required',
             'message' => 'max:100',
-            'type' => 'in:officeWorker,student'
+            'rank' => 'in:officeWorker,student',
+            'type' => 'in:invest,loan'
         ], [
             'name.required' => '請輸入姓名',
             'message.max' => '字數太長，請縮短字數',
-            'type.in' => '請選擇身分'
+            'type.in' => '請選擇身分',
+            'rank.in' => '請選擇使用類別',
         ]);
+
+        $userData = Session::get('userData');
+
+        $type = config('feedback');
+
+        $this->inputs['date'] = date('Y-m-d H:i:s');
+        $this->inputs['imageSrc'] = 'images/'.$type[$userData['sex']][$this->inputs['rank']];
 
         try {
             $exception = DB::transaction(function () {

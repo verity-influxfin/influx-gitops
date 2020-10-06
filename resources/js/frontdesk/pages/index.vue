@@ -2,8 +2,19 @@
   <div class="index-wrapper">
     <div class="banner" ref="banner">
       <div class="puhey-banner">
+        <img
+          :src="'/images/index-banner-d.png'"
+          style="width: 100%"
+          class="hidden-desktop"
+        />
+        <img
+          :src="'/images/index-banner-m.png'"
+          style="width: 100%"
+          class="hidden-phone"
+        />
         <div class="content">
           <p>最貼近年輕人的金融科技平台</p>
+          <p>普匯，你的手機ATM</p>
           <div class="box">
             <a
               class="loan"
@@ -34,7 +45,9 @@
         </div>
         <div class="item">
           <label>成功交易筆數：</label>
-          <div class="count">{{ format(parseInt(tweenedTransactionCount)) }}</div>
+          <div class="count">
+            {{ format(parseInt(tweenedTransactionCount)) }}
+          </div>
         </div>
         <!-- <div class="item">
           <label>APP下載次數：</label>
@@ -641,7 +654,7 @@ export default {
         infinite: true,
         slidesToShow: toShow,
         slidesToScroll: 1,
-        autoplay: true,
+        autoplay: false,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
@@ -934,14 +947,9 @@ export default {
 
     .puhey-banner {
       position: relative;
-      height: 77vh;
-      background-image: url("../asset/images/index-banner.png");
-      background-position: 50% 50%;
-      background-repeat: no-repeat;
-      background-size: cover;
+      height: 72vh;
 
       img {
-        height: inherit;
         width: 100%;
       }
 
@@ -956,7 +964,6 @@ export default {
           font-weight: bold;
           color: #ffffff;
           text-align: center;
-          text-shadow: 0 0 5px white;
         }
 
         .box {
@@ -965,10 +972,18 @@ export default {
           margin-top: 5rem;
 
           %link {
-            width: 80px;
+            box-shadow: 0px 2px 3px black;
+            border: 2px solid;
+            width: 160px;
             text-align: center;
             color: #ffffff;
-            text-shadow: 0 0 6px #3cffe4;
+            background-image: linear-gradient(
+              to bottom,
+              rgba(0, 0, 0, 0.2),
+              rgba(0, 0, 0, 0.2)
+            );
+            padding: 2.2rem;
+            backdrop-filter: blur(5px);
 
             img {
               margin-bottom: 10px;
@@ -977,12 +992,26 @@ export default {
 
           .loan {
             @extend %link;
+            border-image-source: linear-gradient(
+              144deg,
+              #f7eca8 1%,
+              rgba(191, 148, 55, 0.7) 51%,
+              #e7cc7e 100%
+            );
+            border-image-slice: 1;
             img {
               filter: drop-shadow(0px 0px 6px #f6d949);
             }
           }
           .borrow {
             @extend %link;
+            border-image-source: linear-gradient(
+              144deg,
+              #65dab3 1%,
+              rgba(21, 124, 80, 0.7) 48%,
+              #65dab3 100%
+            );
+            border-image-slice: 1;
             img {
               filter: drop-shadow(0px 0px 6px #65dab3);
             }
@@ -1666,6 +1695,8 @@ export default {
   @media screen and (max-width: 767px) {
     .banner {
       .puhey-banner {
+        height: 77vh;
+        
         img {
           height: inherit;
           width: initial;
@@ -1674,18 +1705,18 @@ export default {
         .content {
           font-size: 16px;
           width: 100%;
-          top: 65%;
 
           p {
             font-size: 25px;
           }
 
           .box {
-            margin-top: 10rem;
+            margin-top: 3rem;
           }
         }
       }
     }
+    
     .count-card {
       display: none;
     }

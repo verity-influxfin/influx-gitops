@@ -2,12 +2,12 @@
   <div class="shanghui-banner">
     <img
       :src="'/images/6ac45bc4w.jpg'"
-      style="width: 100%"
+      style="width: 100%; height: auto"
       class="hidden-desktop"
     />
     <img
       :src="'/images/66asc13w.jpg'"
-      style="width: 100%"
+      style="width: 100%; height: auto"
       class="hidden-phone"
     />
     <div class="box">
@@ -33,7 +33,6 @@ export default {};
 <style lang="scss">
 .shanghui-banner {
   position: relative;
-  height: 77vh;
 
   img {
     height: inherit;

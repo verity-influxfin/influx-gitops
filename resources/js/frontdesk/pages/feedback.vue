@@ -16,22 +16,36 @@
             <i class="fas fa-address-card"></i>
           </span>
         </div>
-        <select class="custom-select" v-model="type">
+        <select class="custom-select" v-model="rank">
           <option value>請選擇身分</option>
           <option value="officeWorker">上班族</option>
           <option value="student">學生</option>
         </select>
       </div>
+
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="fas fa-address-card"></i>
+          </span>
+        </div>
+        <select class="custom-select" v-model="type">
+          <option value>請選擇使用類別</option>
+          <option value="invest">投資</option>
+          <option value="loan">借款</option>
+        </select>
+      </div>
+
       <div class="input-group">
         <textarea
           type="textArea"
           maxlength="100"
           placeholder="100字以內"
           class="form-control"
-          v-model="message"
+          v-model="feedback"
         ></textarea>
       </div>
-      <p v-if="errorMessage" class="error-message">{{errorMessage}}</p>
+      <p v-if="errorMessage" class="alert alert-danger">{{errorMessage}}</p>
       <button class="btn btn-submit" @click="submit">
         送出&emsp;
         <i class="fas fa-chevron-right"></i>
@@ -56,8 +70,9 @@ export default {
   },
   data: () => ({
     name: "",
+    rank:"",
     type: "",
-    message: "",
+    feedback: "",
     errorMessage: "",
     componentKey: 0,
     bannerData: {}
@@ -79,13 +94,14 @@ export default {
       });
     },
     submit() {
-      let { name, type, message, $root } = this;
+      let { name, type,rank, feedback, $root } = this;
       let userID = $root.userData.id;
 
       let data = {
         name,
+        rank,
         type,
-        message,
+        feedback,
         userID
       };
 
@@ -94,7 +110,8 @@ export default {
         .then(res => {
           this.name = "";
           this.type = "";
-          this.message = "";
+          this.rank = "";
+          this.feedback = "";
           this.errorMessage = "";
           alert("謝謝您寶貴的意見！");
         })
@@ -126,6 +143,10 @@ export default {
 
   .input-from {
     margin: 10px auto;
+  }
+
+  .alert-danger{
+    text-align: center;
   }
 }
 </style>

@@ -144,6 +144,7 @@ $(() => {
 
                 if (Object.keys(userData).length === 0) {
                     $(this.$refs.loginForm).modal("show");
+                    this.$router.history.pending = { path: '/feedback' };
                 } else {
                     $router.push("/feedback");
                 }
@@ -176,7 +177,7 @@ $(() => {
                                     this.$store.commit('mutationUserData', res.data);
                                     if (this.$router.history.pending) {
                                         $(this.$refs.loginForm).modal("hide");
-                                        this.$router.replace(this.$router.history.pending.path);
+                                        this.$router.push(this.$router.history.pending.path);
                                     }
 
                                     location.reload();
