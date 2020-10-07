@@ -210,5 +210,9 @@ Route::get('/openaccount', function () {
     return view('openaccount');
 });
 
+Route::get('/immediately', function () {
+    return view('immediately');
+});
+
 
 Route::view('/{path?}', 'index');
