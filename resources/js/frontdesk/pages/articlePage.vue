@@ -95,7 +95,9 @@ export default {
   }),
   created() {
     this.getArticleData();
-    this.$store.dispatch("getKnowledgeData");
+    if (!this.search.includes("news")) {
+      this.$store.dispatch("getKnowledgeData");
+    }
   },
   mounted() {
     this.$nextTick(() => {});
@@ -149,26 +151,25 @@ export default {
       this.search = urlParams.get("q");
       let type = urlParams.get("q").split("-");
       if (type[0] == "news") {
-        await this.$store.dispatch("getNewsData");
+        let res = await axios.post(`${location.origin}/getNewsArticle`, {
+          ID: type[1],
+        });
 
-        let news = this.$store.getters.NewsData[type[1]];
-        $("title").text(`${news.title} - inFlux普匯金融科技`);
+        $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
         FB.XFBML.parse();
-        this.articleTitle = news.title;
-        this.articleImg = news.image_url ? news.image_url : "";
-        this.articleHtml = news.content;
+        this.articleTitle = res.data.post_title;
+        this.articleImg = res.data.image_url ? res.data.image_url : "";
+        this.articleHtml = res.data.post_content;
       } else {
-        axios
-          .post(`${location.origin}/getArticleData`, {
-            filter: this.search,
-          })
-          .then((res) => {
-            $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
-            FB.XFBML.parse();
-            this.articleTitle = res.data.post_title;
-            this.articleImg = res.data.media_link ? res.data.media_link : "";
-            this.articleHtml = res.data.post_content;
-          });
+        let res = await axios.post(`${location.origin}/getArticleData`, {
+          filter: this.search,
+        });
+
+        $("title").text(`${res.data.post_title} - inFlux普匯金融科技`);
+        FB.XFBML.parse();
+        this.articleTitle = res.data.post_title;
+        this.articleImg = res.data.media_link ? res.data.media_link : "";
+        this.articleHtml = res.data.post_content;
       }
     },
   },
@@ -198,15 +199,7 @@ export default {
     display: flex;
   }
 
-  .news-view {
-    width: 80%;
-    margin: 0px auto;
-  }
-
-  .main-view {
-    width: 70%;
-    margin-left: 7rem;
-    margin-right: 2rem;
+  %contenier{
     .contenier {
       .title,
       .title-img {
@@ -222,7 +215,21 @@ export default {
         }
       }
     }
+  }
 
+  .news-view {
+    width: 80%;
+    margin: 0px auto;
+
+    @extend %contenier;
+  }
+
+  .main-view {
+    width: 70%;
+    margin-left: 7rem;
+    margin-right: 2rem;
+
+    @extend %contenier;
     .comments {
       margin-top: 50px;
       position: relative;

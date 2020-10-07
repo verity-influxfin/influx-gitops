@@ -28,6 +28,8 @@ Route::post('/getVideoData', 'Controller@getVideoData');
 
 Route::post('/getNewsData', 'Controller@getNewsData');
 
+Route::post('/getNewsArticle', 'Controller@getNewsArticle');
+
 Route::post('/getServiceData', 'Controller@getServiceData');
 
 Route::post('/getQaData', 'Controller@getQaData');
@@ -178,6 +180,15 @@ Route::post('/readCooperationData', 'Backendcontroller@readCooperationData');
 
 Route::post('/deleteCooperationData', 'Backendcontroller@deleteCooperationData');
 
+Route::get('/getNews', 'Backendcontroller@getNews');
+
+Route::post('/modifyNews', 'Backendcontroller@modifyNews');
+
+Route::post('/deleteNews', 'Backendcontroller@deleteNews');
+
+Route::post('/uploadNewsIntroImg', 'Backendcontroller@uploadNewsIntroImg');
+
+Route::post('/uploadNewsImg', 'Backendcontroller@uploadNewsImg');
 
 // verify mail
 

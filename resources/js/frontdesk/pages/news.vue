@@ -3,8 +3,12 @@
     <div class="news-bg">
       <div class="projector">
         <div class="row" ref="projector">
-          <div class="slide-item" v-for="(item,index) in fixedTopData" :key="index">
-            <a :href="item.url.indexOf('influxfin') !== -1 ? '#'+item.link : item.url" class="img">
+          <div
+            class="slide-item"
+            v-for="(item, index) in fixedTopData"
+            :key="index"
+          >
+            <a :href="item.link" class="img">
               <img :src="item.image_url" class="img-fluid" />
             </a>
           </div>
@@ -14,7 +18,12 @@
         <h1 class="float-left">最新消息</h1>
         <div class="input-custom float-right">
           <i class="fas fa-search"></i>
-          <input type="text" class="form-control" placeholder="請輸入關鍵字" v-model="filter" />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="請輸入關鍵字"
+            v-model="filter"
+          />
           <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
         </div>
       </div>
@@ -43,11 +52,11 @@ let newsRow = Vue.extend({
   props: ["item", "index"],
   template: `
       <li class="news-card" data-aos="zoom-in" :data-aos-delay="100 * index">
-        <a :href="item.url.indexOf('influxfin') !== -1 ? item.link : item.url">
+        <a :href="item.link">
           <div class="img"><img :src="item.image_url" class="img-custom" /></div>
           <div class="cnt">
-            <span class="date">{{item.updated_at}}</span>
-            <p class="title">{{item.title}}</p>
+            <span class="date">{{item.post_date}}</span>
+            <p class="title">{{item.post_title}}</p>
           </div>
           <div class="read">Read more+</div>
         </a>
@@ -65,7 +74,9 @@ export default {
     news() {
       let { $store } = this;
       $.each($store.getters.NewsData, (index, row) => {
-        $store.getters.NewsData[index].content = `${row.content
+        $store.getters.NewsData[
+          index
+        ].post_content = `${row.post_content
           .replace(/<[^>]*>/g, "")
           .substr(0, 20)}...`;
       });
@@ -88,7 +99,7 @@ export default {
       this.filterNews = newValue;
       this.fixedTopData = [];
       newValue.forEach((item, index) => {
-        if (item.rank == 8 || item.rank == 45) {
+        if (item.order == 1) {
           this.fixedTopData.push(item);
         }
       });
@@ -102,7 +113,7 @@ export default {
     filter(newVal) {
       this.filterNews = [];
       this.news.forEach((row, index) => {
-        if (row.title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
+        if (row.post_title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
           this.filterNews.push(row);
         }
       });
@@ -239,6 +250,7 @@ export default {
 
             img {
               width: 100%;
+              height: inherit;
             }
           }
 
@@ -363,12 +375,12 @@ export default {
         box-shadow: 0 0 2px 2px #b4b4b4;
         background: #ffffff;
 
-        a{
+        a {
           &:hover {
             text-decoration: none;
             color: #000000;
 
-            .read{
+            .read {
               text-decoration: none;
             }
           }

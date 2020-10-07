@@ -52,36 +52,20 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
+        $news = DB::table('news')->select('*')->orderBy('post_date', 'desc')->get();
 
-        $curlScrapedNewsPage = shell_exec("curl -X GET " . $this->apiGetway . "article/news");
-        $newsdata = json_decode($curlScrapedNewsPage, true);
+        return response()->json($news, 200);
 
-        $curlScrapedEventPage = shell_exec("curl -X GET " . $this->apiGetway . "article/event");
-        $eventdata = json_decode($curlScrapedEventPage, true);
+    }
 
-        $result = array();
+    public function getNewsArticle(Request $request)
+    {
+        $input = $request->all();
 
-        foreach ($newsdata['data']['list'] as $index => $value) {
-            $value['updated_at'] = date('Y-m-d', $value['updated_at']);
-            $result[] = $value;
-        }
+        $news = DB::table('news')->select('*')->where('ID','=',$input['ID'])->first();
 
-        foreach ($eventdata['data']['list'] as $index => $value) {
-            $value['updated_at'] = date('Y-m-d', $value['updated_at']);
-            $result[] = $value;
-        }
+        return response()->json($news, 200);
 
-        $num = count($result);
-
-        for ($i = 0; $i < $num; $i++) {
-            for ($j = $num - 1; $j > $i; $j--) {
-                if ($result[$j]['updated_at'] > $result[$j - 1]['updated_at']) {
-                    list($result[$j], $result[$j - 1]) = array($result[$j - 1], $result[$j]);
-                }
-            }
-        }
-
-        return response()->json($result, 200);
     }
 
     public function getInvestTonicData(Request $request)

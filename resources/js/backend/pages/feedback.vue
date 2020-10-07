@@ -202,7 +202,7 @@ let feedbackRow = Vue.extend({
         <div class="message">{{item.feedback}}</div>
         <div class="status">{{item.isActive ==='on' ? '是' : '否'}}</div>
       <div class="action-row">
-        <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === '0'" @click="vm.read(item)">已讀</button>
+        <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === '0'" @click="vm.read(item)">未讀</button>
         <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
         <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
       </div>

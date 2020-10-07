@@ -92,7 +92,7 @@ let cooperationRow = Vue.extend({
         <div class="message">{{item.message.substr(0, 80)}}...</div>
         <div class="date">{{item.datetime.substr(0,10)}}</div>
         <div class="action-row">
-        <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === 0">未讀</button>
+            <button class="btn btn-warning btn-sm" style="margin-right:20px"v-if="item.isRead === '0'">未讀</button>
             <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
         </div>
     </li>
