@@ -73,12 +73,7 @@ class Sms_lib {
 			$user_info 	= $this->CI->user_model->get($user_id);
 			if($user_info){
 				$phone 		= $user_info->phone;
-				//$content 	= "親愛的用戶，您好！
-				//			您的借款 $target_no ，本期應還本息合計為 $amount 元，您的應還款日為 $date ，請在當天中午12點前將款項主動匯入您的專屬還款帳號內，專屬帳號可在我的普匯inFlux服務內點擊我的→我的還款查看，如已還款，請忽略本訊息。
-				//			敬告用戶，本公司不會以短信、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號，若有收到類似通知，謹防詐騙，或致電普匯客服電話02-25079990舉報，感謝您的配合。";
-                $content 	= "親愛的用戶：
-您好！專屬您的借款app「普匯inFlux」已經上線，網頁版服務將於7/25關閉，請至app商店搜尋「普匯inFlux」下載。網址：https://reurl.cc/6z2Yb
-您的借款".$target_no."，本期應還本息合計為".$amount."元，您的應還款日為".$date."，請在當天中午12點前將款項主動匯入您的專屬還款帳號內，專屬帳號可下載APP「普匯inFlux」→帳戶提領查看，如已還款，請忽略本訊息。敬告用戶，本公司不會以簡訊、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號，感謝您。";
+                $content = '【普匯通知】:借款'.$target_no.'本期應還本息為'.$amount.'元，還款日為本月10號，請於當天凌晨前將款項匯入專屬還款帳號。';
 				return $this->send('target_notice',$user_id,$phone,$content);
 			}
 		}				
