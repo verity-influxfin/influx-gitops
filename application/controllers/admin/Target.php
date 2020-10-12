@@ -912,6 +912,9 @@ class Target extends MY_Admin_Controller {
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
+            // 啟用SQL事務
+            $this->db->trans_start();
+
 			$info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==2 && $info->sub_status==8){
 				$this->load->library('Transaction_lib');
@@ -924,6 +927,10 @@ class Target extends MY_Admin_Controller {
 			}else{
 				echo '查無此ID';die();
 			}
+
+            // 事務交易完成，提交結果
+            $this->db->trans_complete();
+
 		}else{
 			echo '查無此ID';die();
 		}
