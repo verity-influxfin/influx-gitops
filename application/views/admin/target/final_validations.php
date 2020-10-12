@@ -350,7 +350,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
+								<table id="brookesia_results" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
 										<th width="25%">風險等級</th>
@@ -587,7 +587,8 @@
         fillFakeVerifications("borrowing");
         fillFakeVerifications("investing");
         fillFakeRelatedUsers();
-        fillFakeTargets();
+        fillFakeTargets()
+		fillFakeBrookesiaUserHitRule()
         $("#load-more").hide();
         $.ajax({
             type: "GET",
@@ -600,7 +601,9 @@
 				fetchRelatedUsers(userId);
             },
             success: function (response) {
+				fetchBrookesiaUserResult(userId);
                 hideLoadingAnimation();
+				fillFakeBrookesiaUserHitRule(false)
                 fillFakeVerifications("borrowing", false);
                 fillFakeVerifications("investing", false);
                 fillFakeTargets(false);
@@ -659,15 +662,87 @@
 					targets.push(new Target(targetsJson[i]));
 				}
                 fillTargets(targets);
+
             },
 			error: function(error) {
                 alert('資料載入失敗。請重新整理。');
 			}
         });
 
+		var brookesiaDataIndex = 1;
+		var brookesiaData = [];
+		function fetchBrookesiaUserResult(userId) {
+			$.ajax({
+				type: "GET",
+				url: "/brookesia/user_rule_hit" + "?userId=" + userId,
+				beforeSend: function () {
+					brookesiaDatalock = true;
+				},
+				complete: function () {
+					brookesiaDatalock = false;
+				},
+				success: function (response) {
+					if (response.status.code != 200) {
+						return;
+					}
+					brookesiaData = response.response.results
+					fillBrookesiaUserHitRule();
+
+				}
+			});
+		}
+
+		function fillBrookesiaUserHitRule() {
+			// var maxNumInPage = 5;
+			// var start = (brookesiaDataIndex-1) * maxNumInPage;
+			// var end = brookesiaDataIndex * maxNumInPage;
+			// if (end > brookesiaData.results.length) end = brookesiaData.results.length;
+			// if (start > end) {
+			// 	$("#load-more").hide();
+			// } else {
+			// 	$("#load-more").show();
+			// }
+
+			// for (var i = start; i < (end - 1); i++) {
+
+			for (var i = 0; i < brookesiaData.length; i++) {
+				var risk = '<p class="form-control-static">' + brookesiaData[i].risk + '</p>';
+				var updatedAt = '<p class="form-control-static">' +
+						new DateTime(brookesiaData[i].updatedAt).values()+ '</p>';
+				var description = '<p class="form-control-static">' + brookesiaData[i].description + '</p>';
+				var riskColor = (brookesiaData[i].risk === "拒絕") ?"red"
+							: (brookesiaData[i].risk === "高") ? "Tomato"
+							: (brookesiaData[i].risk === "中") ? "Orange"
+							: (brookesiaData[i].risk === "低") ? "green" : "black"
+
+				$("<tr>").append(
+						$('<td class="center-text" style="color:'+ riskColor +';">').append(risk),
+						$('<td class="center-text" style="color:black;">').append(updatedAt),
+						$('<td class="center-text" style="color:black;">').append(description),
+				).appendTo("#brookesia_results");
+			}
+			// brookesiaDataIndex+=1;
+		}
+
+		function fillFakeBrookesiaUserHitRule(show = true) {
+			if (!show) {
+				$("#brookesia_results tr:gt(0)").remove();
+				return;
+			}
+			pTag = '<p class="form-control-static"></p>'
+
+			for (var i = 0; i < 1; i++) {
+				$("<tr>").append(
+						$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
+				).appendTo("#brookesia_results");
+			}
+		}
+
         var relatedUsersIndex = 1;
         var relatedUsers = [];
-		function fetchRelatedUsers(userId) {
+		function fetcRelatedhUsers(userId) {
 			$.ajax({
 				type: "GET",
 				url: "/admin/User/related_users" + "?id=" + userId,
