@@ -63,7 +63,7 @@ class Loan_manager_target_model extends MY_Model
         return $data;
     }
 
-    public function get_target_list($select, $where = [], $orWhere = [],  $offset = 0, $limit = false)
+    public function get_target_list($select, $where = [], $orWhere = [],  $offset = 0, $limit = false, $order_by = false)
     {
         is_array($select) ? $select = implode(',', $select) : '*';
 
@@ -95,13 +95,13 @@ class Loan_manager_target_model extends MY_Model
         }
 
         if(count($orWhere) > 0){
-            foreach ($orWhere as $key => $value){
-                $this->db->or_where($value);
-            }
+            $this->db->or_where($orWhere);
         }
 
 //        $this->db->order_by("processing.updated_at",'desc');
         $limit ? $this->db->limit($limit, $offset) : '';
+        $this->db->group_by('target.id');
+        $order_by ? $this->db->order_by($order_by,'desc') : '';
         $query = $this->db->get();
         return $query->result();
     }
@@ -120,19 +120,49 @@ class Loan_manager_target_model extends MY_Model
         return $query->result();
     }
 
-    public function get_role_info($role_id)
+    public function get_userinfo($userId)
     {
-        $data = array();
-        $userInfo = $this->get($role_id);
-        if ($userInfo) {
-            $data = [
-                'id' => $userInfo->id,
-                'name' => $userInfo->name,
-                'permission' => $userInfo->permission,
-                'creator_id' => $userInfo->creator_id,
-                'status' => $this->status_list[$userInfo->status],
-            ];
-        }
-        return $data;
+        $select = [
+            'user.id as userId',
+            'user.name',
+            'user.picture as userPicture',
+            'processing.id as processingId',
+            'processing.admin_id',
+            'processing.push_by',
+            'processing.push_type',
+            'processing.result',
+            'processing.remark',
+            'processing.updated_at',
+            'admin.name as adminName',
+            'push.push_identity as pushIdentity',
+            'push.user_status as pushUserStatus',
+            'push.status as pushStatus',
+        ];
+
+        $this->db->select($select, false)
+            ->from('p2p_user.users as user');
+        $this->db->join(
+            'loan_manager.debt_processing as processing',
+            'processing.user_id = user.id',
+            'left'
+        );
+        $this->db->join(
+            'loan_manager.push_data as push',
+            'push.user_id = user.id',
+            'left'
+        );
+        $this->db->join(
+            'loan_manager.users as admin',
+            'processing.admin_id = admin.id',
+            'left'
+        );
+
+        $this->db->where([
+            'user.id' => $userId
+        ]);
+        $this->db->order_by('processing.id','desc');
+        $this->db->limit(1,0 );
+        $query = $this->db->get();
+        return $query->result();
     }
 }

@@ -14,6 +14,13 @@ define({
       "GettRoleList",
 
       "GetTargetList",
+      "GetTargetUserInfo",
+
+      "PostTargetUserInfo",
+      "PostTargetAddPushContact",
+      "PostTargetPushContactList",
+      "PostTargetPushUser",
+      "PostTargetPushUserUpdate",
   ],
   "sampleUrl": false,
   "defaultVersion": "0.0.0",

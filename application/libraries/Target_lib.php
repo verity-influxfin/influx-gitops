@@ -767,6 +767,7 @@ class Target_lib
                         'days' => 0,//本期天數
                         'remaining_principal' => 0,//期初本金
                         'repayment_date' => $value->limit_date,//還款日
+                        'repaid' => 0,
                         'r_principal' => 0,
                     ];
                 }
@@ -798,6 +799,8 @@ class Target_lib
                     case SOURCE_DAMAGE:
                     case SOURCE_PREPAYMENT_DAMAGE:
                         $list[$value->instalment_no]['repayment'] += $value->amount;
+                        !isset($schedule['repaid']) ? $schedule['repaid'] = 0 : '';
+                        $schedule['repaid'] += $value->amount;
                         if ($value->source == SOURCE_PRINCIPAL) {
                             $schedule['remaining_principal'] -= $value->amount;
                         } else if ($value->source == SOURCE_PREPAYMENT_DAMAGE) {

@@ -32,17 +32,23 @@ $config['delayStatus'] = [
 ];
 
 $config['pushDataStatus'] = [
-    0 => "未執行",
-    1 => "催收列表",
-    2 => "產轉協商",
-    3 => "法催執行",
+    0 => "催收列表",
+    1 => "產轉協商",
+    2 => "法催執行",
+];
+
+$config['pushIdentity'] = [
+    0 => "身分待確認",
+    1 => "已畢業",
+    2 => "失聯",
+    3 => "工作中",
 ];
 
 $config['pushDataUserStatus'] = [
-    0 => "尚未接觸",
-    1 => "可聯繫",
-    2 => "嘗試聯繫",
-    3 => "失聯",
+    0 => "待確認",
+    1 => "有望催回",
+    2 => "不穩定",
+    3 => "無望催回",
 ];
 
 $config['pushTool'] = [
@@ -58,6 +64,12 @@ $config['pushTool'] = [
     9 => "信件",
     10 => "律師函",
 ];
+defined('PUSH_BY_LINE') or define('PUSH_BY_LINE', '1');
+defined('PUSH_BY_FACEBOOK') or define('PUSH_BY_FACEBOOK', '2');
+defined('PUSH_BY_EMERGENCY_PHONE') or define('PUSH_BY_EMERGENCY_PHONE', '3');
+defined('PUSH_BY_INSTGRAM') or define('PUSH_BY_INSTGRAM', '5');
+defined('PUSH_BY_USER_PHONE') or define('PUSH_BY_USER_PHONE', '6');
+defined('PUSH_BY_SMS') or define('PUSH_BY_SMS', '7');
 
 $config['pushType'] = [
     0 => "提醒",
