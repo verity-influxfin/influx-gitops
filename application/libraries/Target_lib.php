@@ -743,6 +743,7 @@ class Target_lib
             'sub_loan_fees' => 0,
             'platform_fees' => 0,
             'legal_affairs_fee' => 0,
+            'delay_interest' => 0,
             'list' => [],
 
         ];
