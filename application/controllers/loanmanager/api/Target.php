@@ -142,27 +142,28 @@ class Target extends REST_Controller
                     'remaining_principal' => 0,
                     'repaid' => 0,
                 ];
-                $datas[$value->id] = new stdClass();
-                $datas[$value->id]->user_id = $value->user_id;
-                $datas[$value->id]->target_id = $value->id;
-                $datas[$value->id]->target_no = $value->target_no;
-                $datas[$value->id]->name = $value->name;
-                $datas[$value->id]->productName = $productName;
-                $datas[$value->id]->delayStatus = ($value->targetStatus != TARGET_REPAYMENTED ? $this->loantarget_lib->targetStatus($value->delay_days) : '已結案') . ($value->delay_days > 0 ? '(' . $value->delay_days . '天)' : '');
-                $datas[$value->id]->repaymentType = isset($repayment_type[$value->repayment]) ? $repayment_type[$value->repayment] : 1;
-                $datas[$value->id]->instalment = $value->instalment;
-                $datas[$value->id]->interest_rate = $value->interest_rate;
-                $datas[$value->id]->loanAmount = $value->loan_amount;
-                $datas[$value->id]->total_payment = $amortization_schedule['total_payment'];
-                $datas[$value->id]->repaid = isset($amortization_schedule['repaid']) ? $amortization_schedule['repaid'] : 0;
-                $datas[$value->id]->remaining_principal = $amortization_schedule['remaining_principal'];
-                $datas[$value->id]->status = $value->targetStatus;
-                $datas[$value->id]->sub_status = $value->sub_status;
+
+                $datas[$key] = new stdClass();
+                $datas[$key]->target_id = $value->id;
+                $datas[$key]->user_id = $value->user_id;
+                $datas[$key]->target_no = $value->target_no;
+                $datas[$key]->name = $value->name;
+                $datas[$key]->productName = $productName;
+                $datas[$key]->delayStatus = ($value->targetStatus != TARGET_REPAYMENTED ? $this->loantarget_lib->targetStatus($value->delay_days) : '已結案') . ($value->delay_days > 0 ? '(' . $value->delay_days . '天)' : '');
+                $datas[$key]->repaymentType = isset($repayment_type[$value->repayment]) ? $repayment_type[$value->repayment] : 1;
+                $datas[$key]->instalment = $value->instalment;
+                $datas[$key]->interest_rate = $value->interest_rate;
+                $datas[$key]->loanAmount = $value->loan_amount;
+                $datas[$key]->total_payment = $amortization_schedule['total_payment'];
+                $datas[$key]->repaid = isset($amortization_schedule['repaid']) ? $amortization_schedule['repaid'] : 0;
+                $datas[$key]->remaining_principal = $amortization_schedule['remaining_principal'];
+                $datas[$key]->status = $value->targetStatus;
+                $datas[$key]->sub_status = $value->sub_status;
 
                 if (isset($userTargets[$value->user_id]['debtProcess'])) {
-                    $userTargets[$value->user_id]['debtProcess']['userPayment'] += $datas[$value->id]->total_payment;
-                    $userTargets[$value->user_id]['debtProcess']['userRepaid'] += $datas[$value->id]->repaid;
-                    $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] += $datas[$value->id]->remaining_principal;
+                    $userTargets[$value->user_id]['debtProcess']['userPayment'] += $datas[$key]->total_payment;
+                    $userTargets[$value->user_id]['debtProcess']['userRepaid'] += $datas[$key]->repaid;
+                    $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] += $datas[$key]->remaining_principal;
                 } else {
                     if (isset($value->pushStatus)) {
                         if (isset($value->result)) {
@@ -185,11 +186,11 @@ class Target extends REST_Controller
                             'pushUserStatus' => $loanmanagerConfig['pushDataUserStatus'][0],
                         ];
                     }
-                    $userTargets[$value->user_id]['debtProcess']['userPayment'] = $datas[$value->id]->total_payment;
-                    $userTargets[$value->user_id]['debtProcess']['userRepaid'] = $datas[$value->id]->repaid;
-                    $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] = $datas[$value->id]->remaining_principal;
+                    $userTargets[$value->user_id]['debtProcess']['userPayment'] = $datas[$key]->total_payment;
+                    $userTargets[$value->user_id]['debtProcess']['userRepaid'] = $datas[$key]->repaid;
+                    $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] = $datas[$key]->remaining_principal;
                 }
-                $userTargets[$value->user_id]['targetList'][$value->id] = $datas[$value->id];
+                $userTargets[$value->user_id]['targetList'][] = $datas[$key];
             }
             $data = [
                 'list' => $userTargets,
