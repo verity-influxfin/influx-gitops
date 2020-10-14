@@ -914,7 +914,7 @@ class Target extends MY_Admin_Controller {
 		if($id){
             // 啟用SQL事務
             $this->db->trans_start();
-            $this->db->query('SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
+            $this->db->query('SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
 
 			$info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==2 && $info->sub_status==8){
@@ -984,7 +984,7 @@ class Target extends MY_Admin_Controller {
 
             // 啟用SQL事務
             $this->db->trans_start();
-            $this->db->query('SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
+            $this->db->query('SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
 
             $info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==3 && in_array($info->sys_check, [20, 21])){
