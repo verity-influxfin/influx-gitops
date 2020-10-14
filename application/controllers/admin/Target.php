@@ -912,20 +912,27 @@ class Target extends MY_Admin_Controller {
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
+            // 啟用SQL事務
+            $this->db->trans_start();
+            $this->db->query('SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
+
 			$info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==2 && $info->sub_status==8){
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->subloan_success($id,$this->login_info->id);
 				if($rs){
-					echo '產轉放款成功';die();
+					echo '產轉放款成功';
 				}else{
-					echo '產轉放款失敗';die();
+					echo '產轉放款失敗';
 				}
 			}else{
-				echo '查無此ID';die();
+				echo '查無此ID';
 			}
+
+            // 事務交易完成，提交結果
+            $this->db->trans_complete();
 		}else{
-			echo '查無此ID';die();
+			echo '查無此ID';
 		}
 	}
 
@@ -974,20 +981,28 @@ class Target extends MY_Admin_Controller {
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
-			$info = $this->target_model->get($id);
+
+            // 啟用SQL事務
+            $this->db->trans_start();
+            $this->db->query('SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
+
+            $info = $this->target_model->get($id);
 			if($info && $info->status==4 && $info->loan_status==3 && in_array($info->sys_check, [20, 21])){
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->lending_success($id,$this->login_info->id);
 				if($rs){
-					echo '更新成功';die();
+					echo '更新成功';
 				}else{
-					echo '更新失敗';die();
+					echo '更新失敗';
 				}
 			}else{
-				echo '查無此ID';die();
+				echo '查無此ID';
 			}
+
+            // 事務交易完成，提交結果
+            $this->db->trans_complete();
 		}else{
-			echo '查無此ID';die();
+			echo '查無此ID';
 		}
 	}
 
