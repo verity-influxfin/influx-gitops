@@ -165,4 +165,30 @@ class Loan_manager_target_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getPassbookBalance($userId){
+        $select = [
+            'user.id as userId',
+            'virtualaccounts.virtual_account as virtualAccounts',
+            'sum(virtualpassbooks.amount) as virtualPassbooks',
+        ];
+
+        $this->db->select($select, false)
+            ->from('p2p_transaction.virtual_passbook as virtualpassbooks');
+        $this->db->join(
+            'p2p_user.virtual_account as virtualaccounts',
+            'virtualaccounts.virtual_account = virtualpassbooks.virtual_account'
+        );
+        $this->db->join(
+            'p2p_user.users as user',
+            'virtualaccounts.user_id = user.id'
+        );
+        $this->db->where([
+            'user.id' => $userId,
+            'virtualaccounts.investor' => 0,
+        ]);
+        $this->db->order_by('virtualpassbooks.id','desc');
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

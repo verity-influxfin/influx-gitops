@@ -219,6 +219,7 @@ class Target extends REST_Controller
         if ($res) {
             $loanmanagerConfig = $this->config->item('loanmanager');
             $data['userInfo'] = $res[0];
+            $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
 
             if($res[0]->processingId == null){
                 $data['userInfo']->processingId = 0;
@@ -256,6 +257,8 @@ class Target extends REST_Controller
             $data['userInfo']->negotiateTimes = count($wasNegotiate);
             $data['userInfo']->lastContact = !empty($data['userInfo']->updated_at) ? date('Y/m/d H:i:s', $data['userInfo']->updated_at) : '無紀錄';
             $data['userInfo']->lastContactStatus = $loanmanagerConfig['pushTool'][$data['userInfo']->push_by] . $loanmanagerConfig['pushType'][$data['userInfo']->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$data['userInfo']->result];
+            $data['userInfo']->virtualAccounts = $getVirtualAccountInfo[0]->virtualAccounts;
+            $data['userInfo']->virtualPassbooks = $getVirtualAccountInfo[0]->virtualPassbooks;
         }
         $this->response([
             'result' => 'SUCCESS',
