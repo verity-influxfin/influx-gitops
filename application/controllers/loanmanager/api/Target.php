@@ -148,16 +148,16 @@ class Target extends REST_Controller
                 $dailyDelayInterest = intval(round($amortization_schedule['remaining_principal']*DELAY_INTEREST*1/100,0));
 
                 $datas[$key] = new stdClass();
-                $datas[$key]->target_id = $value->id;
-                $datas[$key]->user_id = $value->user_id;
+                $datas[$key]->target_id = intval($value->id);
+                $datas[$key]->user_id = intval($value->user_id);
                 $datas[$key]->target_no = $value->target_no;
                 $datas[$key]->name = $value->name;
                 $datas[$key]->productName = $productName;
                 $datas[$key]->delayStatus = ($value->targetStatus != TARGET_REPAYMENTED ? $this->loantarget_lib->targetStatus($value->delay_days) : '已結案') . ($value->delay_days > 0 ? '(' . $value->delay_days . '天)' : '');
                 $datas[$key]->repaymentType = isset($repayment_type[$value->repayment]) ? $repayment_type[$value->repayment] : 1;
-                $datas[$key]->instalment = $value->instalment;
+                $datas[$key]->instalment = intval($value->instalment);
                 $datas[$key]->interest_rate = $value->interest_rate;
-                $datas[$key]->loanAmount = $value->loan_amount;
+                $datas[$key]->loanAmount = intval($value->loan_amount);
                 $datas[$key]->total_payment = $amortization_schedule['total_payment'];
                 $datas[$key]->repaid = isset($amortization_schedule['repaid']) ? $amortization_schedule['repaid'] : 0;
                 $datas[$key]->remaining_principal = $amortization_schedule['remaining_principal'];
@@ -165,8 +165,8 @@ class Target extends REST_Controller
                 $datas[$key]->delayInterest = $amortization_schedule['delay_interest'];
                 $datas[$key]->liquidatedDamages = $amortization_schedule['liquidated_damages'];
                 $datas[$key]->dailyDelayInterest = $dailyDelayInterest;
-                $datas[$key]->status = $value->targetStatus;
-                $datas[$key]->sub_status = $value->sub_status;
+                $datas[$key]->status = intval($value->targetStatus);
+                $datas[$key]->sub_status = intval($value->sub_status);
 
                 if (isset($userTargets[$value->user_id]['debtProcess'])) {
                     $userTargets[$value->user_id]['debtProcess']['userPayment'] += $datas[$key]->total_payment;
@@ -181,9 +181,9 @@ class Target extends REST_Controller
                             ];
                             $userTargets[$value->user_id]['debtProcess']['lastContact'] = date('Y/m/d H:i:s', $value->updated_at);
                             $userTargets[$value->user_id]['debtProcess']['lastContactAdmin'] = $value->adminName;
-                            $userTargets[$value->user_id]['debtProcess']['pushIdentity'] = $value->pushIdentity;
-                            $userTargets[$value->user_id]['debtProcess']['pushUserStatus'] = $value->pushUserStatus;
-                            $userTargets[$value->user_id]['debtProcess']['pushStatus'] = $value->pushStatus;
+                            $userTargets[$value->user_id]['debtProcess']['pushIdentity'] = intval($value->pushIdentity);
+                            $userTargets[$value->user_id]['debtProcess']['pushUserStatus'] = intval($value->pushUserStatus);
+                            $userTargets[$value->user_id]['debtProcess']['pushStatus'] = intval($value->pushStatus);
                         }
                     } else {
                         $userTargets[$value->user_id]['debtProcess'] = [
