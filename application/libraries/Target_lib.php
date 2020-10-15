@@ -735,6 +735,7 @@ class Target_lib
         $schedule = [
             'amount' => intval($target->loan_amount),
             'remaining_principal' => intval($target->loan_amount),
+            'last_interest' => intval(0),
             'instalment' => intval($target->instalment),
             'rate' => floatval($target->interest_rate),
             'total_payment' => 0,
@@ -743,7 +744,8 @@ class Target_lib
             'sub_loan_fees' => 0,
             'platform_fees' => 0,
             'legal_affairs_fee' => 0,
-            'delay_interest' => 0,
+            'delay_interest' => intval(0),
+            'liquidated_damages' => intval(0),
             'list' => [],
 
         ];
@@ -778,12 +780,17 @@ class Target_lib
                         break;
                     case SOURCE_AR_INTEREST:
                         $list[$value->instalment_no]['interest'] += $value->amount;
+                        if ($value->status == 1) {
+                            $schedule['last_interest'] = $value->amount;
+                        }
                         break;
                     case SOURCE_AR_DAMAGE:
                         $list[$value->instalment_no]['liquidated_damages'] += $value->amount;
+                        $schedule['liquidated_damages'] += $value->amount;
                         break;
                     case SOURCE_AR_DELAYINTEREST:
                         $list[$value->instalment_no]['delay_interest'] += $value->amount;
+                        $schedule['delay_interest'] += $value->amount;
                         break;
                     case SOURCE_SUBLOAN_FEE:
                         $schedule['sub_loan_fees'] += $value->amount;

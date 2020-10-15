@@ -140,8 +140,12 @@ class Target extends REST_Controller
                 $amortization_schedule = $value->targetStatus == TARGET_REPAYMENTING || $value->targetStatus == TARGET_REPAYMENTED ? $this->target_lib->get_amortization_table($value) : [
                     'total_payment' => 0,
                     'remaining_principal' => 0,
+                    'remaining_interest' => 0,
+                    'delay_interest' => 0,
+                    'liquidated_damages' => 0,
                     'repaid' => 0,
                 ];
+                $dailyDelayInterest = intval(round($amortization_schedule['remaining_principal']*DELAY_INTEREST*1/100,0));
 
                 $datas[$key] = new stdClass();
                 $datas[$key]->target_id = $value->id;
@@ -157,6 +161,10 @@ class Target extends REST_Controller
                 $datas[$key]->total_payment = $amortization_schedule['total_payment'];
                 $datas[$key]->repaid = isset($amortization_schedule['repaid']) ? $amortization_schedule['repaid'] : 0;
                 $datas[$key]->remaining_principal = $amortization_schedule['remaining_principal'];
+                $datas[$key]->lastInterest = $amortization_schedule['last_interest'];
+                $datas[$key]->delayInterest = $amortization_schedule['delay_interest'];
+                $datas[$key]->liquidatedDamages = $amortization_schedule['liquidated_damages'];
+                $datas[$key]->dailyDelayInterest = $dailyDelayInterest;
                 $datas[$key]->status = $value->targetStatus;
                 $datas[$key]->sub_status = $value->sub_status;
 
