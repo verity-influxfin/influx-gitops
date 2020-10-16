@@ -15,6 +15,7 @@ define({
 
       "GetTargetList",
       "GetTargetUserInfo",
+      "GetTargetUserPassbook",
 
       "PostTargetUserInfo",
       "PostTargetAddPushContact",

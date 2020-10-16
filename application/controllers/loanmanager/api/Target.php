@@ -432,26 +432,36 @@ class Target extends REST_Controller
         ]);
     }
 
-    function pushUserUpdate_post()
+    function userPassbook_get()
     {
-        $input = $this->input->post(NULL, TRUE);
-        $fields 	= ['push_id','remark'];
+        $input = $this->input->get(NULL, TRUE);
+        $fields 	= ['account'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
-        $userInfo = $this->userInfo($input['user_id']);
-        if($userInfo){
-            $this->load->model('loanmanager/loan_manager_debtprocessing_model');
-            $this->loan_manager_debtprocessing_model->update_by(['id' => $input['push_id']],[
-                'remark' => $input['remark']
-            ]);
+        $getVirtualPassbook = $this->loan_manager_target_model->getPassbookList($input['account']);
+        if($getVirtualPassbook){
+            $transaction_source = $this->config->item('transaction_source');
+            foreach($getVirtualPassbook as $key => $value){
+                $value['remark'] = json_decode($value['remark'],TRUE);
+                $remark = isset($value['remark']['source']) && $value['remark']['source']?$transaction_source[$value['remark']['source']]:'';
+                $list[] = [
+                    'amount' 		=> $value['amount'],
+                    'bank_amount'	=> $value['bank_amount'],
+                    'remark'		=> $remark,
+                    'tx_datetime'	=> $value['tx_datetime'],
+                    'created_at'	=> $value['created_at'],
+                ];
+            }
         }
         $this->response([
             'result' => 'SUCCESS',
+            'data' => $list
         ]);
     }
+
 
     private function userInfo($userId){
         $userInfo = $this->user_model->get_by([

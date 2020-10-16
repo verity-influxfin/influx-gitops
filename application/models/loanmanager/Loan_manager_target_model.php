@@ -191,4 +191,37 @@ class Loan_manager_target_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+
+    public function getPassbookList($account){
+        $select = [
+//            'virtualaccounts.virtual_account as virtualAccounts',
+//            'virtualpassbooks.amount as virtualPassbooks',
+//                '*'
+        ];
+
+        $this->db->select($select, false)
+            ->from('p2p_transaction.virtual_passbook as virtualpassbooks');
+        $this->db->where([
+            'virtualpassbooks.virtual_account' => $account,
+        ]);
+        $this->db->order_by('tx_datetime,created_at','desc');
+        $query = $this->db->get();
+        $res = $query->result();
+
+        $total 	= 0;
+        foreach($res as $key => $value){
+            $total	+= $value->amount;
+            $list[] = array(
+                'amount' 		=> intval($value->amount),
+                'bank_amount'	=> $total,
+                'remark'		=> $value->remark,
+                'tx_datetime'	=> $value->tx_datetime,
+                'created_at'	=> intval($value->created_at),
+                'action'		=> intval($value->amount)>0?'debit':'credit',
+            );
+        }
+
+        return array_reverse($list);
+    }
 }
