@@ -123,24 +123,53 @@
           <div class="cover"></div>
         </div>
       </div>
-    </div>
-    <div class="milestone-card">
-      <h2>普匯編年史</h2>
-      <div class="hr"></div>
-      <div class="timeline">
-        <div
-          v-for="(item, index) in milestone"
-          class="block"
-          data-aos="fade-up"
-          data-aos-duration="500"
-          :key="index"
-        >
-          <label class="icon"></label>
-          <div class="event">
-            <span class="date">{{ item.hook_date }}</span>
-            <h3 class="title">{{ item.title }}</h3>
-            <div class="content">{{ item.content }}</div>
+      <div class="milestone-card">
+        <h2>普匯編年史</h2>
+        <div class="hr"></div>
+        <div class="scroll left" @click="scroll('left')">
+          <img src="/images/n_a_pre.svg" class="img-fluid" />
+        </div>
+        <div class="chunk" ref="chunk">
+          <div class="timeline">
+            <div v-for="(item, index) in milestone" class="block" :key="index">
+              <div class="m-cnt" v-if="index % 2 === 0">
+                <p>{{ item.title }}</p>
+                <div>{{ item.content }}</div>
+              </div>
+              <div class="m-cnt" v-else>
+                <p>{{ item.title }}</p>
+                <div>{{ item.content }}</div>
+              </div>
+              <svg viewBox="0 0 100 100" width="360" height="300">
+                <ellipse
+                  cx="50"
+                  cy="50"
+                  ry="25"
+                  rx="55"
+                  fill="none"
+                  class="ellipse"
+                  stroke-dasharray="131"
+                />
+                <circle
+                  class="circle"
+                  cx="50"
+                  :cy="index % 2 === 0 ? '75' : '25'"
+                  r="18"
+                />
+                <text
+                  font-size="6"
+                  class="text"
+                  x="35"
+                  :y="index % 2 === 0 ? '77' : '28'"
+                >
+                  {{ item.hook_date }}
+                </text>
+              </svg>
+            </div>
           </div>
+        </div>
+        <div class="scroll right" @click="scroll('right')">
+          <img src="/images/n_a_next.svg" class="img-fluid" />
         </div>
       </div>
     </div>
@@ -230,7 +259,6 @@ export default {
     milestone() {
       this.$nextTick(() => {
         this.createSlick();
-        this.timeline();
       });
     },
   },
@@ -295,34 +323,23 @@ export default {
           );
       });
     },
-    timeline() {
-      let $timeline_block = $(".cd-timeline-block");
-
-      $timeline_block.each(function () {
-        if (
-          $(this).offset().top >
-          $(window).scrollTop() + $(window).height() * 0.75
-        ) {
-          $(this)
-            .find(".cd-timeline-img, .cd-timeline-content")
-            .addClass("is-hidden");
-        }
-      });
-
-      $(window).on("scroll", function () {
-        $timeline_block.each(function () {
-          if (
-            $(this).offset().top <=
-              $(window).scrollTop() + $(window).height() * 0.75 &&
-            $(this).find(".cd-timeline-img").hasClass("is-hidden")
-          ) {
-            $(this)
-              .find(".cd-timeline-img, .cd-timeline-content")
-              .removeClass("is-hidden")
-              .addClass("bounce-in");
-          }
-        });
-      });
+    scroll(direction) {
+      let scrollLeft = $(this.$refs.chunk).scrollLeft();
+      if (direction === "left") {
+        $(this.$refs.chunk).animate(
+          {
+            scrollLeft: scrollLeft - 330,
+          },
+          { duration: 1000, queue: false }
+        );
+      } else {
+        $(this.$refs.chunk).animate(
+          {
+            scrollLeft: scrollLeft + 330,
+          },
+          { duration: 1000, queue: false }
+        );
+      }
     },
   },
 };
@@ -420,6 +437,7 @@ export default {
           color: #1f232c;
           font-weight: bold;
           margin: 0px;
+          font-size: 14px;
         }
       }
     }
@@ -590,73 +608,125 @@ export default {
   }
 
   .milestone-card {
-    padding: 30px;
+    padding: 30px 0px;
     overflow: hidden;
     text-align: center;
+    position: relative;
+
+    .scroll {
+      position: absolute;
+      top: 50%;
+      transform: translate(0px, -50%);
+      z-index: 1;
+      display: none;
+    }
+
+    .left {
+      left: 10px;
+    }
+
+    .right {
+      right: 10px;
+    }
+
+    .chunk {
+      overflow-y: hidden;
+      overflow-x: auto;
+    }
 
     .timeline {
-      .block {
-        width: 65%;
-        margin: 15px auto;
-        position: relative;
+      display: flex;
+      width: fit-content;
+      margin-top: 20px;
+      padding: 10px 20px;
 
-        &:before {
-          background-color: black;
-          content: "";
-          margin-left: -1px;
-          position: absolute;
-          top: 0;
-          left: 2em;
-          width: 2px;
-          height: 100%;
+      .block {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin: 0px -15px;
+        padding: 10px 0px;
+
+        svg {
+          filter: drop-shadow(1px 2px 4px #083a6e);
+          pointer-events: none;
         }
 
-        .icon {
-          transform: rotate(45deg);
-          background-color: black;
-          outline: 10px solid white;
-          display: block;
-          margin: 0.5em 0.5em 0.5em -0.5em;
-          position: absolute;
-          top: 0;
-          left: 2em;
-          width: 1em;
-          height: 1em;
+        .ellipse {
+          stroke: #083a6e;
+          stroke-width: 3px;
           transition-duration: 0.5s;
         }
 
-        .event {
-          padding: 2em;
-          position: relative;
-          top: -1.875em;
-          left: 4em;
-          text-align: start;
+        .circle {
+          fill: #ececec;
+          stroke-width: 1px;
+          stroke: #00000008;
+          transition-duration: 0.5s;
+        }
 
-          .date {
-            color: white;
-            font-size: 0.75em;
-            background-color: black;
-            display: inline-block;
-            margin-bottom: 1.2em;
-            padding: 0.25em 1em 0.2em 1em;
-            transition-duration: 0.5s;
+        .text {
+          fill: #083a6e;
+          font-weight: bolder;
+          transition-duration: 0.5s;
+        }
+
+        &:nth-of-type(even) {
+          .ellipse {
+            stroke-dashoffset: 132;
           }
 
-          h3 {
-            font-weight: bold;
+          .m-cnt {
+            bottom: 5px;
+            &:after {
+              top: -20px;
+              border-bottom: 20px solid #ffffff;
+            }
           }
         }
 
-        &:hover {
-          .icon {
-            transform: rotate(-45deg);
-            background: #163a74;
+        &:nth-of-type(odd) {
+          .m-cnt {
+            top: 5px;
+            &:after {
+              bottom: -20px;
+              border-top: 20px solid #ffffff;
+            }
+          }
+        }
+
+        .m-cnt {
+          width: 270px;
+          position: absolute;
+          transition-duration: 0.5s;
+          padding: 5px;
+          border-radius: 5px;
+          background: #ffffff;
+          left: 45px;
+
+          &:after {
+            content: "";
+            position: absolute;
+            height: 0;
+            width: 0;
+            left: 50%;
+            transform: translate(-50%, 0px);
+            transition-duration: 0.5s;
+            border-right: 135px solid #ffffff00;
+            border-left: 135px solid #ffffff00;
           }
 
-          .event {
-            .date {
-              background-color: red;
-            }
+          p {
+            height: 48px;
+            color: #ff0000;
+            font-weight: bolder;
+            margin-bottom: 0.5rem;
+          }
+
+          div {
+            text-align: justify;
+            height: 96px;
+            overflow: auto;
           }
         }
       }
@@ -696,7 +766,7 @@ export default {
 
   @media screen and (max-width: 767px) {
     .child-bg {
-      background-size: cover;
+      background-size: auto;
     }
 
     .text-card {
@@ -778,22 +848,8 @@ export default {
     }
 
     .milestone-card {
-      padding: 10px;
-
-      .timeline {
-        .block {
-          width: 100%;
-
-          .event {
-            padding: 2rem 0rem;
-            top: -1.5em;
-            width: 65%;
-
-            h3 {
-              font-size: 20px;
-            }
-          }
-        }
+      .scroll {
+        display: block;
       }
     }
   }

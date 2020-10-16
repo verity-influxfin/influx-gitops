@@ -196,14 +196,14 @@ export default {
         .post(`${location.origin}/getCaptcha`, { phone, type })
         .then((res) => {
           this.isSended = true;
-          this.registerMessage = "";
+          this.message = "";
           this.timer = setInterval(() => {
             this.reciprocal();
           }, 1000);
         })
         .catch((error) => {
           let errorsData = error.response.data;
-          this.pwdMessage = `${
+          this.message = `${
             this.$store.state.smsErrorCode[errorsData.error]
           }`;
         });

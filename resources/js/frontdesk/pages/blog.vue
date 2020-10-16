@@ -4,7 +4,12 @@
       <h2>金融小學堂</h2>
       <div class="input-custom">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" placeholder="Search" v-model="filter" />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search"
+          v-model="filter"
+        />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
@@ -30,7 +35,7 @@ let postRow = Vue.extend({
   template: `
     <li class="article">
         <a :href="item.link">
-          <div class="img"><img class="img-fluid" :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
+          <div class="img"><img :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
           <div class="chunk">
             <p class="title">{{item.post_title}}</p>
             <p class="date">{{item.post_modified.substr(0,10)}}</p>
@@ -193,6 +198,15 @@ export default {
       background: #ffffff;
       box-shadow: 0 2px 5px 0 #6ab0f2;
 
+      &:hover {
+        .img {
+          img {
+            filter: brightness(0.5);
+            transition-duration: 0.5s;
+          }
+        }
+      }
+
       .img {
         width: 100%;
         height: 250px;
@@ -200,11 +214,11 @@ export default {
         text-align: center;
         padding-bottom: 10px;
 
-        &:hover {
-          img {
-            filter: brightness(0.5);
-            transition-duration: 0.5s;
-          }
+        img {
+          height: 250px;
+          position: relative;
+          left: 50%;
+          transform: translate(-50%, 0px);
         }
       }
 
@@ -232,7 +246,6 @@ export default {
           height: 80px;
         }
 
-        
         .link {
           display: block;
           font-weight: bolder;

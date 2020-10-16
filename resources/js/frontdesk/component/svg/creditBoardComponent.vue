@@ -1188,36 +1188,36 @@
       <text
         transform="matrix(0.9659 0.2588 -0.2588 0.9659 330.8186 -101.7657)"
         class="st23 st24 st25"
-      >{{credit.rate9}}</text>
-      <text transform="matrix(1 0 0 1 249.2903 -110.135)" class="st23 st24 st25">{{credit.rate8}}</text>
+      >{{credit.rate9}}%</text>
+      <text transform="matrix(1 0 0 1 249.2903 -110.135)" class="st23 st24 st25">{{credit.rate8}}%</text>
       <text
         transform="matrix(0.9659 -0.2588 0.2588 0.9659 164.402 -95.7584)"
         class="st23 st24 st25"
-      >{{credit.rate7}}</text>
+      >{{credit.rate7}}%</text>
       <text
         transform="matrix(0.866 -0.5 0.5 0.866 91.2104 -61.9796)"
         class="st23 st24 st25"
-      >{{credit.rate6}}</text>
+      >{{credit.rate6}}%</text>
       <text
         transform="matrix(0.7071 -0.7071 0.7071 0.7071 32.5407 -10.0459)"
         class="st23 st24 st25"
-      >{{credit.rate5}}</text>
+      >{{credit.rate5}}%</text>
       <text
         transform="matrix(0.5 -0.866 0.866 0.5 -16.6587 55.9927)"
         class="st23 st24 st25"
-      >{{credit.rate4}}</text>
+      >{{credit.rate4}}%</text>
       <text
         transform="matrix(0.2588 -0.9659 0.9659 0.2588 -45.2659 134.9625)"
         class="st23 st24 st25"
-      >{{credit.rate3}}</text>
+      >{{credit.rate3}}%</text>
       <text
         transform="matrix(-9.062073e-08 -1 1 -9.062073e-08 -55.3175 218.2697)"
         class="st23 st24 st25"
-      >{{credit.rate2}}</text>
+      >{{credit.rate2}}%</text>
       <text
         transform="matrix(-0.2588 -0.9659 0.9659 -0.2588 -41.0704 299.4468)"
         class="st23 st24 st25"
-      >{{credit.rate1}}</text>
+      >{{credit.rate1}}%</text>
     </g>
     <g class="svg-pointer" :style="`transform: rotate(${$props.deg}deg)`">
       <g id="Point_2_">
@@ -1412,7 +1412,7 @@
       >
         <div
           style="color:antiquewhite;font-size: 24px;width:50px;text-align: center;"
-        >{{$props.credit[Object.keys($props.credit)[index]]}}</div>
+        >{{$props.credit[Object.keys($props.credit)[index]]}}%</div>
       </foreignObject>
     </g>
   </svg>

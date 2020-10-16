@@ -204,7 +204,7 @@
         </div>
       </div>
     </div>
-    <experience :experiences="experiences" />
+    <experience :experiences="experiences" title="真實回饋" />
     <div class="video-card">
       <h2>聽聽投資人怎麼說</h2>
       <div class="hr" />
@@ -392,7 +392,7 @@ export default {
       margin: 0px auto;
 
       .puhey {
-        width: 530px;
+        width: 450px;
         margin: 20px;
         position: relative;
 
@@ -400,7 +400,7 @@ export default {
           position: absolute;
           top: 40%;
           transform: translateY(-50%);
-          width: 530px;
+          width: 450px;
           margin: 30px auto;
 
           .i-b {
@@ -412,7 +412,7 @@ export default {
             top: 28%;
             right: 0%;
             position: absolute;
-            width: 260px;
+            width: 210px;
             z-index: 1;
           }
         }
@@ -424,8 +424,8 @@ export default {
 
         .adv-item {
           position: relative;
-          width: 330px;
-          height: 330px;
+          width: 280px;
+          height: 280px;
           margin: 30px auto;
 
           .i-b {
@@ -437,7 +437,7 @@ export default {
             top: 28%;
             right: 0%;
             position: absolute;
-            width: 155px;
+            width: 130px;
             z-index: 1;
           }
         }
@@ -647,6 +647,11 @@ export default {
             .i-m {
               width: 170px;
             }
+          }
+
+          .i-b {
+            width: initial;
+            height: initial;
           }
         }
 

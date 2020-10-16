@@ -144,6 +144,7 @@ $(() => {
 
                 if (Object.keys(userData).length === 0) {
                     $(this.$refs.loginForm).modal("show");
+                    this.$router.history.pending = { path: '/feedback' };
                 } else {
                     $router.push("/feedback");
                 }
@@ -176,7 +177,7 @@ $(() => {
                                     this.$store.commit('mutationUserData', res.data);
                                     if (this.$router.history.pending) {
                                         $(this.$refs.loginForm).modal("hide");
-                                        this.$router.replace(this.$router.history.pending.path);
+                                        this.$router.push(this.$router.history.pending.path);
                                     }
 
                                     location.reload();
@@ -228,11 +229,11 @@ $(() => {
                 axios.post(`${location.origin}/getCaptcha`, { phone, type })
                     .then((res) => {
                         this.isSended = true;
-                        this.timer = setInterval(() => { $this.reciprocal() }, 1000);
+                        this.timer = setInterval(() => { this.reciprocal() }, 1000);
                     })
                     .catch((error) => {
                         let errorsData = error.response.data;
-                        this.pwdMessage = `${$this.$store.state.smsErrorCode[errorsData.error]}`;
+                        this.pwdMessage = `${this.$store.state.smsErrorCode[errorsData.error]}`;
                     });
             },
             submit() {
@@ -258,7 +259,7 @@ $(() => {
                             });
                             this.pwdMessage = messages.join('、');
                         } else {
-                            this.pwdMessage = `${$this.$store.state.pwdErrorCode[errorsData.error]}`;
+                            this.pwdMessage = `${this.$store.state.pwdErrorCode[errorsData.error]}`;
                         }
                     });
             },

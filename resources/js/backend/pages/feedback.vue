@@ -16,16 +16,29 @@
         <i class="fas fa-plus"></i>
         <span>新增</span>
       </button>
-      <div class="input-group float-right" style="width: 300px;">
-        <input type="text" class="form-control" placeholder="名字" v-model="filter.name" />
+      <div class="input-group float-right" style="width: 300px">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="名字"
+          v-model="filter.name"
+        />
         <div class="input-group-append">
           <span class="input-group-text">
             <i class="fas fa-user"></i>
           </span>
         </div>
       </div>
-      <div class="input-group float-right" style="width: 300px;margin-right:15px">
-        <input type="text" class="form-control" placeholder="回饋內容" v-model="filter.feedback" />
+      <div
+        class="input-group float-right"
+        style="width: 300px; margin-right: 15px"
+      >
+        <input
+          type="text"
+          class="form-control"
+          placeholder="回饋內容"
+          v-model="filter.feedback"
+        />
         <div class="input-group-append">
           <span class="input-group-text">
             <i class="fas fa-search"></i>
@@ -37,7 +50,8 @@
       <div class="feedback-tabletitle">
         <div class="name">填寫人姓名</div>
         <div class="user">填寫人ID</div>
-        <div class="type">身分</div>
+        <div class="rank">身分</div>
+        <div class="type">類別</div>
         <div class="date">填寫時間</div>
         <div class="message">訊息內容</div>
         <div class="status">是否公開</div>
@@ -65,45 +79,73 @@
               <i class="far fa-times-circle"></i>
             </button>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">填寫人姓名</span>
               </div>
-              <input type="text" class="form-control" placeholder="填寫人姓名" v-model="name" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="填寫人姓名"
+                v-model="name"
+              />
             </div>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">填寫人ID</span>
               </div>
-              <input type="text" class="form-control" placeholder="填寫人ID" v-model="userID" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="填寫人ID"
+                v-model="userID"
+              />
             </div>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">身分</span>
               </div>
-              <select class="custom-select" v-model="type">
+              <select class="custom-select" v-model="rank">
                 <option value="student">學生</option>
                 <option value="officeWorker">上班族</option>
               </select>
             </div>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
+              <div class="input-group-prepend">
+                <span class="input-group-text">借款/投資</span>
+              </div>
+              <select class="custom-select" v-model="type">
+                <option value="invest">投資端</option>
+                <option value="loan">借款端</option>
+              </select>
+            </div>
+
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">填寫日期</span>
               </div>
-              <v-date-picker v-model="date" :popover="{ visibility: 'click' }" />
+              <v-date-picker
+                v-model="date"
+                :popover="{ visibility: 'click' }"
+              />
             </div>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">回饋內容</span>
               </div>
-              <textarea type="text" class="form-control" style="height:300px" v-model="feedback" />
+              <textarea
+                type="text"
+                class="form-control"
+                style="height: 300px"
+                v-model="feedback"
+              />
             </div>
 
-            <div class="input-group" style="width: 15%;">
+            <div class="input-group" style="width: 15%">
               <div class="input-group-prepend">
                 <span class="input-group-text">是否公開</span>
               </div>
@@ -113,9 +155,13 @@
               </select>
             </div>
           </div>
-          <div class="modal-footer" style="display:block;">
-            <button class="btn btn-secondary float-left" data-dismiss="modal">取消</button>
-            <button class="btn btn-success float-right" @click="submit">送出</button>
+          <div class="modal-footer" style="display: block">
+            <button class="btn btn-secondary float-left" data-dismiss="modal">
+              取消
+            </button>
+            <button class="btn btn-success float-right" @click="submit">
+              送出
+            </button>
           </div>
         </div>
       </div>
@@ -131,9 +177,11 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-body">{{message}}</div>
-          <div class="modal-footer" style="display:block;">
-            <button class="btn btn-success float-right" @click="close">確認</button>
+          <div class="modal-body">{{ message }}</div>
+          <div class="modal-footer" style="display: block">
+            <button class="btn btn-success float-right" @click="close">
+              確認
+            </button>
           </div>
         </div>
       </div>
@@ -148,17 +196,18 @@ let feedbackRow = Vue.extend({
     <li class="feedback-row">
         <div class="name">{{item.name}}</div>
         <div class="user">{{item.userID}}</div>
-        <div class="type">{{item.type === 'student' ? '學生' : '上班族'}}</div>
+        <div class="rank">{{item.rank === 'student' ? '學生' : '上班族'}}</div>
+        <div class="type">{{item.type === 'invest' ? '投資端' : '借款端'}}</div>
         <div class="date">{{item.date}}</div>
         <div class="message">{{item.feedback}}</div>
         <div class="status">{{item.isActive ==='on' ? '是' : '否'}}</div>
       <div class="action-row">
-        <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === 0" @click="vm.read(item)">已讀</button>
+        <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === '0'" @click="vm.read(item)">未讀</button>
         <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
         <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
       </div>
     </li>
-  `
+  `,
 });
 
 export default {
@@ -166,6 +215,7 @@ export default {
     ID: "",
     name: "",
     userID: "",
+    rank: "",
     type: "",
     date: new Date(),
     feedback: "",
@@ -175,8 +225,8 @@ export default {
     filtedData: [],
     filter: {
       name: "",
-      feedback: ""
-    }
+      feedback: "",
+    },
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
@@ -188,7 +238,7 @@ export default {
     },
     "filter.feedback"(newVal) {
       this.doFilter(newVal, this.filter.name);
-    }
+    },
   },
   methods: {
     doFilter(feedback, name) {
@@ -222,12 +272,12 @@ export default {
               let component = new feedbackRow({
                 propsData: {
                   item,
-                  vm: $this
-                }
+                  vm: $this,
+                },
               }).$mount();
               $($this.$refs.container).append(component.$el);
             });
-          }
+          },
         });
       });
     },
@@ -235,6 +285,7 @@ export default {
       this.ID = "";
       this.name = "";
       this.userID = "";
+      this.rank = "";
       this.type = "";
       this.date = new Date();
       this.feedback = "";
@@ -247,6 +298,7 @@ export default {
       this.ID = item.ID;
       this.name = item.name;
       this.userID = item.userID;
+      this.rank = item.rank;
       this.type = item.type;
       this.date = new Date(item.date);
       this.feedback = item.feedback;
@@ -258,14 +310,14 @@ export default {
     delete(item) {
       axios
         .post("deleteFeedbackData", {
-          ID: item.ID
+          ID: item.ID,
         })
-        .then(res => {
+        .then((res) => {
           this.message = `刪除成功`;
           this.getFeedbackData();
           $(this.$refs.messageModal).modal("show");
         })
-        .catch(error => {
+        .catch((error) => {
           alert(`刪除發生錯誤，請稍後再試`);
         });
     },
@@ -274,13 +326,13 @@ export default {
         .post("readFeedbackData", {
           ID: item.ID,
           data: {
-            isRead: 1
-          }
+            isRead: 1,
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.getFeedbackData();
         })
-        .catch(error => {
+        .catch((error) => {
           alert(`發生錯誤，請稍後再試`);
         });
     },
@@ -289,7 +341,7 @@ export default {
       let date_item = {
         year: d.getFullYear(),
         month: (d.getMonth() + 1 < 10 ? "0" : "") + (d.getMonth() + 1),
-        day: (d.getDate() < 10 ? "0" : "") + d.getDate()
+        day: (d.getDate() < 10 ? "0" : "") + d.getDate(),
       };
 
       axios
@@ -301,12 +353,13 @@ export default {
             name: this.name,
             userID: this.userID,
             type: this.type,
+            type: this.type,
             date: `${date_item.year}-${date_item.month}-${date_item.day}`,
             feedback: this.feedback,
-            isActive: this.isActive
-          }
+            isActive: this.isActive,
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.message = `${
             this.actionType === "insert" ? "新增" : "更新"
           }成功`;
@@ -314,7 +367,7 @@ export default {
           this.getFeedbackData();
           $(this.$refs.messageModal).modal("show");
         })
-        .catch(error => {
+        .catch((error) => {
           alert(
             `${
               this.actionType === "insert" ? "新增" : "更新"
@@ -325,8 +378,8 @@ export default {
     close() {
       $(this.$refs.feedbackModal).modal("hide");
       $(this.$refs.messageModal).modal("hide");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -388,14 +441,18 @@ export default {
     }
 
     .name {
-      width: 10%;
-    }
-
-    .user {
       width: 7%;
     }
 
+    .user {
+      width: 6%;
+    }
+
     .type {
+      width: 5%;
+    }
+
+    .rank {
       width: 5%;
     }
 

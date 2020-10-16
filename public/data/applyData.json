@@ -8,7 +8,7 @@
             },
             {
                 "imgSrc": "./images/invest_student_2.png",
-                "stepTitle": "上傳資料,驗證身分",
+                "stepTitle": "上傳資料",
                 "stepDesc": "AI數據分析審核,全程無人打擾"
             },
             {
@@ -35,7 +35,7 @@
             },
             {
                 "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "金融帳號",
+                "text": "銀行帳號",
                 "memo": ""
             },
             {
@@ -62,7 +62,7 @@
             {
                 "num": 3,
                 "imgSrc": "./images/invest_engineer_3.png",
-                "stepTitle": "上傳資料,驗證身分",
+                "stepTitle": "上傳資料",
                 "stepDesc": "AI數據分析審核,全程無人打擾"
             },
             {
@@ -91,7 +91,7 @@
             },
             {
                 "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "金融帳號",
+                "text": "銀行帳號",
                 "memo": ""
             },
             {
@@ -122,7 +122,7 @@
             {
                 "num": 2,
                 "imgSrc": "./images/invest_worker_2.png",
-                "stepTitle": "上傳資料,驗證身分",
+                "stepTitle": "上傳資料",
                 "stepDesc": "AI數據分析審核,全程無人打擾"
             },
             {
@@ -151,7 +151,7 @@
             },
             {
                 "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "金融卡",
+                "text": "銀行帳號",
                 "memo": ""
             },
             {

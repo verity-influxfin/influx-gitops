@@ -2,8 +2,19 @@
   <div class="index-wrapper">
     <div class="banner" ref="banner">
       <div class="puhey-banner">
+        <img
+          :src="'/images/index-banner-d.png'"
+          style="width: 100%"
+          class="hidden-desktop"
+        />
+        <img
+          :src="'/images/index-banner-m.png'"
+          style="width: 100%"
+          class="hidden-phone"
+        />
         <div class="content">
           <p>最貼近年輕人的金融科技平台</p>
+          <p>普匯，你的手機ATM</p>
           <div class="box">
             <a
               class="loan"
@@ -29,12 +40,15 @@
     <div class="count-card">
       <div class="content">
         <div class="item">
-          <label>會員數：</label>
           <div class="count">{{ format(parseInt(tweenedMemberAmount)) }}</div>
+          <label>會員數</label>
         </div>
+        <div class="lr"></div>
         <div class="item">
-          <label>成功交易筆數：</label>
-          <div class="count">{{ format(parseInt(tweenedTransactionCount)) }}</div>
+          <div class="count">
+            {{ format(parseInt(tweenedTransactionCount)) }}
+          </div>
+          <label>成功交易筆數</label>
         </div>
         <!-- <div class="item">
           <label>APP下載次數：</label>
@@ -202,9 +216,10 @@
     </div>
     <div class="game-card" id="game-card">
       <div style="z-index: 2; position: relative">
-        <h2>額度試算</h2>
+        <h2>試算您可借額度</h2>
         <div class="hr"></div>
         <div class="loan-game">
+          <h5>點點看～立馬可以試算你的信用額度喔!!</h5>
           <div class="option">
             <div
               class="item"
@@ -234,13 +249,21 @@
               </div>
             </div>
           </div>
+          <button class="btn btn-loan" @click="openDialog()">了解更多</button>
         </div>
-        <h2>投報試算</h2>
+        <h2>投資報酬率試算</h2>
         <div class="hr"></div>
         <div class="invest-game">
-          <div class="chart" ref="chart">
-            <div class="invest-chart" ref="investChart"></div>
-          </div>
+          <h5>
+            愛因斯坦說過:「複利的威力大於原子彈」<br />
+            來看看使用普匯所創造的報酬吧
+          </h5>
+          <p>
+            每月投資{{ amount }}元，{{ time }}年後預計可回收<b
+              style="color: #0005a7"
+              >{{ format(tweenedReturnAll) }}</b
+            >元
+          </p>
           <div class="option">
             <div class="item">
               <label
@@ -251,12 +274,12 @@
               <div>
                 <i
                   class="fas fa-minus-circle pointer"
-                  @click="amount > -100000 ? (amount -= 1000) : ''"
+                  @click="amount > 0 ? (amount -= 1000) : ''"
                 ></i>
                 <input
                   type="range"
                   step="1000"
-                  min="-100000"
+                  min="0"
                   max="100000"
                   class="slider"
                   v-model="amount"
@@ -289,6 +312,14 @@
               </div>
             </div>
           </div>
+          <div class="chart" ref="chart">
+            <div class="invest-chart" ref="investChart"></div>
+          </div>
+          <router-link class="btn btn-invest" to="invest">了解更多</router-link>
+          <div style="text-align: end; font-size: 13px">
+            ＊複利滾投∶每月回款本金及利息，持續再投入借出，產生的投資報酬率。<br />
+            利率以12%為例。
+          </div>
         </div>
       </div>
     </div>
@@ -297,7 +328,7 @@
         <div class="slg">
           <p class="title">
             以金融為核心，以科技為輔具，
-            <br />普匯給您前所未有的專業金融APP
+            <br />普匯給您前所未有的最佳使用體驗APP
           </p>
           <p class="l-btn">為什麼選擇普匯金融科技?</p>
         </div>
@@ -309,7 +340,7 @@
           </div>
           <p>最專業的金融專家</p>
           <span
-            >普匯擁有近20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流邏輯...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span
+            >普匯擁有超過20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流管理...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span
           >
         </div>
         <div class="item">
@@ -336,7 +367,7 @@
         </div>
       </div>
     </div>
-    <experience :experiences="experiences" />
+    <experience :experiences="experiences"  title="真實回饋" />
     <div class="information-card">
       <ul class="nav" role="tablist">
         <li class="nav-item">
@@ -354,7 +385,7 @@
             data-toggle="tab"
             href="#knowledge"
             @click="reSlick('knowledge_slick')"
-            >小學堂</a
+            >AI金融科技新知</a
           >
         </li>
         <li class="nav-item">
@@ -363,7 +394,7 @@
             data-toggle="tab"
             href="#video"
             @click="reSlick('video_slick')"
-            >小學堂影音</a
+            >影音專區</a
           >
         </li>
       </ul>
@@ -373,16 +404,14 @@
             <a
               class="slick-item hvr-float-shadow"
               v-for="(item, index) in news"
-              :href="
-                item.url.indexOf('influxfin') !== -1 ? item.link : item.url
-              "
+              :href="item.link"
               :key="index"
             >
               <div class="img">
                 <img :src="item.image_url" class="img-fluid" />
               </div>
-              <p>{{ item.title }}</p>
-              <span>{{ item.updated_at }}</span>
+              <p>{{ item.post_title }}</p>
+              <span>{{ item.post_date.substr(0, 10) }}</span>
             </a>
           </div>
           <router-link class="btn btn-warning btn-to" to="news">
@@ -441,11 +470,33 @@
         <br />最貼近年輕人的金融科技平台
       </p>
       <div class="slogan">普匯．你的手機ATM</div>
-      <div class="img">
-        <img :src="'/images/846.png'" class="img-fluid" />
-      </div>
     </div>
     <download :isLoan="true" :isInvest="true" />
+    <div
+      class="comfirm-modal modal fade"
+      ref="comfirmModal"
+      role="dialog"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" data-dismiss="modal">
+        <div class="modal-content">
+          <div class="modal-body">
+            <h4>您的身分是：</h4>
+            <div class="flex">
+              <router-link to="collegeLoan" class="i hvr-shadow"
+                ><p>學生</p>
+                <img :src="'/images/college_loan.png'" class="img-fluid"
+              /></router-link>
+              <router-link to="freshGraduateLoan" class="i hvr-shadow"
+                ><p>上班族</p>
+                <img :src="'/images/office_loan.png'" class="img-fluid"
+              /></router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -467,6 +518,8 @@ export default {
     shanghuiBanner,
   },
   data: () => ({
+    returnAll: 0,
+    tweenedReturnAll: 0,
     amount: 10000,
     time: 1,
     money: 100000,
@@ -483,13 +536,13 @@ export default {
         money: 10000,
       },
       {
-        text: "金融帳號",
+        text: "銀行帳號",
         img: "/images/icon_cert_rev2_bank.svg",
         checked: false,
         money: 10000,
       },
       {
-        text: "社交認證",
+        text: "社交帳號",
         img: "/images/icon_cert_rev2_social.svg",
         checked: false,
         money: 20000,
@@ -574,12 +627,26 @@ export default {
       this.createChart();
       particlesJS.load("game-card", "data/game.json");
       this.createSlick(this.$refs.advantage_slick, 3, false);
-      this.createSlick(this.$refs.banner, 1, false);
+      this.createSlick(this.$refs.banner, 1);
     });
     AOS.init();
 
-    gsap.to(this.$data, { duration: 0.5, tweenedTransactionCount: 31559 });
-    gsap.to(this.$data, { duration: 0.5, tweenedMemberAmount: 54188 });
+    gsap.to(
+      this.$data,
+      {
+        duration: 2,
+        tweenedTransactionCount: 31559,
+      },
+      1
+    );
+    gsap.to(
+      this.$data,
+      {
+        duration: 2,
+        tweenedMemberAmount: 54188,
+      },
+      1
+    );
     // gsap.to(this.$data, { duration: 0.5, tweenedDownloadCount: 20000 });
   },
   watch: {
@@ -621,8 +688,14 @@ export default {
 
       gsap.to(this.$data, { duration: 0.5, tweenedMoney: data });
     },
+    returnAll(newVal) {
+      gsap.to(this.$data, { duration: 0.5, tweenedReturnAll: newVal });
+    },
   },
   methods: {
+    openDialog() {
+      $(this.$refs.comfirmModal).modal("show");
+    },
     format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
@@ -757,11 +830,7 @@ export default {
 
       for (q = 0; q < _totalFlow.length; q++) {
         let temp = _totalFlow[q];
-        xAxisData.push(
-          q % 12 === 0
-            ? `${Math.floor(q / 12) + 1}/1`
-            : `${Math.floor(q / 12) + 1}/${(q % 12) + 1}`
-        );
+        xAxisData.push(`${Math.floor(q / 12) + 1}/${(q % 12) + 1}`);
         listEveryFlow.push(q < _totalFlow.length - 1 ? $this.amount : 0);
         listPrinciple.push(Math.round((temp["principle"] * 1 * 100) / 100));
         listIntrest.push(Math.round((temp["intrest"] * 1 * 100) / 100));
@@ -774,7 +843,7 @@ export default {
       let _investAll =
         $this.amount > 0 ? $this.amount * ($this.time * 12 - 1) : 0;
 
-      let _returnAll = _totalIncome + _cashLast;
+      this.returnAll = _totalIncome + _cashLast;
 
       let _valueTotal =
         _totalIncome + _cashLast - $this.amount * ($this.time * 12 - 1); //期末回款+本金餘額-期初投入-每期投入總額
@@ -784,13 +853,6 @@ export default {
         listIntrest[listIntrest.length - 2] +
         $this.amount;
 
-      let subtext =
-        _totalIncome < 0 || _last2Return < 0 || _totalIncome + _cashLast < 0
-          ? "領取金額超過每月複投金額"
-          : `每期投資${$this.amount}元，${
-              $this.time
-            }年後預計可回收${$this.format(_returnAll)}元`;
-
       $($this.$refs.investChart)
         .css("width", `${$($this.$refs.chart).innerWidth()}px`)
         .css("height", `${$($this.$refs.chart).innerHeight()}px`);
@@ -798,14 +860,23 @@ export default {
       let line_chart = echarts.init($this.$refs.investChart);
 
       let option = {
+        legend: {
+          data: [
+            { name: "本期回款本金", icon: "path://M19,12l-10,0l0,1l10,0z" },
+            { name: "每期投入", icon: "path://M19,12l-10,0l0,1l10,0z" },
+            { name: "本期回款利息", icon: "path://M19,12l-10,0l0,1l10,0z" },
+          ],
+          selectedMode: false,
+          right: 10,
+          bottom: 10,
+        },
         grid: {
           left: 30,
-          top: 80,
+          top: 10,
           right: 30,
-          bottom: 60,
+          bottom: 100,
         },
         title: {
-          subtext,
           subtextStyle: {
             color: "#083a6e",
             fontSize: 14,
@@ -815,6 +886,7 @@ export default {
         },
         dataZoom: {
           type: "slider",
+          bottom: 40,
         },
         tooltip: {
           trigger: "axis",
@@ -837,6 +909,19 @@ export default {
           type: "category",
           boundaryGap: false,
           data: xAxisData,
+          axisLine: {
+            lineStyle: { color: "#ccc" },
+          },
+          splitLine: {
+            show: true,
+            lineStyle: { color: "#ccc" },
+          },
+          axisLabel: {
+            color: "#083a6e",
+          },
+          axisTick: {
+            show: false,
+          },
         },
         yAxis: {
           type: "value",
@@ -844,8 +929,12 @@ export default {
             show: false,
           },
           axisLabel: {
-            show: false,
+            // show: false,
           },
+          axisLine: {
+            lineStyle: { color: "#ccc" },
+          },
+          splitLine: { show: false },
         },
         series: [
           {
@@ -857,6 +946,7 @@ export default {
               color: "#9F9ADB",
             },
             lineStyle: {
+              width: 4,
               color: "#9F9ADB",
             },
             hoverAnimation: false,
@@ -874,6 +964,7 @@ export default {
               color: "#98F0E2",
             },
             lineStyle: {
+              width: 4,
               color: "#98F0E2",
             },
             hoverAnimation: false,
@@ -891,6 +982,7 @@ export default {
               color: "orange",
             },
             lineStyle: {
+              width: 4,
               color: "orange",
             },
             hoverAnimation: false,
@@ -932,16 +1024,28 @@ export default {
     position: relative;
     overflow: hidden;
 
+    %arrow {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      font-size: 27px;
+    }
+
+    .arrow-left {
+      @extend %arrow;
+      left: 10px;
+    }
+
+    .arrow-right {
+      @extend %arrow;
+      right: 10px;
+    }
+
     .puhey-banner {
       position: relative;
-      height: 77vh;
-      background-image: url("../asset/images/index-banner.png");
-      background-position: 50% 50%;
-      background-repeat: no-repeat;
-      background-size: cover;
+      height: 570px;
 
       img {
-        height: inherit;
         width: 100%;
       }
 
@@ -956,7 +1060,6 @@ export default {
           font-weight: bold;
           color: #ffffff;
           text-align: center;
-          text-shadow: 0 0 5px white;
         }
 
         .box {
@@ -965,10 +1068,18 @@ export default {
           margin-top: 5rem;
 
           %link {
-            width: 80px;
+            box-shadow: 0px 2px 3px black;
+            border: 2px solid;
+            width: 160px;
             text-align: center;
             color: #ffffff;
-            text-shadow: 0 0 6px #3cffe4;
+            background-image: linear-gradient(
+              to bottom,
+              rgba(0, 0, 0, 0.2),
+              rgba(0, 0, 0, 0.2)
+            );
+            padding: 2.2rem;
+            backdrop-filter: blur(5px);
 
             img {
               margin-bottom: 10px;
@@ -977,12 +1088,26 @@ export default {
 
           .loan {
             @extend %link;
+            border-image-source: linear-gradient(
+              144deg,
+              #f7eca8 1%,
+              rgba(191, 148, 55, 0.7) 51%,
+              #e7cc7e 100%
+            );
+            border-image-slice: 1;
             img {
               filter: drop-shadow(0px 0px 6px #f6d949);
             }
           }
           .borrow {
             @extend %link;
+            border-image-source: linear-gradient(
+              144deg,
+              #65dab3 1%,
+              rgba(21, 124, 80, 0.7) 48%,
+              #65dab3 100%
+            );
+            border-image-slice: 1;
             img {
               filter: drop-shadow(0px 0px 6px #65dab3);
             }
@@ -1000,19 +1125,25 @@ export default {
     .content {
       display: flex;
       width: fit-content;
-      margin: 20px auto;
+      margin: 10px auto;
+
+      .lr {
+        border: 1px solid #ffffff;
+        margin: 10px auto;
+      }
 
       .item {
         padding: 0px 20px;
 
-        &:not(:last-of-type) {
-          border-right: 1px solid #ffffff;
+        .count {
+          font-size: 40px;
+          font-weight: bold;
+          line-height: 40px;
         }
 
-        .count {
-          font-size: 26px;
-          font-weight: bold;
-          line-height: 25px;
+        label {
+          margin-top: 0.5rem;
+          margin-bottom: 0px;
         }
       }
     }
@@ -1023,7 +1154,7 @@ export default {
     background-image: url("../asset/images/105.png");
     background-position: 0 0;
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: cover;
     padding: 70px 30px;
 
     .pattern {
@@ -1131,15 +1262,17 @@ export default {
         h5 {
           font-size: 24px;
           font-weight: bold;
+          color: #000000;
         }
 
         p {
           font-weight: bold;
+          color: #222222;
         }
 
         .imagery {
           display: flex;
-          background: #083a6ec7;
+          background: #083a6ef2;
           padding: 2rem;
           height: 345px;
 
@@ -1203,8 +1336,9 @@ export default {
           display: flex;
           padding: 20px;
           color: #ffffff;
+          height: 230px;
 
-          $bgColor: #2e639b, #00def8, #3c73f5, #00b7cc, #1b558e;
+          $bgColor: #2e639b, #0d4c82, #3c73f5, #00b7cc, #1b558e;
 
           @for $i from 1 through 5 {
             &:nth-of-type(#{$i}) {
@@ -1217,13 +1351,12 @@ export default {
           }
 
           .img {
-            height: 190px;
-            width: 150px;
+            width: 110px;
             overflow: hidden;
             position: relative;
 
             img {
-              height: 135px;
+              height: 90px;
               position: absolute;
               top: 50%;
               left: 50%;
@@ -1236,8 +1369,12 @@ export default {
             padding: 0px 20px;
             width: calc(100% - 150px);
 
+            h3 {
+              font-weight: bold;
+            }
+
             p {
-              font-size: 13px;
+              font-size: 17px;
             }
           }
 
@@ -1272,7 +1409,7 @@ export default {
 
   .game-card {
     overflow: hidden;
-    background: #e3e3e3;
+    background: #d2d2d2;
     padding: 40px 0px;
     position: relative;
 
@@ -1310,9 +1447,10 @@ export default {
             width: 80px;
             height: 80px;
             position: relative;
-            border: 10px solid #00d3dc;
+            border: 7px solid #048dbd;
             margin: 5px;
             cursor: pointer;
+            overflow: hidden;
 
             img {
               position: absolute;
@@ -1320,7 +1458,8 @@ export default {
               left: 50%;
               transform: translate(-50%, -50%);
               border-radius: 50%;
-              width: 85%;
+              width: 100%;
+              filter: drop-shadow(0px 0px 1px #989898);
             }
           }
 
@@ -1338,7 +1477,7 @@ export default {
         margin: 10px 20px;
 
         .circle {
-          background-image: linear-gradient(129deg, #00aeff 3%, #00d9d5 102%);
+          background-image: linear-gradient(129deg, #0057a2 3%, #08d6e0 102%);
           border-radius: 26px;
           width: 45%;
           height: 170px;
@@ -1349,7 +1488,7 @@ export default {
           .total {
             position: absolute;
             top: 50%;
-            left: 45%;
+            left: 50%;
             transform: translate(-50%, -50%);
             width: 100%;
 
@@ -1359,7 +1498,7 @@ export default {
 
             span {
               font-size: 65px;
-              text-shadow: 3px 0px 3px darkgrey;
+              text-shadow: 1px 1px 2px white;
             }
 
             .default {
@@ -1379,7 +1518,7 @@ export default {
             }
 
             .awesome {
-              color: #59ffea;
+              color: #002dd0;
             }
           }
         }
@@ -1388,13 +1527,19 @@ export default {
 
     .invest-game {
       @extend %layout;
-      width: 66.5%;
+      width: 1018px;
+
+      p {
+        background-image: linear-gradient(129deg, #0057a2 3%, #08d6e0 102%);
+        width: fit-content;
+        margin: 0px auto;
+        padding: 10px;
+        border-radius: 10px;
+        color: #ffffff;
+      }
 
       .chart {
         color: #000000;
-        background: #ffffff;
-        border-radius: 20px;
-        box-shadow: 0 0 8px #ffffff;
         margin: 10px 5px;
         height: 350px;
 
@@ -1405,6 +1550,7 @@ export default {
 
       .option {
         overflow: auto;
+        margin: 10px 0px;
 
         .item {
           width: calc(50% - 10px);
@@ -1431,13 +1577,34 @@ export default {
         }
       }
     }
+
+    %btn {
+      width: 150px;
+      margin: 10px auto;
+      padding: 5px;
+      font-weight: bold;
+      color: #ffffff;
+      text-align: center;
+      border-radius: 25px;
+      box-shadow: 1px 2px 3px black;
+      background: #104073;
+    }
+
+    .btn-loan {
+      @extend %btn;
+    }
+
+    .btn-invest {
+      @extend %btn;
+    }
   }
 
   .advantage-card {
+    background-image: url("../asset/images/91.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
     .header {
-      background-image: url("../asset/images/why_bg.png");
-      background-repeat: no-repeat;
-      background-size: cover;
       font-size: 17px;
       font-weight: bold;
       overflow: hidden;
@@ -1478,14 +1645,6 @@ export default {
         padding: 3rem;
         height: 380px;
         pointer-events: none;
-
-        $bgColor: #005ec1, #16528f, #083a6e;
-
-        @for $i from 1 through 3 {
-          &:nth-of-type(#{$i}) {
-            background: nth($bgColor, $i);
-          }
-        }
 
         .img {
           width: fit-content;
@@ -1607,7 +1766,7 @@ export default {
         p {
           text-align: center;
           color: #083a6e;
-          font-size: 15px;
+          font-size: 14px;
           margin: 0.5rem 0px;
           pointer-events: none;
         }
@@ -1616,6 +1775,7 @@ export default {
           float: right;
           color: #8c8c8c;
           font-weight: 100;
+          font-size: 13px;
         }
 
         &:hover {
@@ -1632,8 +1792,10 @@ export default {
 
   .slogan-card {
     padding: 25px 0px;
-    background: #0b58a8;
     position: relative;
+    background-image: url("../asset/images/phone_bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
 
     .content {
       width: fit-content;
@@ -1654,18 +1816,47 @@ export default {
       text-align: center;
       border-radius: 25px;
     }
+  }
 
-    .img {
-      position: absolute;
-      bottom: 0px;
-      right: 18%;
-      width: 200px;
+  .comfirm-modal {
+    .modal-dialog {
+      max-width: 290px !important;
+    }
+    h4 {
+      text-align: center;
+      font-weight: bolder;
+      font-size: 20px;
+      margin: 0px;
+      color: #8c8c8c;
+    }
+
+    .flex {
+      display: flex;
+
+      .i {
+        padding: 10px;
+        margin: 5px;
+        background: #c4dcff73;
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        p {
+          text-align: center;
+          margin: 0px;
+          font-weight: bold;
+          font-size: 20px;
+        }
+      }
     }
   }
 
   @media screen and (max-width: 767px) {
     .banner {
       .puhey-banner {
+        height: 77vh;
+
         img {
           height: inherit;
           width: initial;
@@ -1674,18 +1865,18 @@ export default {
         .content {
           font-size: 16px;
           width: 100%;
-          top: 65%;
 
           p {
             font-size: 25px;
           }
 
           .box {
-            margin-top: 10rem;
+            margin-top: 3rem;
           }
         }
       }
     }
+
     .count-card {
       display: none;
     }
@@ -1739,6 +1930,10 @@ export default {
               display: none;
             }
           }
+
+          p {
+            color: #ffffff;
+          }
         }
 
         .p-i {
@@ -1791,27 +1986,36 @@ export default {
         margin: 10px;
       }
 
+      h5 {
+        font-size: 16px;
+      }
+
       .loan-game {
         .option {
           display: block;
           overflow: hidden;
 
           .item {
-            width: calc(100% / 3 - 10px);
             float: left;
+            width: calc(100% / 4 - 10px);
 
             .circle {
+              width: 70px;
+              height: 70px;
               margin: 5px auto;
             }
           }
         }
 
         .credit-num {
+          margin: 10px 0px;
+
           .circle {
             width: initial;
 
             .total {
               left: 50%;
+              padding: 0px 10px;
 
               p {
                 margin-top: 15px;
@@ -1859,15 +2063,6 @@ export default {
         .item {
           padding: 1rem;
           height: 315px;
-
-          $bgColor: #005ec1, #16528f, #083a6e;
-
-          @for $i from 1 through 3 {
-            &:nth-of-type(#{$i + 1}) {
-              background: nth($bgColor, $i);
-            }
-          }
-
           p {
             font-size: 28px;
           }
@@ -1893,7 +2088,7 @@ export default {
 
       .content {
         width: 75%;
-        text-align: left;
+        text-align: justify;
       }
 
       .slogan {

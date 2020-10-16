@@ -181,7 +181,6 @@ class Backendcontroller extends BaseController
         }
     }
 
-
     public function uploadVideoIntroImg(Request $request)
     {
         if ($request->hasFile('file')) {
@@ -565,6 +564,75 @@ class Backendcontroller extends BaseController
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {
             return response()->json($e, 400);
+        }
+    }
+    
+    public function getNews(Request $request)
+    {
+        $newsData = DB::table('news')->select('*')->orderby('post_date','desc')->get();
+
+        return response()->json($newsData, 200);
+    }
+    
+    public function modifyNews(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                if ($this->inputs['actionType'] === 'insert') {
+                    $this->inputs['data']['post_date'] = date('Y-m-d H:i:s');
+                    DB::table('news')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    DB::table('news')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deleteNews(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('news')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function uploadNewsIntroImg(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/news', "$filename");
+                return response()->json($filename, 200);
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+
+    public function uploadNewsImg(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/news', "$filename");
+                $pic_path = 'upload/news/' . $filename;
+                echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
     }
 }

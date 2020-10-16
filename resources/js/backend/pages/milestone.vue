@@ -11,34 +11,37 @@
       </ol>
     </nav>
 
-    <div class="milestone-card">
-      <div class="action-bar">
-        <button class="btn btn-primary float-left" @click="create()">
-          <i class="fas fa-plus"></i>
-          <span>新增</span>
-        </button>
+    <div class="action-bar">
+      <button class="btn btn-primary float-left" @click="create()">
+        <i class="fas fa-plus"></i>
+        <span>新增</span>
+      </button>
 
-        <div class="input-group float-right" style="width: 300px;">
-          <input type="text" class="form-control" placeholder="里程碑標題" v-model="filter.title" />
-          <div class="input-group-append">
-            <span class="input-group-text">
-              <i class="fas fa-search"></i>
-            </span>
-          </div>
+      <div class="input-group float-right" style="width: 300px">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="里程碑標題"
+          v-model="filter.title"
+        />
+        <div class="input-group-append">
+          <span class="input-group-text">
+            <i class="fas fa-search"></i>
+          </span>
         </div>
       </div>
-      <div class="milestone-list">
-        <div class="milestone-tabletitle">
-          <div class="title">標題</div>
-          <div class="hook-date">錨點日期</div>
-          <div class="content">內容</div>
-          <div class="action-row">操作</div>
-        </div>
-        <div class="empty" v-if="rawData.length === 0">查無資料！</div>
-        <div v-else>
-          <ul class="milestone-container" ref="container"></ul>
-          <div class="pagination" ref="pagination"></div>
-        </div>
+    </div>
+    <div class="milestone-list">
+      <div class="milestone-tabletitle">
+        <div class="title">標題</div>
+        <div class="hook-date">錨點日期</div>
+        <div class="content">內容</div>
+        <div class="action-row">操作</div>
+      </div>
+      <div class="empty" v-if="rawData.length === 0">查無資料！</div>
+      <div v-else>
+        <ul class="milestone-container" ref="container"></ul>
+        <div class="pagination" ref="pagination"></div>
       </div>
     </div>
 
@@ -61,24 +64,41 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">標題</span>
               </div>
-              <input type="text" class="form-control" placeholder="標題" v-model="title" />
+              <input
+                type="text"
+                class="form-control"
+                placeholder="標題"
+                v-model="title"
+              />
             </div>
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">錨點日期</span>
               </div>
-              <v-date-picker v-model="hookDate" :popover="{ visibility: 'click' }" />
+              <v-date-picker
+                v-model="hookDate"
+                :popover="{ visibility: 'click' }"
+              />
             </div>
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text">內容</span>
               </div>
-              <textarea type="text" class="form-control" placeholder="內容" v-model="content" />
+              <textarea
+                type="text"
+                class="form-control"
+                placeholder="內容"
+                v-model="content"
+              />
             </div>
           </div>
-          <div class="modal-footer" style="display:block;">
-            <button class="btn btn-secondary float-left" data-dismiss="modal">取消</button>
-            <button class="btn btn-success float-right" @click="submit">送出</button>
+          <div class="modal-footer" style="display: block">
+            <button class="btn btn-secondary float-left" data-dismiss="modal">
+              取消
+            </button>
+            <button class="btn btn-success float-right" @click="submit">
+              送出
+            </button>
           </div>
         </div>
       </div>
@@ -94,9 +114,11 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-body">{{message}}</div>
-          <div class="modal-footer" style="display:block;">
-            <button class="btn btn-success float-right" @click="close">確認</button>
+          <div class="modal-body">{{ message }}</div>
+          <div class="modal-footer" style="display: block">
+            <button class="btn btn-success float-right" @click="close">
+              確認
+            </button>
           </div>
         </div>
       </div>
@@ -117,7 +139,7 @@ let phoneRow = Vue.extend({
           <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
         </div>
     </li>
-  `
+  `,
 });
 
 export default {
@@ -129,8 +151,8 @@ export default {
     message: "",
     rawData: [],
     filter: {
-      title: ""
-    }
+      title: "",
+    },
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
@@ -140,11 +162,11 @@ export default {
     getMilestoneData() {
       axios
         .post("getMilestoneData")
-        .then(res => {
+        .then((res) => {
           this.rawData = res.data;
           this.pagination();
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("getMilestone 發生錯誤，請稍後再試");
         });
     },
@@ -160,12 +182,12 @@ export default {
               let component = new phoneRow({
                 propsData: {
                   item,
-                  vm: $this
-                }
+                  vm: $this,
+                },
               }).$mount();
               $($this.$refs.container).append(component.$el);
             });
-          }
+          },
         });
       });
     },
@@ -190,14 +212,14 @@ export default {
     delete(item) {
       axios
         .post("deleteMilestoneData", {
-          ID: item.ID
+          ID: item.ID,
         })
-        .then(res => {
+        .then((res) => {
           this.message = `刪除成功`;
           this.getMilestoneData();
           $(this.$refs.messageModal).modal("show");
         })
-        .catch(error => {
+        .catch((error) => {
           alert(`刪除發生錯誤，請稍後再試`);
         });
     },
@@ -206,7 +228,7 @@ export default {
       let date_item = {
         year: d.getFullYear(),
         month: (d.getMonth() + 1 < 10 ? "0" : "") + (d.getMonth() + 1),
-        day: (d.getDate() < 10 ? "0" : "") + d.getDate()
+        day: (d.getDate() < 10 ? "0" : "") + d.getDate(),
       };
 
       axios
@@ -216,10 +238,10 @@ export default {
           data: {
             title: this.title,
             hook_date: `${date_item.year}-${date_item.month}-${date_item.day}`,
-            content: this.content
-          }
+            content: this.content,
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.message = `${
             this.actionType === "insert" ? "新增" : "更新"
           }成功`;
@@ -227,7 +249,7 @@ export default {
           this.getMilestoneData();
           $(this.$refs.messageModal).modal("show");
         })
-        .catch(error => {
+        .catch((error) => {
           alert(
             `${
               this.actionType === "insert" ? "新增" : "更新"
@@ -238,8 +260,8 @@ export default {
     close() {
       $(this.$refs.milestoneModal).modal("hide");
       $(this.$refs.messageModal).modal("hide");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -248,87 +270,79 @@ export default {
   overflow: hidden;
   padding: 10px;
 
-  .milestone-card {
-    margin: 15px 5px;
+  .empty {
     padding: 10px;
-    background: #f5f4ff;
-    border-radius: 10px;
-    box-shadow: 0 0 4px black;
+    text-align: center;
+  }
 
-    .empty {
-      padding: 10px;
-      text-align: center;
-    }
+  .action-bar {
+    position: relative;
+    overflow: auto;
+  }
 
-    .action-bar {
-      position: relative;
+  .milestone-list {
+    margin: 15px 0px;
+    padding: 10px;
+    box-shadow: 0 0 2px black;
+
+    .milestone-tabletitle {
+      display: flex;
       overflow: auto;
+
+      div {
+        border-bottom: 2px solid #929292;
+        text-align: center;
+
+        &:not(:last-child) {
+          border-right: 1px solid #bbbbbb;
+        }
+      }
     }
 
-    .milestone-list {
-      margin: 15px 0px;
-      padding: 10px;
-      box-shadow: 0 0 2px black;
+    .milestone-container {
+      margin-bottom: 20px;
+      padding: 0px;
+      list-style: none;
 
-      .milestone-tabletitle {
+      .milestone-row {
         display: flex;
-        overflow: auto;
+
+        .action-row {
+          padding: 5px;
+        }
 
         div {
-          border-bottom: 2px solid #929292;
-          text-align: center;
-
           &:not(:last-child) {
             border-right: 1px solid #bbbbbb;
           }
         }
       }
 
-      .milestone-container {
-        margin-bottom: 20px;
-        padding: 0px;
-        list-style: none;
-
-        .milestone-row {
-          display: flex;
-
-          .action-row {
-            padding: 5px;
-          }
-
-          div {
-            &:not(:last-child) {
-              border-right: 1px solid #bbbbbb;
-            }
-          }
-        }
-
-        .milestone-row:not(:last-child) {
-          border-bottom: 1px solid #b1b1b1;
-        }
+      .milestone-row:not(:last-child) {
+        border-bottom: 1px solid #b1b1b1;
       }
+    }
 
-      .title {
-        width: 20%;
-        padding: 10px;
-      }
+    .title {
+      width: 20%;
+      padding: 10px;
+    }
 
-      .hook-date {
-        width: 10%;
-        padding: 10px;
-        text-align: center;
-      }
+    .hook-date {
+      width: 10%;
+      padding: 10px;
+      text-align: center;
+    }
 
-      .content {
-        width: 75%;
-        padding: 10px;
-      }
+    .content {
+      width: 75%;
+      padding: 10px;
+    }
 
-      .action-row {
-        width: 15%;
-        padding: 10px;
-        text-align: center;
-      }
+    .action-row {
+      width: 15%;
+      padding: 10px;
+      text-align: center;
     }
   }
 

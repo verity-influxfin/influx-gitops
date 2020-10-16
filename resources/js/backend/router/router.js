@@ -7,6 +7,7 @@ import partner from "../pages/partner";
 import media from "../pages/media";
 import feedback from "../pages/feedback";
 import cooperation from "../pages/cooperation";
+import news from "../pages/news";
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -18,7 +19,8 @@ let routers = [
     { path: '/media', component: media },
     { path: '/partner', component: partner },
     { path: '/feedback', component: feedback },
-    { path: '/cooperation', component: cooperation }
+    { path: '/cooperation', component: cooperation },
+    { path: '/news', component: news }
 ];
 
 export default routers;

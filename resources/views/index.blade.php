@@ -115,9 +115,9 @@
                 <div class="desc-card">
                     <div class="img"><img src="{{ asset('images/footer.png') }}" class="img-fluid"></div>
                     <div class="text">
-                        <p>inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化，說聲Hey～普匯！</p>
-                        <p><i class="fas fa-phone"></i>&ensp;02-2507-9990</p>
-                        <p><a href="mailto:service@influxfin.com" target="_blank"><span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</a></span></p>
+                        <p>inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。</p>
+                        <p><a href="tel:+886225079990" target="_blank"><span><i class="fas fa-phone"></i>&ensp;02-2507-9990</span></a></p>
+                        <p><a href="mailto:service@influxfin.com" target="_blank"><span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</span></a></p>
                         <p><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i>&ensp;台北市松江路111號11樓-2</span></a></p>
                     </div>
                 </div>

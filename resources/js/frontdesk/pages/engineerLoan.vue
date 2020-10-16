@@ -12,7 +12,7 @@
     </div>
     <credit :creditList="creditList" amount="20" license="最高額度會根據您的申請身分而有所不同" />
     <apply
-      title="「不知道該如何申貸嗎？」"
+      title="申貸簡便五步驟"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
@@ -40,15 +40,15 @@ export default {
     credit: "--",
     qaData: [],
     creditList: {
-      rate1: "5%",
-      rate2: "5.5%",
-      rate3: "6%",
-      rate4: "6.5%",
-      rate5: "7%",
-      rate6: "7.5%",
-      rate7: "8%",
-      rate8: "8.5%",
-      rate9: "9%",
+      rate1: 5,
+      rate2: 5.5,
+      rate3: 6,
+      rate4: 6.5,
+      rate5: 7,
+      rate6: 7.5,
+      rate7: 8,
+      rate8: 8.5,
+      rate9: 9,
     },
     bannerData: {},
     applyData: {},

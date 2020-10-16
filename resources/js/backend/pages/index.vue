@@ -8,7 +8,7 @@
       <router-link class="center-high left" to="milestone" v-if="userData.identity == 1">里程碑</router-link>
       <router-link class="center-mid left" to="feedback" v-if="userData.identity == 1">心得回饋</router-link>
       <router-link class="center-lower-mid left" to="cooperation" v-if="userData.identity == 1">合作訊息</router-link>
-      <router-link class="center-low left" to="market" v-if="userData.identity == 1">分期超市</router-link>
+      <router-link class="center-low left" to="news" v-if="userData.identity == 1">最新消息</router-link>
       <router-link class="center" to="knowledge">小學堂</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>
       <router-link class="center-mid right" to="partner" v-if="userData.identity == 1">合作夥伴</router-link>

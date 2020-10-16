@@ -11,7 +11,6 @@
         </div>
       </div>
     </div>
-    <credit :creditList="creditList" amount="12" />
     <div class="partner-card">
       <div class="partner-box">
         <p>我們服務了超過140所學校的同學</p>
@@ -20,12 +19,13 @@
         <img class="img-fluid" src="../asset/images/taiwan.svg" />
       </div>
     </div>
-    <experience :experiences="experiences" />
+    <credit :creditList="creditList" amount="12" />
     <apply
-      title="「不知道該如何申貸嗎？」"
+      title="申貸簡便四步驟"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
+    <experience :experiences="experiences" title="同學回饋"/>
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
   </div>
@@ -53,15 +53,15 @@ export default {
     bannerData: {},
     applyData: {},
     creditList: {
-      rate1: "5%",
-      rate2: "6%",
-      rate3: "7%",
-      rate4: "8%",
-      rate5: "9%",
-      rate6: "10%",
-      rate7: "11%",
-      rate8: "12%",
-      rate9: "13%",
+      rate1: 5,
+      rate2: 6,
+      rate3: 7,
+      rate4: 8,
+      rate5: 9,
+      rate6: 10,
+      rate7: 11,
+      rate8: 12,
+      rate9: 13,
     },
   }),
   computed: {
@@ -198,7 +198,7 @@ export default {
   .partner-card {
     overflow: auto;
     position: relative;
-    padding: 4rem 0px;
+    padding: 4rem 0px 0px 0px;
     display: flex;
     justify-content: flex-end;
 

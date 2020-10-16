@@ -11,7 +11,12 @@
       </div>
     </div>
     <credit :creditList="creditList" amount="20" />
-    <experience :experiences="experiences" />
+    <apply
+      title="申貸簡便四步驟"
+      :requiredDocuments="applyData.requiredDocuments"
+      :step="applyData.step"
+    />
+    <experience :experiences="experiences" title="真實回饋" />
     <div class="video-card">
       <h2>聽聽借款人怎麼說</h2>
       <div class="hr" />
@@ -30,11 +35,6 @@
       </div>
       <router-link class="btn link" to="vlog?q=loan"> 影音列表 </router-link>
     </div>
-    <apply
-      title="「不知道該如何申貸嗎？」"
-      :requiredDocuments="applyData.requiredDocuments"
-      :step="applyData.step"
-    />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
   </div>
@@ -62,15 +62,15 @@ export default {
     bannerData: {},
     applyData: {},
     creditList: {
-      rate1: "5%",
-      rate2: "6%",
-      rate3: "7%",
-      rate4: "8%",
-      rate5: "9%",
-      rate6: "10%",
-      rate7: "11%",
-      rate8: "12%",
-      rate9: "13%",
+      rate1: 5,
+      rate2: 6,
+      rate3: 7,
+      rate4: 8,
+      rate5: 9,
+      rate6: 10,
+      rate7: 11,
+      rate8: 12,
+      rate9: 13,
     },
   }),
   computed: {
