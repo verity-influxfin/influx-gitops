@@ -62,7 +62,7 @@
       </div>
     </div>
     <apply
-      title="選擇喜歡的手機，無卡也能分期支付，輕鬆購買"
+      title="簡便五步驟，無卡也能分期支付，輕鬆購買"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
@@ -164,6 +164,7 @@ export default {
         .post(`${location.origin}/getBannerData`, { filter: "mobile" })
         .then((res) => {
           this.bannerData = res.data;
+          this.bannerData.desc = "選擇喜歡的手機，免費用30天後再付款";
         });
     },
     async getMobileData() {

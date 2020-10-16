@@ -1,7 +1,7 @@
 {
     "college": {
         "bannerDesktopHref": "./images/college_banner.png",
-        "bannerMoblieHref":"",
+        "bannerMoblieHref":"./images/college_banner.png",
         "productName": "學生貸"
     },
     "engineer": {

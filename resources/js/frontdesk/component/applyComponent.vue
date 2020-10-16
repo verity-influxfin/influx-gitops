@@ -21,7 +21,10 @@
         <div class="img">
           <img :src="'/images/ah-pu.svg'" class="img-fluid" />
         </div>
-        <p class="dailog">先把下列資料準備好可以加快申貸速度喔！</p>
+        <p class="dailog">
+          備妥<b>{{ $props.requiredDocuments.length }}資料</b
+          >，上傳只要<b>1分鐘</b>，申請超快速
+        </p>
       </div>
       <div class="required">
         <div
@@ -56,11 +59,11 @@ export default {
         infinite: true,
         slidesToShow: 5,
         slidesToScroll: 1,
-        autoplay: false,
+        autoplay: true,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
-        arrows: false,
+        arrows: true,
         prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
         nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
         responsive: [
@@ -83,6 +86,24 @@ export default {
   background: #f6f6f6f6;
   padding: 30px;
   text-align: center;
+  position: relative;
+
+  %arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    font-size: 20px;
+  }
+
+  .arrow-left {
+    @extend %arrow;
+    left: 0%;
+  }
+
+  .arrow-right {
+    @extend %arrow;
+    right: 0%;
+  }
 
   .flow {
     text-align: initial;
@@ -169,6 +190,10 @@ export default {
         margin-bottom: 0px;
         line-height: 52px;
 
+        b {
+          color: red;
+        }
+
         &::after {
           content: "";
           position: absolute;
@@ -214,6 +239,7 @@ export default {
         p {
           color: #ffffff;
           font-weight: bold;
+          margin: 0px;
         }
 
         .other {

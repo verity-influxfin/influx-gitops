@@ -229,11 +229,11 @@ $(() => {
                 axios.post(`${location.origin}/getCaptcha`, { phone, type })
                     .then((res) => {
                         this.isSended = true;
-                        this.timer = setInterval(() => { $this.reciprocal() }, 1000);
+                        this.timer = setInterval(() => { this.reciprocal() }, 1000);
                     })
                     .catch((error) => {
                         let errorsData = error.response.data;
-                        this.pwdMessage = `${$this.$store.state.smsErrorCode[errorsData.error]}`;
+                        this.pwdMessage = `${this.$store.state.smsErrorCode[errorsData.error]}`;
                     });
             },
             submit() {
@@ -259,7 +259,7 @@ $(() => {
                             });
                             this.pwdMessage = messages.join('、');
                         } else {
-                            this.pwdMessage = `${$this.$store.state.pwdErrorCode[errorsData.error]}`;
+                            this.pwdMessage = `${this.$store.state.pwdErrorCode[errorsData.error]}`;
                         }
                     });
             },

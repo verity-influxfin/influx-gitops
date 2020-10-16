@@ -2,7 +2,9 @@
   <div class="closedcase-wrapper">
     <div class="no-data" v-if="groupList.length === 0">
       <img src="../asset/images/empty.svg" class="img-fluid" />
-      <a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">目前沒有投資標的，點我立即前往 >></a>
+      <a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"
+        >目前沒有投資標的，點我立即前往 >></a
+      >
     </div>
     <div id="accordion" role="tablist" v-else>
       <div class="c-title">
@@ -10,7 +12,7 @@
         <div class="p-count">案件件數</div>
         <div class="p-total">應收本金</div>
       </div>
-      <div class="card" v-for="(product,key) in groupList" :key="key">
+      <div class="card" v-for="(product, key) in groupList" :key="key">
         <div
           class="header collapsed"
           data-parent="#accordion"
@@ -19,11 +21,11 @@
           aria-expanded="false"
         >
           <div class="h-t">
-            <div class="p-type">{{product}}</div>
-            <div class="p-count">{{finishedData[product].length}}件</div>
+            <div class="p-type">{{ productList[product] }}</div>
+            <div class="p-count">{{ finishedData[product].length }}件</div>
             <div class="p-total">
               <!-- <span>應收本金</span> -->
-              <span>${{getTotal(finishedData[product])}}</span>
+              <span>${{ getTotal(finishedData[product]) }}</span>
             </div>
           </div>
           <span class="accicon">
@@ -31,8 +33,8 @@
           </span>
         </div>
         <div :id="`collapse${key}`" class="collapse" data-parent="#accordion">
-          <template v-for="(item,age) in groupByAge(finishedData[product])">
-            <div class="mc-body" v-if="item.length !==0" :key="age">
+          <template v-for="(item, age) in groupByAge(finishedData[product])">
+            <div class="mc-body" v-if="item.length !== 0" :key="age">
               <div
                 class="m-header collapsed"
                 :data-parent="`#collapse${key}`"
@@ -41,32 +43,36 @@
                 aria-expanded="false"
               >
                 <div class="h-t">
-                  <div class="p-type">{{ageTextList[age]}}</div>
-                  <div class="p-count">{{item.length}}件</div>
+                  <div class="p-type">{{ ageTextList[age] }}</div>
+                  <div class="p-count">{{ item.length }}件</div>
                   <div class="p-total">
                     <!-- <span>應收本金</span> -->
-                    <span>${{getTotal(item)}}</span>
+                    <span>${{ getTotal(item) }}</span>
                   </div>
                 </div>
                 <span class="accicon">
                   <i class="fas fa-angle-down rotate-icon"></i>
                 </span>
               </div>
-              <div :id="`collapse${age}`" class="collapse" :data-parent="`collapse${key}`">
+              <div
+                :id="`collapse${age}`"
+                class="collapse"
+                :data-parent="`collapse${key}`"
+              >
                 <div class="c-body">
-                  <template v-for="(row,type) in groupByType(item)">
+                  <template v-for="(row, type) in groupByType(item)">
                     <div
                       class="case-row"
-                      v-if="item.length !==0"
-                      @click="showCases(row,typeTextList[type])"
+                      v-if="item.length !== 0"
+                      @click="showCases(row, typeTextList[type])"
                       :key="type"
                     >
                       <div class="d-bg">
-                        <div class="p-type">{{typeTextList[type]}}</div>
-                        <div class="p-count">{{row.length}}件</div>
+                        <div class="p-type">{{ typeTextList[type] }}</div>
+                        <div class="p-count">{{ row.length }}件</div>
                         <div class="p-total">
                           <!-- <span>回收總額</span> -->
-                          <span class="total">${{getTotal(row)}}</span>
+                          <span class="total">${{ getTotal(row) }}</span>
                         </div>
                       </div>
                     </div>
@@ -103,6 +109,7 @@ export default {
     groupList: [],
     detailData: {},
     finishedData: {},
+    productList: ["", "學生貸", "上班族貸", "工程師貸"],
     ageTextList: {
       normal: "正常案",
       observed: "觀察案",
@@ -113,6 +120,7 @@ export default {
     typeTextList: {
       normal: "正常",
       advance: "提前清償",
+      delay: "逾期清償",
       transfer: "產品轉換",
       sell: "債權出讓",
     },
@@ -184,6 +192,7 @@ export default {
       let normal = [],
         advance = [],
         transfer = [],
+        delay = [],
         sell = [];
 
       data.forEach((row, index) => {
@@ -207,7 +216,7 @@ export default {
                 advance.push(row);
               } else {
                 if (_isDelayTarget) {
-                  advance.push(row);
+                  delay.push(row);
                 } else {
                   normal.push(row);
                 }
@@ -219,7 +228,7 @@ export default {
         }
       });
 
-      return { normal, advance, transfer, sell };
+      return { normal, advance, transfer, sell, delay };
     },
     showCases(data, category) {
       this.detailData = data;

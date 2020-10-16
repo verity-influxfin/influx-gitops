@@ -15,6 +15,7 @@
       <img :src="$props.data.bannerPhone" class="img-fluid" />
     </div>
     <h1 class="banner-title">{{ $props.data.productName }}</h1>
+    <h2 class="banner-desc">{{ $props.data.desc }}</h2>
     <div class="banner-download" v-html="$props.data.downloadhtml"></div>
   </div>
 </template>
@@ -28,7 +29,7 @@ export default {
 <style lang="scss">
 .product-banner {
   width: 100%;
-  height: 69vh;
+  height: 547px;
   overflow: hidden;
   position: relative;
 
@@ -56,6 +57,15 @@ export default {
     transform: translate(-50%, -50%);
   }
 
+  .banner-desc{
+    color: #ffffff;
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+
   .phone-img {
     float: right;
     width: fit-content;
@@ -70,7 +80,7 @@ export default {
 @media (max-width: 767px) {
   .product-banner {
     background-position: 50% 50%;
-    height: 76vh;
+    height: 547px;
 
     .phone-img {
       display: none;

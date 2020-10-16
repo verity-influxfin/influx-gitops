@@ -515,10 +515,10 @@ $ci-color: #083a6e;
     position: fixed;
     bottom: 85px;
     right: 10px;
-    padding: 8px;
+    padding: 4px;
     z-index: 10;
     cursor: pointer;
-    width: 46px;
+    width: 35px;
     background: #ffffff;
     box-shadow: 1px 2px 2px #737373;
     opacity: 0.8;
@@ -560,10 +560,10 @@ $ci-color: #083a6e;
     background: #a7a7a7;
 }
 ::-webkit-scrollbar-track-piece {
-    background: #ffffff;
+    background: #ffffff00;
 }
 ::-webkit-scrollbar-corner {
-    background: #ffffff;
+    background: #ffffff00;
 }
 
 .grecaptcha-badge {

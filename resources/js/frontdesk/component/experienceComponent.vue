@@ -1,6 +1,6 @@
 <template>
   <div class="experience-card">
-    <h2>用戶回饋</h2>
+    <h2>{{$props.title}}</h2>
     <div class="hr"></div>
     <div class="comment-box" ref="comment_slick">
       <div
@@ -26,7 +26,11 @@
           <span>{{ item.feedback }}</span>
         </div>
         <div class="img">
-          <img :src="item.imageSrc" class="img-fluid" />
+          <img
+            :src="item.imageSrc"
+            @error="item.imageSrc = '/images/mug_shot.svg'"
+            class="img-fluid"
+          />
         </div>
         <label class="c-pel">
           {{ item.name }}
@@ -43,7 +47,7 @@
 
 <script>
 export default {
-  props: ["experiences"],
+  props: ["experiences","title"],
   watch: {
     "$props.experiences"() {
       this.$nextTick(() => {
@@ -57,11 +61,11 @@ export default {
         infinite: true,
         slidesToShow: 3,
         slidesToScroll: 1,
-        autoplay: true,
+        autoplay: false,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
-        arrows: false,
+        arrows: true,
         prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
         nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
         responsive: [
@@ -92,6 +96,23 @@ export default {
   overflow: hidden;
   position: relative;
   background: #f5f5f5;
+
+  %arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    font-size: 20px;
+  }
+
+  .arrow-left {
+    @extend %arrow;
+    left: -20px;
+  }
+
+  .arrow-right {
+    @extend %arrow;
+    right: -20px;
+  }
 
   h2 {
     text-align: center;
@@ -135,11 +156,12 @@ export default {
         }
 
         box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-        background-color: #ffffff;
         line-height: 1.83;
         padding: 41px 20px;
         text-align: justify;
         min-height: 235px;
+        border-radius: 10px;
+        background: #ffffff;
       }
 
       .img {
@@ -155,24 +177,25 @@ export default {
 
       .c-pel {
         text-align: center;
-        margin: 12px auto;
+        margin: 12px auto 0px auto;
         display: block;
+        font-weight: bolder;
       }
     }
   }
   .slick-active {
     opacity: 0.5;
-    transform: translateY(10%);
+    transform: translateY(20px);
   }
 
   .slick-active + .slick-active {
-    transform: translateY(2%);
+    transform: translateY(0%);
     opacity: 1;
   }
 
   .slick-active + .slick-active + .slick-active {
     opacity: 0.5;
-    transform: translateY(10%);
+    transform: translateY(20px);
   }
 }
 
@@ -183,7 +206,7 @@ export default {
 
     .comment-box {
       .item {
-        margin: 10px;
+        margin: 10px 0px;
       }
     }
 

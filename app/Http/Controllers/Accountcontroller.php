@@ -57,8 +57,7 @@ class Accountcontroller extends BaseController
         
         $params = http_build_query($input);
 
-        $function = array_key_exists('tax_id', $input) ? 'judicialperson' : 'user';
-        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . $function . '/login" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . 'user/login" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
 
