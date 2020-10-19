@@ -103,3 +103,5 @@ $db['admin']		=	array_merge($db_base, array('database'=>'p2p_admin'));
 $db['transaction']	=	array_merge($db_base, array('database'=>'p2p_transaction'));
 $db['behavion']	    =	array_merge($db_base, array('database'=>'behavion'));
 
+$db['loan_manager']	    =	array_merge($db_base, array('database'=>'loan_manager'));
+
