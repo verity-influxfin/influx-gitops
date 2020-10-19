@@ -735,6 +735,7 @@ class Target_lib
         $schedule = [
             'amount' => intval($target->loan_amount),
             'remaining_principal' => intval($target->loan_amount),
+            'last_interest' => intval(0),
             'instalment' => intval($target->instalment),
             'rate' => floatval($target->interest_rate),
             'total_payment' => 0,
@@ -743,6 +744,8 @@ class Target_lib
             'sub_loan_fees' => 0,
             'platform_fees' => 0,
             'legal_affairs_fee' => 0,
+            'delay_interest' => intval(0),
+            'liquidated_damages' => intval(0),
             'list' => [],
 
         ];
@@ -767,6 +770,7 @@ class Target_lib
                         'days' => 0,//本期天數
                         'remaining_principal' => 0,//期初本金
                         'repayment_date' => $value->limit_date,//還款日
+                        'repaid' => 0,
                         'r_principal' => 0,
                     ];
                 }
@@ -776,12 +780,17 @@ class Target_lib
                         break;
                     case SOURCE_AR_INTEREST:
                         $list[$value->instalment_no]['interest'] += $value->amount;
+                        if ($value->status == 1) {
+                            $schedule['last_interest'] = $value->amount;
+                        }
                         break;
                     case SOURCE_AR_DAMAGE:
                         $list[$value->instalment_no]['liquidated_damages'] += $value->amount;
+                        $schedule['liquidated_damages'] += $value->amount;
                         break;
                     case SOURCE_AR_DELAYINTEREST:
                         $list[$value->instalment_no]['delay_interest'] += $value->amount;
+                        $schedule['delay_interest'] += $value->amount;
                         break;
                     case SOURCE_SUBLOAN_FEE:
                         $schedule['sub_loan_fees'] += $value->amount;
@@ -798,6 +807,8 @@ class Target_lib
                     case SOURCE_DAMAGE:
                     case SOURCE_PREPAYMENT_DAMAGE:
                         $list[$value->instalment_no]['repayment'] += $value->amount;
+                        !isset($schedule['repaid']) ? $schedule['repaid'] = 0 : '';
+                        $schedule['repaid'] += $value->amount;
                         if ($value->source == SOURCE_PRINCIPAL) {
                             $schedule['remaining_principal'] -= $value->amount;
                         } else if ($value->source == SOURCE_PREPAYMENT_DAMAGE) {

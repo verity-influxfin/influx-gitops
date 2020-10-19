@@ -84,14 +84,16 @@ defined('EXIT_DATABASE')       OR define('EXIT_DATABASE'		, 8); // database erro
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN'		, 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX'		, 125); // highest automatically-assigned error code
 
+
 //Error Code
 defined('TOKEN_NOT_CORRECT')   			OR define('TOKEN_NOT_CORRECT'			, 100); // token not exit
 defined('BLOCK_USER')   				    OR define('BLOCK_USER'					, 101); // block status
 defined('KEY_FAIL')   			        OR define('KEY_FAIL'		        , 102); // key not exit
 defined('SYSTEM_BLOCK_USER')			    OR define('SYSTEM_BLOCK_USER'	    	, 120); // SYSTEM_BLOCK_USER
 defined('TEMP_BLOCK_USER')			    OR define('TEMP_BLOCK_USER'			    , 121); // TEMP_BLOCK_USER
+defined('PERMISSION_DENY') or define('PERMISSION_DENY', 130);//權限不足
 defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 200); // input not correct.
-defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201); 
+defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201);
 defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒通過認證
 defined('NO_BANK_ACCOUNT')  			OR define('NO_BANK_ACCOUNT'				, 203); //沒綁定金融卡
 defined('INVALID_EMAIL_FORMAT')  		OR define('INVALID_EMAIL_FORMAT'		, 204); //Email
@@ -159,6 +161,7 @@ defined('CERTIFICATION_BANK_ACCOUNT_ERROR') OR define('CERTIFICATION_BANK_ACCOUN
 defined('CERTIFICATION_BANK_ACCOUNT_EXIST') OR define('CERTIFICATION_BANK_ACCOUNT_EXIST', 509);
 defined('CERTIFICATION_STUDENTID_EXIST') 	OR define('CERTIFICATION_STUDENTID_EXIST'	, 510);
 defined('CERTIFICATION_STUDENTEMAIL_EXIST') OR define('CERTIFICATION_STUDENTEMAIL_EXIST', 511);
+defined('MAIL_EXIST') OR define('MAIL_EXIST', 512);
 
 //Certification
 defined('CERTIFICATION_IDCARD')        OR define('CERTIFICATION_IDCARD'            , 1);
