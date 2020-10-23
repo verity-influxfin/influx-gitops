@@ -1222,7 +1222,7 @@ class User extends REST_Controller {
      *
     */
 	public function promote_get()
-    { 	
+    {
         $this->load->model('log/log_game_model');
         $this->not_support_company();
         $this->load->library('line_lib');
@@ -1236,7 +1236,7 @@ class User extends REST_Controller {
         if ($check !== 'success') {
 			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
         }
-		
+
         //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
@@ -1262,7 +1262,7 @@ class User extends REST_Controller {
 		// 	if($promote_code!== 'fbpost01'){
 		// 		$this->game_lib->count_and_send_thirty_points($user_id, $my_line_id, $collect_count);
 		// 	}
-			
+
 		// }
         $check_30send = $this->log_game_model->get_many_by(array("user_id"=>$user_id,"content"=>$my_line_id,"memo"=>'send_thirty_points'));
         $check_30send =count( $check_30send );
@@ -1301,7 +1301,7 @@ class User extends REST_Controller {
         if ($check !== 'success') {
 			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
         }
-		
+
         //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
@@ -1326,7 +1326,7 @@ class User extends REST_Controller {
 			if($promote_code!== 'fbpost01'){
 				$this->game_lib->count_and_send_thirty_points($user_id, $my_line_id, $collect_count);
 			}
-			
+
 		}
             $this->response(array('result' => 'SUCCESS'));
     }
@@ -1407,6 +1407,11 @@ class User extends REST_Controller {
 		$data 	 = [];
 		//上傳檔案欄位
 		if (isset($_FILES['image']) && !empty($_FILES['image'])) {
+            // 確認不是空檔案
+            if ($_FILES['image']['size'] == 0) {
+                $this->response(array('result' => 'ERROR','error' => FILE_IS_EMPTY ));
+            }
+
 			$this->load->library('S3_upload');
 			$image = $this->s3_upload->image_id($_FILES,'image',$user_id,'user_upload/'.$user_id);
 			if($image){
