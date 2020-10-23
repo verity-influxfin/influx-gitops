@@ -104,20 +104,34 @@ class Cron extends CI_Controller {
 	}
 
 	public function charge_targets()
-	{	//每五分鐘
+	{
+        // 進行貸案處理，將還款中的交易帳務過帳核算，更改狀態
+        $script     = 6;
+        $start_time = time();
+
+        // 每五分鐘
 		$this->load->library('Charge_lib');
-		$script  	= 6;
-		$start_time = time();
-		$count 		= $this->charge_lib->script_charge_targets();
-		$num		= $count?intval($count):0;
-		$end_time 	= time();
-		$data		= [
-			'script_name'	=> 'charge_targets',
-			'num'			=> $num,
-			'start_time'	=> $start_time,
-			'end_time'		=> $end_time
-		];
+
+        $data = [
+            'script_name'   => 'charge_targets',
+            'num'           => 0,
+            'start_time'    => $start_time,
+            'end_time'      => $start_time
+        ];
+
+        // 略過17號跨18號時段，避免因最後時刻的還款資訊尚未更新而做逾期處理
+        if ($this->charge_lib->checkExcludePeriodTime()) {
+            $data['parameter'] = "checkExcludePeriodTime is true";
+        } else {
+            $count 		= $this->charge_lib->script_charge_targets();
+            $num        = $count?intval($count):0;
+            $end_time   = time();
+            $data['num'] = $num;
+            $data['end_time'] = $end_time;
+        }
+
 		$this->log_script_model->insert($data);
+
 		die('1');
 	}
 
