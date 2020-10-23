@@ -112,12 +112,12 @@ defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //不支援公司
 defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //請登入公司帳號
 defined('NOT_DEALER') OR define('NOT_DEALER' , 218); //未有該商品類型的經銷商資格
 //User Error Code
-defined('USER_EXIST')  					OR define('USER_EXIST'					, 301); 
-defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302); 
-defined('VERIFY_CODE_ERROR')  			OR define('VERIFY_CODE_ERROR'			, 303); 
-defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 304); 
-defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 305); 
-defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306); 
+defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);
+defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302);
+defined('VERIFY_CODE_ERROR')  			OR define('VERIFY_CODE_ERROR'			, 303);
+defined('PASSWORD_ERROR')  				OR define('PASSWORD_ERROR'				, 304);
+defined('ACCESS_TOKEN_ERROR')  			OR define('ACCESS_TOKEN_ERROR'			, 305);
+defined('TYPE_WAS_BINDED')  			OR define('TYPE_WAS_BINDED'				, 306);
 defined('VERIFY_CODE_BUSY')  			OR define('VERIFY_CODE_BUSY'			, 307); //SMS太頻繁
 defined('FBID_EXIST')  					OR define('FBID_EXIST'					, 308);
 defined('IGID_EXIST')  					OR define('IGID_EXIST'					, 309);
@@ -131,7 +131,7 @@ defined('COOPERATION_TYPE_ERROR')  		OR define('COOPERATION_TYPE_ERROR'		, 316);
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
-defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402); 
+defined('PRODUCT_AMOUNT_RANGE')  		OR define('PRODUCT_AMOUNT_RANGE'		, 402);
 defined('PRODUCT_INSTALMENT_ERROR')  	OR define('PRODUCT_INSTALMENT_ERROR'	, 403);
 defined('APPLY_NOT_EXIST')  			OR define('APPLY_NOT_EXIST'				, 404);
 defined('APPLY_NO_PERMISSION')  		OR define('APPLY_NO_PERMISSION'			, 405);
@@ -150,13 +150,13 @@ defined('M_ORDER_STATUS_ERROR')  		OR define('M_ORDER_STATUS_ERROR'		, 421);
 defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
 
 //Certification Error Code
-defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501); 
-defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502); 
-defined('CERTIFICATION_NEVER_VERIFY') 	OR define('CERTIFICATION_NEVER_VERIFY'	, 503); 
-defined('CERTIFICATION_IDNUMBER_ERROR') OR define('CERTIFICATION_IDNUMBER_ERROR', 504); 
+defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501);
+defined('CERTIFICATION_WAS_VERIFY') 	OR define('CERTIFICATION_WAS_VERIFY'	, 502);
+defined('CERTIFICATION_NEVER_VERIFY') 	OR define('CERTIFICATION_NEVER_VERIFY'	, 503);
+defined('CERTIFICATION_IDNUMBER_ERROR') OR define('CERTIFICATION_IDNUMBER_ERROR', 504);
 defined('CERTIFICATION_IDNUMBER_EXIST') OR define('CERTIFICATION_IDNUMBER_EXIST', 505);
-defined('CERTIFICATION_BANK_CODE_ERROR') 	OR define('CERTIFICATION_BANK_CODE_ERROR'	, 506); 
-defined('CERTIFICATION_BRANCH_CODE_ERROR') 	OR define('CERTIFICATION_BRANCH_CODE_ERROR'	, 507); 
+defined('CERTIFICATION_BANK_CODE_ERROR') 	OR define('CERTIFICATION_BANK_CODE_ERROR'	, 506);
+defined('CERTIFICATION_BRANCH_CODE_ERROR') 	OR define('CERTIFICATION_BRANCH_CODE_ERROR'	, 507);
 defined('CERTIFICATION_BANK_ACCOUNT_ERROR') OR define('CERTIFICATION_BANK_ACCOUNT_ERROR', 508);
 defined('CERTIFICATION_BANK_ACCOUNT_EXIST') OR define('CERTIFICATION_BANK_ACCOUNT_EXIST', 509);
 defined('CERTIFICATION_STUDENTID_EXIST') 	OR define('CERTIFICATION_STUDENTID_EXIST'	, 510);
@@ -220,38 +220,38 @@ defined('INVESTMENT_WAITING_BIDDING') OR define('INVESTMENT_WAITING_BIDDING', 1)
 defined('INVESTMENT_WAITING_LOAN') OR define('INVESTMENT_WAITING_LOAN', 2);
 
 //Notification Error Code
-defined('NOTIFICATION_NOT_EXIST') 		OR define('NOTIFICATION_NOT_EXIST'		, 601); 
+defined('NOTIFICATION_NOT_EXIST') 		OR define('NOTIFICATION_NOT_EXIST'		, 601);
 //Agreement Error Code
-defined('AGREEMENT_NOT_EXIST') 			OR define('AGREEMENT_NOT_EXIST'			, 701); 
+defined('AGREEMENT_NOT_EXIST') 			OR define('AGREEMENT_NOT_EXIST'			, 701);
 //Target Error Code
-defined('TARGET_NOT_EXIST') 			OR define('TARGET_NOT_EXIST'			, 801); 
-defined('TARGET_AMOUNT_RANGE') 			OR define('TARGET_AMOUNT_RANGE'			, 802); 
+defined('TARGET_NOT_EXIST') 			OR define('TARGET_NOT_EXIST'			, 801);
+defined('TARGET_AMOUNT_RANGE') 			OR define('TARGET_AMOUNT_RANGE'			, 802);
 defined('TARGET_APPLY_EXIST')  			OR define('TARGET_APPLY_EXIST'			, 803);
 defined('TARGET_SAME_USER')  			OR define('TARGET_SAME_USER'			, 804);
 defined('TARGET_APPLY_NO_PERMISSION')  	OR define('TARGET_APPLY_NO_PERMISSION'	, 805);
 defined('TARGET_APPLY_NOT_EXIST')  		OR define('TARGET_APPLY_NOT_EXIST'		, 806);
 defined('TARGET_APPLY_STATUS_ERROR')  	OR define('TARGET_APPLY_STATUS_ERROR'	, 807);
-defined('TRANSFER_EXIST') 				OR define('TRANSFER_EXIST'				, 808); 
-defined('TRANSFER_NOT_EXIST') 			OR define('TRANSFER_NOT_EXIST'			, 809); 
+defined('TRANSFER_EXIST') 				OR define('TRANSFER_EXIST'				, 808);
+defined('TRANSFER_NOT_EXIST') 			OR define('TRANSFER_NOT_EXIST'			, 809);
 defined('TRANSFER_APPLY_EXIST')  		OR define('TRANSFER_APPLY_EXIST'		, 810);
-defined('BATCH_NOT_EXIST') 				OR define('BATCH_NOT_EXIST'				, 811); 
-defined('BATCH_NO_PERMISSION') 			OR define('BATCH_NO_PERMISSION'			, 812); 
-defined('TRANSFER_AMOUNT_ERROR') 		OR define('TRANSFER_AMOUNT_ERROR'		, 813); 
-defined('TRANSFER_COMBINE_STATUS') 		OR define('TRANSFER_COMBINE_STATUS'		, 814); 
-defined('TRANSFER_PASSWORD_ERROR') 		OR define('TRANSFER_PASSWORD_ERROR'		, 815); 
+defined('BATCH_NOT_EXIST') 				OR define('BATCH_NOT_EXIST'				, 811);
+defined('BATCH_NO_PERMISSION') 			OR define('BATCH_NO_PERMISSION'			, 812);
+defined('TRANSFER_AMOUNT_ERROR') 		OR define('TRANSFER_AMOUNT_ERROR'		, 813);
+defined('TRANSFER_COMBINE_STATUS') 		OR define('TRANSFER_COMBINE_STATUS'		, 814);
+defined('TRANSFER_PASSWORD_ERROR') 		OR define('TRANSFER_PASSWORD_ERROR'		, 815);
 defined('COMBINATION_NOT_EXIST') 		OR define('COMBINATION_NOT_EXIST'		, 816);
 defined('TARGET_IS_BUSY') 				OR define('TARGET_IS_BUSY'				, 817);
 defined('TARGET_OWNER_EXIST') 			OR define('TARGET_OWNER_EXIST'			, 818);
 //Repayment Error Code
-//defined('TARGET_NOT_DELAY') 			OR define('TARGET_NOT_DELAY'			, 901); 
-//defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902); 
-defined('TARGET_HAD_SUBSTATUS') 		OR define('TARGET_HAD_SUBSTATUS'		, 903); 
-defined('TARGET_SUBLOAN_NOT_EXIST') 	OR define('TARGET_SUBLOAN_NOT_EXIST'	, 904); 
+//defined('TARGET_NOT_DELAY') 			OR define('TARGET_NOT_DELAY'			, 901);
+//defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902);
+defined('TARGET_HAD_SUBSTATUS') 		OR define('TARGET_HAD_SUBSTATUS'		, 903);
+defined('TARGET_SUBLOAN_NOT_EXIST') 	OR define('TARGET_SUBLOAN_NOT_EXIST'	, 904);
 
 
 //Admin
 defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, getenv('ENV_SESSION_APP_ADMIN_INFO')); //Use in Admin Login
-defined('URL_ADMIN')             	OR define('URL_ADMIN'				, '/admin/'); 
+defined('URL_ADMIN')             	OR define('URL_ADMIN'				, '/admin/');
 defined('COOKIES_LOGIN_ADMIN') 		OR define('COOKIES_LOGIN_ADMIN'		, getenv('ENV_COOKIES_LOGIN_ADMIN')); //Use in Admin Login Cookies
 defined('COOKIE_EXPIRE')       		OR define('COOKIE_EXPIRE'			, 1800); //Use in Login Cookies
 
@@ -263,13 +263,13 @@ defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
 defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000); //外匯車商
 
 
-defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額 
+defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE'	, '9'); //virtual_account
 defined('BORROWER_VIRTUAL_CODE')    OR define('BORROWER_VIRTUAL_CODE'	, '1'); //virtual_account
 defined('LAW_VIRTUAL_CODE')    OR define('LAW_VIRTUAL_CODE'	, '8'); //virtual_account
 defined('REQUEST_TOKEN_EXPIRY')    	OR define('REQUEST_TOKEN_EXPIRY'	, 21600); //request_token時效
 defined('REQUEST_RETOKEN_EXPIRY')   OR define('REQUEST_RETOKEN_EXPIRY'	, 10800); //換request_token時效
-defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY'			, 10); //固定還款日
+defined('REPAYMENT_DAY')   			OR define('REPAYMENT_DAY'			, 10); //固定還款日，不能大於28號
 defined('DEBT_TRANSFER_FEES')   	OR define('DEBT_TRANSFER_FEES'		, 0.5); //債轉手續費%
 defined('SUB_LOAN_FEES')   			OR define('SUB_LOAN_FEES'			, 1); //轉貸手續費%
 defined('LIQUIDATED_DAMAGES')   	OR define('LIQUIDATED_DAMAGES'		, 5); //違約金%
@@ -394,8 +394,8 @@ defined('EZPAY_ID')     			OR define('EZPAY_ID'				, getenv('ENV_EZPAY_ID'));
 defined('EZPAY_KEY')     			OR define('EZPAY_KEY'				, getenv('ENV_EZPAY_KEY'));
 defined('EZPAY_IV')     			OR define('EZPAY_IV'				, getenv('ENV_EZPAY_IV'));
 
-//OCR 
-defined('OCR_API_URL')      		OR define('OCR_API_URL'				,'http://52.194.4.73:8888/cxfServerX/ImgReconCard?wsdl'); 
+//OCR
+defined('OCR_API_URL')      		OR define('OCR_API_URL'				,'http://52.194.4.73:8888/cxfServerX/ImgReconCard?wsdl');
 
 
 //Azure
@@ -405,7 +405,7 @@ defined('AZURE_API_KEY')      		OR define('AZURE_API_KEY'		    ,getenv('ENV_AZUR
 
 
 //SMS
-defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME'			, 1800); 
+defined('SMS_EXPIRE_TIME')      	OR define('SMS_EXPIRE_TIME'			, 1800);
 defined('SMS_LIMIT_TIME')      		OR define('SMS_LIMIT_TIME'			, 180);
 
 //EVER8D
