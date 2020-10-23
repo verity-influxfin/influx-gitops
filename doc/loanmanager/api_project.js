@@ -21,6 +21,7 @@ define({
       "PostTargetAddPushContact",
       "PostTargetPushContactList",
       "PostTargetPushUser",
+      "GetTargetPushLog",
       "PostTargetPushUserUpdate",
   ],
   "sampleUrl": false,

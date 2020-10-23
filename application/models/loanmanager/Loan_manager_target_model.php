@@ -195,9 +195,11 @@ class Loan_manager_target_model extends MY_Model
 
     public function getPassbookList($account){
         $select = [
-//            'virtualaccounts.virtual_account as virtualAccounts',
-//            'virtualpassbooks.amount as virtualPassbooks',
-//                '*'
+            'virtualpassbooks.amount',
+            'virtualpassbooks.remark',
+            'virtualpassbooks.tx_datetime',
+            'virtualpassbooks.created_at',
+            'virtualpassbooks.amount',
         ];
 
         $this->db->select($select, false)
@@ -205,7 +207,7 @@ class Loan_manager_target_model extends MY_Model
         $this->db->where([
             'virtualpassbooks.virtual_account' => $account,
         ]);
-        $this->db->order_by('tx_datetime,created_at','desc');
+        $this->db->order_by('tx_datetime,created_at','asc');
         $query = $this->db->get();
         $res = $query->result();
 
@@ -223,5 +225,21 @@ class Loan_manager_target_model extends MY_Model
         }
 
         return array_reverse($list);
+    }
+
+    public function getUserCerList($userId){
+        $select = [
+            'certification.certification_id',
+            'certification.status',
+            'certification.created_at',
+        ];
+
+        $this->db->select($select, false)
+            ->from('p2p_user.user_certification as certification');
+        $this->db->where([
+            'user_id' => $userId,
+        ]);
+        $query = $this->db->get();
+        return $query->result();
     }
 }

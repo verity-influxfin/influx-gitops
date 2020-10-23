@@ -409,7 +409,7 @@ class Target extends REST_Controller
         $input = $this->input->post(NULL, TRUE);
         $fields 	= ['user_id','push_by','push_type','message','start_time','end_time'];
         foreach ($fields as $field) {
-            if (empty($input[$field])) {
+            if ($input[$field] != '') {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
@@ -432,10 +432,11 @@ class Target extends REST_Controller
         ]);
     }
 
-    function userPassbook_get()
+    function userPassbook_get($type = false, $account = false)
     {
         $input = $this->input->get(NULL, TRUE);
         $fields 	= ['account'];
+        $account ? $input['account'] = $account : '';
         foreach ($fields as $field) {
             if (empty($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -443,25 +444,74 @@ class Target extends REST_Controller
         }
         $getVirtualPassbook = $this->loan_manager_target_model->getPassbookList($input['account']);
         if($getVirtualPassbook){
+            $type = isset($type) ? $type : false;
             $transaction_source = $this->config->item('transaction_source');
             foreach($getVirtualPassbook as $key => $value){
                 $value['remark'] = json_decode($value['remark'],TRUE);
                 $remark = isset($value['remark']['source']) && $value['remark']['source']?$transaction_source[$value['remark']['source']]:'';
-                $list[] = [
-                    'amount' 		=> $value['amount'],
-                    'bank_amount'	=> $value['bank_amount'],
-                    'remark'		=> $remark,
-                    'tx_datetime'	=> $value['tx_datetime'],
-                    'created_at'	=> $value['created_at'],
-                ];
+                if($type){
+                    if($value['remark']['source'] == $type)
+                    $list[] = [
+                        'amount' => $value['amount'],
+                        'bank_amount' => $value['bank_amount'],
+                        'tx_datetime' => $value['tx_datetime'],
+                        'created_at' => $value['created_at'],
+                    ];
+                } else {
+                    $list[] = [
+                        'amount' => $value['amount'],
+                        'bank_amount' => $value['bank_amount'],
+                        'remark' => $remark,
+                        'tx_datetime' => $value['tx_datetime'],
+                        'created_at' => $value['created_at'],
+                    ];
+                }
             }
+        }
+        if($type){
+            return $list;
+        }else{
+            $this->response([
+                'result' => 'SUCCESS',
+                'data' => $list
+            ]);
+        }
+
+    }
+
+
+    function serviceLog_get()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $list = [];
+        if (!is_numeric($input['type'])) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
+
+        $userInfo = $this->userInfo($input['user_id']);
+        if($userInfo){
+            $this->load->model('loanmanager/loan_manager_pushdata_model');
+            $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
+            $getAccountingRecord = $this->userPassbook_get(1, $getVirtualAccountInfo[0]->virtualAccounts);
+            foreach($getAccountingRecord as $key => $value){
+                $temp = $value;
+                $temp['type'] = 1;
+                $list[$temp['created_at']][] = $temp;
+            }
+
+            $getUserCerList = $this->loan_manager_target_model->getUserCerList($input['user_id']);
+            foreach($getUserCerList as $key => $value){
+                $temp = (array)$value;
+                $temp['type'] = 2;
+                $list[$temp['created_at']][] = $temp;
+            }
+
         }
         $this->response([
             'result' => 'SUCCESS',
-            'data' => $list
+            'data' => $list,
         ]);
     }
-
 
     private function userInfo($userId){
         $userInfo = $this->user_model->get_by([
