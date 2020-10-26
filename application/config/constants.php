@@ -87,12 +87,14 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX'		, 125); // highest au
 
 //Error Code
 defined('TOKEN_NOT_CORRECT')   			OR define('TOKEN_NOT_CORRECT'			, 100); // token not exit
-defined('BLOCK_USER')   				    OR define('BLOCK_USER'					, 101); // block status
-defined('KEY_FAIL')   			        OR define('KEY_FAIL'		        , 102); // key not exit
-defined('SYSTEM_BLOCK_USER')			    OR define('SYSTEM_BLOCK_USER'	    	, 120); // SYSTEM_BLOCK_USER
+defined('BLOCK_USER')   				OR define('BLOCK_USER'					, 101); // block status
+defined('KEY_FAIL')   			        OR define('KEY_FAIL'		            , 102); // key not exit
+defined('SYSTEM_BLOCK_USER')			OR define('SYSTEM_BLOCK_USER'	    	, 120); // SYSTEM_BLOCK_USER
 defined('TEMP_BLOCK_USER')			    OR define('TEMP_BLOCK_USER'			    , 121); // TEMP_BLOCK_USER
-defined('PERMISSION_DENY') or define('PERMISSION_DENY', 130);//權限不足
+defined('PERMISSION_DENY')              or define('PERMISSION_DENY'             , 130);//權限不足
+defined('FILE_IS_EMPTY')                OR define('FILE_IS_EMPTY'               , 199); // file size is zero
 defined('INPUT_NOT_CORRECT')   			OR define('INPUT_NOT_CORRECT'			, 200); // input not correct.
+
 defined('INSERT_ERROR')  				OR define('INSERT_ERROR'				, 201);
 defined('NOT_VERIFIED')  				OR define('NOT_VERIFIED'				, 202); //沒通過認證
 defined('NO_BANK_ACCOUNT')  			OR define('NO_BANK_ACCOUNT'				, 203); //沒綁定金融卡
@@ -110,7 +112,8 @@ defined('COMPANY_EXIST')  				OR define('COMPANY_EXIST'				, 214); //此公司�
 defined('COMPANY_NOT_EXIST')  			OR define('COMPANY_NOT_EXIST'			, 215); //此公司不存在
 defined('IS_COMPANY')  					OR define('IS_COMPANY'					, 216); //不支援公司帳號
 defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //請登入公司帳號
-defined('NOT_DEALER') OR define('NOT_DEALER' , 218); //未有該商品類型的經銷商資格
+defined('NOT_DEALER')                   OR define('NOT_DEALER'                  , 218); //未有該商品類型的經銷商資格
+
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);
 defined('USER_NOT_EXIST')  				OR define('USER_NOT_EXIST'				, 302);
