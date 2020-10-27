@@ -15,7 +15,7 @@ class Charge_lib
     }
 
 	public function charge_normal_target($target=[]){
-        $before_last_time = '';
+        $before_last_time = null;
 		$date			= get_entering_date();
         $amount			= 0;
         $limit_date		= '';
@@ -222,7 +222,9 @@ class Charge_lib
                 foreach ($transaction as $key => $value) {
                     if (in_array($value->source, $source_list) && $value->user_from == $target->user_id) {
                         $new_date_string = sprintf("%s + %d days", $value->limit_date, GRACE_PERIOD + 1);
-                        $before_last_time = date('Y-m-d 00:00:00', strtotime($new_date_string));
+                        if (0 < $target->delay_days && $target->delay_days <= GRACE_PERIOD) {
+                            $before_last_time = date('Y-m-d 00:00:00', strtotime($new_date_string));
+                        }
                         $amount += $value->amount;
                         if (!isset($user_to[$value->investment_id])) {
                             $user_to[$value->investment_id] = [
