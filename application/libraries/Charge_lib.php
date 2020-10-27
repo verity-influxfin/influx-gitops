@@ -939,8 +939,8 @@ class Charge_lib
     {
         $isExcludeTime = false;
 
-        // UTC+8
-        $datetime_string = date("Y-m-d H:i:s", time() + 8 * 60 * 60);
+        // system, default timezone is UTC+8
+        $datetime_string = date("Y-m-d H:i:s", time());
         if ($deafult_date) {
             $datetime_string = $deafult_date;
         }
