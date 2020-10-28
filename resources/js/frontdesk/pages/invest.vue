@@ -9,148 +9,140 @@
         </div>
       </div>
     </div>
-    <div id="step-card" class="step-card">
-      <h2>我要如何投資?</h2>
+    <div class="desc-card">
+      <h2>普匯投資介紹</h2>
       <div class="hr"></div>
-      <p>普匯平台分為三種投資方式</p>
-      <div class="cnt">
-        <div class="box">
-          <div class="i-box">
-            <div class="icon">
-              <svg
-                viewBox="0 0 60 60"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <pattern
-                    id="optional"
-                    patternUnits="userSpaceOnUse"
-                    width="60"
-                    height="60"
-                  >
-                    <image
-                      x="10"
-                      y="10"
-                      href="../asset/images/invest_choose_optional.svg"
-                      width="40"
-                      height="40"
-                    />
-                  </pattern>
-                </defs>
-                <polygon
-                  class="poly-fill"
-                  points="15 4 1 30 15 56 45 56 59 30 45 4"
-                />
-                <polygon
-                  points="15 4 1 30 15 56 45 56 59 30 45 4"
-                  fill="url(#optional)"
-                  stroke-width="2"
-                  stroke="#08deb1"
-                />
-              </svg>
-            </div>
-            <div class="text">
-              <h4>自選標的</h4>
-              <p>隨時隨地，自由選擇您喜好的投資標的。</p>
-            </div>
+      <div class="box">
+        <div class="item hvr-float-shadow">
+          <div class="img">
+            <img src="../asset/images/nodes.svg" class="img-fluid" />
           </div>
-          <div class="i-m-pic">
-            <img src="../asset/images/optional _invset.png" class="img-fluid" />
+          <div class="i-c">
+            <h4>法律合約明確</h4>
+            <ul class="t">
+              <li>線上簽署合約</li>
+              <li>文件儲存於AWS</li>
+              <li>電子資料更容易保存與比對</li>
+              <li>線上合約範本</li>
+            </ul>
           </div>
         </div>
-        <div class="box">
-          <div class="i-m-pic">
-            <img src="../asset/images/smart_invest.png" class="img-fluid" />
+        <div class="item hvr-float-shadow">
+          <div class="img">
+            <img src="../asset/images/screen.svg" class="img-fluid" />
           </div>
-          <div class="i-box">
-            <div class="icon">
-              <svg
-                viewBox="0 0 60 60"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <pattern
-                    id="smart"
-                    patternUnits="userSpaceOnUse"
-                    width="60"
-                    height="60"
-                  >
-                    <image
-                      x="10"
-                      y="10"
-                      href="../asset/images/invest_choose_smart.svg"
-                      width="40"
-                      height="40"
-                    />
-                  </pattern>
-                </defs>
-                <polygon
-                  class="poly-fill"
-                  points="15 4 1 30 15 56 45 56 59 30 45 4"
-                />
-                <polygon
-                  points="15 4 1 30 15 56 45 56 59 30 45 4"
-                  fill="url(#smart)"
-                  stroke-width="2"
-                  stroke="#08deb1"
-                />
-              </svg>
-            </div>
-            <div class="text">
-              <h4>智能投資</h4>
-              <p>設定您的投資偏好，24小時不錯失優質案件！</p>
-            </div>
+          <div class="i-c">
+            <h4>專屬帳戶</h4>
+            <ul class="t">
+              <li>國泰虛擬帳戶</li>
+              <li>專屬帳戶代收付款</li>
+              <li>帳戶款項隨時可提領</li>
+            </ul>
           </div>
         </div>
-        <div class="box">
-          <div class="i-box">
-            <div class="icon">
-              <svg
-                viewBox="0 0 60 60"
-                version="1.1"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <pattern
-                    id="quick"
-                    patternUnits="userSpaceOnUse"
-                    width="60"
-                    height="60"
-                  >
-                    <image
-                      x="10"
-                      y="10"
-                      href="../asset/images/invest_choose_quick.svg"
-                      width="40"
-                      height="40"
-                    />
-                  </pattern>
-                </defs>
-                <polygon
-                  class="poly-fill"
-                  points="15 4 1 30 15 56 45 56 59 30 45 4"
-                />
-                <polygon
-                  points="15 4 1 30 15 56 45 56 59 30 45 4"
-                  fill="url(#quick)"
-                  stroke-width="2"
-                  stroke="#08deb1"
-                />
-              </svg>
-            </div>
-            <div class="text">
-              <h4>檢審速貸</h4>
-              <p>申請人無提供最高學歷，同時您可以獲得更好的報酬率。</p>
-            </div>
+        <div class="item hvr-float-shadow">
+          <div class="img">
+            <img src="../asset/images/search.svg" class="img-fluid" />
           </div>
-          <div class="i-m-pic">
-            <img src="../asset/images/quick_invest.png" class="img-fluid" />
+          <div class="i-c">
+            <h4>帳務透明</h4>
+            <ul class="t">
+              <li>逐筆交易提供對帳單</li>
+              <li>投資人/借款人/普匯/銀行均留存一份</li>
+              <li>每月10號提供帳單發票</li>
+            </ul>
+          </div>
+        </div>
+        <div class="item hvr-float-shadow">
+          <div class="img">
+            <img src="../asset/images/group.svg" class="img-fluid" />
+          </div>
+          <div class="i-c">
+            <h4>貸後管理/催收</h4>
+            <ul class="t">
+              <li>電子通知繳款</li>
+              <li>Email/簡訊/社交軟體</li>
+              <li>逾期電話催繳</li>
+              <li>線上存證信函寄發</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
+    <div class="step-card">
+      <h2>我要如何投資?</h2>
+      <div class="hr"></div>
+      <p>普匯平台分為三種投資方式</p>
+      <ul class="nav" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#optional">
+            <div class="img">
+              <img
+                src="../asset/images/invest_choose_optional.svg"
+                class="img-fluid"
+              />
+            </div>
+            <p>自選標的</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#smart"
+            ><div class="img">
+              <img
+                src="../asset/images/invest_choose_smart.svg"
+                class="img-fluid"
+              />
+            </div>
+            <p>智能投資</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#quick"
+            ><div class="img">
+              <img
+                src="../asset/images/invest_choose_quick.svg"
+                class="img-fluid"
+              />
+            </div>
+            <p>檢審速貸</p>
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div id="optional" class="tab-pane fade active show">
+          <div class="pic">
+            <img src="../asset/images/optional_invset.png" class="img-fluid" />
+          </div>
+          <div class="text">
+            <h4>自選標的</h4>
+            <p>隨時隨地，自由選擇您喜好的投資標的。</p>
+          </div>
+        </div>
+        <div id="smart" class="tab-pane fade">
+          <div class="pic">
+            <img src="../asset/images/smart_invest.png" class="img-fluid" />
+          </div>
+          <div class="text">
+            <h4>智能投資</h4>
+            <p>設定您的投資偏好，24小時不錯失優質案件！</p>
+          </div>
+        </div>
+        <div id="quick" class="tab-pane fade">
+          <div class="pic">
+            <img src="../asset/images/quick_invest.png" class="img-fluid" />
+          </div>
+          <div class="text">
+            <h4>檢審速貸</h4>
+            <p>申請人無提供最高學歷，同時您可以獲得更好的報酬率。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <apply
+      title="投資簡單四步驟"
+      :requiredDocuments="applyData.requiredDocuments"
+      :step="applyData.step"
+    />
     <div class="advantage-card">
       <h2>投資工具比一比</h2>
       <div class="hr" />
@@ -221,7 +213,9 @@
           <p>{{ item.post_title }}</p>
         </div>
       </div>
-      <router-link class="btn link" to="vlog/?q=invest">影音列表</router-link>
+      <router-link class="btn link" to="vlog/?q=invest"
+        >影音列表 <i class="fas fa-angle-double-right"
+      /></router-link>
     </div>
     <download :isLoan="false" :isInvest="true" />
     <qa :qaData="qaData" />
@@ -233,6 +227,7 @@ import banner from "../component/bannerComponent";
 import download from "../component/downloadComponent";
 import experience from "../component/experienceComponent";
 import qa from "../component/qaComponent";
+import apply from "../component/applyComponent";
 
 export default {
   components: {
@@ -240,10 +235,12 @@ export default {
     experience,
     download,
     qa,
+    apply,
   },
   data: () => ({
     qaData: [],
     bannerData: {},
+    applyData: {},
   }),
   computed: {
     experiences() {
@@ -258,6 +255,7 @@ export default {
     this.$store.dispatch("getVideoData", { category: "invest" });
     this.getQaData();
     this.getBannerData();
+    this.getApplydata();
     $("title").text(`債權投資 - inFlux普匯金融科技`);
   },
   mounted() {
@@ -283,6 +281,7 @@ export default {
         autoplay: true,
         dots: false,
         arrows: false,
+        speed: 1000,
         responsive: [
           {
             breakpoint: 767,
@@ -302,6 +301,13 @@ export default {
         })
         .catch((error) => {
           console.error("getBannerData 發生錯誤，請稍後再試");
+        });
+    },
+    getApplydata() {
+      axios
+        .post(`${location.origin}/getApplydata`, { filter: "invest" })
+        .then((res) => {
+          this.applyData = res.data;
         });
     },
     getQaData() {
@@ -382,6 +388,184 @@ export default {
     }
   }
 
+  .desc-card {
+    background: #f5f5f5;
+    overflow: hidden;
+    padding: 30px;
+
+    .box {
+      width: 1200px;
+      margin: 2rem auto;
+      overflow: auto;
+
+      .item {
+        background: #ffffff;
+        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+        width: calc(50% - 40px);
+        height: 207px;
+        float: left;
+        margin: 20px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        display: flex;
+
+        .img {
+          width: 120px;
+          margin-right: 10px;
+          line-height: 160px;
+        }
+
+        .i-c {
+          width: calc(100% - 130px);
+          margin: 0px auto;
+
+          h4 {
+            padding-left: 30px;
+            color: #0f005f;
+            font-weight: 900;
+            margin-bottom: 1rem;
+          }
+
+          .t {
+            li {
+              list-style: none;
+              background-image: url("../asset/images/invest.svg");
+              background-position: 0 0;
+              background-repeat: no-repeat;
+              background-size: 24px 24px;
+              padding-left: 30px;
+              margin: 10px 0px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .step-card {
+    position: relative;
+    padding: 30px;
+    overflow: hidden;
+    background-image: url("../asset/images/368.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    h2 {
+      font-weight: bolder;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .hr {
+      width: 130px;
+      height: 3px;
+      background-image: linear-gradient(to right, #fbd900, #ffffff);
+      margin: 0px auto;
+    }
+
+    p {
+      color: #ffffff;
+      text-align: center;
+      margin: 1rem 0px;
+    }
+
+    .nav {
+      width: fit-content;
+      margin: 0px auto;
+
+      .nav-link {
+        display: flex;
+
+        &:hover {
+          .img {
+            background: #fff29d;
+          }
+        }
+
+        .img {
+          background: #ffffff;
+          padding: 10px;
+          text-align: center;
+          border-radius: 50%;
+          border: 5px solid #08deb1;
+          transition-duration: 0.5s;
+          overflow: hidden;
+
+          img {
+            width: 50px;
+            height: 50px;
+          }
+        }
+
+        p {
+          color: #ffffff;
+          margin: 0px 15px;
+          line-height: 80px;
+          font-size: 22.5px;
+          font-weight: 900;
+          transition-duration: 0.5s;
+        }
+      }
+
+      .active {
+        .img {
+          border: 5px solid #fbd900;
+        }
+
+        p {
+          color: #fbd900;
+        }
+      }
+    }
+
+    .tab-pane.active {
+      margin: 0px auto;
+      width: fit-content;
+      position: relative;
+      transform: translate(-6rem, 0px);
+
+      .pic {
+        width: 450px;
+        animation: phone-waving 2s infinite alternate linear;
+      }
+
+      .text {
+        position: absolute;
+        transform: translate(100%, -50%);
+        right: 0px;
+        top: 70%;
+
+        h4 {
+          color: #fbd900;
+          font-weight: 900;
+        }
+
+        p {
+          margin: 0px;
+          color: #ffffff;
+        }
+      }
+    }
+
+    .fade {
+      transition-duration: 0.5s;
+    }
+
+    @keyframes phone-waving {
+      0% {
+        transform: translateY(-10px);
+      }
+
+      50% {
+        transform: translateY(0px);
+      }
+
+      100% {
+        transform: translateY(10px);
+      }
+    }
+  }
+
   .advantage-card {
     padding: 20px;
     overflow: hidden;
@@ -404,8 +588,7 @@ export default {
           margin: 30px auto;
 
           .i-b {
-            width: inherit;
-            height: inherit;
+            width: 450px;
           }
 
           .i-m {
@@ -429,8 +612,8 @@ export default {
           margin: 30px auto;
 
           .i-b {
-            width: inherit;
-            height: inherit;
+            width: 280px;
+            height: 280px;
           }
 
           .i-m {
@@ -439,142 +622,6 @@ export default {
             position: absolute;
             width: 130px;
             z-index: 1;
-          }
-        }
-      }
-    }
-  }
-
-  .step-card {
-    background: #4296ba;
-    position: relative;
-    padding: 20px;
-    overflow: hidden;
-    z-index: 0;
-
-    .particles-js-canvas-el {
-      position: absolute;
-      z-index: -1;
-      top: 0;
-      left: 0;
-    }
-
-    h2 {
-      font-weight: bolder;
-      text-align: center;
-      color: #ffffff;
-    }
-
-    .hr {
-      width: 130px;
-      height: 3px;
-      background-image: linear-gradient(to right, #fbd900, #ffffff);
-      margin: 0px auto;
-    }
-
-    p {
-      margin: 15px auto;
-      font-size: 14px;
-      text-align: center;
-      color: #ffffff;
-    }
-
-    .cnt {
-      width: 80%;
-      margin: 0px auto;
-
-      .box {
-        display: flex;
-
-        .i-box {
-          width: 65%;
-          display: flex;
-
-          %center {
-            position: relative;
-            top: 50%;
-            height: fit-content;
-            transform: translateY(-50%);
-            margin: 0px 20px;
-          }
-
-          .icon {
-            width: 20%;
-            @extend %center;
-
-            .poly-fill {
-              fill: #ffffff;
-            }
-          }
-
-          .text {
-            width: 80%;
-            @extend %center;
-
-            h4 {
-              color: #ffffff;
-              font-weight: bold;
-            }
-
-            p {
-              text-align: left;
-            }
-          }
-        }
-
-        .i-m-pic {
-          width: 35%;
-        }
-
-        &:hover {
-          .i-box {
-            .icon {
-              .poly-fill {
-                transition-duration: 0.5s;
-                fill: #fffbb4;
-              }
-            }
-
-            .text {
-              h4 {
-                transition-duration: 0.5s;
-                color: #fbd900;
-              }
-            }
-          }
-
-          .i-m-pic {
-            animation: phone-waving 2s infinite alternate linear;
-
-            &:before {
-              pointer-events: none;
-              position: absolute;
-              z-index: -1;
-              content: "";
-              top: 100%;
-              left: 5%;
-              height: 10px;
-              width: 90%;
-              background: radial-gradient(
-                ellipse at center,
-                rgba(0, 0, 0, 0.35) 0,
-                rgba(0, 0, 0, 0) 80%
-              );
-            }
-          }
-
-          @keyframes phone-waving {
-            0% {
-              transform: translateY(-10px);
-            }
-
-            50% {
-              transform: translateY(0px);
-            }
-
-            100% {
-              transform: translateY(10px);
-            }
           }
         }
       }
@@ -628,6 +675,34 @@ export default {
       }
     }
 
+    .desc-card {
+      padding: 10px;
+
+      .box {
+        width: 100%;
+        margin: 1rem auto 0px auto;
+
+        .item {
+          width: 100%;
+          margin: 10px 0px;
+          padding: 10px;
+          height: auto;
+
+          .img {
+            width: 20%;
+          }
+
+          .i-c {
+            width: 80%;
+
+            .t {
+              padding-left: 20px;
+            }
+          }
+        }
+      }
+    }
+
     .advantage-card {
       padding: 10px;
       .adv-box {
@@ -647,11 +722,11 @@ export default {
             .i-m {
               width: 170px;
             }
-          }
 
-          .i-b {
-            width: initial;
-            height: initial;
+            .i-b {
+              width: initial;
+              height: initial;
+            }
           }
         }
 
@@ -669,34 +744,52 @@ export default {
               width: 80px;
               transition-delay: 0.5s;
             }
+
+            .i-b {
+              width: 170px;
+              height: 170px;
+            }
           }
         }
       }
     }
 
     .step-card {
-      .cnt {
-        width: 100%;
+      padding: 10px;
+      .nav {
+        flex-wrap: inherit;
 
-        .box {
-          margin: 30px auto;
-
-          .i-box {
-            width: 100%;
-
-            %center {
-              margin: 0px 10px;
-            }
-
-            .icon {
-              width: 30%;
-            }
-            .text {
-              width: 70%;
-            }
+        .nav-link {
+          padding: 0px;
+          margin: 0px 10px;
+          .img {
+            display: none;
           }
 
-          .i-m-pic {
+          p {
+            margin: 0px;
+          }
+        }
+      }
+
+      .tab-pane.active {
+        transform: translate(0rem, 0px);
+        display: flex;
+        flex-direction: column;
+
+        .pic {
+          order: 2;
+          width: 100%;
+        }
+
+        .text {
+          order: 1;
+          position: relative;
+          transform: inherit;
+          right: 0;
+          top: 0%;
+
+          h4 {
             display: none;
           }
         }

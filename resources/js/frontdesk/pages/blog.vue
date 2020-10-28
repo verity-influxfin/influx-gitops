@@ -1,7 +1,7 @@
 <template>
   <div class="blog-wrapper" id="blog-wrapper">
     <div class="header">
-      <h2>金融小學堂</h2>
+      <h2>AI金融科技新知</h2>
       <div class="input-custom">
         <i class="fas fa-search"></i>
         <input
@@ -67,7 +67,7 @@ export default {
     },
   },
   created() {
-    $("title").text(`influx 小學堂 - inFlux普匯金融科技`);
+    $("title").text(`AI金融科技新知 - inFlux普匯金融科技`);
     this.$store.dispatch("getKnowledgeData");
   },
   mounted() {

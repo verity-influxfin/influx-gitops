@@ -72,6 +72,9 @@
         </div>
       </template>
     </div>
+    <div class="statement-card">
+      <statement :list="list" @searchDteail="search" @download="downloadCSV" />
+    </div>
     <div
       ref="detailModal"
       class="detail-modal modal"
@@ -300,6 +303,7 @@
 <script>
 import circleProgress from "../component/circleProgressComponent";
 import detailBtn from "../component/detailBtnComponent";
+import statement from "../component/statementComponent";
 
 export default {
   beforeRouteEnter(to, from, next) {
@@ -312,6 +316,7 @@ export default {
   components: {
     detailBtn,
     circleProgress,
+    statement,
   },
   data: () => ({
     circleWidth: 200,
@@ -583,7 +588,7 @@ export default {
       let end = range.end.getTime();
       $("#csvDownloadIframe").remove();
       $("body").append(
-        `<iframe id="csvDownloadIframe" src="${location.origin}/downloadStatement?start=${start}&end=${end}&isInvest=1" style="display: none"></iframe>`
+        `<iframe id="csvDownloadIframe" src="${location.origin}/downloadStatement?start=${start}&end=${end}&isInvest=0" style="display: none"></iframe>`
       );
     },
     closeModal($el) {
@@ -601,11 +606,13 @@ export default {
 .repayment-wrapper {
   display: flex;
   position: relative;
+  width: 85%;
+  margin: 0px auto;
+  padding: 25px;
 
   .repayment-card {
     width: 85%;
     margin: 0px auto;
-    padding: 0px 25px 25px 25px;
     overflow: auto;
     position: relative;
     .info-card {
@@ -648,7 +655,7 @@ export default {
 
         .p-d {
           width: 50%;
-          padding: 0px 25px;
+          padding: 0px 10px;
 
           &:nth-of-type(1) {
             border-right: 2px dashed #c8c8c8;
@@ -868,7 +875,9 @@ export default {
 
 @media screen and (max-width: 767px) {
   .repayment-wrapper {
-    display: block;
+    flex-direction: column;
+    width: 100%;
+    padding: 0px 10px;
 
     %back {
       margin: 15px auto;
@@ -877,6 +886,7 @@ export default {
 
     .repayment-card {
       width: 100%;
+      order: 2;
 
       .info {
         width: calc(100%);

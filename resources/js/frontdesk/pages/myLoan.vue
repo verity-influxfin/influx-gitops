@@ -71,11 +71,14 @@
         </div>
         <div class="repay-s">
           <p class="sm">
-            <strong>{{myRepayment.next_repayment.date}}</strong>
+            <strong>{{ myRepayment.next_repayment.date }}</strong>
             <span class="yellow">次還款日</span>
           </p>
           <p class="sm">
-            <b> <strong>{{repaymentAmount}}</strong>元 </b>
+            <b>
+              <strong>{{ repaymentAmount }}</strong
+              >元
+            </b>
             <span class="yellow">請於還款日前匯入</span>
           </p>
         </div>
@@ -408,7 +411,7 @@ export default {
   }
 
   .statement-card {
-    border-radius: 20px;
+    border-radius: 10px;
     box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
     background-color: #ffffff;
     width: 33%;
@@ -477,12 +480,12 @@ export default {
       padding: 10px;
 
       .borrow-card {
-        width: calc(100% - 20px);
-        margin: 10px;
+        width: calc(100% - 0px);
+        margin: 10px 0px;
       }
 
       .financial-card {
-        width: calc(100% - 20px);
+        width: calc(100% - 0px);
         margin: 25px auto 0px auto;
         padding: 10px;
         overflow: hidden;
@@ -508,6 +511,13 @@ export default {
           margin: 7px 0px 0px 0px;
         }
       }
+    }
+
+    .statement-card {
+      order: 1;
+      margin: 0px;
+      width: 100%;
+      padding: 0px 10px;
     }
   }
 }

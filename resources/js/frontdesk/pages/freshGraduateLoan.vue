@@ -33,7 +33,9 @@
           <p>{{ item.post_title }}</p>
         </div>
       </div>
-      <router-link class="btn link" to="vlog?q=loan"> 影音列表 </router-link>
+      <router-link class="btn link" to="vlog?q=loan"
+        >影音列表<i class="fas fa-angle-double-right"
+      /></router-link>
     </div>
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
@@ -147,6 +149,7 @@ export default {
         autoplay: true,
         dots: false,
         arrows: false,
+        speed: 1000,
         responsive: [
           {
             breakpoint: 767,

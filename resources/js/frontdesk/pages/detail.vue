@@ -367,6 +367,7 @@ export default {
     .statement-card {
       width: 100%;
       margin: 10px 0px;
+      padding: 0px 10px;
     }
   }
 }

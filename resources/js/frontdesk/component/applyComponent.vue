@@ -1,6 +1,7 @@
 <template>
   <div class="applyFlow-card">
     <h2>{{ $props.title }}</h2>
+    <div class="hr"></div>
     <div class="flow" ref="flow_slick">
       <div class="box" v-for="(item, index) in $props.step" :key="index">
         <div class="step">
@@ -60,6 +61,7 @@ export default {
         slidesToShow: 5,
         slidesToScroll: 1,
         autoplay: true,
+        speed: 1000,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
@@ -231,8 +233,7 @@ export default {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            border-radius: 50%;
-            width: 85%;
+            width: 75%;
           }
         }
 

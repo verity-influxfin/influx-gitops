@@ -151,6 +151,7 @@ export default {
         centerMode: true,
         autoplay: false,
         dots: true,
+        speed: 1000,
         dotsClass: "custom-dots",
         customPaging(slider, i) {
           return '<div class="dots"></div>';

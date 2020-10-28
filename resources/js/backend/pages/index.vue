@@ -9,7 +9,7 @@
       <router-link class="center-mid left" to="feedback" v-if="userData.identity == 1">心得回饋</router-link>
       <router-link class="center-lower-mid left" to="cooperation" v-if="userData.identity == 1">合作訊息</router-link>
       <router-link class="center-low left" to="news" v-if="userData.identity == 1">最新消息</router-link>
-      <router-link class="center" to="knowledge">小學堂</router-link>
+      <router-link class="center" to="knowledge">AI金融科技新知</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>
       <router-link class="center-mid right" to="partner" v-if="userData.identity == 1">合作夥伴</router-link>
       <router-link class="center-high right" to="media" v-if="userData.identity == 1">媒體報導</router-link>

@@ -10,7 +10,7 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
-    <meta name="keywords" content="手機ATM、分期、網路借貸、貸款、借貸平台、學生貸款、社團、投資、利率、複利、債權投資、金融科技、打工">
+    <meta name="keywords" content="手機ATM、分期、網路借貸、貸款、借貸平台、學生貸款、社團、投資、利率、複利、債權投資、金融科技、打工、P2P">
     <meta name="description" content="普匯．你的手機ATM 幫助年輕人完成夢想 協助打造溫暖家庭小窩 解決社會大眾生活急需">
     <meta name="site_name" content="inFlux普匯金融科技">
     <meta name="title" content="inFlux普匯金融科技">
@@ -162,7 +162,7 @@
                             <router-link to="/news">最新消息</router-link>
                         </li>
                         <li>
-                            <router-link to="/blog">小學堂金融科技</router-link>
+                            <router-link to="/blog">AI金融科技新知</router-link>
                         </li>
                     </ul>
                 </div>
@@ -277,9 +277,6 @@
     </div>
 </body>
 
-<script>
-    window._locale = "";
-</script>
 <!-- recaptcha-->
 <script src="https://www.google.com/recaptcha/api.js?render=6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3"></script>
 

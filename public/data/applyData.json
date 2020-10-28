@@ -201,6 +201,52 @@
         ],
         "requiredDocuments": []
     },
+    "invest": {
+        "step": [
+            {
+                "num": 1,
+                "imgSrc": "./images/invest_1.png",
+                "stepTitle": "認證註冊",
+                "stepDesc": "上傳並填寫基本資料,開通交易權限"
+            },
+            {
+                "num": 2,
+                "imgSrc": "./images/invest_2.png",
+                "subImgSrc": "./images/invest_2-p.png",
+                "stepTitle": "購買債權",
+                "stepDesc": "選定普匯平台債權案件,下標金額，線上確認債權合約"
+            },
+            {
+                "num": 3,
+                "imgSrc": "./images/invest_3.png",
+                "stepTitle": "取得債權",
+                "stepDesc": "投資人匯入金額至專屬虛擬帳戶"
+            },
+            {
+                "num": 4,
+                "imgSrc": "./images/invest_4.png",
+                "stepTitle": "投資獲利",
+                "stepDesc": "借款人依照約定每月還款"
+            }
+        ],
+        "requiredDocuments": [
+            {
+                "imgSrc": "./images/icon_cert_rev2_identity.svg",
+                "text": "身分證",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./images/icon_cert_rev2_identity.svg",
+                "text": "健保卡",
+                "memo": ""
+            },
+            {
+                "imgSrc": "./images/icon_cert_rev2_bank.svg",
+                "text": "銀行帳號",
+                "memo": ""
+            }
+        ]
+    },
     "transfer": {
         "step": [
             {
@@ -212,14 +258,14 @@
             {
                 "num": 2,
                 "imgSrc": "./images/transfer_2.png",
-                "subImgSrc":"./images/transfer_2-p.png",
+                "subImgSrc": "./images/transfer_2-p.png",
                 "stepTitle": "選擇單筆/打包出售",
                 "stepDesc": ""
             },
             {
                 "num": 3,
                 "imgSrc": "./images/transfer_3.png",
-                "subImgSrc":"./images/transfer_3-p.png",
+                "subImgSrc": "./images/transfer_3-p.png",
                 "stepTitle": "調整出讓金額,並點選出讓",
                 "stepDesc": "詳閱轉讓協議書"
             },

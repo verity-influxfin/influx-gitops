@@ -1,7 +1,7 @@
 {
     "college": {
-        "bannerDesktopHref": "./images/college_banner.png",
-        "bannerMoblieHref":"./images/college_banner.png",
+        "bannerDesktopHref": "./images/college_banner-d.png",
+        "bannerMoblieHref":"./images/college_banner-m.png",
         "productName": "學生貸"
     },
     "engineer": {
@@ -9,13 +9,13 @@
         "bannerMoblieHref":"./images/engineer_banner-m.png"
     },
     "freshgraduate": {
-        "bannerDesktopHref": "./images/worker_banner.png",
-        "bannerMoblieHref":"",
+        "bannerDesktopHref": "./images/worker_banner-d.png",
+        "bannerMoblieHref":"./images/worker_banner-m.png",
         "productName": "上班族貸"
     },
     "invest": {
-        "bannerDesktopHref": "./images/invest_banner.png",
-        "bannerMoblieHref":"",
+        "bannerDesktopHref": "./images/worker_banner-d.png",
+        "bannerMoblieHref":"./images/worker_banner-m.png",
         "productName": "債權投資"
     },
     "mobile": {

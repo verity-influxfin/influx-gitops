@@ -22,7 +22,6 @@ $(() => {
     const router = new VueRouter({
         routes: routers,
         mode: 'history',
-        base: `/${window._locale}/`
     });
 
     router.beforeEach((to, from, next) => {
@@ -122,7 +121,7 @@ $(() => {
                 }
             },
             backtotop() {
-                $(window).scrollTop('0');
+                $('html').stop().animate({scrollTop:0}, 1000);
                 AOS.refresh();
             },
             openLoginModal() {

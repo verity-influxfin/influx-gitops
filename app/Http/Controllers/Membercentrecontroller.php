@@ -128,7 +128,7 @@ class Membercentrecontroller extends BaseController
     public function downloadStatement(Request $request)
     {
         $input = $request->all();
-        $function = $input['isInvest'] ? 'recoveries' : 'repayment';
+        $function = $input['isInvest'] === '1' ? 'recoveries' : 'repayment';
 
         $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . $function . '/passbook" -H "' . "request_token:" . Session::get('token') . '"');
         $result = json_decode($curlScrapedPage, true);

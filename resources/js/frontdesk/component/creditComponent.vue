@@ -134,6 +134,7 @@ export default {
   display: flex;
   overflow: auto;
   padding: 4rem 0px 0px 0px;
+  position: relative;
 
   .credit-box {
     width: 65%;
@@ -200,6 +201,7 @@ export default {
 @media screen and (max-width: 767px) {
   .credit-card {
     display: block;
+    padding: 4rem 0px;
 
     .credit-box {
       width: 100%;
@@ -220,13 +222,21 @@ export default {
       }
 
       .license {
-        float: right;
+        text-align: end;
+      }
+
+      .btn-go {
+        position: absolute;
+        bottom: 4rem;
+        left: 50%;
+        transform: translate(-50%, 0px);
       }
     }
 
     .credit-board {
       width: 80%;
       float: right;
+      margin-bottom: 55px;
     }
   }
 }

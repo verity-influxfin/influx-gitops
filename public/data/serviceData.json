@@ -1,28 +1,28 @@
 [
     {
         "title": "學生貸",
-        "desc":"不論是夢想實現，還是生活急需，我們集結了各大學校友、老師，專門投資借貸同學在學期間的資金需求。",
+        "desc":"媒合眾多<b>老師/校友</b><br>成為你的投資人<br>第一時間提供同學小額貸款。",
         "imageSrc": "/images/college_loan.png",
         "isActive": true,
         "link": "collegeLoan"
     },
     {
         "title": "上班族貸",
-        "desc":"進入社會工作了，臨時有急缺？沒有煩人的「專員」打擾， 只有AI 24小時online滿足您的資金需求。",
+        "desc":"全程<b>無人騷擾</b><br>24小時AI online滿足您的資金需求。",
         "imageSrc": "/images/office_loan.png",
         "isActive": true,
         "link": "freshGraduateLoan"
     },
     {
         "title": "工程師貸",
-        "desc":"無論是學生/上班族，只要是資訊/資工/資管相關科系，我們特別提供給您優惠利率，隨時隨地，只要打開APP，資金到手。",
+        "desc":"Special<b>優惠利率</b><br>打開手機拍照上傳資料立即申請。",
         "imageSrc": "/images/engineer_loan.png",
         "isActive": true,
         "link": "engineerLoan"
     },
     {
         "title": "新創企業貸",
-        "desc":"研發獲利交給您、資金需求交給普匯！<br>我們支持創新、支持創業，提供全新AI無人化金融科技借貸服務。<br>普匯是中小企業線上借貸的最佳好夥伴！",
+        "desc":"",
         "imageSrc": "/images/news_loan.png",
         "isActive": false,
         "link": ""

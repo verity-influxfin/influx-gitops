@@ -7,7 +7,7 @@
             <i class="fas fa-home"></i>
           </router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">小學堂</li>
+        <li class="breadcrumb-item active" aria-current="page">AI金融科技新知</li>
       </ol>
     </nav>
     <div class="action-bar">
