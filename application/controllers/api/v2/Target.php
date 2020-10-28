@@ -1399,8 +1399,11 @@ class Target extends REST_Controller {
 		$input 		= $this->input->post(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
+        $targets = false;
+        $data = [];
+        $aiBidding = isset($input['ai_bidding']) && is_numeric($input['ai_bidding']) ? $input['ai_bidding'] : false;
 
-		//$this->check_adult();
+        //$this->check_adult();
 
 		$content = $filter = [];
 		$where		= [
@@ -1465,110 +1468,154 @@ class Target extends REST_Controller {
 			$where['id not'] = $investment_target;
 		}
 
-		$targets = $this->target_model->get_many_by($where);
+		if(is_numeric($aiBidding)){
+		    if(!isset($input['target_amount']) || !isset($input['daily_amount'])){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
 
-
-		if(isset($input['sex']) && !empty($input['sex']) && $input['sex']!='all' ){
-			$filter['sex'] = $input['sex'];
-			if($targets){
-				foreach($targets as $key => $value){
-					$target_user_info = $this->user_model->get($value->user_id);
-					if($target_user_info->sex != $input['sex']){
-						unset($targets[$key]);
-					}
-				}
-			}
-		}else{
-			$filter['sex'] = 'all';
+            if($input['target_amount'] > 20 || $input['daily_amount'] > 100){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
 		}
+        else{
+            $targets = $this->target_model->get_many_by($where);
+            $data = [
+                'total_amount' 		=> 0,
+                'total_count' 		=> 0,
+                'max_instalment' 	=> 0,
+                'min_instalment' 	=> 0,
+                'XIRR' 				=> 0,
+                'target_ids' 		=> [],
+            ];
+        }
 
-		if(isset($input['system']) && $input['system']!='all' && $input['system']!=''){
-			$filter['system'] = $input['system'];
-			if($targets){
-				foreach($targets as $key => $value){
-					$user_meta = $this->user_meta_model->get_by([
-						'user_id'	=> $value->user_id,
-						'meta_key'	=> 'school_system'
-					]);
-					if($user_meta){
-						if($user_meta->meta_value != $input['system']){
-							unset($targets[$key]);
-						}
-					}else{
-						unset($targets[$key]);
-					}
-				}
-			}
-		}else{
-			$filter['system'] = 'all';
-		}
+        if(isset($input['sex']) && !empty($input['sex']) && $input['sex']!='all' ){
+            $filter['sex'] = $input['sex'];
+            if($targets){
+                foreach($targets as $key => $value){
+                    $target_user_info = $this->user_model->get($value->user_id);
+                    if($target_user_info->sex != $input['sex']){
+                        unset($targets[$key]);
+                    }
+                }
+            }
+        }else{
+            $filter['sex'] = 'all';
+        }
 
-		if(isset($input['national']) && $input['national']!='all' && $input['national']!=''){
-			$this->config->load('school_points',TRUE);
-			$school_list = $this->config->item('school_points');
-			$filter['national'] = $input['national'];
-			if($targets){
-				foreach($targets as $key => $value){
-					$user_meta = $this->user_meta_model->get_by([
-						'user_id'	=> $value->user_id,
-						'meta_key'	=> 'school_name'
-					]);
-					if($user_meta){
-						foreach($school_list['school_points'] as $k => $v){
-							if(trim($user_meta->meta_value)==$v['name']){
-								$school_info = $v;
-								break;
-							}
-						}
-						if($school_info['national']!=$input['national']){
-							unset($targets[$key]);
-						}
-					}else{
-						unset($targets[$key]);
-					}
-				}
-			}
-		}else{
-			$filter['national'] = 'all';
-		}
+        if(isset($input['system']) && $input['system']!='all' && $input['system']!=''){
+            $filter['system'] = $input['system'];
+            if($targets){
+                foreach($targets as $key => $value){
+                    $user_meta = $this->user_meta_model->get_by([
+                        'user_id'	=> $value->user_id,
+                        'meta_key'	=> 'school_system'
+                    ]);
+                    if($user_meta){
+                        if($user_meta->meta_value != $input['system']){
+                            unset($targets[$key]);
+                        }
+                    }else{
+                        unset($targets[$key]);
+                    }
+                }
+            }
+        }else{
+            $filter['system'] = 'all';
+        }
 
-		$data = [
-			'total_amount' 		=> 0,
-			'total_count' 		=> 0,
-			'max_instalment' 	=> 0,
-			'min_instalment' 	=> 0,
-			'XIRR' 				=> 0,
-			'target_ids' 		=> [],
-		];
+        if(isset($input['national']) && $input['national']!='all' && $input['national']!=''){
+            $this->config->load('school_points',TRUE);
+            $school_list = $this->config->item('school_points');
+            $filter['national'] = $input['national'];
+            if($targets){
+                foreach($targets as $key => $value){
+                    $user_meta = $this->user_meta_model->get_by([
+                        'user_id'	=> $value->user_id,
+                        'meta_key'	=> 'school_name'
+                    ]);
+                    if($user_meta){
+                        foreach($school_list['school_points'] as $k => $v){
+                            if(trim($user_meta->meta_value)==$v['name']){
+                                $school_info = $v;
+                                break;
+                            }
+                        }
+                        if($school_info['national']!=$input['national']){
+                            unset($targets[$key]);
+                        }
+                    }else{
+                        unset($targets[$key]);
+                    }
+                }
+            }
+        }else{
+            $filter['national'] = 'all';
+        }
 
-		if($targets){
-			$numerator = $denominator = 0;
-			foreach($targets as $key => $value){
-				$data['total_amount'] += $value->loan_amount;
-				$data['total_count'] ++;
-				if($data['max_instalment'] < $value->instalment){
-					$data['max_instalment'] = intval($value->instalment);
-				}
-				if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
-					$data['min_instalment'] = intval($value->instalment);
-				}
-				$content[] 		= intval($value->id);
-				$numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
-				$denominator 	+= $value->loan_amount * $value->instalment;
-			}
-			$data['XIRR'] 		= round($numerator/$denominator ,2);
-			$data['target_ids'] = $content;
-		}
+        if($targets){
+            $numerator = $denominator = 0;
+            foreach($targets as $key => $value){
+                $data['total_amount'] += $value->loan_amount;
+                $data['total_count'] ++;
+                if($data['max_instalment'] < $value->instalment){
+                    $data['max_instalment'] = intval($value->instalment);
+                }
+                if($data['min_instalment'] > $value->instalment || $data['min_instalment']==0){
+                    $data['min_instalment'] = intval($value->instalment);
+                }
+                $content[] 		= intval($value->id);
+                $numerator 		+= $value->loan_amount * $value->instalment * $value->interest_rate;
+                $denominator 	+= $value->loan_amount * $value->instalment;
+            }
+            $data['XIRR'] 		= round($numerator/$denominator ,2);
+            $data['target_ids'] = $content;
+        }
 
 		$this->load->model('loan/batch_model');
-		$this->batch_model->insert([
-			'user_id'	=> $user_id,
-			'type'		=> 0,
-			'filter'	=> json_encode($filter),
-			'content'	=> json_encode($content),
-		]);
-
-		$this->response(['result' => 'SUCCESS','data' =>$data]);
+		if(is_numeric($aiBidding)){
+            if($aiBidding == 1){
+                $this->batch_model->update_by([
+                    'user_id' => $user_id,
+                    'type' => 3,
+                    'status' => 1,
+                ],[
+                    'status' => 2
+                ]);
+                $content = [
+                    'contract_id' => 12345,
+                    'targetAmount' => ($input['target_amount'] == 0 ? 'all' : $input['target_amount'] * 1000),
+                    'dailyAmount' => ($input['daily_amount'] == 0 ? 'all' :  $input['daily_amount'] * 1000),
+                ];
+                $this->batch_model->insert([
+                    'user_id'	=> $user_id,
+                    'type'		=> 3,
+                    'filter'	=> json_encode($filter),
+                    'content'	=> json_encode($content),
+                    'status' => 1
+                ]);
+            }else{
+                $batchData = $this->batch_model->get_by([
+                    'user_id' => $user_id,
+                    'type' => 3,
+                    'status' => 1,
+                ]);
+                $this->batch_model->update_by([
+                    'id' => $batchData->id,
+                ],[
+                    'status' => 9,
+                ]);
+            }
+            $this->response(['result' => 'SUCCESS']);
+        }else{
+            $this->batch_model->insert([
+                'user_id'	=> $user_id,
+                'type'		=> 0,
+                'filter'	=> json_encode($filter),
+                'content'	=> json_encode($content),
+            ]);
+            $this->response(['result' => 'SUCCESS','data' =>$data]);
+        }
     }
 
 	/**
@@ -1621,21 +1668,30 @@ class Target extends REST_Controller {
 			'user_id'	=> $user_id,
 			'type'		=> 0,
 		]);
-		if($batch){
-			$this->response(['result' => 'SUCCESS','data' => json_decode($batch->filter,TRUE)]);
+
+        $batchData = [
+            'product_id'		=> 'all',
+            'credit_level'		=> 'all',
+            'section'			=> 'all',
+            'interest_rate_s'	=> 0,
+            'interest_rate_e'	=> 20,
+            'instalment_s'		=>  0,
+            'instalment_e'		=> 24,
+            'sex'				=> 'all',
+            'system'			=> 'all',
+            'national'			=> 'all'
+        ];
+
+        $aiBidding = $this->batch_model->get_by([
+            'user_id' => $user_id,
+            'type' => 3,
+            'status' => 1,
+        ]);
+		if($batchData){
+            $batchData = json_decode($batch->filter,TRUE);
+		    $aiBidding ? $batchData = array_merge($batchData,(array)json_decode($aiBidding->content)) : '';
 		}
-		$this->response(['result' => 'SUCCESS','data' => [
-			'product_id'		=> 'all',
-			'credit_level'		=> 'all',
-			'section'			=> 'all',
-			'interest_rate_s'	=> 0,
-			'interest_rate_e'	=> 20,
-			'instalment_s'		=>  0,
-			'instalment_e'		=> 24,
-			'sex'				=> 'all',
-			'system'			=> 'all',
-			'national'			=> 'all'
-		]]);
+		$this->response(['result' => 'SUCCESS','data' => $batchData]);
     }
 
 	private function check_adult(){

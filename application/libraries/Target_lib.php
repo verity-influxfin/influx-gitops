@@ -1665,6 +1665,60 @@ class Target_lib
         return false;
     }
 
+    public function aiBidding($target = []){
+        //取得智能投資清單
+        $this->CI->load->model('loan/batch_model');
+        $batchList = $this->CI->batch_model->order_by('id','random')->get_many_by([
+            'type' => 3,
+            'status' => 1,
+        ]);
+
+        //取得該案投資清單
+        $investmentList = [];
+        $this->CI->load->model('loan/investment_model');
+        $investments = $this->CI->investment_model->get_many_by([
+            'target_id' => $target->id,
+        ]);
+        foreach($investments as $key => $value){
+            //曾下標的投資人
+            $investmentList[] = $value->user_id;
+        }
+
+        //取得各投資人今日投資數字
+        $today = strtotime(date("Y-m-d", time()));
+        $todayInvestments = [];
+        $getTodayInvestments = $this->CI->investment_model->get_many_by([
+            'status NOT' => [8, 9],
+            'created_at >=' => $today,
+        ]);
+        foreach($getTodayInvestments as $key => $value){
+            //如已結標則以結標金額
+            $amount = $value->status >= 2 ? $value->loan_amount : $value->amount;
+
+            //投資人今日投資額
+            !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
+            $todayInvestments[$value->user_id] += $amount;
+        }
+
+        foreach($batchList as $key => $value){
+            $content = json_decode($value->content);
+            //排除曾下標的投資人
+            if(!in_array($value->user_id,$investmentList)){
+                //若每日限額設定"非"無上限
+                if($content->dailyAmount != 'all'){
+                    //今日可投標餘額 = 投資人設定投標金額 - 今日已投標金額
+                    $todayAllowAmounts = $content->dailyAmount - $todayInvestments[$value->user_id];
+                    //今日可投標金額大於1000且
+                    if($content->targetAmount != 'all'){
+
+                    }else{
+
+                    }
+                }
+            }
+        }
+    }
+
     private function get_target_no($product_id = 0)
     {
         $product_list = $this->CI->config->item('product_list');
