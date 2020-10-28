@@ -242,4 +242,44 @@ class Loan_manager_target_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getUserLoginLog($userId){
+        $select = [
+            'userLoginLog.status',
+            'userLoginLog.created_at',
+        ];
+
+        $this->db->select($select, false)
+            ->from('p2p_log.user_login_log as userLoginLog');
+        $this->db->where([
+            'user_id' => $userId,
+        ]);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getUserServiceLog($userId, $type = false){
+        $select = [
+            'debtProcessing.admin_id',
+            'debtProcessing.contact_id',
+            'debtProcessing.result',
+            'debtProcessing.push_by',
+            'debtProcessing.push_type',
+            'debtProcessing.message',
+            'debtProcessing.remark',
+            'debtProcessing.start_time',
+            'debtProcessing.end_time',
+            'debtProcessing.created_at',
+        ];
+
+        $this->db->select($select, false)
+            ->from('loan_manager.debt_processing as debtProcessing');
+        $param = [
+            'user_id' => $userId,
+        ];
+        $type ? $param['push_by'] = 11 : $param['push_by !='] = 11;
+        $this->db->where($param);
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

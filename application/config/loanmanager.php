@@ -63,6 +63,7 @@ $config['pushTool'] = [
     8 => "上門",
     9 => "信件",
     10 => "律師函",
+    11 => "面談",
 ];
 defined('PUSH_BY_LINE') or define('PUSH_BY_LINE', '1');
 defined('PUSH_BY_FACEBOOK') or define('PUSH_BY_FACEBOOK', '2');
@@ -83,6 +84,7 @@ $config['pushResultStatus'] = [
     2 => "發送失敗",
     3 => "接通",
     4 => "未接通",
+    5 => "已面談",
 ];
 
 $config['contactRelationship'] = [

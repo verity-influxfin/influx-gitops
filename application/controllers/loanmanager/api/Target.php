@@ -450,7 +450,6 @@ class Target extends REST_Controller
                 $value['remark'] = json_decode($value['remark'],TRUE);
                 $remark = isset($value['remark']['source']) && $value['remark']['source']?$transaction_source[$value['remark']['source']]:'';
                 if($type){
-                    if($value['remark']['source'] == $type)
                     $list[] = [
                         'amount' => $value['amount'],
                         'bank_amount' => $value['bank_amount'],
@@ -490,22 +489,79 @@ class Target extends REST_Controller
 
         $userInfo = $this->userInfo($input['user_id']);
         if($userInfo){
-            $this->load->model('loanmanager/loan_manager_pushdata_model');
-            $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
-            $getAccountingRecord = $this->userPassbook_get(1, $getVirtualAccountInfo[0]->virtualAccounts);
-            foreach($getAccountingRecord as $key => $value){
-                $temp = $value;
-                $temp['type'] = 1;
-                $list[$temp['created_at']][] = $temp;
+            $type = $input['type'];
+            if(in_array($type, [0, 1])){
+                $this->load->model('loanmanager/loan_manager_pushdata_model');
+                //匯款紀錄
+                $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
+                if($getVirtualAccountInfo[0]->virtualAccounts != null){
+                    $getAccountingRecord = $this->userPassbook_get(1, $getVirtualAccountInfo[0]->virtualAccounts);
+                    foreach($getAccountingRecord as $key => $value){
+                        $temp = $value;
+                        $temp['type'] = 1;
+                        $list[$temp['created_at']][] = $temp;
+                    }
+                }
             }
 
-            $getUserCerList = $this->loan_manager_target_model->getUserCerList($input['user_id']);
-            foreach($getUserCerList as $key => $value){
-                $temp = (array)$value;
-                $temp['type'] = 2;
-                $list[$temp['created_at']][] = $temp;
+            if(in_array($type, [0, 2])){
+                //認證紀錄
+                $getUserCerList = $this->loan_manager_target_model->getUserCerList($input['user_id']);
+                foreach($getUserCerList as $key => $value){
+                    $temp = (array)$value;
+                    $temp['type'] = 2;
+                    $list[$temp['created_at']][] = $temp;
+                }
             }
 
+            if(in_array($type, [0, 3])){
+                //系統通知
+                $this->load->model('user/user_notification_model');
+                $getNotification = $this->user_notification_model->order_by('created_at','desc')->get_many_by([
+                    'user_id'		=> $input['user_id'],
+                    'status <>'		=> 0,
+                    'investor'		=> [0]
+                ]);
+                foreach($getNotification as $key => $value){
+                    $temp = [];
+                    $temp['title'] = $value->title;
+                    $temp['content'] = $value->content;
+                    $temp['status'] = $value->status;
+                    $temp['created_at'] = $value->created_at;
+                    $temp['type'] = 3;
+                    $list[$temp['created_at']][] = (array)$temp;
+                }
+            }
+
+            if(in_array($type, [0, 4])){
+                //登入紀錄
+                $getUserLoginLog = $this->loan_manager_target_model->getUserLoginLog($input['user_id']);
+                foreach($getUserLoginLog as $key => $value){
+                    $temp = (array)$value;
+                    $temp['type'] = 4;
+                    $list[$temp['created_at']][] = $temp;
+                }
+            }
+
+            if(in_array($type, [0, 5])){
+                //客服紀錄
+                $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
+                foreach($getUserLoginLog as $key => $value){
+                    $temp = (array)$value;
+                    $temp['type'] = 5;
+                    $list[$temp['created_at']][] = $temp;
+                }
+            }
+
+            if(in_array($type, [0, 6])){
+                //面談紀錄
+                $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
+                foreach($getUserLoginLog as $key => $value){
+                    $temp = (array)$value;
+                    $temp['type'] = 6;
+                    $list[$temp['created_at']][] = $temp;
+                }
+            }
         }
         $this->response([
             'result' => 'SUCCESS',
