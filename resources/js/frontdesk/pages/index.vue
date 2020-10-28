@@ -265,17 +265,28 @@
         <div class="invest-game">
           <h5>
             愛因斯坦說過:「複利的威力大於原子彈」<br />
-            普匯平台上擁有8%~20%的債權，來試試看在<input
-              v-model="rate"
-              type="number"
-              min="8"
-              max="20"
-              style="width: 50px"
-            />%的利率下所創造的報酬吧
+            普匯平台上擁有年利率8%~20%的債權，來試試看所創造的報酬吧
           </h5>
           <div></div>
           <p>
-            每月投資{{ amount }}元，{{ time }}年後預計可回收<b
+            在
+            
+        <select v-model="rate" 
+              style="width: 50px">
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+        </select>%的利率下，每月投資{{ amount }}元，{{ time }}年後預計可回收<b
               style="color: #0005a7"
               >{{ format(tweenedReturnAll) }}</b
             >元
@@ -568,38 +579,38 @@ export default {
         text: "實名認證",
         img: "/images/icon_cert_rev2_identity.svg",
         checked: true,
-        money: 10000,
+        money: 60000,
       },
-      {
-        text: "銀行帳號",
-        img: "/images/icon_cert_rev2_bank.svg",
-        checked: false,
-        money: 10000,
-      },
+      // {
+      //   text: "銀行帳號",
+      //   img: "/images/icon_cert_rev2_bank.svg",
+      //   checked: false,
+      //   money: 10000,
+      // },
       {
         text: "社交帳號",
         img: "/images/icon_cert_rev2_social.svg",
         checked: false,
         money: 20000,
       },
-      {
-        text: "緊急聯絡人",
-        img: "/images/icon_cert_rev2_emergency.svg",
-        checked: false,
-        money: 10000,
-      },
+      // {
+      //   text: "緊急聯絡人",
+      //   img: "/images/icon_cert_rev2_emergency.svg",
+      //   checked: false,
+      //   money: 10000,
+      // },
       {
         text: "電子信箱",
         img: "/images/icon_cert_rev2_mail.svg",
-        checked: false,
-        money: 10000,
+        checked: true,
+        money: 30000,
       },
-      {
-        text: "財力證明",
-        img: "/images/icon_cert_rev2_income.svg",
-        checked: false,
-        money: 20000,
-      },
+      // {
+      //   text: "財力證明",
+      //   img: "/images/icon_cert_rev2_income.svg",
+      //   checked: false,
+      //   money: 20000,
+      // },
       {
         text: "學生身分",
         img: "/images/icon_cert_rev2_student.svg",
@@ -610,20 +621,20 @@ export default {
         text: "最高學歷",
         img: "/images/icon_cert_rev2_diploma.svg",
         checked: false,
-        money: 30000,
+        money: 40000,
       },
       {
         text: "工作認證",
         img: "/images/icon_cert_rev2_worker.svg",
         checked: false,
-        money: 40000,
-      },
-      {
-        text: "聯合徵信",
-        img: "/images/icon_cert_rev2_icri.svg",
-        checked: true,
         money: 50000,
       },
+      // {
+      //   text: "聯合徵信",
+      //   img: "/images/icon_cert_rev2_icri.svg",
+      //   checked: true,
+      //   money: 50000,
+      // },
     ],
     services: [],
   }),
@@ -1494,6 +1505,7 @@ export default {
 
     .loan-game {
       @extend %layout;
+      width: 1018px;
 
       .option {
         display: flex;
@@ -1930,8 +1942,7 @@ export default {
         }
 
         img {
-          height: inherit;
-          width: initial;
+          width: 100%;
         }
 
         .content {
