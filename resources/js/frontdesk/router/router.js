@@ -53,13 +53,13 @@ let routers = [
     { path: '/register', component: register },
     {
         path: '/myloan', component: myLoan, children: [
-            { path: '/loannotification', component: notification,name:'loan-notification' },
+            { path: '/loannotification', component: notification, name: 'loan-notification' },
             { path: '/myrepayment', component: myrepayment }
         ]
     },
     {
         path: '/myinvestment', component: myInvestment, children: [
-            { path: '/investnotification', component: notification,name:'invest-notification' },
+            { path: '/investnotification', component: notification, name: 'invest-notification' },
             { path: '/debt', component: debt },
             { path: '/closedcase', component: closedcase },
             { path: '/detail', component: detail }

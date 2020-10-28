@@ -1,6 +1,6 @@
 <template>
   <div class="experience-card">
-    <h2>{{$props.title}}</h2>
+    <h2>{{ $props.title }}</h2>
     <div class="hr"></div>
     <div class="comment-box" ref="comment_slick">
       <div
@@ -8,23 +8,13 @@
         v-for="(item, index) in $props.experiences"
         :key="index"
       >
-        <div
-          :class="[
-            'memo',
-            { 'laod-s-b': item.type === 'loan' },
-            { 'invest-s-b': item.type === 'invest' },
-          ]"
-        >
-          <h5
-            :class="[
-              { 'laod-s': item.type === 'loan' },
-              { 'invest-s': item.type === 'invest' },
-            ]"
-          >
-            {{ item.type === "loan" ? "借款" : "投資" }}回饋
-          </h5>
-          <span>{{ item.feedback }}</span>
-        </div>
+        <label class="c-pel">
+          {{ item.type === "loan" ? "借款" : "投資" }}回饋<i
+            class="fas fa-slash"
+          ></i
+          >{{ item.name }}<i class="fas fa-slash"></i
+          >{{ item.rank === "student" ? "在學生" : "上班族" }}
+        </label>
         <div class="img">
           <img
             :src="item.imageSrc"
@@ -32,14 +22,10 @@
             class="img-fluid"
           />
         </div>
-        <label class="c-pel">
-          {{ item.name }}
-          <br />
-          {{ item.rank === "student" ? "在學生" : "上班族" }}
-        </label>
+        <span>{{ item.feedback }}</span>
       </div>
     </div>
-    <button class="btn btn-primary comment" @click="$root.goFeedback">
+    <button class="btn btn-light comment" @click="$root.goFeedback">
       <i class="fas fa-comments"></i>我要回饋
     </button>
   </div>
@@ -47,7 +33,7 @@
 
 <script>
 export default {
-  props: ["experiences","title"],
+  props: ["experiences", "title"],
   watch: {
     "$props.experiences"() {
       this.$nextTick(() => {
@@ -61,11 +47,12 @@ export default {
         infinite: true,
         slidesToShow: 3,
         slidesToScroll: 1,
-        autoplay: false,
+        autoplay: true,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
         arrows: true,
+        speed: 1000,
         prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
         nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
         responsive: [
@@ -95,13 +82,17 @@ export default {
   padding: 30px;
   overflow: hidden;
   position: relative;
-  background: #f5f5f5;
+  background-image: url("../asset/images/index_feedback.png");
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: cover;
 
   %arrow {
     position: absolute;
     top: 50%;
     z-index: 1;
     font-size: 20px;
+    color: #ffffff;
   }
 
   .arrow-left {
@@ -116,7 +107,7 @@ export default {
 
   h2 {
     text-align: center;
-    color: #083a6e;
+    color: #ffffff !important;
   }
 
   .comment {
@@ -133,69 +124,32 @@ export default {
       margin: 20px;
       pointer-events: none;
 
-      .laod-s-b {
-        border: solid 1.5px #880ca2;
-      }
-
-      .invest-s-b {
-        border: solid 1.5px #0ca283;
-      }
-
-      .laod-s {
-        color: #880ca2;
-      }
-
-      .invest-s {
-        color: #0ca283;
-      }
-
-      .memo {
-        h5 {
-          text-align: center;
-          font-weight: bold;
-        }
-
-        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-        line-height: 1.83;
-        padding: 41px 20px;
-        text-align: justify;
-        min-height: 235px;
-        border-radius: 10px;
-        background: #ffffff;
-      }
-
       .img {
         overflow: hidden;
         border-radius: 50%;
-        width: fit-content;
-        margin: -40px auto 0px auto;
-
-        img {
-          width: 80px;
-        }
+        width: 200px;
+        margin: 20px auto;
+        padding: 8px;
+        border: solid 5px #ffffff;
+        filter: drop-shadow(0px 0px 2px #ffffff);
       }
 
       .c-pel {
         text-align: center;
-        margin: 12px auto 0px auto;
+        margin: 10px auto;
         display: block;
         font-weight: bolder;
+        color: #ffffff;
+
+        i {
+          transform: rotate(90deg);
+        }
+      }
+
+      span {
+        color: #ffffff;
       }
     }
-  }
-  .slick-active {
-    opacity: 0.5;
-    transform: translateY(20px);
-  }
-
-  .slick-active + .slick-active {
-    transform: translateY(0%);
-    opacity: 1;
-  }
-
-  .slick-active + .slick-active + .slick-active {
-    opacity: 0.5;
-    transform: translateY(20px);
   }
 }
 

@@ -107,7 +107,7 @@ export default {
   components: {
     banner,
     apply,
-    download
+    download,
   },
   data: () => ({
     now: 0,
@@ -170,7 +170,7 @@ export default {
     async getMobileData() {
       let res = await axios.post(`${location.origin}/getMobileData`);
 
-       let mobile = res.data.data.list.filter((item)=>{
+      let mobile = res.data.data.list.filter((item) => {
         return item.price !== 0;
       });
 
@@ -217,9 +217,19 @@ export default {
     scroll(direction) {
       let scrollLeft = $(this.$refs.option_row).scrollLeft();
       if (direction === "left") {
-        $(this.$refs.option_row).scrollLeft(scrollLeft - 280);
+        $(this.$refs.option_row).animate(
+          {
+            scrollLeft: scrollLeft - 280,
+          },
+          { duration: 1000, queue: false }
+        );
       } else {
-        $(this.$refs.option_row).scrollLeft(scrollLeft + 280);
+        $(this.$refs.option_row).animate(
+          {
+            scrollLeft: scrollLeft + 280,
+          },
+          { duration: 1000, queue: false }
+        );
       }
     },
   },

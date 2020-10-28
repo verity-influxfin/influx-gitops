@@ -39,6 +39,7 @@ export default {
         autoplay: true,
         dots: false,
         arrows: false,
+        speed: 1000,
         responsive: [
           {
             breakpoint: 767,

@@ -123,54 +123,58 @@
           <div class="cover"></div>
         </div>
       </div>
-      <div class="milestone-card">
-        <h2>普匯編年史</h2>
-        <div class="hr"></div>
-        <div class="scroll left" @click="scroll('left')">
-          <img src="/images/n_a_pre.svg" class="img-fluid" />
-        </div>
-        <div class="chunk" ref="chunk">
-          <div class="timeline">
-            <div v-for="(item, index) in milestone" class="block" :key="index">
-              <div class="m-cnt" v-if="index % 2 === 0">
+    </div>
+    <div class="milestone-card">
+      <h2>普匯編年史</h2>
+      <div class="hr"></div>
+      <div class="scroll left" @click="scroll('left')">
+        <img src="/images/n_a_pre.svg" class="img-fluid" />
+      </div>
+      <div class="chunk" ref="chunk">
+        <div class="timeline">
+          <div v-for="(item, index) in milestone" class="block" :key="index">
+            <div style="position: relative">
+              <timelinetopRoute
+                v-if="index % 2 === 0"
+                :index="index"
+                :route="routeArr"
+              />
+              <timelineBottomRoute
+                v-else
+                :index="index"
+                :route="routeArr"
+              />
+            </div>
+            <div
+              class="po"
+              :data-aos="index % 2 === 0 ? 'fade-up' : 'fade-down'"
+              :data-aos-delay="300 * (index + 1)"
+              data-aos-duration="1000"
+            >
+              <timelineTop
+                v-if="index % 2 === 0"
+                :color="pointArr[index]"
+                :date="item.hook_date"
+                :num="index"
+                :img="item.icon"
+              />
+              <timelineBottom
+                v-else
+                :color="pointArr[index]"
+                :date="item.hook_date"
+                :num="index"
+                :img="item.icon"
+              />
+              <div class="m-cnt">
                 <p>{{ item.title }}</p>
-                <div>{{ item.content }}</div>
+                <!-- <div>{{ item.content }}</div> -->
               </div>
-              <div class="m-cnt" v-else>
-                <p>{{ item.title }}</p>
-                <div>{{ item.content }}</div>
-              </div>
-              <svg viewBox="0 0 100 100" width="360" height="300">
-                <ellipse
-                  cx="50"
-                  cy="50"
-                  ry="25"
-                  rx="55"
-                  fill="none"
-                  class="ellipse"
-                  stroke-dasharray="131"
-                />
-                <circle
-                  class="circle"
-                  cx="50"
-                  :cy="index % 2 === 0 ? '75' : '25'"
-                  r="18"
-                />
-                <text
-                  font-size="6"
-                  class="text"
-                  x="35"
-                  :y="index % 2 === 0 ? '77' : '28'"
-                >
-                  {{ item.hook_date }}
-                </text>
-              </svg>
             </div>
           </div>
         </div>
-        <div class="scroll right" @click="scroll('right')">
-          <img src="/images/n_a_next.svg" class="img-fluid" />
-        </div>
+      </div>
+      <div class="scroll right" @click="scroll('right')">
+        <img src="/images/n_a_next.svg" class="img-fluid" />
       </div>
     </div>
     <div
@@ -199,10 +203,18 @@
 
 <script>
 import bannerComponent from "../component/bannerComponent";
+import timelineTopComponent from "../component/svg/timelineTopComponent";
+import timelinetopRouteComponent from "../component/svg/timelinetopRouteComponent";
+import timelineBottomComponent from "../component/svg/timelineBottomComponent";
+import timelineBottomRouteComponent from "../component/svg/timelineBottomRouteComponent";
 
 export default {
   components: {
     banner: bannerComponent,
+    timelineTop: timelineTopComponent,
+    timelineBottom: timelineBottomComponent,
+    timelinetopRoute: timelinetopRouteComponent,
+    timelineBottomRoute: timelineBottomRouteComponent,
   },
   data: () => ({
     isShow: false,
@@ -239,6 +251,8 @@ export default {
     media: [],
     partner: [],
     milestone: [],
+    pointArr: [],
+    routeArr: [],
     partnerData: {},
     bannerData: {},
     reportData: {},
@@ -272,7 +286,17 @@ export default {
     },
     getMilestoneData() {
       axios.post(`${location.origin}/getMilestoneData`).then((res) => {
-        this.milestone = res.data;
+        this.milestone = res.data.reverse();
+        this.pointArr = this.gradientColor(
+          this.milestone.length,
+          "#1B0B8C",
+          "#EBEBEB"
+        );
+        this.routeArr = this.gradientColor(
+          this.milestone.length,
+          "#000067",
+          "#A4C9FF"
+        );
       });
     },
     getMediaData() {
@@ -299,6 +323,7 @@ export default {
         autoplay: true,
         dots: false,
         arrows: false,
+        speed: 1000,
         responsive: [
           {
             breakpoint: 767,
@@ -339,6 +364,91 @@ export default {
           },
           { duration: 1000, queue: false }
         );
+      }
+    },
+    //color
+    gradientColor(length, start, end) {
+      let startRGB = this.colorRgb(start);
+      let startR = startRGB[0];
+      let startG = startRGB[1];
+      let startB = startRGB[2];
+
+      let endRGB = this.colorRgb(end);
+      let endR = endRGB[0];
+      let endG = endRGB[1];
+      let endB = endRGB[2];
+
+      let sR = (endR - startR) / length;
+      let sG = (endG - startG) / length;
+      let sB = (endB - startB) / length;
+
+      let colorArr = [];
+      for (let i = 0; i < length; i++) {
+        let hex = this.colorHex(
+          "rgb(" +
+            parseInt(sR * i + startR) +
+            "," +
+            parseInt(sG * i + startG) +
+            "," +
+            parseInt(sB * i + startB) +
+            ")"
+        );
+        colorArr.push(hex);
+      }
+
+      return colorArr;
+    },
+    colorRgb(sColor) {
+      let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+      sColor = sColor.toLowerCase();
+      if (sColor && reg.test(sColor)) {
+        if (sColor.length === 4) {
+          let sColorNew = "#";
+          for (let i = 1; i < 4; i += 1) {
+            sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
+          }
+          sColor = sColorNew;
+        }
+        let sColorChange = [];
+        for (let i = 1; i < 7; i += 2) {
+          sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
+        }
+        return sColorChange;
+      } else {
+        return sColor;
+      }
+    },
+    colorHex(eColor) {
+      let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+      eColor = eColor.toLowerCase();
+      if (/^(rgb|RGB)/.test(eColor)) {
+        let aColor = eColor.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
+        let strHex = "#";
+        for (let i = 0; i < aColor.length; i++) {
+          let hex = Number(aColor[i]).toString(16);
+          hex = hex < 10 ? 0 + "" + hex : hex;
+          if (hex === "0") {
+            hex += hex;
+          }
+          strHex += hex;
+        }
+        if (strHex.length !== 7) {
+          strHex = eColor;
+        }
+        return strHex;
+      } else if (reg.test(eColor)) {
+        let aNum = eColor.replace(/#/, "").split("");
+        if (aNum.length === 6) {
+          return eColor;
+        } else if (aNum.length === 3) {
+          let numHex = "#";
+          for (let i = 0; i < aNum.length; i += 1) {
+            numHex += aNum[i] + aNum[i];
+          }
+          return numHex;
+        }
+      } else {
+        return eColor;
       }
     },
   },
@@ -644,83 +754,45 @@ export default {
         display: flex;
         flex-direction: column;
         position: relative;
-        margin: 0px -15px;
+        margin: 0px -14px;
         padding: 10px 0px;
 
+        .po {
+          position: absolute;
+          top: 10px;
+        }
+
         svg {
-          filter: drop-shadow(1px 2px 4px #083a6e);
-          pointer-events: none;
-        }
-
-        .ellipse {
-          stroke: #083a6e;
-          stroke-width: 3px;
-          transition-duration: 0.5s;
-        }
-
-        .circle {
-          fill: #ececec;
-          stroke-width: 1px;
-          stroke: #00000008;
-          transition-duration: 0.5s;
-        }
-
-        .text {
-          fill: #083a6e;
-          font-weight: bolder;
-          transition-duration: 0.5s;
+          width: 250px;
         }
 
         &:nth-of-type(even) {
-          .ellipse {
-            stroke-dashoffset: 132;
-          }
-
           .m-cnt {
-            bottom: 5px;
-            &:after {
-              top: -20px;
-              border-bottom: 20px solid #ffffff;
-            }
+            bottom: 75%;
           }
         }
 
         &:nth-of-type(odd) {
           .m-cnt {
-            top: 5px;
-            &:after {
-              bottom: -20px;
-              border-top: 20px solid #ffffff;
-            }
+            top: 75%;
           }
         }
 
         .m-cnt {
-          width: 270px;
+          width: 180px;
           position: absolute;
           transition-duration: 0.5s;
-          padding: 5px;
-          border-radius: 5px;
-          background: #ffffff;
-          left: 45px;
-
-          &:after {
-            content: "";
-            position: absolute;
-            height: 0;
-            width: 0;
-            left: 50%;
-            transform: translate(-50%, 0px);
-            transition-duration: 0.5s;
-            border-right: 135px solid #ffffff00;
-            border-left: 135px solid #ffffff00;
-          }
+          left: 50%;
+          transform: translate(-50%, 0px);
 
           p {
-            height: 48px;
-            color: #ff0000;
+            border-radius: 5px;
+            padding: 5px;
+            background: #ffffff;
+            color: #6b6b6b;
             font-weight: bolder;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0rem;
+            box-shadow: 0px 0px 2px 0px #00000059;
           }
 
           div {

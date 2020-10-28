@@ -7,7 +7,7 @@
     />
     <img
       :src="$props.data.bannerMoblieHref"
-      style="width: 100%"
+      style="width: 100%;"
       class="hidden-phone"
     />
 

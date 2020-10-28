@@ -7,7 +7,7 @@
     x="0px"
     y="0px"
     viewBox="0 0 767 778"
-    style="enable-background:new 0 0 767 778;"
+    style="enable-background: new 0 0 767 778"
     xml:space="preserve"
   >
     <filter
@@ -19,7 +19,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -41,7 +45,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -63,7 +71,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -85,7 +97,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -107,7 +123,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -129,7 +149,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -151,7 +175,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -173,7 +201,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -195,7 +227,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -217,7 +253,11 @@
       y="-60.0%"
     >
       <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1" />
-      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2" />
+      <feGaussianBlur
+        in="shadowOffsetOuter1"
+        result="shadowBlurOuter1"
+        stdDeviation="2"
+      />
       <feComposite
         in="shadowBlurOuter1"
         in2="SourceAlpha"
@@ -239,8 +279,8 @@
       y2="809.5572"
       gradientTransform="matrix(940 0 0 -940 -80754 761264.375)"
     >
-      <stop offset="0" style="stop-color:#ABD4FE" />
-      <stop offset="1" style="stop-color:#FFFFFF" />
+      <stop offset="0" style="stop-color: #abd4fe" />
+      <stop offset="1" style="stop-color: #ffffff" />
     </linearGradient>
     <path
       id="Circle_1_"
@@ -880,15 +920,16 @@
       <linearGradient
         id="path-2_1_"
         gradientUnits="userSpaceOnUse"
-        x1="5.4466"
-        y1="574.0175"
-        x2="560.3938"
-        y2="11.097"
+        x1="5.4385"
+        y1="203.9905"
+        x2="560.3857"
+        y2="766.911"
+        gradientTransform="matrix(1 0 0 -1 -8.526513e-14 778)"
       >
-        <stop offset="0" style="stop-color:#A6A4FA" />
-        <stop offset="0.3586" style="stop-color:#C99BC8" />
-        <stop offset="0.7306" style="stop-color:#DF95AA" />
-        <stop offset="1" style="stop-color:#F88E88" />
+        <stop offset="6.517804e-03" style="stop-color: #0050e9" />
+        <stop offset="0.34" style="stop-color: #2aa3ff" />
+        <stop offset="0.6636" style="stop-color: #ffd894" />
+        <stop offset="1" style="stop-color: #ffaf3f" />
       </linearGradient>
       <path
         id="path-2_6_"
@@ -924,10 +965,20 @@
         width="22"
         height="22"
       >
-        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+        <feColorMatrix
+          type="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"
+        />
       </filter>
     </defs>
-    <mask maskUnits="userSpaceOnUse" x="665.1" y="102.4" width="22" height="22" id="mask-3_4_">
+    <mask
+      maskUnits="userSpaceOnUse"
+      x="665.1"
+      y="102.4"
+      width="22"
+      height="22"
+      id="mask-3_4_"
+    >
       <g class="st6">
         <path
           id="path-2_5_"
@@ -973,10 +1024,20 @@
         width="541.3"
         height="640.8"
       >
-        <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+        <feColorMatrix
+          type="matrix"
+          values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0"
+        />
       </filter>
     </defs>
-    <mask maskUnits="userSpaceOnUse" x="46.7" y="47" width="541.3" height="640.8" id="mask-3_3_">
+    <mask
+      maskUnits="userSpaceOnUse"
+      x="46.7"
+      y="47"
+      width="541.3"
+      height="640.8"
+      id="mask-3_3_"
+    >
       <g class="st11">
         <path
           id="path-2_4_"
@@ -1183,41 +1244,69 @@
       <text
         transform="matrix(0.7071 0.7071 -0.7071 0.7071 474.767 -23.467)"
         class="st23 st24 st25"
-      >15%</text>
-      <text transform="matrix(0.866 0.5 -0.5 0.866 411.9111 -72.7603)" class="st23 st24 st25">14%</text>
+      >
+        15%
+      </text>
+      <text
+        transform="matrix(0.866 0.5 -0.5 0.866 411.9111 -72.7603)"
+        class="st23 st24 st25"
+      >
+        14%
+      </text>
       <text
         transform="matrix(0.9659 0.2588 -0.2588 0.9659 330.8186 -101.7657)"
         class="st23 st24 st25"
-      >{{credit.rate9}}%</text>
-      <text transform="matrix(1 0 0 1 249.2903 -110.135)" class="st23 st24 st25">{{credit.rate8}}%</text>
+      >
+        {{ credit.rate9 }}%
+      </text>
+      <text
+        transform="matrix(1 0 0 1 249.2903 -110.135)"
+        class="st23 st24 st25"
+      >
+        {{ credit.rate8 }}%
+      </text>
       <text
         transform="matrix(0.9659 -0.2588 0.2588 0.9659 164.402 -95.7584)"
         class="st23 st24 st25"
-      >{{credit.rate7}}%</text>
+      >
+        {{ credit.rate7 }}%
+      </text>
       <text
         transform="matrix(0.866 -0.5 0.5 0.866 91.2104 -61.9796)"
         class="st23 st24 st25"
-      >{{credit.rate6}}%</text>
+      >
+        {{ credit.rate6 }}%
+      </text>
       <text
         transform="matrix(0.7071 -0.7071 0.7071 0.7071 32.5407 -10.0459)"
         class="st23 st24 st25"
-      >{{credit.rate5}}%</text>
+      >
+        {{ credit.rate5 }}%
+      </text>
       <text
         transform="matrix(0.5 -0.866 0.866 0.5 -16.6587 55.9927)"
         class="st23 st24 st25"
-      >{{credit.rate4}}%</text>
+      >
+        {{ credit.rate4 }}%
+      </text>
       <text
         transform="matrix(0.2588 -0.9659 0.9659 0.2588 -45.2659 134.9625)"
         class="st23 st24 st25"
-      >{{credit.rate3}}%</text>
+      >
+        {{ credit.rate3 }}%
+      </text>
       <text
         transform="matrix(-9.062073e-08 -1 1 -9.062073e-08 -55.3175 218.2697)"
         class="st23 st24 st25"
-      >{{credit.rate2}}%</text>
+      >
+        {{ credit.rate2 }}%
+      </text>
       <text
         transform="matrix(-0.2588 -0.9659 0.9659 -0.2588 -41.0704 299.4468)"
         class="st23 st24 st25"
-      >{{credit.rate1}}%</text>
+      >
+        {{ credit.rate1 }}%
+      </text>
     </g>
     <g class="svg-pointer" :style="`transform: rotate(${$props.deg}deg)`">
       <g id="Point_2_">
@@ -1243,7 +1332,9 @@
         </g>
       </g>
       <g>
-        <g transform="translate(-1216 -176) rotate(15 983.458 3083.992) translate(557.57 158.774)">
+        <g
+          transform="translate(-1216 -176) rotate(15 983.458 3083.992) translate(557.57 158.774)"
+        >
           <linearGradient
             id="SVGID_1_"
             gradientUnits="userSpaceOnUse"
@@ -1253,8 +1344,8 @@
             y2="-21.5528"
             gradientTransform="matrix(28.9778 7.7645 -77.6457 289.7777 -6176.229 4996.1733)"
           >
-            <stop offset="0" style="stop-color:#ABD4FE" />
-            <stop offset="1" style="stop-color:#FFFFFF" />
+            <stop offset="0" style="stop-color: #abd4fe" />
+            <stop offset="1" style="stop-color: #ffffff" />
           </linearGradient>
           <path
             class="st2"
@@ -1271,8 +1362,8 @@
             y2="-21.5701"
             gradientTransform="matrix(28.9778 7.7646 -31.0583 115.9111 -5137.4878 1118.6072)"
           >
-            <stop offset="0" style="stop-color:#FFFFFF" />
-            <stop offset="1" style="stop-color:#ABD4FE" />
+            <stop offset="0" style="stop-color: #ffffff" />
+            <stop offset="1" style="stop-color: #abd4fe" />
           </linearGradient>
           <path
             class="st3"
@@ -1330,7 +1421,9 @@
         </g>
       </g>
       <g>
-        <g transform="translate(-1216 -176) rotate(15 983.458 3083.992) translate(557.57 158.774)">
+        <g
+          transform="translate(-1216 -176) rotate(15 983.458 3083.992) translate(557.57 158.774)"
+        >
           <linearGradient
             id="SVGID_1_"
             gradientUnits="userSpaceOnUse"
@@ -1340,8 +1433,8 @@
             y2="-21.5528"
             gradientTransform="matrix(28.9778 7.7645 -77.6457 289.7777 -6176.229 4996.1733)"
           >
-            <stop offset="0" style="stop-color:#ABD4FE" />
-            <stop offset="1" style="stop-color:#FFFFFF" />
+            <stop offset="0" style="stop-color: #abd4fe" />
+            <stop offset="1" style="stop-color: #ffffff" />
           </linearGradient>
           <path
             class="p-st2"
@@ -1358,8 +1451,8 @@
             y2="-21.5701"
             gradientTransform="matrix(28.9778 7.7646 -31.0583 115.9111 -5137.4878 1118.6072)"
           >
-            <stop offset="0" style="stop-color:#FFFFFF" />
-            <stop offset="1" style="stop-color:#ABD4FE" />
+            <stop offset="0" style="stop-color: #ffffff" />
+            <stop offset="1" style="stop-color: #abd4fe" />
           </linearGradient>
           <path
             class="p-st3"
@@ -1398,8 +1491,8 @@
       </g>
       <defs>
         <linearGradient id="L" x1="0%" y1="50%" x2="100%" y2="50%">
-          <stop offset="0%" stop-color="#B99FE6" />
-          <stop offset="100%" stop-color="#F2999C" />
+          <stop offset="0%" stop-color="#CF391A" />
+          <stop offset="100%" stop-color="#CF391A" />
         </linearGradient>
       </defs>
       <rect x="609" y="162" ry="50" width="50px" height="50px" fill="url(#L)" />
@@ -1408,12 +1501,57 @@
         y="108"
         width="50px"
         height="50px"
-        style="transform: rotate(31deg);transform-origin: 68% 19.5%;"
+        style="transform: rotate(31deg); transform-origin: 68% 19.5%"
       >
         <div
-          style="color:antiquewhite;font-size: 24px;width:50px;text-align: center;"
-        >{{$props.credit[Object.keys($props.credit)[index]]}}%</div>
+          style="
+            color: antiquewhite;
+            font-size: 24px;
+            width: 50px;
+            text-align: center;
+          "
+        >
+          {{ $props.credit[Object.keys($props.credit)[index]] }}%
+        </div>
       </foreignObject>
+    </g>
+
+    <g>
+      <path
+        class="st26"
+        d="M387.7,656.8l-1.9,3.5c-1.7-2.2-3.8-4.4-6.6-6.6v18.2h-3.7v-17.7c-2.2,4.5-4.8,8.1-7.7,10.9l-1.9-3.6
+		c3.9-3.5,7-7.9,9.3-13.1h-8.4v-3.6h8.7v-4.2c-1.8,0.2-3.9,0.4-6.4,0.5l-1.6-3.6c6.6,0,12.1-0.8,16.7-2.3l2.2,3.2
+		c-1.8,0.6-4.2,1.2-7.2,1.8v4.7h7.6v3.6h-7.6v1.1C382,651.5,384.9,653.9,387.7,656.8z M393.2,664.5h-3.7v-26.3h3.7V664.5z
+		 M401.8,667.3c-0.1,3-1.7,4.6-4.8,4.6l-4.7,0l-1.3-3.9c1.4,0.1,3.5,0.1,6.3,0.1c0.5,0,0.8-0.3,0.8-0.9v-31.8h3.8V667.3z"
+      />
+      <path
+        class="st26"
+        d="M444.8,664.4h-16.3v7.5h-3.8v-7.5h-16.5V661h16.5v-3h3.8v3h16.3V664.4z M418.9,653.5
+		c-3.3,2.4-6.2,4.2-8.7,5.6l-1.7-3.3c2.6-1.2,5.5-3.1,8.8-5.5L418.9,653.5z M443.9,641.6h-18.1l2.4,1.1c-1.6,2-3.2,3.5-4.7,4.8
+		c1.4-0.1,3-0.2,4.7-0.5l2.8-3.4l3.2,1.6c-3.5,4-6.8,7.1-10.1,9.2c1.8-0.2,4-0.4,6.5-0.9c-0.3-0.7-0.8-1.4-1.2-2.1l3.1-1.4
+		c1.7,2.7,2.9,5,3.7,7l-3.3,1.4c-0.2-0.8-0.4-1.5-0.8-2.1c-4.6,0.8-8.9,1.3-12.8,1.5l-0.7-2.9c2.5-1.4,4.7-2.9,6.4-4.7
+		c-1.8,0.2-3.7,0.3-6,0.4l-0.5-2.6c2.4-1.7,4.5-3.8,6.2-6.4h-15.5v-3.3h15.5c-0.3-1-0.7-1.9-1.2-2.7l3.9-0.5
+		c0.7,1.3,1.2,2.4,1.4,3.2h15.1V641.6z M418,647l-2.5,2.6c-1.4-1.3-3.3-2.8-5.8-4.5l2.6-2.5C414.4,643.9,416.3,645.4,418,647z
+		 M443.4,644.8c-1.9,1.8-4,3.4-6.3,4.8l-2.5-2.6c2.1-1.3,4.1-2.8,6-4.5L443.4,644.8z M444.7,656.3l-2.7,2.5
+		c-2.4-2.3-4.8-4.3-7.2-5.9l2.5-2.5C440.2,652.2,442.6,654.2,444.7,656.3z"
+      />
+      <path
+        class="st26"
+        d="M463.9,653.5l-4.9,2.2v12.4c0,2.4-1.7,3.6-5,3.6c-0.7,0-1.4,0-2.2-0.1l-1.1-3.7c1.3,0.1,2.4,0.1,3.6,0.1
+		c0.3,0,0.6-0.1,0.8-0.3s0.4-0.4,0.4-0.7v-9.8c-1.7,0.7-3.2,1.2-4.5,1.6l-1-3.6c2.7-0.9,4.5-1.6,5.4-2v-7.9h-5.1v-3.6h5.1v-6.7h3.6
+		v6.7h4.3v3.6H459v6.4c1.3-0.5,2.8-1.1,4.4-1.9L463.9,653.5z M486.9,649.9H469c-1.2,0-2.2-0.4-2.9-1.2s-1-1.8-1-3.2v-10.3h3.7v3.2
+		h16.3v3.6h-16.3v2.8c0,1,0.5,1.5,1.5,1.5h16.6V649.9z M484.9,671.8h-3.7v-2.1l-12.1-0.1v2.1h-3.7V653h19.4V671.8z M481.2,659.6
+		v-3.2h-12.1v3.2H481.2z M481.2,666.4v-3.4h-12.1v3.4H481.2z"
+      />
+      <path
+        class="st26"
+        d="M510.5,643.6l-2.6,3c-0.3-0.4-0.6-0.8-0.9-1.2v3H503v3.1h6.5v3.6H503v11c2.7-0.5,4.9-1.1,6.8-1.6l0.2,3.6
+		c-7.9,1.8-13.6,2.9-17.1,3.3l-0.6-3.7c3.2-0.4,5.5-0.8,7-1.1V655H493v-3.6h6.3v-3.1h-3.4v-2.1c-0.7,0.5-1.2,0.9-1.7,1.1l-2.1-3.1
+		c3-1.8,5.8-5,8.4-9.4l3.8,0.9c-0.2,0.5-0.4,0.8-0.6,1C506.4,639.1,508.6,641.4,510.5,643.6z M498.1,665.1l-3.3,1
+		c-0.4-3.2-0.9-6.1-1.7-8.7l3.1-0.9C497.2,659.7,497.8,662.6,498.1,665.1z M506.5,645c-1.5-1.9-3.1-3.5-4.8-5
+		c-1.4,1.9-2.8,3.6-4.3,5H506.5z M509.3,657c-0.3,2.1-0.9,4.4-1.8,6.9l-3.2-0.7c0.7-2,1.3-4.2,1.8-6.8L509.3,657z M528.9,651.4h-7.1
+		v20.5h-3.9v-20.5h-7.2v-3.7h7.2v-12.4h3.9v12.4h7.1V651.4z"
+      />
     </g>
   </svg>
 </template>
@@ -1521,6 +1659,9 @@ export default {
 .st25 {
   font-size: 18px;
 }
+.st26 {
+  fill: #5d5d5d;
+}
 
 .p-st0 {
   fill-rule: evenodd;
@@ -1545,8 +1686,7 @@ export default {
   opacity: 0.8;
   fill-rule: evenodd;
   clip-rule: evenodd;
-  fill: #aba2fb;
-  enable-background: new;
+  fill: #ff7a5f;
   cursor: pointer;
 }
 .p-st5 {
@@ -1554,8 +1694,7 @@ export default {
   opacity: 0.8;
   fill-rule: evenodd;
   clip-rule: evenodd;
-  fill: #ff8783;
-  enable-background: new;
+  fill: #ff7a5f;
   cursor: pointer;
 }
 .p-st6 {
@@ -1570,8 +1709,7 @@ export default {
   transform: rotate(-150deg);
 }
 
-.t{
-
+.t {
   transform: translate(-10px, -3px);
 }
 </style>

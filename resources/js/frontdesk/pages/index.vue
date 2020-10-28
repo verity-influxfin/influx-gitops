@@ -4,33 +4,31 @@
       <div class="puhey-banner">
         <img
           :src="'/images/index-banner-d.png'"
-          style="width: 100%"
-          class="hidden-desktop"
+          class="hidden-desktop img-fluid"
         />
         <img
           :src="'/images/index-banner-m.png'"
-          style="width: 100%"
-          class="hidden-phone"
+          class="hidden-phone img-fluid"
         />
+        <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
+        <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
         <div class="content">
           <p>最貼近年輕人的金融科技平台</p>
-          <p>普匯，你的手機ATM</p>
+          <span>普匯，你的手機ATM</span>
           <div class="box">
             <a
               class="loan"
               href="https://event.influxfin.com/r/iurl?p=webinvest"
               target="_blank"
-              ><img src="../asset/images/loan.svg" class="img-fluid" /><span
-                >我要投資</span
-              ></a
+              ><img src="../asset/images/light-b.svg" class="img-fluid" />
+              <div class="text">立即投資</div></a
             >
             <a
               class="borrow"
               href="https://event.influxfin.com/R/url?p=webbanner"
               target="_blank"
-              ><img src="../asset/images/borrow.svg" class="img-fluid" /><span
-                >我要借款</span
-              ></a
+              ><img src="../asset/images/light-y.svg" class="img-fluid" />
+              <div class="text">立即借款</div></a
             >
           </div>
         </div>
@@ -190,27 +188,38 @@
         <h2>貸款方案</h2>
         <div class="hr"></div>
         <div class="product-list">
-          <router-link
-            :class="[
-              'card-item',
-              { 'hvr-grow-shadow': item.isActive },
-              { disable: !item.isActive },
-            ]"
+          <div
+            class="i"
+            data-aos="fade-up"
+            :data-aos-duration="500 * index"
             v-for="(item, index) in this.services"
-            :to="item.link"
             :key="index"
           >
-            <div class="img">
-              <img :src="item.imageSrc" />
+            <div
+              :class="[
+                'card-item',
+                { 'hvr-grow-shadow': item.isActive },
+                { disable: !item.isActive },
+              ]"
+            >
+              <div class="img">
+                <img :src="item.imageSrc" />
+              </div>
+              <div class="cv">
+                <h3>{{ item.title }}</h3>
+                <p v-html="item.desc"></p>
+                <router-link v-if="item.isActive" class="link" :to="item.link"
+                  >了解更多<i
+                    class="fas fa-angle-right"
+                    style="margin-left: 5px"
+                  ></i
+                ></router-link>
+              </div>
+              <div class="cover" v-if="!item.isActive">
+                <span>coming soon</span>
+              </div>
             </div>
-            <div class="cv">
-              <h3>{{ item.title }}</h3>
-              <p v-html="item.desc"></p>
-            </div>
-            <div class="cover" v-if="!item.isActive">
-              <span>coming soon</span>
-            </div>
-          </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -251,13 +260,20 @@
           </div>
           <button class="btn btn-loan" @click="openDialog()">了解更多</button>
         </div>
-        <h2>投資報酬率試算</h2>
+        <h2>試算您投資收益</h2>
         <div class="hr"></div>
         <div class="invest-game">
           <h5>
             愛因斯坦說過:「複利的威力大於原子彈」<br />
-            來看看使用普匯所創造的報酬吧
+            普匯平台上擁有8%~20%的債權，來試試看在<input
+              v-model="rate"
+              type="number"
+              min="8"
+              max="20"
+              style="width: 50px"
+            />%的利率下所創造的報酬吧
           </h5>
+          <div></div>
           <p>
             每月投資{{ amount }}元，{{ time }}年後預計可回收<b
               style="color: #0005a7"
@@ -318,7 +334,6 @@
           <router-link class="btn btn-invest" to="invest">了解更多</router-link>
           <div style="text-align: end; font-size: 13px">
             ＊複利滾投∶每月回款本金及利息，持續再投入借出，產生的投資報酬率。<br />
-            利率以12%為例。
           </div>
         </div>
       </div>
@@ -326,15 +341,22 @@
     <div class="advantage-card">
       <div class="header">
         <div class="slg">
-          <p class="title">
-            以金融為核心，以科技為輔具，
-            <br />普匯給您前所未有的最佳使用體驗APP
-          </p>
-          <p class="l-btn">為什麼選擇普匯金融科技?</p>
+          <div data-aos="fade-up" data-aos-duration="700">
+            <p class="title">
+              以金融為核心，以科技為輔具，
+              <br />普匯給您前所未有的最佳使用體驗APP
+            </p>
+            <p class="l-btn">為什麼選擇普匯金融科技?</p>
+          </div>
         </div>
       </div>
       <div class="content" ref="advantage_slick">
-        <div class="item">
+        <div
+          class="item"
+          data-aos="fade-up"
+          data-delay="900"
+          data-aos-duration="500"
+        >
           <div class="img">
             <img :src="'/images/expert.svg'" class="img-fluid" />
           </div>
@@ -343,7 +365,12 @@
             >普匯擁有超過20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流管理...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span
           >
         </div>
-        <div class="item">
+        <div
+          class="item"
+          data-aos="fade-up"
+          data-delay="900"
+          data-aos-duration="500"
+        >
           <div class="img">
             <img :src="'/images/ai.svg'" class="img-fluid" />
           </div>
@@ -355,7 +382,12 @@
             分秒計息等，不斷與時俱進迭代優化。</span
           >
         </div>
-        <div class="item">
+        <div
+          class="item"
+          data-aos="fade-up"
+          data-delay="900"
+          data-aos-duration="500"
+        >
           <div class="img">
             <img :src="'/images/safe.svg'" class="img-fluid" />
           </div>
@@ -367,99 +399,101 @@
         </div>
       </div>
     </div>
-    <experience :experiences="experiences"  title="真實回饋" />
-    <div class="information-card">
-      <ul class="nav" role="tablist">
-        <li class="nav-item">
-          <a
-            class="nav-link active"
-            data-toggle="tab"
-            href="#news"
-            @click="reSlick('news_slick')"
-            >最新消息</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-toggle="tab"
-            href="#knowledge"
-            @click="reSlick('knowledge_slick')"
-            >AI金融科技新知</a
-          >
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            data-toggle="tab"
-            href="#video"
-            @click="reSlick('video_slick')"
-            >影音專區</a
-          >
-        </li>
-      </ul>
-      <div class="tab-content">
-        <div id="news" class="tab-pane fade active show">
-          <div class="news-slick" ref="news_slick">
+    <experience :experiences="experiences" title="真實回饋" />
+    <div class="information-card" id="information-card">
+      <div style="z-index: 2; position: relative">
+        <ul class="nav" role="tablist">
+          <li class="nav-item">
             <a
-              class="slick-item hvr-float-shadow"
-              v-for="(item, index) in news"
-              :href="item.link"
-              :key="index"
+              class="nav-link active"
+              data-toggle="tab"
+              href="#news"
+              @click="reSlick('news_slick')"
+              >最新消息</a
             >
-              <div class="img">
-                <img :src="item.image_url" class="img-fluid" />
-              </div>
-              <p>{{ item.post_title }}</p>
-              <span>{{ item.post_date.substr(0, 10) }}</span>
-            </a>
-          </div>
-          <router-link class="btn btn-warning btn-to" to="news">
-            最新消息&ensp;
-          </router-link>
-        </div>
-        <div id="knowledge" class="tab-pane fade">
-          <div class="knowledge-slick" ref="knowledge_slick">
-            <router-link
-              class="slick-item hvr-float-shadow"
-              v-for="(item, index) in knowledge"
-              :key="index"
-              :to="item.link"
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              data-toggle="tab"
+              href="#knowledge"
+              @click="reSlick('knowledge_slick')"
+              >AI金融科技新知</a
             >
-              <div class="img">
-                <img :src="item.media_link" class="img-fluid" />
-              </div>
-              <p>{{ item.post_title }}</p>
-              <span>{{ item.post_date }}</span>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              data-toggle="tab"
+              href="#video"
+              @click="reSlick('video_slick')"
+              >影音專區</a
+            >
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div id="news" class="tab-pane fade active show">
+            <div class="news-slick" ref="news_slick">
+              <a
+                class="slick-item hvr-float-shadow"
+                v-for="(item, index) in news"
+                :href="item.link"
+                :key="index"
+              >
+                <div class="img">
+                  <img :src="item.image_url" class="img-fluid" />
+                </div>
+                <p>{{ item.post_title }}</p>
+                <span>{{ item.post_date.substr(0, 10) }}</span>
+              </a>
+            </div>
+            <router-link class="btn btn-warning btn-to" to="news">
+              最新消息&ensp;
             </router-link>
           </div>
-          <router-link class="btn btn-warning btn-to" to="blog">
-            小學堂&ensp;
-          </router-link>
-        </div>
-        <div id="video" class="tab-pane fade">
-          <div class="video-slick" ref="video_slick">
-            <router-link
-              class="slick-item hvr-float-shadow"
-              v-for="(item, index) in video"
-              :to="item.link"
-              :key="index"
-            >
-              <div style="width: fit-content; margin: 0px auto">
-                <iframe
-                  :src="item.video_link"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
-              </div>
-              <p>{{ item.post_title }}</p>
-              <span>{{ item.post_date }}</span>
+          <div id="knowledge" class="tab-pane fade">
+            <div class="knowledge-slick" ref="knowledge_slick">
+              <router-link
+                class="slick-item hvr-float-shadow"
+                v-for="(item, index) in knowledge"
+                :key="index"
+                :to="item.link"
+              >
+                <div class="img">
+                  <img :src="item.media_link" class="img-fluid" />
+                </div>
+                <p>{{ item.post_title }}</p>
+                <span>{{ item.post_date }}</span>
+              </router-link>
+            </div>
+            <router-link class="btn btn-warning btn-to" to="blog">
+              AI金融科技新知&ensp;
             </router-link>
           </div>
-          <router-link class="btn btn-warning btn-to" to="vlog/share">
-            小學堂影音&ensp;
-          </router-link>
+          <div id="video" class="tab-pane fade">
+            <div class="video-slick" ref="video_slick">
+              <router-link
+                class="slick-item hvr-float-shadow"
+                v-for="(item, index) in video"
+                :to="item.link"
+                :key="index"
+              >
+                <div style="width: fit-content; margin: 0px auto">
+                  <iframe
+                    :src="item.video_link"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+                <p>{{ item.post_title }}</p>
+                <span>{{ item.post_date }}</span>
+              </router-link>
+            </div>
+            <router-link class="btn btn-warning btn-to" to="vlog/share">
+              小學堂影音&ensp;
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -522,6 +556,7 @@ export default {
     tweenedReturnAll: 0,
     amount: 10000,
     time: 1,
+    rate: 12,
     money: 100000,
     tweenedMoney: 100000,
     tweenedTransactionCount: 0,
@@ -626,8 +661,9 @@ export default {
     this.$nextTick(() => {
       this.createChart();
       particlesJS.load("game-card", "data/game.json");
+      particlesJS.load("information-card", "data/game.json");
       this.createSlick(this.$refs.advantage_slick, 3, false);
-      this.createSlick(this.$refs.banner, 1);
+      this.createSlick(this.$refs.banner, 1, true, true);
     });
     AOS.init();
 
@@ -673,6 +709,10 @@ export default {
       this.time = parseInt(data);
       this.createChart();
     },
+    rate(data) {
+      this.rate = parseInt(data);
+      this.createChart();
+    },
     money(data) {
       if (data < 50000) {
         this.moneyClass = "default";
@@ -709,18 +749,20 @@ export default {
         this.services = res.data;
       });
     },
-    createSlick(tar, toShow = 4, arrows = true) {
+    createSlick(tar, toShow = 4, arrows = true, fade = false) {
       $(tar).slick({
         infinite: true,
         slidesToShow: toShow,
         slidesToScroll: 1,
-        autoplay: true,
+        // autoplay: true,
         customPaging(slider, i) {
           return '<i class="fas fa-circle"></i>';
         },
         arrows,
+        speed: 1000,
         prevArrow: '<i class="fas fa-chevron-left arrow-left"></i>',
         nextArrow: '<i class="fas fa-chevron-right arrow-right"></i>',
+        fade,
         responsive: [
           {
             breakpoint: 1023,
@@ -787,10 +829,12 @@ export default {
         for (k = 0; k < i; k++) {
           _currentRepamentSchedule.push(_p);
         }
-        let _pmt = $this.pmt(_pv, 12, 12);
+        let _pmt = $this.pmt(_pv, this.rate, 12);
         let _principleRemind = _pv;
         for (l = 0; l < 12; l++) {
-          _intrest = Math.round(((_principleRemind * 12) / 100 / 360) * 30);
+          _intrest = Math.round(
+            ((_principleRemind * this.rate) / 100 / 360) * 30
+          );
           _principle = l < 12 ? _pmt - _intrest : _principleRemind;
           _amount = _principle + _intrest;
           _principleRemind -= _principle;
@@ -929,7 +973,7 @@ export default {
             show: false,
           },
           axisLabel: {
-            // show: false,
+            show: false,
           },
           axisLine: {
             lineStyle: { color: "#ccc" },
@@ -1042,76 +1086,67 @@ export default {
     }
 
     .puhey-banner {
-      position: relative;
-      height: 570px;
-
-      img {
-        width: 100%;
+      .diagram {
+        position: absolute;
+        top: 11%;
+        left: 29%;
+        width: 50%;
       }
 
       .content {
         position: absolute;
-        top: 50%;
-        left: 50%;
+        top: 58%;
+        left: 35%;
         transform: translate(-50%, -50%);
+        text-align: center;
 
         p {
+          text-shadow: 2px 6px 6px rgba(0, 0, 0, 0.75);
+          font-family: NotoSansTC;
           font-size: 40px;
-          font-weight: bold;
+          letter-spacing: 2.4px;
           color: #ffffff;
-          text-align: center;
         }
 
-        .box {
-          display: flex;
-          justify-content: space-around;
-          margin-top: 5rem;
+        span {
+          text-shadow: 2px 6px 6px rgba(0, 0, 0, 0.75);
+          font-size: 36px;
+          letter-spacing: 1.8px;
+          color: #f2e627;
+          text-align: center;
+        }
+      }
 
-          %link {
-            box-shadow: 0px 2px 3px black;
-            border: 2px solid;
-            width: 160px;
-            text-align: center;
+      .box {
+        display: flex;
+        margin-top: 12rem;
+
+        %block {
+          width: 40%;
+          margin: 0px auto;
+          position: relative;
+
+          :hover {
             color: #ffffff;
-            background-image: linear-gradient(
-              to bottom,
-              rgba(0, 0, 0, 0.2),
-              rgba(0, 0, 0, 0.2)
-            );
-            padding: 2.2rem;
-            backdrop-filter: blur(5px);
-
-            img {
-              margin-bottom: 10px;
-            }
+            text-decoration: none;
           }
 
-          .loan {
-            @extend %link;
-            border-image-source: linear-gradient(
-              144deg,
-              #f7eca8 1%,
-              rgba(191, 148, 55, 0.7) 51%,
-              #e7cc7e 100%
-            );
-            border-image-slice: 1;
-            img {
-              filter: drop-shadow(0px 0px 6px #f6d949);
-            }
+          .text {
+            color: #ffffff;
+            position: absolute;
+            top: 51%;
+            left: 47%;
+            transform: translate(-50%, -50%);
+            font-size: 25px;
           }
-          .borrow {
-            @extend %link;
-            border-image-source: linear-gradient(
-              144deg,
-              #65dab3 1%,
-              rgba(21, 124, 80, 0.7) 48%,
-              #65dab3 100%
-            );
-            border-image-slice: 1;
-            img {
-              filter: drop-shadow(0px 0px 6px #65dab3);
-            }
-          }
+        }
+
+        .loan {
+          @extend %block;
+        }
+
+        .borrow {
+          @extend %block;
         }
       }
     }
@@ -1262,17 +1297,17 @@ export default {
         h5 {
           font-size: 24px;
           font-weight: bold;
-          color: #000000;
+          color: #ffffff;
         }
 
         p {
           font-weight: bold;
-          color: #222222;
+          color: #fbd900;
         }
 
         .imagery {
           display: flex;
-          background: #083a6ef2;
+          background: #ffffffb0;
           padding: 2rem;
           height: 345px;
 
@@ -1297,6 +1332,7 @@ export default {
             font-weight: bold;
             padding: 0px 4rem;
             font-size: 20px;
+            color: #083a6e;
           }
         }
       }
@@ -1329,52 +1365,76 @@ export default {
       .product-list {
         padding: 20px;
 
-        .card-item {
-          position: relative;
-          float: left;
-          width: 50%;
-          display: flex;
-          padding: 20px;
-          color: #ffffff;
-          height: 230px;
-
+        .i {
           $bgColor: #2e639b, #0d4c82, #3c73f5, #00b7cc, #1b558e;
 
           @for $i from 1 through 5 {
-            &:nth-of-type(#{$i}) {
+            &:nth-of-type(#{$i}) .card-item {
               background: nth($bgColor, $i);
             }
           }
 
+          float: left;
+          width: 50%;
+          position: relative;
+
           &:hover {
             z-index: 2;
           }
+        }
+
+        .card-item {
+          display: flex;
+          color: #ffffff;
+          height: 230px;
+          overflow: hidden;
 
           .img {
-            width: 110px;
-            overflow: hidden;
+            width: 150px;
             position: relative;
+            z-index: -1;
 
             img {
-              height: 90px;
+              height: 200px;
               position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
+              top: 172px;
+              left: 9px;
+              transform: translate(0px, -50%);
               filter: drop-shadow(3px 3px 3px black);
+              opacity: 0.9;
             }
           }
 
           .cv {
-            padding: 0px 20px;
+            padding: 20px 20px;
             width: calc(100% - 150px);
 
             h3 {
               font-weight: bold;
+              text-shadow: 0px 0px 4px black;
             }
 
             p {
               font-size: 17px;
+              text-shadow: 0px 0px 4px black;
+
+              b {
+                font-size: 25px;
+                padding: 0px 5px;
+                color: #fbd900;
+              }
+            }
+
+            .link {
+              padding: 5px 10px;
+              border: 1px solid;
+              color: #ffffff;
+              transition-duration: 0.5s;
+
+              &:hover {
+                background: #cf3819;
+                text-decoration: none;
+              }
             }
           }
 
@@ -1383,7 +1443,6 @@ export default {
             top: 50%;
             left: 50%;
             transform: translate(50%, 50%);
-            filter: invert(1);
 
             span {
               position: absolute;
@@ -1402,6 +1461,7 @@ export default {
 
         .disable {
           filter: contrast(0.5);
+          cursor: default;
         }
       }
     }
@@ -1409,7 +1469,7 @@ export default {
 
   .game-card {
     overflow: hidden;
-    background: #d2d2d2;
+    background: #2bb9c4;
     padding: 40px 0px;
     position: relative;
 
@@ -1429,6 +1489,7 @@ export default {
       padding: 20px 10px;
       width: fit-content;
       margin: 20px auto 30px auto;
+      box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
     }
 
     .loan-game {
@@ -1457,9 +1518,7 @@ export default {
               top: 50%;
               left: 50%;
               transform: translate(-50%, -50%);
-              border-radius: 50%;
-              width: 100%;
-              filter: drop-shadow(0px 0px 1px #989898);
+              width: 70%;
             }
           }
 
@@ -1541,7 +1600,7 @@ export default {
       .chart {
         color: #000000;
         margin: 10px 5px;
-        height: 350px;
+        height: 300px;
 
         .invest-chart {
           text-align: start;
@@ -1672,6 +1731,13 @@ export default {
   .information-card {
     overflow: hidden;
     padding-bottom: 30px;
+    background: #2bb9c4;
+    position: relative;
+
+    .particles-js-canvas-el {
+      position: absolute;
+      top: 0;
+    }
 
     .nav {
       width: 60%;
@@ -1807,12 +1873,11 @@ export default {
     }
 
     .slogan {
-      background-color: #1c0073;
+      background-color: #fbd900;
       width: 25%;
       margin: 10px auto;
-      padding: 5px;
+      padding: 10px;
       font-weight: bold;
-      color: #ffffff;
       text-align: center;
       border-radius: 25px;
     }
@@ -1857,6 +1922,13 @@ export default {
       .puhey-banner {
         height: 77vh;
 
+        .diagram {
+          position: absolute;
+          top: -4%;
+          left: 10px;
+          width: 63%;
+        }
+
         img {
           height: inherit;
           width: initial;
@@ -1865,13 +1937,29 @@ export default {
         .content {
           font-size: 16px;
           width: 100%;
+          left: 50%;
+          top: 50%;
 
           p {
             font-size: 25px;
+            letter-spacing: 0px;
+          }
+
+          span {
+            font-size: 22px;
+            letter-spacing: 0px;
           }
 
           .box {
-            margin-top: 3rem;
+            margin-top: 25rem;
+
+            %block {
+              width: 45%;
+
+              .text {
+                font-size: 22px;
+              }
+            }
           }
         }
       }
@@ -1954,23 +2042,24 @@ export default {
 
         .product-list {
           padding: 10px;
-          .card-item {
+          .i {
             width: calc(100%);
-            padding: 10px;
-            margin: 5px 0px;
 
-            .img {
-              height: 160px;
-              width: 120px;
+            .card-item {
+              margin: 5px 0px;
 
-              img {
-                height: 100px;
+              .img {
+                width: 120px;
+
+                img {
+                  left: 5px;
+                }
               }
-            }
 
-            .cv {
-              padding: 0px 10px;
-              width: calc(100% - 120px);
+              .cv {
+                padding: 10px;
+                width: calc(100% - 120px);
+              }
             }
           }
         }
