@@ -757,7 +757,7 @@ class Charge_lib
                 $time_array = explode(":", $time_string);
                 $hour = $time_array[0];
                 $minute = $time_array[1];
-                if (!($hour == 0 && $minute <= 10)) {
+                if (!($hour == 0 && $minute < 10)) {
                     $this->handle_delay_target($target,$delay_days,$gracePeriod);
                 }
 			}
