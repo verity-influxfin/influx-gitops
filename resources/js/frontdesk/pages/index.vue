@@ -1932,7 +1932,6 @@ export default {
   @media screen and (max-width: 767px) {
     .banner {
       .puhey-banner {
-        height: 77vh;
 
         .diagram {
           position: absolute;
@@ -1965,7 +1964,7 @@ export default {
             margin-top: 25rem;
 
             %block {
-              width: 45%;
+              width: 170px;
 
               .text {
                 font-size: 22px;
