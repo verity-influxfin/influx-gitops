@@ -112,23 +112,15 @@ class Cron extends CI_Controller {
         // 每五分鐘
 		$this->load->library('Charge_lib');
 
+        $count      = $this->charge_lib->script_charge_targets();
+        $num        = $count?intval($count):0;
+        $end_time   = time();
         $data = [
             'script_name'   => 'charge_targets',
-            'num'           => 0,
+            'num'           => $num,
             'start_time'    => $start_time,
-            'end_time'      => $start_time
+            'end_time'      => $end_time
         ];
-
-        // 略過17號跨18號時段，避免因最後時刻的還款資訊尚未更新而做逾期處理
-        if ($this->charge_lib->checkExcludePeriodTime()) {
-            $data['parameter'] = "checkExcludePeriodTime is true";
-        } else {
-            $count 		= $this->charge_lib->script_charge_targets();
-            $num        = $count?intval($count):0;
-            $end_time   = time();
-            $data['num'] = $num;
-            $data['end_time'] = $end_time;
-        }
 
 		$this->log_script_model->insert($data);
 
