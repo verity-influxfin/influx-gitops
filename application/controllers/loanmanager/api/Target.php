@@ -448,7 +448,10 @@ class Target extends REST_Controller
             $transaction_source = $this->config->item('transaction_source');
             foreach($getVirtualPassbook as $key => $value){
                 $value['remark'] = json_decode($value['remark'],TRUE);
-                $remark = isset($value['remark']['source']) && $value['remark']['source']?$transaction_source[$value['remark']['source']]:'';
+                if(isset($value['remark']['source']) && $value['remark']['source']){
+                    $remark = $transaction_source[$value['remark']['source']];
+                    $targetId = $value['remark']['target_id'];
+                }
                 if($type){
                     $list[] = [
                         'amount' => $value['amount'],
@@ -461,6 +464,7 @@ class Target extends REST_Controller
                         'amount' => $value['amount'],
                         'bank_amount' => $value['bank_amount'],
                         'remark' => $remark,
+                        'targetId' => $targetId,
                         'tx_datetime' => $value['tx_datetime'],
                         'created_at' => $value['created_at'],
                     ];
