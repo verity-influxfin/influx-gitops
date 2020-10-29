@@ -17,7 +17,8 @@ class Transaction_lib{
     }
 
 	//取得資金資料
-	public function get_virtual_funds($virtual_account='', $before_last_time = null){
+	public function get_virtual_funds($virtual_account='')
+	{
 		if($virtual_account){
 			$total  = 0;
             $frozen = 0;
@@ -26,14 +27,7 @@ class Transaction_lib{
 			$last_recharge_date	= '';
 			$this->CI->load->model('transaction/virtual_passbook_model');
 
-			if ($before_last_time) {
-				$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array(
-					'virtual_account' => $virtual_account,
-					'tx_datetime <' => $before_last_time
-				));
-			} else {
-				$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array('virtual_account' => $virtual_account));
-			}
+			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array('virtual_account' => $virtual_account));
 
 			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array('virtual_account' => $virtual_account,'status' => 1));
 			if($virtual_passbook){
