@@ -453,14 +453,14 @@ class Target extends REST_Controller
                     $targetId = $value['remark']['target_id'];
                 }
                 if($type){
-                    $list[] = [
+                    $temp[] = [
                         'amount' => $value['amount'],
                         'bank_amount' => $value['bank_amount'],
                         'tx_datetime' => $value['tx_datetime'],
                         'created_at' => $value['created_at'],
                     ];
                 } else {
-                    $list[] = [
+                    $temp[] = [
                         'amount' => $value['amount'],
                         'bank_amount' => $value['bank_amount'],
                         'remark' => $remark,
@@ -472,11 +472,14 @@ class Target extends REST_Controller
             }
         }
         if($type){
-            return $list;
+            return $temp;
         }else{
             $this->response([
                 'result' => 'SUCCESS',
-                'data' => $list
+                'data' => [
+                    'virtualAccount' => $input['account'],
+                    'list' => $temp,
+                ]
             ]);
         }
 
@@ -494,6 +497,7 @@ class Target extends REST_Controller
         $userInfo = $this->userInfo($input['user_id']);
         if($userInfo){
             $type = $input['type'];
+            $list['userId'] = $input['user_id'];
             if(in_array($type, [0, 1])){
                 $this->load->model('loanmanager/loan_manager_pushdata_model');
                 //匯款紀錄
@@ -569,7 +573,9 @@ class Target extends REST_Controller
         }
         $this->response([
             'result' => 'SUCCESS',
-            'data' => $list,
+            'data' => [
+                'list' => $list
+            ],
         ]);
     }
 
