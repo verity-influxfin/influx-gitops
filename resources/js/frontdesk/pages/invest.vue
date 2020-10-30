@@ -5,74 +5,66 @@
       <div class="a-hr">
         <div class="a-s">
           <p>小額分散，穩定報酬首選</p>
+          <p>運用Fintech投資債權 → 小資族的最佳選擇</p>
           <p>1,000元開始投資創造你的被動收入</p>
         </div>
       </div>
     </div>
     <div class="desc-card">
-      <h2>普匯投資介紹</h2>
+      <h2>投資介紹</h2>
       <div class="hr"></div>
       <div class="box">
-        <div class="item hvr-float-shadow">
-          <div class="img">
-            <img src="../asset/images/nodes.svg" class="img-fluid" />
-          </div>
-          <div class="i-c">
-            <h4>法律合約明確</h4>
+        <p>
+          「債權投資」是近年慢慢興起的投資方式，透過購買借款人的債權，獲取每期回款本息的收益，在金融科技產業發展越來越成熟下，已經成為許多人最信賴的投資標的。
+        </p>
+        <p>
+          投資不外乎就是追求創造額外的穩定收入，並且不用承擔高風險與流動性問題，但許多人不敢玩股票、不懂怎麼選擇債券，更沒有時間研究複雜的投資標的，「普匯債權」一定會是你最好的投資選擇。
+        </p>
+      </div>
+      <div class="box">
+        <h4>普匯債權特性</h4>
+        <div class="gb">
+          <div class="item">
+            <h5>低風險</h5>
             <ul class="t">
-              <li>線上簽署合約</li>
-              <li>文件儲存於AWS</li>
-              <li>電子資料更容易保存與比對</li>
-              <li>線上合約範本</li>
+              <li>對借款人嚴格審核</li>
+              <li>逾期率不到3%</li>
+              <li>小額分散</li>
+              <li>完善貸後管理</li>
             </ul>
           </div>
-        </div>
-        <div class="item hvr-float-shadow">
-          <div class="img">
-            <img src="../asset/images/screen.svg" class="img-fluid" />
-          </div>
-          <div class="i-c">
-            <h4>專屬帳戶</h4>
+
+          <div class="item">
+            <h5>穩定高報酬</h5>
             <ul class="t">
-              <li>國泰虛擬帳戶</li>
-              <li>專屬帳戶代收付款</li>
-              <li>帳戶款項隨時可提領</li>
+              <li>平均年化報酬率8%~15%</li>
+              <li>利率透明公開</li>
+              <li>不受市場波動影響</li>
             </ul>
           </div>
-        </div>
-        <div class="item hvr-float-shadow">
-          <div class="img">
-            <img src="../asset/images/search.svg" class="img-fluid" />
-          </div>
-          <div class="i-c">
-            <h4>帳務透明</h4>
+
+          <div class="item">
+            <h5>操作簡單</h5>
             <ul class="t">
-              <li>逐筆交易提供對帳單</li>
-              <li>投資人/借款人/普匯/銀行均留存一份</li>
-              <li>每月10號提供帳單發票</li>
+              <li>無需盯盤</li>
+              <li>公開透明的回款資訊</li>
             </ul>
           </div>
-        </div>
-        <div class="item hvr-float-shadow">
-          <div class="img">
-            <img src="../asset/images/group.svg" class="img-fluid" />
-          </div>
-          <div class="i-c">
-            <h4>貸後管理/催收</h4>
+
+          <div class="item">
+            <h5>安全性高</h5>
             <ul class="t">
-              <li>電子通知繳款</li>
-              <li>Email/簡訊/社交軟體</li>
-              <li>逾期電話催繳</li>
-              <li>線上存證信函寄發</li>
+              <li>法律合約明確</li>
+              <li>帳務透明</li>
+              <li>專屬帳戶</li>
             </ul>
           </div>
         </div>
       </div>
     </div>
     <div class="step-card">
-      <h2>我要如何投資?</h2>
+      <h2>投資方式</h2>
       <div class="hr"></div>
-      <p>普匯平台分為三種投資方式</p>
       <ul class="nav" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#optional">
@@ -115,7 +107,9 @@
           </div>
           <div class="text">
             <h4>自選標的</h4>
-            <p>隨時隨地，自由選擇您喜好的投資標的。</p>
+            <p>
+              依據信用等級、就讀學校、申貸原因、年化報酬率、期數，自由選擇您喜好的投資標的。
+            </p>
           </div>
         </div>
         <div id="smart" class="tab-pane fade">
@@ -124,7 +118,9 @@
           </div>
           <div class="text">
             <h4>智能投資</h4>
-            <p>設定您的投資偏好，24小時不錯失優質案件！</p>
+            <p>
+              設定您的偏好的信用等級、年化報酬率、期數等自動下標，24小時不錯失優質案件！
+            </p>
           </div>
         </div>
         <div id="quick" class="tab-pane fade">
@@ -395,47 +391,49 @@ export default {
 
     .box {
       width: 1200px;
-      margin: 2rem auto;
+      margin: 1rem auto;
       overflow: auto;
+
+      h4 {
+        text-align: center;
+        font-weight: bold;
+      }
+
+      p {
+        color: #8e8e8e;
+        font-weight: bold;
+      }
+
+      .gb {
+        display: flex;
+      }
 
       .item {
         background: #ffffff;
         box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-        width: calc(50% - 40px);
-        height: 207px;
+        width: 100%;
         float: left;
-        margin: 20px;
+        margin: 10px;
         padding: 10px 20px;
         border-radius: 10px;
-        display: flex;
 
-        .img {
-          width: 120px;
-          margin-right: 10px;
-          line-height: 160px;
+        h5 {
+          text-align: center;
+          font-weight: 700;
+          color: #083a6e;
         }
 
-        .i-c {
-          width: calc(100% - 130px);
-          margin: 0px auto;
+        .t {
+          padding-left: 20px;
 
-          h4 {
+          li {
+            list-style: none;
+            background-image: url("../asset/images/invest.svg");
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            background-size: 24px 24px;
             padding-left: 30px;
-            color: #0f005f;
-            font-weight: 900;
-            margin-bottom: 1rem;
-          }
-
-          .t {
-            li {
-              list-style: none;
-              background-image: url("../asset/images/invest.svg");
-              background-position: 0 0;
-              background-repeat: no-repeat;
-              background-size: 24px 24px;
-              padding-left: 30px;
-              margin: 10px 0px;
-            }
+            margin: 10px 0px;
           }
         }
       }
@@ -460,13 +458,7 @@ export default {
       width: 130px;
       height: 3px;
       background-image: linear-gradient(to right, #fbd900, #ffffff);
-      margin: 0px auto;
-    }
-
-    p {
-      color: #ffffff;
-      text-align: center;
-      margin: 1rem 0px;
+      margin: 20px auto;
     }
 
     .nav {
@@ -671,6 +663,9 @@ export default {
           position: relative;
           width: 100%;
           overflow: hidden;
+          p {
+            word-break: break-word;
+          }
         }
       }
     }
@@ -682,11 +677,26 @@ export default {
         width: 100%;
         margin: 1rem auto 0px auto;
 
+        .gb {
+          flex-direction: column;
+        }
+
         .item {
           width: 100%;
-          margin: 10px 0px;
+          margin: 0px;
           padding: 10px;
           height: auto;
+          border-radius: 0px;
+          box-shadow: 0 0 black;
+          border: 1px solid #dbdbdb;
+
+          &:first-of-type {
+            border-radius: 10px 10px 0px 0px;
+          }
+
+          &:last-of-type {
+            border-radius: 0px 0px 10px 10px;
+          }
 
           .img {
             width: 20%;

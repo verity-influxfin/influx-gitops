@@ -56,295 +56,291 @@
         </div> -->
       </div>
     </div>
-    <div class="product-card">
-      <div class="pattern">
-        <div class="p-i">
-          <h5>投資</h5>
-          <p>
-            提供資金幫他人圓夢
-            <br />並獲得合理報酬
-          </p>
-          <div class="imagery hvr-float">
-            <div class="img">
-              <img src="../asset/images/invest_pu.png" class="img-fluid" />
-            </div>
-            <span>
-              投資人
-              <br />每月定期回收本息
-            </span>
-          </div>
-        </div>
-        <div class="circle">
-          <div class="cnt hvr-grow">
-            <div class="invest-dot-up">
-              <investUp />
-            </div>
-            <div class="l-img">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                version="1.1"
-                viewBox="0 0 220 100"
-              >
-                <defs>
-                  <linearGradient id="L" x1="0%" y1="50%" x2="100%" y2="50%">
-                    <stop offset="0%" stop-color="#B3FAFF">
-                      <animate
-                        attributeName="stop-color"
-                        values="#B3FAFF;#6ad1de;#2bafc3;#6ad1de;#B3FAFF;"
-                        dur="5s"
-                        repeatCount="indefinite"
-                      />
-                    </stop>
-                    <stop offset="50%" stop-color="#6ad1de">
-                      <animate
-                        attributeName="stop-color"
-                        values="#6ad1de;#2bafc3;#6ad1de;#B3FAFF;#6ad1de"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </stop>
-                    <stop offset="100%" stop-color="#2bafc3">
-                      <animate
-                        attributeName="stop-color"
-                        values="#2bafc3;#6ad1de;#B3FAFF;#6ad1de;#2bafc3"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </stop>
-                  </linearGradient>
-                </defs>
-                <path
-                  fill="url(#L)"
-                  d="M 5 50 L 50 10 L 45 40 L 215 40 L 215 60 L 45 60 L 50 90 Z"
-                />
-              </svg>
-            </div>
-            <div class="pu-img">
-              <img src="../asset/images/logo_puhey.svg" class="img-fluid" />
-            </div>
-            <div class="r-img">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                version="1.1"
-                viewBox="0 0 220 100"
-              >
-                <defs>
-                  <linearGradient id="R" x1="0%" y1="50%" x2="100%" y2="50%">
-                    <stop offset="0%" stop-color="#2bafc3">
-                      <animate
-                        attributeName="stop-color"
-                        values="#2bafc3;#6ad1de;#B3FAFF;#6ad1de;#2bafc3;"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </stop>
-                    <stop offset="50%" stop-color="#6ad1de">
-                      <animate
-                        attributeName="stop-color"
-                        values="#6ad1de;#2bafc3;#6ad1de;#B3FAFF;#6ad1de;"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </stop>
-                    <stop offset="100%" stop-color="#B3FAFF">
-                      <animate
-                        attributeName="stop-color"
-                        values="#B3FAFF;#6ad1de;#2bafc3;#6ad1de;#B3FAFF;"
-                        dur="2s"
-                        repeatCount="indefinite"
-                      />
-                    </stop>
-                  </linearGradient>
-                </defs>
-                <path
-                  fill="url(#R)"
-                  d="M 215 50 L 170 90 L 175 60 L 5 60 L 5 40 L 175 40 L 170 10 Z"
-                />
-              </svg>
-            </div>
-            <div class="invest-dot-down">
-              <investDown />
-            </div>
-          </div>
-        </div>
-        <div class="p-l">
-          <h5>借款</h5>
-          <p>
-            取得投資人資金
-            <br />解決生活所需及實夢想
-          </p>
-          <div class="imagery hvr-float">
-            <span>
-              借款人
-              <br />每月定期還款
-            </span>
-            <div class="img">
-              <img src="../asset/images/loan_pu.png" class="img-fluid" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="product">
-        <h2>貸款方案</h2>
-        <div class="hr"></div>
-        <div class="product-list">
-          <div
-            class="i"
-            data-aos="fade-up"
-            :data-aos-duration="500 * index"
-            v-for="(item, index) in this.services"
-            :key="index"
-          >
-            <div
-              :class="[
-                'card-item',
-                { 'hvr-grow-shadow': item.isActive },
-                { disable: !item.isActive },
-              ]"
-            >
+    <div id="bg-card">
+      <div class="product-card">
+        <div class="pattern">
+          <div class="p-i">
+            <h5>投資</h5>
+            <p>
+              提供資金幫他人圓夢
+              <br />並獲得合理報酬
+            </p>
+            <div class="imagery hvr-float">
               <div class="img">
-                <img :src="item.imageSrc" />
+                <img src="../asset/images/invest_pu.png" class="img-fluid" />
               </div>
-              <div class="cv">
-                <h3>{{ item.title }}</h3>
-                <p v-html="item.desc"></p>
-                <router-link v-if="item.isActive" class="link" :to="item.link"
-                  >了解更多<i
-                    class="fas fa-angle-right"
-                    style="margin-left: 5px"
-                  ></i
-                ></router-link>
+              <span>
+                投資人
+                <br />每月定期回收本息
+              </span>
+            </div>
+          </div>
+          <div class="circle">
+            <div class="cnt hvr-grow">
+              <div class="invest-dot-up">
+                <investUp />
               </div>
-              <div class="cover" v-if="!item.isActive">
-                <span>coming soon</span>
+              <div class="l-img">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  viewBox="0 0 220 100"
+                >
+                  <defs>
+                    <linearGradient id="L" x1="0%" y1="50%" x2="100%" y2="50%">
+                      <stop offset="0%" stop-color="#B3FAFF">
+                        <animate
+                          attributeName="stop-color"
+                          values="#B3FAFF;#6ad1de;#2bafc3;#6ad1de;#B3FAFF;"
+                          dur="5s"
+                          repeatCount="indefinite"
+                        />
+                      </stop>
+                      <stop offset="50%" stop-color="#6ad1de">
+                        <animate
+                          attributeName="stop-color"
+                          values="#6ad1de;#2bafc3;#6ad1de;#B3FAFF;#6ad1de"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </stop>
+                      <stop offset="100%" stop-color="#2bafc3">
+                        <animate
+                          attributeName="stop-color"
+                          values="#2bafc3;#6ad1de;#B3FAFF;#6ad1de;#2bafc3"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </stop>
+                    </linearGradient>
+                  </defs>
+                  <path
+                    fill="url(#L)"
+                    d="M 5 50 L 50 10 L 45 40 L 215 40 L 215 60 L 45 60 L 50 90 Z"
+                  />
+                </svg>
+              </div>
+              <div class="pu-img">
+                <img src="../asset/images/logo_puhey.svg" class="img-fluid" />
+              </div>
+              <div class="r-img">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  version="1.1"
+                  viewBox="0 0 220 100"
+                >
+                  <defs>
+                    <linearGradient id="R" x1="0%" y1="50%" x2="100%" y2="50%">
+                      <stop offset="0%" stop-color="#2bafc3">
+                        <animate
+                          attributeName="stop-color"
+                          values="#2bafc3;#6ad1de;#B3FAFF;#6ad1de;#2bafc3;"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </stop>
+                      <stop offset="50%" stop-color="#6ad1de">
+                        <animate
+                          attributeName="stop-color"
+                          values="#6ad1de;#2bafc3;#6ad1de;#B3FAFF;#6ad1de;"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </stop>
+                      <stop offset="100%" stop-color="#B3FAFF">
+                        <animate
+                          attributeName="stop-color"
+                          values="#B3FAFF;#6ad1de;#2bafc3;#6ad1de;#B3FAFF;"
+                          dur="2s"
+                          repeatCount="indefinite"
+                        />
+                      </stop>
+                    </linearGradient>
+                  </defs>
+                  <path
+                    fill="url(#R)"
+                    d="M 215 50 L 170 90 L 175 60 L 5 60 L 5 40 L 175 40 L 170 10 Z"
+                  />
+                </svg>
+              </div>
+              <div class="invest-dot-down">
+                <investDown />
+              </div>
+            </div>
+          </div>
+          <div class="p-l">
+            <h5>借款</h5>
+            <p>
+              取得投資人資金
+              <br />解決生活所需及實夢想
+            </p>
+            <div class="imagery hvr-float">
+              <span>
+                借款人
+                <br />每月定期還款
+              </span>
+              <div class="img">
+                <img src="../asset/images/loan_pu.png" class="img-fluid" />
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="game-card" id="game-card">
-      <div style="z-index: 2; position: relative">
-        <h2>試算您可借額度</h2>
-        <div class="hr"></div>
-        <div class="loan-game">
-          <h5>點點看～立馬可以試算你的信用額度喔!!</h5>
-          <div class="option">
+        <div class="product">
+          <h2>貸款方案</h2>
+          <div class="hr"></div>
+          <div class="product-list">
             <div
-              class="item"
-              data-aos="fade-down"
-              :data-aos-delay="100 * index"
-              v-for="(item, index) in creditRatingItem"
+              class="i"
+              data-aos="fade-up"
+              :data-aos-duration="500 * index"
+              v-for="(item, index) in this.services"
               :key="index"
             >
               <div
-                :class="['circle', { gary: !item.checked }]"
-                @click="
-                  item.checked = !item.checked;
-                  changeCredit(index);
-                "
+                :class="[
+                  'card-item',
+                  { 'hvr-grow-shadow': item.isActive },
+                  { disable: !item.isActive },
+                ]"
               >
-                <img :src="item.img" class="img-fluid" />
+                <div class="img">
+                  <!-- <img :src="item.imageSrc" /> -->
+                </div>
+                <div class="cv">
+                  <h3>{{ item.title }}</h3>
+                  <p v-html="item.desc"></p>
+                  <router-link v-if="item.isActive" class="link" :to="item.link"
+                    >了解更多<i
+                      class="fas fa-angle-right"
+                      style="margin-left: 5px"
+                    ></i
+                  ></router-link>
+                </div>
+                <div class="cover" v-if="!item.isActive">
+                  <span>coming soon</span>
+                </div>
               </div>
-              <span>{{ item.text }}</span>
             </div>
           </div>
-          <div class="credit-num">
-            <div class="circle">
-              <div class="total">
-                <p>最高可達：</p>
-                <strong>5,000～</strong>
-                <span :class="moneyClass">{{ format(tweenedMoney) }}</span>
-              </div>
-            </div>
-          </div>
-          <button class="btn btn-loan" @click="openDialog()">了解更多</button>
         </div>
-        <h2>試算您投資收益</h2>
-        <div class="hr"></div>
-        <div class="invest-game">
-          <h5>
-            愛因斯坦說過:「複利的威力大於原子彈」<br />
-            普匯平台上擁有年利率8%~20%的債權，來試試看所創造的報酬吧
-          </h5>
-          <div></div>
-          <p>
-            在
-            
-        <select v-model="rate" 
-              style="width: 50px">
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
-          <option value="13">13</option>
-          <option value="14">14</option>
-          <option value="15">15</option>
-          <option value="16">16</option>
-          <option value="17">17</option>
-          <option value="18">18</option>
-          <option value="19">19</option>
-          <option value="20">20</option>
-        </select>%的利率下，每月投資{{ amount }}元，{{ time }}年後預計可回收<b
-              style="color: #0005a7"
-              >{{ format(tweenedReturnAll) }}</b
-            >元
-          </p>
-          <div class="option">
-            <div class="item">
-              <label
-                >每期{{ amount >= 0 ? `投入` : `領出` }}金額：{{
-                  format(parseInt(amount))
-                }}</label
+      </div>
+      <div class="game-card">
+        <div style="z-index: 2; position: relative">
+          <h2>試算您可借額度</h2>
+          <div class="hr"></div>
+          <div class="loan-game">
+            <h5>點點看～立馬可以試算你的信用額度喔!!</h5>
+            <div class="option">
+              <div
+                class="item"
+                data-aos="fade-down"
+                :data-aos-delay="100 * index"
+                v-for="(item, index) in creditRatingItem"
+                :key="index"
               >
-              <div>
-                <i
-                  class="fas fa-minus-circle pointer"
-                  @click="amount > 0 ? (amount -= 1000) : ''"
-                ></i>
-                <input
-                  type="range"
-                  step="1000"
-                  min="0"
-                  max="100000"
-                  class="slider"
-                  v-model="amount"
-                />
-                <i
-                  class="fas fa-plus-circle pointer"
-                  @click="amount < 100000 ? (amount -= -1000) : ''"
-                ></i>
+                <div
+                  :class="['circle', { gary: !item.checked }]"
+                  @click="
+                    item.checked = !item.checked;
+                    changeCredit(index);
+                  "
+                >
+                  <img :src="item.img" class="img-fluid" />
+                </div>
+                <span>{{ item.text }}</span>
               </div>
             </div>
-            <div class="item">
-              <label>投資操作時間(年)：{{ format(parseInt(time)) }}</label>
-              <div>
-                <i
-                  class="fas fa-minus-circle pointer"
-                  @click="time > 1 ? (time -= 1) : ''"
-                ></i>
-                <input
-                  type="range"
-                  step="1"
-                  min="1"
-                  max="20"
-                  class="slider"
-                  v-model="time"
-                />
-                <i
-                  class="fas fa-plus-circle pointer"
-                  @click="time < 20 ? (time -= -1) : ''"
-                ></i>
+            <div class="credit-num">
+              <div class="circle">
+                <div class="total">
+                  <p>最高可達：</p>
+                  <strong>5,000～</strong>
+                  <span :class="moneyClass">{{ format(tweenedMoney) }}</span>
+                </div>
               </div>
             </div>
+            <button class="btn btn-loan" @click="openDialog()">了解更多</button>
           </div>
-          <div class="chart" ref="chart">
-            <div class="invest-chart" ref="investChart"></div>
-          </div>
-          <router-link class="btn btn-invest" to="invest">了解更多</router-link>
-          <div style="text-align: end; font-size: 13px">
-            ＊複利滾投∶每月回款本金及利息，持續再投入借出，產生的投資報酬率。<br />
+          <h2>試算您投資收益</h2>
+          <div class="hr"></div>
+          <div class="invest-game">
+            <h5>
+              想要財富自由?想要
+              普匯平台上擁有年利率8%~20%的債權，來試試看使用普匯投資所創造的報酬吧
+            </h5>
+            <p>
+              在
+              <select v-model="rate" style="width: 50px">
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option></select
+              >%的利率下，每月投資{{ amount }}元，{{ time }}年後預計可回收<b
+                style="color: #0005a7"
+                >{{ format(tweenedReturnAll) }}</b
+              >元
+            </p>
+            <div class="option">
+              <div class="item">
+                <label
+                  >每期{{ amount >= 0 ? `投入` : `領出` }}金額：{{
+                    format(parseInt(amount))
+                  }}</label
+                >
+                <div>
+                  <i
+                    class="fas fa-minus-circle pointer"
+                    @click="amount > 0 ? (amount -= 1000) : ''"
+                  ></i>
+                  <input
+                    type="range"
+                    step="1000"
+                    min="0"
+                    max="100000"
+                    class="slider"
+                    v-model="amount"
+                  />
+                  <i
+                    class="fas fa-plus-circle pointer"
+                    @click="amount < 100000 ? (amount -= -1000) : ''"
+                  ></i>
+                </div>
+              </div>
+              <div class="item">
+                <label>投資操作時間(年)：{{ format(parseInt(time)) }}</label>
+                <div>
+                  <i
+                    class="fas fa-minus-circle pointer"
+                    @click="time > 1 ? (time -= 1) : ''"
+                  ></i>
+                  <input
+                    type="range"
+                    step="1"
+                    min="1"
+                    max="20"
+                    class="slider"
+                    v-model="time"
+                  />
+                  <i
+                    class="fas fa-plus-circle pointer"
+                    @click="time < 20 ? (time -= -1) : ''"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="chart" ref="chart">
+              <div class="invest-chart" ref="investChart"></div>
+            </div>
+            <router-link class="btn btn-invest" to="invest"
+              >了解更多</router-link
+            >
+            <div style="text-align: end; font-size: 13px">
+              ＊複利滾投∶每月回款本金及利息，持續再投入借出，產生的投資報酬率。<br />
+            </div>
           </div>
         </div>
       </div>
@@ -671,7 +667,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.createChart();
-      particlesJS.load("game-card", "data/game.json");
+      particlesJS.load("bg-card", "data/game.json");
       particlesJS.load("information-card", "data/game.json");
       this.createSlick(this.$refs.advantage_slick, 3, false);
       this.createSlick(this.$refs.banner, 1, true, true);
@@ -1197,15 +1193,11 @@ export default {
 
   .product-card {
     overflow: hidden;
-    background-image: url("../asset/images/105.png");
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    background-size: cover;
     padding: 70px 30px;
 
     .pattern {
       display: flex;
-      width: 78%;
+      width: 1150px;
       margin: 0px auto 40px auto;
       color: #ffffff;
       position: relative;
@@ -1308,17 +1300,17 @@ export default {
         h5 {
           font-size: 24px;
           font-weight: bold;
-          color: #ffffff;
+          color: #083a6e;
         }
 
         p {
           font-weight: bold;
-          color: #fbd900;
+          color: #ff6f00;
         }
 
         .imagery {
           display: flex;
-          background: #ffffffb0;
+          background: #8dbaffb3;
           padding: 2rem;
           height: 345px;
 
@@ -1366,7 +1358,7 @@ export default {
     }
 
     .product {
-      width: 80%;
+      width: 1150px;
       margin: 40px auto;
 
       h2 {
@@ -1374,7 +1366,7 @@ export default {
       }
 
       .product-list {
-        padding: 20px;
+        padding: 20px 0px;
 
         .i {
           $bgColor: #2e639b, #0d4c82, #3c73f5, #00b7cc, #1b558e;
@@ -1386,8 +1378,9 @@ export default {
           }
 
           float: left;
-          width: 50%;
+          width: calc(50% - 10px);
           position: relative;
+          margin: 5px;
 
           &:hover {
             z-index: 2;
@@ -1480,14 +1473,7 @@ export default {
 
   .game-card {
     overflow: hidden;
-    background: #2bb9c4;
-    padding: 40px 0px;
-    position: relative;
-
-    .particles-js-canvas-el {
-      position: absolute;
-      top: 0;
-    }
+    padding: 40px 30px;
 
     h2 {
       text-align: center;
@@ -1501,11 +1487,15 @@ export default {
       width: fit-content;
       margin: 20px auto 30px auto;
       box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
+
+      h5 {
+        font-weight: 700;
+      }
     }
 
     .loan-game {
       @extend %layout;
-      width: 1018px;
+      width: 1150px;
 
       .option {
         display: flex;
@@ -1598,7 +1588,7 @@ export default {
 
     .invest-game {
       @extend %layout;
-      width: 1018px;
+      width: 1150px;
 
       p {
         background-image: linear-gradient(129deg, #0057a2 3%, #08d6e0 102%);
@@ -1667,6 +1657,18 @@ export default {
 
     .btn-invest {
       @extend %btn;
+    }
+  }
+
+  #bg-card {
+    background: #f5f5f5;
+    position: relative;
+    z-index: 1;
+
+    .particles-js-canvas-el {
+      position: absolute;
+      top: 0;
+      z-index: -1;
     }
   }
 
@@ -1743,7 +1745,7 @@ export default {
   .information-card {
     overflow: hidden;
     padding-bottom: 30px;
-    background: #2bb9c4;
+    background: #f5f5f5;
     position: relative;
 
     .particles-js-canvas-el {
@@ -1932,7 +1934,6 @@ export default {
   @media screen and (max-width: 767px) {
     .banner {
       .puhey-banner {
-
         .diagram {
           position: absolute;
           top: -4%;

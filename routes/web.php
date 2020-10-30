@@ -66,7 +66,7 @@ Route::post('/doLogin', 'Accountcontroller@doLogin');
 
 Route::post('/logout', 'Accountcontroller@logout');
 
-Route::post('/getCaptcha', 'Accountcontroller@getCaptcha');
+Route::middleware('throttle:10,1')->post('/getCaptcha', 'Accountcontroller@getCaptcha');
 
 Route::post('/resetPassword', 'Accountcontroller@resetPassword');
 

@@ -6,10 +6,10 @@
         <div class="a-s">
           <!-- <h3>金融服務「普」及大眾，人才「匯」流。</h3> -->
           <p>
-            普匯金融科技不是銀行，我們是專業的Fintech金融科技顧問，由具備深厚的風險管控、金融產品設計經驗的金融團隊組成，致力提供互信互利的平台，將借款人與投資者聯繫起來，共創雙贏機會。
+            普匯金融科技不是銀行，我們是Fintech金融科技的專家，由具備深厚的風險管控、金融產品設計經驗的團隊組成，運用AI智能科技與安全風控模組，搭起投資人與借款人的橋梁。
           </p>
           <p>
-            運用AI智能科技與安全風控模組，將專業金融產品與線上簡易方式搭起投資人與借款人的橋梁。以「金融專業」為核心，「科技工具」為輔助，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化並串起社會閒置資源，幫助年輕人完成自我學習成長與創業夢想！
+            以「金融專業」為核心，「科技工具」為輔助，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化並串起社會閒置資源，幫助年輕人完成自我學習成長與創業夢想！
           </p>
         </div>
       </div>
@@ -139,11 +139,7 @@
                 :index="index"
                 :route="routeArr"
               />
-              <timelineBottomRoute
-                v-else
-                :index="index"
-                :route="routeArr"
-              />
+              <timelineBottomRoute v-else :index="index" :route="routeArr" />
             </div>
             <div
               class="po"
@@ -848,6 +844,10 @@ export default {
           position: relative;
           width: 100%;
           overflow: hidden;
+
+          p {
+            word-break: break-word;
+          }
         }
       }
     }
