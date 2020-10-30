@@ -497,7 +497,7 @@ class Target extends REST_Controller
         $userInfo = $this->userInfo($input['user_id']);
         if($userInfo){
             $type = $input['type'];
-            $list['userId'] = $input['user_id'];
+            $logs = [];
             if(in_array($type, [0, 1])){
                 $this->load->model('loanmanager/loan_manager_pushdata_model');
                 //匯款紀錄
@@ -507,7 +507,7 @@ class Target extends REST_Controller
                     foreach($getAccountingRecord as $key => $value){
                         $temp = $value;
                         $temp['type'] = 1;
-                        $list[$temp['created_at']][] = $temp;
+                        $logs[$temp['created_at']][] = $temp;
                     }
                 }
             }
@@ -518,7 +518,7 @@ class Target extends REST_Controller
                 foreach($getUserCerList as $key => $value){
                     $temp = (array)$value;
                     $temp['type'] = 2;
-                    $list[$temp['created_at']][] = $temp;
+                    $logs[$temp['created_at']][] = $temp;
                 }
             }
 
@@ -537,7 +537,7 @@ class Target extends REST_Controller
                     $temp['status'] = $value->status;
                     $temp['created_at'] = $value->created_at;
                     $temp['type'] = 3;
-                    $list[$temp['created_at']][] = (array)$temp;
+                    $logs[$temp['created_at']][] = (array)$temp;
                 }
             }
 
@@ -547,7 +547,7 @@ class Target extends REST_Controller
                 foreach($getUserLoginLog as $key => $value){
                     $temp = (array)$value;
                     $temp['type'] = 4;
-                    $list[$temp['created_at']][] = $temp;
+                    $logs[$temp['created_at']][] = $temp;
                 }
             }
 
@@ -557,7 +557,7 @@ class Target extends REST_Controller
                 foreach($getUserLoginLog as $key => $value){
                     $temp = (array)$value;
                     $temp['type'] = 5;
-                    $list[$temp['created_at']][] = $temp;
+                    $logs[$temp['created_at']][] = $temp;
                 }
             }
 
@@ -567,15 +567,17 @@ class Target extends REST_Controller
                 foreach($getUserLoginLog as $key => $value){
                     $temp = (array)$value;
                     $temp['type'] = 6;
-                    $list[$temp['created_at']][] = $temp;
+                    $logs[$temp['created_at']][] = $temp;
                 }
             }
         }
+        $list = [
+            'userId' => $input['user_id'],
+            'logs' => $logs,
+        ];
         $this->response([
             'result' => 'SUCCESS',
-            'data' => [
-                'list' => $list
-            ],
+            'data' => $list,
         ]);
     }
 
