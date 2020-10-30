@@ -873,6 +873,7 @@ class Charge_lib
                                 [
                                     'source' 		=> SOURCE_AR_FEES,
                                     'investment_id' => $value['investment_id'],
+                                    'status'        => 1
                                 ],
                                 [
                                     'amount' => $ar_fee
