@@ -2,12 +2,12 @@
   <div class="shanghui-banner">
     <img
       :src="'/images/6ac45bc4w.jpg'"
-      style="width: 100%; height: auto"
+      style="min-width: 100%;max-height: 610px;"
       class="hidden-desktop"
     />
     <img
       :src="'/images/66asc13w.jpg'"
-      style="width: 100%; height: auto"
+      style="min-width: 100%;max-height: 610px;"
       class="hidden-phone"
     />
     <div class="box">

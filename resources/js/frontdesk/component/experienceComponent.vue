@@ -129,7 +129,6 @@ export default {
         border-radius: 50%;
         width: 200px;
         margin: 20px auto;
-        padding: 8px;
         border: solid 5px #ffffff;
         filter: drop-shadow(0px 0px 2px #ffffff);
       }
@@ -169,21 +168,6 @@ export default {
       margin: 0px auto;
       display: block;
       width: 50%;
-    }
-
-    .slick-active {
-      opacity: 1;
-      transform: translateY(0%);
-    }
-
-    .slick-active + .slick-active {
-      opacity: 1;
-      transform: translateY(0%);
-    }
-
-    .slick-active + .slick-active + .slick-active {
-      opacity: 1;
-      transform: translateY(0%);
     }
   }
 }

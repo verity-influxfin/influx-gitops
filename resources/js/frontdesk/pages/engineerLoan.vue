@@ -199,6 +199,9 @@ export default {
           position: relative;
           width: 100%;
           overflow: hidden;
+          p {
+            word-break: break-word;
+          }
         }
       }
     }

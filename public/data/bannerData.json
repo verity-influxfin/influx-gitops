@@ -1,59 +1,60 @@
 {
     "college": {
-        "bannerDesktopHref": "./images/college_banner-d.png",
-        "bannerMoblieHref":"./images/college_banner-m.png",
+        "bannerDesktopHref": "/images/college_banner-d.png",
+        "bannerMoblieHref":"/images/college_banner-m.png",
         "productName": "學生貸"
     },
     "engineer": {
-        "bannerDesktopHref": "./images/engineer_banner-d.png",
-        "bannerMoblieHref":"./images/engineer_banner-m.png"
+        "bannerDesktopHref": "/images/engineer_banner-d.png",
+        "bannerMoblieHref":"/images/engineer_banner-m.png",
+        "productName": "工程師貸"
     },
     "freshgraduate": {
-        "bannerDesktopHref": "./images/worker_banner-d.png",
-        "bannerMoblieHref":"./images/worker_banner-m.png",
+        "bannerDesktopHref": "/images/worker_banner-d.png",
+        "bannerMoblieHref":"/images/worker_banner-m.png",
         "productName": "上班族貸"
     },
     "invest": {
-        "bannerDesktopHref": "./images/worker_banner-d.png",
-        "bannerMoblieHref":"./images/worker_banner-m.png",
+        "bannerDesktopHref": "/images/invest_banner-d.png",
+        "bannerMoblieHref":"/images/invest_banner-m.png",
         "productName": "債權投資"
     },
     "mobile": {
-        "bannerDesktopHref": "./images/mobile_banner-d.png",
-        "bannerMoblieHref":"./images/mobile_banner-m.png",
+        "bannerDesktopHref": "/images/mobile_banner-d.png",
+        "bannerMoblieHref":"/images/mobile_banner-m.png",
         "productName": ""
     },
     "transfer": {
-        "bannerDesktopHref": "./images/transfer_banner-d.png",
-        "bannerMoblieHref":"./images/transfer_banner-m.png",
+        "bannerDesktopHref": "/images/transfer_banner-d.png",
+        "bannerMoblieHref":"/images/transfer_banner-m.png",
         "productName": ""
     },
     "company": {
-        "bannerDesktopHref": "./images/company_banner.png",
-        "bannerMoblieHref":""
+        "bannerDesktopHref": "/images/company_banner-d.png",
+        "bannerMoblieHref":"/images/company_banner-m.png"
     },
     "recruiting": {
-        "bannerDesktopHref": "./images/recruiting_banner.jpg",
-        "bannerMoblieHref":""
+        "bannerDesktopHref": "/images/recruiting_banner.jpg",
+        "bannerMoblieHref":"/images/recruiting_banner.jpg"
     },
     "campuspartner": {
-        "bannerDesktopHref": "./images/campuspartner_banner.jpg",
-        "bannerMoblieHref":""
+        "bannerDesktopHref": "/images/campuspartner_banner.jpg",
+        "bannerMoblieHref":"/images/campuspartner_banner.jpg"
     },
     "clubcooperation": {
-        "bannerDesktopHref": "./images/clubcooperation_banner.jpg",
-        "bannerMoblieHref":""
+        "bannerDesktopHref": "/images/clubcooperation_banner.jpg",
+        "bannerMoblieHref":"/images/clubcooperation_banner.jpg"
     },
     "firmcooperation": {
-        "bannerDesktopHref": "./images/firmcooperation_banner.jpg",
-        "bannerMoblieHref":""
+        "bannerDesktopHref": "/images/firmcooperation_banner.jpg",
+        "bannerMoblieHref":"/images/firmcooperation_banner.jpg"
     },
     "companycooperation": {
-        "bannerDesktopHref": "./images/companycooperation_banner.jpg",
-        "bannerMoblieHref":""
+        "bannerDesktopHref": "/images/companycooperation_banner.jpg",
+        "bannerMoblieHref":"/images/companycooperation_banner.jpg"
     },
     "feedback": {
-        "bannerDesktopHref": "./images/feedback_banner.jpg",
-        "bannerMoblieHref":""
+        "bannerDesktopHref": "/images/feedback_banner.jpg",
+        "bannerMoblieHref":"/images/feedback_banner.jpg"
     }
 }
