@@ -1027,6 +1027,7 @@ $config['transaction_type_name'] = [
     'transfer' => '債權轉讓',
     'transfer_b' => '債權轉讓費沖正',
     'bank_wrong_tx' => '銀行錯帳撥還',
+    'platform_wrong_tx' => '錯帳退款',
     'prepayment' => '提前還款',
     'charge_delay' => '逾期清償',
     'charge_normal' => '還款',
