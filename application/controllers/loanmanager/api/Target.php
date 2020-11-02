@@ -423,8 +423,9 @@ class Target extends REST_Controller
                 'push_by' => $input['push_by'],
                 'push_type' => $input['push_type'],
                 'message' => $input['message'],
-                'start_time' => strtotime($input['start_time']),
-                'end_time' => strtotime($input['end_time']),
+                'start_time' => $input['start_time'],
+                'end_time' => $input['end_time'],
+//                'result' => in_array($input['push_type'], [1, 2, 5, 7, 8]) ? ''
             ]);
         }
         $this->response([

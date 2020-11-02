@@ -76,7 +76,7 @@ $config['pushType'] = [
 ];
 
 $config['pushResultStatus'] = [
-    0 => "未處理",
+    0 => "未改狀態",
     1 => "已發送",
     2 => "發送失敗",
     3 => "接通",
