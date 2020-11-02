@@ -409,7 +409,7 @@ class Target extends REST_Controller
         $input = $this->input->post(NULL, TRUE);
         $fields 	= ['user_id','push_by','push_type','message','start_time','end_time'];
         foreach ($fields as $field) {
-            if ($input[$field] != '') {
+            if ($input[$field] == '') {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
@@ -558,7 +558,7 @@ class Target extends REST_Controller
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
                 foreach($getUserLoginLog as $key => $value){
                     $structure['title'] = $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . ' / ' . $loanmanagerConfig['pushResultStatus'][$value->result];
-                    $structure['content'] = $value->remark;
+                    $structure['content'] =  $value->message . ($value->message != '' ? ' - ' : '') .$value->remark;
                     $structure['time'] = date('Y-m-d H:i:s', $value->start_time) . ' ~ ' .date('Y-m-d H:i:s', $value->end_time);
                     $structure['type'] = 5;
                     $logs[$value->created_at][] = $structure;
@@ -570,7 +570,7 @@ class Target extends REST_Controller
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
                 foreach($getUserLoginLog as $key => $value){
                     $structure['title'] = $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . ' / ' . $loanmanagerConfig['pushResultStatus'][$value->result];
-                    $structure['content'] = $value->remark;
+                    $structure['content'] = $value->message . ($value->message != '' && $value->remark != '' ? ' - ' : '') .$value->remark;
                     $structure['time'] = date('Y-m-d H:i:s', $value->start_time) . ' ~ ' .date('Y-m-d H:i:s', $value->end_time);
                     $structure['type'] = 6;
                     $logs[$value->created_at][] = $structure;

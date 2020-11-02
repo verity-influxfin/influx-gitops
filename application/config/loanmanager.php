@@ -56,14 +56,11 @@ $config['pushTool'] = [
     1 => "LINE",
     2 => "Facebook",
     3 => "緊急聯絡人",
-    4 => "系統訊息",
+    4 => "面談",
     5 => "instgram",
     6 => "電話",
     7 => "簡訊",
-    8 => "上門",
-    9 => "信件",
-    10 => "律師函",
-    11 => "面談",
+    8 => "系統訊息",
 ];
 defined('PUSH_BY_LINE') or define('PUSH_BY_LINE', '1');
 defined('PUSH_BY_FACEBOOK') or define('PUSH_BY_FACEBOOK', '2');
