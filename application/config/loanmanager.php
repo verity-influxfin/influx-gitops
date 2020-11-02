@@ -92,3 +92,23 @@ $config['contactRelationship'] = [
     1 => "親人",
     2 => "朋友",
 ];
+$config['certifications'] = [
+    1 => ['id' => 1, 'alias' => 'idcard', 'name' => '實名認證', 'status' => 1],
+    2 => ['id' => 2, 'alias' => 'student', 'name' => '學生身份認證', 'status' => 1],
+    3 => ['id' => 3, 'alias' => 'debitcard', 'name' => '金融帳號認證', 'status' => 1],
+    4 => ['id' => 4, 'alias' => 'social', 'name' => '社交認證', 'status' => 1],
+    5 => ['id' => 5, 'alias' => 'emergency', 'name' => '緊急聯絡人', 'status' => 1],
+    6 => ['id' => 6, 'alias' => 'email', 'name' => '常用電子信箱', 'status' => 1],
+    7 => ['id' => 7, 'alias' => 'financial', 'name' => '財務訊息認證', 'status' => 1],
+    8 => ['id' => 8, 'alias' => 'diploma', 'name' => '最高學歷認證', 'status' => 1],
+    9 => ['id' => 9, 'alias' => 'investigation', 'name' => '聯合徵信認證', 'status' => 1],
+    10 => ['id' => 10, 'alias' => 'job', 'name' => '工作認證', 'status' => 1],
+];
+
+$config['cer_status'] = [
+    0 => "待驗證" ,
+    1 => "" ,
+    2 => "無效/過期" ,
+    3 => "待人工審核" ,
+    4 => "未完成填寫" ,
+];

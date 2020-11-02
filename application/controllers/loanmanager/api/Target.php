@@ -432,7 +432,7 @@ class Target extends REST_Controller
         ]);
     }
 
-    function userPassbook_get($type = false, $account = false)
+    function userPassbook_get($internal = false, $account = false)
     {
         $input = $this->input->get(NULL, TRUE);
         $fields 	= ['account'];
@@ -444,34 +444,22 @@ class Target extends REST_Controller
         }
         $getVirtualPassbook = $this->loan_manager_target_model->getPassbookList($input['account']);
         if($getVirtualPassbook){
-            $type = isset($type) ? $type : false;
             $transaction_source = $this->config->item('transaction_source');
             foreach($getVirtualPassbook as $key => $value){
                 $value['remark'] = json_decode($value['remark'],TRUE);
                 if(isset($value['remark']['source']) && $value['remark']['source']){
-                    $remark = $transaction_source[$value['remark']['source']];
-                    $targetId = $value['remark']['target_id'];
-                }
-                if($type){
                     $temp[] = [
                         'amount' => $value['amount'],
                         'bank_amount' => $value['bank_amount'],
-                        'tx_datetime' => $value['tx_datetime'],
-                        'created_at' => $value['created_at'],
-                    ];
-                } else {
-                    $temp[] = [
-                        'amount' => $value['amount'],
-                        'bank_amount' => $value['bank_amount'],
-                        'remark' => $remark,
-                        'targetId' => $targetId,
+                        'remark' => $transaction_source[$value['remark']['source']],
+                        'targetId' => $value['remark']['target_id'],
                         'tx_datetime' => $value['tx_datetime'],
                         'created_at' => $value['created_at'],
                     ];
                 }
             }
         }
-        if($type){
+        if($internal){
             return $temp;
         }else{
             $this->response([
@@ -498,6 +486,12 @@ class Target extends REST_Controller
         if($userInfo){
             $type = $input['type'];
             $logs = [];
+            $structure = [
+                'title' => '',
+                'content' => '',
+                'time' => '',
+                'remark' => '',
+            ];
             if(in_array($type, [0, 1])){
                 $this->load->model('loanmanager/loan_manager_pushdata_model');
                 //匯款紀錄
@@ -505,9 +499,12 @@ class Target extends REST_Controller
                 if($getVirtualAccountInfo[0]->virtualAccounts != null){
                     $getAccountingRecord = $this->userPassbook_get(1, $getVirtualAccountInfo[0]->virtualAccounts);
                     foreach($getAccountingRecord as $key => $value){
-                        $temp = $value;
-                        $temp['type'] = 1;
-                        $logs[$temp['created_at']][] = $temp;
+                        $structure['title'] = $value['remark'];
+                        $structure['content'] = $value['amount'];
+                        $structure['time'] = $value['tx_datetime'];
+                        $structure['remark'] = $value['bank_amount'];
+                        $structure['type'] = 1;
+                        $logs[$value['created_at']][] = $structure;
                     }
                 }
             }
@@ -515,10 +512,15 @@ class Target extends REST_Controller
             if(in_array($type, [0, 2])){
                 //認證紀錄
                 $getUserCerList = $this->loan_manager_target_model->getUserCerList($input['user_id']);
+                $loanmanagerConfig = $this->config->item('loanmanager');
                 foreach($getUserCerList as $key => $value){
-                    $temp = (array)$value;
-                    $temp['type'] = 2;
-                    $logs[$temp['created_at']][] = $temp;
+                    $structure['title'] = '更新認證';
+                    $structure['content'] = $loanmanagerConfig['certifications'][$value->certification_id]['name'];
+                    // . '(' . $loanmanagerConfig['cer_status'][ $value->expire_time > time() && !in_array($value->certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL]) ? $value->status : 2] . ')'
+                    $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
+                    $structure['remark'] = "送出認證";
+                    $structure['type'] = 2;
+                    $logs[$value->created_at][] = $structure;
                 }
             }
 
@@ -531,13 +533,11 @@ class Target extends REST_Controller
                     'investor'		=> [0]
                 ]);
                 foreach($getNotification as $key => $value){
-                    $temp = [];
-                    $temp['title'] = $value->title;
-                    $temp['content'] = $value->content;
-                    $temp['status'] = $value->status;
-                    $temp['created_at'] = $value->created_at;
-                    $temp['type'] = 3;
-                    $logs[$temp['created_at']][] = (array)$temp;
+                    $structure['title'] = $value->title;
+                    $structure['content'] = preg_replace('/\\t/','',$value->content);
+                    $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
+                    $structure['type'] = 3;
+                    $logs[$value->created_at][] = $structure;
                 }
             }
 
@@ -545,9 +545,11 @@ class Target extends REST_Controller
                 //登入紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserLoginLog($input['user_id']);
                 foreach($getUserLoginLog as $key => $value){
-                    $temp = (array)$value;
-                    $temp['type'] = 4;
-                    $logs[$temp['created_at']][] = $temp;
+                    $structure['title'] = '用戶登入';
+                    $structure['content'] = '登入' . $value->status == 1 ? '成功' : '失敗';
+                    $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
+                    $structure['type'] = 3;
+                    $logs[$value->created_at][] = $structure;
                 }
             }
 

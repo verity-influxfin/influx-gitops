@@ -232,6 +232,7 @@ class Loan_manager_target_model extends MY_Model
             'certification.certification_id',
             'certification.status',
             'certification.created_at',
+            'certification.expire_time',
         ];
 
         $this->db->select($select, false)
