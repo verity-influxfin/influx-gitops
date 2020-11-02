@@ -698,7 +698,7 @@ class Estatement_lib{
 								// 特殊情境, 退還平台服務費, issue#816
 								if ($value->bank_account_from == PLATFORM_VIRTUAL_ACCOUNT) {
 									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['date'] = $value->entering_date;
-									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['title'] = '平台服務費退款';
+									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['title'] = '錯帳退款';
 									$platform_fee = $platform_fee * -1;
 								}
 								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['cost_fee'] += $platform_fee;
