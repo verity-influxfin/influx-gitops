@@ -96,7 +96,7 @@ class Account extends MY_Admin_Controller {
 		$display 	= isset($get['display'])&&$get['display']?$get['display']:"";
 		$sdate 		= isset($get['sdate'])&&$get['sdate']?$get['sdate']:get_entering_date();
 		$edate 		= isset($get['edate'])&&$get['edate']?$get['edate']:get_entering_date();
-        $targetId 		= isset($get['target'])&&$get['target']?$get['target']:false;
+        $targetId 	= isset($get['target'])&&$get['target']?$get['target']:false;
 		$source		= array(
 			SOURCE_AR_FEES,
 			SOURCE_AR_PRINCIPAL,
@@ -195,7 +195,7 @@ class Account extends MY_Admin_Controller {
 					$value->target_no = "";
 				}
 
-
+                // 1, 2
 				if($value->source == SOURCE_RECHARGE || $value->source == SOURCE_WITHDRAW){
 					$switch  		= array(SOURCE_RECHARGE=>'recharge',SOURCE_WITHDRAW=>'withdraw');
 					$source_type 	= $switch[$value->source];
@@ -217,7 +217,7 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
-
+                // 50
 				if($value->source == SOURCE_TRANSFER_B) {
                     $item_no           = $value->target_no;
                     $item_platform_fee = 0;
@@ -244,7 +244,7 @@ class Account extends MY_Admin_Controller {
                         "created_at"			=> $value->created_at,
                     );
                 }
-
+                // 53
                 if($value->source == SOURCE_BANK_WRONG_TX_B) {
                     $item_no           = $value->target_no;
                     $item_platform_fee = 0;
@@ -271,7 +271,7 @@ class Account extends MY_Admin_Controller {
                         "created_at"			=> $value->created_at,
                     );
                 }
-
+                // 10
 				if($value->source == SOURCE_TRANSFER){
 				    $item_no           = $value->target_no;
 				    $item_platform_fee = 0;
@@ -312,7 +312,7 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
-
+                // 8
 				if($value->source == SOURCE_PREPAYMENT_DAMAGE){
 					$damage_target[] = $value->target_id.'_'.$value->instalment_no.'_'.$value->entering_date;
 					$sub_list 		= array();
@@ -381,7 +381,7 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
-
+                // 92
 				if($value->source == SOURCE_DAMAGE){
 					$damage_target[] 	= $value->target_id.'_'.$value->instalment_no.'_'.$value->entering_date;
 					$sub_list 			= array();
@@ -456,7 +456,7 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
-
+                // 3
 				if($value->source == SOURCE_LENDING && !in_array($value->target_id,$lending_target)){
 					$lending_target[] = $value->target_id;
 					$sub_list 		= array();
@@ -466,7 +466,8 @@ class Account extends MY_Admin_Controller {
 					foreach($data as $k =>$v){
 						if($v->entering_date==$value->entering_date && $v->target_id==$value->target_id && $v->instalment_no==$value->instalment_no){
 							switch($v->source){
-								case SOURCE_LENDING:
+								// 3
+                                case SOURCE_LENDING:
 									$sub_list[] = array(
 										"user_from"				=> $user_name[$v->user_from],
 										"v_bank_account_from"	=> $v->v_bank_account_from,
@@ -474,7 +475,8 @@ class Account extends MY_Admin_Controller {
 									);
 									$amount += $v->amount;
 									break;
-								case SOURCE_FEES:
+								// 4
+                                case SOURCE_FEES:
 									$platform_fee = $v->amount;
 									break;
 								default:
@@ -497,9 +499,34 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
+
+                // 4, 特殊情境, 退還平台服務費, issue#816
+                if($value->source == SOURCE_FEES && $value->v_bank_account_from == PLATFORM_VIRTUAL_ACCOUNT){
+                    $source_type    = 'platform_fee';
+                    $list[] = array(
+                        "entering_date"         => $value->entering_date,
+                        "target_no"             => $value->target_no,
+                        "target_id"             => $value->target_id,
+                        "source_type"           => $source_type,
+                        "user_from"             => '平台',
+                        "bank_account_from"     => $value->bank_account_from,
+                        "amount_from"           => $value->amount_from,
+                        "v_bank_account_from"   => $value->v_bank_account_from,
+                        "v_amount_from"         => $value->v_amount_from,
+                        "user_to"               => isset($user_name[$value->user_to])?$user_name[$value->user_to]:0,
+                        "bank_account_to"       => $value->bank_account_to,
+                        "amount_to"             => $value->amount_to,
+                        "v_bank_account_to"     => $value->v_bank_account_to,
+                        "v_amount_to"           => $value->v_amount_to,
+                        "created_at"            => $value->created_at,
+                        // 必為負數
+                        'platform_fee'          => "-" . $value->amount
+                    );
+                }
 			}
 
 			foreach($data as $key => $value){
+                // 12
 				if($value->source == SOURCE_PRINCIPAL && !in_array($value->target_id.'_'.$value->instalment_no.'_'.$value->entering_date,$damage_target)){
 					$damage_target[] 	= $value->target_id.'_'.$value->instalment_no.'_'.$value->entering_date;
 					$value->target_no 	= $target_no[$value->target_id];
@@ -517,17 +544,20 @@ class Account extends MY_Admin_Controller {
 								);
 							}
 							switch($v->source){
-								case SOURCE_PRINCIPAL:
+								// 12
+                                case SOURCE_PRINCIPAL:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["principal"]			+= $v->amount;
 									$user_to_info[$v->investment_id]["user_to"]				= $v->user_to;
 									$user_to_info[$v->investment_id]["v_bank_account_to"]	= $v->v_bank_account_to;
 									break;
-								case SOURCE_INTEREST:
+								// 14
+                                case SOURCE_INTEREST:
 									$amount += $v->amount;
 									$user_to_info[$v->investment_id]["interest"]	+= $v->amount;
 									break;
-								case SOURCE_FEES:
+								// 4
+                                case SOURCE_FEES:
 									$user_to_info[$v->investment_id]["platform_fee"]+= $v->amount;
 									break;
 								default:
@@ -632,7 +662,7 @@ class Account extends MY_Admin_Controller {
 		$page_data 	= array("type"=>"list","date"=>$date);
 		$date_range     = entering_date_range($date);
 		$edatetime      = $date_range?$date_range["edatetime"]:"";
-		
+
 		// TODO: query with codeigniter orm
 		// sql - inner join
 		$sql = <<<TEMP
@@ -647,11 +677,11 @@ class Account extends MY_Admin_Controller {
 			GROUP BY T1.`virtual_account`
 			ORDER BY T1.`virtual_account` ASC
 TEMP;
-		
-		
+
+
 		$query_script = $this->db->query($sql);
 		$result_data = $query_script->result();
-		
+
 		$row_length = count($result_data);
 		for ($i = 0; $i < $row_length; $i++) {
 			if ($result_data[$i]->total_amount == "0") {
