@@ -507,7 +507,7 @@ class Account extends MY_Admin_Controller {
                         "entering_date"         => $value->entering_date,
                         "target_no"             => $value->target_no,
                         "target_id"             => $value->target_id,
-                        "source_type"           => $source_type,
+                        "source_type"           => 'platform_wrong_tx',
                         "user_from"             => '平台',
                         "bank_account_from"     => $value->bank_account_from,
                         "amount_from"           => $value->amount_from,
