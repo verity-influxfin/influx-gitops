@@ -484,6 +484,7 @@ class Target extends REST_Controller
 
         $userInfo = $this->userInfo($input['user_id']);
         if($userInfo){
+            $loanmanagerConfig = $this->config->item('loanmanager');
             $type = $input['type'];
             $logs = [];
             $structure = [
@@ -512,7 +513,6 @@ class Target extends REST_Controller
             if(in_array($type, [0, 2])){
                 //認證紀錄
                 $getUserCerList = $this->loan_manager_target_model->getUserCerList($input['user_id']);
-                $loanmanagerConfig = $this->config->item('loanmanager');
                 foreach($getUserCerList as $key => $value){
                     $structure['title'] = '更新認證';
                     $structure['content'] = $loanmanagerConfig['certifications'][$value->certification_id]['name'];
@@ -557,9 +557,11 @@ class Target extends REST_Controller
                 //客服紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
                 foreach($getUserLoginLog as $key => $value){
-                    $temp = (array)$value;
-                    $temp['type'] = 5;
-                    $logs[$temp['created_at']][] = $temp;
+                    $structure['title'] = $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . ' / ' . $loanmanagerConfig['pushResultStatus'][$value->result];
+                    $structure['content'] = $value->remark;
+                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time) . ' ~ ' .date('Y-m-d H:i:s', $value->end_time);
+                    $structure['type'] = 5;
+                    $logs[$value->created_at][] = $structure;
                 }
             }
 
@@ -567,9 +569,11 @@ class Target extends REST_Controller
                 //面談紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
                 foreach($getUserLoginLog as $key => $value){
-                    $temp = (array)$value;
-                    $temp['type'] = 6;
-                    $logs[$temp['created_at']][] = $temp;
+                    $structure['title'] = $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . ' / ' . $loanmanagerConfig['pushResultStatus'][$value->result];
+                    $structure['content'] = $value->remark;
+                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time) . ' ~ ' .date('Y-m-d H:i:s', $value->end_time);
+                    $structure['type'] = 6;
+                    $logs[$value->created_at][] = $structure;
                 }
             }
         }
