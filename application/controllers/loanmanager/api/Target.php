@@ -588,6 +588,10 @@ class Target extends REST_Controller
         ]);
     }
 
+    function depositLetter_get(){
+
+    }
+
     private function userInfo($userId){
         $userInfo = $this->user_model->get_by([
             'id' => $userId,
