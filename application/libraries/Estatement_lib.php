@@ -861,6 +861,7 @@ class Estatement_lib{
 				$transaction 	= $this->CI->transaction_model->get_many_by(array(
 					"source" 				=> [1,10],
 					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
+					"entering_date >=" 		=> $sdate,
 					"entering_date <=" 		=> $edate,
 				));
 				if(!empty($transaction)){
@@ -885,6 +886,7 @@ class Estatement_lib{
 			if($edatetime){
 				$target 		= $this->CI->target_model->get_many_by(array(
 					"status" 		=> array(5,10),
+					"loan_date >=" 	=> $sdate,
 					"loan_date <=" 	=> $edate,
 				));
 				if(!empty($target)){
