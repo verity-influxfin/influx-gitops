@@ -1,11 +1,11 @@
 
 	<script>
-	
+
 		function form_onsubmit(){
 			return true;
 		}
 	</script>
-	
+
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
@@ -23,7 +23,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form role="form" method="post" onsubmit="return form_onsubmit();" > 
+                                    <form role="form" method="post" onsubmit="return form_onsubmit();" >
                                         <div class="form-group">
                                             <label>文字</label>
 											<?
@@ -32,7 +32,7 @@
 												<p class="form-control-static"><?=isset($data->word)?$data->word:"";?></p>
 												<input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
 											<? }else{ ?>
-												<input id="word" name="word" class="form-control" maxlength="1">
+												<input id="word" name="word" class="form-control" maxlength="2">
 											<? } ?>
                                         </div>
                                         <div class="form-group">
