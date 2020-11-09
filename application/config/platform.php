@@ -4,7 +4,7 @@
 $config['admin_menu'] = [
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
     'AntiFraud' => [
-        'name' => '反詐欺指標'
+        'name' => '反詐欺管理指標'
     ],
     'Target' => [
         'parent_name' => '借款管理',
