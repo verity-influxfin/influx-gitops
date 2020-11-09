@@ -6,8 +6,8 @@ class brookesia_lib
 	function __construct()
 	{
 		$this->CI = &get_instance();
-		$brookesiaPort = '5000';
-		$this->brookesiaUrl = "http://" . getenv('ENV_BROOKESIA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
+		$brookesiaPort = '9453';
+		$this->brookesiaUrl = "https://" . getenv('GRACULA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
 	}
 
 	public function getRuleHitByUserId($userId)
@@ -16,7 +16,25 @@ class brookesia_lib
 			return;
 		}
 
-		$url = $this->brookesiaUrl . "result/userHitRule?value=" . $userId;
+		$url = $this->brookesiaUrl . "result/userHitRule?userId=" . $userId;
+
+		$result = curl_get($url);
+		$response = json_decode($result);
+
+		if (!$result || !isset($response->status) || $response->status != 200) {
+			return;
+		}
+
+		return $response;
+	}
+
+	public function getRelatedUserByUserId($userId)
+	{
+		if(!$userId) {
+			return;
+		}
+
+		$url = $this->brookesiaUrl . "result/relatedUser?userId=" . $userId;
 
 		$result = curl_get($url);
 		$response = json_decode($result);
