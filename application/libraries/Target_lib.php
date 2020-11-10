@@ -1788,6 +1788,7 @@ class Target_lib
                         'target_id' => $target->id,
                         'user_id' => $value->user_id,
                         'amount' => $biddingAmount,
+                        'aiBidding' => 1,
                     ]);
                 }
             }

@@ -1339,6 +1339,7 @@ class Target extends REST_Controller {
 					'status' 			=> intval($value->status),
 					'created_at' 		=> intval($value->created_at),
 					'target' 			=> $target,
+					'aiBidding' => intval($value->aiBidding),
 				];
 			}
 		}

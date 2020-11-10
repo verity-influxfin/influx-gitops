@@ -452,6 +452,7 @@ class Recoveries extends REST_Controller
                     'loan_amount' => intval($value->loan_amount),
                     'status' => intval($value->status),
                     'transfer_status' => intval($value->transfer_status),
+                    'aiBidding' => intval($value->aiBidding),
                     'target' => $target,
                     'next_repayment' => isset($instalment_data[$value->id]) ? $instalment_data[$value->id]['next_repayment'] : [],
                     'accounts_receivable' => isset($instalment_data[$value->id]) ? $instalment_data[$value->id]['accounts_receivable'] : [],
@@ -657,6 +658,7 @@ class Recoveries extends REST_Controller
                     'target' => $target,
                     'income' => $instalment_income[$value->id],
                     'invest' => $instalment_invest,
+                    'aiBidding' => $value->aiBidding,
                 );
             }
         }
@@ -1028,6 +1030,7 @@ class Recoveries extends REST_Controller
                 'contract' => $investment_contract['content'],
                 'transfer' => $transfer,
                 'target' => $target,
+                'aiBidding' => $investment->aiBidding,
                 'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info, $investment),
             ];
 

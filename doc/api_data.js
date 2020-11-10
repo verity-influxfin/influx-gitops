@@ -17452,6 +17452,13 @@ define({
                         },
                         {
                             "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "aiBidding",
+                            "description": "<p>智能投資狀態 0:否 1:是</p>"
+                        },
+                        {
+                            "group": "Success 200",
                             "type": "String",
                             "optional": false,
                             "field": "transfer_status",
@@ -17802,6 +17809,13 @@ define({
                             "optional": false,
                             "field": "status",
                             "description": "<p>狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "aiBidding",
+                            "description": "<p>智能投資狀態 0:否 1:是</p>"
                         },
                         {
                             "group": "Success 200",
@@ -18756,6 +18770,13 @@ define({
                             "optional": false,
                             "field": "status",
                             "description": "<p>狀態 0:待付款 1:待結標(款項已移至待交易) 2:待放款(已結標) 3:還款中 8:已取消 9:流標 10:已結案</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "aiBidding",
+                            "description": "<p>智能投資狀態 0:否 1:是</p>"
                         },
                         {
                             "group": "Success 200",
@@ -27441,6 +27462,13 @@ define({
                             "optional": false,
                             "field": "created_at",
                             "description": "<p>申請日期</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "aiBidding",
+                            "description": "<p>智能投資狀態 0:否 1:是</p>"
                         },
                         {
                             "group": "Success 200",
