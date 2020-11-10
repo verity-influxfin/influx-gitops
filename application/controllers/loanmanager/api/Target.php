@@ -114,16 +114,6 @@ class Target extends REST_Controller
             'push.status as pushStatus',
         ];
 
-        $param = [
-//                'target.status' => 5,
-//            'push.status' => 2,
-//            'delay_days >' => 7,
-//                'user_id' => 1364,
-//            'user_id' => 44302,
-//            'user.id <=' => 700,
-//            'user.id' => 294,
-        ];
-
         $res = $this->loan_manager_target_model->get_target_list($select, $where, $or_where, 0, false, $order_by);
 
         $data = [];
@@ -588,11 +578,37 @@ class Target extends REST_Controller
         ]);
     }
 
-    function depositLetter_get(){
+    function depositletter_get(){
+        $input = $this->input->post(NULL, TRUE);
 
     }
 
-    private function userInfo($userId){
+    function depositletter_post(){
+        $input = $this->input->post(NULL, TRUE);
+
+    }
+
+    function createDepositLetter($title, $content){
+        $loanmanagerConfig = $this->config->item('loanmanager');
+        $title = $loanmanagerConfig['depositLetter']['title'];
+        $content = $loanmanagerConfig['depositLetter']['content'];
+
+//        $title = vsprintf($loanmanagerConfig['depositLetter']['title'],$title);
+//        $content = vsprintf($loanmanagerConfig['depositLetter']['content'],$content);
+
+        return [
+            'title' => $title,
+            'content' => $content
+        ];
+    }
+
+    function sendDepositLetter($title, $content){
+//        $this->load->library('Sendemail');
+//		  $this->sendemail->email_notification($data['email'],$data['title'],$data['content']);
+
+    }
+
+        private function userInfo($userId){
         $userInfo = $this->user_model->get_by([
             'id' => $userId,
         ]);

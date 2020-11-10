@@ -23,6 +23,7 @@ define({
       "PostTargetPushUser",
       "GetTargetPushLog",
       "PostTargetPushUserUpdate",
+      "PostTargetDepositLetter",
   ],
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
