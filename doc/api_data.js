@@ -30462,7 +30462,7 @@ define({
                             "type": "String",
                             "optional": true,
                             "field": "ai_bidding",
-                            "description": "<p>0:開啟 1:關閉</p>"
+                            "description": "<p>0:關閉 1:開啟</p>"
                         },
                         {
                             "group": "Parameter",

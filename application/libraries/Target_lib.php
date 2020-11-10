@@ -453,6 +453,7 @@ class Target_lib
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, $user_id, $admin_id);
             $this->CI->notification_lib->target_verify_success($target);
+            $this->aiBiddingTarget($target);
             return true;
         }
         return false;
@@ -1665,13 +1666,46 @@ class Target_lib
         return false;
     }
 
-    public function aiBidding($target = []){
-        //取得智能投資清單
+    //使用者觸發架上案件智能投資
+    public function aiBiddingAllTarget($userId){
+        $allow_aiBidding_product = $this->CI->config->item('allow_aiBidding_product');
+        $targets = $this->CI->target_model->get_many_by([
+            'product_id' => $allow_aiBidding_product,
+            'status' => 3,
+            'script_status' => 0
+        ]);
+        foreach($targets as $key => $value){
+            $this->aiBiddingTarget($value, $userId);
+        }
+    }
+
+    //案件觸發智能投資用戶
+    public function aiBiddingTarget($target, $userId = false){
+        //取得智能投資設定有效期用戶清單
         $this->CI->load->model('loan/batch_model');
-        $batchList = $this->CI->batch_model->order_by('id','random')->get_many_by([
+        $param = [
             'type' => 3,
             'status' => 1,
-        ]);
+            'expire_time >=' => time(),
+        ];
+        $userId ? $param['user_id'] = $userId : '';
+        $aiBiddingList = $this->CI->batch_model->order_by('id','asc')->get_many_by($param);
+        if($aiBiddingList){
+            $this->aiBidding($target, $aiBiddingList);
+        }
+    }
+
+    public function aiBidding($target = [], $aiBiddingList = []){
+        $allow_aiBidding_product = $this->CI->config->item('allow_aiBidding_product');
+        if(!in_array($target->product_id, $allow_aiBidding_product)){
+            return false;
+        }
+
+        //案件剩餘可投標餘額
+        $targetAllowAmount = $target->loan_amount - $target->invested;
+        if($targetAllowAmount < 1000){
+            return false;
+        }
 
         //取得該案投資清單
         $investmentList = [];
@@ -1684,10 +1718,22 @@ class Target_lib
             $investmentList[] = $value->user_id;
         }
 
-        //取得各投資人今日投資數字
+        if(count($aiBiddingList) == 1){
+            if(in_array($aiBiddingList[0]->user_id, $investmentList)){
+                return false;
+            }
+        }
+
+        //智能投資名單
+        foreach($aiBiddingList as $key => $value){
+            $aiBiddingUserList[] = $value->user_id;
+        }
+
+        //取得各智能投資的用戶今日投資數字
         $today = strtotime(date("Y-m-d", time()));
         $todayInvestments = [];
         $getTodayInvestments = $this->CI->investment_model->get_many_by([
+            'user_id' => $aiBiddingUserList,
             'status NOT' => [8, 9],
             'created_at >=' => $today,
         ]);
@@ -1695,25 +1741,54 @@ class Target_lib
             //如已結標則以結標金額
             $amount = $value->status >= 2 ? $value->loan_amount : $value->amount;
 
-            //投資人今日投資額
+            //統計投資人今日投資額
             !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
             $todayInvestments[$value->user_id] += $amount;
         }
 
-        foreach($batchList as $key => $value){
-            $content = json_decode($value->content);
-            //排除曾下標的投資人
-            if(!in_array($value->user_id,$investmentList)){
-                //若每日限額設定"非"無上限
-                if($content->dailyAmount != 'all'){
-                    //今日可投標餘額 = 投資人設定投標金額 - 今日已投標金額
-                    $todayAllowAmounts = $content->dailyAmount - $todayInvestments[$value->user_id];
-                    //今日可投標金額大於1000且
-                    if($content->targetAmount != 'all'){
-
+        foreach($aiBiddingList as $key => $value){
+            if($targetAllowAmount >= 1000){
+                $content = json_decode($value->content);
+                $biddingAmount = 0;
+                //排除曾下標的投資人
+                if(!in_array($value->user_id, $investmentList)){
+                    !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
+                    //有設定每日投資額度
+                    if($content->dailyAmount != 'all'){
+                        //計算今日可投標餘額 = 投資人設定投標金額 - 今日已投標金額
+                        $todayAllowAmounts = $content->dailyAmount - $todayInvestments[$value->user_id];
+                        if($todayAllowAmounts >= 1000){//餘額滿足一千底標
+                            //有設定每案投資額度
+                            if($content->targetAmount != 'all'){
+                                //允許投標金額 = 每案投資額度 >= 今日投標餘額 則 以今日投標餘額
+                                $allowBiddingAmount = $content->targetAmount >= $todayAllowAmounts ? $todayAllowAmounts : $content->targetAmount;
+                                //投標金額 = 允許投標金額 >= 案件可投標金額 則 以案件可投標金額
+                                $biddingAmount = $allowBiddingAmount >= $targetAllowAmount ? $targetAllowAmount : $allowBiddingAmount;
+                                //->以每案投資額度投標
+                            }else{
+                                //->今日可投額度來投標至滿標
+                                $biddingAmount = $targetAllowAmount >= $todayAllowAmounts ? $todayAllowAmounts : $targetAllowAmount;
+                            }
+                        }
                     }else{
-
+                        //有設定每案投資額度
+                        if($content->targetAmount != 'all'){
+                            //投標金額 = 每案投資額度 >= 案件可投標金額 則 以案件可投標金額
+                            $biddingAmount = $content->targetAmount >= $targetAllowAmount ? $targetAllowAmount : $content->targetAmount;
+                            //->以每案投資額度投標
+                        }else{
+                            //全額投至滿標
+                            $biddingAmount = $targetAllowAmount;
+                            //->有多少投多少
+                        }
                     }
+                    //投標
+                    $this->CI->load->model('loan/investment_model');
+                    $this->CI->investment_model->insert([
+                        'target_id' => $target->id,
+                        'user_id' => $value->user_id,
+                        'amount' => $biddingAmount,
+                    ]);
                 }
             }
         }

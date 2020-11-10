@@ -1425,18 +1425,6 @@ class Target extends REST_Controller {
 			$filter['credit_level'] = 'all';
 		}
 
-		if(isset($input['section']) && $input['section']!='all' ){
-			$input['section']  = $input['section']?1:0;
-			$filter['section'] = $input['section'];
-			if($input['section']){
-				$where['invested >'] = 0;
-			}else{
-				$where['invested'] = 0;
-			}
-		}else{
-			$filter['section'] = 'all';
-		}
-
 		$filter['interest_rate_s'] = 0;
 		$filter['interest_rate_e'] = 20;
 		if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
@@ -1477,17 +1465,15 @@ class Target extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
 		}
-        else{
-            $targets = $this->target_model->get_many_by($where);
-            $data = [
-                'total_amount' 		=> 0,
-                'total_count' 		=> 0,
-                'max_instalment' 	=> 0,
-                'min_instalment' 	=> 0,
-                'XIRR' 				=> 0,
-                'target_ids' 		=> [],
-            ];
-        }
+        $targets = $this->target_model->get_many_by($where);
+        $data = [
+            'total_amount' 		=> 0,
+            'total_count' 		=> 0,
+            'max_instalment' 	=> 0,
+            'min_instalment' 	=> 0,
+            'XIRR' 				=> 0,
+            'target_ids' 		=> [],
+        ];
 
         if(isset($input['sex']) && !empty($input['sex']) && $input['sex']!='all' ){
             $filter['sex'] = $input['sex'];
@@ -1572,50 +1558,140 @@ class Target extends REST_Controller {
             $data['target_ids'] = $content;
         }
 
-		$this->load->model('loan/batch_model');
-		if(is_numeric($aiBidding)){
-            if($aiBidding == 1){
-                $this->batch_model->update_by([
-                    'user_id' => $user_id,
-                    'type' => 3,
-                    'status' => 1,
-                ],[
-                    'status' => 2
-                ]);
+        $data['aiBiddingSatus'] = false;
+        $data['contract_id'] = false;
+        $data['contract_data'] = false;
+        $data['targetAmount'] = false;
+        $data['dailyAmount'] = false;
+        $this->load->model('loan/batch_model');
+        $aiBiddingData = $this->batch_model->get_by([
+            'user_id' => $user_id,
+            'type' => 3,
+            'status' => 1,
+        ]);
+
+        //撈取授權扣款同意書
+        $this->load->library('Contract_lib');
+        $this->load->model('loan/contract_model');
+        $contract_id = false;
+        $contract_data = false;
+        $contract = $this->contract_model->get_by([
+            'user_id' => $user_id,
+            'type' => 'authorization_to_debit',
+            'format_id' => '8'
+        ]);
+        if($contract){//有授權書則撈取
+            $contract_id = $contract->id;
+            $contract_data = $this->contract_lib->get_contract($contract->id);
+        }
+        else{//沒授權書則撈取授權書需要的使用者資料
+            $this->load->model('user/user_model');
+            $user_info = $this->user_model->get($user_id);
+        }
+
+        //判斷是否有智能投資參數
+        if(is_numeric($aiBidding)){
+            if($aiBidding == 1){//開啟智能頭吃
+                $expireTime = strtotime('+ 30 days',time());
+
+                //每案投資金額
+                $targetAmount = $input['target_amount'] == 0 ? 'all' : $input['target_amount'] * 1000;
+
+                //抹日最高投標金額
+                $dailyAmount = $input['daily_amount'] == 0 ? 'all' :  $input['daily_amount'] * 1000;
+
+                //授權同意書
+                if(!$contract){
+                    $contract_id = $this->contract_lib->sign_contract('authorization_to_debit', [$user_info->name, $user_info->id_number], $user_id);
+                    $contract_data = $this->contract_lib->get_contract($contract_id);
+                }
                 $content = [
-                    'contract_id' => 12345,
-                    'targetAmount' => ($input['target_amount'] == 0 ? 'all' : $input['target_amount'] * 1000),
-                    'dailyAmount' => ($input['daily_amount'] == 0 ? 'all' :  $input['daily_amount'] * 1000),
+                    'contract_id' => $contract_id,
+                    'targetAmount' => $targetAmount,
+                    'dailyAmount' => $dailyAmount,
                 ];
-                $this->batch_model->insert([
-                    'user_id'	=> $user_id,
-                    'type'		=> 3,
-                    'filter'	=> json_encode($filter),
-                    'content'	=> json_encode($content),
-                    'status' => 1
+                $content = json_encode($content);
+
+                if($aiBiddingData && $content == $aiBiddingData->content){
+                    $this->batch_model->update_by([
+                        'user_id' => $user_id,
+                        'type' => 3,
+                        'status' => 1,
+                    ],[
+                        'expire_time' => $expireTime
+                    ]);
+                }
+                else{
+                    $this->batch_model->update_by([
+                        'user_id' => $user_id,
+                        'type' => 3,
+                        'status' => 1,
+                    ],[
+                        'status' => $aiBiddingData && $aiBiddingData->expire_time < time() ? 7 : 2
+                    ]);
+                    $this->batch_model->insert([
+                        'user_id'	=> $user_id,
+                        'type'		=> 3,
+                        'filter'	=> json_encode($filter),
+                        'content'	=> $content,
+                        'status' => 1,
+                        'expire_time' => $expireTime
+                    ]);
+                }
+                $data['aiBiddingSatus'] = true;
+                $data['contract_id'] = $contract_id;
+                $data['contract_data'] = $contract_data;
+                $data['targetAmount'] = $targetAmount;
+                $data['dailyAmount'] = $dailyAmount;
+                $data['aiBiddingExpireTime'] = date('Y-m-d H:i:s', $aiBiddingData ? $aiBiddingData->expire_time : $expireTime);
+                $this->load->library('Target_lib');
+                $this->target_lib->aiBiddingAllTarget($user_id);
+            }else{
+                if($aiBiddingData){
+                    $this->batch_model->update_by([
+                        'id' => $aiBiddingData->id,
+                    ],[
+                        'status' => 9,
+                    ]);
+                }
+            }
+            $data['contract_id'] = $contract_id;
+            $data['contract_data'] = $contract_data;
+        }else{
+            if($aiBiddingData){
+                $content = json_decode($aiBiddingData->content);
+                $data['aiBiddingSatus'] = $aiBiddingData->expire_time >= time();
+                $data['aiBiddingExpireTime'] = date('Y-m-d H:i:s', $aiBiddingData->expire_time);
+                $data['contract_id'] = $contract_data;
+                $data['contract_data'] = $contract_data;
+                $data['targetAmount'] = $content->targetAmount;
+                $data['dailyAmount'] = $content->dailyAmount;
+            }else{
+                $data['contract_data'] = $this->contract_lib->pretransfer_contract('authorization_to_debit', [$user_info->name, $user_info->id_number]);
+            }
+            $batchData = $this->batch_model->order_by('id','desc')->get_by([
+                'user_id' => $user_id,
+                'type' => 0,
+                'status' => 1,
+            ]);
+            if($batchData){
+                $rs = $this->batch_model->update_by([
+                    'id' => $batchData->id,
+                ], [
+                    'filter' => json_encode($filter),
+                    'content' => json_encode($content),
                 ]);
             }else{
-                $batchData = $this->batch_model->get_by([
+                $this->batch_model->insert([
                     'user_id' => $user_id,
-                    'type' => 3,
+                    'type' => 0,
                     'status' => 1,
-                ]);
-                $this->batch_model->update_by([
-                    'id' => $batchData->id,
-                ],[
-                    'status' => 9,
+                    'filter' => json_encode($filter),
+                    'content' => json_encode($content),
                 ]);
             }
-            $this->response(['result' => 'SUCCESS']);
-        }else{
-            $this->batch_model->insert([
-                'user_id'	=> $user_id,
-                'type'		=> 0,
-                'filter'	=> json_encode($filter),
-                'content'	=> json_encode($content),
-            ]);
-            $this->response(['result' => 'SUCCESS','data' =>$data]);
         }
+        $this->response(['result' => 'SUCCESS','data' =>$data]);
     }
 
 	/**
@@ -1661,37 +1737,57 @@ class Target extends REST_Controller {
 
 	public function batch_get()
     {
-		$input 	= $this->input->get(NULL, TRUE);
-		$this->load->model('loan/batch_model');
-		$user_id 	= $this->user_info->id;
-		$batch 		= $this->batch_model->order_by('created_at','desc')->get_by([
-			'user_id'	=> $user_id,
-			'type'		=> 0,
-		]);
-
         $batchData = [
             'product_id'		=> 'all',
             'credit_level'		=> 'all',
-            'section'			=> 'all',
             'interest_rate_s'	=> 0,
             'interest_rate_e'	=> 20,
             'instalment_s'		=>  0,
             'instalment_e'		=> 24,
             'sex'				=> 'all',
             'system'			=> 'all',
-            'national'			=> 'all'
+            'national'			=> 'all',
+            'aiBidding'			=> [
+                'status' => false,
+                'contract_id' => false,
+                'contract_data' => false,
+                'targetAmount' => false,
+                'dailyAmount' => false,
+                'aiBiddingExpireTime' => false,
+            ],
         ];
 
-        $aiBidding = $this->batch_model->get_by([
+        $user_id 	= $this->user_info->id;
+        $this->load->model('loan/batch_model');
+        $aiBiddingData = $this->batch_model->get_by([
             'user_id' => $user_id,
             'type' => 3,
             'status' => 1,
         ]);
-		if($batchData){
-            $batchData = json_decode($batch->filter,TRUE);
-		    $aiBidding ? $batchData = array_merge($batchData,(array)json_decode($aiBidding->content)) : '';
-		}
-		$this->response(['result' => 'SUCCESS','data' => $batchData]);
+        if($aiBiddingData){
+            $aiBiddingContentData = json_decode($aiBiddingData->content);
+            $contract_id = $aiBiddingContentData->targetAmount;
+            $targetAmount = $aiBiddingContentData->targetAmount;
+            $dailyAmount = $aiBiddingContentData->dailyAmount;
+            $batchData['aiBidding']['contract_id'] = $contract_id;
+            $batchData['aiBidding']['targetAmount'] = $targetAmount;
+            $batchData['aiBidding']['dailyAmount'] = $dailyAmount;
+            $batchData['aiBidding']['aiBiddingExpireTime'] = date('Y-m-d H:i:s', $aiBiddingData->expire_time);
+            $batchData['aiBidding']['status'] = true;
+            $contract_data = $this->contract_lib->get_contract($contract_id);
+        }
+        else{//沒授權書則撈取授權書需要的使用者資料
+            $this->load->model('user/user_model');
+            $user_info = $this->user_model->get($user_id);
+            $contract_data = [
+                'title' => '授權扣款同意書',
+                'content' => $this->contract_lib->pretransfer_contract('authorization_to_debit', [$user_info->name, $user_info->id_number]),
+                'created_at' => '',
+            ];
+        }
+
+        $batchData['aiBidding']['contract_data'] = $contract_data;
+        $this->response(['result' => 'SUCCESS','data' => $batchData]);
     }
 
 	private function check_adult(){
