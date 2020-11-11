@@ -1689,7 +1689,7 @@ class Target_lib
             'expire_time >=' => time(),
         ];
         $userId ? $param['user_id'] = $userId : '';
-        $aiBiddingList = $this->CI->batch_model->order_by('id','asc')->get_many_by($param);
+        $aiBiddingList = $this->CI->batch_model->order_by('expire_time','asc')->get_many_by($param);
         if($aiBiddingList){
             $this->aiBidding($target, $aiBiddingList);
         }

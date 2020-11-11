@@ -1645,7 +1645,9 @@ class Target extends REST_Controller {
                 ]);
             }
             $this->load->library('Target_lib');
-            $this->target_lib->aiBiddingAllTarget($user_id);
+            if($input['ai_bidding'] == 1){
+                $this->target_lib->aiBiddingAllTarget($user_id);
+            }
         }
         $this->response(['result' => 'SUCCESS','data' =>$data]);
     }
