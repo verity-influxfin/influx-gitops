@@ -1420,7 +1420,8 @@ class Target extends REST_Controller {
             }
 		}else{
             $where['product_id'] = $allow_aiBidding_product;
-		}
+            $filter['product_id'] = 'all';
+        }
 
 		if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
 			$filter['credit_level'] = $input['credit_level'];
