@@ -1684,7 +1684,7 @@ class Target_lib
         //取得智能投資設定有效期用戶清單
         $this->CI->load->model('loan/batch_model');
         $param = [
-            'type' => 3,
+            'type' => 0,
             'status' => 1,
             'expire_time >=' => time(),
         ];
@@ -1748,20 +1748,22 @@ class Target_lib
 
         foreach($aiBiddingList as $key => $value){
             if($targetAllowAmount >= 1000){
-                $content = json_decode($value->content);
+                $content = json_decode($value->filter);
                 $biddingAmount = 0;
+                $targetAmount = $targetAmount * 1000;
+                $dailyAmount = $content->daily_amount * 1000;
                 //排除曾下標的投資人
                 if(!in_array($value->user_id, $investmentList)){
                     !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
                     //有設定每日投資額度
-                    if($content->dailyAmount != 'all'){
+                    if($dailyAmount != 0){
                         //計算今日可投標餘額 = 投資人設定投標金額 - 今日已投標金額
-                        $todayAllowAmounts = $content->dailyAmount - $todayInvestments[$value->user_id];
+                        $todayAllowAmounts = $dailyAmount - $todayInvestments[$value->user_id];
                         if($todayAllowAmounts >= 1000){//餘額滿足一千底標
                             //有設定每案投資額度
-                            if($content->targetAmount != 'all'){
+                            if($targetAmount != 0){
                                 //允許投標金額 = 每案投資額度 >= 今日投標餘額 則 以今日投標餘額
-                                $allowBiddingAmount = $content->targetAmount >= $todayAllowAmounts ? $todayAllowAmounts : $content->targetAmount;
+                                $allowBiddingAmount = $targetAmount >= $todayAllowAmounts ? $todayAllowAmounts : $targetAmount;
                                 //投標金額 = 允許投標金額 >= 案件可投標金額 則 以案件可投標金額
                                 $biddingAmount = $allowBiddingAmount >= $targetAllowAmount ? $targetAllowAmount : $allowBiddingAmount;
                                 //->以每案投資額度投標
@@ -1772,9 +1774,9 @@ class Target_lib
                         }
                     }else{
                         //有設定每案投資額度
-                        if($content->targetAmount != 'all'){
+                        if($targetAmount != 0){
                             //投標金額 = 每案投資額度 >= 案件可投標金額 則 以案件可投標金額
-                            $biddingAmount = $content->targetAmount >= $targetAllowAmount ? $targetAllowAmount : $content->targetAmount;
+                            $biddingAmount = $targetAmount >= $targetAllowAmount ? $targetAllowAmount : $targetAmount;
                             //->以每案投資額度投標
                         }else{
                             //全額投至滿標
