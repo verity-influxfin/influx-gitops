@@ -1750,7 +1750,7 @@ class Target_lib
             if($targetAllowAmount >= 1000){
                 $content = json_decode($value->filter);
                 $biddingAmount = 0;
-                $targetAmount = $targetAmount * 1000;
+                $targetAmount = $content->target_amount * 1000;
                 $dailyAmount = $content->daily_amount * 1000;
                 //排除曾下標的投資人
                 if(!in_array($value->user_id, $investmentList)){
