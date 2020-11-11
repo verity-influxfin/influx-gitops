@@ -1553,11 +1553,10 @@ class Target extends REST_Controller {
         !isset($input['ai_bidding']) ? $input['ai_bidding'] = 0 : '';
         !isset($input['target_amount']) ? $input['target_amount'] = 0 : '';
         !isset($input['daily_amount']) ? $input['daily_amount'] = 0 : '';
-        $input['ai_bidding'] != 1 ? $input['ai_bidding'] = 0 : '';
         $input['target_amount'] > 20 ? $input['target_amount'] = 20 : '';
         $input['daily_amount'] > 100 ? $input['daily_amount'] = 100 : '';
 
-        $filter['ai_bidding'] = $input['ai_bidding'];
+        $filter['ai_bidding'] = intval($input['ai_bidding']);
 
         //每案最高投標金額
         $targetAmount = intval($input['target_amount']) * 1000;
