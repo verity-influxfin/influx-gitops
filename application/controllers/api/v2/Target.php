@@ -1560,11 +1560,11 @@ class Target extends REST_Controller {
 
         //每案最高投標金額
         $targetAmount = intval($input['target_amount']) * 1000;
-        $filter['target_amount'] = $input['target_amount'];
+        $filter['target_amount'] = intval($input['target_amount']);
 
         //每日最高投標金額
         $dailyAmount = intval($input['daily_amount']) * 1000;
-        $filter['daily_amount'] = $input['daily_amount'];
+        $filter['daily_amount'] = intval($input['daily_amount']);
 
         if($targets){
             $numerator = $denominator = 0;
