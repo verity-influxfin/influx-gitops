@@ -1403,6 +1403,20 @@ class Target extends REST_Controller {
         $targets = false;
         $data = [];
         $aiBidding = isset($input['ai_bidding']) && is_numeric($input['ai_bidding']) ? $input['ai_bidding'] : false;
+        if(is_numeric($aiBidding)){
+            if(!isset($input['target_amount']) || !isset($input['daily_amount'])){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+
+            if($input['target_amount'] > 20 || $input['daily_amount'] > 100){
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+        }
+        //每案最高投標金額
+        $targetAmount = $input['target_amount'] == 0 ? 'all' : $input['target_amount'] * 1000;
+
+        //每日最高投標金額
+        $dailyAmount = $input['daily_amount'] == 0 ? 'all' :  $input['daily_amount'] * 1000;
 
         //$this->check_adult();
 
@@ -1412,11 +1426,16 @@ class Target extends REST_Controller {
 			'status'		=> 3
 		];
 
-		if(isset($input['product_id']) && !empty($input['product_id']) && $input['product_id']!='all'){
-			$filter['product_id'] = $input['product_id'];
-			$where['product_id']  = explode(',',$input['product_id']);
+        $allow_aiBidding_product = $this->config->item('allow_aiBidding_product');
+        if(isset($input['product_id']) && !empty($input['product_id']) && $input['product_id']!='all'){
+            $filter['product_id'] = $input['product_id'];
+            foreach(explode(',',$input['product_id']) as $key => $value){
+                if(in_array($value, $allow_aiBidding_product)){
+                    $where['product_id'] = $value;
+                }
+            }
 		}else{
-			$filter['product_id'] = 'all';
+            $where['product_id'] = $allow_aiBidding_product;
 		}
 
 		if(isset($input['credit_level']) && !empty($input['credit_level']) && $input['credit_level']!='all' ){
@@ -1426,7 +1445,19 @@ class Target extends REST_Controller {
 			$filter['credit_level'] = 'all';
 		}
 
-		$filter['interest_rate_s'] = 0;
+        if(isset($input['section']) && $input['section']!='all' ){
+            $input['section']  = $input['section']?1:0;
+            $filter['section'] = $input['section'];
+            if($input['section']){
+                $where['invested >'] = 0;
+            }else{
+                $where['invested'] = 0;
+            }
+        }else{
+            $filter['section'] = 'all';
+        }
+
+        $filter['interest_rate_s'] = 0;
 		$filter['interest_rate_e'] = 20;
 		if(isset($input['interest_rate_e']) && intval($input['interest_rate_e'])>0){
 			if(isset($input['interest_rate_s']) && intval($input['interest_rate_e']) >= intval($input['interest_rate_s'])){
@@ -1448,7 +1479,10 @@ class Target extends REST_Controller {
 			}
 		}
 
-		$investments = $this->investment_model->get_many_by(['user_id'=>$user_id,'status'=>[0,1,2]]);
+		$investments = $this->investment_model->get_many_by([
+		    'user_id'=>$user_id,
+            'status'=>[0,1,2]
+        ]);
 		if($investments){
 			$investment_target = [];
 			foreach($investments as $key => $value){
@@ -1457,15 +1491,6 @@ class Target extends REST_Controller {
 			$where['id not'] = $investment_target;
 		}
 
-		if(is_numeric($aiBidding)){
-		    if(!isset($input['target_amount']) || !isset($input['daily_amount'])){
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }
-
-            if($input['target_amount'] > 20 || $input['daily_amount'] > 100){
-                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }
-		}
         $targets = $this->target_model->get_many_by($where);
         $data = [
             'total_amount' 		=> 0,
@@ -1556,12 +1581,44 @@ class Target extends REST_Controller {
                 $denominator 	+= $value->loan_amount * $value->instalment;
             }
             $data['XIRR'] 		= round($numerator/$denominator ,2);
+
+            if($dailyAmount != "all"){
+                //取得各智能投資的用戶今日投資數字
+                $todayInvestments = 0;
+                $today = strtotime(date("Y-m-d", time()));
+                $this->load->model('loan/investment_model');
+                $getTodayInvestments = $this->investment_model->get_many_by([
+                    'user_id' => $user_id,
+                    'status NOT' => [8, 9],
+                    'created_at >=' => $today,
+                ]);
+                if($getTodayInvestments){
+                    foreach($getTodayInvestments as $key => $value){
+                        //如已結標則以結標金額
+                        $amount = $value->status >= 2 ? $value->loan_amount : $value->amount;
+
+                        //統計投資人今日投資額
+                        !isset($todayInvestments) ? $todayInvestments[$value->user_id] = 0 : '';
+                        $todayInvestments += $amount;
+                    }
+                }
+                $dailyAmount -= $todayInvestments;
+                foreach($targets as $key => $value){
+                    $allowAmount = $value->loan_amount - $value->invested;
+                    if( $dailyAmount >= 1000 && $allowAmount >= 1000){
+                        $dailyAmount -= $targetAmount != 'all' ? ($targetAmount >= $allowAmount ? $allowAmount : $targetAmount) : $allowAmount;
+                    }else{
+                        unset($content[$key]);
+                    }
+                }
+            }
+
             $data['target_ids'] = $content;
         }
 
         $data['aiBiddingSatus'] = false;
-        $data['contract_id'] = false;
-        $data['contract_data'] = false;
+//        $data['contract_id'] = false;
+//        $data['contract_data'] = false;
         $data['targetAmount'] = false;
         $data['dailyAmount'] = false;
         $this->load->model('loan/batch_model');
@@ -1571,43 +1628,37 @@ class Target extends REST_Controller {
             'status' => 1,
         ]);
 
-        //撈取授權扣款同意書
-        $this->load->library('Contract_lib');
-        $this->load->model('loan/contract_model');
-        $contract_id = false;
-        $contract_data = false;
-        $contract = $this->contract_model->get_by([
-            'user_id' => $user_id,
-            'type' => 'authorization_to_debit',
-            'format_id' => '8'
-        ]);
-        if($contract){//有授權書則撈取
-            $contract_id = $contract->id;
-            $contract_data = $this->contract_lib->get_contract($contract->id);
-        }
-        else{//沒授權書則撈取授權書需要的使用者資料
-            $this->load->model('user/user_model');
-            $user_info = $this->user_model->get($user_id);
-        }
+//        //撈取授權扣款同意書
+//        $this->load->library('Contract_lib');
+//        $this->load->model('loan/contract_model');
+//        $contract_id = false;
+//        $contract_data = false;
+//        $contract = $this->contract_model->get_by([
+//            'user_id' => $user_id,
+//            'type' => 'authorization_to_debit',
+//            'format_id' => '8'
+//        ]);
+//        if($contract){//有授權書則撈取
+//            $contract_id = $contract->id;
+//            $contract_data = $this->contract_lib->get_contract($contract->id);
+//        }
+//        else{//沒授權書則撈取授權書需要的使用者資料
+//            $this->load->model('user/user_model');
+//            $user_info = $this->user_model->get($user_id);
+//        }
 
         //判斷是否有智能投資參數
         if(is_numeric($aiBidding)){
             if($aiBidding == 1){//開啟智能頭吃
                 $expireTime = strtotime('+ 30 days',time());
 
-                //每案投資金額
-                $targetAmount = $input['target_amount'] == 0 ? 'all' : $input['target_amount'] * 1000;
-
-                //抹日最高投標金額
-                $dailyAmount = $input['daily_amount'] == 0 ? 'all' :  $input['daily_amount'] * 1000;
-
-                //授權同意書
-                if(!$contract){
-                    $contract_id = $this->contract_lib->sign_contract('authorization_to_debit', [$user_info->name, $user_info->id_number], $user_id);
-                    $contract_data = $this->contract_lib->get_contract($contract_id);
-                }
+//                //授權同意書
+//                if(!$contract){
+//                    $contract_id = $this->contract_lib->sign_contract('authorization_to_debit', [$user_info->name, $user_info->id_number], $user_id);
+//                    $contract_data = $this->contract_lib->get_contract($contract_id);
+//                }
                 $content = [
-                    'contract_id' => $contract_id,
+//                    'contract_id' => $contract_id,
                     'targetAmount' => $targetAmount,
                     'dailyAmount' => $dailyAmount,
                 ];
@@ -1640,8 +1691,8 @@ class Target extends REST_Controller {
                     ]);
                 }
                 $data['aiBiddingSatus'] = true;
-                $data['contract_id'] = $contract_id;
-                $data['contract_data'] = $contract_data;
+//                $data['contract_id'] = $contract_id;
+//                $data['contract_data'] = $contract_data;
                 $data['targetAmount'] = $targetAmount;
                 $data['dailyAmount'] = $dailyAmount;
                 $data['aiBiddingExpireTime'] = date('Y-m-d H:i:s', $aiBiddingData ? $aiBiddingData->expire_time : $expireTime);
@@ -1656,20 +1707,21 @@ class Target extends REST_Controller {
                     ]);
                 }
             }
-            $data['contract_id'] = $contract_id;
-            $data['contract_data'] = $contract_data;
+//            $data['contract_id'] = $contract_id;
+//            $data['contract_data'] = $contract_data;
         }else{
             if($aiBiddingData){
                 $content = json_decode($aiBiddingData->content);
                 $data['aiBiddingSatus'] = $aiBiddingData->expire_time >= time();
                 $data['aiBiddingExpireTime'] = date('Y-m-d H:i:s', $aiBiddingData->expire_time);
-                $data['contract_id'] = $contract_data;
-                $data['contract_data'] = $contract_data;
+//                $data['contract_id'] = $contract_data;
+//                $data['contract_data'] = $contract_data;
                 $data['targetAmount'] = $content->targetAmount;
                 $data['dailyAmount'] = $content->dailyAmount;
-            }else{
-                $data['contract_data'] = $this->contract_lib->pretransfer_contract('authorization_to_debit', [$user_info->name, $user_info->id_number]);
             }
+//            else{
+//                $data['contract_data'] = $this->contract_lib->pretransfer_contract('authorization_to_debit', [$user_info->name, $user_info->id_number]);
+//            }
             $batchData = $this->batch_model->order_by('id','desc')->get_by([
                 'user_id' => $user_id,
                 'type' => 0,
@@ -1750,8 +1802,8 @@ class Target extends REST_Controller {
             'national'			=> 'all',
             'aiBidding'			=> [
                 'status' => false,
-                'contract_id' => false,
-                'contract_data' => false,
+//                'contract_id' => false,
+//                'contract_data' => false,
                 'targetAmount' => false,
                 'dailyAmount' => false,
                 'aiBiddingExpireTime' => false,
@@ -1767,27 +1819,27 @@ class Target extends REST_Controller {
         ]);
         if($aiBiddingData){
             $aiBiddingContentData = json_decode($aiBiddingData->content);
-            $contract_id = $aiBiddingContentData->targetAmount;
+//            $contract_id = $aiBiddingContentData->targetAmount;
             $targetAmount = $aiBiddingContentData->targetAmount;
             $dailyAmount = $aiBiddingContentData->dailyAmount;
-            $batchData['aiBidding']['contract_id'] = $contract_id;
+//            $batchData['aiBidding']['contract_id'] = $contract_id;
             $batchData['aiBidding']['targetAmount'] = $targetAmount;
             $batchData['aiBidding']['dailyAmount'] = $dailyAmount;
             $batchData['aiBidding']['aiBiddingExpireTime'] = date('Y-m-d H:i:s', $aiBiddingData->expire_time);
             $batchData['aiBidding']['status'] = true;
-            $contract_data = $this->contract_lib->get_contract($contract_id);
+//            $contract_data = $this->contract_lib->get_contract($contract_id);
         }
-        else{//沒授權書則撈取授權書需要的使用者資料
-            $this->load->model('user/user_model');
-            $user_info = $this->user_model->get($user_id);
-            $contract_data = [
-                'title' => '授權扣款同意書',
-                'content' => $this->contract_lib->pretransfer_contract('authorization_to_debit', [$user_info->name, $user_info->id_number]),
-                'created_at' => '',
-            ];
-        }
+//        else{//沒授權書則撈取授權書需要的使用者資料
+//            $this->load->model('user/user_model');
+//            $user_info = $this->user_model->get($user_id);
+//            $contract_data = [
+//                'title' => '授權扣款同意書',
+//                'content' => $this->contract_lib->pretransfer_contract('authorization_to_debit', [$user_info->name, $user_info->id_number]),
+//                'created_at' => '',
+//            ];
+//        }
 
-        $batchData['aiBidding']['contract_data'] = $contract_data;
+//        $batchData['aiBidding']['contract_data'] = $contract_data;
         $this->response(['result' => 'SUCCESS','data' => $batchData]);
     }
 
