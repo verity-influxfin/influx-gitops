@@ -579,8 +579,8 @@ class Target extends REST_Controller
     }
 
     function depositletter_get(){
-        $input = $this->input->post(NULL, TRUE);
-
+        $input = $this->input->get(NULL, TRUE);
+        print_r($this->createDepositLetter($input['user_id']));
     }
 
     function depositletter_post(){
@@ -588,13 +588,17 @@ class Target extends REST_Controller
 
     }
 
-    function createDepositLetter($title, $content){
+    function createDepositLetter($userId){
         $loanmanagerConfig = $this->config->item('loanmanager');
-        $title = $loanmanagerConfig['depositLetter']['title'];
-        $content = $loanmanagerConfig['depositLetter']['content'];
+        $title = [
 
-//        $title = vsprintf($loanmanagerConfig['depositLetter']['title'],$title);
-//        $content = vsprintf($loanmanagerConfig['depositLetter']['content'],$content);
+        ];
+        $content = [
+
+        ];
+
+        $title = vsprintf($loanmanagerConfig['depositLetter']['title'],$title);
+        $content = vsprintf($loanmanagerConfig['depositLetter']['content'],$content);
 
         return [
             'title' => $title,
