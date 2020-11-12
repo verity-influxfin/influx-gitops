@@ -16,9 +16,12 @@ class Target extends REST_Controller
         $this->auth_lib->authToken();
     }
 
-    public function list_get()
+    public function list_get($sourceInput = false)
     {
         $input = $this->input->get(NULL, TRUE);
+        if($sourceInput){
+            $input = $sourceInput;
+        }
         $or_where = [];
         $where = [];
 
@@ -102,6 +105,7 @@ class Target extends REST_Controller
             'target.status as targetStatus',
             'target.sub_status',
             'target.delay_days',
+            'target.created_at',
             'processing.admin_id',
             'processing.push_by',
             'processing.push_type',
@@ -157,6 +161,7 @@ class Target extends REST_Controller
                 $datas[$key]->dailyDelayInterest = $dailyDelayInterest;
                 $datas[$key]->status = $value->targetStatus;
                 $datas[$key]->sub_status = $value->sub_status;
+                $datas[$key]->lastDay = $amortization_schedule['end_date'];
 
                 if (isset($userTargets[$value->user_id]['debtProcess'])) {
                     $userTargets[$value->user_id]['debtProcess']['userPayment'] += $datas[$key]->total_payment;
@@ -194,6 +199,11 @@ class Target extends REST_Controller
                 'list' => $userTargets,
             ];
         }
+
+        if($sourceInput){
+            return $data;
+        }
+
         $this->response([
             'result' => 'SUCCESS',
             'data' => $data
@@ -589,21 +599,41 @@ class Target extends REST_Controller
     }
 
     function createDepositLetter($userId){
-        $loanmanagerConfig = $this->config->item('loanmanager');
-        $title = [
+        $userData = $this->loan_manager_target_model->get_userinfo($userId)[0];
+        if ($userData) {
+            $getDelayTarget = $this->list_get([
+                'search' => $userId,
+                'delay' => 2,
+            ]);
+            foreach($getDelayTarget['list'][$userId]['targetList'] as $key => $value){
+                $title = [
+                    $userData->name,
+                    $value->total_payment
+                ];
+                $lastDay = explode('-',$value->lastDay);
+                $content = [
+                    $value->loanAmount,
+                    $value->target_no,
+                    $value->productName,
+                    $value->user_id,
+                    date('Y-m-d', $value->created_at),
+                    number_format($value->interest_rate,2),
+                    $value->instalment,
+                    $value->repaymentType,
+                    '民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日',
+                    '---',
+                ];
 
-        ];
-        $content = [
+                $loanmanagerConfig = $this->config->item('loanmanager');
+                $title = vsprintf($loanmanagerConfig['depositLetter']['title'],$title);
+                $content = vsprintf($loanmanagerConfig['depositLetter']['content'],$content);
 
-        ];
-
-        $title = vsprintf($loanmanagerConfig['depositLetter']['title'],$title);
-        $content = vsprintf($loanmanagerConfig['depositLetter']['content'],$content);
-
-        return [
-            'title' => $title,
-            'content' => $content
-        ];
+//                return [
+//                    'title' => $title,
+//                    'content' => $content
+//                ];
+            }
+        }
     }
 
     function sendDepositLetter($title, $content){
