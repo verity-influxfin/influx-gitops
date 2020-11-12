@@ -1718,6 +1718,14 @@ class Target extends REST_Controller {
         ]);
         if($data){
             $batchData = json_decode($data->filter);
+            if($data->expire_time < time()){
+                $batchData->ai_bidding = 0;
+                $this->batch_model->update_by([
+                    'id' => $data->id,
+                ], [
+                    'filter' => json_encode($batchData),
+                ]);
+            }
         }
 
 //        $aiBiddingData = $this->batch_model->get_by([
