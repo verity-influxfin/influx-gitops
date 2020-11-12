@@ -337,7 +337,7 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 $newStatus = false;
                                 if (!$product_info['secondInstance']
-                                    && !$this->CI->anti_fraud_lib->related_users($target->user_id)
+//                                    && !$this->CI->anti_fraud_lib->related_users($target->user_id)
                                     && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
                                     && $this->judicialyuan($user_id)
                                     && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
@@ -1669,7 +1669,7 @@ class Target_lib
     //使用者觸發架上案件智能投資
     public function aiBiddingAllTarget($userId){
         $allow_aiBidding_product = $this->CI->config->item('allow_aiBidding_product');
-        $targets = $this->CI->target_model->get_many_by([
+        $targets = $this->CI->target_model->order_by('expire_time','asc')->get_many_by([
             'product_id' => $allow_aiBidding_product,
             'status' => 3,
             'script_status' => 0
@@ -1784,14 +1784,16 @@ class Target_lib
                             //->有多少投多少
                         }
                     }
-                    //投標
-                    $this->CI->load->model('loan/investment_model');
-                    $this->CI->investment_model->insert([
-                        'target_id' => $target->id,
-                        'user_id' => $value->user_id,
-                        'amount' => $biddingAmount,
-                        'aiBidding' => 1,
-                    ]);
+                    if($biddingAmount >= 1000){
+                        //投標
+                        $this->CI->load->model('loan/investment_model');
+                        $this->CI->investment_model->insert([
+                            'target_id' => $target->id,
+                            'user_id' => $value->user_id,
+                            'amount' => $biddingAmount,
+                            'aiBidding' => 1,
+                        ]);
+                    }
                 }
             }
         }
