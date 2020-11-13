@@ -162,6 +162,7 @@ class Target extends REST_Controller
                 $datas[$key]->status = $value->targetStatus;
                 $datas[$key]->sub_status = $value->sub_status;
                 $datas[$key]->lastDay = $amortization_schedule['end_date'];
+                $datas[$key]->created_at = $value->created_at;
 
                 if (isset($userTargets[$value->user_id]['debtProcess'])) {
                     $userTargets[$value->user_id]['debtProcess']['userPayment'] += $datas[$key]->total_payment;
@@ -606,6 +607,16 @@ class Target extends REST_Controller
                 'delay' => 2,
             ]);
             foreach($getDelayTarget['list'][$userId]['targetList'] as $key => $value){
+                $investmentList = [];
+
+                $this->load->model('loan/investment_model');
+                $investments = $this->investment_model->get_many_by([
+                    'target_id' => $value->target_id,
+                    'status' => 3
+                ]);
+                foreach($investments as $ikey => $ivalue){
+                    $investmentList[] = $ivalue->user_id;
+                }
                 $title = [
                     $userData->name,
                     $value->total_payment
@@ -621,17 +632,17 @@ class Target extends REST_Controller
                     $value->instalment,
                     $value->repaymentType,
                     '民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日',
-                    '---',
+                    implode('、', $investmentList),
                 ];
 
                 $loanmanagerConfig = $this->config->item('loanmanager');
                 $title = vsprintf($loanmanagerConfig['depositLetter']['title'],$title);
                 $content = vsprintf($loanmanagerConfig['depositLetter']['content'],$content);
 
-//                return [
-//                    'title' => $title,
-//                    'content' => $content
-//                ];
+                return [
+                    'title' => $title,
+                    'content' => $content
+                ];
             }
         }
     }
