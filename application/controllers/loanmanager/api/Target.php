@@ -591,69 +591,140 @@ class Target extends REST_Controller
 
     function depositletter_get(){
         $input = $this->input->get(NULL, TRUE);
-        print_r($this->createDepositLetter($input['user_id']));
+        $type = $input['type'];
+        $createDepositLetter = '';
+        if($type == 1) {
+            $depositLetter = $this->createDepositLetter($input['user_id']);
+        }elseif($type == 2){
+            $depositLetter = $this->createDepositLetter($input['user_id'], true);
+        }
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $depositLetter,
+        ]);
     }
 
     function depositletter_post(){
         $input = $this->input->post(NULL, TRUE);
-
+        $type = $input['type'];
+        if($type == 1){
+            $depositLetter = $this->createDepositLetter($input['user_id']);
+            foreach($depositLetter as $key => $value){
+                $this->sendDepositLetter($depositLetter['email'], $value['title'], $value['content']);
+            }
+        }elseif($type == 2){
+//            $depositLetter = $this->createDepositLetter($input['user_id'], true);
+        }
     }
 
-    function createDepositLetter($userId){
+    function createDepositLetter($userId, $forPaper = false){
         $userData = $this->loan_manager_target_model->get_userinfo($userId)[0];
+        $list = [];
         if ($userData) {
+            $email = $userData->email;
+            $investmentList = [];
+            $target_no = [];
+            $productName = [];
+            $loan_date = [];
+            $interest_rate = [];
+            $instalment = [];
+            $repaymentType = [];
+            $lastDays = [];
+            $total_payment = 0;
+            $total_loanAmount = 0;
             $getDelayTarget = $this->list_get([
                 'search' => $userId,
                 'delay' => 2,
             ]);
-            foreach($getDelayTarget['list'][$userId]['targetList'] as $key => $value){
-                $investmentList = [];
-
-                $this->load->model('loan/investment_model');
+            $targetList = $getDelayTarget['list'][$userId]['targetList'];
+            $this->load->model('loan/investment_model');
+            $loanmanagerConfig = $this->config->item('loanmanager');
+            foreach($targetList as $key => $value){
+                //投資人清單
+                !$forPaper ? $investmentList = [] : '';
                 $investments = $this->investment_model->get_many_by([
                     'target_id' => $value->target_id,
                     'status' => 3
                 ]);
                 foreach($investments as $ikey => $ivalue){
-                    $investmentList[] = $ivalue->user_id;
+                    !in_array($ivalue->user_id, $investmentList) ? $investmentList[] = $ivalue->user_id : '';
                 }
-                $title = [
-                    $userData->name,
-                    $value->total_payment
-                ];
+
                 $lastDay = explode('-',$value->lastDay);
-                $content = [
-                    $value->loanAmount,
-                    $value->target_no,
-                    $value->productName,
-                    $value->user_id,
-                    date('Y-m-d', $value->created_at),
-                    number_format($value->interest_rate,2),
-                    $value->instalment,
-                    $value->repaymentType,
-                    '民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日',
-                    implode('、', $investmentList),
-                ];
+                if($forPaper){
+                    $total_payment += $value->total_payment;
+                    $total_loanAmount += $value->loanAmount;
+                    $target_no[] = $value->target_no;
+                    !in_array($value->productName, $productName) ? $productName[] = $value->productName : '';
+                    !in_array(date('Y/m/d', $value->created_at), $loan_date) ? $loan_date[] = date('Y/m/d', $value->created_at) : '';
+                    !in_array(number_format($value->interest_rate,2), $interest_rate) ? $interest_rate[] = number_format($value->interest_rate,2) : '';
+                    !in_array($value->instalment, $instalment) ? $instalment[] = $value->instalment : '';
+                    !in_array($value->repaymentType, $repaymentType) ? $repaymentType[] = $value->repaymentType : '';
+                    !in_array('民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日', $lastDays) ? $lastDays[] = '民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日' : '';
+                    if(count($targetList) - 1 == $key){
+                        $title = [
+                            $userData->name,
+                            $total_payment
+                        ];
+                        $content = [
+                            $userData->name,
+                            $total_loanAmount,
+                            implode('、', $target_no),
+                            implode('、', $productName),
+                            $value->user_id,
+                            implode('、', $loan_date),
+                            implode('、', $interest_rate),
+                            implode('、', $instalment),
+                            implode('、', $repaymentType),
+                            implode('、', $lastDays),
+                            $userData->name,
+                            implode('、', $investmentList),
+                            $userData->name,
+                            $userData->name,
+                        ];
+                        $list = [
+                            'title' => vsprintf($loanmanagerConfig['depositLetterForPaper']['title'],$title),
+                            'content' => vsprintf($loanmanagerConfig['depositLetterForPaper']['content'],$content)
+                        ];
+                    }
+                }else{
+                    $title = [
+                        $userData->name,
+                        $value->total_payment
+                    ];
+                    $content = [
+                        $value->loanAmount,
+                        $value->target_no,
+                        $value->productName,
+                        $value->user_id,
+                        date('Y-m-d', $value->created_at),
+                        number_format($value->interest_rate,2),
+                        $value->instalment,
+                        $value->repaymentType,
+                        $lastDay[0],
+                        $lastDay[1],
+                        $lastDay[2],
+                        implode('、', $investmentList),
+                    ];
 
-                $loanmanagerConfig = $this->config->item('loanmanager');
-                $title = vsprintf($loanmanagerConfig['depositLetter']['title'],$title);
-                $content = vsprintf($loanmanagerConfig['depositLetter']['content'],$content);
-
-                return [
-                    'title' => $title,
-                    'content' => $content
-                ];
+                    $list[$value->target_no] = [
+                        'title' => vsprintf($loanmanagerConfig['depositLetter']['title'],$title),
+                        'content' => vsprintf($loanmanagerConfig['depositLetter']['content'],$content)
+                    ];
+                }
             }
+            $list['email'] = $email;
+            return $list;
         }
+        return false;
     }
 
-    function sendDepositLetter($title, $content){
-//        $this->load->library('Sendemail');
-//		  $this->sendemail->email_notification($data['email'],$data['title'],$data['content']);
-
+    private function sendDepositLetter($email, $title, $content){
+        $this->load->library('Sendemail');
+        return $rs = $this->sendemail->email_notification($email, $title, $content);
     }
 
-        private function userInfo($userId){
+    private function userInfo($userId){
         $userInfo = $this->user_model->get_by([
             'id' => $userId,
         ]);

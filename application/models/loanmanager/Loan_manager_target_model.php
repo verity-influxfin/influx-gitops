@@ -126,6 +126,7 @@ class Loan_manager_target_model extends MY_Model
             'user.id as userId',
             'user.name',
             'user.picture as userPicture',
+            'user.email',
             'processing.id as processingId',
             'processing.admin_id',
             'processing.push_by',
