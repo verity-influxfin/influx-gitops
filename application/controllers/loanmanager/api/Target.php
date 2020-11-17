@@ -607,14 +607,17 @@ class Target extends REST_Controller
     function depositletter_post(){
         $input = $this->input->post(NULL, TRUE);
         $type = $input['type'];
-        if($type == 1){
+        if($type == 1) {
             $depositLetter = $this->createDepositLetter($input['user_id']);
-            foreach($depositLetter as $key => $value){
-                $this->sendDepositLetter($depositLetter['email'], $value['title'], $value['content']);
+            foreach ($depositLetter as $key => $value) {
+                if ($key != 'email') {
+                    $this->sendDepositLetter($depositLetter['email'], $value['title'], $value['content']);
+                }
             }
-        }elseif($type == 2){
-//            $depositLetter = $this->createDepositLetter($input['user_id'], true);
         }
+        $this->response([
+            'result' => 'SUCCESS'
+        ]);
     }
 
     function createDepositLetter($userId, $forPaper = false){
@@ -655,12 +658,12 @@ class Target extends REST_Controller
                     $total_payment += $value->total_payment;
                     $total_loanAmount += $value->loanAmount;
                     $target_no[] = $value->target_no;
-                    !in_array($value->productName, $productName) ? $productName[] = $value->productName : '';
-                    !in_array(date('Y/m/d', $value->created_at), $loan_date) ? $loan_date[] = date('Y/m/d', $value->created_at) : '';
-                    !in_array(number_format($value->interest_rate,2), $interest_rate) ? $interest_rate[] = number_format($value->interest_rate,2) : '';
-                    !in_array($value->instalment, $instalment) ? $instalment[] = $value->instalment : '';
-                    !in_array($value->repaymentType, $repaymentType) ? $repaymentType[] = $value->repaymentType : '';
-                    !in_array('民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日', $lastDays) ? $lastDays[] = '民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日' : '';
+                    $productName[] = $value->productName;
+                    $loan_date[] = date('Y/m/d', $value->created_at);
+                    $interest_rate[] = number_format($value->interest_rate,2);
+                    $instalment[] = $value->instalment;
+                    $repaymentType[] = $value->repaymentType;
+                    $lastDays[] = '民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日';
                     if(count($targetList) - 1 == $key){
                         $title = [
                             $userData->name,
