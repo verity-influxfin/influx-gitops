@@ -507,7 +507,7 @@ class Charge_lib
 										$this->CI->passbook_lib->enter_account($value);
 									}
                                     foreach ($msg as $item_arr =>$item) {
-                                        $this->CI->notification_lib->prepay_success($msg[$item_arr],1,$target->target_no,$item);
+                                        $this->CI->notification_lib->prepay_success($item_arr,1,$target->target_no,$item);
                                     }
 								}
 							}
