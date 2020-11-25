@@ -155,13 +155,13 @@ class Target extends REST_Controller
                 $datas[$key]->total_payment = $amortization_schedule['total_payment'];
                 $datas[$key]->repaid = isset($amortization_schedule['repaid']) ? $amortization_schedule['repaid'] : 0;
                 $datas[$key]->remaining_principal = $amortization_schedule['remaining_principal'];
-                $datas[$key]->lastInterest = $amortization_schedule['last_interest'];
+                $datas[$key]->lastInterest = isset($amortization_schedule['last_interest']) ? $amortization_schedule['last_interest'] : 0;
                 $datas[$key]->delayInterest = $amortization_schedule['delay_interest'];
                 $datas[$key]->liquidatedDamages = $amortization_schedule['liquidated_damages'];
                 $datas[$key]->dailyDelayInterest = $dailyDelayInterest;
                 $datas[$key]->status = $value->targetStatus;
                 $datas[$key]->sub_status = $value->sub_status;
-                $datas[$key]->lastDay = $amortization_schedule['end_date'];
+                $datas[$key]->lastDay = isset($amortization_schedule['end_date']) ? $amortization_schedule['end_date'] : 0;;
                 $datas[$key]->created_at = $value->created_at;
 
                 if (isset($userTargets[$value->user_id]['debtProcess'])) {
