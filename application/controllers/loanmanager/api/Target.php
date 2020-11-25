@@ -169,27 +169,20 @@ class Target extends REST_Controller
                     $userTargets[$value->user_id]['debtProcess']['userRepaid'] += $datas[$key]->repaid;
                     $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] += $datas[$key]->remaining_principal;
                 } else {
-                    if (isset($value->pushStatus)) {
-                        if (isset($value->result)) {
-                            $userTargets[$value->user_id]['debtProcess'] = [
-                                'lastContactStatus' => $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result],
-                                'lastContactRemark' => $value->remark,
-                            ];
-                            $userTargets[$value->user_id]['debtProcess']['lastContact'] = date('Y/m/d H:i:s', $value->updated_at);
-                            $userTargets[$value->user_id]['debtProcess']['lastContactAdmin'] = $value->adminName;
-                            $userTargets[$value->user_id]['debtProcess']['pushIdentity'] = $value->pushIdentity;
-                            $userTargets[$value->user_id]['debtProcess']['pushUserStatus'] = $value->pushUserStatus;
-                            $userTargets[$value->user_id]['debtProcess']['pushStatus'] = $value->pushStatus;
-                        }
-                    } else {
+                    if (isset($value->result)) {
                         $userTargets[$value->user_id]['debtProcess'] = [
-                            'lastContactStatus' => '無',
-                            'lastContactRemark' => '無',
-                            'lastContact' => '無',
-                            'lastContactAdmin' => '無',
-                            'pushUserStatus' => $loanmanagerConfig['pushDataUserStatus'][0],
+                            'lastContactStatus' => $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result],
+                            'lastContactRemark' => $value->remark,
                         ];
                     }
+
+                    $userTargets[$value->user_id]['debtProcess']['lastContact'] = $value->updated_at != null ? date('Y/m/d H:i:s', $value->updated_at) : '無';
+                    $userTargets[$value->user_id]['debtProcess']['lastContactAdmin'] = $value->adminName != null ? $value->adminName : '無';
+                    $userTargets[$value->user_id]['debtProcess']['lastContactStatus'] = $value->push_by != null ? $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result] : '無';
+                    $userTargets[$value->user_id]['debtProcess']['lastContactRemark'] = $value->remark != null ? $value->remark : '無';
+                    $userTargets[$value->user_id]['debtProcess']['pushIdentity'] = $value->pushIdentity != null ? $value->pushIdentity : '無';
+                    $userTargets[$value->user_id]['debtProcess']['pushUserStatus'] = $value->pushUserStatus != null ? $value->pushUserStatus : $loanmanagerConfig['pushDataUserStatus'][0] ;
+                    $userTargets[$value->user_id]['debtProcess']['pushStatus'] = $value->pushStatus != null ? $value->pushStatus : '無';
                     $userTargets[$value->user_id]['debtProcess']['userPayment'] = $datas[$key]->total_payment;
                     $userTargets[$value->user_id]['debtProcess']['userRepaid'] = $datas[$key]->repaid;
                     $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] = $datas[$key]->remaining_principal;
@@ -220,7 +213,6 @@ class Target extends REST_Controller
         if ($res) {
             $loanmanagerConfig = $this->config->item('loanmanager');
             $data['userInfo'] = $res[0];
-            $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
 
             if($res[0]->processingId == null){
                 $data['userInfo']->processingId = 0;
@@ -235,32 +227,34 @@ class Target extends REST_Controller
                 $data['userInfo']->pushUserStatus = 0;
                 $data['userInfo']->pushStatus = 0;
             }
-
-            $wasSubLoan = $this->target_model->get_many_by([
-                'user_id' => $data['userInfo']->userId,
-                'sub_status' => 2,
-            ]);
-            $this->load->model('loanmanager/loan_manager_debtprocessing_model');
-            $wasNegotiate = $this->loan_manager_debtprocessing_model->get_many_by([
-                'user_id' => $data['userInfo']->userId,
-                'push_type' => 1,
-            ]);
-
-            $this->load->model('user/user_meta_model');
-            $getGraduate_date = $this->user_meta_model->get_by([
-                'user_id' => $input['user_id'],
-                'meta_key' => 'graduate_date',
-            ]);
-
-            $graduate_date = $getGraduate_date ? $getGraduate_date->meta_value : null;
-            $data['userInfo']->graduate_date = $graduate_date;
-            $data['userInfo']->subLoanTimes = count($wasSubLoan);
-            $data['userInfo']->negotiateTimes = count($wasNegotiate);
-            $data['userInfo']->lastContact = !empty($data['userInfo']->updated_at) ? date('Y/m/d H:i:s', $data['userInfo']->updated_at) : '無紀錄';
-            $data['userInfo']->lastContactStatus = $loanmanagerConfig['pushTool'][$data['userInfo']->push_by] . $loanmanagerConfig['pushType'][$data['userInfo']->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$data['userInfo']->result];
-            $data['userInfo']->virtualAccounts = $getVirtualAccountInfo[0]->virtualAccounts;
-            $data['userInfo']->virtualPassbooks = $getVirtualAccountInfo[0]->virtualPassbooks;
         }
+
+        $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
+
+        $wasSubLoan = $this->target_model->get_many_by([
+            'user_id' => $data['userInfo']->userId,
+            'sub_status' => 2,
+        ]);
+        $this->load->model('loanmanager/loan_manager_debtprocessing_model');
+        $wasNegotiate = $this->loan_manager_debtprocessing_model->get_many_by([
+            'user_id' => $data['userInfo']->userId,
+            'push_type' => 1,
+        ]);
+
+        $this->load->model('user/user_meta_model');
+        $getGraduate_date = $this->user_meta_model->get_by([
+            'user_id' => $input['user_id'],
+            'meta_key' => 'graduate_date',
+        ]);
+
+        $graduate_date = $getGraduate_date ? $getGraduate_date->meta_value : null;
+        $data['userInfo']->graduate_date = $graduate_date;
+        $data['userInfo']->subLoanTimes = count($wasSubLoan);
+        $data['userInfo']->negotiateTimes = count($wasNegotiate);
+        $data['userInfo']->lastContact = !empty($data['userInfo']->updated_at) ? date('Y/m/d H:i:s', $data['userInfo']->updated_at) : '無紀錄';
+        $data['userInfo']->lastContactStatus = $loanmanagerConfig['pushTool'][$data['userInfo']->push_by] . $loanmanagerConfig['pushType'][$data['userInfo']->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$data['userInfo']->result];
+        $data['userInfo']->virtualAccounts = $getVirtualAccountInfo[0]->virtualAccounts;
+        $data['userInfo']->virtualPassbooks = $getVirtualAccountInfo[0]->virtualPassbooks;
         $this->response([
             'result' => 'SUCCESS',
             'data' => $data

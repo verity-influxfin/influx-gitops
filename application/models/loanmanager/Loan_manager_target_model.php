@@ -186,9 +186,9 @@ class Loan_manager_target_model extends MY_Model
         );
         $this->db->where([
             'user.id' => $userId,
-            'virtualaccounts.investor' => 0,
+//            'virtualaccounts.investor' => 0,
         ]);
-        $this->db->order_by('virtualpassbooks.id','desc');
+//        $this->db->order_by('virtualpassbooks.id','desc');
         $query = $this->db->get();
         return $query->result();
     }
