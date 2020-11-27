@@ -135,6 +135,7 @@ export default {
   overflow: auto;
   padding: 4rem 0px 0px 0px;
   position: relative;
+  background: #ecedf1;
 
   .credit-box {
     width: 65%;

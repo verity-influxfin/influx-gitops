@@ -1,18 +1,20 @@
 <template>
   <div class="qa-card">
-    <h2>還有其他問題嗎?</h2>
+    <div class="t-c"><h2>還有其他問題嗎?</h2></div>
     <div class="hr" />
     <div class="qa-row" ref="qa_slick">
-      <div class="qa-item" v-for="(item,index) in $props.qaData" :key="index">
+      <div class="qa-item" v-for="(item, index) in $props.qaData" :key="index">
         <div class="qa-title">
-          <strong>{{index > 10 ? index+1 : `0${index+1}`}}</strong>
-          <label>{{item.title}}</label>
+          <div class="bg">
+            <strong>{{ index > 10 ? index + 1 : `0${index + 1}` }}</strong>
+          </div>
+          <label>{{ item.title }}</label>
         </div>
         <div class="qa-content" v-html="item.content"></div>
       </div>
     </div>
     <div class="row">
-      <router-link class="btn link" style="margin:0px auto;" to="qa">
+      <router-link class="btn link" style="margin: 0px auto" to="qa">
         更多問題
         <i class="fas fa-angle-double-right" />
       </router-link>
@@ -26,7 +28,7 @@ export default {
   watch: {
     qaData() {
       this.$nextTick(() => {
-         this.createSlick(this.$refs.qa_slick);
+        this.createSlick(this.$refs.qa_slick);
       });
     },
   },
@@ -68,40 +70,71 @@ export default {
     .qa-item {
       margin: 0px 20px;
       pointer-events: none;
-      
-      .qa-title {
-        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-        background-color: #ffffff;
-        padding: 30px 15px;
-        position: relative;
-        text-align: center;
 
-        strong {
-          box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-          background-color: #ffffff;
-          color: #083a6e;
-          font-size: 20px;
-          padding: 7px 11px;
-          border-radius: 50%;
-          position: absolute;
-          top: 50%;
-          left: 0%;
-          transform: translate(-50%, -50%);
+      .qa-title {
+        border-radius: 20px;
+        border-style: solid;
+        border-width: 2px;
+        border-image-source: linear-gradient(to bottom, #81c3f3, #157efb);
+        border-image-slice: 1;
+        background-image: linear-gradient(to left, #ffffff 100%, #ffffff 0%),
+          linear-gradient(to bottom, #81c3f3, #157efb);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        text-align: center;
+        display: flex;
+
+        .bg {
+          background-image: linear-gradient(to bottom, #81c3f3, #157efb);
+          background-clip: text;
+          width: fit-content;
+          color: #ffffff00;
+          margin: 0px 10px;
+          font-size: 36px;
         }
 
         label {
-          margin: 0px;
+          margin: 5px auto;
+          padding: 0px 5px;
           font-weight: 600;
-          font-size: 13px;
+          font-size: 15px;
+          text-align: left;
+          border-left: 2px solid #157efb;
         }
       }
 
       .qa-content {
-        margin-top: 20px;
+        margin-top: 10px;
         line-height: 1.5;
         font-weight: 600;
         font-size: 15px;
+        border-radius: 25px;
+        background-image: linear-gradient(to bottom, #ffffff, #e4eeff);
+        padding: 20px;
       }
+    }
+  }
+
+  .link {
+    display: block;
+    background: #ffffff;
+    color: #3492f9;
+    width: 20%;
+    margin: 0px auto;
+    font-weight: bolder;
+    border: 3px solid #3492f9;
+    border-radius: 20px;
+    background-image: linear-gradient(to top, #ebf5ff, #ffffff),
+      linear-gradient(to bottom, #81c3f3, #157efb);
+
+    i {
+      margin-left: 10px;
+    }
+
+    &:hover {
+      color: #ffffff;
+      background-image: linear-gradient(to top, #10569c, #2c1dff),
+        linear-gradient(to bottom, #81c3f3, #157efb);
     }
   }
 }
@@ -109,6 +142,10 @@ export default {
 @media screen and (max-width: 767px) {
   .qa-card {
     padding: 10px;
+
+    .link {
+      width: 50%;
+    }
   }
 }
 </style>

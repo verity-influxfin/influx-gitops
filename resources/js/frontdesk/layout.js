@@ -5,6 +5,8 @@ import actions from './store/actions';
 import mutations from './store/mutations';
 //vue router
 import routers from './router/router';
+//
+import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 
 $(() => {
     const sessionStoragePlugin = store => {
@@ -288,7 +290,7 @@ $(() => {
 
     $('.back-top').fadeOut();
 
-    let offset = $('.blog-quiklink').offset();
+    // let offset = $('.blog-quiklink').offset();
 
     $(document).scroll(function () {
         AOS.refresh();
@@ -300,14 +302,14 @@ $(() => {
             $('.back-top').fadeOut();
         }
 
-        if ($(window).scrollTop() > offset.top) {
-            $('.blog-quiklink').stop().animate({
-                marginTop: $(window).scrollTop() + offset.top
-            });
-        } else {
-            $('.blog-quiklink').stop().animate({
-                marginTop: offset.top
-            });
-        }
+        // if ($(window).scrollTop() > offset.top) {
+        //     $('.blog-quiklink').stop().animate({
+        //         marginTop: $(window).scrollTop() + offset.top
+        //     });
+        // } else {
+        //     $('.blog-quiklink').stop().animate({
+        //         marginTop: offset.top
+        //     });
+        // }
     });
 });

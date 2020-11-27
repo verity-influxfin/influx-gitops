@@ -1,42 +1,57 @@
 <template>
   <div class="freshGraduate-wrapper">
-    <banner :data="bannerData"></banner>
-    <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <p>「普匯・你的手機ATM」</p>
-          <p>沒有煩人的「專員」打擾，只需要一隻可以上網的手機</p>
-          <p>AI 24hr online滿足您的資金需求</p>
-        </div>
-      </div>
-    </div>
-    <credit :creditList="creditList" amount="20" />
+    <banner :data="bannerData" :isInvest="false"></banner>
+    <target
+      :items="applyData.item"
+      text="年滿20歲的上班族，提供工作證明、聯徵報告，馬上給您最滿意的額度！<br><br>體驗金融科技帶來的線上借貸服務，就從『普匯･你的手機ATM』開始！"
+    ></target>
     <apply
       title="申貸簡便四步驟"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
-    <experience :experiences="experiences" title="真實回饋" />
-    <div class="video-card">
-      <h2>聽聽借款人怎麼說</h2>
-      <div class="hr" />
-      <div class="video-row" ref="video_slick">
-        <div class="item" v-for="(item, index) in shares" :key="index">
-          <iframe
-            :src="item.video_link"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            style="height: 180px"
-          ></iframe>
-          <hr />
-          <p>{{ item.post_title }}</p>
+    <div class="avg-card">
+      <img src="../asset/images/circle.svg" class="img-fluid" />
+      <div class="cnt">
+        <div class="c-t">
+          <div class="item">
+            <h3>即時審核，快速媒合放款</h3>
+            <p>
+              系統自動化審核加快申貸的速度，平均3分鐘完成申請、10分鐘核准、60分鐘到帳！
+            </p>
+          </div>
+          <div class="item">
+            <h3>全線上無人化</h3>
+            <p>
+              運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。
+            </p>
+          </div>
+          <div class="item">
+            <h3>隱私無照會</h3>
+            <p>
+              申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。
+            </p>
+          </div>
+        </div>
+        <div class="c-i">123</div>
+        <div class="c-t">
+          <div class="item">
+            <h3>聯徵不留紀錄</h3>
+            <p>
+              不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。
+            </p>
+          </div>
+          <div class="item">
+            <h3>費率單純透明</h3>
+            <p>
+              只收取一次手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。
+            </p>
+          </div>
         </div>
       </div>
-      <router-link class="btn link" to="vlog?q=loan"
-        >影音列表<i class="fas fa-angle-double-right"
-      /></router-link>
     </div>
+    <credit :creditList="creditList" amount="20" />
+    <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
   </div>
@@ -49,6 +64,7 @@ import experience from "../component/experienceComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import credit from "../component/creditComponent";
+import target from "../component/targetComponent";
 
 export default {
   components: {
@@ -57,6 +73,7 @@ export default {
     experience,
     qa,
     apply,
+    target,
     credit,
   },
   data: () => ({
@@ -169,87 +186,76 @@ export default {
 .freshGraduate-wrapper {
   width: 100%;
 
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-    color: #083a6e;
+  .t-c {
+    background-image: linear-gradient(
+      to right,
+      #1e2973 0%,
+      #319acf 50%,
+      #1e2973 75%
+    );
+    background-clip: text;
+    width: fit-content;
+    color: #ffffff00;
+    margin: 0px auto;
+
+    h2 {
+      font-weight: bolder;
+    }
   }
 
   .hr {
     width: 130px;
     height: 2px;
-    background-image: linear-gradient(to right, #71008b, #ffffff);
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
   }
 
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
+  .avg-card {
+    overflow: auto;
+    position: relative;
+    background-color: #ecedf1;
 
-    i {
-      margin-left: 10px;
-    }
+    .cnt {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      overflow: hidden;
+      height: 687px;
 
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
+      .c-t {
+        width: 35%;
+        overflow: hidden;
+        padding: 20px;
+        position: relative;
+        height: fit-content;
+        top: 50%;
+        transform: translate(0px, -50%);
 
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #083a6e;
-      position: relative;
+        .item {
+          margin: 0px 10px 3rem 10px;
 
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #04769f;
-        font-weight: bold;
-        color: #ffffff;
+          h3 {
+            font-size: 24px;
+            letter-spacing: 1.8px;
+            color: #f2e627;
+          }
 
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
-        }
-
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
+          p {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: 1px;
+            text-align: left;
+            color: #ffffff;
+            height: 90px;
+          }
         }
       }
-    }
-  }
 
-  .video-card {
-    padding: 30px;
-    overflow: hidden;
-    position: relative;
-    background: #f9f9f9;
-
-    .video-row {
-      display: flex;
-      margin: 10px auto;
-      width: fit-content;
-
-      .item {
-        margin: 0px 10px;
-
-        hr {
-          margin: 5px 0px;
-          border-top: 2px solid #000000;
-        }
+      .c-i {
+        width: 30%;
       }
     }
   }
@@ -258,45 +264,6 @@ export default {
     h2 {
       font-size: 25px;
       margin-bottom: 20px;
-    }
-
-    .link {
-      width: 50%;
-    }
-
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-          p {
-            word-break: break-word;
-          }
-        }
-      }
-    }
-
-    .video-card {
-      padding: 10px;
-
-      h2 {
-        text-align: center;
-      }
-
-      .video-row {
-        display: block;
-        width: initial;
-
-        .item {
-          text-align: center;
-
-          p {
-            text-align: initial;
-          }
-        }
-      }
     }
   }
 }

@@ -2,22 +2,26 @@
     "college": {
         "bannerDesktopHref": "/images/college_banner-d.png",
         "bannerMoblieHref":"/images/college_banner-m.png",
-        "productName": "學生貸"
+        "productName": "普匯學生貸",
+        "desc":"快速、安全、隱私<br>現今為最受學生信賴的線上借貸平台！<br>幫助年輕人完成夢想！"
     },
     "engineer": {
         "bannerDesktopHref": "/images/engineer_banner-d.png",
         "bannerMoblieHref":"/images/engineer_banner-m.png",
-        "productName": "工程師貸"
+        "productName": "工程師貸",
+        "desc":"立即申請，提供給您更優惠的利率<br>全自動化審核，不耽誤您寶貴的時間！<br>忙碌之餘，也別忘靈活運用您的資金"
     },
     "freshgraduate": {
         "bannerDesktopHref": "/images/worker_banner-d.png",
         "bannerMoblieHref":"/images/worker_banner-m.png",
-        "productName": "上班族貸"
+        "productName": "上班族貸",
+        "desc":"貸款不必找銀行，一支手機即可完成！<br>不論是「週轉急用」、「投資理財」<br>24Hr內線上滿足您的資金需求！"
     },
     "invest": {
         "bannerDesktopHref": "/images/invest_banner-d.png",
         "bannerMoblieHref":"/images/invest_banner-m.png",
-        "productName": "債權投資"
+        "productName": "債權投資",
+        "desc":"運用Fintech投資債權<br>年化報酬8~15%<br>提早達成財務自由"
     },
     "mobile": {
         "bannerDesktopHref": "/images/mobile_banner-d.png",

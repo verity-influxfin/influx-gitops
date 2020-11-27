@@ -1,31 +1,26 @@
 <template>
   <div class="college-wrapper">
-    <banner :data="this.bannerData"></banner>
-    <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <!-- <h3>「夢想與生活的資金需求，普匯投資借給你！」</h3> -->
-          <p>「普匯．你的手機ATM」</p>
-          <p>「3分鐘申請，10分鐘核准，1小時到帳」</p>
-          <p>集結了各大學校友、老師，專門投資借貸同學在學期間的資金需求。</p>
+    <banner :data="bannerData" :isInvest="false"></banner>
+    <target :items="applyData.item" text="滿20歲的在校生，準備您的雙證件、學生證、金融卡，在APP上拍照上傳，立即核准！"></target>
+    <apply title="申貸簡便四步驟" :step="applyData.step" />
+    <div class="partner-card">
+      <img src="../asset/images/circle.svg" class="img-fluid" />
+      <div class="cnt">
+        <div class="c-c">
+          <div class="t-c">
+            <h2>服務範圍廣</h2>
+          </div>
+          <div class="hr"></div>
+          <p>超過156所大學生，不論是生活急需、還是補習進修費，都在找普匯！</p>
+          <p>成立不到兩年已幫助超過2萬名學生，讓學生一想到借錢，就想到普匯！</p>
+        </div>
+        <div class="c-i">
+          <img class="img-fluid" src="../asset/images/formosa.svg" />
         </div>
       </div>
     </div>
-    <div class="partner-card">
-      <div class="partner-box">
-        <p>我們服務了超過140所學校的同學</p>
-      </div>
-      <div class="partner-map">
-        <img class="img-fluid" src="../asset/images/taiwan.svg" />
-      </div>
-    </div>
     <credit :creditList="creditList" amount="12" />
-    <apply
-      title="申貸簡便四步驟"
-      :requiredDocuments="applyData.requiredDocuments"
-      :step="applyData.step"
-    />
-    <experience :experiences="experiences" title="同學回饋"/>
+    <experience :experiences="experiences" title="同學回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
   </div>
@@ -37,6 +32,7 @@ import download from "../component/downloadComponent";
 import experience from "../component/experienceComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
+import target from "../component/targetComponent";
 import credit from "../component/creditComponent";
 
 export default {
@@ -46,6 +42,7 @@ export default {
     experience,
     qa,
     apply,
+    target,
     credit,
   },
   data: () => ({
@@ -73,9 +70,6 @@ export default {
           data.push(row);
         }
       });
-
-      console.log();
-
       return data;
     },
     video() {
@@ -132,96 +126,78 @@ export default {
 .college-wrapper {
   width: 100%;
 
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-    color: #083a6e;
+  .t-c {
+    background-image: linear-gradient(
+      to right,
+      #1e2973 0%,
+      #319acf 50%,
+      #1e2973 75%
+    );
+    background-clip: text;
+    width: fit-content;
+    color: #ffffff00;
+    margin: 0px auto;
+
+    h2 {
+      font-weight: bolder;
+    }
   }
 
   .hr {
     width: 130px;
     height: 2px;
-    background-image: linear-gradient(to right, #000e8b, #ffffff);
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
-  }
-
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
-
-    i {
-      margin-left: 10px;
-    }
-
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
-
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #94d6eb;
-      position: relative;
-
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #04769f;
-        font-weight: bold;
-        color: #ffffff;
-
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
-        }
-
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
-        }
-      }
-    }
   }
 
   .partner-card {
     overflow: auto;
     position: relative;
-    padding: 4rem 0px 0px 0px;
-    display: flex;
-    justify-content: flex-end;
+    background-color: #ecedf1;
 
-    .partner-box {
-      background-color: #d9e7f5;
-      width: 30%;
-      position: relative;
+    .cnt {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      width: 80%;
 
-      p {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24.5px;
-        font-weight: bold;
-        line-height: 1.73;
-        color: #000000;
+      .hr {
+        margin: 1rem 0px;
       }
-    }
 
-    .partner-map {
-      overflow: hidden;
-      width: 55%;
+      .t-c {
+        background-image: linear-gradient(
+          to right,
+          #3179d5 0%,
+          #0ad0f4 50%,
+          #3179d5 75%
+        );
+
+        margin: 0px;
+      }
+
+      %width {
+        width: 50%;
+      }
+
+      .c-i {
+        @extend %width;
+      }
+
+      .c-c {
+        @extend %width;
+        padding: 5rem 0px;
+
+        p {
+          font-size: 17px;
+          font-weight: 500;
+          line-height: 2.5;
+          letter-spacing: 1px;
+          color: #ffffff;
+        }
+      }
     }
   }
 
@@ -229,10 +205,6 @@ export default {
     h2 {
       font-size: 25px;
       margin-bottom: 20px;
-    }
-
-    .link {
-      width: 50%;
     }
 
     .text-card {

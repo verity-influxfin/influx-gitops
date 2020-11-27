@@ -200,25 +200,6 @@ export default {
     background-size: cover;
   }
 
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
-
-    i {
-      margin-left: 10px;
-    }
-
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
-
   .text-card {
     .a-hr {
       height: 125px;
@@ -340,10 +321,6 @@ export default {
     h2 {
       font-size: 25px;
       margin-bottom: 20px;
-    }
-
-    .link {
-      width: 50%;
     }
 
     .intro-card {

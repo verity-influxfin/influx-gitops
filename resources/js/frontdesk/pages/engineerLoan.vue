@@ -1,20 +1,22 @@
 <template>
   <div class="engineer-wrapper">
-    <banner :data="this.bannerData"></banner>
-    <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <p>「普匯・你的手機ATM」</p>
-          <p>無論是學生/上班族，只要是資訊/資工/資管相關科系，我們特別提供給您優惠利率。</p>
-          <p>隨時隨地，只要打開APP，資金到手。</p>
-        </div>
-      </div>
-    </div>
-    <credit :creditList="creditList" amount="20" license="最高額度會根據您的申請身分而有所不同" />
+    <banner :data="this.bannerData" :isInvest="false"></banner>
+    <target
+      :items="applyData.item"
+      text="資訊/資工/資管相關科系的學生或從事相關職業，並提供專業技術證照，<br><br>馬上享有高額度、低利率的優惠！"
+    ></target>
     <apply
       title="申貸簡便五步驟"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
+    />
+    <div class="avg-card">
+      <img src="../asset/images/circle.svg" class="img-fluid" />
+    </div>
+    <credit
+      :creditList="creditList"
+      amount="20"
+      license="最高額度會根據您的申請身分而有所不同"
     />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
@@ -27,6 +29,7 @@ import download from "../component/downloadComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import credit from "../component/creditComponent";
+import target from "../component/targetComponent";
 
 export default {
   components: {
@@ -34,6 +37,7 @@ export default {
     download,
     qa,
     apply,
+    target,
     credit,
   },
   data: () => ({
@@ -66,19 +70,25 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post(`${location.origin}/getBannerData`, { filter: "engineer" }).then((res) => {
-        this.bannerData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getBannerData`, { filter: "engineer" })
+        .then((res) => {
+          this.bannerData = res.data;
+        });
     },
     getApplydata() {
-      axios.post(`${location.origin}/getApplydata`, { filter: "engineer" }).then((res) => {
-        this.applyData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getApplydata`, { filter: "engineer" })
+        .then((res) => {
+          this.applyData = res.data;
+        });
     },
     getQaData() {
-      axios.post(`${location.origin}/getQaData`, { filter: "engineer" }).then((res) => {
-        this.qaData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getQaData`, { filter: "engineer" })
+        .then((res) => {
+          this.qaData = res.data;
+        });
     },
     rotate(index, type) {
       let angle = window.outerWidth >= 767 ? 22.5 : 42.5;
@@ -128,82 +138,20 @@ export default {
   .hr {
     width: 130px;
     height: 2px;
-    background-image: linear-gradient(to right, #71008b, #ffffff);
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
   }
 
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
-
-    i {
-      margin-left: 10px;
-    }
-
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
-
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #94d6eb;
-      position: relative;
-
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #04769f;
-        font-weight: bold;
-        color: #ffffff;
-
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
-        }
-
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
-        }
-      }
-    }
+  .partner-card {
+    overflow: auto;
+    position: relative;
+    background-color: #ecedf1;
   }
 
   @media screen and (max-width: 767px) {
     h2 {
       font-size: 25px;
       margin-bottom: 20px;
-    }
-
-    .link {
-      width: 50%;
-    }
-
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-          p {
-            word-break: break-word;
-          }
-        }
-      }
     }
   }
 }

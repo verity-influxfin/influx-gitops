@@ -22,26 +22,72 @@
                 "stepDesc": "24小時款項收到款項"
             }
         ],
-        "requiredDocuments": [
+        "item": [
             {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "身分證",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_student_b.svg",
+                "text": "學生身分"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "健保卡",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_identity_b.svg",
+                "text": "實名認證"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "銀行帳號",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_social_b.svg",
+                "text": "社交帳號"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_student.svg",
-                "text": "學生身分",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_mail_b.svg",
+                "text": "電子信箱"
+            }
+        ]
+    },
+    "freshgraduate": {
+        "step": [
+            {
+                "num": 1,
+                "imgSrc": "./images/invest_worker_1.png",
+                "stepTitle": "選擇額度",
+                "stepDesc": "提供完整資訊,有助提高額度"
+            },
+            {
+                "num": 2,
+                "imgSrc": "./images/invest_worker_2.png",
+                "stepTitle": "上傳資料",
+                "stepDesc": "AI數據分析審核,全程無人打擾"
+            },
+            {
+                "num": 3,
+                "imgSrc": "./images/invest_worker_3.png",
+                "stepTitle": "持證自拍",
+                "stepDesc": "審核成功後,立即上架幫您媒合投資人"
+            },
+            {
+                "num": 4,
+                "imgSrc": "./images/invest_worker_4.png",
+                "stepTitle": "媒合成功",
+                "stepDesc": "24小時款項收到款項"
+            }
+        ],
+        "item": [
+            {
+                "imgSrc": "/images/icon_cert_rev2_worker_b.svg",
+                "text": "工作認證"
+            },
+            {
+                "imgSrc": "/images/icon_cert_rev2_identity_b.svg",
+                "text": "實名認證"
+            },
+            {
+                "imgSrc": "/images/icon_cert_rev2_social_b.svg",
+                "text": "社交帳號"
+            },
+            {
+                "imgSrc": "/images/icon_cert_rev2_mail_b.svg",
+                "text": "電子信箱"
+            },
+            {
+                "imgSrc": "/images/icon_cert_rev2_diploma_b.svg",
+                "text": "最高學歷"
             }
         ]
     },
@@ -78,91 +124,30 @@
                 "stepDesc": "24小時款項收到款項"
             }
         ],
-        "requiredDocuments": [
+        "item": [
             {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "身分證件",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_worker_b.svg",
+                "text": "工作認證"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "健保卡",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_identity_b.svg",
+                "text": "實名認證"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "銀行帳號",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_social_b.svg",
+                "text": "社交帳號"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_student.svg",
-                "text": "學歷證明",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_mail_b.svg",
+                "text": "電子信箱"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_worker.svg",
-                "text": "工程師專業證照",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_diploma_b.svg",
+                "text": "學歷證明"
             },
             {
-                "imgSrc": "./images/icon_cert_rev2_worker.svg",
-                "text": "上班族需另提供",
-                "memo": "1.聯徵報告<br>2.工作證明"
-            }
-        ]
-    },
-    "freshgraduate": {
-        "step": [
-            {
-                "num": 1,
-                "imgSrc": "./images/invest_worker_1.png",
-                "stepTitle": "選擇額度",
-                "stepDesc": "提供完整資訊,有助提高額度"
-            },
-            {
-                "num": 2,
-                "imgSrc": "./images/invest_worker_2.png",
-                "stepTitle": "上傳資料",
-                "stepDesc": "AI數據分析審核,全程無人打擾"
-            },
-            {
-                "num": 3,
-                "imgSrc": "./images/invest_worker_3.png",
-                "stepTitle": "持證自拍",
-                "stepDesc": "審核成功後,立即上架幫您媒合投資人"
-            },
-            {
-                "num": 4,
-                "imgSrc": "./images/invest_worker_4.png",
-                "stepTitle": "媒合成功",
-                "stepDesc": "24小時款項收到款項"
-            }
-        ],
-        "requiredDocuments": [
-            {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "身分證",
-                "memo": ""
-            },
-            {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "健保卡",
-                "memo": ""
-            },
-            {
-                "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "銀行帳號",
-                "memo": ""
-            },
-            {
-                "imgSrc": "./images/icon_cert_rev2_worker.svg",
-                "text": "工作證明",
-                "memo": ""
-            },
-            {
-                "imgSrc": "./images/icon_cert_rev2_icri.svg",
-                "text": "聯合徵信",
-                "memo": ""
+                "imgSrc": "/images/icon_cert_rev2_identity_b.svg",
+                "text": "工程師專業證照"
             }
         ]
     },
@@ -198,8 +183,7 @@
                 "stepTitle": "申請成功",
                 "stepDesc": "24小時款項收到款項"
             }
-        ],
-        "requiredDocuments": []
+        ]
     },
     "invest": {
         "step": [
@@ -227,23 +211,6 @@
                 "imgSrc": "./images/invest_4.png",
                 "stepTitle": "投資獲利",
                 "stepDesc": "借款人依照約定每月還款"
-            }
-        ],
-        "requiredDocuments": [
-            {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "身分證",
-                "memo": ""
-            },
-            {
-                "imgSrc": "./images/icon_cert_rev2_identity.svg",
-                "text": "健保卡",
-                "memo": ""
-            },
-            {
-                "imgSrc": "./images/icon_cert_rev2_bank.svg",
-                "text": "銀行帳號",
-                "memo": ""
             }
         ]
     },
@@ -275,7 +242,6 @@
                 "stepTitle": "上架成功,等待媒合",
                 "stepDesc": ""
             }
-        ],
-        "requiredDocuments": []
+        ]
     }
 }

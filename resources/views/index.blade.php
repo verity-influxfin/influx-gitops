@@ -61,13 +61,13 @@
         please turn on your jacascript
     </noscript>
     <div id="web_index" @mousemove="clicked">
-        <div class="blog-quiklink" ref="quiklink">
+        <!-- <div class="blog-quiklink" ref="quiklink">
             <i class="far fa-times-circle" @click="$($refs.quiklink).remove()"></i>
             <router-link to="shanghaipage"><img src="{{ asset('images/ah-pu.svg') }}"></router-link>
-        </div>
+        </div> -->
         <nav class="page-header navbar navbar-expand-lg sticky">
             <div class="web-logo">
-                <router-link to="index"><img src=" {{ asset('images/logo.png') }}" class="img-fluid"></router-link>
+                <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>
             </div>
             <router-link class="event" to="shanghaipage">普匯X上海<br>【萬元獎品等你拿】</router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,10 +85,7 @@
                         </ul>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>會員登入</p>
-                    </li>
-                    <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <router-link class="nav-link l" to="/register"><i class="fas fa-user-plus"></i>會員註冊</router-link>
+                        <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>SING IN</p>
                     </li>
                     <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
@@ -111,17 +108,17 @@
             <router-view></router-view>
         </div>
         <div class="page-footer">
+            <div class="btm-line"></div>
             <div class="top-content">
                 <div class="desc-card">
-                    <div class="img"><img src="{{ asset('images/footer.png') }}" class="img-fluid"></div>
-                    <div class="text">
-                        <p>inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。</p>
-                        <p><a href="tel:+886225079990" target="_blank"><span><i class="fas fa-phone"></i>&ensp;02-2507-9990</span></a></p>
-                        <p><a href="mailto:service@influxfin.com" target="_blank"><span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</span></a></p>
-                        <p><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i>&ensp;台北市松江路111號11樓-2</span></a></p>
+                    <div class="d-a">
+                        <H2>About</H2>
+                        <div class="img"><img src="{{ asset('images/footer.png') }}" class="img-fluid"></div>
                     </div>
+                    <p class="c-s">inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。</p>
                 </div>
                 <div class="loan-card">
+                    <H2>Loan</H2>
                     <ul class="list-column">
                         <li>
                             <router-link to="/collegeLoan">學生貸款</router-link>
@@ -144,6 +141,7 @@
                     </ul>
                 </div>
                 <div class="invest-card">
+                    <H2>Invest</H2>
                     <ul class="list-column">
                         <li>
                             <router-link to="/invest">債權投資</router-link>
@@ -153,7 +151,8 @@
                         </li>
                     </ul>
                 </div>
-                <div class="about-card">
+                <div class="support-card">
+                    <H2>Support</H2>
                     <ul class="list-column">
                         <li>
                             <router-link to="/company">關於我們</router-link>
@@ -166,14 +165,22 @@
                         </li>
                     </ul>
                 </div>
+                <div class="about-card">
+                    <H2>Follow Us</H2>
+                    <div class="text">
+                        <p><a href="tel:+886225079990" target="_blank"><span><i class="fas fa-phone"></i>&ensp;02-2507-9990</span></a></p>
+                        <p><a href="mailto:service@influxfin.com" target="_blank"><span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</span></a></p>
+                        <p><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i>&ensp;台北市松江路111號11樓-2</span></a></p>
+                    </div>
+                    <div class="community">
+                        <a target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook"></i></a>
+                        <a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
+                        <a target="_blank" href="https://www.instagram.com/pop.finance/"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
             </div>
             <hr />
             <div class="bottom-content">
-                <div class="community">
-                    <a target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook"></i></a>
-                    <a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
-                    <a target="_blank" href="https://www.instagram.com/pop.finance/"><i class="fab fa-instagram"></i></a>
-                </div>
                 <div class="contact">
                     <router-link to="/recruiting">徵才服務</router-link>|
                     <router-link to="/campuspartner">校園大使</router-link>|
@@ -265,6 +272,9 @@
                                 <span></span>
                             </div>
                             <button type="button" :class="['btn','btn-password']" @click="switchForm">忘記密碼?</button>
+                        </div>
+                        <div class="input-group">
+                            <router-link class="nav-link l" to="/register"><i class="fas fa-user-plus"></i>會員註冊</router-link>
                         </div>
                     </div>
                     <div class="alert alert-danger" v-if="message">@{{message}}</div>
