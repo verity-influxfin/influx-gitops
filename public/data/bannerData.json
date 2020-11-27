@@ -23,14 +23,15 @@
         "productName": "債權投資",
         "desc":"運用Fintech投資債權<br>年化報酬8~15%<br>提早達成財務自由"
     },
-    "mobile": {
-        "bannerDesktopHref": "/images/mobile_banner-d.png",
-        "bannerMoblieHref":"/images/mobile_banner-m.png",
-        "productName": ""
-    },
     "transfer": {
         "bannerDesktopHref": "/images/transfer_banner-d.png",
         "bannerMoblieHref":"/images/transfer_banner-m.png",
+        "productName": "債權轉讓",
+        "desc":"資金快速轉讓，創造高報酬<br>隨時靈活轉換您的資金 降低流動性風險"
+    },
+    "mobile": {
+        "bannerDesktopHref": "/images/mobile_banner-d.png",
+        "bannerMoblieHref":"/images/mobile_banner-m.png",
         "productName": ""
     },
     "company": {

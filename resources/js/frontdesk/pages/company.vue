@@ -1,131 +1,85 @@
 <template>
   <div class="company-wrapper">
-    <banner :data="this.bannerData"></banner>
     <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <!-- <h3>金融服務「普」及大眾，人才「匯」流。</h3> -->
-          <p>
-            普匯金融科技不是銀行，我們是Fintech金融科技的專家，由具備深厚的風險管控、金融產品設計經驗的團隊組成，運用AI智能科技與安全風控模組，搭起投資人與借款人的橋梁。
-          </p>
-          <p>
-            以「金融專業」為核心，「科技工具」為輔助，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化並串起社會閒置資源，幫助年輕人完成自我學習成長與創業夢想！
-          </p>
-        </div>
+      <img class="img-fluid" src="../asset/images/sd6v16.svg" />
+      <div class="cnt">
+        <h2>普匯相信每個年輕人，我們致力幫助他們完成人生的夢想</h2>
+        <div class="hr-l"></div>
+        <p>
+          普會金融科技不是銀行，我們是Fintech金融科技專家，由具備深厚的風險管控、金融產品設計經驗的團隊組成，<br />運用AI智能科技與安全風控模組，搭起投資人與借款人的橋樑。
+        </p>
+        <p>
+          以「金融專業」為核心，「科技工具」為輔助，提供「最有溫度」的社群服務，拉近人與人的距離，<br />讓金融年輕化並串起社會閒置資源，幫助年輕人完成自我學習成長與創業夢想！
+        </p>
       </div>
     </div>
-    <div class="child-bg">
-      <div class="advantage-card">
-        <h2>我們堅持</h2>
-        <div class="hr"></div>
-        <div class="advantage-cnt" ref="advantage_slick">
-          <div
-            v-for="(item, index) in regulations"
-            class="item hvr-bob"
-            :key="index"
-          >
-            <div class="img">
-              <img class="img-fluid" :src="item.imageSrc" />
-            </div>
-            <h5>{{ item.title }}</h5>
-            <p>{{ item.text }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="partner-card">
-        <h2>合作夥伴</h2>
-        <div class="hr"></div>
-        <div class="list">
-          <div
-            class="item"
-            data-aos="fade-down"
-            :data-aos-delay="100 * index"
-            data-aos-duration="500"
-            v-for="(item, index) in partner.slice(0, 6)"
-            :key="index"
-          >
-            <div class="photo hvr-bob">
-              <img
-                :src="item.imageSrc"
-                class="img-fluid"
-                @mouseenter="
-                  isShow = true;
-                  showPartner(index, $event);
-                "
-                @mouseleave="
-                  isShow = false;
-                  partnerData = {};
-                "
-              />
-            </div>
-            <p>{{ item.name }}</p>
-          </div>
-        </div>
-        <div class="list">
-          <div
-            class="item"
-            data-aos="fade-down"
-            :data-aos-delay="100 * (index + 6)"
-            data-aos-duration="500"
-            v-for="(item, index) in partner.slice(6)"
-            :key="index"
-          >
-            <div class="photo hvr-bob">
-              <img
-                :src="item.imageSrc"
-                class="img-fluid"
-                @mouseenter="
-                  isShow = true;
-                  showPartner(index + 6, $event);
-                "
-                @mouseleave="
-                  isShow = false;
-                  partnerData = {};
-                "
-              />
-            </div>
-            <p>{{ item.name }}</p>
-          </div>
-        </div>
+    <div class="partner-card">
+      <div class="t-c"><h2>合作夥伴</h2></div>
+      <div class="hr"></div>
+      <div class="list">
         <div
-          v-if="Object.keys(partnerData).length !== 0 && isShow"
-          class="content"
+          class="item"
+          data-aos="fade-down"
+          :data-aos-delay="100 * index"
+          data-aos-duration="500"
+          v-for="(item, index) in partner.slice(0, 6)"
+          :key="index"
         >
-          <h5>{{ partnerData.title }}</h5>
-          <p>{{ partnerData.subTitle }}</p>
-          <hr />
-          <p v-html="partnerData.text"></p>
+          <div class="photo hvr-bob">
+            <img
+              :src="item.imageSrc"
+              class="img-fluid"
+              @mouseenter="
+                isShow = true;
+                showPartner(index, $event);
+              "
+              @mouseleave="
+                isShow = false;
+                partnerData = {};
+              "
+            />
+          </div>
+          <p>{{ item.name }}</p>
         </div>
       </div>
-      <div class="media-card">
-        <h2>媒體報導支持</h2>
-        <div class="hr"></div>
-        <div class="title">
-          <div class="date">日期</div>
-          <div class="news-title">標題</div>
-          <div class="press">媒體</div>
-        </div>
-        <div class="list">
-          <div style="height: 325px; overflow: auto">
-            <div v-for="(item, index) in media" class="report-row" :key="index">
-              <div class="date">{{ item.date }}</div>
-              <div class="news-title" @click="openModel(item)">
-                <p>{{ item.title }}</p>
-              </div>
-              <div class="press">
-                <a :href="item.link" target="_blank">
-                  {{ item.media }}
-                  <i class="fas fa-external-link-alt"></i>
-                </a>
-              </div>
-            </div>
+      <div class="list">
+        <div
+          class="item"
+          data-aos="fade-down"
+          :data-aos-delay="100 * (index + 6)"
+          data-aos-duration="500"
+          v-for="(item, index) in partner.slice(6)"
+          :key="index"
+        >
+          <div class="photo hvr-bob">
+            <img
+              :src="item.imageSrc"
+              class="img-fluid"
+              @mouseenter="
+                isShow = true;
+                showPartner(index + 6, $event);
+              "
+              @mouseleave="
+                isShow = false;
+                partnerData = {};
+              "
+            />
           </div>
-          <div class="cover"></div>
+          <p>{{ item.name }}</p>
         </div>
+      </div>
+      <div
+        v-if="Object.keys(partnerData).length !== 0 && isShow"
+        class="content"
+      >
+        <h5>{{ partnerData.title }}</h5>
+        <p>{{ partnerData.subTitle }}</p>
+        <hr />
+        <p v-html="partnerData.text"></p>
       </div>
     </div>
     <div class="milestone-card">
-      <h2>普匯編年史</h2>
+      <div class="t-c"><h2>普匯編年史</h2></div>
       <div class="hr"></div>
       <div class="scroll left" @click="scroll('left')">
         <img src="/images/n_a_pre.svg" class="img-fluid" />
@@ -133,44 +87,62 @@
       <div class="chunk" ref="chunk">
         <div class="timeline">
           <div v-for="(item, index) in milestone" class="block" :key="index">
-            <div style="position: relative">
-              <timelinetopRoute
+            <div class="po">
+              <div
                 v-if="index % 2 === 0"
-                :index="index"
-                :route="routeArr"
-              />
-              <timelineBottomRoute v-else :index="index" :route="routeArr" />
-            </div>
-            <div
-              class="po"
-              :data-aos="index % 2 === 0 ? 'fade-up' : 'fade-down'"
-              :data-aos-delay="300 * (index + 1)"
-              data-aos-duration="1000"
-            >
-              <timelineTop
-                v-if="index % 2 === 0"
-                :color="pointArr[index]"
-                :date="item.hook_date"
-                :num="index"
-                :img="item.icon"
-              />
-              <timelineBottom
-                v-else
-                :color="pointArr[index]"
-                :date="item.hook_date"
-                :num="index"
-                :img="item.icon"
-              />
-              <div class="m-cnt">
-                <p>{{ item.title }}</p>
-                <!-- <div>{{ item.content }}</div> -->
+                :class="[
+                  'text',
+                  { start: index === 0 },
+                  { end: index === milestone.length - 1 },
+                ]"
+              >
+                <div>
+                  <h6>{{ item.hook_date }}</h6>
+                  <p>{{ item.title }}</p>
+                </div>
               </div>
+              <div
+                v-else
+                :class="[
+                  'text',
+                  { start: index === 0 },
+                  { end: index === milestone.length - 1 },
+                ]"
+              >
+                <div>
+                  <h6>{{ item.hook_date }}</h6>
+                  <p>{{ item.title }}</p>
+                </div>
+              </div>
+
+              <routeStart v-if="index === 0" :num="index + 1" />
+              <routeEnd
+                v-else-if="index === milestone.length - 1"
+                :num="index + 1"
+              />
+              <routeDot v-else :num="index + 1" />
             </div>
           </div>
         </div>
       </div>
       <div class="scroll right" @click="scroll('right')">
         <img src="/images/n_a_next.svg" class="img-fluid" />
+      </div>
+    </div>
+    <div class="media-card">
+      <div class="t-c"><h2>媒體報導支持</h2></div>
+      <div class="hr"></div>
+      <div class="list">
+        <div v-for="(item, index) in media" class="report-row" :key="index">
+          <div class="press">
+            <a :href="item.link" target="_blank">
+              <img :src="`/images/${item.imgSrc}`" />
+            </a>
+          </div>
+          <div class="news-title" @click="openModel(item)">
+            <p>{{ item.title }}</p>
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -198,63 +170,29 @@
 </template>
 
 <script>
-import bannerComponent from "../component/bannerComponent";
-import timelineTopComponent from "../component/svg/timelineTopComponent";
-import timelinetopRouteComponent from "../component/svg/timelinetopRouteComponent";
-import timelineBottomComponent from "../component/svg/timelineBottomComponent";
-import timelineBottomRouteComponent from "../component/svg/timelineBottomRouteComponent";
+import banner from "../component/bannerComponent";
+import routeStart from "../component/svg/routeStartComponent";
+import routeDot from "../component/svg/routeDotComponent";
+import routeEnd from "../component/svg/routeEndComponent";
 
 export default {
   components: {
-    banner: bannerComponent,
-    timelineTop: timelineTopComponent,
-    timelineBottom: timelineBottomComponent,
-    timelinetopRoute: timelinetopRouteComponent,
-    timelineBottomRoute: timelineBottomRouteComponent,
+    banner,
+    routeStart,
+    routeDot,
+    routeEnd,
   },
   data: () => ({
     isShow: false,
-    regulations: [
-      {
-        title: "簡單",
-        text:
-          "直覺化UIUX介面設計，讓操作使用更簡單便利，第一次開啟使用就能上手",
-        imageSrc: "/images/easy.svg",
-      },
-      {
-        title: "快速",
-        text:
-          "全程手機線上申請，AI系統24小時不間斷驗證，提升作業速度與效率，加快用戶取得資金",
-        imageSrc: "/images/fast.svg",
-      },
-      {
-        title: "安全",
-        text: "使用 Amazon Web Services雲端服務平台，個資絕不外洩",
-        imageSrc: "/images/security.svg",
-      },
-      {
-        title: "隱私",
-        text:
-          "全程無人系統驗證操作，從申請到取得款項，資訊完全不外洩，保障投資人與借款人各資隱密與隱私",
-        imageSrc: "/images/privacy.svg",
-      },
-      {
-        title: "低風險高報酬",
-        text: "小額分散、分期還款、降低風險、複利效果，創造最高報酬",
-        imageSrc: "/images/reward.svg",
-      },
-    ],
     media: [],
     partner: [],
     milestone: [],
-    pointArr: [],
     routeArr: [],
     partnerData: {},
     bannerData: {},
     reportData: {},
   }),
   created() {
-    this.getBannerData();
     this.getMilestoneData();
     this.getMediaData();
     this.getPartnerData();
@@ -273,26 +211,9 @@ export default {
     },
   },
   methods: {
-    getBannerData() {
-      axios
-        .post(`${location.origin}/getBannerData`, { filter: "company" })
-        .then((res) => {
-          this.bannerData = res.data;
-        });
-    },
     getMilestoneData() {
       axios.post(`${location.origin}/getMilestoneData`).then((res) => {
         this.milestone = res.data.reverse();
-        this.pointArr = this.gradientColor(
-          this.milestone.length,
-          "#1B0B8C",
-          "#EBEBEB"
-        );
-        this.routeArr = this.gradientColor(
-          this.milestone.length,
-          "#000067",
-          "#A4C9FF"
-        );
       });
     },
     getMediaData() {
@@ -362,189 +283,68 @@ export default {
         );
       }
     },
-    //color
-    gradientColor(length, start, end) {
-      let startRGB = this.colorRgb(start);
-      let startR = startRGB[0];
-      let startG = startRGB[1];
-      let startB = startRGB[2];
-
-      let endRGB = this.colorRgb(end);
-      let endR = endRGB[0];
-      let endG = endRGB[1];
-      let endB = endRGB[2];
-
-      let sR = (endR - startR) / length;
-      let sG = (endG - startG) / length;
-      let sB = (endB - startB) / length;
-
-      let colorArr = [];
-      for (let i = 0; i < length; i++) {
-        let hex = this.colorHex(
-          "rgb(" +
-            parseInt(sR * i + startR) +
-            "," +
-            parseInt(sG * i + startG) +
-            "," +
-            parseInt(sB * i + startB) +
-            ")"
-        );
-        colorArr.push(hex);
-      }
-
-      return colorArr;
-    },
-    colorRgb(sColor) {
-      let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
-      sColor = sColor.toLowerCase();
-      if (sColor && reg.test(sColor)) {
-        if (sColor.length === 4) {
-          let sColorNew = "#";
-          for (let i = 1; i < 4; i += 1) {
-            sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1));
-          }
-          sColor = sColorNew;
-        }
-        let sColorChange = [];
-        for (let i = 1; i < 7; i += 2) {
-          sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
-        }
-        return sColorChange;
-      } else {
-        return sColor;
-      }
-    },
-    colorHex(eColor) {
-      let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
-      eColor = eColor.toLowerCase();
-      if (/^(rgb|RGB)/.test(eColor)) {
-        let aColor = eColor.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
-        let strHex = "#";
-        for (let i = 0; i < aColor.length; i++) {
-          let hex = Number(aColor[i]).toString(16);
-          hex = hex < 10 ? 0 + "" + hex : hex;
-          if (hex === "0") {
-            hex += hex;
-          }
-          strHex += hex;
-        }
-        if (strHex.length !== 7) {
-          strHex = eColor;
-        }
-        return strHex;
-      } else if (reg.test(eColor)) {
-        let aNum = eColor.replace(/#/, "").split("");
-        if (aNum.length === 6) {
-          return eColor;
-        } else if (aNum.length === 3) {
-          let numHex = "#";
-          for (let i = 0; i < aNum.length; i += 1) {
-            numHex += aNum[i] + aNum[i];
-          }
-          return numHex;
-        }
-      } else {
-        return eColor;
-      }
-    },
   },
 };
 </script>
 
 <style lang="scss">
 .company-wrapper {
-  width: 100%;
-
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-    color: #061164;
-  }
-
-  .hr {
-    width: 130px;
-    height: 2px;
-    background-image: linear-gradient(to right, #71008b, #ffffff);
+  .t-c {
+    background-image: linear-gradient(
+      to right,
+      #1e2973 0%,
+      #319acf 50%,
+      #1e2973 75%
+    );
+    background-clip: text;
+    width: fit-content;
+    color: #ffffff00;
     margin: 0px auto;
-  }
 
-  .child-bg {
-    background-image: url("../asset/images/compony-bg.png");
-    background-position: 0 0;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-  }
-
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #94d6eb;
-      position: relative;
-
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #04769f;
-        font-weight: bold;
-        color: #ffffff;
-
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
-        }
-
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
-        }
-      }
+    h2 {
+      font-weight: bolder;
     }
   }
 
-  .advantage-card {
-    padding: 30px;
-    .advantage-cnt {
-      width: 80%;
-      margin: 10px auto;
-      overflow: hidden;
+  .hr {
+    width: 260px;
+    height: 1px;
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
+    margin: 0px auto;
+  }
 
-      .item {
-        padding: 10px;
-        margin: 10px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px 0 #6ab0f2;
-        background-color: #ffffff;
+  .text-card {
+    position: relative;
 
-        &:nth-of-type(odd) {
-          margin-top: 1rem;
-        }
-        &:nth-of-type(even) {
-          margin-top: 5rem;
-        }
+    h2 {
+      color: #022564;
+      font-weight: 700;
+    }
 
-        .img {
-          width: 100%;
-        }
+    .cnt {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: fit-content;
 
-        h5 {
-          text-align: center;
-          color: #8629a5;
-          font-weight: bold;
-          margin: 1rem 0px;
-        }
+      .hr-l {
+        height: 1px;
+        background-image: linear-gradient(
+          to left,
+          #16559b 0%,
+          #319acf 50%,
+          #16559b 0%
+        );
+        margin: 2rem auto;
+        width: 400px;
+      }
 
-        p {
-          text-align: justify;
-          color: #1f232c;
-          font-weight: bold;
-          margin: 0px;
-          font-size: 14px;
-        }
+      p {
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        color: #1c2a54;
       }
     }
   }
@@ -554,78 +354,44 @@ export default {
     position: relative;
     overflow: hidden;
 
-    %box {
+    .list {
       width: 80%;
       margin: 1.5rem auto;
       overflow-y: auto;
-      border-radius: 10px;
-      box-shadow: 0 0 10px 0 #6ab0f2;
-      background-color: #ffffff;
-    }
-
-    %div {
-      margin: 10px 0px;
-      padding: 0px 10px;
-    }
-
-    .title {
-      @extend %box;
-      display: flex;
-      color: #8629a5;
-
-      div {
-        @extend %div;
-        text-align: center;
-        font-weight: bold;
-      }
-    }
-
-    .list {
-      @extend %box;
-      position: relative;
-      height: 325px;
 
       .report-row {
-        display: flex;
-        font-size: 18px;
+        float: left;
+        width: calc(25% - 20px);
+        margin: 10px;
+        border-radius: 25px;
+        background-image: linear-gradient(to bottom, #ffffff, #e4eeff);
 
-        div {
-          @extend %div;
+        .press {
+          border-radius: 20px;
+          background: #ffffff;
+          border: 1px solid #81c3f3;
+          text-align: center;
+          padding: 2.5rem 0px;
+
+          img {
+            height: 60px;
+            width: auto;
+          }
         }
 
-        .news-title:hover {
-          cursor: pointer;
-          text-decoration: underline;
+        .news-title {
+          font-size: 15px;
+          font-weight: 700;
+          text-align: center;
+          color: #4a4a4a;
+          margin: 15px 10px;
+
+          &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
         }
       }
-
-      .cover {
-        z-index: 10;
-        height: 14px;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        background-image: linear-gradient(to top, #e5e5e5, #ededed);
-        box-shadow: 0px 0px 10px 10px #ededed;
-      }
-    }
-
-    .date {
-      width: 12%;
-      border-right: 1px solid #6ab0f2;
-    }
-
-    .news-title {
-      width: 71%;
-      border-right: 1px solid #6ab0f2;
-
-      p {
-        margin: 0px;
-      }
-    }
-
-    .press {
-      width: 17%;
     }
   }
 
@@ -718,6 +484,7 @@ export default {
     overflow: hidden;
     text-align: center;
     position: relative;
+    background-image: radial-gradient(circle at 50% 100%, #eef6ff, #ffffff 65%);
 
     .scroll {
       position: absolute;
@@ -747,54 +514,61 @@ export default {
       padding: 10px 20px;
 
       .block {
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        margin: 0px -14px;
-        padding: 10px 0px;
-
-        .po {
-          position: absolute;
-          top: 10px;
-        }
-
-        svg {
-          width: 250px;
+        &:nth-of-type(odd) {
+          .po {
+            .text {
+              top: 16%;
+            }
+          }
         }
 
         &:nth-of-type(even) {
-          .m-cnt {
-            bottom: 75%;
+          .po {
+            .text {
+              bottom: -10%;
+
+              div {
+                position: absolute;
+                bottom: 0;
+                width: max-content;
+              }
+            }
           }
         }
 
-        &:nth-of-type(odd) {
-          .m-cnt {
-            top: 75%;
-          }
-        }
+        .po {
+          width: 200px;
+          position: relative;
 
-        .m-cnt {
-          width: 180px;
-          position: absolute;
-          transition-duration: 0.5s;
-          left: 50%;
-          transform: translate(-50%, 0px);
-
-          p {
-            border-radius: 5px;
-            padding: 5px;
-            background: #ffffff;
-            color: #6b6b6b;
-            font-weight: bolder;
-            margin-bottom: 0rem;
-            box-shadow: 0px 0px 2px 0px #00000059;
+          .start {
+            transform: translate(-40%, -50%) !important;
           }
 
-          div {
-            text-align: justify;
-            height: 96px;
-            overflow: auto;
+          .end {
+            transform: translate(35px, -50%) !important;
+          }
+
+          .text {
+            position: absolute;
+            border-left: 1px solid #81c3f3;
+            padding-left: 10px;
+            left: 50%;
+            transform: translate(0px, -50%);
+            width: fit-content;
+            height: 100px;
+
+            h6 {
+              font-size: 15px;
+              color: #157efb;
+              text-align: start;
+            }
+
+            p {
+              text-align: start;
+              font-size: 12px;
+              color: #1c2a54;
+              font-weight: 600;
+            }
           }
         }
       }
@@ -833,25 +607,6 @@ export default {
   }
 
   @media screen and (max-width: 767px) {
-    .child-bg {
-      background-size: auto;
-    }
-
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-
-          p {
-            word-break: break-word;
-          }
-        }
-      }
-    }
-
     .advantage-card {
       padding: 10px;
 
