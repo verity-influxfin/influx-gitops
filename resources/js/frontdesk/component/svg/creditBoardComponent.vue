@@ -880,58 +880,58 @@
         15%
       </text>
       <text transform="matrix(1 0 0 1 249.2903 -110.1349)" class="st6 st7 st8">
-        12%
+        {{ credit.rate8 }}%
       </text>
       <text
         transform="matrix(0.9659 -0.2588 0.2588 0.9659 164.4017 -95.7585)"
         class="st6 st7 st8"
       >
-        11%
+        {{ credit.rate7 }}%
       </text>
       <text
         transform="matrix(0.866 -0.5 0.5 0.866 91.2108 -61.9797)"
         class="st6 st7 st8"
       >
-        10%
+        {{ credit.rate6 }}%
       </text>
       <text
         transform="matrix(0.7071 -0.7071 0.7071 0.7071 32.5404 -10.0459)"
         class="st6 st7 st8"
       >
-        9%
+        {{ credit.rate5 }}%
       </text>
       <text
         transform="matrix(-0.2588 -0.9659 0.9659 -0.2588 -41.0706 299.4465)"
         class="st6 st7 st8"
       >
-        5%
+        {{ credit.rate1 }}%
       </text>
       <text
         transform="matrix(0.2588 -0.9659 0.9659 0.2588 -45.2655 134.9623)"
         class="st6 st7 st8"
       >
-        7%
+        {{ credit.rate3 }}%
       </text>
       <text
         transform="matrix(0.5 -0.866 0.866 0.5 -16.6586 55.9933)"
         class="st6 st7 st8"
       >
-        8%
+        {{ credit.rate4 }}%
       </text>
       <text
         transform="matrix(-2.787685e-07 -1 1 -2.787685e-07 -55.3176 218.2696)"
         class="st6 st7 st8"
       >
-        6%
+        {{ credit.rate2 }}%
       </text>
       <text
         transform="matrix(0.9659 0.2588 -0.2588 0.9659 330.8185 -101.7646)"
         class="st6 st7 st8"
       >
-        13%
+        {{ credit.rate9 }}%
       </text>
     </g>
-    <g>
+    <g class="svg-pointer" :style="`transform: rotate(${$props.deg}deg)`">
       <polyline class="st9" points="455,460.3 54.9,470.3 455.2,480 	" />
       <path
         class="st9"
@@ -945,11 +945,6 @@
 <script>
 export default {
   props: ["credit", "deg", "index"],
-  methods: {
-    click(formula) {
-      this.$emit("move", formula, this.$props.index);
-    },
-  },
 };
 </script>
 
@@ -1001,6 +996,12 @@ export default {
     stroke-width: 0.5;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+
+  .svg-pointer {
+    transform-origin: 61% 61%;
+    transition-duration: 0.5s;
+    transform: rotate(-150deg);
   }
 }
 </style>

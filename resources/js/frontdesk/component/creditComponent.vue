@@ -1,11 +1,15 @@
 <template>
   <div class="credit-card">
     <div class="credit-box">
-      <h2>速貸{{ $props.amount }}萬，每月需付多少呢？</h2>
+      <p class="t-t">
+        只要有一支手機，「5分鐘」完成申貸手續、「10分鐘」核准、「60分鐘」到帳，<br />
+        全程AI自動審核、無人照會打擾，<br />
+        完全符合現代年輕人希望簡單、快速、尊重隱私的生活需求！
+      </p>
+      <div class="t-c"><h2>年化%與月息試算</h2></div>
       <div class="hr"></div>
-      <p>
-        我們使用信用評等決定您的月付金
-        <br />貸
+      <p class="t-x">
+        速貸{{ amount }}萬元、分
         <select v-model="periods">
           <option value="3">3</option>
           <option value="6">6</option>
@@ -16,10 +20,9 @@
           <option value="21">21</option>
           <option value="24">24</option>
         </select>
-        期，信評{{ index + 1 }}級，每月需付<b>{{ format(tweenedPmt) }}</b>
-        <br />驗證資料提供的越完整，對信評越有幫助，月付金越少！
+        期，每月需付<b>{{ format(tweenedPmt) }}</b>
       </p>
-      <p>可點選您的評級進行月付金試算</p>
+      <p class="t-x">可點選您的評級進行月付金試算</p>
       <div class="credit-level-list">
         <div
           v-for="(item, index) in creditLevelList"
@@ -34,20 +37,9 @@
         <br />
         <p class="license">*{{ $props.license }}</p>
       </template>
-      <a
-        href="https://event.influxfin.com/R/url?p=webbanner"
-        target="_blank"
-        class="btn btn-go"
-        >了解更多</a
-      >
     </div>
     <div class="credit-board">
-      <creditBoard
-        :credit="$props.creditList"
-        :deg="deg"
-        :index="index"
-        @move="movePointer"
-      />
+      <creditBoard :credit="$props.creditList" :deg="deg" :index="index" />
     </div>
   </div>
 </template>
@@ -65,15 +57,15 @@ export default {
     periods: 24,
     tweenedPmt: 0,
     creditLevelList: [
-      { href: "icon_credit_level01.svg", deg: "-150", isChecked: true },
-      { href: "icon_credit_level02.svg", deg: "-135", isChecked: false },
-      { href: "icon_credit_level03.svg", deg: "-120", isChecked: false },
-      { href: "icon_credit_level04.svg", deg: "-105", isChecked: false },
-      { href: "icon_credit_level05.svg", deg: "-90", isChecked: false },
-      { href: "icon_credit_level06.svg", deg: "-75", isChecked: false },
-      { href: "icon_credit_level07.svg", deg: "-60", isChecked: false },
-      { href: "icon_credit_level08.svg", deg: "-45", isChecked: false },
-      { href: "icon_credit_level09.svg", deg: "-30", isChecked: false },
+      { href: "icon_credit_level01.svg", deg: "-30", isChecked: true },
+      { href: "icon_credit_level02.svg", deg: "-15", isChecked: false },
+      { href: "icon_credit_level03.svg", deg: "0", isChecked: false },
+      { href: "icon_credit_level04.svg", deg: "15", isChecked: false },
+      { href: "icon_credit_level05.svg", deg: "30", isChecked: false },
+      { href: "icon_credit_level06.svg", deg: "45", isChecked: false },
+      { href: "icon_credit_level07.svg", deg: "60", isChecked: false },
+      { href: "icon_credit_level08.svg", deg: "75", isChecked: false },
+      { href: "icon_credit_level09.svg", deg: "90", isChecked: false },
     ],
   }),
   mounted() {
@@ -109,14 +101,6 @@ export default {
       this.deg = creditLevelList[key].deg;
       this.pmt();
     },
-    movePointer(formula, key) {
-      let { creditLevelList } = this;
-      key = formula === "plus" ? parseInt(key) + 1 : parseInt(key) - 1;
-
-      if (0 <= key && key <= creditLevelList.length - 1) {
-        this.rotate(true, key);
-      }
-    },
     pmt() {
       let m_rate =
         this.$props.creditList[
@@ -131,47 +115,53 @@ export default {
 
 <style lang="scss">
 .credit-card {
-  display: flex;
   overflow: auto;
-  padding: 4rem 0px 0px 0px;
+  padding: 4rem 8rem;
   position: relative;
   background: #ecedf1;
 
   .credit-box {
-    width: 65%;
-    padding: 0px 15rem 0px 15rem;
+    .t-c {
+      margin: 0px;
+    }
 
-    p {
-      font-size: 16px;
+    .hr {
+      margin: 1rem 0px;
+    }
+
+    .t-t {
+      font-size: 22px;
+      line-height: 2.27;
+      letter-spacing: 1.1px;
+      text-align: left;
+      color: #143970;
       font-weight: bold;
-      color: #1f232c;
-      line-height: 1.5;
-      margin: 20px;
-
-      b {
-        color: #ff7600;
-      }
+      margin-bottom: 5rem;
     }
 
     .credit-level-list {
       overflow: auto;
-      padding: 0px 6rem;
-      width: fit-content;
+      width: 350px;
 
       .level-item {
-        filter: opacity(0.4);
-        width: calc(33% - 40px);
+        width: calc(33% - 20px);
         float: left;
         border-radius: 50%;
-        background-color: #ffffff;
-        margin: 10px 20px;
+        margin: 10px 10px;
         padding: 10px;
 
         &.light {
-          filter: initial;
-          box-shadow: 0 0 10px 0 #6ab0f2;
+          filter: drop-shadow(0px 0px 3px black);
         }
       }
+    }
+
+    .t-x {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 0.5;
+      letter-spacing: 1px;
+      color: #143970;
     }
 
     .license {
@@ -179,23 +169,14 @@ export default {
       font-size: 11px;
       margin: 0px;
     }
-
-    .btn-go {
-      display: block;
-      padding: 5px 20px;
-      margin: 10px auto;
-      font-weight: bold;
-      color: #ffffff;
-      text-align: center;
-      border-radius: 25px;
-      box-shadow: 1px 2px 3px black;
-      background: #104073;
-      width: fit-content;
-    }
   }
 
   .credit-board {
-    width: 35%;
+    width: 550px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
   }
 }
 

@@ -15,34 +15,41 @@
       <div class="cnt">
         <div class="c-t">
           <div class="item">
-            <h3>即時審核，快速媒合放款</h3>
+            <div class="t-c"><h3>即時審核，快速媒合放款</h3></div>
             <p>
               系統自動化審核加快申貸的速度，平均3分鐘完成申請、10分鐘核准、60分鐘到帳！
             </p>
           </div>
           <div class="item">
-            <h3>全線上無人化</h3>
+            <div class="t-c"><h3>全線上無人化</h3></div>
             <p>
               運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。
             </p>
           </div>
           <div class="item">
-            <h3>隱私無照會</h3>
+            <div class="t-c"><h3>隱私無照會</h3></div>
             <p>
               申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。
             </p>
           </div>
         </div>
-        <div class="c-i">123</div>
+        <div class="c-i">
+          <div class="i-line">
+            <img class="img-fluid" src="../asset/images/m-line.png" />
+          </div>
+          <div class="i-m">
+            <img class="img-fluid" src="../asset/images/mobile.png" />
+          </div>
+        </div>
         <div class="c-t">
           <div class="item">
-            <h3>聯徵不留紀錄</h3>
+            <div class="t-c"><h3>聯徵不留紀錄</h3></div>
             <p>
               不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。
             </p>
           </div>
           <div class="item">
-            <h3>費率單純透明</h3>
+            <div class="t-c"><h3>費率單純透明</h3></div>
             <p>
               只收取一次手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。
             </p>
@@ -225,7 +232,7 @@ export default {
       height: 687px;
 
       .c-t {
-        width: 35%;
+        width: 37.5%;
         overflow: hidden;
         padding: 20px;
         position: relative;
@@ -236,10 +243,17 @@ export default {
         .item {
           margin: 0px 10px 3rem 10px;
 
-          h3 {
-            font-size: 24px;
-            letter-spacing: 1.8px;
-            color: #f2e627;
+          .t-c {
+            background-image: linear-gradient(
+              to right,
+              #306fca 0%,
+              #09d4f6 50%,
+              #306fca 75%
+            );
+            margin: 0px;
+            h3 {
+              font-size: 24px;
+            }
           }
 
           p {
@@ -255,8 +269,31 @@ export default {
       }
 
       .c-i {
-        width: 30%;
+        width: 25%;
+        margin: 2.5rem 0px;
+        position: relative;
+
+        .i-m {
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          animation: i-m-float 2.5s ease-in-out infinite;
+        }
       }
+    }
+  }
+
+  @keyframes i-m-float {
+    0% {
+      transform: translatey(-5px);
+    }
+
+    50% {
+      transform: translatey(5px);
+    }
+
+    100% {
+      transform: translatey(-5px);
     }
   }
 
