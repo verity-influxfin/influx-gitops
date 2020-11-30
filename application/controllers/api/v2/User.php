@@ -1232,10 +1232,10 @@ class User extends REST_Controller {
 		$qrcode			  = get_qrcode($url);
         $beginDate = '2020-02-09 23:00';
         $lastday = '2020-02-29 23:59';
-        $check= $this->line_lib->check_thirty_points();
-        if ($check !== 'success') {
-			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
-        }
+//        $check= $this->line_lib->check_thirty_points();
+//        if ($check !== 'success') {
+//			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
+//        }
 		
         //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
@@ -1297,10 +1297,10 @@ class User extends REST_Controller {
 		$qrcode			  = get_qrcode($url);
         $beginDate = '2020-02-09 23:00';
         $lastday = '2020-02-29 23:59';
-        $check= $this->line_lib->check_thirty_points();
-        if ($check !== 'success') {
-			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
-        }
+//        $check= $this->line_lib->check_thirty_points();
+//        if ($check !== 'success') {
+//			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
+//        }
 		
         //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
