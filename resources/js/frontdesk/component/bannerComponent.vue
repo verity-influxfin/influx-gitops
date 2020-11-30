@@ -96,26 +96,24 @@ export default {
 
 @media (max-width: 767px) {
   .product-banner {
-    background-position: 50% 50%;
-    height: 547px;
-
-    .banner-title {
+    .banner-cnt {
+      width: 100%;
+      top: 50%;
       left: 50%;
-    }
+      transform: translate(-50%, -50%);
 
-    .banner-download {
-      left: 50%;
-      width: 90%;
-
-      .b-link {
-        width: 150px;
+      .banner-title {
+        text-align: center;
       }
-    }
 
-    .banner-content {
-      position: initial;
-      transform: initial;
-      margin: 20px auto;
+      .banner-desc {
+        text-align: center;
+        font-size: 20px;
+      }
+
+      .banner-download {
+        width: 60%;
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="company-wrapper">
     <div class="text-card">
-      <img class="img-fluid" src="../asset/images/sd6v16.svg" />
+      <img class="img-fluid ib" src="../asset/images/sd6v16.svg" />
       <div class="cnt">
         <h2>普匯相信每個年輕人，我們致力幫助他們完成人生的夢想</h2>
         <div class="hr-l"></div>
@@ -203,13 +203,6 @@ export default {
       AOS.init();
     });
   },
-  watch: {
-    milestone() {
-      this.$nextTick(() => {
-        this.createSlick();
-      });
-    },
-  },
   methods: {
     getMilestoneData() {
       axios.post(`${location.origin}/getMilestoneData`).then((res) => {
@@ -232,26 +225,6 @@ export default {
         this.partner = res.data;
       });
     },
-    createSlick() {
-      $(this.$refs.advantage_slick).slick({
-        infinite: true,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        autoplay: true,
-        dots: false,
-        arrows: false,
-        speed: 1000,
-        responsive: [
-          {
-            breakpoint: 767,
-            settings: {
-              slidesToShow: 1,
-              slidesToScroll: 1,
-            },
-          },
-        ],
-      });
-    },
     showPartner(index, $event) {
       let $target = $($event.target);
       this.partnerData = this.partner[index];
@@ -270,14 +243,14 @@ export default {
       if (direction === "left") {
         $(this.$refs.chunk).animate(
           {
-            scrollLeft: scrollLeft - 330,
+            scrollLeft: scrollLeft - 200,
           },
           { duration: 1000, queue: false }
         );
       } else {
         $(this.$refs.chunk).animate(
           {
-            scrollLeft: scrollLeft + 330,
+            scrollLeft: scrollLeft + 200,
           },
           { duration: 1000, queue: false }
         );
@@ -607,46 +580,32 @@ export default {
   }
 
   @media screen and (max-width: 767px) {
-    .advantage-card {
-      padding: 10px;
+    .text-card {
+      padding: 20px 10px;
 
-      .advantage-cnt {
+      h2 {
+        font-size: 20px;
+        text-align: center;
+      }
+
+      .ib {
+        display: none;
+      }
+
+      .cnt {
+        position: initial;
+        transform: initial;
         width: 100%;
 
-        .item {
-          margin: 10px !important;
-          box-shadow: 0 0 10px 0px #00000014;
-
-          .img {
-            img {
-              margin: 0px auto;
-            }
-          }
+        .hr-l {
+          margin: 1rem auto;
+          width: 100%;
         }
-      }
-    }
-
-    .media-card {
-      padding: 10px;
-
-      %box {
-        margin: 10px auto;
-        width: 100%;
-        box-shadow: 0 0 10px 0px #00000014;
-      }
-
-      .news-title {
-        overflow: hidden;
 
         p {
-          width: 400%;
+          text-align: justify;
+          font-size: 14px;
         }
-      }
-      .press {
-        width: 55%;
-      }
-      .date {
-        display: none;
       }
     }
 
@@ -677,6 +636,38 @@ export default {
     .milestone-card {
       .scroll {
         display: block;
+        top: 55%;
+      }
+    }
+
+    .media-card {
+      padding: 10px;
+
+      .list {
+        width: 100%;
+        margin: 10px 0px;
+
+        .report-row {
+          width: calc(50% - 10px);
+          margin: 5px;
+
+          .news-title {
+            font-size: 13px;
+            margin: 5px;
+            height: 60px;
+
+            P {
+              margin: 0px;
+            }
+          }
+
+          .press {
+            padding: 1.5rem 0px;
+            img {
+              height: 35px;
+            }
+          }
+        }
       }
     }
   }

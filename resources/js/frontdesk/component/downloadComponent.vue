@@ -103,7 +103,7 @@ export default {
           text-align: center;
           width: fit-content;
 
-          &:hover{
+          &:hover {
             text-decoration: none;
           }
         }
@@ -150,28 +150,25 @@ export default {
 
 @media screen and (max-width: 767px) {
   .download-card {
-    background-size: auto 100%;
+    img {
+      height: 270px;
+      max-width: initial;
+      position: absolute;
+      top: 0;
+      z-index: -1;
+    }
+    .abs {
+      position: initial;
+      transform: inherit;
 
-    .d-desc {
-      width: 100%;
-      padding: 2rem;
+      .d-desc {
+        width: 100%;
+        padding: 2rem;
+      }
     }
 
     .img {
       display: none;
-    }
-
-    .d-apps {
-      width: 100%;
-
-      %font {
-        width: 100%;
-
-        .d-link {
-          width: 80%;
-          margin: 10px auto;
-        }
-      }
     }
   }
 }

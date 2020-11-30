@@ -40,7 +40,7 @@ export default {
   data: () => ({
     options: {
       type: "loop",
-      // autoplay: true,
+      autoplay: true,
       perPage: 4,
       perMove: 1,
       pagination: false,

@@ -573,13 +573,13 @@ export default {
     },
     avgOptions: {
       type: "loop",
-      autoplay: true,
+      autoplay: false,
       perPage: 3,
       arrows: false,
       pagination: false,
       gap: "1.5rem",
       breakpoints: {
-        767: { perPage: 1 },
+        767: { autoplay: false, perPage: 1 },
       },
     },
     infoOptions: {
@@ -595,26 +595,26 @@ export default {
     },
     personOptions: {
       type: "loop",
-      autoplay: true,
+      autoplay: false,
       perPage: 3,
       perMove: 1,
       arrows: false,
       pagination: false,
       gap: "1rem",
       breakpoints: {
-        767: { perPage: 1 },
+        767: { autoplay: true, perPage: 1 },
       },
     },
     groupOptions: {
       type: "loop",
-      autoplay: true,
+      autoplay: false,
       perPage: 2,
       perMove: 1,
       arrows: false,
       pagination: false,
       gap: "1rem",
       breakpoints: {
-        767: { perPage: 1 },
+        767: { autoplay: true, perPage: 1 },
       },
     },
     csOptions: {
@@ -1333,15 +1333,6 @@ export default {
         width: 30%;
       }
 
-      .slick-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translatey(-50%);
-        font-size: 23px;
-        z-index: 1;
-        cursor: pointer;
-      }
-
       .slick-item.is-visible {
         transform: scale(0.9);
       }
@@ -1477,191 +1468,171 @@ export default {
       }
     }
 
-    .product-card {
-      background-size: initial;
-      padding: 0px;
+    .intro-card {
+      padding: 10px;
 
-      .pattern {
+      .i-t {
+        text-align: justify;
+      }
+    }
+
+    .histroy-card {
+      padding: 10px;
+
+      .h-c {
         width: 100%;
-        margin: 10px 0px;
-        overflow: hidden;
+        overflow: auto;
+        padding: 10px;
 
-        .circle {
-          top: 37%;
-
-          %invest-dot {
-            display: none;
-          }
-
-          .cnt {
-            height: 100px;
-            width: 100px;
-            padding: 8px 0px;
-          }
+        div {
+          width: 300px;
         }
+      }
+    }
 
-        %p-bg {
-          width: calc(50% - 15px);
+    .p2p-card {
+      padding: 10px 0px;
 
-          .imagery {
-            display: block;
-            padding: 10px;
-            margin-top: -70px;
-            position: relative;
-            z-index: -1;
+      .img {
+        width: 100%;
+        margin: 1rem auto;
+      }
+    }
 
-            .img {
-              width: 100%;
-              position: initial;
+    .product-card {
+      h5 {
+        font-size: 17px;
+        margin: 1rem auto;
+      }
 
-              img {
-                width: 65%;
-                left: 50%;
-                transform: translateX(-50%);
-                bottom: 10px;
-              }
-            }
-
-            span {
-              display: none;
-            }
+      .typ {
+        .v {
+          .b {
+            width: 100%;
           }
-
-          p {
-            color: #ffffff;
-          }
-        }
-
-        .p-i {
-          @extend %p-bg;
-          margin-right: 5px;
-          margin-left: 10px;
-        }
-
-        .p-l {
-          @extend %p-bg;
-          margin-left: 5px;
-          margin-right: 10px;
         }
       }
 
-      .product {
-        width: initial;
+      .person {
+        padding: 10px;
 
-        .product-list {
-          padding: 10px;
-          .i {
-            width: calc(100%);
+        .product {
+          width: 100%;
+        }
+      }
 
-            .card-item {
-              margin: 5px 0px;
+      .group {
+        padding: 10px;
 
-              .img {
-                width: 120px;
+        .product {
+          width: 100%;
+        }
+      }
+    }
 
-                img {
-                  left: 5px;
-                }
-              }
+    .advantage-card {
+      .adv-cnt {
+        width: 95%;
 
-              .cv {
-                padding: 10px;
-                width: calc(100% - 120px);
+        .header {
+          margin: 10px;
+          min-height: 106px;
+
+          .slg {
+            margin: 0px;
+            .title {
+              margin: 10px auto;
+              font-size: 20px;
+            }
+
+            .l-btn {
+              font-size: 18px;
+            }
+          }
+        }
+
+        .content {
+          padding: 0.5rem;
+
+          .item {
+            padding: 1rem;
+
+            .img {
+              margin: 0px auto;
+              width: 75px;
+
+              img {
+                height: 50px;
               }
             }
+          }
+        }
+      }
+    }
+
+    .slogan-card {
+      padding: 20px 10px;
+
+      .cnt {
+        margin: 0px auto;
+        width: 100%;
+        flex-direction: column;
+
+        .cnt-l {
+          width: 100%;
+
+          h3 {
+            margin: 0px auto;
+          }
+
+          div {
+            display: none;
+            margin: 0px;
+          }
+
+          .ad-b {
+            display: block;
+            height: 115px;
+          }
+        }
+
+        .cnt-r {
+          width: 80%;
+          margin: 0px auto;
+
+          .c-s {
+            width: 100%;
+          }
+
+          .cover {
+            width: 100%;
           }
         }
       }
     }
 
     .game-card {
-      %layout {
-        text-align: center;
-        background-color: #ffffff;
-        padding: 20px 10px;
-        width: initial;
-        margin: 10px;
-      }
+      padding: 10px;
 
       h5 {
-        font-size: 16px;
+        font-size: 20px;
+        margin: 10px auto;
       }
 
-      .loan-game {
-        .option {
-          display: block;
-          overflow: hidden;
+      .cnt {
+        width: 100%;
+        flex-direction: column;
 
-          .item {
-            float: left;
-            width: calc(100% / 4 - 10px);
-
-            .circle {
-              width: 70px;
-              height: 70px;
-              margin: 5px auto;
-            }
-          }
+        .amount-chart {
+          order: 2;
+          width: 100%;
         }
 
-        .credit-num {
-          margin: 10px 0px;
-
-          .circle {
-            width: initial;
-
-            .total {
-              left: 50%;
-              padding: 0px 10px;
-
-              p {
-                margin-top: 15px;
-              }
-            }
-          }
-        }
-      }
-
-      .invest-game {
-        padding: 10px;
-        .chart {
-          height: 300px;
-          margin: 0px;
-        }
-
-        .option {
-          .item {
-            float: initial;
-            width: calc(100% - 10px);
-          }
-        }
-      }
-    }
-
-    .advantage-card {
-      .header {
-        padding: 10px;
-        min-height: auto;
-
-        .slg {
-          position: relative;
-          transform: initial;
-          top: 0%;
-          left: 0%;
-          margin: 35px 10px;
-
-          .title {
-            font-size: 22px;
-          }
-        }
-      }
-
-      .content {
-        .item {
-          padding: 1rem;
-          height: 315px;
-          p {
-            font-size: 28px;
+        .aa-as {
+          width: 100%;
+          .option {
+            position: initial;
+            transform: initial;
           }
         }
       }
@@ -1673,52 +1644,30 @@ export default {
       }
 
       .tab-content {
-        .btn-to {
-          width: 70%;
+        .splide__arrow--prev{
+          left:-1rem;
         }
-      }
-    }
 
-    .slogan-card {
-      overflow: hidden;
-      padding: 25px 10px;
+        .splide__arrow--next{
+          right: -1rem;
+        }
+        
+        .slick-item {
+          transform: scale(1);
+        }
 
-      .content {
-        width: 75%;
-        text-align: justify;
-      }
+        .slick-item.is-visible {
+          transform: scale(1);
+        }
 
-      .slogan {
-        width: 80%;
-      }
+        .slick-item.is-visible + .slick-item.is-visible {
+          transform: scale(1);
+        }
 
-      .img {
-        display: none;
-      }
-    }
-
-    .download-card {
-      background-size: auto 100%;
-
-      .d-desc {
-        width: 100%;
-        padding: 2rem;
-      }
-
-      .img {
-        display: none;
-      }
-
-      .d-apps {
-        width: 100%;
-
-        %font {
-          width: 100%;
-
-          .d-link {
-            width: 80%;
-            margin: 10px auto;
-          }
+        .slick-item.is-visible
+          + .slick-item.is-visible
+          + .slick-item.is-visible {
+          transform: scale(1);
         }
       }
     }

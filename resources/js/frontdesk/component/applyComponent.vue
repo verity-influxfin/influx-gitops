@@ -161,9 +161,9 @@ export default {
         margin: 10px;
 
         .step {
-          .img {
-            margin: initial;
+          margin-top: 90%;
 
+          .img {
             .sub-img1 {
               right: -30px;
             }

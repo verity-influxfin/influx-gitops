@@ -63,6 +63,9 @@
       <div class="cnt">
         <div class="tab-content">
           <div id="optional" class="tab-pane fade active show">
+            <span class="d-h">
+              依據信用等級、就讀學校、申貸原因、年化報酬率、期數，自由選擇您喜好的投資標的。
+            </span>
             <div class="pic">
               <img
                 src="../asset/images/optional_invset.png"
@@ -71,11 +74,17 @@
             </div>
           </div>
           <div id="smart" class="tab-pane fade">
+            <span class="d-h">
+              設定您的偏好的信用等級、年化報酬率、期數等自動下標，24小時不錯失優質案件！
+            </span>
             <div class="pic">
               <img src="../asset/images/smart_invest.png" class="img-fluid" />
             </div>
           </div>
           <div id="quick" class="tab-pane fade">
+            <span class="d-h"
+              >申請人無提供最高學歷，同時您可以獲得更好的報酬率。</span
+            >
             <div class="pic">
               <img src="../asset/images/quick_invest.png" class="img-fluid" />
             </div>
@@ -92,9 +101,9 @@
               </div>
               <div>
                 <p>自選標的</p>
-                <span
-                  >依據信用等級、就讀學校、申貸原因、年化報酬率、期數，自由選擇您喜好的投資標的。</span
-                >
+                <span>
+                  依據信用等級、就讀學校、申貸原因、年化報酬率、期數，自由選擇您喜好的投資標的。
+                </span>
               </div>
             </a>
           </li>
@@ -470,17 +479,17 @@ export default {
             { name: "債權總額", icon: "path://M19,12l-10,0l0,1l10,0z" },
           ],
           selectedMode: false,
-          right: 0,
-          bottom: 50,
+          right: window.outerWidth > 400 ? 0 : "auto",
+          bottom: window.outerWidth > 400 ? 50 : "auto",
           textStyle: {
             color: "#fff",
           },
-          width: "50px",
+          width: window.outerWidth > 400 ? "50px" : "auto",
         },
         grid: {
           left: 30,
-          top: 10,
-          right: 130,
+          top: window.outerWidth > 400 ? 10 : 30,
+          right: window.outerWidth > 400 ? 130 : 30,
           bottom: 100,
         },
         title: {
@@ -489,7 +498,7 @@ export default {
             color: "#ffffff",
             fontSize: 14,
           },
-          right: "40%",
+          right: window.outerWidth > 400 ? "auto" : "40%",
           bottom: "0",
         },
         dataZoom: {
@@ -747,6 +756,10 @@ export default {
       }
     }
 
+    .d-h {
+      display: none;
+    }
+
     .fade {
       transition-duration: 0.5s;
     }
@@ -930,94 +943,120 @@ export default {
       }
     }
 
-    .advantage-card {
-      padding: 10px;
-      .adv-box {
+    .step-card {
+      padding: 10px 0px;
+
+      .d-h {
+        display: block;
+        padding: 20px 10px;
+      }
+
+      .cnt {
         flex-direction: column;
-        width: 100%;
+        margin: 1rem auto;
 
-        .puhey {
-          width: initial;
-          margin: 10px 0px;
+        .nav {
+          order: 1;
+          flex-wrap: unset;
+          flex-direction: row;
+          margin: 0px;
 
-          .adv-item {
+          .nav-link {
+            display: block;
+            margin: 0px auto;
+            padding: 5px;
+
+            .img {
+              margin: 0px auto;
+              text-align: center;
+            }
+
+            p {
+              text-align: center;
+              font-size: 18px;
+              margin: 0px;
+            }
+
+            span {
+              display: none;
+            }
+          }
+
+          .nav-item {
             width: 100%;
-            margin: 10px auto;
-            position: initial;
-            transform: inherit;
-
-            .i-m {
-              width: 170px;
-            }
-
-            .i-b {
-              width: initial;
-              height: initial;
-            }
           }
         }
 
-        .other {
-          margin: 10px 0px;
-          display: flex;
-          width: initial;
+        .tab-content {
+          order: 2;
+        }
 
-          .adv-item {
-            width: 170px;
-            height: 170px;
+        .tab-pane.active {
+          .pic {
+            width: 75%;
             margin: 0px auto;
-
-            .i-m {
-              width: 80px;
-              transition-delay: 0.5s;
-            }
-
-            .i-b {
-              width: 170px;
-              height: 170px;
-            }
           }
         }
       }
     }
 
-    .step-card {
+    .game-card {
       padding: 10px;
-      .nav {
-        flex-wrap: inherit;
 
-        .nav-link {
-          padding: 0px;
-          margin: 0px 10px;
-          .img {
-            display: none;
+      .invest-game {
+        width: 100%;
+        flex-direction: column;
+        margin: 0px auto;
+
+        .i-g-r {
+          width: 100%;
+          order: 1;
+
+          .t-c {
+            margin: 0px auto;
           }
 
-          p {
-            margin: 0px;
+          .hr {
+            margin: 1rem auto;
           }
+
+          .option {
+            .item {
+              margin: 0px;
+              width: 100%;
+
+              div {
+                margin: 0px;
+              }
+            }
+          }
+        }
+
+        .chart {
+          width: 100%;
+          order: 2;
+          margin: 0px;
+          height: 300px;
         }
       }
+    }
 
-      .tab-pane.active {
-        transform: translate(0rem, 0px);
-        display: flex;
+    .advantage-card {
+      padding: 10px;
+
+      .adv-box {
         flex-direction: column;
 
-        .pic {
-          order: 2;
-          width: 100%;
-        }
+        .adv-item {
+          width: 100% !important;
+          margin: 10px 0px;
 
-        .text {
-          order: 1;
-          position: relative;
-          transform: inherit;
-          right: 0;
-          top: 0%;
+          &:nth-of-type(even) {
+            order: 1;
+          }
 
-          h4 {
-            display: none;
+          &:nth-of-type(odd) {
+            order: 2;
           }
         }
       }

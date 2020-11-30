@@ -12,7 +12,7 @@
     />
 
     <div class="avg-card">
-      <img src="../asset/images/circle.svg" class="img-fluid" />
+      <img src="../asset/images/circle.svg" class="img-fluid ib" />
       <div class="cnt">
         <div class="c-t">
           <div class="item">
@@ -248,7 +248,6 @@ export default {
     }
   }
 
-  
   @keyframes i-c-float {
     0% {
       transform: translate(-50%, -50%) translatey(-5px);
@@ -267,6 +266,42 @@ export default {
     h2 {
       font-size: 25px;
       margin-bottom: 20px;
+    }
+
+    .avg-card {
+      background: #153a71;
+
+      .ib {
+        display: none;
+      }
+
+      .cnt {
+        flex-direction: column;
+        width: 100%;
+        position: initial;
+        transform: initial;
+        padding: 10px;
+        height: auto;
+
+        .c-t {
+          width: 100%;
+          transform: initial;
+          top: 0px;
+          padding: 0px;
+
+          .item {
+            margin: 0px 10px 0rem 10px;
+
+            p {
+              height: auto;
+            }
+          }
+        }
+
+        .c-i {
+          display: none;
+        }
+      }
     }
   }
 }

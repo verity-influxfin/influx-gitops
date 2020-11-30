@@ -1,10 +1,13 @@
 <template>
   <div class="college-wrapper">
     <banner :data="bannerData" :isInvest="false"></banner>
-    <target :items="applyData.item" text="滿20歲的在校生，準備您的雙證件、學生證、金融卡，在APP上拍照上傳，立即核准！"></target>
+    <target
+      :items="applyData.item"
+      text="滿20歲的在校生，準備您的雙證件、學生證、金融卡，在APP上拍照上傳，立即核准！"
+    ></target>
     <apply title="申貸簡便四步驟" :step="applyData.step" />
     <div class="partner-card">
-      <img src="../asset/images/circle.svg" class="img-fluid" />
+      <img src="../asset/images/circle.svg" class="img-fluid ib" />
       <div class="cnt">
         <div class="c-c">
           <div class="t-c">
@@ -204,44 +207,38 @@ export default {
   @media screen and (max-width: 767px) {
     h2 {
       font-size: 25px;
-      margin-bottom: 20px;
-    }
-
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-          p {
-            word-break: break-word;
-          }
-        }
-      }
     }
 
     .partner-card {
-      flex-direction: column;
-      padding: 0px;
-      overflow: hidden;
+      background: #153a71;
 
-      .partner-box {
-        width: 100%;
-
-        p {
-          position: initial;
-          transform: initial;
-          margin: 1rem 0px;
-          text-align: center;
-        }
+      .ib {
+        display: none;
       }
 
-      .partner-map {
-        width: 125%;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
+      .cnt {
+        flex-direction: column;
+        width: 100%;
+        position: initial;
+        transform: initial;
+        padding: 10px;
+
+        .c-c {
+          width: 100%;
+          padding: 10px 0px;
+
+          .t-c {
+            margin: 0px auto;
+          }
+
+          .hr {
+            margin: 0px auto;
+          }
+        }
+
+        .c-i {
+          width: 100%;
+        }
       }
     }
   }

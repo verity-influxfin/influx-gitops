@@ -46,4 +46,23 @@ export default {
     }
   }
 }
+
+@media (max-width: 767px) {
+  .target-card {
+    padding: 10px;
+
+    .i-row {
+      display: block;
+      overflow: hidden;
+      .item {
+        float: left;
+        width: calc(100% / 3);
+        .img {
+          width: calc(100% - 20px);
+          margin: 10px;
+        }
+      }
+    }
+  }
+}
 </style>

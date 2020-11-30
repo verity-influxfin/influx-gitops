@@ -182,43 +182,30 @@ export default {
 
 @media screen and (max-width: 767px) {
   .credit-card {
-    display: block;
-    padding: 4rem 0px;
+    padding: 20px 10px 0px 10px;
 
     .credit-box {
-      width: 100%;
-      padding: 10px;
-
-      p {
-        margin: 10px 20px;
+      .t-t {
+        line-height: initial;
+        font-size: 17px;
+        letter-spacing: initial;
+        margin-bottom: 2rem;
       }
 
       .credit-level-list {
         width: 100%;
-        padding: 0px;
 
         .level-item {
-          margin: 5px;
           width: calc(20% - 10px);
+          margin: 15px 5px;
+          padding: 0px;
         }
-      }
-
-      .license {
-        text-align: end;
-      }
-
-      .btn-go {
-        position: absolute;
-        bottom: 4rem;
-        left: 50%;
-        transform: translate(-50%, 0px);
       }
     }
 
     .credit-board {
-      width: 80%;
-      float: right;
-      margin-bottom: 55px;
+      position: relative;
+      width: 100%;
     }
   }
 }
