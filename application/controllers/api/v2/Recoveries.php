@@ -428,6 +428,7 @@ class Recoveries extends REST_Controller
                     $product = $this->trans_sub_product($product, $sub_product_id);
                     $product_name = $product['name'];
                 }
+                $targetData = json_decode($target_info->target_data);
                 $target = array(
                     'id' => intval($target_info->id),
                     'target_no' => $target_info->target_no,
@@ -445,6 +446,7 @@ class Recoveries extends REST_Controller
                     'loan_date' => $target_info->loan_date,
                     'status' => intval($target_info->status),
                     'sub_status' => intval($target_info->sub_status),
+                    'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target_info->interest_rate ? true : false),
                 );
 
                 $list[] = array(
