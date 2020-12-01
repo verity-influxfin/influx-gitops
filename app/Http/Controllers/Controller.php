@@ -238,9 +238,9 @@ class Controller extends BaseController
                 $data[] = ['street_name' => html_entity_decode($row['street_name'])];
             }
 
-            return $data;
+            return response()->json($data, 200);
         }
 
-        return '';
+        return response()->json('', 400);
     }
 }
