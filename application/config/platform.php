@@ -993,6 +993,7 @@ $config['transaction_source'] = [
     82 => '平台驗證費退回',
     83 => '跨行轉帳費',
     84 => '跨行轉帳費退回',
+    85 => '不明原因退款',
 
     91 => '應付違約金',
     92 => '已還違約金',
@@ -1031,6 +1032,7 @@ $config['transaction_type_name'] = [
     'prepayment' => '提前還款',
     'charge_delay' => '逾期清償',
     'charge_normal' => '還款',
+    'unknown_refund' => '不明原因退款'
 ];
 
 $config['certifications'] = [
