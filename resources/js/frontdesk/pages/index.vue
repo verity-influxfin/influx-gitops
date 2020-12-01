@@ -478,31 +478,6 @@
         </div>
       </div>
     </div>
-    <div
-      class="comfirm-modal modal fade"
-      ref="comfirmModal"
-      role="dialog"
-      aria-labelledby="modalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" data-dismiss="modal">
-        <div class="modal-content">
-          <div class="modal-body">
-            <h4>您的身分是：</h4>
-            <div class="flex">
-              <router-link to="collegeLoan" class="i hvr-shadow"
-                ><p>學生</p>
-                <img :src="'/images/college_loan.png'" class="img-fluid"
-              /></router-link>
-              <router-link to="freshGraduateLoan" class="i hvr-shadow"
-                ><p>上班族</p>
-                <img :src="'/images/office_loan.png'" class="img-fluid"
-              /></router-link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -679,9 +654,6 @@ export default {
     },
   },
   methods: {
-    openDialog() {
-      $(this.$refs.comfirmModal).modal("show");
-    },
     async getBannerPic() {
       let res = await axios.get(`${location.origin}/getBannerPic`);
       this.bannerPic = res.data;
@@ -1428,9 +1400,9 @@ export default {
       .puhey-banner {
         .diagram {
           position: absolute;
-          top: -4%;
+          top: 25%;
           left: 10px;
-          width: 63%;
+          width: 65%;
         }
 
         img {
@@ -1644,14 +1616,14 @@ export default {
       }
 
       .tab-content {
-        .splide__arrow--prev{
-          left:-1rem;
+        .splide__arrow--prev {
+          left: -1rem;
         }
 
-        .splide__arrow--next{
+        .splide__arrow--next {
           right: -1rem;
         }
-        
+
         .slick-item {
           transform: scale(1);
         }

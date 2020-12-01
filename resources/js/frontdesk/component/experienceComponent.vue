@@ -26,6 +26,21 @@
     <!-- <button class="btn btn-light comment" @click="$root.goFeedback">
       <i class="fas fa-comments"></i>我要回饋
     </button> -->
+    <div
+      class="feedback-modal modal fade"
+      ref="feedbackModal"
+      role="dialog"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" data-dismiss="modal">
+        <div class="modal-content">
+          <div class="modal-body">
+            {{ feedback }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -49,6 +64,7 @@ export default {
         767: { perPage: 1 },
       },
     },
+    feedback: "",
   }),
   props: ["experiences", "title"],
   watch: {
@@ -58,7 +74,8 @@ export default {
   },
   methods: {
     show(item) {
-      console.log(item);
+      this.feedback = item.feedback;
+      $(this.$refs.feedbackModal).modal("show");
     },
   },
 };

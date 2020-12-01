@@ -310,6 +310,10 @@ $ci-color: #153a71;
     }
 }
 
+.modal-backdrop {
+    filter: blur(100px);
+}
+
 .blog-quiklink {
     float: right;
     margin-top: 254px;
