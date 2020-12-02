@@ -371,6 +371,9 @@ class Recoveries extends REST_Controller
     {
         $input = $this->input->get(NULL, TRUE);
         $product_list = $this->config->item('product_list');
+        $this->config->load('loanmanager');
+        $pushTool = $this->config->item('pushTool');
+        $pushType = $this->config->item('pushType');
         $user_id = $this->user_info->id;
         $investor = $this->user_info->investor;
         $investments = $this->investment_model->get_many_by([
@@ -419,6 +422,8 @@ class Recoveries extends REST_Controller
                 }
             }
 
+            $this->load->model('loanmanager/loan_manager_target_model');
+            $pushData = [];
             foreach ($investments as $key => $value) {
                 $target_info = $this->target_model->get($value->target_id);
                 $product = $product_list[$target_info->product_id];
@@ -428,6 +433,7 @@ class Recoveries extends REST_Controller
                     $product = $this->trans_sub_product($product, $sub_product_id);
                     $product_name = $product['name'];
                 }
+
                 $target = array(
                     'id' => intval($target_info->id),
                     'target_no' => $target_info->target_no,
@@ -446,6 +452,24 @@ class Recoveries extends REST_Controller
                     'status' => intval($target_info->status),
                     'sub_status' => intval($target_info->sub_status),
                 );
+
+                if(!isset($pushData[$target_info->user_id])){
+                    $temp = [];
+                    $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($target_info->user_id);
+                    foreach ($getUserLoginLog as $skey => $svalue) {
+                        $temp[] = [
+                            'type' => 0,
+                            'date' => date("Ym/d H:i:s", $svalue->end_time),
+                            'title' => ($pushTool[$svalue->push_by] . ' / ' .$pushType[$svalue->push_type]),
+                            'msg' => $svalue->remark,
+                        ];
+                    }
+                    $pushData[$target_info->user_id] = $temp;
+                }
+                if(count($pushData[$target_info->user_id]) > 0){
+                    $target['target_message'] = $pushData[$target_info->user_id];
+                }
+
 
                 $list[] = array(
                     'id' => intval($value->id),
@@ -844,7 +868,7 @@ class Recoveries extends REST_Controller
      *       "error": "805"
      *     }
      */
-    public function info_get($investment_id)
+    public function     info_get($investment_id)
     {
         $input = $this->input->get(NULL, TRUE);
         $user_id = $this->user_info->id;
