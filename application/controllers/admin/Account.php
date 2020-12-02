@@ -520,7 +520,30 @@ class Account extends MY_Admin_Controller {
                         "v_amount_to"           => $value->v_amount_to,
                         "created_at"            => $value->created_at,
                         // 必為負數
-                        'platform_fee'          => "-" . $value->amount
+                        "platform_fee"          => "-" . $value->amount
+                    );
+                }
+
+                // 85, 特殊情境, 不明原因退款, issue#861
+                if($value->source == SOURCE_UNKNOWN_R){
+                    $source_type    = 'platform_fee';
+                    $list[] = array(
+                        "entering_date"         => $value->entering_date,
+                        "target_no"             => $value->target_no,
+                        "target_id"             => $value->target_id,
+                        "source_type"           => 'unknown_refund',
+                        "user_from"             => '平台',
+                        "bank_account_from"     => $value->bank_account_from,
+                        "amount_from"           => $value->amount_from,
+                        "v_bank_account_from"   => $value->v_bank_account_from,
+                        "v_amount_from"         => $value->v_amount_from,
+                        "user_to"               => isset($user_name[$value->user_to])?$user_name[$value->user_to]:0,
+                        "bank_account_to"       => $value->bank_account_to,
+                        "amount_to"             => $value->amount_to,
+                        "v_bank_account_to"     => $value->v_bank_account_to,
+                        "v_amount_to"           => $value->v_amount_to,
+                        "created_at"            => $value->created_at,
+                        "platform_fee"          => 0
                     );
                 }
 			}
@@ -697,7 +720,8 @@ TEMP;
 		$this->load->view('admin/_footer');
 	}
 
-	function estatement(){
+	function estatement()
+    {
 		$page_data 	= array("type"=>"list","list"=>array());
 		$input 		= $this->input->get(NULL, TRUE);
 		$list		= array();
@@ -749,7 +773,9 @@ TEMP;
 		$this->load->view('admin/estatement_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-    public function estatement_excel(){
+
+    public function estatement_excel()
+    {
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('Estatement_lib');
         $this->estatement_lib->get_estatement_investor_detail($get['user_id'],$get['sdate'],$get['edate'],true);
