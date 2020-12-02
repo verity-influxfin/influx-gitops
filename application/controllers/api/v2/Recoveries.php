@@ -448,17 +448,18 @@ class Recoveries extends REST_Controller
                     'sub_status' => intval($target_info->sub_status),
                     'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target_info->interest_rate ? true : false),
                 );
-
-                $list[] = array(
+                $temp = array(
                     'id' => intval($value->id),
                     'loan_amount' => intval($value->loan_amount),
                     'status' => intval($value->status),
                     'transfer_status' => intval($value->transfer_status),
-                    'aiBidding' => intval($value->aiBidding),
                     'target' => $target,
                     'next_repayment' => isset($instalment_data[$value->id]) ? $instalment_data[$value->id]['next_repayment'] : [],
                     'accounts_receivable' => isset($instalment_data[$value->id]) ? $instalment_data[$value->id]['accounts_receivable'] : [],
                 );
+
+                $value->aiBidding == 1 ? $temp['aiBidding'] = true : '';
+                $list[] = $temp;
             }
         }
         $this->response(array('result' => 'SUCCESS', 'data' => array('list' => $list)));
@@ -652,7 +653,7 @@ class Recoveries extends REST_Controller
                     $instalment_invest['amount'] = intval($transaction->amount);
                 }
 
-                $list[] = array(
+                $temp = array(
                     'id' => intval($value->id),
                     'loan_amount' => intval($value->loan_amount),
                     'status' => intval($value->status),
@@ -660,8 +661,9 @@ class Recoveries extends REST_Controller
                     'target' => $target,
                     'income' => $instalment_income[$value->id],
                     'invest' => $instalment_invest,
-                    'aiBidding' => $value->aiBidding,
                 );
+                $value->aiBidding == 1 ? $temp['aiBidding'] = true : '';
+                $list[] = $temp;
             }
         }
         $this->response(array('result' => 'SUCCESS', 'data' => array('list' => $list)));
@@ -1032,9 +1034,9 @@ class Recoveries extends REST_Controller
                 'contract' => $investment_contract['content'],
                 'transfer' => $transfer,
                 'target' => $target,
-                'aiBidding' => $investment->aiBidding,
                 'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info, $investment),
             ];
+            $investment->aiBidding == 1 ? $data['aiBidding'] = true : '';
 
             $this->response(['result' => 'SUCCESS', 'data' => $data]);
         }

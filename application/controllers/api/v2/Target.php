@@ -1332,15 +1332,15 @@ class Target extends REST_Controller {
 					'status'		=> intval($target_info->status),
 					'sub_status'	=> intval($target_info->sub_status),
 				];
-
-				$list[] = [
-					'amount' 			=> intval($value->amount),
-					'loan_amount' 		=> intval($value->loan_amount),
-					'status' 			=> intval($value->status),
-					'created_at' 		=> intval($value->created_at),
-					'target' 			=> $target,
-					'aiBidding' => intval($value->aiBidding),
-				];
+                $temp = [
+                    'amount' 			=> intval($value->amount),
+                    'loan_amount' 		=> intval($value->loan_amount),
+                    'status' 			=> intval($value->status),
+                    'created_at' 		=> intval($value->created_at),
+                    'target' 			=> $target,
+                ];
+                $value->aiBidding == 1 ? $temp['aiBidding'] = true : '';
+                $list[] = $temp;
 			}
 		}
 		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ]));
@@ -1727,35 +1727,6 @@ class Target extends REST_Controller {
                 ]);
             }
         }
-
-//        $aiBiddingData = $this->batch_model->get_by([
-//            'user_id' => $user_id,
-//            'type' => 3,
-//            'status' => 1,
-//        ]);
-//        if($aiBiddingData){
-//            $aiBiddingContentData = json_decode($aiBiddingData->content);
-////            $contract_id = $aiBiddingContentData->targetAmount;
-//            $targetAmount = $aiBiddingContentData->targetAmount;
-//            $dailyAmount = $aiBiddingContentData->dailyAmount;
-////            $batchData['aiBidding']['contract_id'] = $contract_id;
-//            $batchData['aiBidding']['targetAmount'] = $targetAmount;
-//            $batchData['aiBidding']['dailyAmount'] = $dailyAmount;
-//            $batchData['aiBidding']['aiBiddingExpireTime'] = date('Y-m-d H:i:s', $aiBiddingData->expire_time);
-//            $batchData['aiBidding']['status'] = true;
-////            $contract_data = $this->contract_lib->get_contract($contract_id);
-//        }
-//        else{//沒授權書則撈取授權書需要的使用者資料
-//            $this->load->model('user/user_model');
-//            $user_info = $this->user_model->get($user_id);
-//            $contract_data = [
-//                'title' => '授權扣款同意書',
-//                'content' => $this->contract_lib->pretransfer_contract('authorization_to_debit', [$user_info->name, $user_info->id_number]),
-//                'created_at' => '',
-//            ];
-//        }
-
-//        $batchData['aiBidding']['contract_data'] = $contract_data;
         $this->response(['result' => 'SUCCESS','data' => $batchData]);
     }
 
