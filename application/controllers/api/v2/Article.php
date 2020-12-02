@@ -141,10 +141,25 @@ class Article extends REST_Controller {
         $this->load->model('behavion/beha_user_model');
         $get_num = 0;
         if(isset($input['promo'])&&!empty($input['promo'])){
-            $query = '%first_open":"'.$input['promo'].'"%';
+            //#因撈取效能不佳故採取以下方式觀察
+            //取得特定條件最後一筆ID
+            $current = $this->beha_user_model->order_by("id","desc")->limit(1)->get_by([
+                'user_id' => 0,
+                'identity' => 0,
+            ]);
+
+            //組合推廣碼
+            $query = '{"first_open":"'.$input['promo'].'",%';
+
+            //撈取近65萬筆資料
+            $idRange = $current->id - 650000;
+
+            //取得筆數
             $get_num = $this->beha_user_model->count_by([
-                'behavior like'   => $query,
-                'created_at >='   => strtotime('-35 days', time()),
+                'id > '   => $idRange,
+                'user_id'   => 0,
+                'identity'   => 0,
+                'behavior like '   => $query,
             ]);
         }
         $this->response($get_num);
