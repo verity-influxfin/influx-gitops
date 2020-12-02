@@ -13,7 +13,8 @@ class Payment_model extends MY_Model
 		4 =>	"已退款",
 		5 =>	"不明資金",
 		6 =>	"已處理",
-        7 =>    "退款-不明原因"
+        # iseeus 861
+        7 =>    "已退款"
 	);
 
 	public function __construct()
