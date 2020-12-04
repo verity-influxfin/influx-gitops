@@ -45,6 +45,7 @@
       amount="20"
       license="最高額度會根據您的申請身分而有所不同"
     />
+    <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
   </div>
@@ -57,6 +58,7 @@ import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import credit from "../component/creditComponent";
 import target from "../component/targetComponent";
+import experience from "../component/experienceComponent";
 
 export default {
   components: {
@@ -66,6 +68,7 @@ export default {
     apply,
     target,
     credit,
+    experience,
   },
   data: () => ({
     credit: "--",
@@ -84,7 +87,18 @@ export default {
     bannerData: {},
     applyData: {},
   }),
+  computed: {
+    experiences() {
+      let $this = this;
+      let data = [];
+      $.each($this.$store.getters.ExperiencesData, (index, row) => {
+        data.push(row);
+      });
+      return data;
+    },
+  },
   created() {
+    this.$store.dispatch("getExperiencesData", "loan");
     this.getApplydata();
     this.getBannerData();
     this.getQaData();

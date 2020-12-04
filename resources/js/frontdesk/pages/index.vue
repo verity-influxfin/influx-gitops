@@ -33,10 +33,7 @@
               >
             </div>
           </div>
-        </div></SplideSlide
-      >
-      <SplideSlide>
-        <shanghuiBanner />
+        </div>
       </SplideSlide>
     </Splide>
     <div class="intro-card">
@@ -60,38 +57,38 @@
               date1: '12.08',
               title1: '公司成立',
               desc1: '普匯金融科技股份有限公司',
-              year2: '2017',
-              date2: '12.08',
-              title2: '公司成立',
-              desc2: '普匯金融科技股份有限公司',
+              year2: '2018',
+              date2: '08.03',
+              title2: '產品發表會',
+              desc2: '於臺北文創舉辦產品發表會',
             }"
           />
         </div>
         <div>
           <histroyDot
             :content="{
-              year1: '2017',
-              date1: '12.08',
-              title1: '公司成立',
-              desc1: '普匯金融科技股份有限公司',
-              year2: '2017',
-              date2: '12.08',
-              title2: '公司成立',
-              desc2: '普匯金融科技股份有限公司',
+              year1: '2019',
+              date1: '05.12',
+              title1: '人數突破2萬',
+              desc1: '會員人數突破2萬人',
+              year2: '2019',
+              date2: '06.25',
+              title2: '新品APP發布會',
+              desc2: '「分期超市」APP 首創登場',
             }"
           />
         </div>
         <div>
           <histroyDot
             :content="{
-              year1: '2017',
-              date1: '12.08',
-              title1: '公司成立',
-              desc1: '普匯金融科技股份有限公司',
+              year1: '2019',
+              date1: '12.01',
+              title1: '人數突破4萬人',
+              desc1: '會員人數突破4萬人',
               year2: '2017',
               date2: '12.08',
-              title2: '公司成立',
-              desc2: '普匯金融科技股份有限公司',
+              title2: '舉辦金融科技競賽',
+              desc2: '帶領【AI金融科技聯盟】舉辦第一屆競賽',
             }"
           />
         </div>
@@ -108,7 +105,7 @@
       <div class="person">
         <div class="t-c"><h2>產品介紹</h2></div>
         <div class="hr"></div>
-        <h5>年滿25～30歲的您 均可申請個人信貸服務喔！</h5>
+        <h5>年滿20～35歲的您 均可申請個人信貸服務喔！</h5>
         <div class="typ">
           <div class="t">
             <div class="img">
@@ -271,10 +268,7 @@
             </div>
             <p>最先進的AI科技系統</p>
             <span
-              >普匯擁有完善的金融科技技術，包含:
-              反詐欺反洗錢系統、競標即時撮合系統、
-              風控信評/線上對保、自動撥貸/貸後管理、
-              分秒計息等，不斷與時俱進迭代優化。</span
+              >普匯擁有完善的金融科技技術，包含:反詐欺反洗錢系統、競標即時撮合系統、風控信評、線上對保、自動撥貸、貸後管理、分秒計息等，不斷與時俱進迭代優化。</span
             >
           </SplideSlide>
           <SplideSlide
@@ -378,7 +372,7 @@
               class="nav-link active"
               data-toggle="tab"
               href="#news"
-              @click="reSlick('news_slick')"
+              @click="reSlick()"
               >最新消息</a
             >
           </li>
@@ -387,7 +381,7 @@
               class="nav-link"
               data-toggle="tab"
               href="#knowledge"
-              @click="reSlick('knowledge_slick')"
+              @click="reSlick()"
               >AI金融科技新知</a
             >
           </li>
@@ -396,7 +390,7 @@
               class="nav-link"
               data-toggle="tab"
               href="#video"
-              @click="reSlick('video_slick')"
+              @click="reSlick()"
               >影音專區</a
             >
           </li>
@@ -490,7 +484,7 @@ import amountChart from "../component/svg/amountChartComponent";
 import histroyDot from "../component/svg/histroyDotComponent";
 import experience from "../component/experienceComponent";
 //banner
-import shanghuiBanner from "../component/banner/shanghuiBanner";
+// import shanghuiBanner from "../component/banner/shanghuiBanner";
 
 export default {
   components: {
@@ -502,7 +496,7 @@ export default {
     Splide,
     SplideSlide,
     //banner
-    shanghuiBanner,
+    // shanghuiBanner,
   },
   data: () => ({
     count: 3,
@@ -671,11 +665,8 @@ export default {
         }
       });
     },
-    pmt(pv, rate, per) {
-      let m_rate = rate / 1200;
-      let nper = Math.pow(m_rate + 1, -per);
-      let _pmt = Math.ceil((pv * m_rate) / (1 - nper));
-      return _pmt;
+    reSlick() {
+      $("html").animate({ scrollTop: window.scrollY - 1 });
     },
     onMoved($event) {
       $(".cnt-l").find("div").removeClass("ad-b");
@@ -1023,7 +1014,7 @@ export default {
           font-weight: 700;
           line-height: 1.45;
           text-align: left;
-          color: #d4d4d4;
+          color: #a5a5a5;
           width: fit-content;
           padding: 10px;
           transition-duration: 0.2s;

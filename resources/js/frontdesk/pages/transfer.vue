@@ -1,6 +1,6 @@
 <template>
   <div class="transfer-wrapper">
-    <banner :data="bannerData"></banner>
+    <banner :data="bannerData" :isInvest="true"></banner>
     <div class="intro-card">
       <div class="t-c"><h2>什麼是債權轉讓？</h2></div>
       <div class="hr"></div>

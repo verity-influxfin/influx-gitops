@@ -189,7 +189,6 @@ export default {
 
 <style lang="scss">
 .membercentre-wrapper {
-  margin-top: 84px;
   background-color: #f5f5f5;
 
   .loan-header {

@@ -149,6 +149,11 @@ export default {
         border-radius: 50%;
         margin: 10px 10px;
         padding: 10px;
+        cursor: pointer;
+
+        &:hover {
+          filter: invert(1);
+        }
 
         &.light {
           filter: drop-shadow(0px 0px 3px black);
@@ -172,7 +177,7 @@ export default {
   }
 
   .credit-board {
-    width: 550px;
+    width: 570px;
     position: absolute;
     bottom: 0;
     right: 0;

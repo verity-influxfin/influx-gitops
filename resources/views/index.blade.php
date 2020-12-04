@@ -69,7 +69,6 @@
             <div class="web-logo">
                 <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>
             </div>
-            <router-link class="event" to="shanghaipage">普匯X上海<br>【萬元獎品等你拿】</router-link>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
@@ -274,12 +273,12 @@
                             <button type="button" :class="['btn','btn-password']" @click="switchForm">忘記密碼?</button>
                         </div>
                         <div class="input-group">
-                            <router-link class="nav-link l" to="/register"><i class="fas fa-user-plus"></i>會員註冊</router-link>
                         </div>
                     </div>
                     <div class="alert alert-danger" v-if="message">@{{message}}</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-submit" @click="doLogin">登入</button>
+                        <router-link class="btn btn-register" @click.native="hideLoginModal()" to="/register">會員註冊</router-link>
                     </div>
                 </div>
             </div>

@@ -45,7 +45,7 @@ export default {
       pagination: false,
       gap: "2rem",
       breakpoints: {
-        767: { perPage: 1 },
+        767: { perPage: 1, arrows: true },
       },
     },
   }),

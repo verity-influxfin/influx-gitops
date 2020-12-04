@@ -129,6 +129,9 @@ $(() => {
             openLoginModal() {
                 $(this.$refs.loginForm).modal("show");
             },
+            hideLoginModal(){
+                $(this.$refs.loginForm).modal("hide");
+            },
             switchTag(evt) {
                 if (!$(evt.target).hasClass('checked')) {
                     this.isCompany = !this.isCompany;

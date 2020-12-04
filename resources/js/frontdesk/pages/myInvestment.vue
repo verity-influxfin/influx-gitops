@@ -189,7 +189,6 @@ export default {
 
 <style lang="scss">
 .investment-wrapper {
-  margin-top: 84px;
   background-color: #f5f5f5;
   .invest-header {
     background-image: url("../asset/images/count_bg.png");

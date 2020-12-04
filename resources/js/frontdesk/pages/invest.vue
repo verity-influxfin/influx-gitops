@@ -132,7 +132,7 @@
                 />
               </div>
               <div>
-                <p>檢審速貸</p>
+                <p>簡審速貸</p>
                 <span>申請人無提供最高學歷，同時您可以獲得更好的報酬率。</span>
               </div>
             </a>
@@ -722,7 +722,7 @@ export default {
 
       .nav-link {
         display: flex;
-        margin: 1.4rem 0px;
+        margin: 2.4rem 0px;
 
         .img {
           margin-right: 0.5rem;
@@ -751,7 +751,7 @@ export default {
       position: relative;
 
       .pic {
-        width: 300px;
+        width: 360px;
         animation: phone-waving 2s infinite alternate linear;
       }
     }
