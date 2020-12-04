@@ -38,7 +38,7 @@ export default {
         infinite: true,
         slidesToShow: 5,
         slidesToScroll: 1,
-        autoplay: true,
+        // autoplay: true,
         dots: false,
         arrows: false,
         speed: 1000,
@@ -69,23 +69,30 @@ export default {
 
     .qa-item {
       margin: 0px 20px;
-      pointer-events: none;
 
       .qa-title {
         border-radius: 20px;
         border-style: solid;
         border-width: 2px;
-        border-image-source: linear-gradient(to bottom, #81c3f3, #157efb);
+        border-image-source: linear-gradient(
+          to bottom,
+          #81c3f3 0%,
+          #157efb 100%
+        );
         border-image-slice: 1;
         background-image: linear-gradient(to left, #ffffff 100%, #ffffff 0%),
-          linear-gradient(to bottom, #81c3f3, #157efb);
+          linear-gradient(to bottom, #81c3f3 0%, #157efb 100%);
         background-origin: border-box;
         background-clip: content-box, border-box;
         text-align: center;
         display: flex;
 
         .bg {
-          background-image: linear-gradient(to bottom, #81c3f3, #157efb);
+          background-image: linear-gradient(
+            to bottom,
+            #81c3f3 0%,
+            #157efb 100%
+          );
           background-clip: text;
           width: fit-content;
           color: #ffffff00;
@@ -94,7 +101,7 @@ export default {
         }
 
         label {
-          margin: 5px auto;
+          margin: 5px 0px;
           padding: 0px 5px;
           font-weight: 600;
           font-size: 15px;
@@ -133,7 +140,7 @@ export default {
 
     &:hover {
       color: #ffffff;
-      background-image: linear-gradient(to top, #10569c, #2c1dff),
+      background-image: linear-gradient(to top, #4993dd, #0c40a1),
         linear-gradient(to bottom, #81c3f3, #157efb);
     }
   }

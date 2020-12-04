@@ -83,7 +83,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item" v-if="!flag || flag === 'logout'">
+                    <!-- <li class="nav-item" v-if="!flag || flag === 'logout'">
                         <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>SING IN</p>
                     </li>
                     <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
@@ -99,7 +99,7 @@
                                 <p class="dropdown-item" @click="logout">登出</p>
                             </li>
                         </ul>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </nav>

@@ -85,8 +85,8 @@
               date1: '12.01',
               title1: '人數突破4萬人',
               desc1: '會員人數突破4萬人',
-              year2: '2017',
-              date2: '12.08',
+              year2: '2019',
+              date2: '12.20',
               title2: '舉辦金融科技競賽',
               desc2: '帶領【AI金融科技聯盟】舉辦第一屆競賽',
             }"
@@ -151,22 +151,6 @@
             <div class="i">
               <img
                 class="img-fluid"
-                src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
-              />
-            </div>
-            <div class="ccs">
-              <div>
-                資訊工程師專案<br />
-                為您的金錢問題debug
-              </div>
-              <p>資訊相關學生或職場專業人員均可申請</p>
-              <router-link to="engineerLoan">了解更多</router-link>
-            </div>
-          </SplideSlide>
-          <SplideSlide class="each">
-            <div class="i">
-              <img
-                class="img-fluid"
                 src="../asset/images/431fd666-9725-4d0c-beec-defca3ded18c_rw_3840.png"
               />
             </div>
@@ -177,6 +161,22 @@
               </div>
               <p>年滿20歲的工作人士均可申請</p>
               <router-link to="freshGraduateLoan">了解更多</router-link>
+            </div>
+          </SplideSlide>
+          <SplideSlide class="each">
+            <div class="i">
+              <img
+                class="img-fluid"
+                src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
+              />
+            </div>
+            <div class="ccs">
+              <div>
+                資訊工程師專案<br />
+                為您的金錢問題debug
+              </div>
+              <p>資訊相關學生或職場專業人員均可申請</p>
+              <router-link to="engineerLoan">了解更多</router-link>
             </div>
           </SplideSlide>
         </Splide>
@@ -548,7 +548,7 @@ export default {
       pagination: false,
       gap: "1.5rem",
       breakpoints: {
-        767: { autoplay: false, perPage: 1 },
+        767: { autoplay: false, perPage: 1, arrows: true },
       },
     },
     infoOptions: {
@@ -559,7 +559,7 @@ export default {
       pagination: false,
       gap: ".5rem",
       breakpoints: {
-        767: { perPage: 1 },
+        767: { perPage: 1, arrows: true },
       },
     },
     personOptions: {
@@ -571,7 +571,7 @@ export default {
       pagination: false,
       gap: "1rem",
       breakpoints: {
-        767: { autoplay: true, perPage: 1 },
+        767: { autoplay: true, perPage: 1, arrows: true },
       },
     },
     groupOptions: {
@@ -583,7 +583,7 @@ export default {
       pagination: false,
       gap: "1rem",
       breakpoints: {
-        767: { autoplay: true, perPage: 1 },
+        767: { autoplay: true, perPage: 1, arrows: true },
       },
     },
     csOptions: {
