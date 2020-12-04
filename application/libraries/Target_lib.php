@@ -104,6 +104,7 @@ class Target_lib
             $this->CI->order_lib->order_change($target->order_id, 1, [
                 'status' => 2,
             ], 0, $admin_id);
+            $this->aiBiddingTarget($target);
             return true;
         }
         return false;
