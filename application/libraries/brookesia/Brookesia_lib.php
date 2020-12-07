@@ -30,29 +30,11 @@ class brookesia_lib
 
 	public function getRelatedUserByUserId($userId)
 	{
-		if(!$userId) {
+		if (!$userId) {
 			return;
 		}
 
 		$url = $this->brookesiaUrl . "result/relatedUser?userId=" . $userId;
-
-		$result = curl_get($url);
-		$response = json_decode($result);
-
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
-
-		return $response;
-	}
-
-	public function getResultByUserId($userId)
-	{
-		if(!$userId) {
-			return;
-		}
-
-		$url = $this->brookesiaUrl . "result/userId?value=" . $userId;
 
 		$result = curl_get($url);
 		$response = json_decode($result);
