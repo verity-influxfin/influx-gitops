@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class Subloan extends REST_Controller {
 
 	public $user_info;
-	
+
     public function __construct()
     {
         parent::__construct();
@@ -19,26 +19,26 @@ class Subloan extends REST_Controller {
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
-			
+
 			//只限借款人
 			if($tokenData->investor != 0){
 				$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 			}
-			
+
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
-			
+
 			if($this->user_info->block_status != 0){
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
-			
+
 			//暫不開放法人
 			if(isset($tokenData->company) && $tokenData->company != 0 ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
-			
+
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
 				$this->log_request_model->insert(array(
@@ -49,7 +49,7 @@ class Subloan extends REST_Controller {
 					'agent'		=> $tokenData->agent,
 				));
 			}
-			
+
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->company 		= $tokenData->company;
 			$this->user_info->incharge 		= $tokenData->incharge;
@@ -58,14 +58,14 @@ class Subloan extends REST_Controller {
         }
     }
 
-	
+
 	/**
      * @api {get} /v2/subloan/preapply/:id 借款方 產品轉換前資訊
 	 * @apiVersion 0.2.0
 	 * @apiName GetSubloanPreapply
      * @apiGroup Subloan
 	 * @apiParam {Number} id Targets ID
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} amount 金額
 	 * @apiSuccess {Object} instalment 期數
@@ -158,10 +158,12 @@ class Subloan extends REST_Controller {
 			}
 
             if(!in_array($target->sub_status,[0,8])){
-                $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
+                if(!in_array($target->sub_status[TARGET_SUBSTATUS_NORNAL,TARGET_SUBSTATUS_SUBLOAN_TARGET,TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])){
+                    $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
+                }
             }
 
-			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){ 
+			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
 
@@ -202,7 +204,7 @@ class Subloan extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {post} /v2/subloan/apply/ 借款方 產品轉換申請
 	 * @apiVersion 0.2.0
@@ -211,7 +213,7 @@ class Subloan extends REST_Controller {
 	 * @apiParam {Number} target_id Target ID
 	 * @apiParam {Number} instalment 申請期數
 	 * @apiParam {Number} repayment 還款方式
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -284,7 +286,7 @@ class Subloan extends REST_Controller {
 		}
 
 		isset($input['product_id'])?$param['product_id']=$input['product_id']:1;
-		
+
 		$target = $this->target_model->get($input['target_id']);
 		if(!empty($target) && $target->status == TARGET_REPAYMENTING ){
 			if($target->user_id != $user_id){
@@ -294,21 +296,21 @@ class Subloan extends REST_Controller {
             if(!in_array($target->sub_status,[TARGET_SUBSTATUS_NORNAL,TARGET_SUBSTATUS_SUBLOAN_TARGET,TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])){
                 $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
             }
-			
-			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){ 
+
+			if($target->delay == 0 || $target->delay_days < GRACE_PERIOD){
 				$this->response(array('result' => 'ERROR','error' => APPLY_STATUS_ERROR ));
 			}
-			
+
 			$product_list 	= $this->config->item('product_list');
 			$product 		= $product_list[$target->product_id];
 			if(!in_array($input['instalment'],$product['instalment'])){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_INSTALMENT_ERROR ));
 			}
-			
+
 			if(!isset($repayment_type[$input['repayment']])){
 				$this->response(array('result' => 'ERROR','error' => PRODUCT_REPAYMENT_ERROR ));
 			}
-			
+
 			$target_id = $this->subloan_lib->apply_subloan($target,$param);
 			if($target_id){
                 $this->load->library('Certification_lib');
@@ -322,21 +324,21 @@ class Subloan extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {get} /v2/subloan/applyinfo/:id 借款方 產品轉換紀錄資訊
 	 * @apiVersion 0.2.0
 	 * @apiName GetSubloanApplyinfo
      * @apiGroup Subloan
 	 * @apiParam {Number} id Targets ID
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} target_id Target ID
 	 * @apiSuccess {String} amount 產品轉換金額
 	 * @apiSuccess {String} instalment 期數
 	 * @apiSuccess {String} repayment 還款方式
 	 * @apiSuccess {String} settlement_date 結息日
-	 * @apiSuccess {String} status 產品轉換狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗	
+	 * @apiSuccess {String} status 產品轉換狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗
 	 * @apiSuccess {String} created_at 申請日期
 	 * @apiSuccess {Object} subloan_target 產品轉換產生的Target
 	 * @apiSuccess {String} subloan_target.id Target ID
@@ -490,12 +492,12 @@ class Subloan extends REST_Controller {
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
-			
+
 			$subloan = $this->subloan_lib->get_subloan(false,$target);
 			if(!$subloan){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}
-			
+
 			$data = array(
 				'target_id'			=> $subloan->target_id,
 				'amount'			=> $subloan->amount,
@@ -505,7 +507,7 @@ class Subloan extends REST_Controller {
 				'status'			=> $subloan->status,
 				'created_at'		=> $subloan->created_at,
 			);
-			
+
 			$new_target  = $this->target_model->get($subloan->new_target_id);
 
             $product_list 		= $this->config->item('product_list');
@@ -525,14 +527,14 @@ class Subloan extends REST_Controller {
 			if($new_target->status==1){
 				$amortization_schedule = $this->financial_lib->get_amortization_schedule($new_target->loan_amount,$new_target);
 			}
-			
+
 			$contract = '';
 			if($new_target->contract_id){
 				$this->load->library('Contract_lib');
 				$contract_data = $this->contract_lib->get_contract($new_target->contract_id);
 				$contract = $contract_data['content'];
 			}
-			
+
 			$fields = $this->target_model->detail_fields;
 			foreach($fields as $field){
 				$subloan_target[$field] = isset($new_target->$field)?$new_target->$field:'';
@@ -545,7 +547,7 @@ class Subloan extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {post} /v2/subloan/signing 借款方 產品轉換簽約
 	 * @apiVersion 0.2.0
@@ -553,7 +555,7 @@ class Subloan extends REST_Controller {
      * @apiGroup Subloan
 	 * @apiParam {Number} target_id Targets ID
 	 * @apiParam {file} person_image 本人照
-	 * 
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -610,7 +612,7 @@ class Subloan extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$param		= array();
-		
+
 		//必填欄位
 		$fields 	= ['target_id'];
 		foreach ($fields as $field) {
@@ -620,7 +622,7 @@ class Subloan extends REST_Controller {
 				$param[$field] = intval($input[$field]);
 			}
 		}
-		
+
 		//上傳檔案欄位
 		$file_fields 	= ['person_image'];
 		foreach ($file_fields as $field) {
@@ -635,14 +637,14 @@ class Subloan extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
 		}
-		
+
 		$target 	= $this->target_model->get($param['target_id']);
 		if(!empty($target)){
 
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
-			
+
 			$subloan = $this->subloan_lib->get_subloan(false,$target);
 			if(!$subloan){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
@@ -662,14 +664,14 @@ class Subloan extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {get} /v2/subloan/cancel/:id 借款方 取消產品轉換
 	 * @apiVersion 0.2.0
 	 * @apiName GetSubloanCancel
      * @apiGroup Subloan
 	 * @apiParam {Number} id Targets ID
-	 * 
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -727,7 +729,7 @@ class Subloan extends REST_Controller {
 			if(!$subloan){
 				$this->response(array('result' => 'ERROR','error' => TARGET_SUBLOAN_NOT_EXIST ));
 			}
-			
+
 			if($subloan->status == 0 ){
 				$this->subloan_lib->cancel_subloan($subloan);
 				$this->response(array('result' => 'SUCCESS'));
