@@ -158,7 +158,11 @@ class Subloan extends REST_Controller {
 			}
 
             if(!in_array($target->sub_status,[0,8])){
-                if(!in_array($target->sub_status[TARGET_SUBSTATUS_NORNAL,TARGET_SUBSTATUS_SUBLOAN_TARGET,TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])){
+                if(!in_array($target->sub_status, [
+                    TARGET_SUBSTATUS_NORNAL,
+                    TARGET_SUBSTATUS_SUBLOAN_TARGET,
+                    TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET
+                ])){
                     $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
                 }
             }
