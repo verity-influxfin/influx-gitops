@@ -600,7 +600,7 @@
             },
             success: function (response) {
 				fetchBrookesiaUserRuleHit(userId);
-				fetchRelatedUsers(userId);
+				// fetchRelatedUsers(userId);
                 hideLoadingAnimation();
 				fillFakeBrookesiaUserHitRule(false)
                 fillFakeVerifications("borrowing", false);
