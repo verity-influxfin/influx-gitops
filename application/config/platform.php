@@ -993,6 +993,7 @@ $config['transaction_source'] = [
     82 => '平台驗證費退回',
     83 => '跨行轉帳費',
     84 => '跨行轉帳費退回',
+    85 => '退款-不明原因',
 
     91 => '應付違約金',
     92 => '已還違約金',
@@ -1016,6 +1017,7 @@ $config['internal_transaction_source'] = [
     82 => '平台驗證費沖正',
     83 => '跨行轉帳費',
     84 => '跨行轉帳費沖正',
+    85 => '退款-不明原因',
 
     92 => '違約金 - 逾期 (已還手續費)',
 ];
@@ -1027,9 +1029,11 @@ $config['transaction_type_name'] = [
     'transfer' => '債權轉讓',
     'transfer_b' => '債權轉讓費沖正',
     'bank_wrong_tx' => '銀行錯帳撥還',
+    'platform_wrong_tx' => '錯帳退款',
     'prepayment' => '提前還款',
     'charge_delay' => '逾期清償',
     'charge_normal' => '還款',
+    'unknown_refund' => '退款-不明原因'
 ];
 
 $config['certifications'] = [

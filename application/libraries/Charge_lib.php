@@ -15,7 +15,6 @@ class Charge_lib
     }
 
 	public function charge_normal_target($target=[]){
-        $before_last_time = '';
 		$date			= get_entering_date();
         $amount			= 0;
         $limit_date		= '';
@@ -221,8 +220,6 @@ class Charge_lib
             if($transaction) {
                 foreach ($transaction as $key => $value) {
                     if (in_array($value->source, $source_list) && $value->user_from == $target->user_id) {
-                        $new_date_string = sprintf("%s + %d days", $value->limit_date, GRACE_PERIOD + 1);
-                        $before_last_time = date('Y-m-d 00:00:00', strtotime($new_date_string));
                         $amount += $value->amount;
                         if (!isset($user_to[$value->investment_id])) {
                             $user_to[$value->investment_id] = [
@@ -244,7 +241,7 @@ class Charge_lib
                     if ($virtual_account) {
                         $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
 
-                        $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account, $before_last_time);
+                        $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
                         $total = $funds['total'] - $funds['frozen'];
                         if ($total >= $amount) {
                             $transaction_param = [];
@@ -752,8 +749,9 @@ class Charge_lib
 			}
 			$this->CI->target_model->update($target->id,$update_data);
             $gracePeriod = $target->product_id == PRODUCT_FOREX_CAR_VEHICLE ? 0 : GRACE_PERIOD;
-			if($delay_days > $gracePeriod){
-				$this->handle_delay_target($target,$delay_days,$gracePeriod);
+			if ($delay_days > $gracePeriod) {
+                // revert to 7df5a422de2af7fdb1e4a7063df1907c7ceacd5b, issue#800
+                $this->handle_delay_target($target, $delay_days, $gracePeriod);
 			}
 			return true;
 		}
@@ -867,6 +865,7 @@ class Charge_lib
                                 [
                                     'source' 		=> SOURCE_AR_FEES,
                                     'investment_id' => $value['investment_id'],
+                                    'status'        => 1
                                 ],
                                 [
                                     'amount' => $ar_fee
@@ -934,47 +933,46 @@ class Charge_lib
 		return false;
 	}
 
-    // 判斷當前時刻，是否為每月17號晚上23點50分到18號0點10分之間
-    public function checkExcludePeriodTime($deafult_date = null)
-    {
-        $isExcludeTime = false;
+    // // 判斷當前時刻，是否為每月17號晚上23點50分到18號0點10分之間
+    // public function checkExcludePeriodTime($deafult_date = null)
+    // {
+    //     $isExcludeTime = false;
 
-        // UTC+8
-        $datetime_string = date("Y-m-d H:i:s", time() + 8 * 60 * 60);
-        if ($deafult_date) {
-            $datetime_string = $deafult_date;
-        }
+    //     // UTC+8
+    //     $datetime_string = date("Y-m-d H:i:s", time() + 8 * 60 * 60);
+    //     if ($deafult_date) {
+    //         $datetime_string = $deafult_date;
+    //     }
 
-        $spilt_array = explode(" ", $datetime_string);
-        $date_string = $spilt_array[0];
-        $time_string = $spilt_array[1];
+    //     $spilt_array = explode(" ", $datetime_string);
+    //     $date_string = $spilt_array[0];
+    //     $time_string = $spilt_array[1];
 
-        $date_array = explode("-", $date_string);
-        $day = $date_array[2];
-        $time_array = explode(":", $time_string);
-        $hour = $time_array[0];
-        $minute = $time_array[1];
+    //     $date_array = explode("-", $date_string);
+    //     $day = $date_array[2];
+    //     $time_array = explode(":", $time_string);
+    //     $hour = $time_array[0];
+    //     $minute = $time_array[1];
 
+    //     // yyyy-dd-17 23:50:00 ~ yyyy-dd-17 23:59:59
+    //     $repqyment_date = sprintf("%s-%s-%02d", $date_array[0], $date_array[1], REPAYMENT_DAY);
+    //     $grace_date_string = sprintf("%s + %d days", $repqyment_date, GRACE_PERIOD);
+    //     $last_grace_date = date('Y-m-d', strtotime($grace_date_string));
+    //     $last_grace_date_array = explode("-", $last_grace_date);
+    //     $last_day_1 = $last_grace_date_array[2];
+    //     if ($day == $last_day_1 && $hour == 23 && $minute >= 50) {
+    //         $isExcludeTime = true;
+    //     }
 
-        // yyyy-dd-17 23:50:00 ~ yyyy-dd-17 23:59:59
-        $repqyment_date = sprintf("%s-%s-%02d", $date_array[0], $date_array[1], REPAYMENT_DAY);
-        $grace_date_string = sprintf("%s + %d days", $repqyment_date, GRACE_PERIOD);
-        $last_grace_date = date('Y-m-d', strtotime($grace_date_string));
-        $last_grace_date_array = explode("-", $last_grace_date);
-        $last_day_1 = $last_grace_date_array[2];
-        if ($day == $last_day_1 && $hour == 23 && $minute >= 50) {
-            $isExcludeTime = true;
-        }
+    //     $last_day_1_date = sprintf("%s-%s-%02d", $date_array[0], $date_array[1], $last_day_1);
+    //     $new_last_day_2_string = date('Y-m-d', strtotime($last_day_1_date . ' + 1 days'));
+    //     $new_last_day_2_array = explode("-", $new_last_day_2_string);
+    //     $last_day_2 = $new_last_day_2_array[2];
+    //     // yyyy-dd-18 00:00:00 ~ yyyy-dd-18 00:09:59
+    //     if ($day == $last_day_2 && $hour == 0 && $minute <= 9) {
+    //         $isExcludeTime = true;
+    //     }
 
-        $last_day_1_date = sprintf("%s-%s-%02d", $date_array[0], $date_array[1], $last_day_1);
-        $new_last_day_2_string = date('Y-m-d', strtotime($last_day_1_date . ' + 1 days'));
-        $new_last_day_2_array = explode("-", $new_last_day_2_string);
-        $last_day_2 = $new_last_day_2_array[2];
-        // yyyy-dd-18 00:00:00 ~ yyyy-dd-18 00:10:59
-        if ($day == $last_day_2 && $hour == 0 && $minute <= 10) {
-            $isExcludeTime = true;
-        }
-
-        return $isExcludeTime;
-    }
+    //     return $isExcludeTime;
+    // }
 }

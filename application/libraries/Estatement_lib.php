@@ -3,7 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Estatement_lib{
-	
+
 	public function __construct()
     {
         $this->CI = &get_instance();
@@ -17,7 +17,7 @@ class Estatement_lib{
 		$this->CI->load->library('credit_lib');
 		$this->CI->load->library('sendemail');
     }
- 
+
 	public function get_estatement_investor($user_id=0,$sdate="",$edate="",$export=false){
 		$user_info = $this->CI->user_model->get($user_id);
 		if($user_info){
@@ -47,7 +47,7 @@ class Estatement_lib{
 									$interest += $value->amount;
 									$interest_count++;
 								}
-								
+
 								if($value->remark['source']==SOURCE_PREPAYMENT_ALLOWANCE){
 									$allowance += $value->amount;
 									$allowance_count++;
@@ -56,7 +56,7 @@ class Estatement_lib{
 							$total += intval($value->amount);
 						}
 					}
-					
+
 					$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array(
 						"virtual_account" 	=> $virtual_account->virtual_account,
 						"created_at <=" 	=> strtotime($edatetime),
@@ -70,14 +70,14 @@ class Estatement_lib{
 							}
 						}
 					}
-					
+
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
 						"source"			=> array(SOURCE_AR_PRINCIPAL,SOURCE_AR_INTEREST,SOURCE_AR_DELAYINTEREST),
 						"user_to" 			=> $user_id,
 						"status" 			=> 1
-					));		
-					
+					));
+
 					if($transactions){
 						$investment = array(
 							"ar_principal"		=> array(),
@@ -85,17 +85,17 @@ class Estatement_lib{
 							"delay_ar_interest"	=> array(),
 							"ar_interest"		=> array(),
 						);
-						
+
 						foreach($transactions as $key => $value){
-							
+
 							if($value->limit_date < $edate){
 								$delay_days	= get_range_days($value->limit_date,$edate);
 							}else{
 								$delay_days = 0;
 							}
-							
+
 							switch ($value->source) {
-								case SOURCE_AR_PRINCIPAL: 
+								case SOURCE_AR_PRINCIPAL:
 									if($delay_days > GRACE_PERIOD){
 										$delay_ar_principal += $value->amount;
 										$investment['delay_ar_principal'][$value->investment_id] = $value->investment_id;
@@ -121,7 +121,7 @@ class Estatement_lib{
 									break;
 							}
 						}
-						
+
 						$else_investment 	= array();
 						$transactions 		= $this->CI->transaction_model->get_many_by(array(
 							"entering_date >"	=> $edate,
@@ -143,7 +143,7 @@ class Estatement_lib{
 							"status" 			=> array(0,2),
 							"updated_at >" 		=> strtotime($edatetime),
 							"updated_at <=" 	=> time(),
-						));		
+						));
 
 						if($transactions){
 							foreach($transactions as $key => $value){
@@ -157,7 +157,7 @@ class Estatement_lib{
 										$delay_days = 0;
 									}
 									switch ($value->source) {
-										case SOURCE_AR_PRINCIPAL: 
+										case SOURCE_AR_PRINCIPAL:
 											if($delay_days > GRACE_PERIOD){
 												$delay_ar_principal += $value->amount;
 												$investment['delay_ar_principal'][$value->investment_id] = $value->investment_id;
@@ -193,7 +193,7 @@ class Estatement_lib{
 						$ar_total		= $ar_principal + $ar_interest + $delay_ar_principal + $delay_ar_interest;
 					}
 				}
-				
+
 				$data = array(
 					"edate" 					=> $edate,
 					"sdate" 					=> $sdate,
@@ -248,13 +248,13 @@ class Estatement_lib{
 					);
 					$rs = $this->CI->user_estatement_model->insert($param);
 				}
-				
+
 				return $rs;
 			}
 		}
 		return false;
 	}
-	
+
 	public function get_estatement_borrower($user_id=0,$sdate="",$edate=""){
 		$user_info 	= $this->CI->user_model->get($user_id);
 		$product_id	= 1;
@@ -273,7 +273,7 @@ class Estatement_lib{
 						$used_credit += intval($value->loan_amount);
 					}
 				}
-				
+
 				$date_range	= entering_date_range($edate);
 				$edatetime	= $date_range?$date_range["edatetime"]:"";
 				$date_range	= entering_date_range($sdate);
@@ -287,13 +287,13 @@ class Estatement_lib{
 						"virtual_account" 	=> $virtual_account->virtual_account,
 						"tx_datetime <=" 	=> $edatetime,
 					));
-					
+
 					if(!empty($virtual_passbook)){
-						foreach($virtual_passbook as $key => $value){						
+						foreach($virtual_passbook as $key => $value){
 							$total += intval($value->amount);
 						}
 					}
-					
+
 					//目前逾期案
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"limit_date <="		=> $edate,
@@ -302,12 +302,12 @@ class Estatement_lib{
 						"status" 			=> 1
 					));
 					if($transactions){
-						
+
 						foreach($transactions as $key => $value){
 							$delay_target[] = $value->target_id;
 							$delay_count++;
 						}
-						
+
 						$transactions 	= $this->CI->transaction_model->get_many_by(array(
 							"limit_date <="	=> $edate,
 							"source"			=> array(
@@ -326,7 +326,7 @@ class Estatement_lib{
 							}
 						}
 					}
-					
+
 					//本期逾期還款
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
@@ -340,7 +340,7 @@ class Estatement_lib{
 							$delay_target[] = $value->target_id;
 							$delay_count++;
 						}
-						
+
 						$transactions 	= $this->CI->transaction_model->get_many_by(array(
 							"entering_date <="	=> $edate,
 							"entering_date >="	=> $sdate,
@@ -360,7 +360,7 @@ class Estatement_lib{
 							}
 						}
 					}
-					
+
 					//本期應還
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"limit_date <="		=> $edate,
@@ -373,7 +373,7 @@ class Estatement_lib{
 						foreach($transactions as $key => $value){
 							if(!in_array($value->target_id,$delay_target)){
 								switch ($value->source) {
-									case SOURCE_AR_PRINCIPAL: 
+									case SOURCE_AR_PRINCIPAL:
 										$normal_target[$value->target_id] = $value->target_id;
 										$normal_amount += $value->amount;
 										break;
@@ -401,7 +401,7 @@ class Estatement_lib{
 							}
 						}
 					}
-					
+
 					//提前還款
 					$prepayment_count 	= 0;
 					$prepayment_amount 	= 0;
@@ -419,7 +419,7 @@ class Estatement_lib{
 							$prepayment_target[] = $value->entering_date.'-'.$value->target_id;
 						}
 					}
-					
+
 					//本期還款
 					$transactions 	= $this->CI->transaction_model->get_many_by(array(
 						"entering_date <="	=> $edate,
@@ -489,8 +489,9 @@ class Estatement_lib{
 		}
 		return false;
 	}
-	
-	public function get_estatement_investor_detail($user_id=0,$sdate="",$edate="",$export=false){
+
+	public function get_estatement_investor_detail($user_id=0,$sdate="",$edate="",$export=false)
+	{
 		$user_info = $this->CI->user_model->get($user_id);
         $this->CI->load->library('Transfer_lib');
 		if($user_info){
@@ -518,7 +519,7 @@ class Estatement_lib{
 						"virtual_account" 	=> $virtual_account->virtual_account,
 						"tx_datetime <=" 	=> $edatetime,
 					));
-					
+
 					if(!empty($virtual_passbook)){
 						foreach($virtual_passbook as $key => $value){
 							if($value->tx_datetime>=$sdatetime){
@@ -535,7 +536,7 @@ class Estatement_lib{
 
 					$tmp_list[] = array("date"=>date("Y-m-d",strtotime($sdate.' -1 day')),"income_principal"=>$first);
 				}
-				
+
 				if($target_id){
 					$target_id 	= array_unique($target_id);
 					$targets 	= $this->CI->target_model->get_many($target_id);
@@ -573,7 +574,7 @@ class Estatement_lib{
 									"income_principal"	=> 0,
 								);
                                 break;
-							case SOURCE_PRINCIPAL: 
+							case SOURCE_PRINCIPAL:
 								$instalment = isset($target_list[$value->target_id])?$target_list[$value->target_id]->instalment:"";
 								if(isset($tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date])){
 									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['income_principal'] += intval($value->amount);
@@ -597,7 +598,7 @@ class Estatement_lib{
 					}
 					foreach($transactions as $key => $value){
 						switch ($value->source) {
-							case SOURCE_RECHARGE: 
+							case SOURCE_RECHARGE:
 								$tmp_list[] = array(
 									"date"				=> $value->entering_date,
 									"target_no"			=> isset($target_list[$value->target_id])?$target_list[$value->target_id]->target_no:"",
@@ -693,7 +694,14 @@ class Estatement_lib{
 								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['remark'] = '提前清償<br>帳期：'.$value->instalment_no.'/'.$instalment;
 								break;
 							case SOURCE_FEES:
-								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['cost_fee'] += intval($value->amount);
+								$platform_fee = intval($value->amount);
+								// 特殊情境, 退還平台服務費, issue#816
+								if ($value->bank_account_from == PLATFORM_VIRTUAL_ACCOUNT) {
+									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['date'] = $value->entering_date;
+									$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['title'] = '錯帳退款';
+									$platform_fee = $platform_fee * -1;
+								}
+								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['cost_fee'] += $platform_fee;
 								break;
 							default:
 								break;
@@ -720,7 +728,7 @@ class Estatement_lib{
 						}
 						$list[] = $value;
 					}
-					
+
 					$num = count($list);
 					for($i = 0 ; $i < $num ; $i++){
 						for ($j=$i+1;$j<$num;$j++) {
@@ -744,10 +752,10 @@ class Estatement_lib{
 					);
 					$amount = 0;
 					foreach($list as $key => $value){
-						$amount += 
-						intval($value["income_principal"]) + 
-						intval($value["income_interest"])+ 
-						intval($value["income_delay_interest"])+ 
+						$amount +=
+						intval($value["income_principal"]) +
+						intval($value["income_interest"])+
+						intval($value["income_delay_interest"])+
 						intval($value["income_allowance"])-
 						intval($value["cost_principal"])-
 						intval($value["cost_fee"]);
@@ -759,7 +767,7 @@ class Estatement_lib{
 						$list[$key] = $value;
 					}
 				}
-				
+
 				$data = array(
 					"edate" 		=> $edate,
 					"sdate" 		=> $sdate,
@@ -802,20 +810,20 @@ class Estatement_lib{
 		}
 		return false;
 	}
-	
+
 	public function upload_pdf($user_id=0,$html="",$password="",$title="",$file_name="",$path="",$orientation=false,$loaalTemp=false,$bpassword=false){
 		if($user_id){
             $spassword = $bpassword ? $bpassword : PDF_OWNER_PASSWORD;
             $orientation?'P':'L';
 			$pdf = new TCPDF($orientation, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 			$permissions  = array(
-				'print', 
-				'modify', 
-				'copy', 
-				'annot-forms', 
-				'fill-forms', 
-				'extract', 
-				'assemble', 
+				'print',
+				'modify',
+				'copy',
+				'annot-forms',
+				'fill-forms',
+				'extract',
+				'assemble',
 				'print-high'
 			);
 			$pdf->SetProtection($permissions , $password , $spassword, 0, null);
@@ -841,7 +849,7 @@ class Estatement_lib{
 		}
 		return false;
 	}
-	
+
 	function get_investor_user_list($sdate="",$edate=""){
 		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
 			$date_range			= entering_date_range($edate);
@@ -853,6 +861,7 @@ class Estatement_lib{
 				$transaction 	= $this->CI->transaction_model->get_many_by(array(
 					"source" 				=> [1,10],
 					"bank_account_to like" 	=> CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE."%",
+					"entering_date >=" 		=> $sdate,
 					"entering_date <=" 		=> $edate,
 				));
 				if(!empty($transaction)){
@@ -865,7 +874,7 @@ class Estatement_lib{
 		}
 		return false;
 	}
-	
+
 	function get_borrower_user_list($sdate="",$edate=""){
 		if(!empty($sdate) && !empty($edate) && $edate >= $sdate){
 			$this->CI->load->model('transaction/target_model');
@@ -877,6 +886,7 @@ class Estatement_lib{
 			if($edatetime){
 				$target 		= $this->CI->target_model->get_many_by(array(
 					"status" 		=> array(5,10),
+					"loan_date >=" 	=> $sdate,
 					"loan_date <=" 	=> $edate,
 				));
 				if(!empty($target)){
@@ -889,7 +899,7 @@ class Estatement_lib{
 		}
 		return false;
 	}
-	
+
 	function create_estatement_pdf($user_estatement= array()){
 		if($user_estatement->id && $user_estatement->url=="" && !empty($user_estatement->content)){
 			$url 		= "";
@@ -898,7 +908,7 @@ class Estatement_lib{
 			$user_id 	= $user_estatement->user_id;
 			$html 		= $user_estatement->content;
 			switch($user_estatement->type){
-				case "estatement": 
+				case "estatement":
 					if($user_estatement->investor){
 						$url = $this->upload_pdf(
 							$user_id,
@@ -943,7 +953,7 @@ class Estatement_lib{
 				default:
 					break;
 			}
-			
+
 			if(!empty($url)){
 				$this->CI->user_estatement_model->update($user_estatement->id,array("url" => $url));
 				return $url;
@@ -951,7 +961,7 @@ class Estatement_lib{
 		}
 		return false;
 	}
-	
+
 	function send_estatement($estatement_id=0){
 		if($estatement_id){
 			$estatement = $this->CI->user_estatement_model->get($estatement_id);
@@ -984,7 +994,7 @@ class Estatement_lib{
 		}
 		return false;
 	}
-	
+
 	function script_create_estatement_pdf(){
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url"	=> "",
@@ -998,7 +1008,7 @@ class Estatement_lib{
 		}
 		return $count;
 	}
-	
+
 	function script_send_estatement_pdf(){
 		$list = $this->CI->user_estatement_model->limit(50)->get_many_by(array(
 			"url !="	=> "",
