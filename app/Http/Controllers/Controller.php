@@ -99,12 +99,11 @@ class Controller extends BaseController
         $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
 
         if ($input['type']) {
-            $filter[] = ['type', '=', $input['type']];
+            $filter[] = ['category', '=', $input['type']];
         }
 
-        $knowledge = DB::table('feedback')->select(['feedback', 'imageSrc', 'name', 'rank', 'type'])->where($filter)->orderBy('date', 'desc')->get();
-
-        return response()->json($knowledge, 200);
+        $experiences = DB::table('interview')->select(['feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
+        return response()->json($experiences, 200);
     }
 
     public function getServiceData(Request $request)

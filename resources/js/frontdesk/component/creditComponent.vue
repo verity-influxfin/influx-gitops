@@ -8,38 +8,16 @@
       </p>
       <div class="t-c"><h2>年化%與月息試算</h2></div>
       <div class="hr"></div>
-      <p class="t-x">
-        速貸{{ amount }}萬元、分
-        <select v-model="periods">
-          <option value="3">3</option>
-          <option value="6">6</option>
-          <option value="9">9</option>
-          <option value="12">12</option>
-          <option value="15">15</option>
-          <option value="18">18</option>
-          <option value="21">21</option>
-          <option value="24">24</option>
-        </select>
-        期，每月需付<b>{{ format(tweenedPmt) }}</b>
-      </p>
-      <p class="t-x">可點選您的評級進行月付金試算</p>
-      <div class="credit-level-list">
-        <div
-          v-for="(item, index) in creditLevelList"
-          :key="index"
-          :class="['level-item', { light: item.isChecked }]"
-          @click="rotate(item.isChecked, index)"
-        >
-          <img :src="`/images/${item.href}`" class="img-fluid" />
-        </div>
-      </div>
       <template v-if="$props.license">
         <br />
         <p class="license">*{{ $props.license }}</p>
       </template>
-    </div>
-    <div class="credit-board">
-      <creditBoard :credit="$props.creditList" :deg="deg" :index="index" />
+      <div style="width: 800px;margin: 0px auto;">
+        <img class="img-fulid" src="/images/sdvsvdvs.svg">
+      </div>
+      <div style="width: 250px;margin: 0px auto;">
+        <img class="img-fulid" src="/images/sdvds.svg">
+      </div>
     </div>
   </div>
 </template>

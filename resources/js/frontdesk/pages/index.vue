@@ -102,131 +102,135 @@
       </div>
     </div>
     <div class="product-card">
-      <div class="person">
+      <!-- <div class="title">
         <div class="t-c"><h2>產品介紹</h2></div>
         <div class="hr"></div>
-        <h5>年滿20～35歲的您 均可申請個人信貸服務喔！</h5>
-        <div class="typ">
-          <div class="t">
-            <div class="img">
-              <img class="img-fluid" src="../asset/images/icon-dot.svg" />
+      </div> -->
+      <div class="box">
+        <div class="person">
+          <h5>年滿20～35歲的您 均可申請個人信貸服務喔！</h5>
+          <div class="typ">
+            <div class="t">
+              <div class="img">
+                <img class="img-fluid" src="../asset/images/icon-dot.svg" />
+              </div>
+              <h3>個人信貸</h3>
             </div>
-            <h3>個人信貸</h3>
+            <div class="v">
+              <div class="b">
+                <img
+                  class="img-fluid"
+                  src="../asset/images/working-from-home.png"
+                />
+              </div>
+              <div class="c">
+                <h4>全線上申請，無人打擾</h4>
+                <p>
+                  最高額度12-20萬元<br />
+                  3-24期，償還期限選擇多元<br />
+                  最低利率5％
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="v">
-            <div class="b">
-              <img
-                class="img-fluid"
-                src="../asset/images/working-from-home.png"
-              />
-            </div>
-            <div class="c">
-              <h4>全線上申請，無人打擾</h4>
-              <p>
-                最高額度12-20萬元<br />
-                3-24期，償還期限選擇多元<br />
-                最低利率5％
-              </p>
-            </div>
-          </div>
+          <Splide class="product" :options="productOptions">
+            <SplideSlide class="each">
+              <div class="i">
+                <img
+                  class="img-fluid"
+                  src="../asset/images/0_YabILwq8vGX1rj_S.png"
+                />
+              </div>
+              <div class="ccs">
+                <div>
+                  學生貸<br />
+                  資金小幫手生活超easy
+                </div>
+                <p>全台大學生與碩博士均可申請</p>
+                <router-link to="collegeLoan">了解更多</router-link>
+              </div>
+            </SplideSlide>
+            <SplideSlide class="each">
+              <div class="i">
+                <img
+                  class="img-fluid"
+                  src="../asset/images/431fd666-9725-4d0c-beec-defca3ded18c_rw_3840.png"
+                />
+              </div>
+              <div class="ccs">
+                <div>
+                  上班族貸<br />
+                  隨時線上照顧您的需求
+                </div>
+                <p>年滿20歲的工作人士均可申請</p>
+                <router-link to="freshGraduateLoan">了解更多</router-link>
+              </div>
+            </SplideSlide>
+            <SplideSlide class="each">
+              <div class="i">
+                <img
+                  class="img-fluid"
+                  src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
+                />
+              </div>
+              <div class="ccs">
+                <div>
+                  資訊工程師專案<br />
+                  為您的金錢問題debug
+                </div>
+                <p>資訊相關學生或職場專業人員均可申請</p>
+                <router-link to="engineerLoan">了解更多</router-link>
+              </div>
+            </SplideSlide>
+          </Splide>
         </div>
-        <Splide class="product" :options="personOptions">
-          <SplideSlide class="each">
-            <div class="i">
-              <img
-                class="img-fluid"
-                src="../asset/images/0_YabILwq8vGX1rj_S.png"
-              />
-            </div>
-            <div class="ccs">
-              <div>
-                學生貸<br />
-                資金小幫手生活超easy
+        <div class="group">
+          <h5>企業融資服務即將上線</h5>
+          <div class="typ">
+            <div class="t">
+              <div class="img">
+                <img class="img-fluid" src="../asset/images/icon-dot.svg" />
               </div>
-              <p>全台大學生與碩博士均可申請</p>
-              <router-link to="collegeLoan">了解更多</router-link>
+              <h3>企業融資</h3>
             </div>
-          </SplideSlide>
-          <SplideSlide class="each">
-            <div class="i">
-              <img
-                class="img-fluid"
-                src="../asset/images/431fd666-9725-4d0c-beec-defca3ded18c_rw_3840.png"
-              />
-            </div>
-            <div class="ccs">
-              <div>
-                上班族貸<br />
-                隨時線上照顧您的需求
+            <div class="v">
+              <div class="b">
+                <img
+                  class="img-fluid"
+                  src="../asset/images/business-work-place.png"
+                />
               </div>
-              <p>年滿20歲的工作人士均可申請</p>
-              <router-link to="freshGraduateLoan">了解更多</router-link>
-            </div>
-          </SplideSlide>
-          <SplideSlide class="each">
-            <div class="i">
-              <img
-                class="img-fluid"
-                src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
-              />
-            </div>
-            <div class="ccs">
-              <div>
-                資訊工程師專案<br />
-                為您的金錢問題debug
-              </div>
-              <p>資訊相關學生或職場專業人員均可申請</p>
-              <router-link to="engineerLoan">了解更多</router-link>
-            </div>
-          </SplideSlide>
-        </Splide>
-      </div>
-      <div class="group">
-        <h5>企業款服務即將上線</h5>
-        <div class="typ">
-          <div class="t">
-            <div class="img">
-              <img class="img-fluid" src="../asset/images/icon-dot.svg" />
-            </div>
-            <h3>企業信貸</h3>
-          </div>
-          <div class="v">
-            <div class="b">
-              <img
-                class="img-fluid"
-                src="../asset/images/business-work-place.png"
-              />
             </div>
           </div>
+          <Splide class="product" :options="productOptions">
+            <SplideSlide class="each">
+              <div class="i">
+                <img
+                  class="img-fluid"
+                  src="../asset/images/0_YabILwq8vGX1rj_S.png"
+                />
+              </div>
+              <div class="ccs">
+                <div>車輛融資專案</div>
+                <p>提供便利資金融通</p>
+                <router-link to="">了解更多</router-link>
+              </div>
+            </SplideSlide>
+            <SplideSlide class="each">
+              <div class="i">
+                <img
+                  class="img-fluid"
+                  src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
+                />
+              </div>
+              <div class="ccs">
+                <div>新創企業貸</div>
+                <p>提供便利資金融通</p>
+                <router-link to="">了解更多</router-link>
+              </div>
+            </SplideSlide>
+          </Splide>
         </div>
-        <Splide class="product" :options="groupOptions">
-          <SplideSlide class="each">
-            <div class="i">
-              <img
-                class="img-fluid"
-                src="../asset/images/0_YabILwq8vGX1rj_S.png"
-              />
-            </div>
-            <div class="ccs">
-              <div>車輛融資專案</div>
-              <p>提供便利資金融通</p>
-              <router-link to="">了解更多</router-link>
-            </div>
-          </SplideSlide>
-          <SplideSlide class="each">
-            <div class="i">
-              <img
-                class="img-fluid"
-                src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
-              />
-            </div>
-            <div class="ccs">
-              <div>新創企業貸</div>
-              <p>提供便利資金融通</p>
-              <router-link to="">了解更多</router-link>
-            </div>
-          </SplideSlide>
-        </Splide>
       </div>
     </div>
     <div class="advantage-card">
@@ -337,6 +341,17 @@
       <div class="t-c"><h2>試算您可借額度</h2></div>
       <div class="hr"></div>
       <h5>分期還款，輕鬆無負擔！</h5>
+      <div style="width: 800px;margin: 0px auto;">
+        <img class="img-fulid" src="/images/dashbord.svg">
+      </div>
+      <div style="width: 250px;margin: 0px auto;">
+        <img class="img-fulid" src="/images/zxc.svg">
+      </div>
+    </div>
+    <!-- <div class="game-card">
+      <div class="t-c"><h2>試算您可借額度</h2></div>
+      <div class="hr"></div>
+      <h5>分期還款，輕鬆無負擔！</h5>
       <div class="cnt">
         <div class="amount-chart"><amountChart :count="count" /></div>
         <div class="aa-as">
@@ -362,7 +377,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <experience :experiences="experiences" title="用戶回饋" />
     <div class="information-card">
       <div style="z-index: 2; position: relative">
@@ -500,6 +515,7 @@ export default {
   },
   data: () => ({
     count: 3,
+    shares: [],
     creditRatingItem: [
       {
         text: "實名認證",
@@ -562,10 +578,10 @@ export default {
         767: { perPage: 1, arrows: true },
       },
     },
-    personOptions: {
+    productOptions: {
       type: "loop",
-      autoplay: false,
-      perPage: 3,
+      autoplay: true,
+      perPage: 2,
       perMove: 1,
       arrows: false,
       pagination: false,
@@ -574,10 +590,10 @@ export default {
         767: { autoplay: true, perPage: 1, arrows: true },
       },
     },
-    groupOptions: {
+    videoOptions: {
       type: "loop",
       autoplay: false,
-      perPage: 2,
+      perPage: 4,
       perMove: 1,
       arrows: false,
       pagination: false,
@@ -829,152 +845,164 @@ export default {
       }
     }
   }
+
   .product-card {
-    h5 {
-      font-size: 25px;
-      font-weight: 600;
-      line-height: 1.47;
-      text-align: center;
-      color: #ffc236;
-      margin: 2rem auto;
+    margin-bottom: 4rem;
+    .title {
+      background-image: linear-gradient(90deg, #153a71 50%, #ffffff 50%);
+      padding: 2rem 0px;
+
+      .t-c {
+        background-image: linear-gradient(
+          to right,
+          #306fca 0%,
+          #09d4f6 50%,
+          #306fca 75%
+        );
+      }
     }
 
-    .t-c {
-      background-image: linear-gradient(
-        to right,
-        #306fca 0%,
-        #09d4f6 50%,
-        #306fca 75%
-      );
-    }
+    .box {
+      display: flex;
+      .person {
+        background: #153a71;
+        padding: 30px 0px;
+        width: 50%;
 
-    .typ {
-      border-radius: 20px;
-      box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.3);
-      background-color: #ffffff;
-      width: fit-content;
-      margin: 0px auto;
-      padding: 20px;
+        .product {
+          width: 90%;
+        }
+      }
 
-      .t {
-        display: flex;
+      .group {
+        background: #f1f1f1;
+        padding: 30px 0px;
+        width: 50%;
+
+        .product {
+          width: 90%;
+        }
+      }
+
+      h5 {
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 1.47;
+        text-align: center;
+        color: #ffc236;
+        margin: 2rem auto;
+      }
+
+      .typ {
+        border-radius: 20px;
+        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.3);
+        background-color: #ffffff;
         width: fit-content;
         margin: 0px auto;
+        padding: 20px;
 
-        h3 {
-          font-weight: 900;
-          line-height: 1.67;
-          color: #1f55a0;
-          margin: 0px;
-        }
+        .t {
+          display: flex;
+          width: fit-content;
+          margin: 0px auto;
 
-        .img {
-          width: 38px;
-          line-height: 46px;
-          margin-right: 5px;
-        }
-      }
-
-      .v {
-        position: relative;
-        margin-top: 10px;
-
-        .b {
-          width: 400px;
-        }
-
-        .c {
-          position: absolute;
-          top: 15px;
-          left: 15px;
-
-          h4 {
-            text-shadow: 0 3px 6px #000000;
-            font-size: 26px;
-            text-align: center;
-            color: #ffc236;
-            font-weight: bold;
-          }
-
-          p {
-            text-shadow: 0 3px 6px #000000;
-            font-size: 18px;
-            line-height: 1.64;
-            color: #ffffff;
+          h3 {
+            font-weight: 900;
+            line-height: 1.67;
+            color: #1f55a0;
             margin: 0px;
           }
-        }
-      }
-    }
 
-    .person {
-      background: #153a71;
-      padding: 30px 0px;
-
-      .product {
-        width: 80%;
-      }
-    }
-
-    .group {
-      background: #ffffff;
-      padding: 30px 0px;
-
-      .product {
-        width: 55%;
-      }
-    }
-
-    .product {
-      margin: 20px auto;
-
-      .splide__list {
-        padding: 10px !important;
-      }
-
-      .each {
-        display: flex;
-        border-radius: 20px;
-        box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.3);
-        background-color: #ffffff;
-        padding: 10px;
-
-        .i {
-          width: 30%;
-          margin-right: 10px;
+          .img {
+            width: 38px;
+            line-height: 46px;
+            margin-right: 5px;
+          }
         }
 
-        .ccs {
-          width: 70%;
+        .v {
           position: relative;
+          margin-top: 10px;
 
-          div {
-            font-size: 18px;
-            font-weight: bold;
-            line-height: 1.21;
-            color: #000000;
+          .b {
+            width: 400px;
           }
 
-          p {
-            font-size: 16px;
-            color: #5d5555;
-            margin: 0px;
-          }
-
-          a {
-            padding: 3px 12px;
-            border-radius: 20px;
-            border: solid 1px #0fd9fb;
-            background-color: #1f55a0;
-            text-shadow: 0 3px 6px #000000;
-            font-size: 15px;
-            color: #ffffff;
+          .c {
             position: absolute;
-            right: 0px;
-            bottom: 0px;
+            top: 15px;
+            left: 15px;
 
-            &:hover {
-              text-decoration: none;
+            h4 {
+              text-shadow: 0 3px 6px #000000;
+              font-size: 26px;
+              text-align: center;
+              color: #ffc236;
+              font-weight: bold;
+            }
+
+            p {
+              text-shadow: 0 3px 6px #000000;
+              font-size: 18px;
+              line-height: 1.64;
+              color: #ffffff;
+              margin: 0px;
+            }
+          }
+        }
+      }
+
+      .product {
+        margin: 20px auto;
+
+        .splide__list {
+          padding: 10px !important;
+        }
+
+        .each {
+          display: flex;
+          border-radius: 20px;
+          box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.3);
+          background-color: #ffffff;
+          padding: 10px;
+
+          .i {
+            width: 30%;
+            margin-right: 10px;
+          }
+
+          .ccs {
+            width: 70%;
+            position: relative;
+
+            div {
+              font-size: 18px;
+              font-weight: bold;
+              line-height: 1.21;
+              color: #000000;
+            }
+
+            p {
+              font-size: 16px;
+              color: #5d5555;
+              margin: 0px;
+            }
+
+            a {
+              padding: 3px 12px;
+              border-radius: 20px;
+              border: solid 1px #0fd9fb;
+              background-color: #1f55a0;
+              text-shadow: 0 3px 6px #000000;
+              font-size: 15px;
+              color: #ffffff;
+              position: absolute;
+              right: 0px;
+              bottom: 0px;
+
+              &:hover {
+                text-decoration: none;
+              }
             }
           }
         }
@@ -1463,32 +1491,41 @@ export default {
     }
 
     .product-card {
-      h5 {
-        font-size: 17px;
-        margin: 1rem auto;
-      }
+      margin: 0px;
 
-      .typ {
-        .v {
-          .b {
-            width: 100%;
+      .box {
+        flex-direction: column;
+
+        h5 {
+          font-size: 17px;
+          margin: 1rem auto;
+        }
+        .typ {
+          .v {
+            .b {
+              width: 100%;
+            }
           }
         }
-      }
 
-      .person {
-        padding: 10px;
-
-        .product {
+        .person {
+          padding: 10px;
           width: 100%;
+
+          .product {
+            width: 100%;
+            margin: 10px auto;
+          }
         }
-      }
 
-      .group {
-        padding: 10px;
-
-        .product {
+        .group {
+          padding: 10px;
           width: 100%;
+
+          .product {
+            width: 100%;
+            margin: 10px auto;
+          }
         }
       }
     }
@@ -1551,11 +1588,12 @@ export default {
           div {
             display: none;
             margin: 0px;
+            font-size: 17px;
           }
 
           .ad-b {
             display: block;
-            height: 115px;
+            height: 70px;
           }
         }
 

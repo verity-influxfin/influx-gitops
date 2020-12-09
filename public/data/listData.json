@@ -35,7 +35,7 @@
             "subMenu": [
                 {
                     "name": "債權投資",
-                    "href": "invest",
+                    "href": "investment",
                     "isActive": true
                 },
                 {

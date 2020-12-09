@@ -37,7 +37,7 @@ let routers = [
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
     { path: '/mobileLoan', component: mobileLoan },
     { path: '/engineerLoan', component: engineerLoan },
-    { path: '/invest', component: invest },
+    { path: '/investment', component: invest },
     { path: '/transfer', component: transfer },
     { path: '/company', component: company },
     { path: '/news', component: news },

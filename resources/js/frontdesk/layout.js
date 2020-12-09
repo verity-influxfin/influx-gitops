@@ -123,13 +123,13 @@ $(() => {
                 }
             },
             backtotop() {
-                $('html').stop().animate({scrollTop:0}, 1000);
+                $('html').stop().animate({ scrollTop: 0 }, 1000);
                 AOS.refresh();
             },
             openLoginModal() {
                 $(this.$refs.loginForm).modal("show");
             },
-            hideLoginModal(){
+            hideLoginModal() {
                 $(this.$refs.loginForm).modal("hide");
             },
             switchTag(evt) {
@@ -179,9 +179,12 @@ $(() => {
                             axios.post(`${location.origin}/doLogin`, params)
                                 .then((res) => {
                                     this.$store.commit('mutationUserData', res.data);
-                                    if (this.$router.history.pending) {
-                                        $(this.$refs.loginForm).modal("hide");
-                                        this.$router.push(this.$router.history.pending.path);
+                                    $(this.$refs.loginForm).modal("hide");
+
+                                    if (investor) {
+                                        this.$router.push('loannotification');
+                                    } else {
+                                        this.$router.push('investnotification');
                                     }
 
                                     location.reload();

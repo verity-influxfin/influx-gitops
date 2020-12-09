@@ -10,6 +10,17 @@
         v-for="(item, index) in $props.experiences"
         :key="index"
       >
+      <template v-if="item.video_link">
+
+          <iframe
+            :src="item.video_link"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            style="width: 100%"
+          ></iframe>
+      </template>
+      <template v-else>
         <div class="img">
           <img
             :src="item.imageSrc"
@@ -17,8 +28,9 @@
             class="img-fluid"
           />
         </div>
+        </template>
         <label class="c-pel">
-          {{ item.name }}
+          {{ item.post_title }}
         </label>
         <button class="btn btn-show" @click="show(item)">使用心得</button>
       </SplideSlide>
@@ -128,11 +140,13 @@ export default {
       border-radius: 25px;
       background-image: linear-gradient(to top, #e4eeff, #fbfbfb);
       margin: 25px 0px;
+      padding: 15px;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
 
       .img {
         overflow: hidden;
         border-radius: 50%;
-        width: 110px;
+    width: 125px;
         margin: 20px auto;
       }
 
@@ -141,6 +155,8 @@ export default {
         margin: 10px auto;
         display: block;
         font-weight: bolder;
+    font-size: 24px; 
+    color: #1c2a54;
 
         i {
           transform: rotate(90deg);
@@ -153,7 +169,6 @@ export default {
         border: solid 3px #1f55a0;
         background-color: #ffffff;
         margin: 0px auto;
-        transform: translate(0px, 50%);
         display: block;
         font-size: 16px;
         color: #1f55a0;

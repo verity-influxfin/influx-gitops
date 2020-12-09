@@ -1,10 +1,10 @@
 <template>
-  <div :class="['notification-wrapper',$router.currentRoute.name]">
+  <div :class="['notification-wrapper', $router.currentRoute.name]">
     <div class="notification-banner">
       <h3>通知</h3>
       <div v-if="unreadCount !== 0" class="btn unread-tip" @click="allRead">
         一鍵已讀
-        <span>{{unreadCount}}</span>
+        <span>{{ unreadCount }}</span>
       </div>
     </div>
     <ul class="notification-container" ref="container"></ul>
@@ -202,6 +202,31 @@ export default {
         border-top: 1px dashed #a9a9a9;
         margin: 10px 10px 0px 10px;
         padding-top: 5px;
+      }
+    }
+  }
+
+  .pagination {
+    width: fit-content;
+    margin: 0px auto;
+
+    .paginationjs-pages {
+      li {
+        border: 0px solid #aaa;
+
+        a {
+          height: 28px;
+          color: #083a6e;
+          background: #f5f5f5;
+        }
+      }
+      .paginationjs-prev,
+      .paginationjs-next,
+      .paginationjs-page.active {
+        a {
+          background: #083a6e;
+          color: #ffffff;
+        }
       }
     }
   }
