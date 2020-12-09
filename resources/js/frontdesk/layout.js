@@ -182,9 +182,9 @@ $(() => {
                                     $(this.$refs.loginForm).modal("hide");
 
                                     if (investor) {
-                                        this.$router.push('loannotification');
-                                    } else {
                                         this.$router.push('investnotification');
+                                    } else {
+                                        this.$router.push('loannotification');
                                     }
 
                                     location.reload();
