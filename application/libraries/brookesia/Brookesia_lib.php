@@ -10,6 +10,25 @@ class brookesia_lib
 		$this->brookesiaUrl = "https://" . getenv('GRACULA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
 	}
 
+	public function userCheckAllRules($userid)
+	{
+		if(!$userid) {
+			return false;
+		}
+
+		$url = $this->brookesiaUrl  . "check/9487/checkAll";
+		$data = ["userid" => $userid];
+
+		$result = curl_get($url, $data);
+		$response = json_decode($result);
+
+		if (!$result || !isset($response->status) || $response->status != 200) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public function getRuleHitByUserId($userId)
 	{
 		if(!$userId) {
@@ -45,5 +64,7 @@ class brookesia_lib
 
 		return $response;
 	}
+
+
 
 }
