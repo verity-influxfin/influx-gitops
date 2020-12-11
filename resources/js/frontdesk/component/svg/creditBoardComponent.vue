@@ -8,6 +8,7 @@
       x="0px"
       y="0px"
       viewBox="0 0 715 507"
+      ref="ccrata"
       style="enable-background: new 0 0 715 507"
       xml:space="preserve"
       @mousemove="moving($event)"
@@ -2433,12 +2434,7 @@
         >
           ${{ format(amount) }}
         </text>
-        <text
-          x="50%"
-          y="50%"
-          class="st5 st6 st14"
-          style="transform: translate(-35.5%, -2%)"
-        >
+        <text x="105" y="245" class="st5 st6 st14">
           ${{ format(amountCount) }}
         </text>
         <text
@@ -3447,6 +3443,8 @@
         </g>
         <circle
           @mousedown="getTarget($event, 'big')"
+          id="big"
+          ref="big"
           class="st19"
           cx="203.129"
           cy="453.047"
@@ -3454,6 +3452,8 @@
         />
         <circle
           @mousedown="getTarget($event, 'small')"
+          id="small"
+          ref="small"
           class="st20 rot"
           cx="362.111"
           cy="326.169"
@@ -3547,6 +3547,7 @@ export default {
     if (this.color) {
       $("#ccrata .st5").css("fill", this.color);
     }
+    this.touchMove();
   },
   watch: {
     pmt(newVal) {
@@ -3557,6 +3558,47 @@ export default {
     },
   },
   methods: {
+    touchMove() {
+      this.$refs.ccrata.addEventListener(
+        "touchmove",
+        this.handleTouchMove,
+        false
+      );
+      this.$refs.big.addEventListener(
+        "touchstart",
+        this.handleTouchStart,
+        false
+      );
+      this.$refs.small.addEventListener(
+        "touchstart",
+        this.handleTouchStart,
+        false
+      );
+      this.$refs.ccrata.addEventListener(
+        "touchend",
+        this.handleTouchtouchend,
+        false
+      );
+    },
+    handleTouchStart(event) {
+      this.moveEl = event.target;
+      this.target = $(event.target).attr("id");
+      if (this.target === "big") {
+        this.amountTick = (this.amount - 5000) / 75;
+      }
+      if (this.target === "small") {
+        this.rateTick = Math.round(((this.rate - 5) / 76) * 100) / 100;
+      }
+      $("body").css("overflow", "hidden");
+    },
+    handleTouchMove(e) {
+      this.moving(event.touches[0]);
+    },
+    handleTouchtouchend() {
+      this.moveEl = "";
+      this.target = "";
+      $("body").css("overflow", "initial");
+    },
     format(data) {
       data = parseInt(data);
       if (!isNaN(data)) {
@@ -3640,12 +3682,6 @@ export default {
         this[this.target]["cy"] +
         this[this.target]["r"] *
           Math.sin((this[this.target]["deg"] * 3.14) / 180);
-
-      console.log(`pageX:${pageX}`);
-      console.log(`pageY:${pageY}`);
-
-      console.log(`cx:${cx}`);
-      console.log(`cy:${cy}`);
 
       if (
         cx + 300 > pageX &&

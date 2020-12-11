@@ -40,17 +40,20 @@
       <div class="t-c"><h2>公司簡介</h2></div>
       <div class="hr"></div>
       <p class="i-t">
-      inFlux普匯金融科技以「普惠金融」為志業，「金融專業」為核心，「高端AI科技」為輔助，提供「最有溫度」銀行服務不到的社群金融！<br /><br />
-      首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！<br /><br />
-      透過P2P點對點技術，進行大量、小額、分散式借貸投資及債權轉讓，保護借款人資訊，保障投資人權益。<br /><br />
-      具備金融專業知識與實務經驗團隊，建立堅強AI自動風控模組，流暢友善UI設計，深受年輕人喜愛，完美呈現AI綠色金融科技體驗環境。
+        inFlux普匯金融科技以「普惠金融」為志業，「金融專業」為核心，「高端AI科技」為輔助，提供「最有溫度」銀行服務不到的社群金融！<br /><br />
+        首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！<br /><br />
+        透過P2P點對點技術，進行大量、小額、分散式借貸投資及債權轉讓，保護借款人資訊，保障投資人權益。<br /><br />
+        具備金融專業知識與實務經驗團隊，建立堅強AI自動風控模組，流暢友善UI設計，深受年輕人喜愛，完美呈現AI綠色金融科技體驗環境。
       </p>
     </div>
     <div class="histroy-card">
       <div class="t-c"><h2>歷史沿革</h2></div>
       <div class="hr"></div>
       <div class="h-c">
-        <div>
+        <div style="width: 100%">
+          <img class="img-fluid" src="/images/route.svg" />
+        </div>
+        <!-- <div>
           <histroyDot
             :content="{
               year1: '2017',
@@ -91,7 +94,7 @@
               desc2: '帶領【AI金融科技聯盟】舉辦第一屆競賽',
             }"
           />
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="p2p-card">
@@ -293,7 +296,7 @@
       <div class="cnt">
         <div class="cnt-l">
           <div>全台唯一無人化借貸平台 操作簡單 快速到款</div>
-          <div>申貸過程，無人干擾！<br>普匯．你的手機ATM</div>
+          <div>申貸過程，無人干擾！<br />普匯．你的手機ATM</div>
           <div>依照個別身分，提供最適合您的貸款服務</div>
           <div>
             5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
@@ -1394,7 +1397,7 @@ export default {
       .h-c {
         width: 100%;
         overflow: auto;
-        padding: 10px;
+        padding: 10px 0px;
 
         div {
           width: 300px;
