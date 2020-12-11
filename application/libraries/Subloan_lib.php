@@ -206,7 +206,8 @@ class Subloan_lib{
 				$this->CI->target_lib->insert_change_log($target->id,$param,0,$admin_id);
 				$this->CI->subloan_model->update($subloan->id,array('status'=>2));
 				$this->CI->notification_lib->target_verify_success($target);
-			}
+                $this->CI->target_lib->aiBiddingTarget($target);
+            }
 		}
 		return false;
 	}
