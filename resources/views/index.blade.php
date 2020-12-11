@@ -114,8 +114,14 @@
                         <H2>About</H2>
                         <div class="img"><img src="{{ asset('images/footer.png') }}" class="img-fluid"></div>
                     </div>
-                    <p class="c-s">「普匯．你的手機ATM」</p>
-                    <p class="c-s">inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。</p>
+                    <div class="cd">
+                        <div class="img"><img class="img-fluid" src="/images/ah-pu.svg"></div>
+                        <div class="cnt">
+                            <p class="c-s">「普匯．你的手機ATM」</p>
+                            <p class="c-s">inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。</p>
+
+                        </div>
+                    </div>
                 </div>
                 <div class="loan-card">
                     <H2>Product</H2>

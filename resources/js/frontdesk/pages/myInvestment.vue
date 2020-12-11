@@ -41,7 +41,7 @@
           <div class="detial-row">
             <div>
               <span>{{ format(tweenedPrincipal) }}$</span>
-              <label>應收帳款</label>
+              <label>應收款項</label>
             </div>
           </div>
           <div class="detial-row">

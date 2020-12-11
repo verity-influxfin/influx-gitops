@@ -10,7 +10,8 @@
       <div class="c-title">
         <div class="p-type">案件類型</div>
         <div class="p-count">案件件數</div>
-        <div class="p-total">已回收本息</div>
+        <div class="p-total">已回收本金</div>
+        <div class="p-total">已回收利息</div>
       </div>
       <div class="card" v-for="(product, key) in groupList" :key="key">
         <div
@@ -24,8 +25,10 @@
             <div class="p-type">{{ productList[product] }}</div>
             <div class="p-count">{{ finishedData[product].length }}件</div>
             <div class="p-total">
-              <!-- <span>應收本金</span> -->
               <span>${{ getTotal(finishedData[product]) }}</span>
+            </div>
+            <div class="p-total">
+              <span>${{ getInterest(finishedData[product]) }}</span>
             </div>
           </div>
           <span class="accicon">
@@ -46,8 +49,10 @@
                   <div class="p-type">{{ ageTextList[age] }}</div>
                   <div class="p-count">{{ item.length }}件</div>
                   <div class="p-total">
-                    <!-- <span>應收本金</span> -->
                     <span>${{ getTotal(item) }}</span>
+                  </div>
+                  <div class="p-total">
+                    <span>${{ getInterest(item) }}</span>
                   </div>
                 </div>
                 <span class="accicon">
@@ -71,8 +76,10 @@
                         <div class="p-type">{{ typeTextList[type] }}</div>
                         <div class="p-count">{{ row.length }}件</div>
                         <div class="p-total">
-                          <!-- <span>回收總額</span> -->
                           <span class="total">${{ getTotal(row) }}</span>
+                        </div>
+                        <div class="p-total">
+                          <span class="total">${{ getInterest(row) }}</span>
                         </div>
                       </div>
                     </div>
@@ -127,7 +134,7 @@ export default {
   }),
   created() {
     this.$parent.pageIcon = "/images/icon_closed_b.svg";
-    this.$parent.pageTitle = "結案總攬";
+    this.$parent.pageTitle = "結案總覽";
     this.$parent.pagedesc = "您已結案的債權";
     this.getFinishedData();
   },
@@ -155,12 +162,16 @@ export default {
       let total = 0;
 
       data.forEach((row, index) => {
-        total +=
-          row.income.delay_interest +
-          row.income.interest +
-          row.income.other +
-          row.income.principal +
-          row.income.transfer;
+        total += row.income.other + row.income.principal + row.income.transfer;
+      });
+
+      return this.format(total);
+    },
+    getInterest(data) {
+      let total = 0;
+
+      data.forEach((row, index) => {
+        total += row.income.delay_interest + row.income.interest;
       });
 
       return this.format(total);

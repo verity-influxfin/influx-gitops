@@ -176,6 +176,35 @@ $ci-color: #153a71;
                     margin-left: 10px;
                 }
             }
+
+            .cd {
+                display: flex;
+
+                .img {
+                    width: 15%;
+                }
+                .cnt {
+                    width: 85%;
+                    background: #ffffff;
+                    color: #153a71;
+                    padding: 1rem 1rem 0px 1rem;
+                    font-weight: 700;
+                    border-radius: 20px;
+                    position: relative;
+
+                    &:before {
+                        content: "";
+                        width: 0px;
+                        height: 0px;
+                        border-right: 15px solid #ffffff;
+                        border-top: 15px solid #ffffff00;
+                        border-bottom: 15px solid #ffffff00;
+                        position: absolute;
+                        top: 23px;
+                        left: -15px;
+                    }
+                }
+            }
         }
 
         .loan-card {
@@ -269,8 +298,22 @@ $ci-color: #153a71;
                     justify-content: center;
                 }
 
-                .c-s {
-                    text-align: center;
+                .cd {
+                    .cnt {
+                        width: 80%;
+                        margin-left: 5%;
+
+                        &::before {
+                            border-right: 16px solid #ffffff;
+                            border-top: 16px solid #ffffff00;
+                            border-bottom: 16px solid #ffffff00;
+                            left: -14px;
+                        }
+
+                        .c-s {
+                            text-align: center;
+                        }
+                    }
                 }
             }
 

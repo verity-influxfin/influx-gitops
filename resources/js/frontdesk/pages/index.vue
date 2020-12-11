@@ -2,38 +2,38 @@
   <div class="index-wrapper">
     <div class="banner" :options="bannerOptions">
       <!-- <SplideSlide> -->
-        <div class="puhey-banner">
-          <img
-            :src="'/images/index-banner-d.png'"
-            class="hidden-desktop img-fluid"
-          />
-          <img
-            :src="'/images/index-banner-m.png'"
-            class="hidden-phone img-fluid"
-          />
-          <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
-          <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
-          <div class="content">
-            <p>最貼近年輕人的金融科技平台</p>
-            <span>普匯，你的手機ATM</span>
-            <div class="box">
-              <a
-                class="loan"
-                href="https://event.influxfin.com/r/iurl?p=webinvest"
-                target="_blank"
-                ><img src="../asset/images/light-b.svg" class="img-fluid" />
-                <div class="text">立即投資</div></a
-              >
-              <a
-                class="borrow"
-                href="https://event.influxfin.com/R/url?p=webbanner"
-                target="_blank"
-                ><img src="../asset/images/light-y.svg" class="img-fluid" />
-                <div class="text">立即借款</div></a
-              >
-            </div>
+      <div class="puhey-banner">
+        <img
+          :src="'/images/index-banner-d.png'"
+          class="hidden-desktop img-fluid"
+        />
+        <img
+          :src="'/images/index-banner-m.png'"
+          class="hidden-phone img-fluid"
+        />
+        <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
+        <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
+        <div class="content">
+          <p>最貼近年輕人的金融科技平台</p>
+          <span>普匯，你的手機ATM</span>
+          <div class="box">
+            <a
+              class="loan"
+              href="https://event.influxfin.com/r/iurl?p=webinvest"
+              target="_blank"
+              ><img src="../asset/images/light-b.svg" class="img-fluid" />
+              <div class="text">立即投資</div></a
+            >
+            <a
+              class="borrow"
+              href="https://event.influxfin.com/R/url?p=webbanner"
+              target="_blank"
+              ><img src="../asset/images/light-y.svg" class="img-fluid" />
+              <div class="text">立即借款</div></a
+            >
           </div>
         </div>
+      </div>
       <!-- </SplideSlide> -->
     </div>
     <div class="count-card">
@@ -46,6 +46,7 @@
         <p>成交筆數</p>
         <div>{{ format(tweenedtransaction) }}</div>
       </div>
+      <div class="pu"><img class="img-fluid" src="/images/pu.png" /></div>
     </div>
     <div class="intro-card">
       <div class="t-c"><h2>公司簡介</h2></div>
@@ -834,6 +835,8 @@ export default {
     justify-content: center;
     padding-bottom: 30px;
     padding-top: 15px;
+    position: relative;
+    overflow: hidden;
 
     .item {
       padding: 0px 10px;
@@ -856,6 +859,12 @@ export default {
         font-size: 45px;
         font-weight: bold;
       }
+    }
+
+    .pu {
+      width: 116px;
+      position: absolute;
+      left: 66rem;
     }
 
     .lr {
@@ -1449,6 +1458,12 @@ export default {
         div {
           font-size: 36px;
         }
+      }
+
+      .pu {
+        width: 70px;
+        left: 19rem;
+        z-index: -1;
       }
     }
 
