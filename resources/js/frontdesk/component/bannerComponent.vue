@@ -98,7 +98,7 @@ export default {
   .product-banner {
     .banner-cnt {
       width: 100%;
-      top: 50%;
+      top: 25%;
       left: 50%;
       transform: translate(-50%, -50%);
 

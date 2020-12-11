@@ -5,7 +5,9 @@ import actions from './store/actions';
 import mutations from './store/mutations';
 //vue router
 import routers from './router/router';
-//
+//import Vue from 'vue'
+import Vue2TouchEvents from 'vue2-touch-events'
+
 import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 
 $(() => {
@@ -294,8 +296,9 @@ $(() => {
         }
     });
 
+    Vue.use(Vue2TouchEvents)
+    
     $('.back-top').fadeOut();
-
     // let offset = $('.blog-quiklink').offset();
 
     $(document).scroll(function () {

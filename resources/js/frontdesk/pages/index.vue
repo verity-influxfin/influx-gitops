@@ -40,10 +40,10 @@
       <div class="t-c"><h2>公司簡介</h2></div>
       <div class="hr"></div>
       <p class="i-t">
-        普匯以P2P借貸平台為主體，運用科技技術導入小額借貸服務，<br />
-        撮合借貸雙方普匯發展獨特「AＩ審核無人化融資系統」，經營團隊擁有近二十年兩岸金融經驗，<br />
-        平台長期接受「金管會」監理沙盒輔導，並經「金融總會」評鑑為市值破億的新創公司，<br />
-        現今已是全台最受年輕人信賴的線上借貸平台。
+      inFlux普匯金融科技以「普惠金融」為志業，「金融專業」為核心，「高端AI科技」為輔助，提供「最有溫度」銀行服務不到的社群金融！<br /><br />
+      首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！<br /><br />
+      透過P2P點對點技術，進行大量、小額、分散式借貸投資及債權轉讓，保護借款人資訊，保障投資人權益。<br /><br />
+      具備金融專業知識與實務經驗團隊，建立堅強AI自動風控模組，流暢友善UI設計，深受年輕人喜愛，完美呈現AI綠色金融科技體驗環境。
       </p>
     </div>
     <div class="histroy-card">
@@ -56,11 +56,11 @@
               year1: '2017',
               date1: '12.08',
               title1: '公司成立',
-              desc1: '普匯金融科技股份有限公司',
+              desc1: '資本額500萬',
               year2: '2018',
               date2: '08.03',
               title2: '產品發表會',
-              desc2: '於臺北文創舉辦產品發表會',
+              desc2: '第一次學生貸',
             }"
           />
         </div>
@@ -74,7 +74,7 @@
               year2: '2019',
               date2: '06.25',
               title2: '新品APP發布會',
-              desc2: '「分期超市」APP 首創登場',
+              desc2: '上班族貸',
             }"
           />
         </div>
@@ -98,7 +98,7 @@
       <div class="t-c"><h2>我們的服務</h2></div>
       <div class="hr"></div>
       <div class="img">
-        <img class="img-fluid" src="/images/p2p.svg" />
+        <img class="img-fluid" src="/images/p2p.png" />
       </div>
     </div>
     <div class="product-card">
@@ -108,7 +108,7 @@
       </div> -->
       <div class="box">
         <div class="person">
-          <h5>年滿20～35歲的您 均可申請個人信貸服務喔！</h5>
+          <h5>年滿20歲 即可申請可申請個人信貸服務喔！</h5>
           <div class="typ">
             <div class="t">
               <div class="img">
@@ -238,10 +238,6 @@
         <div class="header">
           <div class="slg">
             <div data-aos="fade-up" data-aos-duration="700">
-              <p class="title">
-                以金融為核心，以科技為輔具，
-                <br />普匯給您前所未有的最佳使用體驗APP
-              </p>
               <p class="l-btn">為什麼選擇普匯金融科技?</p>
             </div>
           </div>
@@ -296,12 +292,11 @@
     <div class="slogan-card">
       <div class="cnt">
         <div class="cnt-l">
-          <h3>普匯金融科技</h3>
           <div>全台唯一無人化借貸平台 操作簡單 快速到款</div>
-          <div>只要3分鐘，就能擁有自己的手機ATM</div>
+          <div>申貸過程，無人干擾！<br>普匯．你的手機ATM</div>
           <div>依照個別身分，提供最適合您的貸款服務</div>
           <div>
-            快速拿到您的款項，隨到隨審<br />最快1小時媒合完成，絕不耽誤您圓夢的時間
+            5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
           </div>
         </div>
         <div class="cnt-r">
@@ -338,14 +333,11 @@
       </div>
     </div>
     <div class="game-card">
-      <div class="t-c"><h2>試算您可借額度</h2></div>
+      <div class="t-c"><h2>還款試算表</h2></div>
       <div class="hr"></div>
       <h5>分期還款，輕鬆無負擔！</h5>
-      <div style="width: 800px;margin: 0px auto;">
-        <img class="img-fulid" src="/images/dashbord.svg">
-      </div>
-      <div style="width: 250px;margin: 0px auto;">
-        <img class="img-fulid" src="/images/zxc.svg">
+      <div class="credit-slider">
+        <creditBoard amount="200000" />
       </div>
     </div>
     <!-- <div class="game-card">
@@ -496,6 +488,7 @@ import { Splide, SplideSlide } from "@splidejs/vue-splide";
 import investUp from "../component/svg/investDotUpComponent";
 import investDown from "../component/svg/investDotDownComponent";
 import amountChart from "../component/svg/amountChartComponent";
+import creditBoard from "../component/svg/creditBoardComponent";
 import histroyDot from "../component/svg/histroyDotComponent";
 import experience from "../component/experienceComponent";
 //banner
@@ -508,6 +501,7 @@ export default {
     amountChart,
     histroyDot,
     experience,
+    creditBoard,
     Splide,
     SplideSlide,
     //banner
@@ -1025,17 +1019,6 @@ export default {
         width: 60%;
         margin-right: 1rem;
 
-        h3 {
-          padding: 0 10px;
-          border-radius: 8px;
-          background-color: #18447c;
-          font-size: 24px;
-          font-weight: 500;
-          line-height: 1.72;
-          color: #ffffff;
-          width: fit-content;
-        }
-
         div {
           margin: 15px 0px;
           font-size: 22px;
@@ -1106,62 +1089,9 @@ export default {
       );
     }
 
-    .cnt {
-      display: flex;
-      width: 80%;
-      margin: 20px auto;
-
-      .amount-chart {
-        width: 60%;
-      }
-
-      .aa-as {
-        position: relative;
-        width: 40%;
-
-        .option {
-          width: fit-content;
-          height: fit-content;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          .item {
-            margin: 5px;
-            width: calc(100% / 3 - 10px);
-            float: left;
-            color: #ffffff;
-            text-align: center;
-
-            .circle {
-              border-radius: 50%;
-              width: 80px;
-              height: 80px;
-              position: relative;
-              border: 2px solid #048dbd;
-              margin: 5px auto;
-              cursor: pointer;
-              overflow: hidden;
-
-              img {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 70%;
-              }
-            }
-
-            .gary {
-              border-color: #f1f1f1;
-            }
-
-            span {
-              font-size: 14px;
-            }
-          }
-        }
-      }
+    .credit-slider {
+      width: 800px;
+      margin: 0px auto;
     }
   }
 
@@ -1199,15 +1129,6 @@ export default {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-
-          .title {
-            color: #ffffff;
-            margin: 35px auto;
-            width: max-content;
-            text-align: center;
-            font-size: 48px;
-            font-weight: bolder;
-          }
 
           .l-btn {
             color: #ffc236;
@@ -1540,10 +1461,6 @@ export default {
 
           .slg {
             margin: 0px;
-            .title {
-              margin: 10px auto;
-              font-size: 20px;
-            }
 
             .l-btn {
               font-size: 18px;
@@ -1620,22 +1537,8 @@ export default {
         margin: 10px auto;
       }
 
-      .cnt {
+      .credit-slider {
         width: 100%;
-        flex-direction: column;
-
-        .amount-chart {
-          order: 2;
-          width: 100%;
-        }
-
-        .aa-as {
-          width: 100%;
-          .option {
-            position: initial;
-            transform: initial;
-          }
-        }
       }
     }
 

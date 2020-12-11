@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-    <credit :creditList="creditList" amount="20" />
+    <credit :creditList="creditList" amount="200000" />
     <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
@@ -87,17 +87,6 @@ export default {
     qaData: [],
     bannerData: {},
     applyData: {},
-    creditList: {
-      rate1: 5,
-      rate2: 6,
-      rate3: 7,
-      rate4: 8,
-      rate5: 9,
-      rate6: 10,
-      rate7: 11,
-      rate8: 12,
-      rate9: 13,
-    },
   }),
   computed: {
     experiences() {

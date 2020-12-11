@@ -1,22 +1,24 @@
 <template>
   <div class="credit-card">
     <div class="credit-box">
-      <p class="t-t">
-        只要有一支手機，「5分鐘」完成申貸手續、「10分鐘」核准、「60分鐘」到帳，<br />
-        全程AI自動審核、無人照會打擾，<br />
-        完全符合現代年輕人希望簡單、快速、尊重隱私的生活需求！
-      </p>
+      <template v-if="text">
+        <p class="t-t" v-html="text"></p>
+      </template>
+      <template v-else>
+        <p class="t-t">
+          只要有一支手機，「5分鐘」完成申貸手續、「10分鐘」核准、「60分鐘」到帳，<br />
+          全程AI自動審核、無人照會打擾，<br />
+          完全符合現代年輕人希望簡單、快速、尊重隱私的生活需求！
+        </p>
+      </template>
       <div class="t-c"><h2>年化%與月息試算</h2></div>
       <div class="hr"></div>
       <template v-if="$props.license">
         <br />
         <p class="license">*{{ $props.license }}</p>
       </template>
-      <div style="width: 800px;margin: 0px auto;">
-        <img class="img-fulid" src="/images/sdvsvdvs.svg">
-      </div>
-      <div style="width: 250px;margin: 0px auto;">
-        <img class="img-fulid" src="/images/sdvds.svg">
+      <div class="credit-slider">
+        <creditBoard :amount="amount" color="#170e9c" />
       </div>
     </div>
   </div>
@@ -27,67 +29,7 @@ import creditBoard from "./svg/creditBoardComponent";
 
 export default {
   components: { creditBoard },
-  props: ["creditList", "amount", "license"],
-  data: () => ({
-    deg: "",
-    index: "0",
-    Pmt: 0,
-    periods: 24,
-    tweenedPmt: 0,
-    creditLevelList: [
-      { href: "icon_credit_level01.svg", deg: "-30", isChecked: true },
-      { href: "icon_credit_level02.svg", deg: "-15", isChecked: false },
-      { href: "icon_credit_level03.svg", deg: "0", isChecked: false },
-      { href: "icon_credit_level04.svg", deg: "15", isChecked: false },
-      { href: "icon_credit_level05.svg", deg: "30", isChecked: false },
-      { href: "icon_credit_level06.svg", deg: "45", isChecked: false },
-      { href: "icon_credit_level07.svg", deg: "60", isChecked: false },
-      { href: "icon_credit_level08.svg", deg: "75", isChecked: false },
-      { href: "icon_credit_level09.svg", deg: "90", isChecked: false },
-    ],
-  }),
-  mounted() {
-    this.$nextTick(() => {
-      this.rotate(true, 0);
-    });
-  },
-  watch: {
-    Pmt(newVal) {
-      gsap.to(this.$data, { duration: 0.5, tweenedPmt: newVal });
-    },
-    periods() {
-      this.pmt();
-    },
-  },
-  methods: {
-    format(data) {
-      data = parseInt(data);
-      if (!isNaN(data)) {
-        let l10nEN = new Intl.NumberFormat("en-US");
-        return l10nEN.format(data.toFixed(0));
-      }
-      return 0;
-    },
-    rotate(isChecked, key) {
-      let { deg, creditLevelList } = this;
-      creditLevelList.forEach((item, i) => {
-        creditLevelList[i].isChecked = false;
-      });
-
-      this.index = key;
-      creditLevelList[key].isChecked = true;
-      this.deg = creditLevelList[key].deg;
-      this.pmt();
-    },
-    pmt() {
-      let m_rate =
-        this.$props.creditList[
-          Object.keys(this.$props.creditList)[this.index]
-        ] / 1200;
-      let nper = Math.pow(m_rate + 1, -parseInt(this.periods));
-      this.Pmt = Math.ceil((this.amount * m_rate * 10000) / (1 - nper));
-    },
-  },
+  props: ["amount", "license", "text"],
 };
 </script>
 
@@ -117,49 +59,16 @@ export default {
       margin-bottom: 5rem;
     }
 
-    .credit-level-list {
-      overflow: auto;
-      width: 350px;
-
-      .level-item {
-        width: calc(33% - 20px);
-        float: left;
-        border-radius: 50%;
-        margin: 10px 10px;
-        padding: 10px;
-        cursor: pointer;
-
-        &:hover {
-          filter: invert(1);
-        }
-
-        &.light {
-          filter: drop-shadow(0px 0px 3px black);
-        }
-      }
-    }
-
-    .t-x {
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 0.5;
-      letter-spacing: 1px;
-      color: #143970;
-    }
-
     .license {
       color: #4f4f4f;
       font-size: 11px;
       margin: 0px;
     }
-  }
 
-  .credit-board {
-    width: 570px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    z-index: 1;
+    .credit-slider {
+      width: 800px;
+      margin: 0px auto;
+    }
   }
 }
 
@@ -175,20 +84,9 @@ export default {
         margin-bottom: 2rem;
       }
 
-      .credit-level-list {
+      .credit-slider {
         width: 100%;
-
-        .level-item {
-          width: calc(20% - 10px);
-          margin: 15px 5px;
-          padding: 0px;
-        }
       }
-    }
-
-    .credit-board {
-      position: relative;
-      width: 100%;
     }
   }
 }

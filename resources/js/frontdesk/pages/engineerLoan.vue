@@ -42,7 +42,7 @@
     </div>
     <credit
       :creditList="creditList"
-      amount="20"
+      amount="200000"
       license="最高額度會根據您的申請身分而有所不同"
     />
     <experience :experiences="experiences" title="用戶回饋" />
@@ -71,19 +71,7 @@ export default {
     experience,
   },
   data: () => ({
-    credit: "--",
     qaData: [],
-    creditList: {
-      rate1: 5,
-      rate2: 5.5,
-      rate3: 6,
-      rate4: 6.5,
-      rate5: 7,
-      rate6: 7.5,
-      rate7: 8,
-      rate8: 8.5,
-      rate9: 9,
-    },
     bannerData: {},
     applyData: {},
   }),

@@ -11,18 +11,23 @@
       <div class="cnt">
         <div class="c-c">
           <div class="t-c">
-            <h2>服務範圍廣</h2>
+            <h2>客戶遍佈全台大專院校</h2>
           </div>
           <div class="hr"></div>
-          <p>超過156所大學生，不論是生活急需、還是補習進修費，都在找普匯！</p>
-          <p>成立不到兩年已幫助超過2萬名學生，讓學生一想到借錢，就想到普匯！</p>
+          <p>
+            超過156所大學生，在普匯找到生活費、補習費、出國遊學、交換學生...完成夢想！
+          </p>
         </div>
         <div class="c-i">
           <img class="img-fluid" src="../asset/images/formosa.svg" />
         </div>
       </div>
     </div>
-    <credit :creditList="creditList" amount="12" />
+    <credit
+      :creditList="creditList"
+      amount="120000"
+      text="數萬名大專院校、碩博學士會員<br>動動手拍拍照手機上傳，額度立即核准！<br>最快5分鐘申貸 10分鐘核准 1小時放款！"
+    />
     <experience :experiences="experiences" title="同學回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
@@ -52,17 +57,6 @@ export default {
     qaData: [],
     bannerData: {},
     applyData: {},
-    creditList: {
-      rate1: 5,
-      rate2: 6,
-      rate3: 7,
-      rate4: 8,
-      rate5: 9,
-      rate6: 10,
-      rate7: 11,
-      rate8: 12,
-      rate9: 13,
-    },
   }),
   computed: {
     experiences() {
