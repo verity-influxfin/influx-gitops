@@ -2351,7 +2351,7 @@
         <text transform="matrix(1 0 0 1 283.3365 294.6068)" class="st5 st6 st7">
           每期需還本息
         </text>
-        <text x="630" y="500" class="st5 st6 st7 center">
+        <text x="285" y="250" class="st5 st6 st7 cce">
           ${{ format(tweenedPmt) }}
         </text>
         <circle class="st8" cx="365.2" cy="254.8" r="147.7" />
@@ -3811,7 +3811,7 @@ export default {
     transform-origin: 71% 50%;
   }
 
-  .center {
+  .cce {
     font-size: 44px;
   }
 }
