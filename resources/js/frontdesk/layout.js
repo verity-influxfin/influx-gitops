@@ -183,7 +183,7 @@ $(() => {
                                     this.$store.commit('mutationUserData', res.data);
                                     $(this.$refs.loginForm).modal("hide");
 
-                                    if (investor) {
+                                    if (investor === '1') {
                                         this.$router.push('investnotification');
                                     } else {
                                         this.$router.push('loannotification');

@@ -13,6 +13,7 @@
       xml:space="preserve"
       @mousemove="moving($event)"
       @mouseup="removeTarget()"
+      @mouseleave="removeTarget()"
     >
       <rect x="-152.4" y="-1.8" class="st0" width="1035.3" height="598.9" />
       <g>
@@ -2350,7 +2351,7 @@
         <text transform="matrix(1 0 0 1 283.3365 294.6068)" class="st5 st6 st7">
           每期需還本息
         </text>
-        <text x="49%" y="50%" class="st5 st6 st7 center">
+        <text x="630" y="500" class="st5 st6 st7 center">
           ${{ format(tweenedPmt) }}
         </text>
         <circle class="st8" cx="365.2" cy="254.8" r="147.7" />
@@ -3666,6 +3667,7 @@ export default {
 
       this.pageY = pageY;
       if (this.target) {
+        $("body").css("overflow", "hidden");
         this.slide(e);
         this.calculation();
       }
@@ -3704,6 +3706,8 @@ export default {
 
 <style lang="scss">
 #ccrata {
+  user-select: none;
+
   .st0 {
     display: none;
     fill: #153a71;
@@ -3809,7 +3813,6 @@ export default {
 
   .center {
     font-size: 44px;
-    transform: translate(-9%, 0%);
   }
 }
 

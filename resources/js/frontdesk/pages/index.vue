@@ -1,7 +1,7 @@
 <template>
   <div class="index-wrapper">
-    <Splide class="banner" :options="bannerOptions">
-      <SplideSlide>
+    <div class="banner" :options="bannerOptions">
+      <!-- <SplideSlide> -->
         <div class="puhey-banner">
           <img
             :src="'/images/index-banner-d.png'"
@@ -34,13 +34,24 @@
             </div>
           </div>
         </div>
-      </SplideSlide>
-    </Splide>
+      <!-- </SplideSlide> -->
+    </div>
+    <div class="count-card">
+      <div class="item">
+        <p>會員數</p>
+        <div>{{ format(tweenedMember) }}</div>
+      </div>
+      <div class="lr"></div>
+      <div class="item">
+        <p>成交筆數</p>
+        <div>{{ format(tweenedtransaction) }}</div>
+      </div>
+    </div>
     <div class="intro-card">
       <div class="t-c"><h2>公司簡介</h2></div>
       <div class="hr"></div>
       <p class="i-t">
-        inFlux普匯金融科技以「普惠金融」為志業，「金融專業」為核心，「高端AI科技」為輔助，提供「最有溫度」銀行服務不到的社群金融！<br /><br />
+        inFlux普匯金融科技以「普惠金融」為志業，「金融專業」為核心，「高端AI科技」為輔助，提供「最有溫度」的金融服務！<br /><br />
         首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！<br /><br />
         透過P2P點對點技術，進行大量、小額、分散式借貸投資及債權轉讓，保護借款人資訊，保障投資人權益。<br /><br />
         具備金融專業知識與實務經驗團隊，建立堅強AI自動風控模組，流暢友善UI設計，深受年輕人喜愛，完美呈現AI綠色金融科技體驗環境。
@@ -511,7 +522,10 @@ export default {
     // shanghuiBanner,
   },
   data: () => ({
-    count: 3,
+    pmt: 0,
+    tweenedMember: 0,
+    tweenedtransaction: 0,
+    // count: 3,
     shares: [],
     creditRatingItem: [
       {
@@ -642,6 +656,8 @@ export default {
   },
   mounted() {
     AOS.init();
+    gsap.to(this.$data, { duration: 1, tweenedMember: 58723 });
+    gsap.to(this.$data, { duration: 1, tweenedtransaction: 31059 });
   },
   watch: {
     news() {
@@ -661,6 +677,14 @@ export default {
     },
   },
   methods: {
+    format(data) {
+      data = parseInt(data);
+      if (!isNaN(data)) {
+        let l10nEN = new Intl.NumberFormat("en-US");
+        return l10nEN.format(data.toFixed(0));
+      }
+      return 0;
+    },
     async getBannerPic() {
       let res = await axios.get(`${location.origin}/getBannerPic`);
       this.bannerPic = res.data;
@@ -805,8 +829,44 @@ export default {
     }
   }
 
+  .count-card {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 30px;
+    padding-top: 15px;
+
+    .item {
+      padding: 0px 10px;
+      background-image: linear-gradient(
+        to right,
+        #1e2973 0%,
+        #319acf 50%,
+        #1e2973 75%
+      );
+      background-clip: text;
+      width: fit-content;
+      color: #ffffff00;
+
+      p {
+        margin-bottom: 5px;
+        font-size: 24px;
+      }
+
+      div {
+        font-size: 45px;
+        font-weight: bold;
+      }
+    }
+
+    .lr {
+      border-left: 2px solid #080080;
+      margin: 0px 1rem;
+    }
+  }
+
   .intro-card {
     padding: 30px 0px;
+    background-color: #ecedf1;
 
     .i-t {
       font-size: 18px;
@@ -1379,6 +1439,15 @@ export default {
               }
             }
           }
+        }
+      }
+    }
+
+    .count-card {
+      padding: 15px 0px;
+      .item {
+        div {
+          font-size: 36px;
         }
       }
     }

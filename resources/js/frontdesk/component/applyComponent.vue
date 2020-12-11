@@ -4,6 +4,7 @@
       <h2>{{ $props.title }}</h2>
     </div>
     <div class="hr"></div>
+    <template v-if="step">
     <Splide class="flow" ref="flowSlick" :options="applyOptions">
       <SplideSlide
         class="box"
@@ -23,6 +24,7 @@
         </div>
       </SplideSlide>
     </Splide>
+    </template>
   </div>
 </template>
 
@@ -39,7 +41,7 @@ export default {
     applyOptions: {
       type: "loop",
       autoplay: true,
-      perPage: 4,
+      perPage: 1,
       perMove: 1,
       arrows: false,
       pagination: false,
@@ -52,9 +54,6 @@ export default {
   watch: {
     "$props.step"() {
       this.applyOptions.perPage = this.step.length;
-      this.$nextTick(() => {
-        this.$refs.flowSlick.remount();
-      });
     },
   },
 };

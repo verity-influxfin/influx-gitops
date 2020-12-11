@@ -90,10 +90,10 @@
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
                             <li v-if="isInvestor == 0">
-                                <router-link class="dropdown-item loan-link" to="/myloan">借款端</router-link>
+                                <router-link class="dropdown-item loan-link" to="/loannotification">借款端</router-link>
                             </li>
                             <li v-else>
-                                <router-link class="dropdown-item invest-link" to="/myinvestment">投資專區</router-link>
+                                <router-link class="dropdown-item invest-link" to="/investnotification">投資專區</router-link>
                             </li>
                             <li v-if="flag === 'login'">
                                 <p class="dropdown-item" @click="logout">登出</p>

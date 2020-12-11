@@ -187,6 +187,10 @@ export default {
     position: relative;
     background-color: #ecedf1;
 
+    .ib{
+      width: 100%;
+    }
+
     .cnt {
       position: absolute;
       top: 0;
