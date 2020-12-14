@@ -1784,6 +1784,7 @@ class Target_lib
                 $biddingAmount = 0;
                 $targetAmount = $content->target_amount * 1000;
                 $dailyAmount = $content->daily_amount * 1000;
+                $cancel = false;
 
                 //判斷案件是否符合條件
                 $filter = ['product_id', 'credit_level', 'sex', 'system', 'national'];
@@ -1791,6 +1792,7 @@ class Target_lib
                     if($content->$fvalue != 'all') {
                         $ids = explode(",", $content->$fvalue);
                         if (!in_array($target->$fvalue, $ids)) {
+                            $cancel = true;
                             continue;
                         }
                     }
@@ -1800,11 +1802,12 @@ class Target_lib
                     || $content->instalment_s > intval($target->instalment)
                     || $content->instalment_e < intval($target->instalment)
                 ){
+                    $cancel = true;
                     continue;
                 }
 
                 //排除曾下標的投資人
-                if(!in_array($value->user_id, $investmentList)){
+                if(!in_array($value->user_id, $investmentList) && !$cancel){
                     !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
                     //有設定每日投資額度
                     if($dailyAmount != 0){
