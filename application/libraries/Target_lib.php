@@ -1704,7 +1704,7 @@ class Target_lib
             ]);
             if($user_meta){
                 foreach ($user_meta as $skey => $svalue) {
-                    //取德學制
+                    //取得學制
                     $svalue->meta_key == 'school_system' ? $target->system = $svalue->meta_value : '';
 
                     //取得案件學歷是否國立
@@ -1719,7 +1719,7 @@ class Target_lib
                 }
             }
 
-            //取的性別
+            //取得性別
             $target_user_info = $this->CI->user_model->get($target->user_id);
             $target->sex = $target_user_info->sex;
 
