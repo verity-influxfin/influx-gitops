@@ -12,20 +12,21 @@ class Brookesia extends CI_Controller {
 		$this->load->model('log/log_script_model');
 	}
 
-	function user_check_all_rules()
+	public function user_check_all_rules()
 	{
 		$input = $this->input->get(NULL, TRUE);
-		$userid  = isset($input['userid']) ? $input['userid'] : '';
+		$userId  = isset($input['userId']) ? $input['userId'] : '';
 		$this->load->library('output/json_output');
 
-		if(!$userid){
+		if(!$userId){
 			$this->json_output->setStatusCode(400)->send();
 		}
 
 		$this->load->library('brookesia/brookesia_lib');
-		$userCheckAllRules = $this->brookesia_lib->userCheckAllRules($userid);
+		$userCheckAllRules = $this->brookesia_lib->userCheckAllRules($userId);
 
 		$response = json_decode(json_encode($userCheckAllRules), true);
+
 		if(!$response){
 			$this->json_output->setStatusCode(204)->send();
 		}
@@ -34,7 +35,7 @@ class Brookesia extends CI_Controller {
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
 
-	function user_rule_hit()
+	public function user_rule_hit()
 	{
 		$input = $this->input->get(NULL, TRUE);
 		$userId  = isset($input['userId']) ? $input['userId'] : '';
@@ -56,7 +57,7 @@ class Brookesia extends CI_Controller {
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
 
-	function user_related_user()
+	public function user_related_user()
 	{
 		$input = $this->input->get(NULL, TRUE);
 		$userId  = isset($input['userId']) ? $input['userId'] : '';
