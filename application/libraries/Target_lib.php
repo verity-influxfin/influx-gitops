@@ -1791,6 +1791,7 @@ class Target_lib
                 foreach($filter as $fkey => $fvalue){
                     if($content->$fvalue != 'all') {
                         $ids = explode(",", $content->$fvalue);
+                        //不符篩選條件
                         if (!in_array($target->$fvalue, $ids)) {
                             $cancel = true;
                             continue;
@@ -1802,11 +1803,10 @@ class Target_lib
                     || $content->instalment_s > intval($target->instalment)
                     || $content->instalment_e < intval($target->instalment)
                 ){
-                    $cancel = true;
                     continue;
                 }
 
-                //排除曾下標的投資人
+                //排除曾下標的投資人與排除不符篩選標準
                 if(!in_array($value->user_id, $investmentList) && !$cancel){
                     !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
                     //有設定每日投資額度
