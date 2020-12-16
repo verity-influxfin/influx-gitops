@@ -295,9 +295,6 @@
           <div>5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間</div>
         </div>
         <div class="cnt-r">
-          <div class="cover">
-            <img class="img-fluid" src="../asset/images/mobile-line.svg" />
-          </div>
           <Splide class="c-s" :options="csOptions" @splide:moved="onMoved($event)">
             <SplideSlide class="c-e">
               <div class="img">
@@ -320,6 +317,9 @@
               </div>
             </SplideSlide>
           </Splide>
+          <div class="cover">
+            <img class="img-fluid" src="../asset/images/mobile-line.svg" />
+          </div>
         </div>
       </div>
     </div>
@@ -1035,6 +1035,8 @@ export default {
       .cnt-r {
         width: 40%;
         position: relative;
+        pointer-events: none;
+        
         .cover {
           width: 300px;
           position: relative;
