@@ -1,7 +1,5 @@
 <?php
 
-use Smalot\PdfParser\Parser;
-
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Certification_lib{
