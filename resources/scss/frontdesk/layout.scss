@@ -301,7 +301,7 @@ $ci-color: #153a71;
                 .cd {
                     .cnt {
                         width: 80%;
-                        margin-left: 5%;
+                        margin-left: 25px;
 
                         &::before {
                             border-right: 16px solid #ffffff;
@@ -359,39 +359,6 @@ $ci-color: #153a71;
 
 .modal-backdrop {
     filter: blur(100px);
-}
-
-.blog-quiklink {
-    float: right;
-    margin-top: 254px;
-    z-index: 12;
-    position: absolute;
-    right: 10px;
-    color: #ff5151;
-    display: flex;
-    animation: float 4s ease-in-out infinite;
-    filter: drop-shadow(0px 0px 5px black);
-
-    i {
-        cursor: pointer;
-    }
-
-    &:hover {
-        text-decoration: none;
-        color: #ff5151;
-    }
-}
-
-@keyframes float {
-    0% {
-        transform: translatey(0px);
-    }
-    50% {
-        transform: translatey(-10px);
-    }
-    100% {
-        transform: translatey(0px);
-    }
 }
 
 #loginForm {

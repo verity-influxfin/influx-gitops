@@ -22,7 +22,7 @@
           data-aos="fade-down"
           :data-aos-delay="100 * index"
           data-aos-duration="500"
-          v-for="(item, index) in partner.slice(0, 6)"
+          v-for="(item, index) in partner"
           :key="index"
         >
           <div class="photo hvr-bob">
@@ -32,32 +32,6 @@
               @mouseenter="
                 isShow = true;
                 showPartner(index, $event);
-              "
-              @mouseleave="
-                isShow = false;
-                partnerData = {};
-              "
-            />
-          </div>
-          <p>{{ item.name }}</p>
-        </div>
-      </div>
-      <div class="list">
-        <div
-          class="item"
-          data-aos="fade-down"
-          :data-aos-delay="100 * (index + 6)"
-          data-aos-duration="500"
-          v-for="(item, index) in partner.slice(6)"
-          :key="index"
-        >
-          <div class="photo hvr-bob">
-            <img
-              :src="item.imageSrc"
-              class="img-fluid"
-              @mouseenter="
-                isShow = true;
-                showPartner(index + 6, $event);
               "
               @mouseleave="
                 isShow = false;

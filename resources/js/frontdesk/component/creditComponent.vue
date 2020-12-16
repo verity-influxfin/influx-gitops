@@ -1,17 +1,17 @@
 <template>
-  <div class="credit-card">
+  <div class="credit-card" >
     <div class="credit-box">
       <template v-if="text">
         <p class="t-t" v-html="text"></p>
       </template>
       <template v-else>
         <p class="t-t">
-          只要有一支手機，「5分鐘」完成申貸手續、「10分鐘」核准、「60分鐘」到帳，<br />
+          只要有一支手機，「10分鐘」完成申貸手續、「30分鐘」核准、「60分鐘」到帳，<br />
           全程AI自動審核、無人照會打擾，<br />
           完全符合現代年輕人希望簡單、快速、尊重隱私的生活需求！
         </p>
       </template>
-      <div class="t-c"><h2>年化%與月息試算</h2></div>
+      <div class="t-c"><h2>月付金額試算</h2></div>
       <div class="hr"></div>
       <template v-if="$props.license">
         <br />

@@ -67,10 +67,7 @@
               依據信用等級、就讀學校、申貸原因、年化報酬率、期數，自由選擇您喜好的投資標的。
             </span>
             <div class="pic">
-              <img
-                src="../asset/images/optional_invset.png"
-                class="img-fluid"
-              />
+              <img src="../asset/images/optional_invset.png" class="img-fluid" />
             </div>
           </div>
           <div id="smart" class="tab-pane fade">
@@ -82,9 +79,7 @@
             </div>
           </div>
           <div id="quick" class="tab-pane fade">
-            <span class="d-h"
-              >申請人無提供最高學歷，同時您可以獲得更好的報酬率。</span
-            >
+            <span class="d-h">申請人無提供最高學歷，同時您可以獲得更好的報酬率。</span>
             <div class="pic">
               <img src="../asset/images/quick_invest.png" class="img-fluid" />
             </div>
@@ -94,10 +89,7 @@
           <li class="nav-item">
             <a class="nav-link active" data-toggle="tab" href="#optional">
               <div class="img">
-                <img
-                  src="../asset/images/invest_choose_optional.svg"
-                  class="img-fluid"
-                />
+                <img src="../asset/images/invest_choose_optional.svg" class="img-fluid" />
               </div>
               <div>
                 <p>自選標的</p>
@@ -110,10 +102,7 @@
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#smart"
               ><div class="img">
-                <img
-                  src="../asset/images/invest_choose_smart.svg"
-                  class="img-fluid"
-                />
+                <img src="../asset/images/invest_choose_smart.svg" class="img-fluid" />
               </div>
               <div>
                 <p>智能投資</p>
@@ -126,10 +115,7 @@
           <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#quick"
               ><div class="img">
-                <img
-                  src="../asset/images/invest_choose_quick.svg"
-                  class="img-fluid"
-                />
+                <img src="../asset/images/invest_choose_quick.svg" class="img-fluid" />
               </div>
               <div>
                 <p>簡審速貸</p>
@@ -246,6 +232,7 @@
     <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="false" :isInvest="true" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -255,6 +242,7 @@ import download from "../component/downloadComponent";
 import experience from "../component/experienceComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -263,6 +251,7 @@ export default {
     download,
     qa,
     apply,
+    float,
   },
   data: () => ({
     tweenedReturnAll: 0,
@@ -345,18 +334,14 @@ export default {
         });
     },
     getApplydata() {
-      axios
-        .post(`${location.origin}/getApplydata`, { filter: "invest" })
-        .then((res) => {
-          this.applyData = res.data;
-        });
+      axios.post(`${location.origin}/getApplydata`, { filter: "invest" }).then((res) => {
+        this.applyData = res.data;
+      });
     },
     getQaData() {
-      axios
-        .post(`${location.origin}/getQaData`, { filter: "invest" })
-        .then((res) => {
-          this.qaData = res.data;
-        });
+      axios.post(`${location.origin}/getQaData`, { filter: "invest" }).then((res) => {
+        this.qaData = res.data;
+      });
     },
     pmt(pv, rate, per) {
       let m_rate = rate / 1200;
@@ -402,9 +387,7 @@ export default {
         let _pmt = $this.pmt(_pv, this.rate, 12);
         let _principleRemind = _pv;
         for (l = 0; l < 12; l++) {
-          _intrest = Math.round(
-            ((_principleRemind * this.rate) / 100 / 360) * 30
-          );
+          _intrest = Math.round(((_principleRemind * this.rate) / 100 / 360) * 30);
           _principle = l < 12 ? _pmt - _intrest : _principleRemind;
           _amount = _principle + _intrest;
           _principleRemind -= _principle;
@@ -412,14 +395,12 @@ export default {
             _principleRemind = 0;
           }
           if (i + l < _totalFlow.length - 1) {
-            _totalFlow[i + l].principle =
-              _totalFlow[i + l].principle + _principle;
+            _totalFlow[i + l].principle = _totalFlow[i + l].principle + _principle;
             _totalFlow[i + l].intrest = _totalFlow[i + l].intrest + _intrest;
             _totalFlow[i + l].principleRemind =
               _totalFlow[i + l].intrest + _principleRemind;
           } else if (i + l === _totalFlow.length - 1) {
-            _totalFlow[i + l].principle =
-              _totalFlow[i + l].principle + _principle;
+            _totalFlow[i + l].principle = _totalFlow[i + l].principle + _principle;
             _totalFlow[i + l].intrest = _totalFlow[i + l].intrest + _intrest;
             _totalFlow[i + l].principleRemind =
               _totalFlow[i + l].intrest + _principleRemind;
@@ -624,12 +605,7 @@ export default {
   background: #fbfbfb;
 
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;
@@ -1064,4 +1040,3 @@ export default {
   }
 }
 </style>
-

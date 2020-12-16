@@ -147,7 +147,7 @@ class Controller extends BaseController
 
     public function getPartnerData(Request $request)
     {
-        $partner = DB::table('partner')->select('*')->get();
+        $partner = DB::table('partner')->select('*')->orderBy('order')->get();
 
         return response()->json($partner, 200);
     }

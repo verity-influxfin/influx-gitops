@@ -6,7 +6,7 @@
       text="年滿20歲的上班族，提供工作證明、聯徵報告，馬上給您最滿意的額度！<br><br>體驗金融科技帶來的線上借貸服務，就從『普匯･你的手機ATM』開始！"
     ></target>
     <apply
-      title="申貸簡便四步驟"
+      title="申貸簡單四步驟"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
@@ -17,7 +17,7 @@
           <div class="item">
             <div class="t-c"><h3>即時審核，快速媒合放款</h3></div>
             <p>
-              系統自動化審核加快申貸的速度，平均3分鐘完成申請、10分鐘核准、60分鐘到帳！
+              系統自動化審核加快申貸的速度，平均10分鐘完成申請、30分鐘核准、60分鐘到帳！
             </p>
           </div>
           <div class="item">
@@ -44,9 +44,7 @@
         <div class="c-t">
           <div class="item">
             <div class="t-c"><h3>聯徵不留紀錄</h3></div>
-            <p>
-              不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。
-            </p>
+            <p>不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。</p>
           </div>
           <div class="item">
             <div class="t-c"><h3>費率單純透明</h3></div>
@@ -61,6 +59,7 @@
     <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -72,6 +71,7 @@ import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import credit from "../component/creditComponent";
 import target from "../component/targetComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -82,6 +82,7 @@ export default {
     apply,
     target,
     credit,
+    float,
   },
   data: () => ({
     qaData: [],
@@ -183,12 +184,7 @@ export default {
   width: 100%;
 
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;
@@ -211,7 +207,7 @@ export default {
     position: relative;
     background-color: #ecedf1;
 
-    .ib{
+    .ib {
       width: 100%;
     }
 
@@ -334,4 +330,3 @@ export default {
   }
 }
 </style>
-

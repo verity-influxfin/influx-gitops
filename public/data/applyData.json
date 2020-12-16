@@ -29,11 +29,11 @@
             },
             {
                 "imgSrc": "/images/icon_cert_rev2_identity_b.svg",
-                "text": "實名認證"
+                "text": "雙證件"
             },
             {
-                "imgSrc": "/images/icon_cert_rev2_social_b.svg",
-                "text": "社交帳號"
+                "imgSrc": "/images/icon_cert_rev2_bank.svg",
+                "text": "金融帳號"
             },
             {
                 "imgSrc": "/images/icon_cert_rev2_mail_b.svg",
@@ -71,11 +71,11 @@
         "item": [
             {
                 "imgSrc": "/images/icon_cert_rev2_worker_b.svg",
-                "text": "工作認證"
+                "text": "工作證明"
             },
             {
                 "imgSrc": "/images/icon_cert_rev2_identity_b.svg",
-                "text": "實名認證"
+                "text": "雙證件"
             },
             {
                 "imgSrc": "/images/icon_cert_rev2_social_b.svg",

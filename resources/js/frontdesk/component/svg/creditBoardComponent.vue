@@ -2351,9 +2351,7 @@
         <text transform="matrix(1 0 0 1 283.3365 294.6068)" class="st5 st6 st7">
           每期需還本息
         </text>
-        <text x="285" y="250" class="st5 st6 st7 cce">
-          ${{ format(tweenedPmt) }}
-        </text>
+        <text x="285" y="250" class="st5 st6 st7 cce">${{ format(tweenedPmt) }}</text>
         <circle class="st8" cx="365.2" cy="254.8" r="147.7" />
 
         <linearGradient
@@ -2423,25 +2421,14 @@
         </g>
       </g>
       <g>
-        <text
-          transform="matrix(1 0 0 1 205.6837 496.5182)"
-          class="st5 st13 st14"
-        >
+        <text transform="matrix(1 0 0 1 205.6837 496.5182)" class="st5 st13 st14">
           $5,000
         </text>
-        <text
-          transform="matrix(1 0 0 1 205.6837 22.2602)"
-          class="st5 st13 st14"
-        >
+        <text transform="matrix(1 0 0 1 205.6837 22.2602)" class="st5 st13 st14">
           ${{ format(amount) }}
         </text>
-        <text x="105" y="245" class="st5 st6 st14">
-          ${{ format(amountCount) }}
-        </text>
-        <text
-          transform="matrix(1 0 0 1 106.9848 268.1239)"
-          class="st5 st6 st14"
-        >
+        <text x="105" y="245" class="st5 st6 st14">${{ format(amountCount) }}</text>
+        <text transform="matrix(1 0 0 1 106.9848 268.1239)" class="st5 st6 st14">
           可借額度
         </text>
         <g>
@@ -3089,28 +3076,16 @@
         </g>
 
         <g>
-          <text
-            transform="matrix(1 0 0 1 528.9983 445.407)"
-            class="st5 st13 st14"
-          >
+          <text transform="matrix(1 0 0 1 528.9983 445.407)" class="st5 st13 st14">
             5%
           </text>
-          <text
-            transform="matrix(1 0 0 1 572.5278 267.037)"
-            class="st5 st6 st14"
-          >
+          <text transform="matrix(1 0 0 1 572.5278 267.037)" class="st5 st6 st14">
             年化
           </text>
-          <text
-            transform="matrix(1 0 0 1 600.5278 268.1239)"
-            class="st5 st13 st14"
-          >
+          <text transform="matrix(1 0 0 1 600.5278 268.1239)" class="st5 st13 st14">
             {{ Math.round(rateCount) }}%
           </text>
-          <text
-            transform="matrix(1 0 0 1 520.5284 74.5681)"
-            class="st5 st13 st14"
-          >
+          <text transform="matrix(1 0 0 1 520.5284 74.5681)" class="st5 st13 st14">
             {{ rate }}%
           </text>
           <g>
@@ -3468,39 +3443,15 @@
       </div>
       <div class="no-mode-translate-demo-wrapper">
         <transition name="no-mode-translate-fade">
-          <div
-            :class="['periods', { blue: color }]"
-            v-if="key === 0"
-            :key="key"
-          >
-            3期
-          </div>
-          <div
-            :class="['periods', { blue: color }]"
-            v-if="key === 1"
-            :key="key"
-          >
-            6期
-          </div>
-          <div
-            :class="['periods', { blue: color }]"
-            v-if="key === 2"
-            :key="key"
-          >
+          <div :class="['periods', { blue: color }]" v-if="key === 0" :key="key">3期</div>
+          <div :class="['periods', { blue: color }]" v-if="key === 1" :key="key">6期</div>
+          <div :class="['periods', { blue: color }]" v-if="key === 2" :key="key">
             12期
           </div>
-          <div
-            :class="['periods', { blue: color }]"
-            v-if="key === 3"
-            :key="key"
-          >
+          <div :class="['periods', { blue: color }]" v-if="key === 3" :key="key">
             18期
           </div>
-          <div
-            :class="['periods', { blue: color }]"
-            v-if="key === 4"
-            :key="key"
-          >
+          <div :class="['periods', { blue: color }]" v-if="key === 4" :key="key">
             24期
           </div>
         </transition>
@@ -3560,26 +3511,10 @@ export default {
   },
   methods: {
     touchMove() {
-      this.$refs.ccrata.addEventListener(
-        "touchmove",
-        this.handleTouchMove,
-        false
-      );
-      this.$refs.big.addEventListener(
-        "touchstart",
-        this.handleTouchStart,
-        false
-      );
-      this.$refs.small.addEventListener(
-        "touchstart",
-        this.handleTouchStart,
-        false
-      );
-      this.$refs.ccrata.addEventListener(
-        "touchend",
-        this.handleTouchtouchend,
-        false
-      );
+      this.$refs.ccrata.addEventListener("touchmove", this.handleTouchMove, false);
+      this.$refs.big.addEventListener("touchstart", this.handleTouchStart, false);
+      this.$refs.small.addEventListener("touchstart", this.handleTouchStart, false);
+      this.$refs.ccrata.addEventListener("touchend", this.handleTouchtouchend, false);
     },
     handleTouchStart(event) {
       this.moveEl = event.target;
@@ -3593,6 +3528,7 @@ export default {
       $("body").css("overflow", "hidden");
     },
     handleTouchMove(e) {
+      $("body").css("overflow", "hidden");
       this.moving(event.touches[0]);
     },
     handleTouchtouchend() {
@@ -3654,8 +3590,9 @@ export default {
             this.amountCount -= this.amountTick;
           }
         }
+        let max = window.innerWidth > 400 ? 153 : 196;
         if (this.target === "small") {
-          if (this.small.deg < 153) {
+          if (this.small.deg < max) {
             this.small.deg += 2;
             this.rateCount -= this.rateTick;
           }
@@ -3667,7 +3604,6 @@ export default {
 
       this.pageY = pageY;
       if (this.target) {
-        $("body").css("overflow", "hidden");
         this.slide(e);
         this.calculation();
       }
@@ -3678,19 +3614,12 @@ export default {
 
       let cx =
         this[this.target]["cx"] +
-        this[this.target]["r"] *
-          Math.cos((this[this.target]["deg"] * 3.14) / 180);
+        this[this.target]["r"] * Math.cos((this[this.target]["deg"] * 3.14) / 180);
       let cy =
         this[this.target]["cy"] +
-        this[this.target]["r"] *
-          Math.sin((this[this.target]["deg"] * 3.14) / 180);
+        this[this.target]["r"] * Math.sin((this[this.target]["deg"] * 3.14) / 180);
 
-      if (
-        cx + 300 > pageX &&
-        cx - 300 < pageX &&
-        cy + 300 > pageY &&
-        cy - 300 < pageY
-      ) {
+      if (cx + 300 > pageX && cx - 300 < pageX && cy + 300 > pageY && cy - 300 < pageY) {
         $(this.moveEl).attr("cx", cx);
         $(this.moveEl).attr("cy", cy);
       }
@@ -3814,6 +3743,12 @@ export default {
   .cce {
     font-size: 44px;
   }
+
+  @media screen and (max-width: 767px) {
+    .rot {
+      transform: rotate(-120deg);
+    }
+  }
 }
 
 .switch-box {
@@ -3823,6 +3758,7 @@ export default {
 
   .switch {
     width: 50px;
+    user-select: none;
   }
 
   .periods {

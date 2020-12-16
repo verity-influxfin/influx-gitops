@@ -31,6 +31,7 @@
     <experience :experiences="experiences" title="同學回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -42,6 +43,7 @@ import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import target from "../component/targetComponent";
 import credit from "../component/creditComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -52,6 +54,7 @@ export default {
     apply,
     target,
     credit,
+    float,
   },
   data: () => ({
     qaData: [],
@@ -102,18 +105,14 @@ export default {
         });
     },
     getApplydata() {
-      axios
-        .post(`${location.origin}/getApplydata`, { filter: "college" })
-        .then((res) => {
-          this.applyData = res.data;
-        });
+      axios.post(`${location.origin}/getApplydata`, { filter: "college" }).then((res) => {
+        this.applyData = res.data;
+      });
     },
     getQaData() {
-      axios
-        .post(`${location.origin}/getQaData`, { filter: "college" })
-        .then((res) => {
-          this.qaData = res.data;
-        });
+      axios.post(`${location.origin}/getQaData`, { filter: "college" }).then((res) => {
+        this.qaData = res.data;
+      });
     },
   },
 };
@@ -124,12 +123,7 @@ export default {
   width: 100%;
 
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;
@@ -151,8 +145,8 @@ export default {
     overflow: auto;
     position: relative;
     background-color: #ecedf1;
-    
-    .ib{
+
+    .ib {
       width: 100%;
     }
 
@@ -169,12 +163,7 @@ export default {
       }
 
       .t-c {
-        background-image: linear-gradient(
-          to right,
-          #3179d5 0%,
-          #0ad0f4 50%,
-          #3179d5 75%
-        );
+        background-image: linear-gradient(to right, #3179d5 0%, #0ad0f4 50%, #3179d5 75%);
 
         margin: 0px;
       }

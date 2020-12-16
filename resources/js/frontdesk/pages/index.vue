@@ -3,14 +3,8 @@
     <div class="banner" :options="bannerOptions">
       <!-- <SplideSlide> -->
       <div class="puhey-banner">
-        <img
-          :src="'/images/index-banner-d.png'"
-          class="hidden-desktop img-fluid"
-        />
-        <img
-          :src="'/images/index-banner-m.png'"
-          class="hidden-phone img-fluid"
-        />
+        <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
+        <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
         <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
         <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
         <div class="content">
@@ -36,7 +30,7 @@
       </div>
       <!-- </SplideSlide> -->
     </div>
-    <div class="count-card">
+    <div class="count-card" ref="count">
       <div class="item">
         <p>會員數</p>
         <div>{{ format(tweenedMember) }}</div>
@@ -133,10 +127,7 @@
             </div>
             <div class="v">
               <div class="b">
-                <img
-                  class="img-fluid"
-                  src="../asset/images/working-from-home.png"
-                />
+                <img class="img-fluid" src="../asset/images/working-from-home.png" />
               </div>
               <div class="c">
                 <h4>全線上申請，無人打擾</h4>
@@ -151,10 +142,7 @@
           <Splide class="product" :options="productOptions">
             <SplideSlide class="each">
               <div class="i">
-                <img
-                  class="img-fluid"
-                  src="../asset/images/0_YabILwq8vGX1rj_S.png"
-                />
+                <img class="img-fluid" src="../asset/images/0_YabILwq8vGX1rj_S.png" />
               </div>
               <div class="ccs">
                 <div>
@@ -210,20 +198,14 @@
             </div>
             <div class="v">
               <div class="b">
-                <img
-                  class="img-fluid"
-                  src="../asset/images/business-work-place.png"
-                />
+                <img class="img-fluid" src="../asset/images/business-work-place.png" />
               </div>
             </div>
           </div>
           <Splide class="product" :options="productOptions">
             <SplideSlide class="each">
               <div class="i">
-                <img
-                  class="img-fluid"
-                  src="../asset/images/0_YabILwq8vGX1rj_S.png"
-                />
+                <img class="img-fluid" src="../asset/images/0_YabILwq8vGX1rj_S.png" />
               </div>
               <div class="ccs">
                 <div>車輛融資專案</div>
@@ -310,16 +292,13 @@
           <div>全台唯一無人化借貸平台 操作簡單 快速到款</div>
           <div>申貸過程，無人干擾！<br />普匯．你的手機ATM</div>
           <div>依照個別身分，提供最適合您的貸款服務</div>
-          <div>
-            5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
-          </div>
+          <div>5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間</div>
         </div>
         <div class="cnt-r">
-          <Splide
-            class="c-s"
-            :options="csOptions"
-            @splide:moved="onMoved($event)"
-          >
+          <div class="cover">
+            <img class="img-fluid" src="../asset/images/mobile-line.svg" />
+          </div>
+          <Splide class="c-s" :options="csOptions" @splide:moved="onMoved($event)">
             <SplideSlide class="c-e">
               <div class="img">
                 <img class="img-fluid" src="../asset/images/zxc1.png" />
@@ -341,9 +320,6 @@
               </div>
             </SplideSlide>
           </Splide>
-          <div class="cover">
-            <img class="img-fluid" src="../asset/images/mobile-line.svg" />
-          </div>
         </div>
       </div>
     </div>
@@ -355,64 +331,22 @@
         <creditBoard amount="200000" />
       </div>
     </div>
-    <!-- <div class="game-card">
-      <div class="t-c"><h2>試算您可借額度</h2></div>
-      <div class="hr"></div>
-      <h5>分期還款，輕鬆無負擔！</h5>
-      <div class="cnt">
-        <div class="amount-chart"><amountChart :count="count" /></div>
-        <div class="aa-as">
-          <div class="option">
-            <div
-              class="item"
-              data-aos="fade-down"
-              :data-aos-delay="100 * index"
-              v-for="(item, index) in creditRatingItem"
-              :key="index"
-            >
-              <div
-                :class="['circle', { gary: !item.checked }]"
-                @click="
-                  item.checked = !item.checked;
-                  changeCredit(index);
-                "
-              >
-                <img :src="item.img" class="img-fluid" />
-              </div>
-              <span>{{ item.text }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <experience :experiences="experiences" title="用戶回饋" />
     <div class="information-card">
       <div style="z-index: 2; position: relative">
         <ul class="nav" role="tablist">
           <li class="nav-item">
-            <a
-              class="nav-link active"
-              data-toggle="tab"
-              href="#news"
-              @click="reSlick()"
+            <a class="nav-link active" data-toggle="tab" href="#news" @click="reSlick()"
               >最新消息</a
             >
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link"
-              data-toggle="tab"
-              href="#knowledge"
-              @click="reSlick()"
+            <a class="nav-link" data-toggle="tab" href="#knowledge" @click="reSlick()"
               >AI金融科技新知</a
             >
           </li>
           <li class="nav-item">
-            <a
-              class="nav-link"
-              data-toggle="tab"
-              href="#video"
-              @click="reSlick()"
+            <a class="nav-link" data-toggle="tab" href="#video" @click="reSlick()"
               >影音專區</a
             >
           </li>
@@ -439,11 +373,7 @@
             </router-link>
           </div>
           <div id="knowledge" class="tab-pane fade">
-            <Splide
-              class="knowledge-slick"
-              ref="knowledge_slick"
-              :options="infoOptions"
-            >
+            <Splide class="knowledge-slick" ref="knowledge_slick" :options="infoOptions">
               <SplideSlide
                 class="slick-item hvr-float-shadow"
                 v-for="(item, index) in knowledge"
@@ -463,11 +393,7 @@
             </router-link>
           </div>
           <div id="video" class="tab-pane fade">
-            <Splide
-              class="video-slick"
-              ref="video_slick"
-              :options="infoOptions"
-            >
+            <Splide class="video-slick" ref="video_slick" :options="infoOptions">
               <SplideSlide
                 class="slick-item hvr-float-shadow"
                 v-for="(item, index) in video"
@@ -494,6 +420,7 @@
         </div>
       </div>
     </div>
+    <float/>
   </div>
 </template>
 
@@ -506,11 +433,13 @@ import amountChart from "../component/svg/amountChartComponent";
 import creditBoard from "../component/svg/creditBoardComponent";
 import histroyDot from "../component/svg/histroyDotComponent";
 import experience from "../component/experienceComponent";
+import float from "../component/floatComponent";
 //banner
 // import shanghuiBanner from "../component/banner/shanghuiBanner";
 
 export default {
   components: {
+    float,
     investUp,
     investDown,
     amountChart,
@@ -657,8 +586,7 @@ export default {
   },
   mounted() {
     AOS.init();
-    gsap.to(this.$data, { duration: 1, tweenedMember: 58723 });
-    gsap.to(this.$data, { duration: 1, tweenedtransaction: 31059 });
+    window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {
     news() {
@@ -678,6 +606,17 @@ export default {
     },
   },
   methods: {
+    handleScroll() {
+      let gap = window.innerWidth > 400 ? 500 : 300;
+      if (
+        window.scrollY >= gap &&
+        this.tweenedMember === 0 &&
+        this.tweenedtransaction === 0
+      ) {
+        gsap.to(this.$data, { duration: 1, tweenedMember: 58723 });
+        gsap.to(this.$data, { duration: 1, tweenedtransaction: 31059 });
+      }
+    },
     format(data) {
       data = parseInt(data);
       if (!isNaN(data)) {
@@ -719,12 +658,7 @@ export default {
   width: 100%;
 
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;
@@ -840,12 +774,7 @@ export default {
 
     .item {
       padding: 0px 10px;
-      background-image: linear-gradient(
-        to right,
-        #1e2973 0%,
-        #319acf 50%,
-        #1e2973 75%
-      );
+      background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
       background-clip: text;
       width: fit-content;
       color: #ffffff00;
@@ -919,12 +848,7 @@ export default {
       padding: 2rem 0px;
 
       .t-c {
-        background-image: linear-gradient(
-          to right,
-          #306fca 0%,
-          #09d4f6 50%,
-          #306fca 75%
-        );
+        background-image: linear-gradient(to right, #306fca 0%, #09d4f6 50%, #306fca 75%);
       }
     }
 
@@ -941,7 +865,7 @@ export default {
       }
 
       .group {
-        background: #f1f1f1;
+        background: #182461;
         padding: 30px 0px;
         width: 50%;
 
@@ -1114,7 +1038,6 @@ export default {
         .cover {
           width: 300px;
           position: relative;
-          z-index: 1;
         }
 
         .c-s {
@@ -1123,11 +1046,10 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
-          z-index: 0;
 
           .c-e {
             overflow: hidden;
-            border-radius: 15px;
+            border-radius: 28px;
 
             s.img {
               overflow: hidden;
@@ -1153,12 +1075,7 @@ export default {
     }
 
     .t-c {
-      background-image: linear-gradient(
-        to right,
-        #306fca 0%,
-        #09d4f6 50%,
-        #306fca 75%
-      );
+      background-image: linear-gradient(to right, #306fca 0%, #09d4f6 50%, #306fca 75%);
     }
 
     .credit-slider {
@@ -1454,6 +1371,8 @@ export default {
 
     .count-card {
       padding: 15px 0px;
+      justify-content: flex-start;
+
       .item {
         div {
           font-size: 36px;
@@ -1544,13 +1463,14 @@ export default {
 
         .header {
           margin: 10px;
-          min-height: 106px;
+          min-height: 80px;
 
           .slg {
             margin: 0px;
+            width: 100%;
 
             .l-btn {
-              font-size: 18px;
+              font-size: 27px;
             }
           }
         }
@@ -1596,7 +1516,7 @@ export default {
           }
 
           .ad-b {
-            display: block;
+            display: block !important;
             height: 70px;
           }
         }
@@ -1655,9 +1575,7 @@ export default {
           transform: scale(1);
         }
 
-        .slick-item.is-visible
-          + .slick-item.is-visible
-          + .slick-item.is-visible {
+        .slick-item.is-visible + .slick-item.is-visible + .slick-item.is-visible {
           transform: scale(1);
         }
       }

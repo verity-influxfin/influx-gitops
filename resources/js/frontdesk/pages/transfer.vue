@@ -35,6 +35,7 @@
     </div>
     <download :isLoan="false" :isInvest="true" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import banner from "../component/bannerComponent";
 import apply from "../component/applyComponent";
 import experience from "../component/experienceComponent";
 import download from "../component/downloadComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -52,6 +54,7 @@ export default {
     banner,
     experience,
     download,
+    float,
   },
   data: () => ({
     qaData: [],
@@ -114,11 +117,9 @@ export default {
         });
     },
     getQaData() {
-      axios
-        .post(`${location.origin}/getQaData`, { filter: "transfer" })
-        .then((res) => {
-          this.qaData = res.data;
-        });
+      axios.post(`${location.origin}/getQaData`, { filter: "transfer" }).then((res) => {
+        this.qaData = res.data;
+      });
     },
     createTransferSlick() {
       $(this.$refs.transfer_slick).slick({
@@ -179,12 +180,7 @@ export default {
 <style lang="scss">
 .transfer-wrapper {
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;

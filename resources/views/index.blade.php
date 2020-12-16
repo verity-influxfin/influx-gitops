@@ -61,10 +61,6 @@
         please turn on your jacascript
     </noscript>
     <div id="web_index" @mousemove="clicked">
-        <!-- <div class="blog-quiklink" ref="quiklink">
-            <i class="far fa-times-circle" @click="$($refs.quiklink).remove()"></i>
-            <router-link to="shanghaipage"><img src="{{ asset('images/ah-pu.svg') }}"></router-link>
-        </div> -->
         <nav class="page-header navbar navbar-expand-lg sticky">
             <div class="web-logo">
                 <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>

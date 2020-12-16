@@ -299,8 +299,6 @@ $(() => {
     Vue.use(Vue2TouchEvents)
     
     $('.back-top').fadeOut();
-    // let offset = $('.blog-quiklink').offset();
-
     $(document).scroll(function () {
         AOS.refresh();
         window.dispatchEvent(new Event("resize"));
@@ -310,15 +308,5 @@ $(() => {
         } else {
             $('.back-top').fadeOut();
         }
-
-        // if ($(window).scrollTop() > offset.top) {
-        //     $('.blog-quiklink').stop().animate({
-        //         marginTop: $(window).scrollTop() + offset.top
-        //     });
-        // } else {
-        //     $('.blog-quiklink').stop().animate({
-        //         marginTop: offset.top
-        //     });
-        // }
     });
 });

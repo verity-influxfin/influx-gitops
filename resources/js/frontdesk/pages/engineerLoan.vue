@@ -3,7 +3,7 @@
     <banner :data="this.bannerData" :isInvest="false"></banner>
     <target
       :items="applyData.item"
-      text="資訊/資工/資管相關科系的學生或從事相關職業，並提供專業技術證照，<br><br>馬上享有高額度、低利率的優惠！"
+      text="資訊/資工/資管相關科系學生或相關職業，提供專業技術證照，來就貸！"
     ></target>
     <apply
       title="申貸簡便五步驟"
@@ -16,7 +16,7 @@
       <div class="cnt">
         <div class="c-t">
           <div class="item">
-            <div class="t-c"><h3>借款額度高達20萬</h3></div>
+            <div class="t-c"><h3>借款額度高達30萬</h3></div>
             <p>擴大額度，下載APP申請，24hr資金輕鬆到手！</p>
           </div>
           <div class="item">
@@ -31,7 +31,7 @@
         </div>
         <div class="c-t">
           <div class="item">
-            <div class="t-c"><h3>超快速5分鐘審核過件</h3></div>
+            <div class="t-c"><h3>超快速10分鐘審核過件</h3></div>
             <p>
               全線上申請，拍照上傳，優先核准！<br />
               不耽誤你申請的時間，更不拖延您拿到資金的時間！
@@ -42,12 +42,13 @@
     </div>
     <credit
       :creditList="creditList"
-      amount="200000"
+      amount="300000"
       license="最高額度會根據您的申請身分而有所不同"
     />
     <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -59,6 +60,7 @@ import apply from "../component/applyComponent";
 import credit from "../component/creditComponent";
 import target from "../component/targetComponent";
 import experience from "../component/experienceComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -69,6 +71,7 @@ export default {
     target,
     credit,
     experience,
+    float,
   },
   data: () => ({
     qaData: [],
@@ -113,11 +116,9 @@ export default {
         });
     },
     getQaData() {
-      axios
-        .post(`${location.origin}/getQaData`, { filter: "engineer" })
-        .then((res) => {
-          this.qaData = res.data;
-        });
+      axios.post(`${location.origin}/getQaData`, { filter: "engineer" }).then((res) => {
+        this.qaData = res.data;
+      });
     },
     rotate(index, type) {
       let angle = window.outerWidth >= 767 ? 22.5 : 42.5;
@@ -159,12 +160,7 @@ export default {
   width: 100%;
 
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;
@@ -187,7 +183,7 @@ export default {
     position: relative;
     background-color: #ecedf1;
 
-    .ib{
+    .ib {
       width: 100%;
     }
 
@@ -312,4 +308,3 @@ export default {
   }
 }
 </style>
-

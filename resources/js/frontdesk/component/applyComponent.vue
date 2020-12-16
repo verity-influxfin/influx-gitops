@@ -5,25 +5,21 @@
     </div>
     <div class="hr"></div>
     <template v-if="step">
-    <Splide class="flow" ref="flowSlick" :options="applyOptions">
-      <SplideSlide
-        class="box"
-        v-for="(item, index) in $props.step"
-        :key="index"
-      >
-        <div class="step">
-          <div class="img">
-            <img :src="item.imgSrc" class="img-fluid" />
-            <div :class="`sub-img${index}`" v-if="item.subImgSrc">
-              <img :src="item.subImgSrc" class="img-fluid" />
+      <Splide class="flow" ref="flowSlick" :options="applyOptions">
+        <SplideSlide class="box" v-for="(item, index) in $props.step" :key="index">
+          <div class="step">
+            <div class="img">
+              <img :src="item.imgSrc" class="img-fluid" />
+              <div :class="`sub-img${index}`" v-if="item.subImgSrc">
+                <img :src="item.subImgSrc" class="img-fluid" />
+              </div>
             </div>
+            <div class="num">{{ index + 1 }}</div>
+            <h5 v-html="item.stepTitle.replace(',', '<br>')"></h5>
+            <p v-html="item.stepDesc.replace(',', '<br>')"></p>
           </div>
-          <div class="num">{{ index + 1 }}</div>
-          <h5 v-html="item.stepTitle.replace(',', '<br>')"></h5>
-          <p v-html="item.stepDesc.replace(',', '<br>')"></p>
-        </div>
-      </SplideSlide>
-    </Splide>
+        </SplideSlide>
+      </Splide>
     </template>
   </div>
 </template>
@@ -43,11 +39,11 @@ export default {
       autoplay: true,
       perPage: 1,
       perMove: 1,
-      arrows: false,
+      arrows: window.innerWidth > 400 ? false : true,
       pagination: false,
       gap: "2rem",
       breakpoints: {
-        767: { perPage: 1, arrows: true },
+        767: { perPage: 1 },
       },
     },
   }),
@@ -87,6 +83,18 @@ export default {
     text-align: initial;
     width: 90%;
     margin: 0px auto;
+
+    .splide__arrow {
+      top: 35%;
+    }
+
+    .splide__arrow--prev {
+      left: -1em;
+    }
+
+    .splide__arrow--next {
+      right: -1em;
+    }
 
     .box {
       margin: 20rem 0px 0px 0px;

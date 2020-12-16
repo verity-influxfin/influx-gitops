@@ -42,6 +42,7 @@ export default {
         border: 3px solid #153a71;
         border-radius: 50%;
         padding: 15px;
+        margin: 0px auto;
       }
     }
   }
