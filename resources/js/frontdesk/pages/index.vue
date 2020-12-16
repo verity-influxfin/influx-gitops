@@ -1035,11 +1035,11 @@ export default {
       .cnt-r {
         width: 40%;
         position: relative;
-        pointer-events: none;
         
         .cover {
           width: 300px;
           position: relative;
+          pointer-events: none;
         }
 
         .c-s {
