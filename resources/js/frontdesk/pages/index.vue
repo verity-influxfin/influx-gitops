@@ -420,7 +420,7 @@
         </div>
       </div>
     </div>
-    <float/>
+    <float />
   </div>
 </template>
 
@@ -607,7 +607,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      let gap = window.innerWidth > 400 ? 500 : 300;
+      let gap = window.innerWidth > 400 ? 400 : 300;
       if (
         window.scrollY >= gap &&
         this.tweenedMember === 0 &&
@@ -793,7 +793,7 @@ export default {
     .pu {
       width: 116px;
       position: absolute;
-      left: 66rem;
+      right: 25rem;
     }
 
     .lr {
