@@ -1,5 +1,7 @@
 <?php
 
+use Smalot\PdfParser\Parser;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Certification_lib{
@@ -266,8 +268,8 @@ class Certification_lib{
                 $ocr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$rawData['back_image']);
                 $ocr['film_number']      = $this->CI->compare_lib->dataExtraction('\d{6,10}','',preg_replace('/'.$ocr['gnumber'].'/','',$rawData['back_image']));
                 $ocr['address']          = $this->CI->compare_lib->dataExtraction('('.$ocr['born'].')(.*?'.$ocr['gnumber'].')','住|址|生地|住址|\\n|'.$ocr['gnumber'].'|'.$ocr['born'],$rawData['back_image'],1);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                $check_item = ['father','mother','born','gnumber','address'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                foreach($check_item as $k => $v){
+                $check_item = ['father','mother','born','gnumber','address'];
+                foreach($check_item as $k => $v){
                     if($ocr[$v] == false){
                         if(!isset($srawData['back_image'])){
                             //$srawData['back_image'] = $this->CI->scan_lib->azureScanData($content['back_image'],$user_id,$cer_id);
