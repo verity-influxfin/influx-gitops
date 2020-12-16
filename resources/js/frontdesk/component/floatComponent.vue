@@ -1,6 +1,6 @@
 <template>
   <div class="blog-quiklink" ref="quiklink">
-    <div class="icon"><img src="../asset/images/line.svg" class="img-fluid" /></div>
+    <a class="icon" href="https://line.me/R/ti/p/%40kvd1654s" target="_blank"><img src="../asset/images/line.svg" class="img-fluid" /></a>
   </div>
 </template>
 
