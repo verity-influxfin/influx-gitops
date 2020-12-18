@@ -58,6 +58,10 @@ class Certification extends REST_Controller {
 			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
+        if(in_array($method, ['emergency'])){
+            $this->load->library('brookesia/brookesia_lib');
+            $this->brookesia_lib->userCheckAllRules($this->user_info->originalID);
+        }
     }
 
 	/**
@@ -214,18 +218,18 @@ class Certification extends REST_Controller {
 						if (isset($rs->content['type'])) {
 							if ($rs->content['type'] == 'instagram') {
 								$ig_exist = 1;
-							};
-							if ($rs->content['type'] == 'facebook') {
+							}
+                            if ($rs->content['type'] == 'facebook') {
 								$fb_exist = 1;
-							};
-						};
-						if (isset($rs->content['facebook']['name'])) {
+							}
+                        }
+                        if (isset($rs->content['facebook']['name'])) {
 							$fb_exist = 1;
-						};
-						if (isset($rs->content['instagram'])&&$rs->content['instagram'] != null) {
+						}
+                        if (isset($rs->content['instagram'])&&$rs->content['instagram'] != null) {
 							$ig_exist = 1;
-						};
-						$fb_bind = isset($fb_exist) ? 1 : 0;
+						}
+                        $fb_bind = isset($fb_exist) ? 1 : 0;
 						$ig_bind =  isset($ig_exist) ? 1 : 0;
 						$fields 	= [];
 						$data['line_bind'] = $line_bind;
