@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">交易報表
+                    <h1 class="page-header">虛擬帳戶交易明細表
 						<a href="<?=admin_url('Account/daily_report?display=pdf&sdate='.$sdate.'&edate='.$edate) ?>" target="_blank" class="btn btn-primary float-right" >匯出PDF</a>
 					</h1>
 
@@ -59,7 +59,7 @@
                                             <th rowspan="2">案件號碼</th>
 											<th rowspan="2">交易種類</th>
                                             <th colspan="5">提出</th>
-                                            <th colspan="5">提入</th>
+                                            <th colspan="5">存入</th>
                                             <th rowspan="2">本金金額</th>
                                             <th rowspan="2">利息金額</th>
                                             <th rowspan="2">平台服務費</th>
