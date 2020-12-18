@@ -86,7 +86,7 @@ $config['admin_menu'] = [
     ],
     'Account' => [
         'parent_name' => '財務作業',
-        'daily_report' => '交易日報表',
+        'daily_report' => '虛擬帳戶交易明細表',
         'passbook_report' => '虛擬帳號餘額明細表',
         'estatement' => '個人對帳單',
         'index' => '收支統計表',

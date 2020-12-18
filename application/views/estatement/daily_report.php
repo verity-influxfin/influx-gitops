@@ -14,7 +14,7 @@
 		background-color: #DCDCDC;
 	}
 	</style>
-	<h1>交易日報表</h1>
+	<h1>虛擬帳戶交易明細表</h1>
 	<h5>選擇範圍：<?=$sdate.' - '.$edate;?> 列印日期：<?=date("Y-m-d H:i:s");?></h5>
 	<table border="1" style="text-align:center;width:100%">
 		<tbody>
@@ -22,8 +22,8 @@
 				<th width="60" rowspan="2">交易日期</th>
 				<th width="100" rowspan="2">案件號碼</th>
 				<th rowspan="2">交易種類</th>
-				<th width="380" colspan="5">轉出</th>									
-				<th width="380" colspan="5">轉入</th>
+				<th width="380" colspan="5">提出</th>
+				<th width="380" colspan="5">存入</th>
 				<th width="60" rowspan="2">本金金額</th>
 				<th width="60" rowspan="2">利息金額</th>
 				<th width="60" rowspan="2">平台服務費</th>
@@ -33,19 +33,19 @@
 				<th width="60" rowspan="2">債權差額</th>
 			</tr>
 			<tr>
-				<th width="60">戶名</th>									
+				<th width="60">戶名</th>
 				<th width="100">虛擬帳戶</th>
 				<th width="60">金額</th>
 				<th width="100">銀行帳戶</th>
 				<th width="60">金額</th>
-				<th width="60">戶名</th>	
+				<th width="60">戶名</th>
 				<th width="100">虛擬帳戶</th>
 				<th width="60">金額</th>
 				<th width="100">銀行帳戶</th>
 				<th width="60">金額</th>
 			</tr>
 
-		<?php 
+		<?php
 			$sum = array(
 				"v_amount_from"		=> 0,
 				"amount_from"		=> 0,
@@ -96,8 +96,8 @@
 				<td class="num"><?=isset($value["allowance"])&&$value["allowance"]?number_format($value["allowance"]):"" ?></td>
 				<td class="num"><?=isset($value["delay_interest"])&&$value["delay_interest"]?number_format($value["delay_interest"]):"" ?></td>
 				<td class="num"><?=isset($value["else"])&&$value["else"]?number_format($value["else"]):"" ?></td>
-			</tr>   
-				<?php 
+			</tr>
+				<?php
 					if(isset($value["sub_list"]) && !empty($value["sub_list"])){
 						foreach($value["sub_list"] as $k => $v){
 							$sum["v_amount_from"]	+= isset($v["v_amount_from"])&&$v["v_amount_from"]?$v["v_amount_from"]:0;
@@ -130,11 +130,11 @@
 					<td class="num"><?=isset($v["allowance"])&&$v["allowance"]?number_format($v["allowance"]):"" ?></td>
 					<td class="num"><?=isset($v["delay_interest"])&&$v["delay_interest"]?number_format($v["delay_interest"]):"" ?></td>
 					<td class="num"><?=isset($v["else"])&&$v["else"]?number_format($v["else"]):"" ?></td>
-				</tr>  
-				<?php 
+				</tr>
+				<?php
 					}}
 				?>
-		<?php 
+		<?php
 			}}
 		?>
 			<tr class="color">
@@ -158,7 +158,7 @@
 				<td class="num"><?=isset($sum["allowance"])?number_format($sum["allowance"]):"" ?></td>
 				<td class="num"><?=isset($sum["delay_interest"])?number_format($sum["delay_interest"]):"" ?></td>
 				<td class="num"><?=isset($sum["else"])?number_format($sum["else"]):"" ?></td>
-			</tr>   
+			</tr>
 		</tbody>
 	</table>
 </body>
