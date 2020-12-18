@@ -35,6 +35,29 @@ class Brookesia extends CI_Controller {
 		$this->json_output->setStatusCode(200)->setResponse($response)->send();
 	}
 
+	public function user_check_all_log()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$userId  = isset($input['userId']) ? $input['userId'] : '';
+		$this->load->library('output/json_output');
+
+		if(!$userId){
+			$this->json_output->setStatusCode(400)->send();
+		}
+
+		$this->load->library('brookesia/brookesia_lib');
+		$userCheckAllLog = $this->brookesia_lib->userCheckAllLog($userId);
+
+		$response = json_decode(json_encode($userCheckAllLog), true);
+
+		if(!$response){
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$response = ["results" => [$response['response']['result']]];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
+
 	public function user_rule_hit()
 	{
 		$input = $this->input->get(NULL, TRUE);

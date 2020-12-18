@@ -1,7 +1,7 @@
 <?php
 
 
-class brookesia_lib
+class Brookesia_lib
 {
 	function __construct()
 	{
@@ -27,6 +27,24 @@ class brookesia_lib
 		}
 
 		return true;
+	}
+
+	public function userCheckAllLog($userId)
+	{
+		if(!$userId) {
+			return false;
+		}
+
+		$url = $this->brookesiaUrl  . "check/0/checkAll?userId=" . $userId;
+
+		$result = curl_get($url);
+		$response = json_decode($result);
+
+		if (!$result || !isset($response->status) || $response->status != 200) {
+			return;
+		}
+
+		return $response;
 	}
 
 	public function getRuleHitByUserId($userId)
