@@ -1,10 +1,10 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">交易報表 
+                    <h1 class="page-header">虛擬帳戶交易明細表
 						<a href="<?=admin_url('Account/daily_report?display=pdf&sdate='.$sdate.'&edate='.$edate) ?>" target="_blank" class="btn btn-primary float-right" >匯出PDF</a>
 					</h1>
-					
+
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -58,8 +58,8 @@
                                             <th rowspan="2">交易日期</th>
                                             <th rowspan="2">案件號碼</th>
 											<th rowspan="2">交易種類</th>
-                                            <th colspan="5">轉出</th>									
-                                            <th colspan="5">轉入</th>
+                                            <th colspan="5">提出</th>
+                                            <th colspan="5">存入</th>
                                             <th rowspan="2">本金金額</th>
                                             <th rowspan="2">利息金額</th>
                                             <th rowspan="2">平台服務費</th>
@@ -69,12 +69,12 @@
                                             <th rowspan="2">債權差額</th>
                                         </tr>
                                         <tr>
-                                            <th>戶名</th>									
+                                            <th>戶名</th>
                                             <th>虛擬帳戶</th>
 											<th>金額</th>
 											<th>銀行帳戶</th>
 											<th>金額</th>
-											<th>戶名</th>	
+											<th>戶名</th>
                                             <th>虛擬帳戶</th>
                                             <th>金額</th>
 											<th>銀行帳戶</th>
@@ -82,7 +82,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-									<?php 
+									<?php
 										$sum = array(
 											"v_amount_from"		=> 0,
 											"amount_from"		=> 0,
@@ -145,8 +145,8 @@
                                             <td class="num"><?=isset($value["allowance"])&&$value["allowance"]?number_format($value["allowance"]):"" ?></td>
                                             <td class="num"><?=isset($value["delay_interest"])&&$value["delay_interest"]?number_format($value["delay_interest"]):"" ?></td>
                                             <td class="num"><?=isset($value["else"])&&$value["else"]?number_format($value["else"]):"" ?></td>
-                                        </tr>   
-											<?php 
+                                        </tr>
+											<?php
 												if(isset($value["sub_list"]) && !empty($value["sub_list"])){
 													foreach($value["sub_list"] as $k => $v){
 														$sum["v_amount_from"]	+= isset($v["v_amount_from"])&&$v["v_amount_from"]?$v["v_amount_from"]:0;
@@ -183,11 +183,11 @@
 												<td class="num"><?=isset($v["allowance"])&&$v["allowance"]?number_format($v["allowance"]):"" ?></td>
 												<td class="num"><?=isset($v["delay_interest"])&&$v["delay_interest"]?number_format($v["delay_interest"]):"" ?></td>
 												<td class="num"><?=isset($v["else"])&&$v["else"]?number_format($v["else"]):"" ?></td>
-											</tr>  
-											<?php 
+											</tr>
+											<?php
 												}}
 											?>
-									<?php 
+									<?php
 										}}
 									?>
 										<tr style='background-color: #DCDCDC;'>
@@ -211,7 +211,7 @@
                                             <td class="num"><?=isset($sum["allowance"])?number_format($sum["allowance"]):"" ?></td>
                                             <td class="num"><?=isset($sum["delay_interest"])?number_format($sum["delay_interest"]):"" ?></td>
                                             <td class="num"><?=isset($sum["else"])?number_format($sum["else"]):"" ?></td>
-                                        </tr>   
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
