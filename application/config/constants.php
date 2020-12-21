@@ -282,10 +282,10 @@ defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('ORDER_INTEREST_RATE') 		OR define('ORDER_INTEREST_RATE'		, 18); //分期利率
 defined('FEV_INTEREST_RATE') 		OR define('FEV_INTEREST_RATE'		, 15); //分期利率
-defined('FEV_SHARE_RATE') OR define('FEV_SHARE_RATE' , 2); //平台分潤
+defined('FEV_SHARE_RATE')           OR define('FEV_SHARE_RATE' , 2); //平台分潤
 defined('FEV_PREPAYMENT_SHARE_RATE') OR define('FEV_PREPAYMENT_SHARE_RATE' , 5); //提早清算平台分潤
-defined('STAGE_CER_TARGET') OR define('STAGE_CER_TARGET' , 9999);
-defined('STAGE_CER_MIN_AMOUNT') OR define('STAGE_CER_MIN_AMOUNT' , 3000);
+defined('STAGE_CER_TARGET')         OR define('STAGE_CER_TARGET' , 9999);
+defined('STAGE_CER_MIN_AMOUNT')     OR define('STAGE_CER_MIN_AMOUNT' , 3000);
 defined('SUL_INTEREST_STARTING_RATE') 		OR define('SUL_INTEREST_STARTING_RATE' , 5); //分期利率
 defined('SUL_INTEREST_ENDING_RATE') 		OR define('SUL_INTEREST_ENDING_RATE' , 20); //分期利率
 defined('PREPAYMENT_ALLOWANCE_FEES') 		OR define('PREPAYMENT_ALLOWANCE_FEES'		, 1); //提還補貼%

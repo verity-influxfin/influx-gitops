@@ -451,7 +451,17 @@ class Target_lib
         if (!empty($target) && $target->status == 2) {
             $param['status'] = 3;
             $param['launch_times'] = isset($param['launch_times']) ? $param['launch_times'] : 1;
-            $target->sub_status != 8 ? $param['expire_time'] = strtotime('+2 days', time()) : '';
+
+            if ($target->sub_status != 8) {
+                if ($target->sub_product_id == STAGE_CER_TARGET) {
+                    // 階段性上架
+                    $param['expire_time'] = strtotime('+2 days', time());
+                } else {
+                    // 一般
+                    $param['expire_time'] = strtotime('+14 days', time());
+                }
+            }
+
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, $user_id, $admin_id);
             $this->CI->notification_lib->target_verify_success($target);
