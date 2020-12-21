@@ -60,7 +60,7 @@ class Certification extends REST_Controller {
         }
         if(in_array($method, ['emergency'])){
             $this->load->library('brookesia/brookesia_lib');
-            $this->brookesia_lib->userCheckAllRules($this->user_info->originalID);
+            $this->brookesia_lib->userCheckAllRules($this->user_info->id);
         }
     }
 
