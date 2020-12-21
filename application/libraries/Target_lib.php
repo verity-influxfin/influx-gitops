@@ -1604,6 +1604,7 @@ class Target_lib
                             $finish = true;
                             $finish_stage_cer = [];
                             $cer = [];
+                            $matchBrookesia = false;
                             foreach ($certifications as $key => $certification) {
                                 if ($finish && in_array($certification['id'], $product_certification)) {
                                     if ($certification['user_status'] != '1') {
@@ -1617,6 +1618,7 @@ class Target_lib
                                 }
                             }
 
+                            //反詐欺
                             $this->CI->load->library('brookesia/brookesia_lib');
                             $userCheckAllLog = $this->CI->brookesia_lib->userCheckAllLog($value->user_id);
                             if(isset($userCheckAllLog->response->result)){
