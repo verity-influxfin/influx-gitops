@@ -464,7 +464,7 @@ class Transaction_lib{
 								// $this->CI->target_model->update($target_id,$target_update_param);
 
 								# issue_898
-				                $updateSql = sprintf("UPDATE `%s`.`%s` SET `status` = '5', `loan_status` = '1', `loan_date` = '%s', `updated_at` = '%s' WHERE `id` = '%s'", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $data, time(), $target_id);
+				                $updateSql = sprintf("UPDATE `%s`.`%s` SET `status` = '5', `loan_status` = '1', `loan_date` = '%s', `updated_at` = '%s' WHERE `id` = '%s'", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $date, time(), $target_id);
 								$this->db->query($updateSql);
 
 
@@ -1133,7 +1133,7 @@ class Transaction_lib{
 								// $this->CI->target_model->update($target_id,$target_update_param);
 
 								# issue_898
-								$updateSql = sprintf("UPDATE `%s`.`%s` SET `status` = '5', `sub_status` = '0', `loan_status` = '1', `loan_date` = '%s', `updated_at` = '%s' WHERE `id` = '%s'", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $data, time(), $target_id);
+								$updateSql = sprintf("UPDATE `%s`.`%s` SET `status` = '5', `sub_status` = '0', `loan_status` = '1', `loan_date` = '%s', `updated_at` = '%s' WHERE `id` = '%s'", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $date, time(), $target_id);
 								$this->db->query($updateSql);
 
 								$this->CI->load->library('target_lib');
