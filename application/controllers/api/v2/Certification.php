@@ -58,10 +58,6 @@ class Certification extends REST_Controller {
 			$this->user_info->agent 		= $tokenData->agent;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
-        if(in_array($method, ['emergency'])){
-            $this->load->library('brookesia/brookesia_lib');
-            $this->brookesia_lib->userCheckAllRules($this->user_info->id);
-        }
     }
 
 	/**
@@ -2401,6 +2397,10 @@ class Certification extends REST_Controller {
         $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
         if($user_certification){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
+        }
+        if(in_array($certification_id, [CERTIFICATION_EMERGENCY])){
+            $this->load->library('brookesia/brookesia_lib');
+            $this->brookesia_lib->userCheckAllRules($this->user_info->id);
         }
     }
 
