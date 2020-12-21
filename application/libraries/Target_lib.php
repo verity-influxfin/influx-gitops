@@ -1693,6 +1693,36 @@ class Target_lib
         $userId ? $param['user_id'] = $userId : '';
         $aiBiddingList = $this->CI->batch_model->order_by('expire_time','asc')->get_many_by($param);
         if($aiBiddingList){
+            $this->CI->config->load('school_points',TRUE);
+            $school_list = $this->CI->config->item('school_points');
+            $target->system = null;
+            $target->national = null;
+            //取得meta資訊
+            $user_meta = $this->CI->user_meta_model->get_many_by([
+                'user_id'	=> $target->user_id,
+                'meta_key'	=> ['school_system','school_name']
+            ]);
+            if($user_meta){
+                foreach ($user_meta as $skey => $svalue) {
+                    //取得學制
+                    $svalue->meta_key == 'school_system' ? $target->system = $svalue->meta_value : '';
+
+                    //取得案件學歷是否國立
+                    if($svalue->meta_key == 'school_name') {
+                        foreach ($school_list['school_points'] as $k => $v) {
+                            if (trim($svalue->meta_value) == $v['name']) {
+                                $target->national= $v['national'];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //取得性別
+            $target_user_info = $this->CI->user_model->get($target->user_id);
+            $target->sex = $target_user_info->sex;
+
             $this->aiBidding($target, $aiBiddingList);
         }
     }
@@ -1754,8 +1784,30 @@ class Target_lib
                 $biddingAmount = 0;
                 $targetAmount = $content->target_amount * 1000;
                 $dailyAmount = $content->daily_amount * 1000;
-                //排除曾下標的投資人
-                if(!in_array($value->user_id, $investmentList)){
+                $cancel = false;
+
+                //判斷案件是否符合條件
+                $filter = ['product_id', 'credit_level', 'sex', 'system', 'national'];
+                foreach($filter as $fkey => $fvalue){
+                    if($content->$fvalue != 'all') {
+                        $ids = explode(",", $content->$fvalue);
+                        //不符篩選條件
+                        if (!in_array($target->$fvalue, $ids)) {
+                            $cancel = true;
+                            continue;
+                        }
+                    }
+                }
+                if($content->interest_rate_s > intval($target->interest_rate)
+                    || $content->interest_rate_e < intval($target->interest_rate)
+                    || $content->instalment_s > intval($target->instalment)
+                    || $content->instalment_e < intval($target->instalment)
+                ){
+                    continue;
+                }
+
+                //排除曾下標的投資人與排除不符篩選標準
+                if(!in_array($value->user_id, $investmentList) && !$cancel){
                     !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
                     //有設定每日投資額度
                     if($dailyAmount != 0){
