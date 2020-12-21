@@ -15,13 +15,25 @@
       <img src="../asset/images/circle.svg" class="img-fluid ib" />
       <div class="cnt">
         <div class="c-t">
-          <div class="item">
-            <div class="t-c"><h3>借款額度高達30萬</h3></div>
-            <p>擴大額度，下載APP申請，24hr資金輕鬆到手！</p>
+          <div class="item r j">
+            <div class="i-cnt">
+              <div class="t-c"><h3>借款額度高達30萬</h3></div>
+              <div class="ccc"></div>
+              <p>擴大額度，下載APP申請，24hr資金輕鬆到手！</p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/30min.svg" class="img-fluid" />
+            </div>
           </div>
-          <div class="item">
-            <div class="t-c"><h3>利率減免優惠5%起</h3></div>
-            <p>在忙碌的上課、工作之餘，普匯讓您還款無負擔！</p>
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>利率減免優惠5%起</h3></div>
+              <div class="ccc"></div>
+              <p>在忙碌的上課、工作之餘，普匯讓您還款無負擔！</p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/5min.svg" class="img-fluid" />
+            </div>
           </div>
         </div>
         <div class="c-i">
@@ -31,11 +43,17 @@
         </div>
         <div class="c-t">
           <div class="item">
-            <div class="t-c"><h3>超快速10分鐘審核過件</h3></div>
-            <p>
-              全線上申請，拍照上傳，優先核准！<br />
-              不耽誤你申請的時間，更不拖延您拿到資金的時間！
-            </p>
+            <div class="img">
+              <img src="../asset/images/10min.svg" class="img-fluid" />
+            </div>
+            <div class="i-cnt">
+              <div class="t-c"><h3>超快速10分鐘審核過件</h3></div>
+              <div class="ccc"></div>
+              <p>
+                全線上申請，拍照上傳，優先核准！<br />
+                不耽誤你申請的時間，更不拖延您拿到資金的時間！
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -162,12 +180,12 @@ export default {
   .t-c {
     background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
-    width: fit-content;
     color: #ffffff00;
     margin: 0px auto;
 
     h2 {
       font-weight: bolder;
+      text-align: center;
     }
   }
 
@@ -198,7 +216,6 @@ export default {
 
       .c-t {
         width: 35%;
-        overflow: hidden;
         padding: 20px;
         position: relative;
         height: fit-content;
@@ -207,6 +224,28 @@ export default {
 
         .item {
           margin: 10rem 10px;
+          display: flex;
+
+          .i-cnt {
+            width: calc(100% - 100px);
+          }
+
+          .img {
+            margin: 0px 1rem;
+            width: 100px;
+          }
+
+          .ccc {
+            width: 80%;
+            height: 2px;
+            margin-bottom: 0.5rem;
+            background-image: linear-gradient(
+              to left,
+              #3670d3 100%,
+              #09d7f8 50%,
+              #2e84da 0%
+            );
+          }
 
           .t-c {
             background-image: linear-gradient(
@@ -228,7 +267,22 @@ export default {
             letter-spacing: 1px;
             text-align: left;
             color: #ffffff;
-            height: 90px;
+            height: 72px;
+          }
+        }
+
+        .j {
+          transform: translateX(26%);
+        }
+
+        .r {
+          h3,
+          p {
+            text-align: right;
+          }
+
+          .ccc {
+            margin: 0px 0px 0.5rem auto;
           }
         }
       }
@@ -241,26 +295,11 @@ export default {
         .img {
           position: absolute;
           top: 45%;
-          left: 40%;
+          left: 50%;
           width: 100%;
           transform: translate(-50%, -50%);
-          animation: i-c-float 2.5s ease-in-out infinite;
         }
       }
-    }
-  }
-
-  @keyframes i-c-float {
-    0% {
-      transform: translate(-50%, -50%) translatey(-5px);
-    }
-
-    50% {
-      transform: translate(-50%, -50%) translatey(5px);
-    }
-
-    100% {
-      transform: translate(-50%, -50%) translatey(-5px);
     }
   }
 
@@ -291,8 +330,34 @@ export default {
           top: 0px;
           padding: 0px;
 
+          .j {
+            transform: initial;
+          }
+
+          .r {
+            h3,
+            p {
+              text-align: initial;
+            }
+
+            .ccc {
+              margin: 0px 0px 0.5rem 0px;
+            }
+          }
+
           .item {
-            margin: 0px 10px 0rem 10px;
+            margin: 10px 0px;
+
+            .i-cnt {
+              order: 1;
+              width: calc(100% - 60px);
+            }
+
+            .img {
+              order: 0;
+              margin: 0px 0.5rem 0px 0px;
+              width: 60px;
+            }
 
             p {
               height: auto;

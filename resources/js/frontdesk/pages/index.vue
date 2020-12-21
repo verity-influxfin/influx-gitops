@@ -56,51 +56,18 @@
       <div class="t-c"><h2>歷史沿革</h2></div>
       <div class="hr"></div>
       <div class="h-c">
-        <div style="width: 100%">
-          <img class="img-fluid" src="/images/route.svg" />
+        <div class="arrows al">
+          <div @click="pre()">
+            <img src="../asset/images/left-arrow.svg" class="img-fluid" />
+          </div>
         </div>
-        <!-- <div>
-          <histroyDot
-            :content="{
-              year1: '2017',
-              date1: '12.08',
-              title1: '公司成立',
-              desc1: '資本額500萬',
-              year2: '2018',
-              date2: '08.03',
-              title2: '產品發表會',
-              desc2: '第一次學生貸',
-            }"
-          />
+        <routeMap v-if="isDesktop" :routeData="routeData" />
+        <routeMapM :routeData="routeData" />
+        <div class="arrows ar">
+          <div @click="next()">
+            <img src="../asset/images/right-arrow.svg" class="img-fluid" />
+          </div>
         </div>
-        <div>
-          <histroyDot
-            :content="{
-              year1: '2019',
-              date1: '05.12',
-              title1: '人數突破2萬',
-              desc1: '會員人數突破2萬人',
-              year2: '2019',
-              date2: '06.25',
-              title2: '新品APP發布會',
-              desc2: '上班族貸',
-            }"
-          />
-        </div>
-        <div>
-          <histroyDot
-            :content="{
-              year1: '2019',
-              date1: '12.01',
-              title1: '人數突破4萬人',
-              desc1: '會員人數突破4萬人',
-              year2: '2019',
-              date2: '12.20',
-              title2: '舉辦金融科技競賽',
-              desc2: '帶領【AI金融科技聯盟】舉辦第一屆競賽',
-            }"
-          />
-        </div> -->
       </div>
     </div>
     <div class="p2p-card">
@@ -289,10 +256,18 @@
     <div class="slogan-card">
       <div class="cnt">
         <div class="cnt-l">
-          <div>全台唯一無人化借貸平台 操作簡單 快速到款</div>
-          <div>申貸過程，無人干擾！<br />普匯．你的手機ATM</div>
-          <div>依照個別身分，提供最適合您的貸款服務</div>
-          <div>5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間</div>
+          <div :class="[{ 'ad-b': csKey === 0 }]">
+            全台唯一無人化借貸平台 操作簡單 快速到款
+          </div>
+          <div :class="[{ 'ad-b': csKey === 1 }]">
+            申貸過程，無人干擾！<br />普匯．你的手機ATM
+          </div>
+          <div :class="[{ 'ad-b': csKey === 2 }]">
+            依照個別身分，提供最適合您的貸款服務
+          </div>
+          <div :class="[{ 'ad-b': csKey === 3 }]">
+            5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
+          </div>
         </div>
         <div class="cnt-r">
           <Splide class="c-s" :options="csOptions" @splide:moved="onMoved($event)">
@@ -434,6 +409,10 @@ import creditBoard from "../component/svg/creditBoardComponent";
 import histroyDot from "../component/svg/histroyDotComponent";
 import experience from "../component/experienceComponent";
 import float from "../component/floatComponent";
+//svg
+import routeMap from "../component/svg/routeMapComponent";
+import routeMapM from "../component/svg/routeMapMComponent.vue";
+
 //banner
 // import shanghuiBanner from "../component/banner/shanghuiBanner";
 
@@ -448,14 +427,23 @@ export default {
     creditBoard,
     Splide,
     SplideSlide,
+    routeMap,
+    routeMapM,
     //banner
     // shanghuiBanner,
   },
   data: () => ({
+    isDesktop: window.innerWidth > 400 ? true : false,
+    routeIndex: {
+      start: 0,
+      end: window.innerWidth > 400 ? 5 : 3,
+    },
+    csKey: 0,
     pmt: 0,
     tweenedMember: 0,
     tweenedtransaction: 0,
-    // count: 3,
+    milestone: [],
+    routeData: [],
     shares: [],
     creditRatingItem: [
       {
@@ -545,7 +533,7 @@ export default {
     },
     csOptions: {
       type: "loop",
-      autoplay: true,
+      autoplay: false,
       perPage: 1,
       perMove: 1,
       speed: 200,
@@ -582,6 +570,7 @@ export default {
     this.$store.dispatch("getNewsData");
     this.$store.dispatch("getVideoData", { category: "share" });
     this.getServiceData();
+    this.getMilestoneData();
     $("title").text(`首頁 - inFlux普匯金融科技`);
   },
   mounted() {
@@ -589,6 +578,14 @@ export default {
     window.addEventListener("scroll", this.handleScroll, true);
   },
   watch: {
+    "routeIndex.start"() {
+      this.routeData = [];
+      this.milestone.forEach((item, index) => {
+        if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
+          this.routeData.push(item);
+        }
+      });
+    },
     news() {
       this.$nextTick(() => {
         this.$refs.news_slick.remount();
@@ -634,6 +631,17 @@ export default {
         this.services = res.data;
       });
     },
+    async getMilestoneData() {
+      let res = await axios.post(`${location.origin}/getMilestoneData`);
+
+      this.milestone = res.data.reverse();
+
+      this.milestone.forEach((item, index) => {
+        if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
+          this.routeData.push(item);
+        }
+      });
+    },
     changeCredit(index) {
       this.count = 0;
       this.creditRatingItem.forEach((item) => {
@@ -648,6 +656,18 @@ export default {
     onMoved($event) {
       $(".cnt-l").find("div").removeClass("ad-b");
       $($(".cnt-l").find("div")[$event.index]).addClass("ad-b");
+    },
+    pre() {
+      if (this.routeIndex.start > 0) {
+        this.routeIndex.start--;
+        this.routeIndex.end--;
+      }
+    },
+    next() {
+      if (this.routeIndex.end < this.milestone.length - 1) {
+        this.routeIndex.start++;
+        this.routeIndex.end++;
+      }
     },
   },
 };
@@ -834,9 +854,18 @@ export default {
     .h-c {
       display: flex;
 
-      div {
-        width: calc(100% / 3);
-        margin: 0px -7px;
+      .arrows {
+        position: relative;
+        width: 100px;
+        z-index:1;
+
+        div {
+          width: 100px;
+          position: absolute;
+          top: 50%;
+          transform: translate(0px, -50%);
+          cursor: pointer;
+        }
       }
     }
   }
@@ -1035,7 +1064,7 @@ export default {
       .cnt-r {
         width: 40%;
         position: relative;
-        
+
         .cover {
           width: 300px;
           position: relative;
@@ -1378,6 +1407,7 @@ export default {
       .item {
         div {
           font-size: 36px;
+          color: #3b5795;
         }
       }
 
@@ -1401,11 +1431,29 @@ export default {
 
       .h-c {
         width: 100%;
-        overflow: auto;
         padding: 10px 0px;
+        flex-direction: column;
 
-        div {
-          width: 300px;
+        .al {
+          div {
+            right: 0px;
+            transform: translate(0px, 50%) rotate(90deg);
+          }
+        }
+
+        .ar {
+          div {
+            left: 0px;
+            transform: translate(0px, -100%) rotate(90deg);
+          }
+        }
+
+        .arrows {
+          width: 100%;
+
+          div {
+            width: 50px;
+          }
         }
       }
     }
@@ -1518,7 +1566,7 @@ export default {
           }
 
           .ad-b {
-            display: block !important;
+            display: block;
             height: 70px;
           }
         }
@@ -1539,7 +1587,7 @@ export default {
     }
 
     .game-card {
-      padding: 10px;
+      padding: 10px 0px;
 
       h5 {
         font-size: 20px;

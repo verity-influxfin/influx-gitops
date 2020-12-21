@@ -1,5 +1,5 @@
 <template>
-  <div class="credit-card" >
+  <div class="credit-card">
     <div class="credit-box">
       <template v-if="text">
         <p class="t-t" v-html="text"></p>
@@ -42,11 +42,11 @@ export default {
 
   .credit-box {
     .t-c {
-      margin: 0px;
+      margin: 0px auto;
     }
 
     .hr {
-      margin: 1rem 0px;
+      margin: 1rem auto;
     }
 
     .t-t {

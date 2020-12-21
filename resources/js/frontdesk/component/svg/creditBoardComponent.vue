@@ -3499,7 +3499,9 @@ export default {
     if (this.color) {
       $("#ccrata .st5").css("fill", this.color);
     }
-    this.touchMove();
+    this.$nextTick(() => {
+      this.touchMove();
+    });
   },
   watch: {
     pmt(newVal) {
@@ -3511,12 +3513,14 @@ export default {
   },
   methods: {
     touchMove() {
-      this.$refs.ccrata.addEventListener("touchmove", this.handleTouchMove, false);
       this.$refs.big.addEventListener("touchstart", this.handleTouchStart, false);
       this.$refs.small.addEventListener("touchstart", this.handleTouchStart, false);
+      this.$refs.ccrata.addEventListener("touchstart", this.handleTouchStart, false);
+      this.$refs.ccrata.addEventListener("touchmove", this.handleTouchMove, false);
       this.$refs.ccrata.addEventListener("touchend", this.handleTouchtouchend, false);
     },
     handleTouchStart(event) {
+      $("body").css("overflow", "hidden");
       this.moveEl = event.target;
       this.target = $(event.target).attr("id");
       if (this.target === "big") {
@@ -3525,7 +3529,6 @@ export default {
       if (this.target === "small") {
         this.rateTick = Math.round(((this.rate - 5) / 76) * 100) / 100;
       }
-      $("body").css("overflow", "hidden");
     },
     handleTouchMove(e) {
       $("body").css("overflow", "hidden");
@@ -3771,6 +3774,7 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    user-select: none;
   }
 
   .blue {

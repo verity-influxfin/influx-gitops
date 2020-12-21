@@ -1,6 +1,8 @@
 <template>
   <div class="blog-quiklink" ref="quiklink">
-    <a class="icon" href="https://line.me/R/ti/p/%40kvd1654s" target="_blank"><img src="../asset/images/line.svg" class="img-fluid" /></a>
+    <a class="icon" href="https://line.me/R/ti/p/%40kvd1654s" target="_blank"
+      ><img src="../asset/images/line.svg" class="img-fluid"
+    /></a>
   </div>
 </template>
 
@@ -35,7 +37,7 @@ export default {
 
 <style lang="scss">
 .blog-quiklink {
-  z-index: 1;
+  z-index: 2;
   float: right;
   margin-top: 254px;
   position: absolute;

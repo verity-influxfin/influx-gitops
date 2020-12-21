@@ -155,10 +155,11 @@ export default {
       max-width: initial;
       position: absolute;
       top: 0;
-      z-index: -1;
+      z-index: 0;
     }
+    
     .abs {
-      position: initial;
+      position: relative;
       transform: inherit;
 
       .d-desc {

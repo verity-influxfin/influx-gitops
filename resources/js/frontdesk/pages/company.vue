@@ -42,17 +42,14 @@
           <p>{{ item.name }}</p>
         </div>
       </div>
-      <div
-        v-if="Object.keys(partnerData).length !== 0 && isShow"
-        class="content"
-      >
+      <div v-if="Object.keys(partnerData).length !== 0 && isShow" class="content">
         <h5>{{ partnerData.title }}</h5>
         <p>{{ partnerData.subTitle }}</p>
         <hr />
         <p v-html="partnerData.text"></p>
       </div>
     </div>
-    <div class="milestone-card">
+    <!-- <div class="milestone-card">
       <div class="t-c"><h2>普匯編年史</h2></div>
       <div class="hr"></div>
       <div class="scroll left" @click="scroll('left')">
@@ -71,7 +68,7 @@
                 ]"
               >
                 <div>
-                  <h6>{{ item.hook_date }}</h6>
+                  <h6>{{ item.hook_date.substr(0, 7) }}</h6>
                   <p>{{ item.title }}</p>
                 </div>
               </div>
@@ -84,17 +81,18 @@
                 ]"
               >
                 <div>
-                  <h6>{{ item.hook_date }}</h6>
+                  <h6>{{ item.hook_date.substr(0, 7) }}</h6>
                   <p>{{ item.title }}</p>
                 </div>
               </div>
 
-              <routeStart v-if="index === 0" :num="index + 1" />
+              <routeStart v-if="index === 0" :num="index + 1" :img="item.icon" />
               <routeEnd
                 v-else-if="index === milestone.length - 1"
                 :num="index + 1"
+                :img="item.icon"
               />
-              <routeDot v-else :num="index + 1" />
+              <routeDot v-else :num="index + 1" :img="item.icon" />
             </div>
           </div>
         </div>
@@ -102,7 +100,7 @@
       <div class="scroll right" @click="scroll('right')">
         <img src="/images/n_a_next.svg" class="img-fluid" />
       </div>
-    </div>
+    </div> -->
     <div class="media-card">
       <div class="t-c"><h2>媒體報導支持</h2></div>
       <div class="hr"></div>
@@ -178,11 +176,6 @@ export default {
     });
   },
   methods: {
-    getMilestoneData() {
-      axios.post(`${location.origin}/getMilestoneData`).then((res) => {
-        this.milestone = res.data.reverse();
-      });
-    },
     getMediaData() {
       axios.post(`${location.origin}/getMediaData`).then((res) => {
         this.media = res.data;
@@ -206,10 +199,7 @@ export default {
       this.$nextTick(() => {
         $(".content")
           .css("top", $target.offset().top + $(".photo").outerHeight() + 40)
-          .css(
-            "left",
-            $target.offset().left + $(".photo").outerWidth() / 2 - 160
-          );
+          .css("left", $target.offset().left + $(".photo").outerWidth() / 2 - 160);
       });
     },
     scroll(direction) {
@@ -237,12 +227,7 @@ export default {
 <style lang="scss">
 .company-wrapper {
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;
@@ -277,12 +262,7 @@ export default {
 
       .hr-l {
         height: 1px;
-        background-image: linear-gradient(
-          to left,
-          #16559b 0%,
-          #319acf 50%,
-          #16559b 0%
-        );
+        background-image: linear-gradient(to left, #16559b 0%, #319acf 50%, #16559b 0%);
         margin: 2rem auto;
         width: 400px;
       }
@@ -647,4 +627,3 @@ export default {
   }
 }
 </style>
-

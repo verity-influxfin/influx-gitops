@@ -72,14 +72,7 @@ export default {
 
       .qa-title {
         border-radius: 20px;
-        border-style: solid;
-        border-width: 2px;
-        border-image-source: linear-gradient(
-          to bottom,
-          #81c3f3 0%,
-          #157efb 100%
-        );
-        border-image-slice: 1;
+        border: 2px solid #81c3f3;
         background-image: linear-gradient(to left, #ffffff 100%, #ffffff 0%),
           linear-gradient(to bottom, #81c3f3 0%, #157efb 100%);
         background-origin: border-box;
@@ -88,14 +81,10 @@ export default {
         display: flex;
 
         .bg {
-          background-image: linear-gradient(
-            to bottom,
-            #81c3f3 0%,
-            #157efb 100%
-          );
+          background-image: linear-gradient(to bottom, #81c3f3 0%, #157efb 100%);
           background-clip: text;
           width: fit-content;
-          color: #ffffff00;
+          color: #81c3f3;
           margin: 0px 10px;
           font-size: 36px;
         }

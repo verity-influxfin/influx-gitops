@@ -13,24 +13,42 @@
     <div class="avg-card">
       <img src="../asset/images/circle.svg" class="img-fluid ib" />
       <div class="cnt">
-        <div class="c-t">
-          <div class="item">
-            <div class="t-c"><h3>即時審核，快速媒合放款</h3></div>
-            <p>
-              系統自動化審核加快申貸的速度，平均10分鐘完成申請、30分鐘核准、60分鐘到帳！
-            </p>
+        <div class="c-t c-l">
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>即時審核，快速媒合放款</h3></div>
+              <div class="ccc"></div>
+              <p>
+                系統自動化審核加快申貸的速度，平均10分鐘完成申請、30分鐘核准、60分鐘到帳！
+              </p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/num1.svg" class="img-fluid" />
+            </div>
           </div>
-          <div class="item">
-            <div class="t-c"><h3>全線上無人化</h3></div>
-            <p>
-              運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。
-            </p>
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>全線上無人化</h3></div>
+              <div class="ccc"></div>
+              <p>
+                運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。
+              </p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/num2.svg" class="img-fluid" />
+            </div>
           </div>
-          <div class="item">
-            <div class="t-c"><h3>隱私無照會</h3></div>
-            <p>
-              申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。
-            </p>
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>隱私無照會</h3></div>
+              <div class="ccc"></div>
+              <p>
+                申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。
+              </p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/num3.svg" class="img-fluid" />
+            </div>
           </div>
         </div>
         <div class="c-i">
@@ -41,16 +59,28 @@
             <img class="img-fluid" src="../asset/images/mobile.png" />
           </div>
         </div>
-        <div class="c-t">
+        <div class="c-t c-r">
           <div class="item">
-            <div class="t-c"><h3>聯徵不留紀錄</h3></div>
-            <p>不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。</p>
+            <div class="img">
+              <img src="../asset/images/num4.svg" class="img-fluid" />
+            </div>
+            <div class="i-cnt">
+              <div class="t-c"><h3>聯徵不留紀錄</h3></div>
+              <div class="ccc"></div>
+              <p>不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。</p>
+            </div>
           </div>
           <div class="item">
-            <div class="t-c"><h3>費率單純透明</h3></div>
-            <p>
-              只收取一次手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。
-            </p>
+            <div class="img">
+              <img src="../asset/images/num5.svg" class="img-fluid" />
+            </div>
+            <div class="i-cnt">
+              <div class="t-c"><h3>費率單純透明</h3></div>
+              <div class="ccc"></div>
+              <p>
+                只收取一次手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -186,11 +216,11 @@ export default {
   .t-c {
     background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
-    width: fit-content;
     color: #ffffff00;
     margin: 0px auto;
 
     h2 {
+      text-align: center;
       font-weight: bolder;
     }
   }
@@ -203,12 +233,13 @@ export default {
   }
 
   .avg-card {
-    overflow: auto;
+    overflow: hidden;
     position: relative;
     background-color: #ecedf1;
 
     .ib {
       width: 100%;
+      height: 689px;
     }
 
     .cnt {
@@ -220,17 +251,57 @@ export default {
       overflow: hidden;
       height: 687px;
 
+      .c-l {
+        top: 50%;
+        transform: translateY(-46%);
+
+        .item {
+          &:not(:last-of-type) {
+            margin-bottom: 5rem;
+          }
+        }
+      }
+
+      .c-r {
+        top: 50%;
+        transform: translateY(-30%);
+
+        .item {
+          &:not(:last-of-type) {
+            margin-bottom: 3rem;
+          }
+        }
+      }
+
       .c-t {
-        width: 37.5%;
+        width: calc((100% - 383px) / 2);
         overflow: hidden;
         padding: 20px;
         position: relative;
-        height: fit-content;
-        top: 50%;
-        transform: translate(0px, -50%);
 
         .item {
-          margin: 0px 10px 3rem 10px;
+          display: flex;
+
+          .i-cnt {
+            width: calc(100% - 100px);
+          }
+
+          .img {
+            margin: 0px 1rem;
+            width: 100px;
+          }
+
+          .ccc {
+            width: 50%;
+            height: 2px;
+            margin-bottom: 0.5rem;
+            background-image: linear-gradient(
+              to left,
+              #3670d3 100%,
+              #09d7f8 50%,
+              #2e84da 0%
+            );
+          }
 
           .t-c {
             background-image: linear-gradient(
@@ -252,13 +323,24 @@ export default {
             letter-spacing: 1px;
             text-align: left;
             color: #ffffff;
-            height: 90px;
+            height: 72px;
+          }
+        }
+
+        .r {
+          h3,
+          p {
+            text-align: right;
+          }
+
+          .ccc {
+            margin: 0px 0px 0.5rem auto;
           }
         }
       }
 
       .c-i {
-        width: 25%;
+        width: 383px;
         margin: 2.5rem 0px;
         position: relative;
 
@@ -307,14 +389,45 @@ export default {
         padding: 10px;
         height: auto;
 
+        .c-l,
+        .c-r {
+          .item {
+            &:not(:last-of-type) {
+              margin-bottom: initial;
+            }
+          }
+        }
+
         .c-t {
           width: 100%;
           transform: initial;
           top: 0px;
           padding: 0px;
 
+          .r {
+            h3,
+            p {
+              text-align: initial;
+            }
+
+            .ccc {
+              margin: 0px 0px 0.5rem 0px;
+            }
+          }
+
           .item {
-            margin: 0px 10px 0rem 10px;
+            margin: 1rem 10px;
+
+            .i-cnt {
+              order: 1;
+              width: calc(100% - 60px);
+            }
+
+            .img {
+              order: 0;
+              margin: 0px 0.5rem 0px 0px;
+              width: 60px;
+            }
 
             p {
               height: auto;

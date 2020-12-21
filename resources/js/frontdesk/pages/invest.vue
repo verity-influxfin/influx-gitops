@@ -67,7 +67,12 @@
               依據信用等級、就讀學校、申貸原因、年化報酬率、期數，自由選擇您喜好的投資標的。
             </span>
             <div class="pic">
-              <img src="../asset/images/optional_invset.png" class="img-fluid" />
+              <img
+                v-if="isDesktop"
+                src="../asset/images/optional_invset.png"
+                class="img-fluid"
+              />
+              <img v-else src="../asset/images/optional_invset_m.png" class="img-fluid" />
             </div>
           </div>
           <div id="smart" class="tab-pane fade">
@@ -75,13 +80,23 @@
               設定您的偏好的信用等級、年化報酬率、期數等自動下標，24小時不錯失優質案件！
             </span>
             <div class="pic">
-              <img src="../asset/images/smart_invest.png" class="img-fluid" />
+              <img
+                v-if="isDesktop"
+                src="../asset/images/smart_invest.png"
+                class="img-fluid"
+              />
+              <img v-else src="../asset/images/smart_invest_m.png" class="img-fluid" />
             </div>
           </div>
           <div id="quick" class="tab-pane fade">
             <span class="d-h">申請人無提供最高學歷，同時您可以獲得更好的報酬率。</span>
             <div class="pic">
-              <img src="../asset/images/quick_invest.png" class="img-fluid" />
+              <img
+                v-if="isDesktop"
+                src="../asset/images/quick_invest.png"
+                class="img-fluid"
+              />
+              <img v-else src="../asset/images/quick_invest_m.png" class="img-fluid" />
             </div>
           </div>
         </div>
@@ -254,6 +269,7 @@ export default {
     float,
   },
   data: () => ({
+    isDesktop: window.innerWidth > 400,
     tweenedReturnAll: 0,
     amount: 10000,
     time: 1,
@@ -1021,7 +1037,7 @@ export default {
       padding: 10px;
 
       .adv-box {
-        flex-direction: column;
+        display: grid;
 
         .adv-item {
           width: 100% !important;
