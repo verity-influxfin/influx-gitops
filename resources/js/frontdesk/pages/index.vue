@@ -62,7 +62,7 @@
           </div>
         </div>
         <routeMap v-if="isDesktop" :routeData="routeData" />
-        <routeMapM :routeData="routeData" />
+        <routeMapM v-else :routeData="routeData" />
         <div class="arrows ar">
           <div @click="next()">
             <img src="../asset/images/right-arrow.svg" class="img-fluid" />
