@@ -438,17 +438,17 @@
               <text
                 font-family="NotoSansTC-Regular, Noto Sans TC"
                 font-size="16"
-                transform="translate(1129.5 547.3)"
+                transform="translate(1135.5 557.3)"
               >
-                <tspan x="54.636" y="19">{{ showData[5].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="0" y="19">{{ showData[5].hook_date.substr(0, 7) }}</tspan>
               </text>
               <text
                 font-family="NotoSansTC-Bold, Noto Sans TC"
                 font-size="24"
                 font-weight="bold"
-                transform="translate(1129.5 547.3)"
+                transform="translate(1139.5 547.3)"
               >
-                <tspan x="10" y="55">{{ showData[5].title }}</tspan>
+                <tspan x="0" y="55">{{ showData[5].title }}</tspan>
               </text>
               <image
                 transform="matrix(1 0 0 1 1017.6998 223.3605)"
@@ -463,7 +463,7 @@
                 font-size="16"
                 transform="translate(335 357.3)"
               >
-                <tspan x="43.136" y="19">{{ showData[4].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="0" y="19">{{ showData[4].hook_date.substr(0, 7) }}</tspan>
               </text>
               <text
                 font-family="NotoSansTC-Bold, Noto Sans TC"
@@ -471,7 +471,7 @@
                 font-weight="bold"
                 transform="translate(335 357.3)"
               >
-                <tspan x="39" y="50">{{ showData[4].title }}</tspan>
+                <tspan x="0" y="50">{{ showData[4].title }}</tspan>
               </text>
               <image
                 transform="matrix(1 0 0 1 458.6998 161.3605)"
@@ -486,7 +486,7 @@
                 font-size="16"
                 transform="translate(809 191.3)"
               >
-                <tspan x="44.136" y="19">{{ showData[3].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="0" y="19">{{ showData[3].hook_date.substr(0, 7) }}</tspan>
               </text>
               <text
                 font-family="NotoSansTC-Bold, Noto Sans TC"
@@ -494,7 +494,7 @@
                 font-weight="bold"
                 transform="translate(809 191.3)"
               >
-                <tspan x="29" y="50">{{ showData[3].title }}</tspan>
+                <tspan x="0" y="50">{{ showData[3].title }}</tspan>
               </text>
               <image
                 transform="matrix(1 0 0 1 734.6998 50.3605)"
@@ -509,7 +509,7 @@
                 font-size="16"
                 transform="translate(123 131.3)"
               >
-                <tspan x="42.136" y="19">{{ showData[2].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="0" y="19">{{ showData[2].hook_date.substr(0, 7) }}</tspan>
               </text>
               <text
                 font-family="NotoSansTC-Bold, Noto Sans TC"
@@ -517,7 +517,7 @@
                 font-weight="bold"
                 transform="translate(123 131.3)"
               >
-                <tspan x="31" y="47">{{ showData[2].title }}</tspan>
+                <tspan x="0" y="47">{{ showData[2].title }}</tspan>
               </text>
               <image
                 transform="matrix(1 0 0 1 265.6998 66.3605)"
@@ -532,7 +532,7 @@
                 font-size="16"
                 transform="translate(449 42.3)"
               >
-                <tspan x="44.136" y="19">{{ showData[1].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="0" y="19">{{ showData[1].hook_date.substr(0, 7) }}</tspan>
               </text>
               <text
                 font-family="NotoSansTC-Bold, Noto Sans TC"
@@ -540,7 +540,7 @@
                 font-weight="bold"
                 transform="translate(449 42.3)"
               >
-                <tspan x="43" y="47">{{ showData[1].title }}</tspan>
+                <tspan x="0" y="47">{{ showData[1].title }}</tspan>
               </text>
               <image
                 transform="matrix(1 0 0 1 400.6998 10.3605)"
@@ -555,15 +555,15 @@
                 font-size="16"
                 transform="translate(9.5 19.3)"
               >
-                <tspan x="44.636" y="19">{{ showData[0].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="0" y="19">{{ showData[0].hook_date.substr(0, 7) }}</tspan>
               </text>
               <text
                 font-family="NotoSansTC-Bold, Noto Sans TC"
                 font-size="18"
                 font-weight="bold"
-                transform="translate(9.5 19.3)"
+                transform="translate(10 19.3)"
               >
-                <tspan x="37.5" y="45">{{ showData[0].title }}</tspan>
+                <tspan x="0" y="45">{{ showData[0].title }}</tspan>
               </text>
               <image
                 transform="matrix(1 0 0 1 164.6998 7.3605)"

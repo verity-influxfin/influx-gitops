@@ -191,6 +191,7 @@ $ci-color: #153a71;
                     font-weight: 700;
                     border-radius: 20px;
                     position: relative;
+                    margin-left: 25px;
 
                     &:before {
                         content: "";
@@ -202,6 +203,10 @@ $ci-color: #153a71;
                         position: absolute;
                         top: 23px;
                         left: -15px;
+                    }
+
+                    .c-s {
+                        text-align: justify;
                     }
                 }
             }
@@ -301,17 +306,13 @@ $ci-color: #153a71;
                 .cd {
                     .cnt {
                         width: 80%;
-                        margin-left: 25px;
+                        margin-left: 15px;
 
                         &::before {
                             border-right: 16px solid #ffffff;
                             border-top: 16px solid #ffffff00;
                             border-bottom: 16px solid #ffffff00;
                             left: -14px;
-                        }
-
-                        .c-s {
-                            text-align: center;
                         }
                     }
                 }

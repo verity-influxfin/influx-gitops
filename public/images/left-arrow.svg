@@ -1,41 +1,31 @@
-<?xml version="1.0"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" version="1.1" width="512" height="512" x="0" y="0" viewBox="0 0 335.412 335.412" style="enable-background:new 0 0 512 512" xml:space="preserve" class=""><g transform="matrix(-1,1.2246467991473532e-16,-1.2246467991473532e-16,-1,335.4119873046875,335.41200256347656)">
-<g xmlns="http://www.w3.org/2000/svg">
-	<polygon style="" points="238.237,68.441 335.412,167.706 238.237,266.971 238.237,209.502 104.49,209.502    104.49,125.91 238.237,125.91  " fill="#00a3ef" data-original="#00efd1" class=""/>
-	<g>
-		<path style="" d="M73.143,115.461L73.143,115.461c5.771,0,10.449,4.678,10.449,10.449v83.592    c0,5.771-4.678,10.449-10.449,10.449l0,0c-5.771,0-10.449-4.678-10.449-10.449V125.91    C62.694,120.139,67.372,115.461,73.143,115.461z" fill="#126bb8" data-original="#00acea" class=""/>
-		<path style="" d="M41.796,115.461L41.796,115.461c5.771,0,10.449,4.678,10.449,10.449v83.592    c0,5.771-4.678,10.449-10.449,10.449l0,0c-5.771,0-10.449-4.678-10.449-10.449V125.91    C31.347,120.139,36.025,115.461,41.796,115.461z" fill="#126bb8" data-original="#00acea" class=""/>
-		<path style="" d="M10.449,115.461L10.449,115.461c5.771,0,10.449,4.678,10.449,10.449v83.592    c0,5.771-4.678,10.449-10.449,10.449l0,0C4.678,219.951,0,215.273,0,209.502V125.91C0,120.139,4.678,115.461,10.449,115.461z" fill="#126bb8" data-original="#00acea" class=""/>
-	</g>
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-<g xmlns="http://www.w3.org/2000/svg">
-</g>
-</g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="90px" height="90px" viewBox="0 0 90 90" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>links</title>
+    <defs>
+        <linearGradient x1="14.9159664%" y1="14.9019608%" x2="84.2577031%" y2="84.2436975%" id="linearGradient-1">
+            <stop stop-color="#E2E1E6" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="84%"></stop>
+        </linearGradient>
+        <circle id="path-2" cx="35" cy="35" r="35"></circle>
+        <filter x="-21.4%" y="-21.4%" width="142.9%" height="142.9%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.266666667   0 0 0 0 0.670588235   0 0 0 0 0.984313725  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-4">
+            <stop stop-color="#81C3F3" offset="0%"></stop>
+            <stop stop-color="#157EFB" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="歷史沿革" transform="translate(-50.000000, -339.000000)">
+            <g id="links" transform="translate(60.000000, 349.000000)">
+                <g id="椭圆形备份" fill-rule="nonzero">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                </g>
+                <path d="M35.0706436,40.7593754 L35.0706436,45.4346284 C35.0706436,46.9574397 33.229939,47.7205545 32.1523492,46.6429647 L23.3487564,37.8393719 C22.0139464,36.504562 22.0139464,34.3399822 23.3487564,33.0051723 L32.1523492,24.2015795 C33.229939,23.1248442 35.0706436,23.8871044 35.0706436,25.4099157 L35.0706436,33.1137003 C35.0706436,34.056271 35.8337584,34.8210949 36.7754745,34.822804 L61.3276027,34.8809135 C63.4135637,34.8860408 64.9970482,33.0393543 64.7218825,30.971339 C62.7171039,15.8696993 49.2826949,4.37597737 33.3982857,5.47236735 C18.8563775,6.47475663 7.07552617,18.2564625 6.07228234,32.7983707 C4.88360077,50.0312626 18.5111386,64.3800421 35.4902286,64.3800421 C47.9376303,64.3800421 58.5836368,56.6685666 62.9110872,45.7619218" id="linka" stroke="url(#linearGradient-4)" stroke-linecap="round" stroke-linejoin="round"></path>
+            </g>
+        </g>
+    </g>
+</svg>

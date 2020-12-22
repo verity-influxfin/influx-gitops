@@ -256,16 +256,16 @@
     <div class="slogan-card">
       <div class="cnt">
         <div class="cnt-l">
-          <div :class="[{ 'ad-b': csKey === 0 }]">
+          <div :class="['vz', { 'ad-b': csKey === 0 }]">
             全台唯一無人化借貸平台 操作簡單 快速到款
           </div>
-          <div :class="[{ 'ad-b': csKey === 1 }]">
+          <div :class="['vz', { 'ad-b': csKey === 1 }]">
             申貸過程，無人干擾！<br />普匯．你的手機ATM
           </div>
-          <div :class="[{ 'ad-b': csKey === 2 }]">
+          <div :class="['vz', { 'ad-b': csKey === 2 }]">
             依照個別身分，提供最適合您的貸款服務
           </div>
-          <div :class="[{ 'ad-b': csKey === 3 }]">
+          <div :class="['vz', { 'ad-b': csKey === 3 }]">
             5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
           </div>
         </div>
@@ -809,6 +809,7 @@ export default {
       div {
         font-size: 45px;
         font-weight: bold;
+        color: #3b5795;
       }
     }
 
@@ -1046,7 +1047,7 @@ export default {
         width: 60%;
         margin-right: 1rem;
 
-        div {
+        .vz {
           margin: 15px 0px;
           font-size: 22px;
           font-weight: 700;
@@ -1454,7 +1455,7 @@ export default {
           width: 100%;
 
           div {
-            width: 50px;
+            width: 70px;
           }
         }
       }
@@ -1569,10 +1570,11 @@ export default {
             margin: 0px auto;
           }
 
-          div {
+          .vz {
             display: none;
             margin: 0px;
             font-size: 17px;
+            width: 100%;
           }
 
           .ad-b {

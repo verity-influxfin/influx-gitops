@@ -366,7 +366,10 @@ export default {
         }
 
         .c-i {
-          display: none;
+          width: 140%;
+          transform: translate(166px, -49px) rotate(135deg);
+          margin: 0px;
+          opacity: 0.2;
         }
       }
     }

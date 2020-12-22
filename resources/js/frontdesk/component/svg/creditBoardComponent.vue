@@ -3761,6 +3761,7 @@ export default {
 
   .switch {
     width: 50px;
+    cursor: pointer;
     user-select: none;
   }
 
