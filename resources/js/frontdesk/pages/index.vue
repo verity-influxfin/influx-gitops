@@ -510,13 +510,15 @@ export default {
     productOptions: {
       type: "loop",
       autoplay: true,
+      direction: window.innerWidth > 400 ? "ltr" : "ttb",
+      height: window.innerWidth > 400 ? "auto" : 260,
       perPage: 2,
       perMove: 1,
       arrows: false,
       pagination: false,
       gap: "1rem",
       breakpoints: {
-        767: { autoplay: true, perPage: 1, arrows: true },
+        767: { autoplay: true, perPage: 2, arrows: true },
       },
     },
     videoOptions: {
@@ -857,7 +859,7 @@ export default {
       .arrows {
         position: relative;
         width: 100px;
-        z-index:1;
+        z-index: 1;
 
         div {
           width: 100px;
@@ -1492,6 +1494,10 @@ export default {
           .product {
             width: 100%;
             margin: 10px auto;
+
+            .splide__list {
+              padding: 10px 0px !important;
+            }
           }
         }
 
@@ -1502,6 +1508,10 @@ export default {
           .product {
             width: 100%;
             margin: 10px auto;
+
+            .splide__list {
+              padding: 10px 0px !important;
+            }
           }
         }
       }
