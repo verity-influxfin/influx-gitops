@@ -5,13 +5,8 @@
     </div>
     <div class="hr"></div>
     <Splide class="comment-box" :options="options" ref="Splide">
-      <SplideSlide
-        class="item"
-        v-for="(item, index) in $props.experiences"
-        :key="index"
-      >
-      <template v-if="item.video_link">
-
+      <SplideSlide class="item" v-for="(item, index) in $props.experiences" :key="index">
+        <template v-if="item.video_link">
           <iframe
             :src="item.video_link"
             frameborder="0"
@@ -19,15 +14,15 @@
             allowfullscreen
             style="width: 100%"
           ></iframe>
-      </template>
-      <template v-else>
-        <div class="img">
-          <img
-            :src="item.imageSrc"
-            @error="item.imageSrc = '/images/mug_shot.svg'"
-            class="img-fluid"
-          />
-        </div>
+        </template>
+        <template v-else>
+          <div class="img">
+            <img
+              :src="item.imageSrc"
+              @error="item.imageSrc = '/images/mug_shot.svg'"
+              class="img-fluid"
+            />
+          </div>
         </template>
         <label class="c-pel">
           {{ item.post_title }}
@@ -100,12 +95,7 @@ export default {
   position: relative;
 
   .t-c {
-    background-image: linear-gradient(
-      to right,
-      #1e2973 0%,
-      #319acf 50%,
-      #1e2973 75%
-    );
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
     background-clip: text;
     width: fit-content;
     color: #ffffff00;
@@ -141,12 +131,12 @@ export default {
       background-image: linear-gradient(to top, #e4eeff, #fbfbfb);
       margin: 25px 0px;
       padding: 15px;
-    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
+      box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25);
 
       .img {
         overflow: hidden;
         border-radius: 50%;
-    width: 125px;
+        width: 125px;
         margin: 20px auto;
       }
 
@@ -155,8 +145,8 @@ export default {
         margin: 10px auto;
         display: block;
         font-weight: bolder;
-    font-size: 24px; 
-    color: #1c2a54;
+        font-size: 20px;
+        color: #1c2a54;
 
         i {
           transform: rotate(90deg);
@@ -188,6 +178,12 @@ export default {
       margin: 0px auto;
       display: block;
       width: 50%;
+
+      .item {
+        .c-pel {
+          font-size: 16px;
+        }
+      }
     }
   }
 }

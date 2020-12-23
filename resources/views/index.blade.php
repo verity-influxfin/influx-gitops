@@ -80,7 +80,7 @@
                         </ul>
                     </li>
                     <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>SING IN</p>
+                        <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>SIGN IN</p>
                     </li>
                     <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>

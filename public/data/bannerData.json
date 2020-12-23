@@ -15,7 +15,7 @@
         "bannerDesktopHref": "/images/worker_banner-d.png",
         "bannerMoblieHref":"/images/worker_banner-m.png",
         "productName": "上班族貸",
-        "desc":"貸款不必找銀行，一支手機即可完成！<br>不論是「週轉急用」、「投資理財」<br>24Hr內線上滿足您的資金需求！"
+        "desc":"貸款不必找銀行，一支手機即可完成！<br>不論是「週轉急用」、「投資理財」<br>24小時滿足您的資金需求！"
     },
     "invest": {
         "bannerDesktopHref": "/images/invest_banner-d.png",
@@ -27,7 +27,7 @@
         "bannerDesktopHref": "/images/transfer_banner-d.png",
         "bannerMoblieHref":"/images/transfer_banner-m.png",
         "productName": "債權轉讓",
-        "desc":"資金快速轉讓，創造高報酬<br>隨時靈活轉換您的資金 降低流動性風險"
+        "desc":"讓您隨時變現持有之債權<br>靈活運用手中資本，創造最大財富！"
     },
     "mobile": {
         "bannerDesktopHref": "/images/mobile_banner-d.png",

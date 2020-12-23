@@ -39,7 +39,7 @@ export default {
 .blog-quiklink {
   z-index: 2;
   float: right;
-  margin-top: 254px;
+  margin-top: 500px;
   position: absolute;
   right: 10px;
   color: #ff5151;
@@ -62,6 +62,14 @@ export default {
     }
     100% {
       transform: translatey(0px);
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    margin-top: 700px;
+
+    .icon {
+      width: 50px;
     }
   }
 }

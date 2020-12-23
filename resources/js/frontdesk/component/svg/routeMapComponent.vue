@@ -438,7 +438,7 @@
               <text
                 font-family="NotoSansTC-Regular, Noto Sans TC"
                 font-size="16"
-                transform="translate(1135.5 557.3)"
+                transform="translate(1132.5 557.3)"
               >
                 <tspan x="0" y="19">{{ showData[5].hook_date.substr(0, 7) }}</tspan>
               </text>

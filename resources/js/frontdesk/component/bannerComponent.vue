@@ -108,7 +108,7 @@ export default {
 
       .banner-desc {
         text-align: center;
-        font-size: 20px;
+        font-size: 18px;
       }
 
       .banner-download {

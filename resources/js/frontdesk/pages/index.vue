@@ -74,7 +74,7 @@
       <div class="t-c"><h2>我們的服務</h2></div>
       <div class="hr"></div>
       <div class="img">
-        <img class="img-fluid" src="/images/p2p.png" />
+        <img class="img-fluid" src="/images/p2p.svg" />
       </div>
     </div>
     <div class="product-card">
@@ -84,7 +84,7 @@
       </div> -->
       <div class="box">
         <div class="person">
-          <h5>年滿20歲 即可申請可申請個人信貸服務喔！</h5>
+          <h5>年滿20歲 即可申請個人信貸服務喔！</h5>
           <div class="typ">
             <div class="t">
               <div class="img">
@@ -245,10 +245,7 @@
               <img :src="'/images/safe.svg'" class="img-fluid" />
             </div>
             <p>簡單、快速、安全、隱私</p>
-            <span
-              >視覺化簡潔好用的操作介面，運用先進科技與AWS
-              安全系統，保護您的個資絕不外洩，讓您在步入圓夢捷徑的同時，安全又放心。</span
-            >
+            <span>AWS安全系統為架構，輔以簡潔的操作介面，保護您的個資，讓您在申貸時，安全又放心。</span>
           </SplideSlide>
         </Splide>
       </div>
@@ -256,18 +253,34 @@
     <div class="slogan-card">
       <div class="cnt">
         <div class="cnt-l">
-          <div :class="['vz', { 'ad-b': csKey === 0 }]">
-            全台唯一無人化借貸平台 操作簡單 快速到款
-          </div>
-          <div :class="['vz', { 'ad-b': csKey === 1 }]">
-            申貸過程，無人干擾！<br />普匯．你的手機ATM
-          </div>
-          <div :class="['vz', { 'ad-b': csKey === 2 }]">
-            依照個別身分，提供最適合您的貸款服務
-          </div>
-          <div :class="['vz', { 'ad-b': csKey === 3 }]">
-            5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
-          </div>
+          <template v-if="isDesktop">
+            <div :class="['vz', { 'ad-b': csKey === 0 }]">
+              全台唯一無人化借貸平台 操作簡單 快速到款
+            </div>
+            <div :class="['vz', { 'ad-b': csKey === 1 }]">
+              申貸過程，無人干擾！<br />普匯．你的手機ATM
+            </div>
+            <div :class="['vz', { 'ad-b': csKey === 2 }]">
+              依照個別身分，提供最適合您的貸款服務
+            </div>
+            <div :class="['vz', { 'ad-b': csKey === 3 }]">
+              5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
+            </div>
+          </template>
+          <template v-else>
+            <div v-if="csKey === 0" class="vz ad-b">
+              全台唯一無人化借貸平台 操作簡單 快速到款
+            </div>
+            <div v-if="csKey === 1" class="vz ad-b">
+              申貸過程，無人干擾！<br />普匯．你的手機ATM
+            </div>
+            <div v-if="csKey === 2" class="vz ad-b">
+              依照個別身分，提供最適合您的貸款服務
+            </div>
+            <div v-if="csKey === 3" class="vz ad-b">
+              5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
+            </div>
+          </template>
         </div>
         <div class="cnt-r">
           <Splide class="c-s" :options="csOptions" @splide:moved="onMoved($event)">
@@ -434,11 +447,11 @@ export default {
   },
   data: () => ({
     isDesktop: window.innerWidth > 400 ? true : false,
-    load2 :false,
-    load3 :false,
+    load2: false,
+    load3: false,
     routeIndex: {
       start: 0,
-      end: window.innerWidth > 400 ? 5 : 3,
+      end: 0,
     },
     csKey: 0,
     pmt: 0,
@@ -514,6 +527,7 @@ export default {
       autoplay: true,
       direction: window.innerWidth > 400 ? "ltr" : "ttb",
       height: window.innerWidth > 400 ? "auto" : 260,
+      drag: window.innerWidth > 400 ? true : false,
       perPage: 2,
       perMove: 1,
       arrows: false,
@@ -537,7 +551,7 @@ export default {
     },
     csOptions: {
       type: "loop",
-      autoplay: false,
+      autoplay: true,
       perPage: 1,
       perMove: 1,
       speed: 200,
@@ -659,6 +673,10 @@ export default {
 
       this.milestone = res.data.reverse();
 
+      this.routeIndex.end = this.milestone.length - 1;
+      this.routeIndex.start =
+        window.innerWidth > 400 ? this.milestone.length - 6 : this.milestone.length - 4;
+
       this.milestone.forEach((item, index) => {
         if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
           this.routeData.push(item);
@@ -677,8 +695,7 @@ export default {
       $("html").animate({ scrollTop: window.scrollY - 1 });
     },
     onMoved($event) {
-      $(".cnt-l").find("div").removeClass("ad-b");
-      $($(".cnt-l").find("div")[$event.index]).addClass("ad-b");
+      this.csKey = $event.index;
     },
     pre() {
       if (this.routeIndex.start > 0) {
@@ -837,7 +854,7 @@ export default {
     .pu {
       width: 116px;
       position: absolute;
-      right: 25rem;
+      right: 20%;
     }
 
     .lr {
@@ -1498,7 +1515,7 @@ export default {
         flex-direction: column;
 
         h5 {
-          font-size: 17px;
+          font-size: 20px;
           margin: 1rem auto;
         }
         .typ {
@@ -1592,7 +1609,6 @@ export default {
           }
 
           .vz {
-            display: none;
             margin: 0px;
             font-size: 17px;
             width: 100%;

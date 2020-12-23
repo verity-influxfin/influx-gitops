@@ -11,7 +11,7 @@
       <div class="cnt">
         <div class="c-c">
           <div class="t-c">
-            <h2>客戶遍佈全台大專院校</h2>
+            <h2>用戶遍佈全台大專院校</h2>
           </div>
           <div class="hr"></div>
           <p>
