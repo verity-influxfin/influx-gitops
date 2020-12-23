@@ -66,8 +66,8 @@ export default {
   }
 
   @media screen and (max-width: 767px) {
-    margin-top: 700px;
-
+    margin-top: 600px;
+    
     .icon {
       width: 50px;
     }

@@ -448,7 +448,7 @@ export default {
     // shanghuiBanner,
   },
   data: () => ({
-    isDesktop: window.innerWidth > 400 ? true : false,
+    isDesktop: window.innerWidth > 767 ? true : false,
     load2: false,
     load3: false,
     routeIndex: {
@@ -527,9 +527,9 @@ export default {
     productOptions: {
       type: "loop",
       autoplay: true,
-      direction: window.innerWidth > 400 ? "ltr" : "ttb",
-      height: window.innerWidth > 400 ? "auto" : 260,
-      drag: window.innerWidth > 400 ? true : false,
+      direction: window.innerWidth > 767 ? "ltr" : "ttb",
+      height: window.innerWidth > 767 ? "auto" : 260,
+      drag: window.innerWidth > 767 ? true : false,
       perPage: 2,
       perMove: 1,
       arrows: false,
@@ -620,7 +620,7 @@ export default {
   },
   methods: {
     handleScroll() {
-      let gap = window.innerWidth > 400 ? 400 : 300;
+      let gap = window.innerWidth > 767 ? 400 : 300;
 
       if (
         window.scrollY >= gap &&
@@ -631,7 +631,7 @@ export default {
         gsap.to(this.$data, { duration: 1, tweenedtransaction: 31059 });
       }
 
-      let gap2 = window.innerWidth > 400 ? 1000 : 750;
+      let gap2 = window.innerWidth > 767 ? 1000 : 750;
 
       if (
         !this.load2 &&
@@ -646,7 +646,7 @@ export default {
         this.load2 = true;
       }
 
-      let gap3 = window.innerWidth > 400 ? 800 : 600;
+      let gap3 = window.innerWidth > 767 ? 800 : 600;
 
       if (!this.load3 && window.scrollY >= gap3 && this.experiences.length === 0) {
         this.$store.dispatch("getExperiencesData");
@@ -677,7 +677,7 @@ export default {
 
       this.routeIndex.end = this.milestone.length - 1;
       this.routeIndex.start =
-        window.innerWidth > 400 ? this.milestone.length - 6 : this.milestone.length - 4;
+        window.innerWidth > 767 ? this.milestone.length - 6 : this.milestone.length - 4;
 
       this.milestone.forEach((item, index) => {
         if (this.routeIndex.start <= index && this.routeIndex.end >= index) {

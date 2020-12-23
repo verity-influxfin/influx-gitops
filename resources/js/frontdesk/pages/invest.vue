@@ -269,7 +269,7 @@ export default {
     float,
   },
   data: () => ({
-    isDesktop: window.innerWidth > 400,
+    isDesktop: window.innerWidth > 767,
     tweenedReturnAll: 0,
     amount: 10000,
     time: 1,
@@ -476,17 +476,17 @@ export default {
             { name: "債權總額", icon: "path://M19,12l-10,0l0,1l10,0z" },
           ],
           selectedMode: false,
-          right: window.outerWidth > 400 ? 0 : "auto",
-          bottom: window.outerWidth > 400 ? 50 : "auto",
+          right: window.outerWidth > 767 ? 0 : "auto",
+          bottom: window.outerWidth > 767 ? 50 : "auto",
           textStyle: {
             color: "#fff",
           },
-          width: window.outerWidth > 400 ? "50px" : "auto",
+          width: window.outerWidth > 767 ? "50px" : "auto",
         },
         grid: {
           left: 30,
-          top: window.outerWidth > 400 ? 10 : 30,
-          right: window.outerWidth > 400 ? 130 : 30,
+          top: window.outerWidth > 767 ? 10 : 30,
+          right: window.outerWidth > 767 ? 130 : 30,
           bottom: 100,
         },
         title: {
@@ -495,7 +495,7 @@ export default {
             color: "#ffffff",
             fontSize: 14,
           },
-          right: window.outerWidth > 400 ? "auto" : "40%",
+          right: window.outerWidth > 767 ? "auto" : "40%",
           bottom: "0",
         },
         dataZoom: {

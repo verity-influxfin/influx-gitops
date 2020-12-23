@@ -3424,7 +3424,7 @@
           class="st19"
           cx="203.129"
           cy="453.047"
-          r="21.4"
+          :r="bigR"
         />
         <circle
           @mousedown="getTarget($event, 'small')"
@@ -3433,7 +3433,7 @@
           class="st20 rot"
           cx="362.111"
           cy="326.169"
-          r="12.9"
+          :r="smallR"
         />
       </g>
     </svg>
@@ -3467,6 +3467,8 @@
 export default {
   props: ["amount", "color"],
   data: () => ({
+    bigR: window.innerWidth > 767 ? 21.4 : 30,
+    smallR: window.innerWidth > 767 ? 12.9 : 25,
     key: 0,
     amountTick: 0,
     amountCount: 5000,
@@ -3593,7 +3595,7 @@ export default {
             this.amountCount -= this.amountTick;
           }
         }
-        let max = window.innerWidth > 400 ? 153 : 196;
+        let max = window.innerWidth > 767 ? 153 : 196;
         if (this.target === "small") {
           if (this.small.deg < max) {
             this.small.deg += 2;

@@ -39,7 +39,7 @@ export default {
       autoplay: true,
       perPage: 1,
       perMove: 1,
-      arrows: window.innerWidth > 400 ? false : true,
+      arrows: window.innerWidth > 767 ? false : true,
       pagination: false,
       gap: "2rem",
       breakpoints: {
