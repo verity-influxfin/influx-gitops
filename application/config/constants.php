@@ -470,3 +470,7 @@ defined('REDIS_AGREEMENT_LIST')   	OR define('REDIS_AGREEMENT_LIST'	, 'agreement
 defined('REDIS_EVENT_LIST')   		OR define('REDIS_EVENT_LIST'		, 'event_list');
 defined('REDIS_NEWS_LIST')   		OR define('REDIS_NEWS_LIST'			, 'news_list');
 
+// use sql instead of CI orm ,issue#898
+defined('P2P_LOAN_DB')              OR define('P2P_LOAN_DB'             , 'p2p_loan');
+defined('P2P_LOAN_TARGET_TABLE')    OR define('P2P_LOAN_TARGET_TABLE'   , 'targets');
+
