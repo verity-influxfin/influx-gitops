@@ -3431,8 +3431,8 @@
           id="small"
           ref="small"
           class="st20 rot"
-          cx="362.111"
-          cy="326.169"
+          :cx="scx"
+          :cy="scy"
           :r="smallR"
         />
       </g>
@@ -3469,6 +3469,8 @@ export default {
   data: () => ({
     bigR: window.innerWidth > 767 ? 21.4 : 30,
     smallR: window.innerWidth > 767 ? 12.9 : 25,
+    scx: window.innerWidth > 767 ? 362.111 : 350.517,
+    scy: window.innerWidth > 767 ? 326.169 : 207.679,
     key: 0,
     amountTick: 0,
     amountCount: 5000,
@@ -3488,7 +3490,7 @@ export default {
       r: 208.5,
     },
     small: {
-      deg: 153,
+      deg: window.innerWidth > 767 ? 153 : 196,
       cx: 506.8,
       cy: 252.2,
       r: 162.5,
@@ -3532,14 +3534,14 @@ export default {
         this.rateTick = Math.round(((this.rate - 5) / 76) * 100) / 100;
       }
     },
-    handleTouchMove(e) {
+    handleTouchMove(event) {
       $("body").css("overflow", "hidden");
       this.moving(event.touches[0]);
     },
     handleTouchtouchend() {
+      $("body").css("overflow", "initial");
       this.moveEl = "";
       this.target = "";
-      $("body").css("overflow", "initial");
     },
     format(data) {
       data = parseInt(data);
@@ -3582,8 +3584,10 @@ export default {
             this.amountCount += this.amountTick;
           }
         }
+
+        let min = window.innerWidth > 767 ? 1 : 45;
         if (this.target === "small") {
-          if (this.small.deg > 1) {
+          if (this.small.deg > min) {
             this.small.deg -= 2;
             this.rateCount += this.rateTick;
           }
@@ -3607,6 +3611,7 @@ export default {
       if (this.amountCount < 5000) this.amountCount = 5000;
       if (Math.floor(this.amountCount) === 119999) this.amountCount = 120000;
 
+      console.log(this.small.deg);
       this.pageY = pageY;
       if (this.target) {
         this.slide(e);
