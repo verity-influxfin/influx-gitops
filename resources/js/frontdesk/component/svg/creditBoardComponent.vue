@@ -3615,7 +3615,6 @@ export default {
       this.pageY = pageY;
       if (this.target) {
         this.slide(e);
-        this.calculation();
       }
     },
     slide(e) {
@@ -3632,6 +3631,7 @@ export default {
       if (cx + 300 > pageX && cx - 300 < pageX && cy + 300 > pageY && cy - 300 < pageY) {
         $(this.moveEl).attr("cx", cx);
         $(this.moveEl).attr("cy", cy);
+        this.calculation();
       }
     },
     calculation() {
