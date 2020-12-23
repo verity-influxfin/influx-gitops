@@ -689,7 +689,7 @@ class Account extends MY_Admin_Controller {
 		// TODO: query with codeigniter orm
 		// sql - inner join
 		$sql = <<<TEMP
-			SELECT T1.`virtual_account`, T2.`name`, T2.`investor_status`, SUM(T1.`amount`) AS total_amount
+			SELECT T1.`virtual_account`, T2.`name`, T3.`investor` AS investor_status, SUM(T1.`amount`) AS total_amount
 			FROM p2p_transaction.`virtual_passbook` T1
 			INNER JOIN p2p_user.`users` T2
 			INNER JOIN p2p_user.`virtual_account` T3
