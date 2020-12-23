@@ -165,7 +165,6 @@ export default {
     reportData: {},
   }),
   created() {
-    this.getMilestoneData();
     this.getMediaData();
     this.getPartnerData();
     $("title").text(`公司介紹 - inFlux普匯金融科技`);
@@ -248,6 +247,10 @@ export default {
   .text-card {
     position: relative;
 
+    .ib {
+      width: 100%;
+    }
+
     h2 {
       color: #022564;
       font-weight: 700;
@@ -326,10 +329,11 @@ export default {
     padding: 30px;
 
     .list {
-      display: flex;
       padding: 10px;
-      width: fit-content;
       margin: 10px auto;
+      overflow: hidden;
+      display: block;
+      width: 930px;
 
       .slick-list {
         overflow: initial;
@@ -339,6 +343,7 @@ export default {
         margin: 0px 10px;
         text-align: center;
         width: 160px;
+        float: left;
 
         .photo {
           width: 100px;
@@ -567,12 +572,9 @@ export default {
       padding: 10px;
 
       .list {
-        display: block;
         width: 100%;
-        overflow: hidden;
-
+        
         .item {
-          float: left;
           margin: 10px;
           width: calc(100% / 3 - 20px);
 
