@@ -434,6 +434,8 @@ export default {
   },
   data: () => ({
     isDesktop: window.innerWidth > 400 ? true : false,
+    load2 :false,
+    load3 :false,
     routeIndex: {
       start: 0,
       end: window.innerWidth > 400 ? 5 : 3,
@@ -567,10 +569,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("getExperiencesData");
-    this.$store.dispatch("getKnowledgeData");
-    this.$store.dispatch("getNewsData");
-    this.$store.dispatch("getVideoData", { category: "share" });
     this.getServiceData();
     this.getMilestoneData();
     $("title").text(`首頁 - inFlux普匯金融科技`);
@@ -607,6 +605,7 @@ export default {
   methods: {
     handleScroll() {
       let gap = window.innerWidth > 400 ? 400 : 300;
+
       if (
         window.scrollY >= gap &&
         this.tweenedMember === 0 &&
@@ -614,6 +613,28 @@ export default {
       ) {
         gsap.to(this.$data, { duration: 1, tweenedMember: 58723 });
         gsap.to(this.$data, { duration: 1, tweenedtransaction: 31059 });
+      }
+
+      let gap2 = window.innerWidth > 400 ? 1000 : 750;
+
+      if (
+        !this.load2 &&
+        window.scrollY >= gap2 &&
+        this.knowledge.length === 0 &&
+        this.news.length === 0 &&
+        this.video.length === 0
+      ) {
+        this.$store.dispatch("getKnowledgeData");
+        this.$store.dispatch("getNewsData");
+        this.$store.dispatch("getVideoData", { category: "share" });
+        this.load2 = true;
+      }
+
+      let gap3 = window.innerWidth > 400 ? 800 : 600;
+
+      if (!this.load3 && window.scrollY >= gap3 && this.experiences.length === 0) {
+        this.$store.dispatch("getExperiencesData");
+        this.load3 = true;
       }
     },
     format(data) {

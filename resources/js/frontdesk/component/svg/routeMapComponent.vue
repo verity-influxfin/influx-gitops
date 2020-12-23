@@ -594,7 +594,6 @@ export default {
   watch: {
     routeData(newVal) {
       this.showData = newVal;
-      console.log(this.showData);
     },
   },
 };
