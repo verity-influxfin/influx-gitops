@@ -427,22 +427,25 @@ export default {
     position: absolute;
     width: 185px;
     color: #007eff;
-    font-size: 12px;
     user-select: none;
 
     &:nth-of-type(1) {
+      font-size: 12px;
       top: 8%;
       left: 29%;
     }
     &:nth-of-type(2) {
+      font-size: 13px;
       top: 33%;
       left: 12.5%;
     }
     &:nth-of-type(3) {
+      font-size: 14px;
       top: 56.5%;
       left: 29.5%;
     }
     &:nth-of-type(4) {
+      font-size: 15px;
       top: 81%;
       left: 20%;
     }
