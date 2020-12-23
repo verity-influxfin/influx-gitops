@@ -245,7 +245,9 @@
               <img :src="'/images/safe.svg'" class="img-fluid" />
             </div>
             <p>簡單、快速、安全、隱私</p>
-            <span>AWS安全系統為架構，輔以簡潔的操作介面，保護您的個資，讓您在申貸時，安全又放心。</span>
+            <span
+              >AWS安全系統為架構，輔以簡潔的操作介面，保護您的個資，讓您在申貸時，安全又放心。</span
+            >
           </SplideSlide>
         </Splide>
       </div>
@@ -1603,6 +1605,7 @@ export default {
 
         .cnt-l {
           width: 100%;
+          height: 70px;
 
           h3 {
             margin: 0px auto;
