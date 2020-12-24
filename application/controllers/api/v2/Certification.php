@@ -2398,10 +2398,6 @@ class Certification extends REST_Controller {
         if($user_certification){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
         }
-        if(in_array($certification_id, [CERTIFICATION_EMERGENCY])){
-            $this->load->library('brookesia/brookesia_lib');
-            $this->brookesia_lib->userCheckAllRules($this->user_info->id);
-        }
     }
 
 

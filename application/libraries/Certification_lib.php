@@ -1,5 +1,7 @@
 <?php
 
+use Smalot\PdfParser\Parser;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Certification_lib{
@@ -448,7 +450,7 @@ class Certification_lib{
                 $followed_by = $content->instagram->counts->followed_by;
                 $is_fb_email = isset($content->facebook->email);
                 $is_fb_name = isset($content->facebook->name);
-                $this->CI->load->model('user/user_meta_model');;
+                $this->CI->load->model('user/user_meta_model');
                 $line = $this->CI->user_meta_model->get_by(array(
                     'user_id' => $info->user_id,
                     'meta_key' => 'line_access_token'
@@ -521,7 +523,7 @@ class Certification_lib{
 				'status' => null,
 				'messages' => []
 			];
-			$parser = new \Smalot\PdfParser\Parser();
+			$parser = new Parser();
 			$pdf    = $parser->parseFile($url);
 			$text = $pdf->getText();
 			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
@@ -596,7 +598,7 @@ class Certification_lib{
 					'status' => null,
 					'messages' => []
 				];
-				$parser = new \Smalot\PdfParser\Parser();
+				$parser = new Parser();
 				$pdf    = $parser->parseFile($url);
 				$text = $pdf->getText();
 				$res=$this->CI->labor_insurance_lib->check_labor_insurance($info->user_id,$text, $result);
@@ -824,6 +826,8 @@ class Certification_lib{
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
+                $this->CI->load->library('brookesia/brookesia_lib');
+                $this->CI->brookesia_lib->userCheckAllRules($info->user_id);
                 return $this->fail_other_cer($info);
 			}
 		}
