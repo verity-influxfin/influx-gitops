@@ -443,7 +443,7 @@ export default {
 
       for (q = 0; q < _totalFlow.length; q++) {
         let temp = _totalFlow[q];
-        xAxisData.push(`${Math.floor(q / 12) + 1}/${(q % 12) + 1}`);
+        xAxisData.push(q);
         listAmount.push((total += $this.amount));
         let t = 0;
 
@@ -520,7 +520,7 @@ export default {
           },
         },
         xAxis: {
-          name: "年/月",
+          name: "期別",
           type: "category",
           axisTick: {
             show: false,
@@ -540,7 +540,7 @@ export default {
           },
         },
         yAxis: {
-          name: "萬元",
+          name: "金額(萬元)",
           nameLocation: "middle",
           nameGap: 40,
           type: "value",
