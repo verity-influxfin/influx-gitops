@@ -217,8 +217,6 @@ export default {
         img {
           height: 250px;
           position: relative;
-          left: 50%;
-          transform: translate(-50%, 0px);
         }
       }
 
@@ -226,7 +224,7 @@ export default {
         padding: 10px;
 
         .title {
-          font-size: 20px;
+          font-size: 17px;
           color: #061164;
           font-weight: 900;
           height: 60px;

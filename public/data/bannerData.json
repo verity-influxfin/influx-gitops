@@ -40,26 +40,26 @@
     },
     "recruiting": {
         "bannerDesktopHref": "/images/recruiting_banner.jpg",
-        "bannerMoblieHref":"/images/recruiting_banner.jpg"
+        "bannerMoblieHref":""
     },
     "campuspartner": {
         "bannerDesktopHref": "/images/campuspartner_banner.jpg",
-        "bannerMoblieHref":"/images/campuspartner_banner.jpg"
+        "bannerMoblieHref":""
     },
     "clubcooperation": {
         "bannerDesktopHref": "/images/clubcooperation_banner.jpg",
-        "bannerMoblieHref":"/images/clubcooperation_banner.jpg"
+        "bannerMoblieHref":""
     },
     "firmcooperation": {
         "bannerDesktopHref": "/images/firmcooperation_banner.jpg",
-        "bannerMoblieHref":"/images/firmcooperation_banner.jpg"
+        "bannerMoblieHref":""
     },
     "companycooperation": {
         "bannerDesktopHref": "/images/companycooperation_banner.jpg",
-        "bannerMoblieHref":"/images/companycooperation_banner.jpg"
+        "bannerMoblieHref":""
     },
     "feedback": {
         "bannerDesktopHref": "/images/feedback_banner.jpg",
-        "bannerMoblieHref":"/images/feedback_banner.jpg"
+        "bannerMoblieHref":""
     }
 }

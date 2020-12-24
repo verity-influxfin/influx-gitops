@@ -1,6 +1,6 @@
 <template>
   <div class="freshGraduate-wrapper">
-    <banner :data="bannerData" :isInvest="false"></banner>
+    <banner :data="bannerData" :isBorrow="true"></banner>
     <target
       :items="applyData.item"
       text="年滿20歲的上班族，提供工作證明、聯徵報告，馬上給您最滿意的額度！<br><br>體驗金融科技帶來的線上借貸服務，就從『普匯･你的手機ATM』開始！"
@@ -239,7 +239,6 @@ export default {
 
     .ib {
       width: 100%;
-      height: 689px;
     }
 
     .cnt {
@@ -312,12 +311,12 @@ export default {
             );
             margin: 0px;
             h3 {
-              font-size: 24px;
+              font-size: 26px;
             }
           }
 
           p {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             line-height: 1.5;
             letter-spacing: 1px;
@@ -405,9 +404,13 @@ export default {
           padding: 0px;
 
           .r {
-            h3,
+            h3 {
+              text-align: initial;
+              font-size: 24px;
+            }
             p {
               text-align: initial;
+              font-size: 16px;
             }
 
             .ccc {

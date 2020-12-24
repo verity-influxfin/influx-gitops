@@ -9,7 +9,7 @@
           「債權投資」是近年慢慢興起的投資方式，透過購買借款人的債權，獲取每期回款本息的收益，在金融科技產業發展越來越成熟下，已經成為許多人最信賴的投資標的。
         </p>
         <p>
-          投資不外乎就是追求創造額外的穩定收入，並且不用承擔高風險與流動性問題，但許多人不敢玩股票、不懂怎麼選擇債券，更沒有時間研究複雜的投資標的，「普匯債權」一定會是你最好的投資選擇。
+          投資不外乎就是追求創造額外的穩定收入，但許多人不敢玩股票也沒有時間研究複雜的投資標的，「普匯債權」不用承擔高風險與流動性問題，一定是你最好的投資選擇。
         </p>
       </div>
       <div class="box">
@@ -477,14 +477,14 @@ export default {
           ],
           selectedMode: false,
           right: window.outerWidth > 767 ? 0 : "auto",
-          bottom: window.outerWidth > 767 ? 50 : "auto",
+          bottom: window.outerWidth > 767 ? 20 : "auto",
           textStyle: {
             color: "#fff",
           },
           width: window.outerWidth > 767 ? "50px" : "auto",
         },
         grid: {
-          left: 30,
+          left: 60,
           top: window.outerWidth > 767 ? 10 : 30,
           right: window.outerWidth > 767 ? 130 : 30,
           bottom: 100,
@@ -520,9 +520,15 @@ export default {
           },
         },
         xAxis: {
+          name: "年/月",
           type: "category",
+          axisTick: {
+            show: false,
+          },
           data: xAxisData,
           axisLine: {
+            symbol: ["none", "arrow"],
+            symbolOffset:[0,10],
             lineStyle: { color: "#ffffff" },
           },
           splitLine: {
@@ -532,20 +538,23 @@ export default {
           axisLabel: {
             color: "#ffffff",
           },
-          axisTick: {
-            show: false,
-            alignWithLabel: false,
-          },
         },
         yAxis: {
+          name: "萬元",
+          nameLocation: "middle",
+          nameGap: 40,
           type: "value",
           axisTick: {
             show: false,
           },
           axisLabel: {
-            show: false,
+            formatter(value, index) {
+              return Math.round(value / 1000);
+            },
           },
           axisLine: {
+            symbol: ["none", "arrow"],
+            symbolOffset:[0,10],
             lineStyle: { color: "#ffffff" },
           },
           splitLine: { show: false },

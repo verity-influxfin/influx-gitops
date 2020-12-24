@@ -195,10 +195,14 @@ export default {
       let $target = $($event.target);
       this.partnerData = this.partner[index];
 
+      let left = $target.offset().left + $(".photo").outerWidth() / 2 - 160;
+      let min = left > 0 ? left : 10;
+      let max = min + 300 > window.innerWidth ? window.innerWidth - 310 : min;
+
       this.$nextTick(() => {
         $(".content")
-          .css("top", $target.offset().top + $(".photo").outerHeight() + 40)
-          .css("left", $target.offset().left + $(".photo").outerWidth() / 2 - 160);
+          .css("top", $target.offset().top + $(".photo").outerHeight() +(window.innerWidth > 767 ? 40 : 0))
+          .css("left", max);
       });
     },
     scroll(direction) {
@@ -573,7 +577,7 @@ export default {
 
       .list {
         width: 100%;
-        
+
         .item {
           margin: 10px;
           width: calc(100% / 3 - 20px);
@@ -585,6 +589,12 @@ export default {
           p {
             display: none;
           }
+        }
+      }
+
+      .content {
+        &:before {
+          display: none;
         }
       }
     }

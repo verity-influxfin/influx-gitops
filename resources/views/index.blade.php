@@ -16,7 +16,7 @@
     <meta name="title" content="inFlux普匯金融科技">
     <meta name="image" content="{{ asset('images/logo.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta property=”fb:app_id” content=”2194926914163491”>
+    <meta property="fb:app_id" content="2194926914163491">
     <title>inFlux普匯金融科技</title>
     <link rel="icon" href="{{ asset('images/site_icon.png') }}">
 
@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="{{ asset('css/package/hover-min.css') }}">
 
     <!-- local -->
-    <link rel="stylesheet" href="{{ asset('css/web.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/web.css?'.csrf_token()) }}">
 
     <!--Facebook Comments-->
     <script>
@@ -108,7 +108,7 @@
                 <div class="desc-card">
                     <div class="d-a">
                         <H2>About</H2>
-                        <div class="img"><img src="{{ asset('images/footer.png') }}" class="img-fluid"></div>
+                        <div class="img"><img src="{{ asset('images/footer.svg') }}" class="img-fluid"></div>
                     </div>
                     <div class="cd">
                         <div class="img"><img class="img-fluid" src="/images/ah-pu.svg"></div>
@@ -313,6 +313,6 @@
 <script type="text/javascript" src="{{ asset('js/package/particles.min.js') }}"></script>
 
 <!-- local -->
-<script type="text/javascript" src="{{ asset('js/web.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/web.js?'.csrf_token()) }}"></script>
 
 </html>

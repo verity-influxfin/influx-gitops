@@ -3083,10 +3083,10 @@
             年化
           </text>
           <text transform="matrix(1 0 0 1 600.5278 268.1239)" class="st5 st13 st14">
-            {{ Math.round(rateCount) }}%
+            {{ rateCount }}%
           </text>
           <text transform="matrix(1 0 0 1 520.5284 74.5681)" class="st5 st13 st14">
-            {{ rate }}%
+            20%
           </text>
           <g>
             <g>
@@ -3469,19 +3469,20 @@ export default {
   data: () => ({
     bigR: window.innerWidth > 767 ? 21.4 : 30,
     smallR: window.innerWidth > 767 ? 12.9 : 25,
-    scx: window.innerWidth > 767 ? 362.111 : 350.517,
-    scy: window.innerWidth > 767 ? 326.169 : 207.679,
+    scx: window.innerWidth > 767 ? 368.904 : 350.517,
+    scy: window.innerWidth > 767 ? 338.171 : 207.679,
     key: 0,
-    amountTick: 0,
     amountCount: 5000,
-    rate: 20,
-    rateTick: 0,
     rateCount: 5,
     pmt: 0,
     tweenedPmt: 0,
     moveEl: "",
     pageY: "",
     target: "",
+    smin: "",
+    smax: "",
+    sDeg: "",
+    bDeg: "",
     periods: [3, 6, 12, 18, 24],
     big: {
       deg: 105,
@@ -3527,12 +3528,11 @@ export default {
       $("body").css("overflow", "hidden");
       this.moveEl = event.target;
       this.target = $(event.target).attr("id");
-      if (this.target === "big") {
-        this.amountTick = (this.amount - 5000) / 75;
-      }
-      if (this.target === "small") {
-        this.rateTick = Math.round(((this.rate - 5) / 76) * 100) / 100;
-      }
+
+      this.smin = window.innerWidth > 767 ? 0 : 45;
+      this.smax = window.innerWidth > 767 ? 150 : 196;
+      this.sDeg = (this.smax - this.smin) / 29;
+      this.bDeg = 150 / ((this.amount - 5000) / 1000);
     },
     handleTouchMove(event) {
       $("body").css("overflow", "hidden");
@@ -3564,12 +3564,11 @@ export default {
     getTarget(e, target) {
       this.moveEl = e.target;
       this.target = target;
-      if (this.target === "big") {
-        this.amountTick = (this.amount - 5000) / 75;
-      }
-      if (this.target === "small") {
-        this.rateTick = Math.round(((this.rate - 5) / 76) * 100) / 100;
-      }
+
+      this.smin = window.innerWidth > 767 ? 0 : 45;
+      this.smax = window.innerWidth > 767 ? 150 : 196;
+      this.sDeg = (this.smax - this.smin) / 29;
+      this.bDeg = 150 / ((this.amount - 5000) / 1000);
     },
     removeTarget() {
       this.moveEl = "";
@@ -3577,45 +3576,42 @@ export default {
     },
     moving(e) {
       let pageY = e.pageY;
-      if (this.pageY > pageY) {
-        if (this.target === "big") {
-          if (this.big.deg < 255) {
-            this.big.deg += 2;
-            this.amountCount += this.amountTick;
-          }
-        }
 
-        let min = window.innerWidth > 767 ? 1 : 45;
-        if (this.target === "small") {
-          if (this.small.deg > min) {
-            this.small.deg -= 2;
-            this.rateCount += this.rateTick;
-          }
-        }
-      } else {
-        if (this.target === "big") {
-          if (this.big.deg > 105) {
-            this.big.deg -= 2;
-            this.amountCount -= this.amountTick;
-          }
-        }
-        let max = window.innerWidth > 767 ? 153 : 196;
-        if (this.target === "small") {
-          if (this.small.deg < max) {
-            this.small.deg += 2;
-            this.rateCount -= this.rateTick;
-          }
-        }
-      }
-
-      if (this.amountCount < 5000) this.amountCount = 5000;
-      if (Math.floor(this.amountCount) === 119999) this.amountCount = 120000;
-
-      console.log(this.small.deg);
-      this.pageY = pageY;
       if (this.target) {
+        if (this.pageY > pageY) {
+          if (this.target === "big") {
+            if (this.big.deg < 255) {
+              this.big.deg += this.bDeg;
+              this.amountCount += 1000;
+            }
+          }
+
+          if (this.target === "small") {
+            if (this.small.deg > this.smin) {
+              this.small.deg -= this.sDeg;
+              this.rateCount += 0.5;
+            }
+          }
+        } else {
+          if (this.target === "big") {
+            if (this.big.deg > 105) {
+              this.big.deg -= this.bDeg;
+              this.amountCount -= 1000;
+            }
+          }
+          if (this.target === "small") {
+            if (this.small.deg < this.smax) {
+              this.small.deg += this.sDeg;
+              this.rateCount -= 0.5;
+              console.log(this.small.deg);
+            }
+          }
+        }
+
         this.slide(e);
       }
+
+      this.pageY = pageY;
     },
     slide(e) {
       let pageY = e.pageY - $("#ccrata").offset().top;
@@ -3635,7 +3631,7 @@ export default {
       }
     },
     calculation() {
-      let m_rate = Math.round(this.rateCount) / 1200;
+      let m_rate = this.rateCount / 1200;
       let nper = Math.pow(m_rate + 1, -parseInt(this.periods[this.key]));
       this.pmt = Math.ceil((this.amountCount * m_rate) / (1 - nper));
     },
@@ -3746,7 +3742,7 @@ export default {
   }
 
   .rot {
-    transform: rotate(-77deg);
+    transform: rotate(-75deg);
     transform-origin: 71% 50%;
   }
 

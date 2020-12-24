@@ -1,6 +1,6 @@
 <template>
   <div class="college-wrapper">
-    <banner :data="bannerData" :isInvest="false"></banner>
+    <banner :data="bannerData" :isBorrow="true"></banner>
     <target
       :items="applyData.item"
       text="滿20歲的在校生，準備您的雙證件、學生證、金融卡，在APP上拍照上傳，立即核准！"

@@ -1,6 +1,6 @@
 <template>
   <div class="engineer-wrapper">
-    <banner :data="this.bannerData" :isInvest="false"></banner>
+    <banner :data="this.bannerData" :isBorrow="false"></banner>
     <target
       :items="applyData.item"
       text="資訊/資工/資管相關科系學生或相關職業，提供專業技術證照，來就貸！"
@@ -256,12 +256,12 @@ export default {
             );
             margin: 0px;
             h3 {
-              font-size: 24px;
+              font-size: 26px;
             }
           }
 
           p {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 500;
             line-height: 1.5;
             letter-spacing: 1px;
@@ -335,9 +335,13 @@ export default {
           }
 
           .r {
-            h3,
+            h3 {
+              text-align: initial;
+              font-size: 24px;
+            }
             p {
               text-align: initial;
+              font-size: 16px;
             }
 
             .ccc {

@@ -14,7 +14,7 @@
       <h1 class="banner-title">{{ $props.data.productName }}</h1>
       <div class="banner-desc" v-html="$props.data.desc"></div>
       <a
-        v-if="!isInvest"
+        v-if="isBorrow"
         class="banner-download"
         href="https://event.influxfin.com/R/url?p=webbanner"
         target="_blank"
@@ -22,7 +22,7 @@
         <div class="text">立即借款</div></a
       >
       <a
-        v-else
+        v-if="isInvest"
         class="banner-download"
         href="https://event.influxfin.com/r/iurl?p=webinvest"
         target="_blank"
@@ -35,7 +35,7 @@
 
 <script>
 export default {
-  props: ["data", "isInvest"],
+  props: ["data", "isInvest","isBorrow"],
 };
 </script>
 

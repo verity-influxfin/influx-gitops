@@ -102,7 +102,7 @@ export default {
 
       .step {
         border-radius: 10px;
-        padding: 10px;
+        padding: 20px;
         box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
         background-color: #ffffff;
         position: relative;

@@ -9,7 +9,7 @@
         <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
         <div class="content">
           <p>最貼近年輕人的金融科技平台</p>
-          <span>普匯，你的手機ATM</span>
+          <span>普匯．你的手機ATM</span>
           <div class="box">
             <a
               class="loan"
@@ -326,7 +326,7 @@
       <div style="z-index: 2; position: relative">
         <ul class="nav" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#news" @click="reSlick()"
+            <a class="nav-link" data-toggle="tab" href="#news" @click="reSlick()"
               >最新消息</a
             >
           </li>
@@ -510,18 +510,19 @@ export default {
       pagination: false,
       gap: "1.5rem",
       breakpoints: {
-        767: { autoplay: false, perPage: 1, arrows: true },
+        767: { autoplay: false, perPage: 1 },
       },
     },
     infoOptions: {
       type: "loop",
       autoplay: true,
+      arrows: true,
       perPage: 3,
       perMove: 1,
       pagination: false,
       gap: ".5rem",
       breakpoints: {
-        767: { perPage: 1, arrows: true },
+        767: { perPage: 1 },
       },
     },
     productOptions: {
@@ -536,7 +537,7 @@ export default {
       pagination: false,
       gap: "1rem",
       breakpoints: {
-        767: { autoplay: true, perPage: 2, arrows: true },
+        767: { autoplay: true, perPage: 2 },
       },
     },
     videoOptions: {
@@ -548,7 +549,7 @@ export default {
       pagination: false,
       gap: "1rem",
       breakpoints: {
-        767: { autoplay: true, perPage: 1, arrows: true },
+        767: { autoplay: true, perPage: 1 },
       },
     },
     csOptions: {
@@ -557,7 +558,7 @@ export default {
       perPage: 1,
       perMove: 1,
       speed: 200,
-      arrows: false,
+      arrows: window.innerWidth > 767 ? false : true,
       pagination: false,
       gap: "1rem",
     },
@@ -621,7 +622,6 @@ export default {
   methods: {
     handleScroll() {
       let gap = window.innerWidth > 767 ? 400 : 300;
-
       if (
         window.scrollY >= gap &&
         this.tweenedMember === 0 &&
@@ -632,7 +632,6 @@ export default {
       }
 
       let gap2 = window.innerWidth > 767 ? 1000 : 750;
-
       if (
         !this.load2 &&
         window.scrollY >= gap2 &&
@@ -647,7 +646,6 @@ export default {
       }
 
       let gap3 = window.innerWidth > 767 ? 800 : 600;
-
       if (!this.load3 && window.scrollY >= gap3 && this.experiences.length === 0) {
         this.$store.dispatch("getExperiencesData");
         this.load3 = true;
@@ -1629,6 +1627,14 @@ export default {
 
           .c-s {
             width: 100%;
+
+            .splide__arrow--prev {
+              left: -2.5em;
+            }
+
+            .splide__arrow--next {
+              right: -2.5em;
+            }
           }
 
           .cover {

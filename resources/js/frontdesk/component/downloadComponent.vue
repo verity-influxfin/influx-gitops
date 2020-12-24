@@ -3,11 +3,6 @@
     <img src="../asset/images/3013240.jpg" class="img-fluid" />
     <div class="abs">
       <div class="d-desc">
-        <div class="t-c">
-          <h2>Get APP</h2>
-        </div>
-        <hr />
-        <p>前往APP下載區 立即啟動服務</p>
         <div class="d-apps">
           <div v-if="$props.isLoan" class="d-loan">
             <a
@@ -28,6 +23,8 @@
             </a>
           </div>
         </div>
+        <hr />
+        <p>前往APP下載區 立即啟動服務</p>
       </div>
       <div class="img">
         <img :src="'/images/phone.png'" class="img-fluid" />
@@ -58,7 +55,7 @@ export default {
 
   .d-desc {
     width: 55%;
-    padding: 4rem;
+    padding: 6rem;
 
     hr {
       border-top: 2px solid #16559b;
@@ -76,7 +73,7 @@ export default {
     .d-apps {
       display: flex;
       width: 70%;
-      margin: 0px auto;
+      margin: 1px auto;
 
       %font {
         width: 100%;
@@ -91,13 +88,13 @@ export default {
 
         .d-link {
           display: block;
-          margin: 20px auto;
-          padding: 2px 18px 3px;
+          margin: 0px auto;
+          padding: 3px 37px;
           border-radius: 23.5px;
           backdrop-filter: blur(10px);
           border: solid 2px #1f55a0;
           background-color: rgba(216, 216, 216, 0.1);
-          font-size: 20px;
+          font-size: 28px;
           font-weight: 800;
           color: #1f55a0;
           text-align: center;
@@ -105,6 +102,8 @@ export default {
 
           &:hover {
             text-decoration: none;
+            background: #1f55a0;
+            color: #ffffff;
           }
         }
       }
@@ -157,7 +156,7 @@ export default {
       top: 0;
       z-index: 0;
     }
-    
+
     .abs {
       position: relative;
       transform: inherit;
