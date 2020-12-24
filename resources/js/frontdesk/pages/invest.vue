@@ -540,7 +540,7 @@ export default {
           },
         },
         yAxis: {
-          name: "金額(萬元)",
+          name: "金額(千元)",
           nameLocation: "middle",
           nameGap: 40,
           type: "value",
