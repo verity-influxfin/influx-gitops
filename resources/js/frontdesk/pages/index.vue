@@ -692,9 +692,9 @@ export default {
       });
     },
     reSlick() {
-      this.$nextTick(() => {
+      setTimeout(() => {
         $("html").animate({ scrollTop: window.scrollY - 1 });
-      });
+      }, 300);
     },
     onMoved($event) {
       this.csKey = $event.index;
