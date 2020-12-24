@@ -438,11 +438,11 @@ class Target extends REST_Controller
             $this->loan_manager_debtprocessing_model->insert([
                 'admin_id' => $this->user_info->id,
                 'user_id' => $input['user_id'],
-                'push_by' => $input['push_by'],
-                'push_type' => $pushBy,
+                'push_by' => $pushBy,
+                'push_type' => $input['push_type'],
                 'message' => $input['message'],
-                'start_time' => $input['start_time'],
-                'end_time' => $input['end_time'],
+                'start_time' => date($input['start_time']),
+                'end_time' => date($input['end_time']),
                 'result' => in_array($pushBy, [1, 2, 4, 5, 7, 8]) ? 1 : 0
             ]);
             $this->response([
