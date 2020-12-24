@@ -421,7 +421,7 @@ class Target extends REST_Controller
                 $content 	= $input['message'];
                 $rs = $this->sms_lib->send('LoanManagement',$userInfo->id,$phone,$content);
             }//系統訊息+E-mail(5) E-mail(9)
-            elseif($pushBy == 5 || $pushBy == 9){
+            elseif($pushBy == 4 || $pushBy == 8){
                 $title = "【訊息通知】";
                 $content = $input['message'];
                 $param = array(
@@ -431,7 +431,7 @@ class Target extends REST_Controller
                     "content"	=> $content,
                 );
                 $this->load->model('user/user_notification_model');
-                $pushBy == 5 ? $this->user_notification_model->insert($param) : $pushBy;
+                $pushBy == 4 ? $this->user_notification_model->insert($param) : $pushBy;
                 $this->load->library('Sendemail');
                 $this->sendemail->user_notification($userInfo->id,$title,nl2br($content),'b03');
             }
