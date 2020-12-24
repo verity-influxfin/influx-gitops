@@ -279,7 +279,7 @@ class Loan_manager_target_model extends MY_Model
         $param = [
             'user_id' => $userId,
         ];
-        $type ? $param['push_by'] = 4 : $param['push_by !='] = 4;
+        $type ? $param['push_by'] = 9 : $param['push_by !='] = 9;
         $this->db->where($param);
         $query = $this->db->get();
         return $query->result();

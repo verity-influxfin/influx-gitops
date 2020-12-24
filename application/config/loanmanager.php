@@ -56,11 +56,12 @@ $config['pushTool'] = [
     1 => "LINE",
     2 => "Facebook",
     3 => "緊急聯絡人",
-    4 => "面談",
+    4 => "系統訊息(App/E-mail)",
     5 => "instgram",
     6 => "電話",
     7 => "簡訊",
-    8 => "系統訊息",
+    8 => "E-mail",
+    9 => "面談",
 ];
 defined('PUSH_BY_LINE') or define('PUSH_BY_LINE', '1');
 defined('PUSH_BY_FACEBOOK') or define('PUSH_BY_FACEBOOK', '2');
@@ -70,8 +71,8 @@ defined('PUSH_BY_USER_PHONE') or define('PUSH_BY_USER_PHONE', '6');
 defined('PUSH_BY_SMS') or define('PUSH_BY_SMS', '7');
 
 $config['pushType'] = [
-    0 => "提醒",
-    1 => "協商",
+    0 => "協商",
+    1 => "提醒",
     2 => "催收",
 ];
 

@@ -556,7 +556,7 @@ class Target extends REST_Controller
                     $structure['title'] = $value->title;
                     $structure['content'] = preg_replace('/\\t/','',$value->content);
                     $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
-                    $structure['type'] = 3;
+                    $structure['type'] = 4;
                     $logs[$value->created_at][] = $structure;
                 }
             }
