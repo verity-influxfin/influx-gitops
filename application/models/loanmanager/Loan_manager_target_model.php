@@ -98,7 +98,7 @@ class Loan_manager_target_model extends MY_Model
             $this->db->or_where($orWhere);
         }
 
-//        $this->db->order_by("processing.updated_at",'desc');
+        $this->db->order_by('processing.id','desc');
         $limit ? $this->db->limit($limit, $offset) : '';
         $this->db->group_by('target.id');
         $order_by ? $this->db->order_by($order_by,'desc') : '';
