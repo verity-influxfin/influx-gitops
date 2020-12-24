@@ -1,5 +1,7 @@
 <?php
 
+use Smalot\PdfParser\Parser;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Certification_lib{
@@ -257,12 +259,15 @@ class Certification_lib{
                 $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\\n{0,1}\p{Han}{1,6}\\n{0,1}役別|父\p{Han}{1,6}母','父|母|役別|\\n',$rawData['back_image'],1);
                 mb_strlen($ocr['father'])==6?$ocr['father']=mb_substr($ocr['father'],0,3):null;
                 $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\\n{0,1}\p{Han}{1,5}\\n{0,1}父|'.$ocr['father'].'\p{Han}{1,4}役別|母\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶','父|母|役別|配偶|\\n|'.$ocr['father'],$rawData['back_image'],1);
-                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}出生','配偶|出生|役別|\\n',$rawData['back_image'],1);
-                $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶','役別|配偶|\\n',$rawData['back_image'],1);
+                $ocr['mother'] = $this->CI->compare_lib->repeatCheck($ocr['mother']);
+
+                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}出生|配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}役別','配偶|出生|役別|\\n|\\s',$rawData['back_image'],1);
+                $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶|役別\\n{0,1}\p{Han}{1,5}\\n{0,1}出生地','役別|配偶|出生地|\\n',$rawData['back_image'],1);
                 $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\\n{0,1}\s{0,2}\p{Han}{1,3}\\n{0,1}\p{Han}{1,3}\\n{0,1}','生地|住址|\\n',$rawData['back_image'],1);
+                $ocr['born'] = $this->CI->compare_lib->repeatCheck($ocr['born']);
                 $ocr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$rawData['back_image']);
                 $ocr['film_number']      = $this->CI->compare_lib->dataExtraction('\d{6,10}','',preg_replace('/'.$ocr['gnumber'].'/','',$rawData['back_image']));
-                $ocr['address']          = $this->CI->compare_lib->dataExtraction('('.$ocr['born'].'生地|址)(.*?'.$ocr['gnumber'].')','住|址|生地|\\n|'.$ocr['gnumber'],$rawData['back_image'],1);
+                $ocr['address']          = $this->CI->compare_lib->dataExtraction('('.$ocr['born'].')(.*?'.$ocr['gnumber'].')','住|址|生地|住址|\\n|'.$ocr['gnumber'].'|'.$ocr['born'],$rawData['back_image'],1);
                 $check_item = ['father','mother','born','gnumber','address'];
                 foreach($check_item as $k => $v){
                     if($ocr[$v] == false){
@@ -271,9 +276,15 @@ class Certification_lib{
                             $srawData['back_image']  = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id,$cer_id);
 
                             $socr['father']           = $this->CI->compare_lib->dataExtraction('父\p{Han}{1,3}母|'.mb_substr($ocr['name'],0,1,"utf-8").'\p{Han}{1,3}','父|母',$srawData['back_image'],1);
-                            $socr['mother']           = $this->CI->compare_lib->dataExtraction('母\p{Han}{1,5}\|{0,1}配偶','母|配偶|\|',$srawData['back_image'],1);
-                            $socr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\p{Han}{1,5}\|{0,1}役別','配偶|役別|\|',$srawData['back_image'],1);
-                            $socr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\p{Han}{1,5}\|{0,1}出生','役別|出生|\|',$srawData['back_image'],1);
+                            if($socr['mother'] = ''){
+                                $socr['mother'] = $this->CI->compare_lib->dataExtraction('母\p{Han}{1,5}\|{0,1}配偶','母|配偶|\|',$srawData['back_image'],1);
+                            }
+                            if($socr['spouse'] = ''){
+                                $socr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\p{Han}{1,5}\|{0,1}役別','配偶|役別|\|',$srawData['back_image'],1);
+                            }
+                            if($socr['military_service'] = ''){
+                                $socr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\p{Han}{1,5}\|{0,1}出生','役別|出生|\|',$srawData['back_image'],1);
+                            }
                             $socr['born']             = $this->CI->compare_lib->dataExtraction('生地\p{Han}{1,6}\|{0,1}','生地|\|',$srawData['back_image'],1);
                             $socr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$srawData['back_image']);
                             $socr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?\|)|'.$socr['born'].'\|(.*?\|)','住|址|\||'.$socr['born'],$srawData['back_image'],1);
@@ -448,7 +459,7 @@ class Certification_lib{
                 $followed_by = $content->instagram->counts->followed_by;
                 $is_fb_email = isset($content->facebook->email);
                 $is_fb_name = isset($content->facebook->name);
-                $this->CI->load->model('user/user_meta_model');;
+                $this->CI->load->model('user/user_meta_model');
                 $line = $this->CI->user_meta_model->get_by(array(
                     'user_id' => $info->user_id,
                     'meta_key' => 'line_access_token'
@@ -521,7 +532,7 @@ class Certification_lib{
 				'status' => null,
 				'messages' => []
 			];
-			$parser = new \Smalot\PdfParser\Parser();
+			$parser = new Parser();
 			$pdf    = $parser->parseFile($url);
 			$text = $pdf->getText();
 			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
@@ -596,7 +607,7 @@ class Certification_lib{
 					'status' => null,
 					'messages' => []
 				];
-				$parser = new \Smalot\PdfParser\Parser();
+				$parser = new Parser();
 				$pdf    = $parser->parseFile($url);
 				$text = $pdf->getText();
 				$res=$this->CI->labor_insurance_lib->check_labor_insurance($info->user_id,$text, $result);
