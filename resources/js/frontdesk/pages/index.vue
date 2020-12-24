@@ -326,7 +326,7 @@
       <div style="z-index: 2; position: relative">
         <ul class="nav" role="tablist">
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#news" @click="reSlick()"
+            <a class="nav-link active" data-toggle="tab" href="#news" @click="reSlick()"
               >最新消息</a
             >
           </li>
@@ -692,7 +692,9 @@ export default {
       });
     },
     reSlick() {
-      $("html").animate({ scrollTop: window.scrollY - 1 });
+      this.$nextTick(() => {
+        $("html").animate({ scrollTop: window.scrollY - 1 });
+      });
     },
     onMoved($event) {
       this.csKey = $event.index;
@@ -1333,6 +1335,10 @@ export default {
           height: 200px;
           margin: 0px auto;
           overflow: hidden;
+
+          img {
+            width: 100%;
+          }
         }
 
         p {
