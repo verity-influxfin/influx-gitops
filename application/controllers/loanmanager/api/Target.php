@@ -161,7 +161,7 @@ class Target extends REST_Controller
                 $datas[$key]->dailyDelayInterest = $dailyDelayInterest;
                 $datas[$key]->status = $value->targetStatus;
                 $datas[$key]->sub_status = $value->sub_status;
-                $datas[$key]->lastDay = isset($amortization_schedule['end_date']) ? $amortization_schedule['end_date'] : 0;;
+                $datas[$key]->lastDay = isset($amortization_schedule['end_date']) ? $amortization_schedule['end_date'] : 0;
                 $datas[$key]->created_at = $value->created_at;
 
                 if (isset($userTargets[$value->user_id]['debtProcess'])) {
@@ -409,23 +409,47 @@ class Target extends REST_Controller
             }
         }
         $userInfo = $this->userInfo($input['user_id']);
+        $pushBy = $input['push_by'];
         if($userInfo){
             isset($input['contact_id']) && is_numeric($input['contact_id']) ? $param['contact_id'] = $input['contact_id'] : '';
             $this->load->model('loanmanager/loan_manager_debtprocessing_model');
+
+            //簡訊
+            if($pushBy == 7){
+                $this->load->library('sms_lib');
+                $phone 		= $userInfo->phone;
+                $content 	= $input['message'];
+                $rs = $this->sms_lib->send('LoanManagement',$userInfo->id,$phone,$content);
+            }//系統訊息+E-mail(5) E-mail(9)
+            elseif($pushBy == 5 || $pushBy == 9){
+                $title = "【訊息通知】";
+                $content = $input['message'];
+                $param = array(
+                    "user_id"	=> $userInfo->id,
+                    "investor"	=> 0,
+                    "title"		=> $title,
+                    "content"	=> $content,
+                );
+                $this->load->model('user/user_notification_model');
+                $pushBy == 5 ? $this->user_notification_model->insert($param) : $pushBy;
+                $this->load->library('Sendemail');
+                $this->sendemail->user_notification($userInfo->id,$title,nl2br($content),'b03');
+            }
             $this->loan_manager_debtprocessing_model->insert([
                 'admin_id' => $this->user_info->id,
                 'user_id' => $input['user_id'],
                 'push_by' => $input['push_by'],
-                'push_type' => $input['push_type'],
+                'push_type' => $pushBy,
                 'message' => $input['message'],
                 'start_time' => $input['start_time'],
                 'end_time' => $input['end_time'],
-//                'result' => in_array($input['push_type'], [1, 2, 5, 7, 8]) ? ''
+                'result' => in_array($pushBy, [1, 2, 4, 5, 7, 8]) ? 1 : 0
+            ]);
+            $this->response([
+                'result' => 'SUCCESS',
             ]);
         }
-        $this->response([
-            'result' => 'SUCCESS',
-        ]);
+        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
     }
 
     function userPassbook_get($internal = false, $account = false)
