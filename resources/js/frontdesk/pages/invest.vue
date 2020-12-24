@@ -443,7 +443,7 @@ export default {
 
       for (q = 0; q < _totalFlow.length; q++) {
         let temp = _totalFlow[q];
-        xAxisData.push(q);
+        xAxisData.push(q+1);
         listAmount.push((total += $this.amount));
         let t = 0;
 
