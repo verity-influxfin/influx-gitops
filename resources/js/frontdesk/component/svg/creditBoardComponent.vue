@@ -3431,8 +3431,8 @@
           id="small"
           ref="small"
           class="st20 rot"
-          :cx="scx"
-          :cy="scy"
+          cx="551.916"
+          cy="408.311"
           :r="smallR"
         />
       </g>
@@ -3469,29 +3469,20 @@ export default {
   data: () => ({
     bigR: window.innerWidth > 767 ? 21.4 : 30,
     smallR: window.innerWidth > 767 ? 12.9 : 25,
-    scx: window.innerWidth > 767 ? 368.904 : 350.517,
-    scy: window.innerWidth > 767 ? 338.171 : 207.679,
     key: 0,
     amountCount: 5000,
     rateCount: 5,
     pmt: 0,
     tweenedPmt: 0,
     moveEl: "",
-    pageY: "",
     target: "",
-    smin: "",
-    smax: "",
-    sDeg: "",
-    bDeg: "",
     periods: [3, 6, 12, 18, 24],
     big: {
-      deg: 105,
       cx: 263.9,
       cy: 253.6,
       r: 208.5,
     },
     small: {
-      deg: window.innerWidth > 767 ? 153 : 196,
       cx: 506.8,
       cy: 252.2,
       r: 162.5,
@@ -3528,11 +3519,6 @@ export default {
       $("body").css("overflow", "hidden");
       this.moveEl = event.target;
       this.target = $(event.target).attr("id");
-
-      this.smin = window.innerWidth > 767 ? 0 : 45;
-      this.smax = window.innerWidth > 767 ? 150 : 196;
-      this.sDeg = (this.smax - this.smin) / 29;
-      this.bDeg = 150 / ((this.amount - 5000) / 1000);
     },
     handleTouchMove(event) {
       $("body").css("overflow", "hidden");
@@ -3564,71 +3550,55 @@ export default {
     getTarget(e, target) {
       this.moveEl = e.target;
       this.target = target;
-
-      this.smin = window.innerWidth > 767 ? 0 : 45;
-      this.smax = window.innerWidth > 767 ? 150 : 196;
-      this.sDeg = (this.smax - this.smin) / 29;
-      this.bDeg = 150 / ((this.amount - 5000) / 1000);
     },
     removeTarget() {
       this.moveEl = "";
       this.target = "";
     },
     moving(e) {
-      let pageY = e.pageY;
-
-      if (this.target) {
-        if (this.pageY > pageY) {
-          if (this.target === "big") {
-            if (this.big.deg < 255) {
-              this.big.deg += this.bDeg;
-              this.amountCount += 1000;
-            }
-          }
-
-          if (this.target === "small") {
-            if (this.small.deg > this.smin) {
-              this.small.deg -= this.sDeg;
-              this.rateCount += 0.5;
-            }
-          }
-        } else {
-          if (this.target === "big") {
-            if (this.big.deg > 105) {
-              this.big.deg -= this.bDeg;
-              this.amountCount -= 1000;
-            }
-          }
-          if (this.target === "small") {
-            if (this.small.deg < this.smax) {
-              this.small.deg += this.sDeg;
-              this.rateCount -= 0.5;
-              console.log(this.small.deg);
-            }
-          }
-        }
-
-        this.slide(e);
-      }
-
-      this.pageY = pageY;
-    },
-    slide(e) {
       let pageY = e.pageY - $("#ccrata").offset().top;
       let pageX = e.pageX - $("#ccrata").offset().left;
 
+      if (this.target) {
+        let dx = pageX - this[this.target]["cx"];
+        let dy = pageY - this[this.target]["cy"];
+
+        let ang = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+        if (this.target === "big") {
+          let allAng = 150;
+          if ((ang >= 105 && ang <= 180) || (ang >= -180 && ang <= -105)) {
+            let deg = ang < 0 ? 360 + ang : ang;
+            let amountCount = ((this.amount - 5000) * (deg - 105)) / 150 + 5000;
+            this.amountCount = Math.round(amountCount / 1000) * 1000;
+
+            this.rotate(ang);
+          }
+        }
+
+        if (this.target === "small") {
+          let allAng = 150;
+          if ((ang >= 0 && ang <= 75) || (ang >= -75 && ang <= 0)) {
+            let deg = (ang - 75) * -1;
+            let rateCount = (15 * (deg - 0)) / 149 + 5;
+            this.rateCount = rateCount - (rateCount % 0.5);
+
+            this.rotate(ang);
+          }
+        }
+      }
+    },
+    rotate(ang) {
       let cx =
         this[this.target]["cx"] +
-        this[this.target]["r"] * Math.cos((this[this.target]["deg"] * 3.14) / 180);
+        this[this.target]["r"] * Math.cos((ang * Math.PI) / 180);
       let cy =
         this[this.target]["cy"] +
-        this[this.target]["r"] * Math.sin((this[this.target]["deg"] * 3.14) / 180);
+        this[this.target]["r"] * Math.sin((ang * Math.PI) / 180);
 
-      if (cx + 300 > pageX && cx - 300 < pageX && cy + 300 > pageY && cy - 300 < pageY) {
-        $(this.moveEl).attr("cx", cx);
-        $(this.moveEl).attr("cy", cy);
-        this.calculation();
-      }
+      $(this.moveEl).attr("cx", cx);
+      $(this.moveEl).attr("cy", cy);
+      this.calculation();
     },
     calculation() {
       let m_rate = this.rateCount / 1200;
@@ -3741,19 +3711,8 @@ export default {
     stroke-miterlimit: 10;
   }
 
-  .rot {
-    transform: rotate(-75deg);
-    transform-origin: 71% 50%;
-  }
-
   .cce {
     font-size: 44px;
-  }
-
-  @media screen and (max-width: 767px) {
-    .rot {
-      transform: rotate(-120deg);
-    }
   }
 }
 
