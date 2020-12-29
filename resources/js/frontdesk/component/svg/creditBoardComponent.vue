@@ -3556,22 +3556,30 @@ export default {
       this.target = "";
     },
     moving(e) {
-      let pageY = e.pageY - $("#ccrata").offset().top;
-      let pageX = e.pageX - $("#ccrata").offset().left;
+      let pageY;
+      let pageX;
+
+      if (window.innerWidth > 767) {
+        pageY = e.pageY - $("#ccrata").offset().top;
+        pageX = e.pageX - $("#ccrata").offset().left;
+      } else {
+        pageY = e.pageY - $("#ccrata").offset().top + e.clientY / 2;
+        pageX = e.pageX - $("#ccrata").offset().left + e.clientX;
+      }
 
       if (this.target) {
         let dx = pageX - this[this.target]["cx"];
         let dy = pageY - this[this.target]["cy"];
 
         let ang = (Math.atan2(dy, dx) * 180) / Math.PI;
-
+        
         if (this.target === "big") {
           let allAng = 150;
           if ((ang >= 105 && ang <= 180) || (ang >= -180 && ang <= -105)) {
             let deg = ang < 0 ? 360 + ang : ang;
             let amountCount = ((this.amount - 5000) * (deg - 105)) / 150 + 5000;
             this.amountCount = Math.round(amountCount / 1000) * 1000;
-
+            
             this.rotate(ang);
           }
         }
