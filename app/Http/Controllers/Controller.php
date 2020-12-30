@@ -96,7 +96,7 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $filter = [['isActive', '=', 'on'], ['isRead', '=', '1'], ['video_link', '!=', '']];
+        $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
 
         if ($input['type']) {
             $filter[] = ['category', '=', $input['type']];
