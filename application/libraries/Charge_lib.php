@@ -749,17 +749,9 @@ class Charge_lib
 			}
 			$this->CI->target_model->update($target->id,$update_data);
             $gracePeriod = $target->product_id == PRODUCT_FOREX_CAR_VEHICLE ? 0 : GRACE_PERIOD;
-			if($delay_days > $gracePeriod){
-                // check time not between 00:00:00 ~ 00:09:59
-                $now_dateime = date("Y-m-d H:i:s", time());
-                $spilt_array = explode(" ", $now_dateime);
-                $time_string = $spilt_array[1];
-                $time_array = explode(":", $time_string);
-                $hour = $time_array[0];
-                $minute = $time_array[1];
-                if (!($hour == 0 && $minute < 10)) {
-                    $this->handle_delay_target($target,$delay_days,$gracePeriod);
-                }
+			if ($delay_days > $gracePeriod) {
+                // revert to 7df5a422de2af7fdb1e4a7063df1907c7ceacd5b, issue#800
+                $this->handle_delay_target($target, $delay_days, $gracePeriod);
 			}
 			return true;
 		}
@@ -873,6 +865,7 @@ class Charge_lib
                                 [
                                     'source' 		=> SOURCE_AR_FEES,
                                     'investment_id' => $value['investment_id'],
+                                    'status'        => 1
                                 ],
                                 [
                                     'amount' => $ar_fee

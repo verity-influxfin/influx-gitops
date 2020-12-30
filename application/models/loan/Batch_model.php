@@ -15,8 +15,15 @@ class Batch_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-        $data['created_at'] 	= time();
-        $data['created_ip'] 	= get_ip();
+        $data['created_at'] = $data['updated_at'] = time();
+        $data['created_ip'] = $data['updated_ip'] = get_ip();
+        return $data;
+    }
+
+    protected function before_data_u($data)
+    {
+        $data['updated_at'] = time();
+        $data['updated_ip'] = get_ip();
         return $data;
     }
 }

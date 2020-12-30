@@ -104,6 +104,7 @@ class Target_lib
             $this->CI->order_lib->order_change($target->order_id, 1, [
                 'status' => 2,
             ], 0, $admin_id);
+            $this->aiBiddingTarget($target);
             return true;
         }
         return false;
@@ -322,7 +323,8 @@ class Target_lib
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
-                        $loan_amount = $loan_amount % 1000 != 0 ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
+                        // 金額取整程式，2020/10/30排除產轉
+                        $loan_amount = ($loan_amount % 1000 != 0 && $subloan_status == false) ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
                         if ($loan_amount >= $product_info['loan_range_s'] || $subloan_status || $stage_cer != 0 && $loan_amount >= STAGE_CER_MIN_AMOUNT) {
                             if ($product_info['type'] == 1 || $subloan_status) {
                                 $platform_fee = $this->CI->financial_lib->get_platform_fee($loan_amount, $product_info['charge_platform']);
@@ -449,10 +451,21 @@ class Target_lib
         if (!empty($target) && $target->status == 2) {
             $param['status'] = 3;
             $param['launch_times'] = isset($param['launch_times']) ? $param['launch_times'] : 1;
-            $target->sub_status != 8 ? $param['expire_time'] = strtotime('+2 days', time()) : '';
+
+            if ($target->sub_status != 8) {
+                if ($target->sub_product_id == STAGE_CER_TARGET) {
+                    // 階段性上架
+                    $param['expire_time'] = strtotime('+2 days', time());
+                } else {
+                    // 一般
+                    $param['expire_time'] = strtotime('+14 days', time());
+                }
+            }
+
             $this->CI->target_model->update($target->id, $param);
             $this->insert_change_log($target->id, $param, $user_id, $admin_id);
             $this->CI->notification_lib->target_verify_success($target);
+            $this->aiBiddingTarget($target);
             return true;
         }
         return false;
@@ -1677,6 +1690,191 @@ class Target_lib
             }
         }
         return false;
+    }
+
+    //使用者觸發架上案件智能投資
+    public function aiBiddingAllTarget($userId){
+        $allow_aiBidding_product = $this->CI->config->item('allow_aiBidding_product');
+        $targets = $this->CI->target_model->order_by('expire_time','asc')->get_many_by([
+            'product_id' => $allow_aiBidding_product,
+            'status' => 3,
+            'script_status' => 0
+        ]);
+        foreach($targets as $key => $value){
+            $this->aiBiddingTarget($value, $userId);
+        }
+    }
+
+    //案件觸發智能投資用戶
+    public function aiBiddingTarget($target, $userId = false){
+        //取得智能投資設定有效期用戶清單
+        $this->CI->load->model('loan/batch_model');
+        $param = [
+            'type' => 0,
+            'status' => 1,
+            'expire_time >=' => time(),
+        ];
+        $userId ? $param['user_id'] = $userId : '';
+        $aiBiddingList = $this->CI->batch_model->order_by('expire_time','asc')->get_many_by($param);
+        if($aiBiddingList){
+            $this->CI->config->load('school_points',TRUE);
+            $school_list = $this->CI->config->item('school_points');
+            $target->system = null;
+            $target->national = null;
+            //取得meta資訊
+            $user_meta = $this->CI->user_meta_model->get_many_by([
+                'user_id'	=> $target->user_id,
+                'meta_key'	=> ['school_system','school_name']
+            ]);
+            if($user_meta){
+                foreach ($user_meta as $skey => $svalue) {
+                    //取得學制
+                    $svalue->meta_key == 'school_system' ? $target->system = $svalue->meta_value : '';
+
+                    //取得案件學歷是否國立
+                    if($svalue->meta_key == 'school_name') {
+                        foreach ($school_list['school_points'] as $k => $v) {
+                            if (trim($svalue->meta_value) == $v['name']) {
+                                $target->national= $v['national'];
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //取得性別
+            $target_user_info = $this->CI->user_model->get($target->user_id);
+            $target->sex = $target_user_info->sex;
+
+            $this->aiBidding($target, $aiBiddingList);
+        }
+    }
+
+    public function aiBidding($target = [], $aiBiddingList = []){
+        $allow_aiBidding_product = $this->CI->config->item('allow_aiBidding_product');
+        if(!in_array($target->product_id, $allow_aiBidding_product)){
+            return false;
+        }
+
+        //案件剩餘可投標餘額
+        $targetAllowAmount = $target->loan_amount - $target->invested;
+        if($targetAllowAmount < 1000){
+            return false;
+        }
+
+        //取得該案投資清單
+        $investmentList = [];
+        $this->CI->load->model('loan/investment_model');
+        $investments = $this->CI->investment_model->get_many_by([
+            'target_id' => $target->id,
+        ]);
+        foreach($investments as $key => $value){
+            //曾下標的投資人
+            $investmentList[] = $value->user_id;
+        }
+
+        if(count($aiBiddingList) == 1){
+            if(in_array($aiBiddingList[0]->user_id, $investmentList)){
+                return false;
+            }
+        }
+
+        //智能投資名單
+        foreach($aiBiddingList as $key => $value){
+            $aiBiddingUserList[] = $value->user_id;
+        }
+
+        //取得各智能投資的用戶今日投資數字
+        $today = strtotime(date("Y-m-d", time()));
+        $todayInvestments = [];
+        $getTodayInvestments = $this->CI->investment_model->get_many_by([
+            'user_id' => $aiBiddingUserList,
+            'status NOT' => [8, 9],
+            'created_at >=' => $today,
+        ]);
+        foreach($getTodayInvestments as $key => $value){
+            //如已結標則以結標金額
+            $amount = $value->status >= 2 ? $value->loan_amount : $value->amount;
+
+            //統計投資人今日投資額
+            !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
+            $todayInvestments[$value->user_id] += $amount;
+        }
+
+        foreach($aiBiddingList as $key => $value){
+            if($targetAllowAmount >= 1000){
+                $content = json_decode($value->filter);
+                $biddingAmount = 0;
+                $targetAmount = $content->target_amount * 1000;
+                $dailyAmount = $content->daily_amount * 1000;
+                $cancel = false;
+
+                //判斷案件是否符合條件
+                $filter = ['product_id', 'credit_level', 'sex', 'system', 'national'];
+                foreach($filter as $fkey => $fvalue){
+                    if($content->$fvalue != 'all') {
+                        $ids = explode(",", $content->$fvalue);
+                        //不符篩選條件
+                        if (!in_array($target->$fvalue, $ids)) {
+                            $cancel = true;
+                            continue;
+                        }
+                    }
+                }
+                if($content->interest_rate_s > intval($target->interest_rate)
+                    || $content->interest_rate_e < intval($target->interest_rate)
+                    || $content->instalment_s > intval($target->instalment)
+                    || $content->instalment_e < intval($target->instalment)
+                ){
+                    continue;
+                }
+
+                //排除曾下標的投資人與排除不符篩選標準
+                if(!in_array($value->user_id, $investmentList) && !$cancel){
+                    !isset($todayInvestments[$value->user_id]) ? $todayInvestments[$value->user_id] = 0 : '';
+                    //有設定每日投資額度
+                    if($dailyAmount != 0){
+                        //計算今日可投標餘額 = 投資人設定投標金額 - 今日已投標金額
+                        $todayAllowAmounts = $dailyAmount - $todayInvestments[$value->user_id];
+                        if($todayAllowAmounts >= 1000){//餘額滿足一千底標
+                            //有設定每案投資額度
+                            if($targetAmount != 0){
+                                //允許投標金額 = 每案投資額度 >= 今日投標餘額 則 以今日投標餘額
+                                $allowBiddingAmount = $targetAmount >= $todayAllowAmounts ? $todayAllowAmounts : $targetAmount;
+                                //投標金額 = 允許投標金額 >= 案件可投標金額 則 以案件可投標金額
+                                $biddingAmount = $allowBiddingAmount >= $targetAllowAmount ? $targetAllowAmount : $allowBiddingAmount;
+                                //->以每案投資額度投標
+                            }else{
+                                //->今日可投額度來投標至滿標
+                                $biddingAmount = $targetAllowAmount >= $todayAllowAmounts ? $todayAllowAmounts : $targetAllowAmount;
+                            }
+                        }
+                    }else{
+                        //有設定每案投資額度
+                        if($targetAmount != 0){
+                            //投標金額 = 每案投資額度 >= 案件可投標金額 則 以案件可投標金額
+                            $biddingAmount = $targetAmount >= $targetAllowAmount ? $targetAllowAmount : $targetAmount;
+                            //->以每案投資額度投標
+                        }else{
+                            //全額投至滿標
+                            $biddingAmount = $targetAllowAmount;
+                            //->有多少投多少
+                        }
+                    }
+                    if($biddingAmount >= 1000){
+                        //投標
+                        $this->CI->load->model('loan/investment_model');
+                        $this->CI->investment_model->insert([
+                            'target_id' => $target->id,
+                            'user_id' => $value->user_id,
+                            'amount' => $biddingAmount,
+                            'aiBidding' => 1,
+                        ]);
+                    }
+                }
+            }
+        }
     }
 
     private function get_target_no($product_id = 0)

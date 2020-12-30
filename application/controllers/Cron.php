@@ -415,5 +415,31 @@ class Cron extends CI_Controller {
       file_put_contents('reScraper.txt', json_encode($current));
       echo'ok';
   	}
+
+	public function send_ID_card_request()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$personId  = isset($input['personId']) ? $input['personId'] : '';
+		$applyCode  = isset($input['applyCode']) ? $input['applyCode'] : '';
+		$applyYyymmdd  = isset($input['applyYyymmdd']) ? $input['applyYyymmdd'] : '';
+		$issueSiteId  = isset($input['issueSiteId']) ? $input['issueSiteId'] : '';
+		$this->load->library('output/json_output');
+		$this->load->library('id_card_lib');
+
+		if(!$personId || !$applyCode || !$applyYyymmdd || !$issueSiteId){
+			$response = array("Wrong Parameters");
+			$this->json_output->setStatusCode(400)->setResponse($response)->send();
+		}
+
+		$result = $this->id_card_lib->send_request($personId, $applyCode, $applyYyymmdd, $issueSiteId);
+
+		$response = json_decode(json_encode($result), true);
+		if(!$response){
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$this->json_output->setStatusCode(200)->setResponse([$response])->send();
+	}
+
 }
 

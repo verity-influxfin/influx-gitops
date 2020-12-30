@@ -4,9 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Passbook extends MY_Admin_Controller {
-	
+
 	protected $edit_method = array('withdraw_loan','loan_success','loan_failed','unknown_refund','withdraw_by_admin','withdraw_deny');
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/virtual_account_model');
@@ -15,21 +15,21 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->library('passbook_lib');
 
 	}
-	
+
 	public function index(){
 		$page_data 	= array('type'=>'list');
 		$input 		= $this->input->get(NULL, TRUE);
 		$where		= [];
 		$list		= [];
-		
+
 		if(isset($input['virtual_account']) && $input['virtual_account']!='' ) {
 			$where['virtual_account like'] = '%'.$input['virtual_account'].'%';
 		}
-		
+
 		if(isset($input['user_id']) && $input['user_id']!='' ) {
 			$where['user_id'] = $input['user_id'];
 		}
-		
+
 		if(!empty($where)){
 			$list = $this->virtual_account_model->order_by('user_id','ASC')->get_many_by($where);
 		}
@@ -42,7 +42,7 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->view('admin/passbook_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function edit(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?$get['id']:'';
@@ -56,7 +56,7 @@ class Passbook extends MY_Admin_Controller {
 		}else{
 			$virtual_account 	= $this->virtual_account_model->get($id);
 		}
-		
+
 		if($virtual_account){
 			$list 				= $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
 			$frozen_list 		= $this->frozen_amount_model->order_by('tx_datetime','ASC')->get_many_by(array('virtual_account'=>$virtual_account->virtual_account));
@@ -77,7 +77,7 @@ class Passbook extends MY_Admin_Controller {
 			alert('ERROR , id is not exist',admin_url('passbook/index'));
 		}
 	}
-	
+
 	public function display(){
 		$get 				=	 $this->input->get(NULL, TRUE);
 		$account 			= isset($get['virtual_account'])?$get['virtual_account']:'';
@@ -108,7 +108,7 @@ class Passbook extends MY_Admin_Controller {
 			echo 'ERROR , Account is not exist';
 		}
 	}
-	
+
 	public function withdraw_list(){
 		$page_data 	= array('type'=>'list');
 		$list 		= $this->withdraw_model->get_all();
@@ -123,7 +123,7 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->view('admin/withdraw_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function withdraw_waiting(){
 		$page_data 	= array('type'=>'list');
 		$where		= array(
@@ -143,7 +143,7 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->view('admin/withdraw_waiting',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	function withdraw_loan(){
 		$get 		= $this->input->get(NULL, TRUE);
 		$ids		= isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
@@ -162,12 +162,12 @@ class Passbook extends MY_Admin_Controller {
 			alert('請選擇待放款的案件',admin_url('passbook/withdraw_waiting'));
 		}
 	}
-	
+
 	function unknown_funds(){
 		$this->load->model('transaction/payment_model');
 		$page_data 	= array('type'=>'list');
 		$where		= array(
-			'status' 		=> array(4,5,6),
+			'status' 		=> array(4,5,6,7),
 		);
 		$list = $this->payment_model->get_many_by($where);
 		if(!empty($list)){
@@ -180,7 +180,7 @@ class Passbook extends MY_Admin_Controller {
 		$this->load->view('admin/unknown_funds',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	function unknown_refund(){
 		$get 		= $this->input->get(NULL, TRUE);
 		$ids		= isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):'';
@@ -199,7 +199,7 @@ class Passbook extends MY_Admin_Controller {
 			alert('請選擇退款',admin_url('Passbook/unknown_funds'));
 		}
 	}
-	
+
 	function loan_success(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -220,7 +220,7 @@ class Passbook extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function loan_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -236,7 +236,7 @@ class Passbook extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function withdraw_by_admin(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;

@@ -282,10 +282,10 @@ defined('PLATFORM_FEES_MIN')   		OR define('PLATFORM_FEES_MIN'		, 500); //最低
 defined('REPAYMENT_PLATFORM_FEES') 	OR define('REPAYMENT_PLATFORM_FEES'	, 1); //平台手續費%
 defined('ORDER_INTEREST_RATE') 		OR define('ORDER_INTEREST_RATE'		, 18); //分期利率
 defined('FEV_INTEREST_RATE') 		OR define('FEV_INTEREST_RATE'		, 15); //分期利率
-defined('FEV_SHARE_RATE') OR define('FEV_SHARE_RATE' , 2); //平台分潤
+defined('FEV_SHARE_RATE')           OR define('FEV_SHARE_RATE' , 2); //平台分潤
 defined('FEV_PREPAYMENT_SHARE_RATE') OR define('FEV_PREPAYMENT_SHARE_RATE' , 5); //提早清算平台分潤
-defined('STAGE_CER_TARGET') OR define('STAGE_CER_TARGET' , 9999);
-defined('STAGE_CER_MIN_AMOUNT') OR define('STAGE_CER_MIN_AMOUNT' , 3000);
+defined('STAGE_CER_TARGET')         OR define('STAGE_CER_TARGET' , 9999);
+defined('STAGE_CER_MIN_AMOUNT')     OR define('STAGE_CER_MIN_AMOUNT' , 3000);
 defined('SUL_INTEREST_STARTING_RATE') 		OR define('SUL_INTEREST_STARTING_RATE' , 5); //分期利率
 defined('SUL_INTEREST_ENDING_RATE') 		OR define('SUL_INTEREST_ENDING_RATE' , 20); //分期利率
 defined('PREPAYMENT_ALLOWANCE_FEES') 		OR define('PREPAYMENT_ALLOWANCE_FEES'		, 1); //提還補貼%
@@ -335,6 +335,7 @@ defined('SOURCE_VERIFY_FEE')     	OR define('SOURCE_VERIFY_FEE'		, '81');//平�
 defined('SOURCE_VERIFY_FEE_R')     	OR define('SOURCE_VERIFY_FEE_R'		, '82');//平台驗證費退回
 defined('SOURCE_REMITTANCE_FEE')    OR define('SOURCE_REMITTANCE_FEE'	, '83');//跨行轉帳費
 defined('SOURCE_REMITTANCE_FEE_R')  OR define('SOURCE_REMITTANCE_FEE_R'	, '84');//跨行轉帳費退回
+defined('SOURCE_UNKNOWN_R')         OR define('SOURCE_UNKNOWN_R'        , '85');//不明原因退回
 
 defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '91');//應收違約金
 defined('SOURCE_DAMAGE')       		OR define('SOURCE_DAMAGE'			, '92');//違約金
@@ -468,4 +469,8 @@ defined('GOOGLE_APPLICATION_CREDENTIALS')  OR define('GOOGLE_APPLICATION_CREDENT
 defined('REDIS_AGREEMENT_LIST')   	OR define('REDIS_AGREEMENT_LIST'	, 'agreement_list');
 defined('REDIS_EVENT_LIST')   		OR define('REDIS_EVENT_LIST'		, 'event_list');
 defined('REDIS_NEWS_LIST')   		OR define('REDIS_NEWS_LIST'			, 'news_list');
+
+// use sql instead of CI orm ,issue#898
+defined('P2P_LOAN_DB')              OR define('P2P_LOAN_DB'             , 'p2p_loan');
+defined('P2P_LOAN_TARGET_TABLE')    OR define('P2P_LOAN_TARGET_TABLE'   , 'targets');
 
