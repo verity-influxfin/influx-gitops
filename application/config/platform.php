@@ -59,10 +59,6 @@ $config['admin_menu'] = [
         'user_certification_list' => '會員認證審核',
         'difficult_word_list' => '銀行困難字管理',
     ],
-    'Creditmanagementtable' => [
-        'parent_name' => '授信審核表',
-        'index' => '報表',
-    ],
     'Partner' => [
         'parent_name' => '合作夥伴管理',
         'partner_type' => '合作商類別',
