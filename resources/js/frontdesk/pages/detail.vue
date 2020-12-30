@@ -187,7 +187,7 @@ export default {
       });
       pieData.push({
         value: $this.invsetmentData.accounts_receivable.interest,
-        name: "待回收利息",
+        name: "預期利息",
         itemStyle: { color: "#F57C00" },
       });
       pieData.push({

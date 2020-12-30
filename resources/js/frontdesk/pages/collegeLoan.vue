@@ -1,33 +1,37 @@
 <template>
   <div class="college-wrapper">
-    <banner :data="this.bannerData"></banner>
-    <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <!-- <h3>「夢想與生活的資金需求，普匯投資借給你！」</h3> -->
-          <p>「普匯．你的手機ATM」</p>
-          <p>「3分鐘申請，10分鐘核准，1小時到帳」</p>
-          <p>集結了各大學校友、老師，專門投資借貸同學在學期間的資金需求。</p>
+    <banner :data="bannerData" :isBorrow="true"></banner>
+    <target
+      :items="applyData.item"
+      text="滿20歲的在校生，準備您的雙證件、學生證、金融卡，在APP上拍照上傳，立即核准！"
+    ></target>
+    <apply title="申貸簡便四步驟" :step="applyData.step" />
+    <div class="partner-card">
+      <img src="../asset/images/circle.svg" class="img-fluid ib" />
+      <div class="cnt">
+        <div class="c-c">
+          <div class="t-c">
+            <h2>用戶遍佈全台大專院校</h2>
+          </div>
+          <div class="hr"></div>
+          <p>
+            超過156所大學生，在普匯找到生活費、補習費、出國遊學、交換學生...完成夢想！
+          </p>
+        </div>
+        <div class="c-i">
+          <img class="img-fluid" src="../asset/images/formosa.svg" />
         </div>
       </div>
     </div>
-    <div class="partner-card">
-      <div class="partner-box">
-        <p>我們服務了超過140所學校的同學</p>
-      </div>
-      <div class="partner-map">
-        <img class="img-fluid" src="../asset/images/taiwan.svg" />
-      </div>
-    </div>
-    <credit :creditList="creditList" amount="12" />
-    <apply
-      title="申貸簡便四步驟"
-      :requiredDocuments="applyData.requiredDocuments"
-      :step="applyData.step"
+    <credit
+      :creditList="creditList"
+      amount="120000"
+      text="數萬名大專院校、碩博學士會員<br>動動手拍拍照手機上傳，額度立即核准！<br>最快5分鐘申貸 10分鐘核准 1小時放款！"
     />
-    <experience :experiences="experiences" title="同學回饋"/>
+    <experience :experiences="experiences" title="同學回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -37,7 +41,9 @@ import download from "../component/downloadComponent";
 import experience from "../component/experienceComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
+import target from "../component/targetComponent";
 import credit from "../component/creditComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -46,23 +52,14 @@ export default {
     experience,
     qa,
     apply,
+    target,
     credit,
+    float,
   },
   data: () => ({
     qaData: [],
     bannerData: {},
     applyData: {},
-    creditList: {
-      rate1: 5,
-      rate2: 6,
-      rate3: 7,
-      rate4: 8,
-      rate5: 9,
-      rate6: 10,
-      rate7: 11,
-      rate8: 12,
-      rate9: 13,
-    },
   }),
   computed: {
     experiences() {
@@ -73,9 +70,6 @@ export default {
           data.push(row);
         }
       });
-
-      console.log();
-
       return data;
     },
     video() {
@@ -111,18 +105,14 @@ export default {
         });
     },
     getApplydata() {
-      axios
-        .post(`${location.origin}/getApplydata`, { filter: "college" })
-        .then((res) => {
-          this.applyData = res.data;
-        });
+      axios.post(`${location.origin}/getApplydata`, { filter: "college" }).then((res) => {
+        this.applyData = res.data;
+      });
     },
     getQaData() {
-      axios
-        .post(`${location.origin}/getQaData`, { filter: "college" })
-        .then((res) => {
-          this.qaData = res.data;
-        });
+      axios.post(`${location.origin}/getQaData`, { filter: "college" }).then((res) => {
+        this.qaData = res.data;
+      });
     },
   },
 };
@@ -132,144 +122,110 @@ export default {
 .college-wrapper {
   width: 100%;
 
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-    color: #083a6e;
+  .t-c {
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip: text;
+    width: fit-content;
+    color: #ffffff00;
+    margin: 0px auto;
+
+    h2 {
+      font-weight: bolder;
+    }
   }
 
   .hr {
     width: 130px;
     height: 2px;
-    background-image: linear-gradient(to right, #000e8b, #ffffff);
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
-  }
-
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
-
-    i {
-      margin-left: 10px;
-    }
-
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
-
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #94d6eb;
-      position: relative;
-
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #04769f;
-        font-weight: bold;
-        color: #ffffff;
-
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
-        }
-
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
-        }
-      }
-    }
   }
 
   .partner-card {
     overflow: auto;
     position: relative;
-    padding: 4rem 0px 0px 0px;
-    display: flex;
-    justify-content: flex-end;
+    background-color: #ecedf1;
 
-    .partner-box {
-      background-color: #d9e7f5;
-      width: 30%;
-      position: relative;
-
-      p {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 24.5px;
-        font-weight: bold;
-        line-height: 1.73;
-        color: #000000;
-      }
+    .ib {
+      width: 100%;
     }
 
-    .partner-map {
-      overflow: hidden;
-      width: 55%;
+    .cnt {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      width: 80%;
+
+      .hr {
+        margin: 1rem 0px;
+      }
+
+      .t-c {
+        background-image: linear-gradient(to right, #3179d5 0%, #0ad0f4 50%, #3179d5 75%);
+
+        margin: 0px;
+      }
+
+      %width {
+        width: 50%;
+      }
+
+      .c-i {
+        @extend %width;
+      }
+
+      .c-c {
+        @extend %width;
+        padding: 5rem 0px;
+
+        p {
+          font-size: 17px;
+          font-weight: 500;
+          line-height: 2.5;
+          letter-spacing: 1px;
+          color: #ffffff;
+        }
+      }
     }
   }
 
   @media screen and (max-width: 767px) {
     h2 {
       font-size: 25px;
-      margin-bottom: 20px;
-    }
-
-    .link {
-      width: 50%;
-    }
-
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-          p {
-            word-break: break-word;
-          }
-        }
-      }
     }
 
     .partner-card {
-      flex-direction: column;
-      padding: 0px;
-      overflow: hidden;
+      background: #153a71;
 
-      .partner-box {
-        width: 100%;
-
-        p {
-          position: initial;
-          transform: initial;
-          margin: 1rem 0px;
-          text-align: center;
-        }
+      .ib {
+        display: none;
       }
 
-      .partner-map {
-        width: 125%;
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
+      .cnt {
+        flex-direction: column;
+        width: 100%;
+        position: initial;
+        transform: initial;
+        padding: 10px;
+
+        .c-c {
+          width: 100%;
+          padding: 10px 0px;
+
+          .t-c {
+            margin: 0px auto;
+          }
+
+          .hr {
+            margin: 0px auto;
+          }
+        }
+
+        .c-i {
+          width: 100%;
+        }
       }
     }
   }

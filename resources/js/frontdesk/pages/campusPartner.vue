@@ -7,19 +7,29 @@
         <p>你有天馬行空的行銷創意卻沒有舞台付諸行動嗎？</p>
         <p>你是熱愛與人交流、活力滿點的大學生嗎？</p>
         <p>你厭倦普通的打工實習生活了嗎？</p>
-        <p>inFlux普匯校園大使計畫讓你換個方式磨練自我，替未來的履歷增添色彩，勇敢跨出舒適圈，打造更精彩豐富的大學生活。</p>
+        <p>
+          inFlux普匯校園大使計畫讓你換個方式磨練自我，替未來的履歷增添色彩，勇敢跨出舒適圈，打造更精彩豐富的大學生活。
+        </p>
         <p>加入校園大使計劃，你可以：</p>
         <ul>
           <li>提出各種天馬行空的想法，只要你敢說，我們就敢做！</li>
-          <li>認識公司裡來自各領域的奇人異士，有時候新的點子就是在各種對談碰撞中產生的！</li>
-          <li>深入了解金融科技產業，團隊的豐富閱歷以及不一樣的人生觀點絕對讓你受益無窮！</li>
+          <li>
+            認識公司裡來自各領域的奇人異士，有時候新的點子就是在各種對談碰撞中產生的！
+          </li>
+          <li>
+            深入了解金融科技產業，團隊的豐富閱歷以及不一樣的人生觀點絕對讓你受益無窮！
+          </li>
         </ul>
       </div>
       <h4>《報名條件》</h4>
       <div class="text-card">
-        <p>只要你是在學大專院校學生，而且不怕挑戰配合度高、活潑外向願意接受人群、熱情且積極就可以申請擔任PuHey!的校園大使哦！</p>
+        <p>
+          只要你是在學大專院校學生，而且不怕挑戰配合度高、活潑外向願意接受人群、熱情且積極就可以申請擔任PuHey!的校園大使哦！
+        </p>
         <ul>
-          <li>加分項目：臉書、IG擁有高關注度、經營其他個人部落格、人際關係良好交際面廣。</li>
+          <li>
+            加分項目：臉書、IG擁有高關注度、經營其他個人部落格、人際關係良好交際面廣。
+          </li>
         </ul>
       </div>
       <h4>《工作內容》</h4>
@@ -64,15 +74,17 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post(`${location.origin}/getBannerData`, { filter: "campuspartner" }).then((res) => {
-        this.bannerData = res.data;
-      });
+      axios
+        .post(`/getBannerData`, { filter: "campuspartner" })
+        .then((res) => {
+          this.bannerData = res.data;
+        });
     },
     submitData(data) {
       data["type"] = "campus";
 
       axios
-        .post(`${location.origin}/action`, data)
+        .post(`/action`, data)
         .then((res) => {
           this.componentKey += 1;
           this.errorMessage = "";
@@ -104,7 +116,7 @@ export default {
   .content {
     padding: 30px;
     width: 80%;
-    margin: -35% auto 15px auto;
+    margin: -32rem auto 1rem auto;
     box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
     background: #ffffff;
 
@@ -120,7 +132,7 @@ export default {
   @media screen and (max-width: 767px) {
     .content {
       padding: 10px;
-      margin: -36rem auto 0px auto;
+      margin: 1rem auto;
       width: 95%;
 
       .text-card {

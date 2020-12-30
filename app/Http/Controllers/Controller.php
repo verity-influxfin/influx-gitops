@@ -55,17 +55,15 @@ class Controller extends BaseController
         $news = DB::table('news')->select('*')->orderBy('post_date', 'desc')->get();
 
         return response()->json($news, 200);
-
     }
 
     public function getNewsArticle(Request $request)
     {
         $input = $request->all();
 
-        $news = DB::table('news')->select('*')->where('ID','=',$input['ID'])->first();
+        $news = DB::table('news')->select('*')->where('ID', '=', $input['ID'])->first();
 
         return response()->json($news, 200);
-
     }
 
     public function getInvestTonicData(Request $request)
@@ -98,15 +96,14 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
+        $filter = [['isActive', '=', 'on'], ['isRead', '=', '1'], ['video_link', '!=', '']];
 
         if ($input['type']) {
-            $filter[] = ['type', '=', $input['type']];
+            $filter[] = ['category', '=', $input['type']];
         }
 
-        $knowledge = DB::table('feedback')->select(['feedback', 'imageSrc', 'name', 'rank', 'type'])->where($filter)->orderBy('date', 'desc')->get();
-
-        return response()->json($knowledge, 200);
+        $experiences = DB::table('interview')->select(['feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
+        return response()->json($experiences, 200);
     }
 
     public function getServiceData(Request $request)
@@ -150,7 +147,7 @@ class Controller extends BaseController
 
     public function getPartnerData(Request $request)
     {
-        $partner = DB::table('partner')->select('*')->get();
+        $partner = DB::table('partner')->select('*')->orderBy('order')->get();
 
         return response()->json($partner, 200);
     }
@@ -218,7 +215,7 @@ class Controller extends BaseController
         $type = config('feedback');
 
         $this->inputs['date'] = date('Y-m-d H:i:s');
-        $this->inputs['imageSrc'] = 'images/'.$type[$userData['sex']][$this->inputs['rank']];
+        $this->inputs['imageSrc'] = 'images/' . $type[$userData['sex']][$this->inputs['rank']];
 
         try {
             $exception = DB::transaction(function () {
@@ -228,5 +225,21 @@ class Controller extends BaseController
         } catch (Exception $e) {
             return response()->json($e, 400);
         }
+    }
+
+    public function routedecode(Request $request)
+    {
+        $inputs = $request->all();
+
+        if (array_key_exists('routeData', $inputs)) {
+            $data = [];
+            foreach ($inputs['routeData'] as $row) {
+                $data[] = ['street_name' => html_entity_decode($row['street_name'])];
+            }
+
+            return response()->json($data, 200);
+        }
+
+        return response()->json('', 400);
     }
 }

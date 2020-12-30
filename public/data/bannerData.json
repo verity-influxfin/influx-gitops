@@ -2,31 +2,36 @@
     "college": {
         "bannerDesktopHref": "/images/college_banner-d.png",
         "bannerMoblieHref":"/images/college_banner-m.png",
-        "productName": "學生貸"
+        "productName": "學生貸",
+        "desc":"快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度12萬、最低利率5%<br>幫助年輕人完成夢想！"
     },
     "engineer": {
         "bannerDesktopHref": "/images/engineer_banner-d.png",
         "bannerMoblieHref":"/images/engineer_banner-m.png",
-        "productName": "工程師貸"
+        "productName": "工程師貸",
+        "desc":"只要你是工程師，不管學生、上班族還是SOHO，來就貸，普匯支持你圓夢！<br>憑證照、執照，最高可享30萬、5%低利率，跟你比速度，看誰核的快！"
     },
     "freshgraduate": {
         "bannerDesktopHref": "/images/worker_banner-d.png",
         "bannerMoblieHref":"/images/worker_banner-m.png",
-        "productName": "上班族貸"
+        "productName": "上班族貸",
+        "desc":"貸款不必找銀行，一支手機即可完成！<br>不論是「週轉急用」、「投資理財」<br>24小時滿足您的資金需求！"
     },
     "invest": {
         "bannerDesktopHref": "/images/invest_banner-d.png",
         "bannerMoblieHref":"/images/invest_banner-m.png",
-        "productName": "債權投資"
-    },
-    "mobile": {
-        "bannerDesktopHref": "/images/mobile_banner-d.png",
-        "bannerMoblieHref":"/images/mobile_banner-m.png",
-        "productName": ""
+        "productName": "債權投資",
+        "desc":"運用Fintech投資債權<br>年化報酬8~15%<br>提早達成財務自由"
     },
     "transfer": {
         "bannerDesktopHref": "/images/transfer_banner-d.png",
         "bannerMoblieHref":"/images/transfer_banner-m.png",
+        "productName": "債權轉讓",
+        "desc":"讓您隨時變現持有之債權<br>靈活運用手中資本，創造最大財富！"
+    },
+    "mobile": {
+        "bannerDesktopHref": "/images/mobile_banner-d.png",
+        "bannerMoblieHref":"/images/mobile_banner-m.png",
         "productName": ""
     },
     "company": {
@@ -35,26 +40,26 @@
     },
     "recruiting": {
         "bannerDesktopHref": "/images/recruiting_banner.jpg",
-        "bannerMoblieHref":"/images/recruiting_banner.jpg"
+        "bannerMoblieHref":""
     },
     "campuspartner": {
         "bannerDesktopHref": "/images/campuspartner_banner.jpg",
-        "bannerMoblieHref":"/images/campuspartner_banner.jpg"
+        "bannerMoblieHref":""
     },
     "clubcooperation": {
         "bannerDesktopHref": "/images/clubcooperation_banner.jpg",
-        "bannerMoblieHref":"/images/clubcooperation_banner.jpg"
+        "bannerMoblieHref":""
     },
     "firmcooperation": {
         "bannerDesktopHref": "/images/firmcooperation_banner.jpg",
-        "bannerMoblieHref":"/images/firmcooperation_banner.jpg"
+        "bannerMoblieHref":""
     },
     "companycooperation": {
         "bannerDesktopHref": "/images/companycooperation_banner.jpg",
-        "bannerMoblieHref":"/images/companycooperation_banner.jpg"
+        "bannerMoblieHref":""
     },
     "feedback": {
         "bannerDesktopHref": "/images/feedback_banner.jpg",
-        "bannerMoblieHref":"/images/feedback_banner.jpg"
+        "bannerMoblieHref":""
     }
 }

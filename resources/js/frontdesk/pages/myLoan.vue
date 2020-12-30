@@ -72,14 +72,14 @@
         <div class="repay-s">
           <p class="sm">
             <strong>{{ myRepayment.next_repayment.date }}</strong>
-            <span class="yellow">次還款日</span>
+            <span class="blue">次還款日</span>
           </p>
           <p class="sm">
             <b>
               <strong>{{ repaymentAmount }}</strong
               >元
             </b>
-            <span class="yellow">請於還款日前匯入</span>
+            <span class="blue">請於還款日前匯入</span>
           </p>
         </div>
         <p class="legend">
@@ -189,14 +189,12 @@ export default {
 
 <style lang="scss">
 .membercentre-wrapper {
-  margin-top: 84px;
   background-color: #f5f5f5;
 
   .loan-header {
-    background-image: url("../asset/images/loan_bg.png");
-    background-position: 50% 50%;
+    background-image: url("../asset/images/header_bg.png");
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: contain;
     padding: 25px 10%;
     display: flex;
     justify-content: space-between;
@@ -241,7 +239,7 @@ export default {
         float: left;
         text-align: center;
         margin: 10px 5px;
-        color: white;
+        color: #157efb;
         width: 70px;
 
         &:hover {
@@ -249,19 +247,22 @@ export default {
         }
 
         .img {
-          width: 30px;
-          height: 30px;
+          width: 45px;
+          height: 45px;
           position: relative;
           margin: 5px auto;
 
           img {
-            width: 55px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
           }
 
           span {
             position: absolute;
             top: -13px;
-            right: 5px;
+            right: 15px;
             background: #08deb1;
             border-radius: 50%;
             width: 17px;
@@ -278,17 +279,18 @@ export default {
   }
 
   .member-menu {
-    width: 85%;
+    width: 1300px;
     margin: 0px auto;
     display: flex;
     padding: 25px;
+    justify-content: space-between;
 
     .borrow-card {
-      width: calc(50% - 20px);
-      margin: 20px 10px;
-      border-radius: 20px;
+      width: 550px;
+      margin: 20px 0px;
+      border-radius: 25px;
       box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-      background-color: #ffffff;
+      background-image: linear-gradient(to right, #e4eeff 0%, #ffffff 100%);
       position: relative;
 
       .borrow-box {
@@ -305,18 +307,18 @@ export default {
           position: relative;
 
           &:first-of-type {
-            border-right: 1px dashed #00000029;
-            border-bottom: 1px dashed #00000029;
+            border-right: 0.5px solid #81c3f3;
+            border-bottom: 0.5px solid #81c3f3;
             border-width: medium;
           }
 
           &:nth-of-type(2) {
-            border-bottom: 1px dashed #00000029;
+            border-bottom: 0.5px solid #81c3f3;
             border-width: medium;
           }
 
           &:nth-of-type(3) {
-            border-right: 1px dashed #00000029;
+            border-right: 0.5px solid #81c3f3;
             border-width: medium;
           }
 
@@ -333,17 +335,19 @@ export default {
       }
 
       .balance-row {
-        border-radius: 4.5px;
-        background-image: linear-gradient(to bottom, #00aeff, #00d9d5);
-        color: #ffffff;
+        border: 2px solid #157efb;
+        border-radius: 25px;
+        background-image: linear-gradient(to top, #ebf5ff, #ffffff),
+          linear-gradient(to bottom, #81c3f3, #157efb);
+        color: #157efb;
         font-weight: bold;
         position: absolute;
         left: 50%;
         bottom: 0%;
         transform: translate(-50%, 50%);
-        width: 85%;
+        width: 60%;
         text-align: center;
-        padding: 10px;
+        padding: 5px;
 
         label {
           margin-bottom: 0px;
@@ -353,25 +357,24 @@ export default {
     }
 
     .financial-card {
-      width: calc(50% - 20px);
-      margin: 20px 10px;
-      background-image: url("../asset/images/myloan_bank.png");
+      width: 550px;
+      height: 300px;
+      margin: 20px 0px;
+      background-image: url("../asset/images/myloan_bank.svg");
       background-position: 50% 50%;
       background-repeat: no-repeat;
       background-size: 100% 100%;
       padding: 20px;
-      color: #ffffff;
+      color: #083a6e;
 
       .account-card {
-        width: 62%;
+        width: 55%;
         margin: 0px auto;
         .repay-account {
           overflow: hidden;
           margin-bottom: 10px;
 
           .des {
-            width: 50%;
-            float: left;
             font-size: 14px;
             margin-bottom: 5px;
           }
@@ -381,7 +384,8 @@ export default {
       .repay-s {
         width: 62%;
         display: flex;
-        margin: 0px auto;
+        margin: 1.5rem auto;
+
         .sm {
           width: 50%;
           display: flex;
@@ -389,7 +393,7 @@ export default {
           margin: 0px;
 
           &:first-of-type {
-            border-right: 1px dashed #ffffff;
+            border-right: 2px solid #81c3f3;
             padding-right: 15px;
           }
 
@@ -397,8 +401,9 @@ export default {
             padding-left: 15px;
           }
 
-          .yellow {
-            color: #fbd900;
+          .blue {
+            color: #083a6e;
+            font-weight: bold;
           }
         }
       }
@@ -421,32 +426,6 @@ export default {
     .s-title {
       background-color: #083a6e;
       color: #ffffff;
-    }
-  }
-}
-
-.loan-notification {
-  .pagination {
-    width: fit-content;
-    margin: 0px auto;
-
-    .paginationjs-pages {
-      li {
-        border: 0px solid #aaa;
-
-        a {
-          color: #083a6e;
-          background: #f5f5f5;
-        }
-      }
-      .paginationjs-prev,
-      .paginationjs-next,
-      .paginationjs-page.active {
-        a {
-          background: #083a6e;
-          color: #ffffff;
-        }
-      }
     }
   }
 }

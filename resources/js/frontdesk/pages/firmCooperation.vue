@@ -90,7 +90,7 @@ export default {
   .content {
     padding: 30px;
     width: 80%;
-    margin: -35% auto 15px auto;
+    margin: -32rem auto 1rem auto;
     box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
     background: #ffffff;
 
@@ -106,7 +106,7 @@ export default {
   @media screen and (max-width: 767px) {
     .content {
       padding: 10px;
-      margin: -36rem auto 0px auto;
+      margin: 1rem auto;
       width: 95%;
 
       .text-card {

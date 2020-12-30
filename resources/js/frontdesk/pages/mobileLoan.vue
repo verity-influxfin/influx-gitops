@@ -1,6 +1,6 @@
 <template>
   <div class="mobile-wrapper">
-    <banner :data="this.bannerData"></banner>
+    <banner :data="this.bannerData" :isBorrow="true"></banner>
     <div class="hr"></div>
     <div class="search-line">
       <div class="filter-i float-left">

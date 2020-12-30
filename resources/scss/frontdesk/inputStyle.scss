@@ -70,6 +70,7 @@
     transition: all 0.2s;
     z-index: 1;
     box-sizing: content-box;
+    background: #ffffff;
 }
 .chiller_cb span:before {
     transform: rotate(-55deg);
@@ -84,7 +85,7 @@
 
 //radio
 
-.radio-custom{
+.radio-custom {
     display: contents;
 
     label {

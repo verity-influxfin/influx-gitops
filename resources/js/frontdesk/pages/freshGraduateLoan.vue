@@ -1,44 +1,95 @@
 <template>
   <div class="freshGraduate-wrapper">
-    <banner :data="bannerData"></banner>
-    <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <p>「普匯・你的手機ATM」</p>
-          <p>沒有煩人的「專員」打擾，只需要一隻可以上網的手機</p>
-          <p>AI 24hr online滿足您的資金需求</p>
-        </div>
-      </div>
-    </div>
-    <credit :creditList="creditList" amount="20" />
+    <banner :data="bannerData" :isBorrow="true"></banner>
+    <target
+      :items="applyData.item"
+      text="年滿20歲的上班族，提供工作證明、聯徵報告，馬上給您最滿意的額度！<br><br>體驗金融科技帶來的線上借貸服務，就從『普匯･你的手機ATM』開始！"
+    ></target>
     <apply
-      title="申貸簡便四步驟"
+      title="申貸簡單四步驟"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
-    <experience :experiences="experiences" title="真實回饋" />
-    <div class="video-card">
-      <h2>聽聽借款人怎麼說</h2>
-      <div class="hr" />
-      <div class="video-row" ref="video_slick">
-        <div class="item" v-for="(item, index) in shares" :key="index">
-          <iframe
-            :src="item.video_link"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-            style="height: 180px"
-          ></iframe>
-          <hr />
-          <p>{{ item.post_title }}</p>
+    <div class="avg-card">
+      <img src="../asset/images/circle.svg" class="img-fluid ib" />
+      <div class="cnt">
+        <div class="c-t c-l">
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>即時審核，快速媒合放款</h3></div>
+              <div class="ccc"></div>
+              <p>
+                系統自動化審核加快申貸的速度，平均10分鐘完成申請、30分鐘核准、60分鐘到帳！
+              </p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/num1.svg" class="img-fluid" />
+            </div>
+          </div>
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>全線上無人化</h3></div>
+              <div class="ccc"></div>
+              <p>
+                運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。
+              </p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/num2.svg" class="img-fluid" />
+            </div>
+          </div>
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>隱私無照會</h3></div>
+              <div class="ccc"></div>
+              <p>
+                申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。
+              </p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/num3.svg" class="img-fluid" />
+            </div>
+          </div>
+        </div>
+        <div class="c-i">
+          <div class="i-line">
+            <img class="img-fluid" src="../asset/images/m-line.png" />
+          </div>
+          <div class="i-m">
+            <img class="img-fluid" src="../asset/images/mobile.png" />
+          </div>
+        </div>
+        <div class="c-t c-r">
+          <div class="item">
+            <div class="img">
+              <img src="../asset/images/num4.svg" class="img-fluid" />
+            </div>
+            <div class="i-cnt">
+              <div class="t-c"><h3>聯徵不留紀錄</h3></div>
+              <div class="ccc"></div>
+              <p>不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。</p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="img">
+              <img src="../asset/images/num5.svg" class="img-fluid" />
+            </div>
+            <div class="i-cnt">
+              <div class="t-c"><h3>費率單純透明</h3></div>
+              <div class="ccc"></div>
+              <p>
+                只收取一次手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-      <router-link class="btn link" to="vlog?q=loan"
-        >影音列表<i class="fas fa-angle-double-right"
-      /></router-link>
     </div>
+    <credit :creditList="creditList" amount="200000" />
+    <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -49,6 +100,8 @@ import experience from "../component/experienceComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import credit from "../component/creditComponent";
+import target from "../component/targetComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -57,23 +110,14 @@ export default {
     experience,
     qa,
     apply,
+    target,
     credit,
+    float,
   },
   data: () => ({
     qaData: [],
     bannerData: {},
     applyData: {},
-    creditList: {
-      rate1: 5,
-      rate2: 6,
-      rate3: 7,
-      rate4: 8,
-      rate5: 9,
-      rate6: 10,
-      rate7: 11,
-      rate8: 12,
-      rate9: 13,
-    },
   }),
   computed: {
     experiences() {
@@ -169,88 +213,157 @@ export default {
 .freshGraduate-wrapper {
   width: 100%;
 
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-    color: #083a6e;
+  .t-c {
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip: text;
+    color: #ffffff00;
+    margin: 0px auto;
+
+    h2 {
+      text-align: center;
+      font-weight: bolder;
+    }
   }
 
   .hr {
     width: 130px;
     height: 2px;
-    background-image: linear-gradient(to right, #71008b, #ffffff);
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
   }
 
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
-
-    i {
-      margin-left: 10px;
-    }
-
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
-
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #083a6e;
-      position: relative;
-
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #04769f;
-        font-weight: bold;
-        color: #ffffff;
-
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
-        }
-
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
-        }
-      }
-    }
-  }
-
-  .video-card {
-    padding: 30px;
+  .avg-card {
     overflow: hidden;
     position: relative;
-    background: #f9f9f9;
+    background-color: #ecedf1;
 
-    .video-row {
+    .ib {
+      width: 100%;
+    }
+
+    .cnt {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
       display: flex;
-      margin: 10px auto;
-      width: fit-content;
+      overflow: hidden;
+      height: 687px;
 
-      .item {
-        margin: 0px 10px;
+      .c-l {
+        top: 50%;
+        transform: translateY(-46%);
 
-        hr {
-          margin: 5px 0px;
-          border-top: 2px solid #000000;
+        .item {
+          &:not(:last-of-type) {
+            margin-bottom: 5rem;
+          }
         }
       }
+
+      .c-r {
+        top: 50%;
+        transform: translateY(-30%);
+
+        .item {
+          &:not(:last-of-type) {
+            margin-bottom: 3rem;
+          }
+        }
+      }
+
+      .c-t {
+        width: calc((100% - 383px) / 2);
+        overflow: hidden;
+        padding: 20px;
+        position: relative;
+
+        .item {
+          display: flex;
+
+          .i-cnt {
+            width: calc(100% - 100px);
+          }
+
+          .img {
+            margin: 0px 1rem;
+            width: 100px;
+          }
+
+          .ccc {
+            width: 50%;
+            height: 2px;
+            margin-bottom: 0.5rem;
+            background-image: linear-gradient(
+              to left,
+              #3670d3 100%,
+              #09d7f8 50%,
+              #2e84da 0%
+            );
+          }
+
+          .t-c {
+            background-image: linear-gradient(
+              to right,
+              #306fca 0%,
+              #09d4f6 50%,
+              #306fca 75%
+            );
+            margin: 0px;
+            h3 {
+              font-size: 26px;
+            }
+          }
+
+          p {
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: 1px;
+            text-align: left;
+            color: #ffffff;
+            height: 72px;
+          }
+        }
+
+        .r {
+          h3,
+          p {
+            text-align: right;
+          }
+
+          .ccc {
+            margin: 0px 0px 0.5rem auto;
+          }
+        }
+      }
+
+      .c-i {
+        width: 383px;
+        margin: 2.5rem 0px;
+        position: relative;
+
+        .i-m {
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          animation: i-m-float 2.5s ease-in-out infinite;
+        }
+      }
+    }
+  }
+
+  @keyframes i-m-float {
+    0% {
+      transform: translatey(-5px);
+    }
+
+    50% {
+      transform: translatey(5px);
+    }
+
+    100% {
+      transform: translatey(-5px);
     }
   }
 
@@ -260,45 +373,76 @@ export default {
       margin-bottom: 20px;
     }
 
-    .link {
-      width: 50%;
-    }
+    .avg-card {
+      background: #153a71;
 
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-          p {
-            word-break: break-word;
+      .ib {
+        display: none;
+      }
+
+      .cnt {
+        flex-direction: column;
+        width: 100%;
+        position: initial;
+        transform: initial;
+        padding: 10px;
+        height: auto;
+
+        .c-l,
+        .c-r {
+          .item {
+            &:not(:last-of-type) {
+              margin-bottom: initial;
+            }
           }
         }
-      }
-    }
 
-    .video-card {
-      padding: 10px;
+        .c-t {
+          width: 100%;
+          transform: initial;
+          top: 0px;
+          padding: 0px;
 
-      h2 {
-        text-align: center;
-      }
+          .r {
+            h3 {
+              text-align: initial;
+              font-size: 24px;
+            }
+            p {
+              text-align: initial;
+              font-size: 16px;
+            }
 
-      .video-row {
-        display: block;
-        width: initial;
-
-        .item {
-          text-align: center;
-
-          p {
-            text-align: initial;
+            .ccc {
+              margin: 0px 0px 0.5rem 0px;
+            }
           }
+
+          .item {
+            margin: 1rem 10px;
+
+            .i-cnt {
+              order: 1;
+              width: calc(100% - 60px);
+            }
+
+            .img {
+              order: 0;
+              margin: 0px 0.5rem 0px 0px;
+              width: 60px;
+            }
+
+            p {
+              height: auto;
+            }
+          }
+        }
+
+        .c-i {
+          display: none;
         }
       }
     }
   }
 }
 </style>
-

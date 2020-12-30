@@ -41,7 +41,7 @@
           <div class="detial-row">
             <div>
               <span>{{ format(tweenedPrincipal) }}$</span>
-              <label>應收帳款</label>
+              <label>應收款項</label>
             </div>
           </div>
           <div class="detial-row">
@@ -189,13 +189,11 @@ export default {
 
 <style lang="scss">
 .investment-wrapper {
-  margin-top: 84px;
   background-color: #f5f5f5;
   .invest-header {
-    background-image: url("../asset/images/count_bg.png");
-    background-position: 50% 50%;
+    background-image: url("../asset/images/header_bg.png");
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: contain;
     padding: 25px 10%;
     display: flex;
     justify-content: space-between;
@@ -240,7 +238,7 @@ export default {
         float: left;
         text-align: center;
         margin: 10px 5px;
-        color: white;
+        color: #157efb;
         width: 70px;
 
         &:hover {
@@ -248,19 +246,22 @@ export default {
         }
 
         .img {
-          width: 30px;
-          height: 30px;
+          width: 45px;
+          height: 45px;
           position: relative;
           margin: 5px auto;
 
           img {
-            width: 55px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
           }
 
           span {
             position: absolute;
             top: -13px;
-            right: 5px;
+            right: 15px;
             background: #083a6e;
             border-radius: 50%;
             width: 17px;
@@ -285,9 +286,9 @@ export default {
     .invest-card {
       width: calc(50% - 20px);
       margin: 20px 10px;
-      border-radius: 20px;
+      border-radius: 25px;
       box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-      background-color: #ffffff;
+      background-image: linear-gradient(to right, #e4eeff 0%, #ffffff 100%);
       position: relative;
 
       .invest-box {
@@ -304,18 +305,18 @@ export default {
           position: relative;
 
           &:first-of-type {
-            border-right: 1px dashed #00000029;
-            border-bottom: 1px dashed #00000029;
+            border-right: 0.5px solid #81c3f3;
+            border-bottom: 0.5px solid #81c3f3;
             border-width: medium;
           }
 
           &:nth-of-type(2) {
-            border-bottom: 1px dashed #00000029;
+            border-bottom: 0.5px solid #81c3f3;
             border-width: medium;
           }
 
           &:nth-of-type(3) {
-            border-right: 1px dashed #00000029;
+            border-right: 0.5px solid #81c3f3;
             border-width: medium;
           }
 
@@ -331,17 +332,19 @@ export default {
       }
 
       .balance-row {
-        border-radius: 4.5px;
-        background-image: linear-gradient(to bottom, #00aeff, #00d9d5);
-        color: #ffffff;
+        border: 2px solid #157efb;
+        border-radius: 25px;
+        background-image: linear-gradient(to top, #ebf5ff, #ffffff),
+          linear-gradient(to bottom, #81c3f3, #157efb);
+        color: #157efb;
         font-weight: bold;
         position: absolute;
         left: 50%;
         bottom: 0%;
         transform: translate(-50%, 50%);
-        width: 85%;
+        width: 60%;
         text-align: center;
-        padding: 10px;
+        padding: 5px;
 
         label {
           margin-bottom: 0px;
@@ -377,32 +380,6 @@ export default {
 
       p {
         font-weight: bold;
-      }
-    }
-  }
-
-  .invest-notification {
-    .pagination {
-      width: fit-content;
-      margin: 0px auto;
-
-      .paginationjs-pages {
-        li {
-          border: 0px solid #aaa;
-
-          a {
-            color: #37bbc6;
-            background: #f5f5f5;
-          }
-        }
-        .paginationjs-prev,
-        .paginationjs-next,
-        .paginationjs-page.active {
-          a {
-            background: #37bbc6;
-            color: #ffffff;
-          }
-        }
       }
     }
   }

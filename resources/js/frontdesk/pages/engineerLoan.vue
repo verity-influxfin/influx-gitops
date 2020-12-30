@@ -1,23 +1,72 @@
 <template>
   <div class="engineer-wrapper">
-    <banner :data="this.bannerData"></banner>
-    <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <p>「普匯・你的手機ATM」</p>
-          <p>無論是學生/上班族，只要是資訊/資工/資管相關科系，我們特別提供給您優惠利率。</p>
-          <p>隨時隨地，只要打開APP，資金到手。</p>
-        </div>
-      </div>
-    </div>
-    <credit :creditList="creditList" amount="20" license="最高額度會根據您的申請身分而有所不同" />
+    <banner :data="this.bannerData" :isBorrow="false"></banner>
+    <target
+      :items="applyData.item"
+      text="資訊/資工/資管相關科系學生或相關職業，提供專業技術證照，來就貸！"
+    ></target>
     <apply
       title="申貸簡便五步驟"
       :requiredDocuments="applyData.requiredDocuments"
       :step="applyData.step"
     />
+
+    <div class="avg-card">
+      <img src="../asset/images/circle.svg" class="img-fluid ib" />
+      <div class="cnt">
+        <div class="c-t">
+          <div class="item r j">
+            <div class="i-cnt">
+              <div class="t-c"><h3>借款額度高達30萬</h3></div>
+              <div class="ccc"></div>
+              <p>擴大額度，下載APP申請，24hr資金輕鬆到手！</p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/30min.svg" class="img-fluid" />
+            </div>
+          </div>
+          <div class="item r">
+            <div class="i-cnt">
+              <div class="t-c"><h3>利率減免優惠5%起</h3></div>
+              <div class="ccc"></div>
+              <p>在忙碌的上課、工作之餘，普匯讓您還款無負擔！</p>
+            </div>
+            <div class="img">
+              <img src="../asset/images/5min.svg" class="img-fluid" />
+            </div>
+          </div>
+        </div>
+        <div class="c-i">
+          <div class="img">
+            <img src="../asset/images/aaaaa.svg" class="img-fluid" />
+          </div>
+        </div>
+        <div class="c-t">
+          <div class="item">
+            <div class="img">
+              <img src="../asset/images/10min.svg" class="img-fluid" />
+            </div>
+            <div class="i-cnt">
+              <div class="t-c"><h3>超快速10分鐘審核過件</h3></div>
+              <div class="ccc"></div>
+              <p>
+                全線上申請，拍照上傳，優先核准！<br />
+                不耽誤你申請的時間，更不拖延您拿到資金的時間！
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <credit
+      :creditList="creditList"
+      amount="300000"
+      license="最高額度會根據您的申請身分而有所不同"
+    />
+    <experience :experiences="experiences" title="用戶回饋" />
     <download :isLoan="true" :isInvest="false" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -27,6 +76,9 @@ import download from "../component/downloadComponent";
 import qa from "../component/qaComponent";
 import apply from "../component/applyComponent";
 import credit from "../component/creditComponent";
+import target from "../component/targetComponent";
+import experience from "../component/experienceComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
@@ -34,26 +86,28 @@ export default {
     download,
     qa,
     apply,
+    target,
     credit,
+    experience,
+    float,
   },
   data: () => ({
-    credit: "--",
     qaData: [],
-    creditList: {
-      rate1: 5,
-      rate2: 5.5,
-      rate3: 6,
-      rate4: 6.5,
-      rate5: 7,
-      rate6: 7.5,
-      rate7: 8,
-      rate8: 8.5,
-      rate9: 9,
-    },
     bannerData: {},
     applyData: {},
   }),
+  computed: {
+    experiences() {
+      let $this = this;
+      let data = [];
+      $.each($this.$store.getters.ExperiencesData, (index, row) => {
+        data.push(row);
+      });
+      return data;
+    },
+  },
   created() {
+    this.$store.dispatch("getExperiencesData", "loan");
     this.getApplydata();
     this.getBannerData();
     this.getQaData();
@@ -66,14 +120,18 @@ export default {
   },
   methods: {
     getBannerData() {
-      axios.post(`${location.origin}/getBannerData`, { filter: "engineer" }).then((res) => {
-        this.bannerData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getBannerData`, { filter: "engineer" })
+        .then((res) => {
+          this.bannerData = res.data;
+        });
     },
     getApplydata() {
-      axios.post(`${location.origin}/getApplydata`, { filter: "engineer" }).then((res) => {
-        this.applyData = res.data;
-      });
+      axios
+        .post(`${location.origin}/getApplydata`, { filter: "engineer" })
+        .then((res) => {
+          this.applyData = res.data;
+        });
     },
     getQaData() {
       axios.post(`${location.origin}/getQaData`, { filter: "engineer" }).then((res) => {
@@ -119,64 +177,127 @@ export default {
 .engineer-wrapper {
   width: 100%;
 
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-    color: #083a6e;
+  .t-c {
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip: text;
+    color: #ffffff00;
+    margin: 0px auto;
+
+    h2 {
+      font-weight: bolder;
+      text-align: center;
+    }
   }
 
   .hr {
     width: 130px;
     height: 2px;
-    background-image: linear-gradient(to right, #71008b, #ffffff);
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
   }
 
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
+  .avg-card {
+    overflow: auto;
+    position: relative;
+    background-color: #ecedf1;
 
-    i {
-      margin-left: 10px;
+    .ib {
+      width: 100%;
     }
 
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
+    .cnt {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      overflow: hidden;
+      height: 687px;
 
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #94d6eb;
-      position: relative;
+      .c-t {
+        width: 35%;
+        padding: 20px;
+        position: relative;
+        height: fit-content;
+        top: 50%;
+        transform: translate(0px, -50%);
 
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #04769f;
-        font-weight: bold;
-        color: #ffffff;
+        .item {
+          margin: 10rem 10px;
+          display: flex;
 
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
+          .i-cnt {
+            width: calc(100% - 100px);
+          }
+
+          .img {
+            margin: 0px 1rem;
+            width: 100px;
+          }
+
+          .ccc {
+            width: 80%;
+            height: 2px;
+            margin-bottom: 0.5rem;
+            background-image: linear-gradient(
+              to left,
+              #3670d3 100%,
+              #09d7f8 50%,
+              #2e84da 0%
+            );
+          }
+
+          .t-c {
+            background-image: linear-gradient(
+              to right,
+              #306fca 0%,
+              #09d4f6 50%,
+              #306fca 75%
+            );
+            margin: 0px;
+            h3 {
+              font-size: 26px;
+            }
+          }
+
+          p {
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: 1px;
+            text-align: left;
+            color: #ffffff;
+            height: 72px;
+          }
         }
 
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
+        .j {
+          transform: translateX(26%);
+        }
+
+        .r {
+          h3,
+          p {
+            text-align: right;
+          }
+
+          .ccc {
+            margin: 0px 0px 0.5rem auto;
+          }
+        }
+      }
+
+      .c-i {
+        width: 30%;
+        margin: 2.5rem 0px;
+        position: relative;
+
+        .img {
+          position: absolute;
+          top: 45%;
+          left: 50%;
+          width: 100%;
+          transform: translate(-50%, -50%);
         }
       }
     }
@@ -188,24 +309,74 @@ export default {
       margin-bottom: 20px;
     }
 
-    .link {
-      width: 50%;
-    }
+    .avg-card {
+      background: #153a71;
 
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
+      .ib {
+        display: none;
+      }
+
+      .cnt {
+        flex-direction: column;
+        width: 100%;
+        position: initial;
+        transform: initial;
+        padding: 10px;
+        height: auto;
+
+        .c-t {
           width: 100%;
-          overflow: hidden;
-          p {
-            word-break: break-word;
+          transform: initial;
+          top: 0px;
+          padding: 0px;
+
+          .j {
+            transform: initial;
           }
+
+          .r {
+            h3 {
+              text-align: initial;
+              font-size: 24px;
+            }
+            p {
+              text-align: initial;
+              font-size: 16px;
+            }
+
+            .ccc {
+              margin: 0px 0px 0.5rem 0px;
+            }
+          }
+
+          .item {
+            margin: 10px 0px;
+
+            .i-cnt {
+              order: 1;
+              width: calc(100% - 60px);
+            }
+
+            .img {
+              order: 0;
+              margin: 0px 0.5rem 0px 0px;
+              width: 60px;
+            }
+
+            p {
+              height: auto;
+            }
+          }
+        }
+
+        .c-i {
+          width: 140%;
+          transform: translate(166px, -49px) rotate(135deg);
+          margin: 0px;
+          opacity: 0.2;
         }
       }
     }
   }
 }
 </style>
-

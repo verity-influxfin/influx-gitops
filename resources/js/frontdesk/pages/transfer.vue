@@ -1,33 +1,23 @@
 <template>
   <div class="transfer-wrapper">
-    <banner :data="bannerData"></banner>
-    <div class="text-card">
-      <div class="a-hr">
-        <div class="a-s">
-          <p>全台唯一，手持債權，隨時變現</p>
-          <p>資金快速轉讓，創造高報酬！</p>
-          <p>滾石不生苔 , 隨時靈活滾動您的資金</p>
-        </div>
+    <banner :data="bannerData" :isInvest="true"></banner>
+    <div class="intro-card">
+      <div class="t-c"><h2>什麼是債權轉讓？</h2></div>
+      <div class="hr"></div>
+      <div class="cont">
+        <p>
+          您可將持有的債權出售轉讓予其他投資人，隨時將投資標的轉換回現金。
+        </p>
       </div>
     </div>
-    <div class="tra-bg">
-      <div class="intro-card">
-        <h2>什麼是債權轉讓？</h2>
-        <div class="hr"></div>
-        <div class="cont">
-          <p>
-            您隨時可以將已投資的債權標的，出售轉讓予其他投資人，隨時獲利了結，回收投資。
-          </p>
-        </div>
-      </div>
-      <apply
-        title="如何使用債權轉讓"
-        :requiredDocuments="applyData.requiredDocuments"
-        :step="applyData.step"
-      />
-    </div>
+    <apply
+      title="如何使用債權轉讓"
+      :requiredDocuments="applyData.requiredDocuments"
+      :step="applyData.step"
+    />
+    <experience :experiences="experiences" title="用戶回饋" />
     <div class="invest-tonic-card">
-      <h2>投資理財大補帖</h2>
+      <div class="t-c"><h2>投資理財大補帖</h2></div>
       <div class="hr"></div>
       <div class="invest-tonic-slick" ref="investTonic_slick">
         <router-link
@@ -45,6 +35,7 @@
     </div>
     <download :isLoan="false" :isInvest="true" />
     <qa :qaData="qaData" />
+    <float />
   </div>
 </template>
 
@@ -52,14 +43,18 @@
 import qa from "../component/qaComponent";
 import banner from "../component/bannerComponent";
 import apply from "../component/applyComponent";
+import experience from "../component/experienceComponent";
 import download from "../component/downloadComponent";
+import float from "../component/floatComponent";
 
 export default {
   components: {
     qa,
     apply,
     banner,
+    experience,
     download,
+    float,
   },
   data: () => ({
     qaData: [],
@@ -67,7 +62,13 @@ export default {
     investTonic: [],
     bannerData: {},
   }),
+  computed: {
+    experiences() {
+      return this.$store.getters.ExperiencesData;
+    },
+  },
   created() {
+    this.$store.dispatch("getExperiencesData", "invest");
     this.getQaData();
     this.getApplydata();
     this.getBannerData();
@@ -116,11 +117,9 @@ export default {
         });
     },
     getQaData() {
-      axios
-        .post(`${location.origin}/getQaData`, { filter: "transfer" })
-        .then((res) => {
-          this.qaData = res.data;
-        });
+      axios.post(`${location.origin}/getQaData`, { filter: "transfer" }).then((res) => {
+        this.qaData = res.data;
+      });
     },
     createTransferSlick() {
       $(this.$refs.transfer_slick).slick({
@@ -180,74 +179,23 @@ export default {
 
 <style lang="scss">
 .transfer-wrapper {
-  h2 {
-    font-weight: bolder;
-    text-align: center;
-    color: #083a6e;
+  .t-c {
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip: text;
+    width: fit-content;
+    color: #ffffff00;
+    margin: 0px auto;
+
+    h2 {
+      font-weight: bolder;
+    }
   }
 
   .hr {
-    width: 130px;
-    height: 2px;
-    background-image: linear-gradient(to right, #71008b, #ffffff);
+    width: 260px;
+    height: 1px;
+    background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
-  }
-
-  .tra-bg {
-    background-image: url("../asset/images/transfer_bg.png");
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .link {
-    display: block;
-    background: #006bda;
-    color: #ffffff;
-    width: 20%;
-    margin: 0px auto;
-    font-weight: bolder;
-
-    i {
-      margin-left: 10px;
-    }
-
-    &:hover {
-      border: 2px solid #006bda;
-      background: #ffffff;
-      color: #006bda;
-    }
-  }
-
-  .text-card {
-    .a-hr {
-      height: 125px;
-      background-color: #6591be;
-      position: relative;
-
-      .a-s {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 80%;
-        background-color: #083a6e;
-        font-weight: bold;
-        color: #ffffff;
-
-        h3 {
-          color: #ffffff;
-          text-align: center;
-          font-weight: bold;
-          margin: 25px auto;
-        }
-
-        p {
-          width: 80%;
-          margin: 25px auto;
-          word-break: keep-all;
-        }
-      }
-    }
   }
 
   .intro-card {
@@ -326,26 +274,6 @@ export default {
   }
 
   @media (max-width: 767px) {
-    .text-card {
-      .a-hr {
-        height: initial;
-        .a-s {
-          position: relative;
-          width: 100%;
-          overflow: hidden;
-        }
-      }
-    }
-
-    h2 {
-      font-size: 25px;
-      margin-bottom: 20px;
-    }
-
-    .link {
-      width: 50%;
-    }
-
     .intro-card {
       .cont {
         width: 100%;

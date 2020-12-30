@@ -29,7 +29,6 @@ import myLoan from '../pages/myLoan';
 import notification from '../pages/notification';
 import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
-import shanghai from '../pages/shanghai';
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -38,7 +37,7 @@ let routers = [
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
     { path: '/mobileLoan', component: mobileLoan },
     { path: '/engineerLoan', component: engineerLoan },
-    { path: '/invest', component: invest },
+    { path: '/investment', component: invest },
     { path: '/transfer', component: transfer },
     { path: '/company', component: company },
     { path: '/news', component: news },
@@ -71,7 +70,6 @@ let routers = [
     { path: '/firmcooperation', component: firmCooperation },
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
-    { path: '/shanghaipage', component: shanghai },
 ];
 
 export default routers;

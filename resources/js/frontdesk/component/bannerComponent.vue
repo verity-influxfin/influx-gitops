@@ -7,102 +7,113 @@
     />
     <img
       :src="$props.data.bannerMoblieHref"
-      style="width: 100%;"
+      style="width: 100%"
       class="hidden-phone"
     />
-
-    <div class="phone-img">
-      <img :src="$props.data.bannerPhone" class="img-fluid" />
+    <div class="banner-cnt">
+      <h1 class="banner-title">{{ $props.data.productName }}</h1>
+      <div class="banner-desc" v-html="$props.data.desc"></div>
+      <a
+        v-if="isBorrow"
+        class="banner-download"
+        href="https://event.influxfin.com/R/url?p=webbanner"
+        target="_blank"
+        ><img src="../asset/images/light-y.svg" class="img-fluid" />
+        <div class="text">立即借款</div></a
+      >
+      <a
+        v-if="isInvest"
+        class="banner-download"
+        href="https://event.influxfin.com/r/iurl?p=webinvest"
+        target="_blank"
+        ><img src="../asset/images/light-y.svg" class="img-fluid" />
+        <div class="text">立即投資</div></a
+      >
     </div>
-    <h1 class="banner-title">{{ $props.data.productName }}</h1>
-    <h2 class="banner-desc">{{ $props.data.desc }}</h2>
-    <div class="banner-download" v-html="$props.data.downloadhtml"></div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["data"],
+  props: ["data", "isInvest","isBorrow"],
 };
 </script>
 
 <style lang="scss">
 .product-banner {
   width: 100%;
-  height: 547px;
   overflow: hidden;
   position: relative;
 
-  .banner-download {
+  .banner-cnt {
     position: absolute;
-    top: 60%;
-    left: 42%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    width: 500px;
-    justify-content: space-between;
+    top: 54%;
+    left: 40px;
+    transform: translate(0px, -50%);
+    width: 545px;
 
-    .b-link {
-      width: 200px;
-      display: block;
+    .banner-title {
+      text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+      font-size: 48px;
+      font-weight: normal;
+      line-height: 1.48;
+      letter-spacing: 2.4px;
+      text-align: left;
+      color: #f2e627;
     }
-  }
 
-  .banner-title {
-    color: #ffffff;
-    font-weight: bolder;
-    position: absolute;
-    top: 50%;
-    left: 30%;
-    transform: translate(-50%, -50%);
-  }
+    .banner-desc {
+      text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+      font-family: NotoSansTC;
+      font-size: 30px;
+      line-height: 1.5;
+      letter-spacing: 1.8px;
+      color: #ffffff;
+    }
 
-  .banner-desc{
-    color: #ffffff;
-    position: absolute;
-    top: 75%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
+    .banner-download {
+      width: 40%;
+      margin: 1rem auto;
+      position: relative;
+      display: block;
 
-  .phone-img {
-    float: right;
-    width: fit-content;
-    margin-bottom: 5rem;
+      :hover {
+        color: #ffffff;
+        text-decoration: none;
+      }
 
-    img {
-      width: 60%;
+      .text {
+        color: #ffffff;
+        position: absolute;
+        top: 51%;
+        left: 47%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+      }
     }
   }
 }
 
 @media (max-width: 767px) {
   .product-banner {
-    background-position: 50% 50%;
-    height: 547px;
-
-    .phone-img {
-      display: none;
-    }
-
-    .banner-title {
+    .banner-cnt {
+      width: 100%;
+      top: 25%;
       left: 50%;
-    }
+      transform: translate(-50%, -50%);
 
-    .banner-download {
-      left: 50%;
-      width: 90%;
-
-      .b-link {
-        width: 150px;
+      .banner-title {
+        text-align: center;
       }
-    }
 
-    .banner-content {
-      position: initial;
-      transform: initial;
-      margin: 20px auto;
+      .banner-desc {
+        text-align: center;
+        font-size: 18px;
+      }
+
+      .banner-download {
+        width: 60%;
+      }
     }
   }
 }

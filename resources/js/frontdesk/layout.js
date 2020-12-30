@@ -5,6 +5,10 @@ import actions from './store/actions';
 import mutations from './store/mutations';
 //vue router
 import routers from './router/router';
+//import Vue from 'vue'
+import Vue2TouchEvents from 'vue2-touch-events'
+
+import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 
 $(() => {
     const sessionStoragePlugin = store => {
@@ -121,11 +125,14 @@ $(() => {
                 }
             },
             backtotop() {
-                $('html').stop().animate({scrollTop:0}, 1000);
+                $('html').stop().animate({ scrollTop: 0 }, 1000);
                 AOS.refresh();
             },
             openLoginModal() {
                 $(this.$refs.loginForm).modal("show");
+            },
+            hideLoginModal() {
+                $(this.$refs.loginForm).modal("hide");
             },
             switchTag(evt) {
                 if (!$(evt.target).hasClass('checked')) {
@@ -174,9 +181,12 @@ $(() => {
                             axios.post(`${location.origin}/doLogin`, params)
                                 .then((res) => {
                                     this.$store.commit('mutationUserData', res.data);
-                                    if (this.$router.history.pending) {
-                                        $(this.$refs.loginForm).modal("hide");
-                                        this.$router.push(this.$router.history.pending.path);
+                                    $(this.$refs.loginForm).modal("hide");
+
+                                    if (investor === '1') {
+                                        this.$router.push('investnotification');
+                                    } else {
+                                        this.$router.push('loannotification');
                                     }
 
                                     location.reload();
@@ -286,10 +296,9 @@ $(() => {
         }
     });
 
+    Vue.use(Vue2TouchEvents)
+    
     $('.back-top').fadeOut();
-
-    let offset = $('.blog-quiklink').offset();
-
     $(document).scroll(function () {
         AOS.refresh();
         window.dispatchEvent(new Event("resize"));
@@ -298,16 +307,6 @@ $(() => {
             $('.back-top').fadeIn();
         } else {
             $('.back-top').fadeOut();
-        }
-
-        if ($(window).scrollTop() > offset.top) {
-            $('.blog-quiklink').stop().animate({
-                marginTop: $(window).scrollTop() + offset.top
-            });
-        } else {
-            $('.blog-quiklink').stop().animate({
-                marginTop: offset.top
-            });
         }
     });
 });

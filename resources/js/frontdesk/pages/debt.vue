@@ -2,15 +2,18 @@
   <div class="debt-wrapper">
     <div class="no-data" v-if="groupList.length === 0">
       <img src="../asset/images/empty.svg" class="img-fluid" />
-      <a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest">目前沒有投資標的，點我立即前往 >></a>
+      <a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"
+        >目前沒有投資標的，點我立即前往 >></a
+      >
     </div>
     <div v-else id="accordion" role="tablist">
       <div class="c-title">
         <div class="p-type">案件類型</div>
         <div class="p-count">案件件數</div>
-        <div class="p-total">應收本息</div>
+        <div class="p-total">應收本金</div>
+        <div class="p-total">預期利息收入</div>
       </div>
-      <div class="card" v-for="(product,key) in groupList" :key="key">
+      <div class="card" v-for="(product, key) in groupList" :key="key">
         <div
           class="header collapsed"
           data-parent="#accordion"
@@ -19,32 +22,40 @@
           aria-expanded="false"
         >
           <div class="h-t">
-            <div class="p-type">{{product}}</div>
-            <div class="p-count">{{recoveriesData[product].length}}件</div>
+            <div class="p-type">{{ product }}</div>
+            <div class="p-count">{{ recoveriesData[product].length }}件</div>
             <div class="p-total">
-              <!-- <span>應收本金</span> -->
-              <span>${{getTotal(recoveriesData[product])}}</span>
+              <span>${{ getTotal(recoveriesData[product]) }}</span>
+            </div>
+            <div class="p-total">
+              <span>${{ getInterest(recoveriesData[product]) }}</span>
             </div>
           </div>
           <span class="accicon">
             <i class="fas fa-angle-down rotate-icon"></i>
           </span>
         </div>
-        <div :id="`collapse${key}`" class="collapse" data-parent="#accordionExample">
+        <div
+          :id="`collapse${key}`"
+          class="collapse"
+          data-parent="#accordionExample"
+        >
           <div class="c-body">
-            <template v-for="(item,index) in groupBy(recoveriesData[product])">
+            <template v-for="(item, index) in groupBy(recoveriesData[product])">
               <div
                 class="case-row"
-                v-if="item.length !==0"
-                @click="showCases(item,textList[index])"
+                v-if="item.length !== 0"
+                @click="showCases(item, textList[index])"
                 :key="index"
               >
                 <div class="d-bg">
-                  <div class="p-type">{{textList[index]}}</div>
-                  <div class="p-count">{{item.length}}件</div>
+                  <div class="p-type">{{ textList[index] }}</div>
+                  <div class="p-count">{{ item.length }}件</div>
                   <div class="p-total">
-                    <!-- <span>金額</span> -->
-                    <span>${{getTotal(item)}}</span>
+                    <span>${{ getTotal(item) }}</span>
+                  </div>
+                  <div class="p-total">
+                    <span>${{ getInterest(item) }}</span>
                   </div>
                 </div>
               </div>
@@ -125,10 +136,18 @@ export default {
       let total = 0;
 
       data.forEach((row, index) => {
+        total += row.accounts_receivable.principal;
+      });
+
+      return this.format(total);
+    },
+    getInterest(data) {
+      let total = 0;
+
+      data.forEach((row, index) => {
         total +=
           row.accounts_receivable.delay_interest +
-          row.accounts_receivable.interest +
-          row.accounts_receivable.principal;
+          row.accounts_receivable.interest;
       });
 
       return this.format(total);

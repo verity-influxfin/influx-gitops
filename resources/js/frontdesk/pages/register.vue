@@ -273,12 +273,11 @@ export default {
 <style lang="scss">
 .register-wrapper {
   position: relative;
-  margin-top: 84px;
   overflow: hidden;
 
   .register-dialog {
     box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-    background-color: #ffffff;
+    background-color: #f5f5f5;
     width: 880px;
     margin: 45px auto;
     display: flex;
@@ -390,7 +389,7 @@ export default {
         }
 
         .btn-captcha {
-          background: #083a6e;
+          background: #1e2973;
           border-radius: 50px;
           line-height: 15px;
           color: #ffffff;
