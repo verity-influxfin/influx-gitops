@@ -627,7 +627,7 @@ export default {
         this.tweenedMember === 0 &&
         this.tweenedtransaction === 0
       ) {
-        gsap.to(this.$data, { duration: 1, tweenedMember: 58723 });
+        gsap.to(this.$data, { duration: 1, tweenedMember: 57651 });
         gsap.to(this.$data, { duration: 1, tweenedtransaction: 31059 });
       }
 
