@@ -24,7 +24,7 @@ class Accountcontroller extends BaseController
     public function getTerms(Request $request)
     {
         $this->validate($request, [
-            'termsType' => 'required|string|in:privacy_policy,user'
+            'termsType' => 'required|string|in:privacy_policy,user,investor'
         ]);
 
         $termsType = $request->post('termsType');

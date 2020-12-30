@@ -72,54 +72,67 @@
                 >
                   取得驗證碼
                 </button>
-                <div class="btn btn-disable" v-if="isSended">
-                  {{ counter }}S有效
-                </div>
+                <div class="btn btn-disable" v-if="isSended">{{ counter }}S有效</div>
                 <span class="tip" v-if="isSended">驗證碼已寄出</span>
               </div>
             </div>
-            <div class="input-group">
-              <div class="chiller_cb" style="margin: 0px auto">
-                <input
-                  id="confirmTerms"
-                  type="checkbox"
-                  @click="isAgree = !isAgree"
-                  :checked="isAgree"
-                />
-                <label for="confirmTerms" class="block"></label>
-                <span></span>
-                <div class="row">
-                  我同意
-                  <div class="terms" @click="getTerms('user')">
-                    貸款人服務條款
-                  </div>
-                  、
-                  <div class="terms" @click="getTerms('privacy_policy')">
-                    隱私權條款
+            <template v-if="$root.investor === '0'">
+              <div class="input-group">
+                <div class="chiller_cb" style="margin: 0px auto">
+                  <input
+                    id="confirmTerms"
+                    type="checkbox"
+                    @click="isAgree = !isAgree"
+                    :checked="isAgree"
+                  />
+                  <label for="confirmTerms" class="block"></label>
+                  <span></span>
+                  <div class="row">
+                    我同意
+                    <div class="terms" @click="getTerms('user')">借款人服務條款</div>
+                    、
+                    <div class="terms" @click="getTerms('privacy_policy')">
+                      隱私權條款
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </template>
+            <template v-else>
+              <div class="input-group">
+                <div class="chiller_cb" style="margin: 0px auto">
+                  <input
+                    id="confirmTerms"
+                    type="checkbox"
+                    @click="isAgree = !isAgree"
+                    :checked="isAgree"
+                  />
+                  <label for="confirmTerms" class="block"></label>
+                  <span></span>
+                  <div class="row">
+                    我同意
+                    <div class="terms" @click="getTerms('investor')">貸款人服務條款</div>
+                    、
+                    <div class="terms" @click="getTerms('privacy_policy')">
+                      隱私權條款
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
           </div>
           <div class="message" v-if="message">{{ message }}</div>
           <div class="dialog-footer">
             <div
               v-if="
-                phone && password && confirmPassword && code && isAgree
-                  ? false
-                  : true
+                phone && password && confirmPassword && code && isAgree ? false : true
               "
               class="btn btn-disable"
               disable
             >
               送出
             </div>
-            <button
-              type="button"
-              v-else
-              class="btn btn-submit"
-              @click="doRegister"
-            >
+            <button type="button" v-else class="btn btn-submit" @click="doRegister">
               送出
             </button>
           </div>
@@ -203,9 +216,7 @@ export default {
         })
         .catch((error) => {
           let errorsData = error.response.data;
-          this.message = `${
-            this.$store.state.smsErrorCode[errorsData.error]
-          }`;
+          this.message = `${this.$store.state.smsErrorCode[errorsData.error]}`;
         });
     },
     getTerms(termsType) {
@@ -251,9 +262,7 @@ export default {
             });
             this.message = messages.join("、");
           } else {
-            this.message = `${
-              this.$store.state.registerErrorCode[errorsData.error]
-            }`;
+            this.message = `${this.$store.state.registerErrorCode[errorsData.error]}`;
           }
         });
     },
