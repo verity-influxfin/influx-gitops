@@ -487,29 +487,28 @@ class Certification_lib{
 			if($idcard && $idcard->status==1){
 				$status 		= 3;
 				$id_card_remark = json_decode($idcard->remark,true);
-				if($id_card_remark && isset($id_card_remark['OCR'])){
-					$father = $id_card_remark['OCR']['father'];
-					$mother = $id_card_remark['OCR']['mother'];
-					if(in_array($name,array($father,$mother))){
-                        $phone_used = $this->CI->user_model->get_by(array(
-                            'id'    => $info->user_id,
-                            'phone' => $content['phone'],
-                        ));
-					    if($phone_used){
-                            $this->set_failed($info->id,'與註冊電話相同',true);
-                        }
-					    else{
-                            $this->set_success($info->id, true);
-                            $status = 1;
-                        }
-					}
-                    $this->CI->user_certification_model->update($info->id,array(
-                        'status'	=> $status,
-                        'sys_check'	=> 1,
+                $parent = [];
+                isset($id_card_remark['OCR']['father']) ? $parent[] = $id_card_remark['OCR']['father'] : '';
+                isset($id_card_remark['OCR']['mother']) ? $parent[] = $id_card_remark['OCR']['mother'] : '';
+                if(in_array($name,$parent)){
+                    $phone_used = $this->CI->user_model->get_by(array(
+                        'id'    => $info->user_id,
+                        'phone' => $content['phone'],
                     ));
-                    return true;
-				}
-			}
+                    if($phone_used){
+                        $this->set_failed($info->id,'與註冊電話相同',true);
+                    }
+                    else{
+                        $this->set_success($info->id, true);
+                        $status = 1;
+                    }
+                }
+                $this->CI->user_certification_model->update($info->id,array(
+                    'status'	=> $status,
+                    'sys_check'	=> 1,
+                ));
+                return true;
+            }
 		}
 		return false;
 	}
@@ -835,6 +834,8 @@ class Certification_lib{
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
+                $this->CI->load->library('brookesia/brookesia_lib');
+                $this->CI->brookesia_lib->userCheckAllRules($info->user_id);
                 return $this->fail_other_cer($info);
 			}
 		}

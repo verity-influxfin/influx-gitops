@@ -242,7 +242,7 @@ class Target_lib
     }
 
     //核可額度利率
-    public function approve_target($target = [], $remark = false, $renew = false, $targetData = false, $stage_cer = false, $subloan_status = false)
+    public function approve_target($target = [], $remark = false, $renew = false, $targetData = false, $stage_cer = false, $subloan_status = false, $matchBrookesia = false)
     {
         $this->CI->load->library('credit_lib');
         $this->CI->load->library('contract_lib');
@@ -339,7 +339,7 @@ class Target_lib
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 $newStatus = false;
                                 if (!$product_info['secondInstance']
-//                                    && !$this->CI->anti_fraud_lib->related_users($target->user_id)
+                                    && !$matchBrookesia
                                     && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
                                     && $this->judicialyuan($user_id)
                                     && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
@@ -384,7 +384,7 @@ class Target_lib
                                 if ($loan_amount < $target->amount) {
                                     $target->amount < 50000 ? $sub_status = TARGET_SUBSTATUS_SECOND_INSTANCE : $allow = false;
                                 }
-                                if (!$this->CI->anti_fraud_lib->related_users($target->user_id)
+                                if (!$matchBrookesia
                                     && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
                                     && $allow) {
                                     $param = [
@@ -1617,6 +1617,7 @@ class Target_lib
                             $finish = true;
                             $finish_stage_cer = [];
                             $cer = [];
+                            $matchBrookesia = false;
                             foreach ($certifications as $key => $certification) {
                                 if ($finish && in_array($certification['id'], $product_certification)) {
                                     if ($certification['user_status'] != '1') {
@@ -1628,6 +1629,19 @@ class Target_lib
                                     }
                                     $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
                                 }
+                            }
+
+                            //反詐欺
+                            $this->CI->load->library('brookesia/brookesia_lib');
+                            $userCheckAllLog = $this->CI->brookesia_lib->userCheckAllLog($value->user_id);
+                            if(isset($userCheckAllLog->response->result)){
+                                $getRuleHitByUserId = $this->CI->brookesia_lib->getRuleHitByUserId($value->user_id);
+                                if(isset($getRuleHitByUserId->response->results)){
+                                    $hit = count($getRuleHitByUserId->response->results);
+                                    $hit > 0 ? $matchBrookesia = true : '';
+                                }
+                            }elseif($value->user_id != null){
+                                $this->CI->brookesia_lib->userCheckAllRules($value->user_id);
                             }
 
                             $targetData = json_decode($value->target_data);
@@ -1647,7 +1661,7 @@ class Target_lib
                                 !isset($targetData) ? $targetData = new stdClass() : '';
                                 $targetData->certification_id = $cer;
                                 $count++;
-                                $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status);
+                                $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia);
                             } else {
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
