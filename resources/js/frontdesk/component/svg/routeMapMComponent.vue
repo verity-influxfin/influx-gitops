@@ -274,7 +274,7 @@
                 font-weight="300"
                 transform="translate(-4 -13) translate(5 13) translate(83 16)"
               >
-                <tspan x="83.24" y="14">{{ showData[0].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="43.24" y="14">{{ showData[0].title }}</tspan>
               </text>
               <text
                 fill="#157EFB"
@@ -283,7 +283,7 @@
                 font-weight="400"
                 transform="translate(-4 -13) translate(5 13) translate(83 16)"
               >
-                <tspan x="0" y="14">{{ showData[0].title }}</tspan>
+                <tspan x="0" y="14">{{ showData[0].hook_date.substr(0, 7) }}</tspan>
               </text>
               <image
                 transform="matrix(1 0 0 1 15.6998 10.3605)"
@@ -349,7 +349,7 @@
                 font-weight="300"
                 transform="translate(-4 -13) translate(5 13) translate(85 246)"
               >
-                <tspan x="83.24" y="16">{{ showData[2].hook_date.substr(0, 7) }}</tspan>
+                <tspan x="53.24" y="16">{{ showData[2].title }}</tspan>
               </text>
               <text
                 fill="#157EFB"
@@ -358,7 +358,7 @@
                 font-weight="400"
                 transform="translate(-4 -13) translate(5 13) translate(85 246)"
               >
-                <tspan x="1" y="15">{{ showData[2].title }}</tspan>
+                <tspan x="1" y="15">{{ showData[2].hook_date.substr(0, 7) }}</tspan>
               </text>
               <text
                 fill="#157EFB"
