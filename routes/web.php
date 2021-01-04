@@ -20,6 +20,8 @@ Route::get('/', function () {
 
 Route::post('/getListData', 'Controller@getListData');
 
+Route::post('/getIndexBanner', 'Controller@getIndexBanner');
+
 Route::post('/getExperiencesData', 'Controller@getExperiencesData');
 
 Route::post('/getKnowledgeData', 'Controller@getKnowledgeData');
@@ -190,6 +192,13 @@ Route::post('/uploadNewsIntroImg', 'Backendcontroller@uploadNewsIntroImg');
 
 Route::post('/uploadNewsImg', 'Backendcontroller@uploadNewsImg');
 
+Route::get('/bakGetIndexBanner', 'Backendcontroller@getIndexBanner');
+
+Route::post('/modifyBannerData', 'Backendcontroller@modifyBannerData');
+
+Route::post('/deleteBannerData', 'Backendcontroller@deleteBannerData');
+
+Route::post('/uploadBannerImg', 'Backendcontroller@uploadBannerImg');
 // verify mail
 
 

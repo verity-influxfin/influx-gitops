@@ -29,6 +29,13 @@ class Controller extends BaseController
         return response()->json($data, 200);
     }
 
+    public function getIndexBanner(Request $request)
+    {
+        $banner = DB::table('banner')->select(['desktop', 'mobile'])->where('isActive', '=', 'on')->orderBy('post_modified', 'desc')->get();
+
+        return response()->json($banner, 200);
+    }
+
     public function getKnowledgeData(Request $request)
     {
         $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['status', '=', 'publish']])->orderBy('post_modified', 'desc')->get();
