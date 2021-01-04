@@ -1,8 +1,8 @@
 <template>
   <div class="index-wrapper">
-    <div class="banner" :options="bannerOptions">
+    <Splide class="banner" :options="bannerOptions">
       <!-- <SplideSlide> -->
-      <div class="puhey-banner">
+      <SplideSlide class="puhey-banner">
         <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
         <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
         <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
@@ -27,9 +27,12 @@
             >
           </div>
         </div>
-      </div>
-      <!-- </SplideSlide> -->
-    </div>
+      </SplideSlide>
+      <SplideSlide class="puhey-banner">
+        <img :src="'/images/newyear.png'" class="hidden-desktop img-fluid" />
+        <img :src="'/images/newyear_m.png'" class="hidden-phone img-fluid" />
+      </SplideSlide>
+    </Splide>
     <div class="count-card" ref="count">
       <div class="item">
         <p>會員數</p>
