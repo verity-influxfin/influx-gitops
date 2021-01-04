@@ -1,7 +1,6 @@
 <template>
   <div class="index-wrapper">
-    <Splide class="banner" :options="bannerOptions">
-      <!-- <SplideSlide> -->
+    <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
       <SplideSlide class="puhey-banner">
         <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
         <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
@@ -15,6 +14,7 @@
               class="loan"
               href="https://event.influxfin.com/r/iurl?p=webinvest"
               target="_blank"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'invest','10');"
               ><img src="../asset/images/light-b.svg" class="img-fluid" />
               <div class="text">立即投資</div></a
             >
@@ -22,17 +22,48 @@
               class="borrow"
               href="https://event.influxfin.com/R/url?p=webbanner"
               target="_blank"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrow','10');"
               ><img src="../asset/images/light-y.svg" class="img-fluid" />
               <div class="text">立即借款</div></a
             >
           </div>
         </div>
       </SplideSlide>
-      <SplideSlide class="puhey-banner">
-        <img :src="'/images/newyear.png'" class="hidden-desktop img-fluid" />
-        <img :src="'/images/newyear_m.png'" class="hidden-phone img-fluid" />
+      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
+        <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
+        <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
       </SplideSlide>
     </Splide>
+    <div class="banner" v-else>
+      <div class="puhey-banner">
+        <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
+        <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
+        <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
+        <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
+        <div class="content">
+          <p>最貼近年輕人的金融科技平台</p>
+          <span>普匯．你的手機ATM</span>
+          <div class="box">
+            <a
+              class="loan"
+              href="https://event.influxfin.com/r/iurl?p=webinvest"
+              target="_blank"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'invest','10');"
+              ><img src="../asset/images/light-b.svg" class="img-fluid" />
+              <div class="text">立即投資</div></a
+            >
+            <a
+              class="borrow"
+              href="https://event.influxfin.com/R/url?p=webbanner"
+              target="_blank"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrow','10');"
+              ><img src="../asset/images/light-y.svg" class="img-fluid" />
+              <div class="text">立即借款</div></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="count-card" ref="count">
       <div class="item">
         <p>會員數</p>
@@ -81,10 +112,6 @@
       </div>
     </div>
     <div class="product-card">
-      <!-- <div class="title">
-        <div class="t-c"><h2>產品介紹</h2></div>
-        <div class="hr"></div>
-      </div> -->
       <div class="box">
         <div class="person">
           <h5>年滿20歲 即可申請個人信貸服務喔！</h5>
@@ -462,6 +489,7 @@ export default {
     pmt: 0,
     tweenedMember: 0,
     tweenedtransaction: 0,
+    bannerData: [],
     milestone: [],
     routeData: [],
     shares: [],
@@ -591,6 +619,7 @@ export default {
   created() {
     this.getServiceData();
     this.getMilestoneData();
+    this.getIndexBanner();
     $("title").text(`首頁 - inFlux普匯金融科技`);
   },
   mounted() {
@@ -631,7 +660,7 @@ export default {
         this.tweenedtransaction === 0
       ) {
         gsap.to(this.$data, { duration: 1, tweenedMember: 57651 });
-        gsap.to(this.$data, { duration: 1, tweenedtransaction: 31059 });
+        gsap.to(this.$data, { duration: 1, tweenedtransaction: 38277 });
       }
 
       let gap2 = window.innerWidth > 767 ? 1000 : 750;
@@ -670,6 +699,11 @@ export default {
       axios.post(`${location.origin}/getServiceData`).then((res) => {
         this.services = res.data;
       });
+    },
+    async getIndexBanner() {
+      let res = await axios.post(`${location.origin}/getIndexBanner`);
+
+      this.bannerData = res.data;
     },
     async getMilestoneData() {
       let res = await axios.post(`${location.origin}/getMilestoneData`);

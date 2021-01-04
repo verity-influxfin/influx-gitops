@@ -5,11 +5,7 @@
       style="width: 100%"
       class="hidden-desktop"
     />
-    <img
-      :src="$props.data.bannerMoblieHref"
-      style="width: 100%"
-      class="hidden-phone"
-    />
+    <img :src="$props.data.bannerMoblieHref" style="width: 100%" class="hidden-phone" />
     <div class="banner-cnt">
       <h1 class="banner-title">{{ $props.data.productName }}</h1>
       <div class="banner-desc" v-html="$props.data.desc"></div>
@@ -17,6 +13,7 @@
         v-if="isBorrow"
         class="banner-download"
         href="https://event.influxfin.com/R/url?p=webbanner"
+        onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrow','10');"
         target="_blank"
         ><img src="../asset/images/light-y.svg" class="img-fluid" />
         <div class="text">立即借款</div></a
@@ -25,6 +22,7 @@
         v-if="isInvest"
         class="banner-download"
         href="https://event.influxfin.com/r/iurl?p=webinvest"
+        onClick="ga('send', 'event', 'Click', 'Nav Click', 'invest','10');"
         target="_blank"
         ><img src="../asset/images/light-y.svg" class="img-fluid" />
         <div class="text">立即投資</div></a
@@ -35,7 +33,7 @@
 
 <script>
 export default {
-  props: ["data", "isInvest","isBorrow"],
+  props: ["data", "isInvest", "isBorrow"],
 };
 </script>
 

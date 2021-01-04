@@ -1,18 +1,39 @@
 <template>
   <div class="wrapper" :style="`background-image:url(./images/3661950.jpg)`">
     <div class="header">
-      <p class="date">{{date}}</p>
+      <p class="date">{{ date }}</p>
       <h4 class="title">普匯官網後台系統</h4>
     </div>
     <div class="content">
-      <router-link class="center-high left" to="milestone" v-if="userData.identity == 1">里程碑</router-link>
-      <router-link class="center-mid left" to="feedback" v-if="userData.identity == 1">心得回饋</router-link>
-      <router-link class="center-lower-mid left" to="cooperation" v-if="userData.identity == 1">合作訊息</router-link>
-      <router-link class="center-low left" to="news" v-if="userData.identity == 1">最新消息</router-link>
+      <router-link class="center-high left" to="milestone" v-if="userData.identity == 1"
+        >里程碑</router-link
+      >
+      <router-link class="center-mid left" to="feedback" v-if="userData.identity == 1"
+        >心得回饋</router-link
+      >
+      <router-link
+        class="center-lower-mid left"
+        to="cooperation"
+        v-if="userData.identity == 1"
+        >合作訊息</router-link
+      >
+      <router-link class="center-low left" to="news" v-if="userData.identity == 1"
+        >最新消息</router-link
+      >
       <router-link class="center" to="knowledge">AI金融科技新知</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>
-      <router-link class="center-mid right" to="partner" v-if="userData.identity == 1">合作夥伴</router-link>
-      <router-link class="center-high right" to="media" v-if="userData.identity == 1">媒體報導</router-link>
+      <router-link
+        class="center-lower-mid right"
+        to="banner"
+        v-if="userData.identity == 1"
+        >首頁Banner</router-link
+      >
+      <router-link class="center-mid right" to="partner" v-if="userData.identity == 1"
+        >合作夥伴</router-link
+      >
+      <router-link class="center-high right" to="media" v-if="userData.identity == 1"
+        >媒體報導</router-link
+      >
     </div>
     <div v-if="userData.identity == 1">
       <router-link class="notice-cooper" to="cooperation">
@@ -36,9 +57,7 @@ export default {
   data: () => ({
     date: "",
     userData:
-      sessionStorage.length !== 0
-        ? JSON.parse(sessionStorage.getItem("userData"))
-        : {}
+      sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {},
   }),
   created() {
     this.timer = setInterval(() => {
@@ -57,12 +76,11 @@ export default {
 
       let date_item = {
         year: dateObj.getFullYear(),
-        month:
-          (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1),
+        month: (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1),
         day: (dateObj.getDate() < 10 ? "0" : "") + dateObj.getDate(),
         hour: (dateObj.getHours() < 10 ? "0" : "") + dateObj.getHours(),
         min: (dateObj.getMinutes() < 10 ? "0" : "") + dateObj.getMinutes(),
-        sec: (dateObj.getSeconds() < 10 ? "0" : "") + dateObj.getSeconds()
+        sec: (dateObj.getSeconds() < 10 ? "0" : "") + dateObj.getSeconds(),
       };
 
       return `${date_item.year}/${date_item.month}/${date_item.day} ${date_item.hour}:${date_item.min}:${date_item.sec}`;
@@ -78,13 +96,13 @@ export default {
       if (feedRes.data > 0) {
         $(".notice-feedback").addClass("notice-show");
       }
-    }
+    },
   },
   beforeDestroy() {
     if (this.timer) {
       clearInterval(this.timer);
     }
-  }
+  },
 };
 </script>
 
@@ -133,8 +151,7 @@ export default {
       }
     }
 
-    $bgcolor: #36a2ff, #23adff, #1d7ee1, #4688ff, #106ad9, #0042d5, #170bd2,
-      #003189;
+    $bgcolor: #36a2ff, #23adff, #1d7ee1, #4688ff, #106ad9, #0042d5, #170bd2, #003189;
 
     @for $i from 1 through 8 {
       a:nth-child(#{$i}) {
@@ -267,4 +284,3 @@ export default {
   }
 }
 </style>
-
