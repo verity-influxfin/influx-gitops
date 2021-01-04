@@ -350,7 +350,7 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover table-striped">
+								<table id="brookesia_results" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
 										<th width="25%">風險等級</th>
@@ -400,10 +400,9 @@
 								<table id="related-users" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
-										<th width="20%">關聯原因</th>
+										<th width="20%">使用者編號</th>
+										<th width="50%">關聯原因</th>
 										<th width="30%">關聯值</th>
-										<th width="20%">借款/投資端</th>
-										<th width="30%">使用者編號</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -588,6 +587,7 @@
         fillFakeVerifications("investing");
         fillFakeRelatedUsers();
         fillFakeTargets();
+		fillFakeBrookesiaUserHitRule();
         $("#load-more").hide();
         $.ajax({
             type: "GET",
@@ -597,10 +597,12 @@
             },
             complete: function () {
                 targetInfoAjaxLock = false;
-				fetchRelatedUsers(userId);
             },
             success: function (response) {
+				fetchBrookesiaUserRuleHit(userId);
+				fetchRelatedUsers(userId);
                 hideLoadingAnimation();
+				fillFakeBrookesiaUserHitRule(false)
                 fillFakeVerifications("borrowing", false);
                 fillFakeVerifications("investing", false);
                 fillFakeTargets(false);
@@ -659,24 +661,80 @@
 					targets.push(new Target(targetsJson[i]));
 				}
                 fillTargets(targets);
+
             },
 			error: function(error) {
                 alert('資料載入失敗。請重新整理。');
 			}
         });
 
-        var relatedUsersIndex = 1;
+		var brookesiaData = [];
+		function fetchBrookesiaUserRuleHit(userId) {
+			$.ajax({
+				type: "GET",
+				url: "/admin/brookesia/user_rule_hit" + "?userId=" + userId,
+				beforeSend: function () {
+					brookesiaDatalock = true;
+				},
+				complete: function () {
+					brookesiaDatalock = false
+				},
+				success: function (response) {
+					if (response.status.code != 200) {
+						return;
+					}
+					brookesiaData = response.response.results
+					fillBrookesiaUserHitRule();
+
+				}
+			});
+		}
+
+		function fillFakeBrookesiaUserHitRule(show = true) {
+			if (!show) {
+				$("#brookesia_results tr:gt(0)").remove();
+				return;
+			}
+			pTag = '<p class="form-control-static"></p>'
+
+			for (var i = 0; i < 1; i++) {
+				$("<tr>").append(
+						$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
+				).appendTo("#brookesia_results");
+			}
+		}
+
+		function fillBrookesiaUserHitRule() {
+			for (var i = 0; i < brookesiaData.length; i++) {
+				var risk = '<p class="form-control-static">' + brookesiaData[i].risk + '</p>';
+				var updatedAt = '<p class="form-control-static">' +
+						new DateTime(brookesiaData[i].updatedAt).values()+ '</p>';
+				var description = '<p class="form-control-static">' + brookesiaData[i].description + '</p>';
+				var riskColor = (brookesiaData[i].risk === "拒絕") ?"red"
+							: (brookesiaData[i].risk === "高") ? "Tomato"
+							: (brookesiaData[i].risk === "中") ? "Orange"
+							: (brookesiaData[i].risk === "低") ? "green" : "black"
+
+				$("<tr>").append(
+						$('<td class="center-text" style="color:'+ riskColor +';">').append(risk),
+						$('<td class="center-text" style="color:black;">').append(updatedAt),
+						$('<td class="center-text" style="color:black;">').append(description),
+				).appendTo("#brookesia_results");
+			}
+		}
+
         var relatedUsers = [];
 		function fetchRelatedUsers(userId) {
 			$.ajax({
 				type: "GET",
-				url: "/admin/User/related_users" + "?id=" + userId,
+				url: "/admin/brookesia/user_related_user" + "?userId=" + userId,
 				beforeSend: function () {
 					relatedUserAjaxLock = true;
 				},
 				complete: function () {
 					relatedUserAjaxLock = false;
-                    fetchJudicialyuanData(userId);
 				},
 				success: function (response) {
 					fillFakeRelatedUsers(false);
@@ -684,14 +742,46 @@
 						return;
 					}
 
-					let relatedUsersJson = response.response.related_users;
-					for (var i = 0; i < relatedUsersJson.length; i++) {
-						var relatedUser = new RelatedUser(relatedUsersJson[i]);
-						relatedUsers.push(relatedUser);
-					}
+					relatedUsers = response.response.results;
 					fillRelatedUsers();
 				}
 			});
+		}
+
+		function fillFakeRelatedUsers(show = true) {
+			if (!show) {
+				$("#related-users tr:gt(0)").remove();
+				return;
+			}
+			pTag = '<p class="form-control-static"></p>'
+
+			for (var i = 0; i < 3; i++) {
+				$("<tr>").append(
+						$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
+				).appendTo("#related-users");
+			}
+		}
+
+		function fillRelatedUsers() {
+			for (var i = 0; i < relatedUsers.length; i++) {
+				var relatedUserId = relatedUsers[i].relatedUserId
+				var userLink = '<a href="' + '/admin/user/display?id=' + relatedUserId + '" target="_blank"><p>' + relatedUserId + '</p></a>'
+				var descriptionText = relatedUsers[i].description;
+				var description = '<p class="form-control-static">' + descriptionText + '</p>';
+				if (relatedUsers[i]){
+					var relatedInfo = '<p class="form-control-static">' + relatedUsers[i].relatedKey +
+							' : '+ relatedUsers[i].relatedValue +'</p>';
+				} else { var relatedInfo = "無"}
+
+				$("<tr>").append(
+						$('<td class="center-text">').append(userLink),
+						$('<td class="center-text">').append(description),
+						$('<td class="center-text">').append(relatedInfo),
+				).appendTo("#related-users");
+			}
 		}
 
         $('#load-more').on('click', function() {
@@ -737,23 +827,6 @@
 				$(".table-reevaluation p").css('background-size', '800px 104px');
 			}
 		}
-
-		function fillFakeRelatedUsers(show = true) {
-            if (!show) {
-                $("#related-users tr:gt(0)").remove();
-                return;
-            }
-            pTag = '<p class="form-control-static"></p>'
-
-            for (var i = 0; i < 3; i++) {
-                $("<tr>").append(
-                    $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
-                    $('<td class="fake-fields center-text">').append(pTag),
-                ).appendTo("#related-users");
-            }
-        }
             
 		function fillFakejudicialyuanData(show = true) {
             if (!show) {
@@ -768,33 +841,6 @@
                     $('<td class="fake-fields center-text">').append(pTag),
                 ).appendTo("#judicial-yuan");
 			}
-		}
-
-		function fillRelatedUsers() {
-            var maxNumInPage = 5;
-            var start = (relatedUsersIndex-1) * maxNumInPage;
-            var end = relatedUsersIndex * maxNumInPage;
-            if (end > relatedUsers.length) end = relatedUsers.length;
-            if (start > end || (end - start < maxNumInPage)) {
-                $("#load-more").hide();
-			} else {
-                $("#load-more").show();
-			}
-
-            for (var i = start; i < end; i++) {
-                var reasonText = mapRelatedUsersReasons(relatedUsers[i].reason);
-                var reason = '<p class="form-control-static">' + reasonText + '</p>';
-                var value = '<p class="form-control-static">' + relatedUsers[i].relatedValue + '</p>';
-                var statuses = '<p>' + relatedUsers[i].user.borrower_status + "/" + relatedUsers[i].user.investor_status + '</p>';
-				var userLink = '<a href="' + '/admin/user/display?id=' + relatedUsers[i].user.id + '" target="_blank"><p>' + relatedUsers[i].user.id + '</p></a>'
-                $("<tr>").append(
-                    $('<td class="center-text">').append(reason),
-                    $('<td class="center-text">').append(value),
-                    $('<td class="center-text">').append(statuses),
-                    $('<td class="center-text">').append(userLink),
-                ).appendTo("#related-users");
-            }
-            relatedUsersIndex+=1;
 		}
             
 		function filljudicialyuanData() {
@@ -819,23 +865,23 @@
             judicialyuanDataIndex+=1;
 		}
 
-		function mapRelatedUsersReasons(reason) {
-            var mapping = {
-                "same_device_id" : "相同裝置",
-                "same_ip": "相同ip",
-                "same_contact": "相同緊急聯絡人",
-                "emergency_contact": "為此人的緊急聯絡人",
-                "same_bank_account": "嘗試輸入相同銀行帳號",
-                "same_id_number": "嘗試輸入相同身分證字號",
-                "same_phone_number": "嘗試輸入相同電話號碼",
-                "same_address": "相同住址",
-                "introducer": "推薦人",
-            };
-            if (reason in mapping) {
-                return mapping[reason];
-			}
-            return "未定義";
-		}
+		// function mapRelatedUsersReasons(reason) {
+        //     var mapping = {
+        //         "same_device_id" : "相同裝置",
+        //         "same_ip": "相同ip",
+        //         "same_contact": "相同緊急聯絡人",
+        //         "emergency_contact": "為此人的緊急聯絡人",
+        //         "same_bank_account": "嘗試輸入相同銀行帳號",
+        //         "same_id_number": "嘗試輸入相同身分證字號",
+        //         "same_phone_number": "嘗試輸入相同電話號碼",
+        //         "same_address": "相同住址",
+        //         "introducer": "推薦人",
+        //     };
+        //     if (reason in mapping) {
+        //         return mapping[reason];
+		// 	}
+        //     return "未定義";
+		// }
 
 		function fillCurrentTargetInfo(target) {
             $("#applicant-signing-target-image").prepend('<img src="' + target.image + '" style="width: 30%;"></img>');

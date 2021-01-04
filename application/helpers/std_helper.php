@@ -64,10 +64,15 @@
 
 
 	function curl_get($url,$data = array(),$header = array()) {
-		$curl = curl_init($url); 
-		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2); 
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //不直接顯示回傳結果 
+		$curl = curl_init($url);
+		if (ENVIRONMENT == "production") {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		} else {
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		}
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //不直接顯示回傳結果
 		
 		if(!empty($data)) {
 			curl_setopt($curl, CURLOPT_POST, 1); 
