@@ -1,8 +1,8 @@
 ## 設定環境
 
-* 安裝compposer
+* 安裝composer
 * 安裝node.js
-* 安裝 php for windows
+* 安裝php for windows
 
 ## 安裝package
 
