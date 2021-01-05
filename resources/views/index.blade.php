@@ -281,7 +281,7 @@
                     <div class="alert alert-danger" v-if="message">@{{message}}</div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-submit" @click="doLogin">登入</button>
-                        <router-link class="btn btn-register" @click.native="hideLoginModal()" to="/register">會員註冊</router-link>
+                        <router-link v-if="!isCompany" class="btn btn-register" @click.native="hideLoginModal()" to="/register">會員註冊</router-link>
                     </div>
                 </div>
             </div>
