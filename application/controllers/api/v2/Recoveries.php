@@ -465,7 +465,7 @@ class Recoveries extends REST_Controller
                             'type' => 0,
                             'date' => date("Y/m/d", $svalue->end_time),
                             'title' => ($pushTool[$svalue->push_by] . ' / ' .$pushType[$svalue->push_type]),
-                            'msg' => $pushResultStatus[$svalue->push_type] . ($svalue->invest_message != '' ? ' - '.$svalue->invest_message : ''),
+                            'msg' => $pushResultStatus[$svalue->result] . ($svalue->invest_message != '' ? ' - '.$svalue->invest_message : ''),
                         ];
                     }
                     $pushData[$target_info->user_id] = $temp;
