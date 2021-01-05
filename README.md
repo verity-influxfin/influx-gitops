@@ -9,6 +9,7 @@
 pull下來後 下下列指立
 
 server `composer require`
+
 client `npm install`
 
 ## 啟動指令
@@ -16,6 +17,7 @@ client `npm install`
 server `php artisan serve`
 
 client ```develop:npm run watch
+
 production:npm run production```
 
 ## License
