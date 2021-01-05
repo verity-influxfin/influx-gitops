@@ -1,3 +1,16 @@
+## 設定環境
+
+* 安裝compposer
+* 安裝node.js
+* 安裝 php for windows
+
+## 安裝package
+
+pull下來後 下下列指立
+
+server `composer require`
+client `npm install`
+
 ## 啟動指令
 
 server `php artisan serve`
