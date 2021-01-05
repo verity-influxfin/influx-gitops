@@ -374,6 +374,7 @@ class Recoveries extends REST_Controller
         $this->config->load('loanmanager');
         $pushTool = $this->config->item('pushTool');
         $pushType = $this->config->item('pushType');
+        $pushResultStatus = $this->config->item('pushResultStatus');
         $user_id = $this->user_info->id;
         $investor = $this->user_info->investor;
         $investments = $this->investment_model->get_many_by([
@@ -457,11 +458,14 @@ class Recoveries extends REST_Controller
                     $temp = [];
                     $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($target_info->user_id);
                     foreach ($getUserLoginLog as $skey => $svalue) {
+                        if(isset($svalue->message)){
+
+                        }
                         $temp[] = [
                             'type' => 0,
-                            'date' => date("Ym/d H:i:s", $svalue->end_time),
+                            'date' => date("Y/m/d", $svalue->end_time),
                             'title' => ($pushTool[$svalue->push_by] . ' / ' .$pushType[$svalue->push_type]),
-                            'msg' => $svalue->remark,
+                            'msg' => $pushResultStatus[$svalue->push_type] . ($svalue->invest_message != '' ? ' - '.$svalue->invest_message : ''),
                         ];
                     }
                     $pushData[$target_info->user_id] = $temp;

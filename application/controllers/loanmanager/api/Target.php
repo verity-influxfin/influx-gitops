@@ -402,7 +402,7 @@ class Target extends REST_Controller
     function pushUser_post()
     {
         $input = $this->input->post(NULL, TRUE);
-        $fields 	= ['user_id','push_by','push_type','message','start_time','end_time'];
+        $fields 	= ['user_id','push_by','push_type','message','invest_message','remark','start_time','end_time'];
         foreach ($fields as $field) {
             if ($input[$field] == '') {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -419,7 +419,7 @@ class Target extends REST_Controller
                 $this->load->library('sms_lib');
                 $phone 		= $userInfo->phone;
                 $content 	= $input['message'];
-                $rs = $this->sms_lib->send('LoanManagement',$userInfo->id,$phone,$content);
+                $this->sms_lib->send('LoanManagement',$userInfo->id,$phone,$content);
             }//系統訊息+E-mail(5) E-mail(9)
             elseif($pushBy == 4 || $pushBy == 8){
                 $title = "【訊息通知】";
@@ -441,9 +441,36 @@ class Target extends REST_Controller
                 'push_by' => $pushBy,
                 'push_type' => $input['push_type'],
                 'message' => $input['message'],
+                'invest_message' => $input['invest_message'],
+                'remark' => $input['remark'],
                 'start_time' => date($input['start_time']),
                 'end_time' => date($input['end_time']),
-                'result' => in_array($pushBy, [1, 2, 4, 5, 7, 8]) ? 1 : 0
+                'result' => $input['result']
+            ]);
+            $this->response([
+                'result' => 'SUCCESS',
+            ]);
+        }
+        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+    }
+
+    function pushuserupdate_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $fields 	= ['push_id','start_time','end_time'];
+        foreach ($fields as $field) {
+            if ($input[$field] == '') {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+        }
+        $userInfo = $this->userInfo($input['user_id']);
+        if($userInfo){
+            $this->load->model('loanmanager/loan_manager_debtprocessing_model');
+            $this->loan_manager_debtprocessing_model->update_by([
+                'id' => $input['push_id'],
+            ],[
+                'start_time' => $input['start_time'],
+                'end_time' => $input['end_time'],
             ]);
             $this->response([
                 'result' => 'SUCCESS',
@@ -577,9 +604,18 @@ class Target extends REST_Controller
                 //客服紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
                 foreach($getUserLoginLog as $key => $value){
-                    $structure['title'] = $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . ' / ' . $loanmanagerConfig['pushResultStatus'][$value->result];
-                    $structure['content'] =  $value->message . ($value->message != '' && $value->remark != '' ? ' - ' : '') .$value->remark;
-                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time) . ' ~ ' .date('Y-m-d H:i:s', $value->end_time);
+                    $invest_message = $value->invest_message ? '
+-----------------------------                    
+【投資人訊息】
+'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message : '';
+                    $remark = $value->remark != '' ? '
+-----------------------------                    
+【備註】
+'.$value->remark : '';
+                    $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
+                    $structure['content'] =  $value->message . $invest_message . $remark;
+                    $structure['msg'] =  $value->message . ($value->message != '' && $value->remark != '' ? ' - ' : '') .$value->message;
+                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time);
                     $structure['type'] = 5;
                     $logs[$value->created_at][] = $structure;
                 }
@@ -589,9 +625,17 @@ class Target extends REST_Controller
                 //面談紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
                 foreach($getUserLoginLog as $key => $value){
-                    $structure['title'] = $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . ' / ' . $loanmanagerConfig['pushResultStatus'][$value->result];
-                    $structure['content'] = $value->message . ($value->message != '' && $value->remark != '' ? ' - ' : '') .$value->remark;
-                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time) . ' ~ ' .date('Y-m-d H:i:s', $value->end_time);
+                    $invest_message = $value->invest_message ? '
+-----------------------------                    
+【投資人訊息】
+'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message : '';
+                    $remark = $value->remark != '' ? '
+-----------------------------                    
+【備註】
+'.$value->remark : '';
+                    $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
+                    $structure['content'] = $value->message . $invest_message . $value->remark;
+                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time);
                     $structure['type'] = 6;
                     $logs[$value->created_at][] = $structure;
                 }

@@ -71,9 +71,9 @@ defined('PUSH_BY_USER_PHONE') or define('PUSH_BY_USER_PHONE', '6');
 defined('PUSH_BY_SMS') or define('PUSH_BY_SMS', '7');
 
 $config['pushType'] = [
-    0 => "協商",
-    1 => "提醒",
-    2 => "催收",
+    0 => "寬限期提醒",
+    1 => "逾期協商",
+    2 => "逾期催理",
 ];
 
 $config['pushResultStatus'] = [
@@ -83,6 +83,7 @@ $config['pushResultStatus'] = [
     3 => "接通",
     4 => "未接通",
     5 => "已面談",
+    6 => "已約定",
 ];
 
 $config['contactRelationship'] = [

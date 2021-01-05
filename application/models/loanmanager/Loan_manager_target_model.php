@@ -268,6 +268,7 @@ class Loan_manager_target_model extends MY_Model
             'debtProcessing.push_by',
             'debtProcessing.push_type',
             'debtProcessing.message',
+            'debtProcessing.invest_message',
             'debtProcessing.remark',
             'debtProcessing.start_time',
             'debtProcessing.end_time',

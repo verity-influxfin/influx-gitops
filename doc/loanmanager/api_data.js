@@ -1026,6 +1026,11 @@ define(
                     }, {
                         "group": "Parameter",
                         "type": "String",
+                        "field": "result",
+                        "description": "<p>0:未更新狀態 1:已發送 2:發送失敗 3:接通 4:未接通 5:已面談</p>"
+                    }, {
+                        "group": "Parameter",
+                        "type": "String",
                         "field": "start_time",
                         "description": "<p>YYYY-MM-DD HH:mm:ss</p>"
                     }, {
@@ -1145,7 +1150,11 @@ define(
                         "optional": false,
                         "field": "push_id",
                         "description": "<p>訊息ID</p>"
-                    }, {"group": "Parameter", "type": "String", "field": "remark", "description": "<p>更新備註</p>"}]
+                    }, {
+                        "group": "Parameter", "type": "String", "field": "start_time", "description": "<p>開始時間</p>"
+                    }, {
+                        "group": "Parameter", "type": "String", "field": "end_time", "description": "<p>結束時間</p>"
+                    }]
                 }
             },
             "header": {
