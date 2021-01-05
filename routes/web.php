@@ -205,34 +205,8 @@ Route::post('/uploadBannerImg', 'Backendcontroller@uploadBannerImg');
 Route::get('/verifyemail', 'Backendcontroller@verifyemail');
 
 
-// event
-
-
-Route::get('/event', function () {
-    return view('event');
-});
-
-
-Route::get('/getRotationData', 'Backendcontroller@getRotationData');
-
-Route::post('/ratate', 'Backendcontroller@ratate');
-
-Route::post('/checkStatus', 'Backendcontroller@checkStatus');
-
-
 // feedback
 Route::post('/sendFeedback', 'Controller@sendFeedback');
-
-
-//
-// Route::get('/zxc', 'Controller@zxc');
-Route::get('/openaccount', function () {
-    return view('openaccount');
-});
-
-Route::get('/immediately', function () {
-    return view('immediately');
-});
 
 
 Route::view('/{path?}', 'index');
