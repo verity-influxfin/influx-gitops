@@ -1,9 +1,7 @@
 {
     "/js/backend.js": "/js/backend.js",
-    "/js/event.js": "/js/event.js",
     "/js/web.js": "/js/web.js",
     "/css/web.css": "/css/web.css",
     "/css/backend.css": "/css/backend.css",
-    "/css/event.css": "/css/event.css",
     "/css/errors.css": "/css/errors.css"
 }
