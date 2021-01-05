@@ -20,7 +20,8 @@ server
 
 client
 
-```develop:npm run watch production:npm run production```
+```develop:npm run watch ```
+```production:npm run production```
 
 ## License
 
