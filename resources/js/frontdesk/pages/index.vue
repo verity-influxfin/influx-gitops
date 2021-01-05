@@ -797,6 +797,10 @@ export default {
     }
 
     .puhey-banner {
+      img {
+        width: 100%;
+      }
+
       .diagram {
         position: absolute;
         top: 11%;

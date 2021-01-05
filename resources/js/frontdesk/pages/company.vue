@@ -49,58 +49,6 @@
         <p v-html="partnerData.text"></p>
       </div>
     </div>
-    <!-- <div class="milestone-card">
-      <div class="t-c"><h2>普匯編年史</h2></div>
-      <div class="hr"></div>
-      <div class="scroll left" @click="scroll('left')">
-        <img src="/images/n_a_pre.svg" class="img-fluid" />
-      </div>
-      <div class="chunk" ref="chunk">
-        <div class="timeline">
-          <div v-for="(item, index) in milestone" class="block" :key="index">
-            <div class="po">
-              <div
-                v-if="index % 2 === 0"
-                :class="[
-                  'text',
-                  { start: index === 0 },
-                  { end: index === milestone.length - 1 },
-                ]"
-              >
-                <div>
-                  <h6>{{ item.hook_date.substr(0, 7) }}</h6>
-                  <p>{{ item.title }}</p>
-                </div>
-              </div>
-              <div
-                v-else
-                :class="[
-                  'text',
-                  { start: index === 0 },
-                  { end: index === milestone.length - 1 },
-                ]"
-              >
-                <div>
-                  <h6>{{ item.hook_date.substr(0, 7) }}</h6>
-                  <p>{{ item.title }}</p>
-                </div>
-              </div>
-
-              <routeStart v-if="index === 0" :num="index + 1" :img="item.icon" />
-              <routeEnd
-                v-else-if="index === milestone.length - 1"
-                :num="index + 1"
-                :img="item.icon"
-              />
-              <routeDot v-else :num="index + 1" :img="item.icon" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="scroll right" @click="scroll('right')">
-        <img src="/images/n_a_next.svg" class="img-fluid" />
-      </div>
-    </div> -->
     <div class="media-card">
       <div class="t-c"><h2>媒體報導支持</h2></div>
       <div class="hr"></div>
@@ -143,16 +91,10 @@
 
 <script>
 import banner from "../component/bannerComponent";
-import routeStart from "../component/svg/routeStartComponent";
-import routeDot from "../component/svg/routeDotComponent";
-import routeEnd from "../component/svg/routeEndComponent";
 
 export default {
   components: {
     banner,
-    routeStart,
-    routeDot,
-    routeEnd,
   },
   data: () => ({
     isShow: false,
@@ -415,102 +357,6 @@ export default {
     }
   }
 
-  .milestone-card {
-    padding: 30px 0px;
-    overflow: hidden;
-    text-align: center;
-    position: relative;
-    background-image: radial-gradient(circle at 50% 100%, #eef6ff, #ffffff 65%);
-
-    .scroll {
-      position: absolute;
-      top: 50%;
-      transform: translate(0px, -50%);
-      z-index: 1;
-      display: none;
-    }
-
-    .left {
-      left: 10px;
-    }
-
-    .right {
-      right: 10px;
-    }
-
-    .chunk {
-      overflow-y: hidden;
-      overflow-x: auto;
-    }
-
-    .timeline {
-      display: flex;
-      width: fit-content;
-      margin-top: 20px;
-      padding: 10px 20px;
-
-      .block {
-        &:nth-of-type(odd) {
-          .po {
-            .text {
-              top: 16%;
-            }
-          }
-        }
-
-        &:nth-of-type(even) {
-          .po {
-            .text {
-              bottom: -10%;
-
-              div {
-                position: absolute;
-                bottom: 0;
-                width: max-content;
-              }
-            }
-          }
-        }
-
-        .po {
-          width: 200px;
-          position: relative;
-
-          .start {
-            transform: translate(-40%, -50%) !important;
-          }
-
-          .end {
-            transform: translate(35px, -50%) !important;
-          }
-
-          .text {
-            position: absolute;
-            border-left: 1px solid #81c3f3;
-            padding-left: 10px;
-            left: 50%;
-            transform: translate(0px, -50%);
-            width: fit-content;
-            height: 100px;
-
-            h6 {
-              font-size: 15px;
-              color: #157efb;
-              text-align: start;
-            }
-
-            p {
-              text-align: start;
-              font-size: 12px;
-              color: #1c2a54;
-              font-weight: 600;
-            }
-          }
-        }
-      }
-    }
-  }
-
   .modal-dialog {
     .modal-icon {
       position: absolute;
@@ -596,13 +442,6 @@ export default {
         &:before {
           display: none;
         }
-      }
-    }
-
-    .milestone-card {
-      .scroll {
-        display: block;
-        top: 55%;
       }
     }
 

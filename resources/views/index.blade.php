@@ -250,15 +250,15 @@
                         </div>
                         <div class="input-group" v-if="isCompany">
                             <span class="input-group-addon label-text">公司統編：</span>
-                            <input type="text" class="form-control label-input" placeholder="請輸入統一編號" v-model="businessNum" maxlength="8">
+                            <input type="text" class="form-control label-input" placeholder="請輸入統一編號" autocomplete="off" v-model="businessNum" maxlength="8">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">帳號：</span>
-                            <input type="text" class="form-control label-input" placeholder="10位數手機號碼" maxlength="10" v-model="account" maxlength="10">
+                            <input type="text" class="form-control label-input" placeholder="10位數手機號碼" autocomplete="off" v-model="account" maxlength="10">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text">密碼：</span>
-                            <input type="password" class="form-control label-input" placeholder="請輸入密碼" v-model="password" maxlength="50">
+                            <input type="password" class="form-control label-input" placeholder="請輸入密碼" autocomplete="off" v-model="password" maxlength="50">
                         </div>
                         <div class="input-group">
                             <span class="input-group-addon label-text"></span>

@@ -34,6 +34,7 @@
           type="text"
           class="form-control"
           placeholder="手機型號"
+          autocomplete="off"
           v-model="filter.mobileName"
         />
         <i

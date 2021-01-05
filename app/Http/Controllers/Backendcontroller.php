@@ -212,7 +212,7 @@ class Backendcontroller extends BaseController
 
     public function getknowledgeVideoData(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'video')->orderBy('post_modified', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'video')->orderBy('post_date', 'desc')->get();
 
         return response()->json($knowledge, 200);
     }

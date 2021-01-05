@@ -22,6 +22,7 @@
             type="text"
             class="form-control"
             placeholder="請輸入關鍵字"
+            autocomplete="off"
             v-model="filter"
           />
           <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>

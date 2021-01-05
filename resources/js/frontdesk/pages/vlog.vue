@@ -6,7 +6,7 @@
       <h2 v-if="category == 'loan'">借款人專訪</h2>
       <div class="input-custom">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" placeholder="Search" v-model="filter" />
+        <input type="text" class="form-control" placeholder="Search" autocomplete="off" v-model="filter" />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
     </div>
