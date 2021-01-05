@@ -39,7 +39,7 @@ export default {
 .blog-quiklink {
   z-index: 2;
   float: right;
-  margin-top: 500px;
+  margin-top: 35%;
   position: absolute;
   right: 10px;
   color: #ff5151;
@@ -67,7 +67,7 @@ export default {
 
   @media screen and (max-width: 767px) {
     margin-top: 600px;
-    
+
     .icon {
       width: 50px;
     }
