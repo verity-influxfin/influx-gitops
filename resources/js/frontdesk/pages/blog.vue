@@ -8,6 +8,7 @@
           type="text"
           class="form-control"
           placeholder="Search"
+          autocomplete="off"
           v-model="filter"
         />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>

@@ -38,7 +38,7 @@ class Controller extends BaseController
 
     public function getKnowledgeData(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['status', '=', 'publish']])->orderBy('post_modified', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['status', '=', 'publish']])->orderBy('post_date', 'desc')->get();
 
         return response()->json($knowledge, 200);
     }
@@ -49,7 +49,7 @@ class Controller extends BaseController
 
         $result = [];
         if ($input['filter'] !== 'share') {
-            $result = DB::table('interview')->select('*')->where('category', '=', $input['filter'])->orderBy('post_modified', 'desc')->get();
+            $result = DB::table('interview')->select('*')->where('category', '=', $input['filter'])->orderBy('post_date', 'desc')->get();
         } else {
             $result = DB::table('knowledge_article')->select('*')->where([['type', '=', 'video'], ['status', '=', 'publish']])->orderBy('post_modified', 'desc')->get();
         }
@@ -75,7 +75,7 @@ class Controller extends BaseController
 
     public function getInvestTonicData(Request $request)
     {
-        $result = DB::table('knowledge_article')->select('*')->where('category', '=', 'investtonic')->orderBy('post_modified', 'desc')->get();
+        $result = DB::table('knowledge_article')->select('*')->where('category', '=', 'investtonic')->orderBy('post_date', 'desc')->get();
 
         return response()->json($result, 200);
     }
@@ -85,7 +85,7 @@ class Controller extends BaseController
         $input = $request->all();
 
         @list($type, $params) = explode('-', $input['filter']);
-        $result = DB::table('knowledge_article')->select('*')->where('ID', '=', $params)->orderBy('post_modified', 'desc')->first();
+        $result = DB::table('knowledge_article')->select('*')->where('ID', '=', $params)->orderBy('post_date', 'desc')->first();
 
         return response()->json($result, 200);
     }
@@ -94,7 +94,7 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $input['filter'])->orderBy('post_modified', 'desc')->first();
+        $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $input['filter'])->orderBy('post_date', 'desc')->first();
 
         return response()->json($knowledge, 200);
     }

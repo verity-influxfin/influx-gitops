@@ -5,7 +5,7 @@
       <p class="sub-title">請輸入問題關鍵字</p>
       <div class="input-custom">
         <i class="fas fa-search"></i>
-        <input type="text" class="form-control" placeholder="ask something..." v-model="filter" />
+        <input type="text" class="form-control" placeholder="ask something..." autocomplete="off" v-model="filter" />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
       </div>
       <ul class="nav" role="tablist">
