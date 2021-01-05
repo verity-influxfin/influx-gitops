@@ -16,9 +16,7 @@ client `npm install`
 
 server `php artisan serve`
 
-client ```develop:npm run watch
-
-production:npm run production```
+client ```develop:npm run watch production:npm run production```
 
 ## License
 
