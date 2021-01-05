@@ -14,9 +14,13 @@ client `npm install`
 
 ## 啟動指令
 
-server `php artisan serve`
+server 
 
-client ```develop:npm run watch production:npm run production```
+`php artisan serve`
+
+client
+
+```develop:npm run watch production:npm run production```
 
 ## License
 
