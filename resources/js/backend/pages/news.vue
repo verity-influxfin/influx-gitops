@@ -143,7 +143,7 @@ let newsRow = Vue.extend({
         <div class="post-title">{{item.post_title}}</div>
         <div class="image"><img :src="item.image_url" class="img-fluid"></div>
         <div class="status">{{item.status === 'on' ? '公開': '不公開'}}</div>
-        <div class="order">{{item.order === '0' ? '否': '是'}}</div>
+        <div class="order">{{item.order === 0 ? '否': '是'}}</div>
         <div class="post_date">{{item.post_date}}</div>
         <div class="action-row">
           <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>

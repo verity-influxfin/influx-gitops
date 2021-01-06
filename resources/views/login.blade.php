@@ -29,11 +29,11 @@
             <img src=" {{ asset('./images/logo.png') }}" class="img-fluid" style="max-width: 60%;">
             <div class="input-group">
                 <span class="input-group-addon login-text"><i class="fas fa-user"></i></span>
-                <input type="text" class="form-control login-input" v-model="account" maxlength="10" placeholder="請輸入帳號">
+                <input type="text" class="form-control login-input" autocomplete="off" v-model="account" maxlength="10" placeholder="請輸入帳號">
             </div>
             <div class="input-group">
                 <span class="input-group-addon login-text"><i class="fas fa-key"></i></span>
-                <input type="password" class="form-control login-input" v-model="password" maxlength="50" placeholder="請輸入密碼">
+                <input type="password" class="form-control login-input" autocomplete="off" v-model="password" maxlength="50" placeholder="請輸入密碼">
             </div>
             <div v-if="message" class="alert alert-danger">@{{message}}</div>
             <button type="button" class="btn btn-login" @click="login">送出</button>
