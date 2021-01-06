@@ -2,7 +2,7 @@
 
 * 安裝composer
 * 安裝node.js
-* 安裝php for windows
+* 安裝php
 
 ## 安裝package
 
