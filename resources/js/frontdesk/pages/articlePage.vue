@@ -109,14 +109,14 @@ export default {
     list() {
       let groups = [];
       this.$store.getters.KnowledgeData.forEach((kItem) => {
-        let dateItem = kItem.post_modified.substr(0, 7).split("-");
+        let dateItem = kItem.post_date.substr(0, 7).split("-");
         if (groups.filter((gItem) => gItem.text === dateItem[0]).length === 0) {
           groups.push({ text: dateItem[0], children: [] });
         }
       });
 
       this.$store.getters.KnowledgeData.forEach((kItem) => {
-        let dateItem = kItem.post_modified.substr(0, 7).split("-");
+        let dateItem = kItem.post_date.substr(0, 7).split("-");
         groups.forEach((gItem) => {
           if (
             gItem.text === dateItem[0] &&
@@ -132,7 +132,7 @@ export default {
         groups.forEach((gItem, gindex) => {
           gItem.children.forEach((iItem, rindex) => {
             if (
-              kItem.post_modified.substr(0, 7) === `${gItem.text}-${iItem.text}`
+              kItem.post_date.substr(0, 7) === `${gItem.text}-${iItem.text}`
             ) {
               groups[gindex].children[rindex].children.push({
                 text: { text: kItem.post_title, link: kItem.link },
