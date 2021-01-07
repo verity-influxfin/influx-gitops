@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -199,8 +200,18 @@ Route::post('/modifyBannerData', 'Backendcontroller@modifyBannerData');
 Route::post('/deleteBannerData', 'Backendcontroller@deleteBannerData');
 
 Route::post('/uploadBannerImg', 'Backendcontroller@uploadBannerImg');
-// verify mail
 
+Route::get('/bakGetCampusData', 'Backendcontroller@getCampusData');
+
+Route::get('/getMemberFile', function (Request $request) {
+    $inputs = $request->all();
+
+    return response()->download(realpath(base_path('public')) . '/upload/campus/' . $inputs['type'] . '/' . $inputs['file'], $inputs['file']);
+});
+
+Route::get('/bakDownloadTypeFile', 'Backendcontroller@bakDownloadTypeFile');
+
+// verify mail
 
 Route::get('/verifyemail', 'Backendcontroller@verifyemail');
 

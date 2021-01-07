@@ -12,15 +12,20 @@
     </nav>
 
     <div class="action-bar">
-      <div class="input-group float-right" style="width: 300px;">
-        <input type="text" class="form-control" placeholder="名字" v-model="filter.name" />
+      <div class="input-group float-right" style="width: 300px">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="名字"
+          v-model="filter.name"
+        />
         <div class="input-group-append">
           <span class="input-group-text">
             <i class="fas fa-user"></i>
           </span>
         </div>
       </div>
-      <div class="input-group float-right" style="width: 300px;margin-right:15px">
+      <div class="input-group float-right" style="width: 300px; margin-right: 15px">
         <select class="form-control" v-model="filter.type">
           <option value>無</option>
           <option value="campus">校園大使</option>
@@ -35,6 +40,7 @@
         </div>
       </div>
     </div>
+    
     <div class="cooperation-block">
       <div class="cooperation-tabletitle">
         <div class="name">填寫人姓名</div>
@@ -58,12 +64,11 @@
       role="dialog"
       aria-labelledby="modalLabel"
       aria-hidden="true"
-      data-backdrop="static"
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-body">{{message}}</div>
-          <div class="modal-footer" style="display:block;">
+          <div class="modal-body">{{ message }}</div>
+          <div class="modal-footer" style="display: block">
             <button class="btn btn-success float-right" @click="close">確認</button>
           </div>
         </div>
@@ -80,16 +85,16 @@ let cooperationRow = Vue.extend({
       campus: "校園大使",
       club: "校園社團贊助",
       company: "企業合作",
-      firm: "商行合作"
-    }
+      firm: "商行合作",
+    },
   }),
   template: `
-    <li class="cooperation-row" @click="showContent(item)">
+    <li class="cooperation-row">
         <div class="name">{{item.name}}</div>
         <div class="email">{{item.email}}</div>
         <div class="phone">{{item.phone}}</div>
         <div class="type">{{type[item.type]}}</div>
-        <div class="message">{{item.message.substr(0, 80)}}...</div>
+        <div class="message" @click="showContent(item)">{{item.message.substr(0, 80)}}...</div>
         <div class="date">{{item.datetime.substr(0,10)}}</div>
         <div class="action-row">
             <button class="btn btn-warning btn-sm" style="margin-right:20px"v-if="item.isRead === '0'">未讀</button>
@@ -102,8 +107,8 @@ let cooperationRow = Vue.extend({
       this.vm.message = item.message;
       this.vm.read(item);
       $(this.vm.$refs.messageModal).modal("show");
-    }
-  }
+    },
+  },
 });
 
 export default {
@@ -113,8 +118,8 @@ export default {
     filtedData: [],
     filter: {
       name: "",
-      type: ""
-    }
+      type: "",
+    },
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
@@ -140,12 +145,12 @@ export default {
               let component = new cooperationRow({
                 propsData: {
                   item,
-                  vm: $this
-                }
+                  vm: $this,
+                },
               }).$mount();
               $($this.$refs.container).append(component.$el);
             });
-          }
+          },
         });
       });
     },
@@ -154,34 +159,34 @@ export default {
         .post("readCooperationData", {
           ID: item.ID,
           data: {
-            isRead: 1
-          }
+            isRead: 1,
+          },
         })
-        .then(res => {
+        .then((res) => {
           this.getCooperationData();
         })
-        .catch(error => {
+        .catch((error) => {
           alert(`發生錯誤，請稍後再試`);
         });
     },
     delete(item) {
       axios
         .post("deleteCooperationData", {
-          ID: item.ID
+          ID: item.ID,
         })
-        .then(res => {
+        .then((res) => {
           this.message = `刪除成功`;
           this.getCooperationData();
           $(this.$refs.messageModal).modal("show");
         })
-        .catch(error => {
+        .catch((error) => {
           alert(`刪除發生錯誤，請稍後再試`);
         });
     },
     close() {
       $(this.$refs.messageModal).modal("hide");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -226,7 +231,6 @@ export default {
 
       .cooperation-row {
         display: flex;
-        cursor: pointer;
 
         &:hover {
           background: oldlace;
@@ -264,6 +268,7 @@ export default {
 
     .message {
       width: 40%;
+      cursor: pointer;
     }
 
     .date {
