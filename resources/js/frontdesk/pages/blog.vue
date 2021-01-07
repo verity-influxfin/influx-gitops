@@ -39,7 +39,7 @@ let postRow = Vue.extend({
           <div class="img"><img :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
           <div class="chunk">
             <p class="title">{{item.post_title}}</p>
-            <p class="date">{{item.post_modified.substr(0,10)}}</p>
+            <p class="date">{{item.post_date.substr(0,10)}}</p>
             <p class="cnt">{{item.post_content}}</p>
             <div class="link">閱讀更多<img src="/images/a_arrow.png"></a>
           </div>
