@@ -9,6 +9,7 @@ import feedback from "../pages/feedback";
 import cooperation from "../pages/cooperation";
 import news from "../pages/news";
 import banner from "../pages/banner";
+import campus from "../pages/campus";
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -23,6 +24,7 @@ let routers = [
     { path: '/cooperation', component: cooperation },
     { path: '/news', component: news },
     { path: '/banner', component: banner },
+    { path: '/campus', component: campus },
 ];
 
 export default routers;

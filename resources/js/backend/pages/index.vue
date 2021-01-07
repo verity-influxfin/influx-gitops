@@ -8,6 +8,9 @@
       <router-link class="center-high left" to="milestone" v-if="userData.identity == 1"
         >里程碑</router-link
       >
+      <router-link class="center-mid-high left" to="campus" v-if="userData.identity == 1"
+        >普匯大使</router-link
+      >
       <router-link class="center-mid left" to="feedback" v-if="userData.identity == 1"
         >心得回饋</router-link
       >
@@ -151,9 +154,10 @@ export default {
       }
     }
 
-    $bgcolor: #36a2ff, #23adff, #1d7ee1, #4688ff, #106ad9, #0042d5, #170bd2, #003189;
+    $bgcolor: #3198f4, #2c8dea, #2783df, #2279d4, #1d6fc9, #1964bf, #145ab4, #0f50a9,
+      #0a469e, #053b94;
 
-    @for $i from 1 through 8 {
+    @for $i from 1 through 10 {
       a:nth-child(#{$i}) {
         background: nth($bgcolor, $i);
       }
@@ -223,6 +227,22 @@ export default {
 
       &.left {
         left: 15%;
+      }
+    }
+
+    .center-mid-high {
+      width: 200px;
+      height: 200px;
+      line-height: 200px;
+      top: 20%;
+      @extend %bg;
+
+      &.right {
+        left: 80%;
+      }
+
+      &.left {
+        left: 20%;
       }
     }
 

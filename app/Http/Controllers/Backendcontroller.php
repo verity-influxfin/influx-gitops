@@ -688,4 +688,46 @@ class Backendcontroller extends BaseController
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
     }
+
+    public function getCampusData()
+    {
+        $campus = DB::table('campusMember')->select([
+            "department",
+            "email",
+            "grade",
+            "mobile",
+            "name",
+            "portfolio",
+            "proposal",
+            "resume",
+            "school",
+            "selfIntro",
+            "teamName"
+        ])->join('campusTeam', 'teamID', '=', 'campusTeam.ID')->get();
+
+        return response()->json($campus, 200);
+    }
+
+    public function bakDownloadTypeFile(Request $request)
+    {
+
+        $inputs = $request->all();
+
+        $filePaths = DB::table('campusMember')->select($inputs['fileType'] . ' as file')->get();
+        $zip_file = realpath(base_path('public')) . '/upload/campus/' . $inputs['fileType'] . '.zip';
+
+        $zip = new \ZipArchive;
+        $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+        foreach ($filePaths as $item) {
+            if ($item->file) {
+                $invoice_file = realpath(base_path('public')) . '/upload/campus/' . $inputs['fileType'] . '/' . $item->file;
+                $zip->addFile($invoice_file, $item->file);
+            }
+        }
+
+        $zip->close();
+
+        return response()->download($zip_file);
+    }
 }

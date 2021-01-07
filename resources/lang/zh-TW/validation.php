@@ -113,6 +113,16 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'teamName' => '隊伍名稱',
+        'name' => '姓名',
+        'mobile' => '手機',
+        'email' => 'E-Mail',
+        'school' => '學校',
+        'selfIntro' => '簡單自我介紹',
+        'department' => '科系',
+        'grade' => '年級',
+        'resume' => '個人簡歷表',
+    ],
 
 ];
