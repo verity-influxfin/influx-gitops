@@ -402,7 +402,7 @@ class Target extends REST_Controller
     function pushUser_post()
     {
         $input = $this->input->post(NULL, TRUE);
-        $fields 	= ['user_id','push_by','push_type','message','invest_message','remark','start_time','end_time'];
+        $fields 	= ['user_id','push_by','push_type','remark','start_time','end_time'];
         foreach ($fields as $field) {
             if ($input[$field] == '') {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
