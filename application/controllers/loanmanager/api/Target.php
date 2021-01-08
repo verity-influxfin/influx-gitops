@@ -605,7 +605,6 @@ class Target extends REST_Controller
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
                 foreach($getUserLoginLog as $key => $value){
                     $message = $value->message ? '
------------------------------                    
 【借款人訊息】
 '.$value->invest_message : '';
                     $invest_message = $value->invest_message ? '
@@ -630,7 +629,6 @@ class Target extends REST_Controller
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
                 foreach($getUserLoginLog as $key => $value){
                     $message = $value->message ? '
------------------------------                    
 【借款人訊息】
 '.$value->invest_message : '';
                     $invest_message = $value->invest_message ? '
