@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\mobile;
+use App\Rules\identity;
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -229,6 +233,75 @@ class Controller extends BaseController
                 DB::table('feedback')->insert($this->inputs);
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function campusUploadFile(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            $mimeType = $file->getClientOriginalExtension();
+            $arrowType =  config('verifyfiletype')[$this->inputs['fileType']];
+
+            if (!in_array(strtolower($mimeType), $arrowType)) {
+                return response()->json('上傳失敗，請確認檔案格式', 400);
+            }
+
+            if ($file->isValid()) {
+                $newFile =  date('YmdHis') . "_" . $file->getClientOriginalName();
+                $file->move('upload/campus/' . $this->inputs['fileType'], $newFile);
+                return response()->json($newFile, 200);
+            }
+        } else {
+            return response()->json('上傳失敗，請洽工程師', 400);
+        }
+    }
+
+    public function campusSignup(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        $this->validate($request, [
+            'teamName' => 'required',
+        ]);
+
+        foreach ($this->inputs['memberList'] as $key => $value) {
+            $memberValidator[$key]  = Validator::make($value, [
+                'name' => 'required',
+                'mobile' => ['required', new mobile()],
+                'email' => 'required|email',
+                'school' => 'required',
+                'selfIntro' => 'required',
+                'department' => 'required',
+                'grade' => 'required',
+                'resume' => 'required',
+            ]);
+
+            if ($memberValidator[$key]->fails()) {
+                return response()->json(['index' => $key, 'errors' => $memberValidator[$key]->errors()], 400);
+            }
+        }
+
+        try {
+            $exception = DB::transaction(function () {
+                $id =  DB::table('campusTeam')->insertGetId(['teamName' => $this->inputs['teamName']]);
+
+                foreach ($this->inputs['memberList'] as $key => $value) {
+                    $this->inputs['memberList'][$key]['teamID'] = $id;
+                }
+
+                DB::table('campusMember')->insert($this->inputs['memberList']);
+            }, 5);
+            if (is_null($exception)) {
+                return response()->json('', 200);
+            } else {
+                return response()->json($exception,  400);
+            }
         } catch (Exception $e) {
             return response()->json($e, 400);
         }

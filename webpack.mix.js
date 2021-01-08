@@ -13,6 +13,8 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/frontdesk/layout.js', 'public/js/web.js')
     .js('resources/js/backend/layout.js', 'public/js/backend.js')
+    .js('resources/js/campusJoin.js', 'public/js/campusJoin.js')
     .sass('resources/scss/frontdesk/layout.scss', 'public/css/web.css')
     .sass('resources/scss/backend/layout.scss', 'public/css/backend.css')
+    .sass('resources/scss/campusJoin.scss', 'public/css/campusJoin.css')
     .sass('resources/scss/errors.scss', 'public/css/errors.css');
