@@ -13,7 +13,7 @@
     <div class="desc-card">
       <div class="bg-img"><img class="img-fluid" :src="'/images/bg.jpg'" /></div>
       <div class="content">
-        <h3>普匯 X Fintech</h3>
+        <h3>普匯 X Fintech X 校園大使</h3>
         <p>
           這絕對不是在打雜<br />
           我們會給你足夠的空間與資源<br />
