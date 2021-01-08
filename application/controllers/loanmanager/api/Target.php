@@ -604,6 +604,10 @@ class Target extends REST_Controller
                 //客服紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
                 foreach($getUserLoginLog as $key => $value){
+                    $message = $value->message ? '
+-----------------------------                    
+【借款人訊息】
+'.$value->invest_message : '';
                     $invest_message = $value->invest_message ? '
 -----------------------------                    
 【投資人訊息】
@@ -613,7 +617,7 @@ class Target extends REST_Controller
 【備註】
 '.$value->remark : '';
                     $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
-                    $structure['content'] =  $value->message . $invest_message . $remark;
+                    $structure['content'] =  $message . $invest_message . $remark;
                     $structure['msg'] =  $value->message . ($value->message != '' && $value->remark != '' ? ' - ' : '') .$value->message;
                     $structure['time'] = date('Y-m-d H:i:s', $value->start_time);
                     $structure['type'] = 5;
@@ -625,6 +629,10 @@ class Target extends REST_Controller
                 //面談紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
                 foreach($getUserLoginLog as $key => $value){
+                    $message = $value->message ? '
+-----------------------------                    
+【借款人訊息】
+'.$value->invest_message : '';
                     $invest_message = $value->invest_message ? '
 -----------------------------                    
 【投資人訊息】
@@ -634,7 +642,7 @@ class Target extends REST_Controller
 【備註】
 '.$value->remark : '';
                     $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
-                    $structure['content'] = $value->message . $invest_message . $value->remark;
+                    $structure['content'] = $message . $invest_message . $remark;
                     $structure['time'] = date('Y-m-d H:i:s', $value->start_time);
                     $structure['type'] = 6;
                     $logs[$value->created_at][] = $structure;
