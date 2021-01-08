@@ -298,6 +298,13 @@ class Controller extends BaseController
                 DB::table('campusMember')->insert($this->inputs['memberList']);
             }, 5);
             if (is_null($exception)) {
+                foreach ($this->inputs['memberList'] as $memberData) {
+                    try {
+                        app('App\Http\Controllers\SendEmailController')->sendNoticeMail($memberData);
+                    } catch (Exception $e) {
+                        return response()->json('m', 400);
+                    }
+                }
                 return response()->json('', 200);
             } else {
                 return response()->json($exception,  400);

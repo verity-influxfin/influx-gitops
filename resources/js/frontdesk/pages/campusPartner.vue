@@ -64,6 +64,16 @@
           </ul>
         </div>
       </div>
+      <div class="row">
+        <div class="title">繳交內容　　❱</div>
+        <div class="content">
+          <ul>
+            <li>自製履歷</li>
+            <li>活動企劃書(加分) Q:身為學生的你，如何幫助普匯拓展學生族群市場?</li>
+            <li>加分作品集(加分)</li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="bonus-card">
       <div class="bg-img"><img class="img-fluid" :src="'/images/bg_s.jpg'" /></div>
@@ -154,7 +164,6 @@ export default {
       perPage: 3,
       arrows: window.innerWidth > 767 ? false : true,
       pagination: false,
-      gap: "10rem",
       breakpoints: {
         767: { perPage: 1 },
       },
@@ -165,7 +174,7 @@ export default {
       perPage: 4,
       arrows: window.innerWidth > 767 ? false : true,
       pagination: false,
-      gap: "1rem",
+      gap: "5rem",
       breakpoints: {
         767: { perPage: 1 },
       },
@@ -184,8 +193,8 @@ export default {
   }
 
   %h3 {
-    font-size: 65px;
-    font-weight: 500;
+    font-size: 50px;
+    font-weight: 600;
     line-height: 1.49;
     text-align: center;
     color: #153a71;
@@ -200,6 +209,12 @@ export default {
 
   .header-card {
     position: relative;
+
+    .bg-img {
+      img {
+        height: calc(100vh - 85px);
+      }
+    }
 
     .content {
       @extend %center;
@@ -245,7 +260,7 @@ export default {
         border-radius: 70px;
         display: block;
         width: fit-content;
-        margin: 20px auto;
+        margin: 30px auto 20px auto;
 
         &:hover {
           text-decoration: none;
@@ -287,6 +302,9 @@ export default {
     }
 
     .box {
+      width: 1100px;
+      margin: 0px auto;
+
       .item {
         .img {
           text-align: center;
@@ -299,7 +317,7 @@ export default {
         }
 
         h5 {
-          font-size: 50px;
+          font-size: 40px;
           font-weight: bold;
           line-height: 1.48;
           text-align: center;
@@ -307,7 +325,7 @@ export default {
         }
 
         p {
-          font-size: 23px;
+          font-size: 20px;
           line-height: 1.5;
           text-align: center;
           color: #000000;
@@ -326,19 +344,21 @@ export default {
     }
 
     .row {
-      width: 1300px;
+      width: 700px;
       margin: 1rem auto;
 
       .title {
-        font-size: 38px;
+        font-size: 20px;
         font-weight: 500;
         line-height: 1.48;
         text-align: left;
         color: #ffffff;
+        width: 130px;
       }
 
       .content {
-        font-size: 36px;
+        width: calc(100% - 165px);
+        font-size: 20px;
         line-height: 1.5;
         text-align: left;
         color: #ffffff;
@@ -446,14 +466,15 @@ export default {
         .text {
           position: relative;
           background-color: #153a71;
-          width: 260px;
-          height: 260px;
+          width: 230px;
+          height: 230px;
           border-radius: 50%;
           margin: 0px auto;
 
           div {
             @extend %center;
-            font-size: 34px;
+            font-size: 20px;
+            font-weight: 700;
             width: fit-content;
             text-align: center;
             color: #ffffff;
@@ -519,7 +540,7 @@ export default {
         width: 100%;
 
         h3 {
-          font-size: 45px;
+          font-size: 25px;
           margin-bottom: 1rem;
         }
 
@@ -533,7 +554,7 @@ export default {
       padding: 1rem;
 
       h3 {
-        font-size: 45px;
+        font-size: 36px;
       }
 
       .sub {
@@ -541,7 +562,8 @@ export default {
       }
 
       .box {
-        padding: 1rem 4rem;
+        padding: 1rem 3rem;
+        width: 100%;
 
         .item {
           h5 {
@@ -552,6 +574,11 @@ export default {
           p {
             font-size: 20px;
           }
+
+          .img {
+            width: 130px;
+            margin: 15px auto;
+          }
         }
       }
     }
@@ -560,7 +587,7 @@ export default {
       padding: 1rem;
 
       h3 {
-        font-size: 45px;
+        font-size: 36px;
       }
 
       .row {
@@ -593,7 +620,8 @@ export default {
         border-radius: 20px;
         padding: 0px 10px;
         margin: 0px auto;
-        background: #ffffff;
+        font-size: 36px;
+        border: 0;
       }
 
       .content {
@@ -613,7 +641,7 @@ export default {
       padding: 1rem;
 
       h3 {
-        font-size: 45px;
+        font-size: 36px;
       }
 
       p {
@@ -650,11 +678,12 @@ export default {
 
       h3 {
         @extend %initial;
-        font-size: 45px;
+        font-size: 36px;
       }
 
       .box {
         @extend %initial;
+        width: 100%;
 
         .item {
           .text {
