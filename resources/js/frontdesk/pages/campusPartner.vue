@@ -1,14 +1,14 @@
 <template>
   <div class="campuspartner-wrapper">
     <div class="header-card">
-      <h1>2021</h1>
-      <h2>普匯校園大使計畫</h2>
-      <h4>CAMPUS AMBASSADOR PROGRAM</h4>
-    </div>
-    <div class="pic-card">
       <div class="bg-img"><img class="img-fluid" :src="'/images/people.jpg'" /></div>
-      <p>成為校園代言人，寫下你的熱血青春新頁</p>
-      <a href="/campusJoin" target="_blank">我要報名</a>
+      <div class="content">
+        <h1>2021</h1>
+        <h2>普匯校園大使計畫</h2>
+        <h4>CAMPUS AMBASSADOR PROGRAM</h4>
+        <p>成為校園代言人，寫下你的熱血青春新頁</p>
+        <a href="/campusJoin" target="_blank">我要報名</a>
+      </div>
     </div>
     <div class="desc-card">
       <div class="bg-img"><img class="img-fluid" :src="'/images/bg.jpg'" /></div>
@@ -66,7 +66,7 @@
       </div>
     </div>
     <div class="bonus-card">
-      <div class="bg-img"><img class="img-fluid" :src="'/images/bg.jpg'" /></div>
+      <div class="bg-img"><img class="img-fluid" :src="'/images/bg_s.jpg'" /></div>
       <div class="title">加分條件</div>
       <div class="content">
         <div class="text t-l">活潑外向，喜歡接觸人群</div>
@@ -108,7 +108,7 @@
       </div>
     </div>
     <div class="event-card">
-      <div class="bg-img"><img class="img-fluid" :src="'/images/bg.jpg'" /></div>
+      <div class="bg-img"><img class="img-fluid" :src="'/images/bg_s.jpg'" /></div>
       <h3>活動時程</h3>
       <Splide class="box" :options="eventOptions">
         <SplideSlide class="item"
@@ -154,7 +154,7 @@ export default {
       perPage: 3,
       arrows: window.innerWidth > 767 ? false : true,
       pagination: false,
-      gap: "17rem",
+      gap: "10rem",
       breakpoints: {
         767: { perPage: 1 },
       },
@@ -184,7 +184,7 @@ export default {
   }
 
   %h3 {
-    font-size: 80px;
+    font-size: 65px;
     font-weight: 500;
     line-height: 1.49;
     text-align: center;
@@ -199,56 +199,59 @@ export default {
   }
 
   .header-card {
-    color: #153a71;
-
-    h1 {
-      font-size: 224px;
-      line-height: 1.2;
-      text-align: center;
-    }
-
-    h2 {
-      font-size: 130px;
-      font-weight: 600;
-      line-height: 1.48;
-      text-align: center;
-    }
-
-    h4 {
-      font-size: 55px;
-      line-height: 1.48;
-      text-align: center;
-    }
-  }
-
-  .pic-card {
     position: relative;
 
-    p {
-      position: absolute;
-      top: 0px;
-      left: 50%;
-      transform: translate(-50%, 0px);
-      font-size: 40px;
-      font-weight: bold;
-      text-align: center;
-      width: fit-content;
-      color: #000000;
-    }
-
-    a {
+    .content {
       @extend %center;
-      border: solid 4px #184c91;
-      padding: 5px 2rem;
-      font-size: 36px;
-      font-weight: bolder;
-      color: #184c91;
-      border-radius: 70px;
+      width: 100%;
 
-      &:hover {
-        text-decoration: none;
-        background: #184c91;
-        color: #ffffff;
+      h1 {
+        font-size: 150px;
+        line-height: 1.2;
+        text-align: center;
+        color: #153a71;
+      }
+
+      h2 {
+        font-size: 80px;
+        font-weight: 600;
+        line-height: 1.48;
+        text-align: center;
+        color: #153a71;
+      }
+
+      h4 {
+        font-size: 37px;
+        line-height: 1.48;
+        text-align: center;
+        color: #153a71;
+      }
+
+      p {
+        font-size: 29px;
+        font-weight: bold;
+        text-align: center;
+        width: fit-content;
+        color: #000000;
+        margin: 0px auto;
+      }
+
+      a {
+        border: solid 4px #184c91;
+        padding: 5px 2rem;
+        font-size: 36px;
+        font-weight: bolder;
+        color: #184c91;
+        border-radius: 70px;
+        display: block;
+        width: fit-content;
+        margin: 20px auto;
+
+        &:hover {
+          text-decoration: none;
+          background: #184c91;
+          color: #ffffff;
+        }
       }
     }
   }
@@ -284,13 +287,11 @@ export default {
     }
 
     .box {
-      padding: 4rem 0px;
-
       .item {
         .img {
           text-align: center;
-          width: fit-content;
-          margin: 0px auto;
+          width: 160px;
+          margin: 25px auto;
           border: 5px solid #153a71;
           border-radius: 50%;
           overflow: hidden;
@@ -321,6 +322,7 @@ export default {
 
     h3 {
       @extend %h3;
+      color: #ffffff;
     }
 
     .row {
@@ -406,7 +408,7 @@ export default {
 
       .item {
         margin: 1rem;
-        width: calc(100% / 3 - 2rem);
+        width: calc(100% / 6 - 2rem);
         float: left;
         border-radius: 28px;
         border: solid 4px #707070;
@@ -415,7 +417,8 @@ export default {
         text-align: center;
 
         span {
-          font-size: 36px;
+          word-break: keep-all;
+          font-size: 20px;
           font-weight: 700;
           line-height: 1.48;
           color: #000000;
@@ -437,13 +440,14 @@ export default {
 
     .box {
       @extend %center;
-      width: 100%;
+      width: 1200px;
+
       .item {
         .text {
           position: relative;
           background-color: #153a71;
-          width: 300px;
-          height: 300px;
+          width: 260px;
+          height: 260px;
           border-radius: 50%;
           margin: 0px auto;
 
@@ -460,45 +464,44 @@ export default {
   }
 
   @media screen and (max-width: 767px) {
-    .header-card {
-      h1 {
-        font-size: 110px;
-      }
-
-      h2 {
-        font-size: 41px;
-      }
-
-      h4 {
-        font-size: 19px;
-      }
+    %initial {
+      position: initial;
+      transform: initial;
     }
 
-    .pic-card {
+    .header-card {
       padding: 1rem;
 
       .bg-img {
         display: none;
       }
 
-      %initial {
-        position: initial;
-        transform: initial;
-      }
-
-      p {
+      .content {
         @extend %initial;
-        font-size: 18px;
-        text-align: center;
-        margin: 10px auto;
-      }
+        h1 {
+          font-size: 110px;
+        }
 
-      a {
-        @extend %initial;
-        margin: 0px auto;
-        font-size: 20px;
-        display: block;
-        width: fit-content;
+        h2 {
+          font-size: 41px;
+        }
+
+        h4 {
+          font-size: 19px;
+        }
+
+        p {
+          font-size: 18px;
+          text-align: center;
+          margin: 10px auto;
+        }
+
+        a {
+          margin: 0px auto;
+          font-size: 20px;
+          display: block;
+          width: fit-content;
+        }
       }
     }
 

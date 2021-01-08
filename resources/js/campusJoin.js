@@ -10,7 +10,18 @@ $(() => {
         data: () => ({
             isSingup: false,
             teamName: "",
-            memberList: []
+            memberList: [{
+                name: "",
+                school: "",
+                department: "",
+                grade: "",
+                mobile: "",
+                email: "",
+                selfIntro: "",
+                resume: "",
+                proposal: "",
+                portfolio: "",
+            }]
         }),
         created() {
         },
@@ -58,7 +69,6 @@ $(() => {
             deleteRow(index) {
                 if (confirm("確定移除此隊員?")) {
                     this.memberList.splice(index, 1);
-                    alert("移除成功");
                 }
             },
             submit() {

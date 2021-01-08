@@ -74,10 +74,6 @@
         .empty {
             border: 2px solid #ff00008a;
         }
-
-        .img {
-            text-align: center;
-        }
     }
 
     .success {
@@ -86,6 +82,19 @@
             color: #1e2973;
             text-align: center;
             margin-bottom: 2rem;
+        }
+
+        p {
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .img-box {
+            display: flex;
+
+            .img {
+                width: 50%;
+            }
         }
     }
 
@@ -110,6 +119,20 @@
 
             .input-group-text {
                 justify-content: initial;
+            }
+        }
+
+        .success {
+            .img-box {
+                flex-direction: column;
+
+                .img {
+                    width: 100%;
+                }
+            }
+
+            p {
+                text-align: justify;
             }
         }
     }

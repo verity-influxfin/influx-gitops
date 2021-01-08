@@ -53,7 +53,7 @@
                 <template v-for="(item,index) in memberList">
                     <div class="box">
                         <div class="form-group" style="overflow:auto">
-                            <button class="btn btn-danger btn-sm mg" @click="deleteRow(index)">
+                            <button class="btn btn-danger btn-sm mg" v-if="index !== 0" @click="deleteRow(index)">
                                 移除隊員
                             </button>
                         </div>
@@ -142,8 +142,11 @@
             <!-- to do 報名成功 QRCODE -->
             <div class="from-area success">
                 <h3 class="">報名成功，請留意面試通知</h3>
-                <p>滾滾長江東逝水滾滾長江東逝水滾滾長江東逝水滾滾長江東逝水滾滾長江東逝水滾滾長江東逝水滾滾長江東逝水滾滾長江東逝水</p>
-                <div class="img"><img class="img-fluid" src="{{ asset('/images/downloadAPP.svg') }}"></div>
+                <p>立即下載「普匯inFlux APP 」註冊成為會員，裡面有豐富的金融科技知識<br><br>讓你更了解普匯金融科技運作內容，幫助面試更加分喔！</p>
+                <div class="img-box">
+                    <div class="img"><img class="img-fluid" src="{{ asset('/images/APPimg.png') }}"></div>
+                    <div class="img"><img class="img-fluid" src="{{ asset('/images/downloadAPP.svg') }}"></div>
+                </div>
             </div>
         </template>
     </div>
