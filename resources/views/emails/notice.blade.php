@@ -10,8 +10,6 @@
         }
 
         .mail-cnt {
-            min-width: 320px;
-            width: 600px;
             margin: 2rem auto;
             background: #ffffff;
             padding: 1rem;
@@ -43,7 +41,7 @@
     <div class="mail-cnt">
         <div class="img"><img style="width: 290px;" src="{{asset('/images/logo.png')}}" /></div>
         <p>
-            {{ $params['name'] }}同學您好：<br><br><br>
+            {{ $params['name'] ?? '' }}同學您好：<br><br><br>
             您已成功報名【普匯校園大使計畫】<br>
             我們將於 2/2 (二) 寄送初選通過者面試通知／未錄取感謝信，屆時請同學特別留意您的 email 信箱，若針對【普匯校園大使計畫】有其他疑問，請回覆本郵件或電洽普匯金融科技。<br><br><br>
             另外，同學可立即下載「普匯inFlux APP 」、「普匯投資」註冊成為會員，裡面有豐富的金融科技知識，讓你更了解普匯金融科技運作內容，幫助面試更加分喔!<br><br><br>
@@ -51,8 +49,8 @@
             祝 順心
         </p>
         <div class="img">
-            <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank"><img src="/images/google.png" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" /></a>
-            <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank"><img src="/images/apple.png" width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
+            <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank"><img src="{{asset('/images/google.png')}}" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" /></a>
+            <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank"><img src="{{asset('/images/apple.png')}}" width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
         </div>
         <p>
             -----------------------------<br>
