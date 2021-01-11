@@ -21,9 +21,9 @@
         }
 
         .img {
-            display: flex;
-            justify-content: space-between;
             margin: 2rem 0px;
+            overflow: auto;
+            text-align: center;
         }
 
         .t {
@@ -36,6 +36,7 @@
 
         img {
             width: 100%;
+            height: auto;
             margin: 0px auto;
         }
 
@@ -78,8 +79,8 @@
                 祝 順心
             </p>
             <div class="img">
-                <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank"><img src="{{asset('/images/google.png')}}" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" /></a>
-                <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank"><img src="{{asset('/images/apple.png')}}" width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
+                <a style="float:left;" href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" target="_blank"><img src="{{asset('/images/google.png')}}" width="200" alt="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW" /></a>
+                <a style="float:right;" href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_blank"><img src="{{asset('/images/apple.png')}}" width="200" alt="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" /></a>
             </div>
             <p>
                 -----------------------------<br>
