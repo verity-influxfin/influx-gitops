@@ -402,7 +402,7 @@ class Target extends REST_Controller
     function pushUser_post()
     {
         $input = $this->input->post(NULL, TRUE);
-        $fields 	= ['user_id','push_by','push_type','remark','start_time','end_time'];
+        $fields 	= ['user_id','push_by','push_type','start_time','end_time'];
         foreach ($fields as $field) {
             if ($input[$field] == '') {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -600,19 +600,18 @@ class Target extends REST_Controller
                 }
             }
 
+            $br = '
+
+';
             if(in_array($type, [0, 5])){
                 //客服紀錄
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
                 foreach($getUserLoginLog as $key => $value){
                     $message = $value->message ? '【借款人訊息】
-'.$value->message : '';
-                    $invest_message = $value->invest_message ? '
------------------------------                    
-【投資人訊息】
-'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message : '';
-                    $remark = $value->remark != '' ? '
------------------------------                    
-【備註】
+'.$value->message.$br : '';
+                    $invest_message = $value->invest_message ? '【投資人訊息】
+'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message.$br : '';
+                    $remark = $value->remark != '' ? '【備註】
 '.$value->remark : '';
                     $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
                     $structure['content'] =  $message . $invest_message . $remark;
@@ -628,14 +627,10 @@ class Target extends REST_Controller
                 $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
                 foreach($getUserLoginLog as $key => $value){
                     $message = $value->message ? '【借款人訊息】
-'.$value->message : '';
-                    $invest_message = $value->invest_message ? '
------------------------------                    
-【投資人訊息】
-'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message : '';
-                    $remark = $value->remark != '' ? '
------------------------------                    
-【備註】
+'.$value->message.$br : '';
+                    $invest_message = $value->invest_message ? '【投資人訊息】
+'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message.$br : '';
+                    $remark = $value->remark != '' ? '【備註】
 '.$value->remark : '';
                     $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
                     $structure['content'] = $message . $invest_message . $remark;
