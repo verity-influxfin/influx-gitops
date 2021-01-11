@@ -227,8 +227,4 @@ Route::post('/campusUploadFile', 'Controller@campusUploadFile');
 
 Route::post('/campusSignup', 'Controller@campusSignup');
 
-Route::get('/email', function () {
-    return view('emails.notice');
-});
-
 Route::view('/{path?}', 'index');
