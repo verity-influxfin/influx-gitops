@@ -75,12 +75,25 @@ class Backendcontroller extends BaseController
         )->first();
 
         if (!$userInfo) {
+            $this->_record('failure');
             return response()->json(['帳號密碼錯誤'], 400);
         } else {
+            $this->_record('success');
             Session::put('isLogin', true);
             Session::put('identity', $userInfo->identity);
             return response()->json(['isLogin' => Session::get('isLogin'), 'identity' => Session::get('identity')], 200);
         }
+    }
+
+    private function _record($status)
+    {
+        $data = [
+            'IP' => $_SERVER['REMOTE_ADDR'],
+            'loginStatus' => $status,
+            'loginDateTime' => date('Y-m-d H:i:s')
+        ];
+
+        DB::table('record')->insert($data);
     }
 
     public function logout(Request $request)
