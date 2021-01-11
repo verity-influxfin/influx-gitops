@@ -1,7 +1,9 @@
 {
     "/js/backend.js": "/js/backend.js",
+    "/js/campusJoin.js": "/js/campusJoin.js",
     "/js/web.js": "/js/web.js",
     "/css/web.css": "/css/web.css",
     "/css/backend.css": "/css/backend.css",
+    "/css/campusJoin.css": "/css/campusJoin.css",
     "/css/errors.css": "/css/errors.css"
 }

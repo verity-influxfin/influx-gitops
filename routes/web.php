@@ -219,5 +219,12 @@ Route::get('/verifyemail', 'Backendcontroller@verifyemail');
 // feedback
 Route::post('/sendFeedback', 'Controller@sendFeedback');
 
+Route::get('/campusJoin', function () {
+    return view('campusJoin');
+});
+
+Route::post('/campusUploadFile', 'Controller@campusUploadFile');
+
+Route::post('/campusSignup', 'Controller@campusSignup');
 
 Route::view('/{path?}', 'index');
