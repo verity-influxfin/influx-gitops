@@ -69,8 +69,8 @@
         <div class="content">
           <ul>
             <li>自製履歷</li>
-            <li>活動企劃書(加分) Q:身為學生的你，如何幫助普匯拓展學生族群市場?</li>
-            <li>加分作品集(加分)</li>
+            <li>活動企劃書(加分)<br />Q:身為學生的你，如何幫助普匯拓展學生族群市場?</li>
+            <li>作品集(加分)</li>
           </ul>
         </div>
       </div>
@@ -100,16 +100,16 @@
           <span>CEO面對面提案<br /><br /></span>
         </div>
         <div class="item">
-          <div class="img"><img class="img-fluid" :src="'/images/job.jpg'" /></div>
-          <span>表現優異者<br />可獲得實習機會</span>
-        </div>
-        <div class="item">
           <div class="img"><img class="img-fluid" :src="'/images/money.jpg'" /></div>
           <span>專案報酬<br /><br /></span>
         </div>
         <div class="item">
           <div class="img"><img class="img-fluid" :src="'/images/member.jpg'" /></div>
           <span>AI金融科技協會<br />會員優惠待遇</span>
+        </div>
+        <div class="item">
+          <div class="img"><img class="img-fluid" :src="'/images/job.jpg'" /></div>
+          <span>表現優異者<br />可獲得實習機會</span>
         </div>
         <div class="item">
           <div class="img"><img class="img-fluid" :src="'/images/recommend.jpg'" /></div>

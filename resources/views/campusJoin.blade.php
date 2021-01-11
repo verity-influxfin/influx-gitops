@@ -141,11 +141,21 @@
         <template v-else>
             <!-- to do 報名成功 QRCODE -->
             <div class="from-area success">
-                <h3 class="">報名成功，請留意面試通知</h3>
+                <h3>報名成功，請留意面試通知</h3>
                 <p>立即下載「普匯inFlux APP 」註冊成為會員，裡面有豐富的金融科技知識<br><br>讓你更了解普匯金融科技運作內容，幫助面試更加分喔！</p>
-                <div class="img-box">
-                    <div class="img"><img class="img-fluid" src="{{ asset('/images/APPimg.png') }}"></div>
-                    <div class="img"><img class="img-fluid" src="{{ asset('/images/downloadAPP.svg') }}"></div>
+                <div>
+                    <h4>普匯inFlux</h4>
+                    <div class="img-box">
+                        <div class="img"><img class="img-fluid" src="{{ asset('/images/bAPPimg.png') }}"></div>
+                        <div class="img"><img class="img-fluid" src="{{ asset('/images/bDownloadAPP.svg') }}"></div>
+                    </div>
+                </div>
+                <div>
+                    <h4>普匯投資</h4>
+                    <div class="img-box">
+                        <div class="img"><img class="img-fluid" src="{{ asset('/images/iAPPimg.png') }}"></div>
+                        <div class="img"><img class="img-fluid" src="{{ asset('/images/iDownloadAPP.svg') }}"></div>
+                    </div>
                 </div>
             </div>
         </template>
