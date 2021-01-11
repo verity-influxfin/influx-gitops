@@ -10,7 +10,6 @@
             background-color: #eaeced;
             font-weight: 600;
             font-family: "微軟正黑體";
-            color: #888;
         }
 
         .mail-cnt {
@@ -32,6 +31,7 @@
 
         p {
             margin: 0px;
+            color: #888;
         }
 
         img {
