@@ -21,7 +21,7 @@
 
         .sc {
             width: 600px;
-            margin: 0px auto;
+            margin: 1rem auto;
             font-size: 10px;
         }
 
@@ -58,7 +58,7 @@
             }
 
             .sc {
-                width: 85%;
+                width: 90%;
             }
 
             .t {
