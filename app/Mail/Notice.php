@@ -30,7 +30,7 @@ class Notice extends Mailable
      */
     public function build()
     {
-        return $this->subject("【普匯金融科技】校園大使報名通知信")
+        return $this->subject("您已成功報名【普匯校園大使計畫】")
             ->view('emails.notice')
             ->with([
                 'params' => $this->params,
