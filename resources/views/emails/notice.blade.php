@@ -8,7 +8,6 @@
         .cccasc {
             overflow: hidden;
             background-color: #eaeced;
-            font-weight: 600;
             font-family: "微軟正黑體";
         }
 
@@ -17,6 +16,13 @@
             margin: 2rem auto;
             background: #ffffff;
             padding: 1rem;
+            font-weight: 600;
+        }
+
+        .sc {
+            width: 600px;
+            margin: 0px auto;
+            font-size: 10px;
         }
 
         .img {
@@ -49,6 +55,10 @@
             .mail-cnt {
                 width: 85%;
                 margin: 1rem auto;
+            }
+
+            .sc {
+                width: 85%;
             }
 
             .t {
@@ -90,6 +100,8 @@
                 02-2507-9990<br>
             </p>
         </div>
+        <div class="sc">此信件為系統自動發送，請勿直接回覆<br>
+            Copyright ©2020 普匯金融科技股份有限公司</div>
     </div>
 </body>
 
