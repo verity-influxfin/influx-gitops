@@ -54,7 +54,7 @@
                           $('.run-scraper-tr').show();
                         }
                       }
-                      return;
+
                   }
               },
               error: function() {
@@ -102,7 +102,7 @@
                                   list = list_head + list_foot;
                                 }
                                 $("#case_list").prepend(list);
-                            return;
+
 
                         });
                     }
@@ -143,7 +143,7 @@
 
                       if (response.status.code == 201) {
                           alert('爬蟲執行請求2小時內重複發送');
-                              return;
+
                       }
                   },
                   error: function() {
@@ -425,8 +425,8 @@
                                         </tr>
                                         <tr><td>
                                                 <label>姓名：</label><?=isset($remark["OCR"]["healthcard_name"])&&$remark["OCR"]["healthcard_name"]!=''?$remark["OCR"]["healthcard_name"]:"";?><br>
-                                                <label>生日：</label><?=isset($remark["OCR"]["healthcard_id_number"])&&$remark["OCR"]["healthcard_id_number"]!=''?$remark["OCR"]["healthcard_id_number"]:"";?><br>
-                                                <label>身分證字號：</label><?=isset($remark["OCR"]["healthcard_birthday"])&&$remark["OCR"]["healthcard_birthday"]!=''?$remark["OCR"]["healthcard_birthday"]:"";?><br>
+                                                <label>身分證字號：</label><?=isset($remark["OCR"]["healthcard_id_number"])&&$remark["OCR"]["healthcard_id_number"]!=''?$remark["OCR"]["healthcard_id_number"]:"";?><br>
+                                                <label>生日：</label><?=isset($remark["OCR"]["healthcard_birthday"])&&$remark["OCR"]["healthcard_birthday"]!=''?$remark["OCR"]["healthcard_birthday"]:"";?><br>
                                                 <label>健保卡號：</label><?=isset($remark["OCR"]["healthcard_number"])&&$remark["OCR"]["healthcard_number"]!=''?$remark["OCR"]["healthcard_number"]:"";?><br>
                                             </td></tr>
                                     </table>
