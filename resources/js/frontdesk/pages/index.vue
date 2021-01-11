@@ -14,7 +14,7 @@
               class="loan"
               href="https://event.influxfin.com/r/iurl?p=webinvest"
               target="_blank"
-              onClick="ga('send', 'event', 'Click', 'Nav Click', '投資','0')"
+              onClick="ga('send', 'event', '下載', '投資')"
               ><img src="../asset/images/light-b.svg" class="img-fluid" />
               <div class="text">立即投資</div></a
             >
@@ -22,7 +22,7 @@
               class="borrow"
               href="https://event.influxfin.com/R/url?p=webbanner"
               target="_blank"
-              onClick="ga('send', 'event',  'Click', 'Nav Click', '借款','0')"
+              onClick="ga('send', 'event',  '下載', '借款')"
               ><img src="../asset/images/light-y.svg" class="img-fluid" />
               <div class="text">立即借款</div></a
             >
