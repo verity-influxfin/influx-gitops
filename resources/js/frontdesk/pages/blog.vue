@@ -102,6 +102,7 @@ export default {
         $($this.$refs.pagination).pagination({
           dataSource: $this.filterKnowledge,
           pageSize: 9,
+          pageNumber: $cookies.get("page") ? $cookies.get("page") : 1,
           callback(data, pagination) {
             $($this.$refs.content).html("");
             data.forEach((item, index) => {
@@ -113,6 +114,9 @@ export default {
 
               $($this.$refs.content).append(component.$el);
             });
+          },
+          afterPageOnClick() {
+            $cookies.set("page", $(".paginationjs-page.active").attr("data-num"));
           },
         });
 
