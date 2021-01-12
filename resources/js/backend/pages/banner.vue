@@ -7,7 +7,7 @@
             <i class="fas fa-home"></i>
           </router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">首頁banner</li>
+        <li class="breadcrumb-item active" aria-current="page">頁面banner</li>
       </ol>
     </nav>
 
@@ -20,9 +20,10 @@
 
     <div class="banner-block">
       <div class="banner-tabletitle">
+        <div class="type">頁面</div>
         <div class="desktop">桌面板</div>
         <div class="mobile">手機板</div>
-        <div class="type">頁面</div>
+        <div class="link">連結</div>
         <div class="isActive">是否上架</div>
         <div class="action-row">操作</div>
       </div>
@@ -73,6 +74,13 @@
                 />
                 <input type="file" @change="fileChange($event, 'mobile')" />
               </div>
+            </div>
+
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">連結</span>
+              </div>
+              <input type="text" class="form-control" placeholder="連結" v-model="link" />
             </div>
 
             <div class="input-group" style="width: 15%">
@@ -144,9 +152,10 @@ let bannerRow = Vue.extend({
   }),
   template: `
     <li class="banner-row">
+      <div class="type">{{type[item.type]}}</div>
       <div class="desktop"><img class="img-fluid" :src="'upload/banner/'+item.desktop"></div>
       <div class="mobile"><img class="img-fluid" :src="'upload/banner/'+item.mobile"></div>
-      <div class="type">{{type[item.type]}}</div>
+      <div class="link"><a v-if="item.link" target="_blank" :href="item.link"><i class="fas fa-external-link-alt"></i></a></div>
       <div class="isActive">{{item.isActive}}</div>
       <div class="action-row">
         <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
@@ -162,6 +171,7 @@ export default {
     desktop: "",
     mobile: "",
     type: "",
+    link: "",
     message: "",
     isActive: "",
     rawData: [],
@@ -209,6 +219,7 @@ export default {
       this.desktop = "";
       this.mobile = "";
       this.type = "";
+      this.link = "";
       this.isActive = "";
       this.actionType = "insert";
 
@@ -219,6 +230,7 @@ export default {
       this.desktop = item.desktop ? item.desktop : "./images/default-image.png";
       this.mobile = item.mobile ? item.mobile : "./images/default-image.png";
       this.type = item.type;
+      this.link = item.link;
       this.isActive = item.isActive;
       this.actionType = "update";
 
@@ -248,6 +260,7 @@ export default {
             desktop: this.desktop,
             mobile: this.mobile,
             type: this.type,
+            link: this.link,
             isActive: this.isActive,
           },
         })
@@ -326,10 +339,13 @@ export default {
       }
     }
     .desktop {
-      width: 50%;
+      width: 45%;
     }
     .mobile {
       width: 20%;
+    }
+    .link {
+      width: 5%;
     }
     .type {
       width: 10%;
