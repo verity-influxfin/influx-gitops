@@ -1,6 +1,5 @@
 <template>
   <div class="article-wrapper">
-    <h3 class="title" v-if="this.articleTitle">{{ this.articleTitle }}</h3>
     <div class="flex">
       <div
         :class="[
@@ -10,6 +9,7 @@
           },
         ]"
       >
+        <h3 class="title" v-if="this.articleTitle">{{ this.articleTitle }}</h3>
         <div class="contenier">
           <div class="title-img" v-if="this.articleImg">
             <img :src="this.articleImg" class="img-fluid" />
@@ -39,9 +39,7 @@
           <div>
             <div class="latest" v-for="(item, index) in latest" :key="index">
               <a :href="item.link">{{ item.post_title }}</a>
-              <div class="float-right">
-                －{{ item.post_modified.substr(0, 10) }}
-              </div>
+              <div class="float-right">－{{ item.post_modified.substr(0, 10) }}</div>
             </div>
           </div>
         </div>
@@ -62,9 +60,7 @@
               </template>
               <template v-else>
                 <i
-                  :class="[
-                    node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder',
-                  ]"
+                  :class="[node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder']"
                 ></i>
                 {{ node.text }}
               </template>
@@ -120,8 +116,7 @@ export default {
         groups.forEach((gItem) => {
           if (
             gItem.text === dateItem[0] &&
-            gItem.children.filter((iItem) => iItem.text === dateItem[1])
-              .length === 0
+            gItem.children.filter((iItem) => iItem.text === dateItem[1]).length === 0
           ) {
             gItem.children.push({ text: dateItem[1], children: [] });
           }
@@ -131,9 +126,7 @@ export default {
       this.$store.getters.KnowledgeData.forEach((kItem) => {
         groups.forEach((gItem, gindex) => {
           gItem.children.forEach((iItem, rindex) => {
-            if (
-              kItem.post_date.substr(0, 7) === `${gItem.text}-${iItem.text}`
-            ) {
+            if (kItem.post_date.substr(0, 7) === `${gItem.text}-${iItem.text}`) {
               groups[gindex].children[rindex].children.push({
                 text: { text: kItem.post_title, link: kItem.link },
               });
@@ -199,11 +192,15 @@ export default {
     display: flex;
   }
 
-  %contenier{
+  %contenier {
     .contenier {
       .title,
       .title-img {
         text-align: center;
+
+        img {
+          width: 600px;
+        }
       }
 
       .main-content {
@@ -273,8 +270,14 @@ export default {
     padding: 20px 10px 10px 10px;
 
     .title {
-      font-size: 24px;
+      font-size: 20px;
       margin-bottom: 1rem;
+    }
+
+    .title-img {
+      img {
+        width: 100%;
+      }
     }
 
     .flex {
@@ -301,5 +304,3 @@ export default {
   }
 }
 </style>
-
-

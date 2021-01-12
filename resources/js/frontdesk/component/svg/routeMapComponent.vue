@@ -4,7 +4,7 @@
       xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink"
       id="r-map"
-      viewBox="0 0 1297 679"
+      viewBox="0 0 1400 679"
     >
       <defs>
         <linearGradient id="kjndxijg4a" x1="-.639%" x2="99.968%" y1="50%" y2="50%">
@@ -625,7 +625,7 @@ export default {
     }
     &:nth-of-type(2) {
       top: 16%;
-      left: 33.5%;
+      left: 31.5%;
       font-size: 13px;
     }
     &:nth-of-type(3) {
@@ -635,17 +635,17 @@ export default {
     }
     &:nth-of-type(4) {
       top: 39%;
-      left: 61%;
+      left: 57%;
       font-size: 15px;
     }
     &:nth-of-type(5) {
       top: 63%;
-      left: 25%;
+      left: 23.5%;
       font-size: 16px;
     }
     &:nth-of-type(6) {
       top: 92%;
-      left: 87.5%;
+      left: 81%;
       font-size: 17px;
     }
   }
