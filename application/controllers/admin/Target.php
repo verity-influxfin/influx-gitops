@@ -908,24 +908,38 @@ class Target extends MY_Admin_Controller {
 		}
 	}
 
-	function subloan_success(){
+	function subloan_success()
+    {
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
-		if($id){
-			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==2 && $info->sub_status==8){
+		if ($id) {
+            // 啟用SQL事務
+            $this->db->trans_start();
+            $this->db->query('SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
+
+			// $info = $this->target_model->get($id);
+
+            # issue_898
+            $targetSql = sprintf("SELECT * FROM `%s`.`%s` WHERE `id` = '%s' FOR UPDATE", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $id);
+            $sqlResult = $this->db->query($targetSql);
+            $info = $sqlResult->row();
+
+			if ($info && $info->status == 4 && $info->loan_status == 2 && $info->sub_status == 8) {
 				$this->load->library('Transaction_lib');
-				$rs = $this->transaction_lib->subloan_success($id,$this->login_info->id);
-				if($rs){
-					echo '產轉放款成功';die();
-				}else{
-					echo '產轉放款失敗';die();
+				$rs = $this->transaction_lib->subloan_success($id, $this->login_info->id);
+				if ($rs) {
+					echo '產轉放款成功';
+				} else {
+					echo '產轉放款失敗';
 				}
-			}else{
-				echo '查無此ID';die();
+			} else {
+				echo '案件不存在或已處理';
 			}
-		}else{
-			echo '查無此ID';die();
+
+            // 事務交易完成，提交結果
+            $this->db->trans_complete();
+		} else {
+			echo '請輸入ID';
 		}
 	}
 
@@ -970,24 +984,39 @@ class Target extends MY_Admin_Controller {
 		}
 	}
 
-	function loan_success(){
+	function loan_success()
+    {
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
-		if($id){
-			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==3 && in_array($info->sys_check, [20, 21])){
+		if ($id) {
+
+            // 啟用SQL事務
+            $this->db->trans_start();
+            $this->db->query('SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;');
+
+            // $info = $this->target_model->get($id);
+
+            # issue_898
+            $targetSql = sprintf("SELECT * FROM `%s`.`%s` WHERE `id` = '%s' FOR UPDATE", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $id);
+            $sqlResult = $this->db->query($targetSql);
+            $info = $sqlResult->row();
+
+			if ($info && $info->status == 4 && $info->loan_status == 3 && in_array($info->sys_check, [20, 21])) {
 				$this->load->library('Transaction_lib');
-				$rs = $this->transaction_lib->lending_success($id,$this->login_info->id);
-				if($rs){
-					echo '更新成功';die();
-				}else{
-					echo '更新失敗';die();
+				$rs = $this->transaction_lib->lending_success($id, $this->login_info->id);
+				if ($rs) {
+					echo '更新成功';
+				} else {
+					echo '更新失敗';
 				}
-			}else{
-				echo '查無此ID';die();
+			} else {
+				echo '案件不存在或已處理';
 			}
-		}else{
-			echo '查無此ID';die();
+
+            // 事務交易完成，提交結果
+            $this->db->trans_complete();
+		} else {
+			echo '請輸入ID';
 		}
 	}
 

@@ -74,7 +74,7 @@ class Contract_lib{
 		return false;
 	}
 	
-	public function sign_contract( $type='' , $data = [] ){
+	public function sign_contract( $type='' , $data = [] ,$userId = false){
 		if($type && $data){
 			$format = $this->CI->contract_format_model->order_by('created_at','desc')->get_by(['type'=>$type]);
 			if($format){
@@ -83,6 +83,7 @@ class Contract_lib{
 					'format_id'	=> $format->id,
 					'content' 	=> json_encode($data) 
 				);
+                $userId ? $param['user_id'] = $userId : '';
 				return $this->CI->contract_model->insert($param);
 			}
 		}

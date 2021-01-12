@@ -3,8 +3,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Transaction_lib{
-	
-	
+
+
 	public function __construct()
     {
         $this->CI = &get_instance();
@@ -17,7 +17,8 @@ class Transaction_lib{
     }
 
 	//取得資金資料
-	public function get_virtual_funds($virtual_account=''){
+	public function get_virtual_funds($virtual_account='')
+	{
 		if($virtual_account){
 			$total  = 0;
             $frozen = 0;
@@ -25,7 +26,9 @@ class Transaction_lib{
             $frozen_arr = $frozenes;
 			$last_recharge_date	= '';
 			$this->CI->load->model('transaction/virtual_passbook_model');
+
 			$virtual_passbook 	= $this->CI->virtual_passbook_model->get_many_by(array('virtual_account' => $virtual_account));
+
 			$frozen_amount 		= $this->CI->frozen_amount_model->get_many_by(array('virtual_account' => $virtual_account,'status' => 1));
 			if($virtual_passbook){
 				foreach($virtual_passbook as $key => $value){
@@ -35,7 +38,7 @@ class Transaction_lib{
 					}
 				}
 			}
-			
+
 			if($frozen_amount){
 				foreach($frozen_amount as $key => $value){
                     $frozen = $frozen + intval($value->amount);
@@ -55,7 +58,7 @@ class Transaction_lib{
 		}
 		return false;
 	}
-	
+
 	//代收
 	public function recharge($payment_id=0){
 		$date = get_entering_date();
@@ -91,14 +94,14 @@ class Transaction_lib{
 		}
 		return false;
 	}
-	
+
 	function verify_fee($payment){
 		$date = get_entering_date();
 		if($payment && $payment->status != '1'){
 			$this->CI->load->model('transaction/payment_model');
 			$transaction = array();
 			switch ($payment->amount) {
-				case -1: 
+				case -1:
 					$transaction[]	= array(
 						'source'			=> SOURCE_VERIFY_FEE,
 						'entering_date'		=> $date,
@@ -122,7 +125,7 @@ class Transaction_lib{
 						'status'			=> 2
 					);
 					break;
-				case -31: 
+				case -31:
 					$transaction[]	= array(
 						'source'			=> SOURCE_VERIFY_FEE,
 						'entering_date'		=> $date,
@@ -144,7 +147,7 @@ class Transaction_lib{
 						'status'			=> 2
 					);
 					break;
-				case 1: 
+				case 1:
 					$transaction[]	= array(
 						'source'			=> SOURCE_VERIFY_FEE_R,
 						'entering_date'		=> $date,
@@ -156,7 +159,7 @@ class Transaction_lib{
 						'status'			=> 2
 					);
 					break;
-				case 30: 
+				case 30:
 					$transaction[]	= array(
 						'source'			=> SOURCE_REMITTANCE_FEE_R,
 						'entering_date'		=> $date,
@@ -184,7 +187,7 @@ class Transaction_lib{
 		}
 		return false;
 	}
-	
+
 	//提領
 	public function withdraw($user_id,$amount=0,$investor=1){
 		if($user_id && $amount > 31 ){
@@ -255,7 +258,7 @@ class Transaction_lib{
 		}
 		return false;
 	}
-	
+
 	//提領成功
 	function withdraw_success($withdraw_id){
 		$date 			= get_entering_date();
@@ -325,7 +328,7 @@ class Transaction_lib{
 		}
 		return false;
 	}
-	
+
 	//放款成功
 	function lending_success($target_id,$admin_id=0){
 		$date 			= get_entering_date();
@@ -366,7 +369,7 @@ class Transaction_lib{
 							'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 							'status'			=> 2
 						];
-						
+
 
 						$investment_ids = [];
 						$frozen_ids 	= [];
@@ -383,7 +386,7 @@ class Transaction_lib{
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
 								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
 								$this->CI->sms_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
-								
+
 								//放款
 								$transaction[]		= [
 									'source'			=> SOURCE_LENDING,
@@ -399,7 +402,7 @@ class Transaction_lib{
 									'status'			=> 2
 								];
 
-								
+
 								//攤還表
 								$amortization_schedule 		= $this->CI->financial_lib->get_amortization_schedule($value->loan_amount,$target,$date);
 								if($amortization_schedule){
@@ -417,7 +420,7 @@ class Transaction_lib{
 											'bank_account_to'	=> $virtual_account->virtual_account,
 											'limit_date'		=> $payment['repayment_date'],
 										];
-										
+
 										$transaction[]	= [
 											'source'			=> SOURCE_AR_INTEREST,
 											'entering_date'		=> $date,
@@ -431,7 +434,7 @@ class Transaction_lib{
 											'bank_account_to'	=> $virtual_account->virtual_account,
 											'limit_date'		=> $payment['repayment_date'],
 										];
-										
+
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
 										$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
 										$transaction[]	= [
@@ -450,7 +453,7 @@ class Transaction_lib{
 									}
 								}
 							}
-							
+
 							$rs  = $this->CI->transaction_model->insert_many($transaction);
 							if($rs && is_array($rs)){
 								$target_update_param = [
@@ -458,10 +461,16 @@ class Transaction_lib{
 									'loan_status'	=> 1,
 									'loan_date'		=> $date
 								];
-								$this->CI->target_model->update($target_id,$target_update_param);
+								// $this->CI->target_model->update($target_id,$target_update_param);
+
+								# issue_898
+				                $updateSql = sprintf("UPDATE `%s`.`%s` SET `status` = '5', `loan_status` = '1', `loan_date` = '%s', `updated_at` = '%s' WHERE `id` = '%s'", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $date, time(), $target_id);
+								$this->CI->db->query($updateSql);
+
+
 								$this->CI->load->library('target_lib');
 								$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
-								
+
 								$this->CI->investment_model->update_many($investment_ids,['status'=>3]);
 								foreach($investment_ids as $k => $investment_id){
 									$this->CI->target_lib->insert_investment_change_log($investment_id,['status'=>3],0,$admin_id);
@@ -481,12 +490,12 @@ class Transaction_lib{
 		}
 		return false;
 	}
-	
+
 	//分期成功
 	function order_success($target_id,$admin_id=0){
 		$date 			= get_entering_date();
 		$transaction 	= [];
-		if($target_id){			
+		if($target_id){
 			$target = $this->CI->target_model->get($target_id);
 			if( $target && $target->status == 24 && $target->order_id != 0){
 				$this->CI->load->model('transaction/order_model');
@@ -659,7 +668,7 @@ class Transaction_lib{
 			}
 		}
 	}
-	
+
 	//債轉成功
 	function transfer_success($transfer_id,$admin_id=0){
 		$date 			= get_entering_date();
@@ -1121,7 +1130,12 @@ class Transaction_lib{
 									'loan_status'	=> 1,
 									'loan_date'		=> $date
 								);
-								$this->CI->target_model->update($target_id,$target_update_param);
+								// $this->CI->target_model->update($target_id,$target_update_param);
+
+								# issue_898
+								$updateSql = sprintf("UPDATE `%s`.`%s` SET `status` = '5', `sub_status` = '0', `loan_status` = '1', `loan_date` = '%s', `updated_at` = '%s' WHERE `id` = '%s'", P2P_LOAN_DB, P2P_LOAN_TARGET_TABLE, $date, time(), $target_id);
+								$this->CI->db->query($updateSql);
+
 								$this->CI->load->library('target_lib');
 								$this->CI->target_lib->insert_change_log($target_id,$target_update_param,0,$admin_id);
 

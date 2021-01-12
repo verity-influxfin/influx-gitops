@@ -23,6 +23,16 @@ class Compare_lib{
         return $res;
     }
 
+    public function repeatCheck($text){
+        $substr = mb_substr($text,0,2);
+        preg_match_all('/'.$substr.'/', $text, $match);
+        $res = $text;
+        if(count($match[0]) > 1){
+            $res  = $substr.preg_split('/'.$substr.'/',$text)[1];
+        }
+        return $res;
+    }
+
     public function dateContentCheck($compares,$content)
     {
         $content = $this->dateFormat($content);

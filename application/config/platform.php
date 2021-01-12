@@ -3,6 +3,9 @@
 //後台menu
 $config['admin_menu'] = [
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
+    'AntiFraud' => [
+        'name' => '反詐欺管理指標'
+    ],
     'Target' => [
         'parent_name' => '借款管理',
         'index' => '全部列表',
@@ -86,7 +89,7 @@ $config['admin_menu'] = [
     ],
     'Account' => [
         'parent_name' => '財務作業',
-        'daily_report' => '交易日報表',
+        'daily_report' => '虛擬帳戶交易明細表',
         'passbook_report' => '虛擬帳號餘額明細表',
         'estatement' => '個人對帳單',
         'index' => '收支統計表',
@@ -499,8 +502,8 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'DS2' => [
-        'name' => '在庫車融資專案',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>在庫車融資專案</span><br><span style=\'font-size:14px;color:#4a4a4a\'>外匯車商可申請</span>',
+        'name' => '車輛融資專案',
+        'description' => '<span style=\'font-size:14px;color:#4a4a4a\'>提供便利資金融通</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'url' => '',
@@ -508,7 +511,7 @@ $config['visul_id_des'] = [
     ],
     'TODS2' => [
         'name' => '<span style=\'font-size:18px;color:white\'>外匯車貸</span>',
-        'description' => '<span style=\'font-size:14px;color:white\'>不論是夢想實現，還是生活急需，<br/>我們集結了各大學校友、老師，<br/>專門投資借貸同學在學期間的資金需求。</span>',
+        'description' => '<span style=\'font-size:14px;color:white\'>車輛融資專案<br/>提供便利資金融通</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'url' => '',
@@ -993,6 +996,7 @@ $config['transaction_source'] = [
     82 => '平台驗證費退回',
     83 => '跨行轉帳費',
     84 => '跨行轉帳費退回',
+    85 => '退款-不明原因',
 
     91 => '應付違約金',
     92 => '已還違約金',
@@ -1016,6 +1020,7 @@ $config['internal_transaction_source'] = [
     82 => '平台驗證費沖正',
     83 => '跨行轉帳費',
     84 => '跨行轉帳費沖正',
+    85 => '退款-不明原因',
 
     92 => '違約金 - 逾期 (已還手續費)',
 ];
@@ -1027,22 +1032,24 @@ $config['transaction_type_name'] = [
     'transfer' => '債權轉讓',
     'transfer_b' => '債權轉讓費沖正',
     'bank_wrong_tx' => '銀行錯帳撥還',
+    'platform_wrong_tx' => '錯帳退款',
     'prepayment' => '提前還款',
     'charge_delay' => '逾期清償',
     'charge_normal' => '還款',
+    'unknown_refund' => '退款-不明原因'
 ];
 
 $config['certifications'] = [
     1 => ['id' => 1, 'alias' => 'idcard', 'name' => '實名認證', 'status' => 1, 'description' => '驗證個人身份資訊', 'optional' => []],
     2 => ['id' => 2, 'alias' => 'student', 'name' => '學生身份認證', 'status' => 1, 'description' => '驗證學生身份', 'optional' => []],
-    3 => ['id' => 3, 'alias' => 'debitcard', 'name' => '金融帳號認證', 'status' => 1, 'description' => '驗證個人金融帳號', 'optional' => []],
-    4 => ['id' => 4, 'alias' => 'social', 'name' => '社交認證', 'status' => 1, 'description' => '個人社交帳號認證', 'optional' => []],
+    3 => ['id' => 3, 'alias' => 'debitcard', 'name' => '金融/存款帳戶', 'status' => 1, 'description' => '驗證個人金融帳號', 'optional' => []],
+    4 => ['id' => 4, 'alias' => 'social', 'name' => '社交帳號', 'status' => 1, 'description' => '個人社交帳號認證', 'optional' => []],
     5 => ['id' => 5, 'alias' => 'emergency', 'name' => '緊急聯絡人', 'status' => 1, 'description' => '設定緊急連絡人資訊', 'optional' => []],
     6 => ['id' => 6, 'alias' => 'email', 'name' => '常用電子信箱', 'status' => 1, 'description' => '驗證常用E-Mail位址', 'optional' => []],
-    7 => ['id' => 7, 'alias' => 'financial', 'name' => '財務訊息認證', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
-    8 => ['id' => 8, 'alias' => 'diploma', 'name' => '最高學歷認證', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
-    9 => ['id' => 9, 'alias' => 'investigation', 'name' => '聯合徵信認證', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
-    10 => ['id' => 10, 'alias' => 'job', 'name' => '工作認證', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
+    7 => ['id' => 7, 'alias' => 'financial', 'name' => '收支資訊提供', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
+    8 => ['id' => 8, 'alias' => 'diploma', 'name' => '最高學歷證明', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
+    9 => ['id' => 9, 'alias' => 'investigation', 'name' => '聯徵資料提供', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
+    10 => ['id' => 10, 'alias' => 'job', 'name' => '工作收入證明', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
 
     1000 => ['id' => 1000, 'alias' => 'businesstax', 'name' => '401/403稅務資料認證', 'status' => 1, 'description' => '', 'optional' => []],
     1001 => ['id' => 1001, 'alias' => 'balancesheet', 'name' => '資產負債表認證', 'status' => 1, 'description' => '', 'optional' => []],
@@ -1253,3 +1260,5 @@ $config['allow_changeRate_product'] = [1, 3];
 $config['social_patten'] = '全球|財經|數位|兩岸';
 
 $config['no_prepayment_allowance'] = [1000];
+
+$config['allow_aiBidding_product'] = [1, 2, 3, 4];

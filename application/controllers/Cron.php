@@ -12,10 +12,10 @@ class Cron extends CI_Controller {
 		}
         $this->load->model('log/log_script_model');
     }
-	
+
 	public function cathay()
 	{	//每五分鐘
-		$this->load->library('Payment_lib'); 
+		$this->load->library('Payment_lib');
 		$script  	= 1;
 		$start_time = time();
 		$ids 		= $this->payment_lib->script_get_cathay_info();
@@ -33,7 +33,7 @@ class Cron extends CI_Controller {
 
 	public function handle_payment()
 	{	//每五分鐘
-		$this->load->library('Payment_lib'); 
+		$this->load->library('Payment_lib');
 		$script  	= 2;
 		$start_time = time();
 		$count 		= $this->payment_lib->script_handle_payment();
@@ -48,10 +48,10 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function check_bidding()
 	{	//每五分鐘
-		$this->load->library('Target_lib'); 
+		$this->load->library('Target_lib');
 		$script  	= 3;
 		$start_time = time();
 		$count 		= $this->target_lib->script_check_bidding();
@@ -66,10 +66,10 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function approve_target()
 	{	//每五分鐘
-		$this->load->library('Target_lib'); 
+		$this->load->library('Target_lib');
 		$script  	= 4;
 		$start_time = time();
 		$count 		= $this->target_lib->script_approve_target();
@@ -84,10 +84,10 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function check_transfer_bidding()
 	{	//每五分鐘
-		$this->load->library('Transfer_lib'); 
+		$this->load->library('Transfer_lib');
 		$script  	= 5;
 		$start_time = time();
 		$count 		= $this->transfer_lib->script_check_bidding();
@@ -102,28 +102,34 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function charge_targets()
-	{	//每五分鐘
-		$this->load->library('Charge_lib'); 
-		$script  	= 6;
-		$start_time = time();
-		$count 		= $this->charge_lib->script_charge_targets();
-		$num		= $count?intval($count):0;
-		$end_time 	= time();
-		$data		= [
-			'script_name'	=> 'charge_targets',
-			'num'			=> $num,
-			'start_time'	=> $start_time,
-			'end_time'		=> $end_time
-		];
+	{
+        // 進行貸案處理，將還款中的交易帳務過帳核算，更改狀態
+        $script     = 6;
+        $start_time = time();
+
+        // 每五分鐘
+		$this->load->library('Charge_lib');
+
+        $count      = $this->charge_lib->script_charge_targets();
+        $num        = $count?intval($count):0;
+        $end_time   = time();
+        $data = [
+            'script_name'   => 'charge_targets',
+            'num'           => $num,
+            'start_time'    => $start_time,
+            'end_time'      => $end_time
+        ];
+
 		$this->log_script_model->insert($data);
+
 		die('1');
 	}
-	
+
 	public function prepayment_targets()
 	{	//每五分鐘
-		$this->load->library('Charge_lib'); 
+		$this->load->library('Charge_lib');
 		$script  	= 7;
 		$start_time = time();
 		$count 		= $this->charge_lib->script_prepayment_targets();
@@ -138,10 +144,10 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function check_certifications()
 	{	//每五分鐘
-		$this->load->library('Certification_lib'); 
+		$this->load->library('Certification_lib');
 		$script  	= 8;
 		$start_time = time();
 		$count 		= $this->certification_lib->script_check_certification();
@@ -156,10 +162,10 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function daily_tax()
 	{	//每天下午一點
-		$this->load->library('Payment_lib'); 
+		$this->load->library('Payment_lib');
 		$script  	= 9;
         $input 	= $this->input->get();
         $start  = isset($input['dstart'])?$input['dstart']:'';
@@ -180,7 +186,7 @@ class Cron extends CI_Controller {
 
 	public function create_estatement_pdf()
 	{	//每五分鐘
-		$this->load->library('Estatement_lib'); 
+		$this->load->library('Estatement_lib');
 		$script  	= 10;
 		$start_time = time();
 		$count 		= $this->estatement_lib->script_create_estatement_pdf();
@@ -195,10 +201,10 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function alert_account_remaining()
 	{	//需要時才手動跑
-		$this->load->library('Passbook_lib'); 
+		$this->load->library('Passbook_lib');
 		$script  	= 11;
 		$start_time = time();
 		$count 		= $this->passbook_lib->script_alert_account_remaining();
@@ -213,10 +219,10 @@ class Cron extends CI_Controller {
 		$this->log_script_model->insert($data);
 		die('1');
 	}
-	
+
 	public function create_estatement_html()
 	{	//每五分鐘
-		$this->load->library('Estatement_lib'); 
+		$this->load->library('Estatement_lib');
 		$script  	= 12;
 		$start_time = time();
 		$count 		= $this->estatement_lib->script_create_estatement_content();
@@ -273,10 +279,10 @@ class Cron extends CI_Controller {
         $this->log_script_model->insert($data);
         die("1");
     }
-	
+
 	public function check_transfer_success()
 	{	//每五分鐘
-		$this->load->library('Transfer_lib'); 
+		$this->load->library('Transfer_lib');
 		$script  	= 14;
 		$start_time = time();
 		$count 		= $this->transfer_lib->script_transfer_success();
@@ -293,18 +299,20 @@ class Cron extends CI_Controller {
 	}
     //hsiang  串國泰回應API
 	public function check_batchno_to_cathay()
-	{	//每六分鐘
-		 $this->load->library('Payment_lib'); 
-		 $script  	 = 15;
-		 $start_time = time();
-		 $count 	 = $this->payment_lib->check_batchno_to_cathay();
-		 $num		= $count?intval($count):0;
-		 $end_time 	= time();
-		 $data		= [
-			'script_name'	=> 'check_batchno_to_cathay',
-			'num'			=> $num,
-			'start_time'	=> $start_time,
-			'end_time'		=> $end_time
+	{
+        //每六分鐘
+        $this->load->library('Payment_lib');
+        $script  	 = 15;
+        $start_time = time();
+        $id_list 	 = $this->payment_lib->check_batchno_to_cathay();
+        $num		= count($id_list);
+        $end_time 	= time();
+        $data		= [
+            'script_name'	=> 'check_batchno_to_cathay',
+            'num'			=> $num,
+            'start_time'	=> $start_time,
+            'end_time'		=> $end_time,
+            'parameter'     => json_encode($id_list)
 		];
 		$this->log_script_model->insert($data);
 		die('1');
@@ -364,7 +372,7 @@ class Cron extends CI_Controller {
       $current = json_decode(file_get_contents('reScraper.txt'));
 
       if( !$current || ! isset($current->status) || ! isset($current->updated_at) ){
-        $current = new stdClass(); 
+        $current = new stdClass();
         $current->status = 'no_data';
         $current->offset = '0';
         $current->updated_at = date('Y-m-d H:i:s');
@@ -407,5 +415,31 @@ class Cron extends CI_Controller {
       file_put_contents('reScraper.txt', json_encode($current));
       echo'ok';
   	}
+
+	public function send_ID_card_request()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$personId  = isset($input['personId']) ? $input['personId'] : '';
+		$applyCode  = isset($input['applyCode']) ? $input['applyCode'] : '';
+		$applyYyymmdd  = isset($input['applyYyymmdd']) ? $input['applyYyymmdd'] : '';
+		$issueSiteId  = isset($input['issueSiteId']) ? $input['issueSiteId'] : '';
+		$this->load->library('output/json_output');
+		$this->load->library('id_card_lib');
+
+		if(!$personId || !$applyCode || !$applyYyymmdd || !$issueSiteId){
+			$response = array("Wrong Parameters");
+			$this->json_output->setStatusCode(400)->setResponse($response)->send();
+		}
+
+		$result = $this->id_card_lib->send_request($personId, $applyCode, $applyYyymmdd, $issueSiteId);
+
+		$response = json_decode(json_encode($result), true);
+		if(!$response){
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$this->json_output->setStatusCode(200)->setResponse([$response])->send();
+	}
+
 }
 

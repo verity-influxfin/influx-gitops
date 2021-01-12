@@ -54,7 +54,7 @@
                           $('.run-scraper-tr').show();
                         }
                       }
-                      return;
+
                   }
               },
               error: function() {
@@ -102,7 +102,7 @@
                                   list = list_head + list_foot;
                                 }
                                 $("#case_list").prepend(list);
-                            return;
+
 
                         });
                     }
@@ -143,7 +143,7 @@
 
                       if (response.status.code == 201) {
                           alert('爬蟲執行請求2小時內重複發送');
-                              return;
+
                       }
                   },
                   error: function() {
@@ -369,11 +369,11 @@
                                         </tr>
                                         <tr><td>
                                                 <label>人臉數量：</label><?=isset($remark["face_count"]["front_count"])?$remark["face_count"]["front_count"]:0;?><br>
-                                                <?=isset($remark["OCR"]["name"])&&$remark["OCR"]["name"]!=''?"<label>姓名：</label>".$remark["OCR"]["name"]."<br>":"";?>
-                                                <?=isset($remark["OCR"]["birthday"])&&$remark["OCR"]["birthday"]!=''?"<label>生日：</label>".$remark["OCR"]["birthday"]."<br>":"";?>
-                                                <?=isset($remark["OCR"]["id_card_date"])&&$remark["OCR"]["id_card_date"]!=''?"<label>換發日期：</label>".$remark["OCR"]["id_card_date"]."<br>":"";?>
-                                                <?=isset($remark["OCR"]["id_card_place"])&&$remark["OCR"]["id_card_place"]!=''?"<label>換發地區：</label>".$remark["OCR"]["id_card_place"]."<br>":"";?>
-                                                <?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?"<label>身分證字號：</label>".$remark["OCR"]["id_number"]."<br>":"";?>
+                                                <label>姓名：</label><?=isset($remark["OCR"]["name"])&&$remark["OCR"]["name"]!=''?"".$remark["OCR"]["name"]:"";?><br>
+                                                <label>生日：</label><?=isset($remark["OCR"]["birthday"])&&$remark["OCR"]["birthday"]!=''?"".$remark["OCR"]["birthday"]:"";?><br>
+                                                <label>換發日期：</label><?=isset($remark["OCR"]["id_card_date"])&&$remark["OCR"]["id_card_date"]!=''?"".$remark["OCR"]["id_card_date"]:"";?><br>
+                                                <label>換發地區：</label><?=isset($remark["OCR"]["id_card_place"])&&$remark["OCR"]["id_card_place"]!=''?"".$remark["OCR"]["id_card_place"]:"";?><br>
+                                                <label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?"".$remark["OCR"]["id_number"]:"";?><br>
                                             </td></tr>
                                     </table>
                                 </div>
@@ -387,16 +387,15 @@
                                                 </a>
                                             </td>
                                             <td>
-                                                <?
-                                                if(isset($remark["OCR"]["father"])&&$remark["OCR"]["father"]!=''){echo'<label>父：</label>'.$remark["OCR"]["father"].'<br>';}
-                                                if(isset($remark["OCR"]["mother"])&&$remark["OCR"]["mother"]!=''){echo'<label>母：</label>'.$remark["OCR"]["mother"].'<br>';}
-                                                if(isset($remark["OCR"]["spouse"])&&$remark["OCR"]["spouse"]!=''){echo'<label>配偶：</label>'.$remark["OCR"]["spouse"].'<br>';}
-                                                if(isset($remark["OCR"]["military_service"])&&$remark["OCR"]["military_service"]!=''){echo'<label>役別：</label>'.$remark["OCR"]["military_service"].'<br>';}
-                                                if(isset($remark["OCR"]["born"])&&$remark["OCR"]["born"]!=''){echo'<label>出生地：</label>'.$remark["OCR"]["born"].'<br>';}
-                                                if(isset($remark["OCR"]["address"])&&$remark["OCR"]["address"]!=''){echo'<label>住址：</label>'.$remark["OCR"]["address"].'<br>';}
-                                                if(isset($remark["OCR"]["gnumber"])&&$remark["OCR"]["gnumber"]!=''){echo'<label>綠色號碼：</label>'.$remark["OCR"]["gnumber"].'<br>';}
-                                                if(isset($remark["OCR"]["film_number"])&&$remark["OCR"]["film_number"]!=''){echo'<label>膠膜號碼：</label>'.$remark["OCR"]["film_number"];}
-                                                ?>
+
+                                                <label>父：</label><?=isset($remark["OCR"]["father"])&&$remark["OCR"]["father"]!='' ? $remark["OCR"]["father"]: '' ;?><br>
+                                                <label>母：</label><?=isset($remark["OCR"]["mother"])&&$remark["OCR"]["mother"]!='' ? $remark["OCR"]["mother"].'<br>': '' ;?><br>
+                                                <label>配偶：</label><?=isset($remark["OCR"]["spouse"])&&$remark["OCR"]["spouse"]!='' ? $remark["OCR"]["spouse"].'<br>': '' ;?><br>
+                                                <label>役別：</label><?=isset($remark["OCR"]["military_service"])&&$remark["OCR"]["military_service"]!='' ? $remark["OCR"]["military_service"].'<br>': '' ;?><br>
+                                                <label>出生地：</label><?=isset($remark["OCR"]["born"])&&$remark["OCR"]["born"]!='' ? $remark["OCR"]["born"].'<br>': '' ;?><br>
+                                                <label>住址：</label><?=isset($remark["OCR"]["address"])&&$remark["OCR"]["address"]!='' ? $remark["OCR"]["address"].'<br>': '' ;?><br>
+                                                <label>綠色號碼：</label><?=isset($remark["OCR"]["gnumber"])&&$remark["OCR"]["gnumber"]!='' ? $remark["OCR"]["gnumber"].'<br>': '' ;?><br>
+                                                <label>膠膜號碼：</label><?=isset($remark["OCR"]["film_number"])&&$remark["OCR"]["film_number"]!='' ? $remark["OCR"]["film_number"]: '' ; ?><br>
                                             </td>
                                         </tr>
                                     </table>
@@ -425,10 +424,10 @@
                                             </td>
                                         </tr>
                                         <tr><td>
-                                                <?=isset($remark["OCR"]["healthcard_name"])&&$remark["OCR"]["healthcard_name"]!=''?"<label>姓名：</label>".$remark["OCR"]["healthcard_name"]."<br>":"";?>
-                                                <?=isset($remark["OCR"]["healthcard_id_number"])&&$remark["OCR"]["healthcard_id_number"]!=''?"<label>生日：</label>".$remark["OCR"]["healthcard_id_number"]."<br>":"";?>
-                                                <?=isset($remark["OCR"]["healthcard_birthday"])&&$remark["OCR"]["healthcard_birthday"]!=''?"<label>身分證字號：</label>".$remark["OCR"]["healthcard_birthday"]."<br>":"";?>
-                                                <?=isset($remark["OCR"]["healthcard_number"])&&$remark["OCR"]["healthcard_number"]!=''?"<label>健保卡號：</label>".$remark["OCR"]["healthcard_number"]."<br>":"";?>
+                                                <label>姓名：</label><?=isset($remark["OCR"]["healthcard_name"])&&$remark["OCR"]["healthcard_name"]!=''?$remark["OCR"]["healthcard_name"]:"";?><br>
+                                                <label>身分證字號：</label><?=isset($remark["OCR"]["healthcard_id_number"])&&$remark["OCR"]["healthcard_id_number"]!=''?$remark["OCR"]["healthcard_id_number"]:"";?><br>
+                                                <label>生日：</label><?=isset($remark["OCR"]["healthcard_birthday"])&&$remark["OCR"]["healthcard_birthday"]!=''?$remark["OCR"]["healthcard_birthday"]:"";?><br>
+                                                <label>健保卡號：</label><?=isset($remark["OCR"]["healthcard_number"])&&$remark["OCR"]["healthcard_number"]!=''?$remark["OCR"]["healthcard_number"]:"";?><br>
                                             </td></tr>
                                     </table>
                                 </div>
