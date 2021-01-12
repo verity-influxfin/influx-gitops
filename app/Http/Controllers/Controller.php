@@ -35,7 +35,7 @@ class Controller extends BaseController
 
     public function getIndexBanner(Request $request)
     {
-        $banner = DB::table('banner')->select(['desktop', 'mobile'])->where('isActive', '=', 'on')->orderBy('post_modified', 'desc')->get();
+        $banner = DB::table('banner')->select(['desktop', 'mobile'])->where([['isActive', '=', 'on'], ['type', '=', 'index']])->orderBy('post_modified', 'desc')->get();
 
         return response()->json($banner, 200);
     }
@@ -167,9 +167,18 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/bannerData.json'), true);
+        $bannerData = json_decode(file_get_contents('data/bannerData.json'), true);
 
-        return response()->json($data[$input['filter']], 200);
+        $banner = DB::table('banner')->select(['desktop', 'mobile'])->where([['isActive', '=', 'on'], ['type', '=', $input['filter']]])->orderBy('post_modified', 'desc')->get();
+
+        $data[] = $bannerData[$input['filter']];
+
+        foreach ($banner as $index => $row) {
+            $data[$index + 1]['desktop'] = $row->desktop;
+            $data[$index + 1]['mobile'] = $row->mobile;
+        }
+
+        return response()->json($data, 200);
     }
 
     public function getApplydata(Request $request)
