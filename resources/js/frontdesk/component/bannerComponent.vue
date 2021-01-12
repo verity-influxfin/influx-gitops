@@ -12,8 +12,8 @@
       <a
         v-if="isBorrow"
         class="banner-download"
-        href="https://event.influxfin.com/R/url?p=webbanner"
-        onClick="ga('send', 'event',  '下載', '借款')"
+        href="/borrowLink"
+        onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
         target="_blank"
         ><img src="../asset/images/light-y.svg" class="img-fluid" />
         <div class="text">立即借款</div></a
@@ -21,8 +21,8 @@
       <a
         v-if="isInvest"
         class="banner-download"
-        href="https://event.influxfin.com/r/iurl?p=webinvest"
-        onClick="ga('send', 'event', '下載', '投資')"
+        href="/investLink"
+        onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
         target="_blank"
         ><img src="../asset/images/light-y.svg" class="img-fluid" />
         <div class="text">立即投資</div></a
