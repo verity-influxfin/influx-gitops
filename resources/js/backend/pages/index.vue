@@ -29,7 +29,7 @@
         class="center-lower-mid right"
         to="banner"
         v-if="userData.identity == 1"
-        >首頁Banner</router-link
+        >頁面Banner</router-link
       >
       <router-link class="center-mid right" to="partner" v-if="userData.identity == 1"
         >合作夥伴</router-link

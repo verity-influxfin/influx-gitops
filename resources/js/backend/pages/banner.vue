@@ -22,6 +22,7 @@
       <div class="banner-tabletitle">
         <div class="desktop">桌面板</div>
         <div class="mobile">手機板</div>
+        <div class="type">頁面</div>
         <div class="isActive">是否上架</div>
         <div class="action-row">操作</div>
       </div>
@@ -83,6 +84,20 @@
                 <option value="off">不公開</option>
               </select>
             </div>
+
+            <div class="input-group" style="width: 15%">
+              <div class="input-group-prepend">
+                <span class="input-group-text">頁面</span>
+              </div>
+              <select class="custom-select" v-model="type">
+                <option value="index">首頁</option>
+                <option value="college">學生貸款</option>
+                <option value="freshGraduate">上班族貸款</option>
+                <option value="engineer">資訊工程師專案</option>
+                <option value="invest">債權投資</option>
+                <option value="transfer">債權轉讓</option>
+              </select>
+            </div>
           </div>
           <div class="modal-footer" style="display: block">
             <button class="btn btn-secondary float-left" data-dismiss="modal">
@@ -117,10 +132,21 @@
 <script>
 let bannerRow = Vue.extend({
   props: ["item", "vm"],
+  data: () => ({
+    type: {
+      transfer: "債權轉讓",
+      invest: "債權投資",
+      engineer: "資訊工程師專案",
+      freshGraduate: "上班族貸款",
+      college: "學生貸款",
+      index: "首頁",
+    },
+  }),
   template: `
     <li class="banner-row">
       <div class="desktop"><img class="img-fluid" :src="'upload/banner/'+item.desktop"></div>
       <div class="mobile"><img class="img-fluid" :src="'upload/banner/'+item.mobile"></div>
+      <div class="type">{{type[item.type]}}</div>
       <div class="isActive">{{item.isActive}}</div>
       <div class="action-row">
         <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
@@ -135,6 +161,7 @@ export default {
     ID: "",
     desktop: "",
     mobile: "",
+    type: "",
     message: "",
     isActive: "",
     rawData: [],
@@ -181,6 +208,7 @@ export default {
       this.ID = "";
       this.desktop = "";
       this.mobile = "";
+      this.type = "";
       this.isActive = "";
       this.actionType = "insert";
 
@@ -190,6 +218,7 @@ export default {
       this.ID = item.ID;
       this.desktop = item.desktop ? item.desktop : "./images/default-image.png";
       this.mobile = item.mobile ? item.mobile : "./images/default-image.png";
+      this.type = item.type;
       this.isActive = item.isActive;
       this.actionType = "update";
 
@@ -218,6 +247,7 @@ export default {
             ID: this.ID,
             desktop: this.desktop,
             mobile: this.mobile,
+            type: this.type,
             isActive: this.isActive,
           },
         })
@@ -299,10 +329,13 @@ export default {
       width: 50%;
     }
     .mobile {
-      width: 35%;
+      width: 20%;
+    }
+    .type {
+      width: 10%;
     }
     .isActive {
-      width: 5%;
+      width: 10%;
     }
     .action-row {
       width: 10%;

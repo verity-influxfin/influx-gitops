@@ -1,32 +1,44 @@
 <template>
-  <div class="product-banner">
-    <img
-      :src="$props.data.bannerDesktopHref"
-      style="width: 100%"
-      class="hidden-desktop"
-    />
-    <img :src="$props.data.bannerMoblieHref" style="width: 100%" class="hidden-phone" />
-    <div class="banner-cnt">
-      <h1 class="banner-title">{{ $props.data.productName }}</h1>
-      <div class="banner-desc" v-html="$props.data.desc"></div>
-      <a
-        v-if="isBorrow"
-        class="banner-download"
-        href="/borrowLink"
-        onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
-        target="_blank"
-        ><img src="../asset/images/light-y.svg" class="img-fluid" />
-        <div class="text">立即借款</div></a
-      >
-      <a
-        v-if="isInvest"
-        class="banner-download"
-        href="/investLink"
-        onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
-        target="_blank"
-        ><img src="../asset/images/light-y.svg" class="img-fluid" />
-        <div class="text">立即投資</div></a
-      >
+  <div class="product-banner" ref="banner">
+    <div class="item" v-for="(row, index) in $props.data" :key="index">
+      <template v-if="index === 0">
+        <img :src="row.bannerDesktopHref" style="width: 100%" class="hidden-desktop" />
+        <img :src="row.bannerMoblieHref" style="width: 100%" class="hidden-phone" />
+        <div class="banner-cnt">
+          <h1 class="banner-title">{{ row.productName }}</h1>
+          <div class="banner-desc" v-html="row.desc"></div>
+          <a
+            v-if="isBorrow"
+            class="banner-download"
+            href="/borrowLink"
+            onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
+            target="_blank"
+            ><img src="../asset/images/light-y.svg" class="img-fluid" />
+            <div class="text">立即借款</div></a
+          >
+          <a
+            v-if="isInvest"
+            class="banner-download"
+            href="/investLink"
+            onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
+            target="_blank"
+            ><img src="../asset/images/light-y.svg" class="img-fluid" />
+            <div class="text">立即投資</div></a
+          >
+        </div>
+      </template>
+      <template v-else>
+        <img
+          :src="`/upload/banner/${row.desktop}`"
+          style="width: 100%"
+          class="hidden-desktop img-fluid"
+        />
+        <img
+          :src="`/upload/banner/${row.mobile}`"
+          style="width: 100%"
+          class="hidden-phone img-fluid"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -34,6 +46,28 @@
 <script>
 export default {
   props: ["data", "isInvest", "isBorrow"],
+  created() {},
+  watch: {
+    "$props.data"() {
+      this.$nextTick(() => {
+        this.createSlick();
+      });
+    },
+  },
+  mounted() {},
+  methods: {
+    createSlick() {
+      $(this.$refs.banner).slick({
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        dots: false,
+        arrows: false,
+        speed: 1000,
+      });
+    },
+  },
 };
 </script>
 
@@ -42,6 +76,10 @@ export default {
   width: 100%;
   overflow: hidden;
   position: relative;
+
+  .item {
+    position: relative;
+  }
 
   .banner-cnt {
     position: absolute;
