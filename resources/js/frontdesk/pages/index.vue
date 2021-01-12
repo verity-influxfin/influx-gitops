@@ -560,7 +560,7 @@ export default {
       type: "loop",
       autoplay: true,
       direction: window.innerWidth > 767 ? "ltr" : "ttb",
-      height: window.innerWidth > 767 ? "auto" : 260,
+      height: window.innerWidth > 767 ? "auto" : 290,
       drag: window.innerWidth > 767 ? true : false,
       perPage: 2,
       perMove: 1,
@@ -1068,6 +1068,7 @@ export default {
           box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.3);
           background-color: #ffffff;
           padding: 10px;
+          height: 140px;
 
           .i {
             width: 30%;
@@ -1100,8 +1101,8 @@ export default {
               font-size: 15px;
               color: #ffffff;
               position: absolute;
-              right: 0px;
               bottom: 0px;
+              right: 0px;
 
               &:hover {
                 text-decoration: none;
@@ -1273,9 +1274,10 @@ export default {
 
           p {
             color: #ffc236;
-            font-size: 29px;
+            font-size: 26px;
             text-align: center;
             font-weight: 700;
+            word-break: keep-all;
           }
 
           span {
