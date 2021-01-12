@@ -8,8 +8,8 @@
             <a
               class="d-link"
               target="_blank"
-              onClick="ga('send', 'event',  '下載', '借款')"
-              href="https://event.influxfin.com/R/url?p=webbanner"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
+              href="/borrowLink"
             >
               我想借款
             </a>
@@ -18,8 +18,8 @@
             <a
               class="d-link"
               target="_blank"
-              onClick="ga('send', 'event', '下載', '投資')"
-              href="https://event.influxfin.com/r/iurl?p=webinvest"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
+              href="/investLink"
             >
               我想投資
             </a>

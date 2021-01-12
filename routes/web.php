@@ -227,4 +227,12 @@ Route::post('/campusUploadFile', 'Controller@campusUploadFile');
 
 Route::post('/campusSignup', 'Controller@campusSignup');
 
+Route::get('/borrowLink', function () {
+    return view('borrow');
+});
+
+Route::get('/investLink', function () {
+    return view('invest');
+});
+
 Route::view('/{path?}', 'index');
