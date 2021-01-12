@@ -28,16 +28,18 @@
         </div>
       </template>
       <template v-else>
-        <img
-          :src="`/upload/banner/${row.desktop}`"
-          style="width: 100%"
-          class="hidden-desktop img-fluid"
-        />
-        <img
-          :src="`/upload/banner/${row.mobile}`"
-          style="width: 100%"
-          class="hidden-phone img-fluid"
-        />
+        <a :href="row.link" target="_blank">
+          <img
+            :src="`/upload/banner/${row.desktop}`"
+            style="width: 100%"
+            class="hidden-desktop img-fluid"
+          />
+          <img
+            :src="`/upload/banner/${row.mobile}`"
+            style="width: 100%"
+            class="hidden-phone img-fluid"
+          />
+        </a>
       </template>
     </div>
   </div>
