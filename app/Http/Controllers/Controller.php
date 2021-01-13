@@ -63,7 +63,7 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
-        $news = DB::table('news')->select('*')->orderBy('post_date', 'desc')->get();
+        $news = DB::table('news')->select('*')->where('status', '=', 'on')->orderBy('post_date', 'desc')->get();
 
         return response()->json($news, 200);
     }
