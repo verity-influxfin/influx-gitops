@@ -3572,20 +3572,30 @@ export default {
         let dy = pageY - this[this.target]["cy"];
 
         let ang = (Math.atan2(dy, dx) * 180) / Math.PI;
-        
+
         if (this.target === "big") {
-          let allAng = 150;
+          if (0 > ang && ang > -105) {
+            ang = -105;
+          } else if (0 < ang && ang < 105) {
+            ang = 105;
+          }
+
           if ((ang >= 105 && ang <= 180) || (ang >= -180 && ang <= -105)) {
             let deg = ang < 0 ? 360 + ang : ang;
             let amountCount = ((this.amount - 5000) * (deg - 105)) / 150 + 5000;
             this.amountCount = Math.round(amountCount / 1000) * 1000;
-            
+
             this.rotate(ang);
           }
         }
 
         if (this.target === "small") {
-          let allAng = 150;
+          if (-75 > ang && ang > -180) {
+            ang = -75;
+          } else if (75 < ang && ang < 180) {
+            ang = 75;
+          }
+
           if ((ang >= 0 && ang <= 75) || (ang >= -75 && ang <= 0)) {
             let deg = (ang - 75) * -1;
             let rateCount = (15 * (deg - 0)) / 149 + 5;
