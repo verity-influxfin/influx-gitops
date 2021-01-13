@@ -113,8 +113,15 @@ class Controller extends BaseController
             $filter[] = ['category', '=', $input['type']];
         }
 
-        $experiences = DB::table('interview')->select(['feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
+        $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
         return response()->json($experiences, 200);
+    }
+
+    public function getFeedbackImg(Request $request)
+    {
+        $input = $request->all();
+        $feedbackImg = DB::table('feedbackImg')->select(['image'])->where('feedbackID', '=', $input['ID'])->orderBy('order', 'asc')->get();
+        return response()->json($feedbackImg, 200);
     }
 
     public function getServiceData(Request $request)

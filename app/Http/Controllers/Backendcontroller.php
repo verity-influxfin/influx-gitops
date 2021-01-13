@@ -477,14 +477,14 @@ class Backendcontroller extends BaseController
         }
     }
 
-    public function uploadPartnerImg(Request $request)
+    public function uploadFUserImg(Request $request)
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             if ($file->isValid()) {
                 $filename = $file->getClientOriginalName();
-                $file->move('upload/partner', "$filename");
-                return response()->json($filename, 200);
+                $file->move('upload/userImg', "$filename");
+                return response()->json('upload/userImg/' . $filename, 200);
             }
         } else {
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
@@ -493,9 +493,25 @@ class Backendcontroller extends BaseController
 
     public function getFeedbackData(Request $request)
     {
-        $feedbackData = DB::table('feedback')->select('*')->get();
+        $feedbackData = DB::table('interview')->select('*')->get();
 
         return response()->json($feedbackData, 200);
+    }
+
+    public function uploadUserImg(Request $request)
+    {
+
+        if ($request->hasFile('upload')) {
+            $file = $request->file('upload');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/news', "$filename");
+                $pic_path = 'upload/news/' . $filename;
+                echo '<script type="text/javascript">window.parent.CKEDITOR.tools.callFunction(0, "' . $pic_path . '","");</script>';
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
     }
 
 
@@ -505,7 +521,7 @@ class Backendcontroller extends BaseController
 
         try {
             $exception = DB::transaction(function () {
-                DB::table('feedback')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                DB::table('interview')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {
@@ -520,9 +536,9 @@ class Backendcontroller extends BaseController
         try {
             $exception = DB::transaction(function () {
                 if ($this->inputs['actionType'] === 'insert') {
-                    DB::table('feedback')->insert($this->inputs['data']);
+                    DB::table('interview')->insert($this->inputs['data']);
                 } else if ($this->inputs['actionType'] === 'update') {
-                    DB::table('feedback')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                    DB::table('interview')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
                 }
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
@@ -537,7 +553,7 @@ class Backendcontroller extends BaseController
 
         try {
             $exception = DB::transaction(function () {
-                DB::table('feedback')->where('ID', '=', $this->inputs['ID'])->delete();
+                DB::table('interview')->where('ID', '=', $this->inputs['ID'])->delete();
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {
@@ -721,7 +737,7 @@ class Backendcontroller extends BaseController
         return response()->json($campus, 200);
     }
 
-    public function bakDownloadTypeFile(Request $request)
+    public function downloadTypeFile(Request $request)
     {
 
         $inputs = $request->all();
@@ -742,5 +758,77 @@ class Backendcontroller extends BaseController
         $zip->close();
 
         return response()->download($zip_file);
+    }
+
+    public function getFeedbackImg(Request $request)
+    {
+        $inputs = $request->all();
+
+        $images = DB::table('feedbackImg')->select('*')->where('feedbackID', '=', $inputs['ID'])->orderBy('order', 'asc')->get();
+
+        return response()->json($images, 200);
+    }
+
+    public function uploadFeedbackImg(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/feedbackImg', "$filename");
+                return response()->json($filename, 200);
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+
+    public function modifyFeedbackImgData(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                if ($this->inputs['actionType'] === 'insert') {
+                    DB::table('feedbackImg')->insert($this->inputs['data']);
+                } else if ($this->inputs['actionType'] === 'update') {
+                    unset($this->inputs['data']['feedbackID']);
+                    DB::table('feedbackImg')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function updateImgOrder(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                foreach ($this->inputs['data'] as $row) {
+                    DB::table('feedbackImg')->where('ID', $row['ID'])->update(['order' => $row['order']]);
+                }
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
+    public function deleteFeedbackImg(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('feedbackImg')->where('ID', '=', $this->inputs['ID'])->delete();
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
     }
 }

@@ -25,6 +25,8 @@ Route::post('/getIndexBanner', 'Controller@getIndexBanner');
 
 Route::post('/getExperiencesData', 'Controller@getExperiencesData');
 
+Route::post('/getFeedbackImg', 'Controller@getFeedbackImg');
+
 Route::post('/getKnowledgeData', 'Controller@getKnowledgeData');
 
 Route::post('/getVideoData', 'Controller@getVideoData');
@@ -171,6 +173,8 @@ Route::post('/uploadPartnerImg', 'Backendcontroller@uploadPartnerImg');
 
 Route::get('/getFeedbackData', 'Backendcontroller@getFeedbackData');
 
+Route::post('/bakUploadUserImg', 'Backendcontroller@uploadFUserImg');
+
 Route::post('/readFeedbackData', 'Backendcontroller@readFeedbackData');
 
 Route::post('/modifyFeedbackData', 'Backendcontroller@modifyFeedbackData');
@@ -209,7 +213,17 @@ Route::get('/getMemberFile', function (Request $request) {
     return response()->download(realpath(base_path('public')) . '/upload/campus/' . $inputs['type'] . '/' . $inputs['file'], $inputs['file']);
 });
 
-Route::get('/bakDownloadTypeFile', 'Backendcontroller@bakDownloadTypeFile');
+Route::get('/bakDownloadTypeFile', 'Backendcontroller@downloadTypeFile');
+
+Route::post('bakGetFeedbackImg','Backendcontroller@getFeedbackImg');
+
+Route::post('bakUploadFeedbackImg','Backendcontroller@uploadFeedbackImg');
+
+Route::post('bakModifyFeedbackImgData','Backendcontroller@modifyFeedbackImgData');
+
+Route::post('bakUpdateImgOrder','Backendcontroller@updateImgOrder');
+
+Route::post('bakDeleteFeedbackImg','Backendcontroller@deleteFeedbackImg');
 
 // verify mail
 
