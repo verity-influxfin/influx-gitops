@@ -211,12 +211,6 @@ Route::get('/getMemberFile', function (Request $request) {
 
 Route::get('/bakDownloadTypeFile', 'Backendcontroller@bakDownloadTypeFile');
 
-// verify mail
-
-Route::get('/verifyemail', 'Backendcontroller@verifyemail');
-
-
-// feedback
 Route::post('/sendFeedback', 'Controller@sendFeedback');
 
 Route::get('/campusJoin', function () {
@@ -226,5 +220,15 @@ Route::get('/campusJoin', function () {
 Route::post('/campusUploadFile', 'Controller@campusUploadFile');
 
 Route::post('/campusSignup', 'Controller@campusSignup');
+
+// event
+
+Route::post('/eventGetNum', 'Eventcontroller@getNum');
+
+Route::post('/eventRegister', 'Eventcontroller@register');
+
+// verify mail
+
+Route::get('/verifyemail', 'Backendcontroller@verifyemail');
 
 Route::view('/{path?}', 'index');
