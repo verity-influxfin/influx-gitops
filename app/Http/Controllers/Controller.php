@@ -42,7 +42,7 @@ class Controller extends BaseController
 
     public function getKnowledgeData(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['status', '=', 'publish']])->orderBy('post_date', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['status', '=', 'publish']])->orderBy('order', 'desc')->orderBy('post_date', 'desc')->get();
 
         return response()->json($knowledge, 200);
     }
