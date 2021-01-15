@@ -16,6 +16,7 @@
           </div>
           <div
             class="main-content"
+            ref="articleHtml"
             v-if="this.articleHtml"
             v-html="this.articleHtml"
           ></div>
@@ -95,9 +96,7 @@ export default {
       this.$store.dispatch("getKnowledgeData");
     }
   },
-  mounted() {
-    this.$nextTick(() => {});
-  },
+  mounted() {},
   computed: {
     latest() {
       return this.$store.getters.KnowledgeData.splice(0, 3);
@@ -164,6 +163,13 @@ export default {
         this.articleImg = res.data.media_link ? res.data.media_link : "";
         this.articleHtml = res.data.post_content;
       }
+
+      this.$nextTick(() => {
+        $('meta[name="description"]').attr(
+          "content",
+          $(this.$refs.articleHtml)[0].innerText.substr(0, 150)
+        );
+      });
     },
   },
 };

@@ -117,12 +117,22 @@ return [
         'teamName' => '隊伍名稱',
         'name' => '姓名',
         'mobile' => '手機',
-        'email' => 'E-Mail',
+        'email' => '信箱',
         'school' => '學校',
         'selfIntro' => '簡單自我介紹',
         'department' => '科系',
         'grade' => '年級',
         'resume' => '個人簡歷表',
+        //
+        'tax_id' => '統編',
+        //
+        'phone' => '電話',
+        'password' => '密碼',
+        'password_confirmation' => '確認密碼',
+        'new_password' => '新密碼',
+        'new_password_confirmation' => '確認新密碼',
+        'code' => '驗證碼',
+        'promo' => 'promo',
     ],
 
 ];

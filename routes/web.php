@@ -225,12 +225,6 @@ Route::post('bakUpdateImgOrder','Backendcontroller@updateImgOrder');
 
 Route::post('bakDeleteFeedbackImg','Backendcontroller@deleteFeedbackImg');
 
-// verify mail
-
-Route::get('/verifyemail', 'Backendcontroller@verifyemail');
-
-
-// feedback
 Route::post('/sendFeedback', 'Controller@sendFeedback');
 
 Route::get('/campusJoin', function () {
@@ -241,12 +235,14 @@ Route::post('/campusUploadFile', 'Controller@campusUploadFile');
 
 Route::post('/campusSignup', 'Controller@campusSignup');
 
-Route::get('/borrowLink', function () {
-    return view('borrow');
-});
+// event
 
-Route::get('/investLink', function () {
-    return view('invest');
-});
+Route::post('/eventGetNum', 'Eventcontroller@getNum');
+
+Route::post('/eventRegister', 'Eventcontroller@register');
+
+// verify mail
+
+Route::get('/verifyemail', 'Backendcontroller@verifyemail');
 
 Route::view('/{path?}', 'index');
