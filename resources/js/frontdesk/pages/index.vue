@@ -12,17 +12,17 @@
           <div class="box">
             <a
               class="loan"
-              href="https://event.influxfin.com/r/iurl?p=webinvest"
+              href="/investLink"
               target="_blank"
-              onClick="ga('send', 'event', '下載', '投資')"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
               ><img src="../asset/images/light-b.svg" class="img-fluid" />
               <div class="text">立即投資</div></a
             >
             <a
               class="borrow"
-              href="https://event.influxfin.com/R/url?p=webbanner"
+              href="/borrowLink"
               target="_blank"
-              onClick="ga('send', 'event',  '下載', '借款')"
+              onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
               ><img src="../asset/images/light-y.svg" class="img-fluid" />
               <div class="text">立即借款</div></a
             >
@@ -30,8 +30,10 @@
         </div>
       </SplideSlide>
       <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
-        <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
-        <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
+        <a :href="item.link" target="_blank">
+          <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
+          <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
+        </a>
       </SplideSlide>
     </Splide>
     <div class="banner" v-else>
@@ -560,7 +562,7 @@ export default {
       type: "loop",
       autoplay: true,
       direction: window.innerWidth > 767 ? "ltr" : "ttb",
-      height: window.innerWidth > 767 ? "auto" : 260,
+      height: window.innerWidth > 767 ? "auto" : 290,
       drag: window.innerWidth > 767 ? true : false,
       perPage: 2,
       perMove: 1,
@@ -1068,6 +1070,7 @@ export default {
           box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.3);
           background-color: #ffffff;
           padding: 10px;
+          height: 140px;
 
           .i {
             width: 30%;
@@ -1100,8 +1103,8 @@ export default {
               font-size: 15px;
               color: #ffffff;
               position: absolute;
-              right: 0px;
               bottom: 0px;
+              right: 0px;
 
               &:hover {
                 text-decoration: none;
@@ -1273,9 +1276,10 @@ export default {
 
           p {
             color: #ffc236;
-            font-size: 29px;
+            font-size: 26px;
             text-align: center;
             font-weight: 700;
+            word-break: keep-all;
           }
 
           span {

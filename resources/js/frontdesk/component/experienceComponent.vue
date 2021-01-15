@@ -40,10 +40,21 @@
       aria-labelledby="modalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog" data-dismiss="modal">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            {{ feedback }}
+            <template v-if="feedback">
+              {{ feedback }}
+            </template>
+            <template v-if="feedbackImg.length !== 0">
+              <Splide class="img-row" :options="fOptions">
+                <SplideSlide v-for="(item, index) in feedbackImg" :key="index">
+                  <div class="img">
+                    <img :src="`/upload/feedbackImg/${item.image}`" class="img-fluid" />
+                  </div>
+                </SplideSlide>
+              </Splide>
+            </template>
           </div>
         </div>
       </div>
@@ -60,6 +71,8 @@ export default {
     SplideSlide,
   },
   data: () => ({
+    feedback: "",
+    feedbackImg: [],
     options: {
       type: "loop",
       autoplay: true,
@@ -71,7 +84,14 @@ export default {
         767: { perPage: 1 },
       },
     },
-    feedback: "",
+    fOptions: {
+      type: "loop",
+      autoplay: true,
+      arrow: true,
+      perPage: 1,
+      perMove: 1,
+      pagination: false,
+    },
   }),
   props: ["experiences", "title"],
   watch: {
@@ -80,8 +100,14 @@ export default {
     },
   },
   methods: {
-    show(item) {
+    async show(item) {
+      this.feedbackImg = [];
+      if (!item.feedback) {
+        let res = await axios.post("getFeedbackImg", { ID: item.ID });
+        this.feedbackImg = res.data;
+      }
       this.feedback = item.feedback;
+
       $(this.$refs.feedbackModal).modal("show");
     },
   },
@@ -166,6 +192,25 @@ export default {
       }
     }
   }
+
+  .feedback-modal {
+    .img-row {
+      .img {
+        width: 466px;
+        text-align: center;
+      }
+    }
+
+    .splide__arrow--prev {
+      z-index: 1;
+      left: 1rem;
+    }
+
+    .splide__arrow--next {
+      z-index: 1;
+      right: 1rem;
+    }
+  }
 }
 
 @media screen and (max-width: 767px) {
@@ -185,6 +230,26 @@ export default {
         }
       }
     }
+
+    .feedback-modal {
+      .img-row {
+        .img {
+          width: 326px;
+        }
+      }
+
+      .splide__arrow--prev {
+        left: -0.5rem;
+      }
+
+      .splide__arrow--next {
+        right: -0.5rem;
+      }
+    }
+  }
+
+  .modal-dialog {
+    top: 20%;
   }
 }
 </style>

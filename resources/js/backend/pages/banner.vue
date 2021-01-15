@@ -7,7 +7,7 @@
             <i class="fas fa-home"></i>
           </router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">首頁banner</li>
+        <li class="breadcrumb-item active" aria-current="page">頁面banner</li>
       </ol>
     </nav>
 
@@ -20,8 +20,10 @@
 
     <div class="banner-block">
       <div class="banner-tabletitle">
+        <div class="type">頁面</div>
         <div class="desktop">桌面板</div>
         <div class="mobile">手機板</div>
+        <div class="link">連結</div>
         <div class="isActive">是否上架</div>
         <div class="action-row">操作</div>
       </div>
@@ -74,6 +76,13 @@
               </div>
             </div>
 
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">連結</span>
+              </div>
+              <input type="text" class="form-control" placeholder="連結" v-model="link" />
+            </div>
+
             <div class="input-group" style="width: 15%">
               <div class="input-group-prepend">
                 <span class="input-group-text">是否公開</span>
@@ -81,6 +90,20 @@
               <select class="custom-select" v-model="isActive">
                 <option value="on">公開</option>
                 <option value="off">不公開</option>
+              </select>
+            </div>
+
+            <div class="input-group" style="width: 15%">
+              <div class="input-group-prepend">
+                <span class="input-group-text">頁面</span>
+              </div>
+              <select class="custom-select" v-model="type">
+                <option value="index">首頁</option>
+                <option value="college">學生貸款</option>
+                <option value="freshGraduate">上班族貸款</option>
+                <option value="engineer">資訊工程師專案</option>
+                <option value="invest">債權投資</option>
+                <option value="transfer">債權轉讓</option>
               </select>
             </div>
           </div>
@@ -117,10 +140,22 @@
 <script>
 let bannerRow = Vue.extend({
   props: ["item", "vm"],
+  data: () => ({
+    type: {
+      transfer: "債權轉讓",
+      invest: "債權投資",
+      engineer: "資訊工程師專案",
+      freshGraduate: "上班族貸款",
+      college: "學生貸款",
+      index: "首頁",
+    },
+  }),
   template: `
     <li class="banner-row">
+      <div class="type">{{type[item.type]}}</div>
       <div class="desktop"><img class="img-fluid" :src="'upload/banner/'+item.desktop"></div>
       <div class="mobile"><img class="img-fluid" :src="'upload/banner/'+item.mobile"></div>
+      <div class="link"><a v-if="item.link" target="_blank" :href="item.link"><i class="fas fa-external-link-alt"></i></a></div>
       <div class="isActive">{{item.isActive}}</div>
       <div class="action-row">
         <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
@@ -135,6 +170,8 @@ export default {
     ID: "",
     desktop: "",
     mobile: "",
+    type: "",
+    link: "",
     message: "",
     isActive: "",
     rawData: [],
@@ -181,6 +218,8 @@ export default {
       this.ID = "";
       this.desktop = "";
       this.mobile = "";
+      this.type = "";
+      this.link = "";
       this.isActive = "";
       this.actionType = "insert";
 
@@ -190,6 +229,8 @@ export default {
       this.ID = item.ID;
       this.desktop = item.desktop ? item.desktop : "./images/default-image.png";
       this.mobile = item.mobile ? item.mobile : "./images/default-image.png";
+      this.type = item.type;
+      this.link = item.link;
       this.isActive = item.isActive;
       this.actionType = "update";
 
@@ -218,6 +259,8 @@ export default {
             ID: this.ID,
             desktop: this.desktop,
             mobile: this.mobile,
+            type: this.type,
+            link: this.link,
             isActive: this.isActive,
           },
         })
@@ -296,13 +339,19 @@ export default {
       }
     }
     .desktop {
-      width: 50%;
+      width: 45%;
     }
     .mobile {
-      width: 35%;
+      width: 20%;
+    }
+    .link {
+      width: 5%;
+    }
+    .type {
+      width: 10%;
     }
     .isActive {
-      width: 5%;
+      width: 10%;
     }
     .action-row {
       width: 10%;

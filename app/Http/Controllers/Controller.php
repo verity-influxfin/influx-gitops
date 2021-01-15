@@ -35,7 +35,7 @@ class Controller extends BaseController
 
     public function getIndexBanner(Request $request)
     {
-        $banner = DB::table('banner')->select(['desktop', 'mobile'])->where('isActive', '=', 'on')->orderBy('post_modified', 'desc')->get();
+        $banner = DB::table('banner')->select(['desktop', 'mobile', 'link'])->where([['isActive', '=', 'on'], ['type', '=', 'index']])->orderBy('post_modified', 'desc')->get();
 
         return response()->json($banner, 200);
     }
@@ -63,7 +63,7 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
-        $news = DB::table('news')->select('*')->orderBy('post_date', 'desc')->get();
+        $news = DB::table('news')->select('*')->where('status', '=', 'on')->orderBy('post_date', 'desc')->get();
 
         return response()->json($news, 200);
     }
@@ -113,8 +113,15 @@ class Controller extends BaseController
             $filter[] = ['category', '=', $input['type']];
         }
 
-        $experiences = DB::table('interview')->select(['feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
+        $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
         return response()->json($experiences, 200);
+    }
+
+    public function getFeedbackImg(Request $request)
+    {
+        $input = $request->all();
+        $feedbackImg = DB::table('feedbackImg')->select(['image'])->where('feedbackID', '=', $input['ID'])->orderBy('order', 'asc')->get();
+        return response()->json($feedbackImg, 200);
     }
 
     public function getServiceData(Request $request)
@@ -167,9 +174,19 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $data = json_decode(file_get_contents('data/bannerData.json'), true);
+        $bannerData = json_decode(file_get_contents('data/bannerData.json'), true);
 
-        return response()->json($data[$input['filter']], 200);
+        $banner = DB::table('banner')->select(['desktop', 'mobile', 'link'])->where([['isActive', '=', 'on'], ['type', '=', $input['filter']]])->orderBy('post_modified', 'desc')->get();
+
+        $data[] = $bannerData[$input['filter']];
+
+        foreach ($banner as $index => $row) {
+            $data[$index + 1]['desktop'] = $row->desktop;
+            $data[$index + 1]['mobile'] = $row->mobile;
+            $data[$index + 1]['link'] = $row->link;
+        }
+
+        return response()->json($data, 200);
     }
 
     public function getApplydata(Request $request)

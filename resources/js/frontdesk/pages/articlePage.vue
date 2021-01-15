@@ -1,6 +1,5 @@
 <template>
   <div class="article-wrapper">
-    <h3 class="title" v-if="this.articleTitle">{{ this.articleTitle }}</h3>
     <div class="flex">
       <div
         :class="[
@@ -10,6 +9,7 @@
           },
         ]"
       >
+        <h3 class="title" v-if="this.articleTitle">{{ this.articleTitle }}</h3>
         <div class="contenier">
           <div class="title-img" v-if="this.articleImg">
             <img :src="this.articleImg" class="img-fluid" />
@@ -203,6 +203,10 @@ export default {
       .title,
       .title-img {
         text-align: center;
+
+        img {
+          width: 600px;
+        }
       }
 
       .main-content {
@@ -272,8 +276,14 @@ export default {
     padding: 20px 10px 10px 10px;
 
     .title {
-      font-size: 24px;
+      font-size: 20px;
       margin-bottom: 1rem;
+    }
+
+    .title-img {
+      img {
+        width: 100%;
+      }
     }
 
     .flex {

@@ -29,10 +29,7 @@
           </span>
         </div>
       </div>
-      <div
-        class="input-group float-right"
-        style="width: 300px; margin-right: 15px"
-      >
+      <div class="input-group float-right" style="width: 300px; margin-right: 15px">
         <input
           type="text"
           class="form-control"
@@ -49,11 +46,13 @@
     <div class="feedback-block">
       <div class="feedback-tabletitle">
         <div class="name">填寫人姓名</div>
-        <div class="user">填寫人ID</div>
+        <!-- <div class="user">填寫人ID</div> -->
+        <div class="img">照片</div>
+        <div class="video">影片</div>
         <div class="rank">身分</div>
         <div class="type">類別</div>
         <div class="date">填寫時間</div>
-        <div class="message">訊息內容</div>
+        <div class="message">回饋內容</div>
         <div class="status">是否公開</div>
         <div class="action-row">操作</div>
       </div>
@@ -87,19 +86,30 @@
                 type="text"
                 class="form-control"
                 placeholder="填寫人姓名"
-                v-model="name"
+                v-model="post_title"
               />
             </div>
 
             <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
-                <span class="input-group-text">填寫人ID</span>
+                <span class="input-group-text">大頭照</span>
+              </div>
+
+              <div style="display: grid">
+                <img :src="imageSrc" class="img-fluid" style="width: 300px" />
+                <input type="file" @change="uploadUserImg($event)" />
+              </div>
+            </div>
+
+            <div class="input-group" style="width: 95%">
+              <div class="input-group-prepend">
+                <span class="input-group-text">影片連結</span>
               </div>
               <input
                 type="text"
                 class="form-control"
-                placeholder="填寫人ID"
-                v-model="userID"
+                placeholder="填寫人姓名"
+                v-model="video_link"
               />
             </div>
 
@@ -117,7 +127,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">借款/投資</span>
               </div>
-              <select class="custom-select" v-model="type">
+              <select class="custom-select" v-model="category">
                 <option value="invest">投資端</option>
                 <option value="loan">借款端</option>
               </select>
@@ -127,10 +137,7 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">填寫日期</span>
               </div>
-              <v-date-picker
-                v-model="date"
-                :popover="{ visibility: 'click' }"
-              />
+              <v-date-picker v-model="date" :popover="{ visibility: 'click' }" />
             </div>
 
             <div class="input-group" style="width: 95%">
@@ -159,9 +166,45 @@
             <button class="btn btn-secondary float-left" data-dismiss="modal">
               取消
             </button>
-            <button class="btn btn-success float-right" @click="submit">
-              送出
+            <button class="btn btn-success float-right" @click="submit">送出</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="img-modal modal fade"
+      ref="imgModal"
+      role="dialog"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="btn btn-close" data-dismiss="modal">
+              <i class="far fa-times-circle"></i>
             </button>
+
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">回饋圖片</span>
+              </div>
+              <div style="display: grid">
+                <img
+                  :src="`/upload/feedbackImg/${image}`"
+                  class="img-fluid"
+                  style="width: 300px"
+                />
+                <input type="file" @change="uploadImg($event)" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer" style="display: block">
+            <button class="btn btn-secondary float-left" data-dismiss="modal">
+              取消
+            </button>
+            <button class="btn btn-success float-right" @click="submitImg()">送出</button>
           </div>
         </div>
       </div>
@@ -179,9 +222,7 @@
         <div class="modal-content">
           <div class="modal-body">{{ message }}</div>
           <div class="modal-footer" style="display: block">
-            <button class="btn btn-success float-right" @click="close">
-              確認
-            </button>
+            <button class="btn btn-success float-right" @click="close">確認</button>
           </div>
         </div>
       </div>
@@ -190,36 +231,102 @@
 </template>
 
 <script>
+import draggable from "vuedraggable";
+
 let feedbackRow = Vue.extend({
   props: ["item", "vm"],
+  components: {
+    draggable,
+  },
+  data: () => ({
+    isShow: false,
+    cItem: {},
+    feedbackImgs: [],
+  }),
   template: `
     <li class="feedback-row">
-        <div class="name">{{item.name}}</div>
-        <div class="user">{{item.userID}}</div>
+      <div class="parent">
+        <div class="name">{{item.post_title}}</div>
+        <!-- <div class="user">{{item.userID}}</div> -->
+        <div class="img"><img :src="item.imageSrc" class="img-fluid"/></div>
+        <div class="video"><a v-if="item.video_link" :href="item.video_link" target="_blank"><i class="fas fa-external-link-alt"></i></a></div>
         <div class="rank">{{item.rank === 'student' ? '學生' : '上班族'}}</div>
-        <div class="type">{{item.type === 'invest' ? '投資端' : '借款端'}}</div>
-        <div class="date">{{item.date}}</div>
+        <div class="type">{{item.category === 'invest' ? '投資端' : '借款端'}}</div>
+        <div class="date">{{item.post_modified}}</div>
         <div class="message">{{item.feedback}}</div>
         <div class="status">{{item.isActive ==='on' ? '是' : '否'}}</div>
-      <div class="action-row">
-        <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === '0'" @click="vm.read(item)">未讀</button>
-        <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
-        <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
+        <div class="action-row">
+          <button class="btn btn-warning btn-sm" style="margin-right:20px" v-if="item.isRead === '0'" @click="vm.read(item)">未讀</button>
+          <button class="btn btn-primary btn-sm" style="margin-right:20px" @click="isShow = !isShow;showFile(item);">照片</button>
+          <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>
+          <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
+        </div>
+      </div>
+      <div class="child" v-if="isShow">
+        <div class="action-bar">
+          <button class="btn btn-success btn-sm float-left" @click="vm.openImg(item)">
+            <i class="fas fa-plus"></i>
+            <span>新增</span>
+          </button>
+        </div>
+          <draggable class="img-box" v-model="feedbackImgs" @change="changed($event,feedbackImgs)">
+            <div class="img" v-for="(d,index) in feedbackImgs" :key="index">
+              <img :src="'/upload/feedbackImg/'+d.image" class="img-fluid"/>
+              <div class="action">
+                <div class="edit"><i class="fas fa-edit" @click="vm.editImg(d)"></i></div>
+                <div class="delete"><i class="fas fa-times" @click="vm.deleteImg(d)"></i></div>
+              </div>
+            </div>
+          </draggable>
       </div>
     </li>
   `,
+  watch: {
+    "vm.date"() {
+      if (this.isShow) {
+        this.showFile(this.cItem);
+      }
+    },
+  },
+  methods: {
+    async showFile(item) {
+      this.cItem = item;
+
+      if (this.isShow) {
+        let res = await axios.post("bakGetFeedbackImg", {
+          ID: this.cItem.ID,
+        });
+
+        this.feedbackImgs = res.data;
+      }
+    },
+    changed($event, feedbackImgs) {
+      let data = feedbackImgs.map((el, index) => {
+        let item = {};
+        item.order = index + 1;
+        item.ID = el.ID;
+        return item;
+      });
+
+      axios.post("bakUpdateImgOrder", { data });
+    },
+  },
 });
 
 export default {
   data: () => ({
     ID: "",
-    name: "",
+    post_title: "",
     userID: "",
     rank: "",
-    type: "",
+    category: "",
+    post_modified: new Date(),
     date: new Date(),
     feedback: "",
     isActive: "",
+    image: "",
+    imageSrc: "",
+    video_link: "",
     message: "",
     rawData: [],
     filtedData: [],
@@ -227,6 +334,7 @@ export default {
       name: "",
       feedback: "",
     },
+    selectfeedbackData: {},
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
@@ -246,7 +354,7 @@ export default {
       this.rawData.forEach((row, index) => {
         if (
           row.feedback.toLowerCase().indexOf(feedback.toLowerCase()) !== -1 &&
-          row.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+          row.post_title.toLowerCase().indexOf(name.toLowerCase()) !== -1
         ) {
           this.filtedData.push(row);
         }
@@ -281,13 +389,20 @@ export default {
         });
       });
     },
+    async uploadUserImg($event) {
+      let imageData = new FormData();
+      imageData.append("file", $event.target.files[0]);
+      let res = await axios.post("bakUploadUserImg", imageData);
+      this.imageSrc = res.data;
+    },
     create() {
       this.ID = "";
-      this.name = "";
-      this.userID = "";
+      this.post_title = "";
+      this.video_link = "";
+      this.imageSrc = "";
       this.rank = "";
-      this.type = "";
-      this.date = new Date();
+      this.category = "";
+      this.post_modified = new Date();
       this.feedback = "";
       this.isActive = "";
       this.actionType = "insert";
@@ -296,11 +411,12 @@ export default {
     },
     edit(item) {
       this.ID = item.ID;
-      this.name = item.name;
-      this.userID = item.userID;
+      this.post_title = item.post_title;
+      this.video_link = item.video_link;
+      this.imageSrc = item.imageSrc;
       this.rank = item.rank;
-      this.type = item.type;
-      this.date = new Date(item.date);
+      this.category = item.category;
+      this.post_modified = new Date(item.post_modified);
       this.feedback = item.feedback;
       this.isActive = item.isActive;
       this.actionType = "update";
@@ -350,34 +466,80 @@ export default {
           ID: this.ID,
           data: {
             ID: this.ID,
-            name: this.name,
-            userID: this.userID,
-            type: this.type,
-            type: this.type,
-            date: `${date_item.year}-${date_item.month}-${date_item.day}`,
+            post_title: this.post_title,
+            video_link: this.video_link,
+            imageSrc: this.imageSrc,
+            category: this.category,
+            post_modified: `${date_item.year}-${date_item.month}-${date_item.day}`,
             feedback: this.feedback,
             isActive: this.isActive,
           },
         })
         .then((res) => {
-          this.message = `${
-            this.actionType === "insert" ? "新增" : "更新"
-          }成功`;
+          this.message = `${this.actionType === "insert" ? "新增" : "更新"}成功`;
 
           this.getFeedbackData();
           $(this.$refs.messageModal).modal("show");
         })
         .catch((error) => {
-          alert(
-            `${
-              this.actionType === "insert" ? "新增" : "更新"
-            }發生錯誤，請稍後再試`
-          );
+          alert(`${this.actionType === "insert" ? "新增" : "更新"}發生錯誤，請稍後再試`);
         });
     },
     close() {
       $(this.$refs.feedbackModal).modal("hide");
+      $(this.$refs.imgModal).modal("hide");
       $(this.$refs.messageModal).modal("hide");
+    },
+    openImg(item) {
+      this.actionType = "insert";
+      this.selectfeedbackData = item;
+      this.image = "";
+      $(this.$refs.imgModal).modal("show");
+    },
+    editImg(data) {
+      this.actionType = "update";
+      this.selectfeedbackData = data;
+      this.image = data.image;
+      $(this.$refs.imgModal).modal("show");
+    },
+    deleteImg(data) {
+      axios
+        .post("bakDeleteFeedbackImg", {
+          ID: data.ID,
+        })
+        .then((res) => {
+          this.message = `刪除成功`;
+          this.date = new Date();
+          $(this.$refs.messageModal).modal("show");
+        })
+        .catch((error) => {
+          alert(`刪除發生錯誤，請稍後再試`);
+        });
+    },
+    async uploadImg($event) {
+      let imageData = new FormData();
+      imageData.append("file", $event.target.files[0]);
+      let res = await axios.post("bakUploadFeedbackImg", imageData);
+      this.image = res.data;
+    },
+    submitImg() {
+      axios
+        .post("bakModifyFeedbackImgData", {
+          actionType: this.actionType,
+          ID: this.selectfeedbackData.ID,
+          data: {
+            image: this.image,
+            feedbackID: this.selectfeedbackData.ID,
+          },
+        })
+        .then((res) => {
+          this.message = `${this.actionType === "insert" ? "新增" : "更新"}成功`;
+          this.date = new Date();
+          $(this.$refs.messageModal).modal("show");
+        })
+        .catch((error) => {
+          alert(`${this.actionType === "insert" ? "新增" : "更新"}發生錯誤，請稍後再試`);
+        });
     },
   },
 };
@@ -423,14 +585,63 @@ export default {
       list-style: none;
 
       .feedback-row {
-        display: flex;
+        .parent {
+          display: flex;
 
-        div {
+          div {
+            padding: 5px;
+            text-align: center;
+
+            &:not(:last-child) {
+              border-right: 1px solid #bbbbbb;
+            }
+          }
+        }
+
+        .child {
+          border-top: 1px solid;
+          border-bottom: 2px solid;
           padding: 5px;
-          text-align: center;
 
-          &:not(:last-child) {
-            border-right: 1px solid #bbbbbb;
+          .img-box {
+            padding: 5px;
+            overflow: auto;
+
+            .img {
+              margin: 5px;
+              width: calc(20% - 10px);
+              float: left;
+              position: relative;
+
+              .action {
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                display: flex;
+                background: #f0f8ff57;
+
+                %font {
+                  font-size: 20px;
+                  margin: 5px;
+                  padding: 0px 5px;
+                  cursor: pointer;
+
+                  &:hover {
+                    filter: brightness(0.5);
+                  }
+                }
+
+                .edit {
+                  @extend %font;
+                  color: #dadada;
+                }
+
+                .delete {
+                  @extend %font;
+                  color: #ff0f0f;
+                }
+              }
+            }
           }
         }
       }
@@ -448,6 +659,14 @@ export default {
       width: 6%;
     }
 
+    .img {
+      width: 6%;
+    }
+
+    .video {
+      width: 6%;
+    }
+
     .type {
       width: 5%;
     }
@@ -461,7 +680,7 @@ export default {
     }
 
     .message {
-      width: 45%;
+      width: 39%;
     }
 
     .status {
