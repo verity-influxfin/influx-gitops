@@ -1176,7 +1176,10 @@ class Product extends REST_Controller {
             }
 
             $biddingHistory = [];
-            if ($target->status == 3){
+            if ($target->status == 3
+                && $target->sub_product_id != STAGE_CER_TARGET
+                && $target->sub_status != TARGET_SUBSTATUS_SUBLOAN_TARGET
+            ){
                 $this->load->model('loan/investment_model');
                 $this->load->model('log/log_targetschange_model');
                 $this->load->model('log/log_investmentschange_model');
@@ -1185,7 +1188,7 @@ class Product extends REST_Controller {
                 $cancel_inv = [];
                 $cancel_inv_amount = [];
                 $targets_end = $target->expire_time;
-                $targets_start = strtotime('-2 days', $target->expire_time);
+                $targets_start = strtotime('-14 days', $target->expire_time);
                 $currentIndex = strval(ceil((time() - $targets_start) / 60 / 60));
 //                if(!$currentIndex > 90){
                     $x = strval(round(($targets_end - $targets_start) / 60 / 60));
@@ -1705,7 +1708,7 @@ class Product extends REST_Controller {
 
         //檢驗產品規格
         $product_list 	= $this->config->item('product_list');
-        $product 		= $product = isset($product_list[$product_id])?$product_list[$product_id]:[];;
+        $product 		= $product = isset($product_list[$product_id])?$product_list[$product_id]:[];
         if($product){
             if(!$designate){
                 $name = $this->user_info->name;
