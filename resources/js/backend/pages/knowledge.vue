@@ -149,7 +149,7 @@ let articleRow = Vue.extend({
         <div class="post-title">{{item.post_title}}</div>
         <div class="status">{{item.status === 'publish' ? '公開': '不公開'}}</div>
         <div class="category">{{changeToText(item.category)}}</div>
-        <div class="order">{{item.order === '0' ? '否': '是'}}</div>
+        <div class="order">{{item.order === 0 ? '否': '是'}}</div>
         <div class="post_date">{{item.post_date}}</div>
         <div class="action-row">
           <button class="btn btn-info btn-sm" style="margin-right:20px" @click="vm.edit(item)">修改</button>

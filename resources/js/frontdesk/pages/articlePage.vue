@@ -16,6 +16,7 @@
           </div>
           <div
             class="main-content"
+            ref="articleHtml"
             v-if="this.articleHtml"
             v-html="this.articleHtml"
           ></div>
@@ -39,9 +40,7 @@
           <div>
             <div class="latest" v-for="(item, index) in latest" :key="index">
               <a :href="item.link">{{ item.post_title }}</a>
-              <div class="float-right">
-                －{{ item.post_modified.substr(0, 10) }}
-              </div>
+              <div class="float-right">－{{ item.post_modified.substr(0, 10) }}</div>
             </div>
           </div>
         </div>
@@ -62,9 +61,7 @@
               </template>
               <template v-else>
                 <i
-                  :class="[
-                    node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder',
-                  ]"
+                  :class="[node.expanded() ? 'fas fa-folder-open' : 'fas fa-folder']"
                 ></i>
                 {{ node.text }}
               </template>
@@ -99,9 +96,7 @@ export default {
       this.$store.dispatch("getKnowledgeData");
     }
   },
-  mounted() {
-    this.$nextTick(() => {});
-  },
+  mounted() {},
   computed: {
     latest() {
       return this.$store.getters.KnowledgeData.splice(0, 3);
@@ -120,8 +115,7 @@ export default {
         groups.forEach((gItem) => {
           if (
             gItem.text === dateItem[0] &&
-            gItem.children.filter((iItem) => iItem.text === dateItem[1])
-              .length === 0
+            gItem.children.filter((iItem) => iItem.text === dateItem[1]).length === 0
           ) {
             gItem.children.push({ text: dateItem[1], children: [] });
           }
@@ -131,9 +125,7 @@ export default {
       this.$store.getters.KnowledgeData.forEach((kItem) => {
         groups.forEach((gItem, gindex) => {
           gItem.children.forEach((iItem, rindex) => {
-            if (
-              kItem.post_date.substr(0, 7) === `${gItem.text}-${iItem.text}`
-            ) {
+            if (kItem.post_date.substr(0, 7) === `${gItem.text}-${iItem.text}`) {
               groups[gindex].children[rindex].children.push({
                 text: { text: kItem.post_title, link: kItem.link },
               });
@@ -171,6 +163,13 @@ export default {
         this.articleImg = res.data.media_link ? res.data.media_link : "";
         this.articleHtml = res.data.post_content;
       }
+
+      this.$nextTick(() => {
+        $('meta[name="description"]').attr(
+          "content",
+          $(this.$refs.articleHtml)[0].innerText.substr(0, 150)
+        );
+      });
     },
   },
 };
@@ -199,7 +198,7 @@ export default {
     display: flex;
   }
 
-  %contenier{
+  %contenier {
     .contenier {
       .title,
       .title-img {
@@ -301,5 +300,3 @@ export default {
   }
 }
 </style>
-
-
