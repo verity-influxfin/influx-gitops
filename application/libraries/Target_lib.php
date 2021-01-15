@@ -622,15 +622,16 @@ class Target_lib
                                 'sub_status' => 0,
                             ];
                             $this->CI->target_model->update($target->id, $param);
-                            $this->insert_change_log($target->id, $param, 0, 0);
+                            $this->insert_change_log($target->id, $param);
                             $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
                         } else {
                             $target_update_param = [
                                 'launch_times' => $target->launch_times + 1,
-                                'expire_time' => strtotime('+2 days', $target->expire_time),
+                                'expire_time' => strtotime('+14 days', $target->expire_time),
                                 'invested' => 0,
                             ];
                             $this->CI->target_model->update($target->id, $target_update_param);
+                            $this->insert_change_log($target->id, ['status' => 3]);
                         }
                         foreach ($investments as $key => $value) {
                             $this->insert_investment_change_log($value->id, ['status' => 9]);
@@ -705,9 +706,10 @@ class Target_lib
                     } else {
                         $this->CI->target_model->update($target->id, [
                             'launch_times' => $target->launch_times + 1,
-                            'expire_time' => strtotime('+2 days', $target->expire_time),
+                            'expire_time' => strtotime('+14 days', $target->expire_time),
                             'invested' => 0,
                         ]);
+                        $this->insert_change_log($target->id, ['status' => 3]);
                     }
                 }
                 return true;
