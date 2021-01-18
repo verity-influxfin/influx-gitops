@@ -1238,11 +1238,10 @@ class Product extends REST_Controller {
 
                     $lastBidding = 0;
                     foreach ($history as $history_key => $history_val) {
-                        $lastBidding -= (isset($dhistory[$history_key]) ? abs($dhistory[$history_key]) : 0);
-                        $lastBidding = $history[$history_key] = $history_val != 0 || isset($dhistory[$history_key]) ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
-                        if($history_key >= $currentIndex){
-                            break;
+                        if($history_key <= $currentIndex){
+                            $history_val != 0 ?( $lastBidding = 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) ): $lastBidding;
                         }
+                        $history[$history_key] = $lastBidding;
                     }
 
                     $biddingHistory = [
