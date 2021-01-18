@@ -1188,7 +1188,11 @@ class Product extends REST_Controller {
                 $cancel_inv = [];
                 $cancel_inv_amount = [];
                 $targets_end = $target->expire_time;
-                $targets_start = strtotime('-14 days', $target->expire_time);
+                $targetLog	= $this->log_targetschange_model->order_by('created_at', 'desc')->get_by(array(
+                    "target_id"		=> $target->id,
+                    "status"		=> 3,
+                ));
+                $targets_start = $targetLog->created_at;
                 $currentIndex = strval(ceil((time() - $targets_start) / 60 / 60));
 //                if(!$currentIndex > 90){
                     $x = strval(round(($targets_end - $targets_start) / 60 / 60));
