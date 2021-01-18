@@ -16,9 +16,12 @@ class Target extends REST_Controller
         $this->auth_lib->authToken();
     }
 
-    public function list_get()
+    public function list_get($sourceInput = false)
     {
         $input = $this->input->get(NULL, TRUE);
+        if($sourceInput){
+            $input = $sourceInput;
+        }
         $or_where = [];
         $where = [];
 
@@ -102,6 +105,7 @@ class Target extends REST_Controller
             'target.status as targetStatus',
             'target.sub_status',
             'target.delay_days',
+            'target.created_at',
             'processing.admin_id',
             'processing.push_by',
             'processing.push_type',
@@ -112,16 +116,6 @@ class Target extends REST_Controller
             'push.push_identity as pushIdentity',
             'push.user_status as pushUserStatus',
             'push.status as pushStatus',
-        ];
-
-        $param = [
-//                'target.status' => 5,
-//            'push.status' => 2,
-//            'delay_days >' => 7,
-//                'user_id' => 1364,
-//            'user_id' => 44302,
-//            'user.id <=' => 700,
-//            'user.id' => 294,
         ];
 
         $res = $this->loan_manager_target_model->get_target_list($select, $where, $or_where, 0, false, $order_by);
@@ -161,39 +155,34 @@ class Target extends REST_Controller
                 $datas[$key]->total_payment = $amortization_schedule['total_payment'];
                 $datas[$key]->repaid = isset($amortization_schedule['repaid']) ? $amortization_schedule['repaid'] : 0;
                 $datas[$key]->remaining_principal = $amortization_schedule['remaining_principal'];
-                $datas[$key]->lastInterest = $amortization_schedule['last_interest'];
+                $datas[$key]->lastInterest = isset($amortization_schedule['last_interest']) ? $amortization_schedule['last_interest'] : 0;
                 $datas[$key]->delayInterest = $amortization_schedule['delay_interest'];
                 $datas[$key]->liquidatedDamages = $amortization_schedule['liquidated_damages'];
                 $datas[$key]->dailyDelayInterest = $dailyDelayInterest;
                 $datas[$key]->status = $value->targetStatus;
                 $datas[$key]->sub_status = $value->sub_status;
+                $datas[$key]->lastDay = isset($amortization_schedule['end_date']) ? $amortization_schedule['end_date'] : 0;
+                $datas[$key]->created_at = $value->created_at;
 
                 if (isset($userTargets[$value->user_id]['debtProcess'])) {
                     $userTargets[$value->user_id]['debtProcess']['userPayment'] += $datas[$key]->total_payment;
                     $userTargets[$value->user_id]['debtProcess']['userRepaid'] += $datas[$key]->repaid;
                     $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] += $datas[$key]->remaining_principal;
                 } else {
-                    if (isset($value->pushStatus)) {
-                        if (isset($value->result)) {
-                            $userTargets[$value->user_id]['debtProcess'] = [
-                                'lastContactStatus' => $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result],
-                                'lastContactRemark' => $value->remark,
-                            ];
-                            $userTargets[$value->user_id]['debtProcess']['lastContact'] = date('Y/m/d H:i:s', $value->updated_at);
-                            $userTargets[$value->user_id]['debtProcess']['lastContactAdmin'] = $value->adminName;
-                            $userTargets[$value->user_id]['debtProcess']['pushIdentity'] = $value->pushIdentity;
-                            $userTargets[$value->user_id]['debtProcess']['pushUserStatus'] = $value->pushUserStatus;
-                            $userTargets[$value->user_id]['debtProcess']['pushStatus'] = $value->pushStatus;
-                        }
-                    } else {
+                    if (isset($value->result)) {
                         $userTargets[$value->user_id]['debtProcess'] = [
-                            'lastContactStatus' => '無',
-                            'lastContactRemark' => '無',
-                            'lastContact' => '無',
-                            'lastContactAdmin' => '無',
-                            'pushUserStatus' => $loanmanagerConfig['pushDataUserStatus'][0],
+                            'lastContactStatus' => $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result],
+                            'lastContactRemark' => $value->remark,
                         ];
                     }
+
+                    $userTargets[$value->user_id]['debtProcess']['lastContact'] = $value->updated_at != null ? date('Y/m/d H:i:s', $value->updated_at) : '無';
+                    $userTargets[$value->user_id]['debtProcess']['lastContactAdmin'] = $value->adminName != null ? $value->adminName : '無';
+                    $userTargets[$value->user_id]['debtProcess']['lastContactStatus'] = $value->push_by != null ? $loanmanagerConfig['pushTool'][$value->push_by] . $loanmanagerConfig['pushType'][$value->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$value->result] : '無';
+                    $userTargets[$value->user_id]['debtProcess']['lastContactRemark'] = $value->remark != null ? $value->remark : '無';
+                    $userTargets[$value->user_id]['debtProcess']['pushIdentity'] = $value->pushIdentity != null ? $value->pushIdentity : '無';
+                    $userTargets[$value->user_id]['debtProcess']['pushUserStatus'] = $value->pushUserStatus != null ? $value->pushUserStatus : $loanmanagerConfig['pushDataUserStatus'][0] ;
+                    $userTargets[$value->user_id]['debtProcess']['pushStatus'] = $value->pushStatus != null ? $value->pushStatus : '無';
                     $userTargets[$value->user_id]['debtProcess']['userPayment'] = $datas[$key]->total_payment;
                     $userTargets[$value->user_id]['debtProcess']['userRepaid'] = $datas[$key]->repaid;
                     $userTargets[$value->user_id]['debtProcess']['userRemainingPrincipal'] = $datas[$key]->remaining_principal;
@@ -204,6 +193,11 @@ class Target extends REST_Controller
                 'list' => $userTargets,
             ];
         }
+
+        if($sourceInput){
+            return $data;
+        }
+
         $this->response([
             'result' => 'SUCCESS',
             'data' => $data
@@ -219,7 +213,6 @@ class Target extends REST_Controller
         if ($res) {
             $loanmanagerConfig = $this->config->item('loanmanager');
             $data['userInfo'] = $res[0];
-            $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
 
             if($res[0]->processingId == null){
                 $data['userInfo']->processingId = 0;
@@ -234,32 +227,34 @@ class Target extends REST_Controller
                 $data['userInfo']->pushUserStatus = 0;
                 $data['userInfo']->pushStatus = 0;
             }
-
-            $wasSubLoan = $this->target_model->get_many_by([
-                'user_id' => $data['userInfo']->userId,
-                'sub_status' => 2,
-            ]);
-            $this->load->model('loanmanager/loan_manager_debtprocessing_model');
-            $wasNegotiate = $this->loan_manager_debtprocessing_model->get_many_by([
-                'user_id' => $data['userInfo']->userId,
-                'push_type' => 1,
-            ]);
-
-            $this->load->model('user/user_meta_model');
-            $getGraduate_date = $this->user_meta_model->get_by([
-                'user_id' => $input['user_id'],
-                'meta_key' => 'graduate_date',
-            ]);
-
-            $graduate_date = $getGraduate_date ? $getGraduate_date->meta_value : null;
-            $data['userInfo']->graduate_date = $graduate_date;
-            $data['userInfo']->subLoanTimes = count($wasSubLoan);
-            $data['userInfo']->negotiateTimes = count($wasNegotiate);
-            $data['userInfo']->lastContact = !empty($data['userInfo']->updated_at) ? date('Y/m/d H:i:s', $data['userInfo']->updated_at) : '無紀錄';
-            $data['userInfo']->lastContactStatus = $loanmanagerConfig['pushTool'][$data['userInfo']->push_by] . $loanmanagerConfig['pushType'][$data['userInfo']->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$data['userInfo']->result];
-            $data['userInfo']->virtualAccounts = $getVirtualAccountInfo[0]->virtualAccounts;
-            $data['userInfo']->virtualPassbooks = $getVirtualAccountInfo[0]->virtualPassbooks;
         }
+
+        $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
+
+        $wasSubLoan = $this->target_model->get_many_by([
+            'user_id' => $data['userInfo']->userId,
+            'sub_status' => 2,
+        ]);
+        $this->load->model('loanmanager/loan_manager_debtprocessing_model');
+        $wasNegotiate = $this->loan_manager_debtprocessing_model->get_many_by([
+            'user_id' => $data['userInfo']->userId,
+            'push_type' => 1,
+        ]);
+
+        $this->load->model('user/user_meta_model');
+        $getGraduate_date = $this->user_meta_model->get_by([
+            'user_id' => $input['user_id'],
+            'meta_key' => 'graduate_date',
+        ]);
+
+        $graduate_date = $getGraduate_date ? $getGraduate_date->meta_value : null;
+        $data['userInfo']->graduate_date = $graduate_date;
+        $data['userInfo']->subLoanTimes = count($wasSubLoan);
+        $data['userInfo']->negotiateTimes = count($wasNegotiate);
+        $data['userInfo']->lastContact = !empty($data['userInfo']->updated_at) ? date('Y/m/d H:i:s', $data['userInfo']->updated_at) : '無紀錄';
+        $data['userInfo']->lastContactStatus = $loanmanagerConfig['pushTool'][$data['userInfo']->push_by] . $loanmanagerConfig['pushType'][$data['userInfo']->push_type] . '/' . $loanmanagerConfig['pushResultStatus'][$data['userInfo']->result];
+        $data['userInfo']->virtualAccounts = $getVirtualAccountInfo[0]->virtualAccounts;
+        $data['userInfo']->virtualPassbooks = $getVirtualAccountInfo[0]->virtualPassbooks;
         $this->response([
             'result' => 'SUCCESS',
             'data' => $data
@@ -407,35 +402,88 @@ class Target extends REST_Controller
     function pushUser_post()
     {
         $input = $this->input->post(NULL, TRUE);
-        $fields 	= ['user_id','push_by','push_type','message','start_time','end_time'];
+        $fields 	= ['user_id','push_by','push_type','start_time','end_time'];
         foreach ($fields as $field) {
-            if (empty($input[$field])) {
+            if ($input[$field] == '') {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+        }
+        $userInfo = $this->userInfo($input['user_id']);
+        $pushBy = $input['push_by'];
+        if($userInfo){
+            isset($input['contact_id']) && is_numeric($input['contact_id']) ? $param['contact_id'] = $input['contact_id'] : '';
+            $this->load->model('loanmanager/loan_manager_debtprocessing_model');
+
+            //簡訊
+            if($pushBy == 7){
+                $this->load->library('sms_lib');
+                $phone 		= $userInfo->phone;
+                $content 	= $input['message'];
+                $this->sms_lib->send('LoanManagement',$userInfo->id,$phone,$content);
+            }//系統訊息+E-mail(5) E-mail(9)
+            elseif($pushBy == 4 || $pushBy == 8){
+                $title = "【訊息通知】";
+                $content = $input['message'];
+                $param = array(
+                    "user_id"	=> $userInfo->id,
+                    "investor"	=> 0,
+                    "title"		=> $title,
+                    "content"	=> $content,
+                );
+                $this->load->model('user/user_notification_model');
+                $pushBy == 4 ? $this->user_notification_model->insert($param) : $pushBy;
+                $this->load->library('Sendemail');
+                $this->sendemail->user_notification($userInfo->id,$title,nl2br($content),'b03');
+            }
+            $this->loan_manager_debtprocessing_model->insert([
+                'admin_id' => $this->user_info->id,
+                'user_id' => $input['user_id'],
+                'push_by' => $pushBy,
+                'push_type' => $input['push_type'],
+                'message' => $input['message'],
+                'invest_message' => $input['invest_message'],
+                'remark' => $input['remark'],
+                'start_time' => date($input['start_time']),
+                'end_time' => date($input['end_time']),
+                'result' => $input['result']
+            ]);
+            $this->response([
+                'result' => 'SUCCESS',
+            ]);
+        }
+        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+    }
+
+    function pushuserupdate_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $fields 	= ['push_id','start_time','end_time'];
+        foreach ($fields as $field) {
+            if ($input[$field] == '') {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
         }
         $userInfo = $this->userInfo($input['user_id']);
         if($userInfo){
-            isset($input['contact_id']) && is_numeric($input['contact_id']) ? $param['contact_id'] = $input['contact_id'] : '';
             $this->load->model('loanmanager/loan_manager_debtprocessing_model');
-            $this->loan_manager_debtprocessing_model->insert([
-                'admin_id' => $this->user_info->id,
-                'user_id' => $input['user_id'],
-                'push_by' => $input['push_by'],
-                'push_type' => $input['push_type'],
-                'message' => $input['message'],
-                'start_time' => strtotime($input['start_time']),
-                'end_time' => strtotime($input['end_time']),
+            $this->loan_manager_debtprocessing_model->update_by([
+                'id' => $input['push_id'],
+            ],[
+                'start_time' => $input['start_time'],
+                'end_time' => $input['end_time'],
+            ]);
+            $this->response([
+                'result' => 'SUCCESS',
             ]);
         }
-        $this->response([
-            'result' => 'SUCCESS',
-        ]);
+        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
     }
 
-    function userPassbook_get()
+    function userPassbook_get($internal = false, $account = false)
     {
         $input = $this->input->get(NULL, TRUE);
         $fields 	= ['account'];
+        $account ? $input['account'] = $account : '';
         foreach ($fields as $field) {
             if (empty($input[$field])) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -446,22 +494,299 @@ class Target extends REST_Controller
             $transaction_source = $this->config->item('transaction_source');
             foreach($getVirtualPassbook as $key => $value){
                 $value['remark'] = json_decode($value['remark'],TRUE);
-                $remark = isset($value['remark']['source']) && $value['remark']['source']?$transaction_source[$value['remark']['source']]:'';
-                $list[] = [
-                    'amount' 		=> $value['amount'],
-                    'bank_amount'	=> $value['bank_amount'],
-                    'remark'		=> $remark,
-                    'tx_datetime'	=> $value['tx_datetime'],
-                    'created_at'	=> $value['created_at'],
-                ];
+                if(isset($value['remark']['source']) && $value['remark']['source']){
+                    $temp[] = [
+                        'amount' => $value['amount'],
+                        'bank_amount' => $value['bank_amount'],
+                        'remark' => $transaction_source[$value['remark']['source']],
+                        'targetId' => $value['remark']['target_id'],
+                        'tx_datetime' => $value['tx_datetime'],
+                        'created_at' => $value['created_at'],
+                    ];
+                }
             }
         }
+        if($internal){
+            return $temp;
+        }else{
+            $this->response([
+                'result' => 'SUCCESS',
+                'data' => [
+                    'virtualAccount' => $input['account'],
+                    'list' => $temp,
+                ]
+            ]);
+        }
+
+    }
+
+
+    function serviceLog_get()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        $list = [];
+        if (!is_numeric($input['type'])) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
+
+        $userInfo = $this->userInfo($input['user_id']);
+        if($userInfo){
+            $loanmanagerConfig = $this->config->item('loanmanager');
+            $type = $input['type'];
+            $logs = [];
+            $structure = [
+                'title' => '',
+                'content' => '',
+                'time' => '',
+                'remark' => '',
+            ];
+            if(in_array($type, [0, 1])){
+                $this->load->model('loanmanager/loan_manager_pushdata_model');
+                //匯款紀錄
+                $getVirtualAccountInfo = $this->loan_manager_target_model->getPassbookBalance($input['user_id']);
+                if($getVirtualAccountInfo[0]->virtualAccounts != null){
+                    $getAccountingRecord = $this->userPassbook_get(1, $getVirtualAccountInfo[0]->virtualAccounts);
+                    foreach($getAccountingRecord as $key => $value){
+                        $structure['title'] = $value['remark'];
+                        $structure['content'] = $value['amount'];
+                        $structure['time'] = $value['tx_datetime'];
+                        $structure['remark'] = $value['bank_amount'];
+                        $structure['type'] = 1;
+                        $logs[$value['created_at']][] = $structure;
+                    }
+                }
+            }
+
+            if(in_array($type, [0, 2])){
+                //認證紀錄
+                $getUserCerList = $this->loan_manager_target_model->getUserCerList($input['user_id']);
+                foreach($getUserCerList as $key => $value){
+                    $structure['title'] = '更新認證';
+                    $structure['content'] = $loanmanagerConfig['certifications'][$value->certification_id]['name'];
+                    // . '(' . $loanmanagerConfig['cer_status'][ $value->expire_time > time() && !in_array($value->certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL]) ? $value->status : 2] . ')'
+                    $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
+                    $structure['remark'] = "送出認證";
+                    $structure['type'] = 2;
+                    $logs[$value->created_at][] = $structure;
+                }
+            }
+
+            if(in_array($type, [0, 3])){
+                //系統通知
+                $this->load->model('user/user_notification_model');
+                $getNotification = $this->user_notification_model->order_by('created_at','desc')->get_many_by([
+                    'user_id'		=> $input['user_id'],
+                    'status <>'		=> 0,
+                    'investor'		=> [0]
+                ]);
+                foreach($getNotification as $key => $value){
+                    $structure['title'] = $value->title;
+                    $structure['content'] = preg_replace('/\\t/','',$value->content);
+                    $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
+                    $structure['type'] = 4;
+                    $logs[$value->created_at][] = $structure;
+                }
+            }
+
+            if(in_array($type, [0, 4])){
+                //登入紀錄
+                $getUserLoginLog = $this->loan_manager_target_model->getUserLoginLog($input['user_id']);
+                foreach($getUserLoginLog as $key => $value){
+                    $structure['title'] = '用戶登入';
+                    $structure['content'] = '登入' . $value->status == 1 ? '成功' : '失敗';
+                    $structure['time'] = date('Y-m-d H:i:s', $value->created_at);
+                    $structure['type'] = 3;
+                    $logs[$value->created_at][] = $structure;
+                }
+            }
+
+            $br = '
+
+';
+            if(in_array($type, [0, 5])){
+                //客服紀錄
+                $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id']);
+                foreach($getUserLoginLog as $key => $value){
+                    $message = $value->message ? '【借款人訊息】
+'.$value->message.$br : '';
+                    $invest_message = $value->invest_message ? '【投資人訊息】
+'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message.$br : '';
+                    $remark = $value->remark != '' ? '【備註】
+'.$value->remark : '';
+                    $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
+                    $structure['content'] =  $message . $invest_message . $remark;
+                    $structure['msg'] =  $value->message . ($value->message != '' && $value->remark != '' ? ' - ' : '') .$value->message;
+                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time);
+                    $structure['type'] = 5;
+                    $logs[$value->created_at][] = $structure;
+                }
+            }
+
+            if(in_array($type, [0, 6])){
+                //面談紀錄
+                $getUserLoginLog = $this->loan_manager_target_model->getUserServiceLog($input['user_id'], true);
+                foreach($getUserLoginLog as $key => $value){
+                    $message = $value->message ? '【借款人訊息】
+'.$value->message.$br : '';
+                    $invest_message = $value->invest_message ? '【投資人訊息】
+'.$loanmanagerConfig['pushResultStatus'][$value->result] . ' - ' .$value->invest_message.$br : '';
+                    $remark = $value->remark != '' ? '【備註】
+'.$value->remark : '';
+                    $structure['title'] = date('Y/m/d ', $value->start_time) . $loanmanagerConfig['pushTool'][$value->push_by] . ' / ' . $loanmanagerConfig['pushType'][$value->push_type] . ' - ' . $loanmanagerConfig['pushResultStatus'][$value->result];
+                    $structure['content'] = $message . $invest_message . $remark;
+                    $structure['time'] = date('Y-m-d H:i:s', $value->start_time);
+                    $structure['type'] = 6;
+                    $logs[$value->created_at][] = $structure;
+                }
+            }
+        }
+        $list = [
+            'userId' => $input['user_id'],
+            'logs' => $logs,
+        ];
         $this->response([
             'result' => 'SUCCESS',
-            'data' => $list
+            'data' => $list,
         ]);
     }
 
+    function depositletter_get(){
+        $input = $this->input->get(NULL, TRUE);
+        $type = $input['type'];
+        $createDepositLetter = '';
+        if($type == 1) {
+            $depositLetter = $this->createDepositLetter($input['user_id']);
+        }elseif($type == 2){
+            $depositLetter = $this->createDepositLetter($input['user_id'], true);
+        }
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $depositLetter,
+        ]);
+    }
+
+    function depositletter_post(){
+        $input = $this->input->post(NULL, TRUE);
+        $type = $input['type'];
+        if($type == 1) {
+            $depositLetter = $this->createDepositLetter($input['user_id']);
+            foreach ($depositLetter as $key => $value) {
+                if ($key != 'email') {
+                    $this->sendDepositLetter($depositLetter['email'], $value['title'], $value['content']);
+                }
+            }
+        }
+        $this->response([
+            'result' => 'SUCCESS'
+        ]);
+    }
+
+    function createDepositLetter($userId, $forPaper = false){
+        $userData = $this->loan_manager_target_model->get_userinfo($userId)[0];
+        $list = [];
+        if ($userData) {
+            $email = $userData->email;
+            $investmentList = [];
+            $target_no = [];
+            $productName = [];
+            $loan_date = [];
+            $interest_rate = [];
+            $instalment = [];
+            $repaymentType = [];
+            $lastDays = [];
+            $total_payment = 0;
+            $total_loanAmount = 0;
+            $getDelayTarget = $this->list_get([
+                'search' => $userId,
+                'delay' => 2,
+            ]);
+            $targetList = $getDelayTarget['list'][$userId]['targetList'];
+            $this->load->model('loan/investment_model');
+            $loanmanagerConfig = $this->config->item('loanmanager');
+            foreach($targetList as $key => $value){
+                //投資人清單
+                !$forPaper ? $investmentList = [] : '';
+                $investments = $this->investment_model->get_many_by([
+                    'target_id' => $value->target_id,
+                    'status' => 3
+                ]);
+                foreach($investments as $ikey => $ivalue){
+                    !in_array($ivalue->user_id, $investmentList) ? $investmentList[] = $ivalue->user_id : '';
+                }
+
+                $lastDay = explode('-',$value->lastDay);
+                if($forPaper){
+                    $total_payment += $value->total_payment;
+                    $total_loanAmount += $value->loanAmount;
+                    $target_no[] = $value->target_no;
+                    $productName[] = $value->productName;
+                    $loan_date[] = date('Y/m/d', $value->created_at);
+                    $interest_rate[] = number_format($value->interest_rate,2);
+                    $instalment[] = $value->instalment;
+                    $repaymentType[] = $value->repaymentType;
+                    $lastDays[] = '民國'.$lastDay[0].'年'.$lastDay[1].'月'.$lastDay[2].'日';
+                    if(count($targetList) - 1 == $key){
+                        $title = [
+                            $userData->name,
+                            $total_payment
+                        ];
+                        $content = [
+                            $userData->name,
+                            $total_loanAmount,
+                            implode('、', $target_no),
+                            implode('、', $productName),
+                            $value->user_id,
+                            implode('、', $loan_date),
+                            implode('、', $interest_rate),
+                            implode('、', $instalment),
+                            implode('、', $repaymentType),
+                            implode('、', $lastDays),
+                            $userData->name,
+                            implode('、', $investmentList),
+                            $userData->name,
+                            $userData->name,
+                        ];
+                        $list = [
+                            'title' => vsprintf($loanmanagerConfig['depositLetterForPaper']['title'],$title),
+                            'content' => vsprintf($loanmanagerConfig['depositLetterForPaper']['content'],$content)
+                        ];
+                    }
+                }else{
+                    $title = [
+                        $userData->name,
+                        $value->total_payment
+                    ];
+                    $content = [
+                        $value->loanAmount,
+                        $value->target_no,
+                        $value->productName,
+                        $value->user_id,
+                        date('Y-m-d', $value->created_at),
+                        number_format($value->interest_rate,2),
+                        $value->instalment,
+                        $value->repaymentType,
+                        $lastDay[0],
+                        $lastDay[1],
+                        $lastDay[2],
+                        implode('、', $investmentList),
+                    ];
+
+                    $list[$value->target_no] = [
+                        'title' => vsprintf($loanmanagerConfig['depositLetter']['title'],$title),
+                        'content' => vsprintf($loanmanagerConfig['depositLetter']['content'],$content)
+                    ];
+                }
+            }
+            $list['email'] = $email;
+            return $list;
+        }
+        return false;
+    }
+
+    private function sendDepositLetter($email, $title, $content){
+        $this->load->library('Sendemail');
+        return $rs = $this->sendemail->email_notification($email, $title, $content);
+    }
 
     private function userInfo($userId){
         $userInfo = $this->user_model->get_by([

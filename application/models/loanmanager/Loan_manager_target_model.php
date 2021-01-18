@@ -98,7 +98,7 @@ class Loan_manager_target_model extends MY_Model
             $this->db->or_where($orWhere);
         }
 
-//        $this->db->order_by("processing.updated_at",'desc');
+        $this->db->order_by('processing.id','desc');
         $limit ? $this->db->limit($limit, $offset) : '';
         $this->db->group_by('target.id');
         $order_by ? $this->db->order_by($order_by,'desc') : '';
@@ -126,6 +126,7 @@ class Loan_manager_target_model extends MY_Model
             'user.id as userId',
             'user.name',
             'user.picture as userPicture',
+            'user.email',
             'processing.id as processingId',
             'processing.admin_id',
             'processing.push_by',
@@ -185,9 +186,9 @@ class Loan_manager_target_model extends MY_Model
         );
         $this->db->where([
             'user.id' => $userId,
-            'virtualaccounts.investor' => 0,
+//            'virtualaccounts.investor' => 0,
         ]);
-        $this->db->order_by('virtualpassbooks.id','desc');
+//        $this->db->order_by('virtualpassbooks.id','desc');
         $query = $this->db->get();
         return $query->result();
     }
@@ -195,9 +196,11 @@ class Loan_manager_target_model extends MY_Model
 
     public function getPassbookList($account){
         $select = [
-//            'virtualaccounts.virtual_account as virtualAccounts',
-//            'virtualpassbooks.amount as virtualPassbooks',
-//                '*'
+            'virtualpassbooks.amount',
+            'virtualpassbooks.remark',
+            'virtualpassbooks.tx_datetime',
+            'virtualpassbooks.created_at',
+            'virtualpassbooks.amount',
         ];
 
         $this->db->select($select, false)
@@ -205,7 +208,7 @@ class Loan_manager_target_model extends MY_Model
         $this->db->where([
             'virtualpassbooks.virtual_account' => $account,
         ]);
-        $this->db->order_by('tx_datetime,created_at','desc');
+        $this->db->order_by('tx_datetime,created_at','asc');
         $query = $this->db->get();
         $res = $query->result();
 
@@ -223,5 +226,63 @@ class Loan_manager_target_model extends MY_Model
         }
 
         return array_reverse($list);
+    }
+
+    public function getUserCerList($userId){
+        $select = [
+            'certification.certification_id',
+            'certification.status',
+            'certification.created_at',
+            'certification.expire_time',
+        ];
+
+        $this->db->select($select, false)
+            ->from('p2p_user.user_certification as certification');
+        $this->db->where([
+            'user_id' => $userId,
+        ]);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getUserLoginLog($userId){
+        $select = [
+            'userLoginLog.status',
+            'userLoginLog.created_at',
+        ];
+
+        $this->db->select($select, false)
+            ->from('p2p_log.user_login_log as userLoginLog');
+        $this->db->where([
+            'user_id' => $userId,
+        ]);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getUserServiceLog($userId, $type = false){
+        $select = [
+            'debtProcessing.admin_id',
+            'debtProcessing.contact_id',
+            'debtProcessing.result',
+            'debtProcessing.push_by',
+            'debtProcessing.push_type',
+            'debtProcessing.message',
+            'debtProcessing.invest_message',
+            'debtProcessing.remark',
+            'debtProcessing.start_time',
+            'debtProcessing.end_time',
+            'debtProcessing.created_at',
+        ];
+
+        $this->db->select($select, false)
+            ->from('loan_manager.debt_processing as debtProcessing');
+        $param = [
+            'user_id' => $userId,
+        ];
+        $type ? $param['push_by'] = 9 : $param['push_by !='] = 9;
+        $this->db->where($param);
+        $query = $this->db->get();
+        return $query->result();
     }
 }
