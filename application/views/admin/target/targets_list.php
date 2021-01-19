@@ -108,6 +108,7 @@
                                             <th>逾期狀況</th>
                                             <th>逾期天數</th>
                                             <th>狀態</th>
+                                            <th>借款原因</th>
                                             <th>申請日期</th>
                                             <th>核准日期</th>
                                             <th>邀請碼</th>
@@ -116,7 +117,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-									<?php 
+									<?php
 										if(isset($list) && !empty($list)){
                                             $subloan_list = $this->config->item('subloan_list');
 											$count = 0;
@@ -147,13 +148,14 @@
 												}
 											?>
 											</td>
+                                            <td><?=isset($value->reason) ? $value->reason: '' ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'' ?></td>
                                             <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
                                             <td><?=isset($value->remark)?nl2br($value->remark):'' ?></td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>
-                                        </tr>                                        
-									<?php 
+                                        </tr>
+									<?php
 									}}
 									?>
                                     </tbody>
