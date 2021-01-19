@@ -178,7 +178,7 @@ class Sendemail
 		}
 	}
 	
-    private function send($email,$subject,$content,$reply_to=false,$reply_to_name='')
+    public function send($email,$subject,$content,$reply_to=false,$reply_to_name='')
     {
 		$this->CI->email->initialize($this->config);
 		$this->CI->email->clear();

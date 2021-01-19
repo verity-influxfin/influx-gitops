@@ -155,7 +155,7 @@ class Sms_lib {
 		return false;
 	}
 
-	private function send($type,$user_id,$phone,$content){
+	public function send($type,$user_id,$phone,$content){
 		
 		$data = array(
 			"UID"	=> EVER8D_UID,
