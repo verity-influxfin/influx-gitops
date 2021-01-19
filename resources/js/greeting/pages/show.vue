@@ -2,7 +2,16 @@
   <div class="show-wrapper">
     <div class="cover" v-if="!isPlay" @click="play"></div>
     <template v-else>
-      <video class="make-video" src="/upload/greeting/video.mp4"></video>
+      <video
+        class="make-video"
+        webkit-playsinline="true"
+        playsinline="true"
+        x-webkit-airplay="true"
+        x5-video-player-type="h5"
+        x5-video-player-fullscreen="true"
+        x5-video-ignore-metadata="true"
+        src="/upload/greeting/video.mp4"
+      ></video>
       <div class="cnt" v-if="greetingData">
         <div class="greeting-card" ref="greetingcard">
           <div class="avatar-box">
