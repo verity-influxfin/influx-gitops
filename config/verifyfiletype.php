@@ -4,5 +4,5 @@ return [
     'resume' => ['pdf'],
     'proposal' => ['pdf'],
     'portfolio' => ['pdf'],
-    'image' => ['gif', 'jpge', 'jpg', 'png', 'heic']
+    'image' => ['gif', 'jpge', 'jpg', 'png', 'heif','hevc']
 ];
