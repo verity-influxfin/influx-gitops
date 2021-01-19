@@ -135,7 +135,7 @@ export default {
         authorImg: this.authorImg,
       };
 
-      let encodeData = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+      let encodeData = encodeURIComponent(JSON.stringify(data));
 
       let string = `${location.origin}/greeting/show?token=${encodeData}&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
 

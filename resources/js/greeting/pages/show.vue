@@ -49,7 +49,7 @@ export default {
   created() {
     const urlParams = new URLSearchParams(window.location.search);
     let search = urlParams.get("token");
-    this.greetingData = JSON.parse(decodeURIComponent(escape(atob(search))));
+    this.greetingData = JSON.parse(search);
   },
   methods: {
     play() {
