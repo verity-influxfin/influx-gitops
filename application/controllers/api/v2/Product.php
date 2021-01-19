@@ -1240,7 +1240,7 @@ class Product extends REST_Controller {
                     foreach ($history as $history_key => $history_val) {
                         $lastBidding -= (isset($dhistory[$history_key]) ? abs($dhistory[$history_key]) : 0);
                         $lastBidding = $history[$history_key] = $history_val != 0 || isset($dhistory[$history_key]) ? 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100) : $lastBidding;
-                        if($history_key >= $currentIndex){
+                        if($history_key > $currentIndex){
                             unset($history[$history_key]);
                         }
                     }
