@@ -150,6 +150,7 @@ export default {
           }
         )
         .then((res) => {
+          console.log(res);
           $(this.$refs.hide).val(res.short_url).focus().select();
 
           this.$nextTick(() => {
