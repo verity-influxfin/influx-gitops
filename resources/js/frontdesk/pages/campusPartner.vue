@@ -163,6 +163,7 @@ export default {
       autoplay: window.innerWidth > 767 ? false : true,
       perPage: 3,
       arrows: window.innerWidth > 767 ? false : true,
+      drag: window.innerWidth > 767 ? true : false,
       pagination: false,
       breakpoints: {
         767: { perPage: 1 },
@@ -173,6 +174,7 @@ export default {
       autoplay: window.innerWidth > 767 ? false : true,
       perPage: 4,
       arrows: window.innerWidth > 767 ? false : true,
+      drag: window.innerWidth > 767 ? true : false,
       pagination: false,
       gap: "5rem",
       breakpoints: {

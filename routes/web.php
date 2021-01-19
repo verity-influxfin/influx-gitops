@@ -215,15 +215,15 @@ Route::get('/getMemberFile', function (Request $request) {
 
 Route::get('/bakDownloadTypeFile', 'Backendcontroller@downloadTypeFile');
 
-Route::post('bakGetFeedbackImg','Backendcontroller@getFeedbackImg');
+Route::post('/bakGetFeedbackImg','Backendcontroller@getFeedbackImg');
 
-Route::post('bakUploadFeedbackImg','Backendcontroller@uploadFeedbackImg');
+Route::post('/bakUploadFeedbackImg','Backendcontroller@uploadFeedbackImg');
 
-Route::post('bakModifyFeedbackImgData','Backendcontroller@modifyFeedbackImgData');
+Route::post('/bakModifyFeedbackImgData','Backendcontroller@modifyFeedbackImgData');
 
-Route::post('bakUpdateImgOrder','Backendcontroller@updateImgOrder');
+Route::post('/bakUpdateImgOrder','Backendcontroller@updateImgOrder');
 
-Route::post('bakDeleteFeedbackImg','Backendcontroller@deleteFeedbackImg');
+Route::post('/bakDeleteFeedbackImg','Backendcontroller@deleteFeedbackImg');
 
 // verify mail
 
@@ -248,5 +248,13 @@ Route::get('/borrowLink', function () {
 Route::get('/investLink', function () {
     return view('invest');
 });
+
+Route::get('/greeting',function(){
+    return view('greeting');
+});
+
+Route::post('/uploadGreetingAuthorImg','Greetingcontroller@uploadGreetingAuthorImg');
+
+Route::view('/greeting/{path?}', 'greeting');
 
 Route::view('/{path?}', 'index');
