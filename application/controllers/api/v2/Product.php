@@ -1207,9 +1207,11 @@ class Product extends REST_Controller {
 
                     $investments = $this->investment_model->get_many_by([
                         'created_at >=' => $targets_start,
+                        'tx_datetime !=' => null,
                         'target_id' => $target->id,
                         'status' => [1 ,8]
                     ]);
+                    $bidInvest = [];
                     if($investments){
                         foreach ($investments as $inv_key => $inv_val) {
                             if ($inv_val->status == 8) {
@@ -1217,6 +1219,7 @@ class Product extends REST_Controller {
                                 $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
                             }
                             $at = ceil((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
+                            $bidInvest[] = $inv_val->id;
                             $biddingAmount += $inv_val->amount;
                             $history[$at] = $biddingAmount;
                         }
@@ -1225,13 +1228,17 @@ class Product extends REST_Controller {
                     $dhistory = [];
                     if(count($cancel_inv) > 0){
                         $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
+                            'created_at >=' => $targets_start,
                             'investment_id' => $cancel_inv,
                             'status' => 8
                         ]);
                         if($cancel_inv_time){
                             foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
-                                $at = ($cancel_inv_time_val->created_at - $targets_start) / 60 / 60;
-                                $dhistory[$at] = $cancel_inv_amount[$cancel_inv_time_val->investment_id];
+                                if(in_array($cancel_inv_time_val->investment_id,$bidInvest)){
+                                    $at = intval(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
+                                    !isset($dhistory[$at]) ? $dhistory[$at] = 0 : '';
+                                    $dhistory[$at] += $cancel_inv_amount[$cancel_inv_time_val->investment_id];
+                                }
                             }
                         }
                     }
@@ -1244,7 +1251,6 @@ class Product extends REST_Controller {
                             unset($history[$history_key]);
                         }
                     }
-                    unset($history[0]);
 
                     $biddingHistory = [
                         'startBidding' => date("Y/m/d H:i:s",$targets_start),
