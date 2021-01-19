@@ -134,7 +134,8 @@ export default {
         authorName: this.authorName,
         authorImg: this.authorImg,
       };
-      data = window.btoa(JSON.stringify(data));
+
+      data = window.btoa(JSON.stringify(unescape(encodeURIComponent(JSON.stringify(data)))));
 
       let string = `${location.origin}/greeting/show?token=${data}&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
 
