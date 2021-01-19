@@ -150,8 +150,7 @@ export default {
           }
         )
         .then((res) => {
-          console.log(res);
-          $(this.$refs.hide).val(res.short_url).focus().select();
+          $(this.$refs.hide).val(res.data.short_url).focus().select();
 
           this.$nextTick(() => {
             document.execCommand("Copy");
