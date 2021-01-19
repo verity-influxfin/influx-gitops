@@ -135,9 +135,9 @@ export default {
         authorImg: this.authorImg,
       };
 
-      data = window.btoa(JSON.stringify(unescape(encodeURIComponent(JSON.stringify(data)))));
+      let encodeData = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
 
-      let string = `${location.origin}/greeting/show?token=${data}&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
+      let string = `${location.origin}/greeting/show?token=${encodeData}&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
 
       axios
         .post(
