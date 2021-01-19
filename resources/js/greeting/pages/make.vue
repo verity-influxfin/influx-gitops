@@ -269,6 +269,13 @@ export default {
           margin: 7px;
           position: relative;
 
+          img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+
           input[type="file"] {
             width: 80px;
             position: absolute;

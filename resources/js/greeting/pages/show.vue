@@ -180,13 +180,11 @@ export default {
             margin: 7px;
             position: relative;
 
-            input[type="file"] {
-              width: 80px;
+            img {
               position: absolute;
               top: 50%;
               left: 50%;
               transform: translate(-50%, -50%);
-              overflow: hidden;
             }
           }
 
