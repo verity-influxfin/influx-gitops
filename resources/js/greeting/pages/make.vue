@@ -67,7 +67,6 @@
       </div>
 
       <button class="btn btn-greeting" @click="share">分享賀卡</button>
-      <div class="hide" ref="hide">{{ copyUrl }}</div>
     </div>
 
     <div
@@ -80,7 +79,12 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
-            <div class="msg">賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！</div>
+            <div class="msg">
+              <transition name="fade">
+                <input type="text" v-if="!isCopyed" class="hide" @click="copy()" />
+                <span v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
+              </transition>
+            </div>
           </div>
         </div>
       </div>
@@ -96,8 +100,8 @@ export default {
     SplideSlide,
   },
   data: () => ({
+    isCopyed: false,
     isLoading: false,
-    copyUrl: "",
     selectedImg: "avatar1.svg",
     greetingWord: "",
     authorName: "",
@@ -154,6 +158,8 @@ export default {
         });
     },
     share() {
+      this.isCopyed = false;
+
       let data = {
         selectedImg: this.selectedImg,
         greetingWord: this.greetingWord,
@@ -177,22 +183,17 @@ export default {
           }
         )
         .then((res) => {
-          this.copyUrl = res.data.short_url;
-
-          this.$nextTick(() => {
-            let el = document.querySelector(".hide");
-            let range = document.createRange();
-            range.selectNodeContents(el);
-            let sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-            document.execCommand("copy");
-            $(this.$refs.messageModal).modal("show");
-          });
+          $(".hide").val(res.data.short_url);
+          $(this.$refs.messageModal).modal("show");
         })
         .catch((err) => {
           console.error(err);
         });
+    },
+    copy() {
+      document.execCommand("selectAll");
+      document.execCommand("Copy");
+      this.isCopyed = true;
     },
   },
 };
@@ -337,12 +338,6 @@ export default {
       color: #ffffff;
       font-weight: bolder;
     }
-
-    .hide {
-      opacity: 0;
-      height: 0px;
-      position: absolute;
-    }
   }
 
   .message-modal {
@@ -361,6 +356,22 @@ export default {
       .modal-body {
         padding: 0px;
       }
+    }
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.5s;
+    }
+    .fade-enter,
+    .fade-leave-to {
+      opacity: 0;
+    }
+
+    .hide {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 160px;
     }
 
     .msg {
