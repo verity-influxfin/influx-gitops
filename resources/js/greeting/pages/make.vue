@@ -212,7 +212,7 @@ export default {
   }
 
   .make-card {
-    height: calc(100vh - 64px);
+    height: 100vh;
     background-image: url("../asset/greet_bg.svg");
     background-size: cover;
     background-position: center;
