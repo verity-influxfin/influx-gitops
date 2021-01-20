@@ -1205,6 +1205,7 @@ class Product extends REST_Controller {
                     $history[$i] = 0;
                 }
 
+                //取得投標、棄標投資id
                 $investments = $this->investment_model->get_many_by([
                     'created_at >=' => $targets_start,
                     'tx_datetime !=' => null,
@@ -1227,6 +1228,7 @@ class Product extends REST_Controller {
                     }
                 }
 
+                //取得棄標時間
                 $dhistory = [];
                 if(count($cancel_inv) > 0){
                     $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
@@ -1235,6 +1237,7 @@ class Product extends REST_Controller {
                     ]);
                     if($cancel_inv_time){
                         foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
+                            //僅對應有圈存的investment
                             if(in_array($cancel_inv_time_val->investment_id,$bidInvest)){
                                 $at = floor(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
                                 !isset($dhistory[$at]) ? $dhistory[$at] = 0 : '';
