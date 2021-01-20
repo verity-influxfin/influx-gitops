@@ -1223,7 +1223,7 @@ class Product extends REST_Controller {
                         $bidInvest[] = $inv_val->id;
                         $biddingAmount += $inv_val->amount;
                         !isset($history[$at]) ? $history[$at] = 0 : '';
-                        $history[$at] = $biddingAmount;
+                        $history[$at] += $biddingAmount;
                     }
                 }
 
