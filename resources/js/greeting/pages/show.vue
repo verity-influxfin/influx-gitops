@@ -30,6 +30,7 @@
                 <img
                   class="img-fluid"
                   :src="`/upload/greeting/${greetingData.authorImg}`"
+                  @error="greetingData.authorImg = 'default.svg'"
                 />
               </div>
               <img class="img-fluid img-border" src="../asset/border.svg" />
