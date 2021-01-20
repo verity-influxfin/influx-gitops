@@ -60,13 +60,14 @@
               :src="`/upload/greeting/${authorImg}`"
             />
             <input v-else type="file" @change="upload" />
+            <img class="img-fluid" v-if="isLoading" src="../asset/g_loading.svg" />
           </div>
           <img class="img-fluid img-border" src="../asset/border.svg" />
         </div>
       </div>
 
       <button class="btn btn-greeting" @click="share">分享賀卡</button>
-      <input type="text" class="hide" ref="hide" />
+      <input type="text" class="hide" contenteditable="true" ref="hide" />
     </div>
 
     <div
@@ -95,6 +96,7 @@ export default {
     SplideSlide,
   },
   data: () => ({
+    isLoading: false,
     selectedImg: "avatar1.svg",
     greetingWord: "",
     authorName: "",
@@ -115,6 +117,29 @@ export default {
     upload(e) {
       let imageData = new FormData();
       imageData.append("file", e.target.files[0]);
+
+      axios.interceptors.request.use(
+        (config) => {
+          this.isLoading = true;
+          return config;
+        },
+        (error) => {
+          this.isLoading = false;
+          return Promise.reject(error);
+        }
+      );
+
+      axios.interceptors.response.use(
+        (response) => {
+          this.isLoading = false;
+          return response;
+        },
+        (error) => {
+          this.isLoading = false;
+          return Promise.reject(error);
+        }
+      );
+
       axios
         .post("/uploadGreetingAuthorImg", imageData)
         .then((res) => {

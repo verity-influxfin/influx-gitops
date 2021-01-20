@@ -86,6 +86,7 @@ export default {
 <style lang="scss">
 .show-wrapper {
   position: relative;
+  overflow: hidden;
 
   %position {
     position: absolute;
@@ -238,7 +239,8 @@ export default {
 
   .make-video {
     width: 100%;
-    height: 100vh;
+    top: 50%;
+    transform: translate(0px, -50%);
     @extend %position;
   }
 }
