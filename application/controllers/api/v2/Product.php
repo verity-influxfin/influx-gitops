@@ -1180,83 +1180,88 @@ class Product extends REST_Controller {
                 && $target->sub_product_id != STAGE_CER_TARGET
                 && $target->sub_status != TARGET_SUBSTATUS_SUBLOAN_TARGET
             ){
-                $this->load->model('loan/investment_model');
-                $this->load->model('log/log_targetschange_model');
-                $this->load->model('log/log_investmentschange_model');
-                $history = [];
-                $biddingAmount = 0;
-                $cancel_inv = [];
-                $cancel_inv_amount = [];
-                $targets_end = $target->expire_time;
-                $targetLog	= $this->log_targetschange_model->order_by('created_at', 'desc')->get_by(array(
-                    "target_id"		=> $target->id,
-                    "status"		=> 3,
-                ));
-                $targets_start = $targetLog->created_at;
-                $currentIndex = strval(ceil((time() - $targets_start) / 60 / 60));
+            $this->load->model('loan/investment_model');
+            $this->load->model('log/log_targetschange_model');
+            $this->load->model('log/log_investmentschange_model');
+            $history = [];
+            $biddingAmount = 0;
+            $cancel_inv = [];
+            $cancel_inv_amount = [];
+            $targets_end = $target->expire_time;
+            $targetLog	= $this->log_targetschange_model->order_by('created_at', 'desc')->get_by(array(
+                "target_id"		=> $target->id,
+                "status"		=> 3,
+            ));
+            $targets_start = $targetLog->created_at;
+            $currentIndex = strval(floor((time() - $targets_start) / 60 / 60));
 //                if(!$currentIndex > 90){
-                    $x = strval(round(($targets_end - $targets_start) / 60 / 60));
-                    $x_unit = '時';
-                    $x_limit = 1;
-                    $y = '100';
-                    $y_unit = '%';
-                    $y_limit = 10;
-                    for ($i = 0; $i < $x; $i++) {
-                        $history[$i] = 0;
-                    }
+                $x = strval(round(($targets_end - $targets_start) / 60 / 60));
+                $x_unit = '時';
+                $x_limit = 1;
+                $y = '100';
+                $y_unit = '%';
+                $y_limit = 10;
+                for ($i = 0; $i < $x; $i++) {
+                    $history[$i] = 0;
+                }
 
-                    $investments = $this->investment_model->get_many_by([
-                        'created_at >=' => $targets_start,
-                        'tx_datetime !=' => null,
-                        'target_id' => $target->id,
-                        'status' => [1 ,8]
+                $investments = $this->investment_model->get_many_by([
+                    'created_at >=' => $targets_start,
+                    'tx_datetime !=' => null,
+                    'target_id' => $target->id,
+                    'status' => [1 ,8]
+                ]);
+                $bidInvest = [];
+                if($investments){
+                    foreach ($investments as $inv_key => $inv_val) {
+                        $biddingAmount = 0;
+                        if ($inv_val->status == 8) {
+                            $cancel_inv[] = $inv_val->id;
+                            $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
+                        }
+                        $at = floor((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
+                        $bidInvest[] = $inv_val->id;
+                        $biddingAmount += $inv_val->amount;
+                        !isset($history[$at]) ? $history[$at] = 0 : '';
+                        $history[$at] = $biddingAmount;
+                    }
+                }
+
+                $dhistory = [];
+                if(count($cancel_inv) > 0){
+                    $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
+                        'investment_id' => $cancel_inv,
+                        'status' => 8
                     ]);
-                    $bidInvest = [];
-                    if($investments){
-                        foreach ($investments as $inv_key => $inv_val) {
-                            $biddingAmount = 0;
-                            if ($inv_val->status == 8) {
-                                $cancel_inv[] = $inv_val->id;
-                                $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
-                            }
-                            $at = floor((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
-                            $bidInvest[] = $inv_val->id;
-                            $biddingAmount += $inv_val->amount;
-                            !isset($history[$at]) ? $history[$at] = 0 : '';
-                            $history[$at] = $biddingAmount;
-                        }
-                    }
-
-                    $dhistory = [];
-                    if(count($cancel_inv) > 0){
-                        $cancel_inv_time = $this->log_investmentschange_model->order_by('created_at', 'desc')->get_many_by([
-                            'investment_id' => $cancel_inv,
-                            'status' => 8
-                        ]);
-                        if($cancel_inv_time){
-                            foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
-                                if(in_array($cancel_inv_time_val->investment_id,$bidInvest)){
-                                    $at = floor(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
-                                    !isset($dhistory[$at]) ? $dhistory[$at] = 0 : '';
-                                    $dhistory[$at] += $cancel_inv_amount[$cancel_inv_time_val->investment_id];
-                                }
+                    if($cancel_inv_time){
+                        foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
+                            if(in_array($cancel_inv_time_val->investment_id,$bidInvest)){
+                                $at = floor(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
+                                !isset($dhistory[$at]) ? $dhistory[$at] = 0 : '';
+                                $dhistory[$at] += $cancel_inv_amount[$cancel_inv_time_val->investment_id];
                             }
                         }
                     }
+                }
 
-                    $lastBidding = 0;
-                    foreach ($history as $history_key => $history_val) {
-                        $lastBidding -= (isset($dhistory[$history_key]) ? abs($dhistory[$history_key]) : 0);
-                        if ($history_val != 0 || isset($dhistory[$history_key])) {
-                            $lastBidding = 100 - round(($target->loan_amount - $history_val - $lastBidding) / $target->loan_amount * 100);
-                        }
-                        $lastBidding = $history[$history_key] = ($lastBidding > 100 ? 100 : ($lastBidding < 0 ? 0 : $lastBidding));
-                        if($history_key > $currentIndex){
-                            unset($history[$history_key]);
-                        }
+                //取得各期金額
+                $lastBidding = 0;
+                foreach ($history as $history_key => $history_val) {
+                    $history_val != 0 ? $lastBidding += $history_val : '';
+                    isset($dhistory[$history_key]) ? $lastBidding -= $dhistory[$history_key] : '';
+                    $history[$history_key] = $lastBidding;
+                }
+
+                //轉換單位、排除未來期數
+                foreach ($history as $history_key => $history_val) {
+                    $history[$history_key] = 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100);
+                    if($history_key > $currentIndex){
+                        unset($history[$history_key]);
                     }
+                }
+                unset($history[0]);
 
-                    $biddingHistory = [
+                $biddingHistory = [
                         'startBidding' => date("Y/m/d H:i:s",$targets_start),
                         'endBidding' =>  date("Y/m/d H:i:s",$targets_end),
                         'currenIndex' => $currentIndex,
