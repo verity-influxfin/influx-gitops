@@ -3,6 +3,22 @@
     <div class="header">
       <p class="date">{{ date }}</p>
       <h4 class="title">普匯官網後台系統</h4>
+      <div　class="count">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">交易筆數：</span>
+          </div>
+          <input type="text" class="form-control" v-model="transactionCount" />
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">會員數：</span>
+          </div>
+          <input type="text" class="form-control"  v-model="memberCount" />
+        </div>
+
+        <button class="btn btn-warning btn-sm" @click="updateCount">更新</button>
+      </div>
     </div>
     <div class="content">
       <router-link class="center-high left" to="milestone" v-if="userData.identity == 1"
@@ -59,6 +75,9 @@
 export default {
   data: () => ({
     date: "",
+    countID:"",
+    memberCount:"",
+    transactionCount:"",
     userData:
       sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {},
   }),
@@ -68,12 +87,28 @@ export default {
     }, 1000);
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
   },
+  watch: {
+    memberCount(newdata) {
+      this.memberCount = newdata.replace(/[^\d]/g, "");
+    },
+    transactionCount(newdata) {
+      this.transactionCount = newdata.replace(/[^\d]/g, "");
+    },
+  },
   mounted() {
     this.$nextTick(() => {
       this.checkNewMessage();
+      this.getCount();
     });
   },
   methods: {
+    async getCount(){
+      let res = await axios.get("bakGetCount");
+
+      this.memberCount = res.data[0].memberCount;
+      this.transactionCount = res.data[0].transactionCount;
+      this.countID =  res.data[0].ID;
+    },
     dateToString(milliseconds) {
       let dateObj = new Date(milliseconds);
 
@@ -100,6 +135,22 @@ export default {
         $(".notice-feedback").addClass("notice-show");
       }
     },
+    updateCount(){
+      axios
+        .post("bakUpdateCount", {
+            ID: this.countID,
+            memberCount: this.memberCount,
+            transactionCount: this.transactionCount,
+        })
+        .then(res => {
+          alert('更新成功');
+        })
+        .catch(error => {
+          alert(
+            `發生錯誤，請稍後再試`
+          );
+        });
+    }
   },
   beforeDestroy() {
     if (this.timer) {
@@ -122,7 +173,6 @@ export default {
     overflow: auto;
     text-align: center;
     padding: 10px;
-    margin: 20px 0px;
     color: #ffffff;
 
     .date {
@@ -132,6 +182,24 @@ export default {
 
     .title {
       font-size: 41px;
+    }
+
+    .count{
+      width: 240px;
+      margin: 1rem auto;
+
+      .input-group-text{
+        text-align: end;
+        width: 106px;
+        font-weight: 800;
+        background: #a9c8ff;
+        border: 0;
+        display: block;
+      }
+
+      .btn{
+        font-weight: bolder;
+      }
     }
   }
 
