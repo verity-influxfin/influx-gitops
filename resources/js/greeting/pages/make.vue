@@ -67,7 +67,7 @@
       </div>
 
       <button class="btn btn-greeting" @click="share">分享賀卡</button>
-      <input type="text" class="hide" contenteditable="true" ref="hide" />
+      <div class="hide" ref="hide">{{ copyUrl }}</div>
     </div>
 
     <div
@@ -97,6 +97,7 @@ export default {
   },
   data: () => ({
     isLoading: false,
+    copyUrl: "",
     selectedImg: "avatar1.svg",
     greetingWord: "",
     authorName: "",
@@ -176,10 +177,16 @@ export default {
           }
         )
         .then((res) => {
-          $(this.$refs.hide).val(res.data.short_url).focus().select();
+          this.copyUrl = res.data.short_url;
 
           this.$nextTick(() => {
-            document.execCommand("Copy");
+            let el = document.querySelector(".hide");
+            let range = document.createRange();
+            range.selectNodeContents(el);
+            let sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            document.execCommand("copy");
             $(this.$refs.messageModal).modal("show");
           });
         })
