@@ -140,7 +140,7 @@ class Backendcontroller extends BaseController
 
     public function getKnowledge(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('post_date', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('order', 'desc')->orderBy('post_date', 'desc')->get();
 
         foreach ($knowledge as $index => $value) {
             if (!$value->category) {

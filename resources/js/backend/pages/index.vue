@@ -221,11 +221,10 @@ export default {
         background: #d37e00;
       }
     }
+  
+    $bgcolor: #3198f4,#2f91ed,#2d8ae6,#2a83df,#287cd8,#2675d1,#236fca,#2068c3,#1d61bc,#1a5bb5,#1754af,#134ea8,#0f48a1,#0a419b,#053b94;
 
-    $bgcolor: #3198f4, #2c8dea, #2783df, #2279d4, #1d6fc9, #1964bf, #145ab4, #0f50a9,
-      #0a469e, #053b94;
-
-    @for $i from 1 through 10 {
+    @for $i from 1 through 15 {
       a:nth-child(#{$i}) {
         background: nth($bgcolor, $i);
       }
