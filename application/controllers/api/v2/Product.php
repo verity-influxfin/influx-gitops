@@ -1262,7 +1262,7 @@ class Product extends REST_Controller {
                         unset($history[$history_key]);
                     }
                 }
-                unset($history[0]);
+                if(count($history) > 1) unset($history[0]);
 
                 $biddingHistory = [
                         'startBidding' => date("Y/m/d H:i:s",$targets_start),
