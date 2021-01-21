@@ -152,6 +152,33 @@
         </div>
       </div>
     </div>
+    <div
+      class="success-modal modal fade"
+      ref="successModal"
+      role="dialog"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+      data-backdrop="static"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">✕</button>
+            <div class="login-logo">
+              <img src="/images/logo_puhey.svg" class="img-fluid" />
+            </div>
+          </div>
+          <div class="modal-body">
+            <a
+              class="link"
+              target="_blank"
+              :href="`https://dev-app-borrow.influxfin.com/?ofl=https://play.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.influxfin.borrow&link=https://dev-app-borrow.influxfin.com%3Fpromote_code%3D${promo}&apn=com.influxfin.borrow&isi=1463581445&ibi=com.influxfin.borrow&utm_source=partner&utm_medium=promoter&utm_campaign=${promo}&ct=${promo}&pt=119664586&mt=8`"
+              >恭喜註冊完成！<br />馬上來去下載APP 普匯inFlux！</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -266,7 +293,7 @@ export default {
           })
           .then((res) => {
             clearInterval(this.timer);
-            alert("恭喜你，註冊成功！");
+            $(this.$refs.successModal).modal("show");
           })
           .catch((error) => {
             let errorsData = error.response.data;
@@ -593,6 +620,30 @@ export default {
     }
   }
 
+  .success-modal {
+    .modal-dialog {
+      top: 35%;
+    }
+    
+    .login-logo {
+      margin: 0px auto;
+    }
+
+    .close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .link {
+      font-weight: 700;
+      color: #1000ff;
+      text-align: center;
+      display: block;
+      text-decoration: underline;
+    }
+  }
+
   @media screen and (max-width: 767px) {
     .header {
       width: 100%;
@@ -721,6 +772,7 @@ export default {
     }
   }
 }
+
 @keyframes god {
   0%,
   100% {
