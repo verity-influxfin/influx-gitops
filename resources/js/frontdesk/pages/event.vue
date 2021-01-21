@@ -23,8 +23,8 @@
         </div>
       </div>
 
-      <div class="sub-title">每20位大學生就有1人手用過普匯</div>
-      <div class="sub-title">每天持續有15筆案件媒合成功</div>
+      <div class="sub-title">每<span>20</span>位大學生就有1人手用過普匯</div>
+      <div class="sub-title">每天持續有<span>15</span>筆案件媒合成功</div>
 
       <div class="pu-img"><img class="img-fluid" src="/images/pu.png" /></div>
     </div>
@@ -268,7 +268,7 @@ export default {
           })
           .then((res) => {
             clearInterval(this.timer);
-            alert('恭喜你，註冊成功！');
+            alert("恭喜你，註冊成功！");
           })
           .catch((error) => {
             let errorsData = error.response.data;
@@ -373,6 +373,10 @@ export default {
       color: #153a71;
       margin: 20px 0px;
       width: 600px;
+
+      span {
+        color: #fea500;
+      }
     }
   }
 
