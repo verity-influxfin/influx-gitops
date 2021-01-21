@@ -23,8 +23,8 @@
         </div>
       </div>
 
-      <div class="sub-title">每x位大學生就有1人手用過普匯</div>
-      <div class="sub-title">每天持續有x筆案件媒合成功</div>
+      <div class="sub-title">每20位大學生就有1人手用過普匯</div>
+      <div class="sub-title">每天持續有15筆案件媒合成功</div>
 
       <div class="pu-img"><img class="img-fluid" src="/images/pu.png" /></div>
     </div>

@@ -1,7 +1,15 @@
+html {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
 body {
     cursor: default;
     font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica, sans-serif;
-    height: 100vh;
+    position: relative;
+    margin: 0;
 }
 
 a {
