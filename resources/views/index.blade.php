@@ -14,7 +14,8 @@
     <meta name="description" content="普匯．你的手機ATM 幫助年輕人完成夢想 協助打造溫暖家庭小窩 解決社會大眾生活急需">
     <meta name="site_name" content="inFlux普匯金融科技">
     <meta name="title" content="inFlux普匯金融科技">
-    <meta name="image" content="{{ asset('images/logo.png') }}">
+    <meta name="google-site-verification" content="2arsm3rXMMsobi4wX5akzPpQO6-Q6zgUjqwIT0P9UKo" />
+    <meta name="image" content="{{ asset('images/site_icon.png') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="fb:app_id" content="2194926914163491">
     <title>inFlux普匯金融科技</title>

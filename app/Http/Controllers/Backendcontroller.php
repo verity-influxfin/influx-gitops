@@ -103,6 +103,27 @@ class Backendcontroller extends BaseController
         return response()->json('sucess');
     }
 
+    public function getCount()
+    {
+        $count = DB::table('count')->select('*')->get();
+
+        return response()->json($count, 200);
+    }
+
+    public function updateCount(Request $request)
+    {
+        $this->inputs = $request->all();
+
+        try {
+            $exception = DB::transaction(function () {
+                DB::table('count')->where('ID', $this->inputs['ID'])->update(['memberCount' => $this->inputs['memberCount'], "transactionCount" => $this->inputs['transactionCount']]);
+            }, 5);
+            return response()->json($exception, is_null($exception) ? 200 : 400);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+    }
+
     public function checkCooperation(Request $request)
     {
         $cooperation = DB::table('cooperation')->select('*')->where('isRead', '=', '0')->get();
@@ -119,7 +140,7 @@ class Backendcontroller extends BaseController
 
     public function getKnowledge(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('post_date', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*')->where('type', '=', 'article')->orderBy('order', 'desc')->orderBy('post_date', 'desc')->get();
 
         foreach ($knowledge as $index => $value) {
             if (!$value->category) {
@@ -253,7 +274,6 @@ class Backendcontroller extends BaseController
 
     public function modifyPhoneData(Request $request)
     {
-
         $this->inputs = $request->all();
 
         try {

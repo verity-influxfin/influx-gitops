@@ -29,6 +29,7 @@ import myLoan from '../pages/myLoan';
 import notification from '../pages/notification';
 import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
+import event from '../pages/event';
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -70,6 +71,7 @@ let routers = [
     { path: '/firmcooperation', component: firmCooperation },
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
+    { path: '/event', component: event },
 ];
 
 export default routers;

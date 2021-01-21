@@ -20,7 +20,7 @@
           讓你盡情發揮實力<br />
           完成屬於自己的校園專案<br /><br />
           如果你對FinTech有興趣<br />
-          如果你苦無展大身手的舞台<br />
+          如果你苦無大展身手的舞台<br />
           如果你想擁有更有意義的大學生活<br />
           Join Us！
         </p>
@@ -163,6 +163,7 @@ export default {
       autoplay: window.innerWidth > 767 ? false : true,
       perPage: 3,
       arrows: window.innerWidth > 767 ? false : true,
+      drag: window.innerWidth > 767 ? true : false,
       pagination: false,
       breakpoints: {
         767: { perPage: 1 },
@@ -173,6 +174,7 @@ export default {
       autoplay: window.innerWidth > 767 ? false : true,
       perPage: 4,
       arrows: window.innerWidth > 767 ? false : true,
+      drag: window.innerWidth > 767 ? true : false,
       pagination: false,
       gap: "5rem",
       breakpoints: {

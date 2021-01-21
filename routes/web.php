@@ -23,6 +23,8 @@ Route::post('/getListData', 'Controller@getListData');
 
 Route::post('/getIndexBanner', 'Controller@getIndexBanner');
 
+Route::get('/getCount', 'Controller@getCount');
+
 Route::post('/getExperiencesData', 'Controller@getExperiencesData');
 
 Route::post('/getFeedbackImg', 'Controller@getFeedbackImg');
@@ -61,9 +63,9 @@ Route::post('/getVideoPage', 'Controller@getVideoPage');
 
 Route::post('/action', 'Controller@action');
 
+Route::post('/sendFeedback', 'Controller@sendFeedback');
 
 //Account
-
 
 Route::post('/getTerms', 'Accountcontroller@getTerms');
 
@@ -120,6 +122,10 @@ Route::get('/web-admin', function () {
 Route::post('/baklogin', 'Backendcontroller@login');
 
 Route::post('/baklogout', 'Backendcontroller@logout');
+
+Route::get('/bakGetCount', 'Backendcontroller@getCount');
+
+Route::post('/bakUpdateCount', 'Backendcontroller@updateCount');
 
 Route::get('/checkCooperation', 'Backendcontroller@checkCooperation');
 
@@ -215,17 +221,17 @@ Route::get('/getMemberFile', function (Request $request) {
 
 Route::get('/bakDownloadTypeFile', 'Backendcontroller@downloadTypeFile');
 
-Route::post('bakGetFeedbackImg','Backendcontroller@getFeedbackImg');
+Route::post('/bakGetFeedbackImg', 'Backendcontroller@getFeedbackImg');
 
-Route::post('bakUploadFeedbackImg','Backendcontroller@uploadFeedbackImg');
+Route::post('/bakUploadFeedbackImg', 'Backendcontroller@uploadFeedbackImg');
 
-Route::post('bakModifyFeedbackImgData','Backendcontroller@modifyFeedbackImgData');
+Route::post('/bakModifyFeedbackImgData', 'Backendcontroller@modifyFeedbackImgData');
 
-Route::post('bakUpdateImgOrder','Backendcontroller@updateImgOrder');
+Route::post('/bakUpdateImgOrder', 'Backendcontroller@updateImgOrder');
 
-Route::post('bakDeleteFeedbackImg','Backendcontroller@deleteFeedbackImg');
+Route::post('/bakDeleteFeedbackImg', 'Backendcontroller@deleteFeedbackImg');
 
-Route::post('/sendFeedback', 'Controller@sendFeedback');
+// campusJoin
 
 Route::get('/campusJoin', function () {
     return view('campusJoin');
@@ -241,8 +247,37 @@ Route::post('/eventGetNum', 'Eventcontroller@getNum');
 
 Route::post('/eventRegister', 'Eventcontroller@register');
 
+//greeting
+
+Route::get('/greeting', function () {
+    return view('greeting');
+});
+
+Route::post('/uploadGreetingAuthorImg', 'Greetingcontroller@uploadGreetingAuthorImg');
+
+Route::view('/greeting/{path?}', 'greeting');
+
 // verify mail
 
 Route::get('/verifyemail', 'Backendcontroller@verifyemail');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Route::view('/{path?}', 'index');

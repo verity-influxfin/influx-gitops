@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="31" viewBox="0 0 28 31">
+    <defs>
+        <linearGradient id="wci2rf3baa" x1="50%" x2="50%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="#FFE54F"/>
+            <stop offset="100%" stop-color="#FFC727"/>
+        </linearGradient>
+        <filter id="m6ndxftt0b" width="110.9%" height="204.3%" x="-5.5%" y="-52.2%" filterUnits="objectBoundingBox">
+            <feOffset dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g fill="url(#wci2rf3baa)" transform="translate(-74 -149)">
+            <g filter="url(#m6ndxftt0b)" transform="translate(78 151)">
+                <path d="M15.38 22.066c2.033 1.205 4.62-.241 4.62-2.582V3.016C20 .676 17.413-.77 15.38.434L1.481 8.667c-1.975 1.17-1.975 3.996 0 5.166l13.899 8.233z"/>
+            </g>
+        </g>
+    </g>
+</svg>

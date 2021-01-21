@@ -39,6 +39,14 @@ class Controller extends BaseController
 
         return response()->json($banner, 200);
     }
+    
+    public function getCount()
+    {
+        $count = DB::table('count')->select('*')->get();
+
+        return response()->json($count, 200);
+    }
+
 
     public function getKnowledgeData(Request $request)
     {

@@ -489,7 +489,9 @@ export default {
     },
     csKey: 0,
     pmt: 0,
+    member: 0,
     tweenedMember: 0,
+    transaction: 0,
     tweenedtransaction: 0,
     bannerData: [],
     milestone: [],
@@ -622,6 +624,7 @@ export default {
     this.getServiceData();
     this.getMilestoneData();
     this.getIndexBanner();
+    this.getCount();
     $("title").text(`首頁 - inFlux普匯金融科技`);
   },
   mounted() {
@@ -661,8 +664,11 @@ export default {
         this.tweenedMember === 0 &&
         this.tweenedtransaction === 0
       ) {
-        gsap.to(this.$data, { duration: 1, tweenedMember: 57651 });
-        gsap.to(this.$data, { duration: 1, tweenedtransaction: 38277 });
+        gsap.to(this.$data, { duration: 1, tweenedMember: this.member });
+        gsap.to(this.$data, {
+          duration: 1,
+          tweenedtransaction: this.transaction,
+        });
       }
 
       let gap2 = window.innerWidth > 767 ? 1000 : 750;
@@ -696,6 +702,12 @@ export default {
     async getBannerPic() {
       let res = await axios.get(`${location.origin}/getBannerPic`);
       this.bannerPic = res.data;
+    },
+    async getCount() {
+      let res = await axios.get("getCount");
+
+      this.member = res.data[0].memberCount;
+      this.transaction = res.data[0].transactionCount;
     },
     getServiceData() {
       axios.post(`${location.origin}/getServiceData`).then((res) => {
@@ -1164,6 +1176,10 @@ export default {
           position: absolute;
           top: 0;
           left: 0;
+
+          .splide__track {
+            border-radius: 28px;
+          }
 
           .c-e {
             overflow: hidden;
