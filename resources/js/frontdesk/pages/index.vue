@@ -1177,6 +1177,10 @@ export default {
           top: 0;
           left: 0;
 
+          .splide__track {
+            border-radius: 28px;
+          }
+
           .c-e {
             overflow: hidden;
             border-radius: 28px;

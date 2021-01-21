@@ -20,7 +20,7 @@
 	.st13{fill:#F4A116;opacity: 0;animation: flash 6s infinite;}
 	.st14{fill:#FFFFFF;}
 	.st15{font-family:'NotoSansTC-Regular-90ms-RKSJ-H';}
-	.st16{font-size:26px;}
+	.st16{font-size:32px;}
 	.st17{letter-spacing:1;}
 
 	.one{
@@ -258,11 +258,11 @@
 <ellipse id="椭圆_23" transform="matrix(0.017 -0.9999 0.9999 0.017 1116.5106 1405.2467)" class="st13 three" cx="1272.92" cy="134.8" rx="83.5" ry="139.4"/>
 <circle id="椭圆_22" class="st13 two" cx="1151.58" cy="220.75" r="20"/>
 <circle id="椭圆_21" class="st13 one" cx="1164.08" cy="259.25" r="9.5"/>
-<text transform="matrix(1 0 0 1 410.5821 105.7535)" class="st14 st15 st16 st17">學貸房租接著來</text>
-<text transform="matrix(1 0 0 1 1232.2822 126.7535)" class="st14 st15 st16 st17">沒問題</text>
-<text transform="matrix(1 0 0 1 1177.682 164.7535)" class="st14 st15 st16 st17">交給普匯！！！</text>
-<text transform="matrix(1 0 0 1 710.582 228.7535)" class="st14 st15 st16 st17">想換新機下不了手</text>
-<text transform="matrix(1 0 0 1 37.582 230.7535)" class="st14 st15 st16 st17">好想嘗試小額投資</text>
+<text transform="matrix(1 0 0 1 395.5821 105.7535)" class="st14 st15 st16 st17">學貸房租接著來</text>
+<text transform="matrix(1 0 0 1 690.582 228.7535)" class="st14 st15 st16 st17">想換新機下不了手</text>
+<text transform="matrix(1 0 0 1 37.582 230.7535)" class="st14 st15 st16 st17">想嘗試小額投資</text>
+<text transform="matrix(1 0 0 1 1225.2822 126.7535)" class="st14 st15 st16 st17">沒問題</text>
+<text transform="matrix(1 0 0 1 1160.682 164.7535)" class="st14 st15 st16 st17">交給普匯！！！</text>
 <g>
 	<defs>
 		<rect id="SVGID_9_" x="882.63" y="228.75" width="488.88" height="376.71"/>
