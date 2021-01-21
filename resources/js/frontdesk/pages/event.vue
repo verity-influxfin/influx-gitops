@@ -23,7 +23,7 @@
         </div>
       </div>
 
-      <div class="sub-title">每<span>20</span>位大學生就有1人手用過普匯</div>
+      <div class="sub-title">每<span>20</span>位大學生就有1人用過普匯</div>
       <div class="sub-title">每天持續有<span>15</span>筆案件媒合成功</div>
 
       <div class="pu-img"><img class="img-fluid" src="/images/pu.png" /></div>
@@ -56,7 +56,7 @@
 
         <div class="input-group">
           <div class="input-group-prepend">
-            <span class="input-group-text">登入帳號</span>
+            <span class="input-group-text">註冊帳號</span>
           </div>
           <input
             type="text"
@@ -84,20 +84,18 @@
           </button>
           <template v-if="isSended">
             <div class="tip">驗證碼已寄出</div>
-            <div class="btn btn-disable hide" style="margin-left: 10px">
-              {{ counter }}S有效
-            </div>
+            <div class="hide">{{ counter }}S有效</div>
           </template>
         </div>
 
         <div class="input-group">
           <div class="input-group-prepend">
-            <span class="input-group-text">登入密碼</span>
+            <span class="input-group-text">註冊密碼</span>
           </div>
           <input
             type="password"
             class="form-control"
-            placeholder="請設置登入密碼"
+            placeholder="請設置註冊密碼"
             v-model="password"
           />
         </div>
@@ -109,7 +107,7 @@
           <input
             type="password"
             class="form-control"
-            placeholder="再次輸入登入密碼"
+            placeholder="再次輸入註冊密碼"
             v-model="confirmPassword"
           />
         </div>
@@ -555,6 +553,14 @@ export default {
         padding: 0px 10px;
         color: #9c9c9c;
         background: aliceblue;
+      }
+
+      .hide {
+        display: block;
+        width: 75px;
+        text-align: start;
+        margin: 5px 0px 0px 97px;
+        color: #ff7171;
       }
 
       .message {

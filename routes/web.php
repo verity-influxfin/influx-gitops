@@ -257,8 +257,27 @@ Route::post('/uploadGreetingAuthorImg', 'Greetingcontroller@uploadGreetingAuthor
 
 Route::view('/greeting/{path?}', 'greeting');
 
-Route::view('/{path?}', 'index');
-
 // verify mail
 
 Route::get('/verifyemail', 'Backendcontroller@verifyemail');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Route::view('/{path?}', 'index');
