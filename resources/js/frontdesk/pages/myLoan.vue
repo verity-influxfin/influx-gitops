@@ -6,10 +6,7 @@
         <div style="width: max-content; overflow: hidden">
           <router-link class="menu-item" to="loannotification">
             <div class="img">
-              <img
-                src="../asset/images/icon_notification.svg"
-                class="img-fluid"
-              />
+              <img src="../asset/images/icon_notification.svg" class="img-fluid" />
               <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
             </div>
             <p>通知</p>
@@ -180,7 +177,12 @@ export default {
           this.repaymentDate = res.data.data.next_repayment.date;
         })
         .catch((error) => {
-          console.error("getMyRepayment 發生錯誤，請稍後再試");
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.error("getMyRepayment 發生錯誤，請稍後再試");
+          }
         });
     },
   },

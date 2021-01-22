@@ -35,11 +35,7 @@
             <i class="fas fa-angle-down rotate-icon"></i>
           </span>
         </div>
-        <div
-          :id="`collapse${key}`"
-          class="collapse"
-          data-parent="#accordionExample"
-        >
+        <div :id="`collapse${key}`" class="collapse" data-parent="#accordionExample">
           <div class="c-body">
             <template v-for="(item, index) in groupBy(recoveriesData[product])">
               <div
@@ -121,15 +117,17 @@ export default {
       axios
         .post("getRecoveriesList")
         .then((res) => {
-          this.recoveriesData = res.data.data.list.groupBy(
-            "target",
-            "product_name"
-          );
+          this.recoveriesData = res.data.data.list.groupBy("target", "product_name");
 
           this.groupList = Object.keys(this.recoveriesData);
         })
         .catch((error) => {
-          console.log("getRecoveriesList 發生錯誤，請稍後再試");
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.log("getRecoveriesList 發生錯誤，請稍後再試");
+          }
         });
     },
     getTotal(data) {
@@ -146,8 +144,7 @@ export default {
 
       data.forEach((row, index) => {
         total +=
-          row.accounts_receivable.delay_interest +
-          row.accounts_receivable.interest;
+          row.accounts_receivable.delay_interest + row.accounts_receivable.interest;
       });
 
       return this.format(total);
@@ -187,7 +184,12 @@ export default {
           $(this.$refs.investDeatil.$refs.detailModal).modal("show");
         })
         .catch((error) => {
-          console.log("getRecoveriesInfo 發生錯誤，請稍後再試");
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.log("getRecoveriesInfo 發生錯誤，請稍後再試");
+          }
         });
     },
   },

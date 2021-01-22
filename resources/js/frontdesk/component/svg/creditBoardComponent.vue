@@ -3516,16 +3516,16 @@ export default {
       this.$refs.ccrata.addEventListener("touchend", this.handleTouchtouchend, false);
     },
     handleTouchStart(event) {
-      $("html").css("overflow", "hidden");
+      $("body").css("overflow", "hidden");
       this.moveEl = event.target;
       this.target = $(event.target).attr("id");
     },
     handleTouchMove(event) {
-      $("html").css("overflow", "hidden");
+      $("body").css("overflow", "hidden");
       this.moving(event.touches[0]);
     },
     handleTouchtouchend() {
-      $("html").css("overflow", "initial");
+      $("body").css("overflow", "initial");
       this.moveEl = "";
       this.target = "";
     },

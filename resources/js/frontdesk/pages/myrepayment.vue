@@ -8,11 +8,7 @@
         >
       </div>
       <template v-else>
-        <div
-          class="info-card"
-          v-for="(item, index) in installment"
-          :key="index"
-        >
+        <div class="info-card" v-for="(item, index) in installment" :key="index">
           <div class="title">
             {{ item.product_name }}
             <br />
@@ -33,9 +29,7 @@
               :isRound="true"
             ></circle-progress>
             <div class="period">
-              {{ item.next_repayment.instalment }}&nbsp;/&nbsp;{{
-                item.instalment
-              }}
+              {{ item.next_repayment.instalment }}&nbsp;/&nbsp;{{ item.instalment }}
             </div>
           </div>
           <div class="payment">
@@ -44,10 +38,7 @@
               <div class="pd-m">本期還款日期</div>
             </div>
             <div class="p-d">
-              <div
-                class="pd-l"
-                :style="{ color: item.delay_days > 0 ? 'red' : '' }"
-              >
+              <div class="pd-l" :style="{ color: item.delay_days > 0 ? 'red' : '' }">
                 ${{ format(item.next_repayment.amount) }}元
               </div>
               <div class="pd-m">本期還款金額</div>
@@ -111,9 +102,7 @@
                 <div class="card-item">
                   <label>當期還款日</label>
                   <br />
-                  <span class="delay">{{
-                    detailData.next_repayment.date
-                  }}</span>
+                  <span class="delay">{{ detailData.next_repayment.date }}</span>
                 </div>
                 <div class="card-item">
                   <label>逾期日數</label>
@@ -149,10 +138,7 @@
                   }}</span>
                 </div>
               </div>
-              <div
-                class="delay-row"
-                v-if="detailData.targetDatas.virtual_account"
-              >
+              <div class="delay-row" v-if="detailData.targetDatas.virtual_account">
                 <div class="card-item">
                   <label>案件還款行</label>
                   <br />
@@ -166,18 +152,13 @@
                   <label>案件還款分行</label>
                   <br />
                   <span
-                    >({{
-                      detailData.targetDatas.virtual_account.branch_code
-                    }}){{
+                    >({{ detailData.targetDatas.virtual_account.branch_code }}){{
                       detailData.targetDatas.virtual_account.branch_name
                     }}</span
                   >
                 </div>
               </div>
-              <div
-                class="delay-row"
-                v-if="detailData.targetDatas.virtual_account"
-              >
+              <div class="delay-row" v-if="detailData.targetDatas.virtual_account">
                 <div class="card-item">
                   <label>案件還款帳號</label>
                   <span>{{
@@ -224,12 +205,8 @@
             </div>
           </div>
           <div class="modal-footer" style="display: block">
-            <button class="btn btn-info float-left" @click="open">
-              查看還款明細
-            </button>
-            <button class="btn btn-primary float-right" data-dismiss="modal">
-              確認
-            </button>
+            <button class="btn btn-info float-left" @click="open">查看還款明細</button>
+            <button class="btn btn-primary float-right" data-dismiss="modal">確認</button>
           </div>
         </div>
       </div>
@@ -258,28 +235,20 @@
               >
                 <div class="row1">
                   <p>{{ item.repayment_date }}</p>
-                  <span
-                    >第{{ item.instalment }}/{{ detailData.instalment }}期</span
-                  >
+                  <span>第{{ item.instalment }}/{{ detailData.instalment }}期</span>
                 </div>
                 <div class="row2">
                   <p style="color: orange">${{ format(item.total_payment) }}</p>
                   <span v-if="isDelay">逾期清償</span>
                   <span v-else>
                     含利息
-                    <span style="color: lightblue"
-                      >${{ format(item.interest) }}</span
-                    >
+                    <span style="color: lightblue">${{ format(item.interest) }}</span>
                   </span>
                 </div>
                 <div
                   class="row3"
                   v-html="
-                    ckeckStatus(
-                      item.repayment,
-                      item.delay_interest,
-                      item.total_payment
-                    )
+                    ckeckStatus(item.repayment, item.delay_interest, item.total_payment)
                   "
                 ></div>
               </div>
@@ -328,9 +297,7 @@ export default {
   computed: {
     repaymentNumber() {
       let l10nEN = new Intl.NumberFormat("en-US");
-      return l10nEN.format(
-        this.$parent.myRepayment.next_repayment.amount.toFixed(0)
-      );
+      return l10nEN.format(this.$parent.myRepayment.next_repayment.amount.toFixed(0));
     },
     installment() {
       return this.$store.getters.ApplyList.installment;
@@ -402,7 +369,12 @@ export default {
             this.showDetail(res.data.data);
           })
           .catch((error) => {
-            console.log("getDetail 發生錯誤，請稍後在試");
+            if (error.response.data.error === 100) {
+              alert("連線逾時，請重新登入");
+              this.$root.logout();
+            } else {
+              console.log("getDetail 發生錯誤，請稍後在試");
+            }
           });
       }
     },
@@ -580,7 +552,12 @@ export default {
           $this.list = res.data.data.list;
         })
         .catch((error) => {
-          console.log("getTansactionDetails 發生錯誤，請稍後在試");
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.log("getTansactionDetails 發生錯誤，請稍後在試");
+          }
         });
     },
     downloadCSV(range) {

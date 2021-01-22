@@ -25,7 +25,7 @@
             </button>
           </div>
         </template>
-        <SplideSlide v-for="(num, index) in 8" :key="index">
+        <SplideSlide v-for="(num, index) in 9" :key="index">
           <div class="img">
             <img :src="`/images/avatar${num}.svg`" class="img-fluid" />
           </div>
@@ -35,34 +35,37 @@
         <img src="../asset/reel.svg" class="img-fluid" />
       </div>
       <div class="zone">
-        <textarea
-          class="form-control"
-          rows="8"
-          cols="10"
-          placeholder="輸入賀卡內容"
-          autocomplete="off"
-          v-model="greetingWord"
-        ></textarea>
-        <input
-          type="text"
-          class="form-control"
-          style="text-align: end"
-          placeholder="您是誰"
-          name="name"
-          autocomplete="off"
-          v-model="authorName"
-        />
-        <div class="img-box">
-          <div class="user-img">
-            <img
-              class="img-fluid"
-              v-if="authorImg"
-              :src="`/upload/greeting/${authorImg}`"
-            />
-            <input v-else type="file" @change="upload" />
-            <img class="img-fluid" v-if="isLoading" src="../asset/g_loading.svg" />
+        <img src="../asset/greeting_phone.svg" class="img-fluid g_phone" />
+        <div class="cnt">
+          <textarea
+            class="form-control"
+            rows="7"
+            cols="10"
+            maxlength="80"
+            placeholder="輸入賀卡內容"
+            autocomplete="off"
+            v-model="greetingWord"
+          ></textarea>
+          <input
+            type="text"
+            class="form-control"
+            style="text-align: end"
+            placeholder="您是誰"
+            name="name"
+            autocomplete="off"
+            v-model="authorName"
+          />
+          <div class="img-box">
+            <div class="user-img">
+              <img
+                class="img-fluid"
+                v-if="authorImg"
+                :src="`/upload/greeting/${authorImg}`"
+              />
+              <input v-else type="file" @change="upload" />
+              <img class="img-fluid" v-if="isLoading" src="../asset/g_loading.svg" />
+            </div>
           </div>
-          <img class="img-fluid img-border" src="../asset/border.svg" />
         </div>
       </div>
 
@@ -212,8 +215,7 @@ export default {
   }
 
   .make-card {
-    height: 100vh;
-    background-image: url("../asset/greet_bg.svg");
+    background-image: url("../asset/greet_bg.png");
     background-size: cover;
     background-position: center;
     position: relative;
@@ -233,7 +235,7 @@ export default {
 
     .avatar-box {
       width: 200px;
-      margin: -10px auto 0px auto;
+      margin: -20px auto -10px auto;
       height: 162px;
 
       .img {
@@ -266,6 +268,10 @@ export default {
       text-align: center;
       z-index: 1;
       position: relative;
+
+      img {
+        width: 257px;
+      }
     }
 
     .zone {
@@ -277,6 +283,7 @@ export default {
       margin: 0px auto;
       margin-top: -1px;
       padding: 7px 35px;
+      position: relative;
 
       .form-control {
         background: #ffffff00;
@@ -284,22 +291,37 @@ export default {
         margin: 5px auto;
       }
 
+      .g_phone {
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        transform: translate(-50%, 0px);
+        z-index: 0;
+      }
+
+      .cnt {
+        position: relative;
+        z-index: 1;
+        padding: 30px 5px 0px 5px;
+      }
+
       .img-box {
         background-image: url("../asset/back.svg");
         background-size: cover;
         background-position: center;
-        width: 162px;
-        height: 112px;
+        width: 153px;
+        height: 110px;
         margin: 0px auto;
         position: relative;
         text-align: center;
         overflow: hidden;
+        border-radius: 20px;
 
         .user-img {
-          width: 150px;
-          height: 100px;
+          width: 152px;
+          height: 108px;
           overflow: hidden;
-          margin: 7px;
+          margin: 1px;
           position: relative;
 
           img {
@@ -318,19 +340,11 @@ export default {
             overflow: hidden;
           }
         }
-
-        .img-border {
-          position: absolute;
-          z-index: 1;
-          top: 3px;
-          left: 3px;
-          pointer-events: none;
-        }
       }
     }
 
     .btn-greeting {
-      background-image: linear-gradient(to bottom, #e3322a, #a80015);
+      background-image: linear-gradient(to top, #002160, #1f55a0);
       border-radius: 20px;
       padding: 5px 13px;
       margin: 1rem auto;
