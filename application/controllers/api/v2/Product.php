@@ -1193,7 +1193,7 @@ class Product extends REST_Controller {
                 "status"		=> 3,
             ));
             $targets_start = $targetLog->created_at;
-            $currentIndex = strval(floor((time() - $targets_start) / 60 / 60));
+            $currentIndex = strval(floor((time() - $targets_start) / 60 / 60)) + 1;
 //                if(!$currentIndex > 90){
                 $x = strval(round(($targets_end - $targets_start) / 60 / 60));
                 $x_unit = '時';
@@ -1213,6 +1213,7 @@ class Product extends REST_Controller {
                     'status' => [1 ,8]
                 ]);
                 $bidInvest = [];
+                $thisHourBidding = 0;
                 if($investments){
                     foreach ($investments as $inv_key => $inv_val) {
                         $biddingAmount = 0;
@@ -1220,9 +1221,13 @@ class Product extends REST_Controller {
                             $cancel_inv[] = $inv_val->id;
                             $cancel_inv_amount[$inv_val->id] = $inv_val->amount;
                         }
-                        $at = floor((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60);
+                        $at = floor((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60) + 1;
                         $bidInvest[] = $inv_val->id;
                         $biddingAmount += $inv_val->amount;
+                        if($at == $currentIndex){
+                            $at++;
+                            $thisHourBidding++;
+                        }
                         !isset($history[$at]) ? $history[$at] = 0 : '';
                         $history[$at] += $biddingAmount;
                     }
@@ -1239,7 +1244,7 @@ class Product extends REST_Controller {
                         foreach ($cancel_inv_time as $cancel_inv_time_Key => $cancel_inv_time_val) {
                             //僅對應有圈存的investment
                             if(in_array($cancel_inv_time_val->investment_id,$bidInvest)){
-                                $at = floor(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60);
+                                $at = floor(($cancel_inv_time_val->created_at - $targets_start) / 60 / 60) + 1;
                                 !isset($dhistory[$at]) ? $dhistory[$at] = 0 : '';
                                 $dhistory[$at] += $cancel_inv_amount[$cancel_inv_time_val->investment_id];
                             }
@@ -1258,7 +1263,7 @@ class Product extends REST_Controller {
                 //轉換單位、排除未來期數
                 foreach ($history as $history_key => $history_val) {
                     $history[$history_key] = 100 - round(($target->loan_amount - $history_val) / $target->loan_amount * 100);
-                    if($history_key > $currentIndex){
+                    if($history_key > $currentIndex + $thisHourBidding){
                         unset($history[$history_key]);
                     }
                 }
