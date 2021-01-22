@@ -70,19 +70,31 @@ export default {
       $($event.target).css("width", "50px");
       this.isPlay = true;
       this.$nextTick(() => {
-        $(".make-video").get(0).play();
+        let video = $(".make-video")[0];
+        let total = video.duration;
+        let isCardShowed = false;
+        let isZoneShowed = false;
+        let isBtnShowed = false;
+        video.play();
 
-        setTimeout(() => {
-          $(this.$refs.greetingcard).css("opacity", 1);
-        }, 13000);
+        let t = setInterval(() => {
+          if (video.currentTime < total) {
+            if (video.currentTime > 13 && !isCardShowed) {
+              $(this.$refs.greetingcard).css("opacity", 1);
+              isCardShowed = true;
+            }
 
-        setTimeout(() => {
-          $(this.$refs.zone).css("height", "435px");
-        }, 14000);
+            if (video.currentTime > 14 && !isZoneShowed) {
+              $(this.$refs.zone).css("height", "435px");
+              isZoneShowed = true;
+            }
 
-        setTimeout(() => {
-          $(this.$refs.btn).css("opacity", 1);
-        }, 19000);
+            if (video.currentTime > 18 && !isBtnShowed) {
+              $(this.$refs.btn).css("opacity", 1);
+              isBtnShowed = true;
+            }
+          }
+        }, 100);
       });
     },
   },
@@ -160,6 +172,7 @@ export default {
         text-align: center;
         z-index: 1;
         position: relative;
+        width: 250px;
       }
 
       .zone {
@@ -168,7 +181,7 @@ export default {
         background-position: center;
         width: 233px;
         height: 0px;
-        margin-top: -3px;
+        margin: -3px auto 0px auto;
         padding: 7px 35px;
         overflow: hidden;
         transition-duration: 2s;
@@ -251,23 +264,27 @@ export default {
 
     .top-left {
       @extend %position;
-      top: 0px;
-      left: 0px;
+      top: 3px;
+      left: 3px;
+      width: 79px;
     }
     .top-right {
       @extend %position;
-      top: 0px;
-      right: 0px;
+      top: 3px;
+      right: 3px;
+      width: 79px;
     }
     .bottom-left {
       @extend %position;
-      bottom: 0px;
-      left: 0px;
+      bottom: 3px;
+      left: 3px;
+      width: 79px;
     }
     .bottom-right {
       @extend %position;
-      bottom: 0px;
-      right: 0px;
+      bottom: 3px;
+      right: 3px;
+      width: 79px;
     }
   }
 
