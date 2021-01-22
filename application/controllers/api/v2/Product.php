@@ -1231,6 +1231,8 @@ class Product extends REST_Controller {
                         !isset($history[$at]) ? $history[$at] = 0 : '';
                         $history[$at] += $biddingAmount;
                     }
+                }else{
+                    $thisHourBidding--;
                 }
 
                 //取得棄標時間
