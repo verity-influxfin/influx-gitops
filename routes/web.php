@@ -262,6 +262,14 @@ Route::view('/greeting/{path?}', 'greeting');
 Route::get('/verifyemail', 'Backendcontroller@verifyemail');
 
 
+Route::get('/investLink', function () {
+    return view('invest');
+});
+
+Route::get('/borrowLink', function () {
+    return view('borrow');
+});
+
 
 
 

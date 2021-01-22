@@ -34,8 +34,7 @@ let notificationRow = Vue.extend({
 
       let date_item = {
         year: dateObj.getFullYear(),
-        month:
-          (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1),
+        month: (dateObj.getMonth() + 1 < 10 ? "0" : "") + (dateObj.getMonth() + 1),
         day: (dateObj.getDate() < 10 ? "0" : "") + dateObj.getDate(),
         hour: (dateObj.getHours() < 10 ? "0" : "") + dateObj.getHours(),
         min: (dateObj.getMinutes() < 10 ? "0" : "") + dateObj.getMinutes(),
@@ -94,7 +93,12 @@ export default {
           this.$parent.unreadCount = this.unreadCount;
         })
         .catch((error) => {
-          console.log("getNotification 發生錯誤，請稍後再試");
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.log("getNotification 發生錯誤，請稍後再試");
+          }
         });
     },
     pagination() {

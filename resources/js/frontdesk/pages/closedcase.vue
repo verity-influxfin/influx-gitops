@@ -147,15 +147,17 @@ export default {
       axios
         .post(`${location.origin}/getRecoveriesFinished`)
         .then((res) => {
-          this.finishedData = res.data.data.list.groupBy(
-            "target",
-            "product_id"
-          );
+          this.finishedData = res.data.data.list.groupBy("target", "product_id");
 
           this.groupList = Object.keys(this.finishedData);
         })
         .catch((error) => {
-          console.log("getRecoveriesFinished 發生錯誤，請稍後再試");
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.log("getRecoveriesFinished 發生錯誤，請稍後再試");
+          }
         });
     },
     getTotal(data) {

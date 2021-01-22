@@ -1,7 +1,9 @@
 <template>
   <div class="invest-detail-wrapper">
-    <div class="assets-card" v-if="Object.keys(invsetmentData).length !==0">
-      <div class="statistics-date">結算至{{invsetmentData.funds.last_recharge_date}}</div>
+    <div class="assets-card" v-if="Object.keys(invsetmentData).length !== 0">
+      <div class="statistics-date">
+        結算至{{ invsetmentData.funds.last_recharge_date }}
+      </div>
       <div class="assets">
         <div class="pieChart-container">
           <div class="pie-chart" ref="pie_chart"></div>
@@ -12,46 +14,66 @@
             <i class="far fa-question-circle" ref="income_tip" @click="showTip"></i>
             <span class="float-right">
               <span class="nmber">
-                {{format(invsetmentData.income.interest
-                +invsetmentData.income.delay_interest
-                +invsetmentData.income.other)}}
-              </span>$
+                {{
+                  format(
+                    invsetmentData.income.interest +
+                      invsetmentData.income.delay_interest +
+                      invsetmentData.income.other
+                  )
+                }} </span
+              >$
             </span>
           </div>
           <div class="table-col">
             可用餘額
             <span class="float-right">
-              <span class="nmber" style="color:#1E88E5">{{format(tweenedBalance)}}</span>$
+              <span class="nmber" style="color: #1e88e5">{{
+                format(tweenedBalance)
+              }}</span
+              >$
             </span>
           </div>
           <div class="table-col">
             待交易賬戶餘額
             <span class="float-right">
-              <span class="nmber" style="color:#616161">{{format(tweendeTotalFrozen)}}</span>$
+              <span class="nmber" style="color: #616161">{{
+                format(tweendeTotalFrozen)
+              }}</span
+              >$
             </span>
           </div>
           <div class="table-col">
             待回收本金
             <span class="float-right">
-              <span class="nmber" style="color:#FFC107">{{format(tweenedPrincipal)}}</span>$
+              <span class="nmber" style="color: #ffc107">{{
+                format(tweenedPrincipal)
+              }}</span
+              >$
             </span>
           </div>
           <div class="table-col">
             待回收利息
             <span class="float-right">
-              <span class="nmber" style="color:#F57C00">{{format(tweenedInterest)}}</span>$
+              <span class="nmber" style="color: #f57c00">{{
+                format(tweenedInterest)
+              }}</span
+              >$
             </span>
           </div>
           <div class="table-col">
             待回收延滯息
             <span class="float-right">
-              <span class="nmber" style="color:#F44336">{{format(tweenedDelayInterest)}}</span>$
+              <span class="nmber" style="color: #f44336">{{
+                format(tweenedDelayInterest)
+              }}</span
+              >$
             </span>
           </div>
           <div class="table-col">
             資產總額
             <span class="float-right">
-              <span class="nmber" style="color:#558B2F">{{format(tweenedTotal)}}</span>$
+              <span class="nmber" style="color: #558b2f">{{ format(tweenedTotal) }}</span
+              >$
             </span>
           </div>
         </div>
@@ -61,15 +83,17 @@
         <p>累計收益明細：</p>
         <div>
           利息：
-          <span class="float-right">{{format(invsetmentData.income.interest)}}元</span>
+          <span class="float-right">{{ format(invsetmentData.income.interest) }}元</span>
         </div>
         <div>
           延滯利息：
-          <span class="float-right">{{format(invsetmentData.income.delay_interest)}}元</span>
+          <span class="float-right"
+            >{{ format(invsetmentData.income.delay_interest) }}元</span
+          >
         </div>
         <div>
           其他：
-          <span class="float-right">{{format(invsetmentData.income.other)}}元</span>
+          <span class="float-right">{{ format(invsetmentData.income.other) }}元</span>
         </div>
       </div>
     </div>
@@ -134,9 +158,11 @@ export default {
     this.invsetmentData = this.$store.getters.InvestAccountData;
   },
   watch: {
-    invsetmentData() {
+    invsetmentData(newdata) {
       this.totalFrozen = 0;
-      this.createPieChart();
+      if (Object.keys(newdata).length !== 0) {
+        this.createPieChart();
+      }
     },
     balance(newValue) {
       gsap.to(this.$data, { duration: 1, tweenedBalance: newValue });
@@ -247,17 +273,22 @@ export default {
           this.list = res.data.data.list;
         })
         .catch((error) => {
-          console.log("getTansactionDetails 發生錯誤，請稍後在試");
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.log("getTansactionDetails 發生錯誤，請稍後在試");
+          }
         });
     },
-    downloadCSV(range){
+    downloadCSV(range) {
       let start = range.start.getTime();
       let end = range.end.getTime();
       $("#csvDownloadIframe").remove();
       $("body").append(
         `<iframe id="csvDownloadIframe" src="${location.origin}/downloadStatement?start=${start}&end=${end}&isInvest=1" style="display: none"></iframe>`
       );
-    }
+    },
   },
 };
 </script>

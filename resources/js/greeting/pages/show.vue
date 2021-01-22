@@ -1,26 +1,31 @@
 <template>
   <div class="show-wrapper">
-    <div class="cover" v-if="!isPlay" @click="play"></div>
-    <template v-else>
-      <video
-        class="make-video"
-        webkit-playsinline="true"
-        playsinline="true"
-        x-webkit-airplay="true"
-        x5-video-player-type="h5"
-        x5-video-player-fullscreen="true"
-        x5-video-ignore-metadata="true"
-        src="/upload/greeting/video.mp4"
-      ></video>
-      <div class="cnt" v-if="greetingData">
-        <div class="greeting-card" ref="greetingcard">
-          <div class="avatar-box">
-            <img :src="`/images/${greetingData.selectedImg}`" class="img-fluid" />
-          </div>
-          <div class="reel">
-            <img src="../asset/reel.svg" class="img-fluid" />
-          </div>
-          <div class="zone" ref="zone">
+    <transition name="fade">
+      <div class="cover" v-if="!isPlay">
+        <img src="../asset/play.svg" class="img-fluid play" @click="play($event)" />
+      </div>
+    </transition>
+    <video
+      class="make-video"
+      webkit-playsinline="true"
+      playsinline="true"
+      x-webkit-airplay="true"
+      x5-video-player-type="h5"
+      x5-video-player-fullscreen="true"
+      x5-video-ignore-metadata="true"
+      src="/upload/greeting/video.mp4"
+    ></video>
+    <div class="cnt" v-if="greetingData">
+      <div class="greeting-card" ref="greetingcard">
+        <div class="avatar-box">
+          <img :src="`/images/${greetingData.selectedImg}`" class="img-fluid" />
+        </div>
+        <div class="reel">
+          <img src="../asset/reel.svg" class="img-fluid" />
+        </div>
+        <div class="zone" ref="zone">
+          <img src="../asset/greeting_phone.svg" class="img-fluid g_phone" />
+          <div class="g-cnt">
             <div class="word form-control">
               &emsp;&emsp;{{ greetingData.greetingWord }}
             </div>
@@ -33,20 +38,19 @@
                   @error="greetingData.authorImg = 'default.svg'"
                 />
               </div>
-              <img class="img-fluid img-border" src="../asset/border.svg" />
             </div>
           </div>
         </div>
-
-        <a class="btn btn-greeting" ref="btn" href="/greeting/make" target="_blank"
-          >製做我的賀卡</a
-        >
-        <img src="../asset/border-top-left.svg" class="top-left img-fluid" />
-        <img src="../asset/border-top-right.svg" class="top-right img-fluid" />
-        <img src="../asset/border-bottom-left.svg" class="bottom-left img-fluid" />
-        <img src="../asset/border-bottom-right.svg" class="bottom-right img-fluid" />
       </div>
-    </template>
+
+      <a class="btn btn-greeting" ref="btn" href="/greeting/make" target="_blank"
+        >製做我的賀卡</a
+      >
+      <img src="../asset/border-top-left.svg" class="top-left img-fluid" />
+      <img src="../asset/border-top-right.svg" class="top-right img-fluid" />
+      <img src="../asset/border-bottom-left.svg" class="bottom-left img-fluid" />
+      <img src="../asset/border-bottom-right.svg" class="bottom-right img-fluid" />
+    </div>
   </div>
 </template>
 
@@ -62,7 +66,8 @@ export default {
     this.greetingData = JSON.parse(search);
   },
   methods: {
-    play() {
+    play($event) {
+      $($event.target).css("width", "50px");
       this.isPlay = true;
       this.$nextTick(() => {
         $(".make-video").get(0).play();
@@ -94,9 +99,29 @@ export default {
   }
 
   .cover {
+    @extend %position;
     width: 100%;
     height: 100vh;
-    background: #ffffff;
+    background: #0000008c;
+    z-index: 1;
+
+    .play {
+      width: 100px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition-duration: 1s;
+    }
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 1s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
 
   .cnt {
@@ -147,62 +172,70 @@ export default {
         padding: 7px 35px;
         overflow: hidden;
         transition-duration: 2s;
+        position: relative;
 
-        .form-control {
-          background: #ffffff00;
-          border: 0px;
-          margin: 5px auto;
-          font-weight: bold;
+        .g_phone {
+          position: absolute;
+          top: 15px;
+          left: 50%;
+          transform: translate(-50%, 0px);
+          z-index: 0;
         }
 
-        .word {
-          width: 163px;
-          height: 210px;
-          padding: 0px;
-        }
-        .name {
-          text-align: end;
-        }
-
-        .img-box {
-          background-image: url("../asset/back.svg");
-          background-size: cover;
-          background-position: center;
-          width: 162px;
-          height: 112px;
-          margin: 0px auto;
+        .g-cnt {
           position: relative;
-          text-align: center;
-          overflow: hidden;
+          z-index: 1;
+          padding: 30px 5px 0px 5px;
 
-          .user-img {
-            width: 150px;
-            height: 100px;
-            overflow: hidden;
-            margin: 7px;
-            position: relative;
-
-            img {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
+          .form-control {
+            background: #ffffff00;
+            border: 0px;
+            margin: 5px auto;
+            font-weight: bold;
           }
 
-          .img-border {
-            position: absolute;
-            z-index: 1;
-            top: 3px;
-            left: 3px;
-            pointer-events: none;
+          .word {
+            width: 163px;
+            height: 197px;
+            padding: 0px;
+          }
+          .name {
+            text-align: end;
+          }
+
+          .img-box {
+            background-image: url("../asset/back.svg");
+            background-size: cover;
+            background-position: center;
+            width: 153px;
+            height: 110px;
+            margin: 0px auto;
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+            border-radius: 20px;
+
+            .user-img {
+              width: 152px;
+              height: 108px;
+              overflow: hidden;
+              margin: 1px;
+              position: relative;
+
+              img {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
+            }
           }
         }
       }
     }
 
     .btn-greeting {
-      background-image: linear-gradient(to bottom, #e3322a, #a80015);
+      background-image: linear-gradient(to top, #002160, #1f55a0);
       border-radius: 20px;
       padding: 5px 13px;
       margin: 1rem auto;

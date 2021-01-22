@@ -1,14 +1,11 @@
 html {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    border: none;
+    height: 100vh;
 }
 
 body {
     cursor: default;
     font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica, sans-serif;
-    position: relative;
+    width: 100%;
 }
 
 a {
