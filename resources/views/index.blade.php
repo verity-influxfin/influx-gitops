@@ -67,7 +67,7 @@
                 <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>
             </div>
 
-            <a v-if="showGreeting" class="greeting" href="/greeting" target="_blank"><img src="/images/greetingLink.svg" class="img-fluid"></a>
+            <a v-if="showGreeting" class="greeting" href="/greeting" target="_blank"><img src="/images/greeting_link.svg" class="img-fluid"></a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>

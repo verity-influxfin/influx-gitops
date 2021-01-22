@@ -264,23 +264,27 @@ export default {
 
     .top-left {
       @extend %position;
-      top: 0px;
-      left: 0px;
+      top: 3px;
+      left: 3px;
+      width: 79px;
     }
     .top-right {
       @extend %position;
-      top: 0px;
-      right: 0px;
+      top: 3px;
+      right: 3px;
+      width: 79px;
     }
     .bottom-left {
       @extend %position;
-      bottom: 0px;
-      left: 0px;
+      bottom: 3px;
+      left: 3px;
+      width: 79px;
     }
     .bottom-right {
       @extend %position;
-      bottom: 0px;
-      right: 0px;
+      bottom: 3px;
+      right: 3px;
+      width: 79px;
     }
   }
 
