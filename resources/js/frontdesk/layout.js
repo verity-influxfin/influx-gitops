@@ -59,11 +59,10 @@ $(() => {
             menuList: [],
             actionList: [],
             isCompany: false,
-            isRememberAccount: $cookies.get('account') ? true : false,
             isReset: false,
             isSended: false,
-            isInvestor: sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")).investor : "0",
             altered: false,
+            isRememberAccount : $cookies.get('account') ? true : false,
             businessNum: '',
             account: '',
             password: '',
@@ -74,12 +73,31 @@ $(() => {
             message: '',
             pwdMessage: '',
             investor: '0',
-            flag: sessionStorage.length !== 0 ? sessionStorage.getItem("flag") : '',
-            userData: sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {},
             timer: null,
             counter: 180,
             loginTime: 0,
             currentTime: 0
+        },
+        computed: {
+            isInvestor() {
+                return sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")).investor : "0";
+            },
+            flag() {
+                return sessionStorage.length !== 0 ? sessionStorage.getItem("flag") : '';
+            },
+            userData() {
+                return sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {}
+            },
+            showGreeting() {
+                let now = new Date();
+                let startDate = new Date('2020-02-01 00:00:00');
+                let endDate = new Date('2020-02-17 00:00:00');
+                if (startDate <= now && now < endDate) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         },
         created() {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
@@ -92,10 +110,6 @@ $(() => {
             });
         },
         watch: {
-            '$store.state.userData'() {
-                this.flag = localStorage.getItem("flag");
-                this.userData = JSON.parse(localStorage.getItem("userData"));
-            },
             phone() {
                 this.phone = this.phone.replace(/[^\d]/g, '');
             },
@@ -297,7 +311,7 @@ $(() => {
     });
 
     Vue.use(Vue2TouchEvents)
-    
+
     $('.back-top').fadeOut();
     $(document).scroll(function () {
         AOS.refresh();
