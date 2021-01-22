@@ -7,7 +7,7 @@ class Brookesia_lib
 	{
 		$this->CI = &get_instance();
 		$brookesiaPort = '9453';
-		$this->brookesiaUrl = "https://" . getenv('GRACULA_DOMAIN') . ":{$brookesiaPort}/brookesia/api/v1.0/";
+		$this->brookesiaUrl = "https://" . getenv('GRACULA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
 	}
 
 	public function userCheckAllRules($userId)
