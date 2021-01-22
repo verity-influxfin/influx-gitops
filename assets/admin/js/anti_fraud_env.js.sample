@@ -1,4 +1,4 @@
 const ENV = {
-	apiUrl: 'https://{GRACULA_IP}:{BROOKESIA_PORT}/brookesia/api/v1.0/'
+	apiUrl: 'https://{GRACULA_DOMAIN}:{BROOKESIA_PORT}/brookesia/api/v1.0/'
 };
 window.__env__ = ENV;
