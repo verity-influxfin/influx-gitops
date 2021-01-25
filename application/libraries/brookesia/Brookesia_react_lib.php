@@ -7,7 +7,7 @@ class Brookesia_react_lib
 	{
 		$this->CI = &get_instance();
 		$brookesiaPort = '9453';
-		$this->brookesiaUrl = "https://" . getenv('GRACULA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
+		$this->brookesiaUrl = "http://" . getenv('GRACULA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
 	}
 
 	public function getAllRuleType()
