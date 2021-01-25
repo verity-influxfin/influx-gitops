@@ -103,5 +103,70 @@ class Brookesia extends CI_Controller {
 	}
 
 
+# for brookesia react lib
+
+	public function get_all_rule_type()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$this->load->library('output/json_output');
+
+		$this->load->library('brookesia/brookesia_react_lib');
+		$user_result = $this->brookesia_react_lib->getAllRuleType();
+
+		$response = json_decode(json_encode($user_result), true);
+		if(!$response){
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$response = ["results" => $response['response']['results']];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
+
+	public function get_result_by_rule()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$typeId  = isset($input['typeId']) ? $input['typeId'] : '';
+		$ruleId  = isset($input['ruleId']) ? $input['ruleId'] : '';
+
+		$this->load->library('output/json_output');
+
+		if(!$typeId || !$ruleId){
+			$this->json_output->setStatusCode(400)->send();
+		}
+
+		$this->load->library('brookesia/brookesia_react_lib');
+		$result = $this->brookesia_react_lib->getResultByRule($typeId, $ruleId);
+
+		$response = json_decode(json_encode($result), true);
+		if(!$response){
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$response = ["results" => $response['response']['results'], "columnMap"=> $response['response']['columnMap']];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
+
+	public function get_rule_info_by_type()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$typeId  = isset($input['typeId']) ? $input['typeId'] : '';
+
+		$this->load->library('output/json_output');
+
+		if(!$typeId){
+			$this->json_output->setStatusCode(400)->send();
+		}
+
+		$this->load->library('brookesia/brookesia_react_lib');
+		$result = $this->brookesia_react_lib->getRuleInfoByTypeId($typeId);
+
+		$response = json_decode(json_encode($result), true);
+		if(!$response){
+			$this->json_output->setStatusCode(204)->send();
+		}
+
+		$response = ["results" => $response['response']['results']];
+		$this->json_output->setStatusCode(200)->setResponse($response)->send();
+	}
 
 }
