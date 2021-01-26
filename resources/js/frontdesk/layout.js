@@ -88,16 +88,6 @@ $(() => {
             userData() {
                 return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")) : {}
             },
-            showGreeting() {
-                let now = new Date();
-                let startDate = new Date('2020-02-01 00:00:00');
-                let endDate = new Date('2020-02-17 00:00:00');
-                if (startDate <= now && now < endDate) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
         },
         created() {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
@@ -106,6 +96,13 @@ $(() => {
         },
         mounted() {
             this.$nextTick(() => {
+
+                let now = new Date();
+                let startDate = new Date('2020-02-01 00:00:00');
+                let endDate = new Date('2020-02-17 00:00:00');
+                if (startDate <= now && now < endDate) {
+                    $('.greeting').css('display', 'block');
+                }
                 AOS.init();
             });
         },
