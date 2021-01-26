@@ -1,0 +1,4 @@
+const ENV = {
+	apiUrl: '{DEUS_BASE_URL}/'
+};
+window.__env__ = ENV;

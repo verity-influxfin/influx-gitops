@@ -29,3 +29,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+## brookesia (anti_fraud) env
+assets/admin/js/anti_fraud_env.js
