@@ -77,6 +77,15 @@ export default {
       this.pagination();
     },
   },
+  mounted() {
+    let header =
+      $(".invest-header").length !== 0
+        ? $(".invest-header").height()
+        : $(".loan-header").height();
+    $("html")
+      .stop()
+      .animate({ scrollTop: $(".member-menu").height() + header }, 1000);
+  },
   methods: {
     getNotification() {
       this.unreadCount = 0;

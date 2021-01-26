@@ -90,10 +90,10 @@
                         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
                         <ul class="dropdown-menu" style="min-width: 5rem;">
                             <li v-if="isInvestor == 0">
-                                <router-link class="dropdown-item loan-link" to="/loannotification">借款端</router-link>
+                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
                             </li>
                             <li v-else>
-                                <router-link class="dropdown-item invest-link" to="/investnotification">投資專區</router-link>
+                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
                             </li>
                             <li v-if="flag === 'login'">
                                 <p class="dropdown-item" @click="logout">登出</p>
@@ -267,8 +267,8 @@
                         <div class="input-group">
                             <span class="input-group-addon label-text"></span>
                             <div class="radio-custom">
-                                <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor" checked><span class="outside"><span class="inside"></span></span>借款端</label>
-                                <label><input type="radio" name="investor" class="radio-inline" value="1" v-model="investor"><span class="outside"><span class="inside"></span></span>投資端</label>
+                                <label><input type="radio" name="investor" class="radio-inline" value="0" v-model="investor" checked><span class="outside"><span class="inside"></span></span>借款人</label>
+                                <label><input type="radio" name="investor" class="radio-inline" value="1" v-model="investor"><span class="outside"><span class="inside"></span></span>投資人</label>
                             </div>
                         </div>
                         <div class="input-group">

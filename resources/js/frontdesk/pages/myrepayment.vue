@@ -350,6 +350,14 @@ export default {
       }
     },
   },
+  mounted() {
+    $("html")
+      .stop()
+      .animate(
+        { scrollTop: $(".member-menu").height() + $(".loan-header").height() },
+        1000
+      );
+  },
   methods: {
     format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");

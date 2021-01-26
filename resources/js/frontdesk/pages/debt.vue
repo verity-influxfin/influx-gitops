@@ -1,10 +1,11 @@
 <template>
   <div class="debt-wrapper">
     <div class="no-data" v-if="groupList.length === 0">
-      <img src="../asset/images/empty.svg" class="img-fluid" />
-      <a target="_blank" href="https://event.influxfin.com/r/iurl?p=webinvest"
+      <a v-if="this.$parent.isLoading">搜尋中...</a>
+      <a target="_blank" v-else href="https://event.influxfin.com/r/iurl?p=webinvest"
         >目前沒有投資標的，點我立即前往 >></a
       >
+      <img src="../asset/images/empty.svg" class="img-fluid" />
     </div>
     <div v-else id="accordion" role="tablist">
       <div class="c-title">
@@ -107,6 +108,14 @@ export default {
     this.$parent.pageIcon = "/images/icon_moneyback_b.svg";
     this.$parent.pageTitle = "債權總覽";
     this.$parent.pagedesc = "您手上所有的債權";
+  },
+  mounted() {
+    $("html")
+      .stop()
+      .animate(
+        { scrollTop: $(".member-menu").height() + $(".invest-header").height() },
+        1000
+      );
   },
   methods: {
     format(data) {

@@ -62,7 +62,7 @@ $(() => {
             isReset: false,
             isSended: false,
             altered: false,
-            isRememberAccount : $cookies.get('account') ? true : false,
+            isRememberAccount: $cookies.get('account') ? true : false,
             businessNum: '',
             account: '',
             password: '',
@@ -72,7 +72,7 @@ $(() => {
             code: '',
             message: '',
             pwdMessage: '',
-            investor: '0',
+            investor: $cookies.get('investor') === '1' ? '1' : '0',
             timer: null,
             counter: 180,
             loginTime: 0,
@@ -80,13 +80,13 @@ $(() => {
         },
         computed: {
             isInvestor() {
-                return sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")).investor : "0";
+                return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")).investor : "0";
             },
             flag() {
-                return sessionStorage.length !== 0 ? sessionStorage.getItem("flag") : '';
+                return sessionStorage.getItem("flag") ? sessionStorage.getItem("flag") : '';
             },
             userData() {
-                return sessionStorage.length !== 0 ? JSON.parse(sessionStorage.getItem("userData")) : {}
+                return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")) : {}
             },
             showGreeting() {
                 let now = new Date();
@@ -175,9 +175,11 @@ $(() => {
                         axios.post(`${location.origin}/recaptcha`, { token }).then((res) => {
                             if (this.isRememberAccount) {
                                 $cookies.set('account', this.account);
+                                $cookies.set('investor', this.investor);
                                 $cookies.set('businessNum', this.businessNum);
                             } else {
                                 $cookies.remove('account');
+                                $cookies.remove('investor');
                                 $cookies.remove('businessNum');
                             }
 

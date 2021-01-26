@@ -1,6 +1,18 @@
 <template>
   <div class="invest-wrapper">
     <banner :data="bannerData" :isInvest="true"></banner>
+    <div class="count-card" ref="count">
+      <div class="item">
+        <p>會員數</p>
+        <div>{{ format(tweenedMember) }}</div>
+      </div>
+      <div class="lr"></div>
+      <div class="item">
+        <p>成交筆數</p>
+        <div>{{ format(tweenedtransaction) }}</div>
+      </div>
+      <div class="pu"><img class="img-fluid" src="/images/pu.png" /></div>
+    </div>
     <div class="desc-card">
       <div class="t-c"><h2>投資介紹</h2></div>
       <div class="hr"></div>
@@ -270,6 +282,8 @@ export default {
   },
   data: () => ({
     isDesktop: window.innerWidth > 767,
+    tweenedMember: 0,
+    tweenedtransaction: 0,
     tweenedReturnAll: 0,
     amount: 10000,
     time: 1,
@@ -288,6 +302,7 @@ export default {
   },
   created() {
     this.$store.dispatch("getExperiencesData", "invest");
+    this.getCount();
     this.getQaData();
     this.getBannerData();
     this.getApplydata();
@@ -318,6 +333,15 @@ export default {
     format(data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
+    },
+    async getCount() {
+      let res = await axios.get("getCount");
+
+      gsap.to(this.$data, { duration: 1, tweenedMember: res.data[0].memberCount });
+      gsap.to(this.$data, {
+        duration: 1,
+        tweenedtransaction: res.data[0].transactionCount,
+      });
     },
     createSlick(target) {
       $(target).slick({
@@ -443,7 +467,7 @@ export default {
 
       for (q = 0; q < _totalFlow.length; q++) {
         let temp = _totalFlow[q];
-        xAxisData.push(q+1);
+        xAxisData.push(q + 1);
         listAmount.push((total += $this.amount));
         let t = 0;
 
@@ -528,7 +552,7 @@ export default {
           data: xAxisData,
           axisLine: {
             symbol: ["none", "arrow"],
-            symbolOffset:[0,10],
+            symbolOffset: [0, 10],
             lineStyle: { color: "#ffffff" },
           },
           splitLine: {
@@ -554,7 +578,7 @@ export default {
           },
           axisLine: {
             symbol: ["none", "arrow"],
-            symbolOffset:[0,10],
+            symbolOffset: [0, 10],
             lineStyle: { color: "#ffffff" },
           },
           splitLine: { show: false },
@@ -646,6 +670,45 @@ export default {
     height: 2px;
     background-image: linear-gradient(to right, #0559ac, #ffffff);
     margin: 0px auto;
+  }
+
+  .count-card {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 30px;
+    padding-top: 15px;
+    position: relative;
+    overflow: hidden;
+
+    .item {
+      padding: 0px 10px;
+      background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+      background-clip: text;
+      width: fit-content;
+      color: #ffffff00;
+
+      p {
+        margin-bottom: 5px;
+        font-size: 24px;
+      }
+
+      div {
+        font-size: 45px;
+        font-weight: bold;
+        color: #3b5795;
+      }
+    }
+
+    .pu {
+      width: 116px;
+      position: absolute;
+      right: 20%;
+    }
+
+    .lr {
+      border-left: 2px solid #080080;
+      margin: 0px 1rem;
+    }
   }
 
   .desc-card {
@@ -899,6 +962,24 @@ export default {
     h2 {
       font-size: 25px;
       margin-bottom: 20px;
+    }
+
+    .count-card {
+      padding: 15px 0px;
+      justify-content: flex-start;
+
+      .item {
+        div {
+          font-size: 36px;
+          color: #3b5795;
+        }
+      }
+
+      .pu {
+        width: 70px;
+        left: 19rem;
+        z-index: -1;
+      }
     }
 
     .desc-card {
