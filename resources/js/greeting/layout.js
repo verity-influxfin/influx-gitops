@@ -7,7 +7,7 @@ $(() => {
     let now = new Date();
     let startDate = new Date('2020-02-01 00:00:00');
     let endDate = new Date('2020-02-17 00:00:00');
-    if (startDate <= now && now < endDate) {
+    if (startDate >= now || now > endDate) {
         alert('敬請期待！');
         location.replace('/index');
         return;
