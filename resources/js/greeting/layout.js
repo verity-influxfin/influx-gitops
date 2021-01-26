@@ -4,6 +4,15 @@ import routers from './router/router';
 import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 
 $(() => {
+    let now = new Date();
+    let startDate = new Date('2020-02-01 00:00:00');
+    let endDate = new Date('2020-02-17 00:00:00');
+    if (startDate <= now && now < endDate) {
+        alert('敬請期待！');
+        location.replace('/index');
+        return;
+    }
+
     if (window.innerWidth >= 767) {
         alert('請使用行動裝置瀏覽');
         location.replace('/index');
