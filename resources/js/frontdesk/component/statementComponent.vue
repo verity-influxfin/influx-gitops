@@ -4,7 +4,7 @@
       type="button"
       class="down-csv btn btn-success btn-sm"
       @click="$emit('download',range);"
-    >匯出CSV</button>
+    >下載檔案</button>
     <div class="input-group">
       <v-date-picker
         mode="range"

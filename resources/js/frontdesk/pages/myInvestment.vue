@@ -6,10 +6,7 @@
         <div style="width: max-content; overflow: hidden">
           <router-link class="menu-item" to="/investnotification">
             <div class="img">
-              <img
-                src="../asset/images/icon_notification.svg"
-                class="img-fluid"
-              />
+              <img src="../asset/images/icon_notification.svg" class="img-fluid" />
               <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
             </div>
             <p>通知</p>
@@ -38,28 +35,31 @@
     <div class="member-menu">
       <div class="invest-card">
         <div class="invest-box">
-          <div class="detial-row">
-            <div>
-              <span>{{ format(tweenedPrincipal) }}$</span>
-              <label>應收款項</label>
+          <div class="header">投資總覽</div>
+          <div style="overflow: hidden">
+            <div class="detial-row">
+              <div>
+                <span>{{ format(tweenedPrincipal) }}$</span>
+                <label>應收款項</label>
+              </div>
             </div>
-          </div>
-          <div class="detial-row">
-            <div>
-              <span>{{ format(tweenedReceivable) }}$</span>
-              <label>持有債權總額</label>
+            <div class="detial-row">
+              <div>
+                <span>{{ format(tweenedReceivable) }}$</span>
+                <label>持有債權本金餘額</label>
+              </div>
             </div>
-          </div>
-          <div class="detial-row">
-            <div>
-              <span>{{ format(tweenedFrozen) }}$</span>
-              <label>得標/處理中</label>
+            <div class="detial-row">
+              <div>
+                <span>{{ format(tweenedFrozen) }}$</span>
+                <label>得標/處理中</label>
+              </div>
             </div>
-          </div>
-          <div class="detial-row">
-            <div>
-              <span>{{ format(tweenedInsufficient) }}$</span>
-              <label>不足額待匯入</label>
+            <div class="detial-row">
+              <div>
+                <span>{{ format(tweenedInsufficient) }}$</span>
+                <label>不足額待匯入</label>
+              </div>
             </div>
           </div>
         </div>
@@ -100,6 +100,7 @@ export default {
     userInfo,
   },
   data: () => ({
+    isLoading: false,
     userData: JSON.parse(sessionStorage.getItem("userData")),
     pageTitle: "",
     pageIcon: "",
@@ -129,9 +130,28 @@ export default {
     this.$router.push("/investnotification");
 
     $("title").text(`投資專區 - inFlux普匯金融科技`);
-  },
-  mounted() {
-    this.$nextTick(() => {});
+
+    axios.interceptors.request.use(
+      (config) => {
+        this.isLoading = true;
+        return config;
+      },
+      (error) => {
+        this.isLoading = false;
+        return Promise.reject(error);
+      }
+    );
+
+    axios.interceptors.response.use(
+      (response) => {
+        this.isLoading = false;
+        return response;
+      },
+      (error) => {
+        this.isLoading = false;
+        return Promise.reject(error);
+      }
+    );
   },
   watch: {
     myInvsetment() {
@@ -165,13 +185,8 @@ export default {
       }
 
       let money = 0;
-      if (
-        this.myInvsetment.funds.total - totalFrozen <
-        this.myInvsetment.payable
-      ) {
-        money =
-          this.myInvsetment.payable -
-          (this.myInvsetment.funds.total - totalFrozen);
+      if (this.myInvsetment.funds.total - totalFrozen < this.myInvsetment.payable) {
+        money = this.myInvsetment.payable - (this.myInvsetment.funds.total - totalFrozen);
       }
 
       this.principal =
@@ -294,6 +309,12 @@ export default {
       .invest-box {
         overflow: hidden;
         padding: 3rem 2rem;
+
+        .header {
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
 
         .detial-row {
           width: 50%;

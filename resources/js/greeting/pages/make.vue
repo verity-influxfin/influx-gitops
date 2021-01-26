@@ -332,7 +332,7 @@ export default {
           }
 
           input[type="file"] {
-            width: 80px;
+            width: 100px;
             position: absolute;
             top: 50%;
             left: 50%;

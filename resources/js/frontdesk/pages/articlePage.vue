@@ -213,8 +213,8 @@ export default {
         padding: 20px;
 
         img {
-          width: 100% !important;
-          height: auto !important;
+          width: 100%;
+          height: auto;
         }
       }
     }

@@ -123,25 +123,25 @@
       <Splide class="box" :options="eventOptions">
         <SplideSlide class="item"
           ><div class="text">
-            <div>2020/1/31(日)<br />報名截止</div>
+            <div>2021/1/31(日)<br />報名截止</div>
           </div></SplideSlide
         >
         <SplideSlide class="item"
           ><div class="text">
-            <div>2020/2/2(三)<br />寄送面試通知</div>
+            <div>2021/2/2(三)<br />寄送面試通知</div>
           </div></SplideSlide
         >
         <SplideSlide class="item"
           ><div class="text">
             <div>
-              2020/2/4(四)~<br />
-              2020/2/10(三)<br />面試
+              2021/2/4(四)~<br />
+              2021/2/10(三)<br />面試
             </div>
           </div>
         </SplideSlide>
         <SplideSlide class="item"
           ><div class="text">
-            <div>2020/2/15(一)<br />公布錄取名單</div>
+            <div>2021/2/15(一)<br />公布錄取名單</div>
           </div></SplideSlide
         >
       </Splide>

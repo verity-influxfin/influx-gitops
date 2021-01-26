@@ -23,28 +23,31 @@
     <div class="member-menu">
       <div class="borrow-card">
         <div class="borrow-box">
-          <div class="detial-row">
-            <div>
-              <span>{{ format(tweenedFrozen) }}$</span>
-              <label>提領待放款金額</label>
+          <div class="header">借款總覽</div>
+          <div style="overflow: hidden">
+            <div class="detial-row">
+              <div>
+                <span>{{ format(tweenedFrozen) }}$</span>
+                <label>提領待放款金額</label>
+              </div>
+            </div>
+            <div class="detial-row">
+              <div>
+                <span>{{ format(tweenedPrIncipal) }}$</span>
+                <label>現欠本金餘額</label>
+              </div>
+            </div>
+            <div class="detial-row">
+              <div>
+                <span>{{ format(tweenedRepayment) }}$</span>
+                <label>本期({{ repaymentDate }})待還本息</label>
+              </div>
             </div>
           </div>
-          <div class="detial-row">
-            <div>
-              <span>{{ format(tweenedPrIncipal) }}$</span>
-              <label>現欠本金餘額</label>
-            </div>
+          <div class="balance-row">
+            <label>可用餘額</label>
+            <span style="font-size: 20px">{{ format(tweenedFunds) }}$</span>
           </div>
-          <div class="detial-row">
-            <div>
-              <span>{{ format(tweenedRepayment) }}$</span>
-              <label>本期({{ repaymentDate }})待還本息</label>
-            </div>
-          </div>
-        </div>
-        <div class="balance-row">
-          <label>可用餘額</label>
-          <span style="font-size: 20px">{{ format(tweenedFunds) }}$</span>
         </div>
       </div>
       <div class="financial-card">
@@ -142,9 +145,6 @@ export default {
     this.getMyRepayment();
 
     $("title").text(`借款專區 - inFlux普匯金融科技`);
-  },
-  mounted() {
-    this.$nextTick(() => {});
   },
   watch: {
     funds(newValue) {
@@ -298,6 +298,12 @@ export default {
       .borrow-box {
         overflow: hidden;
         padding: 3rem 2rem;
+
+        .header {
+          text-align: center;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
 
         .detial-row {
           width: 50%;

@@ -157,6 +157,14 @@ export default {
     this.$parent.pagedesc = "您現在的總資產明細";
     this.invsetmentData = this.$store.getters.InvestAccountData;
   },
+  mounted() {
+    $("html")
+      .stop()
+      .animate(
+        { scrollTop: $(".member-menu").height() + $(".invest-header").height() },
+        1000
+      );
+  },
   watch: {
     invsetmentData(newdata) {
       this.totalFrozen = 0;
@@ -398,7 +406,7 @@ export default {
     .statement-card {
       width: 100%;
       margin: 10px 0px;
-      padding: 0px 10px;
+      padding: 10px;
     }
   }
 }

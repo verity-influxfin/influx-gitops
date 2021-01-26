@@ -44,7 +44,7 @@
       </div>
 
       <a class="btn btn-greeting" ref="btn" href="/greeting/make" target="_blank"
-        >製做我的賀卡</a
+        >製作我的賀卡</a
       >
       <img src="../asset/border-top-left.svg" class="top-left img-fluid" />
       <img src="../asset/border-top-right.svg" class="top-right img-fluid" />
@@ -208,7 +208,6 @@ export default {
           }
 
           .word {
-            width: 163px;
             height: 197px;
             padding: 0px;
           }

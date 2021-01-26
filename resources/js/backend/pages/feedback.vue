@@ -128,8 +128,8 @@
                 <span class="input-group-text">借款/投資</span>
               </div>
               <select class="custom-select" v-model="category">
-                <option value="invest">投資端</option>
-                <option value="loan">借款端</option>
+                <option value="invest">投資人</option>
+                <option value="loan">借款人</option>
               </select>
             </div>
 
@@ -251,7 +251,7 @@ let feedbackRow = Vue.extend({
         <div class="img"><img :src="item.imageSrc" class="img-fluid"/></div>
         <div class="video"><a v-if="item.video_link" :href="item.video_link" target="_blank"><i class="fas fa-external-link-alt"></i></a></div>
         <div class="rank">{{item.rank === 'student' ? '學生' : '上班族'}}</div>
-        <div class="type">{{item.category === 'invest' ? '投資端' : '借款端'}}</div>
+        <div class="type">{{item.category === 'invest' ? '投資人' : '借款人'}}</div>
         <div class="date">{{item.post_modified}}</div>
         <div class="message">{{item.feedback}}</div>
         <div class="status">{{item.isActive ==='on' ? '是' : '否'}}</div>
