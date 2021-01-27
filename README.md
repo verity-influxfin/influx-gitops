@@ -14,8 +14,6 @@ client `npm install`
 
 需複製`.env.example`為`.env`
 
-為laravel安裝
-
 ## 啟動指令
 
 server 
