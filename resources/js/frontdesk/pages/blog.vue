@@ -36,7 +36,7 @@ let postRow = Vue.extend({
   template: `
     <li class="article">
         <a :href="item.link">
-          <div class="top"><img src="/images/tag.svg" class="img-fluid"></div>
+          <div class="top" v-if="item.order === 1"><img src="/images/tag.svg" class="img-fluid"></div>
           <div class="img"><img :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
           <div class="chunk">
             <p class="title">{{item.post_title}}</p>
