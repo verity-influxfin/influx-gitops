@@ -154,7 +154,7 @@ export default {
         $($this.$refs.pagination).pagination({
           dataSource: $this.rawData,
           pageSize: 8,
-          pageNumber:this.pageNumber,
+          pageNumber:$this.pageNumber,
           callback(data, pagination) {
             $($this.$refs.container).html("");
             data.forEach((item, index) => {
