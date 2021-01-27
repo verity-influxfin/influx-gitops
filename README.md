@@ -12,6 +12,10 @@ server `composer require`
 
 client `npm install`
 
+需複製`.env.example`為`.env`
+
+為laravel安裝
+
 ## 啟動指令
 
 server 
@@ -20,9 +24,13 @@ server
 
 client
 
-```develop:npm run watch ```
+`develop:npm run watch `
 
-```production:npm run production```
+`production:npm run production`
+
+最後下
+
+`php artisan key:generate`
 
 ## License
 
