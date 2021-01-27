@@ -36,6 +36,7 @@ let postRow = Vue.extend({
   template: `
     <li class="article">
         <a :href="item.link">
+          <div class="top"><img src="/images/tag.svg" class="img-fluid"></div>
           <div class="img"><img :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
           <div class="chunk">
             <p class="title">{{item.post_title}}</p>
@@ -202,6 +203,7 @@ export default {
       list-style: none;
       background: #ffffff;
       box-shadow: 0 2px 5px 0 #6ab0f2;
+      position: relative;
 
       &:hover {
         .img {
@@ -210,6 +212,15 @@ export default {
             transition-duration: 0.5s;
           }
         }
+      }
+
+      .top {
+        width: 15px;
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        z-index: 2;
+        filter: drop-shadow(2px 2px 1px black);
       }
 
       .img {

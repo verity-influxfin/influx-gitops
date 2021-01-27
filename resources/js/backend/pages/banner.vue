@@ -167,6 +167,7 @@ let bannerRow = Vue.extend({
 
 export default {
   data: () => ({
+    pageNumber: 1,
     ID: "",
     desktop: "",
     mobile: "",
@@ -194,6 +195,7 @@ export default {
         $($this.$refs.pagination).pagination({
           dataSource: $this.rawData,
           pageSize: 8,
+          pageNumber:this.pageNumber,
           callback(data, pagination) {
             $($this.$refs.container).html("");
             data.forEach((item, index) => {
@@ -205,6 +207,9 @@ export default {
               }).$mount();
               $($this.$refs.container).append(component.$el);
             });
+          },
+          afterPageOnClick() {
+            this.pageNumber = $(".paginationjs-page.active").attr("data-num");
           },
         });
       });
