@@ -213,7 +213,7 @@ export default {
             });
           },
           afterPageOnClick() {
-            this.pageNumber = $(".paginationjs-page.active").attr("data-num");
+            $this.pageNumber = $(".paginationjs-page.active").attr("data-num");
           },
         });
       });
