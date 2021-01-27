@@ -12,9 +12,9 @@ server `composer require`
 
 client `npm install`
 
-需複製`.env.example`為`.env`
+需複製 `.env.example`為`.env`
 
-最後產出網站密鑰`php artisan key:generate`
+最後產出網站密鑰 `php artisan key:generate`
 
 ## 啟動指令
 
