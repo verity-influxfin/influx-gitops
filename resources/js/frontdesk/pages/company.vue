@@ -143,7 +143,12 @@ export default {
 
       this.$nextTick(() => {
         $(".content")
-          .css("top", $target.offset().top + $(".photo").outerHeight() +(window.innerWidth > 767 ? 40 : 0))
+          .css(
+            "top",
+            $target.offset().top +
+              $(".photo").outerHeight() +
+              (window.innerWidth > 767 ? 40 : 0)
+          )
           .css("left", max);
       });
     },
@@ -301,7 +306,8 @@ export default {
           box-shadow: 0 0 10px #6ab0f2;
           cursor: pointer;
           position: relative;
-          margin-bottom: 10px;
+          margin: 10px auto;
+          display: block;
 
           img {
             position: absolute;
