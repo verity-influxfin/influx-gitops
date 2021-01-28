@@ -172,21 +172,12 @@ export default {
 
       let encodeData = encodeURIComponent(JSON.stringify(data));
 
-      let string = `${location.origin}/greeting/show?token=${encodeData}&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
-
       axios
-        .post(
-          "https://api.reurl.cc/shorten",
-          { url: string },
-          {
-            headers: {
-              "reurl-api-key":
-                "4070ff49d794e33218573b663c974755ecd3b235959f04df8a38b58d65165567c4f5d6",
-            },
-          }
-        )
+        .post("/setGreetingData", data)
         .then((res) => {
-          $(".hide").val(res.data.short_url);
+          let string = `${location.origin}/greeting/show?token=${res.data.token}ber1b9er1be9&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
+          $(".hide").val(string);
+
           $(this.$refs.messageModal).modal("show");
         })
         .catch((err) => {

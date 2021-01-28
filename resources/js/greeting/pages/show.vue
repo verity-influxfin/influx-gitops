@@ -2,7 +2,13 @@
   <div class="show-wrapper">
     <transition name="fade">
       <div class="cover" v-if="!isPlay">
-        <img src="../asset/play.svg" class="img-fluid play" @click="play($event)" />
+        <img
+          src="../asset/play.svg"
+          class="img-fluid play"
+          v-if="greetingData"
+          @click="play($event)"
+        />
+        <img src="../asset/play.svg" class="img-fluid play" v-else />
       </div>
     </transition>
     <video
@@ -62,10 +68,20 @@ export default {
   }),
   created() {
     const urlParams = new URLSearchParams(window.location.search);
-    let search = urlParams.get("token");
-    this.greetingData = JSON.parse(search);
+    let token = urlParams.get("token");
+    this.getgreetingData(token.replace("ber1b9er1be9", ""));
   },
   methods: {
+    async getgreetingData(token) {
+      axios
+        .post("/getGreetingData", { token })
+        .then((res) => {
+          this.greetingData = res.data;
+        })
+        .catch((err) => {
+          alert("參數錯誤");
+        });
+    },
     play($event) {
       $($event.target).css("width", "50px");
       this.isPlay = true;
