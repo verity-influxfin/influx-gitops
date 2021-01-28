@@ -22,6 +22,7 @@
       <div class="partner-tabletitle">
         <div class="logo">校徽</div>
         <div class="name">名稱</div>
+        <div class="link">網站連結</div>
         <div class="title">標題</div>
         <div class="desc">說明</div>
         <div class="action-row">操作</div>
@@ -51,20 +52,27 @@
               <div class="input-group-prepend">
                 <span class="input-group-text">校徽</span>
               </div>
-              <div style="display: grid;">
-                <img :src="upLoadImg" class="img-fluid" style="width: 300px;" />
+              <div style="display: grid">
+                <img :src="upLoadImg" class="img-fluid" style="width: 300px" />
                 <input type="file" @change="fileChange" />
               </div>
             </div>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">校名</span>
               </div>
               <input type="text" class="form-control" placeholder="校名" v-model="name" />
             </div>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
+              <div class="input-group-prepend">
+                <span class="input-group-text">連結</span>
+              </div>
+              <input type="text" class="form-control" placeholder="連結" v-model="link" />
+            </div>
+
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">標題</span>
               </div>
@@ -72,12 +80,12 @@
                 type="text"
                 class="form-control"
                 placeholder="標題"
-                style="height:200px"
+                style="height: 200px"
                 v-model="title"
               />
             </div>
 
-            <div class="input-group" style="width: 95%;">
+            <div class="input-group" style="width: 95%">
               <div class="input-group-prepend">
                 <span class="input-group-text">說明</span>
               </div>
@@ -85,13 +93,15 @@
                 type="text"
                 class="form-control"
                 placeholder="標題"
-                style="height:200px"
+                style="height: 200px"
                 v-model="text"
               />
             </div>
           </div>
-          <div class="modal-footer" style="display:block;">
-            <button class="btn btn-secondary float-left" data-dismiss="modal">取消</button>
+          <div class="modal-footer" style="display: block">
+            <button class="btn btn-secondary float-left" data-dismiss="modal">
+              取消
+            </button>
             <button class="btn btn-success float-right" @click="submit">送出</button>
           </div>
         </div>
@@ -108,8 +118,8 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-body">{{message}}</div>
-          <div class="modal-footer" style="display:block;">
+          <div class="modal-body">{{ message }}</div>
+          <div class="modal-footer" style="display: block">
             <button class="btn btn-success float-right" @click="close">確認</button>
           </div>
         </div>
@@ -125,6 +135,7 @@ let partnerRow = Vue.extend({
     <li class="partner-row">
       <div class="logo"><div class="img"><img :src="item.imageSrc" class="img-fluid"></div></div>
       <div class="name">{{item.name}}</div>
+      <div class="link"><a v-if="item.link" class="text-success" :href="item.link" target="_blank"><i class="fas fa-external-link-alt"></i></a></div>
       <div class="title">{{item.title}}</div>
       <div class="desc">{{item.text}}</div>
       <div class="action-row">
@@ -132,21 +143,22 @@ let partnerRow = Vue.extend({
         <button class="btn btn-danger btn-sm" @click="vm.delete(item)">刪除</button>
       </div>
     </li>
-  `
+  `,
 });
 
 export default {
   data: () => ({
-    pageNumber:1,
+    pageNumber: 1,
     ID: "",
     imageSrc: "",
     name: "",
+    link: "",
     title: "",
     text: "",
     upLoadImg: "./images/default-image.png",
     message: "",
     rawData: [],
-    imageData: new FormData()
+    imageData: new FormData(),
   }),
   created() {
     $("title").text(`後臺系統 - inFlux普匯金融科技`);
@@ -165,15 +177,15 @@ export default {
         $($this.$refs.pagination).pagination({
           dataSource: $this.rawData,
           pageSize: 8,
-          pageNumber:$this.pageNumber,
+          pageNumber: $this.pageNumber,
           callback(data, pagination) {
             $($this.$refs.container).html("");
             data.forEach((item, index) => {
               let component = new partnerRow({
                 propsData: {
                   item,
-                  vm: $this
-                }
+                  vm: $this,
+                },
               }).$mount();
               $($this.$refs.container).append(component.$el);
             });
@@ -193,6 +205,7 @@ export default {
       this.ID = "";
       this.imageSrc = "";
       this.name = "";
+      this.link = "";
       this.title = "";
       this.text = "";
       this.upLoadImg = "./images/default-image.png";
@@ -203,11 +216,10 @@ export default {
     edit(item) {
       this.ID = item.ID;
       this.name = item.name;
+      this.link = item.link;
       this.title = item.title;
       this.text = item.text;
-      this.upLoadImg = item.imageSrc
-        ? item.imageSrc
-        : "./images/default-image.png";
+      this.upLoadImg = item.imageSrc ? item.imageSrc : "./images/default-image.png";
       this.actionType = "update";
 
       $(this.$refs.partnerModal).modal("show");
@@ -215,14 +227,14 @@ export default {
     delete(item) {
       axios
         .post("deletePartnerData", {
-          ID: item.ID
+          ID: item.ID,
         })
-        .then(res => {
+        .then((res) => {
           this.message = `刪除成功`;
           this.getPartnerData();
           $(this.$refs.messageModal).modal("show");
         })
-        .catch(error => {
+        .catch((error) => {
           alert(`刪除發生錯誤，請稍後再試`);
         });
     },
@@ -234,32 +246,27 @@ export default {
           data: {
             ID: this.ID,
             name: this.name,
+            link: this.link,
             title: this.title,
             text: this.text,
-            imageSrc: this.upLoadImg
-          }
+            imageSrc: this.upLoadImg,
+          },
         })
-        .then(res => {
-          this.message = `${
-            this.actionType === "insert" ? "新增" : "更新"
-          }成功`;
+        .then((res) => {
+          this.message = `${this.actionType === "insert" ? "新增" : "更新"}成功`;
 
           this.getPartnerData();
           $(this.$refs.messageModal).modal("show");
         })
-        .catch(error => {
-          alert(
-            `${
-              this.actionType === "insert" ? "新增" : "更新"
-            }發生錯誤，請稍後再試`
-          );
+        .catch((error) => {
+          alert(`${this.actionType === "insert" ? "新增" : "更新"}發生錯誤，請稍後再試`);
         });
     },
     close() {
       $(this.$refs.partnerModal).modal("hide");
       $(this.$refs.messageModal).modal("hide");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -326,11 +333,14 @@ export default {
     .name {
       width: 15%;
     }
+    .link {
+      width: 8%;
+    }
     .title {
       width: 23%;
     }
     .desc {
-      width: 50%;
+      width: 42%;
     }
     .action-row {
       width: 10%;
