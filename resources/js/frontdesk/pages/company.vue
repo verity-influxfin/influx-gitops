@@ -25,7 +25,7 @@
           v-for="(item, index) in partner"
           :key="index"
         >
-          <div class="photo hvr-bob">
+          <a class="photo" :href="item.link" target="_blank">
             <img
               :src="item.imageSrc"
               class="img-fluid"
@@ -38,7 +38,7 @@
                 partnerData = {};
               "
             />
-          </div>
+          </a>
           <p>{{ item.name }}</p>
         </div>
       </div>
