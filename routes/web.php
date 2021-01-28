@@ -255,6 +255,10 @@ Route::get('/greeting', function () {
 
 Route::post('/uploadGreetingAuthorImg', 'Greetingcontroller@uploadGreetingAuthorImg');
 
+Route::post('setGreetingData','Greetingcontroller@setGreetingData');
+
+Route::post('getGreetingData','Greetingcontroller@getGreetingData');
+
 Route::view('/greeting/{path?}', 'greeting');
 
 // verify mail
