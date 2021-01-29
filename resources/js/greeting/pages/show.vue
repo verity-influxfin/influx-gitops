@@ -22,6 +22,7 @@
       src="/upload/greeting/video.mp4"
     ></video>
     <div class="cnt" v-if="greetingData">
+      <img src="../asset/greeting_logo.svg" class="top-center img-fluid" />
       <div class="greeting-card" ref="greetingcard">
         <div class="avatar-box">
           <img :src="`/images/${greetingData.selectedImg}`" class="img-fluid" />
@@ -276,7 +277,13 @@ export default {
       transition-duration: 2s;
       opacity: 0;
     }
-
+    .top-center {
+      @extend %position;
+      left: 50%;
+      transform: translate(-50%, 0px);
+      top: 5px;
+      width: 55px;
+    }
     .top-left {
       @extend %position;
       top: 3px;
