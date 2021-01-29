@@ -61,8 +61,9 @@
                 class="img-fluid"
                 v-if="authorImg"
                 :src="`/upload/greeting/${authorImg}`"
+                @click="removeImg(authorImg)"
               />
-              <input v-else type="file" @change="upload" />
+              <input v-else type="file" @change="upload" ref="upload" />
               <img class="img-fluid" v-if="isLoading" src="../asset/g_loading.svg" />
             </div>
           </div>
@@ -121,6 +122,18 @@ export default {
   methods: {
     getImg(splide, newIndex) {
       this.selectedImg = `avatar${newIndex + 1}.svg`;
+    },
+    removeImg(authorImg) {
+      axios
+        .post("/deleteGreetingAuthorImg", { authorImg })
+        .then((res) => {
+          this.authorImg = "";
+        })
+        .catch((error) => {
+          let errorsData = error.response.data;
+          $(this.$refs.upload).val("");
+          alert(errorsData);
+        });
     },
     upload(e) {
       let imageData = new FormData();
