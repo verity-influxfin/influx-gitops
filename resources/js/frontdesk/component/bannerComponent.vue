@@ -67,8 +67,8 @@ export default {
         dots: false,
         arrows: true,
         speed: 1000,
-        prevArrow:'<img class="arrow-left" src="/images/left_pointer.svg">',
-        nextArrow:'<img class="arrow-right" src="/images/right_pointer.svg">',
+        prevArrow: '<img class="arrow-left" src="/images/left_pointer.svg">',
+        nextArrow: '<img class="arrow-right" src="/images/right_pointer.svg">',
       });
     },
   },
@@ -80,6 +80,28 @@ export default {
   width: 100%;
   overflow: hidden;
   position: relative;
+
+  %arrow {
+    font-size: 75px;
+    position: absolute;
+    top: 50%;
+    transform: translate(0px, -50%);
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 2;
+    width: 50px;
+    padding: 0px 10px;
+  }
+
+  .arrow-left {
+    @extend %arrow;
+    left: 0%;
+  }
+
+  .arrow-right {
+    @extend %arrow;
+    right: 0%;
+  }
 
   .item {
     position: relative;
