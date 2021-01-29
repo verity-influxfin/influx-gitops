@@ -82,14 +82,14 @@ export default {
   position: relative;
 
   %arrow {
-    font-size: 75px;
+    font-size: 40px;
     position: absolute;
     top: 50%;
     transform: translate(0px, -50%);
     color: #ffffff;
     cursor: pointer;
     z-index: 2;
-    width: 50px;
+    width: 40px;
     padding: 0px 10px;
   }
 
