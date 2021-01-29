@@ -150,7 +150,7 @@
                     <H2>Investment</H2>
                     <ul class="list-column">
                         <li>
-                            <router-link to="/invest">債權投資</router-link>
+                            <router-link to="/investment">債權投資</router-link>
                         </li>
                         <li>
                             <router-link to="/transfer">債權轉讓</router-link>

@@ -65,8 +65,10 @@ export default {
         slidesToScroll: 1,
         autoplay: true,
         dots: false,
-        arrows: false,
+        arrows: true,
         speed: 1000,
+        prevArrow:'<img class="arrow-left" src="/images/left_pointer.svg">',
+        nextArrow:'<img class="arrow-right" src="/images/right_pointer.svg">',
       });
     },
   },
