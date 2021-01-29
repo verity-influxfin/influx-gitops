@@ -255,6 +255,8 @@ Route::get('/greeting', function () {
 
 Route::post('/uploadGreetingAuthorImg', 'Greetingcontroller@uploadGreetingAuthorImg');
 
+Route::post('/deleteGreetingAuthorImg', 'Greetingcontroller@deleteGreetingAuthorImg');
+
 Route::post('setGreetingData','Greetingcontroller@setGreetingData');
 
 Route::post('getGreetingData','Greetingcontroller@getGreetingData');

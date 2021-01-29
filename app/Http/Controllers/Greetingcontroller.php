@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Exception;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -41,6 +42,13 @@ class Greetingcontroller extends BaseController
         } else {
             echo '<script type="text/javascript">alert("上傳失敗");</script>';
         }
+    }
+
+    public function deleteGreetingAuthorImg(Request $request)
+    {
+        $input = $request->all();
+        File::delete(app_path() . 'upload/greeting/' . $input['authorImg']);
+        return response()->json('', 200);
     }
 
     public function setGreetingData(Request $request)
