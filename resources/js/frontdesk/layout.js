@@ -98,8 +98,8 @@ $(() => {
             this.$nextTick(() => {
 
                 let now = new Date();
-                let startDate = new Date('2020-02-01 00:00:00');
-                let endDate = new Date('2020-02-17 00:00:00');
+                let startDate = new Date('2021-02-01 00:00:00');
+                let endDate = new Date('2021-02-17 00:00:00');
                 if (startDate <= now && now < endDate) {
                     $('.greeting').css('display', 'block');
                 }
