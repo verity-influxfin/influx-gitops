@@ -1224,7 +1224,7 @@ class Product extends REST_Controller {
                         $at = floor((strtotime($inv_val->tx_datetime) - $targets_start) / 60 / 60) + 1;
                         $bidInvest[] = $inv_val->id;
                         $biddingAmount += $inv_val->amount;
-                        if($at == $currentIndex){
+                        if($at == $currentIndex && $inv_val->status != 1){
                             $at++;
                             $thisHourBidding++;
                         }
