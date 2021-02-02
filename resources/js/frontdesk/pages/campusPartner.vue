@@ -128,7 +128,7 @@
         >
         <SplideSlide class="item"
           ><div class="text">
-            <div>2021/2/2(三)<br />寄送面試通知</div>
+            <div>2021/2/2(二)<br />寄送面試通知</div>
           </div></SplideSlide
         >
         <SplideSlide class="item"
