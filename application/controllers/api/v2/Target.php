@@ -153,7 +153,7 @@ class Target extends REST_Controller {
                             'meta_key' => ['job_company', 'diploma_name']
                         ]);
                         if ($meta_info) {
-                            $job_company = get_company_name($meta_info[0]->meta_key == 'job_company'
+                            $job_company = ($meta_info[0]->meta_key == 'job_company'
                                 ? $meta_info[0]->meta_value
                                 : (isset($meta_info[1]) >= 2
                                     ? $meta_info[1]->meta_value
@@ -432,7 +432,7 @@ class Target extends REST_Controller {
                     ]);
                     $user_meta = new stdClass();
                     if ($meta_info) {
-                        $job_company = get_company_name($meta_info[0]->meta_key == 'job_company'
+                        $job_company = ($meta_info[0]->meta_key == 'job_company'
                             ? $meta_info[0]->meta_value
                             : (isset($meta_info[1]) >= 2
                                 ? $meta_info[1]->meta_value
@@ -1286,7 +1286,7 @@ class Target extends REST_Controller {
                         'meta_key' => ['job_company', 'diploma_name']
                     ]);
                     if ($meta_info) {
-                        $job_company = get_company_name($meta_info[0]->meta_key == 'job_company'
+                        $job_company = ($meta_info[0]->meta_key == 'job_company'
                             ? $meta_info[0]->meta_value
                             : (isset($meta_info[1]) >= 2
                                 ? $meta_info[1]->meta_value
