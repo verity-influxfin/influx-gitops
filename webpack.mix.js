@@ -18,4 +18,4 @@ mix.js('resources/js/frontdesk/layout.js', 'public/js/web.js')
     .sass('resources/scss/frontdesk/layout.scss', 'public/css/web.css')
     .sass('resources/scss/backend/layout.scss', 'public/css/backend.css')
     .sass('resources/scss/campusJoin.scss', 'public/css/campusJoin.css')
-    .sass('resources/scss/errors.scss', 'public/css/errors.css');
+    .sass('resources/scss/errors.scss', 'public/css/errors.css').version();
