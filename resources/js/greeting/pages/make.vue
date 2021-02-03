@@ -409,10 +409,9 @@ export default {
       height: 146px;
       margin: 0px auto;
       text-align: center;
-      padding: 2.5rem 0px;
+      padding: 3rem 0px;
       font-size: 15px;
       font-weight: bold;
-      line-height: 80px;
       color: #ffffff;
       .fb-share-button {
         display: inline-flex;
