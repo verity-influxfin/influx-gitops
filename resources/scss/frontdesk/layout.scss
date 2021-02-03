@@ -29,6 +29,53 @@ $ci-color: #153a71;
 
     .greeting {
         display: none;
+        margin: -43px 0 0 0;
+        .head {
+            position: absolute;
+            z-index: 996;
+        }
+        .body {
+            z-index: 998;
+            position: absolute;
+        }
+        .left {
+            position: absolute;
+            margin: 40px 0 0 30px;
+            z-index: 997;
+            -moz-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            transform: rotate(0deg);
+            transition: transform 0.2s;
+            transform-origin: left bottom;
+        }
+        .left.shake{
+            -moz-transform: rotate(15deg);
+            -webkit-transform: rotate(15deg);
+            -o-transform: rotate(15deg);
+            -ms-transform: rotate(15deg);
+            transform: rotate(15deg);
+        }
+        .right {
+            position: absolute;
+            margin: 39px 0 0 0;
+            z-index: 997;
+            -moz-transform: rotate(0deg);
+            -webkit-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            transform: rotate(0deg);
+            transition: transform 0.2s;
+            transform-origin: right bottom;
+        }
+        .right.shake{
+            -moz-transform: rotate(-15deg);
+            -webkit-transform: rotate(-15deg);
+            -o-transform: rotate(-15deg);
+            -ms-transform: rotate(-15deg);
+            transform: rotate(-15deg);
+        }
     }
 
     .event {

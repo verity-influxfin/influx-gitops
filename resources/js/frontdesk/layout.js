@@ -102,6 +102,7 @@ $(() => {
                 let endDate = new Date('2021-02-17 00:00:00');
                 if (startDate <= now && now < endDate) {
                     $('.greeting').css('display', 'block');
+                    setInterval(function(){$('.greeting .left,.greeting .right').toggleClass('shake');},200);
                 }
                 AOS.init();
             });
