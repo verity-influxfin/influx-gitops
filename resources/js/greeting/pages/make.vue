@@ -84,10 +84,8 @@
         <div class="modal-content">
           <div class="modal-body">
             <div class="msg">
-              <transition name="fade">
-                <input type="text" v-if="!isCopyed" class="hide" @click="copy()" />
-                <span v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
-              </transition>
+              <span><div class="line-it-button" data-lang="zh_Hant" data-type="share-a" data-ver="3" data-color="default" data-size="small" data-count="false" style="display: none;"></div></span>
+              <span style="margin: 0 1px 0 6px;"><div class="fb-share-button" data-layout="button"></div></span>
             </div>
           </div>
         </div>
@@ -189,7 +187,18 @@ export default {
         .post("/setGreetingData", data)
         .then((res) => {
           let string = `${location.origin}/greeting/show?token=${res.data.token}ber1b9er1be9&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
-          $(".hide").val(string);
+          // $(".hide").val(string);
+          $('.line-it-button').attr('data-url',string);
+          $('.fb-share-button').attr('data-href',string);
+
+          LineIt.loadButton();
+          (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v3.0";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));
 
           $(this.$refs.messageModal).modal("show");
         })
@@ -198,9 +207,9 @@ export default {
         });
     },
     copy() {
-      document.execCommand("selectAll");
-      document.execCommand("Copy");
-      this.isCopyed = true;
+      // document.execCommand("selectAll");
+      // document.execCommand("Copy");
+      // this.isCopyed = true;
     },
   },
 };
@@ -403,8 +412,11 @@ export default {
       padding: 2.5rem 0px;
       font-size: 15px;
       font-weight: bold;
-      line-height: 1.4;
+      line-height: 80px;
       color: #ffffff;
+      .fb-share-button {
+        display: inline-flex;
+      }
     }
   }
 }

@@ -47,6 +47,10 @@
 
     <!-- local -->
     <script type="text/javascript" src="{{ asset('js/greeting.js') }}"></script>
+    <!-- Line plugins -->
+    <script src="https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js" async="async" defer="defer"></script>
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
 </body>
 
 </html>
