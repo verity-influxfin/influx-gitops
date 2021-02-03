@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="62" viewBox="0 0 50 62">
+    <defs>
+        <radialGradient id="r7i2iippja" cx="49.676%" cy="26.757%" r="198.219%" fx="49.676%" fy="26.757%" gradientTransform="matrix(.40735 0 0 1 .294 0)">
+            <stop offset="0%" stop-color="#E4695E"/>
+            <stop offset="90%" stop-color="#A92628"/>
+        </radialGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g>
+                    <path fill="url(#r7i2iippja)" fill-rule="nonzero" d="M20.132.18l.327-.115c1.508 2.177 2.638 4.956 3.26 8.14-3.753.98-7.69 1.502-11.749 1.502-4.095 0-8.066-.531-11.849-1.529l-.12-.032c.625-3.169 1.756-5.934 3.262-8.1C8.71 2.015 14.659 2.06 20.133.18z" transform="translate(-198 -4) translate(198 4) translate(13.115 52.342)"/>
+                    <path stroke="#FFC217" stroke-linecap="round" stroke-linejoin="round" d="M9.005 1.617L11.854 4.617 14.702 1.617M11.854 4.617L11.844 9.627M9.158 8.185c.538-.472 1.206-.538 2.693-.538s2.152.066 2.69.538" transform="translate(-198 -4) translate(198 4) translate(13.115 52.342)"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
