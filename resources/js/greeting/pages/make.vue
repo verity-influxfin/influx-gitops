@@ -86,7 +86,7 @@
             <div class="msg">
               <transition name="fade">
                 <span class="copy" v-if="!isCopyed"><input type="text" class="hide" @click="copy()" /></span>
-                <span class="copy" v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
+                <span class="copie" v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
               </transition>
               <br />
               <span><div class="line-it-button" data-lang="zh_Hant" data-type="share-a" data-ver="3" data-color="default" data-size="small" data-count="false" style="display: none;"></div></span>
@@ -419,6 +419,10 @@ export default {
 
       .copy {
         margin: 0px 0 0 149px;
+      }
+
+      .copie {
+        margin: -15px 0 0 0;
       }
 
       .fb-share-button {
