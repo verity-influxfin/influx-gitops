@@ -362,7 +362,7 @@ export default {
     }
 
     .btn-greeting {
-      background-image: linear-gradient(to top, #002160, #1f55a0);
+      background-image: linear-gradient(to top, #a80015, #e3322a);
       border-radius: 20px;
       padding: 5px 13px;
       margin: 1rem auto;
