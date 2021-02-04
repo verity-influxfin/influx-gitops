@@ -30,6 +30,26 @@ $ci-color: #153a71;
     .greeting {
         display: none;
         margin: -43px 0 0 0;
+
+        .dialog {
+            background-image: url("https://www.influxfin.com/images/dialog.svg?47325f1c9105d2528f431a6e28b4fb8d");
+            background-size: 80px;
+            width: 80px;
+            height: 30px;
+            background-repeat: no-repeat;
+            margin: -20px 0 0 0px;
+            font-size: 14px;
+            position: absolute;
+        }
+
+        .dialog::after {
+            content:"點我!!點我!!";
+            margin:0px 0 0 8px;
+            font-size: 12px;
+            font-weight:bolder;
+            color:#0e5288
+        }
+
         .head {
             position: absolute;
             z-index: 996;
