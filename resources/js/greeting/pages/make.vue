@@ -84,8 +84,13 @@
         <div class="modal-content">
           <div class="modal-body">
             <div class="msg">
+              <transition name="fade">
+                <input type="text" v-if="!isCopyed" class="hide" @click="copy()" />
+                <span v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
+              </transition>
+              <br />
               <span><div class="line-it-button" data-lang="zh_Hant" data-type="share-a" data-ver="3" data-color="default" data-size="small" data-count="false" style="display: none;"></div></span>
-              <span style="margin: 0 1px 0 6px;"><div class="fb-share-button" data-layout="button"></div></span>
+              <span style="margin: 0 15px 0px 3px"><div class="fb-share-button" data-layout="button"></div></span>
             </div>
           </div>
         </div>
@@ -187,7 +192,7 @@ export default {
         .post("/setGreetingData", data)
         .then((res) => {
           let string = `${location.origin}/greeting/show?token=${res.data.token}ber1b9er1be9&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
-          // $(".hide").val(string);
+          $(".hide").val(string);
           $('.line-it-button').attr('data-url',string);
           $('.fb-share-button').attr('data-href',string);
 
@@ -207,9 +212,9 @@ export default {
         });
     },
     copy() {
-      // document.execCommand("selectAll");
-      // document.execCommand("Copy");
-      // this.isCopyed = true;
+      document.execCommand("selectAll");
+      document.execCommand("Copy");
+      this.isCopyed = true;
     },
   },
 };
@@ -394,11 +399,10 @@ export default {
     }
 
     .hide {
-      position: absolute;
-      top: 35%;
-      left: 50%;
       transform: translate(-50%, -50%);
       width: 160px;
+      display: inline-block;
+      margin: 16px 0 0 149px;
     }
 
     .msg {
@@ -413,8 +417,14 @@ export default {
       font-size: 15px;
       font-weight: bold;
       color: #ffffff;
+
       .fb-share-button {
         display: inline-flex;
+      }
+
+      .line-it-button{
+        width:52px!important;
+        height: 20px!important;
       }
     }
   }
