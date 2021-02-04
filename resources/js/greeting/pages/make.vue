@@ -423,6 +423,7 @@ export default {
 
       .copie {
         margin: -15px 0 0 0;
+        display: inline-block;
       }
 
       .fb-share-button {
