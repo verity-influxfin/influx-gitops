@@ -5,20 +5,126 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use \Firebase\JWT\JWT;
 
 class Id_card_lib {
+
+	// 戶役政 api 查驗結果說明
+	private $responseMessageMapping = [
+		'checkIdCardApply' => [
+			'1' => '國民身分證資料與檔存資料相符',
+			'2' => '身分證字號目前驗證資料錯誤次數已達 1 次，今日錯誤累積達 3 次後，此身分證字號將無法查詢。',
+			'3' => '身分證字號目前驗證資料錯誤次數已達 2 次，今日錯誤累積達 3 次後，此身分證字號將無法查詢。',
+			'4' => '身分證字號目前驗證資料錯誤次數已達 3 次，今日錯誤累積達 3 次後，此身分證字號將無法查詢。(*該次查詢有進行查驗比對但比對結果不相符)',
+			'5' => '身分證字號驗證資料錯誤次數已達 3 次，今日無法查詢，請明日再查!!(*該次查詢無進行查驗比對)',
+			'6' => '您所查詢的國民身分證字號已停止使用。',
+			'7' => '您所查詢的國民身分證，業依當事人申請登錄掛失。',
+			'8' => '單一使用者出現異常使用情形，暫停使用者權限。',
+		],
+	];
+	// 戶役政 api 參數
+	private $parametersMapping = [
+		'applyCode' => [
+			'未領' => '0',
+			'領證' => '1',
+			'補證' => '2',
+			'換證' => '3',
+		],
+		'issueSiteId' => [
+			'連江' => '09007',
+			'金門' => '09020',
+			'北縣' => '10001',
+			'宜縣' => '10002',
+			'桃縣' => '10003',
+			'竹縣' => '10004',
+			'苗縣' => '10005',
+			'中縣' => '10006',
+			'彰縣' => '10007',
+			'投縣' => '10008',
+			'雲縣' => '10009',
+			'嘉縣' => '10010',
+			'南縣' => '10011',
+			'高縣' => '10012',
+			'屏縣' => '10013',
+			'東縣' => '10014',
+			'花縣' => '10015',
+			'彭縣' => '10016',
+			'基市' => '10017',
+			'竹市' => '10018',
+			'中市' => '66000',
+			'嘉市' => '10020',
+			'南市' => '67000',
+			'北市' => '63000',
+			'高市' => '64000',
+			'新北市' => '65000',
+			'桃市' => '68000',
+		],
+	];
 	public function __construct()
 	{
 		$this->CI = &get_instance();
+		$this->CI->load->library('output/json_output');
 		// $this->CI->load->library('JWT');
 	}
 
-	// TODO: handle private key properly.
-	public function send_request($personId, $applyCode, $applyYyymmdd, $issueSiteId){
+	/**
+	 * [send_request 戶役政身分證補換發查詢api]
+	 * @param  string $personId     [身份證字號]
+	 * @param  string $applyCode    [領補換代碼](0=未領/1=領證/2=補證/3=換證)
+	 * @param  string $applyYyymmdd [發證日期](民國格式:YYYmmdd)
+	 * @param  string $issueSiteId  [發證地點行政區域代碼]
+	 * @param  string $userId       [使用api之使用者代號]
+	 * @return array  $result       [查驗結果]
+	 * (
+	 *  [request] =>
+	 *    (
+	 *     [personId] => 身份證字號
+	 *     [applyCode] => 領補換類別
+	 *     [applyYyymmdd] => 發證日期
+	 *     [issueSiteId] => 發證地點
+	 *    )
+	 *  [response] =>
+	 *    (
+	 *     [rowData] => 查驗結果
+	 *     [checkIdCardApplyFormat] => 查驗結果說明
+	 *    )
+	 * )
+	 */
+	public function send_request($personId = '', $applyCode = '未領', $applyYyymmdd = '', $issueSiteId = '', $userId="inFlux000"){
+		$result = [
+			'request' =>[
+				'personId' => $personId,
+				'applyCode' => $applyCode,
+				'applyYyymmdd' => $applyYyymmdd,
+				'issueSiteId' => $issueSiteId
+			],
+			'response'=>[
+				'rowData' => [],
+				'checkIdCardApplyFormat' => 'Wrong Parameters'
+			],
+		];
+
+		if(!$personId || !$applyCode || !$applyYyymmdd || !$issueSiteId){
+			$result['response']['checkIdCardApplyFormat'] = 'Wrong Parameters';
+			$this->CI->json_output->setStatusCode(400)->setResponse($result)->send();
+		}
+		// pattern
+		$applyCodeFormat = isset($this->parametersMapping['applyCode'][$applyCode]) ? $this->parametersMapping['applyCode'][$applyCode] : '';
+		$issueSiteIdFormat = isset($this->parametersMapping['issueSiteId'][$issueSiteId]) ? $this->parametersMapping['issueSiteId'][$issueSiteId] : '';
+
+		if(!$applyCodeFormat || !$issueSiteIdFormat){
+			$result['response']['checkIdCardApplyFormat'] = 'Parameters Not Match';
+			$this->CI->json_output->setStatusCode(401)->setResponse($result)->send();
+		}
+
+		if(! preg_match('/^[0-9]{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/',$applyYyymmdd)){
+			$result['response']['checkIdCardApplyFormat'] = 'Parameters of applyYyymmdd Format Is Wrong';
+			$this->CI->json_output->setStatusCode(401)->setResponse($result)->send();
+		}
+
 		$privateKey = file_get_contents('file:///home/ubuntu/influx_privkey/ris_private.pem');
 		$payload = array(
 			"orgId" => "68566881",
 			"apId" => "INF00",
-			"userId" => "1",
-			"iss" => "XYxNQ1DdEDxjZSmUIRH7VhSRBis98S5W",
+			"userId" => $userId,
+			"iss" => "XYxNQ1DdEDxjZSmUlRH7VhSRBis98S5W",
 			"sub" => "綠色便民專案",
 			"aud" => date('Y/m/d H:i:s',time()),
 			"jobId" => "V2C201",
@@ -27,17 +133,34 @@ class Id_card_lib {
 			"exp" => time() + 180, //token 有效迄止時間，timestamp 格式(建議 發送時間+180 秒)
 			"jti" => md5(uniqid('JWT').time()), // JWT ID 唯一 識別碼(建議使用各語言的 JWT 套件產生)
 			"conditionMap" => "{
-				\"personId\": \"{$personId}\", \"applyCode\":\"{$applyCode}\",
-				 \"applyYyymmdd\":\"{$applyYyymmdd}\",\"issueSiteId\":\"{$issueSiteId}\"}"
+				\"personId\": \"{$personId}\", \"applyCode\":\"{$applyCodeFormat}\",
+				 \"applyYyymmdd\":\"{$applyYyymmdd}\",\"issueSiteId\":\"{$issueSiteIdFormat}\"}"
 		);
 		$jwt = JWT::encode($payload, $privateKey, 'RS256');
 
 		$requestUrl = "https://rwa.moi.gov.tw:1443/integration/rwv2c2/";
-		$data = array('Authorization'=>'Bearer '.$jwt, 'sris-consumerAdminId'=>00000000, 'Content-Type'=>'application/json');
-		$result = curl_get($requestUrl, $data);
 
-		return $result;
+		$headers = [
+			'Authorization: Bearer '.$jwt,
+			'sris-consumerAdminId: 00000000',
+			'Content-Type: application/json'
+		];
+
+		$apiResponse = curl_get($requestUrl, $data="", $header=$headers);
+
+		if($apiResponse){
+			$apiResponse = json_decode($apiResponse, true);
+			$checkIdCardApply = isset($apiResponse['responseData']['checkIdCardApply']) ? $apiResponse['responseData']['checkIdCardApply'] : '';
+			$result['response'] = [
+				'rowData' => $apiResponse,
+				'checkIdCardApplyFormat' => isset($this->responseMessageMapping['checkIdCardApply'][$checkIdCardApply]) ? $this->responseMessageMapping['checkIdCardApply'][$checkIdCardApply]: ''
+			];
+		}else{
+			$result['response']['checkIdCardApplyFormat'] = 'No Response';
+			$this->CI->json_output->setStatusCode(405)->setResponse($response)->send();
+		}
+
+		$this->CI->json_output->setStatusCode(200)->setResponse($result)->send();
 	}
 
 }
-
