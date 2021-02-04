@@ -109,7 +109,7 @@ export default {
   data: () => ({
     isCopyed: false,
     isLoading: false,
-    selectedImg: "avatar2.svg",
+    selectedImg: "avatar1.svg",
     greetingWord: "",
     authorName: "",
     authorImg: "",
