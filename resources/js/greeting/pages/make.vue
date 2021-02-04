@@ -85,12 +85,12 @@
           <div class="modal-body">
             <div class="msg">
               <transition name="fade">
-                <input type="text" v-if="!isCopyed" class="hide" @click="copy()" />
-                <span v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
+                <span class="copy" v-if="!isCopyed"><input type="text" class="hide" @click="copy()" /></span>
+                <span class="copy" v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
               </transition>
               <br />
               <span><div class="line-it-button" data-lang="zh_Hant" data-type="share-a" data-ver="3" data-color="default" data-size="small" data-count="false" style="display: none;"></div></span>
-              <span style="margin: 0 15px 0px 3px"><div class="fb-share-button" data-layout="button"></div></span>
+              <span><div class="fb-share-button" data-layout="button"></div></span>
             </div>
           </div>
         </div>
@@ -402,7 +402,6 @@ export default {
       transform: translate(-50%, -50%);
       width: 160px;
       display: inline-block;
-      margin: 16px 0 0 149px;
     }
 
     .msg {
@@ -418,8 +417,13 @@ export default {
       font-weight: bold;
       color: #ffffff;
 
+      .copy {
+        margin: 0px 0 0 149px;
+      }
+
       .fb-share-button {
         display: inline-flex;
+        margin: 0 15px 0px 3px
       }
 
       .line-it-button{
