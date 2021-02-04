@@ -6,7 +6,6 @@
           src="../asset/play.svg"
           class="img-fluid play"
           v-if="greetingData"
-          @click="play($event)"
         />
         <img src="../asset/play.svg" class="img-fluid play" v-else />
         <img
@@ -25,7 +24,7 @@
           src="/upload/greeting/video.mp4"
       ></video>
     </transition>
-    <div class="cnt" v-if="greetingData" @click="play($event)">
+    <div class="cnt" v-if="greetingData" @click.once="play($event)">
       <img src="../asset/greeting_logo.svg" class="top-center img-fluid" />
       <div class="greeting-card" ref="greetingcard">
         <div class="avatar-box">
@@ -88,11 +87,11 @@ export default {
         });
     },
     play($event) {
-      $($event.target).css("width", "50px");
+      $(".play").css("width", "50px");
       this.isPlay = true;
       this.$nextTick(() => {
         let video = $(".make-video")[0];
-        let total = video.duration;
+        let total = 20;
         let isCardShowed = false;
         let isZoneShowed = false;
         let isBtnShowed = false;
@@ -101,17 +100,17 @@ export default {
         let t = setInterval(() => {
           if (video.currentTime < total) {
             if (video.currentTime > 13 && !isCardShowed) {
-              $(this.$refs.greetingcard).css("opacity", 1);
+              $(".greeting-card").css("opacity", 1);
               isCardShowed = true;
             }
 
             if (video.currentTime > 14 && !isZoneShowed) {
-              $(this.$refs.zone).css("height", "435px");
+              $(".zone").css("height", "435px");
               isZoneShowed = true;
             }
 
             if (video.currentTime > 18 && !isBtnShowed) {
-              $(this.$refs.btn).css("opacity", 1);
+              $(".btn").css("opacity", 1);
               isBtnShowed = true;
             }
           }
@@ -331,7 +330,7 @@ export default {
   }
 
   .make-video {
-    width: 100%;
+    width: 97%;
     top: 50%;
     transform: translate(0px, -50%);
     @extend %position;
