@@ -102,7 +102,7 @@ export default {
     -webkit-transform:scaleX(-1);
     -o-transform:scaleX(-1);
     transform:scaleX(-1);
-    margin: -21px 0 0 0;
+    margin: -21px 0 0 5px;
   }
   .arrow-left:hover {
     background-color: #bfb5b596;
@@ -111,6 +111,7 @@ export default {
   .arrow-right {
     @extend %arrow;
     right: 0%;
+    margin: 0 5px 0 0px;
   }
   .arrow-right:hover {
     background-color: #bfb5b596;
