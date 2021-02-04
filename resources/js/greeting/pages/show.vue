@@ -172,7 +172,7 @@ export default {
 
       .avatar-box {
         width: 200px;
-        margin: 0px auto -20px auto;
+        margin: 0px auto -33px auto;
         text-align: center;
         height: 172px;
         position: relative;
@@ -189,7 +189,8 @@ export default {
         text-align: center;
         z-index: 1;
         position: relative;
-        width: 250px;
+        width: 282px;
+        margin-bottom: -27px;
       }
 
       .zone {
@@ -271,7 +272,7 @@ export default {
       color: #ffffff;
       font-weight: bolder;
       position: absolute;
-      bottom: 10px;
+      bottom: 75px;
       left: 50%;
       transform: translate(-50%, 0px);
       transition-duration: 2s;

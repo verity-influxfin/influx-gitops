@@ -253,7 +253,7 @@ export default {
 
     .avatar-box {
       width: 200px;
-      margin: -20px auto -10px auto;
+      margin: -20px auto -26px auto;
       height: 162px;
 
       .img {
@@ -286,9 +286,10 @@ export default {
       text-align: center;
       z-index: 1;
       position: relative;
+      margin-bottom: -27px;
 
       img {
-        width: 257px;
+        width: 282px;
       }
     }
 
