@@ -67,8 +67,8 @@ export default {
         dots: false,
         arrows: true,
         speed: 1000,
-        prevArrow: '<img class="arrow-left" src="/images/left_pointer.svg">',
-        nextArrow: '<img class="arrow-right" src="/images/right_pointer.svg">',
+        prevArrow: '<svg class="arrow-left slick-arrow"xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>',
+        nextArrow: '<svg class="arrow-right slick-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>',
       });
     },
   },
@@ -82,7 +82,6 @@ export default {
   position: relative;
 
   %arrow {
-    font-size: 40px;
     position: absolute;
     top: 50%;
     transform: translate(0px, -50%);
@@ -90,12 +89,19 @@ export default {
     cursor: pointer;
     z-index: 2;
     width: 40px;
-    padding: 0px 10px;
+    padding: 0px 11px;
+    background-color: #bfb5b55e;
+    border-radius: 29px;
   }
 
   .arrow-left {
     @extend %arrow;
     left: 0%;
+    -moz-transform:scaleX(-1);
+    -webkit-transform:scaleX(-1);
+    -o-transform:scaleX(-1);
+    transform:scaleX(-1);
+    margin: -21px 0 0 0;
   }
 
   .arrow-right {
