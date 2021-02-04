@@ -9,19 +9,23 @@
           @click="play($event)"
         />
         <img src="../asset/play.svg" class="img-fluid play" v-else />
+        <img
+            src="../asset/greeting_influx.svg"
+            class="img-fluid greeting_influx"
+        />
       </div>
+      <video v-else
+          class="make-video"
+          webkit-playsinline="true"
+          playsinline="true"
+          x-webkit-airplay="true"
+          x5-video-player-type="h5"
+          x5-video-player-fullscreen="true"
+          x5-video-ignore-metadata="true"
+          src="/upload/greeting/video.mp4"
+      ></video>
     </transition>
-    <video
-      class="make-video"
-      webkit-playsinline="true"
-      playsinline="true"
-      x-webkit-airplay="true"
-      x5-video-player-type="h5"
-      x5-video-player-fullscreen="true"
-      x5-video-ignore-metadata="true"
-      src="/upload/greeting/video.mp4"
-    ></video>
-    <div class="cnt" v-if="greetingData">
+    <div class="cnt" v-if="greetingData" @click="play($event)">
       <img src="../asset/greeting_logo.svg" class="top-center img-fluid" />
       <div class="greeting-card" ref="greetingcard">
         <div class="avatar-box">
@@ -131,13 +135,22 @@ export default {
     @extend %position;
     width: 100%;
     height: 100vh;
-    background: #0000008c;
+    background: #EFFAFF;
     z-index: 1;
 
     .play {
       width: 100px;
       position: absolute;
-      top: 50%;
+      top: 46%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition-duration: 1s;
+    }
+
+    .greeting_influx {
+      width: 100px;
+      position: absolute;
+      top: 55.5%;
       left: 50%;
       transform: translate(-50%, -50%);
       transition-duration: 1s;
@@ -160,6 +173,7 @@ export default {
     background-image: url("../asset/greetingborder.png");
     background-size: 100% 100%;
     background-position: inherit;
+    z-index: 10;
 
     .greeting-card {
       position: absolute;
@@ -283,30 +297,35 @@ export default {
       left: 50%;
       transform: translate(-50%, 0px);
       top: 5px;
-      width: 55px;
+      width: 95px;
+      z-index: 10;
     }
     .top-left {
       @extend %position;
       top: 3px;
       left: 3px;
       width: 79px;
+      z-index: 10;
     }
     .top-right {
       @extend %position;
       top: 3px;
       right: 3px;
       width: 79px;
+      z-index: 10;
     }
     .bottom-left {
       @extend %position;
       bottom: 3px;
       left: 3px;
       width: 79px;
+      z-index: 10;
     }
     .bottom-right {
       @extend %position;
       bottom: 3px;
       right: 3px;
+      z-index: 10;
       width: 79px;
     }
   }
