@@ -88,10 +88,11 @@ export default {
     color: #ffffff;
     cursor: pointer;
     z-index: 2;
-    width: 40px;
-    padding: 0px 11px;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
     background-color: #bfb5b55e;
-    border-radius: 29px;
+    border-radius: 8px;
   }
 
   .arrow-left {
@@ -103,10 +104,16 @@ export default {
     transform:scaleX(-1);
     margin: -21px 0 0 0;
   }
+  .arrow-left:hover {
+    background-color: #bfb5b596;
+  }
 
   .arrow-right {
     @extend %arrow;
     right: 0%;
+  }
+  .arrow-right:hover {
+    background-color: #bfb5b596;
   }
 
   .item {
