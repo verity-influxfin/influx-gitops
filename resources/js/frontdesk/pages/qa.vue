@@ -296,21 +296,25 @@ export default {
       this.borrow = [];
       this.invest = [];
       this.default = [];
-
+      newVal = newVal.toLowerCase();
       this.qaData.forEach((row, index) => {
-        if (
-          row.title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1 ||
-          row.content.toLowerCase().indexOf(newVal.toLowerCase()) !== -1
-        ) {
-          if (row.type === "borrow") {
-            this.borrow.push(row);
-          } else if (row.type === "invest") {
-            this.invest.push(row);
-          } else if (row.type === "default") {
-            this.default.push(row);
+        row.title = row.title.toLowerCase();
+        row.content = row.content.toLowerCase();
+        if ( row.title.indexOf(newVal) !== -1 || row.content.indexOf(newVal) !== -1 ) {
+          var tempData = $.extend(true, {}, row);
+          if(newVal != "" ){
+            tempData.content = tempData.content.replaceAll(new RegExp(newVal, 'g'),"<span class='highlight'>" + newVal + "</span>");
+          }
+          if (tempData.type === "borrow") {
+            this.borrow.push(tempData);
+          } else if (tempData.type === "invest") {
+            this.invest.push(tempData);
+          } else if (tempData.type === "default") {
+            this.default.push(tempData);
           }
         }
       });
+      $('.qaPage-wrapper .collapse').addClass('show');
     },
   },
   methods: {

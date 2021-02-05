@@ -71,7 +71,7 @@
                 <img src="/images/21greeting/body.svg" class="img-fluid body">
                 <img src="/images/21greeting/left.svg" class="img-fluid left">
                 <img src="/images/21greeting/right.svg" class="img-fluid right">
-{{--                <div class="dialog"></div>--}}
+                <div class="dialog"></div>
 
             </a>
 
