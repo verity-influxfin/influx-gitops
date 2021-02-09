@@ -196,7 +196,6 @@ export default {
           $('.line-it-button').attr('data-url',string);
           $('.fb-share-button').attr('data-href',string);
 
-          LineIt.loadButton();
           (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
@@ -204,6 +203,10 @@ export default {
             js.src = "https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v3.0";
             fjs.parentNode.insertBefore(js, fjs);
           }(document, 'script', 'facebook-jssdk'));
+
+          window.setTimeout(function() {
+            LineIt.loadButton();
+          }, 1500);
 
           $(this.$refs.messageModal).modal("show");
         })

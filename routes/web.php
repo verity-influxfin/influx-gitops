@@ -277,20 +277,11 @@ Route::get('/borrowLink', function () {
 });
 
 
+//NewYear card Game
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+Route::get('/cardgame', function () {
+    return view('cardgame');
+});
 
 
 
