@@ -1,6 +1,12 @@
 <template>
   <div class="index-wrapper">
     <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
+      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
+        <a :href="item.link" target="_blank">
+          <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
+          <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
+        </a>
+      </SplideSlide>
       <SplideSlide class="puhey-banner">
         <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
         <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
@@ -11,29 +17,23 @@
           <span>普匯．你的手機ATM</span>
           <div class="box">
             <a
-              class="loan"
-              href="/investLink"
-              target="_blank"
-              onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
-              ><img src="../asset/images/light-b.svg" class="img-fluid" />
+                class="loan"
+                href="/investLink"
+                target="_blank"
+                onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
+            ><img src="../asset/images/light-b.svg" class="img-fluid" />
               <div class="text">立即投資</div></a
             >
             <a
-              class="borrow"
-              href="/borrowLink"
-              target="_blank"
-              onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
-              ><img src="../asset/images/light-y.svg" class="img-fluid" />
+                class="borrow"
+                href="/borrowLink"
+                target="_blank"
+                onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
+            ><img src="../asset/images/light-y.svg" class="img-fluid" />
               <div class="text">立即借款</div></a
             >
           </div>
         </div>
-      </SplideSlide>
-      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
-        <a :href="item.link" target="_blank">
-          <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
-          <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
-        </a>
       </SplideSlide>
     </Splide>
     <div class="banner" v-else>
@@ -533,7 +533,7 @@ export default {
     bannerOptions: {
       type: "loop",
       autoplay: true,
-      perPage: 2,
+      perPage: 1,
       perMove: 1,
       pagination: false,
     },
