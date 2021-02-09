@@ -533,7 +533,7 @@ export default {
     bannerOptions: {
       type: "loop",
       autoplay: true,
-      perPage: 1,
+      perPage: 2,
       perMove: 1,
       pagination: false,
     },
