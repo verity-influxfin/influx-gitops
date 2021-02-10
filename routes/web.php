@@ -282,7 +282,9 @@ Route::get('/borrowLink', function () {
 Route::get('/cardgame', function () {
     return view('cardgame');
 });
+Route::post('getAns','Cardgamecontroller@getAns');
 
+Route::view('/cardgame/{path?}', 'cardgame');
 
 
 Route::view('/{path?}', 'index');

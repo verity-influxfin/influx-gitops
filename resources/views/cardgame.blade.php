@@ -47,6 +47,7 @@
 
     <!-- local -->
     <script type="text/javascript" src="{{ asset('js/cardgame.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/turntable.js') }}"></script>
 </body>
 
 </html>
