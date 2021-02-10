@@ -50,8 +50,6 @@ class Cardgamecontroller extends BaseController
     public function getAns(Request $request)
     {
         $input = $request->all();
-//        $id = base64_decode($input['token']);
-//        $result = DB::table('greeting')->select('*')->where('ID', '=', $id)->first();
 
         $result = [
             'ans' => $input['qnum'] == 7 && $input['qans'] == 'A' || $input['qnum'] != 7 && $input['qans'] == 'B' ? 0 : 1

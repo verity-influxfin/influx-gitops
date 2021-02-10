@@ -42,12 +42,12 @@
     <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/axios.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/package/vuex.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vue.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/package/vue-router.min.js') }}"></script>
 
     <!-- local -->
     <script type="text/javascript" src="{{ asset('js/cardgame.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/turntable.js') }}"></script>
 </body>
 
 </html>
