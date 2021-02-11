@@ -41,8 +41,8 @@
           </div>
         </div>
       </SplideSlide>
-      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
-        <a :href="item.link" target="_blank" v-if="index > 1">
+      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index" v-if="index > 1">
+        <a :href="item.link" target="_blank">
           <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
           <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
         </a>
