@@ -93,6 +93,7 @@ $(() => {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
             this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
+            this.$refs.A = this;
         },
         mounted() {
             this.$nextTick(() => {
@@ -166,6 +167,9 @@ $(() => {
                 } else {
                     $router.push("/feedback");
                 }
+            },
+            checkLogin() {
+                console.log(2);
             },
             doLogin() {
                 grecaptcha.ready(() => {

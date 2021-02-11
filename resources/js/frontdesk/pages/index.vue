@@ -8,6 +8,12 @@
         </a>
       </SplideSlide>
       <SplideSlide class="puhey-banner">
+        <a href="/cardgame" target="_blank" @click="checkLogin()">
+          <img :src="`/images/cardgame_banner.jpg`" class="hidden-desktop img-fluid" />
+          <img :src="`/images/cardgame_banner_mobole.jpg`" class="hidden-phone img-fluid" />
+        </a>
+      </SplideSlide>
+      <SplideSlide class="puhey-banner">
         <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
         <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
         <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
@@ -761,6 +767,10 @@ export default {
         this.routeIndex.start++;
         this.routeIndex.end++;
       }
+    },
+    checkLogin() {
+      console.log(1);
+      this.$refs.checkLogin();
     },
   },
 };

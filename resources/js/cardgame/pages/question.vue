@@ -34,8 +34,8 @@ export default {
       process: false,
       randkeys: [],
       faceNum: ['H','A','P','P','Y','N','E','W','Y','E','A','R'],
-      picTop: ['40','50','50','41','49','41','43','50','56','43','49','49'],
-      picLeft: ['4','8','4','5','5','3','1','7','6','2','6','2','6',],
+      picTop: ['40','46','50','36','48','37','43','47','51','43','47','45'],
+      picLeft: ['4','4','3','2','3','1','-1','5','4','0','4','0','5'],
       imgs: {
         1: {
           num: "A",
@@ -130,21 +130,19 @@ export default {
         axios
             .post("/getAns", data)
             .then((res) => {
-              var ans = res.data.ans == 1,
-                  finish = $('.done').length;
-              if(finish > 2){
-                alert('恭喜全部答對，請前往抽獎');
-                window.location.href = "/cardgame/truntable"
-              }else{
-                if(ans){
+              if(res.data.ans == 1){
+                $('.active:not(.done)').addClass('done');
+                if($('.done').length > 2){
+                  alert('恭喜全部答對，請前往抽獎');
+                  window.location.href = "/cardgame/turntable"
+                }else {
                   alert('恭喜您答對了!! 下一題~')
-                  $('.active:not(.done)').addClass('done');
                   $('.active').removeClass('active');
                   $('[data-id='+data.qnum+'] .cardAns:not([data-ans='+data.qans+'])').remove()
-                }else{
-                  alert('答錯囉~再讓我們玩一次吧！');
-                  window.location.href = "/cardgame"
                 }
+              }else{
+                alert('答錯囉~再讓我們玩一次吧！');
+                window.location.href = "/cardgame"
               }
               this.process = false;
             })
