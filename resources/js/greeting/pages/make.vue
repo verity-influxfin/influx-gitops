@@ -89,7 +89,7 @@
                 <span class="copie" v-else> 賀卡已複製到您的剪貼簿，<br />趕快分享給好友吧！ </span>
               </transition>
               <br />
-              <span><div class="line-it-button" data-lang="zh_Hant" data-type="share-a" data-ver="3" data-color="default" data-size="small" data-count="false" style="display: none;"></div></span>
+              <span><a class="line-it-button"></a></span>
               <span><div class="fb-share-button" data-layout="button"></div></span>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default {
         .then((res) => {
           let string = `${location.origin}/greeting/show?token=${res.data.token}ber1b9er1be9&utm_source=greeting&utm_medium=track&utm_campaign=greetingShow`;
           $(".hide").val(string);
-          $('.line-it-button').attr('data-url',string);
+          $('.line-it-button').attr('href','https://social-plugins.line.me/lineit/share?url='+string);
           $('.fb-share-button').attr('data-href',string);
 
           (function(d, s, id) {
@@ -436,8 +436,12 @@ export default {
       }
 
       .line-it-button{
-        width:52px!important;
-        height: 20px!important;
+        background-image: url(/images/line_share.png);
+        background-size: 45px;
+        background-repeat: no-repeat;
+        width: 46px !important;
+        height: 20px !important;
+        display: inline-block;
       }
     }
   }

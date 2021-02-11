@@ -1,6 +1,12 @@
 <template>
   <div class="index-wrapper">
     <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
+      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
+        <a :href="item.link" target="_blank">
+          <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
+          <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
+        </a>
+      </SplideSlide>
       <SplideSlide class="puhey-banner">
         <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
         <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
@@ -11,29 +17,23 @@
           <span>普匯．你的手機ATM</span>
           <div class="box">
             <a
-              class="loan"
-              href="/investLink"
-              target="_blank"
-              onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
-              ><img src="../asset/images/light-b.svg" class="img-fluid" />
+                class="loan"
+                href="/investLink"
+                target="_blank"
+                onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
+            ><img src="../asset/images/light-b.svg" class="img-fluid" />
               <div class="text">立即投資</div></a
             >
             <a
-              class="borrow"
-              href="/borrowLink"
-              target="_blank"
-              onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
-              ><img src="../asset/images/light-y.svg" class="img-fluid" />
+                class="borrow"
+                href="/borrowLink"
+                target="_blank"
+                onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
+            ><img src="../asset/images/light-y.svg" class="img-fluid" />
               <div class="text">立即借款</div></a
             >
           </div>
         </div>
-      </SplideSlide>
-      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
-        <a :href="item.link" target="_blank">
-          <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
-          <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
-        </a>
       </SplideSlide>
     </Splide>
     <div class="banner" v-else>
@@ -764,6 +764,11 @@ export default {
     },
   },
 };
+alert('【普匯溫馨提醒】請留意網路詐騙新手法\n' +
+    '\n' +
+    '近期有多起詐騙信件及簡訊假借公司民名義，要求您輸入帳號密碼。\n' +
+    '【普匯不會以任何簡訊、EMAIL的方式要求您輸入帳號密碼】\n' +
+    '如有疑慮請撥打165反詐騙專線，預祝您新春愉快！');
 </script>
 
 <style lang="scss">
