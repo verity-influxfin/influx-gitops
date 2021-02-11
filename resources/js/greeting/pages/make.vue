@@ -196,7 +196,6 @@ export default {
           $('.line-it-button').attr('href','https://social-plugins.line.me/lineit/share?url='+string);
           $('.fb-share-button').attr('data-href',string);
 
-          LineIt.loadButton();
           (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
             if (d.getElementById(id)) return;
