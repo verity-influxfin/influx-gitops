@@ -321,7 +321,7 @@ export default {
     getQaData() {
       axios
         .get(
-          "https://cors-anywhere.herokuapp.com/https://d3imllwf4as09k.cloudfront.net/json/qa.json"
+          "/upload/json/qa.json"
         )
         .then((res) => {
           this.qaData = res.data.QA;
