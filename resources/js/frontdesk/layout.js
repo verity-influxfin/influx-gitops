@@ -17,6 +17,9 @@ $(() => {
                 sessionStorage.setItem("flag", Object.keys(userData).length !== 0 ? "login" : "logout");
                 sessionStorage.setItem("loginTime", Object.keys(userData).length !== 0 ? new Date().getTime() : 0);
                 sessionStorage.setItem("userData", JSON.stringify(userData));
+                localStorage.setItem("flag", Object.keys(userData).length !== 0 ? "login" : "logout");
+                localStorage.setItem("loginTime", Object.keys(userData).length !== 0 ? new Date().getTime() : 0);
+                localStorage.setItem("userData", JSON.stringify(userData));
             }
         });
     };
@@ -93,7 +96,6 @@ $(() => {
             this.account = $cookies.get('account') ? $cookies.get('account') : '';
             this.businessNum = $cookies.get('businessNum') ? $cookies.get('businessNum') : '';
             this.getListData();
-            this.$refs.A = this;
         },
         mounted() {
             this.$nextTick(() => {
@@ -168,9 +170,6 @@ $(() => {
                     $router.push("/feedback");
                 }
             },
-            checkLogin() {
-                console.log(2);
-            },
             doLogin() {
                 grecaptcha.ready(() => {
                     grecaptcha.execute('6LfQla4ZAAAAAGrpdqaZYkJgo_0Ur0fkZHQEYKa3', { action: 'submit' }).then((token) => {
@@ -207,7 +206,11 @@ $(() => {
                                         this.$router.push('loannotification');
                                     }
 
-                                    location.reload();
+                                    if($("#loginModal").attr("data-type") == "cardgame"){
+                                        location.replace('/cardgame');
+                                    }else {
+                                        location.reload();
+                                    }
                                 })
                                 .catch((error) => {
                                     let errorsData = error.response.data;

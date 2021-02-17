@@ -20,7 +20,7 @@
         </a>
       </SplideSlide>
       <SplideSlide class="puhey-banner">
-        <a href="/cardgame" target="_blank" @click="checkLogin()">
+        <a target="_blank" @click="checkLogin()">
           <img :src="`/images/cardgame_banner.jpg`" class="hidden-desktop img-fluid" />
           <img :src="`/images/cardgame_banner_mobole.jpg`" class="hidden-phone img-fluid" />
         </a>
@@ -787,8 +787,13 @@ export default {
       }
     },
     checkLogin() {
-      console.log(1);
-      this.$refs.checkLogin();
+      if(localStorage.getItem("flag") != "login"){
+        $("#loginModal").attr("data-type","cardgame");
+        $("p.nav-link.l").click();
+      }
+      else {
+        location.replace('/cardgame');
+      }
     },
   },
 };

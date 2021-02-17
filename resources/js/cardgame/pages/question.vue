@@ -115,7 +115,7 @@ export default {
   mounted:function () {
     //todo random
     this.randkeys = [1,2,3,4,5,6,7,8,9,10,11,12];
-    $(document).off("click",".cardA,.cardB").on("click",".cardA,.cardB" ,  function(e,t){
+    $(document).off("click",".cardA:not(.done),.cardB:not(.done)").on("click",".cardA:not(.done),.cardB:not(.done)" ,  function(e,t){
       $(this).addClass('active');
     });
   },
@@ -178,7 +178,8 @@ export default {
       height: 150px;
       display: inline-table;
       border-radius: 20px;
-      border: 6px solid;
+      border-width: 6px;
+      border-style: solid;
       padding: 8px 5px;
       font-weight: bold;
       color: white;
@@ -191,6 +192,7 @@ export default {
         position: absolute;
         width: 94%;
         height: 80%;
+        border-width: 20px;
         z-index: 999;
         left: 0;
         top: 86px;

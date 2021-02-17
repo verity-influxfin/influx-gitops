@@ -1,32 +1,21 @@
-//vuex store
-import state from '../frontdesk/store/state';
-import getters from '../frontdesk/store/getters';
-import actions from '../frontdesk/store/actions';
-import mutations from '../frontdesk/store/mutations';
-
 //vue router
 import routers from './router/router';
 
 import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 
 $(() => {
-    const sessionStoragePlugin = store => {
-        store.subscribe((mutation, { userData }) => {
-            if (mutation.type === "mutationUserData") {
-                sessionStorage.setItem("flag", Object.keys(userData).length !== 0 ? "login" : "logout");
-                sessionStorage.setItem("loginTime", Object.keys(userData).length !== 0 ? new Date().getTime() : 0);
-                sessionStorage.setItem("userData", JSON.stringify(userData));
-            }
-        });
-    };
-
     let now = new Date();
     let startDate = new Date('2021-02-01 00:00:00');
-    let endDate = new Date('2021-02-17 00:00:00');
+    let endDate = new Date('2021-03-10 00:00:00');
     if (startDate >= now || now > endDate) {
         alert('敬請期待！');
         location.replace('/index');
         return;
+    }
+
+    if(localStorage.getItem("flag") != "login"){
+        alert('請登入會員');
+        location.replace('/index');
     }
 
     if (window.innerWidth >= 767) {
@@ -51,27 +40,18 @@ $(() => {
         }
     });
 
-    const store = new Vuex.Store({
-        state,
-        getters,
-        actions,
-        mutations,
-        plugins: [sessionStoragePlugin]
-    });
-
     const vue = new Vue({
         el: '#cardgame',
-        store,
         router,
         computed: {
             isInvestor() {
-                return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")).investor : "0";
+                return localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData")).investor : "0";
             },
             flag() {
-                return sessionStorage.getItem("flag") ? sessionStorage.getItem("flag") : '';
+                return localStorage.getItem("flag") ? localStorage.getItem("flag") : '';
             },
             userData() {
-                return sessionStorage.getItem("userData") ? JSON.parse(sessionStorage.getItem("userData")) : {}
+                return localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData")) : {}
             },
         },
         created() {

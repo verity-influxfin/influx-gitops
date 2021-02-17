@@ -7,28 +7,12 @@
         /></router-link>
       </div>
     </nav>
-    <div class="turntable">
-      <div class="cover" @click="turn">{{flag ? '1':'2'}}普匯<br/>好好玩</div>
-      <div class="arrow"></div>
-      <div class="disk" style="background-image: url(/images/turntable.png)"></div>
+    <div class="block">
+      <div class="turntable">
+        <div class="arrow"></div>
+        <div class="disk"></div>
+      </div>
     </div>
-    <li class="nav-item" v-if="!flag || flag === 'logout'">
-      <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>SIGN IN</p>
-    </li>
-<!--    <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">-->
-<!--      <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>-->
-<!--      <ul class="dropdown-menu" style="min-width: 5rem;">-->
-<!--        <li v-if="isInvestor == 0">-->
-<!--          <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>-->
-<!--        </li>-->
-<!--        <li v-else>-->
-<!--          <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>-->
-<!--        </li>-->
-<!--        <li v-if="flag === 'login'">-->
-<!--          <p class="dropdown-item" @click="logout">登出</p>-->
-<!--        </li>-->
-<!--      </ul>-->
-<!--    </li>-->
   </div>
 </template>
 
@@ -104,48 +88,40 @@ export default {
     }
   }
 
-  .turntable {
+  .block {
     background-color: #ffd186;
     width: 100%;
     height: 100%;
-    position: absolute;
-    padding: 100px 0 0 0;
+    padding: 100px 0;
+    text-align: center;
 
-    .disk {
-      background-image: url(/images/turntable.png);
-      background-repeat: no-repeat;
-      background-size: 100%;
-      background-position: 0 -8px;
-      width: 100%;
-      height: 359px;
-      position: absolute;
-      transition: 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      transform-style: preserve-3d;
-      transform: rotate(3600deg);
-    }
-    .arrow {
-      background-color: #aa1933;
-      z-index: 99;
-      width: 5px;
-      height: 24px;
-      display: block;
-      top: 233px;
-      left: 186px;
-      position: absolute;
-    }
-    .cover {
-      background-color: #aa1933;
-      z-index: 99;
-      width: 50px;
-      height: 24px;
-      display: block;
-      top: 261px;
-      left: 164px;
-      position: absolute;
-      color: white;
-      text-align: center;
-      font-weight: bold;
-      letter-spacing: 0.5px;
+    .turntable {
+      background-color: #ffd186;
+      display: inline-block;
+
+      .disk {
+        background-image: url(/images/turntable.png);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: 0 0px;
+        background-color: transparent;
+        width: 350px;
+        height: 350px;
+        transition: 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transform-style: preserve-3d;
+        transform: rotate(3600deg);
+        display: inline-block;
+      }
+
+      .arrow {
+        background-image: url(/images/turntableArrow.png);
+        background-repeat: no-repeat;
+        background-size: 100%;
+        z-index: 99;
+        width: 70px;
+        height: 105px;
+        display: inline-block;
+      }
     }
   }
 }

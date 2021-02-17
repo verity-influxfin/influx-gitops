@@ -1,10 +1,11 @@
 {
-    "/js/backend.js": "/js/backend.js?id=b601de8772dc5b31a753",
+    "/js/backend.js": "/js/backend.js?id=a5a1ec98f05990973516",
     "/js/campusJoin.js": "/js/campusJoin.js?id=c0b9dba164248d55ceac",
-    "/js/greeting.js": "/js/greeting.js?id=bc05e6fac787800e1319",
-    "/js/web.js": "/js/web.js?id=facaaf7ca0f56318409d",
-    "/css/web.css": "/css/web.css?id=e12e6f94eec2475ef4e8",
+    "/js/cardgame.js": "/js/cardgame.js?id=4559434bb0f93d1ab0f5",
+    "/js/greeting.js": "/js/greeting.js?id=25a04e9a18c3cdcfe0d7",
+    "/js/web.js": "/js/web.js?id=b82162146a00f9294c72",
+    "/css/web.css": "/css/web.css?id=b75c37909be732d42ba0",
     "/css/backend.css": "/css/backend.css?id=2605b7c26b6fe5f50507",
-    "/css/campusJoin.css": "/css/campusJoin.css?id=9f535a41c303c6d43d90",
+    "/css/campusJoin.css": "/css/campusJoin.css?id=c3771d6efb01bd6a22ca",
     "/css/errors.css": "/css/errors.css?id=74fd3e70b3b2580ac3f0"
 }
