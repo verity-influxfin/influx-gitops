@@ -1,5 +1,5 @@
 <template>
-  <div class="turntable-wrapper">
+  <div class="turntable-wrapper" @click.once="turn()">
     <nav class="page-header navbar navbar-expand-lg">
       <div class="web-logo">
         <router-link to="index"
@@ -40,34 +40,20 @@ export default {
       if(!this.process){
         this.process = true;
         let data = {
-          qnum: event.target.parentElement.dataset.id,
-          qans: event.target.dataset.ans,
+          user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"]: {},
+          // qans: event.target.dataset.ans,
         };
-        // axios
-        //     .post("/getAns", data)
-        //     .then((res) => {
-        //       var ans = res.data.ans == 1,
-        //           finish = $('.done').length;
-        //       if(finish > 2){
-        //         alert('恭喜全部答對，請前往抽獎');
-        //         window.location.href = "/truntable"
-        //       }else{
-        //         if(ans){
-        //           alert('恭喜您答對了!! 下一題~')
-        //           $('.active:not(.done)').addClass('done');
-        //           $('.active').removeClass('active');
-        //           $('[data-id='+data.qnum+'] .cardAns:not([data-ans='+data.qans+'])').remove()
-        //         }else{
-        //           alert('答錯囉~再讓我們玩一次吧！');
-        //           window.location.href = "/cardgame"
-        //         }
-        //       }
-        //       this.process = false;
-        //     })
-        //     .catch((err) => {
-        //       console.error(err);
-        //     });
-        console.log('test');
+        axios
+            .post("/setGamePrize", data)
+            .then((res) => {
+              var prize = res.data.prize;
+
+              this.process = false;
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        console.log(data.user_id);
       }else{
         console.log('duplicate!!');
       }
@@ -92,7 +78,7 @@ export default {
     background-color: #ffd186;
     width: 100%;
     height: 100%;
-    padding: 100px 0;
+    padding: 160px 0 300px;
     text-align: center;
 
     .turntable {
@@ -121,6 +107,8 @@ export default {
         width: 70px;
         height: 105px;
         display: inline-block;
+        position: absolute;
+        margin: 120px 0 0 142px;
       }
     }
   }

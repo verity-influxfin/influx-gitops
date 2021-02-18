@@ -21,15 +21,27 @@ class Cardgamecontroller extends BaseController
     {
     }
 
-    public function setGreetingData(Request $request)
+    public function setGamePrize(Request $request)
     {
         $this->inputs = $request->all();
         $this->data = '';
 
         try {
+            $prizeList = [
+                '恭喜抽中威秀雙人套票一組！' => 35,
+                '恭喜抽中Linepoint 100點！' => 35,
+                '恭喜抽中Linepoint 50點！' => 35,
+                '恭喜抽中Linepoint 10點！' => 35,
+                '恭喜抽中Linepoint 5點！' => 35,
+                '恭喜抽中新年好話一句！牛轉乾坤行好運' => 35,
+                '恭喜抽中新年好話一句！牛年天天開心數鈔票' => 35,
+                '恭喜抽中新年好話一句！牛年旺旺來' => 35,
+            ];
+            $this->inputs['get_prize'] = "fsddsv";
+            $this->inputs['created_at'] = time();
             $exception = DB::transaction(function () {
-                $id = DB::table('greeting')->insertGetId($this->inputs);
-                $this->data = ['token' => base64_encode($id)];
+                $id = DB::table('cardgame')->insertGetId($this->inputs);
+                $this->data = ['prize' => '??'];
             }, 5);
             return response()->json($this->data, 200);
         } catch (Exception $e) {
@@ -42,7 +54,7 @@ class Cardgamecontroller extends BaseController
         $input = $request->all();
 
         $id = base64_decode($input['token']);
-        $result = DB::table('greeting')->select('*')->where('ID', '=', $id)->first();
+        $result = DB::table('cardgame')->select('*')->where('ID', '=', $id)->first();
 
         return response()->json($result, 200);
     }

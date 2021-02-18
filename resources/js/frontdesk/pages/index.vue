@@ -9,7 +9,7 @@
       </SplideSlide>
       <SplideSlide class="puhey-banner">
         <a :href="bannerData[1].link" target="_blank">
-          <img :src="`/upload/banner/${bannerData[1].desktop}`" class="hidden-desktop img-fluid" />
+          <img :src="`/upload/banner/${bannerData[1].desktop}`" class="hidden-desktop img-fluid" />loca
           <img :src="`/upload/banner/${bannerData[1].mobile}`" class="hidden-phone img-fluid" />
         </a>
       </SplideSlide>
