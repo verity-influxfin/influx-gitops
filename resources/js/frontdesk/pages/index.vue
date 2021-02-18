@@ -2,24 +2,6 @@
   <div class="index-wrapper">
     <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
       <SplideSlide class="puhey-banner">
-        <a :href="bannerData[0].link" target="_blank">
-          <img :src="`/upload/banner/${bannerData[0].desktop}`" class="hidden-desktop img-fluid" />
-          <img :src="`/upload/banner/${bannerData[0].mobile}`" class="hidden-phone img-fluid" />
-        </a>
-      </SplideSlide>
-      <SplideSlide class="puhey-banner">
-        <a :href="bannerData[1].link" target="_blank">
-          <img :src="`/upload/banner/${bannerData[1].desktop}`" class="hidden-desktop img-fluid" />
-          <img :src="`/upload/banner/${bannerData[1].mobile}`" class="hidden-phone img-fluid" />
-        </a>
-      </SplideSlide>
-      <SplideSlide class="puhey-banner">
-        <a :href="bannerData[2].link" target="_blank">
-          <img :src="`/upload/banner/${bannerData[2].desktop}`" class="hidden-desktop img-fluid" />
-          <img :src="`/upload/banner/${bannerData[2].mobile}`" class="hidden-phone img-fluid" />
-        </a>
-      </SplideSlide>
-      <SplideSlide class="puhey-banner">
         <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
         <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
         <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
@@ -47,7 +29,7 @@
           </div>
         </div>
       </SplideSlide>
-      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index" v-if="index > 3">
+      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
         <a :href="item.link" target="_blank">
           <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
           <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
