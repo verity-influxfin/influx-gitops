@@ -23,9 +23,9 @@ class Id_card_lib {
 	private $parametersMapping = [
 		'applyCode' => [
 			'未領' => '0',
-			'領證' => '1',
-			'補證' => '2',
-			'換證' => '3',
+			'初發' => '1',
+			'補發' => '2',
+			'換發' => '3',
 		],
 		'issueSiteId' => [
 			'連江' => '09007',
@@ -60,7 +60,7 @@ class Id_card_lib {
 	public function __construct()
 	{
 		$this->CI = &get_instance();
-		$this->CI->load->library('output/json_output');
+		// $this->CI->load->library('output/json_output');
 		// $this->CI->load->library('JWT');
 	}
 
@@ -73,50 +73,63 @@ class Id_card_lib {
 	 * @param  string $userId       [使用api之使用者代號]
 	 * @return array  $result       [查驗結果]
 	 * (
-	 *  [request] =>
-	 *    (
-	 *     [personId] => 身份證字號
-	 *     [applyCode] => 領補換類別
-	 *     [applyYyymmdd] => 發證日期
-	 *     [issueSiteId] => 發證地點
-	 *    )
-	 *  [response] =>
-	 *    (
-	 *     [rowData] => 查驗結果
-	 *     [checkIdCardApplyFormat] => 查驗結果說明
-	 *    )
+	 *  [status] => 回應碼
+	 *  [response]=>
+	 *   (
+	 *    [request] =>
+	 *      (
+	 *       [personId] => 身份證字號
+	 *       [applyCode] => 領補換類別
+	 *       [applyYyymmdd] => 發證日期
+	 *       [issueSiteId] => 發證地點
+	 *      )
+	 *    [response] =>
+	 *      (
+	 *       [rowData] => 查驗結果
+	 *       [checkIdCardApplyFormat] => 查驗結果說明
+	 *      )
+	 *   )
 	 * )
 	 */
-	public function send_request($personId = '', $applyCode = '未領', $applyYyymmdd = '', $issueSiteId = '', $userId="inFlux000"){
+	public function send_request($personId = '', $applyCode = '初發', $applyYyymmdd = '', $issueSiteId = '', $userId="inFlux000"){
 		$result = [
-			'request' =>[
-				'personId' => $personId,
-				'applyCode' => $applyCode,
-				'applyYyymmdd' => $applyYyymmdd,
-				'issueSiteId' => $issueSiteId
-			],
-			'response'=>[
-				'rowData' => [],
-				'checkIdCardApplyFormat' => 'Wrong Parameters'
-			],
+			'status' => '500',
+			'response' => [
+				'request' =>[
+					'personId' => $personId,
+					'applyCode' => $applyCode,
+					'applyYyymmdd' => $applyYyymmdd,
+					'issueSiteId' => $issueSiteId
+				],
+				'response'=>[
+					'rowData' => [],
+					'checkIdCardApplyFormat' => 'Wrong Parameters'
+				],
+			]
 		];
 
 		if(!$personId || !$applyCode || !$applyYyymmdd || !$issueSiteId){
-			$result['response']['checkIdCardApplyFormat'] = 'Wrong Parameters';
-			$this->CI->json_output->setStatusCode(400)->setResponse($result)->send();
+			$result['status'] = 400;
+			$result['response']['response']['checkIdCardApplyFormat'] = 'Wrong Parameters';
+			// $this->CI->json_output->setStatusCode(400)->setResponse($result)->send();
+			return $result;
 		}
 		// pattern
 		$applyCodeFormat = isset($this->parametersMapping['applyCode'][$applyCode]) ? $this->parametersMapping['applyCode'][$applyCode] : '';
 		$issueSiteIdFormat = isset($this->parametersMapping['issueSiteId'][$issueSiteId]) ? $this->parametersMapping['issueSiteId'][$issueSiteId] : '';
 
 		if(!$applyCodeFormat || !$issueSiteIdFormat){
-			$result['response']['checkIdCardApplyFormat'] = 'Parameters Not Match';
-			$this->CI->json_output->setStatusCode(401)->setResponse($result)->send();
+			$result['status'] = 401;
+			$result['response']['response']['checkIdCardApplyFormat'] = 'Parameters Not Match';
+			// $this->CI->json_output->setStatusCode(401)->setResponse($result)->send();
+			return $result;
 		}
 
 		if(! preg_match('/^[0-9]{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/',$applyYyymmdd)){
-			$result['response']['checkIdCardApplyFormat'] = 'Parameters of applyYyymmdd Format Is Wrong';
-			$this->CI->json_output->setStatusCode(401)->setResponse($result)->send();
+			$result['status'] = 401;
+			$result['response']['response']['checkIdCardApplyFormat'] = 'Parameters of applyYyymmdd Format Is Wrong';
+			// $this->CI->json_output->setStatusCode(401)->setResponse($result)->send();
+			return $result;
 		}
 
 		$privateKey = file_get_contents('file:///home/ubuntu/influx_privkey/ris_private.pem');
@@ -151,16 +164,19 @@ class Id_card_lib {
 		if($apiResponse){
 			$apiResponse = json_decode($apiResponse, true);
 			$checkIdCardApply = isset($apiResponse['responseData']['checkIdCardApply']) ? $apiResponse['responseData']['checkIdCardApply'] : '';
-			$result['response'] = [
+			$result['response']['response'] = [
 				'rowData' => $apiResponse,
 				'checkIdCardApplyFormat' => isset($this->responseMessageMapping['checkIdCardApply'][$checkIdCardApply]) ? $this->responseMessageMapping['checkIdCardApply'][$checkIdCardApply]: ''
 			];
 		}else{
-			$result['response']['checkIdCardApplyFormat'] = 'No Response';
-			$this->CI->json_output->setStatusCode(405)->setResponse($response)->send();
+			$result['status'] = 405;
+			$result['response']['response']['checkIdCardApplyFormat'] = 'No Response';
+			// $this->CI->json_output->setStatusCode(405)->setResponse($response)->send();
+			return $result;
 		}
-
-		$this->CI->json_output->setStatusCode(200)->setResponse($result)->send();
+		$result['status'] = 200;
+		// $this->CI->json_output->setStatusCode(200)->setResponse($result)->send();
+		return $result;
 	}
 
 }

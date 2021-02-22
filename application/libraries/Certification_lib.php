@@ -383,18 +383,21 @@ class Certification_lib{
 
 			// 戶役政 api
 			$this->CI->load->library('id_card_lib');
-			$requestPersonId = isset($ocr['id_number']) ? $ocr['id_number'] : '';
-			preg_match('/(初|補|換)發$/',$ocr['id_card_place'],$requestApplyCode);
-			$reqestApplyYyymmdd = $ocr['id_card_date'];
-			$requestIssueSiteId = preg_match('/((\W{1}|新北)市|\W{1}縣)|(連江|金門)/',$ocr['id_card_place'],$requestIssueSiteId);
+			$requestPersonId = isset($content['id_number']) ? $content['id_number'] : '';
+			preg_match('/(初|補|換)發$/',$content['id_card_place'],$requestApplyCode);
+			$requestApplyCode = isset($requestApplyCode[0]) ? $requestApplyCode[0] : '';
+			$reqestApplyYyymmdd = $content['id_card_date'];
+			preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/',$content['id_card_place'],$requestIssueSiteId);
+			$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
 			$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId);
 			if($result){
-				$result = json_decode($result,true);
+				// $result = json_decode($result,true);
 				if($result['status'] != '200'){
 					$done = false;
 				}
 				$content['id_card_api'] = $result['response'];
 			}else{
+				$content['id_card_api'] = 'no response';
 				$done = false;
 			}
 
