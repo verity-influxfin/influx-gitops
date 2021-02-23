@@ -242,9 +242,10 @@ export default {
       .cardFlip {
         position: absolute;
         backface-visibility: hidden;
-        left: 6px;
+        left: 0px;
         &.card-back {
           transform: rotateY(180deg);
+          width: 100%;
           height: 100%;
           background-repeat: no-repeat;
           padding: 76px 32px;
