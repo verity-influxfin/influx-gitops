@@ -8,17 +8,18 @@
       </div>
     </nav>
     <div class="cards">
+      <div class="countdown">00:<span>10</span></div>
       <template >
         <span :class="'card'+(index%2===0?'B':'A')" v-for="(d, index) in randkeys">
-          <span class="cardFlip card-front">
+          <span class="cardFlip card-front" @click.once="timer()">
             <span class="cardNum">{{faceNum[index]}}</span>
             <img class="cardFace" :src="'/images/cardGame'+(index+1)+'.png'">
           </span>
           <span class="cardFlip card-back">
             <span class="cardQuestion" :data-id="d">
               {{imgs[d].question}}<br /><br />
-              <div class="cardAns" @click.once="ans" data-ans="A">(A){{imgs[d].selection[0]}}</div>
-              <div class="cardAns" @click.once="ans" data-ans="B">(B){{imgs[d].selection[1]}}</div>
+              <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="A">(A){{imgs[d].selection[0]}}</div>
+              <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="B">(B){{imgs[d].selection[1]}}</div>
             </span>
           </span>
         </span>
@@ -40,15 +41,15 @@ export default {
           selection: ['借貸/投資','保險'],
         },
         2: {
-          question: 'p2p借貸的英文縮寫?',
+          question: 'p2p借貸的英文<br />縮寫為何?',
           selection: ['peer to peer','pika to pika'],
         },
         3: {
-          question: '普匯今年舉辦什麼活動?',
+          question: '普匯今年舉辦<br />什麼活動?',
           selection: ['AI金融科技創新創意競賽','國外旅遊'],
         },
         4: {
-          question: '普匯為下列何種類型公司?',
+          question: '普匯為下列何種<br />類型公司?',
           selection: ['金融科技','科技金融'],
         },
         5: {
@@ -92,9 +93,12 @@ export default {
       let j = Math.floor(Math.random() * (i + 1));
       [this.randkeys[i], this.randkeys[j]] = [this.randkeys[j], this.randkeys[i]];
     }
-    $(document).off("click",".cardA:not(.done),.cardB:not(.done)").on("click",".cardA:not(.done),.cardB:not(.done)" ,  function(e,t){
+    $('.countdown').hide();
+    $(document).off("click",".cardA:not(.done):not(.active),.cardB:not(.done):not(.active)").on("click",".cardA:not(.done):not(.active),.cardB:not(.done):not(.active)" ,  function(e,t){
       $('.cardA,.cardB').hide();
       $(this).addClass('active').show();
+      $('.countdown').show();
+      $('.countdown span').text('10');
     });
     let data = {
       user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"] : {},
@@ -105,6 +109,11 @@ export default {
           if (res.data) {
             alert('您已參加過遊戲囉!!');
             location.replace('/');
+          }else{
+            alert('遊戲流程：\n' +
+                '◆從12張卡牌中，挑選喜愛的3個生肖回答普匯相關題目\n' +
+                '◆每題限時10秒，30秒即可完成遊戲\n' +
+                '◆答錯可重新遊戲直到全對');
           }
         })
         .catch((err) => {
@@ -112,7 +121,31 @@ export default {
         });
   },
   methods: {
+    timer(){
+      let my = this
+      this.time = setInterval(function(){
+        var time = $('.countdown span');
+        if(time.text()>0){
+          time.text('0'+(time.text()-1));
+        }
+        else if(time.text()==0){
+          $('.countdown').hide();
+          time.text('*');
+          alert('時間到囉~請重新挑戰');
+          location.replace('/cardgame');
+        }
+      },1000);
+    },
+    setTime() {
+      this.timer()
+    },
+    stopTime() {
+      if (this.time) {
+        clearInterval(this.time)
+      }
+    },
     ans(event) {
+      $('.countdown').hide();
       if(!this.process){
         this.process = true;
         let data = {
@@ -127,11 +160,12 @@ export default {
                 $('.cardA,.cardB').show();
                 $('.active').removeClass('active');
                 $('[data-id='+data.qnum+'] .cardAns:not([data-ans='+data.qans+'])').remove()
+                this.countDown = false;
                 if($('.done').length > 2){
                   alert('恭喜全部答對，請前往抽獎');
                   window.location.href = "/cardgame/turntable"
                 }else {
-                  alert('恭喜您答對了!! 下一題~')
+                  alert('恭喜您答對了!! 下一題~');
                 }
               }else{
                 alert('答錯囉~再讓我們玩一次吧！');
@@ -166,6 +200,13 @@ export default {
     background-color:#ffd186;
     text-align: center;
     height: 1040px;
+
+    .countdown {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: red;
+    }
 
     .cardA,.cardB{
       width: 110px;
@@ -226,7 +267,7 @@ export default {
       }
 
       .cardFace {
-        margin: 45px 0px 0 8px;
+        margin: 36px 0px 0 11px;
         width: 75px;
         position: relative;
       }
