@@ -184,6 +184,10 @@ export default {
       background-repeat: no-repeat;
       &.active {
         transform: rotateY(180deg);
+        -moz-transform:rotateY(180deg);
+        -webkit-transform:rotateY(180deg);
+        -o-transform:rotateY(180deg);
+        -ms-transform:rotateY(180deg);
         position: absolute;
         border-radius: 22px;
         width: 100%;
@@ -203,6 +207,10 @@ export default {
       }
       &.done {
         transform: rotateY(180deg);
+        -moz-transform:rotateY(180deg);
+        -webkit-transform:rotateY(180deg);
+        -o-transform:rotateY(180deg);
+        -ms-transform:rotateY(180deg);
         .card-front {
           display: none;
         }
@@ -235,9 +243,9 @@ export default {
       }
       .cardAns {
         display: block;
-        font-size: 18px;
+        font-size: 26px;
         width: 100%;
-        height: 36px;;
+        height: 44px;;
         text-align: center;
       }
 
@@ -247,6 +255,10 @@ export default {
         left: 0px;
         &.card-back {
           transform: rotateY(180deg);
+          -moz-transform:rotateY(180deg);
+          -webkit-transform:rotateY(180deg);
+          -o-transform:rotateY(180deg);
+          -ms-transform:rotateY(180deg);
           width: 100%;
           height: 100%;
           background-repeat: no-repeat;
