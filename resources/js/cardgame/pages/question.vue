@@ -164,8 +164,8 @@ export default {
 
   .cards {
     background-color:#ffd186;
-    padding: 30px 0;
     text-align: center;
+    height: 1040px;
 
     .cardA,.cardB{
       width: 110px;
