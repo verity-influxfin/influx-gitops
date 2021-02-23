@@ -12,13 +12,13 @@
         <span :class="'card'+(d%2===0?'B':'A')" v-for="d in randkeys">
           <span class="cardFlip card-front">
             <span class="cardNum">{{faceNum[d-1] }}</span>
-            <img class="cardFace" :style="'margin-top:'+picTop[d-1]+'px;margin-left:'+picLeft[d-1]+'px'" :src="'/images/cardGame'+d+'.svg'">
+            <img class="cardFace" :src="'/images/cardGame'+d+'.png'">
           </span>
           <span class="cardFlip card-back">
             <span class="cardQuestion" :data-id="d">
               {{imgs[d].question}}<br /><br />
-              <span class="cardAns" @click="ans" data-ans="A">(A){{imgs[d].selection[0]}}</span>
-              <span class="cardAns" @click="ans" data-ans="B">(B){{imgs[d].selection[1]}}</span>
+              <span class="cardAns" @click.once="ans" data-ans="A">(A){{imgs[d].selection[0]}}</span>
+              <span class="cardAns" @click.once="ans" data-ans="B">(B){{imgs[d].selection[1]}}</span>
             </span>
           </span>
         </span>
@@ -52,7 +52,7 @@ export default {
         3: {
           num: "C",
           question: '普匯今年舉辦什麼活動?',
-          selection: ['AI金融科技創新創意競賽?','國外旅遊'],
+          selection: ['AI金融科技創新創意競賽','國外旅遊'],
           ans: 'A'
         },
         4: {
@@ -116,8 +116,23 @@ export default {
     //todo random
     this.randkeys = [1,2,3,4,5,6,7,8,9,10,11,12];
     $(document).off("click",".cardA:not(.done),.cardB:not(.done)").on("click",".cardA:not(.done),.cardB:not(.done)" ,  function(e,t){
-      $(this).addClass('active');
+      $('.cardA,.cardB').hide();
+      $(this).addClass('active').show();
     });
+    let data = {
+      user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"] : {},
+    };
+    axios
+        .post("/getData", data)
+        .then((res) => {
+          if (res.data) {
+            alert('您已參加過遊戲囉!!');
+            location.replace('/');
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
   },
   methods: {
     ans(event) {
@@ -132,13 +147,14 @@ export default {
             .then((res) => {
               if(res.data.ans == 1){
                 $('.active:not(.done)').addClass('done');
+                $('.cardA,.cardB').show();
+                $('.active').removeClass('active');
+                $('[data-id='+data.qnum+'] .cardAns:not([data-ans='+data.qans+'])').remove()
                 if($('.done').length > 2){
                   alert('恭喜全部答對，請前往抽獎');
                   window.location.href = "/cardgame/turntable"
                 }else {
                   alert('恭喜您答對了!! 下一題~')
-                  $('.active').removeClass('active');
-                  $('[data-id='+data.qnum+'] .cardAns:not([data-ans='+data.qans+'])').remove()
                 }
               }else{
                 alert('答錯囉~再讓我們玩一次吧！');
@@ -172,12 +188,13 @@ export default {
   .cards {
     background-color:#ffd186;
     padding: 30px 0;
+    height: 800px;
 
     .cardA,.cardB{
       width: 110px;
       height: 150px;
       display: inline-table;
-      border-radius: 20px;
+      border-radius: 32px;
       border-width: 6px;
       border-style: solid;
       padding: 8px 5px;
@@ -187,15 +204,17 @@ export default {
       position: relative;
       transition: transform 1s;
       transform-style: preserve-3d;
+      background-repeat: no-repeat;
       &.active {
         transform: rotateY(180deg);
         position: absolute;
-        width: 94%;
+        width: 92%;
         height: 80%;
-        border-width: 20px;
+        border: 0;
         z-index: 999;
         left: 0;
         top: 86px;
+        background-color: transparent;
         .card-front {
           display: none;
         }
@@ -208,17 +227,21 @@ export default {
         .card-front {
           display: none;
         }
+        .card-back {
+          padding: 0px 5px!important;
+        }
         .cardQuestion {
           font-size: 12px;
         }
       }
 
       .cardFace {
-        width: 145%;
+        margin: 45px 0px 0 8px;
+        width: 75px;
         position: relative;
       }
       .cardNum {
-        font-size: 36px;
+        font-size: 24px;
         margin: -8px 0 0 4px;
         position: absolute;
       }
@@ -226,24 +249,21 @@ export default {
         font-size: 12px;
         padding: 0 5px;
         display: block;
-        &.active {
-
-        }
       }
       .cardAns {
         display: block;
+        font-size: 18px;
+        margin-bottom: 10px;
       }
 
       .cardFlip {
         position: absolute;
         backface-visibility: hidden;
-
-        &.card-front {
-        }
-
         &.card-back {
           transform: rotateY(180deg);
-          width: 96%;
+          height: 100%;
+          background-repeat: no-repeat;
+          padding: 76px 32px;
         }
       }
     }
@@ -251,11 +271,17 @@ export default {
     .cardA {
       background-color: #012060;
       border-color: #b40b12;
+      &.active .card-back {
+        background-image: url(/images/cardGameRedLine.svg);
+      }
     }
 
     .cardB {
       background-color: #b40b12;
       border-color: #012060;
+      &.active .card-back {
+        background-image: url(/images/cardGameBlueLine.svg);
+      }
     }
   }
 }

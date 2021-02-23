@@ -8,6 +8,11 @@
       </div>
     </nav>
     <div class="block">
+      <ul>抽獎辦法：
+        <li>每用戶只可抽獎一次</li>
+        <li>活動截止後由公司寄發中獎簡訊通知</li>
+        <li>本公司保有隨時修改本活動之權利，如有任何變更內容或詳細注意事項將公布於官網</li>
+      </ul>
       <div class="turntable">
         <div class="arrow"></div>
         <div class="disk"></div>
@@ -34,6 +39,20 @@ export default {
     $(document).off("click",".cardA,.cardB").on("click",".cardA,.cardB" ,  function(e,t){
       $(this).addClass('active');
     });
+    let data = {
+      user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"] : {},
+    };
+    axios
+        .post("/getData", data)
+        .then((res) => {
+          if (res.data) {
+            alert('您已參加過遊戲囉!!');
+            location.replace('/');
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
   },
   methods: {
     turn(event) {
@@ -46,14 +65,23 @@ export default {
         axios
             .post("/setGamePrize", data)
             .then((res) => {
-              var prize = res.data.prize;
-
-              this.process = false;
+              if(res.data.prize != undefined){
+                var prize = res.data.prize;
+                var rotate = res.data.rotate * 1 + 3000*1;
+                this.process = false;
+                $('.turntable .disk').css('transform','rotate('+ rotate +'deg)');
+                setTimeout(function() {
+                  alert("恭喜抽中" + prize + "！<br /><br />※活動截止後由公司寄發中獎簡訊通知");
+                  location.replace('/');
+                }, 11000);
+              }else {
+                alert("已經玩過遊戲囉!" + (res.data!=''?'抽中的是->'+ res.data:''));
+                location.replace('/');
+              }
             })
             .catch((err) => {
               console.error(err);
             });
-        console.log(data.user_id);
       }else{
         console.log('duplicate!!');
       }
@@ -78,8 +106,20 @@ export default {
     background-color: #ffd186;
     width: 100%;
     height: 100%;
-    padding: 160px 0 300px;
+    padding: 10px 0 300px;
     text-align: center;
+
+    ul {
+      font-weight: bold;
+      font-size: 18px;
+      margin: 10px 0 15px ;
+      text-align: left;
+    }
+
+    li {
+      font-weight: 400;
+      font-size: 14px;
+    }
 
     .turntable {
       background-color: #ffd186;
@@ -93,9 +133,9 @@ export default {
         background-color: transparent;
         width: 350px;
         height: 350px;
-        transition: 3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transition: 10s cubic-bezier(0.1, 0.46, 0, 0.94);
         transform-style: preserve-3d;
-        transform: rotate(3600deg);
+        transform: rotate(0deg);
         display: inline-block;
       }
 

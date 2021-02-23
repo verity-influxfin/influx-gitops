@@ -283,6 +283,8 @@ Route::get('/cardgame', function () {
     return view('cardgame');
 });
 Route::post('getAns','Cardgamecontroller@getAns');
+Route::post('getData','Cardgamecontroller@getData');
+Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
 

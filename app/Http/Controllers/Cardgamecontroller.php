@@ -28,35 +28,87 @@ class Cardgamecontroller extends BaseController
 
         try {
             $prizeList = [
-                '恭喜抽中威秀雙人套票一組！' => 35,
-                '恭喜抽中Linepoint 100點！' => 35,
-                '恭喜抽中Linepoint 50點！' => 35,
-                '恭喜抽中Linepoint 10點！' => 35,
-                '恭喜抽中Linepoint 5點！' => 35,
-                '恭喜抽中新年好話一句！牛轉乾坤行好運' => 35,
-                '恭喜抽中新年好話一句！牛年天天開心數鈔票' => 35,
-                '恭喜抽中新年好話一句！牛年旺旺來' => 35,
+                0 => [
+                    'prize' => '威秀雙人套票一組',
+                    'rotate' => '152',
+                ],
+                1 => [
+                    'prize' => 'Linepoint 100點',
+                    'rotate' => '69',
+                ],
+                2 => [
+                    'prize' => 'Linepoint 50點',
+                    'rotate' => '232',
+                ],
+                3 => [
+                    'prize' => 'Linepoint 10點',
+                    'rotate' => '340',
+                ],
+                4 => [
+                    'prize' => 'Linepoint 5點',
+                    'rotate' => '259',
+                ],
+                5 => [
+                    'prize' => '新年好話一句！牛轉乾坤行好運',
+                    'rotate' => '163',
+                ],
+                6 => [
+                    'prize' => '新年好話一句！牛年天天開心數鈔票',
+                    'rotate' => '123',
+                ],
+                7 => [
+                    'prize' => '新年好話一句！牛年旺旺來',
+                    'rotate' => '49',
+                ],
             ];
-            $this->inputs['get_prize'] = "fsddsv";
-            $this->inputs['created_at'] = time();
-            $exception = DB::transaction(function () {
-                $id = DB::table('cardgame')->insertGetId($this->inputs);
-                $this->data = ['prize' => '??'];
-            }, 5);
-            return response()->json($this->data, 200);
+
+            $result = DB::table('cardgame')->select('*')->where('user_id', '=', $this->inputs['user_id'])->first();
+
+            if(!$result){
+                $rand = rand(1,100);
+                if($rand == 0){
+                    $prize = $prizeList[0];
+                }elseif($rand >= 1 && $rand <= 3){
+                    $prize = $prizeList[1];
+                }elseif($rand >= 4 && $rand <= 8){
+                    $prize = $prizeList[2];
+                }elseif($rand >= 9 && $rand <= 20){
+                    $prize = $prizeList[3];
+                }elseif($rand >= 21 && $rand <= 40){
+                    $prize = $prizeList[4];
+                }elseif($rand >= 41 && $rand <= 60){
+                    $prize = $prizeList[5];
+                }elseif($rand >= 61 && $rand <= 80){
+                    $prize = $prizeList[6];
+                }elseif($rand >= 81 && $rand <= 100){
+                    $prize = $prizeList[7];
+                }
+
+                $this->inputs['get_prize'] = $prize['prize'];
+                $this->inputs['created_at'] = time();
+                $exception = DB::transaction(function () {
+                    $id = DB::table('cardgame')->insertGetId($this->inputs);
+                }, 5);
+                $this->data = [
+                    'prize' => $prize['prize'],
+                    'rotate' => $prize['rotate']
+                ];
+                return response()->json($this->data, 200);
+            }
+            return response()->json($result->get_prize, 200);
         } catch (Exception $e) {
             return response()->json($e, 400);
         }
     }
 
-    public function getGreetingData(Request $request)
+    public function getData(Request $request)
     {
         $input = $request->all();
 
-        $id = base64_decode($input['token']);
-        $result = DB::table('cardgame')->select('*')->where('ID', '=', $id)->first();
+        $id = $input['user_id'];
+        $result = DB::table('cardgame')->select('*')->where('user_id', '=', $id)->first();
 
-        return response()->json($result, 200);
+        return response()->json($result?true:false, 200);
     }
 
     public function getAns(Request $request)

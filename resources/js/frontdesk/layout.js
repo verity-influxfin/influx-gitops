@@ -207,7 +207,22 @@ $(() => {
                                     }
 
                                     if($("#loginModal").attr("data-type") == "cardgame"){
-                                        location.replace('/cardgame');
+                                        let data = {
+                                            user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"] : {},
+                                        };
+                                        axios
+                                            .post("/getData", data)
+                                            .then((res) => {
+                                                this.process = false;
+                                                if (!res.data) {
+                                                    location.replace('/cardgame');
+                                                } else {
+                                                    alert('您已參加過遊戲囉!!');
+                                                }
+                                            })
+                                            .catch((err) => {
+                                                console.error(err);
+                                            });
                                     }else {
                                         location.reload();
                                     }
