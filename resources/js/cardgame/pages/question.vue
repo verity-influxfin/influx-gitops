@@ -245,6 +245,10 @@ export default {
         .cardQuestion {
           font-size: 34px;
         }
+        .cardFlip {
+          -webkit-backface-visibility: visible;
+          backface-visibility: visible;
+        }
       }
       &.done {
         transform: rotateY(180deg);
@@ -263,6 +267,10 @@ export default {
         }
         .cardAns {
           font-size: 12px;
+        }
+        .cardFlip {
+          -webkit-backface-visibility: visible;
+          backface-visibility: visible;
         }
       }
 
@@ -292,6 +300,7 @@ export default {
         position: absolute;
         backface-visibility: hidden;
         left: 0px;
+        padding: 0 5px;
         &.card-back {
           transform: rotateY(180deg);
           -moz-transform:rotateY(180deg);
