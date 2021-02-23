@@ -165,7 +165,6 @@ export default {
   .cards {
     background-color:#ffd186;
     padding: 30px 0;
-    height: 800px;
     text-align: center;
 
     .cardA,.cardB{
@@ -178,7 +177,7 @@ export default {
       padding: 8px 5px;
       font-weight: bold;
       color: white;
-      margin: 15px 10px 0;
+      margin: 15px 5px 0;
       position: relative;
       transition: transform 1s;
       transform-style: preserve-3d;
