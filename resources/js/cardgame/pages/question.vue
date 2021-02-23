@@ -17,8 +17,8 @@
           <span class="cardFlip card-back">
             <span class="cardQuestion" :data-id="d">
               {{imgs[d].question}}<br /><br />
-              <span class="cardAns" @click.once="ans" data-ans="A">(A){{imgs[d].selection[0]}}</span>
-              <span class="cardAns" @click.once="ans" data-ans="B">(B){{imgs[d].selection[1]}}</span>
+              <div class="cardAns" @click.once="ans" data-ans="A">(A){{imgs[d].selection[0]}}</div>
+              <div class="cardAns" @click.once="ans" data-ans="B">(B){{imgs[d].selection[1]}}</div>
             </span>
           </span>
         </span>
