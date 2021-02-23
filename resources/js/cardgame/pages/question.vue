@@ -17,7 +17,7 @@
           </span>
           <span class="cardFlip card-back">
             <span class="cardQuestion" :data-id="d">
-              {{imgs[d].question}}<br /><br />
+              <span v-html="imgs[d].question"></span><br /><br />
               <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="A">(A){{imgs[d].selection[0]}}</div>
               <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="B">(B){{imgs[d].selection[1]}}</div>
             </span>
@@ -256,7 +256,7 @@ export default {
           display: none;
         }
         .card-back {
-          padding: 0px 5px!important;
+          padding: 0px!important;
         }
         .cardQuestion {
           font-size: 12px;
