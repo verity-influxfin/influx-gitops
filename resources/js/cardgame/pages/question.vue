@@ -271,6 +271,7 @@ export default {
         .cardFlip {
           -webkit-backface-visibility: visible;
           backface-visibility: visible;
+          position: absolute;
         }
       }
 

@@ -49,7 +49,7 @@ export default {
             alert('您已參加過遊戲囉!!');
             location.replace('/');
           }else{
-            var email = prompt('請輸入您的Email：');
+            var email = prompt('請輸入您的email以利中獎通知：');
             localStorage.setItem('email', email);
           }
         })
