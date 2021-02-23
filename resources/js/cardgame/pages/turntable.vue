@@ -48,6 +48,9 @@ export default {
           if (res.data) {
             alert('您已參加過遊戲囉!!');
             location.replace('/');
+          }else{
+            var email = prompt('請輸入您的Email：');
+            localStorage.setItem('email', email);
           }
         })
         .catch((err) => {
@@ -60,7 +63,7 @@ export default {
         this.process = true;
         let data = {
           user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"]: {},
-          // qans: event.target.dataset.ans,
+          email: localStorage.getItem("email"),
         };
         axios
             .post("/setGamePrize", data)
