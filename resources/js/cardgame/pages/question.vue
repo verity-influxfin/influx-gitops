@@ -239,13 +239,11 @@ export default {
         font-size: 12px;
         padding: 0 5px;
         display: block;
-        text-align: left;
       }
       .cardAns {
         display: block;
         font-size: 26px;
         width: 100%;
-        height: 44px;;
         text-align: center;
       }
 
