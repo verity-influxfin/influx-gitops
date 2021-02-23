@@ -238,6 +238,7 @@ export default {
         font-size: 18px;
         width: 100%;
         height: 36px;;
+        text-align: center;
       }
 
       .cardFlip {
