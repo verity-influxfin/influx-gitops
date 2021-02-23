@@ -236,6 +236,7 @@ export default {
       .cardAns {
         display: block;
         font-size: 18px;
+        width: 100%;
         height: 36px;;
       }
 

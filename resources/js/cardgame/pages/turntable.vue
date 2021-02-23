@@ -71,7 +71,7 @@ export default {
                 this.process = false;
                 $('.turntable .disk').css('transform','rotate('+ rotate +'deg)');
                 setTimeout(function() {
-                  alert("恭喜抽中" + prize + "！<br /><br />※活動截止後由公司寄發中獎簡訊通知");
+                  alert("恭喜抽中" + prize + "！\n\n※活動截止後由公司寄發中獎簡訊通知");
                   location.replace('/');
                 }, 11000);
               }else {
