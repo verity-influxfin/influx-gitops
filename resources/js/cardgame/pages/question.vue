@@ -236,7 +236,7 @@ export default {
       .cardAns {
         display: block;
         font-size: 18px;
-        margin-bottom: 10px;
+        line-height: 36px;;
       }
 
       .cardFlip {
