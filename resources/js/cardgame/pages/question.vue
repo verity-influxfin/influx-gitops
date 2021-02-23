@@ -9,10 +9,10 @@
     </nav>
     <div class="cards">
       <template >
-        <span :class="'card'+(d%2===0?'B':'A')" v-for="d in randkeys">
+        <span :class="'card'+(index%2===0?'B':'A')" v-for="(d, index) in randkeys">
           <span class="cardFlip card-front">
-            <span class="cardNum">{{faceNum[d-1] }}</span>
-            <img class="cardFace" :src="'/images/cardGame'+d+'.png'">
+            <span class="cardNum">{{faceNum[index]}}</span>
+            <img class="cardFace" :src="'/images/cardGame'+(index+1)+'.png'">
           </span>
           <span class="cardFlip card-back">
             <span class="cardQuestion" :data-id="d">
@@ -34,87 +34,64 @@ export default {
       process: false,
       randkeys: [],
       faceNum: ['H','A','P','P','Y','N','E','W','Y','E','A','R'],
-      picTop: ['40','46','50','36','48','37','43','47','51','43','47','45'],
-      picLeft: ['4','4','3','2','3','1','-1','5','4','0','4','0','5'],
       imgs: {
         1: {
-          num: "A",
           question: '普匯目前主要業務項目為何?',
           selection: ['借貸/投資','保險'],
-          ans: 'A'
         },
         2: {
-          num: "B",
           question: 'p2p借貸的英文縮寫?',
           selection: ['peer to peer','pika to pika'],
-          ans: 'A'
         },
         3: {
-          num: "C",
           question: '普匯今年舉辦什麼活動?',
           selection: ['AI金融科技創新創意競賽','國外旅遊'],
-          ans: 'A'
         },
         4: {
-          num: "D",
           question: '普匯為下列何種類型公司?',
           selection: ['金融科技','科技金融'],
-          ans: 'A'
         },
         5: {
-          num: "E",
           question: '普匯是媒合誰與誰的平台?',
           selection: ['借款人與投資人','你和我'],
-          ans: 'A'
         },
         6: {
-          num: "F",
           question: '普匯的吉祥物叫?',
           selection: ['小普','來福'],
-          ans: 'A'
         },
         7: {
-          num: "G",
           question: '普匯的代表色為何?',
           selection: ['黑色','藍色'],
-          ans: 'B'
         },
         8: {
-          num: "H",
           question: '普匯主打的服務是?',
           selection: ['AI線上無人化','見面對保狂call你'],
-          ans: 'A'
         },
         9: {
-          num: "I",
           question: '普匯第一個上線的產品是?',
           selection: ['學生貸','房貸'],
-          ans: 'A'
         },
         10: {
-          num: "J",
           question: '普匯投資是多少元起投?',
           selection: ['1000元','1000萬'],
-          ans: 'A'
         },
         11: {
-          num: "K",
           question: '普匯創立於哪一年份??',
           selection: ['2017年','2025年'],
-          ans: 'A'
         },
         12: {
-          num: "L",
           question: '普匯APP於哪一年上線?',
           selection: ['2019年','尚未上線'],
-          ans: 'A'
         }
       }
     }
   },
   mounted:function () {
-    //todo random
     this.randkeys = [1,2,3,4,5,6,7,8,9,10,11,12];
+    for (let i = this.randkeys.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [this.randkeys[i], this.randkeys[j]] = [this.randkeys[j], this.randkeys[i]];
+    }
     $(document).off("click",".cardA:not(.done),.cardB:not(.done)").on("click",".cardA:not(.done),.cardB:not(.done)" ,  function(e,t){
       $('.cardA,.cardB').hide();
       $(this).addClass('active').show();
@@ -189,18 +166,19 @@ export default {
     background-color:#ffd186;
     padding: 30px 0;
     height: 800px;
+    text-align: center;
 
     .cardA,.cardB{
       width: 110px;
       height: 150px;
       display: inline-table;
-      border-radius: 32px;
+      border-radius: 22px;
       border-width: 6px;
       border-style: solid;
       padding: 8px 5px;
       font-weight: bold;
       color: white;
-      margin: 15px 0 0 11px;
+      margin: 15px 10px 0;
       position: relative;
       transition: transform 1s;
       transform-style: preserve-3d;
@@ -208,6 +186,7 @@ export default {
       &.active {
         transform: rotateY(180deg);
         position: absolute;
+        border-radius: 22px;
         width: 92%;
         height: 80%;
         border: 0;
@@ -233,6 +212,9 @@ export default {
         .cardQuestion {
           font-size: 12px;
         }
+        .cardAns {
+          font-size: 12px;
+        }
       }
 
       .cardFace {
@@ -249,6 +231,7 @@ export default {
         font-size: 12px;
         padding: 0 5px;
         display: block;
+        text-align: left;
       }
       .cardAns {
         display: block;
@@ -259,6 +242,7 @@ export default {
       .cardFlip {
         position: absolute;
         backface-visibility: hidden;
+        left: 6px;
         &.card-back {
           transform: rotateY(180deg);
           height: 100%;
