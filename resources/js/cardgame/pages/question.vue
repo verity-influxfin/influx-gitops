@@ -186,8 +186,9 @@ export default {
         transform: rotateY(180deg);
         position: absolute;
         border-radius: 22px;
-        width: 92%;
-        height: 80%;
+        width: 100%;
+        height: 100%;
+        margin: 0 0 0 0;
         border: 0;
         z-index: 999;
         left: 0;
