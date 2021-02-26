@@ -10,7 +10,7 @@
     <div class="block">
       <ul>抽獎辦法：
         <li>每用戶只可抽獎一次</li>
-        <li>活動截止後由公司寄發中獎簡訊通知</li>
+        <li>中獎後會由公司寄發中獎信件通知</li>
         <li>本公司保有隨時修改本活動之權利，如有任何變更內容或詳細注意事項將公布於官網</li>
       </ul>
       <div class="turntable">
@@ -83,7 +83,7 @@ export default {
                 this.process = false;
                 $('.turntable .disk').css('transform','rotate('+ rotate +'deg)');
                 setTimeout(function() {
-                  alert("恭喜抽中" + prize + "！\n\n※活動截止後由公司寄發中獎簡訊通知");
+                  alert("恭喜抽中" + prize + "！\n\n※中獎後會由公司寄發中獎信件通知");
                   location.replace('/');
                 }, 11000);
               }else {
