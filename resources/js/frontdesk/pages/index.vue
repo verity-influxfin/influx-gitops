@@ -2,12 +2,6 @@
   <div class="index-wrapper">
     <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
       <SplideSlide class="puhey-banner">
-        <a :href="bannerData[0].link" target="_blank">
-          <img :src="`/upload/banner/${bannerData[0].desktop}`" class="hidden-desktop img-fluid" />
-          <img :src="`/upload/banner/${bannerData[0].mobile}`" class="hidden-phone img-fluid" />
-        </a>
-      </SplideSlide>
-      <SplideSlide class="puhey-banner">
         <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
         <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
         <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
