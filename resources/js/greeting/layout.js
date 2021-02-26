@@ -6,7 +6,7 @@ import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 $(() => {
     let now = new Date();
     let startDate = new Date('2021-02-01 00:00:00');
-    let endDate = new Date('2021-02-28 00:00:00');
+    let endDate = new Date('2021-12-31 00:00:00');
     if (startDate >= now || now > endDate) {
         alert('敬請期待！');
         location.replace('/index');
