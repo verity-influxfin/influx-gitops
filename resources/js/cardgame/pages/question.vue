@@ -37,23 +37,23 @@ export default {
       faceNum: ['H','A','P','P','Y','N','E','W','Y','E','A','R'],
       imgs: {
         1: {
-          question: '普匯目前主要業務項目為何?',
+          question: '普匯目前主要<br />業務項目為何?',
           selection: ['借貸/投資','保險'],
         },
         2: {
-          question: 'p2p借貸的英文<br />縮寫為何?',
+          question: 'p2p借貸的<br />英文縮寫為何?',
           selection: ['peer to peer','pika to pika'],
         },
         3: {
-          question: '普匯今年舉辦<br />什麼活動?',
+          question: '普匯今年<br />舉辦什麼活動?',
           selection: ['AI金融科技創新創意競賽','國外旅遊'],
         },
         4: {
-          question: '普匯為下列何種<br />類型公司?',
+          question: '普匯為下列<br />何種類型公司?',
           selection: ['金融科技','科技金融'],
         },
         5: {
-          question: '普匯是媒合誰與誰的平台?',
+          question: '普匯是媒合<br />誰與誰的平台?',
           selection: ['借款人與投資人','你和我'],
         },
         6: {
@@ -69,19 +69,19 @@ export default {
           selection: ['AI線上無人化','見面對保狂call你'],
         },
         9: {
-          question: '普匯第一個上線的產品是?',
+          question: '普匯第一個<br />上線的產品是?',
           selection: ['學生貸','房貸'],
         },
         10: {
-          question: '普匯投資是多少元起投?',
+          question: '普匯投資是<br />多少元起投?',
           selection: ['1000元','1000萬'],
         },
         11: {
-          question: '普匯創立於哪一年份??',
+          question: '普匯創立於<br />哪一年份?',
           selection: ['2017年','2025年'],
         },
         12: {
-          question: '普匯APP於哪一年上線?',
+          question: '普匯APP於<br />哪一年上線?',
           selection: ['2019年','尚未上線'],
         }
       }

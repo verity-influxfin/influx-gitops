@@ -50,7 +50,16 @@ export default {
             location.replace('/');
           }else{
             var email = prompt('請輸入您的email以利中獎通知：');
-            localStorage.setItem('email', email);
+            if(email == null || email == '') {
+              var semail = prompt('請輸入您的email以利中獎通知，若未輸入將放棄轉盤遊戲：');
+              if (semail == null || semail == '') {
+                alert('將跳回首頁');
+                location.replace('/');
+              }
+            }
+            else {
+              localStorage.setItem('email', email);
+            }
           }
         })
         .catch((err) => {
