@@ -57,11 +57,14 @@ class Id_card_lib {
 			'桃市' => '68000',
 		],
 	];
+
+	# TODO: Add OCTOPODA_IP and RIS_PRIVATE_KEY_PATH in Apache vhost
 	public function __construct()
 	{
 		$this->CI = &get_instance();
-		// $this->CI->load->library('output/json_output');
-		// $this->CI->load->library('JWT');
+		$serviceAdapterPort = '9218';
+		$this->serviceAdapterUrl = "http://".getenv('OCTOPODA_IP').":{$serviceAdapterPort}/service-adapter/api/v1.0";
+		$this->risPrivateKeyPath = getenv('RIS_PRIVATE_KEY_PATH');
 	}
 
 	/**
@@ -132,7 +135,7 @@ class Id_card_lib {
 			return $result;
 		}
 
-		$privateKey = file_get_contents('file:///home/ubuntu/influx_privkey/ris_private.pem');
+		$privateKey = file_get_contents($this->risPrivateKeyPath);
 		$payload = array(
 			"orgId" => "68566881",
 			"apId" => "INF00",
@@ -151,15 +154,15 @@ class Id_card_lib {
 		);
 		$jwt = JWT::encode($payload, $privateKey, 'RS256');
 
-		$requestUrl = "https://rwa.moi.gov.tw:1443/integration/rwv2c2/";
+//		$headers = [
+//			'Authorization: Bearer '.$jwt,
+//			'sris-consumerAdminId: 00000000',
+//			'Content-Type: application/json'
+//		];
 
-		$headers = [
-			'Authorization: Bearer '.$jwt,
-			'sris-consumerAdminId: 00000000',
-			'Content-Type: application/json'
-		];
-
-		$apiResponse = curl_get($requestUrl, $data="", $header=$headers);
+		$authorization = array('authorization' => 'Bearer '.$jwt);
+		$requestUrl = $this->serviceAdapterUrl . "/id-card/send-request";
+		$apiResponse = curl_get($requestUrl, $data=$authorization);
 
 		if($apiResponse){
 			$apiResponse = json_decode($apiResponse, true);
