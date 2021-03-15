@@ -35,12 +35,6 @@
           <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
         </a>
       </SplideSlide>
-      <SplideSlide class="puhey-banner">
-        <a target="_blank" @click="checkLogin()">
-          <img :src="`/images/cardgame_banner.jpg`" class="hidden-desktop img-fluid" />
-          <img :src="`/images/cardgame_banner_mobole.jpg`" class="hidden-phone img-fluid" />
-        </a>
-      </SplideSlide>
     </Splide>
     <div class="banner" v-else>
       <div class="puhey-banner">
