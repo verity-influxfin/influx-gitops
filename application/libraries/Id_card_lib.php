@@ -94,7 +94,7 @@ class Id_card_lib {
 	 *   )
 	 * )
 	 */
-	public function send_request($personId = '', $applyCode = '初發', $applyYyymmdd = '', $issueSiteId = '', $userId="inFlux000"){
+	public function send_request($personId = '', $applyCode = '初發', $applyYyymmdd = '', $issueSiteId = '', $userId="inFlux001"){
 		$result = [
 			'status' => '500',
 			'response' => [
@@ -154,15 +154,15 @@ class Id_card_lib {
 		);
 		$jwt = JWT::encode($payload, $privateKey, 'RS256');
 
-//		$headers = [
-//			'Authorization: Bearer '.$jwt,
-//			'sris-consumerAdminId: 00000000',
-//			'Content-Type: application/json'
-//		];
+		$headers = array(
+			'Authorization' =>  'Bearer '.$jwt,
+			'sris-consumerAdminId'=> '00000000',
+			'Content-Type'=> 'application/json'
+		);
 
-		$authorization = array('authorization' => 'Bearer '.$jwt);
+		$payload = array('headers' => json_encode($headers, true));
 		$requestUrl = $this->serviceAdapterUrl . "/id-card/send-request";
-		$apiResponse = curl_get($requestUrl, $data=$authorization);
+		$apiResponse = curl_get($requestUrl, $data=$payload);
 
 		if($apiResponse){
 			$apiResponse = json_decode($apiResponse, true);
