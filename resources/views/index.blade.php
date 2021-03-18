@@ -66,13 +66,6 @@
             <div class="web-logo">
                 <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>
             </div>
-            <a class="greeting" href="/greeting" target="_blank">
-                <img src="/images/21greeting/head.svg" class="img-fluid head">
-                <img src="/images/21greeting/body.svg" class="img-fluid body">
-                <img src="/images/21greeting/left.svg" class="img-fluid left">
-                <img src="/images/21greeting/right.svg" class="img-fluid right">
-                <div class="dialog" style="background-image: url({{ asset('images/greetingMsgbox.svg') }});background-position: 0px 2px;"></div>
-            </a>
 
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
