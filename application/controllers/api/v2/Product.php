@@ -1090,13 +1090,24 @@ class Product extends REST_Controller {
 
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
+					// 返回認證資料
 					$user_certification = $this->user_certification_model->get_by(['id'=>$value['certification_id']]);
+					$content_array_data = [];
+					// 刪除無用資訊
+					if(isset($user_certification->content) && $user_certification->content != '' ){
+						$user_certification = json_decode($user_certification->content,true);
+						if(array_key_exists('return_type',$user_certification)){
+							$content_array_data = [
+								'return_type' => $user_certification['return_type'],
+							];
+						}
+					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications'])){
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
-						$value['certification_content'] = isset($user_certification->content) ? json_decode($user_certification->content) : '';
+						$value['certification_content'] = $content_array_data;
                         $certification[] = $value;
                     }
                 }
