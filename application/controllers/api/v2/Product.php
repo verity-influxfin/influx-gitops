@@ -1090,11 +1090,13 @@ class Product extends REST_Controller {
 
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
+					$user_certification = $this->user_certification_model->get_by(['id'=>$value['certification_id']]);
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications'])){
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
+						$value['certification_content'] = isset($user_certification->content) ? json_decode($user_certification->content) : '';
                         $certification[] = $value;
                     }
                 }
