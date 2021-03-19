@@ -1099,7 +1099,7 @@ class Product extends REST_Controller {
 						$user_certification = json_decode($user_certification->content,true);
 						foreach($content_key as $key_name){
 							if(array_key_exists($key_name,$user_certification)){
-								$content_array_data[$key_name] = $$user_certification[$key_name];
+								$content_array_data[$key_name] = $user_certification[$key_name];
 							}
 						}
 					}
