@@ -39,6 +39,8 @@
                                     <div class="form-group">
                                         <label>公司</label>
                                         <p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
+										<label>實收資本額</label>
+                                        <p class="form-control-static"><?=isset($content['capital_amount'])?$content['capital_amount']:""?></p>
                                     <?
                                     if($content['company']==''&&$data->status==3){
                                         echo '<form role="form" method="post">
