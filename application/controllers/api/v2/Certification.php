@@ -1864,6 +1864,18 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+
+			// to do : 加入商業司爬蟲相關機制
+			$this->load->library('gcis_lib');
+			$gcis_response =  $this->gcis_lib->account_info($content['tax_id']);
+			if($gcis_response){
+				if($gcis_response['Paid_In_Capital_Amount']){
+					$content['capital_amount'] = $gcis_response['Paid_In_Capital_Amount']
+				}else{
+					$content['capital_amount'] = $gcis_response['Capital_Stock_Amount']
+				}
+			}
+
             $content['company'] 	  = isset($input['company'])?$input['company']:"";
             $content['company_address'] 	  = isset($input['company_address'])?$input['company_address']:"";
             $content['company_phone_number'] 	  = isset($input['company_phone_number'])?$input['company_phone_number']:"";
