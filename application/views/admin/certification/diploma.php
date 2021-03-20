@@ -44,10 +44,10 @@
 										<label>學制</label>
 										<p class="form-control-static"><?= isset($content['system']) ? $school_system[$content['system']] : "" ?></p>
 									</div>
-									<div class="form-group">
+									<!-- <div class="form-group">
 										<label>學門</label>
 										<p class="form-control-static"><?= isset($content['major']) ? $content['major'] : "" ?></p>
-									</div>
+									</div> -->
 									<div class="form-group">
 										<label>系所</label>
 										<p class="form-control-static"><?= isset($content['department']) ? $content['department'] : "" ?></p>
@@ -56,14 +56,14 @@
 										<label>畢業日期</label>
 										<p class="form-control-static"><?= isset($content['diploma_date']) ? $content['diploma_date'] : "" ?></p>
 									</div>
-									<div class="form-group">
+									<!-- <div class="form-group">
 										<label>SIP 帳號</label>
 										<p class="form-control-static"><?= isset($content['sip_account']) ? $content['sip_account'] : "" ?></p>
 									</div>
 									<div class="form-group">
 										<label>SIP 密碼</label>
 										<p class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
-									</div>
+									</div> -->
 									<div class="form-group">
 										<label>SIP 網址</label><br>
 										<? if (!empty($content['sipURL'])) { ?>
