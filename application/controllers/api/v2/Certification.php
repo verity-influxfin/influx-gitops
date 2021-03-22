@@ -1691,6 +1691,8 @@ class Certification extends REST_Controller {
                 }
 
                 $send_mail = true;
+				// 加入檔案尚未為回傳標記
+				$content['mail_file_status'] = 0;
             }
 
 
@@ -1911,6 +1913,8 @@ class Certification extends REST_Controller {
 					$content['labor_type']=$input['labor_type'];
                     $this->mail_check($user_id,$investor);
                     $send_mail =true;
+					// 加入檔案睡回傳標記
+					$content['mail_file_status'] = 0;
                 }
             }
             if(isset($input['passbook_image_type'])){
