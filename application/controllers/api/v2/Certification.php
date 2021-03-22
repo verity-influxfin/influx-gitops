@@ -1872,9 +1872,9 @@ class Certification extends REST_Controller {
 			$gcis_response =  $this->gcis_lib->account_info($content['tax_id']);
 			if($gcis_response){
 				if($gcis_response['Paid_In_Capital_Amount']){
-					$content['capital_amount'] = $gcis_response['Paid_In_Capital_Amount']
+					$content['capital_amount'] = $gcis_response['Paid_In_Capital_Amount'];
 				}else{
-					$content['capital_amount'] = $gcis_response['Capital_Stock_Amount']
+					$content['capital_amount'] = $gcis_response['Capital_Stock_Amount'];
 				}
 			}
 
