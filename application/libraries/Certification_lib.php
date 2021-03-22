@@ -581,9 +581,16 @@ class Certification_lib{
 		return false;
 	}
 
+	// 寫入信箱夾帶檔案位置
 	public function save_mail_url($info = array(),$url) {
 		$content=json_decode($info->content,true);
 		$content['pdf_file']=$url;
+		if($url){
+			$content['mail_file_status'] = 1;
+		}else{
+			$content['mail_file_status'] = 0;
+		}
+
 		$this->CI->user_certification_model->update($info->id, array(
 			'content'=>json_encode($content)
 		));

@@ -1093,15 +1093,15 @@ class Product extends REST_Controller {
 					// 返回認證資料
 					$user_certification = $this->user_certification_model->get_by(['id'=>$value['certification_id']]);
 					$content_array_data = [];
-					$content_key = ['labor_type','return_type'];
 					// 刪除無用資訊
 					if(isset($user_certification->content) && $user_certification->content != '' ){
 						$user_certification = json_decode($user_certification->content,true);
-						foreach($content_key as $key_name){
-							if(array_key_exists($key_name,$user_certification)){
-								$content_array_data[$key_name] = $user_certification[$key_name];
-							}
+						if(array_key_exists('mail_file_status',$user_certification)){
+							$content_array_data['mail_file_status'] = $user_certification['mail_file_status'];
 						}
+					}
+					if(!$content_array_data){
+						$content_array_data = new StdClass();
 					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications'])){
