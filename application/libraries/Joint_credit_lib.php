@@ -21,1254 +21,840 @@ class Joint_credit_lib{
 		$this->CI->load->model('user/user_model');
 	}
 
-	public function check_join_credits($userId, $text, &$result){
-		$this->setCurrentTime(time());
-		if ($text == '') {
-            return [
-                "status" => "pending",
-                "messages" => [
-                    [
-                        "stage" => "id_card",
-                        "status" => "failure",
-                        "message" => "PDF掃描失敗"
-                    ]
-                ]
-            ];
-		}elseif (!$this->is_id_match($userId, $text)) {
-			return [
-				"status" => "pending",
-				"messages" => [
-					[
-						"stage" => "id_card",
-						"status" => "failure",
-						"message" => "非本人"
-					]
-				]
-			];
-		}
-        $result["messages"][] = [
-            "stage" => "id_card",
-            "status" => "success",
-            "message" => "本人"
-        ];
-        $this->check_report_expirations($text, $result);
-        $this->check_report_range($text, $result);
-        $this->check_bank_loan($text, $result);
-        $this->check_overdue_and_bad_debts($text, $result);
-        $this->check_main_debts($text, $result);
-        $this->check_extra_debts($text, $result);
-        $this->check_extra_transfer_debts($text,$result);
-        $this->check_bounced_checks($text, $result);
-        $this->check_lost_contacts($text, $result);
-        $creditCardInfo = $this->check_credit_cards($text, $result);
-
-        $input = [
-			'appliedTime' => $this->get_credit_date($text),
-			'allowedAmount' => $creditCardInfo["allowedAmount"]
-		];
-        $this->check_credit_card_accounts($text, $input, $result);
-        $this->check_credit_card_debts($text, $result);
-        $this->check_browsed_hits($text, $result);
-        $this->check_browsed_hits_by_electrical_pay($text, $result);
-        $this->check_browsed_hits_by_itself($text, $result);
-        $this->check_extra_messages($text, $result);
-        $this->check_credit_scores($text, $result);
-//        $this->check_credit_result($text, $result);
-		$this->aggregate($result);
-
-		return $result;
-	}
-
+	// 找身分證號
 	private function getIdCardNumber($text){
-		$matches = $this->CI->regex->findPatternInBetween($text, "身分證號：", "【銀行借款資訊】");
-		if (!$matches) {
-			return;
-		}
-		$id = $this->CI->regex->replaceEqualBreaker($matches[0]);
-		return trim($id);
+		preg_match('/身分證號：.*[a-z,A-Z]{1}[0-9]{9}/',$text,$id_card);
+		$id_card = isset($id_card[0]) ? $id_card[0] : [];
+		preg_match('/[a-z,A-Z]{1}[0-9]{9}/',$id_card,$id_card);
+		$id_card = isset($id_card[0]) ? $id_card[0] : [];
+		return $id_card;
 	}
 
-	public function is_id_match($userId, $text){
-		$user = $this->CI->user_model->get($userId);
-		$idCardNumber = $this->getIdCardNumber($text);
-		return $user && $user->id_number == $idCardNumber && strlen($idCardNumber) > 0;
+	// 找印表日期
+	private function getReportTime($text){
+		preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}/',$text,$report_time);
+		$report_time = isset($report_time[0]) ? $report_time[0] : '';
+		return $report_time;
 	}
 
-	public function check_bank_loan($text, &$result){
-		$content=$this->CI->regex->findPatternInBetween($text, '【銀行借款資訊】', '【逾期、催收或呆帳資訊】');
-        $expire = $expire = $this->expire_check($text, $result);
-		if ($this->CI->regex->isNoDataFound($content[0])) {
-		    $obj = [
-                "stage" => "bank_loan",
-                "status" => "success",
-                "message" => "銀行借款家數：無"
-            ];
-		    $obj = $this->serExpireFailure($obj, $expire);
-			$result["messages"][] = $obj;
-			return ;
+	// 所有信用資訊項目切割抓取是否有信用紀錄資訊
+	// 格式： content = 檢驗內容, start_key_word = 切割開頭關鍵字, end_key_word = 切割結尾關鍵字, mapping_array = 對照資料陣列
+	private function split_info($content,$start_key_word,$end_key_word,$mapping_array){
+		$has_info_array = [];
+		$res = [];
+		$data = $this->CI->regex->findPatternInBetween($content,$start_key_word,$end_key_word);
+		$data = isset($data[0]) ? $data[0] : '';
+		if($data){
+			$data = array_filter(preg_split('/\s/',$data));
+			$num = 0;
+			foreach($data as $k=>$v){
+				if(preg_match('/[1-9].*\..*/',$v)){
+					$v = preg_replace('/[1-9].*\./','',$v);
+					if(isset($mapping_array[$v])){
+						$res[$mapping_array[$v]] = '';
+					}
+				}else{
+					$has_info_array[] = $v;
+				}
+			}
+			foreach($res as $k=>$v){
+				$res[$k] = $has_info_array[$num];
+				$num += 1;
+			}
 		}
+		return $res;
+	}
 
-		if(preg_match("/有無延遲還款/", $content['0'])){
-			$content_data=$this->CI->regex->replaceSpacesToSpace($content['0']);
-			$content_data= explode(" ", $content_data);
-            $get_student_loan = [];
-			foreach($content_data as $key => $value){
-				if (preg_match("/分行|營業部|北分/", $value)) {
-                    $getProportion= $this->get_loan_proportion($content_data[$key + 1], $content_data[$key + 2], $content_data[$key + 3]);
-                    $getStudentLoanStatus = $this->get_student_loan($content_data[$key + 2], $content_data[$key + 3]);
-                    $getBankname= $this->get_loan_bankname($value,$content_data[$key + 3]);
-                    $getMidTermLoan= $this->get_mid_term_loan($content_data[$key + 2],$content_data[$key + 3]);
-                    $getLongTermLoanBankname= $this->get_long_term_loan_bankname($value,$content_data[$key + 3]);
-					if(!empty($getProportion)){
-						$get_proportion[]=$getProportion;
+	/**
+	* [checkHasInfo 信用資訊項目總表解析]
+	* @param  string $text [pdf解析字串]
+	* @return array  $res  [信用資訊項目有/無信用資訊]
+	* (
+	*  [liabilities] => array
+	*   (
+	*    [totalAmount] => 借款總餘額資訊
+	*    [metaInfo] => 共同債務/從債務/其他債務資訊
+	*    [badDebtInfo] => 借款逾期、催收或呆帳記錄
+	*   )
+	*  [creditCard] => array
+	*   (
+	*    [cardInfo] => 信用卡持卡紀錄
+	*    [totalAmount] => 信用卡帳款總餘額資訊
+	*   )
+	*  [checkingAccount] => array
+	*   (
+	*    [largeAmount] => 大額存款不足退票資訊
+	*    [rejectInfo] => 票據拒絕往來資訊
+	*   )
+	*  [queryLog] => array
+	*   (
+	*    [queriedLog] => 被查詢記錄
+	*    [applierSelfQueriedLog] => 當事人查詢信用報告記錄
+	*   )
+	*  [other] => array
+	*   (
+	*    [extraInfo] => 附加訊息資訊
+	*    [mainInfo] => 主債務債權轉讓及清償資訊
+	*    [metaInfo] => 共同債務/從債務/其他債務轉讓資訊
+	*    [creditCardTransferInfo] => 信用卡債權轉讓及清償資訊
+	*   )
+	* )
+	*/
+	private function checkHasInfo($text=''){
+		$res = [];
+		$has_info = [];
+
+		preg_match('/第 1 頁\s.*\( 共 [0-9].* 頁 \).*/',$text,$page_info);
+		$end_key_word = isset($page_info[0]) ? $page_info[0] : '';
+		if($end_key_word){
+			$end_key_word = preg_replace('/\(/','\(',$end_key_word);
+			$end_key_word = preg_replace('/\)/','\)',$end_key_word);
+			$content = $this->CI->regex->findPatternInBetween($text, '參閱信用明細', $end_key_word);
+			$content = isset($content[0]) ? $content[0] : '';
+			if($content){
+				$content = preg_replace('/--|表[a-zA-Z].*[0-9].*/','',$content);
+				// 一、借款資訊
+				$mapping_array = ['借款總餘額資訊'=>'totalAmount','共同債務/從債務/其他債務資訊'=>'metaInfo','借款逾期、催收或呆帳紀錄'=>'badDebtInfo'];
+				$has_info['liabilities'] = $this->split_info($content, '一、借款資訊', '二、信用卡資訊',$mapping_array);
+				$res = array_merge($has_info,$res);
+				// 二、信用卡資訊
+				$mapping_array = ['信用卡持卡紀錄'=>'cardInfo','信用卡帳款總餘額資訊'=>'totalAmount'];
+				$has_info['creditCard'] = $this->split_info($content, '二、信用卡資訊', '三、票信資訊',$mapping_array);
+				$res = array_merge($has_info,$res);
+				// 三、票信資訊
+				$mapping_array = ['大額存款不足退票資訊'=>'largeAmount','票據拒絕往來資訊'=>'rejectInfo'];
+				$has_info['checkingAccount'] = $this->split_info($content, '三、票信資訊', '四、查詢紀錄',$mapping_array);
+				$res = array_merge($has_info,$res);
+				// 四、查詢紀錄
+				$mapping_array = ['被查詢紀錄'=>'queriedLog','當事人查詢信用報告紀錄'=>'applierSelfQueriedLog'];
+				$has_info['queryLog'] = $this->split_info($content, '四、查詢紀錄', '五、其他',$mapping_array);
+				$res = array_merge($has_info,$res);
+				// 五、其他
+				$mapping_array = ['附加訊息資訊'=>'extraInfo','主債務債權轉讓及清償資訊'=>'mainInfo','共同債務/從債務/其他債務轉讓資訊'=>'metaInfo','信用卡債權轉讓及清償資訊'=>'creditCardTransferInfo'];
+				$has_info['other'] = $this->split_info($content, '五、其他', '',$mapping_array);
+				$res = array_merge($has_info,$res);
+			}
+		}
+		return $res;
+	}
+
+	/**
+	 * [deletePageInfo 消除跨頁及第一頁資訊]
+	 * @param  string $text    [pdf解析字串]
+	 * @return string $content [消除後字串]
+	 */
+	private function deletePageInfo($text=''){
+		$content = '';
+		preg_match('/第 1 頁\s.*\( 共 [0-9].* 頁 \).*/',$text,$page_info);
+		$end_key_word = isset($page_info[0]) ? $page_info[0] : '';
+		if($end_key_word){
+			$end_key_word = preg_replace('/\(/','\(',$end_key_word);
+			$end_key_word = preg_replace('/\)/','\)',$end_key_word);
+			$content = $this->CI->regex->findPatternInBetween($text, $end_key_word, '');
+			$content = isset($content[0]) ? $content[0] : '';
+			if($content){
+				$content = preg_replace('/E\d{13}|第 [0-9].* 頁\s.*\( 共 [0-9].* 頁 \).*/','',$content);
+			}
+		}
+		return $content;
+	}
+
+	/**
+	 * [getTotalLoanInfo 找借款總餘額資訊]
+	 * @param  string $text       [pdf字串]
+	 * @return array  $data_array [借款資訊項目解析資料]
+	 */
+	private function getTotalLoanInfo($text=''){
+		// print_r($text);exit;
+		$data_array = [];
+		$b2_mapping = [
+			'共同債務資訊' => 'part1',
+			'從債務資訊' => 'part2',
+			'其他債務資訊' => 'part3',
+		];
+		if($text){
+			// 資訊項目：借款總餘額資訊
+			$content = $this->CI->regex->findPatternInBetween($text, '', '借款餘額.\w.*千元');
+			$content = isset($content[0]) ? $content[0] : [];
+			// print_r($content);exit;
+			if($content){
+				$content = $this->CI->regex->findPatternInBetween($content, '[0-9]{3}\/[0-9]{2}\~[0-9]{3}\/[0-9]{2}', '');
+				$content = isset($content[0]) ? $content[0] : [];
+				// print_r($content);exit;
+				if($content){
+					// preg_match_all('/(\W){1,}.*[0-9]{3}\/[0-9]{2}.*/',$content,$content);
+					preg_match_all('/((\W){1,}.*[0-9]{3}\/[0-9]{2}.*(無|有\s.*\s遲延狀態：(.*\s.*月|.*)))/',$content,$content);
+					$content = isset($content[0]) ? $content[0] : [];
+				}
+			}
+			// print_r($content);exit;
+			if($content){
+				foreach($content as $k=>$v){
+					$content[$k] = array_values(array_filter(preg_split('/\t/',$v)));
+				}
+				// print_r($content);exit;
+				foreach($content as $k=>$v){
+					$data_array['B1']['dataList'][$k]['bankName'] = isset($content[$k][0]) ? preg_replace('/\s/','',$content[$k][0]) : '';
+					$data_array['B1']['dataList'][$k]['yearMonth'] = isset($content[$k][1]) ? preg_replace('/\s/','',$content[$k][1]) : '';
+					$data_array['B1']['dataList'][$k]['totalAmount'] = isset($content[$k][2]) ? preg_replace('/\s/','',$content[$k][2]) : '';
+					$data_array['B1']['dataList'][$k]['noDelayAmount'] = isset($content[$k][3]) ? preg_replace('/\s/','',$content[$k][3]) : '';
+					$data_array['B1']['dataList'][$k]['delayAmount'] = isset($content[$k][4]) ? preg_replace('/\s/','',$content[$k][4]) : '';
+					$data_array['B1']['dataList'][$k]['accountDescription'] = isset($content[$k][5]) ? preg_replace('/\s/','',$content[$k][5]) : '';
+					$data_array['B1']['dataList'][$k]['purpose'] = isset($content[$k][6]) ? preg_replace('/\s/','',$content[$k][6]) : '';
+					$data_array['B1']['dataList'][$k]['pastOneYearDelayRepayment'] = isset($content[$k][7]) ? preg_replace('/\s/','',$content[$k][7]) : '';
+				}
+			}
+			// 借款餘額小計
+			preg_match('/借款餘額.\w.*千元/',$text,$page_info);
+			$page_info = isset($page_info[0]) ? $page_info[0] : '';
+			if($page_info){
+				preg_match('/小計.*.千元$/',$page_info,$page_info);
+				$page_info = isset($page_info[0]) ? $page_info[0] : '';
+				$page_info = preg_replace('/(小計)|(千元)/','',$page_info);
+				$page_info = isset($page_info) ? $page_info : '';
+			}
+			// $data_array['total-loan-subtotal'] = isset($page_info) ? $page_info : '';
+
+			// 資訊項目：借款總餘額資訊(未滿一個月)
+			$content = $this->CI->regex->findPatternInBetween($text, '遲延還款紀錄.\s[0-9]{3}\/[0-9]{2}\/[0-9]{2}\~[0-9]{3}\/[0-9]{2}\/[0-9]{2}', '小計');
+			$content = isset($content[0]) ? $content[0] : [];
+			// print_r($text);exit;
+			if($content){
+				$content = preg_replace('/當事人綜合信用報告|金融機構.*\s.*[0-9]{3}\/[0-9]{2}\/[0-9]{2}\~[0-9]{3}\/[0-9]{2}\/[0-9]{2}|[0-9]{3}\/[0-9]{2}\/[0-9]{2}\~[0-9]{3}\/[0-9]{2}\/[0-9]{2}/','',$content);
+				preg_match_all('/((\W){1,}.*[0-9]{3}\/[0-9]{2}.*(無|有\s.*\s遲延狀態：.*\s.*月))/',$content,$content);
+				// $content = preg_split('/\t/',$content);
+				$content = isset($content[0]) ? $content[0] : [];
+				if($content){
+					// 外層去空格
+					foreach($content as $k=>$v){
+						$content[$k] = array_values(array_filter(preg_split('/\t/',$v)));
 					}
-					if(!empty($getBankname)){
-						$get_bankname[]=$getBankname;
-					}
-					if(!empty($getStudentLoanStatus)){
-						$get_student_loan[]=$getStudentLoanStatus;
-					}
-					if(!empty($getMidTermLoan)){
-						$get_mid_term_loan[]=$getMidTermLoan;
-					}
-					if(!empty($getLongTermLoanBankname)){
-						$get_long_term_loan_bankname[]=$getLongTermLoanBankname;
+					foreach($content as $k=>$v){
+						// 裏層去空格
+						foreach($v as $k1=>$v1){
+							$content[$k][$k1] = preg_replace('/\s/','',$v1);
+						}
+						$content[$k] = array_values(array_filter($content[$k]));
+
+						$data_array['B1-extra']['dataList'][$k]['bankName'] = isset($content[$k][0]) ? preg_replace('/\s/','',$content[$k][0]) : '';
+						$data_array['B1-extra']['dataList'][$k]['yearMonth'] = isset($content[$k][1]) ? preg_replace('/\s/','',$content[$k][1]) : '';
+						$data_array['B1-extra']['dataList'][$k]['撥款'] = isset($content[$k][2]) ? preg_replace('/\s/','',$content[$k][2]) : '';
+						$data_array['B1-extra']['dataList'][$k]['還款'] = isset($content[$k][3]) ? preg_replace('/\s/','',$content[$k][3]) : '';
+						$data_array['B1-extra']['dataList'][$k]['accountDescription'] = isset($content[$k][4]) ? preg_replace('/\s/','',$content[$k][4]) : '';
+						$data_array['B1-extra']['dataList'][$k]['purpose'] = isset($content[$k][5]) ? preg_replace('/\s/','',$content[$k][5]) : '';
+						$data_array['B1-extra']['dataList'][$k]['pastOneYearDelayRepayment'] = isset($content[$k][6]) ? preg_replace('/\s/','',$content[$k][6]) : '';
 					}
 				}
 			}
-            $getStudentLoan = [
-                isset($get_student_loan) ? array_sum($get_student_loan) : 0,
-                count($get_student_loan)
-            ];
-            $getCountALLMidTermLoan = isset($get_mid_term_loan) ? array_sum($get_mid_term_loan) : 0;
-            $getALLLongTermLoanBankname=(isset($get_long_term_loan_bankname))?$get_long_term_loan_bankname:Null;
-            $getCountALLLongTermLoanBank=(!empty($getALLLongTermLoanBankname))?count(array_flip(array_flip($getALLLongTermLoanBankname))):0;
 
+			// 資訊項目：共同債務
+			if(preg_match('/共同債務\/從債務\/其他債務資訊/u',$text)){
+				$content = '';
+				preg_match('/.*共同債務\/從債務\/其他債務資訊.*(\s.*)*/u',$text, $match);
+				$match = isset($match[0]) ? $match[0] : '';
+				if($match){
+					$content = preg_replace('/(.*共同債務\/從債務\/其他債務資訊.*)|([0-9]{3}\/[0-9]{2}.*)|(當事人綜合信用報告)/','',$match);
+					$content = preg_split('/(從債務資訊\s.*\s|共同債務資訊\s.*\s|其他債務資訊\s.*\s)/u',$content,-1,PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+					foreach($content as $k=>$v){
+						$v = preg_replace('/\s/','',$v);
+						if(!$v){
+							unset($content[$k]);
+						}
+					}
+					// $content = array_filter($content);
+					$content = array_chunk($content,2);
+					foreach($content as $v){
+						$title = '';
+						foreach($v as $v1){
+							// 從債務項目種類解析
+							if(preg_match('/(從債務資訊\s.*|共同債務資訊\s.*|其他債務資訊\s.*)/u',$v1)){
+								$title = preg_replace('/\s/','',preg_replace('/\s.*/u','',$v1));
+								if(isset($b2_mapping[$title])){
+									$data_array['B2'][$b2_mapping[$title]]['description'] = $title;
+								}
+							}
 
-			$getAllBanknameWithoutSchoolLoan=(isset($get_bankname))?$get_bankname:Null;
-			$getAllProportion=(isset($get_proportion))?$get_proportion:[0];
-			$getCountAllBanknameWithoutSchoolLoan=(!empty($getAllBanknameWithoutSchoolLoan))?count(array_flip(array_flip($getAllBanknameWithoutSchoolLoan))):0;
-			$keyword=$this->CI->regex->findPatternInBetween($text, '有無延遲還款', '【逾期、催收或呆帳資訊】');
-			if (preg_match("/有/", $keyword[0])) {
-			    $obj = [
-                    "stage" => "bank_loan",
-                    "status" => "failure",
-                    "message" => [
-                        "有無延遲還款 : 有",
-                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan"
-                    ],
-                    "rejected_message" => [
-                        "最近十二個月有無延遲還款 : 有"
-                    ]
-                ];
-                $obj = $this->serExpireFailure($obj, $expire);
-                $result["messages"][] = $obj;
-			} else {
-				$this->get_loan_info($getCountAllBanknameWithoutSchoolLoan,$getAllProportion,$getCountALLLongTermLoanBank,$getCountALLMidTermLoan,$getStudentLoan, $result, $expire);
+							if($title && preg_match('/(\W*\s)*.*(.*放款|催收|呆帳|助學貸款|逾期)/',$v1)){
+								$v1 = preg_replace('/主借款戶.*科目/','',$v1);
+								preg_match_all('/(\W*\s)*.*(.*放款|催收|呆帳|助學貸款)/',$v1,$v1);
+								$value = isset($v1[0]) ? $v1[0] : [];
+								foreach($value as $k2=>$v2){
+									$list[$k2] = array_values(array_filter(preg_split('/\s/',preg_replace('/(\t\n)/','',$v2))));
+								}
+
+								foreach($list as $k2=>$v2){
+									if(count($v2) ==5){
+										$data_array['B2'][$b2_mapping[$title]]['dataList'][] = [
+											'主借款戶' => isset($v2[0]) ? $v2[0] : '',
+											'承貸金融機構' => isset($v2[1]) ? $v2[1] : '',
+											'未逾期金額' => isset($v2[2]) ? $v2[2] : '',
+											'逾期金額' => isset($v2[3]) ? $v2[3] : '',
+											'科目' => isset($v2[4]) ? $v2[4] : '',
+
+										];
+									}
+									if(count($v2) ==4){
+										preg_match('/.*公司/',$v2[0],$main_borrower);
+										preg_match('/(?<=(公司)).*(?=.*)/',$v2[0],$agency_name);
+										$data_array['B2'][$b2_mapping[$title]]['dataList'][] = [
+											'主借款戶' => isset($main_borrower[0]) ? $main_borrower[0] : '',
+											'承貸金融機構' => isset($agency_name[0]) ? $agency_name[0] : '',
+											'未逾期金額' => isset($v2[1]) ? $v2[1] : '',
+											'逾期金額' => isset($v2[2]) ? $v2[2] : '',
+											'科目' => isset($v2[3]) ? $v2[3] : '',
+
+										];
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+
+			// 資訊項目：借款逾期、催收或呆帳紀錄
+			if(preg_match('/若結案日期欄位有結案日期係指您與金融機構間已無債權債務關係/',$text)){
+				// print_r($text);exit;
+				preg_match('/(?<=(借款逾期、催收或呆帳紀錄))(.*\s)*/',$text,$content);
+				$content = isset($content[0]) ? $content[0] : '';
+				// print_r($content);exit;
+				if($content){
+					$content = preg_replace('/(\(若結案日期欄位有結案日期係指您與金融機構間已無債權債務關係\))|金融機構名稱|資料日期|金額|科目|結案日期|當事人綜合信用報告|說明\：.*/','',$content);
+					// print_r($content);exit;
+					// preg_match_all('/.*[0-9]{3}\/[0-9]{2}.*[0-9]{3}\/[0-9]{2}/',$content,$content);
+					preg_match_all('/.*[0-9]{3}\/[0-9]{2}.*/',$content,$content);
+					$content = isset($content[0]) ? $content[0] : '';
+					// print_r($content);exit;
+					if($content){
+						foreach($content as $k=>$v){
+							$v = array_values(array_filter(preg_split('/\s/',$v)));
+							if(count($v)==5){
+								$data_array['B3']['dataList'][] = [
+									'金融機構名稱' => isset($v[0]) ? $v[0] : '',
+									'資料日期' => isset($v[1]) ? $v[1] : '',
+									'金額' => isset($v[2]) ? $v[2] : '',
+									'科目' => isset($v[3]) ? $v[3] : '',
+									'結案日期' => isset($v[4]) ? $v[4] : '',
+								];
+							}
+
+							if(count($v)==4){
+								$data_array['B3']['dataList'][] = [
+									'金融機構名稱' => isset($v[0]) ? $v[0] : '',
+									'資料日期' => isset($v[1]) ? $v[1] : '',
+									'金額' => isset($v[2]) ? $v[2] : '',
+									'科目' => isset($v[3]) ? $v[3] : '',
+									'結案日期' => isset($v[4]) ? $v[4] : '',
+								];
+							}
+						}
+					}
+				}
+			}
+// print_r($data_array);exit;
+		}
+		return $data_array;
+	}
+
+		/**
+		 * [getCreditCardsInfo 找信用卡持卡紀錄]
+		 * @param  string $text       [pdf字串]
+		 * @return array  $data_array [信用卡持卡紀錄]
+		 */
+		private function getCreditCardsInfo($text=''){
+			$data_array = [
+				'K1' => [
+					'description' => '信用卡持卡記錄'
+				]
+			];
+			if($text){
+				$text = preg_replace('/信用卡持卡紀錄|表|K1|說明：|發卡機構|卡名|發卡日期|停卡日期|使用狀態/','',$text);
+				preg_match_all('/(.*正卡.[0-9]{3}\/[0-9]{2}\/[0-9]{2}.*)|(.*附卡.[0-9]{3}\/[0-9]{2}\/[0-9]{2}.*\s.*)/',$text,$content);
+				$content = isset($content[0]) ? $content[0] : [];
+				if($content){
+					foreach($content as $k=>$v){
+						$content[$k] = array_values(array_filter(preg_split('/\s/',$v)));
+					}
+
+					foreach($content as $k=>$v){
+						$data_array['K1']['dataList'][$k]['authority'] = isset($content[$k][0]) ? $content[$k][0] : '';
+						// $name_of_credit_card = isset($content[$k][1]) && isset($content[$k][2]) && isset($content[$k][3]) ? $content[$k][1].$content[$k][2].$content[$k][3] : '';
+						$data_array['K1']['dataList'][$k]['cardName']['type'] = $content[$k][1];
+						$data_array['K1']['dataList'][$k]['cardName']['level'] = $content[$k][2];
+						$data_array['K1']['dataList'][$k]['cardName']['primaryType'] = $content[$k][3];
+						$data_array['K1']['dataList'][$k]['authorizedDate'] = isset($content[$k][4]) ? $content[$k][4] : '';
+						if(count($v) == 6){
+							$data_array['K1']['dataList'][$k]['status'] = isset($content[$k][5]) ? $content[$k][5] : '';
+						}else{
+							$data_array['K1']['dataList'][$k]['deauthorizedDate'] = isset($content[$k][5]) ? $content[$k][5] : '';
+							$data_array['K1']['dataList'][$k]['status'] = isset($content[$k][6]) ? $content[$k][6] : '';
+						}
+					}
+				}
+			}
+			return $data_array;
+		}
+
+	// 信用卡帳款總餘額資訊
+	/**
+	 * [getCreditCardAccounts 找信用卡帳款總餘額資訊]
+	 * @param  string $text       [pdf字串]
+	 * @return array  $data_array [信用卡帳款總餘額資訊]
+	 */
+	private function getCreditCardAccounts($text=''){
+		$data_array = [];
+		if($text){
+			$content = preg_replace('/當事人綜合信用報告(\s)*.(\W)*|信用卡戶帳款資訊|表|K2|.*\s.*但最長不超過自停卡日期起7年.*/','',$text);
+			$content = preg_replace('/債權結案|結帳日|發卡機構|卡名|額度|本期|應付帳款|未到期|待付款|上期|繳款狀況|是否|預借現金|債權|狀態|債權結案/','',$content);
+			$content = preg_replace('/.*信用卡帳款總餘額.*/','',$content);
+			if($content){
+				$array = preg_split('/([0-9]{3}\/[0-9]{2}\/[0-9]{2})/',$content,-1,PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+				foreach($array as $k=>$v){
+					$array[$k] = preg_replace('/(^\s*)|(\s*$)/','',preg_replace('/[\r\n]/','',$v));
+				}
+				$array = array_values(array_filter($array));
+				$result = array();
+				for( $i = 0, $count = count( $array); $i < $count-1; $i += 2){
+						$v = preg_split('/\t/',$array[$i] ."\t". $array[$i + 1]);
+
+						$data_array['K2']['dataList'][] = [
+							'date' => isset($v[0]) ? $v[0] : '',
+							'bank' => isset($v[1]) ? $v[1] : '',
+							'cardType' => isset($v[2]) ? $v[2] : '',
+							'quotaAmount' => isset($v[3]) ? $v[3] : '',
+							'currentAmount' => isset($v[4]) ? $v[4] : '',
+							'nonExpiredAmount' => isset($v[5]) ? $v[5] : '',
+							'previousPaymentStatus' => isset($v[6]) ? $v[6] : '',
+							'cashAdvanced' => isset($v[7]) ? $v[7] : '',
+							'claimsStatus' => isset($v[8]) ? $v[8] : '',
+							'claimsClosed' => isset($v[9]) ? $v[9] : ''
+						];
+				}
 			}
 		}
+		return $data_array;
 	}
-	private function get_loan_info($getCountAllBanknameWithoutSchoolLoan, $getAllProportion, $getCountALLLongTermLoanBank, $getCountALLMidTermLoan, $getStudentLoan, &$result, $expire)
-	{
-		$getAllProportion = array_pad($getAllProportion, 3, 0);
-		$longTermLoan = "長期放款借款餘額比例 : 0%";
-        $getStudentLoanStatusMsg = $getStudentLoan[1] == 0 ? ' 無' : '<br />助學貸款借款餘額 ( 千元 ) 合計 / 筆數 : '  . $getStudentLoan[0] . ' / ' . $getStudentLoan[1] . ' 筆';
-        $getCountALLMidTermLoanMsg = '中期借款借款餘額 ( 千元 ) 合計 : ' . $getCountALLMidTermLoan;
-		if ($getCountAllBanknameWithoutSchoolLoan > 3) {
-			$result["status"]= "failure";
-            $obj = [
-				"stage" => "bank_loan",
-				"status" => "failure",
-				"message" => [
-					"有無延遲還款 : 無",
-					"是否有助學貸款 : ".$getStudentLoanStatusMsg,
-					"銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-                    $getCountALLMidTermLoanMsg,
-					$longTermLoan
+
+	/**
+	 * [getQueryLogInfo 找查詢記錄]
+	 * @param  string $text       [pdf字串]
+	 * @param  string $info_item  [信用資訊項目]
+	 * S1|S2(被查詢記錄|當事人查詢信用報告紀錄)
+	 * @return array  $data_array [被查詢記錄|當事人查詢信用報告紀錄]
+	 */
+	private function getQueryLogInfo($text='',$info_item=''){
+		$data_array = [];
+
+		if($text){
+			preg_match_all('/.*[0-9]{3}\/[0-9]{2}\/[0-9]{2}.*/',$text,$content);
+			$content = isset($content[0]) ? $content[0] : [];
+			if($content){
+				foreach($content as $k=>$v){
+					$content[$k] = array_filter(preg_split('/\s/',$v));
+				}
+				if($info_item){
+					// 被查詢記錄
+					if($info_item=='S1'){
+						foreach($content as $k=>$v){
+							$data_array['S1']['dataList'][$k]['date'] = isset($content[$k][0]) ? $content[$k][0] : '';
+							$data_array['S1']['dataList'][$k]['institution'] = isset($content[$k][1]) ? $content[$k][1] : '';
+							$data_array['S1']['dataList'][$k]['reason'] = isset($content[$k][2]) ? $content[$k][2] : '';
+						}
+					}
+					// 當事人查詢信用報告紀錄
+					if($info_item=='S2'){
+						foreach($content as $k=>$v){
+							$data_array['S2']['dataList'][$k]['date'] = isset($content[$k][0]) ? $content[$k][0] : '';
+							$data_array['S2']['dataList'][$k]['applyType'] = isset($content[$k][1]) ? $content[$k][1] : '';
+							$data_array['S2']['dataList'][$k]['creditReportType'] = isset($content[$k][2]) ? $content[$k][2] : '';
+							$data_array['S2']['dataList'][$k]['revealToBank'] = isset($content[$k][3]) ? $content[$k][3] : '';
+						}
+					}
+				}
+			}
+		}
+
+		return $data_array;
+	}
+
+	// 信用評分
+	/**
+	 * [getCreditScore 找信用評分資訊]
+	 * @param  string $text       [pdf字串]
+	 * @return array  $data_array [信用評分]
+	 * (
+	 *  [scoreComment] => 信用評分
+	 * )
+	 */
+	private function getCreditScore($text=''){
+		$data_array = [];
+		if($text){
+			preg_match('/信用評分:(\s)?[0-9]{3}分/',$text,$score);
+			$score = isset($score[0]) ? $score[0] : '';
+			if($score){
+				preg_match('/[0-9]{3}/',$score,$score);
+				$score = isset($score[0]) ? $score[0] : '';
+			}
+			$data_array['scoreComment'] = $score;
+		}
+		return $data_array;
+	}
+
+	/**
+	 * [getCreditScoreReason 找評分原因資訊]
+	 * @param  string $text       [pdf字串]
+	 * @return array  $data_array [評分原因]
+	 * (
+	 *  [noCommentReason] =>
+	 *    (
+	 *     '評分原因'
+	 *     ...
+	 *    )
+	 * )
+	 */
+	private function getCreditScoreReason($text=''){
+		$data_array['noCommentReason'] = '';
+		if($text){
+			preg_match_all('/＊.*/',$text,$content);
+			$content = isset($content[0]) ? $content[0] : [];
+			if($content){
+				foreach($content as $k=>$v){
+					$data_array['noCommentReason'] .= $v.'
+					';
+				}
+			}
+		}
+		return $data_array;
+	}
+
+	/**
+	 * [searchEndKey 尋找信用項目切段結尾字串]
+	 * @param  array  $credit_info [信用資訊項目總表]
+	 *(
+	 * [liabilities] =>
+	 *   (
+	 *    [totalAmount] => 借款總餘額資訊
+	 *    [metaInfo] => 共同債務/從債務/其他債務資訊
+	 *    [badDebtInfo] => 借款逾期、催收或呆帳紀錄
+	 *   )
+	 * [creditCard] =>
+	 *   (
+	 *    [cardInfo] => 信用卡持卡紀錄
+	 *    [totalAmount] => 信用卡帳款總餘額資訊
+	 *   )
+	 * [checkingAccount] =>
+	 *   (
+	 *    [largeAmount] => 大額存款不足退票資訊
+	 *    [rejectInfo] => 票據拒絕往來資訊
+	 *   )
+	 * [queryLog] =>
+	 *   (
+	 *    [queriedLog] => 被查詢紀錄
+	 *    [applierSelfQueriedLog] => 當事人查詢信用報告紀錄
+	 *   )
+	 * [other] =>
+	 *   (
+	 *    [extraInfo] => 附加訊息資訊
+	 *    [mainInfo] => 主債務債權轉讓及清償資訊
+	 *    [metaInfo] => 共同債務/從債務/其他債務轉讓資訊
+	 *    [creditCardTransferInfo] => 信用卡債權轉讓及清償資訊
+	 *   )
+	 *)
+	 * @param  string $start_key   [擷取信用項目開頭類別]
+	 * @return string $end_key     [擷取信用項目結尾類別]
+	 */
+	public function searchEndKey($credit_info=[],$start_key=''){
+		$end_key = '';
+		// $end_key_1 = '';
+		$is_after_start_key=0;
+		$mapping_array = [
+			'liabilities' => '一、借款資訊',
+			'creditCard' => '二、信用卡資訊',
+			'checkingAccount' => '三、票信資訊',
+			'queryLog' => '四、查詢紀錄',
+			'other' => '五、其他',
+		];
+
+		foreach($credit_info as $k=>$v){
+			if($k == $start_key){
+				$is_after_start_key=1;
+				continue;
+			}
+			if($is_after_start_key){
+				foreach($v as $k1=>$v1){
+					if($v1 != '' && $v1 != '無'){
+						$end_key = $k;
+						break 2;
+					}
+				}
+			}
+		}
+
+		if($end_key){
+			$end_key = isset($mapping_array[$end_key]) ? $mapping_array[$end_key] : '';
+		}
+
+		return $end_key;
+	}
+
+	// 轉換 pdf 解析資料格式
+	public function transfrom_pdf_data($text){
+
+		$response = [
+			'applierInfo' => [
+				'basicInfo' =>[
+					'personId' => '',
 				],
-				"rejected_message" => [
-					"銀行借款家數超過3家"
-				]
-			];
-            $obj = $this->serExpireFailure($obj, $expire);
-            $result["messages"][] = $obj;
-		} elseif ($getCountAllBanknameWithoutSchoolLoan == 3) {
-			$result["status"]= "pending";
-            $obj = [
-				"stage" => "bank_loan",
-				"status" => "pending",
-				"message" => [
-					"有無延遲還款 : 無",
-                    "是否有助學貸款 : ".$getStudentLoanStatusMsg,
-                    "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-                    $getCountALLMidTermLoanMsg,
-					$longTermLoan
-				]
-			];
-            $obj = $this->serExpireFailure($obj, $expire);
-            $result["messages"][] = $obj;
-		} else {
-			if (in_array(1, $getAllProportion)) {
-				$result["status"]= "failure";
-                $obj = [
-					"stage" => "bank_loan",
-					"status" => "failure",
-					"message" => [
-						"有無延遲還款 : 無",
-                        "是否有助學貸款 : ".$getStudentLoanStatusMsg,
-                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-                        $getCountALLMidTermLoanMsg,
-						$longTermLoan
-					],
-					"rejected_message" => [
-						"長期放款的借款餘額等於訂約金額"
-					]
-				];
-                $obj = $this->serExpireFailure($obj, $expire);
-                $result["messages"][] = $obj;
-				return;
-			}
-
-			foreach ($getAllProportion as $key => $value) {
-				$is_InStandard[] = ($value < 0.7) ? true : false;
-			}
-			$is_InStandard=(isset($is_InStandard))?$is_InStandard:0;
-			if ((in_array(false, $is_InStandard) == 0) && $getCountAllBanknameWithoutSchoolLoan <= 2) {
-                $obj = [
-					"stage" => "bank_loan",
-					"status" => "success",
-					"message" => [
-						"有無延遲還款 : 無",
-                        "是否有助學貸款 : ".$getStudentLoanStatusMsg,
-                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-                        $getCountALLMidTermLoanMsg,
-						"長期放款家數 : $getCountALLLongTermLoanBank",
-					]
-				];
-				$result["status"]= "success";
-                $obj = $this->serExpireFailure($obj, $expire);
-                $result["messages"][] = $obj;
-				foreach ($getAllProportion as $value) {
-					$result["messages"][3]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
-				}
-			} else {
-                $obj = [
-					"stage" => "bank_loan",
-					"status" => "pending",
-					"message" => [
-						"有無延遲還款 : 無",
-                        "是否有助學貸款 : ".$getStudentLoanStatusMsg,
-                        "銀行借款家數 : $getCountAllBanknameWithoutSchoolLoan",
-                        $getCountALLMidTermLoanMsg,
-						"長期放款家數 : $getCountALLLongTermLoanBank",
-					]
-				];
-				$result["status"]= "pending";
-                $obj = $this->serExpireFailure($obj, $expire);
-                $result["messages"][] = $obj;
-				foreach ($getAllProportion as $value) {
-					$result["messages"][3]["message"][] = "長期放款借款餘額比例 : " . ($value * 100) . '%';
-				}
-			}
-		}
-	}
-	private function get_student_loan($value,$subject)
-	{
-		if ($subject == '助學貸款') {
-            $totalAmount = preg_replace('/\D+/', '', $value);;
-            return	$totalAmount;
-		}
-	}
-
-	private function get_loan_bankname($value,$subject)
-	{
-		if ($subject !== '助學貸款') {
-			$bankname = $value;
-			return	$bankname;
-		}
-	}
-
-	private function get_mid_term_loan($value,$subject)
-	{
-		if (($subject == '中期放款')||($subject == '中期擔保放款')) {
-			$totalAmount = preg_replace('/\D+/', '', $value);;
-			return	$totalAmount;
-		}
-	}
-
-	private function get_long_term_loan_bankname($value,$subject)
-	{
-		if (($subject == '長期放款')||($subject == '長期擔保放款')) {
-			$bankname = $value;
-			return	$bankname;
-		}
-	}
-
-	private function get_loan_proportion($contract_money,$balance_of_loans,$subject)
-	{
-		if (($subject == '長期放款')||($subject == '長期擔保放款')) {
-			preg_match('!\d+!', $contract_money, $ContractMoney);
-			preg_match('!\d+!', $balance_of_loans, $BalanceOfLoan);
-			$proportion = round($BalanceOfLoan[0] / $ContractMoney[0],3);
-			return $proportion;
-		}
-	}
-
-	public function check_overdue_and_bad_debts($text, &$result)
-	{
-        $expire = $expire = $this->expire_check($text, $result);
-		$content = $this->CI->regex->findPatternInBetween($text, '【逾期、催收或呆帳資訊】', '【主債務債權再轉讓及清償資訊】');
-        $obj = $this->CI->regex->isNoDataFound($content[0]) ? [
-			"stage" => "bad_debts",
-			"status" => "success",
-			"message" => "逾期、催收或呆帳資訊：無"
-		] : [
-			"stage" => "bad_debts",
-			"status" => "failure",
-			"message" => "逾期、催收或呆帳資訊：有",
-			"rejected_message" => [
-				"逾期、催收或呆帳"
-			]
-		];
-        $obj = $this->serExpireFailure($obj, $expire);
-        $result["messages"][] = $obj;
-	}
-
-	public function check_main_debts($text, &$result){
-        $expire = $expire = $this->expire_check($text, $result);
-		$content=$this->CI->regex->findPatternInBetween($text, '【主債務債權再轉讓及清償資訊】', '【共同債務\/從債務\/其他債務資訊】');
-		$obj = $this->CI->regex->isNoDataFound($content[0]) ? [
-			"stage" => "main_debts",
-			"status" => "success",
-			"message" => "主債務債權再轉讓及清償資訊：無"
-		] : [
-			"stage" => "main_debts",
-			"status" => "failure",
-			"message" => "主債務債權再轉讓及清償資訊：有",
-			"rejected_message" => [
-				"逾期、催收或呆帳"
-			]
-		];
-        $obj = $this->serExpireFailure($obj, $expire);
-        $result["messages"][] = $obj;
-	}
-
-	private function initializeEmptyExtraDebtRows(){
-		return [
-			'台端' => '',
-			"科目" => '',
-			'承貸行' => '',
-			'未逾期' => '',
-			'逾期未還金額' => '',
-		];
-	}
-
-	private function readExtraDebtRow($content){
-		$row = [];
-		$rows = [];
-		$content = $this->CI->regex->replaceSpacesToSpace($content);
-		$content = $this->CI->regex->removeExtraDebtsStopWords($content);
-		$elements = explode(" ", $content);
-
-		$iters = count($elements);
-		$isIrrelevant = false;
-		$prevKey = null;
-		for ($i = 0; $i < $iters; $i++) {
-			$element = $elements[$i];
-			if ($this->CI->regex->isDateTimeFormat($element)) {
-				$isIrrelevant = true;
-			}
-			if (strpos($element, "台端") !== false) {
-				$isIrrelevant = false;
-				if ($row) {
-					$rows[] = $row;
-				}
-				$row = $this->initializeEmptyExtraDebtRows();
-			}
-			if ($isIrrelevant) {
-				continue;
-			}
-			if ($prevKey) {
-				$row[$prevKey] = $element;
-				$prevKey = null;
-			}
-			$keys = ["台端", "承貸行", "台端", "未逾期", "逾期未還金額", "未逾期餘額"];
-			foreach ($keys as $key) {
-				if (strpos($element, $key) !== false) {
-					$row[$key] = $element;
-				}
-			}
-			if (strpos($element, "科目") !== false) {
-				$prevKey = "科目";
-			}
-		}
-
-		if ($row) {
-			$rows[] = $row;
-		}
-		return $rows;
-	}
-
-	public function check_extra_debts($text, &$result){
-		//3 15 29
-        $expire = $expire = $this->expire_check($text, $result);
-		$message = ["stage" => "extra_debts", "status" => "success", "message" => []];
-		$matches = $this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務資訊】', '【共同債務\/從債務\/其他債務轉讓資訊】');
-		$content = $matches[0];
-		if ($this->CI->regex->isNoDataFound($content)) {
-			$message["status"] = "success";
-			$message["message"] = self::EXTRA_DEBITS_DATA . "無";
-            $obj = $message;
-            $obj = $this->serExpireFailure($obj, $expire);
-            $result["messages"][] = $obj;
-			return;
-		}
-
-		$rows = [];
-		$commonDebt1 = $this->CI->regex->findPatternInBetween($content, '共同債務', '從債務');
-		$commonDebt2 = $this->CI->regex->findPatternInBetween($content, '共同債務', '擔保品提供人');
-		$commonDebt3 = $this->CI->regex->findPatternInBetween($content, '共同債務', '');
-
-		$commonDebt = $commonDebt1 ? $commonDebt1 : $commonDebt2 ? $commonDebt2 : $commonDebt3;
-		if ($commonDebt) {
-			$currentRows = $this->readExtraDebtRow($commonDebt[0]);
-			$rows = array_merge($rows, $currentRows);
-		}
-
-		$secondaryLiability1 = $this->CI->regex->findPatternInBetween($content, '從債務', '擔保品提供人');
-		$secondaryLiability2 = $this->CI->regex->findPatternInBetween($content, '從債務', '');
-		$secondaryLiability = $secondaryLiability1 ? $secondaryLiability1 : $secondaryLiability2;
-		if ($secondaryLiability) {
-			$currentRows = $this->readExtraDebtRow($secondaryLiability[0]);
-			$rows = array_merge($rows, $currentRows);
-		}
-
-		$collateralProvider = $this->CI->regex->findPatternInBetween($content, '擔保品提供人', '');
-		if ($collateralProvider) {
-			$currentRows = $this->readExtraDebtRow($secondaryLiability[0]);
-			$rows = array_merge($rows, $currentRows);
-		}
-
-		if ($rows) {
-			foreach ($rows as $row) {
-				if (!$row["科目"]) {
-					continue;
-				}
-				if (strpos($row["科目"], '助學貸款') !== false) {
-					if (!$this->CI->regex->getZeroOverdueAmount($row["逾期未還金額"])) {
-						$message["status"] = "failure";
-						$message["rejected_message"][] = "助學貸款，逾期未還金額>0";
-					}
-				}
-				if (
-					strpos($row["科目"], '長期擔保') !== false
-					|| strpos($row["科目"], '房貸') !== false
-					|| strpos($row["科目"], '不動產擔保') !== false
-				) {
-					$message["status"] = "pending";
-				}
-
-				if ($this->CI->regex->isGuarantor($row["台端"])) {
-					$message["message"][] = $row["台端"];
-				}
-				$message["message"][] = "科目：" . $row["科目"];
-				$message["message"][] = $row["未逾期餘額"];
-			}
-		}
-        $obj = $message;
-        $obj = $this->serExpireFailure($obj, $expire);
-        $result["messages"][] = $obj;
-	}
-
-	public function check_extra_transfer_debts($text, &$result){
-        $expire = $expire = $this->expire_check($text, $result);
-		$content=$this->CI->regex->findPatternInBetween($text, '【共同債務\/從債務\/其他債務轉讓資訊】', '【退票資訊】');
-        $obj = $this->CI->regex->isNoDataFound($content[0]) ? [
-			"stage" => "transfer_debts",
-			"status" => "success",
-			"message" => "共同債務/從債務/其他債務轉讓資訊：無"
-		] : [
-			"stage" => "transfer_debts",
-			"status" => "pending",
-			"message" => "共同債務/從債務/其他債務轉讓資訊：有"
-		];
-        $obj = $this->serExpireFailure($obj, $expire);
-        $result["messages"][] = $obj;
-	}
-
-	public function check_bounced_checks($text, &$result){
-		$content=$this->CI->regex->findPatternInBetween($text, '【退票資訊】', '【拒絕往來資訊】');
-        $getDay = $this->getDay($content[0]);
-        $sevenDays = strtotime("-7 days", strtotime(($result['appliedTime'][0] + 1911).$result['appliedTime'][1].$result['appliedTime'][2]));
-        $dataTime = strtotime(($getDay[0] + 1911) . $getDay[1] . $getDay[2]);
-		$obj = $this->CI->regex->isNoDataFound($content[0]) ? [
-			"stage" => "bounced_checks",
-			"status" => "success",
-			"message" => "退票資訊：無"
-		] : [
-			"stage" => "bounced_checks",
-			"status" => "pending",
-			"message" => "退票資訊：有"
-		];
-		if($dataTime <= $sevenDays || $getDay[0] == ''){
-            $obj['rejected_message'] = '非七天內' . ($getDay[0] == '' ? '(資料無日期)' : '');
-            $obj['status'] = 'pending';
-        }
-		else{
-            $obj['message'] = (isset($obj['message']) ? $obj['message'] . '<br / >' :''). $getDay[0] . '/' . $getDay[1] . '/' . $getDay[2] .'<br />為七天內';
-        }
-        $result["messages"][] = $obj;
-    }
-
-	public function check_lost_contacts($text, &$result){
-		$content=$this->CI->regex->findPatternInBetween($text, '【拒絕往來資訊】', '【信用卡資訊】');
-		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
-			"stage" => "lost_contacts",
-			"status" => "success",
-			"message" => "拒絕往來資訊：無"
-		] : [
-			"stage" => "lost_contacts",
-			"status" => "pending",
-			"message" => "拒絕往來資訊：有"
-		];
-	}
-
-	public function check_credit_cards($text, &$result){
-		$credit_date=$this->CI->regex->replaceSpacesToSpace($text);
-		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
-		$credit_date=substr($credit_date[0], 0, 10);
-		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡資訊】', '【信用卡戶帳款資訊】');
-		$cards_info =[
-			"allowedAmount" => 0,
-		];
-		$this->CI->regex->isNoDataFound($content[0]) ?	$result["messages"][] = [
-			"stage" => "credit_card_debts",
-			"status" => "success",
-			"message" => "信用卡資訊：無"
-		] : $cards_info=$this->get_credit_cards_info($content,$result);
-		return 	 $cards_info;
-	}
-
-	private function get_credit_date($text)
-	{
-		$credit_date=$this->CI->regex->replaceSpacesToSpace($text);
-		$credit_date=$this->CI->regex->findPatternInBetween($credit_date, ' 財團法人金融聯合徵信中心', '其所載信用資訊並非金融機構准駁金融交易之唯一依據');
-		$credit_date=substr($credit_date[0], 0, 19);
-		return trim($credit_date);
-	}
-
-	public function get_credit_cards_info($content,&$result)
-	{
-		$case =	preg_match("/強制/", $content['0']) ? 'deactivated' : 'check_in_used';
-		switch ($case) {
-			case 'deactivated':
-				$count_credit_cards = substr_count($content[0], "使用中");
-				if ($count_credit_cards > 0) {
-					$used = explode("使用中", $content[0]);
-					$size = count($used);
-					for ($i = 0; $i < $size - 1; $i++) {
-						$amount[] = substr($used[$i], -26, 5);
-					}
-					$allowedAmount = (int) array_sum($amount);
-					$result["messages"][] = [
-						"stage" => "credit_card_info",
-						"status" => "failure",
-						"message"  => [
-							"信用卡資訊：有",
-							"信用卡使用中張數：{$count_credit_cards}",
-							"信用卡總額度（仟元）：{$allowedAmount}"
+				'creditInfo' =>[
+					'printDatetime' => '',
+					'liabilities' => [
+						'description' => '一. 借款資訊B',
+						'totalAmount' => [
+							'description' => "1. 借款總餘額資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
 						],
-						"rejected_message" => [
-							"有強制停用或強制停卡"
+						'metaInfo' => [
+							'description' => "2. 共同債務/從債務/其他債務資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+						'badDebtInfo' => [
+							'description' => "3. 借款逾期、催收或呆帳記錄",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+					],
+					'creditCard' => [
+						'description' => "二. 信用卡資訊K",
+						'cardInfo' => [
+							'description' => "1. 信用卡持卡紀錄",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+						'totalAmount' => [
+							'description' => "2. 信用卡帳款總餘額資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+					],
+					'checkingAccount' => [
+						'description' => "三. 票信資訊C",
+						'largeAmount' =>[
+							'description' => "1. 大額存款不足退票資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+						'rejectInfo' => [
+							'description' => "2. 票據拒絕往來資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
 						]
-					];
-				} else {
-					$result["messages"][] = [
-						"stage" => "credit_card_info",
-						"status" => "failure",
-						"message" => [
-							"信用卡資訊：強制停用或強制停卡",
-							"信用卡使用中張數：0",
-							"信用卡總額度（仟元）：0"
+					],
+					'queryLog' => [
+						'description' => "四. 查詢記錄S",
+						'queriedLog' => [
+							'description' => "1. 被查詢記錄",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+						'applierSelfQueriedLog' => [
+							'description' => "2. 當事人查詢信用報告記錄",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
 						]
-					];
+					],
+					'other' => [
+						'description' => "五. 其他O",
+						'extraInfo' => [
+							'description' => "1. 附加訊息資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+						'mainInfo' => [
+							'description' => "2. 主債務債權轉讓及清償資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+						'metaInfo' =>[
+							'description' => "3. 共同債務/從債務/其他債務轉讓資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						],
+						'creditCardTransferInfo' => [
+							'description' => "4. 信用卡債權轉讓及清償資訊",
+							'existCreditInfo' => "有/無信用資訊",
+							'creditDetail' => "參閱信用明細"
+						]
+					]
+				]
+			],
+			'B1' => [
+				'dataList' => [],
+			],
+			'B1-extra' => [
+				'dataList' => [],
+			],
+			'B2' => [
+				'part1' => [
+					'dataList' => [],
+				],
+				'part2' => [
+					'dataList' => [],
+				],
+				'part3' => [
+					'dataList' => [],
+				]
+			],
+			'B3' => [
+				'dataList' => [],
+			],
+			'K1' => [
+				'dataList' => [],
+			],
+			'K2' => [
+				'dataList' => [],
+			],
+			'C1' => [
+				'dataList' => [],
+			],
+			'C2' => [
+				'dataList' => [],
+			],
+			'S1' => [
+				'dataList' => [],
+			],
+			'S2' => [
+				'dataList' => [],
+			],
+			'01' => [
+				'dataList' => [],
+			],
+			'02' => [
+				'dataList' => [],
+			],
+			'03' => [
+				'dataList' => [],
+			],
+			'04' => [
+				'dataList' => [],
+			],
+			'companyCreditScore' => [
+				'scoreComment' => '',
+				'noCommentReason' => [],
+			]
+		];
+
+		// 統一編號
+		$response['applierInfo']['basicInfo']['personId'] = $this->getIdCardNumber($text);
+
+		// 截至印表時間
+		$report_time = $this->getReportTime($text);
+		$response['applierInfo']['creditInfo']['printDatetime'] = $report_time;
+
+		// 第一頁總表資訊
+		$credit_table_info = $this->checkHasInfo($text);
+		if($credit_table_info){
+			foreach($credit_table_info as $k=>$v){
+				foreach($v as $k1=>$v1){
+					$response['applierInfo']['creditInfo'][$k][$k1]['existCreditInfo'] = $v1;
 				}
-				break;
-			case 'check_in_used':
-				$count_credit_cards = substr_count($content[0], "使用中");
-				if ($count_credit_cards > 0) {
-					$used = explode("使用中", $content[0]);
-					$size = count($used);
-					$banks = [];
-					for ($i = 0; $i < $size - 1; $i++) {
-                        $bank = $i == 0 ? preg_replace('/\\n/','',explode(' ', explode('使用狀態', $used[$i])[1])[0]) : preg_replace('/\\n/','',explode(' ', $used[$i])[0]);
-						if(!in_array($bank,$banks) && mb_strlen($bank) <= 4){
-                            $amount[] = substr($used[$i], -26, 5);
-                            $banks[] = $bank;
-                        }
+			}
+		}
+
+		// 消除首頁與跨頁資訊
+		$new_text = $this->deletePageInfo($text);
+
+		$item_check = [];
+		foreach($credit_table_info as $k=>$v){
+			foreach($v as $k1=>$v1){
+				if($v1 != '無' && $v1 != ''){
+					$item_check[$k] = 1;
+				}
+			}
+		}
+
+		// 一、借款資訊
+		if(isset($item_check['liabilities']) && $item_check['liabilities']==1){
+			$end_key = $this->searchEndKey($credit_table_info,'liabilities');
+			$content = $this->CI->regex->findPatternInBetween($new_text, '一、借款資訊', $end_key);
+			$content = isset($content[0]) ? $content[0] : '';
+			$res = $this->getTotalLoanInfo($content);
+			$response = array_merge($response,$res);
+		}
+
+		// 二、信用卡資訊
+		if(isset($item_check['creditCard']) && $item_check['creditCard']==1){
+			$end_key = $this->searchEndKey($credit_table_info,'creditCard');
+			$content = $this->CI->regex->findPatternInBetween($new_text, '二、信用卡資訊', $end_key);
+			$content = isset($content[0]) ? $content[0] : '';
+
+			// 信用卡持卡紀錄
+			if($response['applierInfo']['creditInfo']['creditCard']['cardInfo']['existCreditInfo']=='有'){
+				$sub_content = $this->CI->regex->findPatternInBetween($content, '', '信用卡資料揭露期限');
+				$sub_content = isset($sub_content[0]) ? $sub_content[0] : '';
+				$res = $this->getCreditCardsInfo($sub_content);
+				$response = array_merge($response,$res);
+			}
+
+			// 信用卡戶帳款資訊
+			if(preg_match('/有|[0-9]*(,[0-9]*)*元/',$response['applierInfo']['creditInfo']['creditCard']['totalAmount']['existCreditInfo'])){
+				if(preg_match('/([0-9]*(,[0-9]*)*元)?\s信用卡帳款總餘額\s([0-9]*(,[0-9]*)*元)?/',$content)){
+					preg_match('/([0-9]*(,[0-9]*)*元)?\s信用卡帳款總餘額\s([0-9]*(,[0-9]*)*元)?/',$content,$sub_content);
+					$sub_content = isset($sub_content[0]) ? $sub_content[0] : '';
+					if($sub_content){
+						$response['K2']['totalAmount'] = preg_replace('/\s信用卡帳款總餘額\s/','',$sub_content);
 					}
-					$allowedAmount = (int)array_sum($amount);
-					(!(preg_match("/其他/", $content['0'])||preg_match("/側錄/", $content['0'])||preg_match("/掛失/", $content['0'])||preg_match("/不明/", $content['0'])||preg_match("/偽冒/", $content['0'])))?$status='success':$status='pending';
-					$result["messages"][] = [
-						"stage" => "credit_card_info",
-						"status" => $status,
-						"message"  => [
-							"信用卡資訊：有",
-							"信用卡使用中張數：{$count_credit_cards}",
-							"信用卡總額度（仟元）：{$allowedAmount}"
-						]
-					];
-					$cards_info = [
-						"allowedAmount" => $allowedAmount,
-					];
-					return $cards_info;
-				} else {
-					$result["messages"][] = [
-						"stage" => "credit_card_info",
-						"status" => "pending",
-						"message"  => [
-							"信用卡資訊：有",
-							"信用卡使用中張數：0",
-							"信用卡總額度（仟元）：0"
-						]
-					];
 				}
-				break;
-		}
-	}
-
-	public function readRow($template, $row){
-		if (!$row) return;
-
-		$template["結帳日"] = $row[0];
-		$template["發卡機構"] = $row[1];
-		$index = 2;
-		if (
-			strpos($row[$index], "VISA") !== false
-			|| strpos($row[$index], "MASTER") !== false
-			|| strpos($row[$index], "JCB") !== false
-			|| strpos($row[$index], "AE") !== false
-		) {
-			$template["卡名"] = $row[$index++];
-		}
-
-		$template["額度(千元)"] = $row[$index++];
-		$template["預借現金"] = $row[$index++];
-
-		if (!is_numeric($row[$index])) {
-			if (!is_numeric($row[$index+2])) {
-				$template["結案"] = $row[$index++];
-			}
-
-			if (!is_numeric($row[$index+1])) {
-				$template["上期繳款狀況"] = $row[$index] . " " . $row[$index+1];
-				$index+=2;
-			} else {
-				$template["上期繳款狀況"] = $row[$index++];
-			}
-		}
-
-		if (
-			!is_numeric($row[$index])
-			|| !is_numeric($row[$index+1])
-			|| !is_numeric($template["額度(千元)"])
-		) {
-			return;
-		}
-		$template["本期應付帳款(元)"] = $row[$index++];
-		$template["未到期待付款(元)"] = $row[$index++];
-
-		if (isset($row[$index])) {
-			$template["債權狀態"] = $row[$index];
-		}
-
-		return $template;
-	}
-
-	public function format_credit_card_account_input($creditCardAccounts){
-		$template = [];
-		$rows = [];
-		$rowIndex = 0;
-		$length = count($creditCardAccounts);
-		for ($i = 1; $i < $length; $i++) {
-			$creditCardPayByMonth = $creditCardAccounts[$i];
-			$each = $this->CI->regex->replaceSpacesToSpace($creditCardPayByMonth);
-			$result = explode(" ", $each);
-
-			if ($i == 1) {
-				foreach ($result as $keyName) {
-					$template[$keyName] = null;
+				if($response['applierInfo']['creditInfo']['creditCard']['cardInfo']['existCreditInfo']=='有'){
+					$start_key = '信用卡資料揭露期限';
+				}else{
+					$start_key = '';
 				}
-				continue;
+				$sub_content = $this->CI->regex->findPatternInBetween($content, $start_key, '信用卡戶帳款資料揭露期限');
+				$sub_content = isset($sub_content[0]) ? $sub_content[0] : '';
+				$res = $this->getCreditCardAccounts($sub_content);
+				$response = array_merge($response,$res);
+			}
+		}
+
+		// 四、查詢紀錄
+		if(isset($item_check['queryLog']) && $item_check['queryLog']==1){
+			$end_key = $this->searchEndKey($credit_table_info,'queryLog');
+			$content = $this->CI->regex->findPatternInBetween($new_text, '四、查詢紀錄', $end_key);
+			$content = isset($content[0]) ? $content[0] : '';
+
+			// 被查詢紀錄
+			if(preg_match('/被查詢紀錄/',$content)){
+				$sub_content = $this->CI->regex->findPatternInBetween($content, '', '被金融機構或電子支付機構或電子票證發行機構查詢紀錄');
+				$sub_content = isset($sub_content[0]) ? $sub_content[0] : '';
+				$res = $this->getQueryLogInfo($sub_content,'S1');
+				$response = array_merge($response,$res);
 			}
 
-			$currentRow = [];
-			foreach ($result as $value) {
-				if ($currentRow && $this->CI->regex->isDateTimeFormat($value)) {
-					$filledTemplate = $this->readRow($template, $currentRow);
-					if ($filledTemplate) {
-						$rows[] = $filledTemplate;
-						$rowIndex++;
-					}
-					$currentRow = [];
+			// 當事人查詢信用報告紀錄
+			if(preg_match('/當事人查詢信用報告紀錄/',$content)){
+				if($response['applierInfo']['creditInfo']['queryLog']['queriedLog']['existCreditInfo']=='有'){
+					$start_key = '被金融機構或電子支付機構或電子票證發行機構查詢紀錄';
+				}else{
+					$start_key = '';
 				}
-				$currentRow[] = $value;
-			}
-			if ($currentRow && $this->CI->regex->isDateTimeFormat($currentRow[0])) {
-				$filledTemplate = $this->readRow($template, $currentRow);
-				if ($filledTemplate) {
-					$rows[] = $filledTemplate;
-					$rowIndex++;
-				}
+				$sub_content = $this->CI->regex->findPatternInBetween($content, $start_key, '當事人查詢信用報告紀錄');
+				$sub_content = isset($sub_content[0]) ? $sub_content[0] : '';
+				$res = $this->getQueryLogInfo($sub_content,'S2');
+				$response = array_merge($response,$res);
 			}
 		}
 
-		return $rows;
+		// 信用評分
+		$res = $this->getCreditScore($new_text);
+		$response['companyCreditScore'] = array_merge($response['companyCreditScore'],$res);
+
+		// 信用評分說明
+		$res = $this->getCreditScoreReason($new_text);
+		$response['companyCreditScore'] = array_merge($response['companyCreditScore'],$res);
+
+		return $response;
 	}
-
-	private function aggregateScores($scores){
-		if (!$scores) {
-			return 0;
-		}
-
-		$sum = 0;
-		foreach ($scores as $timeDiff => $score) {
-			if ($timeDiff > 6) {
-				continue;
-			}
-			$sum += $score;
-		}
-
-		$numScores = count($scores);
-		return floatval($sum/$numScores);
-	}
-
-	private function cashAdvanceWithDelayInThreshold($cashAdvances, $delays){
-		$cashAdvanceWithDelayInThreshold = true;
-		for ($i = 0; $i < 12; $i++) {
-			if ($cashAdvances[$i] && $delays[$i] > 1) {
-				$cashAdvanceWithDelayInThreshold = false;
-			}
-		}
-		return $cashAdvanceWithDelayInThreshold;
-	}
-
-	public function check_credit_card_accounts($text, $input, &$result){
-		$message = ["stage" => "credit_card_accounts", "status" => "failure", "message" => []];
-
-		$matches = $this->CI->regex->findPatternInBetween($text, "【信用卡戶帳款資訊】", "【信用卡債權再轉讓及清償資訊】");
-		$content = $matches[0];
-		if ($this->CI->regex->isNoDataFound($content)) {
-			$message["status"] = "success";
-			$message["message"] = self::NO_DATA;
-			$result["messages"] [] = $message;
-			return;
-		}
-
-		$creditCardAccounts = explode(self::BREAKER, $content);
-		$length = count($creditCardAccounts);
-		if ($length <= 2) {
-			$message["status"] = "pending";
-			$message["message"] = self::NO_DATA;
-			$result["messages"][] = $message;
-			return;
-		}
-
-		$rows = $this->format_credit_card_account_input($creditCardAccounts);
-
-		$scores = array_fill(0, 12, 0);
-		$delays = array_fill(0, 12, 0);
-		$cashAdvances = array_fill(0, 12, false);
-		$numbersOfDelayInAMonth = 0;
-		$numbersOfDelayMoreThanAMonth = 0;
-		$numbersOfGreatCredit = 0;
-		$creditRange = [
-			"range" => 0,
-			"isGreat" => true,
-		];
-		$maxTimeDiffFromAppliedAt = null;
-		$hasBadCredit = false;
-		$doesObtainCashAdvance = false;
-		$isDelayPayAndCashAdvance = false;
-		$isOverdueOrBadDebits = false;
-		$needFurtherInvestigationForFinishedCase = false;
-		$allowedAmount = $input["allowedAmount"] * 1000;
-		$appliedTimes = explode("/", $input["appliedTime"]);
-
-		foreach ($rows as $row) {
-			$isCurrentBadCredit = false;
-			$amountDue = $row["結帳日"];
-			$amountDue = explode("/", $amountDue);
-
-			$timeDiffFromAppliedAt = (intval($appliedTimes[0]) - intval($amountDue[0])) * 12 + intval($appliedTimes[1]) - intval($amountDue[1]);
-
-			$score = $allowedAmount > 0
-				? (intval($row["本期應付帳款(元)"]) + intval($row["未到期待付款(元)"])) / intval($allowedAmount)
-				: 0;
-
-			$scores[$timeDiffFromAppliedAt] += $score;
-			$delay = $this->CI->regex->getDelayByMonth($row["上期繳款狀況"]);
-			if ($delay > 1) {
-				$numbersOfDelayMoreThanAMonth++;
-			} elseif ($delay == 1) {
-				$numbersOfDelayInAMonth++;
-				$delays[$timeDiffFromAppliedAt]++;
-			}
-
-			if ($maxTimeDiffFromAppliedAt === null) {
-				$maxTimeDiffFromAppliedAt = $timeDiffFromAppliedAt;
-			}
-
-			if ($maxTimeDiffFromAppliedAt < $timeDiffFromAppliedAt) {
-				$maxTimeDiffFromAppliedAt = $timeDiffFromAppliedAt;
-				if ($creditRange["isGreat"]) {
-					$numbersOfGreatCredit += $creditRange["range"];
-					$creditRange["range"] = 0;
-					$creditRange["isGreat"] = false;
-				}
-			}
-
-			if ($maxTimeDiffFromAppliedAt == $timeDiffFromAppliedAt) {
-				if ($this->CI->regex->isGreatCredit($row["上期繳款狀況"]) && !$hasBadCredit) {
-					$creditRange["range"] = 1;
-					$creditRange["isGreat"] = true;
-				}
-			}
-
-			if (
-				$this->CI->regex->onlyPayMinimumOrUnder($row["上期繳款狀況"])
-				|| $numbersOfDelayMoreThanAMonth > 0
-				|| $numbersOfDelayInAMonth > 0
-			) {
-				$hasBadCredit = true;
-			}
-
-			$cashAdvances[$timeDiffFromAppliedAt] = $row["預借現金"] != "無";
-			$doesObtainCashAdvance = $doesObtainCashAdvance || $row["預借現金"] != "無";
-			$isDelayPayAndCashAdvance = $isDelayPayAndCashAdvance || $row["預借現金"] != "無" && $delay == 1;
-			$isOverdueOrBadDebits = $isOverdueOrBadDebits || $this->CI->regex->isOverdueOrBadDebits($row["債權狀態"]);
-			$needFurtherInvestigationForFinishedCase = $needFurtherInvestigationForFinishedCase
-				  									   || $this->CI->regex->needFurtherInvestigationForFinishedCase($row["結案"]);
-		}
-
-		if ($creditRange["isGreat"]) {
-			$numbersOfGreatCredit += $creditRange["range"];
-		}
-
-		$message["message"][] = "信用紀錄幾個月：{$numbersOfGreatCredit}";
-		$message["message"][] = "當月信用卡使用率：" . round($scores[0] * 100, 2) . "%";
-		$message["message"][] = "近一月信用卡使用率：" . round($scores[1] * 100, 2) . "%";
-		$message["message"][] = "近二月信用卡使用率：" . round($scores[2] * 100, 2) . "%";
-		$message["status"] = "success";
-		if ($needFurtherInvestigationForFinishedCase) {
-			$message["status"] = "pending";
-		}
-		if ($numbersOfDelayInAMonth == 2) {
-			$message["status"] = "pending";
-		} elseif ($numbersOfDelayInAMonth > 2) {
-			$message["status"] = "failure";
-			$message["rejected_message"][] = "延遲紀錄超過3次";
-		}
-
-		if ($doesObtainCashAdvance) {
-			$averageScores = $this->aggregateScores($scores);
-			$cashAdvanceWithDelayInThreshold = $this->cashAdvanceWithDelayInThreshold($cashAdvances, $delays);
-			if ($averageScores < 70 && $cashAdvanceWithDelayInThreshold) {
-				$message["status"] = "pending";
-			} else {
-				$message["status"] = "failure";
-				if ($averageScores > 70) {
-					$message["rejected_message"][] = "有預借現金且半年信用卡使用率超過70%";
-				}
-				if (!$cashAdvanceWithDelayInThreshold) {
-					$message["rejected_message"][] = "預借現金該月有延遲紀錄";
-				}
-			}
-		}
-
-		if ($numbersOfDelayMoreThanAMonth > 0) {
-			$message["status"] = "failure";
-			$message["message"][] = self::DELAY_PAYMENT_MORE_THAN_ONE_MONTH . $numbersOfDelayMoreThanAMonth;
-		}
-
-		if ($isOverdueOrBadDebits) {
-			$message["status"] = "failure";
-			$message["rejected_message"][] = "債權狀態：呆帳或催收";
-		}
-
-		$message["message"][] = self::DOES_OBTAIN_CASH_ADVANCE . ($doesObtainCashAdvance ? "有" : "無");
-		$message["message"][] = self::DELAY_PAYMENT_IN_A_MONTH_EXCEEDED . $numbersOfDelayInAMonth;
-		$result["messages"][] = $message;
-	}
-
-	public function check_credit_card_debts($text, &$result){
-		$content=$this->CI->regex->findPatternInBetween($text, '【信用卡債權再轉讓及清償資訊】', '【被查詢紀錄】');
-		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ? [
-			"stage" => "credit_card_debts",
-			"status" => "success",
-			"message" => "信用卡債權再轉讓及清償資訊：無"
-		] : [
-			"stage" => "credit_card_debts",
-			"status" => "pending",
-			"message"=> "信用卡債權再轉讓及清償資訊：有"
-		];
-
-	}
-
-	private function readBrowsedRow($content, $record){
-		if (count($content) != 3) {
-			return $record;
-		}
-
-		if ($this->CI->regex->isHoursMinutesSecondsFormat($content[1])) {
-			return $record;
-		}
-
-		$record["rows"] += 1;
-		if ($content[2] == "新業務") {
-			$record["patterns"] += 1;
-		}
-
-		return $record;
-	}
-
-	public function check_browsed_hits($text, &$result){
-		$matches = $this->CI->regex->findPatternInBetween($text, '【被查詢紀錄】', '【被電子支付機構及電子票證發行機構查詢紀錄】');
-		$content = $matches[0];
-		if ($this->CI->regex->isNoDataFound($content)) {
-			$result["messages"] [] = [
-				"stage" => "browsed_hits",
-				"status" => "success",
-				"message" => self::BROWSED_HITS . '0'
-			];
-			return;
-		}
-
-		$contents = explode(self::BREAKER, $content);
-		$iters = count($contents);
-		$record = ["rows" => 0, "patterns" => 0];
-		for ($i = 1; $i < $iters; $i++) {
-			$row = $contents[$i];
-			$row = $this->CI->regex->replaceEqualBreaker($row);
-			$row = $this->CI->regex->replaceSpacesToSpace($row);
-			$rowElements = explode(" ", $row);
-			$currentElements = [];
-			$numElements = count($rowElements);
-			for ($i = 3; $i < $numElements; $i++) {
-				$rowElement = $rowElements[$i];
-				if (
-					$currentElements
-					&& $rowElement
-					&& $this->CI->regex->isDateTimeFormat($rowElement)
-				) {
-					$record = $this->readBrowsedRow($currentElements, $record);
-					$currentElements = [];
-				}
-				$currentElements[] = $rowElement;
-			}
-			if ($currentElements && $this->CI->regex->isDateTimeFormat($currentElements[0])) {
-				$record = $this->readBrowsedRow($currentElements, $record);
-			}
-		}
-		$message = [
-			"stage" => "browsed_hits",
-			"status" => "failure",
-			"message" => self::BROWSED_HITS . $record["patterns"]
-		];
-		if ($record["patterns"] <= 3) {
-			$message["status"] = "success";
-		}
-		if ($record["patterns"] > 3 && $record["patterns"] <= 10) {
-			$message["status"] = "pending";
-		}
-		if ($message["status"] == "failure") {
-			$message["rejected_message"][] = "新業務之次數>10";
-		}
-		$result["messages"][] = $message;
-	}
-
-	private function readBrowsedByElectricalHitsRow($content, $record){
-		if (count($content) <= 2) {
-			return $record;
-		}
-
-		if ($this->CI->regex->isHoursMinutesSecondsFormat($content[1])) {
-			return $record;
-		}
-
-		$record["rows"] += 1;
-
-		return $record;
-	}
-
-	public function check_browsed_hits_by_electrical_pay($text, &$result){
-		$matches = $this->CI->regex->findPatternInBetween($text, '【被電子支付機構及電子票證發行機構查詢紀錄】', '【當事人查詢紀錄】');
-		$content = $matches[0];
-		if ($this->CI->regex->isNoDataFound($content)) {
-			$result["messages"] [] = [
-				"stage" => "browsed_hits_by_electrical_pay",
-				"status" => "success",
-				"message" => self::BROWSED_HITS_BY_ELECTRICAL_PAY . '0'
-			];
-			return;
-		}
-
-		$contents = explode(self::BREAKER, $content);
-		$iters = count($contents);
-		$record = ["rows" => 0];
-		for ($i = 1; $i < $iters; $i++) {
-			$row = $contents[$i];
-			$row = $this->CI->regex->replaceEqualBreaker($row);
-			$row = $this->CI->regex->replaceSpacesToSpace($row);
-
-			$rowElements = explode(" ", $row);
-			$currentElements = [];
-			$numElements = count($rowElements);
-			for ($i = 2; $i < $numElements; $i++) {
-				$rowElement = $rowElements[$i];
-				if (
-					$currentElements
-					&& $rowElement
-					&& $this->CI->regex->isDateTimeFormat($rowElement)
-				) {
-					$record = $this->readBrowsedByElectricalHitsRow($currentElements, $record);
-					$currentElements = [];
-				}
-				$currentElements[] = $rowElement;
-			}
-			if ($currentElements && $this->CI->regex->isDateTimeFormat($currentElements[0])) {
-				$record = $this->readBrowsedByElectricalHitsRow($currentElements, $record);
-			}
-		}
-		$message = [
-			"stage" => "browsed_hits_by_electrical_pay",
-			"status" => "pending",
-			"message" => self::BROWSED_HITS_BY_ELECTRICAL_PAY . $record["rows"]
-		];
-		if ($record["rows"] <= 2) {
-			$message["status"] = "success";
-		}
-
-		$result["messages"][] = $message;
-	}
-
-	private function readBrowsedByItselfRow($content, $record){
-		if (count($content) != 3 && count($content) != 4) {
-			return $record;
-		}
-
-		if ($this->CI->regex->isHoursMinutesSecondsFormat($content[1])) {
-			return $record;
-		}
-
-		$record["rows"] += 1;
-
-		return $record;
-	}
-
-	public function check_browsed_hits_by_itself($text, &$result){
-		$matches = $this->CI->regex->findPatternInBetween($text, '【當事人查詢紀錄】', '【附加訊息】');
-		$content = $matches[0];
-		if ($this->CI->regex->isNoDataFound($content)) {
-			$result["messages"] [] = [
-				"stage" => "browsed_hits_by_itself",
-				"status" => "success",
-				"message" => self::BROWSED_HITS_BY_ITSELF . '0'
-			];
-			return;
-		}
-
-		$contents = explode(self::BREAKER, $content);
-		$iters = count($contents);
-		$record = ["rows" => 0];
-		for ($i = 1; $i < $iters; $i++) {
-			$row = $contents[$i];
-			$row = $this->CI->regex->replaceEqualBreaker($row);
-			$row = $this->CI->regex->replaceSpacesToSpace($row);
-			$rowElements = explode(" ", $row);
-			$currentElements = [];
-			$numElements = count($rowElements);
-			for ($i = 3; $i < $numElements; $i++) {
-				$rowElement = $rowElements[$i];
-				if (
-					$currentElements
-					&& $rowElement
-					&& $this->CI->regex->isDateTimeFormat($rowElement)
-				) {
-					$record = $this->readBrowsedByItselfRow($currentElements, $record);
-					$currentElements = [];
-				}
-				$currentElements[] = $rowElement;
-			}
-			if ($currentElements && $this->CI->regex->isDateTimeFormat($currentElements[0])) {
-				$record = $this->readBrowsedByItselfRow($currentElements, $record);
-			}
-		}
-		$message = [
-			"stage" => "browsed_hits_by_itself",
-			"status" => "pending",
-			"message" => self::BROWSED_HITS_BY_ITSELF . $record["rows"]
-		];
-		if ($record["rows"] <= 2) {
-			$message["status"] = "success";
-		}
-
-		$result["messages"][] = $message;
-	}
-
-	public function check_extra_messages($text, &$result){
-		$content=$this->CI->regex->findPatternInBetween($text, '【附加訊息】', '【信用評分】');
-		$result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ?  [
-			"stage" => "extra_messages",
-			"status" => "success",
-			"message" => "附加訊息：無"
-		] : [
-			"stage" => "extra_messages",
-			"status" => "failure",
-			"message" => "附加訊息：有",
-		];
-	}
-
-	public function check_credit_scores($text, &$result){
-		(preg_match("/信用評分\:/", $text))?$this->get_scores($text,$result): $result["messages"][] = [
-				"stage" => "credit_scores",
-				"status" => "pending",
-				"message" => "信用評分 : 無"
-			];
-	}
-//
-//    public function check_credit_result($text, &$result){
-//        $content=$this->CI->regex->findPatternInBetween($text, '台端之信用評分位於上述百分位區間之主要原因依序說明如下：', '※本項評分數值係依據本中心資料');
-//        $result["messages"][] = $this->CI->regex->isNoDataFound($content[0]) ?  [
-//            "stage" => "credit_result",
-//            "status" => "success",
-//            "message" => "附加訊息：無"
-//        ] : [
-//            "stage" => "credit_result",
-//            "status" => "failure",
-//            "message" => "附加訊息：有",
-//        ];
-//    }
-
-    public function get_scores($text, &$result)
-	{
-		if (preg_match("/台端為給予固定評分/", $text)) {
-			$result["messages"][] = [
-				"stage" => "credit_scores",
-				"status" => "pending",
-				"message" => "信用評分 : 200"
-			];
-		} else if(preg_match("/此次所有受評者中\，有/", $text)){
-			$content = $this->CI->regex->findPatternInBetween($text, '信用評分:', '此次所有受評者中，有');
-			$content = $this->CI->regex->replaceSpacesToSpace($content[0]);
-			$scores = substr($content, 0, 3);
-			((int) $scores >= 460) ?
-				$result["messages"][] = [
-					"stage" => "credit_scores",
-					"status" => "success",
-					"message" => "信用評分 : " . $scores
-				] : $result["messages"][] = [
-					"stage" => "credit_scores",
-					"status" => "pending",
-					"message" => "信用評分 : " . $scores
-				];
-
-		}else{
-			$result["messages"][] = [
-				"stage" => "credit_scores",
-				"status" => "pending",
-				"message" => "信用評分 : 此次暫時無法評分"
-			];
-		}
-	}
-
-	public function  check_report_expirations($text, &$result){
-		$date = $this->get_credit_date($text);
-		$dateArray = explode("/", $date);
-		$appliedTime = mktime(0, 0, 0, intval($dateArray[1]), intval($dateArray[2]), 1911 + intval($dateArray[0]));
-		$thirtyOneDays = 86400 * 31;
-        $result["lastmonth"] = [
-            intval($dateArray[0]),
-            intval($dateArray[1] - ($dateArray[2] > 22 ? 1 : 2))
-        ];
-        $result["appliedTime"] = [
-            $dateArray[0],
-            $dateArray[1],
-            $dateArray[2],
-        ];
-        $result["appliedExpire"] = $appliedTime + $thirtyOneDays;
-
-        $message = [
-            "stage" => "report_expirations",
-            "status" => "failure",
-            "message" => $date . "<br />文件與申請日超過一個月"
-        ];
-		if ($this->currentTime - $appliedTime < $thirtyOneDays) {
-			$message["status"] = "success";
-			$message["message"] = $date . "<br />符合";
-		}
-
-		$result["messages"][] = $message;
-	}
-
-    public function check_report_range($text, &$result){
-        $date = $dateArray = preg_split('/\//',preg_split('/\s/',$this->CI->regex->findPatten($text, '授信最新資料日期為\s\d{3}\/\d{2}\s底')[0])[1]);
-        $message = [
-            "stage" => "report_range",
-            "status" => "failure",
-            "message" => $date
-        ];
-        if ($date) {
-            $message["status"] = "success";
-            $message["message"] = $date[0] .'年'. $date[1] .'月底'.  "<br />符合";
-        }
-        $result["messages"][] = $message;
-	}
-
-	public function aggregate(&$result){
-		if (!$result) {
-			$result = ["status" => "pending", "messages" => []];
-		}
-		foreach ($result["messages"] as $stage) {
-			if (!$result["status"]) {
-				$result["status"] = "success";
-			}
-			if ($stage["status"] == "failure") {
-				$result["status"] = "failure";
-			}
-			if ($stage["status"] == "pending" && $result["status"] == "success") {
-				$result["status"] = "pending";
-			}
-		}
-		return $result;
-	}
-
-	public function setCurrentTime($currentTime){
-		$this->currentTime = $currentTime;
-	}
-
-	private function getMonth($text){
-        return preg_split('/年/',preg_replace('/月底/','',$this->CI->regex->findPatten($text, '\d{3}年\d{2}月底')[0]));
-    }
-
-	private function getDay($text){
-        $patten = $this->CI->regex->findPatten($text, '\d{3}\/\d{2}\/\d{2}');
-        if($patten){
-            return preg_split('/\//', $patten[0]);
-        }
-        return false;
-    }
-
-    private function expire_check($text, $result){
-        $lastAllowMonth = $this->getMonth($text);
-        return $result['lastmonth'][0] < $lastAllowMonth[0] && $result['lastmonth'][1] >= $lastAllowMonth[1] ? '<br / >資料須為' . intval($lastAllowMonth[0]) . '年' . intval($lastAllowMonth[1]) . '月底為最新資訊' : false;
-    }
-
-    private function serExpireFailure($obj, $expire){
-	    if($expire){
-            $obj['status'] = 'failure';
-            $obj['rejected_message'][] = (isset($obj['rejected_message']) ? '<br / >' :''). $expire;
-        }
-        return $obj;
-    }
 }

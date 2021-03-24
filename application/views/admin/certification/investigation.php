@@ -50,7 +50,30 @@
                                             <?} ?>
                                             </div>
                                         <?}?>
-                                    <form role="form" method="post">
+								</div>
+                                <? if($content['return_type']==0){?>
+								<div class="col-lg-6">
+									<h1>圖片</h1>
+									<fieldset disabled>
+										<div class="form-group">
+											<label>郵遞回單</label><br>
+											<a href="<?= isset($content['postal_image']) ? $content['postal_image'] : "" ?>" data-fancybox="images">
+												<img src="<?= isset($content['postal_image']) ? $content['postal_image'] : "" ?>" style='width:30%;max-width:400px'>
+											</a>
+										</div>
+									</fieldset>
+								</div>
+                                <? } ?>
+								<!-- 聯徵報告 -->
+								<div class="col-lg-12">
+								<?
+									if($report_page){
+										echo $report_page;
+									}
+								?>
+								</div>
+								<div class="col-lg-12">
+									<form role="form" method="post">
                                     <? if ($data->status == 1) { ?>
                                         <div class="form-group">
                                             <label>查詢次數</label>
@@ -65,7 +88,7 @@
                                             <p><?= isset($content['months']) ? $content['months'] : 0 ?></p>
                                         </div>
                                         <div class="form-group">
-                                            <label>信用記錄幾個月</label>
+                                            <label>聯徵調閱日期</label>
                                             <p><?= isset($content['printDate']) ? $content['printDate'] : 0 ?></p>
                                         </div>
                                     <? } else { ?>
@@ -79,7 +102,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>信用記錄幾個月</label>
-                                            <input type="number" class="form-control" name="months" value="<?= isset($content['printDate']) ? $content['printDate'] : 0 ?>">
+                                            <input type="number" class="form-control" name="months" value="<?= isset($content['months']) ? $content['months'] : 0 ?>">
                                         </div>
                                         <div class="form-group">
                                             <label>聯徵調閱日期</label>
@@ -122,19 +145,6 @@
 										</fieldset>
 									</form>
 								</div>
-                                <? if($content['return_type']==0){?>
-								<div class="col-lg-6">
-									<h1>圖片</h1>
-									<fieldset disabled>
-										<div class="form-group">
-											<label>郵遞回單</label><br>
-											<a href="<?= isset($content['postal_image']) ? $content['postal_image'] : "" ?>" data-fancybox="images">
-												<img src="<?= isset($content['postal_image']) ? $content['postal_image'] : "" ?>" style='width:30%;max-width:400px'>
-											</a>
-										</div>
-									</fieldset>
-								</div>
-                                <? } ?>
                             </div>
 							<!-- /.row (nested) -->
 						</div>
