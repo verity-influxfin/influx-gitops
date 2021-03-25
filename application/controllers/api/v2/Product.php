@@ -1299,7 +1299,7 @@ class Product extends REST_Controller {
                         'y_limit' => $y_limit,
                     ];
                 }
-//            }
+           }
 
 
             $reason = $target->reason;
