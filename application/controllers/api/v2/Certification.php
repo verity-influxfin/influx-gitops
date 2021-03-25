@@ -1255,7 +1255,27 @@ class Certification extends REST_Controller {
 				'restaurant',
 				'transportation',
 				'entertainment',
-				'other_expense'
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
 			];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {

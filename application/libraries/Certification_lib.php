@@ -508,26 +508,23 @@ class Certification_lib{
 		if($info && $info->status ==0 && $info->certification_id==5){
 			$content	= json_decode($info->content,true);
 			$name 		= $content['name'];
+
 			$idcard		= $this->get_certification_info($info->user_id,1,0);
 			if($idcard && $idcard->status==1){
 				$status 		= 3;
-				$id_card_remark = json_decode($idcard->remark,true);
-                $parent = [];
-                isset($id_card_remark['OCR']['father']) ? $parent[] = $id_card_remark['OCR']['father'] : '';
-                isset($id_card_remark['OCR']['mother']) ? $parent[] = $id_card_remark['OCR']['mother'] : '';
-                if(in_array($name,$parent)){
-                    $phone_used = $this->CI->user_model->get_by(array(
-                        'id'    => $info->user_id,
-                        'phone' => $content['phone'],
-                    ));
-                    if($phone_used){
-                        $this->set_failed($info->id,'與註冊電話相同',true);
-                    }
-                    else{
-                        $this->set_success($info->id, true);
-                        $status = 1;
-                    }
-                }
+
+				$phone_used = $this->CI->user_model->get_by(array(
+					'id'    => $info->user_id,
+					'phone' => $content['phone'],
+				));
+				if($phone_used){
+					$this->set_failed($info->id,'與註冊電話相同',true);
+				}
+				else{
+					$this->set_success($info->id, true);
+					$status = 1;
+				}
+
                 $this->CI->user_certification_model->update($info->id,array(
                     'status'	=> $status,
                     'sys_check'	=> 1,

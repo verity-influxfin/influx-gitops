@@ -5742,6 +5742,76 @@ define({
                             "field": "entertainment",
                             "description": "<p>娛樂支出</p>"
                         },
+						{
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "rent_expenses",
+			              "description": "<p>房租家庭支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "educational_expenses",
+			              "description": "<p>教育支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "insurance_expenses",
+			              "description": "<p>保險支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "social_expenses",
+			              "description": "<p>社交支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "long_assure_monthly_payment",
+			              "description": "<p>房貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "mid_assure_monthly_payment",
+			              "description": "<p>車貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "credit_monthly_payment",
+			              "description": "<p>信貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "student_loans_monthly_payment",
+			              "description": "<p>助學貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "credit_card_monthly_payment",
+			              "description": "<p>信用卡月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "other_private_borrowing",
+			              "description": "<p>民間借貸月付</p>"
+			            },
                         {
                             "group": "Parameter",
                             "type": "Number",
