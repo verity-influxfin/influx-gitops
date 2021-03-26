@@ -1036,7 +1036,8 @@ $config['transaction_type_name'] = [
     'prepayment' => '提前還款',
     'charge_delay' => '逾期清償',
     'charge_normal' => '還款',
-    'unknown_refund' => '退款-不明原因'
+    'unknown_refund' => '退款-不明原因',
+    'platform_law_fee' => '法催執行費',
 ];
 
 $config['certifications'] = [

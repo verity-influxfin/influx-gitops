@@ -326,6 +326,9 @@ defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還�
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息
 defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
 
+defined('SOURCE_AR_LAW_FEE')        OR define('SOURCE_AR_LAW_FEE'       , '31');//應付法催執行費
+defined('SOURCE_LAW_FEE')           OR define('SOURCE_LAW_FEE'          , '32');//法催執行費
+
 defined('SOURCE_FEES_B')        	OR define('SOURCE_FEES_B'			, '50');//平台服務費沖正
 defined('SOURCE_TRANSFER_FEES_B')   OR define('SOURCE_TRANSFER_FEES_B'	, '51');//債權轉讓服務費沖正
 defined('SOURCE_TRANSFER_B')       	OR define('SOURCE_TRANSFER_B'		, '52');//債權轉讓費沖正
@@ -341,6 +344,7 @@ defined('SOURCE_AR_DAMAGE')       	OR define('SOURCE_AR_DAMAGE'		, '91');//應�
 defined('SOURCE_DAMAGE')       		OR define('SOURCE_DAMAGE'			, '92');//違約金
 defined('SOURCE_AR_DELAYINTEREST')  OR define('SOURCE_AR_DELAYINTEREST'	, '93');//應收延滯息
 defined('SOURCE_DELAYINTEREST')     OR define('SOURCE_DELAYINTEREST'	, '94');//延滯息
+
 
 //Facebook
 defined('FACEBOOK_APP_ID')       	OR define('FACEBOOK_APP_ID'			, getenv('ENV_FB_CLIENT_ID'));

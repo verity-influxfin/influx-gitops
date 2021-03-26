@@ -103,6 +103,7 @@ class Account extends MY_Admin_Controller {
 			SOURCE_AR_INTEREST,
 			SOURCE_AR_DAMAGE,
 			SOURCE_AR_DELAYINTEREST,
+            SOURCE_AR_LAW_FEE,
 			SOURCE_VERIFY_FEE,
 			SOURCE_VERIFY_FEE_R,
 			SOURCE_REMITTANCE_FEE,
@@ -538,6 +539,29 @@ class Account extends MY_Admin_Controller {
                         "v_bank_account_from"   => $value->v_bank_account_from,
                         "v_amount_from"         => $value->v_amount_from,
                         "user_to"               => isset($user_name[$value->user_to])?$user_name[$value->user_to]:0,
+                        "bank_account_to"       => $value->bank_account_to,
+                        "amount_to"             => $value->amount_to,
+                        "v_bank_account_to"     => $value->v_bank_account_to,
+                        "v_amount_to"           => $value->v_amount_to,
+                        "created_at"            => $value->created_at,
+                        "platform_fee"          => 0
+                    );
+                }
+
+                // 32, 法催執行費, issue#1016
+                if($value->source == SOURCE_LAW_FEE){
+                    $source_type    = 'platform_law_fee';
+                    $list[] = array(
+                        "entering_date"         => $value->entering_date,
+                        "target_no"             => $value->target_no,
+                        "target_id"             => $value->target_id,
+                        "source_type"           => 'platform_law_fee',
+                        "user_from"             => isset($user_name[$value->user_from])?$user_name[$value->user_from]:'',
+                        "bank_account_from"     => $value->bank_account_from,
+                        "amount_from"           => $value->amount_from,
+                        "v_bank_account_from"   => $value->v_bank_account_from,
+                        "v_amount_from"         => $value->v_amount_from,
+                        "user_to"               => '平台',
                         "bank_account_to"       => $value->bank_account_to,
                         "amount_to"             => $value->amount_to,
                         "v_bank_account_to"     => $value->v_bank_account_to,
