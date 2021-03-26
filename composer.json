@@ -17,7 +17,8 @@
 		"google/cloud-vision": "^0.20",
 		"predis/predis": "*",
 		"phpoffice/phpspreadsheet":"1.6.*",
-		"smalot/pdfparser":"*"
+		"smalot/pdfparser":"*",
+	  	"ext-json": "*"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x",

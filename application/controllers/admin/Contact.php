@@ -92,20 +92,49 @@ class Contact extends MY_Admin_Controller {
 			$this->load->view('admin/_footer');
 
 		}else{
-			$fields = ['email', 'title', 'content'];
-			foreach ($fields as $field) {
-				if (isset($post[$field]) && !empty($post[$field])) {
-					$data[$field] = trim($post[$field]);
-				}else{
-					alert('缺少參數:'.$field,admin_url('contact/send_email'));
+			if(isset($post["notification"])) {
+				$this->load->model('user/user_notification_model');
+				$devices = $this->user_notification_model->get_filtered_deviceid($post);
+				alert('推播發送成功! 總共送出 '.count($devices).'筆.', admin_url('contact/send_email'));
+			}else {
+				$fields = ['email', 'title', 'content'];
+				foreach ($fields as $field) {
+					if (isset($post[$field]) && !empty($post[$field])) {
+						$data[$field] = trim($post[$field]);
+					}else{
+						alert('缺少參數:'.$field,admin_url('contact/send_email'));
+					}
+				}
+
+				$rs = $this->sendemail->email_notification($data['email'], $data['title'], $data['content']);
+				if ($rs === true) {
+					alert('發送成功', admin_url('contact/send_email'));
+				} else {
+					alert('發送失敗，請洽工程師', admin_url('contact/send_email'));
 				}
 			}
-			$rs = $this->sendemail->email_notification($data['email'],$data['title'],$data['content']);
-			if($rs===true){
-				alert('發送成功',admin_url('contact/send_email'));
-			}else{
-				alert('發送失敗，請洽工程師',admin_url('contact/send_email'));
-			}
+		}
+	}
+
+	public function send_notification() {
+		$data = $this->input->post(NULL, TRUE);
+		if(empty($data)){
+			$this->load->helper('url');
+			redirect('/send_email', 'refresh');
+		}else {
+//			array (
+//				'investment' => 'on',
+//				'android' => 'on',
+//				'gender' => 'on',
+//				'age_range_start' => '10',
+//				'age_range_end' => '5',
+//				'user_ids' => '11',
+//				'title' => '44',
+//				'content' => '2',
+//				'send_date' => '2021-03-10 10:05',
+//				'notification' => '1',
+//			)
+			var_dump($data);
 		}
 	}
 
