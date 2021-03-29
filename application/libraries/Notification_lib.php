@@ -294,7 +294,7 @@ $name 您好，
 	
 	public function lending_success($user_id,$investor,$target_no,$amount=0,$bankaccount=""){
 		if($investor==1){
-			$title 		= "【借款放款成功】 您申請的標的 $target_no 已放款成功";
+			$title 		= "【學生貸/上班族貸競標成功】 您投資的標的 $target_no 已完成放款";
 			$content 	= "親愛的用戶，您好！
 您申請的標的 $target_no ，核可金額 $amount 元，
 已成功放款。";

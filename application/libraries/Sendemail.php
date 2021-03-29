@@ -197,6 +197,18 @@ class Sendemail
 		}
     }
 
+    public function lending_success($email, $user_id, $target_no, $loan_amount) {
+    	if(!empty($email)) {
+    		$subject = "[投資標的]您的資金已放款成功";
+    		$title = "【競標成功】";
+			$content = "親愛的投資人，恭喜您標得 " . $target_no . " 新台幣 " . number_format($loan_amount) . " 元的債權，並成功放款至會員ID:" . $user_id . "。<br>更多投資標的，盡在普匯APP";
+			$mail_event = $this->CI->config->item('mail_event');
+			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> 'b08', "mail_event"=> $mail_event),TRUE);
+			return $this->send($email, $subject, $content);
+		}
+		return false;
+	}
+
     public function EDM($mail, $title = "", $content = "", $EDM, $url)
     {
         if ($mail) {
