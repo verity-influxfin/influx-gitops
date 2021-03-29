@@ -380,11 +380,15 @@ class Transaction_lib{
 							'frozen_status'	=> 1
 						]);
 						if($investments){
+							$this->load->library('Sendemail');
+							$this->CI->load->model('user/user_model');
 							foreach($investments as $key => $value){
 								$investment_ids[]	= $value->id;
 								$frozen_ids[]		= $value->frozen_id;
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
 								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
+								$investor_user = $this->CI->user_model->get_by(array('id' => $value->user_id));
+								$this->sendemail->lending_success($investor_user->email, $value->user_id, $target->target_no, $value->loan_amount);
 
 								//放款
 								$transaction[]		= [
@@ -1048,11 +1052,15 @@ class Transaction_lib{
 							'frozen_status'	=> 1
 						));
 						if($investments){
+							$this->load->library('Sendemail');
+							$this->CI->load->model('user/user_model');
 							foreach($investments as $key => $value){
 								$investment_ids[]	= $value->id;
 								$frozen_ids[]		= $value->frozen_id;
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
 								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
+								$investor_user = $this->CI->user_model->get_by(array('id' => $value->user_id));
+								$this->sendemail->lending_success($investor_user->email, $value->user_id, $target->target_no, $value->loan_amount);
 
 								//放款
 								$transaction[]		= array(
