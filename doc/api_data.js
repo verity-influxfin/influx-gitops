@@ -5735,6 +5735,13 @@ define({
                             "field": "transportation",
                             "description": "<p>交通支出</p>"
                         },
+						{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "telegraph_expense",
+                            "description": "<p>網路電信支出</p>"
+                        },
                         {
                             "group": "Parameter",
                             "type": "Number",

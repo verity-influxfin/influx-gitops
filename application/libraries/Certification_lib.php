@@ -579,9 +579,6 @@ class Certification_lib{
 					// 過件結果
 					if($approve_status){
 						$status = isset($approve_status['status_code']) ? $approve_status['status_code'] : $status;
-						if(isset($approve_status['status_code']) && $approve_status['status_code'] == 2){
-							// to do : 鎖三十天
-						}
 					}
 				}else{
 					$status = 2;
@@ -600,6 +597,11 @@ class Certification_lib{
 				'months' => isset($result['creditLogCount']) ? $result['creditLogCount'] : 0,
 				'printDatetime' => $time,
 			];
+
+			if(isset($approve_status['status_code']) && $approve_status['status_code'] == 2){
+				// to do : 鎖三十天
+				$certification_content['mail_file_status'] = 2;
+			}
 
 			$this->CI->user_certification_model->update($info->id, array(
                'status' => $status,
@@ -705,7 +707,7 @@ class Certification_lib{
 			if(isset($certification_content['tax_id']) && $certification_content['tax_id']){
 				$this->CI->load->library('gcis_lib');
 				$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
-				$certification_content['gcis_info'] = $gcis_res
+				$certification_content['gcis_info'] = $gcis_res;
 			}
 
 			//勞保 pdf 驗證
@@ -1300,6 +1302,8 @@ class Certification_lib{
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
                     $value['updated_at'] 		   = intval($user_certification->updated_at);
+					// 回傳認證資料
+					$value['content']		   = $user_certification->content;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
 				}else{

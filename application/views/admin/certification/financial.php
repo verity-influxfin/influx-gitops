@@ -56,6 +56,10 @@
 										<p class="form-control-static"><?=isset($content['transportation'])?$content['transportation']:""?></p>
 									</div>
 									<div class="form-group">
+										<label>網路電信支出</label>
+										<p class="form-control-static"><?=isset($content['telegraph_expense'])?$content['telegraph_expense']:""?></p>
+									</div>
+									<div class="form-group">
 										<label>娛樂支出</label>
 										<p class="form-control-static"><?=isset($content['entertainment'])?$content['entertainment']:""?></p>
 									</div>

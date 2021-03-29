@@ -1254,6 +1254,8 @@ class Certification extends REST_Controller {
 				'other_income',
 				'restaurant',
 				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
 				'entertainment',
 				'other_expense',
 				// 租金
