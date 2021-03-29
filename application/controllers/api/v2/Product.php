@@ -1101,7 +1101,7 @@ class Product extends REST_Controller {
 							if(array_key_exists($key_name,$user_certification)){
 								$content_array_data[$key_name] = $user_certification[$key_name];
 							}
-					}
+					}}
 					if(!$content_array_data){
 						$content_array_data = new StdClass();
 					}
@@ -1113,7 +1113,6 @@ class Product extends REST_Controller {
 						$value['certification_content'] = $content_array_data;
                         $certification[] = $value;
                     }
-                }
             }
 
             $amortization_schedule = [];
