@@ -539,12 +539,15 @@ class Certification_lib{
 	public function investigation_verify($info = array(), $url=null)
 	{
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
-		if($user_certification==false || $user_certification->status!=1){
+		$job_certification = $this->get_certification_info($info->user_id,10,$info->investor);
+		if($user_certification==false || $user_certification->status!=1 ||$job_certification ==false || $job_certification=>status!=1){
 			return false;
 		}
 		$url = isset(json_decode($info->content)->pdf_file) ?
 			json_decode($info->content)->pdf_file
 			: $url;
+
+		$result = [];
 
 		if ($info && $info->certification_id == 9 && !empty($url) && $info->status == 0) {
 			$this->CI->load->library('Joint_credit_lib');
@@ -597,6 +600,26 @@ class Certification_lib{
 				'months' => isset($result['creditLogCount']) ? $result['creditLogCount'] : 0,
 				'printDatetime' => $time,
 			];
+
+			// 還款力計算-22倍薪資
+			if(isset($job_certification->content)){
+				$job_certification_content = json_decode($job_certification->content,true);
+				$salary = isset($job_certification_content['salary']) ? $job_certification_content['salary'] : 0;
+			}else{
+				$salary = 0;
+			}
+			$certification_content['total_repayment_enough'] = 0;
+			$certification_content['monthly_repayment_enough'] = 0;
+			if($salary && isset($result['totalMonthlyPayment']) && isset($result['totalAmountQuota'])){
+				// 每月還款是否小於投保金額
+				if($result['totalMonthlyPayment'] < $salary){
+					$certification_content['monthly_repayment_enough'] = 1;
+				}
+				// 借款總額是否小於薪資22倍
+				if($result['totalAmountQuota'] < $salary*22){
+					$certification_content['total_repayment_enough'] = 1;
+				}
+			}
 
 			if(isset($approve_status['status_code']) && $approve_status['status_code'] == 2){
 				// to do : 鎖三十天

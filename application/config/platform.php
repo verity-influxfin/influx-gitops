@@ -910,7 +910,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL,
-                    CERTIFICATION_DIPLOMA,
+                    // CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
                 ],
