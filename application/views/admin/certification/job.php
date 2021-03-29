@@ -39,8 +39,6 @@
                                     <div class="form-group">
                                         <label>公司</label>
                                         <p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
-										<label>實收資本額</label>
-                                        <p class="form-control-static"><?=isset($content['capital_amount'])?$content['capital_amount']:""?></p>
                                     <?
                                     if($content['company']==''&&$data->status==3){
                                         echo '<form role="form" method="post">
@@ -94,6 +92,41 @@
 										<label>此公司工作期間</label>
 										<p class="form-control-static"><?=isset($content['job_seniority'])?$seniority_range[$content['job_seniority']]:""?></p>
 									</div>
+									<div class="form-group">
+										<label>商業司查詢資料</label>
+										<table>
+											<tbody>
+												<tr>
+													<td>商業司查詢統一編號</td>
+													<td><? isset($content['gcis_info']['Business_Accounting_NO']) ? $content['gcis_info']['Business_Accounting_NO'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>設立狀況</td>
+													<td><? isset($content['gcis_info']['Company_Status_Desc']) ? $content['gcis_info']['Company_Status_Desc'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>公司名稱</td>
+													<td><? isset($content['gcis_info']['Company_Name']) ? $content['gcis_info']['Company_Name'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>資本總額</td>
+													<td><? isset($content['gcis_info']['Capital_Stock_Amount']) ? $content['gcis_info']['Capital_Stock_Amount'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>實收資本額</td>
+													<td><? isset($content['gcis_info']['Paid_In_Capital_Amount']) ? $content['gcis_info']['Paid_In_Capital_Amount'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>負責人</td>
+													<td><? isset($content['gcis_info']['Responsible_Name']) ? $content['gcis_info']['Responsible_Name'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>地址</td>
+													<td><? isset($content['gcis_info']['Company_Location']) ? $content['gcis_info']['Company_Location'] : '' ?></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
                                     <? if($data->status==1){?>
                                     <div class="form-group">
                                         <label>月薪</label><br />
@@ -133,51 +166,6 @@
                                         </div>
                                         <?}} ?>
                                     <form role="form" method="post">
-                                        <div class="form-group">
-                                            <label>專業證書加分 (最高6級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['license_status'])&&$content['license_status']>0?$content['license_status']."級":"專業證書不加分"?></p>
-                                            <?}else{?>
-                                                <select name="license_status" class="form-control">
-                                                    <option value="0" <?=isset($content['license_status'])&&$content['license_status']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['license_status'])&&$content['license_status']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['license_status'])&&$content['license_status']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['license_status'])&&$content['license_status']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['license_status'])&&$content['license_status']==4?"selected":""?>>4級</option>
-                                                    <option value="5" <?=isset($content['license_status'])&&$content['license_status']==5?"selected":""?>>5級</option>
-                                                    <option value="6" <?=isset($content['license_status'])&&$content['license_status']==6?"selected":""?>>6級</option>
-                                                </select>
-                                            <?}?>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>競賽作品加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
-                                            <?}else{?>
-                                                <select name="game_work_level" class="form-control">
-                                                    <option value="0" <?=isset($content['game_work_level'])&&$content['game_work_level']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['game_work_level'])&&$content['game_work_level']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['game_work_level'])&&$content['game_work_level']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['game_work_level'])&&$content['game_work_level']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['game_work_level'])&&$content['game_work_level']==4?"selected":""?>>4級</option>
-                                                </select>
-                                            <?}?>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>專家調整 (最高5級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['pro_level'])&&$content['pro_level']>0?$content['pro_level']."級":"專家調整不加分"?></p>
-                                            <?}else{?>
-                                                <select name="pro_level" class="form-control">
-                                                    <option value="0" <?=isset($content['pro_level'])&&$content['pro_level']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['pro_level'])&&$content['pro_level']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['pro_level'])&&$content['pro_level']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['pro_level'])&&$content['pro_level']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['pro_level'])&&$content['pro_level']==4?"selected":""?>>4級</option>
-                                                    <option value="5" <?=isset($content['pro_level'])&&$content['pro_level']==5?"selected":""?>>5級</option>
-                                                </select>
-                                            <?}?>
-                                        </div><br />
                                     <div class="form-group">
 										<label>備註</label>
 
@@ -276,11 +264,13 @@
                                                 if (isset($content['license_image'])) {
                                                     !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
                                                     echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
-                                                    $arr_license_desc = explode(',',$content['license_des']);
-                                                    foreach($content['license_image'] as $key => $value){
-                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
-                                                         echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
-                                                    }
+													if(isset($content['license_des'])){
+														$arr_license_desc = explode(',',$content['license_des']);
+	                                                    foreach($content['license_image'] as $key => $value){
+	                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+	                                                         echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
+	                                                    }
+													}
                                                     echo '</div>';
                                                 }
                                                 if (isset($content['pro_certificate_image'])) {

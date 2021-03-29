@@ -912,4 +912,238 @@ class Labor_insurance_lib
     {
         $this->currentTime = $currentTime;
     }
+
+
+	// 這裡以上為舊的勞保異動明細(工作認證)使用
+	// 備註 : 刪除前須確認是否有使用其他東西
+	/**
+	 * [transfrom_pdf_data 轉換 pdf 解析資料格式]
+	 * @param  string $text     [勞保異動明細 pdf 解析字串]
+	 * @return array  $response [勞保異動明細轉換結果]
+	 * (
+	 *  [type] => person (固定值)
+	 *  [pageList] =>
+	 *    (
+	 *     [0] =>
+	 *       (
+	 *         [title] => 表頭
+	 *         [reportDate] => 印表日期
+	 *         [personId] => 身分證號
+	 *         [name] => 姓名
+	 *         [birthday] => 出生日期
+	 *         [insuranceList] =>
+	 *           (
+	 *             [0] =>
+	 *               (
+	 *                 [insuranceId] =>
+	 *                 [companyName] =>
+	 *                 [detailList] =>
+	 *                   (
+	 *                     [0] =>
+	 *                       (
+	 *                         [insuranceSalary] => 投保薪資
+	 *                         [startDate] => 生效日期
+	 *                         [endDate] => 退保日期
+	 *                         [comment] => 備註
+	 *                       )
+	 *                     ...
+	 *                   )
+	 *               )
+	 *              ...
+	 *           )
+	 *       )
+	 *     ...
+	 *    )
+	 * )
+	 */
+	public function transfrom_pdf_data($text = ''){
+		$response = [
+			'type' => 'person',
+			'pageList' => [],
+		];
+
+		// pdf標頭
+		$title = $this->getPageTitle($text);
+		$response['pageList'][0]['title'] = isset($title[0]) ? $title[0] : '';
+
+		// 身分證號
+		$person_id = $this->getPersonId($text);
+		$response['pageList'][0]['personId'] = isset($person_id[0]) ? $person_id[0]: '';
+
+		// 姓名
+		$name = $this->getName($text);
+		$response['pageList'][0]['name'] = isset($name[0]) ? $name[0]: '';
+
+		// 出生日期
+		$birth_day = $this->getBirthDay($text);
+		$response['pageList'][0]['birthday'] = isset($birth_day[0]) ? $birth_day[0]: '';
+
+		// 印表時間
+		$print_date = $this->getPrintDate($text);
+		$response['pageList'][0]['reportDate'] = isset($print_date[0]) ? $print_date[0]: '';
+
+		// 表格內容
+		$all_page_array =[];
+		$text_of_page_array = array_filter(preg_split('/共.*[0-9]*頁/',$text));
+		// 切頁
+		if($text_of_page_array){
+			$page_array = [];
+			foreach($text_of_page_array as $key => $value){
+				if(preg_match('/查詢結果/',$value)){
+					$page_array = $this->CI->regex->findNonGreedyPatternInBetween($value, "費註記", "(※注意事項)|(第.*[0-9]*頁)");
+					if($page_array){
+						foreach($page_array as $key1=>$value1){
+							$page_array[$key1] = trim($value1);
+						}
+					}
+					$page_array = array_values(array_filter($page_array));
+					$all_page_array[] = !empty($page_array[0]) ? $page_array[0] : '';
+				}
+			}
+		}
+		if($all_page_array){
+			$page_array =[];
+			foreach($all_page_array as $key => $value){
+				// 切單條資訊項目
+
+				$value = ' '.$value;
+				$value = preg_replace('/\n*\n/u','',$value);
+				// print_r($value);exit;
+				$info_array = preg_split('/\s[\d]{1,6}\s/',$value);
+				// print_r($info_array);exit;
+				if($info_array){
+					foreach($info_array as $key1 => $value1){
+						$info_array[$key1] = trim($value1);
+					}
+				}
+				$page_array = array_values(array_filter($info_array));
+				// print_r($page_array);exit;
+				foreach($page_array as $key1=> $value1){
+					// 切單欄資訊內容
+					$page_array[$key1] = preg_split('/\s/',$value1);
+					// print_r($page_array[$key1]);exit;
+					if($page_array[$key1] && count($page_array[$key1]) >3){
+						$response['pageList'][$key]['insuranceList'][$key1]['insuranceId'] = isset($page_array[$key1][0]) ? preg_replace('/\s/','',$page_array[$key1][0]) : '';
+						$response['pageList'][$key]['insuranceList'][$key1]['companyName'] = isset($page_array[$key1][1]) ? preg_replace('/\s/','',$page_array[$key1][1]) : '';
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = isset($page_array[$key1][2]) ? preg_replace('/\s/','',$page_array[$key1][2]) : '';
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['startDate'] = isset($page_array[$key1][3]) ? preg_replace('/\s/','',$page_array[$key1][3]) : '';
+						if(isset($page_array[$key1][4])){
+							if(preg_match('/[0-9]{7}/',$page_array[$key1][4])){
+								$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = isset($page_array[$key1][4]) ? preg_replace('/\s/','',$page_array[$key1][4]) : '';
+							}else{
+								$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = isset($page_array[$key1][4]) ? preg_replace('/\s/','',$page_array[$key1][4]) : '';
+							}
+						}
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = isset($page_array[$key1][5]) ? preg_replace('/\s/','',$page_array[$key1][5]) : '';
+					}
+				}
+			}
+		}
+
+		// $content = $this->readRows($text);
+		// if($content){
+		// 	$response['pageList'][0]['insuranceList'] = [];
+		// 	if(is_array($content)){
+		// 		foreach($content as $v){
+		// 			if(is_array($v)){
+		// 				foreach($v as $v1){
+		// 					$response['pageList'][0]['insuranceList'][] = [
+		// 						'insuranceId' => isset($v1['id']) ? $v1['id']: '',
+		// 						'companyName' => isset($v1['name']) ? $v1['name']: '',
+		// 						'detailList' => [
+		// 							'insuranceSalary' => isset($v1['salary']) ? $v1['salary']: '',
+		// 							'startDate' => isset($v1['createdAt']) ? $v1['createdAt']: '',
+		// 							'endDate' => isset($v1['endAt']) ? $v1['endAt']: '',
+		// 							'comment' => isset($v1['comment']) ? $v1['comment']: '',
+		// 						],
+		// 					];
+		//
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+		return $response;
+	}
+
+	/**
+	 * [getPageTitle 取得 pdf表格名稱]
+	 * @param  string $text  [解析字串]
+	 * @return string $title [表格標頭]
+	 */
+	public function getPageTitle($text=''){
+		$title = '';
+		if($text){
+			if(preg_match('/勞工保險異動查詢/',$text)){
+				preg_match('/勞工保險異動查詢/',$text,$title);
+			}
+		}
+
+		return $title;
+	}
+
+	/**
+	 * [getPersonId 取得身分證號]
+	 * @param  string $text     [解析字串]
+	 * @return string $personId [身分證號]
+	 */
+	public function getPersonId($text=''){
+		$personId = '';
+		if($text){
+			if(preg_match('/身分證號：[A-Z][0-9]{9}|身分證號:[A-Z][0-9]{9}/',$text)){
+				preg_match('/身分證號：[A-Z][0-9]{9}|身分證號:[A-Z][0-9]{9}/',$text,$personId);
+				$personId = preg_replace('/身分證號：|身分證號:/','',$personId);
+			}
+		}
+		return $personId;
+	}
+
+	/**
+	 * [getName 取得姓名]
+	 * @param  string $text [解析字串]
+	 * @return string $name [姓名]
+	 */
+	public function getName($text=''){
+		$name = '';
+		if($text){
+			if(preg_match('/姓名：.*|姓名:.*/',$text)){
+				preg_match('/姓名：.*|姓名:.*/',$text,$name);
+				$name = preg_replace('/姓名：|姓名:/','',$name);
+			}
+		}
+		return $name;
+	}
+
+	/**
+	 * [getBirthDay 取得出生日期]
+	 * @param  string $text      [解析字串]
+	 * @return string $birth_day [出生日期]
+	 */
+	public function getBirthDay($text=''){
+		$birth_day = '';
+		if($text){
+			if(preg_match('/出生日期：[0-9]*|出生日期:[0-9]*/',$text)){
+				preg_match('/出生日期：[0-9]*|出生日期:[0-9]*/',$text,$birth_day);
+				$birth_day = preg_replace('/出生日期：|出生日期:/','',$birth_day);
+			}
+		}
+		return $birth_day;
+	}
+
+	/**
+	 * [getPrintDate 印表日期]
+	 * @param  string $text       [解析字串]
+	 * @return string $print_date [印表日期]
+	 */
+	public function getPrintDate($text=''){
+		$print_date = '';
+		if($text){
+			if(preg_match('/查詢日期起訖：.*|查詢日期起訖:.*/',$text)){
+				preg_match('/查詢日期起訖：.*|查詢日期起訖:.*/',$text,$print_date);
+				$print_date = preg_replace('/查詢日期起訖：.*~\s|查詢日期起訖:.*~\s/','',$print_date);
+			}
+		}
+		return $print_date;
+	}
 }

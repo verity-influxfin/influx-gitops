@@ -672,74 +672,72 @@ class Certification_lib{
 	}
 
 	public function job_verify($info = array(),$url=null) {
+
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+
 		if($user_certification==false || !in_array($user_certification->status , [1,4])){
 			return false;
 		}
 
-		$url = isset(json_decode($info->content)->pdf_file) ?
-			json_decode($info->content)->pdf_file
-			: $url;
+		if(isset($info->content) && $info->content){
+			$certification_content = json_decode($info->content);
+		}else{
+			$certification_content = [];
+		}
 
-			if ($info && $info->certification_id == 10 && !empty($url) && $info->status == 0) {
+		$status = 3;
+		$res = [];
+		$gcis_res = [];
+
+		// 勞保異動明細 pdf
+		$pdf_url = isset($content['pdf_file']) ? $content['pdf_file'] : '';
+
+		if($info && $info->certification_id == 10 && $info->status == 0){
+			// 勞保 pdf 解析
+			if($pdf_url){
 				$this->CI->load->library('Labor_insurance_lib');
-				$result = [
-					'status' => null,
-					'messages' => []
-				];
-				$parser = new Parser();
-				$pdf    = $parser->parseFile($url);
+				$parser = new \Smalot\PdfParser\Parser();
+				$pdf    = $parser->parseFile($pdf_url);
 				$text = $pdf->getText();
-				$res=$this->CI->labor_insurance_lib->check_labor_insurance($info->user_id,$text, $result);
-
-				switch ($res['status']) {
-					case 'pending': //轉人工
-						$status = 3;
-						$content=json_decode($info->content,true);
-						$content['result']=$res;
-						$this->CI->user_certification_model->update($info->id, array(
-							'status' => $status,
-							'sys_check' => 1,
-							'content' => json_encode($content),
-							'expire_time' => isset($res['expireTime']) ? $res['expireTime'] : null
-						));
-						break;
-					case 'success':
-						$status = 1;
-						$content=json_decode($info->content,true);
-						$content['pro_level']=0;
-						$content['license_status']=0;
-						$content['result']=$res;
-						$this->CI->user_certification_model->update($info->id, array(
-							'status' => $status,
-							'sys_check' => 1,
-							'content' => json_encode($content),
-						));
-						$this->set_success($info->id,true,$res['expireTime']);
-						break;
-					case 'failure':
-						$status = 2;
-						$content=json_decode($info->content,true);
-                        $rejectMessage = $this->CI->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
-                        foreach ($res["messages"] as $message) {
-                            if (isset($message['rejected_message'])) {
-                                $rejectMessage = $message['rejected_message'];
-                                break;
-                            }
-                        }
-
-						$content['result']=$res;
-						$this->CI->user_certification_model->update($info->id, array(
-							'sys_check' => 1,
-							'content' => json_encode($content),
-						));
-						$this->set_failed($info->id, $rejectMessage, true,$res['expireTime']);
-						break;
-				}
-				return true;
+				$res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
 			}
+
+			if(isset($certification_content['tax_id']) && $certification_content['tax_id']){
+				$this->CI->load->library('gcis_lib');
+				$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
+				$certification_content['gcis_info'] = $gcis_res
+			}
+
+			//勞保 pdf 驗證
+			if($res && isset($res['pageList']) && isset($certification_content['tax_id'])){
+
+				$this->CI->load->library('mapping/user/Certification_data');
+				$result = $this->CI->certification_data->transformJobToResult($res);
+
+				$certification_content['pdf_info'] = $result;
+
+				$this->CI->load->library('verify/data_legalize_lib');
+				$verify_res = $this->data_legalize_lib->legalize_job($info->user_id,$result);
+
+				// $this->CI->load->library('verify/data_verify_lib');
+				// $approve_status = $this->data_verify_lib->check_job($info->user_id,$result);
+
+				// to do : 是否千大企業員工
+				// $this->CI->config->load('top_enterprise');
+				// $top_enterprise = $this->CI->config->item("top_enterprise");
+
+			}
+
+			$this->CI->user_certification_model->update($info->id, array(
+				'status' => $status,
+				'sys_check' => 1,
+				'content' => json_encode($certification_content),
+			));
+			return true;
+		}
 			return false;
 	}
+
     public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
 		$image 	= file_get_contents($url);
 		if($image){

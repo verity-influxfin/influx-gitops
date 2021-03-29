@@ -54,25 +54,65 @@
 									<div class="form-group">
 										<label>交通支出</label>
 										<p class="form-control-static"><?=isset($content['transportation'])?$content['transportation']:""?></p>
-									</div>	
+									</div>
 									<div class="form-group">
 										<label>娛樂支出</label>
 										<p class="form-control-static"><?=isset($content['entertainment'])?$content['entertainment']:""?></p>
-									</div>	
+									</div>
+									<div class="form-group">
+										<label>房租家庭支出</label>
+										<p class="form-control-static"><?=isset($content['rent_expenses'])?$content['rent_expenses']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>教育支出</label>
+										<p class="form-control-static"><?=isset($content['educational_expenses'])?$content['educational_expenses']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>保險支出</label>
+										<p class="form-control-static"><?=isset($content['insurance_expenses'])?$content['insurance_expenses']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>社交支出</label>
+										<p class="form-control-static"><?=isset($content['social_expenses'])?$content['social_expenses']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>房貸月繳</label>
+										<p class="form-control-static"><?=isset($content['long_assure_monthly_payment'])?$content['long_assure_monthly_payment']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>車貸月繳</label>
+										<p class="form-control-static"><?=isset($content['mid_assure_monthly_payment'])?$content['mid_assure_monthly_payment']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>信貸月繳</label>
+										<p class="form-control-static"><?=isset($content['credit_monthly_payment'])?$content['credit_monthly_payment']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>助學貸月繳</label>
+										<p class="form-control-static"><?=isset($content['student_loans_monthly_payment'])?$content['student_loans_monthly_payment']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>信用卡月繳</label>
+										<p class="form-control-static"><?=isset($content['student_loans_monthly_payment'])?$content['student_loans_monthly_payment']:""?></p>
+									</div>
+									<div class="form-group">
+										<label>民間借貸月付</label>
+										<p class="form-control-static"><?=isset($content['other_private_borrowing'])?$content['other_private_borrowing']:""?></p>
+									</div>
 									<div class="form-group">
 										<label>其他支出</label>
 										<p class="form-control-static"><?=isset($content['other_expense'])?$content['other_expense']:""?></p>
 									</div>
 									<div class="form-group">
 										<label>備註</label>
-										<? 
+										<?
 											if($remark){
 												if(isset($remark["fail"]) && $remark["fail"]){
 													echo '<p style="color:red;" class="form-control-static">失敗原因：'.$remark["fail"].'</p>';
 												}
 											}
 										?>
-									</div>									
+									</div>
 									<h4>審核</h4>
                                     <form role="form" method="post">
                                         <fieldset>

@@ -868,6 +868,55 @@ class Certification_data
     }
 
 	/**
+	 * [transformJobToResult 工作認證資料轉 result]
+	 * @param  array  $data [勞保異動明細解析資料]
+	 * @return array  $res
+	 * (
+	 *   [name] => 投保人姓名
+	 *   [person_id] => 身分證字號
+	 *   [report_date] => 截至印表日期
+	 *   [last_insurance_info] => 現在投保公司資訊
+	 *   [total_count] => 總工作年資
+	 *   [this_company_count] => 現在投保工作年資
+	 * )
+	 */
+	public function transformJobToResult($data=[]){
+		$res = [
+			'name' => '',
+			'person_id' => '',
+			'report_date' => '',
+			'last_insurance_info' => [],
+			'total_count' => 0,
+			'this_company_count' => 0,
+		];
+		if($data){
+			$res['name'] = isset($data['pageList'][0]['name']) ? $data['pageList'][0]['name'] : '';
+			$res['person_id'] = isset($data['pageList'][0]['personId']) ? $data['pageList'][0]['personId'] : '';
+			$res['report_date'] = isset($data['reportDate']) ? $data['reportDate'] : '';
+			$last_page_array = end($data['pageList']);
+			$res['last_insurance_info'] = end($last_page_array['insuranceList']);
+			$company = $res['last_insurance_info']['companyName'];
+			// $this->CI->load->library('mapping/time');
+
+			foreach($data['pageList'] as $page_info){
+				foreach($page_info['insuranceList'] as $page_info_value){
+					if(! preg_match('/部分工時/',$page_info_value['detailList'][0]['comment'])){
+						// $time = $this->CI->time->ROCDateToUnixTimestamp($page_info_value['detailList'][0]['startDate']);
+						// $start_date = date_create(date('Ymd',$time));
+						// $diff=date_diff($date1,$date2);
+						// echo $diff->format("%m");
+						$res['total_count'] += 1;
+						if($page_info['insuranceList']['companyName'] == $company){
+							$res['this_company_count'] += 1;
+						}
+					}
+				}
+			}
+		}
+		return $res;
+	}
+
+	/**
 	 * [transformSimplificationjobToMeta 工作資料 result 轉 meta data]
 	 * @param  array  $result    [工作資料 result]
 	 * @return array  $meta_data [user meta data]

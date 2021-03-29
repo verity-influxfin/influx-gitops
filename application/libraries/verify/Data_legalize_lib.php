@@ -522,4 +522,44 @@ class Data_legalize_lib{
 
 		return $res;
 	}
+
+	/**
+	 * [legalize_job 工作認證正確性驗證]
+	 * @param  string $user_id [使用者 ID]
+	 * @param  array  $data    [驗證資料]
+	 * @return array  $res     [返回結果]
+	 */
+	public function legalize_job($user_id='',$data=[]){
+		$res = [
+			'error_location' => [],
+			'error_message' => [],
+			'result' => [],
+		];
+
+		if($user_id && $data){
+			$this->CI->load->model('user/user_model');
+			$user_info = $this->CI->user_model->get_by(['id'=>$user_id]);
+			if($user_info && $data['pdf_info']['pageList'][0]['personId']){
+				if($data['pdf_info']['pageList'][0]['personId'] != $user_info->id_number){
+					$res['error_message'][] = '身分證號與該實名用戶統一編號不一致';
+					$res['error_location'][] = 'id_card';
+				}
+				if($data['pdf_info']['pageList'][0]['name'] != $user_info->name){
+					$res['error_message'][] = '姓名與該實名用戶姓名不一致';
+					$res['error_location'][] = 'name';
+				}
+			}else{
+				$res['error_message'][] = '查無使用者身分證資訊';
+			}
+			if(isset($data['gcis_info']) && $data['gcis_info']){
+				if($data['gcis_info']['Company_Name'] != $data['pdf_info']['company_name']){
+					$res['error_message'][] = '公司名稱與商業司查詢不一致';
+					$res['error_location'][] = 'company_name';
+				}
+			}else{
+				$res['error_message'][] = '查無商業司資料';
+			}
+		}
+		return $res;
+	}
 }

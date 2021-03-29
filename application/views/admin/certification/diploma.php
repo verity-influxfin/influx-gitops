@@ -64,7 +64,7 @@
 										<label>SIP 密碼</label>
 										<p class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
 									</div> -->
-									<div class="form-group">
+									<!-- <div class="form-group">
 										<label>SIP 網址</label><br>
 										<? if (!empty($content['sipURL'])) { ?>
 											<? foreach ($content['sipURL'] as $key => $value) { ?>
@@ -72,7 +72,7 @@
 												</a>
 											<? } ?>
 										<? } ?>
-									</div>
+									</div> -->
 									<div class="form-group">
 										<label>備註</label>
 										<?
@@ -122,7 +122,7 @@
                                                 </a>
                                             <? } ?>
 										</div>
-										<div class="form-group">
+										<!-- <div class="form-group">
 											<label>成績單</label><br>
 											<? if (!empty($content['transcript_image'])) { ?>
 												<? foreach ($content['transcript_image'] as $key => $value) { ?>
@@ -131,7 +131,7 @@
 													</a>
 												<? } ?>
 											<? } ?>
-										</div>
+										</div> -->
 									</fieldset>
 								</div>
 							</div>

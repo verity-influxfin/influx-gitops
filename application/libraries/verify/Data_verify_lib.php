@@ -199,6 +199,31 @@ class Data_verify_lib{
 		}
 
 		/**
+		 * [check_job 工作認證過件檢核]
+		 * @param  array  $data [工作認證 user meta]
+		 * @return array  $res  [檢核結果]
+		 */
+		public function check_job($data=[]){
+			$res = [
+				'status_code' => 1,
+				'error_message' => [],
+			];
+
+			$this->CI->config->load('top_enterprise');
+			$top_enterprise = $this->CI->config->item("top_enterprise");
+
+			// foreach($data as $key => $value){
+			// 	if($key == 'company_name'){
+			// 		if(in_array($value,$top_enterprise)){
+			//
+			// 		}
+			// 	}
+			// }
+
+			return $res;
+		}
+
+		/**
 		 * [check_employeeinsurancelist 月末投保信保標準檢核]
 		 * @param  array  $data [月末投保 user meta]
 		 * @return array $res  [檢核結果]
