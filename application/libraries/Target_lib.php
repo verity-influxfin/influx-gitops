@@ -1631,7 +1631,7 @@ class Target_lib
                                     }
 									// 工作認證有專業技能證書進待二審
 									if($certification['id'] == 10 && isset($certification['content'])){
-										if(isest($certification['content']['license_image']) || isset($certification['content']['pro_certificate_image']) || isset($certification['content']['game_work_image'])){
+										if(isset($certification['content']['license_image']) || isset($certification['content']['pro_certificate_image']) || isset($certification['content']['game_work_image'])){
 											$finish = false;
 										}
 									}
