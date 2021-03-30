@@ -197,16 +197,30 @@ class Sendemail
 		}
     }
 
-    public function lending_success($email, $user_id, $target_no, $loan_amount) {
-    	if(!empty($email)) {
-    		$subject = "[投資標的]您的資金已放款成功";
-    		$title = "【競標成功】";
-			$content = "親愛的投資人，恭喜您標得 " . $target_no . " 新台幣 " . number_format($loan_amount) . " 元的債權，並成功放款至會員ID:" . $user_id . "。<br>更多投資標的，盡在普匯APP";
-			$mail_event = $this->CI->config->item('mail_event');
-			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> 'b08', "mail_event"=> $mail_event),TRUE);
-			return $this->send($email, $subject, $content);
+    public function lending_success($user_id, $investor, $target_no, $amount, $bankaccount="") {
+		if($investor == 1) {
+			$subject = "[投資標的]您的資金已放款成功";
+			$title = "【競標成功】";
+			$content = "親愛的投資人，恭喜您標得 " . $target_no . " 新台幣 " . number_format($amount) . " 元的債權，並成功放款至會員ID:" . $user_id . "
+				更多投資標的，盡在普匯APP";
+			$type = 'i04';
+		} else {
+			$bankaccount = substr($bankaccount, -4, 4);
+			$title 		= "【借款放款成功】 您的借款 $target_no 已發放成功";
+			$content 	= "親愛的用戶，您好！
+您的借款 $target_no ，
+借款金額 $amount 元已發放至您的綁定金融卡賬戶尾號 $bankaccount 內，
+請您妥善安排用款。
+
+敬告用戶，本公司不會以短信或電話等任何形式告知您其他非APP內的還款專屬帳號。";
+			$type = 'b04';
 		}
-		return false;
+		$user_info 		= $this->CI->user_model->get($user_id);
+		if(isset($user_info) && $user_info->email) {
+			$mail_event = $this->CI->config->item('mail_event');
+			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => $content, "type" => $type, "mail_event" => $mail_event), TRUE);
+			$this->send($user_info->email,isset($subject)?$subject:$title, $content);
+		}
 	}
 
     public function EDM($mail, $title = "", $content = "", $EDM, $url)
