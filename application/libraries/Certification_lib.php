@@ -540,7 +540,7 @@ class Certification_lib{
 	{
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
 		$job_certification = $this->get_certification_info($info->user_id,10,$info->investor);
-		if($user_certification==false || $user_certification->status!=1 ||$job_certification ==false || $job_certification=>status!=1){
+		if($user_certification==false || $user_certification->status!=1 ||$job_certification ==false || $job_certification->status!=1){
 			return false;
 		}
 		$url = isset(json_decode($info->content)->pdf_file) ?
