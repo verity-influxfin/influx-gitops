@@ -326,7 +326,7 @@ defined('SOURCE_PRINCIPAL')       	OR define('SOURCE_PRINCIPAL'		, '12');//還�
 defined('SOURCE_AR_INTEREST')       OR define('SOURCE_AR_INTEREST'		, '13');//應收借款利息
 defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款利息
 
-defined('SOURCE_AR_LAW_FEE')        OR define('SOURCE_AR_LAW_FEE'       , '31');//應付法催執行費
+defined('SOURCE_AR_LAW_FEE')        OR define('SOURCE_AR_LAW_FEE'       , '31');//應收法催執行費
 defined('SOURCE_LAW_FEE')           OR define('SOURCE_LAW_FEE'          , '32');//法催執行費
 
 defined('SOURCE_FEES_B')        	OR define('SOURCE_FEES_B'			, '50');//平台服務費沖正
