@@ -1296,7 +1296,8 @@ class Target extends REST_Controller {
                             : (isset($meta_info[1]) >= 2
                                 ? $meta_info[1]->meta_value
                                 : false);
-                        $user_meta->meta_value = $job_company ? $job_company : $diploma_name;
+						$user_meta = new stdClass();
+						$user_meta->meta_value = $job_company ? $job_company : $diploma_name;
                     } else {
                         $user_meta = new stdClass();
                         $user_meta->meta_value = '未提供相關資訊';
