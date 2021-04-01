@@ -2,6 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+use Symfony\Component\HttpClient\HttpClient;
 
 class Contact extends MY_Admin_Controller {
 	
@@ -10,6 +11,7 @@ class Contact extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_contact_model');
+		$this->load->helper('admin');
  	}
 	
 	public function index(){
@@ -80,22 +82,144 @@ class Contact extends MY_Admin_Controller {
 			}
 		}
 	}
-	
+
+	public function update_notificaion() {
+		// TODO: 增加權限控管，若無權限或該筆紀錄非發送者擁有時需 reject
+		$id = $this->input->input_stream('id');
+		$action = $this->input->input_stream('action');
+
+		$notification_url = $this->config->item('notification')['url'];
+		$httpClient = HttpClient::create();
+		$response = $httpClient->request('PUT', $notification_url, [
+			'body' => json_encode(['id' => $id, 'action' => $action]),
+			'headers' => ['Content-Type' => 'application/json'],
+		]);
+
+		try {
+			$statusCode = $response->getStatusCode();
+		} catch (Exception $e) {
+			$statusCode = -1;
+			$statusDescription = '無法連線到推播中心';
+		} finally {
+			if ($statusCode == 200) {
+				return json_encode(['code' => $statusCode, 'description' => 'success']);
+			} else {
+				return json_encode(['code' => $statusCode, 'description' => 'failure']);
+			}
+		}
+
+	}
+	/** 寄送 Email 及 app 通知的頁面 (GET & POST)
+	 *
+	 * @return null
+	 */
 	public function send_email(){
 		$page_data 	= array('type'=>'edit');
 		$post 		= $this->input->post(NULL, TRUE);
 		$this->load->library('Sendemail');
+		$this->load->model('admin/role_model');
+		$this->login_info = check_admin();
+		$role_name 	= $this->role_model->get_list();
+
 		if(empty($post)){
+			// For GET Method
+			$data = array('user_id' => $this->login_info->id);
+			$notification_url = $this->config->item('notification')['url'];
+			$httpClient = HttpClient::create();
+			$response = $httpClient->request('GET', $notification_url, [
+				'body' => json_encode($data),
+				'headers' => ['Content-Type' => 'application/json'],
+				'timeout' => 2.5
+			]);
+
+			try {
+				$notification_content = array('data' => array());
+				$statusCode = $response->getStatusCode();
+			} catch (Exception $e) {
+				$statusCode = -1;
+				$statusDescription = '無法連線到推播中心';
+			} finally {
+				if ($statusCode == 200) {
+					$notification_content = array('data' => $response->toArray()['data']);
+				} else {
+					$msg = '取得不到推播中心的資料! 請洽工程師。 (狀態碼:'.$statusCode.' '.$statusDescription.')';
+					echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><script language="javascript">alert("'.$msg.'");</script>';
+				}
+			}
+
 			$this->load->view('admin/_header');
 			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('core/page_wrapper_start');
 			$this->load->view('admin/send_email',$page_data);
+			$this->load->view('admin/send_notification',$notification_content);
+			$this->load->view('core/page_wrapper_end');
 			$this->load->view('admin/_footer');
-
 		}else{
+			// For POST Method
+
+			// 如果 payload 有帶 notification，則視為發送推播
 			if(isset($post["notification"])) {
 				$this->load->model('user/user_notification_model');
-				$devices = $this->user_notification_model->get_filtered_deviceid($post);
-				alert('推播發送成功! 總共送出 '.count($devices).'筆.', admin_url('contact/send_email'));
+
+				// 投資人 / 借貸人 / 不過濾
+				$targetCategory = isset($post['investment'])?NotificationTargetCategory::investment:0;
+				$targetCategory += isset($post['loan'])?NotificationTargetCategory::loan:0;
+
+				$platform = array();
+				if(isset($post['android']))
+					$platform[] = 'android';
+				if(isset($post['ios']))
+					$platform[] = 'ios';
+
+				if(!isset($post['send_date']) || $post['send_date'] != date('Y-m-d H:i',strtotime($post['send_date']))) {
+					alert('預定發送時間不能為空，或是格式有誤。', admin_url('contact/send_email'));
+				}
+
+				$devices = $this->user_notification_model->get_filtered_deviceid($post, $targetCategory);
+				$data = array(
+					'user_id' => $this->login_info->id,
+					'sender_name' => $this->login_info->name,
+					'target_category' => $this->config->item('notification')['target_category_name'][$targetCategory],
+					'target_platform' => implode("/", $platform),
+					'tokens' => $devices,
+					"notification"=>array(
+						"title" => $post['title'],
+						"body" => $post['content']
+					),
+					"data" => array(
+						'targetNo' => $post['target']
+					),
+					"send_at" => $post['send_date'],
+					"apns" => array(
+						"payload" => array(
+							"category" => "NEW_MESSAGE_CATEGORY"
+						)
+    				),
+				);
+
+				$notification_url = $this->config->item('notification')['url'];
+				$httpClient = HttpClient::create();
+				$response = $httpClient->request('POST', $notification_url, [
+					'body' => json_encode($data),
+					'headers' => ['Content-Type' => 'application/json']
+				]);
+
+				try {
+					$statusCode = $response->getStatusCode();
+					$statusDescription = '';
+				} catch (Exception $e) {
+					$statusCode = -1;
+					$statusDescription = '無法連線到推播中心';
+				} finally {
+					if ($statusCode == 200) {
+						if (count($devices) == 0)
+							alert('推播預約失敗! 因為沒有任何匹配的設備，請重新選取篩選規則。', admin_url('contact/send_email'));
+						else
+							alert('推播預約成功! 該推播總共會有 ' . count($devices) . ' 個設備收到推播訊息。', admin_url('contact/send_email'));
+					}else{
+						alert('推播預約失敗! 請洽工程師。 (狀態碼:'.$statusCode.' '.$statusDescription.')', admin_url('contact/send_email'));
+					}
+				}
 			}else {
 				$fields = ['email', 'title', 'content'];
 				foreach ($fields as $field) {
@@ -113,28 +237,6 @@ class Contact extends MY_Admin_Controller {
 					alert('發送失敗，請洽工程師', admin_url('contact/send_email'));
 				}
 			}
-		}
-	}
-
-	public function send_notification() {
-		$data = $this->input->post(NULL, TRUE);
-		if(empty($data)){
-			$this->load->helper('url');
-			redirect('/send_email', 'refresh');
-		}else {
-//			array (
-//				'investment' => 'on',
-//				'android' => 'on',
-//				'gender' => 'on',
-//				'age_range_start' => '10',
-//				'age_range_end' => '5',
-//				'user_ids' => '11',
-//				'title' => '44',
-//				'content' => '2',
-//				'send_date' => '2021-03-10 10:05',
-//				'notification' => '1',
-//			)
-			var_dump($data);
 		}
 	}
 

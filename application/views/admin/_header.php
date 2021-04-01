@@ -20,6 +20,8 @@
     <link href="<?=base_url()?>assets/admin/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="<?=base_url()?>assets/admin/css/datepicker.css" rel="stylesheet">
 	<link href="<?=base_url()?>assets/admin/css/bootstrap-datetimepicker.css" rel="stylesheet">
+	<link href="<?=base_url()?>assets/admin/css/bootstrap-table.css" rel="stylesheet">
+	<link href="<?=base_url()?>assets/admin/css/bootstrap-table-filter-control.css" rel="stylesheet">
 	<link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
 	<link href="//cdn.datatables.net/responsive/1.0.7/css/responsive.dataTables.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
@@ -29,6 +31,12 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
 	<script src="//cloud.tinymce.com/stable/tinymce.min.js?apiKey=50g7aczgyla2r7aenym5m6qorvpgpbo0mjec0fffvlt9frf6"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-datetimepicker.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table-zh-TW.min.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table-export.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table-filter-control.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/moment.min.js"></script>
+
 	<script>
 		$(document).ready(function() {
 			
