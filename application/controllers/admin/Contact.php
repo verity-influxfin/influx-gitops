@@ -173,6 +173,8 @@ class Contact extends MY_Admin_Controller {
 
 				if(!isset($post['send_date']) || $post['send_date'] != date('Y-m-d H:i',strtotime($post['send_date']))) {
 					alert('預定發送時間不能為空，或是格式有誤。', admin_url('contact/send_email'));
+				}else if(!$targetCategory) {
+					alert('必須勾選發送的對象，如投資端等。', admin_url('contact/send_email'));
 				}
 
 				$devices = $this->user_notification_model->get_filtered_deviceid($post, $targetCategory);

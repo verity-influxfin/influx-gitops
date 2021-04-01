@@ -77,28 +77,38 @@ class User_notification_model extends MY_Model
 		$this->_database
 			->select('*')
 			->from('`p2p_log.user_login_log` as ull')
-			->join("($subquery) as `us`", "`us`.`id` = `ull`.`user_id`");
+			->join("($subquery) as `us`", "`us`.`id` = `ull`.`user_id`")
+			->order_by('created_at', 'DESC');
 
 		if($targetCategory & NotificationTargetCategory::investment) {
 			$this->_database->or_where("investor = 1");
 		}else if($targetCategory & NotificationTargetCategory::loan) {
 			$this->_database->or_where("investor = 0");
 		}
-		// $debug_query = $this->_database->get_compiled_select('', FALSE);
+		//$debug_query = $this->_database->get_compiled_select('', FALSE);
 		$list = $this->_database->get()->{$this->_return_type(1)}();
 
 		// 過濾掉重複 device_id，塞選對應的 platform 會員，並重新組建一個 array
-		$deviceList = array();
+		$deviceList = array('ios' => array(), 'android' => array());
 		foreach($list as $user) {
 			$device_id_borrow = json_decode($user->client);
+			// 如果登入資訊的 device_id 有存在，而且也有 os 的資訊
 			if(isset($device_id_borrow) && !empty($device_id_borrow->device_id) &&
-				!in_array($device_id_borrow->device_id, $deviceList) // && (!empty($device_id_borrow->os) &&
-				//	((isset($filterRole['android']) && $device_id_borrow->os == 'android') ||
-				//	(isset($filterRole['ios']) && $device_id_borrow->os == 'ios')))
+				  (!empty($device_id_borrow->os) &&
+					  // 有勾選任一作業系統時篩選，若兩個都沒勾選擇忽略篩選
+					  (((isset($filterRole['android']) && $device_id_borrow->os == 'android') ||
+					(isset($filterRole['ios']) && $device_id_borrow->os == 'ios')) ||
+					  (!isset($filterRole['android']) && !isset($filterRole['ios'])))) &&
+				!in_array($user->user_id, $deviceList[$device_id_borrow->os])
 			) {
-				array_push($deviceList, $device_id_borrow->device_id);
+				$deviceList[$device_id_borrow->os][$user->user_id] =$device_id_borrow->device_id;
 			}
 		}
+
+		// Convert the dictionary to 1 dimension array.
+		$android_tokens = array_values($deviceList['android']);
+		$ios_tokens = array_values($deviceList['ios']);
+		$deviceList = array_merge($android_tokens, $ios_tokens);
 		return $deviceList;
 	}
 
