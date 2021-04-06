@@ -474,3 +474,5 @@ defined('REDIS_NEWS_LIST')   		OR define('REDIS_NEWS_LIST'			, 'news_list');
 defined('P2P_LOAN_DB')              OR define('P2P_LOAN_DB'             , 'p2p_loan');
 defined('P2P_LOAN_TARGET_TABLE')    OR define('P2P_LOAN_TARGET_TABLE'   , 'targets');
 
+// notification
+defined('NOTIFICATION_INVEST_API_KEY')  OR define('NOTIFICATION_INVEST_API_KEY' , getenv('NOTIFICATION_INVEST_API_KEY'));

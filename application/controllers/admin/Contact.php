@@ -107,8 +107,8 @@ class Contact extends MY_Admin_Controller {
 				return json_encode(['code' => $statusCode, 'description' => 'failure']);
 			}
 		}
-
 	}
+
 	/** 寄送 Email 及 app 通知的頁面 (GET & POST)
 	 *
 	 * @return null
@@ -217,7 +217,7 @@ class Contact extends MY_Admin_Controller {
 					$statusCode = -1;
 					$statusDescription = '無法連線到推播中心';
 				} finally {
-					if ($statusCode == 200) {
+					if ($statusCode == 200 || $statusCode == 201) {
 						if (count($devices) == 0)
 							alert('推播預約失敗! 因為沒有任何匹配的設備，請重新選取篩選規則。', admin_url('contact/send_email'));
 						else
@@ -246,6 +246,54 @@ class Contact extends MY_Admin_Controller {
 		}
 	}
 
+	public function update_user_platform() {
+		$this->load->model('log/Log_userlogin_model');
+		$result = $this->Log_userlogin_model->get_latest_devices(1);
+
+		$deviceList = array();
+		foreach($result as $i => $log) {
+			$device_id_borrow = json_decode($log->client);
+			if($log->user_id && isset($device_id_borrow) && !empty($device_id_borrow->device_id)) {
+				if(!empty($deviceList[$log->user_id]['android']) && !empty($deviceList[$log->user_id]['ios']) )
+					continue;
+				if (empty($device_id_borrow->os)) {
+					$httpClient = HttpClient::create();
+					$response = $httpClient->request('GET', 'https://iid.googleapis.com/iid/info/'.$device_id_borrow->device_id , [
+						'headers' => [
+							'Content-Type' => 'application/json',
+							'Authorization' => 'key='.NOTIFICATION_INVEST_API_KEY],
+						'timeout' => 2.5
+					]);
+
+					try {
+						echo ".";
+						$statusCode = $response->getStatusCode();
+					} catch (Exception $e) {
+						$statusCode = -1;
+						$statusDescription = '無法連線到推播中心';
+					} finally {
+						if ($statusCode == 200) {
+							$data = $response->toArray();
+							if(isset($data['platform']) && empty($deviceList[$log->user_id][strtolower($data['platform'])])) {
+								$deviceList[$log->user_id][strtolower($data['platform'])] = array($i, $log->id);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		foreach ($deviceList as $device) {
+			foreach (array('android', 'ios') as $key) {
+				if(!isset($device[$key]))
+					continue;
+				$client = json_decode($result[$device[$key][0]]->client);
+				$client->os = $key;
+				$this->Log_userlogin_model->update($device[$key][1], array("client" => json_encode($client)));
+			}
+		}
+		alert('更新成功', admin_url('contact/send_email'));
+	}
 	public function certifications()
 	{
 		$this->load->model('user/user_certification_model');

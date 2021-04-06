@@ -102,4 +102,14 @@ class Log_userlogin_model extends MY_Model
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function get_latest_devices($investment) {
+		$this->db
+			->select('*')
+			->from('`p2p_log.user_login_log`')
+			->where('investor =', $investment)
+			->order_by('created_at', 'DESC');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
