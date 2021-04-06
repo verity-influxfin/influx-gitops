@@ -136,13 +136,17 @@
 									<td><?= $record['target_platform'] ?></td>
 									<td><?= $record['number_of_tokens']?></td>
 									<td><?= $record['sender_name'] ?></td>
-									<td class="col-md-2"><? if($record['status']==0) { ?>
-										<button type="button" class="btn btn-danger check" data-action="2" onclick="check_notification(this)">拒絕</button>
-										<button type="button" class="btn btn-primary check" data-action="1" onclick="check_notification(this)">核可</button>
-
+									<td class="col-md-2">
+										<? if($record['status']==0) { ?>
+											<button type="button" class="btn btn-danger check" data-action="2" onclick="check_notification(this)">拒絕</button>
+											<button type="button" class="btn btn-primary check" data-action="1" onclick="check_notification(this)">核可</button>
 										<? } else { ?>
-										<?= $this->config->item('notification')['status'][$record['status']] ?></td>
+											<?= $this->config->item('notification')['status'][$record['status']] ?>
 										<? } ?>
+										<? if($record['status']==1) { ?>
+											<button type="button" class="btn btn-warning check" data-action="4" onclick="check_notification(this)">取消</button>
+										<? } ?>
+									</td>
 								</tr>
 								<? } ?>
 								</tbody>
@@ -160,7 +164,7 @@
 		let $table = $('#table');
 
 		function check_notification(ele) {
-			let action = $(ele).data('action');
+			let action = parseInt($(ele).data('action'), 10);
 			let id = $(ele).closest('tr').data('id');
 			let data = {id: id, action: action};
 			$.ajax({
@@ -170,7 +174,7 @@
 				data: data,
 				success: (json) => {
 					let status = <?= json_encode($this->config->item('notification')['status']) ?>;
-					$(ele).closest('td').html(status[parseInt(data['action'])]);
+					$(ele).closest('td').html(status[data['action']]);
 				},
 				error: function (xhr, textStatus, thrownError) {
 					alert(textStatus);

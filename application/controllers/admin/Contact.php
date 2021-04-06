@@ -170,9 +170,13 @@ class Contact extends MY_Admin_Controller {
 					$platform[] = 'android';
 				if(isset($post['ios']))
 					$platform[] = 'ios';
+				if(empty($platform))
+					$platform = array('android', 'ios');
 
 				if(!isset($post['send_date']) || $post['send_date'] != date('Y-m-d H:i',strtotime($post['send_date']))) {
 					alert('預定發送時間不能為空，或是格式有誤。', admin_url('contact/send_email'));
+				}else if(time() - strtotime($post['send_date']) > 0) {
+					alert('預定發送時間不能比目前時間早，請重新填入。', admin_url('contact/send_email'));
 				}else if(!$targetCategory) {
 					alert('必須勾選發送的對象，如投資端等。', admin_url('contact/send_email'));
 				}
