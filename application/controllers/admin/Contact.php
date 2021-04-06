@@ -256,7 +256,10 @@ class Contact extends MY_Admin_Controller {
 			if($log->user_id && isset($device_id_borrow) && !empty($device_id_borrow->device_id)) {
 				if(!empty($deviceList[$log->user_id]['android']) && !empty($deviceList[$log->user_id]['ios']) )
 					continue;
-				if (empty($device_id_borrow->os)) {
+
+				if(!empty($device_id_borrow->os)) {
+					$deviceList[$log->user_id][strtolower($device_id_borrow->os)] = array($i, $log->id);
+				} else {
 					$httpClient = HttpClient::create();
 					$response = $httpClient->request('GET', 'https://iid.googleapis.com/iid/info/'.$device_id_borrow->device_id , [
 						'headers' => [

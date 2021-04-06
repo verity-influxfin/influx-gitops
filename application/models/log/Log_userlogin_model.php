@@ -107,7 +107,8 @@ class Log_userlogin_model extends MY_Model
 		$this->db
 			->select('*')
 			->from('`p2p_log.user_login_log`')
-			->where('investor =', $investment)
+			->where('investor = ', $investment)
+			->where('client like ', '%"device_id":"%')
 			->order_by('created_at', 'DESC');
 		$query = $this->db->get();
 		return $query->result();
