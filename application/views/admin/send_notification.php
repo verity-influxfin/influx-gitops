@@ -174,7 +174,11 @@
 				data: data,
 				success: (json) => {
 					let status = <?= json_encode($this->config->item('notification')['status']) ?>;
-					$(ele).closest('td').html(status[data['action']]);
+					let statusCell = $(ele).closest('td');
+					statusCell.html(status[data['action']]);
+					if(data['action'] === 1) {
+						statusCell.append('<button type="button" class="btn btn-warning check" data-action="4" onclick="check_notification(this)">取消</button>');
+					}
 				},
 				error: function (xhr, textStatus, thrownError) {
 					alert(textStatus);
@@ -184,8 +188,6 @@
 
 
 		$(function () {
-
-
 			$('#send_datetime').datetimepicker({
 				useCurrent: false,
 				defaultDate: moment(new Date(), "YYYY-MM-DD HH:mm"),
