@@ -1091,17 +1091,20 @@ class Product extends REST_Controller {
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
 					// 返回認證資料
+					if(isset($value['content'])){
+						unset($value['content']);
+					}
 					$user_certification = $this->user_certification_model->get_by(['id'=>$value['certification_id']]);
 					$content_array_data = [];
 					$content_key = ['labor_type','return_type','mail_file_status'];
-					// 刪除無用資訊
 					if(isset($user_certification->content) && $user_certification->content != '' ){
 						$user_certification = json_decode($user_certification->content,true);
 						foreach($content_key as $key_name){
 							if(array_key_exists($key_name,$user_certification)){
 								$content_array_data[$key_name] = $user_certification[$key_name];
 							}
-					}}
+						}
+					}
 					if(!$content_array_data){
 						$content_array_data = new StdClass();
 					}
