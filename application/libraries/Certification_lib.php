@@ -593,10 +593,15 @@ class Certification_lib{
 				$time = time();
 			}
 
+			$group_id = isset(json_decode($info->content)->group_id) ? json_decode($info->content)->group_id : time();
+
 			$certification_content = [
+				'group_id' => $group_id,
 				'return_type' => $return_type,
 				'pdf_file' => $url,
-				'result' => $result,
+				'result' => [
+					"{$group_id}" => $result
+				],
 				'times' => isset($result['S1Count']) ? $result['S1Count'] : 0,
 				'credit_rate' => isset($result['creditCardUseRate']) ? $result['creditCardUseRate'] : 0,
 				'months' => isset($result['creditLogCount']) ? $result['creditLogCount'] : 0,
@@ -605,7 +610,9 @@ class Certification_lib{
 
 			// 還款力計算-22倍薪資
 			if(isset($job_certification->content)){
-				$job_certification_content = json_decode($job_certification->content,true);
+				if(! is_array($job_certification->content)){
+					$job_certification_content = json_decode($job_certification->content,true);
+				}
 				$salary = isset($job_certification_content['salary']) ? $job_certification_content['salary'] : 0;
 			}else{
 				$salary = 0;

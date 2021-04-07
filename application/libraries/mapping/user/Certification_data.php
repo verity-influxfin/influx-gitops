@@ -516,11 +516,9 @@ class Certification_data
 						foreach($v as $k1=>$v1){
 							if(is_array($v1)){
 								foreach($v1 as $k2=>$v2){
-									if(is_array($v2)){
-										$name = $k.'_'.$k1;
-										if(isset($res[$name])){
-											$res[$name] = $v2['existCreditInfo'];
-										}
+									$name = $k.'_'.$k1;
+									if(isset($res[$name])){
+										$res[$name] = $v1['existCreditInfo'];
 									}
 								}
 							}
@@ -651,11 +649,8 @@ class Certification_data
 				}
 
 				foreach($data['K2']['dataList'] as $key => $value){
-					// if($key == 2){
-					// 	print_r($value);exit;
-					// }
 					// 信用紀錄幾個月
-					if(preg_match('/^繳足最低.*無遲延$|不需繳款|^全額繳清.*無遲延$/',$value['previousPaymentStatus']) && $creditLogCountStatus){
+					if(preg_match('/^繳足最低.*無遲延$|不須繳款|^全額繳清.*無遲延$/',$value['previousPaymentStatus']) && $creditLogCountStatus){
 						$res['creditLogCount'] += 1;
 					}else{
 						if(preg_match('/.*遲延.*個月$|.*遲延.*個月以上$/',$value['previousPaymentStatus'])){

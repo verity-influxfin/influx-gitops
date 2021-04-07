@@ -142,8 +142,19 @@ class Certification extends MY_Admin_Controller {
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					$content = json_decode($info->content);
 					if ($content->return_type !== 0 && isset($content->pdf_file) && isset($content->result)) {
-						$this->joint_credits();
-						return;
+						//聯徵檔案報告產生
+						$info_content = json_decode($info->content, true);
+						if($info_content){
+							$group_id = isset($info_content['group_id']) ? $info_content['group_id'] : '';
+							$page_data['report_page'] = '';
+							if(isset($info_content['result'][$group_id])){
+								$report_data['type'] = 'person';
+								$report_data['data'] = $info_content['result'][$group_id];
+								$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
+							}
+						}
+						// $this->joint_credits();
+						// return;
 					}
 				}
 				elseif($info->certification_id == CERTIFICATION_JOB){
@@ -175,18 +186,6 @@ class Certification extends MY_Admin_Controller {
 					}
 					$page_data['techie_lang'] = isset($techie_lang) ? $techie_lang : false;
 					$page_data['other_lang']  = isset($other_lang) ? $other_lang : false;
-				}
-				//聯徵檔案報告產生
-				$info_content = json_decode($info->content, true);
-				if($info_content){
-					$group_id = isset($info_content['group_id']) ? $info_content['group_id'] : '';
-					$page_data['report_page'] = '';
-					if(isset($info_content['result'][$group_id])){
-						$report_data['type'] = 'person';
-						$report_data['data'] = $info_content['result'][$group_id];
-						$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
-					}
-					// print_r($page_data['report_page']);exit;
 				}
 				$page_data['id'] 					= $id;
 				$page_data['remark'] 				= json_decode($info->remark,true);
