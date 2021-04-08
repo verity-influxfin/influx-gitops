@@ -53,7 +53,7 @@ class User_notification_model extends MY_Model
 
 			foreach($userData as $users) {
 				$userRange = explode("-", $users);
-				if(count($userRange) == 2) {
+				if(isset($userRange) && is_array($userRange) && count($userRange) == 2) {
 					$this->_database->or_where('(id >=', $userRange[0], FALSE);
 					$this->_database->where('id <=', $userRange[1].")", FALSE);
 				}else if(is_numeric($users)) {
@@ -99,7 +99,7 @@ class User_notification_model extends MY_Model
 					  (((isset($filterRole['android']) && $device_id_borrow->os == 'android') ||
 					(isset($filterRole['ios']) && $device_id_borrow->os == 'ios')) ||
 					  (!isset($filterRole['android']) && !isset($filterRole['ios'])))) &&
-				!in_array($user->user_id, $deviceList[$device_id_borrow->os])
+				!array_key_exists($user->user_id, $deviceList[$device_id_borrow->os])
 			) {
 				$deviceList[$device_id_borrow->os][$user->user_id] =$device_id_borrow->device_id;
 			}
