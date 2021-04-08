@@ -106,10 +106,12 @@ class User_notification_model extends MY_Model
 		}
 
 		// Convert the dictionary to 1 dimension array.
-		$android_tokens = array_values($deviceList['android']);
-		$ios_tokens = array_values($deviceList['ios']);
-		$deviceList = array_merge($android_tokens, $ios_tokens);
-		return $deviceList;
+		// $android_tokens = array_values($deviceList['android']);
+		// $ios_tokens = array_values($deviceList['ios']);
+		// $deviceList = array_merge($android_tokens, $ios_tokens);
+		// return $deviceList;
+		return array('android' => array_values($deviceList['android']),
+					'ios' => array_values($deviceList['ios']));
 	}
 
 }

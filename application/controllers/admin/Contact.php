@@ -192,9 +192,7 @@ class Contact extends MY_Admin_Controller {
 						"title" => $post['title'],
 						"body" => $post['content']
 					),
-					"data" => array(
-						'targetNo' => $post['target']
-					),
+					"data" => array(),
 					"send_at" => $post['send_date'],
 					"apns" => array(
 						"payload" => array(
@@ -202,6 +200,9 @@ class Contact extends MY_Admin_Controller {
 						)
     				),
 				);
+
+				if("" != trim($post['target']))
+					$data['data']['targetNo']= trim($post['target']);
 
 				$notification_url = $this->config->item('notification')['url'];
 				$httpClient = HttpClient::create();
@@ -221,7 +222,7 @@ class Contact extends MY_Admin_Controller {
 						if (count($devices) == 0)
 							alert('推播預約失敗! 因為沒有任何匹配的設備，請重新選取篩選規則。', admin_url('contact/send_email'));
 						else
-							alert('推播預約成功! 該推播總共會有 ' . count($devices) . ' 個設備收到推播訊息。', admin_url('contact/send_email'));
+							alert('推播預約成功! 該推播總共會有 ' . (count($devices['android'])+count($devices['ios'])) . ' 個設備收到推播訊息。', admin_url('contact/send_email'));
 					}else{
 						alert('推播預約失敗! 請洽工程師。 (狀態碼:'.$statusCode.' '.$statusDescription.')', admin_url('contact/send_email'));
 					}
