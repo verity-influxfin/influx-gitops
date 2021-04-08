@@ -14,6 +14,7 @@ class Transaction_lib{
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Passbook_lib');
 		$this->CI->load->library('Notification_lib');
+		$this->CI->load->library('Sendemail');
     }
 
 	//取得資金資料
@@ -355,7 +356,9 @@ class Transaction_lib{
 					if($user_bankaccount){
 						$this->CI->load->library('sms_lib');
 						$this->CI->sms_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
-						$this->CI->notification_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
+						$this->CI->notification_lib->lending_success($target->user_id,0,$target->target_no,$target->product_id,$target->sub_product_id,$target->loan_amount,$user_bankaccount->bank_account);
+						$this->CI->sendemail->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$user_bankaccount->bank_account);
+
 						//手續費
 						$transaction[]	= [
 							'source'			=> SOURCE_FEES,
@@ -380,11 +383,13 @@ class Transaction_lib{
 							'frozen_status'	=> 1
 						]);
 						if($investments){
+							$this->CI->load->model('user/user_model');
 							foreach($investments as $key => $value){
 								$investment_ids[]	= $value->id;
 								$frozen_ids[]		= $value->frozen_id;
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
-								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
+								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$target->product_id,$target->sub_product_id,$value->loan_amount,'');
+								$this->CI->sendemail->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
 
 								//放款
 								$transaction[]		= [
@@ -1010,6 +1015,7 @@ class Transaction_lib{
 						$this->CI->load->library('sms_lib');
 						$this->CI->sms_lib->lending_success($target->user_id,0,$target->target_no,$target->loan_amount,$target_account->virtual_account);
 						$this->CI->notification_lib->subloan_success($target->user_id,$target->target_no,$target->loan_amount);
+
 						//轉換產品手續費
 						$transaction[]	= array(
 							'source'			=> SOURCE_SUBLOAN_FEE,
@@ -1048,11 +1054,13 @@ class Transaction_lib{
 							'frozen_status'	=> 1
 						));
 						if($investments){
+							$this->CI->load->model('user/user_model');
 							foreach($investments as $key => $value){
 								$investment_ids[]	= $value->id;
 								$frozen_ids[]		= $value->frozen_id;
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
-								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
+								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$target->product_id,$target->sub_product_id,$value->loan_amount,'');
+								$this->CI->sendemail->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
 
 								//放款
 								$transaction[]		= array(

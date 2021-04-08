@@ -9,6 +9,7 @@ class Notification_lib{
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('user/user_notification_model');
+		$this->CI->load->library('Transfer_lib');
     }
 
 	public function first_login($user_id,$investor){
@@ -292,9 +293,24 @@ $name 您好，
 		return $rs;
 	}
 	
-	public function lending_success($user_id,$investor,$target_no,$amount=0,$bankaccount=""){
+	public function lending_success($user_id,$investor,$target_no,$product_id,$sub_product_id,$amount=0,$bankaccount=""){
 		if($investor==1){
-			$title 		= "【借款放款成功】 您申請的標的 $target_no 已放款成功";
+			$product_list = $this->CI->config->item('product_list');
+			$sub_product_list = $this->CI->config->item('sub_product_list');
+
+			if(isset($product_list[$product_id])) {
+				$product = $product_list[$product_id];
+				if ((count($product['sub_product']) > 0 && isset($sub_product_list[$sub_product_id]))
+					|| $product['hiddenMainProduct']
+					|| ($sub_product_id && !in_array($sub_product_id, $product['sub_product']))) {
+					if ($this->CI->transfer_lib->is_sub_product($product, $sub_product_id)) {
+						$product = $this->CI->transfer_lib->trans_sub_product($product, $sub_product_id);
+					}
+				}
+			}
+			$product_name = isset($product['name']) ? "【".$product['name']."】" : "";
+
+			$title 		= $product_name."您投資的標的 $target_no 已完成放款";
 			$content 	= "親愛的用戶，您好！
 您申請的標的 $target_no ，核可金額 $amount 元，
 已成功放款。";
@@ -318,8 +334,6 @@ $name 您好，
 			"content"	=> $content,
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
-		$this->CI->load->library('Sendemail');
-		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 		return $rs;
 	}
 	
