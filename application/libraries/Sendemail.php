@@ -223,6 +223,26 @@ class Sendemail
 		}
 	}
 
+	public function change_interest_rate($investment, $old_rate, $new_rate) {
+
+		$subject = "【投資標的】您的投資利率已提高";
+		$title = "【好康標的】";
+		$content = "親愛的投資人請注意：
+			您的投資標的有一項重大變更！
+			您於" .  date("m月d日",strtotime($investment->tx_datetime)) . "投資債權，剛剛自主提升利率由			
+			".$old_rate."%-->".$new_rate."%
+			同樣的項目，更高的潛在收益！
+			請登錄普匯APP 下標搶佔先手";
+		$type = 'i09';
+
+		$user_info 		= $this->CI->user_model->get($investment->user_id);
+		if(isset($user_info) && $user_info->email) {
+			$mail_event = $this->CI->config->item('mail_event');
+			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => nl2br($content), "type" => $type, "mail_event" => $mail_event, "investor_status" => 1), TRUE);
+			$this->send($user_info->email,isset($subject)?$subject:$title, $content);
+		}
+	}
+
     public function EDM($mail, $title = "", $content = "", $EDM, $url)
     {
         if ($mail) {
