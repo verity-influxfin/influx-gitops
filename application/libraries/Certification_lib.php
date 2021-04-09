@@ -724,7 +724,7 @@ class Certification_lib{
 		$gcis_res = [];
 
 		// 勞保異動明細 pdf
-		$pdf_url = isset($content['pdf_file']) ? $content['pdf_file'] : '';
+		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
 
 		if($info && $info->certification_id == 10 && $info->status == 0){
 			// 勞保 pdf 解析
