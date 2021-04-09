@@ -751,7 +751,7 @@ class Certification_lib{
 				$certification_content['pdf_info'] = $result;
 
 				$this->CI->load->library('verify/data_legalize_lib');
-				$verify_res = $this->data_legalize_lib->legalize_job($info->user_id,$result);
+				$verify_res = $this->CI->data_legalize_lib->legalize_job($info->user_id,$res);
 
 				// $this->CI->load->library('verify/data_verify_lib');
 				// $approve_status = $this->data_verify_lib->check_job($info->user_id,$result);
