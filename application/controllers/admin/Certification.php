@@ -158,10 +158,10 @@ class Certification extends MY_Admin_Controller {
 					}
 				}
 				elseif($info->certification_id == CERTIFICATION_JOB){
-					if(isset(json_decode($info->content)->pdf_file)) {
-						$this->job_credits();
-						return;
-					}
+					// if(isset(json_decode($info->content)->pdf_file)) {
+					// 	$this->job_credits();
+					// 	return;
+					// }
 					$page_data['employee_range'] 		= $this->config->item('employee_range');
 					$page_data['position_name']			= $this->config->item('position_name');
 					$page_data['seniority_range'] 		= $this->config->item('seniority_range');
@@ -795,11 +795,12 @@ class Certification extends MY_Admin_Controller {
 				"data" => (isset($job_credits->result) ? $job_credits->result : false),
 				"certification" => $certification
 			]);
+			$remark  = isset(json_decode($certification->remark)->fail) ?  json_decode($certification->remark)->fail: '';
 			$response = [
 				"user" => $this->user_output->toOne(),
 				"job_credits" => $this->job_credit_output->toOne(),
 				"statuses" => $this->user_certification_model->status_list,
-				"remark" => json_decode($certification->remark)->fail,
+				"remark" => $remark,
 				"fail_msg" => $this->config->item('certifications_msg')[10],
 			];
 
@@ -807,7 +808,7 @@ class Certification extends MY_Admin_Controller {
 		}
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/certification/job_credits',$page_data);
+		$this->load->view('admin/certification/job',$page_data);
 		$this->load->view('admin/_footer');
 	}
 
