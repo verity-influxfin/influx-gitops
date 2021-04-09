@@ -141,12 +141,12 @@ class Certification extends MY_Admin_Controller {
 
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					$content = json_decode($info->content);
+					$page_data['report_page'] = '';
 					if ($content->return_type !== 0 && isset($content->pdf_file) && isset($content->result)) {
 						//聯徵檔案報告產生
 						$info_content = json_decode($info->content, true);
 						if($info_content){
 							$group_id = isset($info_content['group_id']) ? $info_content['group_id'] : '';
-							$page_data['report_page'] = '';
 							if(isset($info_content['result'][$group_id])){
 								$report_data['type'] = 'person';
 								$report_data['data'] = $info_content['result'][$group_id];
