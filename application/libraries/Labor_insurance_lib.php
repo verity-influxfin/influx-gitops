@@ -1027,6 +1027,7 @@ class Labor_insurance_lib
 						$response['pageList'][$key]['insuranceList'][$key1]['companyName'] = isset($page_array[$key1][1]) ? preg_replace('/\s/','',$page_array[$key1][1]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = isset($page_array[$key1][2]) ? preg_replace('/\s/','',$page_array[$key1][2]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['startDate'] = isset($page_array[$key1][3]) ? preg_replace('/\s/','',$page_array[$key1][3]) : '';
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = '';
 						if(isset($page_array[$key1][4])){
 							if(preg_match('/[0-9]{7}/',$page_array[$key1][4])){
 								$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = isset($page_array[$key1][4]) ? preg_replace('/\s/','',$page_array[$key1][4]) : '';

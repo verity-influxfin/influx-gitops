@@ -884,25 +884,69 @@ class Certification_data
 			'total_count' => 0,
 			'this_company_count' => 0,
 		];
+		$start_date = '';
+		$end_date = '';
+		// 公司無退保
+		$the_same_company = 0;
 		if($data){
 			$res['name'] = isset($data['pageList'][0]['name']) ? $data['pageList'][0]['name'] : '';
 			$res['person_id'] = isset($data['pageList'][0]['personId']) ? $data['pageList'][0]['personId'] : '';
-			$res['report_date'] = isset($data['reportDate']) ? $data['reportDate'] : '';
+			$res['report_date'] = isset($data['pageList'][0]['reportDate']) ? $data['pageList'][0]['reportDate'] : '';
 			$last_page_array = end($data['pageList']);
 			$res['last_insurance_info'] = end($last_page_array['insuranceList']);
 			$company = $res['last_insurance_info']['companyName'];
-			// $this->CI->load->library('mapping/time');
+			$this->CI->load->library('mapping/time');
 
-			foreach($data['pageList'] as $page_info){
-				foreach($page_info['insuranceList'] as $page_info_value){
+			$first_key = array_key_last($data['pageList']);
+			$second_key = array_key_last($data['pageList'][$first_key]['insuranceList']);
+
+			foreach($data['pageList'] as $key => $page_info){
+				foreach($page_info['insuranceList'] as $page_info_key => $page_info_value){
 					if(! preg_match('/部分工時/',$page_info_value['detailList'][0]['comment'])){
-						// $time = $this->CI->time->ROCDateToUnixTimestamp($page_info_value['detailList'][0]['startDate']);
-						// $start_date = date_create(date('Ymd',$time));
-						// $diff=date_diff($date1,$date2);
-						// echo $diff->format("%m");
-						$res['total_count'] += 1;
-						if($page_info['insuranceList']['companyName'] == $company){
-							$res['this_company_count'] += 1;
+						if(preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['startDate'])){
+							// 上筆投保紀錄不為同公司
+							if($the_same_company == 0){
+								// 開始時間
+								$time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
+								$time = $this->CI->time->ROCDateToUnixTimestamp($time);
+								$start_date = date_create(date('Ymd',$time));
+							}
+							// 退保時間
+							if($page_info_value['detailList'][0]['endDate'] != '' && preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['endDate'])){
+								$time = substr($page_info_value['detailList'][0]['endDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['endDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['endDate'], 5);
+								$time = $this->CI->time->ROCDateToUnixTimestamp($time);
+								$end_date = date_create(date('Ymd',$time));
+								$the_same_company = 0;
+							}
+
+							if($page_info_value['detailList'][0]['endDate'] == ''){
+								if($first_key == $key && $second_key == $page_info_key){
+									if($res['report_date'] && preg_match('/[0-9]{7}/',$res['report_date'])){
+										$time = substr($res['report_date'], 0,3).'/'.substr($res['report_date'], 3,2).'/'.substr($res['report_date'], 5);
+										$time = $this->CI->time->ROCDateToUnixTimestamp($time);
+										$end_date = date_create(date('Ymd',$time));
+									}else{
+										$end_date = date_create(date('Ymd',time()));
+									}
+								}else{
+									$the_same_company = 1;
+								}
+							}
+
+							if($the_same_company == 0){
+								$diff=date_diff($start_date,$end_date);
+								// echo'  start-';
+								// print_r($start_date);echo'  ';
+								// echo'   end-';
+								// print_r($end_date);echo'  -------';
+								$res['total_count'] += $diff->format("%y")*12;
+								$res['total_count'] += $diff->format("%m");
+
+								if($page_info_value['companyName'] == $company){
+									$res['this_company_count'] += $diff->format("%y")*12;
+									$res['this_company_count'] += $diff->format("%m");
+								}
+							}
 						}
 					}
 				}

@@ -40,7 +40,7 @@
                                         <label>公司</label>
                                         <p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
                                     <?
-                                    if($content['company']==''&&$data->status==3){
+                                    if(isset($content['company'])&&$content['company']==''&&($data->status==3||$data->status==4)){
                                         echo '<form role="form" method="post">
                                         <div class="form-group">
                                             <input type="text" name="company" value="' . $content['company'] . '" />
@@ -98,34 +98,78 @@
 											<tbody>
 												<tr>
 													<td>商業司查詢統一編號</td>
-													<td><? isset($content['gcis_info']['Business_Accounting_NO']) ? $content['gcis_info']['Business_Accounting_NO'] : '' ?></td>
+													<td><?= isset($content['gcis_info']['Business_Accounting_NO']) ? $content['gcis_info']['Business_Accounting_NO'] : '' ?></td>
 												</tr>
 												<tr>
 													<td>設立狀況</td>
-													<td><? isset($content['gcis_info']['Company_Status_Desc']) ? $content['gcis_info']['Company_Status_Desc'] : '' ?></td>
+													<td><?= isset($content['gcis_info']['Company_Status_Desc']) ? $content['gcis_info']['Company_Status_Desc'] : '' ?></td>
 												</tr>
 												<tr>
 													<td>公司名稱</td>
-													<td><? isset($content['gcis_info']['Company_Name']) ? $content['gcis_info']['Company_Name'] : '' ?></td>
+													<td><?= isset($content['gcis_info']['Company_Name']) ? $content['gcis_info']['Company_Name'] : '' ?></td>
 												</tr>
 												<tr>
 													<td>資本總額</td>
-													<td><? isset($content['gcis_info']['Capital_Stock_Amount']) ? $content['gcis_info']['Capital_Stock_Amount'] : '' ?></td>
+													<td><?= isset($content['gcis_info']['Capital_Stock_Amount']) ? $content['gcis_info']['Capital_Stock_Amount'] : '' ?></td>
 												</tr>
 												<tr>
 													<td>實收資本額</td>
-													<td><? isset($content['gcis_info']['Paid_In_Capital_Amount']) ? $content['gcis_info']['Paid_In_Capital_Amount'] : '' ?></td>
+													<td><?= isset($content['gcis_info']['Paid_In_Capital_Amount']) ? $content['gcis_info']['Paid_In_Capital_Amount'] : '' ?></td>
 												</tr>
 												<tr>
 													<td>負責人</td>
-													<td><? isset($content['gcis_info']['Responsible_Name']) ? $content['gcis_info']['Responsible_Name'] : '' ?></td>
+													<td><?= isset($content['gcis_info']['Responsible_Name']) ? $content['gcis_info']['Responsible_Name'] : '' ?></td>
 												</tr>
 												<tr>
 													<td>地址</td>
-													<td><? isset($content['gcis_info']['Company_Location']) ? $content['gcis_info']['Company_Location'] : '' ?></td>
+													<td><?= isset($content['gcis_info']['Company_Location']) ? $content['gcis_info']['Company_Location'] : '' ?></td>
 												</tr>
 											</tbody>
 										</table>
+									</div>
+									<div class="form-group">
+										<label>勞保異動明細資料</label>
+										<? if(isset($content['pdf_info'])){ ?>
+											<table border="1">
+												<tbody>
+													<tr>
+														<td>姓名</td>
+														<td><?= isset($content['pdf_info']['name']) ? $content['pdf_info']['name'] : '' ?></td>
+													</tr>
+													<tr>
+														<td>身分證字號</td>
+														<td><?= isset($content['pdf_info']['person_id']) ? $content['pdf_info']['person_id'] : '' ?></td>
+													</tr>
+													<tr>
+														<td>下載日期</td>
+														<td><?= isset($content['pdf_info']['report_date']) ? $content['pdf_info']['report_date'] : '' ?></td>
+													</tr>
+													<tr>
+														<td>總工作年資</td>
+														<td><?= isset($content['pdf_info']['total_count']) ? $content['pdf_info']['total_count'] : '' ?></td>
+													</tr>
+													<tr>
+														<td>目前任職公司年資</td>
+														<td><?= isset($content['pdf_info']['this_company_count']) ? $content['pdf_info']['this_company_count'] : '' ?></td>
+													</tr>
+												</tbody>
+											</table>
+											<table border="1" style="margin-top:5px;">
+												<tbody>
+													<tr>
+														<td>保險證號</td><td>投保公司名稱</td><td>投保薪資</td><td>投保日期</td><td>退保日期</td><td>註記</td>
+													</tr>
+													<tr>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['insuranceId']) ? $content['pdf_info']['last_insurance_info']['insuranceId'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['companyName']) ? $content['pdf_info']['last_insurance_info']['companyName'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['startDate']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['startDate'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['endDate']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['endDate'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['comment']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['comment'] : '' ?></td>
+													</tr>
+												</tbody>
+											</table>
+										<? } ?>
 									</div>
                                     <? if($data->status==1){?>
                                     <div class="form-group">
@@ -192,7 +236,7 @@
                                                 </select>
                                                 <input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" style="background-color:white!important;display:none" disabled="false">
 											</div>
-											<button type="submit" class="btn btn-primary" <?=$content['company']==''&&$data->status==3?'disabled':''; ?>>送出</button>
+											<button type="submit" class="btn btn-primary" <?=(!isset($content['company'])||$content['company']=='')&&$data->status==3?'disabled':''; ?>>送出</button>
                                         </fieldset>
                                     </form>
                                 </div>
