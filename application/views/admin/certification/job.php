@@ -146,11 +146,11 @@
 													</tr>
 													<tr>
 														<td>總工作年資</td>
-														<td><?= isset($content['pdf_info']['total_count']) ? $content['pdf_info']['total_count'] : '' ?></td>
+														<td><?= isset($content['pdf_info']['total_count']) ? floor($content['pdf_info']['total_count']/12).'年'.($content['pdf_info']['total_count']%12).'月' : '0年0月' ?></td>
 													</tr>
 													<tr>
 														<td>目前任職公司年資</td>
-														<td><?= isset($content['pdf_info']['this_company_count']) ? $content['pdf_info']['this_company_count'] : '' ?></td>
+														<td><?= isset($content['pdf_info']['this_company_count']) ? floor($content['pdf_info']['this_company_count']/12).'年'.($content['pdf_info']['this_company_count']%12).'月' : '0年0月' ?></td>
 													</tr>
 												</tbody>
 											</table>

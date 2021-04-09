@@ -673,24 +673,28 @@ class Certification_data
 					}
 
 					// creditCardUseRate
+					// to do : 信用卡月繳待修，須以銀行加卡名為基準判斷當期與前期之未到期待付款，目前以最後一筆日期直接推算
 					if($end_date && $end_date_before && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$value['date'])){
 
 						$value['date'] = $this->CI->time->ROCDateToUnixTimestamp($value['date']);
-						if($end_date > $value['date']){
+						if($end_date < $value['date']){
 							$value['quotaAmount'] = preg_replace('/\,|元/','',$value['quotaAmount']);
 							$value['currentAmount'] = preg_replace('/\,|元/','',$value['currentAmount']);
 							$value['nonExpiredAmount'] = preg_replace('/\,|元/','',$value['nonExpiredAmount']);
 							if(is_numeric($value['quotaAmount']) && is_numeric($value['currentAmount']) && is_numeric($value['nonExpiredAmount'])){
 								$totalAmount += $value['currentAmount'] + $value['nonExpiredAmount'];
 
+								// 信用卡月繳
 								$currentAmount += $value['currentAmount'];
 								$nonExpiredAmount += $value['nonExpiredAmount'];
+
 								if(!in_array($value['bank'],$bank_array)){
 									$bank_array[] = $value['bank'];
 									$totalQuota += $value['quotaAmount'];
 								}
 							}
 						}
+						// 信用卡月繳
 						if($end_date < $value['date'] && $value['date'] < $end_date_before){
 							$value['nonExpiredAmount_before'] = preg_replace('/\,|元/','',$value['nonExpiredAmount']);
 							if(is_numeric($value['nonExpiredAmount_before'])){
@@ -701,21 +705,22 @@ class Certification_data
 							$res['creditCardUseRate'] = $totalAmount/$totalQuota*100;
 						}
 
-						// 信用卡月繳
-						$res['creditCardMonthlyPayment'] = $currentAmount*0.1 + $nonExpiredAmount - $nonExpiredAmount_before;
-
 					}
 
 				}
+				// 信用卡月繳
+				$res['creditCardMonthlyPayment'] = ($currentAmount*0.1 + $nonExpiredAmount - $nonExpiredAmount_before)/1000;
 			}
 			// 被查詢記錄
 			if(!empty($data['S1']['dataList'])){
 				$institution_array = [];
 				foreach($data['S1']['dataList'] as $key => $value){
-					$institution_name = preg_replace('/銀行.*分行$/',"",$value['institution']);
-					if(! in_array($institution_name,$institution_array)){
-						$institution_array[] = $institution_name;
-						$res['S1Count'] += 1;
+					if(preg_match('/新業務申請/',$value['reason']) && preg_match('/信貸|個金|消金|風控|信用審查|徵信|授信/',$value['institution'])){
+						$institution_name = preg_replace('/銀行.*/',"",$value['institution']);
+						if(! in_array($institution_name,$institution_array)){
+							$institution_array[] = $institution_name;
+							$res['S1Count'] += 1;
+						}
 					}
 				}
 			}

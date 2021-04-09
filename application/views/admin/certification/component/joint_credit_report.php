@@ -32,14 +32,14 @@
 		<?php
 		 if($type == 'person'){
 		?>
-			<p>長期擔保放款：<?= ! is_null($data['longAssureMonthlyPayment']) ? $data['longAssureMonthlyPayment'] : '-'; ?>元</p>
-			<p>中期擔保放款：<?= ! is_null($data['midAssureMonthlyPayment']) ? $data['midAssureMonthlyPayment'] : '-'; ?>元</p>
-			<p>長期放款：<?= ! is_null($data['longMonthlyPayment']) ? $data['longMonthlyPayment'] : '-'; ?>元</p>
-			<p>中期放款：<?= ! is_null($data['midMonthlyPayment']) ? $data['midMonthlyPayment'] : '-'; ?>元</p>
-			<p>短期放款：<?= ! is_null($data['shortMonthlyPayment']) ? $data['shortMonthlyPayment'] : '-'; ?>元</p>
-			<p>助學貸款月繳：<?= ! is_null($data['studentLoansMonthlyPayment']) ? $data['studentLoansMonthlyPayment'] : '-'; ?>元</p>
-			<p>信用卡月繳：<?= ! is_null($data['creditCardMonthlyPayment']) ? $data['creditCardMonthlyPayment'] : '-'; ?>元</p>
-			<p>總共月繳：<?= ! is_null($data['totalMonthlyPayment']) ? $data['totalMonthlyPayment'] : '-'; ?>元</p>
+			<p>長期擔保放款：<?= ! is_null($data['longAssureMonthlyPayment']) ? $data['longAssureMonthlyPayment'] : '-'; ?>千元</p>
+			<p>中期擔保放款：<?= ! is_null($data['midAssureMonthlyPayment']) ? $data['midAssureMonthlyPayment'] : '-'; ?>千元</p>
+			<p>長期放款：<?= ! is_null($data['longMonthlyPayment']) ? $data['longMonthlyPayment'] : '-'; ?>千元</p>
+			<p>中期放款：<?= ! is_null($data['midMonthlyPayment']) ? $data['midMonthlyPayment'] : '-'; ?>千元</p>
+			<p>短期放款：<?= ! is_null($data['shortMonthlyPayment']) ? $data['shortMonthlyPayment'] : '-'; ?>千元</p>
+			<p>助學貸款月繳：<?= ! is_null($data['studentLoansMonthlyPayment']) ? $data['studentLoansMonthlyPayment'] : '-'; ?>千元</p>
+			<p>信用卡月繳：<?= ! is_null($data['creditCardMonthlyPayment']) ? $data['creditCardMonthlyPayment'] : '-'; ?>千元</p>
+			<p>總共月繳：<?= ! is_null($data['totalMonthlyPayment']) ? $data['totalMonthlyPayment'] : '-'; ?>千元</p>
 		<?php
 		 }
 		?>
