@@ -594,6 +594,7 @@ class Certification_lib{
 			}
 
 			$group_id = isset(json_decode($info->content)->group_id) ? json_decode($info->content)->group_id : time();
+			$printDatetime = isset($result['printDatetime']) ? date('Y-m-d',$result['printDatetime']): '';
 
 			$certification_content = [
 				'group_id' => $group_id,
@@ -606,6 +607,7 @@ class Certification_lib{
 				'credit_rate' => isset($result['creditCardUseRate']) ? $result['creditCardUseRate'] : 0,
 				'months' => isset($result['creditLogCount']) ? $result['creditLogCount'] : 0,
 				'printDatetime' => $time,
+				'printDate' => $printDatetime,
 			];
 
 			// 還款力計算-22倍薪資
