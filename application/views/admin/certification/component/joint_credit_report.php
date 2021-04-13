@@ -40,6 +40,16 @@
 			<p>助學貸款月繳：<?= ! is_null($data['studentLoansMonthlyPayment']) ? $data['studentLoansMonthlyPayment'] : '-'; ?>千元</p>
 			<p>信用卡月繳：<?= ! is_null($data['creditCardMonthlyPayment']) ? $data['creditCardMonthlyPayment'] : '-'; ?>千元</p>
 			<p>總共月繳：<?= ! is_null($data['totalMonthlyPayment']) ? $data['totalMonthlyPayment'] : '-'; ?>千元</p>
+			<p>是否小於投保薪資：<?= ! is_null($data['monthly_repayment_enough']) ? $data['monthly_repayment_enough'] : '-'; ?></p>
+			<p>
+				<span>投保薪資：<?= ! is_null($data['monthly_repayment']) ? $data['monthly_repayment'] : '-'; ?>千元</span>；
+				<span>總共月繳：<?= ! is_null($data['totalMonthlyPayment']) ? $data['totalMonthlyPayment'] : '-'; ?>千元</span>
+			</p>
+			<p>是否小於薪資22倍：<?= ! is_null($data['total_repayment_enough']) ? $data['total_repayment_enough'] : '-'; ?></p>
+			<p>
+				<span>薪資22倍：<?= ! is_null($data['total_repayment']) ? $data['total_repayment'] : '-'; ?>千元</span>；
+				<span>訂約金額額度總額：<?= ! is_null($data['totalAmountQuota']) ? $data['totalAmountQuota'] : '-'; ?>千元</span>
+			</p>
 		<?php
 		 }
 		?>
@@ -63,7 +73,6 @@
 	  <td rowspan="4"><?= ! is_null($data['liabilities_totalAmount']) ? $data['liabilities_totalAmount'] : '-'; ?></td>
 	  <td>總攬</td>
 	  <td>
-		<p>截至<?= ! is_null($data['totalAmountShortMonth']) ? $data['totalAmountShortMonth']:'-'; ?>底止</p>
 		<p>有無遲延還款：<?= ! is_null($data['repaymentDelay']) ? $data['repaymentDelay']: '-'; ?></p>
 		<p>借款家數：<?= ! is_null($data['bankCount']) ? $data['bankCount']: '-'; ?>家</p>
 		<p>助學貸款筆數：<?= ! is_null($data['totalAmountStudentLoansCount']) ? $data['totalAmountStudentLoansCount']: '-'; ?>筆</p>

@@ -709,7 +709,7 @@ class Certification_data
 
 				}
 				// 信用卡月繳
-				$res['creditCardMonthlyPayment'] = ($currentAmount*0.1 + $nonExpiredAmount - $nonExpiredAmount_before)/1000;
+				$res['creditCardMonthlyPayment'] = number_format(($currentAmount*0.1 + $nonExpiredAmount - $nonExpiredAmount_before)/1000,2);
 			}
 			// 被查詢記錄
 			if(!empty($data['S1']['dataList'])){
@@ -737,32 +737,32 @@ class Certification_data
 
 			// 長擔月繳(房貸)
 			if(is_numeric($res['totalAmountLongAssure']) && $res['totalAmountLongAssure']!= 0){
-				$res['longAssureMonthlyPayment'] = $res['totalAmountLongAssure']*(pow(1.0020833,300)*0.0020833)/(pow(1.0020833,300)-1);
+				$res['longAssureMonthlyPayment'] = number_format($res['totalAmountLongAssure']*(pow(1.0020833,300)*0.0020833)/(pow(1.0020833,300)-1),2);
 			}
 
 			// 中擔月繳(車貸)
 			if(is_numeric($res['totalAmountMidAssure']) && $res['totalAmountMidAssure']!= 0){
-				$res['midAssureMonthlyPayment'] = $res['totalAmountMidAssure']*(pow(1.0041666,84)*0.0041666)/(pow(1.0041666,84)-1);
+				$res['midAssureMonthlyPayment'] = number_format($res['totalAmountMidAssure']*(pow(1.0041666,84)*0.0041666)/(pow(1.0041666,84)-1),2);
 			}
 
 			// 長放月繳
 			if(is_numeric($res['totalAmountLong']) && $res['totalAmountLong']!= 0){
-				$res['longMonthlyPayment'] = $res['totalAmountLong']*(pow(1.0020833,300)*0.0020833)/(pow(1.0020833,300)-1);
+				$res['longMonthlyPayment'] = number_format($res['totalAmountLong']*(pow(1.0020833,300)*0.0020833)/(pow(1.0020833,300)-1),2);
 			}
 
 			// 中放月繳
 			if(is_numeric($res['totalAmountMid']) && $res['totalAmountMid']!= 0){
-				$res['midMonthlyPayment'] = $res['totalAmountMid']*(pow(1.0083333,60)*0.0083333)/(pow(1.0083333,60)-1);
+				$res['midMonthlyPayment'] = number_format($res['totalAmountMid']*(pow(1.0083333,60)*0.0083333)/(pow(1.0083333,60)-1),2);
 			}
 
 			// 短放月繳
 			if(is_numeric($res['totalAmountShort']) && $res['totalAmountShort']!= 0){
-				$res['shortMonthlyPayment'] = $res['totalAmountShort']*0.0083333;
+				$res['shortMonthlyPayment'] = number_format($res['totalAmountShort']*0.0083333,2);
 			}
 
 			// 助學貸款月繳
 			if(is_numeric($res['totalAmountStudentLoans']) && is_numeric($res['totalAmountStudentLoansCount']) && $res['totalAmountStudentLoans']> 0 && $res['totalAmountStudentLoans']> 0){
-				$res['studentLoansMonthlyPayment'] = $res['totalAmountStudentLoans']/($res['totalAmountStudentLoansCount']*12);
+				$res['studentLoansMonthlyPayment'] = number_format($res['totalAmountStudentLoans']/($res['totalAmountStudentLoansCount']*12),2);
 			}
 
 			// 總共月繳

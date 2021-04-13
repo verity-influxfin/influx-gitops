@@ -574,7 +574,10 @@ class Certification_lib{
 			// 民國轉西元
 			if(isset($result['printDatetime']) && $result['printDatetime']){
 				$this->CI->load->library('mapping/time');
-				$time = $this->CI->time->ROCDateToUnixTimestamp($result['printDatetime']);
+				$time = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/','',$result['printDatetime']);
+				$time = $this->CI->time->ROCDateToUnixTimestamp($time);
+				// 印表日期
+				$printDatetime = date('Y-m-d',$time);
 				$time = strtotime(date('Y-m-d H:i:s',$time)." + 1 month");
 
 				// 過件邏輯
@@ -590,11 +593,12 @@ class Certification_lib{
 				}
 
 			}else{
+				$status = 3;
 				$time = time();
+				$printDatetime = '';
 			}
 
 			$group_id = isset(json_decode($info->content)->group_id) ? json_decode($info->content)->group_id : time();
-			$printDatetime = isset($result['printDatetime']) ? date('Y-m-d',$result['printDatetime']): '';
 
 			$certification_content = [
 				'group_id' => $group_id,
@@ -611,25 +615,44 @@ class Certification_lib{
 			];
 
 			// 還款力計算-22倍薪資
+			// 薪資22倍
+			$certification_content['total_repayment'] = '';
+			// 投保金額
+			$certification_content['monthly_repayment'] = '';
+			// 借款總額是否小於薪資22倍
+			$certification_content['total_repayment_enough'] = '';
+			// 每月還款是否小於投保金額
+			$certification_content['monthly_repayment_enough'] = '';
 			if(isset($job_certification->content)){
 				if(! is_array($job_certification->content)){
 					$job_certification_content = json_decode($job_certification->content,true);
+				}else{
+					$job_certification_content = $job_certification->content;
 				}
-				$salary = isset($job_certification_content['salary']) ? $job_certification_content['salary'] : 0;
-			}else{
-				$salary = 0;
+				$certification_content['monthly_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? number_format($job_certification_content['salary']/1000,2) : '';
+				$certification_content['total_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? number_format($job_certification_content['salary']*22/1000,2) : '';
 			}
-			$certification_content['total_repayment_enough'] = 0;
-			$certification_content['monthly_repayment_enough'] = 0;
-			if($salary && isset($result['totalMonthlyPayment']) && isset($result['totalAmountQuota'])){
+
+			if(isset($result['totalMonthlyPayment'])  && $certification_content['monthly_repayment']){
 				// 每月還款是否小於投保金額
-				if($result['totalMonthlyPayment'] < $salary){
-					$certification_content['monthly_repayment_enough'] = 1;
+				if($result['totalMonthlyPayment'] < $certification_content['monthly_repayment']){
+					$certification_content['monthly_repayment_enough'] = '是';
+				}else{
+					$certification_content['monthly_repayment_enough'] = '否';
 				}
+			}else{
+				$certification_content['monthly_repayment_enough'] = '資料不齊無法比對';
+			}
+
+			if(isset($result['totalAmountQuota']) && $certification_content['total_repayment']){
 				// 借款總額是否小於薪資22倍
-				if($result['totalAmountQuota'] < $salary*22){
-					$certification_content['total_repayment_enough'] = 1;
+				if($result['totalAmountQuota'] < $certification_content['total_repayment']){
+					$certification_content['total_repayment_enough'] = '是';
+				}else{
+					$certification_content['total_repayment_enough'] = '否';
 				}
+			}else{
+				$certification_content['total_repayment_enough'] = '資料不齊無法比對';
 			}
 
 			if(isset($approve_status['status_code']) && $approve_status['status_code'] == 2){

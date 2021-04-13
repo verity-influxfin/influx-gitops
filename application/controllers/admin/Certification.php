@@ -150,6 +150,15 @@ class Certification extends MY_Admin_Controller {
 							if(isset($info_content['result'][$group_id])){
 								$report_data['type'] = 'person';
 								$report_data['data'] = $info_content['result'][$group_id];
+								// 還款力計算
+								// 薪資22倍
+								$report_data['data']['total_repayment'] = $info_content['total_repayment'];
+								// 投保金額
+								$report_data['data']['monthly_repayment'] = $info_content['monthly_repayment'];
+								// 借款總額是否小於薪資22倍
+								$report_data['data']['total_repayment_enough'] = $info_content['total_repayment_enough'];
+								// 每月還款是否小於投保金額
+								$report_data['data']['monthly_repayment_enough'] = $info_content['monthly_repayment_enough'];
 								$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
 							}
 						}
