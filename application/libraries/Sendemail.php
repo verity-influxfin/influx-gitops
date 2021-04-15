@@ -190,6 +190,7 @@ class Sendemail
         $reply_to?$this->CI->email->reply_to($reply_to,$reply_to_name):'';
 
 		$rs = $this->CI->email->send();
+
 		if($rs){
 			return true;
 		}else{
@@ -221,6 +222,52 @@ class Sendemail
 			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => nl2br($content), "type" => $type, "mail_event" => $mail_event), TRUE);
 			$this->send($user_info->email,isset($subject)?$subject:$title, $content);
 		}
+	}
+
+
+	/**
+	 * 當貸款人提高利率時，寄送通知信件給所有已得標的投資人。
+	 * @param investment_model $investment: 投資物件
+	 * @param float $old_rate: 舊利率
+	 * @param float $new_rate: 新利率
+	 * @return false
+	 */
+	public function change_interest_rate($investment, $old_rate, $new_rate) {
+		// 如果該筆投資不是 0: 待付款 或 1: 待結標(款項已移至待交易) 就不寄信了
+		if(!isset($investment) || !in_array($investment->status, [0, 1]))
+			return false;
+
+		$subject = "【投資標的】您的投資利率已提高";
+		$title = "【好康標的】";
+		$content = "親愛的投資人請注意：
+			您的投資標的有一項重大變更！
+			您於" .  date("m月d日",strtotime($investment->tx_datetime)) . "投資債權，剛剛自主提升利率由			
+			".$old_rate."%-->".$new_rate."%
+			同樣的項目，更高的潛在收益！
+			請登錄普匯APP 下標搶佔先手";
+		$type = 'i09';
+
+		$user_info 		= $this->CI->user_model->get($investment->user_id);
+		if(isset($user_info)) {
+			$this->CI->load->library('certification_lib');
+			$this->CI->load->model('user/user_certification_model');
+
+			// 找出投資人的 certification
+			$certification_info = $this->CI->certification_lib->get_last_status($user_info->id,1,$user_info->company_status);
+			foreach($certification_info as $value) {
+				if($value['alias']=='email')
+					$certification_id = $value['certification_id'];
+			}
+			// 依照 email 的 certification id 找到 user certification 才能找到對應投資人的 email
+			$info = $this->CI->user_certification_model->get($certification_id);
+			$user_certification = json_decode($info->content, true);
+
+			$mail_event = $this->CI->config->item('mail_event');
+			$content = $this->CI->parser->parse('email/user_notification', array("title" => $title, "content" => nl2br($content), "type" => $type, "mail_event" => $mail_event, "investor_status" => 1), TRUE);
+			$this->send($user_certification['email'],isset($subject)?$subject:$title, $content);
+			return true;
+		}
+		return false;
 	}
 
     public function EDM($mail, $title = "", $content = "", $EDM, $url)

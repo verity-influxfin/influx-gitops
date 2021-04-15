@@ -1447,8 +1447,10 @@ class Product extends REST_Controller {
                     'target_id' => $target->id,
                     'status' => [0, 1]
                 ]);
+				$this->load->library('Sendemail');
                 foreach ($investments as $inv_key => $inv_val) {
                     $this->target_lib->cancel_investment($target, $inv_val, $user_id);
+					$this->sendemail->change_interest_rate($inv_val, $target->interest_rate, $new_rate);
                 }
                 $target->status = 2;
                 $this->load->library('Contract_lib');
