@@ -3,7 +3,6 @@ if(ENVIRONMENT=="development"){
 	$config['access_ip_list']	= array(
 		'114.34.172.44',
 		'54.64.205.49',
-		'10.0.4.125',
 	);
 }else{
 	$config['access_ip_list']	= array(
