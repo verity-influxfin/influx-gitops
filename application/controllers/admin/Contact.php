@@ -87,11 +87,15 @@ class Contact extends MY_Admin_Controller {
 		// TODO: 增加權限控管，若無權限或該筆紀錄非發送者擁有時需 reject
 		$id = $this->input->input_stream('id');
 		$action = $this->input->input_stream('action');
+		// $user_id = $this->input->input_stream('user_id');
+
+		$this->load->model('admin/role_model');
+		$this->login_info = check_admin();
 
 		$notification_url = $this->config->item('notification')['url'];
 		$httpClient = HttpClient::create();
 		$response = $httpClient->request('PUT', $notification_url, [
-			'body' => json_encode(['id' => $id, 'action' => $action]),
+			'body' => json_encode(['id' => $id, 'action' => $action, 'user_id' => $this->login_info->id]),
 			'headers' => ['Content-Type' => 'application/json'],
 		]);
 
