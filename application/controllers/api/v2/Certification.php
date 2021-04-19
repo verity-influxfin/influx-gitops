@@ -1254,8 +1254,30 @@ class Certification extends REST_Controller {
 				'other_income',
 				'restaurant',
 				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
 				'entertainment',
-				'other_expense'
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
 			];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
@@ -1691,6 +1713,8 @@ class Certification extends REST_Controller {
                 }
 
                 $send_mail = true;
+				// 加入檔案尚未為回傳標記
+				$content['mail_file_status'] = 0;
             }
 
 
@@ -1864,6 +1888,18 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+
+			// to do : 加入商業司爬蟲相關機制
+			$this->load->library('gcis_lib');
+			$gcis_response =  $this->gcis_lib->account_info($content['tax_id']);
+			if($gcis_response){
+				if($gcis_response['Paid_In_Capital_Amount']){
+					$content['capital_amount'] = $gcis_response['Paid_In_Capital_Amount'];
+				}else{
+					$content['capital_amount'] = $gcis_response['Capital_Stock_Amount'];
+				}
+			}
+
             $content['company'] 	  = isset($input['company'])?$input['company']:"";
             $content['company_address'] 	  = isset($input['company_address'])?$input['company_address']:"";
             $content['company_phone_number'] 	  = isset($input['company_phone_number'])?$input['company_phone_number']:"";
@@ -1899,6 +1935,8 @@ class Certification extends REST_Controller {
 					$content['labor_type']=$input['labor_type'];
                     $this->mail_check($user_id,$investor);
                     $send_mail =true;
+					// 加入檔案睡回傳標記
+					$content['mail_file_status'] = 0;
                 }
             }
             if(isset($input['passbook_image_type'])){

@@ -1629,6 +1629,12 @@ class Target_lib
                                             $finish = false;
                                         }
                                     }
+									// 工作認證有專業技能證書進待二審
+									if($certification['id'] == 10 && isset($certification['content'])){
+										if(isset($certification['content']['license_image']) || isset($certification['content']['pro_certificate_image']) || isset($certification['content']['game_work_image'])){
+											$finish = false;
+										}
+									}
                                     $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
                                 }
                             }
@@ -1683,6 +1689,12 @@ class Target_lib
                                         $this->CI->order_model->update($value->order_id, ['status' => 0]);
                                     }
                                 }
+
+								// 進待二審 (工作認證有專業證照)
+								if(in_array(10,$finish_stage_cer)){
+									$this->CI->load->model('transaction/order_model');
+									$this->CI->order_model->update($value->order_id, ['sub_status' => 9]);
+								}
                             }
                         }
                         $this->CI->target_model->update($value->id, ['script_status' => 0]);
