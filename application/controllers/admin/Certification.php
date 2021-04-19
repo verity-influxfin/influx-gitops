@@ -141,16 +141,36 @@ class Certification extends MY_Admin_Controller {
 
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					$content = json_decode($info->content);
+					$page_data['report_page'] = '';
 					if ($content->return_type !== 0 && isset($content->pdf_file) && isset($content->result)) {
-						$this->joint_credits();
-						return;
+						//聯徵檔案報告產生
+						$info_content = json_decode($info->content, true);
+						if($info_content){
+							$group_id = isset($info_content['group_id']) ? $info_content['group_id'] : '';
+							if(isset($info_content['result'][$group_id])){
+								$report_data['type'] = 'person';
+								$report_data['data'] = $info_content['result'][$group_id];
+								// 還款力計算
+								// 薪資22倍
+								$report_data['data']['total_repayment'] = $info_content['total_repayment'];
+								// 投保金額
+								$report_data['data']['monthly_repayment'] = $info_content['monthly_repayment'];
+								// 借款總額是否小於薪資22倍
+								$report_data['data']['total_repayment_enough'] = $info_content['total_repayment_enough'];
+								// 每月還款是否小於投保金額
+								$report_data['data']['monthly_repayment_enough'] = $info_content['monthly_repayment_enough'];
+								$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
+							}
+						}
+						// $this->joint_credits();
+						// return;
 					}
 				}
 				elseif($info->certification_id == CERTIFICATION_JOB){
-					if(isset(json_decode($info->content)->pdf_file)) {
-						$this->job_credits();
-						return;
-					}
+					// if(isset(json_decode($info->content)->pdf_file)) {
+					// 	$this->job_credits();
+					// 	return;
+					// }
 					$page_data['employee_range'] 		= $this->config->item('employee_range');
 					$page_data['position_name']			= $this->config->item('position_name');
 					$page_data['seniority_range'] 		= $this->config->item('seniority_range');
@@ -784,11 +804,12 @@ class Certification extends MY_Admin_Controller {
 				"data" => (isset($job_credits->result) ? $job_credits->result : false),
 				"certification" => $certification
 			]);
+			$remark  = isset(json_decode($certification->remark)->fail) ?  json_decode($certification->remark)->fail: '';
 			$response = [
 				"user" => $this->user_output->toOne(),
 				"job_credits" => $this->job_credit_output->toOne(),
 				"statuses" => $this->user_certification_model->status_list,
-				"remark" => json_decode($certification->remark)->fail,
+				"remark" => $remark,
 				"fail_msg" => $this->config->item('certifications_msg')[10],
 			];
 
@@ -796,7 +817,7 @@ class Certification extends MY_Admin_Controller {
 		}
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/certification/job_credits',$page_data);
+		$this->load->view('admin/certification/job',$page_data);
 		$this->load->view('admin/_footer');
 	}
 

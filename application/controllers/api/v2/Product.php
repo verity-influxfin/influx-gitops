@@ -1090,14 +1090,32 @@ class Product extends REST_Controller {
 
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
+					// 返回認證資料
+					if(isset($value['content'])){
+						unset($value['content']);
+					}
+					$user_certification = $this->user_certification_model->get_by(['id'=>$value['certification_id']]);
+					$content_array_data = [];
+					$content_key = ['labor_type','return_type','mail_file_status'];
+					if(isset($user_certification->content) && $user_certification->content != '' ){
+						$user_certification = json_decode($user_certification->content,true);
+						foreach($content_key as $key_name){
+							if(array_key_exists($key_name,$user_certification)){
+								$content_array_data[$key_name] = $user_certification[$key_name];
+							}
+						}
+					}
+					if(!$content_array_data){
+						$content_array_data = new StdClass();
+					}
                     $diploma = $key==8?$value:null;
                     if(in_array($key,$product['certifications'])){
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
+						$value['certification_content'] = $content_array_data;
                         $certification[] = $value;
                     }
-                }
             }
 
             $amortization_schedule = [];
@@ -1283,7 +1301,7 @@ class Product extends REST_Controller {
                         'y_limit' => $y_limit,
                     ];
                 }
-//            }
+           }
 
 
             $reason = $target->reason;

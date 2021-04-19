@@ -40,7 +40,7 @@
                                         <label>公司</label>
                                         <p class="form-control-static"><?=isset($content['tax_id'])?$content['tax_id']:""?></p>
                                     <?
-                                    if($content['company']==''&&$data->status==3){
+                                    if(isset($content['company'])&&$content['company']==''&&($data->status==3||$data->status==4)){
                                         echo '<form role="form" method="post">
                                         <div class="form-group">
                                             <input type="text" name="company" value="' . $content['company'] . '" />
@@ -92,6 +92,85 @@
 										<label>此公司工作期間</label>
 										<p class="form-control-static"><?=isset($content['job_seniority'])?$seniority_range[$content['job_seniority']]:""?></p>
 									</div>
+									<div class="form-group">
+										<label>商業司查詢資料</label>
+										<table>
+											<tbody>
+												<tr>
+													<td>商業司查詢統一編號</td>
+													<td><?= isset($content['gcis_info']['Business_Accounting_NO']) ? $content['gcis_info']['Business_Accounting_NO'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>設立狀況</td>
+													<td><?= isset($content['gcis_info']['Company_Status_Desc']) ? $content['gcis_info']['Company_Status_Desc'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>公司名稱</td>
+													<td><?= isset($content['gcis_info']['Company_Name']) ? $content['gcis_info']['Company_Name'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>資本總額</td>
+													<td><?= isset($content['gcis_info']['Capital_Stock_Amount']) ? $content['gcis_info']['Capital_Stock_Amount'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>實收資本額</td>
+													<td><?= isset($content['gcis_info']['Paid_In_Capital_Amount']) ? $content['gcis_info']['Paid_In_Capital_Amount'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>負責人</td>
+													<td><?= isset($content['gcis_info']['Responsible_Name']) ? $content['gcis_info']['Responsible_Name'] : '' ?></td>
+												</tr>
+												<tr>
+													<td>地址</td>
+													<td><?= isset($content['gcis_info']['Company_Location']) ? $content['gcis_info']['Company_Location'] : '' ?></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="form-group">
+										<label>勞保異動明細資料</label>
+										<? if(isset($content['pdf_info'])){ ?>
+											<table border="1">
+												<tbody>
+													<tr>
+														<td>姓名</td>
+														<td><?= isset($content['pdf_info']['name']) ? $content['pdf_info']['name'] : '' ?></td>
+													</tr>
+													<tr>
+														<td>身分證字號</td>
+														<td><?= isset($content['pdf_info']['person_id']) ? $content['pdf_info']['person_id'] : '' ?></td>
+													</tr>
+													<tr>
+														<td>下載日期</td>
+														<td><?= isset($content['pdf_info']['report_date']) ? $content['pdf_info']['report_date'] : '' ?></td>
+													</tr>
+													<tr>
+														<td>總工作年資</td>
+														<td><?= isset($content['pdf_info']['total_count']) ? floor($content['pdf_info']['total_count']/12).'年'.($content['pdf_info']['total_count']%12).'月' : '0年0月' ?></td>
+													</tr>
+													<tr>
+														<td>目前任職公司年資</td>
+														<td><?= isset($content['pdf_info']['this_company_count']) ? floor($content['pdf_info']['this_company_count']/12).'年'.($content['pdf_info']['this_company_count']%12).'月' : '0年0月' ?></td>
+													</tr>
+												</tbody>
+											</table>
+											<table border="1" style="margin-top:5px;">
+												<tbody>
+													<tr>
+														<td>保險證號</td><td>投保公司名稱</td><td>投保薪資</td><td>投保日期</td><td>退保日期</td><td>註記</td>
+													</tr>
+													<tr>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['insuranceId']) ? $content['pdf_info']['last_insurance_info']['insuranceId'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['companyName']) ? $content['pdf_info']['last_insurance_info']['companyName'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['startDate']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['startDate'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['endDate']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['endDate'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['comment']) ? $content['pdf_info']['last_insurance_info']['detailList'][0]['comment'] : '' ?></td>
+													</tr>
+												</tbody>
+											</table>
+										<? } ?>
+									</div>
                                     <? if($data->status==1){?>
                                     <div class="form-group">
                                         <label>月薪</label><br />
@@ -101,7 +180,7 @@
                                         <form role="form" method="post">
                                             <div class="form-group">
                                                 <label>月薪</label><br />
-                                                <input type="text" name="salary" value="<?=isset($content['salary'])?$content['salary']:""?>" />
+                                                <input type="text" name="salary" value="<?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary']) ? preg_replace('/\,/','',$content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary']) : '0' ?>" />
                                                 <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
                                                 <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
                                             </div>
@@ -131,51 +210,6 @@
                                         </div>
                                         <?}} ?>
                                     <form role="form" method="post">
-                                        <div class="form-group">
-                                            <label>專業證書加分 (最高6級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['license_status'])&&$content['license_status']>0?$content['license_status']."級":"專業證書不加分"?></p>
-                                            <?}else{?>
-                                                <select name="license_status" class="form-control">
-                                                    <option value="0" <?=isset($content['license_status'])&&$content['license_status']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['license_status'])&&$content['license_status']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['license_status'])&&$content['license_status']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['license_status'])&&$content['license_status']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['license_status'])&&$content['license_status']==4?"selected":""?>>4級</option>
-                                                    <option value="5" <?=isset($content['license_status'])&&$content['license_status']==5?"selected":""?>>5級</option>
-                                                    <option value="6" <?=isset($content['license_status'])&&$content['license_status']==6?"selected":""?>>6級</option>
-                                                </select>
-                                            <?}?>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>競賽作品加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
-                                            <?}else{?>
-                                                <select name="game_work_level" class="form-control">
-                                                    <option value="0" <?=isset($content['game_work_level'])&&$content['game_work_level']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['game_work_level'])&&$content['game_work_level']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['game_work_level'])&&$content['game_work_level']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['game_work_level'])&&$content['game_work_level']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['game_work_level'])&&$content['game_work_level']==4?"selected":""?>>4級</option>
-                                                </select>
-                                            <?}?>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>專家調整 (最高5級)</label>
-                                            <? if($data->status==1){?>
-                                                <p><?=isset($content['pro_level'])&&$content['pro_level']>0?$content['pro_level']."級":"專家調整不加分"?></p>
-                                            <?}else{?>
-                                                <select name="pro_level" class="form-control">
-                                                    <option value="0" <?=isset($content['pro_level'])&&$content['pro_level']==0?"selected":""?>>不加分</option>
-                                                    <option value="1" <?=isset($content['pro_level'])&&$content['pro_level']==1?"selected":""?>>1級</option>
-                                                    <option value="2" <?=isset($content['pro_level'])&&$content['pro_level']==2?"selected":""?>>2級</option>
-                                                    <option value="3" <?=isset($content['pro_level'])&&$content['pro_level']==3?"selected":""?>>3級</option>
-                                                    <option value="4" <?=isset($content['pro_level'])&&$content['pro_level']==4?"selected":""?>>4級</option>
-                                                    <option value="5" <?=isset($content['pro_level'])&&$content['pro_level']==5?"selected":""?>>5級</option>
-                                                </select>
-                                            <?}?>
-                                        </div><br />
                                     <div class="form-group">
 										<label>備註</label>
 
@@ -202,7 +236,7 @@
                                                 </select>
                                                 <input type="text" class="form-control" id="fail" name="fail" value="<?=$remark && isset($remark["fail"])?$remark["fail"]:"";?>" style="background-color:white!important;display:none" disabled="false">
 											</div>
-											<button type="submit" class="btn btn-primary" <?=$content['company']==''&&$data->status==3?'disabled':''; ?>>送出</button>
+											<button type="submit" class="btn btn-primary" <?=(!isset($content['company'])||$content['company']=='')&&$data->status==3?'disabled':''; ?>>送出</button>
                                         </fieldset>
                                     </form>
                                 </div>
@@ -274,11 +308,13 @@
                                                 if (isset($content['license_image'])) {
                                                     !is_array($content['license_image'])?$content['license_image']=[$content['license_image']]:'';
                                                     echo '<div class="form-group"><label for="disabledSelect">其他專業證明證照</label><br>';
-                                                    $arr_license_desc = explode(',',$content['license_des']);
-                                                    foreach($content['license_image'] as $key => $value){
-                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
-                                                         echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
-                                                    }
+													if(isset($content['license_des'])){
+														$arr_license_desc = explode(',',$content['license_des']);
+	                                                    foreach($content['license_image'] as $key => $value){
+	                                                        echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a><br>';
+	                                                         echo '圖片說明：'.(isset($arr_license_desc[$key])&&!empty($arr_license_desc[$key])?$arr_license_desc[$key]:'未填寫說明')."<br><br>";
+	                                                    }
+													}
                                                     echo '</div>';
                                                 }
                                                 if (isset($content['pro_certificate_image'])) {

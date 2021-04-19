@@ -381,6 +381,33 @@ class Certification_lib{
                 ],
             ];
 
+			// 戶役政 api
+			if(isset($content['id_number']) && isset($ocr['id_number']) && isset($content['name']) && isset($ocr['name']) && isset($content['birthday']) && isset($ocr['birthday'])){
+				if($content['id_number'] == $ocr['id_number'] && $content['name'] == $ocr['name'] && $content['birthday'] == $ocr['birthday']){
+					$this->CI->load->library('id_card_lib');
+					$requestPersonId = isset($content['id_number']) ? $content['id_number'] : '';
+					preg_match('/(初|補|換)發$/',$content['id_card_place'],$requestApplyCode);
+					$requestApplyCode = isset($requestApplyCode[0]) ? $requestApplyCode[0] : '';
+					$reqestApplyYyymmdd = $content['id_card_date'];
+					preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/',$content['id_card_place'],$requestIssueSiteId);
+					$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
+					$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId);
+					if($result){
+						// $result = json_decode($result,true);
+						if($result['status'] != '200'){
+							$done = false;
+						}
+						if($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1){
+							$done = true;
+						}
+						$content['id_card_api'] = $result['response'];
+					}else{
+						$content['id_card_api'] = 'no response';
+						$done = false;
+					}
+				}
+			}
+
             $remark['error'] = $msg;
             $remark['OCR']   = $ocr;
             $param = [
@@ -483,26 +510,23 @@ class Certification_lib{
 		if($info && $info->status ==0 && $info->certification_id==5){
 			$content	= json_decode($info->content,true);
 			$name 		= $content['name'];
+
 			$idcard		= $this->get_certification_info($info->user_id,1,0);
 			if($idcard && $idcard->status==1){
 				$status 		= 3;
-				$id_card_remark = json_decode($idcard->remark,true);
-                $parent = [];
-                isset($id_card_remark['OCR']['father']) ? $parent[] = $id_card_remark['OCR']['father'] : '';
-                isset($id_card_remark['OCR']['mother']) ? $parent[] = $id_card_remark['OCR']['mother'] : '';
-                if(in_array($name,$parent)){
-                    $phone_used = $this->CI->user_model->get_by(array(
-                        'id'    => $info->user_id,
-                        'phone' => $content['phone'],
-                    ));
-                    if($phone_used){
-                        $this->set_failed($info->id,'與註冊電話相同',true);
-                    }
-                    else{
-                        $this->set_success($info->id, true);
-                        $status = 1;
-                    }
-                }
+
+				$phone_used = $this->CI->user_model->get_by(array(
+					'id'    => $info->user_id,
+					'phone' => $content['phone'],
+				));
+				if($phone_used){
+					$this->set_failed($info->id,'與註冊電話相同',true);
+				}
+				else{
+					$this->set_success($info->id, true);
+					$status = 1;
+				}
+
                 $this->CI->user_certification_model->update($info->id,array(
                     'status'	=> $status,
                     'sys_check'	=> 1,
@@ -517,73 +541,189 @@ class Certification_lib{
 	public function investigation_verify($info = array(), $url=null)
 	{
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
-		if($user_certification==false || $user_certification->status!=1){
+		$job_certification = $this->get_certification_info($info->user_id,10,$info->investor);
+		if($user_certification==false || $user_certification->status!=1 ||$job_certification ==false || $job_certification->status!=1){
 			return false;
 		}
 		$url = isset(json_decode($info->content)->pdf_file) ?
 			json_decode($info->content)->pdf_file
 			: $url;
 
+		$result = [];
+
 		if ($info && $info->certification_id == 9 && !empty($url) && $info->status == 0) {
 			$this->CI->load->library('Joint_credit_lib');
 			$return_type=json_decode($info->content)->return_type;
-			$result = [
-				'status' => null,
-				'messages' => []
-			];
-			$parser = new Parser();
+
+			$parser = new \Smalot\PdfParser\Parser();
 			$pdf    = $parser->parseFile($url);
 			$text = $pdf->getText();
-			$res=$this->CI->joint_credit_lib->check_join_credits($info->user_id,$text, $result);
-			if(isset($res['appliedTime']) && $res['appliedTime'] != null){
-                $res['printDate'] =  mktime(0, 0, 0, intval($res['appliedTime'][1]), intval($res['appliedTime'][2]), 1911 + intval($res['appliedTime'][0]));
-            }
+			$response=$this->CI->joint_credit_lib->transfrom_pdf_data($text);
+			$data = [
+				'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId']: '',
+				'name' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId']: '',
+			];
 
-			switch ($res['status']) {
-                case 'pending': //轉人工
-                    $status = 3;
-                    $this->CI->user_certification_model->update($info->id, array(
-                        'status' => $status,
-                        'sys_check' => 1,
-                        'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res)),
-                        'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
-                    ));
-                    break;
-                case 'success':
-					$status = 1;
-					$get_time=$res['messages'][13]['message'];
-					$get_months=$res['messages'][11]['message'][0];
-					$get_credit_rate=$res['messages'][11]['message'][2];
-					$times=preg_replace('/[^\d]/','',$get_time);
-					$credit_rate=(preg_replace('/[^\d*\.\d]/','',$get_credit_rate));
-					$months=preg_replace('/[^\d]/','',$get_months);
-					$this->CI->user_certification_model->update($info->id, array(
-						'sys_check' => 1,
-						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
-					));
-					$this->set_success($info->id,true,$res['appliedExpire']);
-					$this->CI->user_certification_model->update($info->id, array(
-						'status' => $status
-					));
-					break;
-				case 'failure':
+			// 自然人聯徵正確性驗證
+			$this->CI->load->library('verify/data_legalize_lib');
+			$res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data);
+
+			// 資料轉 result
+			$this->CI->load->library('mapping/user/Certification_data');
+			$result = $this->CI->certification_data->transformJointCreditToResult($response);
+			// 民國轉西元
+			if(isset($result['printDatetime']) && $result['printDatetime']){
+				$this->CI->load->library('mapping/time');
+				$time = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/','',$result['printDatetime']);
+				$time = $this->CI->time->ROCDateToUnixTimestamp($time);
+				// 印表日期
+				$printDatetime = date('Y-m-d',$time);
+				$time = strtotime(date('Y-m-d H:i:s',$time)." + 1 month");
+
+				// 過件邏輯
+				if(!$res['error_message']){
+					$this->CI->load->library('verify/data_verify_lib');
+					$approve_status = $this->data_verify_lib->check_investigation($result);
+					// 過件結果
+					if($approve_status){
+						$status = isset($approve_status['status_code']) ? $approve_status['status_code'] : $status;
+					}
+				}else{
 					$status = 2;
-					$this->CI->user_certification_model->update($info->id, array(
-						'sys_check' => 1,
-						'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
-					));
-					$msg = isset($res['message']) ? $res['message']:'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。';
-					$this->set_failed($info->id,$msg,true,$res['appliedExpire']);
-					break;
+				}
+
+			}else{
+				$status = 3;
+				$time = time();
+				$printDatetime = '';
 			}
+
+			$group_id = isset(json_decode($info->content)->group_id) ? json_decode($info->content)->group_id : time();
+
+			$certification_content = [
+				'group_id' => $group_id,
+				'return_type' => $return_type,
+				'pdf_file' => $url,
+				'result' => [
+					"{$group_id}" => $result
+				],
+				'times' => isset($result['S1Count']) ? $result['S1Count'] : 0,
+				'credit_rate' => isset($result['creditCardUseRate']) ? $result['creditCardUseRate'] : 0,
+				'months' => isset($result['creditLogCount']) ? $result['creditLogCount'] : 0,
+				'printDatetime' => $time,
+				'printDate' => $printDatetime,
+			];
+
+			// 還款力計算-22倍薪資
+			// 薪資22倍
+			$certification_content['total_repayment'] = '';
+			// 投保金額
+			$certification_content['monthly_repayment'] = '';
+			// 借款總額是否小於薪資22倍
+			$certification_content['total_repayment_enough'] = '';
+			// 每月還款是否小於投保金額
+			$certification_content['monthly_repayment_enough'] = '';
+			if(isset($job_certification->content)){
+				if(! is_array($job_certification->content)){
+					$job_certification_content = json_decode($job_certification->content,true);
+				}else{
+					$job_certification_content = $job_certification->content;
+				}
+				$certification_content['monthly_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? number_format($job_certification_content['salary']/1000,2) : '';
+				$certification_content['total_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? number_format($job_certification_content['salary']*22/1000,2) : '';
+			}
+
+			if(isset($result['totalMonthlyPayment'])  && $certification_content['monthly_repayment']){
+				// 每月還款是否小於投保金額
+				if($result['totalMonthlyPayment'] < $certification_content['monthly_repayment']){
+					$certification_content['monthly_repayment_enough'] = '是';
+				}else{
+					$certification_content['monthly_repayment_enough'] = '否';
+				}
+			}else{
+				$certification_content['monthly_repayment_enough'] = '資料不齊無法比對';
+			}
+
+			if(isset($result['totalAmountQuota']) && $certification_content['total_repayment']){
+				// 借款總額是否小於薪資22倍
+				if($result['totalAmountQuota'] < $certification_content['total_repayment']){
+					$certification_content['total_repayment_enough'] = '是';
+				}else{
+					$certification_content['total_repayment_enough'] = '否';
+				}
+			}else{
+				$certification_content['total_repayment_enough'] = '資料不齊無法比對';
+			}
+
+			if(isset($approve_status['status_code']) && $approve_status['status_code'] == 2){
+				// to do : 鎖三十天
+				$certification_content['mail_file_status'] = 2;
+			}
+
+			$this->CI->user_certification_model->update($info->id, array(
+               'status' => $status,
+               'sys_check' => 1,
+               'content' => json_encode($certification_content),
+               'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
+           ));
+
+			// if(isset($res['appliedTime']) && $res['appliedTime'] != null){
+            //     $res['printDate'] =  mktime(0, 0, 0, intval($res['appliedTime'][1]), intval($res['appliedTime'][2]), 1911 + intval($res['appliedTime'][0]));
+            // }
+
+			// switch ($res['status']) {
+            //     case 'pending': //轉人工
+            //         $status = 3;
+            //         $this->CI->user_certification_model->update($info->id, array(
+            //             'status' => $status,
+            //             'sys_check' => 1,
+            //             'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res)),
+            //             'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
+            //         ));
+            //         break;
+            //     case 'success':
+			// 		$status = 1;
+			// 		$get_time=$res['messages'][13]['message'];
+			// 		$get_months=$res['messages'][11]['message'][0];
+			// 		$get_credit_rate=$res['messages'][11]['message'][2];
+			// 		$times=preg_replace('/[^\d]/','',$get_time);
+			// 		$credit_rate=(preg_replace('/[^\d*\.\d]/','',$get_credit_rate));
+			// 		$months=preg_replace('/[^\d]/','',$get_months);
+			// 		$this->CI->user_certification_model->update($info->id, array(
+			// 			'sys_check' => 1,
+			// 			'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
+			// 		));
+			// 		$this->set_success($info->id,true,$res['appliedExpire']);
+			// 		$this->CI->user_certification_model->update($info->id, array(
+			// 			'status' => $status
+			// 		));
+			// 		break;
+			// 	case 'failure':
+			// 		$status = 2;
+			// 		$this->CI->user_certification_model->update($info->id, array(
+			// 			'sys_check' => 1,
+			// 			'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
+			// 		));
+			// 		$msg = isset($res['message']) ? $res['message']:'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。';
+			// 		$this->set_failed($info->id,$msg,true,$res['appliedExpire']);
+			// 		break;
+			// }
+
 			return true;
 		}
 		return false;
 	}
 
+	// 寫入信箱夾帶檔案位置
 	public function save_mail_url($info = array(),$url) {
 		$content=json_decode($info->content,true);
 		$content['pdf_file']=$url;
+		if($url){
+			$content['mail_file_status'] = 1;
+		}else{
+			$content['mail_file_status'] = 0;
+		}
+
 		$this->CI->user_certification_model->update($info->id, array(
 			'content'=>json_encode($content)
 		));
@@ -591,74 +731,72 @@ class Certification_lib{
 	}
 
 	public function job_verify($info = array(),$url=null) {
+
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+
 		if($user_certification==false || !in_array($user_certification->status , [1,4])){
 			return false;
 		}
 
-		$url = isset(json_decode($info->content)->pdf_file) ?
-			json_decode($info->content)->pdf_file
-			: $url;
+		if(isset($info->content) && $info->content){
+			$certification_content = json_decode($info->content,true);
+		}else{
+			$certification_content = [];
+		}
 
-			if ($info && $info->certification_id == 10 && !empty($url) && $info->status == 0) {
+		$status = 3;
+		$res = [];
+		$gcis_res = [];
+
+		// 勞保異動明細 pdf
+		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
+
+		if($info && $info->certification_id == 10 && $info->status == 0){
+			// 勞保 pdf 解析
+			if($pdf_url){
 				$this->CI->load->library('Labor_insurance_lib');
-				$result = [
-					'status' => null,
-					'messages' => []
-				];
-				$parser = new Parser();
-				$pdf    = $parser->parseFile($url);
+				$parser = new \Smalot\PdfParser\Parser();
+				$pdf    = $parser->parseFile($pdf_url);
 				$text = $pdf->getText();
-				$res=$this->CI->labor_insurance_lib->check_labor_insurance($info->user_id,$text, $result);
-
-				switch ($res['status']) {
-					case 'pending': //轉人工
-						$status = 3;
-						$content=json_decode($info->content,true);
-						$content['result']=$res;
-						$this->CI->user_certification_model->update($info->id, array(
-							'status' => $status,
-							'sys_check' => 1,
-							'content' => json_encode($content),
-							'expire_time' => isset($res['expireTime']) ? $res['expireTime'] : null
-						));
-						break;
-					case 'success':
-						$status = 1;
-						$content=json_decode($info->content,true);
-						$content['pro_level']=0;
-						$content['license_status']=0;
-						$content['result']=$res;
-						$this->CI->user_certification_model->update($info->id, array(
-							'status' => $status,
-							'sys_check' => 1,
-							'content' => json_encode($content),
-						));
-						$this->set_success($info->id,true,$res['expireTime']);
-						break;
-					case 'failure':
-						$status = 2;
-						$content=json_decode($info->content,true);
-                        $rejectMessage = $this->CI->labor_insurance_lib::REJECT_DUR_TO_CONSTRAINT_NOT_PASSED;
-                        foreach ($res["messages"] as $message) {
-                            if (isset($message['rejected_message'])) {
-                                $rejectMessage = $message['rejected_message'];
-                                break;
-                            }
-                        }
-
-						$content['result']=$res;
-						$this->CI->user_certification_model->update($info->id, array(
-							'sys_check' => 1,
-							'content' => json_encode($content),
-						));
-						$this->set_failed($info->id, $rejectMessage, true,$res['expireTime']);
-						break;
-				}
-				return true;
+				$res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
 			}
+
+			if(isset($certification_content['tax_id']) && $certification_content['tax_id']){
+				$this->CI->load->library('gcis_lib');
+				$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
+				$certification_content['gcis_info'] = $gcis_res;
+			}
+
+			//勞保 pdf 驗證
+			if($res && isset($res['pageList']) && isset($certification_content['tax_id'])){
+
+				$this->CI->load->library('mapping/user/Certification_data');
+				$result = $this->CI->certification_data->transformJobToResult($res);
+
+				$certification_content['pdf_info'] = $result;
+
+				$this->CI->load->library('verify/data_legalize_lib');
+				$verify_res = $this->CI->data_legalize_lib->legalize_job($info->user_id,$res);
+
+				// $this->CI->load->library('verify/data_verify_lib');
+				// $approve_status = $this->data_verify_lib->check_job($info->user_id,$result);
+
+				// to do : 是否千大企業員工
+				// $this->CI->config->load('top_enterprise');
+				// $top_enterprise = $this->CI->config->item("top_enterprise");
+
+			}
+
+			$this->CI->user_certification_model->update($info->id, array(
+				'status' => $status,
+				'sys_check' => 1,
+				'content' => json_encode($certification_content),
+			));
+			return true;
+		}
 			return false;
 	}
+
     public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
 		$image 	= file_get_contents($url);
 		if($image){
@@ -1221,6 +1359,8 @@ class Certification_lib{
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
                     $value['updated_at'] 		   = intval($user_certification->updated_at);
+					// 回傳認證資料
+					$value['content']		   = $user_certification->content;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
 				}else{
