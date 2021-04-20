@@ -180,7 +180,7 @@
                                         <form role="form" method="post">
                                             <div class="form-group">
                                                 <label>月薪</label><br />
-                                                <input type="text" name="salary" value="<?=isset($content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary']) ? preg_replace('/\,/','',$content['pdf_info']['last_insurance_info']['detailList'][0]['insuranceSalary']) : '0' ?>" />
+                                                <input type="text" name="salary" value="<?=isset($content['salary']) ? $content['salary'] : '0' ?>" />
                                                 <input type="hidden" name="id" value="<?=isset($data->id)?$data->id:"";?>" >
                                                 <input type="hidden" name="from" value="<?=isset($content['salary'])?$content['salary']:"";?>" >
                                             </div>
