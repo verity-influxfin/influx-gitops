@@ -397,6 +397,7 @@ class User extends REST_Controller {
         $fields 	= ['phone','password'];
         $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
         $location   = isset($input['location'])?trim($input['location']):'';
+        $os			= isset($input['os'])?trim($input['os']):'';
         foreach ($fields as $field) {
             if (empty($input[$field])) {
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -452,7 +453,7 @@ class User extends REST_Controller {
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
 				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
 
-				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location);
+				$this->insert_login_log($input['phone'],$investor,1,$user_info->id,$device_id,$location,$os);
 
 				if($first_time){
 					$this->load->library('notification_lib');
@@ -467,7 +468,7 @@ class User extends REST_Controller {
 					]
 				]);
 			}else{
-                $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id,$location);
+                $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id,$location,$os);
 				$this->response([
 				    'result' => 'ERROR',
                     'error'  => PASSWORD_ERROR,
@@ -477,7 +478,7 @@ class User extends REST_Controller {
                 ]);
 			}
 		}else{
-			$this->insert_login_log($input['phone'],$investor,0,0,$device_id,$location);
+			$this->insert_login_log($input['phone'],$investor,0,0,$device_id,$location,$os);
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
 	}
@@ -1616,7 +1617,7 @@ class User extends REST_Controller {
         ));
     }
 
-	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
+	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location='',$os=''){
         $this->load->library('user_agent');
         $this->agent->device_id=$device_id;
         $this->load->model('log/log_userlogin_model');
@@ -1625,7 +1626,8 @@ class User extends REST_Controller {
 			'investor'	=> intval($investor),
 			'user_id'	=> intval($user_id),
 			'location'	=> $location,
-			'status'	=> intval($status)
+			'status'	=> intval($status),
+			'os'		=> $os
 		];
 		$this->log_userlogin_model->insert($loginLog);
 
