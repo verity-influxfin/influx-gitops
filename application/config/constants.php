@@ -478,3 +478,7 @@ defined('REDIS_NEWS_LIST')   		OR define('REDIS_NEWS_LIST'			, 'news_list');
 defined('P2P_LOAN_DB')              OR define('P2P_LOAN_DB'             , 'p2p_loan');
 defined('P2P_LOAN_TARGET_TABLE')    OR define('P2P_LOAN_TARGET_TABLE'   , 'targets');
 
+// notification
+defined('ENV_NOTIFICATION_INVEST_API_KEY')  OR define('ENV_NOTIFICATION_INVEST_API_KEY' , getenv('ENV_NOTIFICATION_INVEST_API_KEY'));
+defined('ENV_NOTIFICATION_ENDPOINT')  OR define('ENV_NOTIFICATION_ENDPOINT' , getenv('ENV_NOTIFICATION_ENDPOINT'));
+defined('ENV_NOTIFICATION_REQUEST_URL')  OR define('ENV_NOTIFICATION_REQUEST_URL' , getenv('ENV_NOTIFICATION_ENDPOINT').'notification');
