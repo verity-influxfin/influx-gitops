@@ -1270,7 +1270,6 @@ abstract class NotificationTargetCategory
 	const loan = 2;
 }
 $config['notification'] = [
-	'url' => 'http://172.31.8.146:9980/api/v1.0/notification',
 	'target_category_name' => [1 => '投資', 2 => '貸款', 3 => '投資&貸款'],
 	'status' => [0 => '未核可', 1 => '未發送', 2 => '已拒絕', 3 => '已發送', 4 => '已取消']
 ];

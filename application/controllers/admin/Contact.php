@@ -92,14 +92,13 @@ class Contact extends MY_Admin_Controller {
 		$this->load->model('admin/role_model');
 		$this->login_info = check_admin();
 
-		$notification_url = $this->config->item('notification')['url'];
-		$httpClient = HttpClient::create();
-		$response = $httpClient->request('PUT', $notification_url, [
-			'body' => json_encode(['id' => $id, 'action' => $action, 'user_id' => $this->login_info->id]),
-			'headers' => ['Content-Type' => 'application/json'],
-		]);
-
 		try {
+			$httpClient = HttpClient::create();
+			$response = $httpClient->request('PUT', ENV_NOTIFICATION_REQUEST_URL, [
+				'body' => json_encode(['id' => $id, 'action' => $action, 'user_id' => $this->login_info->id]),
+				'headers' => ['Content-Type' => 'application/json'],
+			]);
+
 			$statusCode = $response->getStatusCode();
 		} catch (Exception $e) {
 			$statusCode = -1;
@@ -128,16 +127,17 @@ class Contact extends MY_Admin_Controller {
 		if(empty($post)){
 			// For GET Method
 			$data = array('user_id' => $this->login_info->id);
-			$notification_url = $this->config->item('notification')['url'];
-			$httpClient = HttpClient::create();
-			$response = $httpClient->request('GET', $notification_url, [
-				'body' => json_encode($data),
-				'headers' => ['Content-Type' => 'application/json'],
-				'timeout' => 2.5
-			]);
 
 			try {
 				$notification_content = array('data' => array());
+
+				$httpClient = HttpClient::create();
+				$response = $httpClient->request('GET', ENV_NOTIFICATION_REQUEST_URL, [
+					'body' => json_encode($data),
+					'headers' => ['Content-Type' => 'application/json'],
+					'timeout' => 2.5
+				]);
+
 				$statusCode = $response->getStatusCode();
 			} catch (Exception $e) {
 				$statusCode = -1;
@@ -208,14 +208,12 @@ class Contact extends MY_Admin_Controller {
 				if("" != trim($post['target']))
 					$data['data']['targetNo']= trim($post['target']);
 
-				$notification_url = $this->config->item('notification')['url'];
-				$httpClient = HttpClient::create();
-				$response = $httpClient->request('POST', $notification_url, [
-					'body' => json_encode($data),
-					'headers' => ['Content-Type' => 'application/json']
-				]);
-
 				try {
+					$httpClient = HttpClient::create();
+					$response = $httpClient->request('POST', ENV_NOTIFICATION_REQUEST_URL, [
+						'body' => json_encode($data),
+						'headers' => ['Content-Type' => 'application/json']
+					]);
 					$statusCode = $response->getStatusCode();
 					$statusDescription = '';
 				} catch (Exception $e) {
@@ -278,7 +276,7 @@ class Contact extends MY_Admin_Controller {
 					$response = $httpClient->request('GET', 'https://iid.googleapis.com/iid/info/'.$device_id_borrow->device_id , [
 						'headers' => [
 							'Content-Type' => 'application/json',
-							'Authorization' => 'key='.NOTIFICATION_INVEST_API_KEY],
+							'Authorization' => 'key='.ENV_NOTIFICATION_INVEST_API_KEY],
 						'timeout' => 2.5
 					]);
 
