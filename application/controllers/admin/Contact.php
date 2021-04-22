@@ -253,7 +253,16 @@ class Contact extends MY_Admin_Controller {
 
 	public function update_user_platform() {
 		$this->load->model('log/Log_userlogin_model');
-		$result = $this->Log_userlogin_model->get_latest_devices(1);
+		$get = $this->input->get(NULL, TRUE);
+		$result = array();
+
+		if(!empty($get)) {
+			$offset = isset($get['offset']) ? intval($get['offset']) : 0;
+			$limit = isset($get['limit']) ? intval($get['limit']) : 0;
+			$result = $this->Log_userlogin_model->get_latest_devices(1, $offset, $limit);
+		}else{
+			$result = $this->Log_userlogin_model->get_latest_devices(1);
+		}
 
 		$deviceList = array();
 		foreach($result as $i => $log) {
@@ -274,11 +283,10 @@ class Contact extends MY_Admin_Controller {
 					]);
 
 					try {
-						echo ".";
 						$statusCode = $response->getStatusCode();
 					} catch (Exception $e) {
 						$statusCode = -1;
-						$statusDescription = '無法連線到推播中心';
+						$statusDescription = '無法連線到 iid.googleapis.com';
 					} finally {
 						if ($statusCode == 200) {
 							$data = $response->toArray();
@@ -291,6 +299,7 @@ class Contact extends MY_Admin_Controller {
 			}
 		}
 
+		$updatedcount = 0;
 		foreach ($deviceList as $device) {
 			foreach (array('android', 'ios') as $key) {
 				if(!isset($device[$key]))
@@ -298,9 +307,10 @@ class Contact extends MY_Admin_Controller {
 				$client = json_decode($result[$device[$key][0]]->client);
 				$client->os = $key;
 				$this->Log_userlogin_model->update($device[$key][1], array("client" => json_encode($client)));
+				$updatedcount++;
 			}
 		}
-		alert('更新成功', admin_url('contact/send_email'));
+		alert('更新成功，已更新'.$updatedcount."個設備。", admin_url('contact/send_email'));
 	}
 	public function certifications()
 	{
