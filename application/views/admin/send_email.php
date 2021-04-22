@@ -1,15 +1,13 @@
 
 	<script>
 	
-		function form_onsubmit(){
-			if(confirm("確認發送此郵件？")){
+		function form_onsubmit(msg){
+			if(confirm(msg)){
 				return true;
 			}
 			return false;
 		}
 	</script>
-	
-        <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">通知工具</h1>
@@ -26,7 +24,7 @@
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form role="form" method="post" onsubmit="return form_onsubmit();" > 
+                                    <form role="form" method="post" onsubmit="return form_onsubmit('確認發送此郵件？');" >
                                         <div class="form-group">
                                             <label>Email</label>
                                             <input id="email" name="email" class="form-control" placeholder="Enter Email" >
@@ -55,7 +53,3 @@
                     <!-- /.panel -->
                 </div>
                 <!-- /.col-lg-12 -->
-            </div>
-            <!-- /.row -->
-        </div>
-        <!-- /#page-wrapper -->

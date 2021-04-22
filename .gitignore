@@ -32,3 +32,6 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 ## brookesia (anti_fraud) env
 assets/admin/js/anti_fraud_env.js
+
+*.influxfin.com-access_log
+*.influxfin.com-error_log

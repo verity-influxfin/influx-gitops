@@ -1269,3 +1269,15 @@ $config['social_patten'] = '全球|財經|數位|兩岸';
 $config['no_prepayment_allowance'] = [1000];
 
 $config['allow_aiBidding_product'] = [1, 2, 3, 4];
+
+# 推播的相關設定
+abstract class NotificationTargetCategory
+{
+	const investment = 1;
+	const loan = 2;
+}
+$config['notification'] = [
+	'target_category_name' => [1 => '投資', 2 => '貸款', 3 => '投資&貸款'],
+	'status' => [0 => '未核可', 1 => '未發送', 2 => '已拒絕', 3 => '已發送', 4 => '已取消']
+];
+

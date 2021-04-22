@@ -11,20 +11,22 @@
 		"source": "https://github.com/bcit-ci/CodeIgniter"
 	},
 	"require": {
-		"php": ">=5.3.7",
+		"php": ">=5.6",
 		"aws/aws-sdk-php": "3.*",
 		"tecnickcom/tcpdf": "6.*",
 		"google/cloud-vision": "^0.20",
 		"predis/predis": "*",
 		"phpoffice/phpspreadsheet":"1.6.*",
-		"smalot/pdfparser":"*"
+		"smalot/pdfparser":"*",
+	  	"ext-json": "*",
+		"symfony/http-client": "^5.2"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x",
 		"ext-bcmath": "Need to support JSON deserialization"
 	},
 	"require-dev": {
-		"mikey179/vfsStream": "1.1.*",
+		"mikey179/vfsstream": "1.1.*",
 		"kenjis/ci-phpunit-test": "^0.17.0",
 		"phpunit/phpunit": "^7"
 	}
