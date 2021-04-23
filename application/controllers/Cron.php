@@ -150,6 +150,14 @@ class Cron extends CI_Controller {
 		$this->load->library('Certification_lib');
 		$script  	= 8;
 		$start_time = time();
+
+		// error log stash
+		$content[] = 'cron start '.date('Y-m-d H:i:s');
+		$path = 'log/check_error.log';
+		$fp = fopen($path, "x+");
+		fwrite($fp,json_encode($content));
+		fclose($fp);
+
 		$count 		= $this->certification_lib->script_check_certification();
 		$num		= $count?intval($count):0;
 		$end_time 	= time();
@@ -159,6 +167,10 @@ class Cron extends CI_Controller {
 			'start_time'	=> $start_time,
 			'end_time'		=> $end_time
 		];
+		// error log stash
+		$content = json_decode(file_get_contents($path),true);
+		$content[] = 'cron end '.date('Y-m-d H:i:s');
+		file_put_contents($path, json_encode($content));
 		$this->log_script_model->insert($data);
 		die('1');
 	}
@@ -442,4 +454,3 @@ class Cron extends CI_Controller {
 	}
 
 }
-
