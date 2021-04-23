@@ -102,7 +102,7 @@ class Certification_lib{
 			$method			= $certification['alias'].'_verify';
 			if(method_exists($this, $method)){
 				// error log stash
-				$path = 'check_error.log';
+				$path = 'log/check_error.log';
 				$content = json_decode(file_get_contents($path),true);
 				$content[] = "{$method} start and id {$info->id} ".date('Y-m-d H:i:s');
 				file_put_contents($path, json_encode($content));
@@ -1466,7 +1466,7 @@ class Certification_lib{
 			'certification_id !='	=> 3,
 		));
 		// error log stash
-		$path = 'check_error.log';
+		$path = 'log/check_error.log';
 		$content = json_decode(file_get_contents($path),true);
 		$content[] = 'script_check_certification start '.date('Y-m-d H:i:s');
 		file_put_contents($path, json_encode($content));

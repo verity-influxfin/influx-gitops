@@ -153,7 +153,7 @@ class Cron extends CI_Controller {
 
 		// error log stash
 		$content[] = 'cron start '.date('Y-m-d H:i:s');
-		$path = 'check_error.log';
+		$path = 'log/check_error.log';
 		$fp = fopen($path, "x+");
 		fwrite($fp,json_encode($content));
 		fclose($fp);
