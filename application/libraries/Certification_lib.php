@@ -101,6 +101,12 @@ class Certification_lib{
 			$certification 	= $this->certification[$info->certification_id];
 			$method			= $certification['alias'].'_verify';
 			if(method_exists($this, $method)){
+				// error log stash
+				$path = 'check_error.log';
+				$content = json_decode(file_get_contents($path),true);
+				$content[] = "{$method} start and id {$info->id} ".date('Y-m-d H:i:s');
+				file_put_contents($path, json_encode($content));
+
 				$rs = $this->$method($info);
 			}else{
 				$rs = $this->CI->user_certification_model->update($info->id,array(
@@ -453,6 +459,7 @@ class Certification_lib{
     public function social_verify($info = array())
     {
         if ($info && $info->status == 0 && $info->certification_id == 4) {
+			$param['status'] = 3;
             $content = json_decode($info->content);
 
             if (isset($content->instagram->username) && isset($info->user_id)) {
@@ -492,7 +499,6 @@ class Certification_lib{
                     'meta_key' => 'line_access_token'
                 ));
                 if ((is_numeric($media) && is_numeric($followed_by) || $is_fb_email && $is_fb_name) && isset($line)) {
-                    $param['status'] = 3;
                     if ($media >= 10 && $followed_by >= 10 || is_numeric($media) && is_numeric($followed_by) ) {
                         $param['status'] = 1;
                         $this->set_success($info->id, true);
@@ -657,7 +663,7 @@ class Certification_lib{
 
 			if(isset($approve_status['status_code']) && $approve_status['status_code'] == 2){
 				// to do : 鎖三十天
-				$certification_content['mail_file_status'] = 2;
+				// $certification_content['mail_file_status'] = 2;
 			}
 
 			$this->CI->user_certification_model->update($info->id, array(
@@ -718,11 +724,11 @@ class Certification_lib{
 	public function save_mail_url($info = array(),$url) {
 		$content=json_decode($info->content,true);
 		$content['pdf_file']=$url;
-		if($url){
-			$content['mail_file_status'] = 1;
-		}else{
-			$content['mail_file_status'] = 0;
-		}
+		// if($url){
+		// 	$content['mail_file_status'] = 1;
+		// }else{
+		// 	$content['mail_file_status'] = 0;
+		// }
 
 		$this->CI->user_certification_model->update($info->id, array(
 			'content'=>json_encode($content)
@@ -1459,10 +1465,16 @@ class Certification_lib{
 			'status'				=> 0,
 			'certification_id !='	=> 3,
 		));
+		// error log stash
+		$path = 'check_error.log';
+		$content = json_decode(file_get_contents($path),true);
+		$content[] = 'script_check_certification start '.date('Y-m-d H:i:s');
+		file_put_contents($path, json_encode($content));
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
 					case 2:
+						break;
 					case 6:
 						if(time() > ($value->created_at + 3600)){
 							$this->set_failed($value->id,'未在有效時間內完成認證');
@@ -1475,6 +1487,10 @@ class Certification_lib{
 				$count++;
 			}
 		}
+
+		$content = json_decode(file_get_contents($path),true);
+		$content[] = 'script_check_certification end '.date('Y-m-d H:i:s');
+		file_put_contents('reScraper.txt', json_encode($content));
 		return $count;
 	}
 
