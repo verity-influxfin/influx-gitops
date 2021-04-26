@@ -34,8 +34,11 @@ class Log_userlogin_model extends MY_Model
 		$data['client'] = json_encode([
 			'agent'		=> $this->agent->agent_string(),
 			'platform'	=> $this->agent->platform(),
-            'device_id'	=> $device_id
+			'device_id'	=> $device_id,
+			'os'		=> isset($data['os'])?$data['os']:""
 		]);
+		// 由於 os 是要存在 client 欄位內，所以需要 unset，否則會造成多一個欄位插入
+		unset($data['os']);
 
 		return $data;
     }
