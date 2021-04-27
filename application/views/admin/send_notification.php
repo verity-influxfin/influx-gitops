@@ -137,13 +137,13 @@
 									<td><?= $record['number_of_tokens']?></td>
 									<td><?= $record['sender_name'] ?></td>
 									<td class="col-md-2">
-										<? if($record['status']==0) { ?>
+										<? if($record['status'] == 0 && $permission) { ?>
 											<button type="button" class="btn btn-danger check" data-action="2" onclick="check_notification(this)">拒絕</button>
 											<button type="button" class="btn btn-primary check" data-action="1" onclick="check_notification(this)">核可</button>
 										<? } else { ?>
 											<?= $this->config->item('notification')['status'][$record['status']] ?>
 										<? } ?>
-										<? if($record['status']==1) { ?>
+										<? if($record['status'] == 1) { ?>
 											<button type="button" class="btn btn-warning check" data-action="4" onclick="check_notification(this)">取消</button>
 										<? } ?>
 									</td>

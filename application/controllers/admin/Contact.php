@@ -11,6 +11,7 @@ class Contact extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_contact_model');
+		$this->load->library('Notification_lib');
 		$this->load->helper('admin');
  	}
 	
@@ -93,22 +94,26 @@ class Contact extends MY_Admin_Controller {
 		$this->login_info = check_admin();
 
 		try {
-			$httpClient = HttpClient::create();
-			$response = $httpClient->request('PUT', ENV_NOTIFICATION_REQUEST_URL, [
-				'body' => json_encode(['id' => $id, 'action' => $action, 'user_id' => $this->login_info->id]),
-				'headers' => ['Content-Type' => 'application/json'],
-			]);
+			// 目標狀態是未登入 或 欲審核推播的會員不是管理員時
+			if(!isset($this->login_info) || (!$this->notification_lib->has_check_permission($this->login_info) &&
+				($action == 1 || $action == 2))) {
+				$statusCode = 401;
+				$statusDescription = '你沒有權限做此操作。';
+			}else {
+				$httpClient = HttpClient::create();
+				$response = $httpClient->request('PUT', ENV_NOTIFICATION_REQUEST_URL, [
+					'body' => json_encode(['id' => $id, 'action' => $action, 'user_id' => $this->login_info->id]),
+					'headers' => ['Content-Type' => 'application/json'],
+				]);
 
-			$statusCode = $response->getStatusCode();
+				$statusCode = $response->getStatusCode();
+				$statusDescription = '更新成功。';
+			}
 		} catch (Exception $e) {
 			$statusCode = -1;
 			$statusDescription = '無法連線到推播中心';
 		} finally {
-			if ($statusCode == 200) {
-				return json_encode(['code' => $statusCode, 'description' => 'success']);
-			} else {
-				return json_encode(['code' => $statusCode, 'description' => 'failure']);
-			}
+			return json_encode(['code' => $statusCode, 'description' => $statusDescription]);
 		}
 	}
 
@@ -144,7 +149,9 @@ class Contact extends MY_Admin_Controller {
 				$statusDescription = '無法連線到推播中心';
 			} finally {
 				if ($statusCode == 200) {
-					$notification_content = array('data' => $response->toArray()['data']);
+					$permission = $this->notification_lib->has_check_permission($this->login_info);
+					$notification_content = array('permission' => $permission,
+						'data' => $response->toArray()['data']);
 				} else {
 					$msg = '取得不到推播中心的資料! 請洽工程師。 (狀態碼:'.$statusCode.' '.$statusDescription.')';
 					echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><script language="javascript">alert("'.$msg.'");</script>';
