@@ -545,20 +545,19 @@ class Certification_lib{
 		if($user_certification==false || $user_certification->status!=1 ||$job_certification ==false || $job_certification->status!=1){
 			return false;
 		}
-		$url = isset(json_decode($info->content)->pdf_file) ?
-			json_decode($info->content)->pdf_file
-			: $url;
-
+		$certification_content = isset($info->content) ? json_decode($info->content,true): [];
+		$url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file']: null;
 		$result = [];
+		$status = 3;
+		$time = time();
+		$printDatetime = '';
 
-		if ($info && $info->certification_id == 9 && !empty($url) && $info->status == 0) {
+		if ($info && $info->certification_id == 9 && $url && $info->status == 0) {
 			$this->CI->load->library('Joint_credit_lib');
-			$return_type=json_decode($info->content)->return_type;
-
 			$parser = new \Smalot\PdfParser\Parser();
 			$pdf    = $parser->parseFile($url);
 			$text = $pdf->getText();
-			$response=$this->CI->joint_credit_lib->transfrom_pdf_data($text);
+			$response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
 			$data = [
 				'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId']: '',
 				'name' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId']: '',
@@ -592,27 +591,17 @@ class Certification_lib{
 					$status = 2;
 				}
 
-			}else{
-				$status = 3;
-				$time = time();
-				$printDatetime = '';
 			}
 
 			$group_id = isset(json_decode($info->content)->group_id) ? json_decode($info->content)->group_id : time();
 
-			$certification_content = [
-				'group_id' => $group_id,
-				'return_type' => $return_type,
-				'pdf_file' => $url,
-				'result' => [
-					"{$group_id}" => $result
-				],
-				'times' => isset($result['S1Count']) ? $result['S1Count'] : 0,
-				'credit_rate' => isset($result['creditCardUseRate']) ? $result['creditCardUseRate'] : 0,
-				'months' => isset($result['creditLogCount']) ? $result['creditLogCount'] : 0,
-				'printDatetime' => $time,
-				'printDate' => $printDatetime,
-			];
+			$certification_content['group_id'] = $group_id;
+			$certification_content['result']["$group_id"] = $result;
+			$certification_content['times'] = isset($result['S1Count']) ? $result['S1Count'] : 0;
+			$certification_content['credit_rate'] = isset($result['creditCardUseRate']) ? $result['creditCardUseRate'] : 0;
+			$certification_content['months'] = isset($result['creditLogCount']) ? $result['creditLogCount'] : 0;
+			$certification_content['printDatetime'] = $time;
+			$certification_content['printDate'] = $printDatetime;
 
 			// 還款力計算-22倍薪資
 			// 薪資22倍
@@ -666,49 +655,6 @@ class Certification_lib{
                'content' => json_encode($certification_content),
                'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
            ));
-
-			// if(isset($res['appliedTime']) && $res['appliedTime'] != null){
-            //     $res['printDate'] =  mktime(0, 0, 0, intval($res['appliedTime'][1]), intval($res['appliedTime'][2]), 1911 + intval($res['appliedTime'][0]));
-            // }
-
-			// switch ($res['status']) {
-            //     case 'pending': //轉人工
-            //         $status = 3;
-            //         $this->CI->user_certification_model->update($info->id, array(
-            //             'status' => $status,
-            //             'sys_check' => 1,
-            //             'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res)),
-            //             'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
-            //         ));
-            //         break;
-            //     case 'success':
-			// 		$status = 1;
-			// 		$get_time=$res['messages'][13]['message'];
-			// 		$get_months=$res['messages'][11]['message'][0];
-			// 		$get_credit_rate=$res['messages'][11]['message'][2];
-			// 		$times=preg_replace('/[^\d]/','',$get_time);
-			// 		$credit_rate=(preg_replace('/[^\d*\.\d]/','',$get_credit_rate));
-			// 		$months=preg_replace('/[^\d]/','',$get_months);
-			// 		$this->CI->user_certification_model->update($info->id, array(
-			// 			'sys_check' => 1,
-			// 			'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res,'times'=>$times,'credit_rate'=>$credit_rate,'months'=>$months))
-			// 		));
-			// 		$this->set_success($info->id,true,$res['appliedExpire']);
-			// 		$this->CI->user_certification_model->update($info->id, array(
-			// 			'status' => $status
-			// 		));
-			// 		break;
-			// 	case 'failure':
-			// 		$status = 2;
-			// 		$this->CI->user_certification_model->update($info->id, array(
-			// 			'sys_check' => 1,
-			// 			'content' => json_encode(array('return_type'=>$return_type,'pdf_file' => $url, 'result' => $res))
-			// 		));
-			// 		$msg = isset($res['message']) ? $res['message']:'經本平台綜合評估暫時無法核准您的聯徵認證，感謝您的支持與愛護，希望下次還有機會為您服務。';
-			// 		$this->set_failed($info->id,$msg,true,$res['appliedExpire']);
-			// 		break;
-			// }
-
 			return true;
 		}
 		return false;
@@ -734,15 +680,11 @@ class Certification_lib{
 
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
 
-		if($user_certification==false || !in_array($user_certification->status , [1,4])){
+		if($user_certification==false || $user_certification->status !=1){
 			return false;
 		}
 
-		if(isset($info->content) && $info->content){
-			$certification_content = json_decode($info->content,true);
-		}else{
-			$certification_content = [];
-		}
+		$certification_content = isset($info->content) ? json_decode($info->content,true) : [];
 
 		$status = 3;
 		$res = [];
