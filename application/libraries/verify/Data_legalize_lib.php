@@ -539,12 +539,12 @@ class Data_legalize_lib{
 		if($user_id && $data){
 			$this->CI->load->model('user/user_model');
 			$user_info = $this->CI->user_model->get_by(['id'=>$user_id]);
-			if($user_info && $data['pdf_info']['pageList'][0]['personId']){
-				if($data['pdf_info']['pageList'][0]['personId'] != $user_info->id_number){
+			if($user_info && $data['pageList'][0]['personId']){
+				if($data['pageList'][0]['personId'] != $user_info->id_number){
 					$res['error_message'][] = '身分證號與該實名用戶統一編號不一致';
 					$res['error_location'][] = 'id_card';
 				}
-				if($data['pdf_info']['pageList'][0]['name'] != $user_info->name){
+				if($data['pageList'][0]['name'] != $user_info->name){
 					$res['error_message'][] = '姓名與該實名用戶姓名不一致';
 					$res['error_location'][] = 'name';
 				}
@@ -552,7 +552,7 @@ class Data_legalize_lib{
 				$res['error_message'][] = '查無使用者身分證資訊';
 			}
 			if(isset($data['gcis_info']) && $data['gcis_info']){
-				if($data['gcis_info']['Company_Name'] != $data['pdf_info']['company_name']){
+				if($data['gcis_info']['Company_Name'] != $data['company_name']){
 					$res['error_message'][] = '公司名稱與商業司查詢不一致';
 					$res['error_location'][] = 'company_name';
 				}
