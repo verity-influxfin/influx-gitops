@@ -726,7 +726,7 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false, $years, $sex, $app, $mail)
+    public function EDM($user_id, $title, $content, $EDM, $url, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [])
     {
         $user_list = [];
         $user_ids = false;
@@ -771,7 +771,14 @@ $name 您好，
             $user_list[] = $user_info;
         }
 
-        if (count($user_list) > 0) {
+		if (count($mail_list) > 0)
+		{
+			$this->CI->load->library('Sendemail');
+			foreach ($mail_list as $mail) {
+				$this->CI->sendemail->EDM($mail, $title, nl2br($content), $EDM, $url);
+			}
+			$count = count($mail_list);
+		}else if (count($user_list) > 0) {
             foreach ($user_list as $key => $value) {
                 if($app){
                     $param = array(
@@ -795,9 +802,9 @@ $name 您好，
                 $count++;
             }
             $this->CI->load->library('parser');
-            echo $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM), TRUE);
-        }
-        echo '已發送 ' . $count . ' 位使用者';
+		}
+		echo $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => nl2br($content), "EDM" => $EDM), TRUE);
+		echo '已發送 ' . $count . ' 位使用者';
         return $count;
 
     }
