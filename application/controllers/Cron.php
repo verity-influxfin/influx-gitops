@@ -318,30 +318,39 @@ class Cron extends CI_Controller {
 		die('1');
 	}
 
-    public function EDM()
+	/**
+	 * 寄發 EDM 通知
+	 *
+	 * 需使用 POST 方法，並帶入 JSON payload
+	 * 若有帶入 mail_list 時，無視其他篩選條件，只寄送給 mail_list 的信箱
+	 * app 若設為 1 是用來通知 app client
+	 * mail 若設為 1 是用來寄送信件
+	 */
+	public function EDM()
     {
-        $input = $this->input->get();
-        $user_id = isset($input['user_id']) ? $input['user_id'] : 0;
-        $title = $input['title'];
-        $content = $input['content'];
-        $EDM = $input['EDM'];
-        $url = $input['url'];
-        $investor = isset($input['investor']) ? $input['investor'] : 0;
-        $school = isset($input['school']) && $input['school'] != '' ? $input['school'] : false;
-        $years = isset($input['years']) && $input['years'] != '' ? $input['years'] : false;
-        $sex = isset($input['sex']) && $input['sex'] != '' ? $input['sex'] : false;
-        $app = isset($input['app']) && $input['app'] != '' ? $input['app'] : false;
-        $mail = isset($input['mail']) && $input['mail'] != '' ? $input['mail'] : false;
+        $input = json_decode($this->input->raw_input_stream);
+        $user_id = isset($input->user_id) ? $input->user_id : 0;
+        $title = $input->title;
+        $content = $input->content;
+        $EDM = $input->EDM;
+        $url = $input->url;
+        $investor = isset($input->investor) ? $input->investor : 0;
+        $school = isset($input->school) && $input->school != '' ? $input->school : false;
+        $years = isset($input->years) && $input->years != '' ? $input->years : false;
+        $sex = isset($input->sex) && $input->sex != '' ? $input->sex : false;
+        $app = isset($input->app) && $input->app != '' ? $input->app : false;
+        $mail = isset($input->mail) && $input->mail != '' ? $input->mail : false;
+		$mail_list = isset($input->mail_list) && count($input->mail_list)? $input->mail_list : array();
         $this->load->library('Notification_lib');
 
         $start_time = time();
-        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail);
+        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail, $mail_list);
         $num = $count ? intval($count) : 0;
         $end_time = time();
         $data = [
             'script_name' => 'EDM',
             'num' => $num,
-            'parameter' => json_encode([$user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail]),
+            'parameter' => json_encode([$user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail, $mail_list]),
             'start_time' => $start_time,
             'end_time' => $end_time
         ];
