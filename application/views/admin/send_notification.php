@@ -11,18 +11,18 @@
 									<form role="form" method="post" onsubmit="return form_onsubmit('確認發送此推播？');" >
 										<div class="align-items-start">
 											<div class="form-group mr-3">
+                                                                                                <label>平台：</label><br/>
+                                                                                                <input type="checkbox" name="android" value="1" checked>
+                                                                                                <label for="android">Android</label>
+                                                                                                <input type="checkbox" name="ios" value="1" checked>
+                                                                                                <label for="ios">IOS</label>
+                                                                                        </div>
+											<div class="form-group mr-3">
 												<label>發送對象：</label><br/>
 												<!--<input type="checkbox" name="loan" value="1">
 												<label for="loan">借款</label>-->
 												<input type="checkbox" name="investment" value="1" checked>
 												<label for="investment">投資</label>
-											</div>
-											<div class="form-group mr-3">
-												<label>平台：</label><br/>
-												<input type="checkbox" name="android" value="1" checked>
-												<label for="android">Android</label>
-												<input type="checkbox" name="ios" value="1" checked>
-												<label for="ios">IOS</label>
 											</div>
 											<div class="form-group mr-3">
 												<label>性別：</label><br/>
