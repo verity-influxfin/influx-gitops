@@ -389,7 +389,7 @@ class Transaction_lib{
 								$frozen_ids[]		= $value->frozen_id;
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
 								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$target->product_id,$target->sub_product_id,$value->loan_amount,'');
-								$this->CI->sendemail->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
+								$this->CI->sendemail->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'',$target->user_id);
 
 								//放款
 								$transaction[]		= [
@@ -1060,7 +1060,7 @@ class Transaction_lib{
 								$frozen_ids[]		= $value->frozen_id;
 								$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$value->user_id,'investor'=>1,'status'=>1));
 								$this->CI->notification_lib->lending_success($value->user_id,1,$target->target_no,$target->product_id,$target->sub_product_id,$value->loan_amount,'');
-								$this->CI->sendemail->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'');
+								$this->CI->sendemail->lending_success($value->user_id,1,$target->target_no,$value->loan_amount,'',$target->user_id);
 
 								//放款
 								$transaction[]		= array(

@@ -198,11 +198,11 @@ class Sendemail
 		}
     }
 
-    public function lending_success($user_id, $investor, $target_no, $amount, $bankaccount="") {
+    public function lending_success($user_id, $investor, $target_no, $amount, $bankaccount="", $borrower_user_id=0) {
 		if($investor == 1) {
 			$subject = "【投資標的】您的資金已放款成功";
 			$title = "【競標成功】";
-			$content = "親愛的投資人，恭喜您標得 " . $target_no . " 新台幣 " . number_format($amount) . " 元的債權，並成功放款至會員ID:" . $user_id . "
+			$content = "親愛的投資人，恭喜您標得 " . $target_no . " 新台幣 " . number_format($amount) . " 元的債權，並成功放款至會員ID:" . $borrower_user_id . "
 				更多投資標的，盡在普匯APP";
 			$type = 'i04';
 		} else {
@@ -278,4 +278,5 @@ class Sendemail
         }
         return false;
     }
+
 }
