@@ -7,7 +7,7 @@ class Reports extends REST_Controller {
     public $user_info;
 
     private $allowedReports = ['balance_sheet', 'income_statement', 'business_tax_return_report','insurance_table','amendment_of_register','credit_investigation','identification_card_front','identification_card_back'];
-
+	private $needAuthReports = ['identification_card_front', 'identification_card_back'];
     public function __construct()
     {
         parent::__construct();
@@ -16,8 +16,10 @@ class Reports extends REST_Controller {
         $this->load->library('log/log_image_model');
 
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['info'];
-        if (!in_array($method, $nonAuthMethods)) {
+		$input = $this->input->get(NULL, TRUE);
+		$type = isset($input["type"]) ? $input["type"] : '';
+
+        if (in_array($type, $this->needAuthReports)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
@@ -75,7 +77,7 @@ class Reports extends REST_Controller {
       *                              "taxId": "68566881"
       *                          }
       *                      },
-      * 		    		    "created_at": 1520421572,
+      * 		    		 "created_at": 1520421572,
       *                      "updated_at": 1520421572
       *  			    }
       *              ]
