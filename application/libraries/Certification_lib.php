@@ -554,6 +554,7 @@ class Certification_lib{
 
 		if ($info && $info->certification_id == 9 && $url && $info->status == 0) {
 			$remark = isset($info->remark) ? json_decode($info->remark, true) : NULL;
+			$remark['verify_result'] = [];
 			$this->CI->load->library('Joint_credit_lib');
 			$parser = new \Smalot\PdfParser\Parser();
 			$pdf    = $parser->parseFile($url);
@@ -567,7 +568,7 @@ class Certification_lib{
 			$this->CI->load->library('verify/data_legalize_lib');
 			$res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data);
 			if($res['error_message']){
-				$remark['fail'][] = $res['error_message'];
+				$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
 			}
 
 			// 資料轉 result
@@ -590,7 +591,7 @@ class Certification_lib{
 					if($approve_status){
 						$status = isset($approve_status['status_code']) ? $approve_status['status_code'] : $status;
 						if($approve_status['error_message']){
-							$remark['fail'][] = $approve_status['error_message'];
+							$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
 						}
 					}
 				}else{
@@ -697,6 +698,7 @@ class Certification_lib{
 		$res = [];
 		$gcis_res = [];
 		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
+		$remark['verify_result'] = [];
 
 		// 勞保異動明細 pdf
 		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
@@ -727,7 +729,9 @@ class Certification_lib{
 
 				$this->CI->load->library('verify/data_legalize_lib');
 				$verify_res = $this->CI->data_legalize_lib->legalize_job($info->user_id,$res);
-				$remark['fail'][] = $verify_res['error_message'];
+				if($verify_res['error_message']){
+					$remark['verify_result'] = array_merge($remark['verify_result'],$verify_res['error_message']);
+				}
 				// $this->CI->load->library('verify/data_verify_lib');
 				// $approve_status = $this->data_verify_lib->check_job($info->user_id,$result);
 
