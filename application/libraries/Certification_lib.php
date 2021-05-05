@@ -553,6 +553,7 @@ class Certification_lib{
 		$printDatetime = '';
 
 		if ($info && $info->certification_id == 9 && $url && $info->status == 0) {
+			$remark = isset($info->remark) ? json_decode($info->remark, true) : NULL;
 			$this->CI->load->library('Joint_credit_lib');
 			$parser = new \Smalot\PdfParser\Parser();
 			$pdf    = $parser->parseFile($url);
@@ -560,12 +561,14 @@ class Certification_lib{
 			$response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
 			$data = [
 				'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId']: '',
-				'name' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId']: '',
 			];
 
 			// 自然人聯徵正確性驗證
 			$this->CI->load->library('verify/data_legalize_lib');
 			$res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data);
+			if($res['error_message']){
+				$remark['fail'][] = $res['error_message'];
+			}
 
 			// 資料轉 result
 			$this->CI->load->library('mapping/user/Certification_data');
@@ -582,10 +585,13 @@ class Certification_lib{
 				// 過件邏輯
 				if(!$res['error_message']){
 					$this->CI->load->library('verify/data_verify_lib');
-					$approve_status = $this->data_verify_lib->check_investigation($result);
+					$approve_status = $this->CI->data_verify_lib->check_investigation($result);
 					// 過件結果
 					if($approve_status){
 						$status = isset($approve_status['status_code']) ? $approve_status['status_code'] : $status;
+						if($approve_status['error_message']){
+							$remark['fail'][] = $approve_status['error_message'];
+						}
 					}
 				}else{
 					$status = 2;
@@ -653,6 +659,7 @@ class Certification_lib{
                'status' => $status,
                'sys_check' => 1,
                'content' => json_encode($certification_content),
+			   'remark' => json_encode($remark),
                'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
            ));
 			return true;
@@ -689,6 +696,7 @@ class Certification_lib{
 		$status = 3;
 		$res = [];
 		$gcis_res = [];
+		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
 
 		// 勞保異動明細 pdf
 		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
@@ -719,7 +727,7 @@ class Certification_lib{
 
 				$this->CI->load->library('verify/data_legalize_lib');
 				$verify_res = $this->CI->data_legalize_lib->legalize_job($info->user_id,$res);
-
+				$remark['fail'][] = $verify_res['error_message'];
 				// $this->CI->load->library('verify/data_verify_lib');
 				// $approve_status = $this->data_verify_lib->check_job($info->user_id,$result);
 
@@ -732,6 +740,7 @@ class Certification_lib{
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status,
 				'sys_check' => 1,
+				'remark' => json_encode($remark),
 				'content' => json_encode($certification_content),
 			));
 			return true;
