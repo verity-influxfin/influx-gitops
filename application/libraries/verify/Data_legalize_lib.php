@@ -444,7 +444,7 @@ class Data_legalize_lib{
 			if($user_info && isset($data['id'])){
 
 				if($data['id'] != $user_info->id_number){
-					$res['error_message'][] = '名稱與該實名用戶統一編號不一致';
+					$res['error_message'][] = '聯徵身分證號與該實名用戶統一編號不一致';
 					$res['error_location'][] = 'id';
 				}
 				$res['result']['id'] = $data['id'];
