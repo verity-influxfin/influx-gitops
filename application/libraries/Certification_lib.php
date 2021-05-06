@@ -593,6 +593,7 @@ class Certification_lib{
 						if($approve_status['error_message']){
 							$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
 						}
+						$status = 3;
 					}
 				}else{
 					$status = 2;
@@ -661,7 +662,6 @@ class Certification_lib{
                'sys_check' => 1,
                'content' => json_encode($certification_content),
 			   'remark' => json_encode($remark),
-               'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
            ));
 			return true;
 		}
@@ -672,11 +672,11 @@ class Certification_lib{
 	public function save_mail_url($info = array(),$url) {
 		$content=json_decode($info->content,true);
 		$content['pdf_file']=$url;
-		// if($url){
-		// 	$content['mail_file_status'] = 1;
-		// }else{
-		// 	$content['mail_file_status'] = 0;
-		// }
+		if($url){
+			$content['mail_file_status'] = 1;
+		}else{
+			$content['mail_file_status'] = 0;
+		}
 
 		$this->CI->user_certification_model->update($info->id, array(
 			'content'=>json_encode($content)
@@ -703,7 +703,7 @@ class Certification_lib{
 		// 勞保異動明細 pdf
 		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
 
-		if($info && $info->certification_id == 10 && $info->status == 0){
+		if($info && $info->certification_id == 10 && $info->status == 0 && $pdf_url){
 			// 勞保 pdf 解析
 			if($pdf_url){
 				$this->CI->load->library('Labor_insurance_lib');

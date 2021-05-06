@@ -106,7 +106,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>聯徵調閱日期</label>
-                                            <input type="text" class="form-control" name="printDate" data-toggle="datepicker" style="width: 182px;" value="" placeholder="<?= isset($content['printDate']) ? $content['printDate'] : 0 ?>">
+                                            <input type="text" class="form-control" name="printDate" data-toggle="datepicker" style="width: 182px;" value="<?= isset($content['printDate']) ? $content['printDate'] : 0 ?>">
                                         </div>
                                     <? } ?>
 									<div class="form-group">
