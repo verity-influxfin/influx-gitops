@@ -144,6 +144,7 @@ class Contact extends MY_Admin_Controller {
 				]);
 
 				$statusCode = $response->getStatusCode();
+				$statusDescription = '';
 			} catch (Exception $e) {
 				$statusCode = -1;
 				$statusDescription = '無法連線到推播中心';
@@ -170,11 +171,11 @@ class Contact extends MY_Admin_Controller {
 
 			// 如果 payload 有帶 notification，則視為發送推播
 			if(isset($post["notification"])) {
-				$this->load->model('user/user_notification_model');
+				$this->load->model('log/Log_userlogin_model');
 
 				// 投資人 / 借貸人 / 不過濾
-				$targetCategory = isset($post['investment'])?NotificationTargetCategory::investment:0;
-				$targetCategory += isset($post['loan'])?NotificationTargetCategory::loan:0;
+				$targetCategory = isset($post['investment'])?NotificationTargetCategory::Investment:0;
+				$targetCategory += isset($post['loan'])?NotificationTargetCategory::Loan:0;
 
 				$platform = array();
 				if(isset($post['android']))
@@ -192,7 +193,7 @@ class Contact extends MY_Admin_Controller {
 					alert('必須勾選發送的對象，如投資端等。', admin_url('contact/send_email'));
 				}
 
-				$devices = $this->user_notification_model->get_filtered_deviceid($post, $targetCategory);
+				$devices = $this->Log_userlogin_model->get_filtered_deviceid($post, $targetCategory);
 				$data = array(
 					'user_id' => $this->login_info->id,
 					'sender_name' => $this->login_info->name,
@@ -210,32 +211,23 @@ class Contact extends MY_Admin_Controller {
 							"category" => "NEW_MESSAGE_CATEGORY"
 						)
     				),
+					"type" => NotificationType::Manual
 				);
 
 				if("" != trim($post['target']))
 					$data['data']['targetNo']= trim($post['target']);
 
-				try {
-					$httpClient = HttpClient::create();
-					$response = $httpClient->request('POST', ENV_NOTIFICATION_REQUEST_URL, [
-						'body' => json_encode($data),
-						'headers' => ['Content-Type' => 'application/json']
-					]);
-					$statusCode = $response->getStatusCode();
-					$statusDescription = '';
-				} catch (Exception $e) {
-					$statusCode = -1;
-					$statusDescription = '無法連線到推播中心';
-				} finally {
-					if ($statusCode == 200 || $statusCode == 201) {
-						if (count($devices) == 0)
-							alert('推播預約失敗! 因為沒有任何匹配的設備，請重新選取篩選規則。', admin_url('contact/send_email'));
-						else
-							alert('推播預約成功! 該推播總共會有 ' . (count($devices['android'])+count($devices['ios'])) . ' 個設備收到推播訊息。', admin_url('contact/send_email'));
-					}else{
-						alert('推播預約失敗! 請洽工程師。 (狀態碼:'.$statusCode.' '.$statusDescription.')', admin_url('contact/send_email'));
-					}
+				$result = $this->notification_lib->send_notification($data);
+				if ($result['code'] == 200 || $result['code'] == 201) {
+					$c = (count($devices ,COUNT_RECURSIVE) - count($devices) - array_sum(array_map('count',$devices )));
+					if ($c == 0)
+						alert('推播預約失敗! 因為沒有任何匹配的設備，請重新選取篩選規則。', admin_url('contact/send_email'));
+					else
+						alert('推播預約成功! 該推播總共會有 ' . $c . ' 個設備收到推播訊息。', admin_url('contact/send_email'));
+				}else{
+					alert('推播預約失敗! 請洽工程師。 (狀態碼:'.$result['code'].' '.$result['msg'].')', admin_url('contact/send_email'));
 				}
+
 			}else {
 				$fields = ['email', 'title', 'content'];
 				foreach ($fields as $field) {

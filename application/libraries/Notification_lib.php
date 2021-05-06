@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use Symfony\Component\HttpClient\HttpClient;
 
 class Notification_lib{
 	
@@ -863,5 +864,22 @@ $name 您好，
 		if (isset($role) && $role->role_id == "1")
 			return True;
 		return False;
+	}
+
+	public function send_notification($data) {
+		try {
+			$httpClient = HttpClient::create();
+			$response = $httpClient->request('POST', ENV_NOTIFICATION_REQUEST_URL, [
+					   'body' => json_encode($data),
+					   'headers' => ['Content-Type' => 'application/json']
+				   ]);
+			$statusCode = $response->getStatusCode();
+			$statusDescription = 'OK.';
+		} catch (Exception $e) {
+			$statusCode = -1;
+			$statusDescription = "無法連線到推播中心";
+		}finally {
+			return ['code'=>$statusCode, 'msg'=>$statusDescription];
+	   }
 	}
 }
