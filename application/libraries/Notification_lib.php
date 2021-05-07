@@ -460,16 +460,15 @@ $name 您好，
 		return $rs;
 	}
 
-	public function notice_normal_target($user_id,$amount=0,$target_no="",$date=""){
+	public function notice_normal_target($user_id,$amount=0,$difference=0,$target_no="",$date=""){
 
 		$title 		= "【普匯金融科技貼心提醒】您的借款 $target_no ，還款日為 $date";
 		$content 	= "親愛的用戶，您好！
 您的借款 $target_no ，本期應還本息合計為 $amount 元，
-您的應還款日為 $date ，
-請在當天中午12點前將款項主動匯入您的專屬還款帳號內，
-專屬帳號可在普匯inFlux APP服務內點擊我的→我的還款查看，
-如已還款，請忽略本訊息。
-敬告用戶，本公司不會以短信、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號。";
+虛擬帳戶尚不足 ".abs($difference)." 元，
+請在還款日 $date 前將款項匯入虛擬帳戶。
+專屬帳號可在普匯inFlux APP服務內點擊我的→我的還款查看。
+敬告用戶，本公司不會以簡訊、電話或任何形式，告知您其他非服務內揭露的專屬還款帳號。";
 
 		$param = array(
 			"user_id"	=> $user_id,
