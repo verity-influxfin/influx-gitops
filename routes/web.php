@@ -247,6 +247,8 @@ Route::post('/eventGetNum', 'Eventcontroller@getNum');
 
 Route::post('/eventRegister', 'Eventcontroller@register');
 
+Route::post('/sendBankEvent', 'Eventcontroller@bankEvent');
+
 //greeting
 
 Route::get('/greeting', function () {
