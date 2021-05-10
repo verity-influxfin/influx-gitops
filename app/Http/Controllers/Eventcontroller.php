@@ -88,4 +88,25 @@ class Eventcontroller extends BaseController
 
         return response()->json("", $data['result'] === "SUCCESS" ? 200 : 400);
     }
+
+	public function bankEvent(Request $request)
+	{
+		$input = $request->all();
+
+		if(empty($input['phone']) || empty($input['name']) || empty($input['email']) || empty($input['page_from'])){
+			response()->json('{"response":"error","description":"parameter is null"}',  401);
+		}
+
+		$eventData = [
+			'phone' => $input['phone'],
+			'name' => $input['name'],
+			'email' => $input['email'],
+			'page_from' => $input['page_from'],
+			'created_at' => date('Y-m-d H:i:s'),
+			'created_ip' => $_SERVER['REMOTE_ADDR'],
+		];
+
+		DB::table('event_banks')->insert($eventData);
+		return response()->json('{"response":"success"}',  200);
+	}
 }
