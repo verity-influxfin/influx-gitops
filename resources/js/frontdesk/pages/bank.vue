@@ -150,7 +150,7 @@ export default {
         border: 0px;
 		border-radius: 15px;
 		font-size: 38px;
-		font-weight: 800;
+		font-weight: bold;
 		padding: .375rem 1.75rem;
       }
 
@@ -158,7 +158,7 @@ export default {
         font-size: 27px;
         display: block;
         margin: 0px auto;
-        font-weight: 800;
+        font-weight: bold;
         width: 300px;
       }
 
@@ -168,7 +168,7 @@ export default {
         cursor: default;
         display: block;
         margin: 0px auto;
-        font-weight: 800;
+        font-weight: bold;
         color: #495057;
       }
 
@@ -182,7 +182,7 @@ export default {
 		color: white;
 		width: 100%;
 		font-size: 27px;
-		font-weight: 800;
+		font-weight: bold;
 	  }
     }
   }
@@ -220,7 +220,7 @@ export default {
 			.form-control {
 				background-size: contain;
 			    height: 16vw;
-    			font-weight: 100;
+    			font-weight: bold;
 				font-size: 25px;
     			left: initial;
     		}
