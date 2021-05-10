@@ -30,6 +30,7 @@ import notification from '../pages/notification';
 import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
 import event from '../pages/event';
+import bank from '../pages/bank';
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -72,6 +73,7 @@ let routers = [
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
     { path: '/event', component: event },
+	{ path: '/bank', component: bank },
 ];
 
 export default routers;
