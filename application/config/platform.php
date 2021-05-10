@@ -27,6 +27,7 @@ $config['admin_menu'] = [
         'obligations' => '全部列表(New)',
         'waiting_transfer' => '債轉待收購',
         'waiting_transfer_success' => '債轉待放款',
+		'bidding' => '已投標'
     ],
     'Risk' => [
         'parent_name' => '風控專區',
