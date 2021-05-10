@@ -660,8 +660,7 @@ class Certification_lib{
                'status' => $status,
                'sys_check' => 1,
                'content' => json_encode($certification_content),
-			   'remark' => json_encode($remark),
-               'expire_time' => isset($res['appliedExpire']) ? $res['appliedExpire'] : null
+			   'remark' => json_encode($remark)
            ));
 			return true;
 		}
@@ -703,7 +702,7 @@ class Certification_lib{
 		// 勞保異動明細 pdf
 		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
 
-		if($info && $info->certification_id == 10 && $info->status == 0){
+		if($info && $info->certification_id == 10 && $info->status == 0 && $pdf_url){
 			// 勞保 pdf 解析
 			if($pdf_url){
 				$this->CI->load->library('Labor_insurance_lib');
@@ -719,13 +718,16 @@ class Certification_lib{
 				$certification_content['gcis_info'] = $gcis_res;
 			}
 
-			//勞保 pdf 驗證
-			if($res && isset($res['pageList']) && isset($certification_content['tax_id'])){
-
+			if($res){
 				$this->CI->load->library('mapping/user/Certification_data');
 				$result = $this->CI->certification_data->transformJobToResult($res);
-
 				$certification_content['pdf_info'] = $result;
+			}else{
+				$remark['verify_result'][] = '勞保pdf解析失敗';
+			}
+
+			//勞保 pdf 驗證
+			if($res && isset($res['pageList']) && isset($certification_content['tax_id'])){
 
 				$this->CI->load->library('verify/data_legalize_lib');
 				$verify_res = $this->CI->data_legalize_lib->legalize_job($info->user_id,$res);
