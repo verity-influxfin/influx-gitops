@@ -93,6 +93,10 @@ class Eventcontroller extends BaseController
 	{
 		$input = $request->all();
 
+		if(empty($input['phone']) || empty($input['name']) || empty($input['email']) || empty($input['page_from'])){
+			response()->json('{"response":"error","description":"parameter is null"}',  401);
+		}
+
 		$eventData = [
 			'phone' => $input['phone'],
 			'name' => $input['name'],

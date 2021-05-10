@@ -121,7 +121,7 @@ export default {
 	    position: relative;
 		background-size: cover;
 		width: 100%;
-	    height: 84vw;
+	    height: 79vw;
 	}
 
   .form {
@@ -136,15 +136,15 @@ export default {
       background-size: cover;
 
       .input-group {
-        width: 50vw;
-		height: 8vw;
-        margin: 0px auto 2.5rem auto;
+        width: 43vw;
+		height: 7vw;
+        margin: 0px auto 0.5rem auto;
         padding: 5px 10px;
       }
 
       .form-control {
-		width: 50vw;
-  		height: 8vw;
+		width: 43vw;
+  		height: 7vw;
 		background-image: url("../asset/images/bankInput.svg");
   	    background-repeat: no-repeat;
         border: 0px;
@@ -175,8 +175,8 @@ export default {
 	  .send-btn {
 		background-image: url("../asset/images/bankButton.svg");
     	background-repeat: no-repeat;
-		width: 50vw;
-		height: 8vw;
+		width: 43vw;
+		height: 7vw;
         border: 0px;
   		border-radius: 15px;
 		color: white;
@@ -193,7 +193,7 @@ export default {
 	  position: relative;
 	  background-size: cover;
 	  width: 100%;
-	  height: 39vw;
+	  height: 40vw;
   }
 
 }
@@ -201,7 +201,7 @@ export default {
   .bank-wrapper {
 	  .content-top {
     	  background-image: url("../asset/images/bankTopM.svg");
-		  height: 170vw;
+		  height: 164vw;
       }
 
       .form {
@@ -209,7 +209,6 @@ export default {
 
     	.event-form {
     	  padding: initial;
-		  margin: 10px;
 		  max-width: 90%;
 
     	  .input-group {
@@ -222,10 +221,13 @@ export default {
 				background-size: contain;
 			    height: 16vw;
     			font-weight: 100;
+				font-size: 25px;
+    			left: initial;
     		}
 
 			.send-btn {
 				height: 16vw;
+				font-size: 25px;
 			}
     	  }
 
@@ -233,7 +235,7 @@ export default {
       }
       .content-bottom {
     	  background-image: url("../asset/images/bankBottomM.svg");
-		  height: 49vw;
+		  height: 48vw;
       }
   }
 }
