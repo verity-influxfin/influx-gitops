@@ -889,13 +889,10 @@ class Certification_data
 			'total_count' => 0,
 			'this_company_count' => 0,
 		];
-		$this_count_start_date = '';
-		$this_count_end_date = '';
 		$total_count_end_date = '';
 		$total_count_start_date = '';
-		// 公司無退保
 		$first_log = true;
-		$the_same_flag = false;
+		$previous_end_date_null = false;
 		if($data){
 			$res['name'] = isset($data['pageList'][0]['name']) ? $data['pageList'][0]['name'] : '';
 			$res['person_id'] = isset($data['pageList'][0]['personId']) ? $data['pageList'][0]['personId'] : '';
@@ -911,7 +908,6 @@ class Certification_data
 			foreach($data['pageList'] as $key => $page_info){
 				if(isset($page_info['insuranceList'])){
 					foreach($page_info['insuranceList'] as $page_info_key => $page_info_value){
-						// 投保時間
 						if(! preg_match('/部分工時/',$page_info_value['detailList'][0]['comment'])){
 							if(preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['startDate'])){
 								// 總年資開始
@@ -921,51 +917,62 @@ class Certification_data
 									$total_count_start_date = date_create(date('Ymd',$time));
 									$first_log = false;
 								}
-
-								// 現職公司開始
-								if(!$the_same_flag){
-									if(isset($res['last_insurance_info']['insuranceId'])){
-										if(!empty($page_info_value['insuranceId']) && $page_info_value['insuranceId'] == $res['last_insurance_info']['insuranceId']){
-											$time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
-											$time = $this->CI->time->ROCDateToUnixTimestamp($time);
-											$this_count_start_date = date_create(date('Ymd',$time));
-										}
-										if(empty($page_info_value['detailList'][0]['endDate'])){
-											$the_same_flag = true;
-										}else{
-											$the_same_flag = false;
-										}
-									}
-								}
 							}
-							// 退保時間
-							// 現職公司結束
+							// 計算現在任職年資
 							if(isset($res['last_insurance_info']['insuranceId'])){
-								if($page_info_value['insuranceId'] == $res['last_insurance_info']['insuranceId']){
-									// 最後一筆資料(現職公司)
-									if($first_key == $key && $second_key == $page_info_key){
-										$time = substr($res['report_date'], 0,3).'/'.substr($res['report_date'], 3,2).'/'.substr($res['report_date'], 5);
-										$time = $this->CI->time->ROCDateToUnixTimestamp($time);
-										$this_count_end_date = date_create(date('Ymd',$time));
-									}else{
-										if(!empty($page_info_value['detailList'][0]['endDate']) && preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['endDate'])){
-											$time = substr($page_info_value['detailList'][0]['endDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['endDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['endDate'], 5);
-											$time = $this->CI->time->ROCDateToUnixTimestamp($time);
-											$this_count_end_date = date_create(date('Ymd',$time));
+								if(!empty($page_info_value['insuranceId']) && $page_info_value['insuranceId'] == $res['last_insurance_info']['insuranceId']){
+									if(empty($page_info_value['detailList'][0]['endDate'])){
+										if(!$previous_end_date_null){
+											$start_time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
 										}
+										if($first_key == $key && $second_key == $page_info_key){
+											if(!empty($res['report_date'])){
+												$end_time = substr($res['report_date'], 0,3).'/'.substr($res['report_date'], 3,2).'/'.substr($res['report_date'], 5);
+											}else{
+												if(!empty($page_info_value['detailList'][0]['endDate'])){
+													$end_time = substr($page_info_value['detailList'][0]['endDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['endDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['endDate'], 5);
+												}else{
+													$end_time = '';
+												}
+											}
+
+											if($start_time && $end_time){
+												$start_time = $this->CI->time->ROCDateToUnixTimestamp($start_time);
+												$end_time = $this->CI->time->ROCDateToUnixTimestamp($end_time);
+
+												$start_time = date_create(date('Ymd',$start_time));
+												$end_time = date_create(date('Ymd',$end_time));
+
+												$diff=date_diff($start_time,$end_time);
+												$res['this_company_count'] += $diff->format("%y")*12;
+												$res['this_company_count'] += $diff->format("%m");
+											}
+										}
+										$previous_end_date_null = true;
+									}else{
+										if(!$previous_end_date_null){
+											$start_time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
+										}
+										$previous_end_date_null = false;
+										$end_time = substr($page_info_value['detailList'][0]['endDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['endDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['endDate'], 5);
+
+										$start_time = $this->CI->time->ROCDateToUnixTimestamp($start_time);
+										$end_time = $this->CI->time->ROCDateToUnixTimestamp($end_time);
+
+										$start_time = date_create(date('Ymd',$start_time));
+										$end_time = date_create(date('Ymd',$end_time));
+
+										$diff=date_diff($start_time,$end_time);
+										$res['this_company_count'] += $diff->format("%y")*12;
+										$res['this_company_count'] += $diff->format("%m");
 									}
 								}
 							}
-						}
-						if(!empty($this_count_start_date) &&  !empty($this_count_end_date)){
-							// print_r($this_count_end_date);exit;
-							$diff=date_diff($this_count_start_date,$this_count_end_date);
-							$res['this_company_count'] += $diff->format("%y")*12;
-							$res['this_company_count'] += $diff->format("%m");
 						}
 					}
 				}
 			}
+			// echo'end Ha Ha';exit;
 			if(preg_match('/[0-9]{7}/',$res['report_date'])){
 				$time = substr($res['report_date'], 0,3).'/'.substr($res['report_date'], 3,2).'/'.substr($res['report_date'], 5);
 				$time = $this->CI->time->ROCDateToUnixTimestamp($time);
