@@ -102,7 +102,7 @@ class Eventcontroller extends BaseController
 			'name' => $input['name'],
 			'email' => $input['email'],
 			'page_from' => $input['page_from'],
-			'created_at' => date('Y-m-d H:i:s'),
+			'created_at' => date('Y-m-d H:i:s', strtotime('+8 hours')),
 			'created_ip' => $_SERVER['REMOTE_ADDR'],
 		];
 
