@@ -133,8 +133,9 @@ class Data_verify_lib{
 		 * )
 		 */
 		public function check_investigation($data=[]){
+			// todo list 暫時轉人工
 			$res = [
-				'status_code' => 1,
+				'status_code' => 3,
 				'error_message' => [],
 			];
 			foreach($data as  $k=>$v){
