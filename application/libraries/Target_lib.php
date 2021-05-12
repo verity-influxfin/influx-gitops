@@ -337,7 +337,6 @@ class Target_lib
                                     'status' => 0,
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
-                                $newStatus = false;
                                 if (!$product_info['secondInstance']
                                     && !$matchBrookesia
                                     && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
@@ -374,9 +373,8 @@ class Target_lib
                                 if ($rs && $msg) {
                                     $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
                                 }
-                                if ($newStatus) {
-                                    $this->insert_change_log($target->id, $param);
-                                }
+
+                                $this->insert_change_log($target->id, $param);
                                 return true;
                             } else if ($product_info['type'] == 2) {
                                 $allow = true;

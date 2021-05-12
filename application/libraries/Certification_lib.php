@@ -593,6 +593,7 @@ class Certification_lib{
 						if($approve_status['error_message']){
 							$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
 						}
+						$status = 3;
 					}
 				}else{
 					$status = 2;
@@ -660,7 +661,7 @@ class Certification_lib{
                'status' => $status,
                'sys_check' => 1,
                'content' => json_encode($certification_content),
-			   'remark' => json_encode($remark)
+			         'remark' => json_encode($remark)
            ));
 			return true;
 		}
@@ -671,11 +672,11 @@ class Certification_lib{
 	public function save_mail_url($info = array(),$url) {
 		$content=json_decode($info->content,true);
 		$content['pdf_file']=$url;
-		// if($url){
-		// 	$content['mail_file_status'] = 1;
-		// }else{
-		// 	$content['mail_file_status'] = 0;
-		// }
+		if($url){
+			$content['mail_file_status'] = 1;
+		}else{
+			$content['mail_file_status'] = 0;
+		}
 
 		$this->CI->user_certification_model->update($info->id, array(
 			'content'=>json_encode($content)

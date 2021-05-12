@@ -11,6 +11,7 @@ class Contact extends MY_Admin_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_contact_model');
+		$this->load->library('Notification_lib');
 		$this->load->helper('admin');
  	}
 	
@@ -93,22 +94,26 @@ class Contact extends MY_Admin_Controller {
 		$this->login_info = check_admin();
 
 		try {
-			$httpClient = HttpClient::create();
-			$response = $httpClient->request('PUT', ENV_NOTIFICATION_REQUEST_URL, [
-				'body' => json_encode(['id' => $id, 'action' => $action, 'user_id' => $this->login_info->id]),
-				'headers' => ['Content-Type' => 'application/json'],
-			]);
+			// 目標狀態是未登入 或 欲審核推播的會員不是管理員時
+			if(!isset($this->login_info) || (!$this->notification_lib->has_check_permission($this->login_info) &&
+				($action == 1 || $action == 2))) {
+				$statusCode = 401;
+				$statusDescription = '你沒有權限做此操作。';
+			}else {
+				$httpClient = HttpClient::create();
+				$response = $httpClient->request('PUT', ENV_NOTIFICATION_REQUEST_URL, [
+					'body' => json_encode(['id' => $id, 'action' => $action, 'user_id' => $this->login_info->id]),
+					'headers' => ['Content-Type' => 'application/json'],
+				]);
 
-			$statusCode = $response->getStatusCode();
+				$statusCode = $response->getStatusCode();
+				$statusDescription = '更新成功。';
+			}
 		} catch (Exception $e) {
 			$statusCode = -1;
 			$statusDescription = '無法連線到推播中心';
 		} finally {
-			if ($statusCode == 200) {
-				return json_encode(['code' => $statusCode, 'description' => 'success']);
-			} else {
-				return json_encode(['code' => $statusCode, 'description' => 'failure']);
-			}
+			return json_encode(['code' => $statusCode, 'description' => $statusDescription]);
 		}
 	}
 
@@ -139,12 +144,15 @@ class Contact extends MY_Admin_Controller {
 				]);
 
 				$statusCode = $response->getStatusCode();
+				$statusDescription = '';
 			} catch (Exception $e) {
 				$statusCode = -1;
 				$statusDescription = '無法連線到推播中心';
 			} finally {
 				if ($statusCode == 200) {
-					$notification_content = array('data' => $response->toArray()['data']);
+					$permission = $this->notification_lib->has_check_permission($this->login_info);
+					$notification_content = array('permission' => $permission,
+						'data' => $response->toArray()['data']);
 				} else {
 					$msg = '取得不到推播中心的資料! 請洽工程師。 (狀態碼:'.$statusCode.' '.$statusDescription.')';
 					echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><script language="javascript">alert("'.$msg.'");</script>';
@@ -163,21 +171,21 @@ class Contact extends MY_Admin_Controller {
 
 			// 如果 payload 有帶 notification，則視為發送推播
 			if(isset($post["notification"])) {
-				$this->load->model('user/user_notification_model');
+				$this->load->model('log/Log_userlogin_model');
 
 				// 投資人 / 借貸人 / 不過濾
-				$targetCategory = isset($post['investment'])?NotificationTargetCategory::investment:0;
-				$targetCategory += isset($post['loan'])?NotificationTargetCategory::loan:0;
+				$targetCategory = isset($post['investment'])?NotificationTargetCategory::Investment:0;
+				$targetCategory += isset($post['loan'])?NotificationTargetCategory::Loan:0;
 
 				$platform = array();
 				if(isset($post['android']))
 					$platform[] = 'android';
 				if(isset($post['ios']))
 					$platform[] = 'ios';
-				if(empty($platform))
-					$platform = array('android', 'ios');
 
-				if(!isset($post['send_date']) || $post['send_date'] != date('Y-m-d H:i',strtotime($post['send_date']))) {
+				if(empty($platform)) {
+					alert('必須選定發送的平台，請重新填入。', admin_url('contact/send_email'));
+				}else if(!isset($post['send_date']) || $post['send_date'] != date('Y-m-d H:i',strtotime($post['send_date']))) {
 					alert('預定發送時間不能為空，或是格式有誤。', admin_url('contact/send_email'));
 				}else if(time() - strtotime($post['send_date']) > 0) {
 					alert('預定發送時間不能比目前時間早，請重新填入。', admin_url('contact/send_email'));
@@ -185,7 +193,7 @@ class Contact extends MY_Admin_Controller {
 					alert('必須勾選發送的對象，如投資端等。', admin_url('contact/send_email'));
 				}
 
-				$devices = $this->user_notification_model->get_filtered_deviceid($post, $targetCategory);
+				$devices = $this->Log_userlogin_model->get_filtered_deviceid($post, $targetCategory);
 				$data = array(
 					'user_id' => $this->login_info->id,
 					'sender_name' => $this->login_info->name,
@@ -203,32 +211,23 @@ class Contact extends MY_Admin_Controller {
 							"category" => "NEW_MESSAGE_CATEGORY"
 						)
     				),
+					"type" => NotificationType::Manual
 				);
 
 				if("" != trim($post['target']))
 					$data['data']['targetNo']= trim($post['target']);
 
-				try {
-					$httpClient = HttpClient::create();
-					$response = $httpClient->request('POST', ENV_NOTIFICATION_REQUEST_URL, [
-						'body' => json_encode($data),
-						'headers' => ['Content-Type' => 'application/json']
-					]);
-					$statusCode = $response->getStatusCode();
-					$statusDescription = '';
-				} catch (Exception $e) {
-					$statusCode = -1;
-					$statusDescription = '無法連線到推播中心';
-				} finally {
-					if ($statusCode == 200 || $statusCode == 201) {
-						if (count($devices) == 0)
-							alert('推播預約失敗! 因為沒有任何匹配的設備，請重新選取篩選規則。', admin_url('contact/send_email'));
-						else
-							alert('推播預約成功! 該推播總共會有 ' . (count($devices['android'])+count($devices['ios'])) . ' 個設備收到推播訊息。', admin_url('contact/send_email'));
-					}else{
-						alert('推播預約失敗! 請洽工程師。 (狀態碼:'.$statusCode.' '.$statusDescription.')', admin_url('contact/send_email'));
-					}
+				$result = $this->notification_lib->send_notification($data);
+				if ($result['code'] == 200 || $result['code'] == 201) {
+					$c = (count($devices ,COUNT_RECURSIVE) - count($devices) - array_sum(array_map('count',$devices )));
+					if ($c == 0)
+						alert('推播預約失敗! 因為沒有任何匹配的設備，請重新選取篩選規則。', admin_url('contact/send_email'));
+					else
+						alert('推播預約成功! 該推播總共會有 ' . $c . ' 個設備收到推播訊息。', admin_url('contact/send_email'));
+				}else{
+					alert('推播預約失敗! 請洽工程師。 (狀態碼:'.$result['code'].' '.$result['msg'].')', admin_url('contact/send_email'));
 				}
+
 			}else {
 				$fields = ['email', 'title', 'content'];
 				foreach ($fields as $field) {

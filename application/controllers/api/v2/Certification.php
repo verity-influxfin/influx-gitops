@@ -1714,7 +1714,7 @@ class Certification extends REST_Controller {
 
                 $send_mail = true;
 				// 加入檔案尚未為回傳標記
-				// $content['mail_file_status'] = 0;
+				$content['mail_file_status'] = 0;
             }
 
 
@@ -1936,7 +1936,7 @@ class Certification extends REST_Controller {
                     $this->mail_check($user_id,$investor);
                     $send_mail =true;
 					// 加入檔案回傳標記
-					// $content['mail_file_status'] = 0;
+					$content['mail_file_status'] = 0;
                 }
             }
             if(isset($input['passbook_image_type'])){

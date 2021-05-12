@@ -11,18 +11,18 @@
 									<form role="form" method="post" onsubmit="return form_onsubmit('確認發送此推播？');" >
 										<div class="align-items-start">
 											<div class="form-group mr-3">
+                                                                                                <label>平台：</label><br/>
+                                                                                                <input type="checkbox" name="android" value="1" checked>
+                                                                                                <label for="android">Android</label>
+                                                                                                <input type="checkbox" name="ios" value="1" checked>
+                                                                                                <label for="ios">IOS</label>
+                                                                                        </div>
+											<div class="form-group mr-3">
 												<label>發送對象：</label><br/>
 												<!--<input type="checkbox" name="loan" value="1">
 												<label for="loan">借款</label>-->
-												<input type="checkbox" name="investment" value="1">
+												<input type="checkbox" name="investment" value="1" checked>
 												<label for="investment">投資</label>
-											</div>
-											<div class="form-group mr-3">
-												<label>平台：</label><br/>
-												<input type="checkbox" name="android" value="1">
-												<label for="android">Android</label>
-												<input type="checkbox" name="ios" value="1">
-												<label for="ios">IOS</label>
 											</div>
 											<div class="form-group mr-3">
 												<label>性別：</label><br/>
@@ -137,13 +137,13 @@
 									<td><?= $record['number_of_tokens']?></td>
 									<td><?= $record['sender_name'] ?></td>
 									<td class="col-md-2">
-										<? if($record['status']==0) { ?>
+										<? if($record['status'] == 0 && $permission) { ?>
 											<button type="button" class="btn btn-danger check" data-action="2" onclick="check_notification(this)">拒絕</button>
 											<button type="button" class="btn btn-primary check" data-action="1" onclick="check_notification(this)">核可</button>
 										<? } else { ?>
 											<?= $this->config->item('notification')['status'][$record['status']] ?>
 										<? } ?>
-										<? if($record['status']==1) { ?>
+										<? if($record['status'] == 1) { ?>
 											<button type="button" class="btn btn-warning check" data-action="4" onclick="check_notification(this)">取消</button>
 										<? } ?>
 									</td>
