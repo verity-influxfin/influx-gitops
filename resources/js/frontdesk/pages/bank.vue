@@ -40,6 +40,40 @@
 </template>
 
 <script>
+function viewport_convert(px = 0, vw = 0, vh = 0){
+  if(px != 0){
+	  if(vw){
+		  return (100 * px / window.innerWidth);
+	  } else {
+		  return (100 * px / window.innerHeight);
+	  }
+  } else if(vw != 0 && vh != 0){
+	  var w_h_arr = [];
+	  w_h_arr["width"] = Math.ceil((window.innerWidth * vw / 100));
+	  w_h_arr["height"] = Math.ceil((window.innerHeight * vh / 100));
+	  return w_h_arr;
+  } else if(vw != 0){
+	  return Math.ceil((window.innerWidth * vw / 100));
+  } else if(vh != 0){
+	  return Math.ceil((window.innerHeight * vh / 100));
+  }
+}
+
+$(document).ready(function() {
+	const urlParams = new URLSearchParams(window.location.search);
+    let move = urlParams.get("move");
+	let screen_width = screen.width;
+	let move_range;
+	if(move){
+		if(screen_width > 767){
+			move_range = 49;
+		}else{
+			move_range = 130;
+		}
+		let height_range = viewport_convert(0,move_range);
+		$("html, body").animate({ scrollTop: height_range }, 2000);
+	}
+});
 export default {
   data: () => ({
     phone: "",
