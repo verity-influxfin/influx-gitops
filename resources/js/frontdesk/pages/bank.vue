@@ -62,8 +62,15 @@ function viewport_convert(px = 0, vw = 0, vh = 0){
 $(document).ready(function() {
 	const urlParams = new URLSearchParams(window.location.search);
     let move = urlParams.get("move");
+	let screen_width = screen.width;
+	let move_range;
 	if(move){
-		let height_range = viewport_convert(0,49);
+		if(screen_width > 767){
+			move_range = 49;
+		}else{
+			move_range = 130;
+		}
+		let height_range = viewport_convert(0,move_range);
 		$("html, body").animate({ scrollTop: height_range }, 2000);
 	}
 });
