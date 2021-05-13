@@ -6,8 +6,8 @@ class Reports extends REST_Controller {
 
     public $user_info;
 
-    private $allowedReports = ['balance_sheet', 'income_statement', 'business_tax_return_report','insurance_table','amendment_of_register','credit_investigation','identification_card_front','identification_card_back'];
-	private $needAuthReports = ['identification_card_front', 'identification_card_back'];
+    private $allowedReports = ['balance_sheet', 'income_statement', 'business_tax_return_report','insurance_table','amendment_of_register','credit_investigation','identification_card_front','identification_card_back','national_health_insurance'];
+	private $needAuthReports = ['identification_card_front', 'identification_card_back', 'national_health_insurance'];
     public function __construct()
     {
         parent::__construct();

@@ -19,6 +19,8 @@ class Report_scan_lib
 		'identification_card_fronts' => 'reports/identification-card/front/',
         'identification_card_back' => 'reports/identification-card/back/',
 		'identification_card_backs' => 'reports/identification-card/back/',
+		'national_health_insurance' => 'reports/national-health-insurance/',
+		'national_health_insurances' => 'reports/national-health-insurance/',
     ];
 
     function __construct()
