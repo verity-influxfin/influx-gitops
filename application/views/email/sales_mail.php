@@ -164,25 +164,15 @@
                                cellpadding="0" cellspacing="0">
                             <tr>
                                 <td class="img-flex">
-                                    <a href="{url}"><img src="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}.jpg"
+                                    <a href="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}"><img src="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}"
                                             style="vertical-align:top;" width="800" alt=""/></a></td>
                             </tr>
                             <tr>
-                                <td data-bgcolor="bg-block" class="holder" style="padding:35px 30px 45px;"
-                                    bgcolor="#f9f9f9">
-                                    <table width="100%" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td colspan="2" data-color="text" data-size="size text" data-min="10"
-                                                data-max="26" data-link-color="link text color"
-                                                data-link-style="font-weight:bold; text-decoration:underline; color:#40aceb;"
-                                                align="center"
-                                                style="font:bold 16px/25px Arial, Helvetica, sans-serif; color:#888; letter-spacing: 1px">
-                                                {content}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </td>
-                            </tr>
+								<td data-bgcolor="bg-block" class="holder" style="padding:35px 30px 45px; color:#888;"
+									bgcolor="#f9f9f9">
+									{content}
+								</td>
+							</tr>
                             <tr>
                                 <td height="28"></td>
                             </tr>
@@ -209,7 +199,7 @@
                                                             class="aligncenter"
                                                             style="font:12px/16px Arial, Helvetica, sans-serif; color:#797c82; padding:0 0 10px;">
                                                             此信件為系統自動發送，請勿直接回覆<br>
-                                                            Copyright © 2021 普匯金融科技股份有限公司
+                                                            Copyright © <?= date('Y') ?> 普匯金融科技股份有限公司
                                                         </td>
                                                     </tr>
                                                 </table>
