@@ -429,26 +429,26 @@ class Certification_lib{
         return false;
     }
 
-    public function student_verify($info = array()){
-       if($info && $info->status ==0 && $info->certification_id==2) {
-           $status 	 = 3;
-           $content     = json_decode($info->content);
-           $user_id        = $info->user_id;
-           $cer_id         = $info->id;
-           $school       = $content->info->counts->school;
-           $student_id   = $content->info->counts->student_id;
-
-           $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id,$cer_id);
-           $rawData['back_image']       = $this->CI->scan_lib->detectText($content['back_image'],$user_id,$cer_id,'[a-zA-Z]');
-
-           $this->CI->user_certification_model->update($info->id,array(
-               'status'	=> $status,
-               'sys_check'	=> 1,
-           ));
-           return true;
-       }
-       return false;
-    }
+    // public function student_verify($info = array()){
+    //    if($info && $info->status ==0 && $info->certification_id==2) {
+    //        $status 	 = 3;
+    //        $content     = json_decode($info->content);
+    //        $user_id        = $info->user_id;
+    //        $cer_id         = $info->id;
+    //        $school       = $content->info->counts->school;
+    //        $student_id   = $content->info->counts->student_id;
+	//
+    //        $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id,$cer_id);
+    //        $rawData['back_image']       = $this->CI->scan_lib->detectText($content['back_image'],$user_id,$cer_id,'[a-zA-Z]');
+	//
+    //        $this->CI->user_certification_model->update($info->id,array(
+    //            'status'	=> $status,
+    //            'sys_check'	=> 1,
+    //        ));
+    //        return true;
+    //    }
+    //    return false;
+    // }
 
     public function social_verify($info = array())
     {
@@ -2420,6 +2420,9 @@ class Certification_lib{
             }
 
 			foreach($certification as $key => $value){
+				if($company){
+                    $user_id = $key < CERTIFICATION_FOR_JUDICIAL ? $naturalPerson->id : $user_id;
+                }
                 $user_certification = $this->get_certification_info($user_id,$key,$investor,$get_fail);
                 if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
@@ -2436,8 +2439,7 @@ class Certification_lib{
 				}
 
                     $certification_list[$key] = $value;
-                }
-			}
+            }
 			return $certification_list;
 		}
 		return false;
