@@ -28,7 +28,7 @@ class Report_scan_lib
         $this->CI = &get_instance();
         $this->CI->load->library('S3_upload');
         $this->CI->load->library('S3_lib');
-        $this->ocr_url = "http://" . getenv('GRACULA_IP') . ":" . getenv('GRACULA_PORT') . "/ocr/api/v1.0/";
+        $this->ocr_url = "http://" . getenv('OCR_IP') . ":" . getenv('OCR_PORT') . "/ocr/api/v1.0/";
     }
 
     public function requestForScan($type, $image, $ownerId, $ocr_type='')
