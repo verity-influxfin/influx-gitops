@@ -2420,10 +2420,11 @@ class Certification_lib{
             }
 
 			foreach($certification as $key => $value){
+				$userId = $user_id;
 				if($company){
-                    $user_id = $key < CERTIFICATION_FOR_JUDICIAL ? $naturalPerson->id : $user_id;
+                    $userId = $key < CERTIFICATION_FOR_JUDICIAL ? $naturalPerson->id : $user_id;
                 }
-                $user_certification = $this->get_certification_info($user_id,$key,$investor,$get_fail);
+                $user_certification = $this->get_certification_info($userId,$key,$investor,$get_fail);
                 if($user_certification){
 					$value['user_status'] 		   = intval($user_certification->status);
 					$value['certification_id'] 	   = intval($user_certification->id);
