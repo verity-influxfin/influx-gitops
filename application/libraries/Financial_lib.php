@@ -592,6 +592,7 @@ class Financial_lib{
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }

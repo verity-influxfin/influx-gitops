@@ -240,7 +240,7 @@ class Transfer extends MY_Admin_Controller
                                 <th>科系</th>
                                 <th>利率</th>
                                 <th>放款期間</th>
-                                <th>還款方式</th>
+                                <th>計息方式</th>
                                 <th>放款日期</th>
                                 <th>債權狀態</th>
                                 <th>案件狀態</th>
@@ -1027,7 +1027,7 @@ class Transfer extends MY_Admin_Controller
                     $repayment_type = $this->config->item('repayment_type');
                     $subloan_list = $this->config->item('subloan_list');
                     $transfer_status_list = $this->investment_model->transfer_status_list;
-                    $sheetTItle = ['產品名稱','案號','借款人ID','投資人ID','債權總額','投資金額','剩餘本金','核准信評','學校/公司','科系','利率','放款期間','還款方式','放款日期','案件狀態','逾期天數','逾期資產','調降信評','債轉狀態'];
+                    $sheetTItle = ['產品名稱','案號','借款人ID','投資人ID','債權總額','投資金額','剩餘本金','核准信評','學校/公司','科系','利率','放款期間','計息方式','放款日期','案件狀態','逾期天數','逾期資產','調降信評','債轉狀態'];
                     $cell  = [];
                     foreach ($list as $key => $value) {
                         $target = $targets[$value->target_id];

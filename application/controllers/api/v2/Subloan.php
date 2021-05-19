@@ -69,7 +69,7 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} amount 金額
 	 * @apiSuccess {Object} instalment 期數
-	 * @apiSuccess {Object} repayment 還款方式
+	 * @apiSuccess {Object} repayment 計息方式
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -259,7 +259,7 @@ class Subloan extends REST_Controller {
      *       "error": "407"
      *     }
 	 *
-     * @apiError 409 不支援此還款方式
+     * @apiError 409 不支援此計息方式
      * @apiErrorExample {Object} 409
      *     {
      *       "result": "ERROR",
@@ -340,7 +340,7 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} target_id Target ID
 	 * @apiSuccess {String} amount 產品轉換金額
 	 * @apiSuccess {String} instalment 期數
-	 * @apiSuccess {String} repayment 還款方式
+	 * @apiSuccess {String} repayment 計息方式
 	 * @apiSuccess {String} settlement_date 結息日
 	 * @apiSuccess {String} status 產品轉換狀態 0:待簽約 1:轉貸中 2:成功 8:已取消 9:申請失敗
 	 * @apiSuccess {String} created_at 申請日期
@@ -354,7 +354,7 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} subloan_target.platform_fee 平台服務費
 	 * @apiSuccess {String} subloan_target.interest_rate 核可利率
 	 * @apiSuccess {String} subloan_target.instalment 期數
-	 * @apiSuccess {String} subloan_target.repayment 還款方式
+	 * @apiSuccess {String} subloan_target.repayment 計息方式
 	 * @apiSuccess {String} subloan_target.remark 備註
 	 * @apiSuccess {String} subloan_target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {String} subloan_target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案

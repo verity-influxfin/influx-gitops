@@ -5,16 +5,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use Aws\Sns\SnsClient;
 
 class Sms_lib {
-	
+
 	private $client;
-	
+
 	public function __construct()
     {
         $this->CI = &get_instance();
         $this->CI->load->model('user/sms_verify_model');
 		$this->CI->load->model('log/log_sns_model');
     }
-	
+
 	public function send_register($phone=""){
 		if(!empty($phone)){
 			$code	 = get_rand_token();
@@ -67,7 +67,7 @@ class Sms_lib {
 		}
 		return false;
 	}
-	
+
 	public function notice_normal_target($user_id,$amount=0,$target_no="",$date=""){
 		if(!empty($user_id)){
 			$user_info 	= $this->CI->user_model->get($user_id);
@@ -76,10 +76,10 @@ class Sms_lib {
                 $content = '【普匯通知】:借款'.$target_no.'本期應還本息為'.$amount.'元，還款日為本月10號，請於當天凌晨前將款項匯入專屬還款帳號。';
 				return $this->send('target_notice',$user_id,$phone,$content);
 			}
-		}				
+		}
 		return false;
 	}
-	
+
 	public function notice_delay_target($user_id,$amount=0,$target_no=""){
 		if(!empty($user_id)){
 			$user_info 	= $this->CI->user_model->get($user_id);
@@ -89,7 +89,7 @@ class Sms_lib {
 善意提醒，您的借款 $target_no ，本期應還款 $amount 元已逾期，請立即繳款，逾寬限期需立即全額還款。";
 				return $this->send('target_notice',$user_id,$phone,$content);
 			}
-		}				
+		}
 		return false;
 	}
 
@@ -121,6 +121,29 @@ class Sms_lib {
         return false;
     }
 
+	public function notify_target_associates($userId, $phone, $username, $subProduct, $character)
+	{
+		if (!$userId || !$phone || !$username || !$subProduct || !$character) {
+			return false;
+		}
+
+		$content = "您好，您的合作夥伴{$username}在普匯金融科技邀請您做為企業主貸{$subProduct}專案的{$character}，請至普匯金融科技官網了解更多，或下載普匯inFlux更新您的資料，取得授信額度。";
+
+		return $this->send('target_invitation', $userId, $phone, $content);
+	}
+
+	// 百萬信保微企貸
+	public function notify_target_product_1002_associates($userId, $phone, $username, $subProduct, $character)
+	{
+		if (!$userId || !$phone || !$username) {
+			return false;
+		}
+
+		$content = "{$username}公司已申請加入您作為保證人，請至普匯inFlux申請，詳見inFlux 信保微企貸。";
+
+		return $this->send('target_invitation', $userId, $phone, $content);
+	}
+
     public function verify_code($phone="",$code=""){
 		if(!empty($phone) && !empty($code)){
 			$param = array(
@@ -137,7 +160,7 @@ class Sms_lib {
 		}
 		return false;
 	}
-	
+
 	public function get_code($phone=""){
 		if(!empty($phone)){
 			$rs = $this->CI->sms_verify_model->order_by("expire_time","desc")->get_by(array("phone"=>$phone));
@@ -156,14 +179,14 @@ class Sms_lib {
 	}
 
 	public function send($type,$user_id,$phone,$content){
-		
+
 		$data = array(
 			"UID"	=> EVER8D_UID,
 			"PWD"	=> EVER8D_PWD,
 			"msg"	=> $content,
 			"DEST"	=> $phone,
 		);
-		
+
 		if(is_development()){
 			$rs 	= 1;
 			$status = 1;
@@ -175,7 +198,7 @@ class Sms_lib {
 				$status	= 1;
 			}
 		}
-		
+
 		$rs = $this->CI->log_sns_model->insert(array(
 			"type" 		=> $type,
 			"user_id"	=> $user_id,
@@ -185,5 +208,5 @@ class Sms_lib {
 		));
 		return $status?true:false;
 	}
-	
+
 }

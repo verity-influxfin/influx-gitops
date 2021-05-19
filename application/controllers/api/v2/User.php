@@ -167,31 +167,32 @@ class User extends REST_Controller {
         $input = $this->input->post(NULL, TRUE);
 		$phone = isset($input['phone'])?trim($input['phone']):'';
 
-		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $phone)){
+		if(!preg_match('/^09[0-9]{8}$/', $phone)){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
+        // 檢查該手機在有效時間內註冊簡訊驗證碼是否正確
 		$this->load->library('sms_lib');
 		$code = $this->sms_lib->get_code($phone);
-		if($code && (time()-$code['created_at']) <= SMS_LIMIT_TIME){
+		if($code && (time()-$code['created_at']) <= SMS_LIMIT_TIME && !is_development()){
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
 
-		$result = $this->user_model->get_by('phone', $phone);
-        if ($result) {
-			$this->response(array('result' => 'ERROR','error' => USER_EXIST ));
+        $send_sms_result = $this->sms_lib->send_register($phone);
+        if ($send_sms_result) {
+            $this->response(array('result' => 'SUCCESS'));
         } else {
-			$this->sms_lib->send_register($phone);
-			$this->response(array('result' => 'SUCCESS'));
+            $this->response(array('result' => 'ERROR','error' => SMS_SEND_FAIL ));
         }
     }
 
-	 /**
+	/**
      * @api {post} /v2/user/register 會員 註冊
 	 * @apiVersion 0.2.0
 	 * @apiName PostUserRegister
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
+     * @apiParam {String{8}} tax_id 統編(若為法人身份)
      * @apiParam {String{6..50}} password 設定密碼
      * @apiParam {String} code 簡訊驗證碼
 	 * @apiParam {String} [access_token] Facebook AccessToken
@@ -256,100 +257,196 @@ class User extends REST_Controller {
 		$this->load->library('facebook_lib');
 		$this->load->library('sms_lib');
 
-		$input 		= $this->input->post(NULL, TRUE);
-		$data		= [];
-        $fields 	= ['phone','password','code'];
-        foreach ($fields as $field) {
-            if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }else{
-				$data[$field] = $input[$field];
-			}
+        $input = $this->input->post(NULL, TRUE);
+        $result = [
+            'result' => 'ERROR',
+            'error' => INPUT_NOT_CORRECT
+        ];
+
+        // required fields
+
+        // check phone
+        if (!isset($input['phone']) || !preg_match('/^09[0-9]{8}$/', $input['phone'])) {
+            goto END;
+        }
+        // check password
+        if (!isset($input['password']) || (strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password']) > PASSWORD_LENGTH_MAX)) {
+            $result['error'] = PASSWORD_LENGTH_ERROR;
+            goto END;
+        }
+        // TODO: wait to implement
+        // check code
+        if (!isset($input['code'])) {
+            goto END;
         }
 
-		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $input['phone'])){
-			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-		}
 
-		if(strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password'])> PASSWORD_LENGTH_MAX ){
-			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
-		}
-
-		$user_exist = $this->user_model->get_by('phone',$input['phone']);
-		if ($user_exist) {
-			$this->response(array('result' => 'ERROR','error' => USER_EXIST ));
-        }
-
-		$input['investor'] 			= isset($input['investor'])&&$input['investor']?1:0;
-		$data['promote_code']		= isset($input['promote_code'])?$input['promote_code']:'';
-		$data['status']				= $input['investor']?0:1;
-		$data['investor_status']	= $input['investor']?1:0;
-		$data['my_promote_code'] 	= $this->get_promote_code();
-		$data['auth_otp'] 			= get_rand_token();
-
-        $rs = $this->sms_lib->verify_code($data['phone'], $data['code']);
-        if ($rs) {
-            unset($data['code']);
-            $access_token = false;
-            if (isset($input['access_token'])) {
-                $access_token = $input['access_token'];
-			    unset($input['access_token']);
+        // 確認該法人是否存在
+        $tax_id_exist = isset($input['tax_id']);
+        if ($tax_id_exist) {
+            // check tax_id 統編8碼數字
+            if (strlen($input['tax_id']) != 8) {
+                $result['error'] = TAX_ID_LENGTH_ERROR;
+                goto END;
             }
-			$insert = $this->user_model->insert($data);
-			if($insert){
-			    if($access_token){
-                    $this->load->library('facebook_lib');
-                    $info = $this->facebook_lib->get_info($access_token);
-                    $content = [
-                        'facebook' => $info,
-                        'instagram' => '',
-                    ];
-                    $param = [
-                        'user_id' => $insert,
-                        'certification_id' => 4,
-                        'investor' => $input['investor'],
-                        'content' => json_encode($content),
-                    ];
-                    $this->load->model('user/user_certification_model');
-                    $this->user_certification_model->insert($param);
+
+            // 檢查'法人關聯表-judicial_person'是否已存在此公司對應自然人之歸戶
+            $this->load->model('user/judicial_person_model');
+            $company_already_exist = $this->judicial_person_model->get_by([
+                    'tax_id' => $input['tax_id'],
+                    // 2:審核失敗
+                    'status !=' => 2
+            ]);
+            if($company_already_exist){
+                $result['error'] = COMPANY_EXIST;
+                goto END;
+            }
+
+            // 檢查該法人在'使用者表-users'是否已存在
+            $user_already_exist = $this->user_model->get_by([
+                'id_number' => $input['tax_id'],
+                'phone' => $input['phone'],
+                // 法人狀態: 1=啟用
+                'company_status' => 1
+            ]);
+            if ($user_already_exist) {
+                $result['error'] = COMPANY_EXIST;
+                goto END;
+            }
+
+        // 確認自然人是否存在
+        } else {
+            // 檢查該自然人在'使用者表-users'是否已存在
+            $user_already_exist = $this->user_model->get_by([
+                'phone' => $input['phone'],
+                // 法人狀態: 0=未啟用
+                'company_status' => 0
+            ]);
+            if ($user_already_exist) {
+                $result['error'] = USER_EXIST;
+                goto END;
+            }
+        }
+
+        // default parameters
+
+        // investor
+        if (!isset($input['investor']) || !in_array($input['investor'], ['0', '1'])) {
+            $input['investor'] = 0;
+        }
+
+        // 確認簡訊驗證
+        $verify_result = $this->sms_lib->verify_code($input['phone'], $input['code']);
+        if ($verify_result) {
+
+            $opt_token = get_rand_token();
+
+            // 新自然人帳號資料
+            $new_account_data = [
+                'phone' => $input['phone'],
+                'password' => $input['password'],
+                'promote_code' => isset($input['promote_code']) ? $input['promote_code'] : '',
+                'status' => $input['investor'] ? 0 : 1,
+                'investor_status' => $input['investor'] ? 1 : 0,
+                'my_promote_code' => $this->get_promote_code(),
+                'auth_otp' => $opt_token,
+            ];
+
+
+            // 使用sql transaction，確保資料一致性
+
+            // 啟用SQL事務
+            $this->db->trans_start();
+
+            // 新增法人帳號
+            if ($tax_id_exist) {
+
+                // 建立法人帳號
+                $new_company_user_param = [
+                    'phone' => $input['phone'],
+                    'id_number' => $input['tax_id'],
+                    'password' => $input['password'],
+                    // 啟用法人
+                    'company_status' => 1,
+                    'auth_otp' => $opt_token,
+                ];
+                $new_id = $this->user_model->insert($new_company_user_param);
+
+                // 若該法人之自然人帳號不存在，則自動建立其自然人帳號
+                $company_user_already_exist = $this->user_model->get_by([
+                    'phone' => $input['phone'],
+                    // 法人狀態: 0=未啟用
+                    'company_status' => 0
+                ]);
+                if (!$company_user_already_exist) {
+                    $this->user_model->insert($new_account_data);
                 }
 
-				$token = (object) [
-					'id'			=> $insert,
-					'phone'			=> $data['phone'],
-					'auth_otp'		=> $data['auth_otp'],
-					'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
-					'investor'		=> $data['investor_status'],
-					'company'		=> 0,
-					'incharge'		=> 0,
-					'agent'			=> 0,
-				];
-				$request_token 		= AUTHORIZATION::generateUserToken($token);
-				$this->notification_lib->first_login($insert,$input['investor']);
-				$this->response(array(
-					'result' => 'SUCCESS',
-					'data' 	 => array(
-						'token' 		=> $request_token,
-						'expiry_time'	=> $token->expiry_time,
-						'first_time'	=> 1
-					)
-				))
+            // 新增自然人帳號
+            } else {
 
-                ;
-			}else{
-				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
-			}
-		}else{
-			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_ERROR ));
-		}
+                $new_id = $this->user_model->insert($new_account_data);
+                if ($new_id) {
+
+                    // 若facebook的token存在，則新增'社群'認證
+                    $facebook_access_token = isset($input['access_token']) ? $input['access_token'] : false;
+                    if ($facebook_access_token) {
+                        $this->load->model('user/user_certification_model');
+                        $this->user_certification_model->add_facebook_certification(
+                            $facebook_access_token,
+                            $new_id,
+                            $input['investor']
+                        );
+                    }
+
+                } else {
+                    $result['error'] = INSERT_ERROR;
+                    goto END;
+                }
+            }
+
+            // 回傳創建帳號成功之token
+            $token = (object) [
+                'id'            => $new_id,
+                'phone'         => $new_account_data['phone'],
+                'auth_otp'      => $new_account_data['auth_otp'],
+                'expiry_time'   => time() + REQUEST_TOKEN_EXPIRY,
+                'investor'      => $new_account_data['investor_status'],
+                'company'       => $tax_id_exist ? 1 : 0,
+                'incharge'      => 0,
+                'agent'         => 0,
+            ];
+            $request_token      = AUTHORIZATION::generateUserToken($token);
+            $this->notification_lib->first_login($new_id, $input['investor']);
+            $result = [
+                'result' => 'SUCCESS',
+                'data'   => [
+                    'token'         => $request_token,
+                    'expiry_time'   => $token->expiry_time,
+                    'first_time'    => 1
+                ]
+            ];
+
+            // 事務交易完成，提交結果
+            $this->db->trans_complete();
+
+        } else {
+            $result['error'] = VERIFY_CODE_ERROR;
+            goto END;
+        }
+
+END:
+        // response result
+        $this->response($result);
     }
 
-	 /**
+	/**
      * @api {post} /v2/user/login 會員 用戶登入
 	 * @apiVersion 0.2.0
 	 * @apiName PostUserLogin
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
+     * @apiParam {String{8}} tax_id 統編(若為法人身份)
      * @apiParam {String{6..50}} password 密碼
 	 * @apiParam {Number=0,1} [investor=0] 1:投資端 0:借款端
      *
@@ -391,8 +488,9 @@ class User extends REST_Controller {
      *     }
 	 *
      */
-	public function login_post(){
 
+    public function login_post()
+    {
 		$input = $this->input->post(NULL, TRUE);
         $fields 	= ['phone','password'];
         $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
@@ -409,7 +507,22 @@ class User extends REST_Controller {
 		}
 
 		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
-		$user_info 	= $this->user_model->get_by('phone', $input['phone']);
+
+        // 自然人或法人判斷
+        if (isset($input['tax_id'])) {
+            // 法人
+            $user_info = $this->user_model->get_by([
+                'id_number' => $input['tax_id'],
+                'phone' => $input['phone'],
+                'company_status' => 1
+            ]);
+        } else {
+            // 自然人
+            $user_info = $this->user_model->get_by([
+                'phone' => $input['phone'],
+                'company_status' => 0
+            ]);
+        }
 		if($user_info){
             //判斷鎖定狀態並解除
             $this->load->library('user_lib');
@@ -440,14 +553,27 @@ class User extends REST_Controller {
 					$first_time = 1;
 				}
 
+                // 負責人
+                $is_charge = 0;
+                if (isset($input['tax_id'])) {
+                    $this->load->model('user/judicial_person_model');
+                    $charge_person = $this->judicial_person_model->check_valid_charge_person($input['tax_id']);
+                    if ($charge_person) {
+                        $userData = $this->user_model->get($charge_person->user_id);
+                        $userData ? $is_charge = 1 : '';
+                    }
+                } else {
+                    // TODO: 自然人登入，是否需關聯其法人負責人
+                }
+
 				$token = (object) [
 					'id'			=> $user_info->id,
 					'phone'			=> $user_info->phone,
 					'auth_otp'		=> get_rand_token(),
 					'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
 					'investor'		=> $investor,
-					'company'		=> 0,
-					'incharge'		=> 0,
+					'company'		=> isset($input['tax_id']) ? 1 : 0,
+					'incharge'		=> $is_charge,
 					'agent'			=> 0,
 				];
 				$request_token 		= AUTHORIZATION::generateUserToken($token);
@@ -524,73 +650,74 @@ class User extends REST_Controller {
      *
      */
 
-	public function sociallogin_post(){
-        $input 		= $this->input->post(NULL, TRUE);
-		$investor	= isset($input['investor']) && $input['investor'] ?1:0;
-		$device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
-        $location   = isset($input['location'])?trim($input['location']):'';
-		$fields = ['access_token'];
-		foreach ($fields as $field) {
-            if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }
-        }
+    // 未使用
+	// public function sociallogin_post(){
+ //        $input 		= $this->input->post(NULL, TRUE);
+	// 	$investor	= isset($input['investor']) && $input['investor'] ?1:0;
+	// 	$device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
+ //        $location   = isset($input['location'])?trim($input['location']):'';
+	// 	$fields = ['access_token'];
+	// 	foreach ($fields as $field) {
+ //            if (empty($input[$field])) {
+	// 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+ //            }
+ //        }
 
-		$this->load->library('facebook_lib');
-		$info	 	= $this->facebook_lib->get_info($input['access_token']);
-		$user_id  	= $this->facebook_lib->login($info);
-		$account  	= isset($info['id'])?$info['id']:'';
-		if($user_id && $account){
-			$user_info = $this->user_model->get($user_id);
-			if($user_info){
+	// 	$this->load->library('facebook_lib');
+	// 	$info	 	= $this->facebook_lib->get_info($input['access_token']);
+	// 	$user_id  	= $this->facebook_lib->login($info);
+	// 	$account  	= isset($info['id'])?$info['id']:'';
+	// 	if($user_id && $account){
+	// 		$user_info = $this->user_model->get($user_id);
+	// 		if($user_info){
 
-				if($user_info->block_status != 0){
-					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
-				}
+	// 			if($user_info->block_status != 0){
+	// 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+	// 			}
 
-				$first_time = 0;
-				if($investor==1 && $user_info->investor_status==0){
-					$first_time = $user_info->investor_status = 1;
-					$this->user_model->update($user_info->id,array('investor_status'=>1));
-				}else if($investor==0 && $user_info->status==0){
-					$first_time = $user_info->status = 1;
-					$this->user_model->update($user_info->id,array('status'=>1));
-				}
+	// 			$first_time = 0;
+	// 			if($investor==1 && $user_info->investor_status==0){
+	// 				$first_time = $user_info->investor_status = 1;
+	// 				$this->user_model->update($user_info->id,array('investor_status'=>1));
+	// 			}else if($investor==0 && $user_info->status==0){
+	// 				$first_time = $user_info->status = 1;
+	// 				$this->user_model->update($user_info->id,array('status'=>1));
+	// 			}
 
-				$token = (object) [
-					'id'			=> $user_info->id,
-					'phone'			=> $user_info->phone,
-					'auth_otp'		=> get_rand_token(),
-					'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
-					'investor'		=> $investor,
-					'company'		=> 0,
-					'incharge'		=> 0,
-					'agent'			=> 0,
-				];
-				$request_token = AUTHORIZATION::generateUserToken($token);
-				$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
-				$this->insert_login_log($account,$investor,1,$user_id,$device_id,$location);
-				if($first_time){
-					$this->load->library('notification_lib');
-					$this->notification_lib->first_login($user_info->id,$investor);
-				}
-				$this->response(array(
-					'result' => 'SUCCESS',
-					'data' 	 => array(
-						'token'			=> $request_token,
-						'expiry_time'	=> $token->expiry_time,
-						'first_time'	=> $first_time
-					)
-				));
-			}else{
-				$this->insert_login_log($account,$investor,0,$user_id,$device_id,$location);
-				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
-			}
-		}else{
-			$this->insert_login_log($account,$investor,0,0,$device_id,$location);
-			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
-		}
-	}
+	// 			$token = (object) [
+	// 				'id'			=> $user_info->id,
+	// 				'phone'			=> $user_info->phone,
+	// 				'auth_otp'		=> get_rand_token(),
+	// 				'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
+	// 				'investor'		=> $investor,
+	// 				'company'		=> 0,
+	// 				'incharge'		=> 0,
+	// 				'agent'			=> 0,
+	// 			];
+	// 			$request_token = AUTHORIZATION::generateUserToken($token);
+	// 			$this->user_model->update($user_info->id,array('auth_otp'=>$token->auth_otp));
+	// 			$this->insert_login_log($account,$investor,1,$user_id,$device_id,$location);
+	// 			if($first_time){
+	// 				$this->load->library('notification_lib');
+	// 				$this->notification_lib->first_login($user_info->id,$investor);
+	// 			}
+	// 			$this->response(array(
+	// 				'result' => 'SUCCESS',
+	// 				'data' 	 => array(
+	// 					'token'			=> $request_token,
+	// 					'expiry_time'	=> $token->expiry_time,
+	// 					'first_time'	=> $first_time
+	// 				)
+	// 			));
+	// 		}else{
+	// 			$this->insert_login_log($account,$investor,0,$user_id,$device_id,$location);
+	// 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
+	// 		}
+	// 	}else{
+	// 		$this->insert_login_log($account,$investor,0,0,$device_id,$location);
+	// 		$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
+	// 	}
+	// }
 
 	/**
      * @api {post} /v2/user/smsloginphone 會員 忘記密碼簡訊
@@ -598,6 +725,7 @@ class User extends REST_Controller {
 	 * @apiName PostUserSmsloginphone
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
+     * @apiParam {String{8}} tax_id 統編(若為法人身份)
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
@@ -625,14 +753,13 @@ class User extends REST_Controller {
 
 	public function smsloginphone_post()
     {
-
         $input = $this->input->post(NULL, TRUE);
 		$phone = isset($input['phone'])?trim($input['phone']):'';
 		if (empty($phone)) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
-		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $phone)){
+		if(!preg_match('/^09[0-9]{8}$/', $phone)){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
@@ -642,21 +769,36 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => VERIFY_CODE_BUSY ));
 		}
 
-		$result = $this->user_model->get_by('phone', $phone);
-        if ($result) {
-			$this->sms_lib->send_verify_code($result->id,$phone);
+        // 自然人或法人判斷
+        if (isset($input['tax_id'])) {
+            // 法人
+            $user_info = $this->user_model->get_by([
+                'id_number' => $input['tax_id'],
+                'phone' => $input['phone'],
+                'company_status' => 1
+            ]);
+        } else {
+            // 自然人
+            $user_info = $this->user_model->get_by([
+                'phone' => $input['phone'],
+                'company_status' => 0
+            ]);
+        }
+        if ($user_info) {
+			$this->sms_lib->send_verify_code($user_info->id, $phone);
 			$this->response(array('result' => 'SUCCESS'));
         } else {
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
         }
     }
 
-	 /**
+	/**
      * @api {post} /v2/user/forgotpw 會員 忘記密碼
 	 * @apiVersion 0.2.0
 	 * @apiName PostUserForgotpw
      * @apiGroup User
      * @apiParam {String} phone 手機號碼
+     * @apiParam {String{8}} tax_id 統編(若為法人身份)
      * @apiParam {String} code 簡訊驗證碼
 	 * @apiParam {String{6..50}} new_password 新密碼
      *
@@ -689,7 +831,8 @@ class User extends REST_Controller {
      *     }
      *
      */
-	public function forgotpw_post(){
+	public function forgotpw_post()
+    {
 
 		$input = $this->input->post(NULL, TRUE);
         $fields 	= ['phone','code','new_password'];
@@ -699,7 +842,7 @@ class User extends REST_Controller {
             }
         }
 
-		if(!preg_match('/^09[0-9]{2}[0-9]{6}$/', $input['phone'])){
+		if(!preg_match('/^09[0-9]{8}$/', $input['phone'])){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
 
@@ -707,7 +850,21 @@ class User extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
 		}
 
-		$user_info 	= $this->user_model->get_by('phone', $input['phone']);
+        // 自然人或法人判斷
+        if (isset($input['tax_id'])) {
+            // 法人
+            $user_info = $this->user_model->get_by([
+                'id_number' => $input['tax_id'],
+                'phone' => $input['phone'],
+                'company_status' => 1
+            ]);
+        } else {
+            // 自然人
+            $user_info = $this->user_model->get_by([
+                'phone' => $input['phone'],
+                'company_status' => 0
+            ]);
+        }
 		if($user_info){
 			$this->load->library('sms_lib');
 			$rs = $this->sms_lib->verify_code($user_info->phone,$input['code']);
@@ -726,7 +883,7 @@ class User extends REST_Controller {
 		}
 	}
 
-	 /**
+	/**
      * @api {get} /v2/user/info 會員 個人資訊
 	 * @apiVersion 0.2.0
 	 * @apiName GetUserInfo
@@ -831,43 +988,44 @@ class User extends REST_Controller {
      *     }
      *
      */
-	public function bind_post()
-    {
-		$this->not_support_company();
-        $input 	= $this->input->post(NULL, TRUE);
-		$fields = ['access_token'];
-        foreach ($fields as $field) {
-            if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }
-        }
+	// 未使用
+  //   public function bind_post()
+  //   {
+		// $this->not_support_company();
+  //       $input 	= $this->input->post(NULL, TRUE);
+		// $fields = ['access_token'];
+  //       foreach ($fields as $field) {
+  //           if (empty($input[$field])) {
+		// 		$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+  //           }
+  //       }
 
-		$this->load->library('facebook_lib');
-		$meta  = $this->facebook_lib->get_user_meta($this->user_info->id);
-		if($meta){
-			$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
-		}
+		// $this->load->library('facebook_lib');
+		// $meta  = $this->facebook_lib->get_user_meta($this->user_info->id);
+		// if($meta){
+		// 	$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
+		// }
 
-		$debug_token = $this->facebook_lib->debug_token($input['access_token']);
-		if($debug_token){
-			$info 		= $this->facebook_lib->get_info($input['access_token']);
-			if($info){
-				$user_id 	= $this->facebook_lib->login($info);
-				if($user_id){
-					$this->response(array('result' => 'ERROR','error' => FBID_EXIST ));
-				}else{
-					$rs 		= $this->facebook_lib->bind_user($this->user_info->id,$info);
-					if($rs){
-						$this->set_nickname($info);
-						$this->response(array('result' => 'SUCCESS'));
-					}else{
-						$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
-					}
-				}
-			}
-		}
-		$this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
-    }
+		// $debug_token = $this->facebook_lib->debug_token($input['access_token']);
+		// if($debug_token){
+		// 	$info 		= $this->facebook_lib->get_info($input['access_token']);
+		// 	if($info){
+		// 		$user_id 	= $this->facebook_lib->login($info);
+		// 		if($user_id){
+		// 			$this->response(array('result' => 'ERROR','error' => FBID_EXIST ));
+		// 		}else{
+		// 			$rs 		= $this->facebook_lib->bind_user($this->user_info->id,$info);
+		// 			if($rs){
+		// 				$this->set_nickname($info);
+		// 				$this->response(array('result' => 'SUCCESS'));
+		// 			}else{
+		// 				$this->response(array('result' => 'ERROR','error' => TYPE_WAS_BINDED ));
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// $this->response(array('result' => 'ERROR','error' => ACCESS_TOKEN_ERROR ));
+  //   }
 
 	private function set_nickname($info){
 		if($this->user_info->nickname=='' && $info['name']){
@@ -971,7 +1129,6 @@ class User extends REST_Controller {
 		$this->not_support_company();
 		$input 		= $this->input->post(NULL, TRUE);
 		$data		= array();
-		$user_id 	= $this->user_info->id;
         $fields 	= ['password','new_password','code'];
         foreach ($fields as $field) {
             if (empty($input[$field])) {
@@ -1238,7 +1395,7 @@ class User extends REST_Controller {
 //      if ($check !== 'success') {
 //			  $this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
 //      }
-		
+
         //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
@@ -1304,7 +1461,7 @@ class User extends REST_Controller {
 //        if ($check !== 'success') {
 //			$this->response(array('result' => 'ERROR', 'error' => TARGET_IS_BUSY));
 //        }
-		
+
         //檢查是否有推薦其他人
         $promote_count    = $this->user_model->get_many_by([
             'promote_code'  => $promote_code,
@@ -1461,6 +1618,7 @@ class User extends REST_Controller {
 
         $user_id    = $this->user_info->id;
         $investor   = $this->user_info->investor;
+        $company   = $this->user_info->company;
         $bio_type       = $data['bio_type'];
         $device_id  = $data['device_id'];
 
@@ -1468,6 +1626,7 @@ class User extends REST_Controller {
             'user_id'   => $user_id,
             'bio_type'  => $bio_type,
             'investor'  => $investor,
+            'company'  => $company,
             'device_id' => $device_id,
             'auth_otp'  => get_rand_token(),
         ];
@@ -1477,6 +1636,7 @@ class User extends REST_Controller {
             'user_id'	=> $user_id,
             'bio_type'	=> $bio_type,
             'investor'	=> $investor,
+            'company'  => $company,
             'device_id' => $device_id,
         ));
 
@@ -1490,6 +1650,7 @@ class User extends REST_Controller {
                 'user_id'	=> $user_id,
                 'bio_type'	=> $bio_type,
                 'investor'	=> $investor,
+                'company'  => $company,
                 'device_id'	=> $device_id,
                 'bio_key'	=> $bio_key,
             ));
@@ -1516,6 +1677,7 @@ class User extends REST_Controller {
         $user_id    = $bio_keyData->user_id;
         $bio_type   = $bio_keyData->bio_type;
         $investor   = $bio_keyData->investor;
+        $company   = isset($bio_keyData->company) ? $bio_keyData->company : 0;
         $device_id  = $bio_keyData->device_id;
 
         if ($pdevice_id != $bio_keyData->device_id ) {
@@ -1528,6 +1690,7 @@ class User extends REST_Controller {
             'user_id'	=> $user_id,
             'bio_type'	=> $bio_type,
             'investor'	=> $investor,
+            'company'	=> $company,
             'device_id' => $device_id,
             'bio_key'   => $bio_key
         ));
@@ -1549,7 +1712,7 @@ class User extends REST_Controller {
                     'auth_otp' => get_rand_token(),
                     'expiry_time' => time() + REQUEST_TOKEN_EXPIRY,
                     'investor' => $investor,
-                    'company' => 0,
+                    'company' => $company,
                     'incharge' => 0,
                     'agent' => 0,
                 ];
@@ -1563,6 +1726,7 @@ class User extends REST_Controller {
                     'bio_type' => $bio_type,
                     'investor' => $investor,
                     'device_id' => $device_id,
+                    'company' => $company,
                     'auth_otp' => get_rand_token(),
                 ];
                 $bio_key = AUTHORIZATION::generateUserToken($ntoken);

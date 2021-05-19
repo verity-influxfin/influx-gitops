@@ -162,6 +162,14 @@ class Target_lib
                     return false;
                 }
             }
+
+            $guarantors = $this->get_associates_user_data($target->id, 'all', [0 ,1], false);
+            if($guarantors){
+                $this->CI->target_associate_model->update_by([
+                    'target_id' => $target->id,
+                ],["status" => 8]);
+            }
+
             $param = [
                 'status' => 8,
             ];
@@ -271,7 +279,16 @@ class Target_lib
 
             $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
             if (!$credit || $stage_cer != 0) {
-                $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit);
+                if($product['checkOwner']){
+                    $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
+                    foreach ($mix_credit as $value) {
+                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true);
+                    }
+                    $total_point = array_sum($credit_score);
+                    $rs = $this->CI->credit_lib->approve_associates_credit($target, $total_point);
+                }else{
+                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit);
+                }
                 if ($rs) {
                     $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
                 }
@@ -350,24 +367,31 @@ class Target_lib
 
                                     $remark
                                         ? $param['remark'] = (empty($target->remark)
-                                        ? $remark
-                                        : $target->remark . ', ' . $remark)
+                                            ? $remark
+                                            : $target->remark . ', ' . $remark)
                                         : '';
                                     $msg = $target->status == TARGET_WAITING_APPROVE ? true : false;
                                     $target->sub_product_id == STAGE_CER_TARGET && $target->status == TARGET_WAITING_SIGNING && $stage_cer == 0 ? $param['sub_product_id'] = 0 : '';
                                     $renew ? $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET : '';
                                     if ($target->contract_id == null || $target->loan_amount != $loan_amount) {
-                                        $param['contract_id'] = $this->CI->contract_lib->sign_contract('lend', ['', $user_id, $loan_amount, $interest_rate, '']);
+                                        $contract_type = 'lend';
+                                        $contract_data =  ['', $user_id, $loan_amount, $interest_rate, ''];
+                                        if($target->product_id == PRODUCT_FOREX_CAR_VEHICLE && $target->sub_product_id == 3){
+                                            $this->CI->load->model('user/judicial_person_model');
+                                            $companyData = $this->CI->judicial_person_model->get_by(['company_user_id' => $user_id]);
+                                            $userData = $this->CI->user_model->get($companyData->user_id);
+                                            $contract_year = date('Y') - 1911;
+                                            $contract_month = date('m');
+                                            $contract_day = date('d');
+                                            $contract_type = 'lend_FEV';
+                                            $contract_data = [ '', $user_id, $loan_amount, $target->interest_rate, $contract_year, $contract_month, $contract_day, $targetData->vin, '', '', '', $companyData->company, $userData->name, $companyData->tax_id, $companyData->cooperation_address];
+                                        }
+                                        $param['contract_id'] = $this->CI->contract_lib->sign_contract($contract_type, $contract_data);
                                     }
                                 } else {
                                     $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
                                     $msg = false;
                                 }
-                                $curTargetData = json_decode($target->target_data);
-                                $curTargetData && !$targetData ? $targetData = $curTargetData : '';
-                                !$targetData ? $targetData = new stdClass() : '';
-                                $targetData->credit_level = $credit['level'];
-                                $targetData->original_interest_rate = $interest_rate;
                                 $param['target_data'] = json_encode($targetData);
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if ($rs && $msg) {
@@ -414,7 +438,7 @@ class Target_lib
                             $this->approve_target_fail($user_id, $target);
                         }
                     } else {
-                        $this->approve_target_fail($user_id, $target, true);
+                        $this->approve_target_fail($user_id, $target, ($user_current_credit_amount != 0 ? true : false));
                     }
                 } else {
                     $this->approve_target_fail($user_id, $target);
@@ -436,6 +460,13 @@ class Target_lib
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
         $this->CI->notification_lib->approve_target($user_id, '9', 0,false,$remark);
+
+        $guarantors = $this->get_associates_user_data($target->id, 'all', 1, false);
+        if($guarantors){
+            $this->CI->target_associate_model->update_by([
+                'target_id' => $target->id,
+            ],["status" => 9]);
+        }
         if ($target->order_id != 0) {
             $this->CI->load->model('transaction/order_model');
             $this->CI->order_model->update($target->order_id, ['status' => 9]);
@@ -482,6 +513,7 @@ class Target_lib
                     'sub_status' => 0,
                     'remark' => $remark,
                 ];
+                $target->status == TARGET_BANK_FAIL ? $param['status'] = TARGET_BANK_FAIL : '';
                 $this->CI->target_model->update($target->id, $param);
                 $this->insert_change_log($target->id, $param, 0, $admin_id);
                 $this->CI->notification_lib->target_verify_failed($target->user_id, 0, $remark);
@@ -567,13 +599,7 @@ class Target_lib
                                 if ($total < $target->loan_amount && $ended) {
                                     $loan_amount = $value->amount;
                                     $schedule = $this->CI->financial_lib->get_amortization_schedule($loan_amount, $target);
-                                    $contract_id = $this->CI->contract_lib->sign_contract('lend', [
-                                        $value->user_id,
-                                        $target->user_id,
-                                        $loan_amount,
-                                        $target->interest_rate,
-                                        $schedule['total_payment']
-                                    ]);
+                                    $contract_id = $this->signContract($target ,$value->user_id ,$schedule['total_payment'],$loan_amount);
                                     $param = [
                                         'loan_amount' => $loan_amount,
                                         'contract_id' => $contract_id,
@@ -583,13 +609,7 @@ class Target_lib
                                 } else if ($total >= $target->loan_amount && $ended) {
                                     $loan_amount = $value->amount + $target->loan_amount - $total;
                                     $schedule = $this->CI->financial_lib->get_amortization_schedule($loan_amount, $target);
-                                    $contract_id = $this->CI->contract_lib->sign_contract('lend', [
-                                        $value->user_id,
-                                        $target->user_id,
-                                        $loan_amount,
-                                        $target->interest_rate,
-                                        $schedule['total_payment']
-                                    ]);
+                                    $contract_id = $this->signContract($target ,$value->user_id ,$schedule['total_payment'],$loan_amount);
                                     $param = [
                                         'loan_amount' => $loan_amount,
                                         'contract_id' => $contract_id,
@@ -721,7 +741,7 @@ class Target_lib
     {
         if (!empty($target)) {
             $param = array(
-                "status" => 2,
+                "status" => TARGET_WAITING_VERIFY,
                 "launch_times" => 0,
                 "remark" => $remark,
             );
@@ -1613,6 +1633,37 @@ class Target_lib
                         if ($value->status != '1' || $value->sub_product_id == STAGE_CER_TARGET) {
                             $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
                             $company = $value->product_id >= 1000 ? 1 : 0;
+
+							// 微企貸
+							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
+							$wait_associates = false;
+                            if($product['checkOwner']){
+                                $this->CI->load->model('loan/target_associate_model');
+                                if($value->sub_status == TARGET_SUBSTATUS_WAITING_ASSOCIATES) {
+                                    $this->CI->certification_lib->check_associates($target_id);
+                                    $cer_userList = $this->get_associates_user_data($value->id, 'all', [0, 1], false);
+                                    $wait_associates = true;
+                                    foreach ($cer_userList as $listKey => $listValue) {
+                                        if($listValue->status == 0 || $listValue->user_id == null) {
+                                            $finish = false;
+                                        }
+                                    }
+
+                                    //待認證清待加入法人本身
+                                    if($product['identity'] == 3){
+                                        $cer_userList[] = (object)[
+                                            'target_id' => $value->id,
+                                            'product_id' => $value->product_id,
+                                            'sub_product_id' => $value->sub_product_id,
+                                            'identity' => 3,
+                                            'user_id' => $value->user_id,
+                                        ];
+                                    }
+                                }else{
+                                    $wait_associates = false;
+                                }
+                            }
+
                             $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
                             $finish = true;
                             $finish_stage_cer = [];
@@ -1650,6 +1701,13 @@ class Target_lib
                                 $this->CI->brookesia_lib->userCheckAllRules($value->user_id);
                             }
 
+							if ($finish && $wait_associates) {
+                                if ($value->status == TARGET_WAITING_APPROVE && $value->sub_status == TARGET_SUBSTATUS_WAITING_ASSOCIATES
+                                    && !$this->get_associates_user_data($value->id, 'all', [0], false)) {
+                                    $this->CI->target_model->update($value->id, ['sub_status' => 0]);
+                                }
+                            }
+
                             $targetData = json_decode($value->target_data);
                             foreach ($product['targetData'] as $targetDataKey => $targetDataValue) {
                                 if (empty($targetData->$targetDataKey) && !$targetDataValue[3]) {
@@ -1667,7 +1725,35 @@ class Target_lib
                                 !isset($targetData) ? $targetData = new stdClass() : '';
                                 $targetData->certification_id = $cer;
                                 $count++;
-                                $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia);
+								// 判斷是否為微企貸
+								if(in_array($value->product_id, $this->CI->config->item('externalCooperation'))){
+                                        $param = [
+                                            'target_data' => json_encode($targetData),
+                                            'status' => TARGET_WAITING_VERIFY,
+                                        ];
+
+                                        //其一userId match反詐欺>轉待二審
+                                        $matchBrookesia ? $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE : '';
+
+                                        //信保額度判斷
+                                        //to do : 過件邏輯待串
+                                        $this->CI->load->library('verify/data_verify_lib');
+                                        $allowProductStatus = $this->CI->data_verify_lib->productVerify($product, $value);
+                                        if($allowProductStatus['status_code']){
+                                            //todo信保未過邏輯
+                                            if($allowProductStatus['status_code'] == 2){
+                                                $param['status'] = TARGET_FAIL;
+                                                $param['sub_status'] = TARGET_SUBSTATUS_NORNAL;
+                                                $this->approve_target_fail($value->user_id, $value);
+                                            }elseif($allowProductStatus['status_code'] == 3){
+                                                $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
+                                            }
+                                        }
+
+                                        $this->CI->target_model->update($value->id, $param);
+                                }else{
+									$this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia);
+								}
                             } else {
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
@@ -1975,6 +2061,7 @@ class Target_lib
             'secondInstance' => $sub_product['secondInstance'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }
@@ -2016,5 +2103,181 @@ class Target_lib
             }
         }
         return true;
+    }
+
+    public function get_associates($user_id){
+        $this->CI->load->model('loan/target_associate_model');
+        $params = [
+            "user_id" => $user_id,
+            "status" => [0, 1],
+        ];
+        return $this->CI->target_associate_model->get_many_by($params);
+    }
+
+    public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [0, 1, 500, 501]){
+        $targets = $target_id ? '' : [];
+        $get_associates_list = $this->get_associates($user_id);
+        if($get_associates_list){
+            foreach ($get_associates_list as $key => $value) {
+                if(!$target_id || $target_id == $value->target_id){
+                    $param = [
+                        'id' => $value->target_id,
+                    ];
+                    $status != false ? $param['status'] = $status : '' ;
+                    $temp = $this->CI->target_model->get_by($param);
+                    if($temp && ($temp->user_id != $user_id && $self == true || $self == false)){
+                        $temp = !isset($temp) ? new stdClass() : $temp;
+                        $temp->associate['owner'] = ($value->character == 1 ? true : false);
+                        $temp->associate['identity'] = intval($value->identity);
+                        $temp->associate['status'] = intval($value->status);
+                        $target_id ? $targets = $temp : $targets[] = $temp;
+                    }
+                }
+            }
+        }
+        return  $targets;
+    }
+
+    public function get_associates_user_data($target_id, $owner = false, $status = [0 ,1], $userList = false, $identity = false){
+        $this->CI->load->model('loan/target_associate_model');
+        $params = [
+            "target_id" => $target_id,
+            "status" => $status,
+//            "character" => ($owner ? 1 : 2),
+        ];
+//        $identity ? $params['identity'] = [1,2] : '';
+//        if(!is_bool($owner) && $owner == 'all'){
+//            unset($params['character']);
+//        }
+
+        $rs = $this->CI->target_associate_model->get_many_by($params);
+        if($userList){
+            $user_list = [];
+            foreach ($rs as $key => $value){
+                $user_list[] = $value->user_id;
+                if($value->user_id == null){
+                    $user_list = false;
+                    break;
+                }
+            }
+            $rs = $user_list;
+        }
+
+        return $rs;
+    }
+
+    public function get_associates_list($target_id, $status = [0, 1], $product, $self_user_id, $self_certification)
+    {
+        $this->CI->load->model('loan/target_associate_model');
+        $get_associates_list = $this->CI->target_associate_model->get_many_by([
+            'target_id' => $target_id,
+            'status <=' => 1,
+        ]);
+        $target = [];
+        $chargeOfRegistration = false;
+        if ($get_associates_list) {
+            $param = [
+                'id' => $target_id,
+            ];
+            $status != false ? $param['status'] = $status : '';
+            $target = $this->CI->target_model->get_by($param);
+            if ($target) {
+                $temp = [
+                    'remaining_guarantor' => 2,
+                    'addspouse' => false,
+                    'addrealcharacter' => false,
+                    'character' => '',
+                    'owner' => '',
+                    'agitate' => [],
+                ];
+                foreach ($get_associates_list as $key => $value) {
+                    $self = $self_user_id == $value->user_id;
+                    $certification = $self ? $self_certification : [];
+                    $user_id = $self ? $self_user_id : '';
+                    $temp['character'] == '' && $self ? $temp['character'] = $value->character : '' ;
+                    if(is_null($value->user_id)){
+                        $content = json_decode($value->content);
+                        $name = $content->name;
+                        $id_number = $content->id_number;
+                        $phone = $content->phone;
+                    }else{
+                        $user_info = $this->CI->user_model->get($value->user_id);
+                        $user_id = $user_info->id;
+                        $name = $user_info->name;
+                        $id_number = $user_info->id_number;
+                        $phone = $user_info->phone;
+                        $certification_list = $this->CI->certification_lib->get_status($value->user_id, $this->CI->user_info->investor, $this->CI->user_info->company);
+                        foreach ($certification_list as $ckey => $cvalue) {
+                            if (in_array($ckey, $product['certifications']) && $ckey <= 1000) {
+                                $cvalue['optional'] = false;
+                                $certification[] = $cvalue;
+                            }
+                        }
+                    }
+                    if($this->CI->user_info->company == 1){
+                        if($value->character == 0 || $value->character == 1){
+                            $this->CI->load->library('Certification_lib');
+                            $user_certification	= $this->CI->certification_lib->get_certification_info($value->user_id,1,0);
+                            if($user_certification){
+                                $temp['addspouse'] = isset($user_certification->content['SpouseName']) && $user_certification->content['SpouseName'] != '';
+                            }
+                        }
+
+                        if($value->character == 0){
+                            $chargeOfRegistration = true;
+                            $temp['addrealcharacter'] = $chargeOfRegistration;
+                        }elseif($value->character == 2){
+                            $temp['addrealcharacter'] = false;
+                        }elseif($value->character == 3){
+                            $temp['addspouse'] = false;
+                        }
+                    }
+                    $data = [
+                        'user_id' => $user_id,
+                        'name' => $name,
+                        'id_number' => $id_number,
+                        'phone' => $phone,
+                        'identity' => intval($value->identity),
+                        'status' => intval($value->status),
+                        'guarantor' => ($value->guarantor == 1),
+                        'self' => $self,
+                        'certification' => $certification,
+                    ];
+                    $guarantor_type = [
+                       2 => 'A',
+                       3 => 'B',
+                       4 => 'C',
+                       5 => 'C'
+                    ];
+                    $value->is_applicant == 0 ? $data['guarantor_type'] = $guarantor_type[$value->character] : '';
+                    if($value->character == 0 || $value->character == 1){
+                        $temp['owner'] = $data;
+                    }else{
+                        $temp['agitate'][] = $data;
+                        $temp['remaining_guarantor']--;
+                    }
+                }
+                $target->associate = $temp;
+            }
+        }
+        return $target;
+    }
+
+    private function signContract($target, $investmentUserId, $total_payment ,$loan_amount){
+        $contract_type = 'lend';
+        $contract_data =  [$investmentUserId, $target->user_id, $loan_amount, $target->interest_rate, $total_payment];
+        if($target->product_id == PRODUCT_FOREX_CAR_VEHICLE && $target->sub_product_id == 3){
+            $targetData = json_decode($target->target_data);
+            $this->CI->load->model('user/judicial_person_model');
+            $companyData = $this->CI->judicial_person_model->get_by(['company_user_id' => $target->user_id]);
+            $userData = $this->CI->user_model->get($companyData->user_id);
+            $investmentData = $this->CI->user_model->get($investmentUserId);
+            $contract_year = date('Y') - 1911;
+            $contract_month = date('m');
+            $contract_day = date('d');
+            $contract_type = 'lend_FEV';
+            $contract_data = [ $investmentUserId, $target->user_id, $loan_amount, $target->interest_rate, $contract_year, $contract_month, $contract_day, $targetData->vin, $investmentData->name, $investmentData->id_number, $investmentData->address, $companyData->company, $userData->name, $companyData->tax_id, $companyData->cooperation_address];
+        }
+        return $this->CI->contract_lib->sign_contract($contract_type, $contract_data);
     }
 }

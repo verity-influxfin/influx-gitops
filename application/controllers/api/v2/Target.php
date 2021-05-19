@@ -75,7 +75,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} loan_amount 核准金額
 	 * @apiSuccess {Number} interest_rate 年化利率
 	 * @apiSuccess {Number} instalment 期數
-	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} repayment 計息方式
 	 * @apiSuccess {Number} expire_time 流標時間
 	 * @apiSuccess {Number} invested 目前投標量
 	 * @apiSuccess {String} reason 借款原因
@@ -192,8 +192,8 @@ class Target extends REST_Controller {
                                 if(isset($targetData->$key) && !empty($targetData->$key)){
                                     $pic_array = [];
                                     foreach ($targetData->$key as $svalue){
-                                        preg_match('/\/image.+/', $svalue,$matches);
-                                        $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                                        preg_match('/image.+/', $svalue,$matches);
+                                        $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
                                     }
                                     $targetDatas[$key] = $pic_array;
                                 }
@@ -203,9 +203,12 @@ class Target extends REST_Controller {
                             }
                         }
                         $user = array(
+                            'name' 			=> $user_info->name,
+                            'id_number'		=> '',
                             'sex' 			=> '',
                             'age'			=> '',
                             'company_name'	=> '',
+                            'tax_id'	=> $user_info->id_number,
                         );
                     }
 				}
@@ -233,7 +236,7 @@ class Target extends REST_Controller {
                     'invested' 			=> intval($value->invested),
                     'reason' 			=> $reason,
                     'targetDatas' => $targetDatas,
-                    'isTargetOpaque' => $sub_product_id==9999?true:false,
+                    'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
                     'status' 			=> intval($value->status),
                     'sub_status' 		=> intval($value->sub_status),
                     'created_at' 		=> intval($value->created_at),
@@ -266,7 +269,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} credit_level 信用評等
 	 * @apiSuccess {Number} interest_rate 年化利率
 	 * @apiSuccess {Number} instalment 期數
-	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} repayment 計息方式
 	 * @apiSuccess {Number} expire_time 流標時間
 	 * @apiSuccess {Number} invested 目前投標量
 	 * @apiSuccess {String} reason 借款原因
@@ -416,13 +419,13 @@ class Target extends REST_Controller {
 				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
 				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
 				$age  		= get_age($user_info->birthday);
-				if($product['identity']==1){
+                $user_meta = new stdClass();
+                if($product['identity']==1){
 					$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
                     if(is_object($user_meta)){
                         $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
                     }
                     else{
-                        $user_meta = new stdClass();
                         $user_meta->meta_value='未提供學校資訊';
                     }
 				} elseif ($product_list[$target->product_id]['identity'] == 2) {
@@ -430,7 +433,6 @@ class Target extends REST_Controller {
                         'user_id' => $target->user_id,
                         'meta_key' => ['job_company', 'diploma_name']
                     ]);
-                    $user_meta = new stdClass();
                     if ($meta_info) {
                         $job_company = ($meta_info[0]->meta_key == 'job_company'
                             ? $meta_info[0]->meta_value
@@ -453,7 +455,7 @@ class Target extends REST_Controller {
 					'id_number'		=> $id_number,
 					'sex' 			=> $user_info->sex,
 					'age'			=> $age,
-					'company_name'	=> $user_meta?$user_meta->meta_value:'',
+					'company_name'	=> isset($user_meta->meta_value)?$user_meta->meta_value:'',
 				);
 			}
 
@@ -473,8 +475,8 @@ class Target extends REST_Controller {
                         if(isset($targetData->$key) && !empty($targetData->$key)){
                             $pic_array = [];
                             foreach ($targetData->$key as $svalue){
-                                preg_match('/\/image.+/', $svalue,$matches);
-                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                                preg_match('/image.+/', $svalue,$matches);
+                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
                             }
                             $targetDatas[$key] = $pic_array;
                         }
@@ -484,11 +486,12 @@ class Target extends REST_Controller {
                     }
                 }
                 $user = array(
-                    'name' 			=> '',
+                    'name' 			=> $user_info->name,
                     'id_number'		=> '',
                     'sex' 			=> '',
                     'age'			=> '',
                     'company_name'	=> '',
+                    'tax_id'	=> $user_info->id_number,
                 );
             }
 
@@ -524,7 +527,9 @@ class Target extends REST_Controller {
                             $description = '已驗證個人金融帳號';
                         } elseif ($value == 4){
                             $ig = isset($contents->instagram) ? $contents->instagram : $contents->info;
-                            $description .= 'Instagram' . '<br>貼文：' . $ig->counts->media . '<br>追蹤者：' . $ig->counts->followed_by . '<br>追蹤中：' . $ig->counts->follows;
+                            if(!empty($ig)){
+                                $description .= 'Instagram' . '<br>貼文：' . $ig->counts->media . '<br>追蹤者：' . $ig->counts->followed_by . '<br>追蹤中：' . $ig->counts->follows;
+                            }
                         } elseif ($value == 5){
                             $description = '已輸入父母作為緊急聯絡人';
                         } elseif ($value == 6){
@@ -582,7 +587,7 @@ class Target extends REST_Controller {
 				'repayment' 		=> intval($target->repayment),
 				'expire_time' 		=> intval($target->expire_time),
 				'invested' 			=> intval($target->invested),
-                'isTargetOpaque' => $sub_product_id==9999?true:false,
+                'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
                 'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target->interest_rate ? true : false),
                 'status' 			=> intval($target->status),
 				'sub_status' 		=> intval($target->sub_status),
@@ -594,7 +599,7 @@ class Target extends REST_Controller {
 
             count($certification_list)>0 ? $data['certification'] = $certification_list : '';
 
-            if($target->sub_product_id == 9999){
+            if($target->sub_product_id == STAGE_CER_TARGET){
                 $target_tips = $this->config->item('target_tips');
                 $data['target_tips'] = $target_tips;
             }
@@ -1204,7 +1209,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} target.credit_level 信用評等
 	 * @apiSuccess {Number} target.interest_rate 年化利率
 	 * @apiSuccess {Number} target.instalment 期數
-	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.repayment 計息方式
 	 * @apiSuccess {Number} target.expire_time 流標時間
 	 * @apiSuccess {Number} target.invested 目前投標量
 	 * @apiSuccess {Number} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
@@ -1785,6 +1790,7 @@ class Target extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }

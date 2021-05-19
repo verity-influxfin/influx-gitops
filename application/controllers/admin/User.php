@@ -98,8 +98,8 @@ class User extends MY_Admin_Controller {
 					$page_data['data'] 					= $info;
 					$page_data['meta'] 					= $meta_data;
 					$page_data['school_system'] 		= $this->config->item('school_system');
-					$page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,0,$info->company_status);
-					$page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,1,$info->company_status);
+					$page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,BORROWER,$info->company_status);
+					$page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,INVESTOR,$info->company_status);
 					$page_data['credit_list'] 			= $credit_list;
 					$page_data['product_list']			= $this->config->item('product_list');
 					$page_data['bank_account'] 			= $bank_account;
@@ -191,7 +191,6 @@ class User extends MY_Admin_Controller {
 			$bank_account 		= $this->user_bankaccount_model->get_many_by(array(
 				'user_id'	=> $id,
 				'status'	=> 1,
-				//'verify'	=> 1,
 			));
 			$credit_list		= $this->credit_model->get_many_by(array(
 				'user_id' => $id,
@@ -203,8 +202,8 @@ class User extends MY_Admin_Controller {
 				$page_data['data'] 					= $info;
 				$page_data['meta'] 					= $meta_data;
 				$page_data['school_system'] 		= $this->config->item('school_system');
-                $page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,0,$info->company_status);
-                $page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,1,$info->company_status);
+                $page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,BORROWER,$info->company_status);
+                $page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,INVESTOR,$info->company_status);
 				$page_data['certification_list'] 	= $certification_list;
 				$page_data['credit_list'] 			= $credit_list;
 				$page_data['product_list']			= $this->config->item('product_list');

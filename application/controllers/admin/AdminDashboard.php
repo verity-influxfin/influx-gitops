@@ -14,7 +14,11 @@ class AdminDashboard extends MY_Admin_Controller {
 
 	public function index()
 	{
+		$get = $this->input->get(NULL, TRUE);
 		$data 			= array();
+		$transfer_list = false;
+		$bank_account_user_ids = [];
+		$type = isset($get['type']) ? $get['type'] : '';
 		$target_count 	= array(
 			"evaluation"					 => 0,
 			"approve"						 => 0,
@@ -26,10 +30,73 @@ class AdminDashboard extends MY_Admin_Controller {
 			"transfer_success"			 	 => 0,
 			"withdraw"						 => 0,
 			"waiting_approve_order_transfer" => 0,
+			"manual_handling" => 0,
 		);
-		$target_list 	= $this->target_model->get_many_by(array("status" => array(0,2,3,4,5,23,24)));
-		$transfer_list 	= $this->transfer_model->get_many_by(array("status" => array(0,1)));
 		$contact_list 	= $this->user_contact_model->order_by("created_at","desc")->limit(5)->get_many_by(array("status" => 0));
+
+		$chart_date = array();
+		$chart_list = array();
+		for($i=0;$i<30;$i++){
+			$chart_date[] = date("Y-m-d",strtotime("-".$i."days"));
+		}
+		sort($chart_date);
+		$sdatetime = current($chart_date).' 00:00:00';
+		$edatetime = end($chart_date).' 23:59:59';
+
+
+		foreach($chart_date as $key => $date){
+			$chart_list[$date] = array("register"=>0,"loan"=>0);
+		}
+
+		if($type == 'judicial'){
+			$targetsParm = [
+				'product_id >=' => PRODUCT_FOR_JUDICIAL,
+				"status" => [
+					TARGET_WAITING_VERIFY,
+					TARGET_BANK_VERIFY,
+					TARGET_BANK_GUARANTEE,
+					TARGET_BANK_LOAN,
+					TARGET_BANK_REPAYMENTING,
+					TARGET_BANK_FAIL
+				]
+			];
+			$registerParm = [
+				"company_status" => 1,
+				"created_at <=" =>strtotime($edatetime),
+				"created_at >="	=>strtotime($sdatetime),
+			];
+			$targetschangeParm = [
+				"status"		=> [TARGET_BANK_VERIFY],
+				"created_at <=" => strtotime($edatetime),
+				"created_at >="	=> strtotime($sdatetime),
+			];
+		}
+		else{
+			$transfer_list 	= $this->transfer_model->get_many_by(array("status" => array(0,1)));
+			$targetsParm = [
+				'product_id <' => PRODUCT_FOR_JUDICIAL,
+				"status" => [
+					TARGET_WAITING_APPROVE,
+					TARGET_WAITING_VERIFY,
+					TARGET_WAITING_BIDDING,
+					TARGET_WAITING_LOAN,
+					TARGET_REPAYMENTING,
+					TARGET_ORDER_WAITING_SHIP,
+					TARGET_ORDER_WAITING_VERIFY_TRANSFER
+				]
+			];
+			$registerParm = [
+				"status"		=>1,
+				"created_at <=" =>strtotime($edatetime),
+				"created_at >="	=>strtotime($sdatetime),
+			];
+			$targetschangeParm = [
+				"status"		=> TARGET_WAITING_BIDDING,
+				"created_at <=" => strtotime($edatetime),
+				"created_at >="	=> strtotime($sdatetime),
+			];
+		}
+
 		if($transfer_list){
 			foreach($transfer_list as $key => $value){
 				if($value->status==0){
@@ -41,6 +108,7 @@ class AdminDashboard extends MY_Admin_Controller {
 			}
 		}
 
+		$target_list 	= $this->target_model->get_many_by($targetsParm);
 		if($target_list){
 			foreach($target_list as $targekey => $targevalue){
 				$target_user_ids[] = $targevalue->user_id;
@@ -55,66 +123,60 @@ class AdminDashboard extends MY_Admin_Controller {
 				$bank_account_user_ids[] = $bankvalue->user_id;
 			}
 			foreach($target_list as $key => $value){
-				if($value->status==0 && $value->sub_status==9){
+				if($value->status==0 && $value->sub_status==TARGET_SUBSTATUS_SECOND_INSTANCE){
 					$target_count["evaluation"] += 1;
 				}
-				if($value->delay==1 && $value->status==5){
+				if($value->delay==1 && $value->status==TARGET_REPAYMENTING
+					|| $value->delay == 1 && $value->status == TARGET_BANK_REPAYMENTING) {
 					$target_count["delay"] += 1;
 				}
-				if(in_array($value->user_id,$bank_account_user_ids)){
-					if($value->status==2 || $value->status==23 && ($value->sub_status==0 || $value->sub_status==5 || $value->sub_status==9)){
+				if (in_array($value->user_id, $bank_account_user_ids) || in_array($value->product_id, $this->config->item('externalCooperation'))) {
+					if ($value->status == TARGET_WAITING_VERIFY && $value->sub_status != TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
+						|| $value->status == TARGET_ORDER_WAITING_SHIP
+						&& ($value->sub_status == TARGET_SUBSTATUS_NORNAL
+							|| $value->sub_status == TARGET_SUBSTATUS_SHIPING
+							|| $value->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE)) {
 						$target_count["approve"] += 1;
 					}
 
-					if($value->status==3){
+					if (in_array($value->status, [
+						TARGET_WAITING_BIDDING,
+						TARGET_BANK_VERIFY,
+						TARGET_BANK_GUARANTEE,
+						TARGET_BANK_LOAN
+					])) {
 						$target_count["bidding"] += 1;
 					}
 
-					if($value->status==4){
+					if ($value->status == TARGET_WAITING_LOAN) {
 						$target_count["success"] += 1;
 					}
 
-					if($value->sub_status==3 && $value->status==5){
+					if ($value->sub_status == TARGET_SUBSTATUS_PREPAYMENT
+						&& $value->status == TARGET_REPAYMENTING) {
 						$target_count["prepayment"] += 1;
 					}
-					if($value->status==24){
+					if ($value->status == TARGET_ORDER_WAITING_VERIFY_TRANSFER) {
 						$target_count["waiting_approve_order_transfer"] += 1;
+					}
+
+					if ($value->status == TARGET_WAITING_VERIFY
+						&& $value->sub_status == TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
+						|| $value->status == TARGET_BANK_FAIL
+						&& $value->sub_status == TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL) {
+						$target_count["manual_handling"]++;
 					}
 				}
 			}
 		}
 
-		$chart_date = array();
-		$chart_list = array();
-		for($i=0;$i<30;$i++){
-			$chart_date[] = date("Y-m-d",strtotime("-".$i."days"));
-		}
-		sort($chart_date);
-		$sdatetime = current($chart_date).' 00:00:00';
-		$edatetime = end($chart_date).' 23:59:59';
-
-
-		foreach($chart_date as $key => $date){
-			$chart_list[$date] = array("register"=>0,"loan"=>0);
-
-		}
-
-		$user_list	= $this->user_model->get_many_by(array(
-			"status"		=>1,
-			"created_at <=" =>strtotime($edatetime),
-			"created_at >="	=>strtotime($sdatetime),
-		));
-
+		$user_list	= $this->user_model->get_many_by($registerParm);
 		foreach($user_list as $k => $v){
 			$chart_list[date("Y-m-d",$v->created_at)]['register']++;
 		}
 
 		$this->load->model('log/Log_targetschange_model');
-		$target_list	= $this->Log_targetschange_model->get_many_by(array(
-			"status"		=> 3,
-			"created_at <=" => strtotime($edatetime),
-			"created_at >="	=> strtotime($sdatetime),
-		));
+		$target_list	= $this->Log_targetschange_model->get_many_by($targetschangeParm);
 
 		foreach($target_list as $k => $v){
 			$chart_list[date("Y-m-d",$v->created_at)]['loan']++;
@@ -131,10 +193,15 @@ class AdminDashboard extends MY_Admin_Controller {
 		$data["chart_list"] 	= $chart_list;
 		$data["target_count"] 	= $target_count;
 		$data["contact_list"] 	= $contact_list;
-		$this->load->view('admin/_header');
-		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/index',$data);
-		$this->load->view('admin/_footer');
+		$data["type"] = $type;
+		if($type == 'judicial'){
+			$this->load->view('admin/judicialdashboard',$data);
+		}else{
+			$this->load->view('admin/_header');
+			$this->load->view('admin/_footer');
+			$this->load->view('admin/_title',$this->menu);
+			$this->load->view('admin/index',$data);
+		}
 	}
 
 	public function personal(){

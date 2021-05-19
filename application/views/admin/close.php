@@ -1,5 +1,9 @@
 <?php
 /* ... SQL EXECUTION TO UPDATE DB ... */
 
-echo "<script>window.close();</script>";
+echo '<script>
+open(location, "_self").close();
+window.location.href="about:blank";
+window.close();
+</script>';
 ?>

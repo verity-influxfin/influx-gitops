@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class Repayment extends REST_Controller {
 
 	public $user_info;
-	
+
     public function __construct()
     {
         parent::__construct();
@@ -23,26 +23,26 @@ class Repayment extends REST_Controller {
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
-			
+
 			//只限借款人
 			if($tokenData->investor != 0){
 				$this->response(array('result' => 'ERROR','error' => IS_INVERTOR ));
 			}
-			
+
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
-			
+
 			if($this->user_info->block_status != 0){
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
-			
+
 			//暫不開放法人
 			//if(isset($tokenData->company) && $tokenData->company != 0 ){
 			//	$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			//}
-			
+
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
 				$this->log_request_model->insert(array(
@@ -53,7 +53,7 @@ class Repayment extends REST_Controller {
 					'agent'		=> $tokenData->agent,
 				));
 			}
-			
+
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->company 		= $tokenData->company;
 			$this->user_info->incharge 		= $tokenData->incharge;
@@ -61,7 +61,7 @@ class Repayment extends REST_Controller {
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
     }
-	
+
 	/**
      * @api {get} /v2/repayment/dashboard 借款端 我的還款
 	 * @apiVersion 0.2.0
@@ -132,7 +132,7 @@ class Repayment extends REST_Controller {
 	 * @apiUse IsCompany
 	 *
      */
-	 	
+
 	public function dashboard_get()
     {
 		$input 		 			= $this->input->get();
@@ -148,15 +148,19 @@ class Repayment extends REST_Controller {
 
         if($company){
             $this->load->model('user/judicial_person_model');
-            $selling_type = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id))->selling_type;
-            if($selling_type == FOREX_CAR_DEALER){
-                $virtual = TAISHIN_VIRTUAL_CODE;
-                $account = [
-                    'bank_code'			=> TAISHIN_BANK_CODE,
-                    'branch_code'		=> TAISHIN_BRANCH_CODE,
-                    'bank_name'			=> TAISHIN_BANK_NAME,
-                    'branch_name'		=> TAISHIN_BRANCH_NAME,
-                ];
+            $judicial_person = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id));
+            if ($judicial_person) {
+                $selling_type = $judicial_person->selling_type;
+
+                if($selling_type == FOREX_CAR_DEALER){
+                    $virtual = TAISHIN_VIRTUAL_CODE;
+                    $account = [
+                        'bank_code'			=> TAISHIN_BANK_CODE,
+                        'branch_code'		=> TAISHIN_BRANCH_CODE,
+                        'bank_name'			=> TAISHIN_BANK_NAME,
+                        'branch_name'		=> TAISHIN_BRANCH_NAME,
+                    ];
+                }
             }
         }
 
@@ -170,7 +174,7 @@ class Repayment extends REST_Controller {
 			'delay_interest'	 => 0,
 			'liquidated_damages' => 0,
 		];
-		
+
 		$transaction 			= $this->transaction_model->order_by('limit_date','asc')->get_many_by([
 			'user_from'	=> $user_id,
 			'status'	=> 1,
@@ -179,30 +183,30 @@ class Repayment extends REST_Controller {
 				SOURCE_AR_INTEREST,
 				SOURCE_AR_DAMAGE,
 				SOURCE_AR_DELAYINTEREST
-			], 
+			],
 		]);
-		
+
 		if($transaction){
 			$first 					= current($transaction);
 			$next_repayment['date'] = $first->limit_date;
 			foreach($transaction as $key => $value){
 				switch($value->source){
-					case SOURCE_AR_PRINCIPAL: 
+					case SOURCE_AR_PRINCIPAL:
 						$accounts_payable['principal'] 			+= $value->amount;
 						break;
 					case SOURCE_AR_INTEREST:
 						$accounts_payable['interest'] 			+= $value->amount;
 						break;
-					case SOURCE_AR_DELAYINTEREST: 
+					case SOURCE_AR_DELAYINTEREST:
 						$accounts_payable['delay_interest'] 	+= $value->amount;
 						break;
-					case SOURCE_AR_DAMAGE: 
+					case SOURCE_AR_DAMAGE:
 						$accounts_payable['liquidated_damages'] += $value->amount;
 						break;
 					default:
 						break;
 				}
-				
+
 				if($value->limit_date == $next_repayment['date']){
 					$next_repayment['amount'] += $value->amount;
 				}
@@ -238,7 +242,7 @@ class Repayment extends REST_Controller {
 				'virtual_account'	=> '',
 			);
 		}
-		
+
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$user_bankaccount 	= $this->user_bankaccount_model->get_by([
 			'investor'	=> 0,
@@ -259,7 +263,7 @@ class Repayment extends REST_Controller {
 				'bank_account'	=> '',
 			);
 		}
-		
+
 		$data	= array(
 			'accounts_payable'	=> $accounts_payable,
 			'next_repayment'	=> $next_repayment,
@@ -267,17 +271,17 @@ class Repayment extends REST_Controller {
 			'bank_account'		=> $bank_account,
 			'virtual_account'	=> $virtual_account,
 		);
-		
+
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
-	
+
 	/**
      * @api {get} /v2/repayment/list 借款方 我的還款列表
 	 * @apiVersion 0.2.0
 	 * @apiName GetRepaymentList
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {Number} id Targets ID
 	 * @apiSuccess {String} target_no 案號
@@ -287,7 +291,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {Number} loan_amount 核准金額
 	 * @apiSuccess {Number} interest_rate 年化利率
 	 * @apiSuccess {Number} instalment 期數
-	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} repayment 計息方式
 	 * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {Number} delay_days 逾期天數
 	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
@@ -369,7 +373,7 @@ class Repayment extends REST_Controller {
 							SOURCE_AR_DELAYINTEREST
 						],
 					]);
-					
+
 					if($transaction){
 						$first 							= current($transaction);
 						$next_repayment['date'] 		= $first->limit_date;
@@ -405,7 +409,7 @@ class Repayment extends REST_Controller {
 		}
 		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
     }
-	
+
 	/**
      * @api {get} /v2/repayment/info/:id 借款方 我的還款資訊
 	 * @apiVersion 0.2.0
@@ -413,7 +417,7 @@ class Repayment extends REST_Controller {
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} id Targets ID
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {Number} id Target ID
 	 * @apiSuccess {String} target_no 標的號
@@ -428,7 +432,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} reason 借款原因
 	 * @apiSuccess {String} remark 備註
 	 * @apiSuccess {Number} instalment 期數
-	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} repayment 計息方式
 	 * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {Number} delay_days 逾期天數
 	 * @apiSuccess {Number} status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
@@ -569,7 +573,7 @@ class Repayment extends REST_Controller {
 		$target 			= $this->target_model->get($target_id);
 		$data				= [];
 		if(!empty($target) && in_array($target->status,[5,10])){
-			
+
 			if($target->user_id != $user_id){
 				$this->response([ 'result' => 'ERROR','error' => APPLY_NO_PERMISSION ]);
 			}
@@ -599,11 +603,11 @@ class Repayment extends REST_Controller {
                 ];
                 foreach ($product['targetData'] as $key => $value) {
                     if(in_array($key,['car_history_image','car_title_image','car_import_proof_image','car_artc_image','car_others_image','car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                        if(isset($targetData->$key)){
+                        if(isset($targetData->$key) && !empty($targetData->$key)){
                             $pic_array = [];
                             foreach ($targetData->$key as $svalue){
-                                preg_match('/\/image.+/', $svalue,$matches);
-                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                                preg_match('/image.+/', $svalue,$matches);
+                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
                             }
                             $targetDatas[$key] = $pic_array;
                         }
@@ -667,7 +671,7 @@ class Repayment extends REST_Controller {
 				'interest'			=> 0,
 				'delay_interest'	=> 0,
 				'liquidated_damages'=> 0,
-				
+
 			];
 			if($target->status==5){
 				$transaction = $this->transaction_model->order_by('limit_date','asc')->get_many_by(array(
@@ -675,7 +679,7 @@ class Repayment extends REST_Controller {
 					'user_from'	=> $user_id,
 					'status'	=> 1
 				));
-				
+
 				if($transaction){
 					$first 							= current($transaction);
 					$next_repayment['date'] 		= $first->limit_date;
@@ -684,16 +688,16 @@ class Repayment extends REST_Controller {
 						if($value->limit_date == $next_repayment['date']){
 							$next_repayment['amount'] += $value->amount;
 							switch($value->source){
-								case SOURCE_AR_PRINCIPAL: 
+								case SOURCE_AR_PRINCIPAL:
 									$next_repayment['principal'] 		+= $value->amount;
 									break;
-								case SOURCE_AR_INTEREST: 
+								case SOURCE_AR_INTEREST:
 									$next_repayment['interest'] 		+= $value->amount;
 									break;
-								case SOURCE_AR_DELAYINTEREST: 
+								case SOURCE_AR_DELAYINTEREST:
 									$next_repayment['delay_interest'] 	+= $value->amount;
 									break;
-								case SOURCE_AR_DAMAGE: 
+								case SOURCE_AR_DAMAGE:
 									$next_repayment['liquidated_damages'] += $value->amount;
 									break;
 								default:
@@ -748,14 +752,14 @@ class Repayment extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {get} /v2/repayment/prepayment/:id 借款方 提前還款資訊
 	 * @apiVersion 0.2.0
 	 * @apiName GetRepaymentPrepayment
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 
+
 	 * @apiParam {Number} id Targets ID
 	 * @apiDescription 只有正常還款的狀態才可申請，逾期或寬限期內都將不通過
 	 *
@@ -816,7 +820,7 @@ class Repayment extends REST_Controller {
 			if($target->user_id != $user_id){
 				$this->response(['result' => 'ERROR','error' => APPLY_NO_PERMISSION]);
 			}
-			
+
 			if($target->status != 5 || $target->delay_days > 0 ){
 				$this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
 			}
@@ -826,7 +830,7 @@ class Repayment extends REST_Controller {
 		}
 		$this->response(['result' => 'ERROR','error' => APPLY_NOT_EXIST]);
     }
-	
+
 	/**
      * @api {post} /v2/repayment/prepayment/:id 借款方 申請提前還款
 	 * @apiVersion 0.2.0
@@ -835,7 +839,7 @@ class Repayment extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} id Targets ID
 	 * @apiDescription 只有正常還款的狀態才可申請，逾期或寬限期內都將不通過
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -880,11 +884,11 @@ class Repayment extends REST_Controller {
 		$user_id 			= $this->user_info->id;
 		$target 			= $this->target_model->get($input['target_id']);
 		if(!empty($target)){
-			
+
 			if($target->status != 5 || $target->delay_days > 0 || $target->script_status != 0){
 				$this->response(['result' => 'ERROR','error' => APPLY_STATUS_ERROR]);
 			}
-			
+
 			if($target->user_id != $user_id){
 				$this->response(['result' => 'ERROR','error' => APPLY_NO_PERMISSION]);
 			}
@@ -892,7 +896,7 @@ class Repayment extends REST_Controller {
             if(!in_array($target->sub_status,[0,8,10])){
                 $this->response(array('result' => 'ERROR','error' => TARGET_HAD_SUBSTATUS ));
             }
-			
+
 			$rs = $this->prepayment_lib->apply_prepayment($target);
 			if($rs){
 				$this->response(['result' => 'SUCCESS']);
@@ -910,7 +914,7 @@ class Repayment extends REST_Controller {
      * @apiGroup Repayment
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} id Targets ID
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} title 合約標題
 	 * @apiSuccess {String} contract 合約內容
@@ -953,9 +957,9 @@ class Repayment extends REST_Controller {
 		$target 			= $this->target_model->get($target_id);
 		$data				= array();
 		if(!empty($target)){
-			
+
 			$list = array();
-			
+
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
 			}
@@ -985,7 +989,7 @@ class Repayment extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => APPLY_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {post} /v2/repayment/withdraw 借款方 提領申請
 	 * @apiVersion 0.2.0
@@ -994,7 +998,7 @@ class Repayment extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {Number} amount 提領金額
      * @apiParam {String} transaction_password 交易密碼
-	 * 
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} target_id Targets ID
      * @apiSuccessExample {Object} SUCCESS
@@ -1060,7 +1064,7 @@ class Repayment extends REST_Controller {
 		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
 			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ]);
 		}
-		
+
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$bank_account = $this->user_bankaccount_model->get_by([
 			'investor'	=> $investor,
@@ -1071,15 +1075,15 @@ class Repayment extends REST_Controller {
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
-		
+
 		if($this->user_info->transaction_password==''){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
-		
+
 		if($this->user_info->transaction_password != sha1($input['transaction_password'])){
 			$this->response(array('result' => 'ERROR','error' => TRANSACTION_PASSWORD_ERROR ));
 		}
-		
+
 		$withdraw = $this->transaction_lib->withdraw($user_id,intval($input['amount']),0);
 		if($withdraw){
 			$this->response(array('result' => 'SUCCESS'));
@@ -1178,7 +1182,7 @@ class Repayment extends REST_Controller {
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
-		
+
 		$virtual_account = $this->virtual_account_model->get_by([
 			'investor'	=> 0,
 			'user_id'	=> $user_id
@@ -1221,6 +1225,7 @@ class Repayment extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }

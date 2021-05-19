@@ -519,6 +519,7 @@ class Certification_data
 									$name = $k.'_'.$k1;
 									if(isset($res[$name])){
 										$res[$name] = $v1['existCreditInfo'];
+
 									}
 								}
 							}
@@ -625,6 +626,7 @@ class Certification_data
 				$this->CI->load->library('mapping/time');
 				$res['creditLogCount'] = 0;
 				$creditLogCountStatus = 1;
+
 				// 前一個月(當期)
 				$end_date = '';
 				// 前兩個月(前一期)
@@ -659,6 +661,7 @@ class Certification_data
 						if(preg_match('/逾期|催收|呆帳/',$value['previousPaymentStatus'])){
 							$res['creditCardHasBadDebt'] = '有';
 						}
+
 						$creditLogCountStatus = 0;
 					}
 
@@ -675,6 +678,7 @@ class Certification_data
 					// creditCardUseRate
 					// to do : 信用卡月繳待修，須以銀行加卡名為基準判斷當期與前期之未到期待付款，目前以最後一筆日期直接推算
 					if($end_date && $end_date_before && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$value['date'])){
+
 
 						$value['date'] = $this->CI->time->ROCDateToUnixTimestamp($value['date']);
 						if($end_date < $value['date']){
@@ -694,6 +698,7 @@ class Certification_data
 								}
 							}
 						}
+
 						// 信用卡月繳
 						if($end_date < $value['date'] && $value['date'] < $end_date_before){
 							$value['nonExpiredAmount_before'] = preg_replace('/\,|元/','',$value['nonExpiredAmount']);

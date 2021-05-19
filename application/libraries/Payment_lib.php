@@ -194,8 +194,8 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
-                    $isTaishinVirtualCode = substr($value->bank_id, 0, 5) == TAISHIN_VIRTUAL_CODE ? true : false;
-					if (!investor_virtual_account($value->virtual_account) && !$isTaishinVirtualCode) {
+                    $isTaishinVirtualCode = substr($value->virtual_account, 0, 5) == TAISHIN_VIRTUAL_CODE ? true : false;
+					if (!investor_virtual_account($value->virtual_account) || $isTaishinVirtualCode) {
 						$this->CI->transaction_lib->recharge($value->id);
 						return true;
 					}

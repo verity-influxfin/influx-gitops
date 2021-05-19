@@ -306,7 +306,7 @@ class Recoveries extends REST_Controller
      * @apiSuccess {Number} target.credit_level 信用評等
      * @apiSuccess {Number} target.interest_rate 年化利率
      * @apiSuccess {Number} target.instalment 期數
-     * @apiSuccess {Number} target.repayment 還款方式
+     * @apiSuccess {Number} target.repayment 計息方式
      * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
      * @apiSuccess {Number} target.delay_days 逾期天數
      * @apiSuccess {String} target.loan_date 放款日期
@@ -513,7 +513,7 @@ class Recoveries extends REST_Controller
      * @apiSuccess {Number} target.credit_level 信用評等
      * @apiSuccess {Number} target.interest_rate 年化利率
      * @apiSuccess {Number} target.instalment 期數
-     * @apiSuccess {Number} target.repayment 還款方式
+     * @apiSuccess {Number} target.repayment 計息方式
      * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
      * @apiSuccess {Number} target.delay_days 逾期天數
      * @apiSuccess {String} target.loan_date 放款日期
@@ -732,7 +732,7 @@ class Recoveries extends REST_Controller
      * @apiSuccess {Number} target.credit_level 信用評等
      * @apiSuccess {Number} target.interest_rate 年化利率
      * @apiSuccess {Number} target.instalment 期數
-     * @apiSuccess {Number} target.repayment 還款方式
+     * @apiSuccess {Number} target.repayment 計息方式
      * @apiSuccess {String} target.reason 借款原因
      * @apiSuccess {String} target.remark 備註
      * @apiSuccess {Number} target.delay 狀態 0:無 1:逾期
@@ -945,8 +945,8 @@ class Recoveries extends REST_Controller
                         if (isset($targetData->$key)) {
                             $pic_array = [];
                             foreach ($targetData->$key as $svalue) {
-                                preg_match('/\/image.+/', $svalue, $matches);
-                                $pic_array[] = FRONT_CDN_URL . 'stmps/tarda' . $matches[0];
+                                preg_match('/image.+/', $svalue, $matches);
+                                $pic_array[] = FRONT_CDN_URL . 'stmps/tarda/' . $matches[0];
                             }
                             $targetDatas[$key] = $pic_array;
                         } else {
@@ -955,11 +955,12 @@ class Recoveries extends REST_Controller
                     }
                 }
                 $user = array(
-                    'name' => '',
+                    'name' => $user_info->name,
                     'id_number' => '',
                     'sex' => '',
                     'age' => '',
-                    'company_name' => '',
+                    'company_name'	=> '',
+                    'tax_id'	=> $user_info->id_number,
                 );
             }
 
@@ -1820,6 +1821,7 @@ class Recoveries extends REST_Controller
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }

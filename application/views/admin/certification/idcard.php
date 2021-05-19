@@ -205,6 +205,10 @@
                             }
                             ?>
                             <div class="form-group">
+                                <label>配偶</label>
+                                <p class="form-control-static"><?=isset($content['SpouseName'])?$content['SpouseName']:""?></p>
+                            </div>
+                            <div class="form-group">
                                 <label>身分證字號</label>
                                 <p class="form-control-static"><?=isset($content['id_number'])?$content['id_number']:""?></p>
                             </div>

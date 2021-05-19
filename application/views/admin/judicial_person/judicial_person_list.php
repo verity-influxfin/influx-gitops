@@ -113,12 +113,7 @@
                                             <td><?=isset($value->cooperation_phone)?$value->cooperation_phone:"" ?></td>
                                             <td><?=isset($value->cooperation_address)?$value->cooperation_address:"" ?></td>
                                             <td><?=isset($value->remark)?$value->remark:"" ?></td>
-                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?>
-											<? if($value->status==0 && $media_data != ']}'){ ?>
-												<button class="btn btn-success" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">通過</button>
-												<button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>)">不通過</button>
-											<? } elseif($value->status==0){echo '未上傳法人影片';} ?>
-											</td>
+                                            <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a target="_blank" href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
                                         </tr>

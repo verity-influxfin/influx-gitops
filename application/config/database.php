@@ -105,3 +105,4 @@ $db['behavion']	    =	array_merge($db_base, array('database'=>'behavion'));
 
 $db['loan_manager']	    =	array_merge($db_base, array('database'=>'loan_manager'));
 
+$db['skbank']		=	array_merge($db_base, array('database'=>'p2p_skbank'));

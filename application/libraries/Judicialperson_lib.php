@@ -14,139 +14,56 @@ class Judicialperson_lib{
         $this->CI->load->model('user/user_certification_model');
         $this->CI->load->model('user/virtual_account_model');
     }
-	
+
 	//審核成功
 	function apply_success($person_id,$admin_id=0){
 		if($person_id){
 			$judicial_person = $this->CI->judicial_person_model->get($person_id);
 			if( $judicial_person && $judicial_person->status == 0){
-				$exist = $this->CI->user_model->get_by([
-					'phone' => $judicial_person->tax_id
-				]);
-				if(!$exist){
-                    $judicial_person_data = json_decode($judicial_person->sign_video,true);
-                    $transaction_password = $judicial_person_data['transaction_password'];
-                    $bank_code            = $judicial_person_data['bank_code'];
-                    $branch_code          = $judicial_person_data['branch_code'];
-                    $bank_account         = $judicial_person_data['bank_account'];
-                    $email                = $judicial_person_data['email'];
-					$bankbook_images      = urldecode($judicial_person_data['bankbook_images']);
-                    $businesstax = false;
-					if(empty($judicial_person_data['judi_admin_video'])|| empty($judicial_person_data['judi_user_video']))
-					{
-						echo '請先上傳法人或請負責人上傳對保影片';die();
-					}
+                $company_user_id = $judicial_person->company_user_id;
+//                     if($company_user_id) {
+//                        $agent_param = [
+//                            'company_user_id' => $company_user_id,
+//                            'incharge' => 1,
+//                            'user_id' => $judicial_person->user_id,
+//                        ];
+//                        $virtual_data = [];
+//                        $virtual_data[] = [
+//                            'investor' => 1,
+//                            'user_id' => $company_user_id,
+//                            'virtual_account' => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
+//                        ];
+//
+//                        $virtual_data[] = [
+//                            'investor' => 0,
+//                            'user_id' => $company_user_id,
+//                            'virtual_account' => CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
+//                        ];
+//
+//                        if (in_array($judicial_person->selling_type, $this->CI->config->item('use_taishin_selling_type'))) {
+//                            $virtual_data[] = [
+//                                'investor' => 0,
+//                                'user_id' => $company_user_id,
+//                                'virtual_account' => TAISHIN_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
+//                            ];
+//                        }
+//                    }
+//                    $v_rs = $this->CI->virtual_account_model->insert_many($virtual_data);
+//                    if($v_rs){
+//                        $this->CI->judicial_agent_model->insert($agent_param);
+                $this->CI->judicial_person_model->update($person_id, [
+                    'status' 			=> 1,
+                    'company_user_id'	=> $company_user_id,
+                ]);
+                $certification_info = $this->CI->user_certification_model->get_by(['user_id' => $company_user_id, 'certification_id' => CERTIFICATION_JUDICIALGUARANTEE, 'investor' => [0, 1], 'status' => [3]]);
+                if($certification_info){
+                    $this->CI->user_certification_model->update($certification_info->id,array(
+                        'status' => 1
+                    ));
+                }
+                return true;
 
-					if(isset($judicial_person_data['businesstax'])){
-                        $businesstax = $judicial_person_data['businesstax'];
-                        unset($judicial_person_data['businesstax']);
-                    }
-
-                    unset(
-                        $judicial_person_data['transaction_password'],
-                        $judicial_person_data['bank_code'],
-                        $judicial_person_data['branch_code'],
-                        $judicial_person_data['bank_account'],
-                        $judicial_person_data['email'],
-                        $judicial_person_data['bankbook_images']
-                    );
-					$media = json_encode($judicial_person_data);
-
-					$user_param = [
-						'name'				   => $judicial_person->company,
-						'nickname'			   => $judicial_person->company,
-						'password'			   => md5($judicial_person->user_id),
-						'phone'				   => $judicial_person->tax_id,
-						'email'                => $email,
-						'id_number'			   => $judicial_person->tax_id,
-						'company_status'	   => 1,
-						'transaction_password' => $transaction_password,
-					];
-                    $user_id = $this->CI->user_model->insert($user_param);
-                    if($user_id) {
-                        $agent_param = [
-                            'company_user_id' => $user_id,
-                            'incharge' => 1,
-                            'user_id' => $judicial_person->user_id,
-                        ];
-                        $virtual_data = [];
-                        $virtual_data[] = [
-                            'investor' => 1,
-                            'user_id' => $user_id,
-                            'virtual_account' => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
-                        ];
-
-                        $virtual_data[] = [
-                            'investor' => 0,
-                            'user_id' => $user_id,
-                            'virtual_account' => CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
-                        ];
-
-                        if (in_array($judicial_person->selling_type, $this->CI->config->item('use_taishin_selling_type'))) {
-                            $virtual_data[] = [
-                                'investor' => 0,
-                                'user_id' => $user_id,
-                                'virtual_account' => TAISHIN_VIRTUAL_CODE . '0' . substr($judicial_person->tax_id, 0, 8),
-                            ];
-                        }
-                    }
-                    $v_rs = $this->CI->virtual_account_model->insert_many($virtual_data);
-                    if($v_rs){
-                        $this->CI->judicial_agent_model->insert($agent_param);
-                        $param		= [
-                            'user_id'			=> $user_id,
-                            'certification_id'	=> 3,
-                            'investor'			=> 1,
-                            'expire_time'		=> strtotime('+20 years'),
-                            'content'			=> $bankbook_images,
-                            'status'            => 1,
-                        ];
-                        $insert = $this->CI->user_certification_model->insert($param);
-
-                        $params = [];
-                        if($businesstax){
-                            $params[] = [
-                                'user_id' => $user_id,
-                                'certification_id' => 1000,
-                                'investor' => 1,
-                                'expire_time' => strtotime('+2 months'),
-                                'content' => $businesstax,
-                                'status' => 0,
-                            ];
-                        }
-
-                        $enterprise_registration['governmentauthorities_image'] = json_decode($judicial_person->enterprise_registration ,true)['enterprise_registration_image'];
-                        $params[] = [
-                            'user_id' => $user_id,
-                            'certification_id' => 1007,
-                            'investor' => 1,
-                            'expire_time' => strtotime('+1 years'),
-                            'content' => json_encode($enterprise_registration),
-                            'status' => 0,
-                        ];
-                        $this->CI->user_certification_model->insert_many($params);
-
-                        //建立金融帳號
-                        $bankaccount_info = [
-                            'user_id'               => $user_id,
-                            'investor'              => 1,
-                            'user_certification_id' => $insert,
-                            'bank_code'             => $bank_code,
-                            'branch_code'           => $branch_code,
-                            'bank_account'          => $bank_account,
-                            'front_image'	        => $bankbook_images,
-                            'verify'                => 1,
-                        ];
-                        $this->CI->user_bankaccount_model->insert($bankaccount_info);
-                        $this->CI->judicial_person_model->update($person_id, [
-                            'status' 			=> 1,
-                            'company_user_id'	=> $user_id,
-                            'sign_video'        => $media,
-                        ]);
-                        return true;
-
-                    }
-				}
+//                    }
 			}
 		}
 		return false;
@@ -156,7 +73,13 @@ class Judicialperson_lib{
 	function apply_failed($person_id,$admin_id=0){
 		if($person_id){
 			$judicial_person = $this->CI->judicial_person_model->get($person_id);
-			if( $judicial_person && $judicial_person->status == 0){
+ 			if( $judicial_person && in_array($judicial_person->status, [0])){
+                $certification_info = $this->CI->user_certification_model->get_by(['user_id' => $judicial_person->company_user_id, 'certification_id' => CERTIFICATION_JUDICIALGUARANTEE, 'investor' => [0, 1], 'status' => [0, 1, 3]]);
+                if($certification_info) {
+                    $this->CI->user_certification_model->update($certification_info->id, array(
+                        'status' => 2
+                    ));
+                }
 				$param = array(
 					'status'	    => 2,
 					'cooperation'	=> 0,
@@ -166,7 +89,7 @@ class Judicialperson_lib{
 		}
 		return false;
 	}
-	
+
 	//經銷商審核成功
 	function cooperation_success($person_id,$admin_id=0){
 		if($person_id){
@@ -200,4 +123,133 @@ class Judicialperson_lib{
 		}
 		return false;
 	}
+
+	// 法人人臉辨識排程
+	function script_check_judicial_person_face($info){
+		$this->CI->load->model('user/judicial_person_model');
+        $judicial_person_info = $this->CI->judicial_person_model->get_by([
+            'company_user_id' => $info->user_id,
+            'status' => 0,
+        ]);
+
+        $image_info = isset($judicial_person_info->sign_video) && json_decode($judicial_person_info->sign_video,true) ? json_decode($judicial_person_info->sign_video,true) : [];
+        $governmentauthorities_image = isset($image_info['image_url']) ? $image_info['image_url'] : '';
+        $person_image = '';
+        $user_id = isset($judicial_person_info->user_id) ? $judicial_person_info->user_id : '';
+
+        // 找持證自拍
+        if($user_id){
+            $certification_info = $this->CI->user_certification_model->get_by(['user_id' => $user_id,'certification_id' => 1,'investor' => 0, 'status' => 1]);
+            if($certification_info){
+                $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+                $person_image = isset($content['person_image']) ? $content['person_image'] : '';
+            }
+        }
+        // 人臉辨識
+        if($person_image && $governmentauthorities_image){
+             $image_info['person_image_url']= $person_image;
+            // 微軟
+            $this->CI->load->library('azure_lib');
+            $person_image_info = $this->CI->azure_lib->detect($person_image);
+            $governmentauthorities_image_info = $this->CI->azure_lib->detect($governmentauthorities_image);
+            if(!empty($person_image_info) && !empty($governmentauthorities_image_info)){
+                $image_info['azure']['person'] = ! empty($person_image_info) ? $person_image_info : [];
+                $image_info['azure']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
+                foreach ($person_image_info as $value) {
+                    $face_id = isset($value['faceId']) ? $value['faceId'] : '';
+                    if($face_id){
+                        foreach ($governmentauthorities_image_info as $value1) {
+                            $face_id1 = isset($value1['faceId']) ? $value1['faceId'] : '';
+                            if($face_id1){
+                                $image_info['azure']['compare'][] = $this->CI->azure_lib->verify($face_id,$face_id1);
+                            }
+                        }
+                    }
+                }
+            }else{
+                $image_info['azure']['person'] = ! empty($person_image_info) ? $person_image_info : [];
+                $image_info['azure']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
+                $image_info['azure']['compare'] = [];
+            }
+
+            // 曠世
+            $this->CI->load->library('faceplusplus_lib');
+            $person_image_info = $this->CI->faceplusplus_lib->get_face_token($person_image);
+            $governmentauthorities_image_info = $this->CI->faceplusplus_lib->get_face_token($governmentauthorities_image);
+            if(!empty($person_image_info) && !empty($governmentauthorities_image_info)){
+                $image_info['faceplusplus']['person'] = $person_image_info;
+                $image_info['faceplusplus']['governmentauthorities'] = $person_image_info;
+                foreach ($person_image_info as $value) {
+                    $face_id = isset($value[0]) ? $value[0] : '';
+                    if($face_id){
+                        foreach ($governmentauthorities_image_info as $value1) {
+                            $face_id1 = isset($value1[0]) ? $value1[0] : '';
+                            if($face_id1){
+                                $image_info['faceplusplus']['compare'][] = $this->CI->faceplusplus_lib->url_compare($face_id,$face_id1);
+                            }
+                        }
+                    }
+                }
+            }else{
+                $image_info['faceplusplus']['person'] = ! empty($person_image_info) ? $person_image_info : [];
+                $image_info['faceplusplus']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
+                $image_info['faceplusplus']['compare'] = [];
+            }
+
+            // papago
+            $this->CI->load->library('papago_lib');
+            $person_image_info = $this->CI->papago_lib->detect($person_image);
+            $governmentauthorities_image_info = $this->CI->papago_lib->detect($governmentauthorities_image);
+            if(!empty($person_image_info) && !empty($governmentauthorities_image_info)){
+                $image_info['papago']['person'] = $person_image_info;
+                $image_info['papago']['governmentauthorities'] = $person_image_info;
+                foreach ($person_image_info['faces'] as $value) {
+                    $face_id = isset($value['face_token']) ? $value['face_token'] : '';
+                    if($face_id){
+                        foreach ($governmentauthorities_image_info['faces'] as $value1) {
+                            $face_id1 = isset($value1['face_token']) ? $value1['face_token'] : '';
+                            if($face_id1){
+                                $image_info['papago']['compare'][] = $this->CI->papago_lib->compare([$face_id,$face_id1]);
+                            }
+                        }
+                    }
+                }
+            }else{
+                $image_info['papago']['person'] = ! empty($person_image_info) ? $person_image_info : [];
+                $image_info['papago']['governmentauthorities'] = ! empty($person_image_info) ? $person_image_info : [];
+                $image_info['papago']['compare'] = [];
+            }
+
+            // to do : 自動過件邏輯
+            if(true){
+                //閥值通過的過件邏輯
+                $status = 1;
+                $this->CI->judicial_agent_model->insert([
+                    'incharge'			=> 1,
+                    'company_user_id'	=> $judicial_person_info->company_user_id,
+                    'user_id'			=> $judicial_person_info->user_id,
+                ]);
+            }
+            else{
+                //閥值不足處置
+                $status = 0;//停留在待人工審核
+            }
+        }else{
+            $status = 3;
+        }
+        $this->CI->judicial_person_model->update_by(['id' => $judicial_person_info->id],['sign_video' => json_encode($image_info), 'status' => $status]);
+        return [
+            'status' => $status,
+            'judicialPersonId' => $judicial_person_info->id,
+            'compareResult' => $image_info,
+        ];
+	}
+	public function getNaturalPerson($userId){
+        $this->CI->load->model('user/user_model');
+        $info = $this->CI->user_model->get($userId);
+        return $this->CI->user_model->get_by([
+            "phone" => $info->phone,
+            "company_status" => 0,
+        ]);
+    }
 }

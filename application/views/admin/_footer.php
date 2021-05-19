@@ -126,7 +126,7 @@
                     val=false;
                 }
             });
-            return val;
+            // return val;
         }
 	</script>
 </body>
