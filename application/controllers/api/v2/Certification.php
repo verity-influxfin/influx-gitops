@@ -418,6 +418,7 @@ class Certification extends REST_Controller {
 
 					if($rs){
 						$content[$field] = $rs->url;
+						$content[$field."_id"] = $image_id;
 					}else{
 						$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 					}

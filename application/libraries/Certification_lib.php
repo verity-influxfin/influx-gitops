@@ -11,8 +11,10 @@ class Certification_lib{
 	public function __construct()
     {
         $this->CI = &get_instance();
+		$this->CI->load->library('ocr/report_scan_lib');
 		$this->CI->load->model('user/user_certification_model');
 		$this->CI->load->model('user/user_meta_model');
+		$this->CI->load->model('log/log_image_model');
 		$this->CI->load->library('Notification_lib');
 		$this->certification = $this->CI->config->item('certifications');
     }
@@ -171,12 +173,8 @@ class Certification_lib{
             $cer_id         = $info->id;
             $msg            = '';
             $ocr            = [];
-            $socr           = [];
             $answer         = [];
-            $rawData        = [];
-            $srawData       = false;
             $person_compare = [];
-            $done           = false;
 
             $content = json_decode($info->content,true);
             $this->CI->load->library('Scan_lib');
@@ -220,141 +218,168 @@ class Certification_lib{
                 ),
             );
 
-            if($person_count>=2 && $person_count<=3 && $front_count==1){
-                foreach($person_face as $token){
-                    $person_compare[] = $this->CI->azure_lib->verify($token['faceId'],$front_face[0]['faceId'],$user_id,$cer_id);
-                }
-                $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id,$cer_id);
-                $rawData['back_image']       = $this->CI->scan_lib->detectText($content['back_image'],$user_id,$cer_id,'[a-zA-Z]');
-                $rawData['healthcard_image'] = $this->CI->scan_lib->scanDataArr($content['healthcard_image'],$user_id,$cer_id);
+            // content 存放圖片 ID 或 URL 的對應欄位名稱
+ 			$imageIdTable = ['front_image_id', 'back_image_id', 'healthcard_image_id'];
+			$imageUrlTable = ['front_image', 'back_image', 'healthcard_image'];
+			// OCR service 請求和回應的 type
+			$imageType = ['identification_card_front', 'identification_card_back', 'national_health_insurance'];
+			$scannedResultVarName = ['identification-card', 'identification-card', 'result'];
+			// OCR 結果的欄位名稱需轉換成與 content 欄位名稱一樣
+			$saveAliasKeyName = [
+				[
+					'number' => 'id_number',
+					'issueCity' => 'id_card_place',
+					'issueDate' => 'id_card_date'
+				],
+				[
+					'military' => 'military_service',
+					'birthAddress' => 'born',
+					'barcode' => 'gnumber',
+					'domicile' => 'address'
 
-                //身分證正面
-                $ocr['name']            = $this->CI->compare_lib->contentCheck($content['name'],$rawData['front_image'],1);
-                $ocr['id_number']       = $this->CI->compare_lib->contentCheck($content['id_number'],$rawData['front_image']);
-                $ocr['birthday']        = $this->CI->compare_lib->dateContentCheck($content['birthday'],$rawData['front_image']);
-                $ocr['id_card_date']    = $this->CI->compare_lib->dateContentCheck($content['id_card_date'],$rawData['front_image']);
-                $ocr['id_card_place']   = $this->CI->compare_lib->dataExtraction('\(\p{Han}{2,3}\)\p{Han}{2}','',$rawData['front_image'],1);
-                $check_name = ['姓名','身分證字號','發證日','生日'];
-                $check_item = ['name','id_number','id_card_date','birthday'];
-                foreach($check_item as $k => $v){
-                    if($ocr[$v] == false){
-                        if(!isset($srawData['front_image'])){
-                            $srawData['front_image'] = $this->CI->scan_lib->azureScanData($content['front_image'],$user_id,$cer_id);
+				],
+				[
+					'name' => 'healthcard_name',
+					'number' => 'healthcard_id_number',
+					'birthday' => 'healthcard_birthday',
+					'cardNumber' => 'healthcard_number',
+				],
+			];
 
-                            $socr['name']            = $this->CI->compare_lib->contentCheck($content['name'],$srawData['front_image'],1);
-                            $socr['id_number']       = $this->CI->compare_lib->contentCheck($content['id_number'],$srawData['front_image']);
-                            $socr['birthday']        = $this->CI->compare_lib->dateContentCheck($content['birthday'],$srawData['front_image']);
-                            $socr['id_card_date']    = $this->CI->compare_lib->dateContentCheck($content['id_card_date'],$srawData['front_image']);
-                            $socr['id_card_place']   = $this->CI->compare_lib->dataExtraction('\(\p{Han}{2,3}\)\p{Han}{2}','',$srawData['front_image'],1);
-                        }
-                        if($socr[$v]!=false){
-                            $ocr[$v]=$socr[$v];
-                        }else{
-                            $msg.='身分證'.$check_name[$k].'無法辨識<br />';
-                        }
-                    }
-                }
+			// 取得對應的 image log
+			$imageLogs = [];
+			for ( $i=0 ; $i<count($imageIdTable) ; $i++ ) {
+				if(array_key_exists($imageIdTable[$i], $content)) {
+					$imageLogs[] = $this->CI->log_image_model->get([$content[$imageIdTable[$i]]]);
+				}else
+					$imageLogs[] = $this->CI->log_image_model->get_by(['url' => $content[$imageUrlTable[$i]]]);
+			}
 
-                //身分證背面
-                $ocr['father']           = $this->CI->compare_lib->dataExtraction('父\\n{0,1}\p{Han}{1,6}\\n{0,1}役別|父\p{Han}{1,6}母','父|母|役別|\\n',$rawData['back_image'],1);
-                mb_strlen($ocr['father'])==6?$ocr['father']=mb_substr($ocr['father'],0,3):null;
-                $ocr['mother']           = $this->CI->compare_lib->dataExtraction('母\\n{0,1}\p{Han}{1,5}\\n{0,1}父|'.$ocr['father'].'\p{Han}{1,4}役別|母\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶','父|母|役別|配偶|\\n|'.$ocr['father'],$rawData['back_image'],1);
-                $ocr['mother'] = $this->CI->compare_lib->repeatCheck($ocr['mother']);
+			// 檢查 OCR 辨識結果
+			$ocrResult = array_fill(0, 3, null);
+			$checkOcrResultFunction = function () use ($imageIdTable, $imageType, $scannedResultVarName, $imageLogs, &$ocrResult) {
+				for ($i = 0; $i < count($imageIdTable); $i++) {
+					if ($ocrResult[$i])
+						continue;
 
-                $ocr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}出生|配偶\\n{0,1}\p{Han}{1,5}\\n{0,1}役別','配偶|出生|役別|\\n|\\s',$rawData['back_image'],1);
-                $ocr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\\n{0,1}\p{Han}{1,5}\\n{0,1}配偶|役別\\n{0,1}\p{Han}{1,5}\\n{0,1}出生地','役別|配偶|出生地|\\n',$rawData['back_image'],1);
-                $ocr['born']             = $this->CI->compare_lib->dataExtraction('生地\\n{0,1}\s{0,2}\p{Han}{1,3}\\n{0,1}\p{Han}{1,3}\\n{0,1}','生地|住址|\\n',$rawData['back_image'],1);
-                $ocr['born'] = $this->CI->compare_lib->repeatCheck($ocr['born']);
-                $ocr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$rawData['back_image']);
-                $ocr['film_number']      = $this->CI->compare_lib->dataExtraction('\d{6,10}','',preg_replace('/'.$ocr['gnumber'].'/','',$rawData['back_image']));
-                $ocr['address']          = $this->CI->compare_lib->dataExtraction('('.$ocr['born'].')(.*?'.$ocr['gnumber'].')','住|址|生地|住址|\\n|'.$ocr['gnumber'].'|'.$ocr['born'],$rawData['back_image'],1);
-                $check_item = ['father','mother','born','gnumber','address'];
-                foreach($check_item as $k => $v){
-                    if($ocr[$v] == false){
-                        if(!isset($srawData['back_image'])){
-                            //$srawData['back_image'] = $this->CI->scan_lib->azureScanData($content['back_image'],$user_id,$cer_id);
-                            $srawData['back_image']  = $this->CI->scan_lib->scanDataArr($content['back_image'],$user_id,$cer_id);
+					$response = $this->CI->report_scan_lib->requestForResult($imageType[$i], [$imageLogs[$i]->id]);
+					if ($response) {
+						$response = json_decode(json_encode(current($response->response)->items[0]), true);
+						if ($response['status'] === "finished")
+							$ocrResult[$i] = $response[$scannedResultVarName[$i]];
 
-                            $socr['father']           = $this->CI->compare_lib->dataExtraction('父\p{Han}{1,3}母|'.mb_substr($ocr['name'],0,1,"utf-8").'\p{Han}{1,3}','父|母',$srawData['back_image'],1);
-                            if($socr['mother'] = ''){
-                                $socr['mother'] = $this->CI->compare_lib->dataExtraction('母\p{Han}{1,5}\|{0,1}配偶','母|配偶|\|',$srawData['back_image'],1);
-                            }
-                            if($socr['spouse'] = ''){
-                                $socr['spouse']           = $this->CI->compare_lib->dataExtraction('配偶\p{Han}{1,5}\|{0,1}役別','配偶|役別|\|',$srawData['back_image'],1);
-                            }
-                            if($socr['military_service'] = ''){
-                                $socr['military_service'] = $this->CI->compare_lib->dataExtraction('役別\p{Han}{1,5}\|{0,1}出生','役別|出生|\|',$srawData['back_image'],1);
-                            }
-                            $socr['born']             = $this->CI->compare_lib->dataExtraction('生地\p{Han}{1,6}\|{0,1}','生地|\|',$srawData['back_image'],1);
-                            $socr['gnumber']          = $this->CI->compare_lib->dataExtraction('\d{10}','',$srawData['back_image']);
-                            $socr['address']          = $this->CI->compare_lib->dataExtraction('址(.*?\|)|'.$socr['born'].'\|(.*?\|)','住|址|\||'.$socr['born'],$srawData['back_image'],1);
-                        }
-                        if($socr[$v]!=false){
-                            $ocr[$v]=$socr[$v];
-                        }
-                    }
-                }
+					}
+				}
+			};
 
+			$checkOcrResultFunction();
+			$requestedSuccessfullyCnt = 0;
+			for ( $i=0 ; $i<count($imageIdTable) ; $i++ ) {
+				if($ocrResult[$i] !== null)
+					continue;
+				$rs = $this->CI->report_scan_lib->requestForScan($imageType[$i], $imageLogs[$i] , $user_id, '');
+				if($rs)
+					$requestedSuccessfullyCnt++;
+			}
 
-                //健保卡
-                $ocr['healthcard_name']      = $this->CI->compare_lib->contentCheck($content['name'],$rawData['healthcard_image'],1);
-                $ocr['healthcard_id_number'] = $this->CI->compare_lib->contentCheck($content['id_number'],$rawData['healthcard_image']);
-                $ocr['healthcard_birthday']  = $this->CI->compare_lib->contentCheck($content['birthday'],$rawData['healthcard_image']);
-                $ocr['healthcard_number']    = $this->CI->compare_lib->dataExtraction('\|\d{11,12}','\|',preg_replace('/'.$ocr['healthcard_id_number'].'/','',$rawData['healthcard_image']));
-                $check_name = ['姓名','身分證字號','生日'];//,'發證區域'
-                $check_item = ['healthcard_name','healthcard_id_number','healthcard_birthday'];
-                foreach($check_item as $k => $v){
-                    $ocr[$v] == false?$msg.='健保卡'.$check_name[$k].'無法辨識<br />':null;
-                }
+			// 如果有發送 OCR 辨識請求時，才會確認 OCR 結果
+			if ($requestedSuccessfullyCnt) {
+				$tryTimes = 0;
+				while ($tryTimes++ < 15) {
+					$checkOcrResultFunction();
 
-                $remark['face']       = [$person_compare[0]['confidence']*100,$person_compare[1]['confidence']*100];
-                $remark['face_flag']  = [$person_compare[0]['isIdentical'],$person_compare[1]['isIdentical']];
-//                if($remark['face'][0]  < 65 || $remark['face'][1]  < 80){
-                    $person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'],$info->user_id,$cer_id);
-                    $front_token  = $this->CI->faceplusplus_lib->get_face_token($content['front_image'],$info->user_id,$cer_id);
-                    $fperson_count 	= $person_token&&is_array($person_token)?count($person_token):0;
-                    $ffront_count 	= $front_token&&is_array($front_token)?count($front_token):0;
-                    //嘗試轉向找人臉
-                    if($fperson_count==0){
-                        $rotate = $this->face_rotate($content['person_image'],$user_id,$cer_id,'faceplusplus');
-                        if($rotate){
-                            $content['person_image'] 	= $rotate['url'];
-                            $fperson_count				= $rotate['count'];
-                            $person_token               = $fperson_count;
-                        }
-                    }
-                    if($ffront_count==0){
-                        $rotate = $this->face_rotate($content['front_image'],$user_id,$cer_id,'faceplusplus');
-                        if($rotate){
-                            $content['front_image'] 	= $rotate['url'];
-                            $ffront_count				= $rotate['count'];
-                            $front_token                = $ffront_count;
-                        }
-                    }
-                    if($fperson_count ==2 && $ffront_count == 1 ){
-                        foreach($person_token as $token){
-                            $answer[] = $this->CI->faceplusplus_lib->token_compare($token[0],$front_token[0][0],$info->user_id,$cer_id);
-                            $faceplus_data[] = [
-                                'gender' => $token[1],
-                                'age' => $token[2],
-                            ];
-                        }
-                        sort($answer);
-                        $remark['faceplus'] = $answer;
-                        $remark['faceplus_data'] = $faceplus_data;
-                        if($answer[0]<65 || $answer[1]<80){
-                            $msg .= 'Face++人臉比對分數不足';
-                        }
-                    }
-                    else{
-                        $msg .= 'Face++人臉數量不足';
-                    }
-//                }
-                $done = true;
-            }
-            else{
-                $msg .= '系統判定人臉數量不正確，可能有陰影或其他因素';
-            }
+					if (count(array_filter($ocrResult, function ($ele) {
+						return $ele === null;
+					})))
+						sleep(2);
+					else
+						break;
+				}
+			}
+
+			// 將 OCR 辨識結果轉換為指定的格式並存入 $ocr
+			array_map(function ($x, $k) use ($saveAliasKeyName, &$ocr) {
+				array_walk($x, function ($val, $key) use ($saveAliasKeyName, $k, &$ocr) {
+					if(array_key_exists($key, $saveAliasKeyName[$k]))
+						$key = $saveAliasKeyName[$k][$key];
+					if($key !== 'title') {
+						// 轉換為純數字的日期，並且月跟日補0
+						preg_match('/(?<year>\d{2,3})(年|\/)(?<month>\d{1,2})(月|\/)(?<day>\d{1,2})/', $val, $regexResult);
+						if(!empty($regexResult))
+							$ocr[$key] = $regexResult['year'].str_pad($regexResult['month'],2,0,STR_PAD_LEFT ).
+								str_pad($regexResult['day'],2,0,STR_PAD_LEFT );
+						else
+							$ocr[$key] = $val;
+					}
+				});
+			}, $ocrResult, array_keys($ocrResult));
+
+			// 對欲檢查項目進行比對檢查
+			$checkItemList = [
+				['name', 'id_number', 'id_card_date', 'birthday'],
+				[],
+				['name', 'id_number', 'birthday']
+			];
+			$ocrCheckFailed = false;
+			for ($i = 0; $i < count($checkItemList); $i++) {
+				foreach($checkItemList[$i] as $key) {
+					if(!isset($content[$key]) || !isset($ocr[$key]) || $content[$key] !== $ocr[$key]) {
+						$msg.=$key.'無法辨識<br />';
+						$ocrCheckFailed = true;
+					}
+				}
+			}
+
+			if($person_count>=2 && $person_count<=3 && $front_count==1) {
+				foreach ($person_face as $token) {
+					$person_compare[] = $this->CI->azure_lib->verify($token['faceId'], $front_face[0]['faceId'], $user_id, $cer_id);
+				}
+
+				$remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
+				$remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
+				// if($remark['face'][0]  < 65 || $remark['face'][1]  < 80) {
+				$person_token = $this->CI->faceplusplus_lib->get_face_token($content['person_image'], $info->user_id, $cer_id);
+				$front_token = $this->CI->faceplusplus_lib->get_face_token($content['front_image'], $info->user_id, $cer_id);
+				$fperson_count = $person_token && is_array($person_token) ? count($person_token) : 0;
+				$ffront_count = $front_token && is_array($front_token) ? count($front_token) : 0;
+				// 嘗試轉向找人臉
+				if ($fperson_count == 0) {
+					$rotate = $this->face_rotate($content['person_image'], $user_id, $cer_id, 'faceplusplus');
+					if ($rotate) {
+						$content['person_image'] = $rotate['url'];
+						$fperson_count = $rotate['count'];
+						$person_token = $fperson_count;
+					}
+				}
+				if ($ffront_count == 0) {
+					$rotate = $this->face_rotate($content['front_image'], $user_id, $cer_id, 'faceplusplus');
+					if ($rotate) {
+						$content['front_image'] = $rotate['url'];
+						$ffront_count = $rotate['count'];
+						$front_token = $ffront_count;
+					}
+				}
+				if ($fperson_count == 2 && $ffront_count == 1) {
+					foreach ($person_token as $token) {
+						$answer[] = $this->CI->faceplusplus_lib->token_compare($token[0], $front_token[0][0], $info->user_id, $cer_id);
+						$faceplus_data[] = [
+							'gender' => $token[1],
+							'age' => $token[2],
+						];
+					}
+					sort($answer);
+					$remark['faceplus'] = $answer;
+					$remark['faceplus_data'] = $faceplus_data;
+					if ($answer[0] < 65 || $answer[1] < 80) {
+						$msg .= 'Face++人臉比對分數不足';
+					}
+				} else {
+					$msg .= 'Face++人臉數量不足';
+				}
+				// }
+			}else{
+				$msg .= '系統判定人臉數量不正確，可能有陰影或其他因素';
+			}
 
             $this->CI->load->library('Papago_lib');
             $face8_person_face = $this->CI->papago_lib->detect($content['person_image'], $user_id, $cer_id);
@@ -382,41 +407,45 @@ class Certification_lib{
             ];
 
 			// 戶役政 api
-			// if(isset($content['id_number']) && isset($ocr['id_number']) && isset($content['name']) && isset($ocr['name']) && isset($content['birthday']) && isset($ocr['birthday'])){
-			// 	if($content['id_number'] == $ocr['id_number'] && $content['name'] == $ocr['name'] && $content['birthday'] == $ocr['birthday']){
-			// 		$this->CI->load->library('id_card_lib');
-			// 		$requestPersonId = isset($content['id_number']) ? $content['id_number'] : '';
-			// 		preg_match('/(初|補|換)發$/',$content['id_card_place'],$requestApplyCode);
-			// 		$requestApplyCode = isset($requestApplyCode[0]) ? $requestApplyCode[0] : '';
-			// 		$reqestApplyYyymmdd = $content['id_card_date'];
-			// 		preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/',$content['id_card_place'],$requestIssueSiteId);
-			// 		$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
-			// 		$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId);
-			// 		if($result){
-			// 			// $result = json_decode($result,true);
-			// 			if($result['status'] != '200'){
-			// 				$done = false;
-			// 			}
-			// 			if($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1){
-			// 				$done = true;
-			// 			}
-			// 			$content['id_card_api'] = $result['response'];
-			// 		}else{
-			// 			$content['id_card_api'] = 'no response';
-			// 			$done = false;
-			// 		}
-			// 	}
-			// }
+			$risVerified = false;
+			$risVerificationFailed = true;
+			if(isset($content['id_number']) && isset($ocr['id_number']) && isset($content['name']) && isset($ocr['name']) && isset($content['birthday']) && isset($ocr['birthday'])){
+				if($content['id_number'] == $ocr['id_number'] && $content['name'] == $ocr['name'] && $content['birthday'] == $ocr['birthday']) {
+			 		$this->CI->load->library('id_card_lib');
+			 		$requestPersonId = isset($content['id_number']) ? $content['id_number'] : '';
+					preg_match('/(初|補|換)發$/',$content['id_card_place'],$requestApplyCode);
+					$requestApplyCode = isset($requestApplyCode[0]) ? $requestApplyCode[0] : '';
+			 		$reqestApplyYyymmdd = $content['id_card_date'];
+					preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/',$content['id_card_place'],$requestIssueSiteId);
+					$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
+			 		$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId);
+			 		if($result){
+						$risVerified = true;
+			 			if($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1){
+							$risVerificationFailed = false;
+			 			}else{
+							$risVerificationFailed = true;
+						}
+			 			$content['id_card_api'] = $result['response'];
+			 		}else{
+			 			$content['id_card_api'] = 'no response';
 
+			 		}
+			 	}
+			 }
+			// TODO: 有修改過資料是指姓名/出生年月日/身分證字號而已嗎？
+
+			// 1 成功 2 失敗 3 人工
             $remark['error'] = $msg;
             $remark['OCR']   = $ocr;
             $param = [
-                'status'	    => 3,
+                'status'	    => ($risVerificationFailed && $risVerified ? 2 : 3),
                 'remark'	    => json_encode($remark),
                 'content'	    => json_encode($content),
                 'sys_check'     => 1,
             ];
-            if($remark['error']==''&&$done){
+            if( $remark['error']=='' &&
+				$risVerified && !$risVerificationFailed && !$ocrCheckFailed) {
                 $param = [
                     'remark'	    => json_encode($remark),
                     'content'	    => json_encode($content),
