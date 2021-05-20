@@ -316,15 +316,15 @@ class Certification_lib{
 
 			// 對欲檢查項目進行比對檢查
 			$checkItemList = [
-				['name', 'id_number', 'id_card_date', 'birthday'],
+				['name'=>'name', 'id_number'=>'id_number', 'id_card_date'=>'id_card_date', 'birthday'=>'birthday'],
 				[],
-				['name', 'id_number', 'birthday']
+				['healthcard_name'=>'name', 'healthcard_id_number'=>'id_number', 'healthcard_birthday'=>'birthday']
 			];
 			$ocrCheckFailed = false;
 			for ($i = 0; $i < count($checkItemList); $i++) {
-				foreach($checkItemList[$i] as $key) {
-					if(!isset($content[$key]) || !isset($ocr[$key]) || $content[$key] !== $ocr[$key]) {
-						$msg.=$key.'無法辨識<br />';
+				foreach($checkItemList[$i] as $ocrResultKey => $contentKey) {
+					if(!isset($content[$contentKey]) || !isset($ocr[$ocrResultKey]) || $content[$contentKey] !== $ocr[$ocrResultKey]) {
+						$msg.=$ocrResultKey.'無法辨識<br />';
 						$ocrCheckFailed = true;
 					}
 				}
@@ -433,7 +433,6 @@ class Certification_lib{
 			 		}
 			 	}
 			 }
-			// TODO: 有修改過資料是指姓名/出生年月日/身分證字號而已嗎？
 
 			// 1 成功 2 失敗 3 人工
             $remark['error'] = $msg;
