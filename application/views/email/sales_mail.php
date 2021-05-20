@@ -164,7 +164,7 @@
                                cellpadding="0" cellspacing="0">
                             <tr>
                                 <td class="img-flex">
-                                    <a href="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}"><img src="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}"
+                                    <a href="<?=isset($EDM_href)?$EDM_href:FRONT_CDN_URL.'mail_assets/EDM/'.$EDM?>"><img src="<?= FRONT_CDN_URL ?>mail_assets/EDM/{EDM}"
                                             style="vertical-align:top;" width="800" alt=""/></a></td>
                             </tr>
                             <tr>
