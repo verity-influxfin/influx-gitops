@@ -551,7 +551,7 @@ class Cron extends CI_Controller
 						),
 						"status" => NotificationStatus::Accepted,
 						"type" => NotificationType::RoutineReminder,
-						"dry_run" => 1
+						"dry_run" => 0
 					);
 					$result = $this->notification_lib->send_notification($sendPayload);
 					$end_time = time();

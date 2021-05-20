@@ -6,8 +6,8 @@ class Reports extends REST_Controller {
 
     public $user_info;
 
-    private $allowedReports = ['balance_sheet', 'income_statement', 'business_tax_return_report','insurance_table','amendment_of_register','credit_investigation'];
-
+    private $allowedReports = ['balance_sheet', 'income_statement', 'business_tax_return_report','insurance_table','amendment_of_register','credit_investigation','identification_card_front','identification_card_back','national_health_insurance'];
+	private $needAuthReports = ['identification_card_front', 'identification_card_back', 'national_health_insurance'];
     public function __construct()
     {
         parent::__construct();
@@ -16,8 +16,10 @@ class Reports extends REST_Controller {
         $this->load->library('log/log_image_model');
 
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['info'];
-        if (!in_array($method, $nonAuthMethods)) {
+		$input = $this->input->get(NULL, TRUE);
+		$type = isset($input["type"]) ? $input["type"] : '';
+
+        if (in_array($type, $this->needAuthReports)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
@@ -75,7 +77,7 @@ class Reports extends REST_Controller {
       *                              "taxId": "68566881"
       *                          }
       *                      },
-      * 		    		    "created_at": 1520421572,
+      * 		    		 "created_at": 1520421572,
       *                      "updated_at": 1520421572
       *  			    }
       *              ]
@@ -147,6 +149,14 @@ class Reports extends REST_Controller {
             $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
         }
 
+        // 比對圖片記錄的擁有者是否與要求存取的人一樣
+		// 不匹配時則返回權限不足
+        $validLogs = array_filter($imageLogs, function($log){
+			return $log->user_id==$this->user_info->id;
+		});
+        if(isset($this->user_info) && count($validLogs) != count($imageLogs))
+			$this->response(['result' => 'ERROR','error' => PERMISSION_DENY]);
+
         $numRequestedIds = [];
 //        $ownerId = $this->user_info->id;
         $ownerId = false;
@@ -183,7 +193,7 @@ class Reports extends REST_Controller {
         $numRequested = count($imageLogs);
         $response = $this->report_scan_lib->requestForResult($batchType, $imageIds);
         if (!$response) {
-           $this->response(['result' => 'ERROR','error' => EXIT_ERROR]);
+           $this->response(['result' => 'ERROR','error' => EXIT_ERROR,'msg' => 'The result not found.']);
         }
         //removed already OCRed image so sleep time can be reduced
         if ($response->status == 200) {
@@ -215,13 +225,13 @@ class Reports extends REST_Controller {
         $sleepingTime = $numRequested * 3;
         sleep($sleepingTime);
         if (!$numRequestedIds) {
-            $this->response(['result' => 'ERROR','error' => EXIT_ERROR]);
+            $this->response(['result' => 'ERROR','error' => EXIT_ERROR, 'msg' => 'numRequestedIds not found.']);
         }
 
         $scannedResult = [];
         $response = $this->report_scan_lib->requestForResult($batchType, $numRequestedIds);
         if (!$response) {
-            $this->response(['result' => 'ERROR','error' => EXIT_ERROR]);
+            $this->response(['result' => 'ERROR','error' => EXIT_ERROR, 'msg' => 'The scan result not found.']);
         }
 
         if (isset($response->response)) {

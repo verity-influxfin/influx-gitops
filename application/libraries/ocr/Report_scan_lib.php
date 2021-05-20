@@ -15,6 +15,12 @@ class Report_scan_lib
         'amendment_of_registers' => 'reports/amendment-of-registers',
         'credit_investigation' => 'reports/credit-investigations/',
         'credit_investigations' => 'reports/credit-investigations',
+        'identification_card_front' => 'reports/identification-card/front/',
+		'identification_card_fronts' => 'reports/identification-card/front/',
+        'identification_card_back' => 'reports/identification-card/back/',
+		'identification_card_backs' => 'reports/identification-card/back/',
+		'national_health_insurance' => 'reports/national-health-insurance/',
+		'national_health_insurances' => 'reports/national-health-insurance/',
     ];
 
     function __construct()
@@ -22,7 +28,7 @@ class Report_scan_lib
         $this->CI = &get_instance();
         $this->CI->load->library('S3_upload');
         $this->CI->load->library('S3_lib');
-        $this->ocr_url = "http://" . getenv('GRACULA_IP') . ":10001/ocr/api/v1.0/";
+        $this->ocr_url = "http://" . getenv('OCR_IP') . ":" . getenv('OCR_PORT') . "/ocr/api/v1.0/";
     }
 
     public function requestForScan($type, $image, $ownerId, $ocr_type='')
@@ -122,7 +128,7 @@ class Report_scan_lib
         }
 
         $imageIdString = implode(",", $imageIds);
-        $url = $this->ocr_url  . $this->endPoints[$type] . "?references={$imageIdString}";
+        $url = $this->ocr_url  . $this->endPoints[$type] . $imageIdString;
 
         $this->CI->load->library('utility/http_utility');
         $this->CI->http_utility->setUrl($url);
