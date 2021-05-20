@@ -270,10 +270,10 @@ class Sendemail
 		return false;
 	}
 
-    public function EDM($mail, $title = "", $content = "", $EDM, $url)
+    public function EDM($mail, $title = "", $content = "", $EDM)
     {
         if ($mail) {
-            $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM, "url" => $url), TRUE);
+            $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM), TRUE);
             return $this->send($mail, $title, $content);
         }
         return false;

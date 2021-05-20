@@ -333,7 +333,6 @@ class Cron extends CI_Controller {
         $title = $input->title;
         $content = $input->content;
         $EDM = $input->EDM;
-        $url = $input->url;
         $investor = isset($input->investor) ? $input->investor : 0;
         $school = isset($input->school) && $input->school != '' ? $input->school : false;
         $years = isset($input->years) && $input->years != '' ? $input->years : false;
@@ -344,7 +343,7 @@ class Cron extends CI_Controller {
         $this->load->library('Notification_lib');
 
         $start_time = time();
-        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail, $mail_list);
+        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $investor, $school, $years, $sex, $app, $mail, $mail_list);
         $num = $count ? intval($count) : 0;
         $end_time = time();
         $data = [
@@ -450,4 +449,77 @@ class Cron extends CI_Controller {
 		$this->json_output->setStatusCode(200)->setResponse([$response])->send();
 	}
 
+	public function idleFundNotification() {
+		$this->load->model('log/Log_userlogin_model');
+		$this->load->library('Notification_lib');
+
+		$scriptName = 'idleFundNotification';
+		$datetime = new DateTime();
+		$dayOfMonth = $datetime->format('d');
+		$hour = $datetime->format('H');
+
+		$title = "【溫馨提示】";
+		$content = "親愛的會員您好，建議您充分利用虛擬帳戶閒置資金，以提高投資效益；若暫無偏好標的，可使用「提領」功能，將您的資金轉出到其他投資項目，預祝您投資順利，穩穩獲利！";
+
+		$result = ['code'=> 0, 'msg'=>'Nothing happened'];
+		// 每月18號的下午3點觸發
+		if($dayOfMonth == 18 && $hour == 15) {
+			$record = $this->log_script_model->order_by("created_at", "desc")->limit(1)->get_by([
+				'TIMESTAMPDIFF(SECOND, FROM_UNIXTIME(created_at), CURRENT_TIMESTAMP()) <' 		=> ' 3600',
+				'script_name' => $scriptName,
+			]);
+
+			// 近一小時內沒有執行的紀錄
+			if(!isset($record)) {
+				$data = [
+					'script_name' => $scriptName,
+					'num' => 0,
+					'start_time' => 0,
+					'end_time' => 0
+				];
+				$inserted_id = $this->log_script_model->insert($data);
+				if ($inserted_id) {
+					$start_time = time();
+					$devices = $this->Log_userlogin_model->get_all_devices();
+					$sentCount = (count($devices ,COUNT_RECURSIVE) - count($devices) - array_sum(array_map('count',$devices )));
+
+					$sendPayload = array(
+						'user_id' => 0,
+						'sender_name' => "閒置資金系統提醒",
+						'target_category' => $this->config->item('notification')['target_category_name'][NotificationTargetCategory::Investment+NotificationTargetCategory::Loan],
+						'target_platform' => 'android/ios',
+						'tokens' => $devices,
+						"notification"=>array(
+							"title" => $title,
+							"body" => $content,
+						),
+						"data" => array(),
+						"send_at" => (new DateTime())->format('Y-m-d H:i'),
+						"apns" => array(
+							"payload" => array(
+								"category" => "NEW_MESSAGE_CATEGORY"
+							)
+						),
+						"status" => NotificationStatus::Accepted,
+						"type" => NotificationType::RoutineReminder,
+						"dry_run" => 0
+					);
+					$result = $this->notification_lib->send_notification($sendPayload);
+					$end_time = time();
+
+					$updateData = [
+						'num' => $sentCount,
+						'start_time' => $start_time,
+						'end_time' => $end_time
+					];
+					$this->log_script_model->update_by(
+						['id' => $inserted_id],
+						$updateData
+					);
+
+				}
+			}
+		}
+		echo json_encode($result);
+	}
 }

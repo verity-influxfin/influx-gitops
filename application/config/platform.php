@@ -910,7 +910,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL,
-                    // CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
                 ],
@@ -1273,11 +1273,34 @@ $config['allow_aiBidding_product'] = [1, 2, 3, 4];
 # 推播的相關設定
 abstract class NotificationTargetCategory
 {
-	const investment = 1;
-	const loan = 2;
+	const Investment = 1;
+	const Loan = 2;
+	const All = 3;
 }
-$config['notification'] = [
-	'target_category_name' => [1 => '投資', 2 => '貸款', 3 => '投資&貸款'],
-	'status' => [0 => '未核可', 1 => '未發送', 2 => '已拒絕', 3 => '已發送', 4 => '已取消']
-];
+abstract class NotificationType
+{
+	const Manual = 1;
+	const RoutineReminder = 2;
+}
+abstract class NotificationStatus
+{
+	const Pending = 0;
+	const Accepted = 1;
+	const Rejected = 2;
+	const Sent = 3;
+	const Canceled = 4;
+}
 
+$config['notification'] = [
+	'target_category_name' => [
+		NotificationTargetCategory::Investment => '投資',
+		NotificationTargetCategory::Loan => '借款',
+		NotificationTargetCategory::All => '投資&借款'],
+	'status' => [
+		NotificationStatus::Pending => '待核可',
+		NotificationStatus::Accepted => '待發送',
+		NotificationStatus::Rejected => '已拒絕',
+		NotificationStatus::Sent => '已發送',
+		NotificationStatus::Canceled => '已取消'
+	]
+];

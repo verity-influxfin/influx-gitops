@@ -672,7 +672,18 @@ class Charge_lib
 					}
 					if($amount){
 						$this->CI->load->library('Notification_lib');
-						$this->CI->notification_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);
+						$this->CI->load->model('user/virtual_account_model');
+						$virtualAcount = $this->CI->virtual_account_model->get_by([
+							'investor'	=> 0,
+							'user_id'	=> $target->user_id,
+						]);
+						if(isset($virtualAcount)) {
+							$virtualAccountBalance = $this->CI->virtual_passbook_model->get_virtual_acc_balance($virtualAcount->virtual_account);
+							$difference = $virtualAccountBalance - $amount;
+							if($difference < 0) {
+								$this->CI->notification_lib->notice_normal_target($target->user_id, $amount, $difference, $target->target_no, $next_date);
+							}
+						}
 						if($range_days==1){
 							$this->CI->load->library('sms_lib');
 							$this->CI->sms_lib->notice_normal_target($target->user_id,$amount,$target->target_no,$next_date);

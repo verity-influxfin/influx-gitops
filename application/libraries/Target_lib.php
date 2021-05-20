@@ -337,7 +337,6 @@ class Target_lib
                                     'status' => 0,
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
-                                $newStatus = false;
                                 if (!$product_info['secondInstance']
                                     && !$matchBrookesia
                                     && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
@@ -374,9 +373,8 @@ class Target_lib
                                 if ($rs && $msg) {
                                     $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
                                 }
-                                if ($newStatus) {
-                                    $this->insert_change_log($target->id, $param);
-                                }
+
+                                $this->insert_change_log($target->id, $param);
                                 return true;
                             } else if ($product_info['type'] == 2) {
                                 $allow = true;
@@ -1632,7 +1630,7 @@ class Target_lib
 									// 工作認證有專業技能證書進待二審
 									if($certification['id'] == 10 && isset($certification['content'])){
 										if(isset($certification['content']['license_image']) || isset($certification['content']['pro_certificate_image']) || isset($certification['content']['game_work_image'])){
-											$finish = false;
+											$subloan_status = true;
 										}
 									}
                                     $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
@@ -1690,11 +1688,6 @@ class Target_lib
                                     }
                                 }
 
-								// 進待二審 (工作認證有專業證照)
-								if(in_array(10,$finish_stage_cer)){
-									$this->CI->load->model('transaction/order_model');
-									$this->CI->order_model->update($value->order_id, ['sub_status' => 9]);
-								}
                             }
                         }
                         $this->CI->target_model->update($value->id, ['script_status' => 0]);

@@ -22,7 +22,7 @@ class Labor_insurance_lib
     {
         $this->CI = &get_instance();
         $this->CI->config->load('top_enterprise');
-        $this->CI->load->library('utility/labor_insurance_regex', [], 'regex');
+        $this->CI->load->library('utility/labor_insurance_regex', [], 'l_regex');
         $this->CI->load->library('gcis_lib');
         $this->CI->load->model('user/user_model');
         $this->CI->load->model('user/user_meta_model');
@@ -55,7 +55,7 @@ class Labor_insurance_lib
 
     public function checkIfEmpty($text, &$result)
     {
-        if ($this->CI->regex->isEmpty($text)) {
+        if ($this->CI->l_regex->isEmpty($text)) {
             $result["status"] = "pending";
         }
     }
@@ -68,7 +68,7 @@ class Labor_insurance_lib
             "message" => ""
         ];
 
-        $isApplication = $this->CI->regex->isLaborInsuranceApplication($text);
+        $isApplication = $this->CI->l_regex->isLaborInsuranceApplication($text);
         if ($isApplication) {
             $message["status"] = self::SUCCESS;
             $result["messages"][] = $message;
@@ -83,14 +83,14 @@ class Labor_insurance_lib
 
     public function processDocumentIsValid($text, &$result)
     {
-        $content = $this->CI->regex->findNonGreedyPatternInBetween($text, "網頁下載時間", "秒");
+        $content = $this->CI->l_regex->findNonGreedyPatternInBetween($text, "網頁下載時間", "秒");
         if (!$content) {
             $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
             return;
         }
         $downloadTimeText = $content[0];
-        $downloadTimeArray = $this->CI->regex->extractDownloadTime($downloadTimeText);
+        $downloadTimeArray = $this->CI->l_regex->extractDownloadTime($downloadTimeText);
         if (!$downloadTimeArray || !is_array($downloadTimeArray[0]) || count($downloadTimeArray[0]) != 6) {
             $message["message"] = "無法辨識日期";
             $result["messages"][] = $message;
@@ -128,13 +128,13 @@ class Labor_insurance_lib
             "message" => ["無法辨識日期"]
         ];
 
-        $content = $this->CI->regex->findNonGreedyPatternInBetween($text, "查詢日期起訖：", "【");
+        $content = $this->CI->l_regex->findNonGreedyPatternInBetween($text, "查詢日期起訖：", "【");
         if (!$content) {
             $result["messages"][] = $message;
             return;
         }
 
-        $searchTimeArray = $this->CI->regex->extractDownloadTime($content[0]);
+        $searchTimeArray = $this->CI->l_regex->extractDownloadTime($content[0]);
 
         if (
             !is_array($searchTimeArray)
@@ -255,7 +255,7 @@ class Labor_insurance_lib
             "message" => ""
         ];
 
-        $idNumberMatch = $this->CI->regex->extractIdNumber($text);
+        $idNumberMatch = $this->CI->l_regex->extractIdNumber($text);
         if (!$idNumberMatch) {
             $message["message"] = "身分證字號無法判讀";
             $result["messages"][] = $message;
@@ -263,7 +263,7 @@ class Labor_insurance_lib
         }
         $idNumber = $idNumberMatch[0];
 
-        $fullnameText = $this->CI->regex->findNonGreedyPatternInBetween($text, "姓名：", "出生日期");
+        $fullnameText = $this->CI->l_regex->findNonGreedyPatternInBetween($text, "姓名：", "出生日期");
         if (!$fullnameText || !trim($fullnameText[0])) {
             $message["message"] = "姓名無法判讀";
             $result["messages"][] = $message;
@@ -271,7 +271,7 @@ class Labor_insurance_lib
         }
         $fullname = trim($fullnameText[0]);
 
-        $bornAtText = $this->CI->regex->findNonGreedyPatternInBetween($text, "出生日期：", "查詢日期起訖");
+        $bornAtText = $this->CI->l_regex->findNonGreedyPatternInBetween($text, "出生日期：", "查詢日期起訖");
         if (!$bornAtText || !trim($bornAtText[0])) {
             $message["message"] = "出生日期無法判讀";
             $result["messages"][] = $message;
@@ -342,7 +342,7 @@ class Labor_insurance_lib
 
     public function readRows($text)
     {
-        $text = $this->CI->regex->replaceSpacesToSpace($text);
+        $text = $this->CI->l_regex->replaceSpacesToSpace($text);
         $data = explode(" ", $text);
 
         $rows = [];
@@ -352,7 +352,7 @@ class Labor_insurance_lib
         $numAdded = 0;
         for ($i = 0; $i < $total; $i++) {
             $each = $data[$i];
-            $insuranceId = $this->CI->regex->isInsuranceId($each);
+            $insuranceId = $this->CI->l_regex->isInsuranceId($each);
             if ($insuranceId) {
                 if ($row) {
                     $rows[$row['name']][] = $row;
@@ -383,7 +383,7 @@ class Labor_insurance_lib
                     continue;
                 }
                 if ($currentIndex == 3) {
-                    $isSalary = $this->CI->regex->isSalary($each);
+                    $isSalary = $this->CI->l_regex->isSalary($each);
                     if ($isSalary) {
                         $row['salary'] = $each;
                         $currentIndex++;
@@ -400,7 +400,7 @@ class Labor_insurance_lib
                     }
                 }
                 if ($currentIndex == 4) {
-                    $isSalary = $this->CI->regex->isSalary($each);
+                    $isSalary = $this->CI->l_regex->isSalary($each);
                     if ($isTimeFormat && !isset($row['createdAt'])) {
                         $row['createdAt'] = $each;
                         $currentIndex++;
@@ -768,7 +768,7 @@ class Labor_insurance_lib
             return false;
         }
 
-        $graduatedArray = $this->CI->regex->extractDownloadTime($graduatedString);
+        $graduatedArray = $this->CI->l_regex->extractDownloadTime($graduatedString);
         $graduatedArray[0][0] = strlen($graduatedArray[0][0]) == 3 ? $graduatedArray[0][0] : 0 . $graduatedArray[0][0];
         $graduatedAt = $graduatedArray[0][0] . $graduatedArray[0][1] . $graduatedArray[0][2];
 
@@ -807,7 +807,7 @@ class Labor_insurance_lib
         }
 
         if (isset($enrolledInsurance['salary'])) {
-            $salary = $this->CI->regex->convertSalary($enrolledInsurance['salary']);
+            $salary = $this->CI->l_regex->convertSalary($enrolledInsurance['salary']);
         }
 
         if ($salary >= self::MINIMUM_WAGE) {
@@ -989,8 +989,10 @@ class Labor_insurance_lib
 		if($text_of_page_array){
 			$page_array = [];
 			foreach($text_of_page_array as $key => $value){
-				if(preg_match('/查詢結果/',$value)){
-					$page_array = $this->CI->regex->findNonGreedyPatternInBetween($value, "費註記", "(※注意事項)|(第.*[0-9]*頁)");
+
+				if(preg_match('/查詢結果|查\s詢\s結\s果/',$value)){
+
+					$page_array = $this->CI->l_regex->findNonGreedyPatternInBetween($value, "費註記|費\s註\s記", "(※注意事項)|(第.*[0-9]*頁)|(※\s注\s意\s事\s項)");
 					if($page_array){
 						foreach($page_array as $key1=>$value1){
 							$page_array[$key1] = trim($value1);
@@ -1006,22 +1008,38 @@ class Labor_insurance_lib
 			foreach($all_page_array as $key => $value){
 				// 切單條資訊項目
 
-				$value = ' '.$value;
-				$value = preg_replace('/\n*\n/u','',$value);
-				// print_r($value);exit;
-				$info_array = preg_split('/\s[\d]{1,6}\s/',$value);
-				// print_r($info_array);exit;
+				preg_match_all('/[0-9]*\s+[0-9]{8}[A-Z]{1}\s+[\W]*[0-9,]+\s+[0-9]{7}\s*/',$value,$info_array);
+				$info_array = isset($info_array[0]) ? $info_array[0] : [];
+				// to do list : PREG_SPLIT_DELIM_CAPTURE flag not work
+				// 勞保退保訊息後半段
+				$info_array_extra = preg_split('/[0-9]*\s*[0-9]{8}[A-Z]{1}\s*[\W]*[0-9,]+\s*[0-9]{7}\s*/', $value);
+				if($info_array_extra){
+					unset($info_array_extra[0]);
+					$info_array_extra = array_values($info_array_extra);
+
+					$info_array_count = count($info_array);
+					if($info_array_count >0){
+						for($i=0;$i<$info_array_count;$i++){
+							$info_array[$i] = $info_array[$i].$info_array_extra[$i].' ';
+						}
+					}
+				}
 				if($info_array){
 					foreach($info_array as $key1 => $value1){
-						$info_array[$key1] = trim($value1);
+							$info_array[$key1] = trim($value1);
 					}
 				}
 				$page_array = array_values(array_filter($info_array));
 				// print_r($page_array);exit;
 				foreach($page_array as $key1=> $value1){
 					// 切單欄資訊內容
+					$value1 = preg_replace('/\n/','',$value1);
 					$page_array[$key1] = preg_split('/\s/',$value1);
-					// print_r($page_array[$key1]);exit;
+
+					// 刪除第一欄序號
+					unset($page_array[$key1][0]);
+					$page_array[$key1] = array_values($page_array[$key1]);
+
 					if($page_array[$key1] && count($page_array[$key1]) >3){
 						$response['pageList'][$key]['insuranceList'][$key1]['insuranceId'] = isset($page_array[$key1][0]) ? preg_replace('/\s/','',$page_array[$key1][0]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['companyName'] = isset($page_array[$key1][1]) ? preg_replace('/\s/','',$page_array[$key1][1]) : '';
@@ -1040,31 +1058,6 @@ class Labor_insurance_lib
 				}
 			}
 		}
-
-		// $content = $this->readRows($text);
-		// if($content){
-		// 	$response['pageList'][0]['insuranceList'] = [];
-		// 	if(is_array($content)){
-		// 		foreach($content as $v){
-		// 			if(is_array($v)){
-		// 				foreach($v as $v1){
-		// 					$response['pageList'][0]['insuranceList'][] = [
-		// 						'insuranceId' => isset($v1['id']) ? $v1['id']: '',
-		// 						'companyName' => isset($v1['name']) ? $v1['name']: '',
-		// 						'detailList' => [
-		// 							'insuranceSalary' => isset($v1['salary']) ? $v1['salary']: '',
-		// 							'startDate' => isset($v1['createdAt']) ? $v1['createdAt']: '',
-		// 							'endDate' => isset($v1['endAt']) ? $v1['endAt']: '',
-		// 							'comment' => isset($v1['comment']) ? $v1['comment']: '',
-		// 						],
-		// 					];
-		//
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// }
-
 		return $response;
 	}
 
@@ -1110,7 +1103,7 @@ class Labor_insurance_lib
 		if($text){
 			if(preg_match('/姓名：.*|姓名:.*/',$text)){
 				preg_match('/姓名：.*|姓名:.*/',$text,$name);
-				$name = preg_replace('/姓名：|姓名:/','',$name);
+				$name = preg_replace('/姓名：|姓名:|出生.*|\s/','',$name);
 			}
 		}
 		return $name;
