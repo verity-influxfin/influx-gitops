@@ -36,9 +36,9 @@ class Bankdata extends MY_Admin_Controller
         $target_id = isset($input['target_id']) ? $input['target_id'] : '';
 		$table_type = isset($input['table_type']) ? $input['table_type'] : '';
 
-				if(!$target_id || !$table_type){
-					echo '參數不正確'.'參數：target_id = '.$target_id.' , table_type = '.$table_type;exit;
-				}
+		if(!$target_id || !$table_type){
+			echo '參數不正確'.'參數：target_id = '.$target_id.' , table_type = '.$table_type;exit;
+		}
 
         if (!$this->input->is_ajax_request()) {
 			if($table_type == 'check'){
