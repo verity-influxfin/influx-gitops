@@ -155,7 +155,7 @@ class Reports extends REST_Controller {
 			$validLogs = array_filter($imageLogs, function($log){
 				return $log->user_id==$this->user_info->id;
 			});
-	        if(isset($this->user_info) && count($validLogs) != count($imageLogs))
+	        if(count($validLogs) != count($imageLogs))
 				$this->response(['result' => 'ERROR','error' => PERMISSION_DENY]);
 		}
 
