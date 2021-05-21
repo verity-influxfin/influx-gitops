@@ -171,11 +171,20 @@ class Check_list
 		if($meta_data){
 			krsort($meta_data);
 			$num = 1;
-			foreach($meta_data['list'] as $k=>$v){
-				$response['NumOfInsuredYM'.$num.'_content'] = $k;
-				$response['NumOfInsured'.$num.'_content'] = $v;
-				$num += 1;
+			if(isset($meta_data['list'])){
+				foreach($meta_data['list'] as $k=>$v){
+					$response['NumOfInsuredYM'.$num.'_content'] = $k;
+					$response['NumOfInsured'.$num.'_content'] = $v;
+					$num += 1;
+				}
+			}else{
+				foreach($meta_data as $k=>$v){
+					if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
+						$response[$k.'_content'] = $v;
+					}
+				}
 			}
+
 		}
 		return $response;
 	}
