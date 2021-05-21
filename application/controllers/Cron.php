@@ -281,24 +281,6 @@ class Cron extends CI_Controller
 		die("1");
 	}
 
-    public function send_estatement_pdf()
-    {	//每五分鐘
-        $this->load->library('Estatement_lib');
-        $script  	= 13;
-        $start_time = time();
-        $count 		= $this->estatement_lib->script_send_estatement_pdf();
-        $num		= $count?intval($count):0;
-        $end_time 	= time();
-        $data		= array(
-            "script_name"	=> "send_estatement_pdf",
-            "num"			=> $num,
-            "start_time"	=> $start_time,
-            "end_time"		=> $end_time
-        );
-        $this->log_script_model->insert($data);
-        die("1");
-    }
-
 	public function check_transfer_success()
 	{	//每五分鐘
 		$this->load->library('Transfer_lib');

@@ -9,7 +9,7 @@ class Report_scan_lib
         'income_statements' => 'reports/income-statements/',
         'business_tax_return_report' => 'reports/business-tax-return-reports/',
         'business_tax_return_reports' => 'reports/business-tax-return-reports/',
-        'insurance_table' => 'reports/insurance-table/',
+        'insurance_table' => 'reports/insurance-tables/',
         'insurance_tables' => 'reports/insurance-tables/',
         'amendment_of_register' => 'reports/amendment-of-registers/',
         'amendment_of_registers' => 'reports/amendment-of-registers/',
