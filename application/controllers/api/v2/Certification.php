@@ -2607,6 +2607,7 @@ class Certification extends REST_Controller {
                         $content[$field][] = $v->url;
                     }
 					$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
+					$content['mail_file_status'] = 1;
                 }else{
                     $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                 }
