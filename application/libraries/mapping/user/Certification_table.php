@@ -64,6 +64,13 @@ class Certification_table
 		'12' => [
 			'type' => 'credit_investigation',
 			'file_location' => 'person_mq_image',
+			'total_table' => [
+				'action_user' => '編輯人',
+				'send_time' => '編輯時間',
+				'status' => '編輯狀態',
+				'personName' => '戶名',
+				'printDatetime' => '印表時間'
+			]
 		],
 		'1001' => [
 			'type' => 'balance_sheet',

@@ -1887,6 +1887,24 @@ class Certification_lib{
 		return false;
 	}
 
+	private function investigationa11_success($info){
+		if($info){
+			// $content = $info->content;
+			// $this->CI->load->library('mapping/user/Certification_data');
+			// $result = ! empty($content['result']) ? $content['result'] : [];
+			// $meta = $this->CI->certification_data->transformJointCreditToMeta($result);
+			$data 		= [
+				$info->certification_id.'_investigationa11' => ''//json_encode($meta),
+			];
+
+			$rs = $this->user_meta_progress($data,$info);
+			if($rs){
+					return $this->fail_other_cer($info);
+			}
+		}
+		return false;
+	}
+
 	private function job_success($info){
 		if($info){
 			$content 	= $info->content;
