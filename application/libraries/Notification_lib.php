@@ -726,7 +726,7 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [])
+    public function EDM($user_id, $title, $content, $EDM, $EDM_href, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [])
     {
         $user_list = [];
         $user_ids = false;
@@ -775,7 +775,7 @@ $name 您好，
 		{
 			$this->CI->load->library('Sendemail');
 			foreach ($mail_list as $mail) {
-				$this->CI->sendemail->EDM($mail, $title, nl2br($content), $EDM);
+				$this->CI->sendemail->EDM($mail, $title, nl2br($content), $EDM, $EDM_href);
 			}
 			$count = count($mail_list);
 		}else if (count($user_list) > 0) {
@@ -797,7 +797,7 @@ $name 您好，
                 }
                 if($mail){
                     $this->CI->load->library('Sendemail');
-                    $this->CI->sendemail->EDM($value->email, $title, nl2br($content), $EDM, $url);
+                    $this->CI->sendemail->EDM($value->email, $title, nl2br($content), $EDM, $EDM_href);
                 }
                 $count++;
             }
