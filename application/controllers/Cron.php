@@ -333,6 +333,7 @@ class Cron extends CI_Controller {
         $title = $input->title;
         $content = $input->content;
         $EDM = $input->EDM;
+		$EDM_href = $input->EDM_href;
         $investor = isset($input->investor) ? $input->investor : 0;
         $school = isset($input->school) && $input->school != '' ? $input->school : false;
         $years = isset($input->years) && $input->years != '' ? $input->years : false;
@@ -343,13 +344,13 @@ class Cron extends CI_Controller {
         $this->load->library('Notification_lib');
 
         $start_time = time();
-        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $investor, $school, $years, $sex, $app, $mail, $mail_list);
+        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $EDM_href, $investor, $school, $years, $sex, $app, $mail, $mail_list);
         $num = $count ? intval($count) : 0;
         $end_time = time();
         $data = [
             'script_name' => 'EDM',
             'num' => $num,
-            'parameter' => json_encode([$user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail, $mail_list]),
+            'parameter' => json_encode([$user_id, $title, $content, $EDM, $EDM_href, $investor, $school, $years, $sex, $app, $mail, $mail_list]),
             'start_time' => $start_time,
             'end_time' => $end_time
         ];
