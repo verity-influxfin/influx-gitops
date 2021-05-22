@@ -54,7 +54,27 @@
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
+		gtag('config', 'AW-692812197');
     </script>
+	<!-- Event snippet for 借款、投資app下載 conversion page In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+	<!-- 借款：WE5GCNWzgpoCEKXzrcoC 投資：vcdCCJyj_ZkCEKXzrcoC -->
+	<script>
+		window.addEventListener("load", function(event) {
+		  setTimeout(function(){
+				document.querySelectorAll("a[href*='investLink']").forEach(function(e){
+					e.addEventListener('click',function(){
+						gtag('event', 'conversion', {'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'});
+		   		});
+		   	});
+
+		    document.querySelectorAll("a[href*='borrowLink']").forEach(function(e){
+					e.addEventListener('click',function(){
+						gtag('event', 'conversion', {'send_to': 'AW-692812197/WE5GCNWzgpoCEKXzrcoC'});
+		   		});
+		   	});
+		  },2000)
+	  });
+	</script>
 </head>
 
 <body>
