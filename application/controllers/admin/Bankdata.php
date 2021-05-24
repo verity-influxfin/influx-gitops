@@ -172,43 +172,35 @@ class Bankdata extends MY_Admin_Controller
 
 	/**
 	 * [getMappingMsgNo 取得新光交易編號]
-	 * @param  string $target_id   [案件號]
-	 * @param  string $action_user [操作人員 ID]
-	 * @param  string $action      [呼叫動作]
-	 * @return array $msg_no       [新光交易編號]
+	 * @param  string $target_id      [案件號]
+	 * @param  string $action_user    [操作人員 ID]
+	 * @param  string $action         [呼叫動作]
+	 * @param  string $data_type      [送出資料類型]
+	 * @return array $msg_no          [新光交易編號]
 	 */
 	public function getMappingMsgNo($target_id=''){
 		$input = $this->input->get(NULL, TRUE);
         $target_id = isset($input['target_id']) ? $input['target_id'] : $target_id;
 		$action_user = isset($this->login_info->id) ? $this->login_info->id : '';
 		$action = isset($input['action']) ? $input['action'] : '';
+		$data_type = isset($input['data_type']) ? $input['data_type'] : '';
+
 
 		$this->load->library('mapping/sk_bank/msgno');
 		$response = $this->msgno->getSKBankInfoByTargetId($target_id);
 
 		if($action == 'send'){
 			$this->load->model('skbank/loantargetmappingmsgno_model');
-			if($response['status']['code'] == 201){
-				$data = [
-					'target_id' => $target_id,
-					'msg_no' => isset($response['data']['msg_no']) ? $response['data']['msg_no'] : '',
-					'action_user_id' => $action_user,
-					'date' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],0,8) : '',
-					'serial_number' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],8) : '',
+			$data = [
+				'target_id' => $target_id,
+				'msg_no' => isset($response['data']['msg_no']) ? $response['data']['msg_no'] : '',
+				'action_user_id' => $action_user,
+				'type' => $data_type,
+				'date' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],0,8) : '',
+				'serial_number' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],8) : '',
 
-				];
-				$this->loantargetmappingmsgno_model->insert($data);
-			}
-			if($response['status']['code'] == 202){
-				$data = [
-					'msg_no' => isset($response['data']['msg_no']) ? $response['data']['msg_no'] : '',
-					'action_user_id' => $action_user,
-					'date' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],0,8) : '',
-					'serial_number' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],8) : '',
-
-				];
-				$this->loantargetmappingmsgno_model->update_by(['target_id' => $target_id],$data);
-			}
+			];
+			$this->loantargetmappingmsgno_model->insert($data);
 		}
 
 		if($action){
