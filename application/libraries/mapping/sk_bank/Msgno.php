@@ -106,7 +106,7 @@ class Msgno
 		$serial_number = $this->CI->LoanTargetMappingMsgNo_model->getMaxSerialNumberByDate($date);
 		if($serial_number != ''){
 			// to do : 加入序號上限阻擋
-			if($serial_number = '9999999'){
+			if($serial_number == '9999999'){
 
 			}
 			$last_serial_number = isset($serial_number) ? $serial_number : $count;

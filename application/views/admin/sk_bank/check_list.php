@@ -3288,7 +3288,7 @@
   function getMappingMsgNo(target_id,data_type,result){
 	  $.ajax({
           type: "GET",
-          url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=send&type=${data_type}`,
+          url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=send&data_type=${data_type}`,
           success: function (response) {
 			  response = response.response;
               result(response);
@@ -3326,7 +3326,7 @@
   }
 
   function save(send_type){
-	all_data = getCheckListData();
+	all_data = getCheckLisTexttData();
 	// 收件檢核表資料傳送
 	if(send_type == 'api_data_page'){
 		data_type = 'text';

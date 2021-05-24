@@ -185,7 +185,6 @@ class Bankdata extends MY_Admin_Controller
 		$action = isset($input['action']) ? $input['action'] : '';
 		$data_type = isset($input['data_type']) ? $input['data_type'] : '';
 
-
 		$this->load->library('mapping/sk_bank/msgno');
 		$response = $this->msgno->getSKBankInfoByTargetId($target_id);
 
