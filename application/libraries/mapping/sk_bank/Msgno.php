@@ -58,8 +58,8 @@ class Msgno
 				$action_user = '';
 			}
 			if($msg_no){
-				$this->CI->load->model('skbank/loansendrequestlog_model');
-				$mapping_info = $this->CI->loansendrequestlog_model->get_by(['msg_no'=>$msg_no,'send_success'=> 1]);
+				$this->CI->load->model('skbank/LoanSendRequestLog_model');
+				$mapping_info = $this->CI->LoanSendRequestLog_model->get_by(['msg_no'=>$msg_no,'send_success'=> 1]);
 				// 送出人員
 				if($action_user){
 					$this->CI->load->model('admin/admin_model');
@@ -74,7 +74,7 @@ class Msgno
 					$response['data']['send_log'] = json_decode(json_encode($mapping_info),true);
 					$response['data']['send_log']['action_user'] = $action_user;
 				}else{
-					$mapping_info = $this->CI->loansendrequestlog_model->order_by('created_at','desc')->get_by(['msg_no'=>$msg_no]);
+					$mapping_info = $this->CI->LoanSendRequestLog_model->order_by('created_at','desc')->get_by(['msg_no'=>$msg_no]);
 					$response['status']['code'] = 202;
 					$response['data']['msg_no'] = $this->createNewMsgNo();
 					$response['data']['send_log'] = json_decode(json_encode($mapping_info),true);
