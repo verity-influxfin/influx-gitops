@@ -28,7 +28,7 @@
 			  <td><input id="msg_no" disabled></td>
 			  <td><input id="case_no" disabled></td>
 			  <td><input id="send_success" disabled></td>
-			  <td><input id="return_msg" disabled></td>
+			  <td><input id="return_msg" style="min-width: 300px;" disabled></td>
 			  <td><input id="action_user" disabled></td>
 			</tr>
 		</tbody>
@@ -3363,12 +3363,7 @@
 		        url: '/api/skbank/v1/LoanRequest/apply_text',
 		        dataType: "json",
 		        success: function (response) {
-		          if(response.result == 'ERROR'){
-		            alert(response.error);
-		          }
-		          if(response.result == 'SUCCESS'){
-		            alert(response.result);
-		          }
+		          alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
 		        },
 		        error: function(error) {
 		          alert(error);

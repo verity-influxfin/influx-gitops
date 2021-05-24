@@ -34,6 +34,7 @@ class Msgno
 	 *   )
 	 * )
 	 */
+	// to do : 待擴充圖片附件檢核表撈取
 	public function getSKBankInfoByTargetId($target_id = ''){
 		$response = [
 			'status' => [
@@ -49,7 +50,7 @@ class Msgno
 		if($target_id){
 			// 查詢關聯表是否有該案件號對應之新光交易序號
 			$this->CI->load->model('skbank/LoanTargetMappingMsgNo_model');
-			$mapping_info = $this->CI->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$target_id]);
+			$mapping_info = $this->CI->LoanTargetMappingMsgNo_model->order_by('id','desc')->get_by(['target_id'=>$target_id, 'type'=> 'text']);
 			if($mapping_info){
 				$msg_no = isset($mapping_info->msg_no) ? $mapping_info->msg_no: '';
 				$action_user = isset($mapping_info->action_user_id) ? $mapping_info->action_user_id: '';
@@ -59,7 +60,7 @@ class Msgno
 			}
 			if($msg_no){
 				$this->CI->load->model('skbank/LoanSendRequestLog_model');
-				$mapping_info = $this->CI->LoanSendRequestLog_model->get_by(['msg_no'=>$msg_no,'send_success'=> 1]);
+				$mapping_info = $this->CI->LoanSendRequestLog_model->get_by(['msg_no'=>$msg_no]);
 				// 送出人員
 				if($action_user){
 					$this->CI->load->model('admin/admin_model');
