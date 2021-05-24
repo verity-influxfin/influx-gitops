@@ -12,85 +12,93 @@ class Check_list
 	// 收件檢核表變卡相關資料
 	public function get_1007_governmentauthorities_data($meta_data){
 		$response = [];
-		$meta_data = json_decode($meta_data,true) ? json_decode($meta_data,true) : '';
+		$meta_data = json_decode($meta_data,true) ? json_decode($meta_data,true) : [];
 		if($meta_data){
-			$this->CI->load->library('gcis_lib');
-			if(isset($meta_data['tax_id'])){
-				// 商業司(公司)
-				$gcis_info = $this->CI->gcis_lib->account_info($meta_data['tax_id']);
-				if(! $gcis_info){
-					// 商業司(行號)
-					$gcis_info = $this->CI->gcis_lib->account_info_businesss($meta_data['tax_id']);
-				}
-
-				$response['CompId_content'] = $meta_data['tax_id'];
-				// 財政部 api
-				$meragre_array = $this->get_mof_api($meta_data['tax_id']);
-				$response = array_merge($response,$meragre_array);
-
-				// 商業司爬蟲
-				$this->CI->load->library('scraper/findbiz_lib');
-	      $res = $this->CI->findbiz_lib->getResultByBusinessId($meta_data['tax_id']);
-				// print_r($res);exit;
-				if($res){
-					$findbiz_info = $this->CI->findbiz_lib->searchEachTermOwner($res);
-					krsort($findbiz_info);
-					$num = 0;
-					foreach($findbiz_info as $k=>$v){
-						if($num==0){
-							$response['PrOnboardDay_content'] = $k;
-							$response['PrOnboardName_content'] = $v;
-						}
-						if($num==1){
-							$response['ExPrOnboardDay_content'] = $k;
-							$response['ExPrOnboardName_content'] = $v;
-						}
-						if($num==2){
-							$response['ExPrOnboardDay2_content'] = $k;
-							$response['ExPrOnboardName2_content'] = $v;
-						}
-						if($num==3){
-							break;
-						}
-						$num++;
-					}
-				}
-
-				if($gcis_info){
-					$response['CompType_content'] = isset($gcis_info['Business_Organization_Type_Desc']) && $gcis_info['Business_Organization_Type_Desc'] == '獨資' ? '獨資': '中小企業';
-					$response['CompName_content'] = $gcis_info['Company_Name'];
-					$response['CompName_content'] = $gcis_info['Company_Name'];
-					$response['CompSetDate_content'] = $gcis_info['Company_Setup_Date'];
-					$response['CompCapital_content'] = $gcis_info['Paid_In_Capital_Amount'] ? $gcis_info['Paid_In_Capital_Amount'] : $gcis_info['Capital_Stock_Amount'];
-					$response['CompRegAddress_content'] = $gcis_info['Company_Location'];
-					$response['PrName_content'] = $gcis_info['Responsible_Name'];
-					// 郵遞區號
-					if($gcis_info['Company_Location']){
-						$this->CI->load->library('mapping/address');
-		        $zip_code = $this->CI->address->getZipAdrNumber($gcis_info['Company_Location']);
-						$zip_name = '';
-						if($zip_code){
-							$zip_name = $this->CI->address->getZipAdrName($zip_code,2);
-						}
-						// 地址拆分
-						$split_address = $this->CI->address->splitAddress($gcis_info['Company_Location']);
-						$response['BizRegAddrCityName_content'] = $split_address['city'];
-						$response['BizRegAddrAreaName_content'] = $split_address['area'];
-						$response['BizRegAddrRoadName_content'] = $split_address['road'];
-						$response['BizRegAddrSec_content'] = $split_address['part'];
-						$response['BizRegAddrLn_content'] = $split_address['lane'];
-						$response['BizRegAddrAly_content'] = $split_address['alley'];
-						$response['BizRegAddrNo_content'] = $split_address['number'];
-						$response['BizRegAddrNoExt_content'] = $split_address['sub_number'];
-						$response['BizRegAddrFloor_content'] = $split_address['floor'];
-						$response['BizRegAddrFloorExt_content'] = $split_address['sub_floor'];
-					}
-
-					$response['CompRegAddrZip_content'] = $zip_code;
-					// 郵遞區號名稱前面需加入市或縣
-					$response['CompRegAddrZipName_content'] = $zip_name;
-				}
+			foreach($meta_data as $k => $v){
+				// if($k == ''){
+				// 	$k = '';
+				// }
+				// if($k == ''){
+				// 	$k = '';
+				// }
+				$response[$k.'_content'] = $v;
 			}
+			// $this->CI->load->library('gcis_lib');
+			// if(isset($meta_data['tax_id'])){
+			// 	// 商業司(公司)
+			// 	$gcis_info = $this->CI->gcis_lib->account_info($meta_data['tax_id']);
+			// 	if(! $gcis_info){
+			// 		// 商業司(行號)
+			// 		$gcis_info = $this->CI->gcis_lib->account_info_businesss($meta_data['tax_id']);
+			// 	}
+			//
+			// 	$response['CompId_content'] = $meta_data['tax_id'];
+			// 	// 財政部 api
+			// 	$meragre_array = $this->get_mof_api($meta_data['tax_id']);
+			// 	$response = array_merge($response,$meragre_array);
+			//
+			// 	// 商業司爬蟲
+			// 	$this->CI->load->library('scraper/findbiz_lib');
+	      	// 	$res = $this->CI->findbiz_lib->getResultByBusinessId($meta_data['tax_id']);
+			// 	if($res){
+			// 		$findbiz_info = $this->CI->findbiz_lib->searchEachTermOwner($res);
+			// 		krsort($findbiz_info);
+			// 		$num = 0;
+			// 		foreach($findbiz_info as $k=>$v){
+			// 			if($num==0){
+			// 				$response['PrOnboardDay_content'] = $k;
+			// 				$response['PrOnboardName_content'] = $v;
+			// 			}
+			// 			if($num==1){
+			// 				$response['ExPrOnboardDay_content'] = $k;
+			// 				$response['ExPrOnboardName_content'] = $v;
+			// 			}
+			// 			if($num==2){
+			// 				$response['ExPrOnboardDay2_content'] = $k;
+			// 				$response['ExPrOnboardName2_content'] = $v;
+			// 			}
+			// 			if($num==3){
+			// 				break;
+			// 			}
+			// 			$num++;
+			// 		}
+			// 	}
+			//
+			// 	if($gcis_info){
+			// 		$response['CompType_content'] = isset($gcis_info['Business_Organization_Type_Desc']) && $gcis_info['Business_Organization_Type_Desc'] == '獨資' ? '獨資': '中小企業';
+			// 		$response['CompName_content'] = $gcis_info['Company_Name'];
+			// 		$response['CompName_content'] = $gcis_info['Company_Name'];
+			// 		$response['CompSetDate_content'] = $gcis_info['Company_Setup_Date'];
+			// 		$response['CompCapital_content'] = $gcis_info['Paid_In_Capital_Amount'] ? $gcis_info['Paid_In_Capital_Amount'] : $gcis_info['Capital_Stock_Amount'];
+			// 		$response['CompRegAddress_content'] = $gcis_info['Company_Location'];
+			// 		$response['PrName_content'] = $gcis_info['Responsible_Name'];
+			// 		// 郵遞區號
+			// 		if($gcis_info['Company_Location']){
+			// 			$this->CI->load->library('mapping/address');
+		    //     $zip_code = $this->CI->address->getZipAdrNumber($gcis_info['Company_Location']);
+			// 			$zip_name = '';
+			// 			if($zip_code){
+			// 				$zip_name = $this->CI->address->getZipAdrName($zip_code,2);
+			// 			}
+			// 			// 地址拆分
+			// 			$split_address = $this->CI->address->splitAddress($gcis_info['Company_Location']);
+			// 			$response['BizRegAddrCityName_content'] = $split_address['city'];
+			// 			$response['BizRegAddrAreaName_content'] = $split_address['area'];
+			// 			$response['BizRegAddrRoadName_content'] = $split_address['road'];
+			// 			$response['BizRegAddrSec_content'] = $split_address['part'];
+			// 			$response['BizRegAddrLn_content'] = $split_address['lane'];
+			// 			$response['BizRegAddrAly_content'] = $split_address['alley'];
+			// 			$response['BizRegAddrNo_content'] = $split_address['number'];
+			// 			$response['BizRegAddrNoExt_content'] = $split_address['sub_number'];
+			// 			$response['BizRegAddrFloor_content'] = $split_address['floor'];
+			// 			$response['BizRegAddrFloorExt_content'] = $split_address['sub_floor'];
+			// 		}
+			//
+			// 		$response['CompRegAddrZip_content'] = $zip_code;
+			// 		// 郵遞區號名稱前面需加入市或縣
+			// 		$response['CompRegAddrZipName_content'] = $zip_name;
+			// 	}
+			// }
 		}
 		return $response;
 	}

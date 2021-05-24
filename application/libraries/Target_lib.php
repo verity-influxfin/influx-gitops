@@ -1710,7 +1710,7 @@ class Target_lib
 
                             $targetData = json_decode($value->target_data);
                             foreach ($product['targetData'] as $targetDataKey => $targetDataValue) {
-                                if (empty($targetData->$targetDataKey) && !$targetDataValue[3]) {
+                                if (empty($targetData->$targetDataKey) && isset($targetDataValue[3]) && !$targetDataValue[3]) {
                                     $finish = false;
                                     break;
                                 }

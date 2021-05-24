@@ -1482,7 +1482,7 @@
             <td>
               <center>
                 <input  class="input-width" type="button"
-                onclick="edit_click(PrTelNo_content)" value="Edit" >
+                onclick="edit_click(PrTelExt_content)" value="Edit" >
               </center>
               </td>
           </tr>
@@ -3213,8 +3213,13 @@
   let url;
   let target_id;
   let table_type;
+  let data_type;
   let msg_no;
   let msg_data;
+  let all_data ={};
+  let IDs = [];
+  let key = '';
+  let value = '';
   // 下拉選單列表
   let select_array = ['CompType_content','BusinessType_content','CompDuType_content','BizRegAddrOwner_content','IsBizAddrEqToBizRegAddr_content','BizTaxFileWay_content',
   'IsPrMarried_content','IsPrSpouseGu_content','RealPr_content','IsBizRegAddrSelfOwn_content','IsRealBizAddrSelfOwn_content','RealBizAddrOwner_content','OthRealPrRelWithPr_content',
@@ -3251,7 +3256,7 @@
 	  	}
 		if(rawData_array.includes($(`#${key}`).attr('id'))){
 			Object.keys(data[key]).forEach(function(key1) {
-				console.log(data[key][key1]);
+				// console.log(data[key][key1]);
 				var a_tag = `<a href="${data[key][key1]}" data-fancybox="images">
 					<img src="${data[key][key1]}" style='width:30%;max-width:400px'>
 				</a>`;
@@ -3280,10 +3285,10 @@
       });
   }
 
-  function getMappingMsgNo(target_id,result){
+  function getMappingMsgNo(target_id,data_type,result){
 	  $.ajax({
           type: "GET",
-          url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=send`,
+          url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=send&type=${data_type}`,
           success: function (response) {
 			  response = response.response;
               result(response);
@@ -3294,37 +3299,38 @@
       });
   }
 
+  // 取得收件檢核表文字資料
+  function getCheckLisTexttData(){
+	$(".api_data_page").find("input").each(function(){ IDs.push(this.id); });
+
+  	IDs.forEach((item,index)=>{
+  	  if(item){
+  		if(item.match(/.*-selectized/g)){
+  		  key = item.replace(/-selectized/g, '');
+  		}else{
+  		  key = item;
+  		}
+  		value = $(`#${key}`).val();
+  		key = key.replace(/_content/g, '');
+  		if(is_int_array.includes(key)){
+  			if(value){
+  				value = parseInt(value);
+  			}else{
+  				value = 0;
+  			}
+  		}
+  		all_data[key] = value;
+  	  }
+  	});
+	return all_data;
+  }
+
   function save(send_type){
-    var IDs = [];
-
-	var all_data ={};
-	var key = '';
-	var value = '';
-
+	all_data = getCheckListData();
 	// 收件檢核表資料傳送
 	if(send_type == 'api_data_page'){
-		$(".api_data_page").find("input").each(function(){ IDs.push(this.id); });
-
-	    IDs.forEach((item,index)=>{
-	      if(item){
-	        if(item.match(/.*-selectized/g)){
-	          key = item.replace(/-selectized/g, '');
-	        }else{
-	          key = item;
-	        }
-	        value = $(`#${key}`).val();
-	        key = key.replace(/_content/g, '');
-			if(is_int_array.includes(key)){
-				if(value){
-					value = parseInt(value);
-				}else{
-					value = 0;
-				}
-			}
-	        all_data[key] = value;
-	      }
-	    });
-		getMappingMsgNo(target_id, function (data){
+		data_type = 'text';
+		getMappingMsgNo(target_id, data_type, function (data){
 			msg_data = data;
 
 			if(!msg_data){
@@ -3339,6 +3345,7 @@
 			}
 			if(msg_no == ''){
 				alert('交易序號為空');
+				return;
 			}
 		    request_data = {
 		      'MsgNo': msg_no,
@@ -3353,7 +3360,7 @@
 		    $.ajax({
 		        type: "POST",
 		        data: request_data,
-		        url: '/api/skbank/LoanRequest',
+		        url: '/api/skbank/v1/LoanRequest/apply_text',
 		        dataType: "json",
 		        success: function (response) {
 		          if(response.result == 'ERROR'){
@@ -3386,7 +3393,8 @@
 	        all_data[key] = value;
 	      }
 	    });
-		console.log(all_data);return;
+		// console.log(all_data);
+		return;
 	}
   }
 
