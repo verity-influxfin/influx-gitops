@@ -60,7 +60,7 @@ class Msgno
 			}
 			if($msg_no){
 				$this->CI->load->model('skbank/LoanSendRequestLog_model');
-				$mapping_info = $this->CI->LoanSendRequestLog_model->get_by(['msg_no'=>$msg_no]);
+				$mapping_info = $this->CI->LoanSendRequestLog_model->get_by(['msg_no'=>$msg_no, 'send_success !='=>0, 'case_no !='=>0 ]);
 				// 送出人員
 				if($action_user){
 					$this->CI->load->model('admin/admin_model');

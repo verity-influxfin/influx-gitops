@@ -47,6 +47,7 @@ class Bankdata extends MY_Admin_Controller
 			}
         }
 		$response = [];
+		$return_msg = [];
 		$this->load->library('output/json_output');
 
 		$this->load->model('loan/target_model');
@@ -67,7 +68,8 @@ class Bankdata extends MY_Admin_Controller
 					}else{
 						$response['send_success'] = '未送出';
 					}
-					$response['return_msg'] = isset($msg_no_info['data']['send_log']['response_content']) ? json_decode($msg_no_info['data']['send_log']['response_content'],true)['ReturnMsg']: '';
+					$return_msg = json_decode($msg_no_info['data']['send_log']['response_content'],true);
+					$response['return_msg'] = isset($return_msg['ReturnMsg']) ? $return_msg['ReturnMsg'] : $msg_no_info['data']['send_log']['error_msg'];
 					$response['action_user'] = isset($msg_no_info['data']['send_log']['action_user']) ? $msg_no_info['data']['send_log']['action_user'] : '';
 				}
 				// 法人徵提資料
