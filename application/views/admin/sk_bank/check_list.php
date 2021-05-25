@@ -1781,7 +1781,7 @@
               <td>
                 <center>
                   <input  class="input-width" type="button"
-                  onclick="edit_click(SpouseCurAddrZipName_content)" value="Edit" >
+                  onclick="edit_click(SpouseCurlAddress_content)" value="Edit" >
                 </center>
                 </td>
             </tr>
