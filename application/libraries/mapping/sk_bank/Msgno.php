@@ -49,6 +49,7 @@ class Msgno
 
 		if($target_id){
 			// 查詢關聯表是否有該案件號對應之新光交易序號
+			// to do : 待加入附件檢核表資訊
 			$this->CI->load->model('skbank/LoanTargetMappingMsgNo_model');
 			$mapping_info = $this->CI->LoanTargetMappingMsgNo_model->order_by('id','desc')->get_by(['target_id'=>$target_id, 'type'=> 'text']);
 			if($mapping_info){

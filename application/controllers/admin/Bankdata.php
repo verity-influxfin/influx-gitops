@@ -48,6 +48,7 @@ class Bankdata extends MY_Admin_Controller
         }
 		$response = [];
 		$return_msg = [];
+        $send_request_data = [];
 		$this->load->library('output/json_output');
 
 		$this->load->model('loan/target_model');
@@ -60,6 +61,7 @@ class Bankdata extends MY_Admin_Controller
 				$this->load->library('mapping/sk_bank/check_list');
 				// 取得交易序號相關資料
 				$msg_no_info = $this->getMappingMsgNo($target_id);
+                // 有上筆送出資料時
 				if($msg_no_info){
 					$response['msg_no'] = isset($msg_no_info['data']['send_log']['msg_no']) ? $msg_no_info['data']['send_log']['msg_no'] : '';
 					$response['case_no'] = isset($msg_no_info['data']['send_log']['case_no']) ? $msg_no_info['data']['send_log']['case_no']: '';
@@ -71,6 +73,24 @@ class Bankdata extends MY_Admin_Controller
 					$return_msg = json_decode($msg_no_info['data']['send_log']['response_content'],true);
 					$response['return_msg'] = isset($return_msg['ReturnMsg']) ? $return_msg['ReturnMsg'] : $msg_no_info['data']['send_log']['error_msg'];
 					$response['action_user'] = isset($msg_no_info['data']['send_log']['action_user']) ? $msg_no_info['data']['send_log']['action_user'] : '';
+
+                    // 填入上筆送出資料
+                    if(!empty($response['msg_no'])){
+                        $this->load->model('skbank/LoanSendRequestLog_model');
+                        $send_request_log = $this->LoanSendRequestLog_model->order_by('id','desc')->get_by(['msg_no'=> $response['msg_no']]);
+                        if(!empty($send_request_log->request_content)){
+                            $send_request_data = json_decode($send_request_log->request_content,true);
+                            $response['CompId_content'] = isset($send_request_data['unencrypted']['CompId']) ? $send_request_data['unencrypted']['CompId'] : '';
+                            $response['PrincipalId_content'] = isset($send_request_data['unencrypted']['PrincipalId']) ? $send_request_data['unencrypted']['PrincipalId'] : '';
+                            $send_request_data = !empty($send_request_data['unencrypted']['Data']) ? $send_request_data['unencrypted']['Data'] : [];
+                            if(!empty($send_request_data)){
+                                foreach($send_request_data as $send_request_data_key => $send_request_data_value){
+                                    $response[$send_request_data_key.'_content'] = $send_request_data_value;
+                                }
+                            }
+                        }
+                        // print_r($send_request_data);exit;
+                    }
 				}
 				// 法人徵提資料
 
@@ -85,82 +105,86 @@ class Bankdata extends MY_Admin_Controller
 				// 		}
 				// 	}
 				// }
-				foreach($this->mapping_config['check'] as $v){
-					$user_meta = $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>$v]);
-					$function_name = "get_{$v}_data";
-					if($user_meta && isset($user_meta->meta_value) && method_exists($this->check_list,$function_name)){
-						$meragre_array = $this->check_list->$function_name($user_meta->meta_value);
-						$response = array_merge($response,$meragre_array);
-					}
-				}
 
-				$this->load->library('Target_lib');
-				// 找案件的相關人員(負責人、實際負責人、配偶、保證人) User ID
-				$guarantors = $this->target_lib->get_associates_user_data($target_id, 'all', [0 ,1], false);
-				// print_r($guarantors);exit;
-				if($guarantors && is_array($guarantors)){
-					foreach($guarantors as $k=>$v){
-						if($v->status == 1){
-							$user_id = isset($v->user_id) ? $v->user_id : '';
-							if($user_id){
-								// 負責人
-								if($v->character == 0 || $v->character == 1){
-									$user_role = 'Pr';
-								}
-								// 配偶
-								if($v->character == 3){
-									$user_role = 'Spouse';
-								}
-								// 甲保證人
-								if($v->character == 4){
-									$user_role = 'GuOne';
-								}
-								// 乙保證人
-								if($v->character == 5){
-									$user_role = 'GuTwo';
-								}
-								// 身份證資料
-								$identity_info = $this->user_certification_model->get_by(['user_id'=>$user_id, 'certification_id'=>'1']);
-								// print_r($identity_info);exit;
-								if($identity_info){
-									if(isset($identity_info->content)){
-										$identity_info_content = json_decode($identity_info->content,true);
-										$meragre_array = $this->check_list->get_company_user_data($identity_info_content,$user_role);
-										$response = array_merge($response,$meragre_array);
-									}
-								}
-								// 勞保異動明細資料
-								$security_info = $this->user_certification_model->get_by(['user_id'=>$user_id, 'certification_id'=>'10']);
-								if($security_info){
-									if(isset($security_info->content)){
-										$security_content = json_decode($security_info->content,true);
-										$meragre_array = $this->check_list->get_insurance_table_user_data($security_content,$user_role);
-										$response = array_merge($response,$meragre_array);
-									}
-								}
-								// 自然人聯徵資料
-								$credit_investigation = $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'9_credit_investigation']);
-								if($credit_investigation){
-									if(isset($credit_investigation->meta_value)){
-										$credit_investigation_content = json_decode($credit_investigation->meta_value,true);
-										$meragre_array = $this->check_list->get_9_credit_investigation_data($credit_investigation_content,$user_role);
-										$response = array_merge($response,$meragre_array);
-									}
-								}
-								// 個人資料表
-								$profile_info = $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'11_profile']);
-								if($profile_info){
-									if(isset($profile_info->meta_value)){
-										$profile_content = json_decode($profile_info->meta_value,true);
-										$meragre_array = $this->check_list->get_11_profile_data($profile_content);
-										$response = array_merge($response,$meragre_array);
-									}
-								}
-
-							}
+				//
+				if(!isset($response['msg_no'])){
+					foreach($this->mapping_config['check'] as $v){
+						$user_meta = $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>$v]);
+						$function_name = "get_{$v}_data";
+						if($user_meta && isset($user_meta->meta_value) && method_exists($this->check_list,$function_name)){
+							$meragre_array = $this->check_list->$function_name($user_meta->meta_value);
+							$response = array_merge($response,$meragre_array);
 						}
 					}
 
+					$this->load->library('Target_lib');
+					// 找案件的相關人員(負責人、實際負責人、配偶、保證人) User ID
+					$guarantors = $this->target_lib->get_associates_user_data($target_id, 'all', [0 ,1], false);
+					// print_r($guarantors);exit;
+					if($guarantors && is_array($guarantors)){
+						foreach($guarantors as $k=>$v){
+							if($v->status == 1){
+								$user_id = isset($v->user_id) ? $v->user_id : '';
+								if($user_id){
+									// 負責人
+									if($v->character == 0 || $v->character == 1){
+										$user_role = 'Pr';
+									}
+									// 配偶
+									if($v->character == 3){
+										$user_role = 'Spouse';
+									}
+									// 甲保證人
+									if($v->character == 4){
+										$user_role = 'GuOne';
+									}
+									// 乙保證人
+									if($v->character == 5){
+										$user_role = 'GuTwo';
+									}
+									// 身份證資料
+									$identity_info = $this->user_certification_model->get_by(['user_id'=>$user_id, 'certification_id'=>'1']);
+									// print_r($identity_info);exit;
+									if($identity_info){
+										if(isset($identity_info->content)){
+											$identity_info_content = json_decode($identity_info->content,true);
+											$meragre_array = $this->check_list->get_company_user_data($identity_info_content,$user_role);
+											$response = array_merge($response,$meragre_array);
+										}
+									}
+									// 勞保異動明細資料
+									$security_info = $this->user_certification_model->get_by(['user_id'=>$user_id, 'certification_id'=>'10']);
+									if($security_info){
+										if(isset($security_info->content)){
+											$security_content = json_decode($security_info->content,true);
+											$meragre_array = $this->check_list->get_insurance_table_user_data($security_content,$user_role);
+											$response = array_merge($response,$meragre_array);
+										}
+									}
+									// 自然人聯徵資料
+									$credit_investigation = $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'9_credit_investigation']);
+									if($credit_investigation){
+										if(isset($credit_investigation->meta_value)){
+											$credit_investigation_content = json_decode($credit_investigation->meta_value,true);
+											$meragre_array = $this->check_list->get_9_credit_investigation_data($credit_investigation_content,$user_role);
+											$response = array_merge($response,$meragre_array);
+										}
+									}
+									// 個人資料表
+									$profile_info = $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'11_profile']);
+									if($profile_info){
+										if(isset($profile_info->meta_value)){
+											$profile_content = json_decode($profile_info->meta_value,true);
+											$meragre_array = $this->check_list->get_11_profile_data($profile_content);
+											$response = array_merge($response,$meragre_array);
+										}
+									}
+
+								}
+							}
+						}
+
+					}
 				}
 				// 附件檢核表
 				$meragre_array = $this->check_list->get_raw_data($target_info);
@@ -191,7 +215,7 @@ class Bankdata extends MY_Admin_Controller
 		$response = $this->msgno->getSKBankInfoByTargetId($target_id);
 
 		if($action == 'send'){
-			$this->load->model('skbank/loantargetmappingmsgno_model');
+			$this->load->model('skbank/LoanTargetMappingMsgNo_model');
 			$data = [
 				'target_id' => $target_id,
 				'msg_no' => isset($response['data']['msg_no']) ? $response['data']['msg_no'] : '',
@@ -201,7 +225,7 @@ class Bankdata extends MY_Admin_Controller
 				'serial_number' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],8) : '',
 
 			];
-			$this->loantargetmappingmsgno_model->insert($data);
+			$this->LoanTargetMappingMsgNo_model->insert($data);
 		}
 
 		if($action){
