@@ -131,7 +131,8 @@ class Reports extends REST_Controller {
             }
 
           }else{
-            $this->response(['result' => 'FAIL']);exit;
+			$ocr_type = 'ltd';
+            // $this->response(['result' => 'FAIL']);exit;
           }
         }
 
