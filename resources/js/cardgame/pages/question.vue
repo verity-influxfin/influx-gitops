@@ -18,8 +18,8 @@
           <span class="cardFlip card-back">
             <span class="cardQuestion" :data-id="d">
               <span v-html="imgs[d].question"></span><br /><br />
-              <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="A">(A){{imgs[d].selection[0]}}</div>
-              <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="B">(B){{imgs[d].selection[1]}}</div>
+              <div class="cardAns" @click.once="(e) => {ans(e); stopTime()}" data-ans="A">(A){{imgs[d].selection[0]}}</div>
+              <div class="cardAns" @click.once="(e) => {ans(e); stopTime()}" data-ans="B">(B){{imgs[d].selection[1]}}</div>
             </span>
           </span>
         </span>
