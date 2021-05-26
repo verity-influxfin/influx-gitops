@@ -70,16 +70,13 @@ class Bankdata extends MY_Admin_Controller
 					}else{
 						$response['send_success'] = '未送出';
 					}
-					$return_msg = json_decode($msg_no_info['data']['send_log']['response_content'],true);
-					$response['return_msg'] = isset($return_msg['ReturnMsg']) ? $return_msg['ReturnMsg'] : $msg_no_info['data']['send_log']['error_msg'];
-					$response['action_user'] = isset($msg_no_info['data']['send_log']['action_user']) ? $msg_no_info['data']['send_log']['action_user'] : '';
-
-                    // 填入上筆送出資料
-                    if(!empty($response['msg_no'])){
-                        $this->load->model('skbank/LoanSendRequestLog_model');
-                        $send_request_log = $this->LoanSendRequestLog_model->order_by('id','desc')->get_by(['msg_no'=> $response['msg_no']]);
-                        if(!empty($send_request_log->request_content)){
-                            $send_request_data = json_decode($send_request_log->request_content,true);
+                    // print_r($msg_no_info);exit;
+                    if(!empty($msg_no_info['data']['send_log'])){
+                        $return_msg = json_decode($msg_no_info['data']['send_log']['response_content'],true);
+                        // 填入上筆送出資料
+                        // $msg_no_info['data']['send_log']
+                        if(!empty($msg_no_info['data']['send_log']['request_content'])){
+                            $send_request_data = json_decode($msg_no_info['data']['send_log']['request_content'],true);
                             $response['CompId_content'] = isset($send_request_data['unencrypted']['CompId']) ? $send_request_data['unencrypted']['CompId'] : '';
                             $response['PrincipalId_content'] = isset($send_request_data['unencrypted']['PrincipalId']) ? $send_request_data['unencrypted']['PrincipalId'] : '';
                             $send_request_data = !empty($send_request_data['unencrypted']['Data']) ? $send_request_data['unencrypted']['Data'] : [];
@@ -89,8 +86,14 @@ class Bankdata extends MY_Admin_Controller
                                 }
                             }
                         }
-                        // print_r($send_request_data);exit;
                     }
+                    if(isset($return_msg['ReturnMsg'])){
+                        $response['return_msg'] = $return_msg['ReturnMsg'];
+                    }
+                    if(!isset($return_msg['ReturnMsg']) && isset($msg_no_info['data']['send_log']['error_msg'])){
+                        $response['return_msg'] = $msg_no_info['data']['send_log']['error_msg'];
+                    }
+					$response['action_user'] = isset($msg_no_info['data']['send_log']['action_user']) ? $msg_no_info['data']['send_log']['action_user'] : '';
 				}
 				// 法人徵提資料
 
@@ -107,7 +110,7 @@ class Bankdata extends MY_Admin_Controller
 				// }
 
 				//
-				if(!isset($response['msg_no'])){
+				if(empty($send_request_data)){
 					foreach($this->mapping_config['check'] as $v){
 						$user_meta = $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>$v]);
 						$function_name = "get_{$v}_data";
