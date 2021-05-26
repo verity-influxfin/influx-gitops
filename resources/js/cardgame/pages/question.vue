@@ -10,7 +10,7 @@
     <div class="cards">
       <div class="countdown">00:<span>10</span></div>
       <template >
-        <span :class="'card'+(index%2===0?'B':'A')" v-for="(d, index) in randkeys">
+        <span :class="'card'+(index%2===0?'B':'A')" v-for="(d, index) in randkeys" :key="index">
           <span class="cardFlip card-front" @click.once="timer()">
             <span class="cardNum">{{faceNum[index]}}</span>
             <img class="cardFace" :src="'/images/cardGame'+(index+1)+'.png'">
