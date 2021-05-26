@@ -344,4 +344,15 @@
 			return false;
 		}
 	}
+
+	function array_columns(array $arr, array $keysSelect)
+	{
+		$keys = array_flip($keysSelect);
+		return array_map(
+			function($a) use($keys) {
+				return array_intersect_key($a,$keys);
+			},
+			$arr
+		);
+	}
 ?>
