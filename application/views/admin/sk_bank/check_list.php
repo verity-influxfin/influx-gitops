@@ -809,7 +809,7 @@
               <td class="bold-right-border">實際營業地址</td>
               <td colspan="3"><select name="is_real_biz_addr_self_own" class="table-input" id="IsRealBizAddrSelfOwn_content" disabled>
                   <option value="1">1:自有</option>
-                  <option value="2">0:非自有</option>
+                  <option value="0">0:非自有</option>
                 </select>
               </td>
 
