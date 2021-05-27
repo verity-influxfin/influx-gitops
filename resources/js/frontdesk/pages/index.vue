@@ -66,382 +66,199 @@
         </div>
       </div>
     </div>
-    <div class="count-card" ref="count">
-      <div class="item">
-        <p>會員數</p>
-        <div>{{ format(tweenedMember) }}</div>
+    <div class="alesis-counters">
+      <div class="wrapper">
+        <index-counter image="/images/累積放款金額-01.svg" header="累積註冊用戶" number="60000" unit="人"></index-counter>
+        <index-counter image="/images/累積放款金額-01.svg" header="累積放款金額" number="15857" unit="萬"></index-counter>
+        <index-counter image="/images/累積放款金額-01.svg" header="累積成交筆數" number="37390" unit="筆"></index-counter>
       </div>
-      <div class="lr"></div>
-      <div class="item">
-        <p>成交筆數</p>
-        <div>{{ format(tweenedtransaction) }}</div>
-      </div>
-      <div class="pu"><img class="img-fluid" src="/images/pu.png" /></div>
     </div>
-    <div class="intro-card">
-      <div class="t-c"><h2>公司簡介</h2></div>
-      <div class="hr"></div>
-      <p class="i-t">
-        inFlux普匯金融科技以「普惠金融」為志業，「金融專業」為核心，「高端AI科技」為輔助，提供「最有溫度」的金融服務！<br /><br />
-        首創台灣「AI風控審核無人化融資系統」，利用高端科技，全程無人為干擾，一支手機完成借貸！<br /><br />
-        透過P2P點對點技術，進行大量、小額、分散式借貸投資及債權轉讓，保護借款人資訊，保障投資人權益。<br /><br />
-        具備金融專業知識與實務經驗團隊，建立堅強AI自動風控模組，流暢友善UI設計，深受年輕人喜愛，完美呈現AI綠色金融科技體驗環境。
-      </p>
-    </div>
-    <div class="histroy-card">
-      <div class="t-c"><h2>歷史沿革</h2></div>
-      <div class="hr"></div>
-      <div class="h-c">
-        <div class="arrows al">
-          <div @click="pre()">
-            <img src="../asset/images/left-arrow.svg" class="img-fluid" />
+
+    <div class="alesis-our-service">
+      <index-section header="我們的服務" :secondary="true">
+        <img class="image" src="/images/p2p.svg" />
+        <div class="actions">
+          <div class="left">
+            <a href="#!" class="action">立即投資</a>
+            <a href="#!" class="action">了解更多</a>
+          </div>
+          <div class="right">
+            <a href="#!" class="action">立即借款</a>
+            <a href="#!" class="action">了解更多</a>
           </div>
         </div>
-        <routeMap v-if="isDesktop" :routeData="routeData" />
-        <routeMapM v-else :routeData="routeData" />
-        <div class="arrows ar">
-          <div @click="next()">
-            <img src="../asset/images/right-arrow.svg" class="img-fluid" />
-          </div>
-        </div>
-      </div>
+      </index-section>
     </div>
-    <div class="p2p-card">
-      <div class="t-c"><h2>我們的服務</h2></div>
-      <div class="hr"></div>
-      <div class="img">
-        <img class="img-fluid" src="/images/p2p.svg" />
-      </div>
-    </div>
-    <div class="product-card">
-      <div class="box">
-        <div class="person">
-          <h5>年滿20歲 即可申請個人信貸服務喔！</h5>
-          <div class="typ">
-            <div class="t">
-              <div class="img">
-                <img class="img-fluid" src="../asset/images/icon-dot.svg" />
-              </div>
-              <h3>個人信貸</h3>
-            </div>
-            <div class="v">
-              <div class="b">
-                <img class="img-fluid" src="../asset/images/working-from-home.png" />
-              </div>
-              <div class="c">
-                <h4>全線上申請，無人打擾</h4>
-                <p>
-                  最高額度12-20萬元<br />
-                  3-24期，償還期限選擇多元<br />
-                  最低利率5％
-                </p>
-              </div>
-            </div>
-          </div>
-          <Splide class="product" :options="productOptions">
-            <SplideSlide class="each">
-              <div class="i">
-                <img class="img-fluid" src="../asset/images/0_YabILwq8vGX1rj_S.png" />
-              </div>
-              <div class="ccs">
-                <div>
-                  學生貸<br />
-                  資金小幫手生活超easy
+
+    <div class="alesis-company-introduction">
+      <index-section header="公司簡介">
+        <div class="carousel">
+            <div class="entity">
+                 <div class="left">
+                    <img src="/images/sshot-1559.png" alt="">
                 </div>
-                <p>全台大學生與碩博士均可申請</p>
-                <router-link to="collegeLoan">了解更多</router-link>
-              </div>
-            </SplideSlide>
-            <SplideSlide class="each">
-              <div class="i">
-                <img
-                  class="img-fluid"
-                  src="../asset/images/431fd666-9725-4d0c-beec-defca3ded18c_rw_3840.png"
-                />
-              </div>
-              <div class="ccs">
-                <div>
-                  上班族貸<br />
-                  隨時線上照顧您的需求
+                <div class="lightbox">
+                    <img class="image" src="/images/sshot-1566.png" />
                 </div>
-                <p>年滿20歲的工作人士均可申請</p>
-                <router-link to="freshGraduateLoan">了解更多</router-link>
-              </div>
-            </SplideSlide>
-            <SplideSlide class="each">
-              <div class="i">
-                <img
-                  class="img-fluid"
-                  src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
-                />
-              </div>
-              <div class="ccs">
-                <div>
-                  資訊工程師專案<br />
-                  為您的金錢問題debug
+                <div class="right">
+                    <img src="/images/sshot-1558.png" alt="">
                 </div>
-                <p>資訊相關學生或職場專業人員均可申請</p>
-                <router-link to="engineerLoan">了解更多</router-link>
-              </div>
-            </SplideSlide>
-          </Splide>
+            </div>
         </div>
-        <div class="group">
-          <h5>企業融資服務即將上線</h5>
-          <div class="typ">
-            <div class="t">
-              <div class="img">
-                <img class="img-fluid" src="../asset/images/icon-dot.svg" />
-              </div>
-              <h3>企業融資</h3>
-            </div>
-            <div class="v">
-              <div class="b">
-                <img class="img-fluid" src="../asset/images/business-work-place.png" />
-              </div>
-            </div>
+        <div class="introduction">
+          <div class="showcase">
+            <img src="/images/借款額度-------.png" alt="">
           </div>
-          <Splide class="product" :options="productOptions">
-            <SplideSlide class="each">
-              <div class="i">
-                <img class="img-fluid" src="../asset/images/0_YabILwq8vGX1rj_S.png" />
-              </div>
-              <div class="ccs">
-                <div>車輛融資專案</div>
-                <p>提供便利資金融通</p>
-                <router-link to="">了解更多</router-link>
-              </div>
-            </SplideSlide>
-            <SplideSlide class="each">
-              <div class="i">
-                <img
-                  class="img-fluid"
-                  src="../asset/images/avel-chuklanov-DUmFLtMeAbQ-unsplash-2-1-.png"
-                />
-              </div>
-              <div class="ccs">
-                <div>新創企業貸</div>
-                <p>提供便利資金融通</p>
-                <router-link to="">了解更多</router-link>
-              </div>
-            </SplideSlide>
-          </Splide>
-        </div>
-      </div>
-    </div>
-    <div class="advantage-card">
-      <div class="adv-cnt">
-        <div class="header">
-          <div class="slg">
-            <div data-aos="fade-up" data-aos-duration="700">
-              <p class="l-btn">為什麼選擇普匯金融科技?</p>
-            </div>
+          <div class="items">
+            <index-bullet class="item" image="/images/累積放款金額-01.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></index-bullet>
+            <index-bullet class="item" image="/images/累積放款金額-01.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾!"></index-bullet>
           </div>
         </div>
-        <Splide class="content" :options="avgOptions">
-          <SplideSlide
-            class="item"
-            data-aos="fade-up"
-            data-delay="900"
-            data-aos-duration="500"
-          >
-            <div class="img">
-              <img :src="'/images/expert.svg'" class="img-fluid" />
-            </div>
-            <p>最專業的金融專家</p>
-            <span
-              >普匯擁有超過20年金融專業經驗，深度理解各類金融產品、相關金融法規、財稅務、金流管理...等。能針對不同產業產品與市場，設計出更適合用戶需求的金融服務。</span
-            >
-          </SplideSlide>
-          <SplideSlide
-            class="item"
-            data-aos="fade-up"
-            data-delay="900"
-            data-aos-duration="500"
-          >
-            <div class="img">
-              <img :src="'/images/ai.svg'" class="img-fluid" />
-            </div>
-            <p>最先進的AI科技系統</p>
-            <span
-              >普匯擁有完善的金融科技技術，包含:反詐欺反洗錢系統、競標即時撮合系統、風控信評、線上對保、自動撥貸、貸後管理、分秒計息等，不斷與時俱進迭代優化。</span
-            >
-          </SplideSlide>
-          <SplideSlide
-            class="item"
-            data-aos="fade-up"
-            data-delay="900"
-            data-aos-duration="500"
-          >
-            <div class="img">
-              <img :src="'/images/safe.svg'" class="img-fluid" />
-            </div>
-            <p>簡單、快速、安全、隱私</p>
-            <span
-              >AWS安全系統為架構，輔以簡潔的操作介面，保護您的個資，讓您在申貸時，安全又放心。</span
-            >
-          </SplideSlide>
-        </Splide>
-      </div>
+      </index-section>
     </div>
-    <div class="slogan-card">
-      <div class="cnt">
-        <div class="cnt-l">
-          <template v-if="isDesktop">
-            <div :class="['vz', { 'ad-b': csKey === 0 }]">
-              全台唯一無人化借貸平台 操作簡單 快速到款
+
+    <div class="alesis-feature">
+      <index-section header="產品特色" :secondary="true">
+        <div class="wrapper">
+            <div class="showcase">
+                <img class="image" src="/images/步驟1-01.png" alt="">
             </div>
-            <div :class="['vz', { 'ad-b': csKey === 1 }]">
-              申貸過程，無人干擾！<br />普匯．你的手機ATM
+            <div class="content">
+                <index-bullet class="bullet" image="/images/累積放款金額-01.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></index-bullet>
+                <div class="moons">
+                    <div class="item">
+                        <index-moon class="moon" header="簡單" level="1"></index-moon>
+                        <div class="content">
+                            AWS安全系統為架構，<br>
+                            輔以簡潔的操作界面。
+                        </div>
+                    </div>
+                    <div class="item">
+                        <index-moon class="moon" header="快速" level="2"></index-moon>
+                        <div class="content">
+                            10分鐘快速填寫申請資料，<br>
+                            全程線上操作，無人干擾
+                        </div>
+                    </div>
+                    <div class="item">
+                        <index-moon class="moon" header="安全" level="3"></index-moon>
+                        <div class="content">
+                            資訊傳輸由HTTPS方式利用SSL/TLS<br>
+                            加密，儲存於亞馬遜AWS雲端伺服器
+                        </div>
+                    </div>
+                    <div class="item">
+                        <index-moon class="moon" header="隱私" level="4"></index-moon>
+                        <div class="content">
+                            全台唯一無人化借貸平台，<br>
+                            讓手機成為您專屬的ATM
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div :class="['vz', { 'ad-b': csKey === 2 }]">
-              依照個別身分，提供最適合您的貸款服務
-            </div>
-            <div :class="['vz', { 'ad-b': csKey === 3 }]">
-              5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
-            </div>
-          </template>
-          <template v-else>
-            <div v-if="csKey === 0" class="vz ad-b">
-              全台唯一無人化借貸平台 操作簡單 快速到款
-            </div>
-            <div v-if="csKey === 1" class="vz ad-b">
-              申貸過程，無人干擾！<br />普匯．你的手機ATM
-            </div>
-            <div v-if="csKey === 2" class="vz ad-b">
-              依照個別身分，提供最適合您的貸款服務
-            </div>
-            <div v-if="csKey === 3" class="vz ad-b">
-              5分鐘申貸、10分鐘審核<br />快速1小時媒合放款，絕不耽誤您圓夢的時間
-            </div>
-          </template>
         </div>
-        <div class="cnt-r">
-          <Splide class="c-s" :options="csOptions" @splide:moved="onMoved($event)">
-            <SplideSlide class="c-e">
-              <div class="img">
-                <img class="img-fluid" src="../asset/images/zxc1.png" />
+        <div class="slogan">假日放款全年無休</div>
+      </index-section>
+    </div>
+
+    <div class="alesis-fast-transfer">
+      <index-section header="普匯債權快速變現" multiline="全台唯一債權轉讓功能">
+          <div class="wrapper">
+              <div class="graph">
+                  <img class="image" src="/images/sshot-1569.png" alt="">
               </div>
-            </SplideSlide>
-            <SplideSlide class="c-e">
-              <div class="img">
-                <img class="img-fluid" src="../asset/images/zxc2.png" />
+              <div class="moons">
+                    <index-moon class="moon" header="債權轉讓" multiline="快速變現" level="3"></index-moon>
+                    <index-moon class="moon" header="小額資金" multiline="分散風險" level="2"></index-moon>
+                    <index-moon class="moon" header="智能投資" multiline="自動下標" level="1"></index-moon>
               </div>
-            </SplideSlide>
-            <SplideSlide class="c-e">
-              <div class="img">
-                <img class="img-fluid" src="../asset/images/zxc3.png" />
-              </div>
-            </SplideSlide>
-            <SplideSlide class="c-e">
-              <div class="img">
-                <img class="img-fluid" src="../asset/images/zxc4.png" />
-              </div>
-            </SplideSlide>
-          </Splide>
-          <div class="cover">
-            <img class="img-fluid" src="../asset/images/mobile-line.svg" />
           </div>
-        </div>
-      </div>
+      </index-section>
     </div>
-    <div class="game-card">
+
+    <div class="alesis-solutions">
+      <index-section header="產品方案" :secondary="true">
+          <div class="wrapper">
+              <index-plan class="plan" :header="item.header" :targets="item.targets" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :key="index"></index-plan>
+          </div>
+      </index-section>
+    </div>
+
+    <div class="alesis-recommend-banks">
+      <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率！">
+          <div class="wrapper">
+                <div class="box">
+                    <img class="logo" src="/images/shanghai.png" alt="">
+                    <div class="divider"></div>
+                    <div class="list">
+                        <div class="item">1日快速核准</div>
+                        <div class="item">前3個月利率1.88%起</div>
+                        <div class="item">額度最高達300萬，期間最長7年</div>
+                    </div>
+                    <div class="buttons">
+                        <a class="button" href="#!">了解更多</a>
+                        <a class="button" href="#!">取得資格</a>
+                    </div>
+                </div>
+          </div>
+      </index-section>
+    </div>
+
+    <div class="alesis-solutions">
+      <index-section header="分期還款沒壓力" :secondary="true">
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+        <div class="credit-slider">
+            <creditBoard amount="200000" />
+        </div>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </index-section>
+    </div>
+
+    <!--<div class="game-card">
       <div class="t-c"><h2>還款試算表</h2></div>
       <div class="hr"></div>
       <h5>分期還款，輕鬆無負擔！</h5>
       <div class="credit-slider">
         <creditBoard amount="200000" />
       </div>
+    </div>-->
+
+    <div class="alesis-humans">
+      <index-section header="看看他們怎麼說">
+          <div class="carousel">
+                <div class="left">
+                    <img src="/images/sshot-1559.png" alt="">
+                </div>
+                <div class="lightbox">
+                    <index-human></index-human>
+                    <index-human></index-human>
+                </div>
+                <div class="right">
+                    <img src="/images/sshot-1558.png" alt="">
+                </div>
+          </div>
+      </index-section>
     </div>
-    <experience :experiences="experiences" title="用戶回饋" />
-    <div class="information-card">
-      <div style="z-index: 2; position: relative">
-        <ul class="nav" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#news" @click="reSlick()"
-              >最新消息</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#knowledge" @click="reSlick()"
-              >AI金融科技新知</a
-            >
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#video" @click="reSlick()"
-              >影音專區</a
-            >
-          </li>
-        </ul>
-        <div class="tab-content">
-          <div id="news" class="tab-pane fade active show">
-            <Splide class="news-slick" ref="news_slick" :options="infoOptions">
-              <SplideSlide
-                class="slick-item hvr-float-shadow"
-                v-for="(item, index) in news"
-                :key="index"
-              >
-                <router-link :to="item.link">
-                  <div class="img">
-                    <img :src="item.image_url" class="img-fluid" />
-                  </div>
-                  <p>{{ item.post_title }}</p>
-                  <span>{{ item.post_date.substr(0, 10) }}</span>
-                </router-link>
-              </SplideSlide>
-            </Splide>
-            <router-link class="btn btn-warning btn-to" to="news">
-              最新消息&ensp;
-            </router-link>
-          </div>
-          <div id="knowledge" class="tab-pane fade">
-            <Splide class="knowledge-slick" ref="knowledge_slick" :options="infoOptions">
-              <SplideSlide
-                class="slick-item hvr-float-shadow"
-                v-for="(item, index) in knowledge"
-                :key="index"
-              >
-                <router-link :to="item.link">
-                  <div class="img">
-                    <img :src="item.media_link" class="img-fluid" />
-                  </div>
-                  <p>{{ item.post_title }}</p>
-                  <span>{{ item.post_date }}</span>
-                </router-link>
-              </SplideSlide>
-            </Splide>
-            <router-link class="btn btn-warning btn-to" to="blog">
-              AI金融科技新知&ensp;
-            </router-link>
-          </div>
-          <div id="video" class="tab-pane fade">
-            <Splide class="video-slick" ref="video_slick" :options="infoOptions">
-              <SplideSlide
-                class="slick-item hvr-float-shadow"
-                v-for="(item, index) in video"
-                :key="index"
-              >
-                <router-link :to="item.link">
-                  <div style="width: fit-content; margin: 0px auto">
-                    <iframe
-                      :src="item.video_link"
-                      frameborder="0"
-                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen
-                    ></iframe>
-                  </div>
-                  <p>{{ item.post_title }}</p>
-                  <span>{{ item.post_date }}</span>
-                </router-link>
-              </SplideSlide>
-            </Splide>
-            <router-link class="btn btn-warning btn-to" to="vlog/share">
-              小學堂影音&ensp;
-            </router-link>
-          </div>
-        </div>
+
+    <div class="alesis-news">
+      <index-section class="header" header="媒體報導支持" :outlined="true" :nospace="true"></index-section>
+      <div class="wrapper">
+          <div class="logos">
+                <img class="item" src="/images/a645f762048f5f425d0f0a8486f34612.png" alt="">
+                <img class="item" src="/images/1JHY1QOLYPF0.png" alt="">
+                <img class="item" src="/images/Now_News_logo.png" alt="">
+                <img class="item" src="/images/logo-chinatimes2019-1200x635.png" alt="">
+            </div>
+            <div class="logos -three">
+                <img class="item" src="/images/logo-cn-yes-1.png" alt="">
+                <img class="item" src="/images/logo-red.png" alt="">
+                <img class="item" src="/images/logo300_90.png" alt="">
+            </div>
       </div>
     </div>
+
     <float />
   </div>
 </template>
@@ -459,6 +276,13 @@ import float from "../component/floatComponent";
 //svg
 import routeMap from "../component/svg/routeMapComponent";
 import routeMapM from "../component/svg/routeMapMComponent.vue";
+//
+import indexCounter from "../component/alesis/index/counter";
+import indexSection from "../component/alesis/index/section";
+import indexBullet from "../component/alesis/index/bullet";
+import indexMoon from "../component/alesis/index/moon";
+import indexPlan from "../component/alesis/index/plan";
+import indexHuman from "../component/alesis/index/human";
 
 //banner
 // import shanghuiBanner from "../component/banner/shanghuiBanner";
@@ -476,10 +300,73 @@ export default {
     SplideSlide,
     routeMap,
     routeMapM,
+
+    //
+    indexCounter,
+    indexSection,
+    indexBullet,
+    indexMoon,
+    indexPlan,
+    indexHuman
+
     //banner
     // shanghuiBanner,
   },
   data: () => ({
+
+    plans: [
+        {
+            header: "學生貸",
+            unready: false,
+            targets: [
+                "大學、碩博士在學生",
+                "20-35歲中華民國國民"
+            ],
+            action: "開始試算",
+            features: [
+                "Instagram / Dcard 大學生最推薦資金媒合平台",
+                "備妥雙證件即可，不打擾親友",
+                "額度高達12萬",
+                "3-24期分期方式選擇多元",
+                "隱私安全、全線上申請、無人照會",
+            ]
+        },
+        {
+            header: "上班族貸",
+            unready: false,
+            targets: [
+                "社會新鮮人、金融小白",
+                "20-35歲中華民國國民"
+            ],
+            action: "開始試算",
+            features: [
+                "超過200家上市櫃公司、千大企業員工最佳選擇",
+                "申請紀錄不上聯徵，不影響未來銀行貸款額度",
+                "可貸額度1萬-20萬",
+                "3-24期分期方式選擇多元",
+                "隱私安全、全線上申請、無人照會",
+            ]
+        },
+        {
+            header: "中小企業融資",
+            unready: false,
+            targets: [],
+            action: "敬請期待",
+            features: [
+                "信保微企貸",
+                "申請速度最快，核准機率最高",
+            ]
+        },
+        {
+            header: "車輛融資",
+            unready: true,
+            targets: [],
+            action: "敬請期待",
+            features: []
+        }
+    ],
+
+
     isDesktop: window.innerWidth > 767 ? true : false,
     load2: false,
     load3: false,
@@ -795,7 +682,734 @@ export default {
 };
 </script>
 
+
+
 <style lang="scss">
+.alesis-counters {
+    margin         : 4rem auto 8rem;
+    max-width      : 1280px;
+
+    .wrapper {
+      display        : flex;
+      justify-content: center;
+    }
+}
+
+
+.alesis-our-service {
+    .image {
+        width    : 100%;
+        max-width: 920px;
+        margin   : 0 auto 3rem;
+        display  : block;
+        z-index  : 0;
+        position : relative;
+    }
+
+    .actions {
+        position  : absolute;
+        display   : flex;
+        left      : 50%;
+        transform : translateX(-50%);
+        width     : 100%;
+        max-width : 1200px;
+        margin-top: -4rem;
+        z-index   : 1;
+
+        .left,
+        .right {
+            text-align: center;
+            flex      : 1;
+        }
+
+        .left {
+            margin-right: 4.5rem;
+        }
+
+        .right {
+            margin-left: 4.5rem;
+        }
+
+        .action {
+            border-radius: 1rem;
+            padding      : 0.3rem 1.5rem;
+            font-size    : 1.2rem;
+            font-weight  : bolder;
+            color        : #112e53;
+            border       : 1px solid #1a5fa2;
+
+            &:not(:first-child) {
+                margin-left: 1rem;
+            }
+        }
+    }
+}
+
+.alesis-company-introduction {
+     .carousel {
+        margin    : 0 auto 3rem;
+        text-align: center;
+
+        .entity {
+            display    : inline-flex;
+            align-items: center;
+
+            .lightbox {
+                .image {
+                    max-width: 85%;
+                }
+            }
+        }
+    }
+
+    .introduction {
+        display  : flex;
+        max-width: 1280px;
+        margin   : 0 auto;
+
+        .showcase {
+            flex      : 1;
+            text-align: center;
+        }
+
+        .items {
+            flex           : 1;
+            display        : flex;
+            flex-direction : column;
+            align-items    : flex-start;
+            justify-content: center;
+
+            .item {
+                margin-top: 3rem;
+            }
+        }
+    }
+}
+
+.alesis-feature {
+    .wrapper {
+        display        : flex;
+        justify-content: center;
+        max-width      : 1280px;
+        margin         : 0 auto;
+
+        .showcase {
+            flex       : 0.75;
+            text-align : center;
+            padding-top: 4rem;
+
+            .image {
+                width: 240px;
+            }
+        }
+        .content {
+            flex: 1;
+
+            .bullet {
+                margin-left: 2.3rem;
+            }
+        }
+
+        .moons {
+            > .item {
+                display: flex;
+                margin-top: 3.5rem;
+
+                .moon {
+                    margin-right   : 3rem;
+                }
+                .content {
+                    color: #5d5555;
+                }
+            }
+        }
+    }
+
+    .slogan {
+        text-align : center;
+        color      : #f29600;
+        font-size  : 2rem;
+        font-weight: bolder;
+        margin-top : 4rem;
+    }
+}
+
+.alesis-fast-transfer {
+    .wrapper {
+        display    : flex;
+        margin     : 3rem auto 0;
+        align-items: center;
+        max-width  : 1000px;
+
+        .graph {
+            text-align: center;
+            flex      : 1;
+
+            .image {
+                width: 640px;
+            }
+        }
+
+        .moons {
+            .moon {
+                &:not(:first-child) {
+                    margin-top: 5rem;
+                }
+            }
+        }
+    }
+}
+
+.alesis-solutions {
+    .wrapper {
+        display              : grid;
+        grid-template-columns: repeat(4, 1fr);
+        max-width            : 1100px;
+        margin               : 3rem auto 0;
+        gap                  : 1.5rem;
+
+        .plan {
+            padding: 1rem;
+            flex   : 1;
+        }
+    }
+}
+
+.r-count-card {
+    display: flex;
+    justify-content: center;
+    margin: 5rem auto;
+    max-width: 1280px;
+}
+
+.r-count-card__item {
+  flex: 1;
+  text-align: center;
+}
+
+.r-count-card__item__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.r-count-card__item__symbol {
+    margin-right: 1rem;
+}
+
+.r-count-card__item__content {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.r-count-card__item__content__header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #353482;
+}
+
+.r-count-card__item__content__counter {
+    font-size: 1.2rem;
+}
+
+.r-count-card__item__content__counter__number {
+      color: #646464;
+}
+
+.r-count-card__item__content__counter__unit {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #353482;
+}
+
+
+.r-introduction {
+      max-width: 1280px;
+    margin: 0 auto;
+}
+
+.r-introduction__header {
+  position: relative;
+  background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    color: #ffffff00;
+    margin: 0px auto;
+    font-weight: bolder;
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.r-introduction__summary {
+  display: flex;
+}
+
+.r-introduction__summary__demo {
+  flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 9rem;
+}
+
+.r-introduction__summary__demo__image {
+
+}
+
+.r-introduction__summary__items {
+
+}
+
+.r-introduction__summary__items__item {
+      display: flex;
+    align-items: center;
+    margin-top: 4rem;
+}
+
+.r-introduction__summary__items__item__image {
+  margin-right: 2rem;
+}
+
+.r-introduction__summary__items__item__content {
+
+}
+
+.r-introduction__summary__items__item__content__header {
+      font-size: 1.2rem;
+    font-weight: bold;
+    color: #353482;
+}
+
+.r-introduction__summary__items__item__content__description {
+      font-size: 1.2rem;
+    color: #646464;
+}
+
+.r-features {
+
+}
+
+.r-features__header {
+
+}
+
+.r-features__main {
+  display: flex;
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+.r-features__main__demo {
+
+}
+
+.r-features__main__demo__image {
+
+}
+
+.r-features__main__content {
+  margin-left: 6rem;
+}
+
+.r-features__main__content__featured {
+      display: flex;
+    align-items: center;
+}
+
+.r-features__main__content__featured__image {
+  margin-right: 2rem;
+}
+
+.r-features__main__content__featured__content {
+
+}
+
+.r-features__main__content__featured__content__header {
+  font-size: 1.2rem;
+    font-weight: bold;
+    color: #353482;
+}
+
+.r-features__main__content__featured__content__description {
+  font-size: 1.1rem;
+    color: #646464;
+}
+
+.r-features__main__content__item {
+    display: flex;
+    margin-top: 3rem;
+}
+
+.r-features__main__content__item:nth-child(3) .r-features__main__content__item__line {
+  width: 35px;
+}
+
+.r-features__main__content__item:nth-child(4) .r-features__main__content__item__line {
+  width: 20px;
+}
+
+.r-features__main__content__item:nth-child(5) .r-features__main__content__item__line {
+  width: 0px;
+}
+
+.r-features__main__content__item__symbol {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 3rem;
+  justify-content: flex-end;
+  min-width: 130px;
+}
+
+.r-features__main__content__item__line {
+    height: 1px;
+    width: 60px;
+    margin-right: -16px;
+    background: #000;
+}
+
+.r-features__main__content__item__circle {
+    width: 60px;
+    height: 30px;
+    border-top-left-radius: 113px;
+    border-top-right-radius: 110px;
+    border: 3px solid black;
+    transform: rotate(270deg);
+    border-bottom: 0;
+    left: 24px;
+}
+
+.r-features__main__content__item__text {
+  margin-left: -16px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.r-features__main__content__item__content {
+  font-size: 1.1rem;
+    color: #646464;
+}
+
+.r-features__norest {
+      text-align: center;
+    color: #9aa313;
+    font-weight: bolder;
+    font-size: 1.68em;
+    margin: 2rem 0 6rem;
+}
+
+.r-section-header {
+  position: relative;
+}
+
+.r-section-header__wrapper {
+  background: #FFF;
+  position: relative;
+  z-index: 1;
+}
+
+.r-section-header__text {
+    position: relative;
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    color: #ffffff00;
+    margin: 0px auto;
+    font-weight: bolder;
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.r-section-header__dots {
+   position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 0;
+}
+
+.r-section-header__dots__wrapper {
+   position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.r-section-header__dots__dot {
+    width: 8px;
+    height: 8px;
+    background: #3670d3;
+    border-radius: 100rem;
+    margin-bottom: .7rem;
+
+    &:nth-child(1) {
+      opacity: 0.2;
+      width: 4px;
+      height: 4px;
+    }
+    &:nth-child(2) {
+      opacity: 0.4;
+      width: 6px;
+      height: 6px;
+    }
+    &:nth-child(3) {
+      opacity: 0.6;
+    }
+    &:nth-child(4) {
+      opacity: 0.75;
+    }
+    &:nth-child(5) {
+      opacity: 0.75;
+    }
+    &:nth-child(6) {
+      opacity: 0.6;
+    }
+    &:nth-child(7) {
+      opacity: 0.4;
+      width: 6px;
+      height: 6px;
+    }
+    &:nth-child(8) {
+      opacity: 0.2;
+      width: 4px;
+      height: 4px;
+    }
+}
+
+.r-solutions {
+
+}
+
+.r-solutions__items {
+  display: flex;
+  margin: 8rem auto;
+  justify-content: center;
+  max-width: 1280px;
+}
+
+.r-solutions__items__item {
+  padding: 1rem;
+  flex: 1;
+}
+
+.r-solutions__items__item__box {
+      padding: 1rem;
+    border: 1px solid #000;
+    border-radius: 24px;
+    position: relative;
+        height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.r-solutions__items__item__box__image {
+      position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    background: #fff;
+    border-radius: 3rem;
+}
+
+.r-solutions__items__item__box__feature {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+}
+
+.r-solutions__items__item__box__feature__header {
+  font-size: 1.2rem;
+    font-weight: bold;
+    color: #353482;
+}
+
+.r-solutions__items__item__box__feature__list {
+  font-size: .9rem;
+  min-height: 43px;
+}
+
+.r-solutions__items__item__box__feature__list__item {
+
+}
+
+.r-solutions__items__item__box__list {
+      border-top: 1px solid #000;
+    padding-top: 1rem;
+    margin-top: 1rem;
+        font-size: .9rem;
+    line-height: 2;
+    margin-bottom: 1.5rem;
+}
+
+.r-solutions__items__item__box__list__item {
+
+}
+
+.r-solutions__items__item__box__start {
+      display: block;
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #353482;
+    border-radius: .4rem;
+    padding: .5rem 0;
+    border: 1px solid #000;
+    margin-top: auto;
+}
+
+.r-recommended__content {
+
+}
+
+.r-recommended__content__box {
+
+}
+
+.r-recommended__content__box__logo {
+
+}
+
+.r-recommended__content__box__divider {
+
+}
+
+.r-recommended__content__box__list {
+
+}
+
+.r-recommended__content__box__list__item {
+
+}
+
+.r-recommended__content__buttons {
+
+}
+
+.r-recommended__content__buttons__button {
+
+}
+
+.r-recommended__content__buttons__button + .r-recommended__content__buttons__button {
+
+}
+
+.alesis-recommend-banks {
+    .wrapper {
+        display        : flex;
+        align-items    : center;
+        justify-content: center;
+        margin         : 10rem 0;
+
+        .box {
+            display      : inline-block;
+            border-radius: 17px;
+            border       : 1px solid #2664a5;
+            padding      : 1.5rem 1rem;
+
+            .logo {
+
+            }
+
+            .divider {
+                height    : 1px;
+                background: #2664a5;
+                margin    : 1rem 0;
+            }
+
+            .list {
+                line-height: 2;
+                margin-left: 1rem;
+
+                .item {
+                    display: list-item;
+                }
+            }
+
+            .buttons {
+                margin-top: 2rem;
+                display   : flex;
+
+                .button {
+                    display      : block;
+                    flex         : 1;
+                    text-align   : center;
+                    padding      : .1rem 1rem;
+                    border       : 1px solid #2664a5;
+                    border-radius: .4rem;
+                    width        : 100%;
+                    font-size    : 1.2rem;
+                    font-weight  : bold;
+                    color        : #036eb7;
+                    margin-right : 1rem;
+                    line-height  : 1.4;
+
+                    & + .button {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.alesis-humans {
+    .carousel {
+        max-width  : 1280px;
+        margin     : 2rem auto 0;
+        display    : flex;
+        align-items: center;
+
+        .left {
+
+        }
+        .lightbox {
+            flex                 : 1;
+            display              : grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap                  : 2rem;
+        }
+        .right {
+
+        }
+    }
+}
+
+.alesis-news {
+    .header {
+        padding-bottom: 5rem;
+    }
+
+    .wrapper {
+        background-image: linear-gradient(to top, #ffffff -18%, #c9d1d9 115%);
+        padding         : .5rem 0;
+
+        .logos {
+            display              : grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width            : 1280px;
+            margin               : 2rem auto;
+            gap                  : 1rem;
+
+            &.-three {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .item {
+                height: 60px;
+                margin: 0 auto;
+            }
+        }
+    }
+}
+
 .index-wrapper {
   width: 100%;
 
@@ -805,6 +1419,7 @@ export default {
     width: fit-content;
     color: #ffffff00;
     margin: 0px auto;
+    position: relative;
 
     h2 {
       font-weight: bolder;
