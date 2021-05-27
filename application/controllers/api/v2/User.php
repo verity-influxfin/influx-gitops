@@ -392,11 +392,12 @@ class User extends REST_Controller {
                     $facebook_access_token = isset($input['access_token']) ? $input['access_token'] : false;
                     if ($facebook_access_token) {
                         $this->load->model('user/user_certification_model');
-                        $this->user_certification_model->add_facebook_certification(
-                            $facebook_access_token,
-                            $new_id,
-                            $input['investor']
-                        );
+                        $this->user_certification_model->insert([
+                                'user_id' => $new_id,
+                                'certification_id' => 4,
+                                'investor' => $input['investor'],
+                                'content' => json_encode(['facebook'=> $facebook_access_token]);
+                            ]);
                     }
 
                 } else {
