@@ -396,7 +396,7 @@ class User extends REST_Controller {
                                 'user_id' => $new_id,
                                 'certification_id' => 4,
                                 'investor' => $input['investor'],
-                                'content' => json_encode(['facebook'=> $facebook_access_token]);
+                                'content' => json_encode(['facebook'=> $facebook_access_token])
                             ]);
                     }
 
