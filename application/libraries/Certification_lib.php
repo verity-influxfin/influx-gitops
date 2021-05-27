@@ -229,8 +229,30 @@ class Certification_lib{
 		$ocr = [];
 		$answer = [];
 		$person_compare = [];
-
+		$remark = array(
+			'error' => '',
+			'OCR' => '',
+			'face' => [],
+			'face_flag' => [],
+			'faceplus' => [],
+			'faceplus_data' => [],
+			'face_count' => array(
+				'person_count' => 0,
+				'front_count' => 0
+			),
+		);
+		$returnData = [
+			'remark'=>['error'=>[], 'OCR'=>[]],
+			'content'=>[],
+			'risVerified'=> False,
+			'risVerificationFailed'=> False,
+			'ocrCheckFailed'=> False,
+		];
 		$content = json_decode($info->content, true);
+		if(!is_array($content)) {
+			$returnData['remark']['error'] = '使用者資料解析發生錯誤<br/>';
+			return $returnData;
+		}
 		$this->CI->load->library('Scan_lib');
 		$this->CI->load->library('Compare_lib');
 		$this->CI->load->library('Azure_lib');
@@ -259,18 +281,8 @@ class Certification_lib{
 			}
 		}
 
-		$remark = array(
-			'error' => '',
-			'OCR' => '',
-			'face' => [],
-			'face_flag' => [],
-			'faceplus' => [],
-			'faceplus_data' => [],
-			'face_count' => array(
-				'person_count' => $person_count,
-				'front_count' => $front_count
-			),
-		);
+		$remark['person_count'] = $person_count;
+		$remark['front_count'] = $front_count;
 
 		// content 存放圖片 ID 或 URL 的對應欄位名稱
 		$imageIdTable = ['front_image_id', 'back_image_id', 'healthcard_image_id'];
@@ -305,8 +317,14 @@ class Certification_lib{
 		for ($i = 0; $i < count($imageIdTable); $i++) {
 			if (array_key_exists($imageIdTable[$i], $content)) {
 				$imageLogs[] = $this->CI->log_image_model->get([$content[$imageIdTable[$i]]]);
-			} else
+			} else if (array_key_exists($imageUrlTable[$i], $content)) {
 				$imageLogs[] = $this->CI->log_image_model->get_by(['url' => $content[$imageUrlTable[$i]]]);
+			}
+		}
+
+		if(count($imageLogs) != count($imageIdTable)) {
+			$returnData['remark']['error'] = '使用者的圖片資料不足'.count($imageIdTable).'筆，無法進行實名驗證<br/>';
+			return $returnData;
 		}
 
 		// 檢查 OCR 辨識結果
@@ -504,13 +522,20 @@ class Certification_lib{
 			$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
 			$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId);
 			if ($result) {
-				$risVerified = true;
-				if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1) {
-					$risVerificationFailed = false;
-				} else {
-					$risVerificationFailed = true;
+				if($result['status'] != 200) {
+					$content['id_card_api'] = [
+						'status' => $result['status'],
+						'error' => $result['response']['response']['checkIdCardApplyFormat']
+					];
+				}else{
+					$risVerified = true;
+					if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1) {
+						$risVerificationFailed = false;
+					} else {
+						$risVerificationFailed = true;
+					}
+					$content['id_card_api'] = $result['response'];
 				}
-				$content['id_card_api'] = $result['response'];
 			} else {
 				$content['id_card_api'] = 'no response';
 			}
@@ -528,13 +553,12 @@ class Certification_lib{
 
 		$remark['error'] = $msg;
 		$remark['OCR']   = $ocr;
-		return [
-			'remark'=>$remark,
-			'content'=>$content,
-			'risVerified'=>$risVerified,
-			'risVerificationFailed'=>$risVerificationFailed,
-			'ocrCheckFailed'=>$ocrCheckFailed,
-		];
+		$returnData['remark'] = $remark;
+		$returnData['content'] = $content;
+		$returnData['risVerified'] = $risVerified;
+		$returnData['risVerificationFailed'] = $risVerificationFailed;
+		$returnData['ocrCheckFailed'] = $ocrCheckFailed;
+		return $returnData;
 	}
 
     public function idcard_verify($info = []) {
@@ -895,6 +919,9 @@ class Certification_lib{
 	}
 
     public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
+		if(empty($url))
+			return false;
+
 		$image 	= file_get_contents($url);
 		if($image){
 			for($i=1;$i<=3;$i++){

@@ -168,23 +168,29 @@ class Cron extends CI_Controller {
 	 * 針對實名驗證已成功的所有用戶進行重新認證
 	 */
 	public function recheck_certifications() {
+
 		$this->load->model('user/user_certification_model');
 		$stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
 		$request = json_decode($stream_clean);
 		if(empty($request)) {
-			$user_certifications = $this->user_certification_model->order_by('certification_id', 'ASC')->get_many_by(array(
+			$user_certifications = $this->user_certification_model->order_by('user_id', 'ASC')->get_many_by(array(
 				'status' => 1,
 				'certification_id =' => 1,
 				// 借款投資都要驗
 				//'investor' => 0
 			));
-			echo json_encode(array_columns(json_decode(json_encode($user_certifications), true), ['user_id', 'investor']));
+			echo json_encode(array_values(
+				array_unique(array_columns(
+					json_decode(json_encode($user_certifications), true),
+					['user_id', 'investor']),
+					SORT_REGULAR)
+				));
 		}else{
 			$result = [];
 			$this->load->library('Certification_lib');
 			foreach ($request as $key => $v) {
 				$user_certifications 	= $this->user_certification_model
-					->order_by('certification_id','ASC')
+					->order_by('user_id ASC, id DESC', '')
 					->get_by(array(
 						'status' => 1,
 						'certification_id =' => 1,
