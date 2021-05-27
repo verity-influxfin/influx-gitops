@@ -391,12 +391,14 @@ class User extends REST_Controller {
                     // 若facebook的token存在，則新增'社群'認證
                     $facebook_access_token = isset($input['access_token']) ? $input['access_token'] : false;
                     if ($facebook_access_token) {
+                        $this->load->library('facebook_lib');
+                        $info = $this->facebook_lib->get_info($facebook_access_token);
                         $this->load->model('user/user_certification_model');
                         $this->user_certification_model->insert([
                                 'user_id' => $new_id,
                                 'certification_id' => 4,
                                 'investor' => $input['investor'],
-                                'content' => json_encode(['facebook'=> $facebook_access_token])
+                                'content' => json_encode(['facebook'=> $info,'instagram'=>''])
                             ]);
                     }
 
