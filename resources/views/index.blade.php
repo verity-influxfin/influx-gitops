@@ -124,7 +124,92 @@
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
-        <div class="page-footer">
+        <div class="alesis-footer">
+            <div class="line"></div>
+            <div class="main">
+                <div class="introduction">
+                    <div class="brand">
+                        <div class="text">認識</div>
+                        <img class="image" src="/images/footer@2x.png" alt="">
+                    </div>
+                    <div class="paragraphy">
+                        「普匯．你的手機ATM」<br>
+                        inFlux普匯金融科技，以普惠金融為志業，希望落實傳統
+                        銀行無法提供的金融服務。「金融專業」為核心，「高端
+                        科技」為輔具，提供「最有溫度」的社群服務，拉近人與
+                        人的距離，讓金融年輕化。
+                    </div>
+                </div>
+                <div class="information">
+                    <div class="item">
+                        <div class="header">我要申貸</div>
+                        <div class="list">
+                            <a href="#!">學生貸款</a>
+                            <a href="#!">上班族貸款</a>
+                            <a href="#!">資訊工程師專案</a>
+                            <a href="#!">外匯車貸</a>
+                            <a href="#!">新創企業主貸</a>
+                            <a href="#!">手機分期</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">我要投資</div>
+                        <div class="list">
+                            <a href="#!">債權投資</a>
+                            <a href="#!">債權轉讓</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">關於我們</div>
+                        <div class="list">
+                            <a href="#!">關於我們</a>
+                            <a href="#!">最新消息</a>
+                            <a href="#!">AI金融科技新知</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">聯絡我們</div>
+                        <div class="meta">
+                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="text">服務時間  9:00 AM - 6:00 PM</div>
+
+                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="text">02-2507-9990</div>
+
+                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="text">service@influxfin.com</div>
+
+                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="text">台北市松江路111號11樓-2</div>
+                        </div>
+                        <div class="socials">
+                            <a href="#!" class="item"><img src="/images/clock.png" alt=""></a>
+                            <a href="#!" class="item"><img src="/images/clock.png" alt=""></a>
+                            <a href="#!" class="item"><img src="/images/clock.png" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary">
+                <div class="copyright">
+                    Copyright ©2020 普匯金融科技股份有限公司 All rights reserved.
+                    <div class="links">
+                        <a href="#!" class="item">使用者條款</a> |
+                        <a href="#!" class="item">隱私條款政策</a> |
+                        <a href="#!" class="item">借款人服務條款</a>
+                    </div>
+                </div>
+                <div class="links">
+                    <a href="#!" class="item">徵才服務</a> |
+                    <a href="#!" class="item">校園大使</a> |
+                    <a href="#!" class="item">社團合作</a> |
+                    <a href="#!" class="item">商行合作</a> |
+                    <a href="#!" class="item">企業合作</a>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="page-footer">
             <div class="btm-line"></div>
             <div class="top-content">
                 <div class="desc-card">
@@ -221,7 +306,7 @@
                     </p>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
