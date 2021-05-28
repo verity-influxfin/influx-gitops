@@ -4,7 +4,8 @@ html {
 
 body {
     cursor: default;
-    font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica, sans-serif;
+    font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica,
+        sans-serif;
     width: 100%;
 }
 
@@ -20,7 +21,12 @@ $ci-color: #153a71;
 
 .page-header {
     z-index: 11;
-    background-image: linear-gradient(to right, #1e2973 0%, #319acf 36%, #1e2973 73%);
+    background-image: linear-gradient(
+        to right,
+        #1e2973 0%,
+        #319acf 36%,
+        #1e2973 73%
+    );
 
     .web-logo {
         width: 180px;
@@ -74,7 +80,7 @@ $ci-color: #153a71;
             transition: transform 0.2s;
             transform-origin: left bottom;
         }
-        .left.shake{
+        .left.shake {
             -moz-transform: rotate(15deg);
             -webkit-transform: rotate(15deg);
             -o-transform: rotate(15deg);
@@ -93,7 +99,7 @@ $ci-color: #153a71;
             transition: transform 0.2s;
             transform-origin: right bottom;
         }
-        .right.shake{
+        .right.shake {
             -moz-transform: rotate(-15deg);
             -webkit-transform: rotate(-15deg);
             -o-transform: rotate(-15deg);
@@ -205,6 +211,130 @@ $ci-color: #153a71;
     width: 100%;
     margin-top: 87px;
     overflow: auto;
+}
+
+.alesis-footer {
+    background: #153a71;
+    padding: 0.5rem 0;
+    color: #fff;
+
+    > .line {
+        height: 1px;
+        background: #2f95cb;
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+
+    > .main {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        margin: 1rem auto 0;
+        max-width: 1280px;
+        gap: 3rem;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+
+        > .introduction {
+            > .brand {
+                display: flex;
+                align-items: center;
+
+                > .text {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    margin-right: 1rem;
+                }
+
+                > .image {
+                    height: 40px;
+                }
+            }
+
+            > .paragraphy {
+                font-size: 0.9rem;
+                line-height: 2;
+                margin-top: 2rem;
+            }
+        }
+
+        > .information {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            font-size: 0.9rem;
+
+            > .item {
+                > .header {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    margin-right: 1rem;
+                    line-height: 2;
+                    color: #fff;
+                }
+
+                > .list {
+                    display: flex;
+                    flex-direction: column;
+                    font-size: 0.9rem;
+                    margin-top: 1.5rem;
+
+                    > a {
+                        color: #fff;
+                        margin: 0.25rem 0;
+                    }
+                }
+
+                > .meta {
+                    display: grid;
+                    grid-template-columns: min-content max-content;
+                    gap: 0.5rem;
+                    margin-top: 2rem;
+
+                    > .icon {
+                        margin-top: -1px;
+
+                        > img {
+                        }
+                    }
+
+                    > .text {
+                    }
+                }
+
+                > .socials {
+                    margin-top: 0.7rem;
+
+                    > .item {
+                        margin-right: 0.2rem;
+                    }
+                }
+            }
+        }
+    }
+
+    > .secondary {
+        margin: 4rem auto 1rem;
+        max-width: 1280px;
+        display: flex;
+        align-items: flex-end;
+
+        .copyright {
+            margin-right: 3rem;
+            font-size: 0.8rem;
+
+            > .links {
+                .item {
+                    color: #fff;
+                }
+            }
+        }
+
+        > .links {
+            > .item {
+                color: #fff;
+            }
+        }
+    }
 }
 
 .page-footer {
@@ -454,7 +584,8 @@ $ci-color: #153a71;
 }
 
 %modal-style {
-    font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica, sans-serif;
+    font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica,
+        sans-serif;
 
     .modal-header {
         display: initial !important;

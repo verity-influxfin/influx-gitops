@@ -196,6 +196,117 @@ a {
   overflow: auto;
 }
 
+.alesis-footer {
+  background: #153a71;
+  padding: 0.5rem 0;
+  color: #fff;
+}
+
+.alesis-footer > .line {
+  height: 1px;
+  background: #2f95cb;
+  max-width: 95%;
+  margin: 1rem auto;
+}
+
+.alesis-footer > .main {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  margin: 1rem auto 0;
+  max-width: 1280px;
+  gap: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.alesis-footer > .main > .introduction > .brand {
+  display: flex;
+  align-items: center;
+}
+
+.alesis-footer > .main > .introduction > .brand > .text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.alesis-footer > .main > .introduction > .brand > .image {
+  height: 40px;
+}
+
+.alesis-footer > .main > .introduction > .paragraphy {
+  font-size: 0.9rem;
+  line-height: 2;
+  margin-top: 2rem;
+}
+
+.alesis-footer > .main > .information {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+  font-size: 0.9rem;
+}
+
+.alesis-footer > .main > .information > .item > .header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 1rem;
+  line-height: 2;
+  color: #fff;
+}
+
+.alesis-footer > .main > .information > .item > .list {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.alesis-footer > .main > .information > .item > .list > a {
+  color: #fff;
+  margin: 0.25rem 0;
+}
+
+.alesis-footer > .main > .information > .item > .meta {
+  display: grid;
+  grid-template-columns: -webkit-min-content -webkit-max-content;
+  grid-template-columns: min-content max-content;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.alesis-footer > .main > .information > .item > .meta > .icon {
+  margin-top: -1px;
+}
+
+.alesis-footer > .main > .information > .item > .socials {
+  margin-top: 0.7rem;
+}
+
+.alesis-footer > .main > .information > .item > .socials > .item {
+  margin-right: 0.2rem;
+}
+
+.alesis-footer > .secondary {
+  margin: 4rem auto 1rem;
+  max-width: 1280px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.alesis-footer > .secondary .copyright {
+  margin-right: 3rem;
+  font-size: 0.8rem;
+}
+
+.alesis-footer > .secondary .copyright > .links .item {
+  color: #fff;
+}
+
+.alesis-footer > .secondary > .links > .item {
+  color: #fff;
+}
+
 .page-footer {
   background-color: #153a71;
   width: 100%;
