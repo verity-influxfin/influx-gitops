@@ -67,7 +67,9 @@
       </div>
       <div class="alesis-projects" >
           <index-section header="現有案件" :secondary="true">
-              asad
+              <div class="wrapper">
+                  <index-project></index-project>
+              </div>
           </index-section>
       </div>
   </div>
@@ -80,12 +82,14 @@ import routeMapM from "../component/svg/routeMapMComponent.vue";
 import indexSection from "../component/alesis/index/section";
 import indexSymcard from "../component/alesis/index/symcard";
 import indexHuman from "../component/alesis/index/human";
+import indexProject from "../component/alesis/index/project";
 
 export default {
   components: {
     indexSection,
     indexSymcard,
-    indexHuman
+    indexHuman,
+    indexProject
     //banner
     // shanghuiBanner,
   },
