@@ -98,19 +98,19 @@ export default {
     display: flex;
     flex-direction: column;
     background-image: url("/images/未命名-2.png");
-        background-size: cover;
+    background-size: cover;
     padding: 2rem 0;
     margin-bottom: 8rem;
 
   .header {
-        text-align: center;
+    text-align: center;
     .text {
       color:#FFF;
       padding-bottom: .2rem;
       border-bottom: 1px solid #FFF;
-          display: inline-block;
-    font-size: 1.8rem;
-    font-weight: bolder;
+      display: inline-block;
+      font-size: 1.8rem;
+      font-weight: bolder;
     }
   }
   .phones {
