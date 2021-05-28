@@ -879,7 +879,7 @@ export default {
         display        : flex;
         align-items    : center;
         justify-content: center;
-        margin         : 10rem 0;
+        margin         : 3rem 0;
 
         .box {
             display      : inline-block;
