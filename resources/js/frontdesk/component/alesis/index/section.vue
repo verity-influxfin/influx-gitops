@@ -82,24 +82,20 @@ export default {
         .header {
             .text {
                 .multiline {
-                    border: 1px solid #1a5fa2;
-            padding: .5rem;
-            line-height: 1;
-            border-radius: .4rem;
+                    border       : 1px solid #1a5fa2;
+                    padding      : .5rem;
+                    line-height  : 1;
+                    border-radius: .4rem;
                 }
-
             }
-
 
             .after-dots {
                 top: 6.9rem;
             }
         }
-
-
     }
 
-    .header {
+    > .header {
         position : absolute;
         left     : 50%;
         top      : 0;
