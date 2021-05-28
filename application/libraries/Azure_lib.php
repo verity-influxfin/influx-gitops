@@ -48,7 +48,7 @@ class Azure_lib
 
         if(empty($url))
         	return [];
-        $file = file_get_contents($url);
+        $file = @file_get_contents($url);
         if(!$file)
         	return [];
 

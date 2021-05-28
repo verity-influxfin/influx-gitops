@@ -128,7 +128,7 @@ class Id_card_lib {
 			return $result;
 		}
 
-		preg_match('/^(?<year>[0-9]{1,3})(?<month>[0-9]{1,2})(?<day>[0-9]{1,2})$/', $applyYyymmdd, $regexResult);
+		preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $applyYyymmdd, $regexResult);
 		if(!empty($regexResult)) {
 			$applyYyymmdd = str_pad($regexResult['year'], 3, 0, STR_PAD_LEFT) .
 				str_pad($regexResult['month'], 2, 0, STR_PAD_LEFT) .

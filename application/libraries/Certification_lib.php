@@ -253,6 +253,7 @@ class Certification_lib{
 			$returnData['remark']['error'] = '使用者資料解析發生錯誤<br/>';
 			return $returnData;
 		}
+
 		$this->CI->load->library('Scan_lib');
 		$this->CI->load->library('Compare_lib');
 		$this->CI->load->library('Azure_lib');
@@ -326,6 +327,13 @@ class Certification_lib{
 			$returnData['remark']['error'] = '使用者的圖片資料不足'.count($imageIdTable).'筆，無法進行實名驗證<br/>';
 			return $returnData;
 		}
+		$availableImage = array_filter($imageLogs, function ($img) {
+			return !empty(@file_get_contents($img->url));
+		});
+		if(count($availableImage) != count($imageUrlTable)) {
+			$returnData['remark']['error'] = '使用者的圖片無法取得'.(count($imageUrlTable)-count($availableImage)).'筆，無法進行實名驗證<br/>';
+			return $returnData;
+		}
 
 		// 檢查 OCR 辨識結果
 		$ocrResult = array_fill(0, 3, null);
@@ -367,6 +375,13 @@ class Certification_lib{
 				else
 					break;
 			}
+		}
+
+		if (count(array_filter($ocrResult, function ($ele) {
+			return $ele === null;
+		}))) {
+			$returnData['remark']['error'] = 'OCR沒有在正常時間內回應，無法進行實名驗證<br/>';
+			return $returnData;
 		}
 
 		// 將 OCR 辨識結果轉換為指定的格式並存入 $ocr
@@ -483,9 +498,9 @@ class Certification_lib{
 		$this->CI->load->library('Papago_lib');
 		$face8_person_face = $this->CI->papago_lib->detect($content['person_image'], $user_id, $cer_id);
 		$face8_front_face = $this->CI->papago_lib->detect($content['front_image'], $user_id, $cer_id);
-		$face8_person_count = count($face8_person_face['faces']);
-		$face8_front_count = count($face8_front_face['faces']);
-		foreach ($face8_person_face['faces'] as $tkey => $token) {
+		$face8_person_count = is_array($face8_person_face['faces']) ? count($face8_person_face['faces']) : 0;
+		$face8_front_count = is_array($face8_front_face['faces']) ? count($face8_front_face['faces']) : 0;
+		foreach ((array)$face8_person_face['faces'] as $tkey => $token) {
 			if (isset($token['face_token']) && count($face8_front_face['faces']) > 0) {
 				$face8_compare_res = $this->CI->papago_lib->compare([$token['face_token'], $face8_front_face['faces'][0]['face_token']], $user_id, $cer_id);
 				$compares[] = $face8_compare_res['confidence'];
@@ -513,6 +528,15 @@ class Certification_lib{
 		$risVerified = false;
 		$risVerificationFailed = true;
 		if (isset($content['id_number']) && isset($content['name']) && isset($content['birthday'])) {
+			$this->CI->load->model('log/log_integration_model');
+			$logRs = $this->CI->log_integration_model->order_by('id', 'DESC')->limit(1)->get_all();
+			if(!empty($logRs)) {
+				$logRs = $logRs[0];
+				$resultUserId = substr($logRs->api_user_id, 0, -3) .
+					str_pad(strval((intval(substr($logRs->api_user_id, -3)) + 1) % 1000), 3, 0, STR_PAD_LEFT);
+			}else
+				$resultUserId = 'realname_001';
+
 			$this->CI->load->library('id_card_lib');
 			$requestPersonId = isset($content['id_number']) ? $content['id_number'] : '';
 			preg_match('/(初|補|換)發$/', $content['id_card_place'], $requestApplyCode);
@@ -520,22 +544,43 @@ class Certification_lib{
 			$reqestApplyYyymmdd = $content['id_card_date'];
 			preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/', $content['id_card_place'], $requestIssueSiteId);
 			$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
-			$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId);
+			$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId, $resultUserId);
 			if ($result) {
+				$param = [
+					'user_certification_id' => $info->id,
+					'api_user_id' => $resultUserId,
+					'httpCode' => $result['status'],
+					'rdCode' => '',
+					'rdMessage' => '',
+					'checkIdCardApply' => 0,
+					'checkIdCardApplyFormat' => '',
+					];
+
 				if($result['status'] != 200) {
 					$content['id_card_api'] = [
 						'status' => $result['status'],
 						'error' => $result['response']['response']['checkIdCardApplyFormat']
 					];
-				}else{
-					$risVerified = true;
-					if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1) {
-						$risVerificationFailed = false;
-					} else {
-						$risVerificationFailed = true;
+					$param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
+
+				}else {
+					$param['rdCode'] = $result['response']['response']['rowData']['rdCode'];
+					$param['rdMessage'] = $result['response']['response']['rowData']['rdMessage'];
+					if (isset($result['response']['response']['rowData']['responseData']['checkIdCardApply'])) {
+						$param['checkIdCardApply'] = $result['response']['response']['rowData']['responseData']['checkIdCardApply'];
+						$param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
+
+						$risVerified = true;
+						if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1) {
+							$risVerificationFailed = false;
+						} else {
+							$risVerificationFailed = true;
+						}
 					}
+
 					$content['id_card_api'] = $result['response'];
 				}
+				$this->CI->log_integration_model->insert($param);
 			} else {
 				$content['id_card_api'] = 'no response';
 			}
@@ -922,7 +967,7 @@ class Certification_lib{
 		if(empty($url))
 			return false;
 
-		$image 	= file_get_contents($url);
+		$image 	= @file_get_contents($url);
 		if($image){
 			for($i=1;$i<=3;$i++){
 				$src  	= imagecreatefromstring($image);
