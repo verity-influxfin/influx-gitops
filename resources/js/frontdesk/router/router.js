@@ -31,10 +31,13 @@ import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
 import event from '../pages/event';
 import bank from '../pages/bank';
+import loans from '../pages/loans';
+import invest2 from '../pages/invest2';
 
 let routers = [
     { path: '*', redirect: '/index' },
     { path: '/index', component: index },
+    { path: '/loans', component: loans },
     { path: '/collegeLoan', component: collegeLoan },
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
     { path: '/mobileLoan', component: mobileLoan },
@@ -45,6 +48,7 @@ let routers = [
     { path: '/news', component: news },
     { path: '/blog', component: blog },
     { path: '/vlog', component: vlog },
+    { path: '/invest2', component: invest2 },
     { path: '/qa', component: qa },
     { path: '/videopage', component: videoPage },
     { path: '/articlepage', component: articlePage },
