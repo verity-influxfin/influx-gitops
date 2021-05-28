@@ -149,6 +149,7 @@ export default {
             font-weight     : bolder;
             font-size       : 2rem;
             line-height     : 1.2;
+            white-space     : nowrap;
         }
 
         .multiline {
