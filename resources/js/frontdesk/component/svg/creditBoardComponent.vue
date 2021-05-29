@@ -3650,7 +3650,7 @@ export default {
     fill: #73a6c8;
   }
   .st5 {
-    fill: #ffffff;
+    fill: #326398;
   }
   .st6 {
     font-family: "微軟正黑體";
@@ -3746,7 +3746,7 @@ export default {
   }
 
   .periods {
-    color: #ffffff;
+    color: #326398;
     text-align: center;
     line-height: 50px;
     font-size: 36px;
