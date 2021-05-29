@@ -210,22 +210,22 @@
       <index-section header="分期還款沒壓力" :secondary="true">
         <div class="wrapper">
           <div class="calculator">
-             <creditBoard amount="200000" />
+             <creditBoard amount="200000" v-on:update-calculator="updateCalculator"/>
           </div>
           <div class="inputs">
             <div class="row">
               <div class="text">申請</div>
-              <input type="text" class="input">
+              <input type="text" class="input" v-model="amountCount">
               <div class="text">元</div>
             </div>
              <div class="row">
               <div class="text">分期償還</div>
-              <input type="text" class="input">
+              <input type="text" class="input" v-model="period">
               <div class="text">期</div>
             </div>
              <div class="row">
               <div class="text">每月僅需約</div>
-              <input type="text" class="input">
+              <input type="text" class="input" v-model="pmt">
               <div class="text">元</div>
             </div>
           </div>
@@ -332,7 +332,10 @@ export default {
     // shanghuiBanner,
   },
   data: () => ({
-
+    amountCount: 5000,
+    rateCount: 5,
+    pmt: 0,
+    tweenedPmt: 0,
     plans: [
         {
             header: "學生貸",
@@ -396,6 +399,7 @@ export default {
     csKey: 0,
     pmt: 0,
     member: 0,
+    period: 3,
     tweenedMember: 0,
     transaction: 0,
     tweenedtransaction: 0,
@@ -563,6 +567,29 @@ export default {
     },
   },
   methods: {
+    updateCalculator(e) {
+      console.log(e)
+      this.pmt = e.pmt
+      switch (e.key) {
+        case 0:
+          this.period = 3
+          break
+        case 1:
+          this.period = 6
+          break
+        case 2:
+          this.period = 12
+          break
+        case 3:
+          this.period = 18
+          break
+        case 4:
+          this.period = 24
+          break
+      }
+      this.rateCount = e.rateCount
+      this.amountCount = e.amountCount
+    },
     handleScroll() {
       let gap = window.innerWidth > 767 ? 400 : 300;
       if (
@@ -1007,18 +1034,18 @@ export default {
 
 .alesis-calculator {
   .wrapper {
-        display: flex;
-    align-items: center;
+    display        : flex;
+    align-items    : center;
     justify-content: center;
-    max-width: 1280px;
-    margin: 0 auto;
+    max-width      : 1280px;
+    margin         : 0 auto;
 
     .calculator {
-          flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 7rem;
+      flex           : 1;
+      display        : flex;
+      align-items    : center;
+      justify-content: center;
+      margin-right   : 7rem;
 
       > div {
             width: 600px;
@@ -1028,31 +1055,34 @@ export default {
       flex: 1;
 
       .row {
-         margin: 0;
+            margin: 0;
             margin-top: 1rem;
 
         .text {
-          text-align: center;
-    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
-    background-clip: text;
-    width: fit-content;
-    color: rgba(255, 255, 255, 0);
-    font-weight: bolder;
-    font-size: 2rem;
-    line-height: 1.2;
-    white-space: nowrap;
+          text-align      : center;
+          background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+          background-clip : text;
+          width           : fit-content;
+          color           : rgba(255, 255, 255, 0);
+          font-weight     : bolder;
+          font-size       : 2rem;
+          line-height     : 1.2;
+          white-space     : nowrap;
         }
         .input {
-          appearance: none;
-    border: 0;
-    border-bottom: 1px solid #2b8bc3;
-    padding: .25rem 1rem;
-    box-sizing: border-box;
-    background: transparent;
-    color: #f29600;
-    font-size: 1.6rem;
-    line-height: 1;
-    outline: none;
+          appearance    : none;
+          border        : 0;
+          border-bottom : 1px solid #2b8bc3;
+          padding       : .25rem 1rem;
+          box-sizing    : border-box;
+          background    : transparent;
+          color         : #f29600;
+          font-size     : 1.6rem;
+          line-height   : 1;
+          width         : 8rem;
+          text-align    : center;
+          outline       : none;
+          pointer-events: none;
         }
       }
     }

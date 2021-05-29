@@ -3501,9 +3501,26 @@ export default {
   },
   watch: {
     pmt(newVal) {
+      this.$emit("update-calculator", {
+        pmt: newVal,
+        key: this.key,
+        amountCount: this.amountCount,
+      })
       gsap.to(this.$data, { duration: 0.5, tweenedPmt: newVal });
     },
-    key() {
+    amountCount(newVal) {
+      this.$emit("update-calculator", {
+        pmt: this.pmt,
+        key: this.key,
+        amountCount: newVal,
+      })
+    },
+    key(newVal) {
+      this.$emit("update-calculator", {
+        pmt: this.pmt,
+        key: newVal,
+        amountCount: this.amountCount,
+      })
       this.calculation();
     },
   },
