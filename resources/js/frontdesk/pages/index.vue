@@ -196,23 +196,40 @@
                         <div class="item">額度最高達300萬，期間最長7年</div>
                     </div>
                     <div class="buttons">
-                        <a class="button" href="#!">了解更多</a>
-                        <a class="button" href="#!">取得資格</a>
+                        <a class="button" href="#!"><index-button>了解更多</index-button></a>
+                        <a class="button" href="#!"><index-button>取得資格</index-button></a>
                     </div>
                 </div>
+
+
           </div>
       </index-section>
     </div>
 
-    <div class="alesis-solutions">
+    <div class="alesis-calculator">
       <index-section header="分期還款沒壓力" :secondary="true">
-          <p>&nbsp;</p>
-          <p>&nbsp;</p>
-        <div class="credit-slider">
-            <creditBoard amount="200000" />
+        <div class="wrapper">
+          <div class="calculator">
+             <creditBoard amount="200000" />
+          </div>
+          <div class="inputs">
+            <div class="row">
+              <div class="text">申請</div>
+              <input type="text" class="input">
+              <div class="text">元</div>
+            </div>
+             <div class="row">
+              <div class="text">分期償還</div>
+              <input type="text" class="input">
+              <div class="text">期</div>
+            </div>
+             <div class="row">
+              <div class="text">每月僅需約</div>
+              <input type="text" class="input">
+              <div class="text">元</div>
+            </div>
+          </div>
         </div>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
       </index-section>
     </div>
 
@@ -283,6 +300,7 @@ import indexBullet from "../component/alesis/index/bullet";
 import indexMoon from "../component/alesis/index/moon";
 import indexPlan from "../component/alesis/index/plan";
 import indexHuman from "../component/alesis/index/human";
+import indexButton from "../component/alesis/index/button";
 
 //banner
 // import shanghuiBanner from "../component/banner/shanghuiBanner";
@@ -307,7 +325,8 @@ export default {
     indexBullet,
     indexMoon,
     indexPlan,
-    indexHuman
+    indexHuman,
+    indexButton
 
     //banner
     // shanghuiBanner,
@@ -907,11 +926,14 @@ export default {
             }
 
             .buttons {
-                margin-top: 2rem;
+                margin-top: 1rem;
                 display   : flex;
 
-                .button {
-                    display      : block;
+                > .button {
+                    flex         : 1;
+                    margin-right : 1rem;
+
+                    /*display      : block;
                     flex         : 1;
                     text-align   : center;
                     padding      : .1rem 1rem;
@@ -922,7 +944,7 @@ export default {
                     font-weight  : bold;
                     color        : #036eb7;
                     margin-right : 1rem;
-                    line-height  : 1.4;
+                    line-height  : 1.4;*/
 
                     & + .button {
                         margin-right: 0;
@@ -981,6 +1003,60 @@ export default {
             }
         }
     }
+}
+
+.alesis-calculator {
+  .wrapper {
+        display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 1280px;
+    margin: 0 auto;
+
+    .calculator {
+          flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 7rem;
+
+      > div {
+            width: 600px;
+      }
+    }
+    .inputs {
+      flex: 1;
+
+      .row {
+         margin: 0;
+            margin-top: 1rem;
+
+        .text {
+          text-align: center;
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip: text;
+    width: fit-content;
+    color: rgba(255, 255, 255, 0);
+    font-weight: bolder;
+    font-size: 2rem;
+    line-height: 1.2;
+    white-space: nowrap;
+        }
+        .input {
+          appearance: none;
+    border: 0;
+    border-bottom: 1px solid #2b8bc3;
+    padding: .25rem 1rem;
+    box-sizing: border-box;
+    background: transparent;
+    color: #f29600;
+    font-size: 1.6rem;
+    line-height: 1;
+    outline: none;
+        }
+      }
+    }
+  }
 }
 
 .index-wrapper {
