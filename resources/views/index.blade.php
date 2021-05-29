@@ -170,22 +170,22 @@
                     <div class="item">
                         <div class="header">聯絡我們</div>
                         <div class="meta">
-                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-clock.svg" alt=""></div>
                             <div class="text">服務時間  9:00 AM - 6:00 PM</div>
 
-                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-phone.svg" alt=""></div>
                             <div class="text">02-2507-9990</div>
 
-                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-email.svg" alt=""></div>
                             <div class="text">service@influxfin.com</div>
 
-                            <div class="icon"><img src="/images/clock.png" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-address.svg" alt=""></div>
                             <div class="text">台北市松江路111號11樓-2</div>
                         </div>
                         <div class="socials">
-                            <a href="#!" class="item"><img src="/images/clock.png" alt=""></a>
-                            <a href="#!" class="item"><img src="/images/clock.png" alt=""></a>
-                            <a href="#!" class="item"><img src="/images/clock.png" alt=""></a>
+                            <a href="#!" class="item"><img src="/images/alesis-facebook.svg" alt=""></a>
+                            <a href="#!" class="item"><img src="/images/alesis-line.svg" alt=""></a>
+                            <a href="#!" class="item"><img src="/images/alesis-instagram.svg" alt=""></a>
                         </div>
                     </div>
                 </div>
