@@ -187,6 +187,7 @@ class Cron extends CI_Controller {
 				));
 		}else{
 			$result = [];
+			$pendingUpdateData = [];
 			$this->load->library('Certification_lib');
 			foreach ($request as $key => $v) {
 				$user_certifications 	= $this->user_certification_model
@@ -218,14 +219,24 @@ class Cron extends CI_Controller {
 							'content' => json_encode($tmpRs['content']),
 						];
 						$reviewStatus = 2;
-						$this->certification_lib->set_failed_for_recheck($user_certifications->id, '', true);
 					}
 
-					if ( $reviewStatus == 2 || $reviewStatus == 3)
-						$this->user_certification_model->update($user_certifications->id, $param);
-
+					$pendingUpdateData[] = [
+						'reviewStatus' => $reviewStatus,
+						'cer_id' => $user_certifications->id,
+						'param' => $param
+					];
 				}
 			}
+
+			array_map(function ($data) {
+				if($data['reviewStatus'] == 2)
+					$this->certification_lib->set_failed_for_recheck($data['cer_id'], '', true);
+				if($data['reviewStatus'] == 2 || $data['reviewStatus'] == 3)
+					$this->user_certification_model->update($data['cer_id'], $data['param']);
+
+			}, $pendingUpdateData);
+
 			echo json_encode($result);
 		}
 	}
