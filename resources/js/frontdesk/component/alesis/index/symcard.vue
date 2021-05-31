@@ -93,23 +93,23 @@ export default {
 
     }
     .content {
-        position: relative;
-    overflow: hidden;
-    border-radius: 0px 0px 10px 10px;
+        position     : relative;
+        overflow     : hidden;
+        border-radius: 0px 0px 10px 10px;
 
         .image {
             vertical-align: top;
-            width: 100%;
+            width         : 100%;
         }
 
         .description {
             position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgb(0 0 0 / 70%);
-    color: #FFF;
-    padding: 1rem;
+            bottom  : 0;
+            left    : 0;
+            right   : 0;
+            background: rgb(0 0 0 / 70%);
+            color: #FFF;
+            padding: 1rem;
         }
     }
 }
