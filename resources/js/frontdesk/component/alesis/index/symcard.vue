@@ -3,18 +3,18 @@
         <div class="header">
             <div class="symbol">
                 <div class="wrapper">
-                    <img class="image" src="/images/累積放款金額-01.svg" alt="">
+                    <img class="image" :src="symbol" alt="">
                 </div>
             </div>
             <div class="text">
-                <div class="header">企業融資</div>
+                <div class="header">{{ header }}</div>
                 <div class="line"></div>
             </div>
         </div>
         <div class="content">
-            <img class="image" src="/images/减去 11.png" alt="">
+            <img class="image" :src="image" alt="">
             <div class="description">
-                急需資金不再慌張，AI審核立即入帳
+                {{ description }}
             </div>
         </div>
     </div>
@@ -24,10 +24,10 @@
 export default {
     name : "Symcard",
     props: {
-        image : "",
-        header: "",
-        number: "",
-        unit  : "",
+        symbol     : "",
+        image      : "",
+        header     : "",
+        description: "",
     }
 };
 </script>
