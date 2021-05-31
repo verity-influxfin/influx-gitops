@@ -40,19 +40,7 @@
         <div class="alesis-recommends">
             <index-section header="銀行合作專區" multiline="透過普匯推薦合作銀行，可享最高額度300萬！" :secondary="true">
                 <div class="wrapper">
-                    <div class="box">
-                        <img class="logo" src="/images/shanghai.png" alt="">
-                        <div class="divider"></div>
-                        <div class="list">
-                            <div class="item">1日快速核准</div>
-                            <div class="item">前3個月利率1.88%起</div>
-                            <div class="item">額度最高達300萬，期間最長7年</div>
-                        </div>
-                        <div class="buttons">
-                            <a class="button" href="#!">了解更多</a>
-                            <a class="button" href="#!">取得資格</a>
-                        </div>
-                    </div>
+                    <index-shanghai></index-shanghai>
                 </div>
             </index-section>
         </div>
@@ -106,6 +94,7 @@
 import indexSection from "../component/alesis/index/section";
 import indexSymcard from "../component/alesis/index/symcard";
 import indexHuman from "../component/alesis/index/human";
+import indexShanghai from "../component/alesis/index/shanghai";
 import globalCarousel from "../component/alesis/global-carousel";
 
 export default {
@@ -113,6 +102,7 @@ export default {
     indexSection,
     indexSymcard,
     indexHuman,
+    indexShanghai,
     globalCarousel
   },
   data: () => {
@@ -195,56 +185,6 @@ export default {
         align-items    : center;
         justify-content: center;
         margin         : 3rem 0 0;
-
-        .box {
-            display      : inline-block;
-            border-radius: 17px;
-            border       : 1px solid #2664a5;
-            padding      : 1.5rem 1rem;
-
-            .logo {
-
-            }
-
-            .divider {
-                height    : 1px;
-                background: #2664a5;
-                margin    : 1rem 0;
-            }
-
-            .list {
-                line-height: 2;
-                margin-left: 1rem;
-
-                .item {
-                    display: list-item;
-                }
-            }
-
-            .buttons {
-                margin-top: 2rem;
-                display   : flex;
-
-                .button {
-                    display      : block;
-                    flex         : 1;
-                    text-align   : center;
-                    padding      : .1rem 1rem;
-                    border       : 1px solid #2664a5;
-                    border-radius: .4rem;
-                    width        : 100%;
-                    font-size    : 1.2rem;
-                    font-weight  : bold;
-                    color        : #036eb7;
-                    margin-right : 1rem;
-                    line-height  : 1.4;
-
-                    & + .button {
-                        margin-right: 0;
-                    }
-                }
-            }
-        }
     }
 }
 
