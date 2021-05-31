@@ -286,6 +286,7 @@ $ci-color: #153a71;
     background: #153a71;
     padding: 0.5rem 0;
     color: #fff;
+    position: relative;
 
     > .line {
         height: 1px;
@@ -401,6 +402,30 @@ $ci-color: #153a71;
         > .links {
             > .item {
                 color: #fff;
+            }
+        }
+
+        .externals {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: inline-flex;
+            border-radius: 0.7rem;
+            overflow: hidden;
+
+            .item {
+                text-decoration: none;
+                flex: 1;
+                padding: 0.25rem 1rem;
+                background: #326398;
+                color: #fff;
+                font-weight: bold;
+                font-size: 1.1rem;
+
+                &.-invest {
+                    background: #fff;
+                    color: #326398;
+                }
             }
         }
     }

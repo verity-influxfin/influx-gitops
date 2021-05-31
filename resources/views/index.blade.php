@@ -229,6 +229,10 @@
                     <a href="#!" class="item">商行合作</a> |
                     <a href="#!" class="item">企業合作</a>
                 </div>
+                <div class="externals">
+                    <a class="item" href="/borrow">我想申貸</a>
+                    <a class="item -invest" href="/invest">我想投資</a>
+                </div>
             </div>
         </div>
 
