@@ -1,299 +1,307 @@
 <template>
-  <div class="index-wrapper">
-    <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
-      <SplideSlide class="puhey-banner">
-        <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
-        <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
-        <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
-        <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
-        <div class="content">
-          <p>最貼近年輕人的金融科技平台</p>
-          <span>普匯．你的手機ATM</span>
-          <div class="box">
-            <a
-                class="loan"
-                href="/investLink"
-                target="_blank"
-                onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
-            ><img src="../asset/images/light-b.svg" class="img-fluid" />
-              <div class="text">立即投資</div></a
-            >
-            <a
-                class="borrow"
-                href="/borrowLink"
-                target="_blank"
-                onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
-            ><img src="../asset/images/light-y.svg" class="img-fluid" />
-              <div class="text">立即借款</div></a
-            >
-          </div>
-        </div>
-      </SplideSlide>
-      <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
-        <a :href="item.link" target="_blank">
-          <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
-          <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
-        </a>
-      </SplideSlide>
-    </Splide>
-    <div class="banner" v-else>
-      <div class="puhey-banner">
-        <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
-        <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
-        <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
-        <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
-        <div class="content">
-          <p>最貼近年輕人的金融科技平台</p>
-          <span>普匯．你的手機ATM</span>
-          <div class="box">
-            <a
-              class="loan"
-              href="https://event.influxfin.com/r/iurl?p=webinvest"
-              target="_blank"
-              onClick="ga('send', 'event', 'Click', 'Nav Click', 'invest','10');"
-              ><img src="../asset/images/light-b.svg" class="img-fluid" />
-              <div class="text">立即投資</div></a
-            >
-            <a
-              class="borrow"
-              href="https://event.influxfin.com/R/url?p=webbanner"
-              target="_blank"
-              onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrow','10');"
-              ><img src="../asset/images/light-y.svg" class="img-fluid" />
-              <div class="text">立即借款</div></a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="alesis-counters">
-      <div class="wrapper">
-        <index-counter image="/images/累積放款金額-01.svg" header="累積註冊用戶" number="60000" unit="人"></index-counter>
-        <index-counter image="/images/累積放款金額-01.svg" header="累積放款金額" number="15857" unit="萬"></index-counter>
-        <index-counter image="/images/累積放款金額-01.svg" header="累積成交筆數" number="37390" unit="筆"></index-counter>
-      </div>
-    </div>
-
-    <div class="alesis-our-service">
-      <index-section header="我們的服務" :secondary="true">
-        <img class="image" src="/images/p2p.svg" />
-        <div class="actions">
-          <div class="left">
-            <a href="#!" class="action">立即投資</a>
-            <a href="#!" class="action">了解更多</a>
-          </div>
-          <div class="right">
-            <a href="#!" class="action">立即借款</a>
-            <a href="#!" class="action">了解更多</a>
-          </div>
-        </div>
-      </index-section>
-    </div>
-
-    <div class="alesis-company-introduction">
-      <index-section header="公司簡介">
-        <div class="carousel">
-            <div class="entity">
-                 <div class="left">
-                    <img src="/images/sshot-1559.png" alt="">
-                </div>
-                <div class="lightbox">
-                    <img class="image" src="/images/sshot-1566.png" />
-                </div>
-                <div class="right">
-                    <img src="/images/sshot-1558.png" alt="">
-                </div>
-            </div>
-        </div>
-        <div class="introduction">
-          <div class="showcase">
-            <img src="/images/借款額度-------.png" alt="">
-          </div>
-          <div class="items">
-            <index-bullet class="item" image="/images/累積放款金額-01.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></index-bullet>
-            <index-bullet class="item" image="/images/累積放款金額-01.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾!"></index-bullet>
-          </div>
-        </div>
-      </index-section>
-    </div>
-
-    <div class="alesis-feature">
-      <index-section header="產品特色" :secondary="true">
-        <div class="wrapper">
-            <div class="showcase">
-                <img class="image" src="/images/步驟1-01.png" alt="">
-            </div>
+    <div class="index-wrapper">
+        <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
+        <SplideSlide class="puhey-banner">
+            <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
+            <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
+            <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
+            <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
             <div class="content">
-                <index-bullet class="bullet" image="/images/累積放款金額-01.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></index-bullet>
-                <div class="moons">
-                    <div class="item">
-                        <index-moon class="moon" header="簡單" level="1"></index-moon>
-                        <div class="content">
-                            AWS安全系統為架構，<br>
-                            輔以簡潔的操作界面。
-                        </div>
-                    </div>
-                    <div class="item">
-                        <index-moon class="moon" header="快速" level="2"></index-moon>
-                        <div class="content">
-                            10分鐘快速填寫申請資料，<br>
-                            全程線上操作，無人干擾
-                        </div>
-                    </div>
-                    <div class="item">
-                        <index-moon class="moon" header="安全" level="3"></index-moon>
-                        <div class="content">
-                            資訊傳輸由HTTPS方式利用SSL/TLS<br>
-                            加密，儲存於亞馬遜AWS雲端伺服器
-                        </div>
-                    </div>
-                    <div class="item">
-                        <index-moon class="moon" header="隱私" level="4"></index-moon>
-                        <div class="content">
-                            全台唯一無人化借貸平台，<br>
-                            讓手機成為您專屬的ATM
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="slogan">假日放款全年無休</div>
-      </index-section>
-    </div>
-
-    <div class="alesis-fast-transfer">
-      <index-section header="普匯債權快速變現" multiline="全台唯一債權轉讓功能">
-          <div class="wrapper">
-              <div class="graph">
-                  <img class="image" src="/images/sshot-1569.png" alt="">
-              </div>
-              <div class="moons">
-                    <index-moon class="moon" header="債權轉讓" multiline="快速變現" level="3"></index-moon>
-                    <index-moon class="moon" header="小額資金" multiline="分散風險" level="2"></index-moon>
-                    <index-moon class="moon" header="智能投資" multiline="自動下標" level="1"></index-moon>
-              </div>
-          </div>
-      </index-section>
-    </div>
-
-    <div class="alesis-solutions">
-      <index-section header="產品方案" :secondary="true">
-          <div class="wrapper">
-              <index-plan class="plan" :header="item.header" :targets="item.targets" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :key="index"></index-plan>
-          </div>
-      </index-section>
-    </div>
-
-    <div class="alesis-recommend-banks">
-      <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率！">
-          <div class="wrapper">
+                <p>最貼近年輕人的金融科技平台</p>
+                <span>普匯．你的手機ATM</span>
                 <div class="box">
-                    <img class="logo" src="/images/shanghai.png" alt="">
-                    <div class="divider"></div>
-                    <div class="list">
-                        <div class="item">1日快速核准</div>
-                        <div class="item">前3個月利率1.88%起</div>
-                        <div class="item">額度最高達300萬，期間最長7年</div>
-                    </div>
-                    <div class="buttons">
-                        <a class="button" href="#!"><index-button>了解更多</index-button></a>
-                        <a class="button" href="#!"><index-button>取得資格</index-button></a>
+                    <a
+                        class="loan"
+                        href="/investLink"
+                        target="_blank"
+                        onClick="ga('send', 'event', 'Click', 'Nav Click', 'investLink','10')"
+                    ><img src="../asset/images/light-b.svg" class="img-fluid" />
+                    <div class="text">立即投資</div></a
+                    >
+                    <a
+                        class="borrow"
+                        href="/borrowLink"
+                        target="_blank"
+                        onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrowLink','10')"
+                    ><img src="../asset/images/light-y.svg" class="img-fluid" />
+                    <div class="text">立即借款</div></a
+                    >
+                </div>
+            </div>
+        </SplideSlide>
+        <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
+            <a :href="item.link" target="_blank">
+            <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
+            <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
+            </a>
+        </SplideSlide>
+        </Splide>
+        <div class="banner" v-else>
+            <div class="puhey-banner">
+                <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
+                <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
+                <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
+                <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
+                <div class="content">
+                    <p>最貼近年輕人的金融科技平台</p>
+                    <span>普匯．你的手機ATM</span>
+                    <div class="box">
+                        <a
+                        class="loan"
+                        href="https://event.influxfin.com/r/iurl?p=webinvest"
+                        target="_blank"
+                        onClick="ga('send', 'event', 'Click', 'Nav Click', 'invest','10');"
+                        ><img src="../asset/images/light-b.svg" class="img-fluid" />
+                        <div class="text">立即投資</div></a
+                        >
+                        <a
+                        class="borrow"
+                        href="https://event.influxfin.com/R/url?p=webbanner"
+                        target="_blank"
+                        onClick="ga('send', 'event', 'Click', 'Nav Click', 'borrow','10');"
+                        ><img src="../asset/images/light-y.svg" class="img-fluid" />
+                        <div class="text">立即借款</div></a
+                        >
                     </div>
                 </div>
-
-
-          </div>
-      </index-section>
-    </div>
-
-    <div class="alesis-calculator">
-      <index-section header="分期還款沒壓力" :secondary="true">
-        <div class="wrapper">
-          <div class="calculator">
-             <creditBoard amount="200000" v-on:update-calculator="updateCalculator"/>
-          </div>
-          <div class="inputs">
-            <div class="row">
-              <div class="text">申請</div>
-              <input type="text" class="input" v-model="amountCount">
-              <div class="text">元</div>
             </div>
-             <div class="row">
-              <div class="text">分期償還</div>
-              <input type="text" class="input" v-model="period">
-              <div class="text">期</div>
-            </div>
-             <div class="row">
-              <div class="text">每月僅需約</div>
-              <input type="text" class="input" v-model="pmt">
-              <div class="text">元</div>
-            </div>
-          </div>
         </div>
-      </index-section>
-    </div>
 
-    <!--<div class="game-card">
-      <div class="t-c"><h2>還款試算表</h2></div>
-      <div class="hr"></div>
-      <h5>分期還款，輕鬆無負擔！</h5>
-      <div class="credit-slider">
-        <creditBoard amount="200000" />
-      </div>
-    </div>-->
-
-    <div class="alesis-humans">
-      <index-section header="看看他們怎麼說">
-          <div class="carousel">
-                <div class="left">
-                    <img src="/images/sshot-1559.png" alt="">
-                </div>
-                <div class="lightbox">
-                    <index-human></index-human>
-                    <index-human></index-human>
-                </div>
-                <div class="right">
-                    <img src="/images/sshot-1558.png" alt="">
-                </div>
-          </div>
-      </index-section>
-    </div>
-
-    <div class="alesis-news">
-      <index-section class="header" header="媒體報導支持" :outlined="true" :nospace="true"></index-section>
-      <div class="wrapper">
-          <div class="logos">
-                <img class="item" src="/images/a645f762048f5f425d0f0a8486f34612.png" alt="">
-                <img class="item" src="/images/1JHY1QOLYPF0.png" alt="">
-                <img class="item" src="/images/Now_News_logo.png" alt="">
-                <img class="item" src="/images/logo-chinatimes2019-1200x635.png" alt="">
+        <!-- 開頭計數器 -->
+        <div class="alesis-counters">
+            <div class="wrapper">
+                <index-counter image="/images/alesis-registered.svg" header="累積註冊用戶" number="60000" unit="人"></index-counter>
+                <index-counter image="/images/alesis-totalmoney.svg" header="累積放款金額" number="15857" unit="萬"></index-counter>
+                <index-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" number="37390" unit="筆"></index-counter>
             </div>
-            <div class="logos -three">
-                <img class="item" src="/images/logo-cn-yes-1.png" alt="">
-                <img class="item" src="/images/logo-red.png" alt="">
-                <img class="item" src="/images/logo300_90.png" alt="">
-            </div>
-      </div>
-    </div>
+        </div>
+        <!-- / 開頭計數器 -->
 
-    <float />
-  </div>
+        <!-- 我們的服務 -->
+        <div class="alesis-our-service">
+            <index-section header="我們的服務" :secondary="true">
+                <img class="image" src="/images/p2p.svg" />
+                <div class="actions">
+                    <div class="left">
+                        <a href="#!" class="action">立即投資</a>
+                        <a href="#!" class="action">了解更多</a>
+                    </div>
+                    <div class="right">
+                        <a href="#!" class="action">立即借款</a>
+                        <a href="#!" class="action">了解更多</a>
+                    </div>
+                </div>
+            </index-section>
+        </div>
+        <!-- / 我們的服務 -->
+
+        <!-- 公司簡介 -->
+        <div class="alesis-company-introduction">
+            <index-section header="公司簡介">
+                <div class="carousel">
+                    <div class="entity">
+                        <div class="left">
+                            <img src="/images/sshot-1559.png" alt="">
+                        </div>
+                        <div class="lightbox">
+                            <img class="image" src="/images/sshot-1566.png" />
+                        </div>
+                        <div class="right">
+                            <img src="/images/sshot-1558.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="introduction">
+                    <div class="showcase">
+                        <img src="/images/借款額度-------.png" alt="">
+                    </div>
+                    <div class="items">
+                        <index-bullet class="item" image="/images/alesis-ift.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></index-bullet>
+                        <index-bullet class="item" image="/images/alesis-brain.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾!"></index-bullet>
+                    </div>
+                </div>
+            </index-section>
+        </div>
+        <!-- / 公司簡介 -->
+
+        <!-- 產品特色 -->
+        <div class="alesis-feature">
+            <index-section header="產品特色" :secondary="true">
+                <div class="wrapper">
+                    <div class="showcase">
+                        <img class="image" src="/images/步驟1-01.png" alt="">
+                    </div>
+                    <div class="content">
+                        <index-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></index-bullet>
+                        <div class="moons">
+                            <div class="item">
+                                <index-moon class="moon" header="簡單" level="1"></index-moon>
+                                <div class="content">
+                                    AWS安全系統為架構，<br>
+                                    輔以簡潔的操作界面。
+                                </div>
+                            </div>
+                            <div class="item">
+                                <index-moon class="moon" header="快速" level="2"></index-moon>
+                                <div class="content">
+                                    10分鐘快速填寫申請資料，<br>
+                                    全程線上操作，無人干擾
+                                </div>
+                            </div>
+                            <div class="item">
+                                <index-moon class="moon" header="安全" level="3"></index-moon>
+                                <div class="content">
+                                    資訊傳輸由HTTPS方式利用SSL/TLS<br>
+                                    加密，儲存於亞馬遜AWS雲端伺服器
+                                </div>
+                            </div>
+                            <div class="item">
+                                <index-moon class="moon" header="隱私" level="4"></index-moon>
+                                <div class="content">
+                                    全台唯一無人化借貸平台，<br>
+                                    讓手機成為您專屬的ATM
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slogan">假日放款全年無休</div>
+            </index-section>
+        </div>
+        <!-- / 產品特色 -->
+
+        <!-- 普匯債權快速變現 -->
+        <div class="alesis-fast-transfer">
+            <index-section header="普匯債權快速變現" multiline="全台唯一債權轉讓功能">
+                <div class="wrapper">
+                    <div class="graph">
+                        <img class="image" src="/images/alesis-transfer-graph.svg" alt="">
+                    </div>
+                    <div class="moons">
+                        <index-moon class="moon" header="債權轉讓" multiline="快速變現" level="3"></index-moon>
+                        <index-moon class="moon" header="小額資金" multiline="分散風險" level="2"></index-moon>
+                        <index-moon class="moon" header="智能投資" multiline="自動下標" level="1"></index-moon>
+                    </div>
+                </div>
+            </index-section>
+        </div>
+        <!-- / 普匯債權快速變現 -->
+
+        <!-- 產品方案 -->
+        <div class="alesis-solutions">
+            <index-section header="產品方案" :secondary="true">
+                <div class="wrapper">
+                    <index-plan class="plan" :header="item.header" :targets="item.targets" :image="item.image" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :key="index"></index-plan>
+                </div>
+            </index-section>
+        </div>
+        <!-- / 產品方案 -->
+
+        <!-- 普匯推薦 銀行速貸好條件 -->
+        <div class="alesis-recommend-banks">
+            <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率！">
+                <div class="wrapper">
+                    <div class="box">
+                        <img class="logo" src="/images/shanghai.png" alt="">
+                        <div class="divider"></div>
+                        <div class="form">
+                            <input class="input" type="text" placeholder="姓名">
+                            <input class="input" type="text" placeholder="*手機">
+                            <input class="input" type="text" placeholder="*E-mail">
+                            <a href="#!" class="button">前往優惠</a>
+                        </div>
+                        <div class="list">
+                            <div class="item">1日快速核准</div>
+                            <div class="item">前3個月利率1.88%起</div>
+                            <div class="item">額度最高達300萬，期間最長7年</div>
+                        </div>
+                        <div class="buttons">
+                            <a class="button" href="#!"><index-button>了解更多</index-button></a>
+                            <a class="button" href="#!"><index-button>取得資格</index-button></a>
+                        </div>
+                    </div>
+                </div>
+            </index-section>
+        </div>
+        <!-- / 普匯推薦 銀行速貸好條件 -->
+
+        <!-- 分期還款沒壓力 -->
+        <div class="alesis-calculator">
+            <index-section header="分期還款沒壓力" :secondary="true">
+                <div class="wrapper">
+                    <div class="calculator">
+                        <creditBoard amount="200000" v-on:update-calculator="updateCalculator"/>
+                    </div>
+                    <div class="inputs">
+                        <div class="row">
+                            <div class="text">申請</div>
+                            <input type="text" class="input" v-model="amountCount">
+                            <div class="text">元</div>
+                        </div>
+                        <div class="row">
+                            <div class="text">分期償還</div>
+                            <input type="text" class="input" v-model="period">
+                            <div class="text">期</div>
+                        </div>
+                        <div class="row">
+                            <div class="text">每月僅需約</div>
+                            <input type="text" class="input" v-model="pmt">
+                            <div class="text">元</div>
+                        </div>
+                    </div>
+                </div>
+            </index-section>
+        </div>
+        <!-- / 分期還款沒壓力 -->
+
+        <!-- 看看他們怎麼說 -->
+        <div class="alesis-humans">
+            <index-section header="看看他們怎麼說">
+                <div class="carousel">
+                        <div class="left">
+                            <img src="/images/sshot-1559.png" alt="">
+                        </div>
+                        <div class="lightbox">
+                            <index-human></index-human>
+                            <index-human></index-human>
+                        </div>
+                        <div class="right">
+                            <img src="/images/sshot-1558.png" alt="">
+                        </div>
+                </div>
+            </index-section>
+        </div>
+        <!-- / 看看他們怎麼說 -->
+
+        <!-- 媒體報導支持 -->
+        <div class="alesis-news">
+            <index-section class="header" header="媒體報導支持" :outlined="true" :nospace="true"></index-section>
+            <div class="wrapper">
+                <div class="logos">
+                    <img class="item" src="/images/a645f762048f5f425d0f0a8486f34612.png" alt="">
+                    <img class="item" src="/images/1JHY1QOLYPF0.png" alt="">
+                    <img class="item" src="/images/Now_News_logo.png" alt="">
+                    <img class="item" src="/images/logo-chinatimes2019-1200x635.png" alt="">
+                </div>
+                <div class="logos -three">
+                    <img class="item" src="/images/logo-cn-yes-1.png" alt="">
+                    <img class="item" src="/images/logo-red.png" alt="">
+                    <img class="item" src="/images/logo300_90.png" alt="">
+                </div>
+            </div>
+        </div>
+        <!-- / 媒體報導支持 -->
+
+        <float />
+    </div>
 </template>
 
 <script>
 import { Splide, SplideSlide } from "@splidejs/vue-splide";
 //
-import investUp from "../component/svg/investDotUpComponent";
-import investDown from "../component/svg/investDotDownComponent";
-import amountChart from "../component/svg/amountChartComponent";
 import creditBoard from "../component/svg/creditBoardComponent";
-import histroyDot from "../component/svg/histroyDotComponent";
-import experience from "../component/experienceComponent";
 import float from "../component/floatComponent";
-//svg
-import routeMap from "../component/svg/routeMapComponent";
-import routeMapM from "../component/svg/routeMapMComponent.vue";
-//
+// Alesis components
 import indexCounter from "../component/alesis/index/counter";
 import indexSection from "../component/alesis/index/section";
 import indexBullet from "../component/alesis/index/bullet";
@@ -302,22 +310,12 @@ import indexPlan from "../component/alesis/index/plan";
 import indexHuman from "../component/alesis/index/human";
 import indexButton from "../component/alesis/index/button";
 
-//banner
-// import shanghuiBanner from "../component/banner/shanghuiBanner";
-
 export default {
   components: {
     float,
-    investUp,
-    investDown,
-    amountChart,
-    histroyDot,
-    experience,
     creditBoard,
     Splide,
     SplideSlide,
-    routeMap,
-    routeMapM,
 
     //
     indexCounter,
@@ -327,9 +325,6 @@ export default {
     indexPlan,
     indexHuman,
     indexButton
-
-    //banner
-    // shanghuiBanner,
   },
   data: () => ({
     amountCount: 5000,
@@ -340,6 +335,7 @@ export default {
         {
             header: "學生貸",
             unready: false,
+            image: "/images/alesis-student.svg",
             targets: [
                 "大學、碩博士在學生",
                 "20-35歲中華民國國民"
@@ -356,6 +352,7 @@ export default {
         {
             header: "上班族貸",
             unready: false,
+            image: "/images/alesis-work.svg",
             targets: [
                 "社會新鮮人、金融小白",
                 "20-35歲中華民國國民"
@@ -372,6 +369,7 @@ export default {
         {
             header: "中小企業融資",
             unready: false,
+            image: "/images/alesis-companies.svg",
             targets: [],
             action: "敬請期待",
             features: [
@@ -382,6 +380,7 @@ export default {
         {
             header: "車輛融資",
             unready: true,
+            image: "/images/alesis-car.svg",
             targets: [],
             action: "敬請期待",
             features: []
@@ -891,7 +890,7 @@ export default {
             flex      : 1;
 
             .image {
-                width: 640px;
+                width: 590px;
             }
         }
 
@@ -937,6 +936,33 @@ export default {
 
             }
 
+            .form {
+                display       : flex;
+                flex-direction: column;
+
+              .input {
+                    appearance   : none;
+                    border       : 1px solid #326398;
+                    border-radius: .4rem;
+                    line-height  : 2.2;
+                    padding      : 0 .5rem;
+              }
+
+              .button {
+                background   : #326398;
+                width        : 100%;
+                display      : block;
+                color        : #FFF;
+                padding      : .5rem;
+                text-align   : center;
+                border-radius: .4rem;
+              }
+
+              > *:not(:last-child) {
+                margin-bottom: 1rem;
+              }
+            }
+
             .divider {
                 height    : 1px;
                 background: #2664a5;
@@ -959,19 +985,6 @@ export default {
                 > .button {
                     flex         : 1;
                     margin-right : 1rem;
-
-                    /*display      : block;
-                    flex         : 1;
-                    text-align   : center;
-                    padding      : .1rem 1rem;
-                    border       : 1px solid #2664a5;
-                    border-radius: .4rem;
-                    width        : 100%;
-                    font-size    : 1.2rem;
-                    font-weight  : bold;
-                    color        : #036eb7;
-                    margin-right : 1rem;
-                    line-height  : 1.4;*/
 
                     & + .button {
                         margin-right: 0;
@@ -1033,1051 +1046,205 @@ export default {
 }
 
 .alesis-calculator {
-  .wrapper {
-    display        : flex;
-    align-items    : center;
-    justify-content: center;
-    max-width      : 1280px;
-    margin         : 0 auto;
+    .wrapper {
+        display        : flex;
+        align-items    : center;
+        justify-content: center;
+        max-width      : 1280px;
+        margin         : 0 auto;
 
-    .calculator {
-      flex           : 1;
-      display        : flex;
-      align-items    : center;
-      justify-content: center;
-      margin-right   : 7rem;
+        .calculator {
+            flex           : 1;
+            display        : flex;
+            align-items    : center;
+            justify-content: center;
+            margin-right   : 7rem;
 
-      > div {
-            width: 600px;
-      }
-    }
-    .inputs {
-      flex: 1;
-
-      .row {
-            margin: 0;
-            margin-top: 1rem;
-
-        .text {
-          text-align      : center;
-          background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
-          background-clip : text;
-          width           : fit-content;
-          color           : rgba(255, 255, 255, 0);
-          font-weight     : bolder;
-          font-size       : 2rem;
-          line-height     : 1.2;
-          white-space     : nowrap;
+            > div {
+                    width: 600px;
+            }
         }
-        .input {
-          appearance    : none;
-          border        : 0;
-          border-bottom : 1px solid #2b8bc3;
-          padding       : .25rem 1rem;
-          box-sizing    : border-box;
-          background    : transparent;
-          color         : #f29600;
-          font-size     : 1.6rem;
-          line-height   : 1;
-          width         : 8rem;
-          text-align    : center;
-          outline       : none;
-          pointer-events: none;
+
+        .inputs {
+            flex: 1;
+
+            .row {
+                    margin: 0;
+                    margin-top: 1rem;
+
+                .text {
+                    text-align      : center;
+                    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+                    background-clip : text;
+                    width           : fit-content;
+                    color           : rgba(255, 255, 255, 0);
+                    font-weight     : bolder;
+                    font-size       : 2rem;
+                    line-height     : 1.2;
+                    white-space     : nowrap;
+                }
+
+                .input {
+                    appearance    : none;
+                    border        : 0;
+                    border-bottom : 1px solid #2b8bc3;
+                    padding       : .25rem 1rem;
+                    box-sizing    : border-box;
+                    background    : transparent;
+                    color         : #f29600;
+                    font-size     : 1.6rem;
+                    line-height   : 1;
+                    width         : 8rem;
+                    text-align    : center;
+                    outline       : none;
+                    pointer-events: none;
+                }
+            }
         }
-      }
     }
-  }
 }
 
 .index-wrapper {
-  width: 100%;
+    width: 100%;
 
-  .t-c {
-    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
-    background-clip: text;
-    width: fit-content;
-    color: #ffffff00;
-    margin: 0px auto;
-    position: relative;
 
-    h2 {
-      font-weight: bolder;
-    }
-  }
-
-  .hr {
-    width: 260px;
-    height: 1px;
-    background-image: linear-gradient(to right, #0559ac, #ffffff);
-    margin: 0px auto;
-  }
-
-  .banner {
-    position: relative;
-    overflow: hidden;
-
-    %arrow {
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      font-size: 27px;
-    }
-
-    .arrow-left {
-      @extend %arrow;
-      left: 10px;
-    }
-
-    .arrow-right {
-      @extend %arrow;
-      right: 10px;
-    }
-
-    .puhey-banner {
-      img {
-        width: 100%;
-      }
-
-      .diagram {
-        position: absolute;
-        top: 11%;
-        left: 29%;
-        width: 50%;
-      }
-
-      .content {
-        position: absolute;
-        top: 45%;
-        left: 35%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-
-        p {
-          text-shadow: 2px 6px 6px rgba(0, 0, 0, 0.75);
-          font-family: NotoSansTC;
-          font-size: 40px;
-          letter-spacing: 2.4px;
-          color: #ffffff;
-        }
-
-        span {
-          text-shadow: 2px 6px 6px rgba(0, 0, 0, 0.75);
-          font-size: 36px;
-          letter-spacing: 1.8px;
-          color: #f2e627;
-          text-align: center;
-        }
-      }
-
-      .box {
-        display: flex;
-        margin-top: 9rem;
-
-        %block {
-          width: 40%;
-          margin: 0px auto;
-          position: relative;
-
-          :hover {
-            color: #ffffff;
-            text-decoration: none;
-          }
-
-          .text {
-            color: #ffffff;
-            position: absolute;
-            top: 51%;
-            left: 47%;
-            transform: translate(-50%, -50%);
-            font-size: 25px;
-          }
-        }
-
-        .loan {
-          @extend %block;
-        }
-
-        .borrow {
-          @extend %block;
-        }
-      }
-    }
-  }
-
-  .count-card {
-    display: flex;
-    justify-content: center;
-    padding-bottom: 30px;
-    padding-top: 15px;
-    position: relative;
-    overflow: hidden;
-
-    .item {
-      padding: 0px 10px;
-      background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
-      background-clip: text;
-      width: fit-content;
-      color: #ffffff00;
-
-      p {
-        margin-bottom: 5px;
-        font-size: 24px;
-      }
-
-      div {
-        font-size: 45px;
-        font-weight: bold;
-        color: #3b5795;
-      }
-    }
-
-    .pu {
-      width: 116px;
-      position: absolute;
-      right: 20%;
-    }
-
-    .lr {
-      border-left: 2px solid #080080;
-      margin: 0px 1rem;
-    }
-  }
-
-  .intro-card {
-    padding: 30px 0px;
-    background-color: #ecedf1;
-
-    .i-t {
-      font-size: 18px;
-      font-weight: bold;
-      letter-spacing: normal;
-      text-align: center;
-      color: #1c2a54;
-      width: fit-content;
-      margin: 1.5rem auto;
-    }
-  }
-
-  .p2p-card {
-    background-color: #ecedf180;
-    padding: 30px 0px;
-
-    .img {
-      width: 80%;
-      margin: 1rem auto;
-    }
-  }
-
-  .histroy-card {
-    padding: 40px 30px;
-    background-color: #ecedf1;
-
-    .h-c {
-      display: flex;
-
-      .arrows {
-        position: relative;
-        width: 100px;
-        z-index: 1;
-
-        div {
-          width: 100px;
-          position: absolute;
-          top: 50%;
-          transform: translate(0px, -50%);
-          cursor: pointer;
-        }
-      }
-    }
-  }
-
-  .product-card {
-    margin-bottom: 4rem;
-    .title {
-      background-image: linear-gradient(90deg, #153a71 50%, #ffffff 50%);
-      padding: 2rem 0px;
-
-      .t-c {
-        background-image: linear-gradient(to right, #306fca 0%, #09d4f6 50%, #306fca 75%);
-      }
-    }
-
-    .box {
-      display: flex;
-      .person {
-        background: #153a71;
-        padding: 30px 0px;
-        width: 50%;
-
-        .product {
-          width: 90%;
-        }
-      }
-
-      .group {
-        background: #182461;
-        padding: 30px 0px;
-        width: 50%;
-
-        .product {
-          width: 90%;
-        }
-      }
-
-      h5 {
-        font-size: 25px;
-        font-weight: 600;
-        line-height: 1.47;
-        text-align: center;
-        color: #ffc236;
-        margin: 2rem auto;
-      }
-
-      .typ {
-        border-radius: 20px;
-        box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.3);
-        background-color: #ffffff;
-        width: fit-content;
-        margin: 0px auto;
-        padding: 20px;
-
-        .t {
-          display: flex;
-          width: fit-content;
-          margin: 0px auto;
-
-          h3 {
-            font-weight: 900;
-            line-height: 1.67;
-            color: #1f55a0;
-            margin: 0px;
-          }
-
-          .img {
-            width: 38px;
-            line-height: 46px;
-            margin-right: 5px;
-          }
-        }
-
-        .v {
-          position: relative;
-          margin-top: 10px;
-
-          .b {
-            width: 400px;
-          }
-
-          .c {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-
-            h4 {
-              text-shadow: 0 3px 6px #000000;
-              font-size: 26px;
-              text-align: center;
-              color: #ffc236;
-              font-weight: bold;
-            }
-
-            p {
-              text-shadow: 0 3px 6px #000000;
-              font-size: 18px;
-              line-height: 1.64;
-              color: #ffffff;
-              margin: 0px;
-            }
-          }
-        }
-      }
-
-      .product {
-        margin: 20px auto;
-
-        .splide__list {
-          padding: 10px !important;
-        }
-
-        .each {
-          display: flex;
-          border-radius: 20px;
-          box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.3);
-          background-color: #ffffff;
-          padding: 10px;
-          height: 140px;
-
-          .i {
-            width: 30%;
-            margin-right: 10px;
-          }
-
-          .ccs {
-            width: 70%;
-            position: relative;
-
-            div {
-              font-size: 18px;
-              font-weight: bold;
-              line-height: 1.21;
-              color: #000000;
-            }
-
-            p {
-              font-size: 16px;
-              color: #5d5555;
-              margin: 0px;
-            }
-
-            a {
-              padding: 3px 12px;
-              border-radius: 20px;
-              border: solid 1px #0fd9fb;
-              background-color: #1f55a0;
-              text-shadow: 0 3px 6px #000000;
-              font-size: 15px;
-              color: #ffffff;
-              position: absolute;
-              bottom: 0px;
-              right: 0px;
-
-              &:hover {
-                text-decoration: none;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .slogan-card {
-    padding: 40px 30px;
-    background-color: #ecedf1;
-
-    .cnt {
-      display: flex;
-      width: 90%;
-      margin: 4rem auto;
-
-      .cnt-l {
-        display: flex;
-        flex-direction: column;
-        width: 60%;
-        margin-right: 1rem;
-
-        .vz {
-          margin: 15px 0px;
-          font-size: 22px;
-          font-weight: 700;
-          line-height: 1.45;
-          text-align: left;
-          color: #a5a5a5;
-          width: fit-content;
-          padding: 10px;
-          transition-duration: 0.2s;
-        }
-
-        .ad-b {
-          color: #153a71;
-        }
-      }
-
-      .cnt-r {
-        width: 40%;
-        position: relative;
-
-        .cover {
-          width: 300px;
-          position: relative;
-          pointer-events: none;
-        }
-
-        .c-s {
-          width: 300px;
-          padding: 13px 18px;
-          position: absolute;
-          top: 0;
-          left: 0;
-
-          .splide__track {
-            border-radius: 28px;
-          }
-
-          .c-e {
-            overflow: hidden;
-            border-radius: 28px;
-
-            s.img {
-              overflow: hidden;
-              border-radius: 15px;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .game-card {
-    overflow: hidden;
-    padding: 40px 30px;
-    background-color: #153a71;
-
-    h5 {
-      font-size: 32px;
-      font-weight: 600;
-      line-height: 1.47;
-      text-align: center;
-      color: #ffc236;
-    }
-
-    .t-c {
-      background-image: linear-gradient(to right, #306fca 0%, #09d4f6 50%, #306fca 75%);
-    }
-
-    .credit-slider {
-      width: 800px;
-      margin: 0px auto;
-    }
-  }
-
-  #bg-card {
-    background: #f5f5f5;
-    position: relative;
-    z-index: 1;
-
-    .particles-js-canvas-el {
-      position: absolute;
-      top: 0;
-      z-index: -1;
-    }
-  }
-
-  .advantage-card {
-    background-image: linear-gradient(to bottom, #ffffff 65%, #ecedf1 35%);
-
-    .adv-cnt {
-      background-image: url("../asset/images/91.png");
-      background-repeat: no-repeat;
-      background-size: cover;
-      width: 90%;
-      margin: 0px auto;
-
-      .header {
-        font-size: 17px;
-        font-weight: bold;
-        overflow: hidden;
-        min-height: 350px;
-        position: relative;
-
-        .slg {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-
-          .l-btn {
-            color: #ffc236;
-            font-size: 48px;
-            font-weight: bold;
-            width: 100%;
-            margin: 0px auto;
-            text-align: center;
-          }
-        }
-      }
-
-      .content {
-        padding: 4.5rem 1.5rem 1.5rem 1.5rem;
-        overflow: hidden;
-
-        .splide__track {
-          overflow: unset;
-        }
-
-        .item {
-          padding: 3rem;
-          border-radius: 20px;
-          background-color: #153a71b8;
-
-          .img {
-            margin: -100px auto 20px auto;
-            border-radius: 20px;
-            background-color: #a9c0dc;
-            width: 110px;
-            padding: 10px;
-            text-align: center;
-
-            img {
-              height: 90px;
-            }
-          }
-
-          p {
-            color: #ffc236;
-            font-size: 26px;
-            text-align: center;
-            font-weight: 700;
-            word-break: keep-all;
-          }
-
-          span {
-            color: #ffffff;
-          }
-        }
-      }
-    }
-  }
-
-  .information-card {
-    overflow: hidden;
-    background: linear-gradient(to bottom, #ffffff 65%, #153a71 35%);
-    position: relative;
-
-    .nav {
-      margin: 0px auto;
-      .nav-item {
-        width: calc(100% / 3);
-        text-align: center;
-        font-weight: bolder;
-
-        .nav-link {
-          width: 100%;
-          position: relative;
-          background: #f6f6f6;
-          color: #153a71;
-          padding: 15px 0px;
-          cursor: pointer;
-
-          &.active {
-            background: #153a71;
-            color: #ffffff;
-            border: 0px;
-
-            &:after {
-              content: "";
-              height: 0;
-              width: 0;
-              border-top: 15px solid #153a71;
-              border-left: 15px solid #ffffff00;
-              border-right: 15px solid #ffffff00;
-              position: absolute;
-              bottom: -15px;
-              left: 50%;
-              transform: translate(-50%, 0);
-            }
-          }
-        }
-      }
-    }
-
-    .tab-content {
-      margin: 20px;
-      text-align: center;
-
-      .splide__track {
-        width: 90%;
-        margin: 0px auto;
-      }
-
-      .news-slick,
-      .knowledge-slick,
-      .video-slick {
-        margin: 25px auto;
-        position: relative;
-      }
-
-      .btn-to {
-        font-weight: bold;
-        width: 30%;
-      }
-
-      .slick-item.is-visible {
-        transform: scale(0.9);
-      }
-
-      .slick-item.is-visible + .slick-item.is-visible {
-        transform: scale(1);
-      }
-
-      .slick-item.is-visible + .slick-item.is-visible + .slick-item.is-visible {
-        transform: scale(0.9);
-      }
-
-      .slick-item {
-        padding: 10px;
-        text-align: initial;
-        font-size: 16px;
-        font-weight: bolder;
-        box-shadow: 0 1.5px 3px 0 rgba(0, 0, 0, 0.16);
-        background-color: #ffffff;
-        min-height: 274px;
-        transform: scale(0.9);
-
-        .img {
-          width: 100%;
-          height: 200px;
-          margin: 0px auto;
-          overflow: hidden;
-
-          img {
-            width: 100%;
-          }
-        }
-
-        p {
-          text-align: center;
-          color: #083a6e;
-          font-size: 16px;
-          margin: 0.5rem 0px;
-          pointer-events: none;
-        }
-
-        span {
-          float: right;
-          color: #8c8c8c;
-          font-weight: 100;
-          font-size: 13px;
-        }
-
-        &:hover {
-          text-decoration: none;
-        }
-
-        iframe {
-          width: 100%;
-          height: 180px;
-        }
-      }
-    }
-  }
-
-  .comfirm-modal {
-    .modal-dialog {
-      max-width: 290px !important;
-    }
-    h4 {
-      text-align: center;
-      font-weight: bolder;
-      font-size: 20px;
-      margin: 0px;
-      color: #8c8c8c;
-    }
-
-    .flex {
-      display: flex;
-
-      .i {
-        padding: 10px;
-        margin: 5px;
-        background: #c4dcff73;
-
-        &:hover {
-          text-decoration: none;
-        }
-
-        p {
-          text-align: center;
-          margin: 0px;
-          font-weight: bold;
-          font-size: 20px;
-        }
-      }
-    }
-  }
-
-  @media screen and (max-width: 767px) {
     .banner {
-      .puhey-banner {
-        .diagram {
-          position: absolute;
-          top: 25%;
-          left: 10px;
-          width: 65%;
+        position: relative;
+        overflow: hidden;
+
+        %arrow {
+            position : absolute;
+            z-index  : 1;
+            top      : 50%;
+            font-size: 27px;
         }
 
-        img {
-          width: 100%;
+        .arrow-left {
+            @extend %arrow;
+            left: 10px;
         }
 
-        .content {
-          font-size: 16px;
-          width: 100%;
-          left: 50%;
-          top: 50%;
-
-          p {
-            font-size: 25px;
-            letter-spacing: 0px;
-          }
-
-          span {
-            font-size: 22px;
-            letter-spacing: 0px;
-          }
-
-          .box {
-            margin-top: 25rem;
-
-            %block {
-              width: 170px;
-
-              .text {
-                font-size: 22px;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .count-card {
-      padding: 15px 0px;
-      justify-content: flex-start;
-
-      .item {
-        div {
-          font-size: 36px;
-          color: #3b5795;
-        }
-      }
-
-      .pu {
-        width: 70px;
-        left: 19rem;
-        z-index: -1;
-      }
-    }
-
-    .intro-card {
-      padding: 10px;
-
-      .i-t {
-        text-align: justify;
-      }
-    }
-
-    .histroy-card {
-      padding: 10px;
-
-      .h-c {
-        width: 100%;
-        padding: 10px 0px;
-        flex-direction: column;
-
-        .al {
-          div {
-            right: 0px;
-            transform: translate(0px, 50%) rotate(90deg);
-          }
+        .arrow-right {
+            @extend %arrow;
+            right: 10px;
         }
 
-        .ar {
-          div {
-            left: 0px;
-            transform: translate(0px, -100%) rotate(90deg);
-          }
-        }
-
-        .arrows {
-          width: 100%;
-
-          div {
-            width: 70px;
-          }
-        }
-      }
-    }
-
-    .p2p-card {
-      padding: 10px 0px;
-
-      .img {
-        width: 100%;
-        margin: 1rem auto;
-      }
-    }
-
-    .product-card {
-      margin: 0px;
-
-      .box {
-        flex-direction: column;
-
-        h5 {
-          font-size: 20px;
-          margin: 1rem auto;
-        }
-        .typ {
-          .v {
-            .b {
-              width: 100%;
-            }
-          }
-        }
-
-        .person {
-          padding: 10px;
-          width: 100%;
-
-          .product {
-            width: 100%;
-            margin: 10px auto;
-
-            .splide__list {
-              padding: 10px 0px !important;
-            }
-          }
-        }
-
-        .group {
-          padding: 10px;
-          width: 100%;
-
-          .product {
-            width: 100%;
-            margin: 10px auto;
-
-            .splide__list {
-              padding: 10px 0px !important;
-            }
-          }
-        }
-      }
-    }
-
-    .advantage-card {
-      .adv-cnt {
-        width: 95%;
-
-        .header {
-          margin: 10px;
-          min-height: 80px;
-
-          .slg {
-            margin: 0px;
-            width: 100%;
-
-            .l-btn {
-              font-size: 27px;
-            }
-          }
-        }
-
-        .content {
-          padding: 0.5rem;
-
-          .item {
-            padding: 1rem;
-
-            .img {
-              margin: 0px auto;
-              width: 75px;
-
-              img {
-                height: 50px;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .slogan-card {
-      padding: 20px 10px;
-
-      .cnt {
-        margin: 0px auto;
-        width: 100%;
-        flex-direction: column;
-
-        .cnt-l {
-          width: 100%;
-          height: 70px;
-
-          h3 {
-            margin: 0px auto;
-          }
-
-          .vz {
-            margin: 0px;
-            font-size: 17px;
-            width: 100%;
-          }
-
-          .ad-b {
-            display: block;
-            height: 70px;
-          }
-        }
-
-        .cnt-r {
-          width: 80%;
-          margin: 0px auto;
-
-          .c-s {
-            width: 100%;
-
-            .splide__arrow--prev {
-              left: -2.5em;
+        .puhey-banner {
+            img {
+                width: 100%;
             }
 
-            .splide__arrow--next {
-              right: -2.5em;
+            .diagram {
+                position: absolute;
+                top     : 11%;
+                left    : 29%;
+                width   : 50%;
             }
-          }
 
-          .cover {
-            width: 100%;
-          }
+            .content {
+                position  : absolute;
+                top       : 45%;
+                left      : 35%;
+                transform : translate(-50%, -50%);
+                text-align: center;
+
+                p {
+                    text-shadow   : 2px 6px 6px rgba(0, 0, 0, 0.75);
+                    font-family   : NotoSansTC;
+                    font-size     : 40px;
+                    letter-spacing: 2.4px;
+                    color         : #ffffff;
+                }
+
+                span {
+                    text-shadow   : 2px 6px 6px rgba(0, 0, 0, 0.75);
+                    font-size     : 36px;
+                    letter-spacing: 1.8px;
+                    color         : #f2e627;
+                    text-align    : center;
+                }
+            }
+
+            .box {
+                display   : flex;
+                margin-top: 9rem;
+
+                %block {
+                    width   : 40%;
+                    margin  : 0px auto;
+                    position: relative;
+
+                    :hover {
+                        color          : #ffffff;
+                        text-decoration: none;
+                    }
+
+                    .text {
+                        color    : #ffffff;
+                        position : absolute;
+                        top      : 51%;
+                        left     : 47%;
+                        transform: translate(-50%, -50%);
+                        font-size: 25px;
+                    }
+                }
+
+                .loan {
+                    @extend %block;
+                }
+
+                .borrow {
+                    @extend %block;
+                }
+            }
         }
-      }
     }
 
-    .game-card {
-      padding: 10px 0px;
 
-      h5 {
-        font-size: 20px;
-        margin: 10px auto;
-      }
+    @media screen and (max-width: 767px) {
+        .banner {
+            .puhey-banner {
+                .diagram {
+                    position: absolute;
+                    top     : 25%;
+                    left    : 10px;
+                    width   : 65%;
+                }
 
-      .credit-slider {
-        width: 100%;
-      }
+                img {
+                    width: 100%;
+                }
+
+                .content {
+                    font-size: 16px;
+                    width    : 100%;
+                    left     : 50%;
+                    top      : 50%;
+
+                    p {
+                        font-size     : 25px;
+                        letter-spacing: 0px;
+                    }
+
+                    span {
+                        font-size: 22px;
+                        letter-spacing: 0px;
+                    }
+
+                    .box {
+                        margin-top: 25rem;
+
+                        %block {
+                            width: 170px;
+
+                            .text {
+                                font-size: 22px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-
-    .information-card {
-      .nav {
-        width: 100%;
-      }
-
-      .tab-content {
-        .splide__arrow--prev {
-          left: -1rem;
-        }
-
-        .splide__arrow--next {
-          right: -1rem;
-        }
-
-        .slick-item {
-          transform: scale(1);
-        }
-
-        .slick-item.is-visible {
-          transform: scale(1);
-        }
-
-        .slick-item.is-visible + .slick-item.is-visible {
-          transform: scale(1);
-        }
-
-        .slick-item.is-visible + .slick-item.is-visible + .slick-item.is-visible {
-          transform: scale(1);
-        }
-      }
-    }
-  }
 }
 </style>
