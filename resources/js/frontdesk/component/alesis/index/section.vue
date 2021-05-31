@@ -1,6 +1,6 @@
 <template>
     <div class="section" :class="{'-secondary': secondary, '-multiline': multiline !== undefined, '-outlined': outlined, '-outlined-multiline': outlinedMulti}">
-        <div class="header">
+        <div class="header" v-if="header">
             <div class="before-dots">
                 <div class="dot"></div>
                 <div class="dot"></div>
@@ -20,7 +20,7 @@
                 <div class="dot"></div>
             </div>
         </div>
-        <div class="spacer" v-if="!nospace"></div>
+        <div class="spacer" v-if="!nospace && header"></div>
         <slot></slot>
         <div class="spacer" v-if="!nospace"></div>
     </div>
