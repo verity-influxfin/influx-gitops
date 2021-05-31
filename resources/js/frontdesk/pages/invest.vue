@@ -157,7 +157,7 @@ export default {
 
 <style lang="scss" scoped>
 .alesis-slate {
-    background-image: url("/images/上班族.png");
+    background-image: url("/images/sshot-1647.png");
     background-size : cover;
 
     .wrapper {
@@ -166,7 +166,7 @@ export default {
         position   : relative;
         padding-top: 4rem;
 
-        &:before {
+        /*&:before {
             content         : ' ';
             display         : block;
             position        : absolute;
@@ -177,7 +177,7 @@ export default {
             opacity         : 0.6;
             background-image: url("/images/未命名-3.png");
             background-size : cover;
-        }
+        }*/
 
         .header {
             flex      : 1;
