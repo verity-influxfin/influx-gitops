@@ -1,6 +1,6 @@
 <template>
     <div class="box">
-        <img class="image" src="/images/累積放款金額-01.svg" alt="">
+        <img class="image" :src="image" alt="">
         <div class="feature">
             <div class="header">
                 {{ header }}
@@ -28,6 +28,7 @@ export default {
         unready : false,
         targets : [],
         action  : "",
+        image   : "",
         features: [],
     },
     components: {
@@ -52,7 +53,7 @@ export default {
         left         : 50%;
         transform    : translate(-50%, -50%);
         z-index      : 2;
-        background   : #f3f3f3;
+        background   : #f5f6f8;
         border-radius: 3rem;
     }
 
