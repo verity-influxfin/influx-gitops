@@ -216,7 +216,7 @@ class Joint_credit_lib{
 			// $data_array['total-loan-subtotal'] = isset($page_info) ? $page_info : '';
 
 			// 資訊項目：借款總餘額資訊(未滿一個月)
-			$content = $this->CI->regex->findPatternInBetween($text, '遲延還款紀錄.\s[0-9]{3}\/[0-9]{2}\/[0-9]{2}\~[0-9]{3}\/[0-9]{2}\/[0-9]{2}', '小計');
+			$content = $this->CI->regex->findPatternInBetween($text, '遲延還款紀錄\s[0-9]{3}\/[0-9]{2}\/[0-9]{2}\~[0-9]{3}\/[0-9]{2}\/[0-9]{2}', '小計');
 			$content = isset($content[0]) ? $content[0] : [];
 			// print_r($text);exit;
 			if($content){
