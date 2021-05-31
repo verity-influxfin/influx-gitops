@@ -335,7 +335,7 @@ export default {
         {
             header: "學生貸",
             unready: false,
-            image: "/images/alesis-student.svg",
+            image: "/images/alesis-student-rotate.svg",
             targets: [
                 "大學、碩博士在學生",
                 "20-35歲中華民國國民"
@@ -352,7 +352,7 @@ export default {
         {
             header: "上班族貸",
             unready: false,
-            image: "/images/alesis-work.svg",
+            image: "/images/alesis-work-rotate.svg",
             targets: [
                 "社會新鮮人、金融小白",
                 "20-35歲中華民國國民"
@@ -369,7 +369,7 @@ export default {
         {
             header: "中小企業融資",
             unready: false,
-            image: "/images/alesis-companies.svg",
+            image: "/images/alesis-companies-rotate.svg",
             targets: [],
             action: "敬請期待",
             features: [
@@ -380,7 +380,7 @@ export default {
         {
             header: "車輛融資",
             unready: true,
-            image: "/images/alesis-car.svg",
+            image: "/images/alesis-car-rotate.svg",
             targets: [],
             action: "敬請期待",
             features: []
