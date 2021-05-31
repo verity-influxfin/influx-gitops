@@ -29,6 +29,10 @@
     <link rel="stylesheet" href="{{ asset('css/package/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/pagination.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/hover-min.css') }}">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
 
     <!-- local -->
     <link rel="stylesheet" href="{{ asset('css/web.css?'.csrf_token()) }}">
