@@ -101,13 +101,13 @@
                 <div class="carousel">
                     <div class="entity">
                         <div class="left">
-                            <img src="/images/sshot-1559.png" alt="">
+                            <img src="/images/alesis-carousel-left.svg" alt="">
                         </div>
                         <div class="lightbox">
-                            <img class="image" src="/images/sshot-1566.png" />
+                            <img class="image" src="/images/alesis-roadmap.svg" />
                         </div>
                         <div class="right">
-                            <img src="/images/sshot-1558.png" alt="">
+                            <img src="/images/alesis-carousel-right.svg" alt="">
                         </div>
                     </div>
                 </div>
@@ -265,18 +265,34 @@
                 <global-carousel>
                     <div class="set">
                         <div class="item">
-                            <index-human></index-human>
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
                         </div>
                         <div class="item">
-                            <index-human></index-human>
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
                         </div>
                     </div>
                     <div class="set">
                         <div class="item">
-                            A
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
                         </div>
                         <div class="item">
-                            B
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
                         </div>
                     </div>
                 </global-carousel>
