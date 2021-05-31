@@ -4,7 +4,7 @@
         <div class="content">
             <div class="header">{{ header }}</div>
             <div class="counter">
-                <span class="number">{{ number }}</span>
+                <span class="number">{{ format(displayNumber) }}</span>
                 <span class="unit">{{ unit }}</span>
             </div>
         </div>
@@ -17,8 +17,37 @@ export default {
     props: {
         image : "",
         header: "",
-        number: "",
+        number: 0,
         unit  : "",
+    },
+    mounted() {
+        if (this.number != 0) {
+            this.displayNumber = Math.round(this.number / 1.5)
+        }
+
+        var adder = setInterval(() => {
+            this.displayNumber += 100
+
+            if(this.displayNumber >= this.number) {
+                this.displayNumber = this.number
+                clearInterval(adder)
+            }
+        }, 50)
+    },
+    methods: {
+        format(data) {
+            data = parseInt(data);
+            if (!isNaN(data)) {
+                let l10nEN = new Intl.NumberFormat("en-US");
+                return l10nEN.format(data.toFixed(0));
+            }
+            return 0;
+        },
+    },
+    data() {
+        return {
+            displayNumber: 0,
+        }
     }
 };
 </script>
