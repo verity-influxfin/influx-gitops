@@ -209,8 +209,75 @@ $ci-color: #153a71;
 
 .content-wrapper {
     width: 100%;
-    margin-top: 87px;
+    margin-top: 66px;
     overflow: auto;
+}
+
+.alesis-header {
+    color: #fff;
+    background-image: linear-gradient(
+        to right,
+        #1e2973 0%,
+        #319acf 36%,
+        #1e2973 73%
+    );
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 11;
+
+    .logo {
+        flex: 1;
+        .image {
+            height: 40px;
+        }
+    }
+    .centerx {
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        grid-template-columns: repeat(3, auto);
+        gap: 0.5rem;
+        text-align: center;
+        font-size: 1.1rem;
+
+        .item {
+        }
+        .separator {
+            .image {
+                height: 50px;
+                mix-blend-mode: screen;
+            }
+        }
+    }
+    .aside {
+        display: grid;
+        margin-left: auto;
+        grid-template-columns: repeat(6, auto);
+        gap: 2rem;
+        font-size: 0.9rem;
+        align-items: center;
+        text-align: center;
+        flex: 1;
+        white-space: nowrap;
+        justify-content: flex-end;
+
+        .item {
+            .login {
+                background: #2c4c9b;
+                color: #1d82be;
+                border: 1px solid #1d82be;
+                border-radius: 0.4rem;
+                padding: 0.25rem 0.5rem;
+                line-height: 1;
+            }
+        }
+    }
 }
 
 .alesis-footer {

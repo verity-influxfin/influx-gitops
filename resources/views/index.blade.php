@@ -82,7 +82,27 @@
         please turn on your jacascript
     </noscript>
     <div id="web_index" @mousemove="clicked">
-        <nav class="page-header navbar navbar-expand-lg sticky">
+        <div class="alesis-header">
+            <div class="logo"><img src="/images/logo_new.png" class="image"></div>
+            <div class="centerx">
+                <div class="item">我要借款</div>
+                <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
+                <div class="item">我要投資</div>
+            </div>
+            <div class="aside">
+                <div class="item">分期付款超市</div>
+                <div class="item">關於我們</div>
+                <div class="item">小學堂金融科技</div>
+                <div class="item">了解更多</div>
+                <div class="item">下載APP</div>
+                <div class="item">
+                    <div class="login">SIGN IN</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--<nav class="page-header navbar navbar-expand-lg sticky">
             <div class="web-logo">
                 <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>
             </div>
@@ -120,7 +140,8 @@
                     </li>
                 </ul>
             </div>
-        </nav>
+        </nav>-->
+
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
