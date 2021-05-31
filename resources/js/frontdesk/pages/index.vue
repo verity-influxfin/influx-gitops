@@ -986,8 +986,9 @@ export default {
             }
 
             .item {
-                height: 60px;
-                margin: 0 auto;
+                height        : 60px;
+                margin        : 0 auto;
+                mix-blend-mode: darken;
             }
         }
     }
