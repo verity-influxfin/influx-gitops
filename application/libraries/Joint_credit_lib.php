@@ -410,9 +410,21 @@ class Joint_credit_lib{
 			$content = preg_replace('/.*信用卡帳款總餘額.*/','',$content);
 			if($content){
 				$array = preg_split('/([0-9]{3}\/[0-9]{2}\/[0-9]{2})/',$content,-1,PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+				$validFlag = false;
 				foreach($array as $k=>$v){
+					if(!$validFlag) {
+						preg_match('/([0-9]{3}\/[0-9]{2}\/[0-9]{2})/', $v, $matches);
+						if(empty($matches)) {
+							unset($array[$k]);
+							continue;
+						}
+						$validFlag = true;
+					}
 					$array[$k] = preg_replace('/(^\s*)|(\s*$)/','',preg_replace('/[\r\n]/','',$v));
 				}
+
+				// Filter null/empty object with array_filter
 				$array = array_values(array_filter($array));
 				$result = array();
 				for( $i = 0, $count = count( $array); $i < $count-1; $i += 2){
