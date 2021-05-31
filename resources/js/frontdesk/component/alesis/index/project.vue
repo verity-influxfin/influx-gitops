@@ -31,7 +31,7 @@
             </div>
             <div class="item">
                 <div class="header">年化報酬率</div>
-                <div class="value">14.5%</div>
+                <div class="value -important">14.5%</div>
             </div>
         </div>
         <div class="target">
@@ -59,12 +59,13 @@ export default {
 
 <style lang="scss" scoped>
 .index-card {
-    border       : 1px solid #000;
+    border       : 1px solid #3770AC;
     background   : #FFF;
     border-radius: 20px;
     padding      : .5rem;
     overflow     : hidden;
     font-size    : .9rem;
+    min-width    : 450px;
 
     .header {
         display    : flex;
@@ -79,11 +80,15 @@ export default {
         }
 
         .personal {
-            flex: 1;
+            flex: 0.8;
+
             .character {
 
             }
+
             .level {
+                color: #85ACE3;
+
                 .help {
                     .image {
                         width : 28px;
@@ -94,7 +99,7 @@ export default {
         }
 
         .identifier {
-            border-left : 1px solid #000;
+            border-left : 1px solid #D4DAE4;
             padding-left: .8rem;
 
             .from {
@@ -113,7 +118,7 @@ export default {
 
     .divider {
         height    : 1px;
-        background: #000;
+        background: #D4DAE4;
     }
 
     .information {
@@ -124,10 +129,14 @@ export default {
             flex: 1;
 
             .header {
-
+                color: #96A0AE;
             }
             .value {
+                color: #729EE0;
 
+                &.-important {
+                    color: #EC6869;
+                }
             }
         }
     }
@@ -174,7 +183,7 @@ export default {
             left         : .2rem;
             bottom       : .2rem;
             width        : 10%;
-            background   : #829036;
+            background   : #E9A944;
             z-index      : 0;
         }
 
@@ -182,10 +191,11 @@ export default {
             .item {
                 display      : block;
                 padding      : .7rem 1.5rem;
-                background   : #d7d7d7;
-                color        : #000;
+                background   : #E8EBEE;
+                color        : #2B4669;
                 border-radius: .4rem;
                 line-height  : 1;
+                font-weight  : bold;
             }
         }
     }
