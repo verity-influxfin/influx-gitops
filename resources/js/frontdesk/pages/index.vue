@@ -970,7 +970,8 @@ export default {
     }
 
     .wrapper {
-        background-image: linear-gradient(to top, #ffffff -18%, #c9d1d9 115%);
+        background-image: url('/images/sshot-1644.png');
+        background-size : cover;
         padding         : .5rem 0;
 
         .logos {
