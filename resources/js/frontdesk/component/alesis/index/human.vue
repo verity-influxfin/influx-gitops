@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="content">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <slot name="video"></slot>
         </div>
     </div>
 </template>
@@ -74,6 +74,7 @@ export default {
                 }
             }
         }
+
         .grid {
             display              : grid;
             grid-template-columns: 1fr min-content;
@@ -93,15 +94,20 @@ export default {
                 font-weight: bold;
                 color      : #353482;
             }
+
             .number {
                 font-size: 1.2rem;
                 color    : #646464;
             }
         }
     }
-    .content {
-        iframe {
 
+    .content {
+        overflow     : hidden;
+        border-radius: 0rem 0 20px 20px;
+
+        iframe {
+            vertical-align: top;
         }
     }
 }
