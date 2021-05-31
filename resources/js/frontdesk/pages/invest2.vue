@@ -60,7 +60,7 @@
                   <div class="cover">
                       <img class="image" src="/images/報告書.png" alt="">
                   </div>
-                  <a class="more" href="#!">查看更多</a>
+                  <a class="more" href="#!"><index-button>查看更多</index-button></a>
               </div>
 
           </index-section>
@@ -68,30 +68,87 @@
       <div class="alesis-projects" >
           <index-section header="現有案件" :secondary="true">
               <div class="wrapper">
-                  <index-project></index-project>
+                  <div class="header">優質項目專區</div>
+                  <global-carousel>
+                    <div class="set">
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                    </div>
+                    <div class="set">
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                    </div>
+                </global-carousel>
               </div>
           </index-section>
+          <index-section>
+              <div class="wrapper">
+                  <div class="header -fast">快速變現專區</div>
+                  <global-carousel>
+                    <div class="set">
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                    </div>
+                    <div class="set">
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                    </div>
+                </global-carousel>
+              </div>
+          </index-section>
+      </div>
+      <div class="alesis-app">
+          <div class="wrapper">
+              <div class="content">
+                  <a href="#!" class="button">立即投資</a>
+                  <div class="divider"></div>
+                  <div class="description">前往APP下載區 立即啟動服務</div>
+                  <div class="markets">
+                      <a href="#!" class="link"><img src="/images/alesis-app-store.svg" alt=""></a>
+                      <a href="#!" class="link"><img src="/images/alesis-google-play.svg" alt=""></a>
+                  </div>
+              </div>
+              <div class="demo">
+                  <img class="phone" src="/images/alesis-phone-lay.svg" alt="">
+                  <img class="edge" src="/images/alesis-outer-edge-phones.svg" alt="">
+              </div>
+          </div>
       </div>
   </div>
 </template>
 <script>
-//svg
-import routeMap from "../component/svg/routeMapComponent";
-import routeMapM from "../component/svg/routeMapMComponent.vue";
 //
 import indexSection from "../component/alesis/index/section";
 import indexSymcard from "../component/alesis/index/symcard";
 import indexHuman from "../component/alesis/index/human";
+import indexButton from "../component/alesis/index/button";
 import indexProject from "../component/alesis/index/project";
+import globalCarousel from "../component/alesis/global-carousel";
 
 export default {
   components: {
     indexSection,
     indexSymcard,
     indexHuman,
-    indexProject
-    //banner
-    // shanghuiBanner,
+    indexProject,
+    indexButton,
+    globalCarousel
   },
   data: () => {
   },
@@ -209,6 +266,34 @@ export default {
     }
 }
 
+.alesis-projects {
+    .wrapper {
+        width : min-content;
+        margin: 0 auto;
+
+        .header {
+            text-align      : center;
+            background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+            background-clip : text;
+            width           : fit-content;
+            color           : rgba(255, 255, 255, 0);
+            font-weight     : bolder;
+            font-size       : 1.9rem;
+            line-height     : 1.2;
+            white-space     : nowrap;
+            border-bottom   : 1px solid #2664A5;
+            padding-bottom  : .5rem;
+            padding-right   : 2rem;
+            margin-bottom   : 2rem;
+            margin-left     : 4rem;
+
+            &.-fast {
+                margin-top: -1rem;
+            }
+        }
+    }
+}
+
 .alesis-comparison {
     .grid {
         display              : grid;
@@ -247,6 +332,74 @@ export default {
     }
 }
 
+.alesis-app {
+    .wrapper {
+        background-image: url('/images/sshot-1644.png');
+        background-size : cover;
+        display         : flex;
+        align-items     : center;
+        justify-content : center;
+        min-height      : 34rem;
+        position        : relative;
+
+        .content {
+            flex      : 1;
+            text-align: center;
+
+            .button {
+                text-align      : center;
+                background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+                background-clip : text;
+                width           : fit-content;
+                color           : rgba(255, 255, 255, 0);
+                font-weight     : bolder;
+                font-size       : 1.9rem;
+                line-height     : 1;
+                white-space     : nowrap;
+                border-bottom   : 1px solid #2664A5;
+                padding         : .25rem 1.5rem;
+                border-radius   : 1rem;
+                border          : 2px solid #036eb7;
+            }
+            .divider {
+                background: #2f95cb;
+                height    : 1px;
+                margin    : 2rem auto 2rem;
+                width     : 330px;
+            }
+            .description {
+                font-size  : 1.1rem;
+                font-weight: bolder;
+                color      : #112e53;
+            }
+            .markets {
+                    margin-top: 2rem;
+
+                .link {
+                    &:first-child {
+                        margin-right: 1rem;
+                    }
+                }
+            }
+        }
+        .demo {
+            flex: 1;
+
+            .phone {
+
+            }
+
+            .edge {
+                position: absolute;
+                top     : 0;
+                right   : 0;
+                bottom  : 0;
+                height  : 100%;
+            }
+        }
+    }
+}
+
 .alesis-report {
     .wrapper {
          text-align: center;
@@ -259,7 +412,11 @@ export default {
             }
         }
         .more {
-            margin-top: 2rem;
+            > div {
+                margin-top: 3rem;
+                width    : 100%;
+                font-size: 1.2rem;
+            }
         }
     }
 }
