@@ -83,11 +83,13 @@
     </noscript>
     <div id="web_index" @mousemove="clicked">
         <div class="alesis-header">
-            <div class="logo"><img src="/images/logo_new.png" class="image"></div>
+            <div class="logo">
+                <a href="/index"><img src="/images/logo_new.png" class="image"></a>
+            </div>
             <div class="centerx">
-                <div class="item">我要借款</div>
+                <a class="item" href="/borrow">我要借款</a>
                 <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
-                <div class="item">我要投資</div>
+                <a class="item" href="/invest">我要投資</a>
             </div>
             <div class="aside">
                 <div class="item">分期付款超市</div>
