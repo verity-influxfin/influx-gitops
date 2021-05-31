@@ -2,13 +2,13 @@
     <div class="carousel">
         <div class="selector">
             <div class="left">
-                <a href="#!" @click="previous"><img class="image" src="/images/alesis-carousel-left.svg" alt=""></a>
+                <div  @click="previous"><img class="image" src="/images/alesis-carousel-left.svg" alt=""></div>
             </div>
             <div class="lightbox">
                 <slot></slot>
             </div>
             <div class="right">
-                <a href="#!" @click="next"><img class="image" src="/images/alesis-carousel-right.svg" alt=""></a>
+                <div @click="next"><img class="image" src="/images/alesis-carousel-right.svg" alt=""></div>
             </div>
         </div>
         <div class="indicator">
@@ -75,7 +75,7 @@ export default {
 
         .left,
         .right {
-
+            cursor: pointer;
         }
         .left {
 
