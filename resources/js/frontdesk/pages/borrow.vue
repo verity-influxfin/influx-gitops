@@ -111,6 +111,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@keyframes fadein2 {
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    100%   { opacity: 1; }
+}
+@keyframes fadein1 {
+    0% { opacity: 0; }
+    30% { opacity: 0; }
+    100%   { opacity: 1; }
+}
+@keyframes fadein3 {
+    0% { opacity: 0; }
+    100%   { opacity: 1; }
+}
+
 .alesis-slate {
     display         : flex;
     flex-direction  : column;
@@ -144,8 +159,9 @@ export default {
             position: relative;
 
             .phone {
-                position: absolute;
-                left: -29rem;
+                position : absolute;
+                left     : -29rem;
+                animation: fadein3 2s;
             }
         }
 
@@ -156,8 +172,12 @@ export default {
             position   : relative;
 
             .phone:first-child {
-                position: absolute;
-                left    : 21rem;
+                position : absolute;
+                left     : 21rem;
+                animation: fadein2 2s;
+            }
+            .phone:last-child {
+                animation: fadein1 2s;
             }
         }
 
