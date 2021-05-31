@@ -48,7 +48,7 @@
 			<p>是否小於薪資22倍：<?= ! is_null($data['total_repayment_enough']) ? $data['total_repayment_enough'] : '-'; ?></p>
 			<p>
 				<span>薪資22倍：<?= ! is_null($data['total_repayment']) ? $data['total_repayment'] : '-'; ?>千元</span>；
-				<span>訂約金額額度總額：<?= ! is_null($data['totalAmountQuota']) ? $data['totalAmountQuota'] : '-'; ?>千元</span>
+				<span>借款總餘額：<?= ! is_null($data['liabilities_totalAmount']) ? $data['liabilities_totalAmount'] : '-'; ?></span>
 			</p>
 		<?php
 		 }
@@ -104,7 +104,7 @@
 	<tr>
 	  <td>借款餘額(千元)</td>
 	  <td>
-		<p>借款餘額(千元)額度總額：<?= ! is_null($data['totalAmountQuota']) ? $data['totalAmountQuota'] : '-'; ?>(千元)</p>
+		<p>借款餘額(千元)額度總額：<?= ! is_null($data['balanceQuota']) ? $data['balanceQuota'] : '-'; ?>(千元)</p>
 		<p>助學貸款借款金額(千元)：<?= ! is_null($data['balanceStudentLoans']) ? $data['balanceStudentLoans'] : '-'; ?>(千元)</p>
 		<p>短期借款金額(千元)：<?= ! is_null($data['balanceShort']) ? $data['balanceShort'] : '-'; ?>(千元)</p>
 		<p>中期借款金額(千元)：<?= ! is_null($data['balanceMid']) ? $data['balanceMid'] : '-'; ?>(千元)</p>

@@ -827,7 +827,7 @@ class Joint_credit_lib{
 				$sub_content = $this->CI->regex->findPatternInBetween($content, $start_key, '信用卡戶帳款資料揭露期限');
 				$sub_content = isset($sub_content[0]) ? $sub_content[0] : '';
 				$res = $this->getCreditCardAccounts($sub_content);
-				$response = array_merge($response,$res);
+				$response = array_merge_recursive($response,$res);
 			}
 		}
 
