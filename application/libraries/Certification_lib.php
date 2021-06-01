@@ -620,6 +620,9 @@ class Certification_lib{
 			$certification_content['total_repayment_enough'] = '';
 			// 每月還款是否小於投保金額
 			$certification_content['monthly_repayment_enough'] = '';
+			// 負債比
+			$certification_content['debt_to_equity_ratio'] = 0;
+
 			if(isset($job_certification->content)){
 				if(! is_array($job_certification->content)){
 					$job_certification_content = json_decode($job_certification->content,true);
@@ -656,6 +659,10 @@ class Certification_lib{
 				// to do : 鎖三十天
 				// $certification_content['mail_file_status'] = 2;
 			}
+
+			// 負債比計算，投保薪資不能為0
+			if(intval($certification_content['monthly_repayment']))
+				$certification_content['debt_to_equity_ratio'] = round($result['totalMonthlyPayment'] / $certification_content['monthly_repayment'] * 100, 2);
 
 			$this->CI->user_certification_model->update($info->id, array(
                'status' => $status,

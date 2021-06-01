@@ -432,6 +432,7 @@ class Certification_data
 			'personId' => '',
 			'taxId' => '',
 			'liabilities_totalAmount'=>'',
+			'debt_to_equity_ratio'=> 0,
 			'liabilities_metaInfo'=>'',
 			'liabilities_badDebtInfo'=>'',
 			'creditCard_cardInfo'=>'',
@@ -484,6 +485,7 @@ class Certification_data
 			'creditLogCount' => '',
 			'cashAdvanced' => '無',
 			'delayLessMonth' => 0,
+			'delayMoreMonth' => 0,
 			'creditCardUseRate' => 0,
 			'S1Count' => 0,
 			'S2Count' => 0,
@@ -653,7 +655,7 @@ class Certification_data
 						if(preg_match('/.*遲延.*個月$|.*遲延.*個月以上$/',$value['previousPaymentStatus'])){
 							$res['creditCardHasDelay'] = '有';
 						}
-						if(preg_match('/逾期|催收|呆帳/',$value['previousPaymentStatus'])){
+						if(preg_match('/逾期|催收|呆帳/',$value['claimsStatus'])){
 							$res['creditCardHasBadDebt'] = '有';
 						}
 						$creditLogCountStatus = 0;
@@ -665,8 +667,11 @@ class Certification_data
 					}
 
 					// 延遲未滿一個月次數
+					$value['previousPaymentStatus'] = mb_convert_kana($value['previousPaymentStatus'], 'n');
 					if(preg_match('/遲延未滿1個月|遲延未滿１個月/',$value['previousPaymentStatus'])){
 						$res['delayLessMonth'] += 1;
+					}else if(preg_match('/遲延未滿[0-9]+個月|遲延[0-9]+個月以上/',$value['previousPaymentStatus'])){
+						$res['delayMoreMonth'] += 1;
 					}
 
 					// creditCardUseRate
