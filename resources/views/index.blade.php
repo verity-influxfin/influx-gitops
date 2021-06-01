@@ -100,6 +100,7 @@
                 <div class="item">關於我們</div>
                 <div class="item">小學堂金融科技</div>
                 <div class="item">了解更多</div>
+                <div class="item">平台公告</div>
                 <div class="item">下載APP</div>
                 <div class="item">
                     <div class="login">SIGN IN</div>
