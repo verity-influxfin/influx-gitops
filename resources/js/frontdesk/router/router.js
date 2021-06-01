@@ -1,5 +1,4 @@
-import index from "../pages/index";
-import collegeLoan from "../pages/collegeLoan";
+import collegeLoan from "../pages/collegeLoanx";
 import freshGraduateLoan from "../pages/freshGraduateLoan";
 import engineerLoan from "../pages/engineerLoan";
 import transfer from "../pages/transfer";
@@ -30,14 +29,14 @@ import myrepayment from '../pages/myrepayment';
 import feedback from '../pages/feedback';
 import event from '../pages/event';
 import bank from '../pages/bank';
-import borrow from '../pages/borrow';
-import invest from '../pages/invest';
 
-import workLoan from '../pages/workLoan';
-import myLoan from '../pages/myLoan';
-import faq from '../pages/faq';
-import risk from '../pages/risk';
-import projects from '../pages/projects';
+import index from "../pages/alesis-index";
+import borrow from '../pages/alesis-borrow';
+import invest from '../pages/alesis-invest';
+import faq from '../pages/alesis-faq';
+import risk from '../pages/alesis-risk';
+import projects from '../pages/alesis-projects';
+import workLoan from '../pages/alesis-workLoan';
 
 let routers = [
     { path: '*', redirect: '/index' },
