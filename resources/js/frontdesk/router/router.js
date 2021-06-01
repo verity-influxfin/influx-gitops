@@ -33,11 +33,24 @@ import bank from '../pages/bank';
 import borrow from '../pages/borrow';
 import invest from '../pages/invest';
 
+import workLoan from '../pages/workLoan';
+import myLoan from '../pages/myLoan';
+import faq from '../pages/faq';
+import risk from '../pages/risk';
+import projects from '../pages/projects';
+
 let routers = [
     { path: '*', redirect: '/index' },
     { path: '/index', component: index },
     { path: '/borrow', component: borrow },
+
+    { path: '/workLoan', component: workLoan },
     { path: '/collegeLoan', component: collegeLoan },
+    { path: '/faq', component: faq },
+    { path: '/risk', component: risk },
+    { path: '/projects', component: projects },
+
+
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
     { path: '/mobileLoan', component: mobileLoan },
     { path: '/engineerLoan', component: engineerLoan },
