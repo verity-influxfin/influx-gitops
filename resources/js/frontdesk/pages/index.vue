@@ -105,7 +105,7 @@
                 </div>
                 <div class="introduction">
                     <div class="showcase">
-                        <img class="image animate__animated" src="/images/借款額度-------.png" alt="">
+                        <img class="image animate__animated" src="/images/alesis-intro-phone.svg" alt="">
                     </div>
                     <div class="items">
                         <index-bullet class="item" image="/images/alesis-ift.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></index-bullet>
