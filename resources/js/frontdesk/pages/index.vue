@@ -1,43 +1,11 @@
 <template>
     <div class="index-wrapper">
-        <Splide class="banner" :options="bannerOptions" v-if="bannerData.length !== 0">
-        <SplideSlide class="puhey-banner">
-            <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
-            <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
-            <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
-            <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
-            <div class="content">
-                <p>最貼近年輕人的金融科技平台</p>
-                <span>普匯．你的手機ATM</span>
-                <div class="box">
-                    <a
-                        class="loan"
-                        href="/invest"
-                    ><img src="../asset/images/light-b.svg" class="img-fluid" />
-                    <div class="text">立即投資</div></a
-                    >
-                    <a
-                        class="borrow"
-                        href="/borrow"
-                    ><img src="../asset/images/light-y.svg" class="img-fluid" />
-                    <div class="text">立即借款</div></a
-                    >
-                </div>
-            </div>
-        </SplideSlide>
-        <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
-            <a :href="item.link" target="_blank">
-            <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
-            <img :src="`/upload/banner/${item.mobile}`" class="hidden-phone img-fluid" />
-            </a>
-        </SplideSlide>
-        </Splide>
-        <div class="banner" v-else>
+        <div class="banner">
             <div class="puhey-banner">
-                <img :src="'/images/index-banner-d.png'" class="hidden-desktop img-fluid" />
-                <img :src="'/images/index-banner-m.png'" class="hidden-phone img-fluid" />
-                <img :src="'/images/diagram-d.svg'" class="diagram hidden-desktop" />
-                <img :src="'/images/diagram-m.svg'" class="diagram hidden-phone" />
+                <img src="/images/index-banner-d.png" class="hidden-desktop img-fluid" />
+                <img src="/images/index-banner-m.png" class="hidden-phone img-fluid" />
+                <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
+                <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
                 <div class="content">
                     <p>最貼近年輕人的金融科技平台</p>
                     <span>普匯．你的手機ATM</span>
@@ -296,439 +264,139 @@
 import { Splide, SplideSlide } from "@splidejs/vue-splide";
 //
 import creditBoard from "../component/svg/creditBoardComponent";
-import float from "../component/floatComponent";
+import float       from "../component/floatComponent";
 // Alesis components
-import indexCounter from "../component/alesis/index/counter";
-import indexSection from "../component/alesis/index/section";
-import indexBullet from "../component/alesis/index/bullet";
-import indexMoon from "../component/alesis/index/moon";
-import indexPlan from "../component/alesis/index/plan";
-import indexHuman from "../component/alesis/index/human";
-import indexButton from "../component/alesis/index/button";
-import indexShanghai from "../component/alesis/index/shanghai";
+import indexCounter   from "../component/alesis/index/counter";
+import indexSection   from "../component/alesis/index/section";
+import indexBullet    from "../component/alesis/index/bullet";
+import indexMoon      from "../component/alesis/index/moon";
+import indexPlan      from "../component/alesis/index/plan";
+import indexHuman     from "../component/alesis/index/human";
+import indexButton    from "../component/alesis/index/button";
+import indexShanghai  from "../component/alesis/index/shanghai";
 import globalCarousel from "../component/alesis/global-carousel";
 
 export default {
-  components: {
-    float,
-    creditBoard,
-    Splide,
-    SplideSlide,
-
-    //
-    indexCounter,
-    indexSection,
-    indexBullet,
-    indexMoon,
-    indexPlan,
-    indexHuman,
-    indexButton,
-    indexShanghai,
-    globalCarousel
-  },
-  data: () => ({
-    amountCount: 5000,
-    rateCount: 5,
-    pmt: 0,
-    tweenedPmt: 0,
-    plans: [
-        {
-            header: "學生貸",
-            unready: false,
-            image: "/images/alesis-student-rotate.svg",
-            targets: [
-                "大學、碩博士在學生",
-                "20-35歲中華民國國民"
-            ],
-            action: "開始試算",
-            features: [
-                "Instagram / Dcard 大學生最推薦資金媒合平台",
-                "備妥雙證件即可，不打擾親友",
-                "額度高達12萬",
-                "3-24期分期方式選擇多元",
-                "隱私安全、全線上申請、無人照會",
-            ]
+    components: {
+        float,
+        creditBoard,
+        Splide,
+        SplideSlide,
+        //
+        indexCounter,
+        indexSection,
+        indexBullet,
+        indexMoon,
+        indexPlan,
+        indexHuman,
+        indexButton,
+        indexShanghai,
+        globalCarousel
+    },
+    data: () => ({
+        amountCount: 5000,
+        rateCount  : 5,
+        pmt        : 0,
+        tweenedPmt : 0,
+        plans      : [
+            {
+                header: "學生貸",
+                unready: false,
+                image: "/images/alesis-student-rotate.svg",
+                targets: [
+                    "大學、碩博士在學生",
+                    "20-35歲中華民國國民"
+                ],
+                action: "開始試算",
+                features: [
+                    "Instagram / Dcard 大學生最推薦資金媒合平台",
+                    "備妥雙證件即可，不打擾親友",
+                    "額度高達12萬",
+                    "3-24期分期方式選擇多元",
+                    "隱私安全、全線上申請、無人照會",
+                ]
+            },
+            {
+                header: "上班族貸",
+                unready: false,
+                image: "/images/alesis-work-rotate.svg",
+                targets: [
+                    "社會新鮮人、金融小白",
+                    "20-35歲中華民國國民"
+                ],
+                action: "開始試算",
+                features: [
+                    "超過200家上市櫃公司、千大企業員工最佳選擇",
+                    "申請紀錄不上聯徵，不影響未來銀行貸款額度",
+                    "可貸額度1萬-20萬",
+                    "3-24期分期方式選擇多元",
+                    "隱私安全、全線上申請、無人照會",
+                ]
+            },
+            {
+                header: "中小企業融資",
+                unready: false,
+                image: "/images/alesis-companies-rotate.svg",
+                targets: [],
+                action: "敬請期待",
+                features: [
+                    "信保微企貸",
+                    "申請速度最快，核准機率最高",
+                ]
+            },
+            {
+                header: "車輛融資",
+                unready: true,
+                image: "/images/alesis-car-rotate.svg",
+                targets: [],
+                action: "敬請期待",
+                features: []
+            }
+        ],
+        isForm: false,
+        period: 3
+    }),
+    created() {
+        $("title").text(`首頁 - inFlux普匯金融科技`);
+    },
+    mounted() {
+        document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
+    },
+    methods: {
+        updateCalculator(e) {
+            console.log(e)
+            this.pmt = e.pmt
+            switch (e.key) {
+                case 0:
+                    this.period = 3
+                    break
+                case 1:
+                    this.period = 6
+                    break
+                case 2:
+                    this.period = 12
+                    break
+                case 3:
+                    this.period = 18
+                    break
+                case 4:
+                    this.period = 24
+                    break
+            }
+            this.rateCount   = e.rateCount
+            this.amountCount = e.amountCount
         },
-        {
-            header: "上班族貸",
-            unready: false,
-            image: "/images/alesis-work-rotate.svg",
-            targets: [
-                "社會新鮮人、金融小白",
-                "20-35歲中華民國國民"
-            ],
-            action: "開始試算",
-            features: [
-                "超過200家上市櫃公司、千大企業員工最佳選擇",
-                "申請紀錄不上聯徵，不影響未來銀行貸款額度",
-                "可貸額度1萬-20萬",
-                "3-24期分期方式選擇多元",
-                "隱私安全、全線上申請、無人照會",
-            ]
+        format(data) {
+            data = parseInt(data);
+            if (!isNaN(data)) {
+                let l10nEN = new Intl.NumberFormat("en-US");
+                return l10nEN.format(data.toFixed(0));
+            }
+            return 0;
         },
-        {
-            header: "中小企業融資",
-            unready: false,
-            image: "/images/alesis-companies-rotate.svg",
-            targets: [],
-            action: "敬請期待",
-            features: [
-                "信保微企貸",
-                "申請速度最快，核准機率最高",
-            ]
-        },
-        {
-            header: "車輛融資",
-            unready: true,
-            image: "/images/alesis-car-rotate.svg",
-            targets: [],
-            action: "敬請期待",
-            features: []
-        }
-    ],
-    isForm: false,
-    isDesktop: window.innerWidth > 767 ? true : false,
-    load2: false,
-    load3: false,
-    routeIndex: {
-      start: 0,
-      end: 0,
     },
-    csKey: 0,
-    pmt: 0,
-    member: 0,
-    period: 3,
-    tweenedMember: 0,
-    transaction: 0,
-    tweenedtransaction: 0,
-    bannerData: [],
-    milestone: [],
-    routeData: [],
-    shares: [],
-    creditRatingItem: [
-      {
-        text: "實名認證",
-        img: "/images/icon_cert_rev2_identity.svg",
-        checked: true,
-      },
-      {
-        text: "社交帳號",
-        img: "/images/icon_cert_rev2_social.svg",
-        checked: false,
-      },
-      {
-        text: "電子信箱",
-        img: "/images/icon_cert_rev2_mail.svg",
-        checked: true,
-      },
-      {
-        text: "學生身分",
-        img: "/images/icon_cert_rev2_student.svg",
-        checked: true,
-      },
-      {
-        text: "最高學歷",
-        img: "/images/icon_cert_rev2_diploma.svg",
-        checked: false,
-      },
-      {
-        text: "工作認證",
-        img: "/images/icon_cert_rev2_worker.svg",
-        checked: false,
-      },
-    ],
-    services: [],
-    bannerOptions: {
-      type: "loop",
-      autoplay: true,
-      perPage: 1,
-      perMove: 1,
-      pagination: false,
-    },
-    avgOptions: {
-      type: "loop",
-      autoplay: false,
-      perPage: 3,
-      arrows: false,
-      pagination: false,
-      gap: "1.5rem",
-      breakpoints: {
-        767: { autoplay: false, perPage: 1 },
-      },
-    },
-    infoOptions: {
-      type: "loop",
-      autoplay: true,
-      arrows: true,
-      perPage: 3,
-      perMove: 1,
-      pagination: false,
-      gap: ".5rem",
-      breakpoints: {
-        767: { perPage: 1 },
-      },
-    },
-    productOptions: {
-      type: "loop",
-      autoplay: true,
-      direction: window.innerWidth > 767 ? "ltr" : "ttb",
-      height: window.innerWidth > 767 ? "auto" : 290,
-      drag: window.innerWidth > 767 ? true : false,
-      perPage: 2,
-      perMove: 1,
-      arrows: false,
-      pagination: false,
-      gap: "1rem",
-      breakpoints: {
-        767: { autoplay: true, perPage: 2 },
-      },
-    },
-    videoOptions: {
-      type: "loop",
-      autoplay: false,
-      perPage: 4,
-      perMove: 1,
-      arrows: false,
-      pagination: false,
-      gap: "1rem",
-      breakpoints: {
-        767: { autoplay: true, perPage: 1 },
-      },
-    },
-    csOptions: {
-      type: "loop",
-      autoplay: true,
-      perPage: 1,
-      perMove: 1,
-      speed: 200,
-      arrows: window.innerWidth > 767 ? false : true,
-      pagination: false,
-      gap: "1rem",
-    },
-  }),
-  computed: {
-    experiences() {
-      return this.$store.getters.ExperiencesData;
-    },
-    video() {
-      return this.$store.getters.VideoData.slice(0, 8);
-    },
-    knowledge() {
-      let $this = this;
-      $.each($this.$store.getters.KnowledgeData, (index, row) => {
-        $this.$store.getters.KnowledgeData[
-          index
-        ].post_content = `${row.post_content
-          .replace(/(<([^>]+)>)/gi, "")
-          .substr(0, 80)}...`;
-      });
-      return $this.$store.getters.KnowledgeData.slice(0, 8);
-    },
-    news() {
-      return this.$store.getters.NewsData.slice(0, 8);
-    },
-  },
-  created() {
-    this.getServiceData();
-    this.getMilestoneData();
-    this.getIndexBanner();
-    this.getCount();
-    $("title").text(`首頁 - inFlux普匯金融科技`);
-  },
-  mounted() {
-    AOS.init();
-    window.addEventListener("scroll", this.handleScroll, true);
-
-    document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
-  },
-  watch: {
-    "routeIndex.start"() {
-      this.routeData = [];
-      this.milestone.forEach((item, index) => {
-        if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
-          this.routeData.push(item);
-        }
-      });
-    },
-    news() {
-      this.$nextTick(() => {
-        this.$refs.news_slick.remount();
-      });
-    },
-    knowledge() {
-      this.$nextTick(() => {
-        this.$refs.knowledge_slick.remount();
-      });
-    },
-    video() {
-      this.$nextTick(() => {
-        this.$refs.video_slick.remount();
-      });
-    },
-  },
-  methods: {
-    updateCalculator(e) {
-      console.log(e)
-      this.pmt = e.pmt
-      switch (e.key) {
-        case 0:
-          this.period = 3
-          break
-        case 1:
-          this.period = 6
-          break
-        case 2:
-          this.period = 12
-          break
-        case 3:
-          this.period = 18
-          break
-        case 4:
-          this.period = 24
-          break
-      }
-      this.rateCount = e.rateCount
-      this.amountCount = e.amountCount
-    },
-    handleScroll() {
-      let gap = window.innerWidth > 767 ? 400 : 300;
-      if (
-        window.scrollY >= gap &&
-        this.tweenedMember === 0 &&
-        this.tweenedtransaction === 0
-      ) {
-        gsap.to(this.$data, { duration: 1, tweenedMember: this.member });
-        gsap.to(this.$data, {
-          duration: 1,
-          tweenedtransaction: this.transaction,
-        });
-      }
-
-      let gap2 = window.innerWidth > 767 ? 1000 : 750;
-      if (
-        !this.load2 &&
-        window.scrollY >= gap2 &&
-        this.knowledge.length === 0 &&
-        this.news.length === 0 &&
-        this.video.length === 0
-      ) {
-        this.$store.dispatch("getKnowledgeData");
-        this.$store.dispatch("getNewsData");
-        this.$store.dispatch("getVideoData", { category: "share" });
-        this.load2 = true;
-      }
-
-      let gap3 = window.innerWidth > 767 ? 800 : 600;
-      if (!this.load3 && window.scrollY >= gap3 && this.experiences.length === 0) {
-        this.$store.dispatch("getExperiencesData");
-        this.load3 = true;
-      }
-    },
-    format(data) {
-      data = parseInt(data);
-      if (!isNaN(data)) {
-        let l10nEN = new Intl.NumberFormat("en-US");
-        return l10nEN.format(data.toFixed(0));
-      }
-      return 0;
-    },
-    async getBannerPic() {
-      let res = await axios.get(`${location.origin}/getBannerPic`);
-      this.bannerPic = res.data;
-    },
-    async getCount() {
-      let res = await axios.get("getCount");
-
-      this.member = res.data[0].memberCount;
-      this.transaction = res.data[0].transactionCount;
-    },
-    getServiceData() {
-      axios.post(`${location.origin}/getServiceData`).then((res) => {
-        this.services = res.data;
-      });
-    },
-    async getIndexBanner() {
-      let res = await axios.post(`${location.origin}/getIndexBanner`);
-
-      this.bannerData = res.data;
-    },
-    async getMilestoneData() {
-      let res = await axios.post(`${location.origin}/getMilestoneData`);
-
-      this.milestone = res.data.reverse();
-
-      this.routeIndex.end = this.milestone.length - 1;
-      this.routeIndex.start =
-        window.innerWidth > 767 ? this.milestone.length - 6 : this.milestone.length - 4;
-
-      this.milestone.forEach((item, index) => {
-        if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
-          this.routeData.push(item);
-        }
-      });
-    },
-    changeCredit(index) {
-      this.count = 0;
-      this.creditRatingItem.forEach((item) => {
-        if (item.checked) {
-          this.count++;
-        }
-      });
-    },
-    reSlick() {
-      setTimeout(() => {
-        $("html").animate({ scrollTop: window.scrollY - 1 });
-      }, 300);
-    },
-    onMoved($event) {
-      this.csKey = $event.index;
-    },
-    pre() {
-      if (this.routeIndex.start > 0) {
-        this.routeIndex.start--;
-        this.routeIndex.end--;
-      }
-    },
-    next() {
-      if (this.routeIndex.end < this.milestone.length - 1) {
-        this.routeIndex.start++;
-        this.routeIndex.end++;
-      }
-    },
-    checkLogin() {
-      if(localStorage.getItem("flag") != "login"){
-        $("#loginModal").attr("data-type","cardgame");
-        $("p.nav-link.l").click();
-      }
-      else {
-        if(!this.process) {
-          this.process = true;
-          let data = {
-            user_id: localStorage.getItem("userData") ? JSON.parse(localStorage.getItem("userData"))["id"] : {},
-          };
-          axios
-              .post("/getData", data)
-              .then((res) => {
-                this.process = false;
-                if (!res.data) {
-                  location.replace('/cardgame');
-                } else {
-                  alert('您已參加過遊戲囉!!');
-                }
-              })
-              .catch((err) => {
-                console.error(err);
-              });
-        }else{
-          console.log('duplicate!!');
-        }
-      }
-    },
-  },
 };
 </script>
-
-
 
 <style lang="scss">
 .alesis-counters {
@@ -936,26 +604,6 @@ export default {
         max-width  : 1280px;
         margin     : 2rem auto 0;
     }
-
-    /*.carousel {
-        max-width  : 1280px;
-        margin     : 2rem auto 0;
-        display    : flex;
-        align-items: center;
-
-        .left {
-
-        }
-        .lightbox {
-            flex                 : 1;
-            display              : grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap                  : 2rem;
-        }
-        .right {
-
-        }
-    }*/
 }
 
 .alesis-news {
@@ -1050,27 +698,9 @@ export default {
 .index-wrapper {
     width: 100%;
 
-
     .banner {
         position: relative;
         overflow: hidden;
-
-        %arrow {
-            position : absolute;
-            z-index  : 1;
-            top      : 50%;
-            font-size: 27px;
-        }
-
-        .arrow-left {
-            @extend %arrow;
-            left: 10px;
-        }
-
-        .arrow-right {
-            @extend %arrow;
-            right: 10px;
-        }
 
         .puhey-banner {
             img {
