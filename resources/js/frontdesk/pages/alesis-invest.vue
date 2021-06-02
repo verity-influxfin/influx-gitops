@@ -113,33 +113,21 @@
                 </div>
             </index-section>
         </div>
-        <div class="alesis-app">
-            <div class="wrapper">
-                <div class="content">
-                    <a href="#!" class="button">立即投資</a>
-                    <div class="divider"></div>
-                    <div class="description">前往APP下載區 立即啟動服務</div>
-                    <div class="markets">
-                        <a href="#!" class="link"><img src="/images/alesis-app-store.svg" alt=""></a>
-                        <a href="#!" class="link"><img src="/images/alesis-google-play.svg" alt=""></a>
-                    </div>
-                </div>
-                <div class="demo">
-                    <img class="phone" src="/images/alesis-phone-lay.svg" alt="">
-                    <img class="edge" src="/images/alesis-outer-edge-phones.svg" alt="">
-                </div>
-            </div>
-        </div>
+
+        <!-- 應用程式推薦 -->
+        <alesis-application-recommendation></alesis-application-recommendation>
+        <!-- / 應用程式推薦 -->
     </div>
 </template>
 <script>
 //
-import indexSection   from "../component/alesis/index/section";
-import indexSymcard   from "../component/alesis/index/symcard";
-import indexHuman     from "../component/alesis/index/human";
-import indexButton    from "../component/alesis/index/button";
-import indexProject   from "../component/alesis/index/project";
-import globalCarousel from "../component/alesis/global-carousel";
+import indexSection                    from "../component/alesis/index/section";
+import indexSymcard                    from "../component/alesis/index/symcard";
+import indexHuman                      from "../component/alesis/index/human";
+import indexButton                     from "../component/alesis/index/button";
+import indexProject                    from "../component/alesis/index/project";
+import AlesisApplicationRecommendation from "../component/alesis/application-recommendation";
+import globalCarousel                  from "../component/alesis/global-carousel";
 
 export default {
     components: {
@@ -148,7 +136,8 @@ export default {
         indexHuman,
         indexProject,
         indexButton,
-        globalCarousel
+        globalCarousel,
+        AlesisApplicationRecommendation
     },
 };
 </script>
