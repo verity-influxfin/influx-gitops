@@ -89,9 +89,26 @@
         <!-- / 服務範圍廣 -->
 
         <!-- 為什麼選擇普匯 -->
-        <div class="alesis-">
+        <div class="alesis-why">
             <index-section header="為什麼選擇普匯">
-
+                <div class="items">
+                    <div class="item">
+                        <img class="image" src="/images/alesis-symbol-taiwan.svg" alt="">
+                        <div class="label">全台學生貸市佔量最高</div>
+                    </div>
+                    <div class="item">
+                        <img class="image" src="/images/alesis-symbol-dnd.svg" alt="">
+                        <div class="label">全程使用APP  無人打擾</div>
+                    </div>
+                    <div class="item">
+                        <img class="image" src="/images/alesis-symbol-cash.svg" alt="">
+                        <div class="label">放款不受休假限制</div>
+                    </div>
+                    <div class="item">
+                        <img class="image" src="/images/alesis-symbol-approve.svg" alt="">
+                        <div class="label">學生核貸率100%</div>
+                    </div>
+                </div>
             </index-section>
         </div>
         <!-- / 為什麼選擇普匯 -->
@@ -204,6 +221,33 @@ export default {
         display              : grid;
         max-width            : 1280px;
         margin               : 6rem auto 0;
+        grid-template-columns: repeat(4, 1fr);
+        align-items          : center;
+        justify-content      : center;
+
+        .item {
+            text-align: center;
+
+            .image {
+
+            }
+
+            .label {
+                margin-top : 1rem;
+                font-weight: bold;
+                color      : #112E53;
+                font-size  : 1.3rem;
+            }
+        }
+    }
+}
+
+
+.alesis-why {
+    .items {
+        display              : grid;
+        max-width            : 1280px;
+        margin               : 0 auto;
         grid-template-columns: repeat(4, 1fr);
         align-items          : center;
         justify-content      : center;
