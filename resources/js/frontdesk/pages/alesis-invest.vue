@@ -1,157 +1,155 @@
 <template>
-  <div class="index-wrapper">
-      <div class="alesis-slate">
-          <div class="wrapper">
-              <div class="header">
-                  <div class="text">普匯投資</div>
-              </div>
-              <div class="showcase">
-                  <img class="image" src="/images/直手機-14.png" alt="">
-              </div>
-          </div>
-      </div>
-      <div class="alesis-types">
-          <index-section header="債權種類">
-            <div class="items">
-                <div class="item">
-                    <div class="header">債權投資</div>
-                    <div class="divider"></div>
-                    <div class="features">
-                        <div class="feature">
-                            <span class="highlighted">自選債權：</span>
-                            優良債權　自由選擇
-                        </div>
-                        <div class="feature">
-                            <span class="highlighted">智能投資：</span>
-                            設定喜好　AI自動投標
-                        </div>
-                    </div>
+    <div class="index-wrapper">
+        <div class="alesis-slate">
+            <div class="wrapper">
+                <div class="header">
+                    <div class="text">普匯投資</div>
                 </div>
-                <div class="item">
-                    <div class="header">債權轉讓</div>
-                    <div class="divider"></div>
-                    <div class="features">
-                        <div class="feature -centered">
-                            轉讓債權　立即變現
-                        </div>
-                    </div>
+                <div class="showcase">
+                    <img class="image" src="/images/直手機-14.png" alt="">
                 </div>
             </div>
+        </div>
+        <div class="alesis-types">
+            <index-section header="債權種類">
+                <div class="items">
+                    <div class="item">
+                        <div class="header">債權投資</div>
+                        <div class="divider"></div>
+                        <div class="features">
+                            <div class="feature">
+                                <span class="highlighted">自選債權：</span>
+                                優良債權　自由選擇
+                            </div>
+                            <div class="feature">
+                                <span class="highlighted">智能投資：</span>
+                                設定喜好　AI自動投標
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">債權轉讓</div>
+                        <div class="divider"></div>
+                        <div class="features">
+                            <div class="feature -centered">
+                                轉讓債權　立即變現
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </index-section>
+        </div>
+        <div class="alesis-comparison" >
+            <index-section header="投資工具比一比" :secondary="true">
+                <div class="grid">
+                    <div class="A">
+                        <img src="/images/invest_chart_a.png" alt="">
+                    </div>
+                    <div class="B">
+                        <img src="/images/invest_chart_b.png" alt="">
+                    </div>
+                    <div class="C">
+                        <img src="/images/invest_chart_c.png" alt="">
+                    </div>
+                </div>
             </index-section>
-      </div>
-      <div class="alesis-comparison" >
-          <index-section header="投資工具比一比" :secondary="true">
-              <div class="grid">
-                  <div class="A">
-                      <img src="/images/invest_chart_a.png" alt="">
-                  </div>
-                  <div class="B">
-                       <img src="/images/invest_chart_b.png" alt="">
-                  </div>
-                  <div class="C">
-                       <img src="/images/invest_chart_c.png" alt="">
-                  </div>
-              </div>
-          </index-section>
-      </div>
-      <div class="alesis-report">
-          <index-section header="債權風險報告書">
-              <div class="wrapper">
-                  <div class="cover">
-                      <img class="image" src="/images/報告書.png" alt="">
-                  </div>
-                  <a class="more" href="#!"><index-button>查看更多</index-button></a>
-              </div>
+        </div>
+        <div class="alesis-report">
+            <index-section header="債權風險報告書">
+                <div class="wrapper">
+                    <div class="cover">
+                        <img class="image" src="/images/報告書.png" alt="">
+                    </div>
+                    <a class="more" href="#!"><index-button>查看更多</index-button></a>
+                </div>
 
-          </index-section>
-      </div>
-      <div class="alesis-projects" >
-          <index-section header="現有案件" :secondary="true">
-              <div class="wrapper">
-                  <div class="header">優質項目專區</div>
-                  <global-carousel>
-                    <div class="set">
-                        <div class="item">
-                            <index-project></index-project>
+            </index-section>
+        </div>
+        <div class="alesis-projects" >
+            <index-section header="現有案件" :secondary="true">
+                <div class="wrapper">
+                    <div class="header">優質項目專區</div>
+                    <global-carousel>
+                        <div class="set">
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
                         </div>
-                        <div class="item">
-                            <index-project></index-project>
+                        <div class="set">
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
                         </div>
+                    </global-carousel>
+                </div>
+            </index-section>
+            <index-section>
+                <div class="wrapper">
+                    <div class="header -fast">快速變現專區</div>
+                    <global-carousel>
+                        <div class="set">
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
+                        </div>
+                        <div class="set">
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
+                            <div class="item">
+                                <index-project></index-project>
+                            </div>
+                        </div>
+                    </global-carousel>
+                </div>
+            </index-section>
+        </div>
+        <div class="alesis-app">
+            <div class="wrapper">
+                <div class="content">
+                    <a href="#!" class="button">立即投資</a>
+                    <div class="divider"></div>
+                    <div class="description">前往APP下載區 立即啟動服務</div>
+                    <div class="markets">
+                        <a href="#!" class="link"><img src="/images/alesis-app-store.svg" alt=""></a>
+                        <a href="#!" class="link"><img src="/images/alesis-google-play.svg" alt=""></a>
                     </div>
-                    <div class="set">
-                        <div class="item">
-                            <index-project></index-project>
-                        </div>
-                        <div class="item">
-                            <index-project></index-project>
-                        </div>
-                    </div>
-                </global-carousel>
-              </div>
-          </index-section>
-          <index-section>
-              <div class="wrapper">
-                  <div class="header -fast">快速變現專區</div>
-                  <global-carousel>
-                    <div class="set">
-                        <div class="item">
-                            <index-project></index-project>
-                        </div>
-                        <div class="item">
-                            <index-project></index-project>
-                        </div>
-                    </div>
-                    <div class="set">
-                        <div class="item">
-                            <index-project></index-project>
-                        </div>
-                        <div class="item">
-                            <index-project></index-project>
-                        </div>
-                    </div>
-                </global-carousel>
-              </div>
-          </index-section>
-      </div>
-      <div class="alesis-app">
-          <div class="wrapper">
-              <div class="content">
-                  <a href="#!" class="button">立即投資</a>
-                  <div class="divider"></div>
-                  <div class="description">前往APP下載區 立即啟動服務</div>
-                  <div class="markets">
-                      <a href="#!" class="link"><img src="/images/alesis-app-store.svg" alt=""></a>
-                      <a href="#!" class="link"><img src="/images/alesis-google-play.svg" alt=""></a>
-                  </div>
-              </div>
-              <div class="demo">
-                  <img class="phone" src="/images/alesis-phone-lay.svg" alt="">
-                  <img class="edge" src="/images/alesis-outer-edge-phones.svg" alt="">
-              </div>
-          </div>
-      </div>
-  </div>
+                </div>
+                <div class="demo">
+                    <img class="phone" src="/images/alesis-phone-lay.svg" alt="">
+                    <img class="edge" src="/images/alesis-outer-edge-phones.svg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 <script>
 //
-import indexSection from "../component/alesis/index/section";
-import indexSymcard from "../component/alesis/index/symcard";
-import indexHuman from "../component/alesis/index/human";
-import indexButton from "../component/alesis/index/button";
-import indexProject from "../component/alesis/index/project";
+import indexSection   from "../component/alesis/index/section";
+import indexSymcard   from "../component/alesis/index/symcard";
+import indexHuman     from "../component/alesis/index/human";
+import indexButton    from "../component/alesis/index/button";
+import indexProject   from "../component/alesis/index/project";
 import globalCarousel from "../component/alesis/global-carousel";
 
 export default {
-  components: {
-    indexSection,
-    indexSymcard,
-    indexHuman,
-    indexProject,
-    indexButton,
-    globalCarousel
-  },
-  data: () => {
-  },
+    components: {
+        indexSection,
+        indexSymcard,
+        indexHuman,
+        indexProject,
+        indexButton,
+        globalCarousel
+    },
 };
 </script>
 
@@ -165,19 +163,6 @@ export default {
         align-items: center;
         position   : relative;
         padding-top: 4rem;
-
-        /*&:before {
-            content         : ' ';
-            display         : block;
-            position        : absolute;
-            left            : 0;
-            top             : 0;
-            width           : 100%;
-            height          : 100%;
-            opacity         : 0.6;
-            background-image: url("/images/未命名-3.png");
-            background-size : cover;
-        }*/
 
         .header {
             flex      : 1;
