@@ -1,4 +1,3 @@
-import collegeLoan from "../pages/collegeLoanx";
 import freshGraduateLoan from "../pages/freshGraduateLoan";
 import engineerLoan from "../pages/engineerLoan";
 import transfer from "../pages/transfer";
@@ -37,6 +36,7 @@ import faq from '../pages/alesis-faq';
 import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
+import collegeLoan from "../pages/alesis-collegeLoan";
 
 let routers = [
     { path: '*', redirect: '/index' },
