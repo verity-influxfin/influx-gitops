@@ -1,5 +1,5 @@
 <template>
-    <div class="section" :class="{'-secondary': secondary, '-multiline': multiline !== undefined, '-outlined': outlined, '-outlined-multiline': outlinedMulti}">
+    <div class="section" :class="{'-secondary': secondary, '-multiline': multiline !== undefined, '-outlined': outlined, '-outlined-multiline': outlinedMulti, '-description-multiline': descriptionMulti}">
         <div class="header" v-if="header">
             <div class="before-dots">
                 <div class="dot"></div>
@@ -36,6 +36,7 @@ export default {
         outlined : false,
         nospace  : false,
         outlinedMulti: false,
+        descriptionMulti: false,
     },
 };
 </script>
@@ -64,6 +65,8 @@ export default {
     }
 
 
+
+
     &.-multiline {
         .header {
             transform: translate(-50%, -20%);
@@ -77,6 +80,25 @@ export default {
         }
     }
 
+    &.-description-multiline {
+        .header {
+            transform: translate(-50%, -15%);
+
+            .text {
+                .multiline {
+                    font-size  : 1.5rem;
+                    white-space: pre;
+                    line-height: 1.7;
+                }
+            }
+            .before-dots {
+                bottom: 8.5rem;
+            }
+            .after-dots {
+                top: 9rem;
+            }
+        }
+    }
 
     &.-outlined-multiline {
         .header {
