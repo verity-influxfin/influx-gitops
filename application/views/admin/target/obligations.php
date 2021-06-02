@@ -108,6 +108,12 @@
                         <input id="amortization_schedule" type="hidden" name="ids"/>
                     </form>
 
+                    <form action="<?= admin_url('transfer/assets_export_new') ?>" method="post"
+                          style="display: inline-block">
+                        <input type="submit" class="btn btn-danger float-right" value="全債權明細表(New)"/>
+                        <input id="assets_export_new" type="hidden" name="ids"/>
+                    </form>
+
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
