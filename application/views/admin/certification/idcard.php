@@ -373,7 +373,8 @@
                                                 <label>生日：</label><?=isset($remark["OCR"]["birthday"])&&$remark["OCR"]["birthday"]!=''?"".$remark["OCR"]["birthday"]:"";?><br>
                                                 <label>換發日期：</label><?=isset($remark["OCR"]["id_card_date"])&&$remark["OCR"]["id_card_date"]!=''?"".$remark["OCR"]["id_card_date"]:"";?><br>
                                                 <label>換發地區：</label><?=isset($remark["OCR"]["id_card_place"])&&$remark["OCR"]["id_card_place"]!=''?"".$remark["OCR"]["id_card_place"]:"";?><br>
-                                                <label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?"".$remark["OCR"]["id_number"]:"";?><br>
+												<label>發證方式：</label><?=isset($remark["OCR"]["issueType"])&&$remark["OCR"]["issueType"]!=''?"".$remark["OCR"]["issueType"]:"";?><br>
+												<label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?"".$remark["OCR"]["id_number"]:"";?><br>
                                             </td></tr>
                                     </table>
                                 </div>

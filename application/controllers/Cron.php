@@ -210,9 +210,10 @@ class Cron extends CI_Controller {
 						'sys_check' => 1,
 					];
 					$reviewStatus = 3;
-					if ( !$tmpRs['ocrCheckFailed'] && $tmpRs['remark']['error'] == '' && !$tmpRs['ocrCheckFailed'])
+					if (!$tmpRs['ocrCheckFailed'] && $tmpRs['remark']['error'] == '' && !$tmpRs['ocrCheckFailed']) {
+						unset($param['status']);
 						$reviewStatus = 1;
-
+					}
 					if ($tmpRs['risVerified'] && $tmpRs['risVerificationFailed']) {
 						$param = [
 							'remark' => json_encode($tmpRs['remark']),
@@ -232,8 +233,8 @@ class Cron extends CI_Controller {
 			array_map(function ($data) {
 				if($data['reviewStatus'] == 2)
 					$this->certification_lib->set_failed_for_recheck($data['cer_id'], '', true);
-				if($data['reviewStatus'] == 2 || $data['reviewStatus'] == 3)
-					$this->user_certification_model->update($data['cer_id'], $data['param']);
+
+				$this->user_certification_model->update($data['cer_id'], $data['param']);
 
 			}, $pendingUpdateData);
 

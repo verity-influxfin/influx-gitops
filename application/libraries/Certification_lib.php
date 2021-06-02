@@ -265,6 +265,10 @@ class Certification_lib{
 
 		$person_count = count($person_face);
 		$front_count = count($front_face);
+		$remark['face_count'] = [
+			'person_count' => $person_count,
+			'front_count' => $front_count
+		];
 
 		//嘗試轉向找人臉
 		if ($person_count == 0) {
@@ -324,6 +328,7 @@ class Certification_lib{
 		}
 
 		if(count($imageLogs) != count($imageIdTable)) {
+			$returnData['content'] = $content;
 			$returnData['remark']['error'] = '使用者的圖片資料不足'.count($imageIdTable).'筆，無法進行實名驗證<br/>';
 			return $returnData;
 		}
@@ -331,6 +336,7 @@ class Certification_lib{
 			return !empty(@file_get_contents($img->url));
 		});
 		if(count($availableImage) != count($imageUrlTable)) {
+			$returnData['content'] = $content;
 			$returnData['remark']['error'] = '使用者的圖片無法取得'.(count($imageUrlTable)-count($availableImage)).'筆，無法進行實名驗證<br/>';
 			return $returnData;
 		}
@@ -380,6 +386,7 @@ class Certification_lib{
 		if (count(array_filter($ocrResult, function ($ele) {
 			return $ele === null;
 		}))) {
+			$returnData['content'] = $content;
 			$returnData['remark']['error'] = 'OCR沒有在正常時間內回應，無法進行實名驗證<br/>';
 			return $returnData;
 		}
@@ -469,6 +476,9 @@ class Certification_lib{
 			$remark['faceplus'] = $answer;
 			$remark['faceplus_data'] = $faceplus_data;
 
+			if ($answer[1] < 80)
+				$msg .= '[Face++]「身分證正面照」與「持證自拍照證件」未滿 80% 相似度<br/>';
+
 			// 依照發證至今的年數決定臉部識別相似度需多高
 			$faceCompareSimilarityByYear = [2 => 80, 5 => 65, 9999 => 60];
 			$parsedIssueDate = false;
@@ -482,16 +492,16 @@ class Certification_lib{
 					foreach ($faceCompareSimilarityByYear as $year => $similarity) {
 						if ($diffDate->y < $year) {
 							if ($answer[0] < $similarity)
-								$msg .= 'Face++人臉比對分數不足<br/>';
+								$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 '.$similarity.'% 相似度(持證未滿'.$year.'年)<br/>';
 							break;
 						}
 					}
 				}
 			}
 			if (!$parsedIssueDate)
-				$msg .= '系統無法解析身分證正面的發證日期<br/>';
+				$msg .= '[Face++]系統無法解析身分證正面的發證日期<br/>';
 		} else {
-			$msg .= 'Face++人臉數量不足<br/>';
+			$msg .= '[Face++]人臉數量不足<br/>';
 		}
 
 		// Face8
@@ -571,10 +581,12 @@ class Certification_lib{
 						$param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
 
 						$risVerified = true;
-						if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] == 1) {
-							$risVerificationFailed = false;
-						} else {
+						if (in_array($result['response']['response']['rowData']['responseData']['checkIdCardApply'], [2,3,4])) {
 							$risVerificationFailed = true;
+						} else {
+							if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1)
+								$msg .= $param['checkIdCardApplyFormat']."<br/>";
+							$risVerificationFailed = false;
 						}
 					}
 
