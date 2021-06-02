@@ -201,6 +201,23 @@ class Transfer extends MY_Admin_Controller
 		$this->load->view('admin/_footer');
 	}
 
+  public function assets_export_new()
+  {
+      $this->load->library('sisyphus/assets_report_lib');
+      $assets_report = $this->assets_report_lib->getAssetsReport();
+
+      if ($assets_report){
+          $file_name = 'assets_'.date('Ymd-His').'.xlsx';
+          force_download($file_name, $assets_report);
+
+      }else{
+          echo '<script type="text/javascript"> alert("撈取失敗，請洽工程師\nError: get assets report failed (sisyphus)");
+          window.location.href="obligations";
+          </script>';
+      }
+
+  }
+
     public function assets_export()
     {
         $post = $this->input->post(NULL, TRUE);
