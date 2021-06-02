@@ -91,46 +91,44 @@
 
 <script>
 //
-import indexSection from "../component/alesis/index/section";
-import indexSymcard from "../component/alesis/index/symcard";
-import indexHuman from "../component/alesis/index/human";
-import indexShanghai from "../component/alesis/index/shanghai";
+import indexSection   from "../component/alesis/index/section";
+import indexSymcard   from "../component/alesis/index/symcard";
+import indexHuman     from "../component/alesis/index/human";
+import indexShanghai  from "../component/alesis/index/shanghai";
 import globalCarousel from "../component/alesis/global-carousel";
 
 export default {
-  components: {
-    indexSection,
-    indexSymcard,
-    indexHuman,
-    indexShanghai,
-    globalCarousel
-  },
-  mounted() {
-      document.querySelectorAll(".symcard").forEach((v, i) => {
-        setTimeout(() => {
-            v.classList.add("animate__flipInY")
-        }, 300 * i)
-      })
-  },
-  data: () => {
-  },
+    components: {
+        indexSection,
+        indexSymcard,
+        indexHuman,
+        indexShanghai,
+        globalCarousel
+    },
+    mounted() {
+        document.querySelectorAll(".symcard").forEach((v, i) => {
+            setTimeout(() => {
+                v.classList.add("animate__flipInY")
+            }, 300 * i)
+        })
+    },
 };
 </script>
 
 <style lang="scss" scoped>
 @keyframes fadein2 {
-    0% { opacity: 0; }
-    50% { opacity: 0; }
-    100%   { opacity: 1; }
+    0%   { opacity: 0; }
+    50%  { opacity: 0; }
+    100% { opacity: 1; }
 }
 @keyframes fadein1 {
-    0% { opacity: 0; }
-    30% { opacity: 0; }
-    100%   { opacity: 1; }
+    0%   { opacity: 0; }
+    30%  { opacity: 0; }
+    100% { opacity: 1; }
 }
 @keyframes fadein3 {
-    0% { opacity: 0; }
-    100%   { opacity: 1; }
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 .alesis-slate {
