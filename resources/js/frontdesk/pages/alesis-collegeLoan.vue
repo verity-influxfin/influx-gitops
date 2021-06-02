@@ -124,7 +124,40 @@
         <!-- 案例分享 -->
         <div class="alesis-">
             <index-section header="案例分享 / 用戶分享" :outlined="true">
-
+                <global-carousel>
+                    <div class="set">
+                        <div class="item">
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
+                        </div>
+                        <div class="item">
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
+                        </div>
+                    </div>
+                    <div class="set">
+                        <div class="item">
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
+                        </div>
+                        <div class="item">
+                            <index-human>
+                                <div slot="video">
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </index-human>
+                        </div>
+                    </div>
+                </global-carousel>
             </index-section>
         </div>
         <!-- / 案例分享 -->
