@@ -1,16 +1,11 @@
 <template>
     <div class="alesis-loan-header">
         <div class="background">
-            <img src="/images/sshot-1691.png" class="image">
+            <img :src="image" class="image">
         </div>
         <div class="mask">
-            <div class="header">學生貸</div>
-            <div class="content">
-                快速、安全、隱私<br>
-                最受學生信賴的線上借貸平台！<br>
-                最高額度12萬、最低利率5%<br>
-                幫助年輕人完成夢想！
-            </div>
+            <div class="header">{{ header }}</div>
+            <div class="content" v-html="content"></div>
             <div class="action">
                 <a href="#!" class="item">立即借款 &gt;</a>
             </div>
@@ -20,18 +15,24 @@
 
 <script>
 export default {
-    name: "LoanHeader"
+    name : "LoanHeader",
+    props: {
+        header : "",
+        content: "",
+        image  : "",
+    }
 };
 </script>
 
 <style lang="scss" scoped>
 .alesis-loan-header {
     position: relative;
+    height  : 33rem;
 
     .background {
         position: absolute;
         top     : 0;
-        left    : 0;
+        left    : 10rem;
         right   : 0;
         bottom  : 0;
 
@@ -52,7 +53,8 @@ export default {
         padding          : 7rem 1rem 5rem;
         background-size  : contain;
         background-repeat: no-repeat;
-        min-width        : 1315px;
+        min-width        : 1485px;
+        height           : 100%;
 
         .header {
             font-size  : 2.2rem;
@@ -63,6 +65,7 @@ export default {
         .content {
             margin-top : 1rem;
             line-height: 1.8;
+            font-size  : 1.3rem;
         }
 
         .action {
