@@ -243,24 +243,25 @@ class Certification_lib{
 		);
 		$returnData = [
 			'remark'=>['error'=>[], 'OCR'=>[]],
-			'content'=>[],
+			'content'=>$info->content,
 			'risVerified'=> False,
 			'risVerificationFailed'=> False,
 			'ocrCheckFailed'=> False,
 		];
 		$content = json_decode($info->content, true);
-		if(!is_array($content)) {
+		if(!is_array($content) || empty($content)) {
 			$returnData['remark']['error'] = '使用者資料解析發生錯誤<br/>';
 			return $returnData;
 		}
+		$returnData['content'] = $content;
 
 		$this->CI->load->library('Scan_lib');
 		$this->CI->load->library('Compare_lib');
 		$this->CI->load->library('Azure_lib');
 		$this->CI->load->library('Faceplusplus_lib');
 
-		$person_face = $this->CI->azure_lib->detect($content['person_image'], $user_id, $cer_id);
-		$front_face = $this->CI->azure_lib->detect($content['front_image'], $user_id, $cer_id);
+		$person_face = $this->CI->azure_lib->detect(isset($content['person_image'])?$content['person_image']:'', $user_id, $cer_id);
+		$front_face = $this->CI->azure_lib->detect(isset($content['front_image'])?$content['front_image']:'', $user_id, $cer_id);
 		//$healthcard_face   = $this->CI->azure_lib->detect($content['healthcard_image'],$user_id);
 
 		$person_count = count($person_face);
@@ -327,7 +328,7 @@ class Certification_lib{
 			}
 		}
 
-		if(count($imageLogs) != count($imageIdTable)) {
+		if(count(array_filter($imageLogs)) != count($imageIdTable)) {
 			$returnData['content'] = $content;
 			$returnData['remark']['error'] = '使用者的圖片資料不足'.count($imageIdTable).'筆，無法進行實名驗證<br/>';
 			return $returnData;
@@ -534,6 +535,17 @@ class Certification_lib{
 			$msg .= '[face8]系統判定人臉數量不正確，可能有陰影或其他因素<br/>';
 		}
 
+		// 比對健保卡與身分證的資料是否相符
+		$sameDataCheckList = ['healthcard_name' => 'name', 'healthcard_id_number' => 'id_number', 'healthcard_birthday' => 'birthday'];
+		if (count(array_filter($sameDataCheckList, function ($v, $k) use ($content, $ocr) {
+				if (isset($content[$k]))
+					return $content[$k] && isset($content[$v]) && $content[$k] == $content[$v];
+				else
+					return isset($ocr[$k]) && isset($content[$v]) && $ocr[$k] == $content[$v];
+			}, ARRAY_FILTER_USE_BOTH)) != count($sameDataCheckList)) {
+			$msg .= '健保卡與身分證的資料不符<br/>';
+		}
+
 		// 勾稽戶役政 API
 		$risVerified = false;
 		$risVerificationFailed = true;
@@ -597,16 +609,6 @@ class Certification_lib{
 				$content['id_card_api'] = 'no response';
 			}
 		}
-
-		// 比對健保卡與身分證的資料是否相符
-		$sameDataCheckList = ['healthcard_name' => 'name', 'healthcard_id_number' => 'id_number', 'healthcard_birthday' => 'birthday'];
-		if (count(array_filter($sameDataCheckList, function ($v, $k) use ($content, $ocr) {
-				if (isset($content[$k]))
-					return $content[$k] && isset($content[$v]) && $content[$k] == $content[$v];
-				else
-					return isset($ocr[$k]) && isset($content[$v]) && $ocr[$k] == $content[$v];
-			}, ARRAY_FILTER_USE_BOTH)) != count($sameDataCheckList))
-			$msg .= '健保卡與身分證的資料不符<br/>';
 
 		$remark['error'] = $msg;
 		$remark['OCR']   = $ocr;
