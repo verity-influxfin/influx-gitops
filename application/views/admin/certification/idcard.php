@@ -396,7 +396,6 @@
                                                 <label>出生地：</label><?=isset($remark["OCR"]["born"])&&$remark["OCR"]["born"]!='' ? $remark["OCR"]["born"].'<br>': '' ;?><br>
                                                 <label>住址：</label><?=isset($remark["OCR"]["address"])&&$remark["OCR"]["address"]!='' ? $remark["OCR"]["address"].'<br>': '' ;?><br>
                                                 <label>綠色號碼：</label><?=isset($remark["OCR"]["gnumber"])&&$remark["OCR"]["gnumber"]!='' ? $remark["OCR"]["gnumber"].'<br>': '' ;?><br>
-                                                <label>膠膜號碼：</label><?=isset($remark["OCR"]["film_number"])&&$remark["OCR"]["film_number"]!='' ? $remark["OCR"]["film_number"]: '' ; ?><br>
                                             </td>
                                         </tr>
                                     </table>
