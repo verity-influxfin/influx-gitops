@@ -984,7 +984,7 @@ class Labor_insurance_lib
 
 		// 表格內容
 		$all_page_array =[];
-		$text_of_page_array = array_filter(preg_split('/共.*[0-9]*頁/',$text));
+		$text_of_page_array = array_filter(preg_split('/共(\s+)?[0-9](\s)?頁/',$text));
 		// 切頁
 		if($text_of_page_array){
 			$page_array = [];
@@ -1030,9 +1030,13 @@ class Labor_insurance_lib
 					}
 				}
 				$page_array = array_values(array_filter($info_array));
-				// print_r($page_array);exit;
+
 				foreach($page_array as $key1=> $value1){
 					// 切單欄資訊內容
+					// 去除公司名稱中間空白符號
+                    if(preg_match('/(.*[^\w\s]+)\s+([^\w\s]+.*)/',$value1,$matches)){
+                        $value1 = $matches[1].$matches[2];
+                    }
 					$value1 = preg_replace('/\n/','',$value1);
 					$page_array[$key1] = preg_split('/\s/',$value1);
 
@@ -1043,7 +1047,7 @@ class Labor_insurance_lib
 					if($page_array[$key1] && count($page_array[$key1]) >3){
 						$response['pageList'][$key]['insuranceList'][$key1]['insuranceId'] = isset($page_array[$key1][0]) ? preg_replace('/\s/','',$page_array[$key1][0]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['companyName'] = isset($page_array[$key1][1]) ? preg_replace('/\s/','',$page_array[$key1][1]) : '';
-						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = isset($page_array[$key1][2]) ? preg_replace('/\s/','',$page_array[$key1][2]) : '';
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = isset($page_array[$key1][2]) ? preg_replace('/\s|,/','',$page_array[$key1][2]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['startDate'] = isset($page_array[$key1][3]) ? preg_replace('/\s/','',$page_array[$key1][3]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = '';
 						if(isset($page_array[$key1][4])){
@@ -1054,7 +1058,14 @@ class Labor_insurance_lib
 							}
 						}
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = isset($page_array[$key1][5]) ? preg_replace('/\s/','',$page_array[$key1][5]) : '';
-					}
+					}else{
+                        $response['pageList'][$key]['insuranceList'][$key1]['insuranceId'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['companyName'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['startDate'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = '';
+                    }
 				}
 			}
 		}
