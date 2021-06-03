@@ -50,7 +50,7 @@ export default {
     }
 
     &.-outlined {
-        .header {
+        > .header {
             border       : 1px solid #1a5fa2;
             padding      : 5px;
             border-radius: 7px;
@@ -68,7 +68,7 @@ export default {
 
 
     &.-multiline {
-        .header {
+        > .header {
             transform: translate(-50%, -20%);
 
             .before-dots {
@@ -81,7 +81,7 @@ export default {
     }
 
     &.-description-multiline {
-        .header {
+        > .header {
             transform: translate(-50%, -15%);
 
             .text {
@@ -101,7 +101,7 @@ export default {
     }
 
     &.-outlined-multiline {
-        .header {
+        > .header {
             .text {
                 .multiline {
                     border       : 1px solid #1a5fa2;
