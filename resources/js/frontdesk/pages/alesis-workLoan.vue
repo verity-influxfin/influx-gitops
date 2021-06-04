@@ -43,7 +43,81 @@
         <!-- 申貸流程 -->
         <div class="alesis-flow">
             <index-section header="申貸流程" :secondary="true">
+                <global-carousel>
+                    <!-- Step 1 -->
+                    <div class="set">
+                        <div class="item">
+                            <div class="step-1">
+                                <div class="left"></div>
+                                <div class="center"></div>
+                                <div class="right">
+                                    <div class="header">Step 1.：</div>
+                                    <div class="content">
+                                        下載「普匯influx」APP<br>
+                                        註冊會員<br>
+                                        申請「上班族貸」<br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Step 1 -->
 
+                    <!-- Step 2 -->
+                    <div class="set">
+                        <div class="item">
+                            <div class="step-2">
+                                <div class="left">
+                                    <div class="phones">
+                                        <img src="" class="image">
+                                        <img src="" class="image">
+                                    </div>
+                                    <div class="section">
+                                        <div class="header">工作證明</div>
+                                        <div class="divider"></div>
+                                        <div class="paragraph">
+                                            <div class="label">方法 1</div>
+                                            <div class="box">自然人憑證</div>
+                                        </div>
+                                        <div class="content">至各縣市勞動部申請 : 申請後請拍照上傳至APP內</div>
+                                    </div>
+                                </div>
+                                <div class="right">
+                                    <div class="header">Step 2.：</div>
+                                    <div class="content">
+                                        選擇申請金額、期數<br>
+                                        完成實名認證<br>
+                                        上傳申貸資料<br>
+                                    </div>
+                                    <br><br>
+                                    <div class="header">需提供資料：</div>
+                                    <div class="content">
+                                        近一個月勞保異動明細　<a href="#!" class="help">如何申請？</a>
+                                        近一個月信用報告　<a href="#!" class="help">如何申請？</a>
+                                        學歷證明（畢業證書）
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Step 2 -->
+
+                    <!-- Step 3 -->
+                    <div class="set">
+                        <div class="item">
+
+                        </div>
+                    </div>
+                    <!-- / Step 3 -->
+
+                    <!-- Step 4 -->
+                    <div class="set">
+                        <div class="item">
+
+                        </div>
+                    </div>
+                    <!-- / Step 4 -->
+                </global-carousel>
             </index-section>
         </div>
         <!-- / 申貸流程 -->
