@@ -14,6 +14,7 @@ class Credit_lib{
 		$this->CI->config->load('school_points',TRUE);
 		$this->CI->config->load('credit',TRUE);
 		$this->credit = $this->CI->config->item('credit');
+		$this->platform = $this->CI->config->item('platform');
 		$this->scoreHistory = [];
     }
 	
@@ -230,9 +231,11 @@ class Credit_lib{
             }
         }
         $param['expire_time'] = $expire_time;
-//        $param['scoreHistory'] = $this->scoreHistory;
+//      $param['scoreHistory'] = $this->scoreHistory;
+		$param['amount'] = min($this->platform['product_list'][$product_id]['loan_range_e'], $param['amount']);
 
-        if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
+
+		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
         }
 
@@ -336,33 +339,26 @@ class Credit_lib{
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
                     $salary = isset($data['job_salary']) ? intval($data['job_salary']) : 0;
                     $param['amount'] = $salary * $value['rate'];
-                    if ($stage_cer != 0) {
-                        if ($stage_cer == 3) {
-                            $param['amount'] = $salary * ($value['rate'] >= 1 ? 1 : $value['rate']);
-                            $value['rate'] == 0 ? $param['amount'] = 5000 : '';
-                        } elseif ($stage_cer == 4) {
-                            $param['amount'] = $salary * ($value['rate'] >= 2 ? 2 : $value['rate']);
-                            $value['rate'] == 0 ? $param['amount'] = 5000 : '';
-                        } else {
-                            $param['amount'] = $stage_cer == 1 ? 3000 : 5000;
-                        }
-                    }
                     break;
                 }
             }
         }
-        $param['amount'] = $param['amount'] > 200000 ? 200000 : $param['amount'];
+
         if($stage_cer != 0) {
             $expire_time = strtotime('+1 days', $time);
         }else{
-            $param['amount'] = $param['amount'] < 20000 ? 0 : $param['amount'];
+        	// 低於最小放款額度時則不予授信
+            $param['amount'] = $param['amount'] < intval($this->platform['product_list'][$product_id]['loan_range_s']) ? 0 : $param['amount'];
         }
         $param['expire_time'] = $expire_time;
 
-        if (!$stage_cer && intval($data['job_salary']) <= 35000) {
-            $job_salary = intval($data['job_salary']) * 2;
-            $param['amount'] = $param['amount'] > $job_salary ? $job_salary : $param['amount'];
+        // 月薪低於特定值，不能超過特定倍數的額度
+        if (!$stage_cer && intval($data['job_salary']) <= $this->platform['product_list'][$product_id]['condition_rate']['salary_below']) {
+			$job_salary = intval($data['job_salary']) * $this->platform['product_list'][$product_id]['condition_rate']['rate'];
+            $param['amount'] = intval(min($param['amount'], $job_salary));
         }
+		// 額度不能大於最大允許額度
+		$param['amount'] = min($this->platform['product_list'][$product_id]['loan_range_e'], $param['amount']);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
