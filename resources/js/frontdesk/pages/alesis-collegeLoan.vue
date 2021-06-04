@@ -114,9 +114,123 @@
         <!-- / 為什麼選擇普匯 -->
 
         <!-- 貸安吶 -->
-        <div class="alesis-">
+        <div class="alesis-form">
             <index-section header="貸安吶" multiline="請您依現在的真實狀況填寫以下題目" :outlinedMulti="true" :secondary="true">
-
+                <div class="form">
+                    <div class="row">
+                        <div class="label">1.就讀學校：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">2.科系：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">3.系上排名：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">4.是否拿過獎學金：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">5.是否有學貸：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">6.是否有打工或兼職：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">7.是否有承擔家中經濟來源：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">8.每月經濟：</div>
+                        <div class="input">
+                            <select>
+                                <option selected disabled>-請選擇-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">暱稱：</div>
+                        <div class="input">
+                            <input type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label">E-mail：</div>
+                        <div class="input">
+                            <input type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="label"></div>
+                        <div class="input">
+                            <button>取得報告</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="result">
+                    <div class="showcase">
+                        <img src="/images/alesis-phone-and-cash.svg" class="image">
+                    </div>
+                    <div class="content">
+                        <div class="header">親愛的用戶您好：</div>
+                        <div class="content">
+                            感謝您使用普匯的學生貸款額度利率評估服務，<br>
+                            經系統自動評估後，符合您的額度及利率區間如下：
+                        </div>
+                        <div class="values">
+                            <div class="row">
+                                <div class="label">1. 可借款額度：</div>
+                                <div class="value">200,000</div>
+                            </div>
+                            <div class="row">
+                                <div class="label">2. 借款利率區間：</div>
+                                <div class="value">24</div>
+                            </div>
+                            <div class="row">
+                                <div class="label">3. 手續費金額：</div>
+                                <div class="value">15</div>
+                            </div>
+                            <div class="row">
+                                <div class="label">4. 每期攤還金額約：</div>
+                                <div class="value">6000</div>
+                            </div>
+                        </div>
+                        <div class="description">►僅為初步評估，實際貸款條件依照您真實提供的資料而定。</div>
+                    </div>
+                </div>
             </index-section>
         </div>
         <!-- / 貸安吶 -->
@@ -220,6 +334,122 @@ export default {
 <style lang="scss">
 .alesis-counters {
     margin: 4rem auto 5rem;
+}
+
+.alesis-form {
+
+    .form {
+        max-width: 1280px;
+        margin   : 4rem auto 0;
+
+        .row {
+            grid-template-columns: 1.05fr 1fr;
+            display              : grid;
+            margin               : 0;
+            align-items          : center;
+            gap                  : 1rem;
+
+            &:not(:last-child) {
+                margin-bottom: 1.5rem;
+            }
+
+            .label {
+                text-align: right;
+                font-size : 1.4rem;
+            }
+
+            .input {
+                select {
+                    width        : 100%;
+                    padding      : .5rem 1rem;
+                    font-size    : 1.4rem;
+                    border-radius: .4rem;
+                    border       : 1px solid #036eb7;
+                    background   : transparent;
+                    text-align   : center;
+                    color        : #036eb7;
+                    padding-left : 45%;
+                }
+                input {
+                    width        : 100%;
+                    padding      : .5rem 1rem;
+                    font-size    : 1.4rem;
+                    border-radius: .4rem;
+                    border       : 1px solid #036eb7;
+                    background   : transparent;
+                    color        : #036eb7;
+                }
+                button {
+                    width        : 100%;
+                    padding      : 0.5rem 1rem;
+                    font-size    : 1.4rem;
+                    border-radius: 0.4rem;
+                    border       : 0;
+                    background   : #326398;
+                    color        : #FFF;
+                }
+            }
+        }
+    }
+
+    .result {
+        display      : flex;
+        align-items  : center;
+        margin-top   : 8rem;
+        margin-bottom: 2rem;
+
+        .showcase {
+            flex      : 1;
+            text-align: right;
+
+            .image {
+                height: 350px;
+            }
+        }
+
+        > .content {
+            background-image       : linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+            -webkit-background-clip: text;
+            background-clip        : text;
+            color                  : rgba(255, 255, 255, 0);
+            font-weight            : bolder;
+            font-size              : 2rem;
+            flex                   : 1;
+            margin-left            : 3rem;
+
+            .header {
+                margin-bottom: 1.5rem;
+                font-size    : 1.8rem;
+            }
+            .content {
+                font-size    : 1.3rem;
+                line-height  : 1.7;
+                margin-bottom: 1.5rem;
+            }
+            .values {
+                font-size    : 1.2rem;
+                line-height  : 1.8;
+                margin-bottom: 2rem;
+
+                .row {
+                    margin: 0;
+
+                    .label {
+
+                    }
+                    .value {
+                        color      : #5d5555;
+                        font-weight: normal;
+                    }
+                }
+            }
+            .description {
+                color      : #f29600;
+                font-size  : .9rem;
+                font-weight: normal;
+            }
+        }
+    }
 }
 
 .alesis-coops {
