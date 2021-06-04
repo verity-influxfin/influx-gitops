@@ -480,7 +480,9 @@ class Certification_lib{
 			if ($answer[1] < 80)
 				$msg .= '[Face++]「身分證正面照」與「持證自拍照證件」未滿 80% 相似度<br/>';
 
-			// 依照發證至今的年數決定臉部識別相似度需多高
+			// 依照發證至提交資料的的時間，計算差異年數決定臉部識別相似度需多高
+			$certificationSubmitDate = new DateTime();
+			$certificationSubmitDate->setTimestamp($info->created_at);
 			$faceCompareSimilarityByYear = [2 => 80, 5 => 65, 9999 => 60];
 			$parsedIssueDate = false;
 			if (isset($ocr['id_card_date'])) {
@@ -489,7 +491,7 @@ class Certification_lib{
 					$parsedIssueDate = true;
 					$dateStr = sprintf('%d-%d-%d', intval($regexRs['year']) + 1911, intval($regexRs['month']), intval($regexRs['day']));
 					$issueDate = DateTime::createFromFormat('Y-m-d', $dateStr);
-					$diffDate = (new DateTime())->diff($issueDate);
+					$diffDate = $certificationSubmitDate->diff($issueDate);
 					foreach ($faceCompareSimilarityByYear as $year => $similarity) {
 						if ($diffDate->y < $year) {
 							if ($answer[0] < $similarity)
@@ -1086,7 +1088,12 @@ class Certification_lib{
 						'virtual_account'	=> CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE.substr($content['id_number'],1,9),
 					);
 					$this->CI->load->model('user/virtual_account_model');
-					$this->CI->virtual_account_model->insert_many($virtual_data);
+
+					array_map(function ($viracc) {
+						$data = $this->CI->virtual_account_model->get_by($viracc);
+						if(!isset($data))
+							$this->CI->virtual_account_model->insert($viracc);
+					}, $virtual_data);
 				}
 
 				$this->CI->user_model->update_many($info->user_id,$user_info);
