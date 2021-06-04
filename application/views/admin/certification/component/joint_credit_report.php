@@ -48,7 +48,12 @@
 			<p>是否小於薪資22倍：<?= ! is_null($data['total_repayment_enough']) ? $data['total_repayment_enough'] : '-'; ?></p>
 			<p>
 				<span>薪資22倍：<?= ! is_null($data['total_repayment']) ? $data['total_repayment'] : '-'; ?>千元</span>；
-				<span>訂約金額額度總額：<?= ! is_null($data['totalAmountQuota']) ? $data['totalAmountQuota'] : '-'; ?>千元</span>
+				<span>借款總餘額：<?= ! is_null($data['liabilities_totalAmount']) ? $data['liabilities_totalAmount'] : '-'; ?></span>
+			</p>
+			<p>
+				<span>
+					負債比計算：<?= ! is_null($data['debt_to_equity_ratio']) ? $data['debt_to_equity_ratio'] : '-'; ?>%</span>
+				</span>
 			</p>
 		<?php
 		 }
@@ -71,7 +76,7 @@
 	  <td rowspan="6">一、借款資訊</td>
 	  <td rowspan="4">1.借款總餘額資訊</td>
 	  <td rowspan="4"><?= ! is_null($data['liabilities_totalAmount']) ? $data['liabilities_totalAmount'] : '-'; ?></td>
-	  <td>總攬</td>
+	  <td>總覽</td>
 	  <td>
 		<p>有無遲延還款：<?= ! is_null($data['repaymentDelay']) ? $data['repaymentDelay']: '-'; ?></p>
 		<p>借款家數：<?= ! is_null($data['bankCount']) ? $data['bankCount']: '-'; ?>家</p>
@@ -104,7 +109,7 @@
 	<tr>
 	  <td>借款餘額(千元)</td>
 	  <td>
-		<p>借款餘額(千元)額度總額：<?= ! is_null($data['totalAmountQuota']) ? $data['totalAmountQuota'] : '-'; ?>(千元)</p>
+		<p>借款餘額(千元)額度總額：<?= ! is_null($data['balanceQuota']) ? $data['balanceQuota'] : '-'; ?>(千元)</p>
 		<p>助學貸款借款金額(千元)：<?= ! is_null($data['balanceStudentLoans']) ? $data['balanceStudentLoans'] : '-'; ?>(千元)</p>
 		<p>短期借款金額(千元)：<?= ! is_null($data['balanceShort']) ? $data['balanceShort'] : '-'; ?>(千元)</p>
 		<p>中期借款金額(千元)：<?= ! is_null($data['balanceMid']) ? $data['balanceMid'] : '-'; ?>(千元)</p>
@@ -134,7 +139,7 @@
 	  <td rowspan="2">二、信用卡資訊</td>
 	  <td>1.信用卡持卡紀錄</td>
 	  <td><?= ! is_null($data['creditCard_cardInfo']) ? $data['creditCard_cardInfo'] : '-'; ?></td>
-	  <td>總攬</td>
+	  <td>總覽</td>
 	  <td>
 		<p>信用卡使用中張數：<?= ! is_null($data['creditCardCount']) ? $data['creditCardCount'] : '-'; ?>張</p>
 		<p>信用卡是否有額度：
@@ -155,12 +160,14 @@
 	<tr>
 	  <td>2.信用卡帳款總餘額資訊</td>
 	  <td><?= ! is_null($data['creditCard_totalAmount']) ? $data['creditCard_totalAmount'] : '-'; ?></td>
-	  <td>總攬</td>
+	  <td>總覽</td>
 	  <td>
 		<p>信用紀錄幾個月：<?= ! is_null($data['creditLogCount']) ? $data['creditLogCount'] : '-'; ?></p>
 		<p>近一個月信用卡使用率：<?= ! is_null($data['creditCardUseRate']) ? $data['creditCardUseRate'] : '-'; ?>%</p>
 		<p>是否有預借現金：<?= ! is_null($data['cashAdvanced']) ? $data['cashAdvanced'] : '-'; ?></p>
 		<p>延遲未滿一個月次數：<?= ! is_null($data['delayLessMonth']) ? $data['delayLessMonth'] : '-'; ?></p>
+		<p>延遲超過一個月次數：<?= ! is_null($data['delayMoreMonth']) ? $data['delayMoreMonth'] : '-'; ?></p>
+		<p>催收、呆帳紀錄：<?= ! is_null($data['creditCardHasBadDebt']) ? $data['creditCardHasBadDebt'] : '-'; ?></p>
 	  </td>
 	</tr>
 	<tr>
@@ -176,7 +183,7 @@
 	  <td rowspan="2">四、查詢資訊</td>
 	  <td>1.被查詢記錄</td>
 	  <td><?= ! is_null($data['queryLog_queriedLog']) ? $data['queryLog_queriedLog'] : '-'; ?></td>
-	  <td>總攬</td>
+	  <td>總覽</td>
 	  <td>
 		<p>被電子支付或電子票證發行機構查詢紀錄：<?= ! is_null($data['S1Count']) ? $data['S1Count'] : '-'; ?></p>
 	  </td>
@@ -184,7 +191,7 @@
 	<tr>
 	  <td>2.當事人查詢查詢信用報告紀錄</td>
 	  <td><?= ! is_null($data['queryLog_applierSelfQueriedLog']) ? $data['queryLog_applierSelfQueriedLog'] : '-'; ?></td>
-	  <td>總攬</td>
+	  <td>總覽</td>
 	  <td>
 		<p>當事人查詢紀錄：<?= ! is_null($data['S2Count']) ? $data['S2Count'] : '-'; ?></p>
 	  </td>

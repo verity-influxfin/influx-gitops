@@ -432,6 +432,7 @@ class Certification_data
 			'personId' => '',
 			'taxId' => '',
 			'liabilities_totalAmount'=>'',
+			'debt_to_equity_ratio'=> 0,
 			'liabilities_metaInfo'=>'',
 			'liabilities_badDebtInfo'=>'',
 			'creditCard_cardInfo'=>'',
@@ -484,6 +485,7 @@ class Certification_data
 			'creditLogCount' => '',
 			'cashAdvanced' => '無',
 			'delayLessMonth' => 0,
+			'delayMoreMonth' => 0,
 			'creditCardUseRate' => 0,
 			'S1Count' => 0,
 			'S2Count' => 0,
@@ -604,7 +606,7 @@ class Certification_data
 				$res['bankCount'] = count($bank_array);
 				// 訂約金額總額度
 				if($res['totalAmountShort'] != 0 || $res['totalAmountMid'] != 0 || $res['totalAmountLong'] != 0){
-					$res['creditUtilizationRate'] = ($res['balanceShort'] + $res['balanceMid'] + $res['balanceLong'])/($res['totalAmountShort'] + $res['totalAmountMid'] + $res['totalAmountLong']);
+					$res['creditUtilizationRate'] = round(($res['balanceShort'] + $res['balanceMid'] + $res['balanceLong'])/($res['totalAmountShort'] + $res['totalAmountMid'] + $res['totalAmountLong'])*100, 2);
 				}else{
 					$res['creditUtilizationRate'] = 0;
 				}
@@ -613,12 +615,15 @@ class Certification_data
 			// 信用卡持卡紀錄
 			if(!empty($data['K1']['dataList'])){
 				$bank_array = [];
+				$res['creditCardCount'] = 0;
 				foreach ($data['K1']['dataList'] as $key => $value) {
-					if(! in_array($value['authority'],$bank_array) && preg_match('/使用中/',$value['status'])){
-						$bank_array[] = $value['authority'];
+					if(preg_match('/使用中/',$value['status'])) {
+						if (!in_array($value['authority'], $bank_array)){
+							$bank_array[] = $value['authority'];
+						}
+						$res['creditCardCount']++;
 					}
 				}
-				$res['creditCardCount'] = count($bank_array);
 			}
 			// 信用卡帳款總餘額資訊
 			if(!empty($data['K2']['dataList'])){
@@ -632,12 +637,6 @@ class Certification_data
 				$bank_array = [];
 				$totalAmount = 0;
 				$totalQuota = 0;
-				// 當期應付款項
-				$currentAmount = 0;
-				// 當期未到期代付款
-				$nonExpiredAmount = 0;
-				// 前期到期代付款
-				$nonExpiredAmount_before = 0;
 
 				if(isset($data['K2']['dataList'][0]['date']) && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$data['K2']['dataList'][0]['date'])){
 					$last_date = $this->CI->time->ROCDateToUnixTimestamp($data['K2']['dataList'][0]['date']);
@@ -656,7 +655,7 @@ class Certification_data
 						if(preg_match('/.*遲延.*個月$|.*遲延.*個月以上$/',$value['previousPaymentStatus'])){
 							$res['creditCardHasDelay'] = '有';
 						}
-						if(preg_match('/逾期|催收|呆帳/',$value['previousPaymentStatus'])){
+						if(preg_match('/逾期|催收|呆帳/',$value['claimsStatus'])){
 							$res['creditCardHasBadDebt'] = '有';
 						}
 						$creditLogCountStatus = 0;
@@ -668,8 +667,11 @@ class Certification_data
 					}
 
 					// 延遲未滿一個月次數
+					$value['previousPaymentStatus'] = mb_convert_kana($value['previousPaymentStatus'], 'n');
 					if(preg_match('/遲延未滿1個月|遲延未滿１個月/',$value['previousPaymentStatus'])){
 						$res['delayLessMonth'] += 1;
+					}else if(preg_match('/遲延未滿[0-9]+個月|遲延[0-9]+個月以上/',$value['previousPaymentStatus'])){
+						$res['delayMoreMonth'] += 1;
 					}
 
 					// creditCardUseRate
@@ -684,32 +686,22 @@ class Certification_data
 							if(is_numeric($value['quotaAmount']) && is_numeric($value['currentAmount']) && is_numeric($value['nonExpiredAmount'])){
 								$totalAmount += $value['currentAmount'] + $value['nonExpiredAmount'];
 
-								// 信用卡月繳
-								$currentAmount += $value['currentAmount'];
-								$nonExpiredAmount += $value['nonExpiredAmount'];
-
 								if(!in_array($value['bank'],$bank_array)){
 									$bank_array[] = $value['bank'];
 									$totalQuota += $value['quotaAmount'];
 								}
 							}
 						}
-						// 信用卡月繳
-						if($end_date < $value['date'] && $value['date'] < $end_date_before){
-							$value['nonExpiredAmount_before'] = preg_replace('/\,|元/','',$value['nonExpiredAmount']);
-							if(is_numeric($value['nonExpiredAmount_before'])){
-								$nonExpiredAmount_before += $value['nonExpiredAmount_before'];
-							}
-						}
+
 						if($totalQuota != 0){
-							$res['creditCardUseRate'] = $totalAmount/$totalQuota*100;
+							$res['creditCardUseRate'] = round($totalAmount/$totalQuota*100, 2);
 						}
-
 					}
-
 				}
+
 				// 信用卡月繳
-				$res['creditCardMonthlyPayment'] = number_format(($currentAmount*0.1 + $nonExpiredAmount - $nonExpiredAmount_before)/1000,2);
+				$res['creditCardMonthlyPayment'] = round(intval(preg_replace('/\,|元/', '', $data['K2']['totalAmount'])) * 0.1 / 1000, 2);
+
 			}
 			// 被查詢記錄
 			if(!empty($data['S1']['dataList'])){
