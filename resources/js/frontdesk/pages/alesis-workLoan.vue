@@ -51,7 +51,79 @@
         <!-- 上班族產品特色 -->
         <div class="alesis-features">
             <index-section header="上班族產品特色" >
-
+                <div class="wrapper">
+                    <div class="left">
+                        <div class="section">
+                            <div class="symbol">
+                                <img src="/images/alesis-work-loan-feature1.svg" class="image">
+                            </div>
+                            <div class="content">
+                                <div class="header">即時審核，快速媒合放款</div>
+                                <div class="divider"></div>
+                                <div class="text">系統自動化審核加快申貸的速度，平均3分鐘完成申請、10分鐘核准、60分鐘到帳！</div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="symbol">
+                                <img src="/images/alesis-work-loan-feature2.svg" class="image">
+                            </div>
+                            <div class="content">
+                                <div class="header">全線無人化</div>
+                                <div class="divider"></div>
+                                <div class="text">運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。</div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="symbol">
+                                <img src="/images/alesis-work-loan-feature3.svg" class="image">
+                            </div>
+                            <div class="content">
+                                <div class="header">隱私無照會</div>
+                                <div class="divider"></div>
+                                <div class="text">申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="center">
+                        <div class="showcase">
+                            <img src="/images/alesis-work-loan-phone.svg" class="image">
+                        </div>
+                        <div class="slogan">假日放款全年無休</div>
+                        <a href="#!" class="get"><index-button>取得資金</index-button></a>
+                    </div>
+                    <div class="right">
+                        <div class="section">
+                            <div class="symbol">
+                                <img src="/images/alesis-work-loan-feature4.svg" class="image">
+                            </div>
+                            <div class="content">
+                                <div class="header">聯徵不留紀錄</div>
+                                <div class="divider"></div>
+                                <div class="text">不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。</div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="symbol">
+                                <img src="/images/alesis-work-loan-feature5.svg" class="image">
+                            </div>
+                            <div class="content">
+                                <div class="header">費率單純透明</div>
+                                <div class="divider"></div>
+                                <div class="text">只收取一次手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。</div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <div class="symbol">
+                                <img src="/images/alesis-work-loan-feature6.svg" class="image">
+                            </div>
+                            <div class="content">
+                                <div class="header">金融機構合作</div>
+                                <div class="divider"></div>
+                                <div class="text">在會員用戶逐漸成長的情況下，普匯專業優質的名聲，吸引許多金融機構相邀合作，包含「凱基銀行」、「上海商銀」等，共同為台灣金融科技發展貢獻一份力。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </index-section>
         </div>
         <!-- / 上班族產品特色 -->
@@ -423,6 +495,116 @@ export default {
                 color      : #f29600;
                 font-size  : .9rem;
                 font-weight: normal;
+            }
+        }
+    }
+}
+
+.alesis-features {
+    .wrapper {
+        display  : flex;
+        max-width: 1280px;
+        margin   : 0 auto;
+
+        .left {
+            flex          : 1;
+            display       : flex;
+            flex-direction: column;
+            align-items   : flex-start;
+            margin-right  : -5rem;
+            margin-left   : 5rem;
+
+            .section {
+                flex-direction: row-reverse;
+
+                .symbol {
+                    margin-left : 1.5rem;
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .center {
+            text-align: center;
+            position  : relative;
+            top       : initial;
+            left      : initial;
+            transform : none;
+
+            .showcase {
+                margin-top: 4rem;
+
+                .image {
+                    height: 34rem;
+                }
+            }
+
+            .slogan {
+                text-align : center;
+                color      : #f29600;
+                font-size  : 2rem;
+                font-weight: bolder;
+                margin-top : 7rem;
+            }
+
+            .get {
+                > div {
+                    margin-top: 1rem;
+                    width    : 100%;
+                    font-size: 1.2rem;
+                }
+            }
+        }
+        .right {
+            flex: 1;
+
+            .section:nth-child(2) {
+                margin-left: -2rem;
+            }
+            .section:nth-child(3) {
+                margin-left: -3rem;
+            }
+        }
+
+        .section {
+            display      : flex;
+            margin-bottom: 5rem;
+
+            .symbol {
+                margin-right: 1.5rem;
+
+                .image {
+
+                }
+            }
+
+            .content {
+                margin-top : 2.7rem;
+                width      : 290px;
+                line-height: 1.6;
+
+                .header {
+                    display                : inline-block;
+                    background-image       : linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+                    -webkit-background-clip: text;
+                    background-clip        : text;
+                    color                  : rgba(255, 255, 255, 0);
+                    font-weight            : bolder;
+                    font-size              : 1.6rem;
+                }
+
+                .divider {
+                    width     : 160px;
+                    height    : 1px;
+                    background: #2f95cb;
+                    margin    : .5rem 0 1rem;
+                }
+
+                .text {
+                    color     : #5d5555;
+                    min-height: 5rem;
+                    text-align: justify;
+                }
             }
         }
     }
