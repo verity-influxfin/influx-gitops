@@ -584,7 +584,7 @@ class Certification_lib{
 						'error' => $result['response']['response']['checkIdCardApplyFormat']
 					];
 					$param['checkIdCardApplyFormat'] = $result['response']['response']['checkIdCardApplyFormat'];
-
+					$msg .= "[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
 				}else {
 					$param['rdCode'] = $result['response']['response']['rowData']['rdCode'];
 					$param['rdMessage'] = $result['response']['response']['rowData']['rdMessage'];
@@ -597,7 +597,7 @@ class Certification_lib{
 							$risVerificationFailed = true;
 						} else {
 							if ($result['response']['response']['rowData']['responseData']['checkIdCardApply'] != 1)
-								$msg .= $param['checkIdCardApplyFormat']."<br/>";
+								$msg .= "[戶役政]".$param['checkIdCardApplyFormat']."<br/>";
 							$risVerificationFailed = false;
 						}
 					}
