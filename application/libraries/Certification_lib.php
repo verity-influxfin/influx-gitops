@@ -485,6 +485,8 @@ class Certification_lib{
 			$certificationSubmitDate->setTimestamp($info->created_at);
 			$faceCompareSimilarityByYear = [2 => 80, 5 => 65, 9999 => 60];
 			$parsedIssueDate = false;
+			$years = array_keys($faceCompareSimilarityByYear);
+			$prevYear = reset($years);
 			if (isset($ocr['id_card_date'])) {
 				preg_match('/(?<year>\d{2,3})(?<month>\d{1,2})(?<day>\d{1,2})/', $ocr['id_card_date'], $regexRs);
 				if (!empty($regexRs)) {
@@ -494,10 +496,15 @@ class Certification_lib{
 					$diffDate = $certificationSubmitDate->diff($issueDate);
 					foreach ($faceCompareSimilarityByYear as $year => $similarity) {
 						if ($diffDate->y < $year) {
-							if ($answer[0] < $similarity)
-								$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 '.$similarity.'% 相似度(持證未滿'.$year.'年)<br/>';
+							if ($answer[0] < $similarity) {
+								if(end($years) == $year)
+									$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 ' . $similarity . '% 相似度(持證已滿' . $prevYear . '年以上)<br/>';
+								else
+									$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 ' . $similarity . '% 相似度(持證未滿' . $year . '年)<br/>';
+							}
 							break;
 						}
+						$prevYear = $year;
 					}
 				}
 			}

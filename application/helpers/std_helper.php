@@ -63,7 +63,7 @@
 	}
 
 
-	function curl_get($url,$data = array(),$header = array()) {
+	function curl_get($url,$data = array(),$header = array(),$timeout=null) {
 		$curl = curl_init($url);
 		if (ENVIRONMENT == "production") {
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
@@ -73,7 +73,8 @@
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		}
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //不直接顯示回傳結果
-		
+		if(isset($timeout))
+			curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
 		if(!empty($data)) {
 			curl_setopt($curl, CURLOPT_POST, 1); 
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $data); 
