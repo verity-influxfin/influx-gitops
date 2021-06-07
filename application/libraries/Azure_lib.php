@@ -45,7 +45,14 @@ class Azure_lib
 	public function detect($url,$user_id=0,$cer_id=0){
 		$api_url=AZURE_API_URL.'face/v1.0/detect?returnFaceId=true&recognitionModel=recognition_02&returnRecognitionModel=true&detectionModel=detection_02';
         $bucket=AZURE_S3_BUCKET;
-        $s3_url=$this->CI->s3_upload->public_image_by_data(file_get_contents($url),$bucket);
+
+        if(empty($url))
+        	return [];
+        $file = @file_get_contents($url);
+        if(!$file)
+        	return [];
+
+        $s3_url=$this->CI->s3_upload->public_image_by_data($file, $bucket);
         $data= [
 			'url' =>  $s3_url,
 		];
