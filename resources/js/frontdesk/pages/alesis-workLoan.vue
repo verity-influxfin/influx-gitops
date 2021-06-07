@@ -48,8 +48,13 @@
                     <div class="set">
                         <div class="item">
                             <div class="step-1">
-                                <div class="left"></div>
-                                <div class="center"></div>
+                                <div class="left">
+                                    <a href="#!"><img src="/images/alesis-app-store.svg" class="image"></a>
+                                    <a href="#!"><img src="/images/alesis-google-play.svg" class="image"></a>
+                                </div>
+                                <div class="center">
+                                    <img src="/images/alesis-workloan-step1.svg" class="image">
+                                </div>
                                 <div class="right">
                                     <div class="header">Step 1.：</div>
                                     <div class="content">
@@ -69,17 +74,60 @@
                             <div class="step-2">
                                 <div class="left">
                                     <div class="phones">
-                                        <img src="" class="image">
-                                        <img src="" class="image">
+                                        <img src="/images/alesis-workloan-step2-1.svg" class="image">
+                                        <img src="/images/alesis-workloan-step2-2.svg" class="image">
                                     </div>
                                     <div class="section">
                                         <div class="header">工作證明</div>
                                         <div class="divider"></div>
                                         <div class="paragraph">
                                             <div class="label">方法 1</div>
-                                            <div class="box">自然人憑證</div>
+                                            <div class="box">
+                                                <div class="bordered">自然人憑證</div>
+                                            </div>
                                         </div>
                                         <div class="content">至各縣市勞動部申請 : 申請後請拍照上傳至APP內</div>
+                                        <div class="divider"></div>
+                                        <div class="paragraph">
+                                            <div class="label">方法 2</div>
+                                            <div class="box">
+                                                <div class="bordered">至各縣市勞動部申請</div>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            自然人憑證 : 使用自然人憑證卡搭配電腦與讀卡機至勞保局網頁 (<a href="#!">https://edesk.bli.gov.tw/aa/</a>) 進行申請
+                                        </div>
+                                    </div>
+                                    <div class="section">
+                                        <div class="header">聯徵證明</div>
+                                        <div class="divider"></div>
+                                        <div class="paragraph">
+                                            <div class="label">方法 1</div>
+                                            <div class="box">
+                                                <div class="bordered">郵局</div>
+                                            </div>
+                                        </div>
+                                        <div class="content">郵局：至郵局櫃台申請聯徵,並寄送至普匯金融科技 (台北市松江路111號11樓之2)</div>
+                                        <div class="divider"></div>
+                                        <div class="paragraph">
+                                            <div class="label">方法 2</div>
+                                            <div class="box">
+                                                <div class="bordered">自然人憑證</div>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            自然人憑證 : 使用自然人憑證卡搭配電腦與讀卡機至財團法人金融聯合中心網頁 (<a href="#!">https://apply.jcic.org.tw/CreditQueryInput.do</a>) 進行申請
+                                        </div>
+                                        <div class="divider"></div>
+                                        <div class="paragraph">
+                                            <div class="label">方法 3</div>
+                                            <div class="box">
+                                                <div class="bordered">投資人行動網</div>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            投資人行動網 : 下載投資人行動網APP(TWID)並選擇您開立證券戶之券商
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="right">
@@ -92,8 +140,8 @@
                                     <br><br>
                                     <div class="header">需提供資料：</div>
                                     <div class="content">
-                                        近一個月勞保異動明細　<a href="#!" class="help">如何申請？</a>
-                                        近一個月信用報告　<a href="#!" class="help">如何申請？</a>
+                                        近一個月勞保異動明細　<a href="#!" class="help">如何申請？</a><br>
+                                        近一個月信用報告　<a href="#!" class="help">如何申請？</a><br>
                                         學歷證明（畢業證書）
                                     </div>
                                 </div>
@@ -105,7 +153,20 @@
                     <!-- Step 3 -->
                     <div class="set">
                         <div class="item">
-
+                            <div class="step-3">
+                                <div class="left">
+                                    <img src="/images/alesis-workloan-step3-1.svg" class="image">
+                                    <img src="/images/alesis-workloan-step3-2.svg" class="image">
+                                </div>
+                                <div class="right">
+                                    <div class="header">Step 3.：</div>
+                                    <div class="content">
+                                        審核通過<br>
+                                        線上簽約<br>
+                                        立即上架媒和<br>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- / Step 3 -->
@@ -113,7 +174,18 @@
                     <!-- Step 4 -->
                     <div class="set">
                         <div class="item">
-
+                            <div class="step-4">
+                                <div class="left">
+                                    <img src="/images/alesis-donezo.svg" class="image">
+                                </div>
+                                <div class="right">
+                                    <div class="header">Step 4.：</div>
+                                    <div class="content">
+                                        成功媒合投資人<br>
+                                        立即放款
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- / Step 4 -->
@@ -572,6 +644,212 @@ export default {
             }
         }
     }
+}
+
+.alesis-flow {
+    .carousel {
+        margin: 2rem auto;
+        max-width: 1280px;
+
+        .selector .lightbox .set {
+            grid-template-columns: 1fr;
+        }
+
+        .step-1 {
+            display              : inline-grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin               : 0 auto;
+            gap                  : 6rem;
+
+            .left {
+                display        : flex;
+                align-items    : flex-end;
+                justify-content: center;
+                flex-direction : column;
+                gap            : 1.5rem;
+
+                .image {
+
+                }
+            }
+            .center {
+                .image {
+
+                }
+            }
+            .right {
+                display        : flex;
+                justify-content: center;
+                flex-direction : column;
+
+                .header {
+                    color    : #112E53;
+                    font-size: 1.3rem;
+                }
+                .content {
+                    color    : #5D5555;
+                    font-size: 1.1rem;
+                }
+            }
+        }
+        .step-2 {
+            display              : grid;
+            grid-template-columns: 470px 1fr;
+            gap                  : 3rem;
+            max-width            : 800px;
+
+            .left {
+                display       : flex;
+                flex-direction: column;
+                align-items   : center;
+
+                .phones {
+                    display: flex;
+                    gap    : 3rem;
+
+                    .image {
+                        width: 210px;
+                    }
+                }
+                .section {
+                    border       : 1px solid #2664A5;
+                    border-radius: .8rem;
+                    padding      : 1.5rem;
+                    margin-top   : 3rem;
+
+                    .header {
+                        text-align: center;
+                        font-size : 1.5rem;
+                        color     : #036EB7;
+                    }
+                    .divider {
+                        height    : 1px;
+                        background: #2664A5;
+                        margin    : 1rem 0;
+                    }
+
+                    .paragraph {
+                        display              : grid;
+                        grid-template-columns: 1fr 4fr;
+                        align-items          : center;
+
+                        .label {
+                            font-size: 1.2rem;
+                            color    : #036EB7;
+                        }
+                        .box {
+                            .bordered {
+                                position       : relative;
+                                padding        : 1rem 1.5rem;
+                                display        : inline-flex;
+                                align-items    : center;
+                                justify-content: center;
+                                line-height    : 1;
+                                background-image   : url(/images/alesis-button-lines.svg);
+                                background-size    : contain;
+                                background-repeat  : no-repeat;
+                                background-position: center;
+                                font-size  : 1.1rem;
+                                font-weight: bold;
+                                color      : #036eb7;
+                            }
+
+                        }
+                    }
+
+                    .content {
+                        line-height: 1.8;
+                        margin-top : .8rem;
+                        color      : #5D5555;
+
+                        a {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+            .right {
+                padding-top: 6rem;
+
+                .header {
+                    color    : #112E53;
+                    font-size: 1.3rem;
+                }
+                .content {
+                    color    : #5D5555;
+                    font-size: 1.1rem;
+
+                    .help {
+                        font-size      : .9rem;
+                        text-decoration: underline;
+                        color          : #112E53;
+                    }
+                }
+            }
+        }
+        .step-3 {
+            display              : grid;
+            grid-template-columns: 470px 1fr;
+            gap                  : 3rem;
+            max-width            : 800px;
+
+            .left {
+                display        : flex;
+                align-items    : flex-end;
+                justify-content: center;
+                flex-direction : row;
+                gap            : 3rem;
+
+                .image {
+                    width: 210px;
+                }
+            }
+            .right {
+                display        : flex;
+                justify-content: center;
+                flex-direction : column;
+
+                .header {
+                    color    : #112E53;
+                    font-size: 1.3rem;
+                }
+                .content {
+                    color    : #5D5555;
+                    font-size: 1.1rem;
+                }
+            }
+        }
+        .step-4 {
+            display              : grid;
+            grid-template-columns: 470px 1fr;
+            gap                  : 3rem;
+            max-width            : 800px;
+
+            .left {
+                text-align: center;
+
+                .image {
+                    width: 260px;
+                }
+            }
+
+            .right {
+                display        : flex;
+                justify-content: center;
+                flex-direction : column;
+
+                .header {
+                    color    : #112E53;
+                    font-size: 1.3rem;
+                }
+                .content {
+                    color    : #5D5555;
+                    font-size: 1.1rem;
+                }
+            }
+        }
+    }
+
 }
 
 .alesis-features {
