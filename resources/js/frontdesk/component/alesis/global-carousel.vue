@@ -73,13 +73,15 @@ export default {
         grid-template-columns: min-content 1fr min-content;
         gap                  : 3rem;
 
-        .left,
-        .right {
+        > .left,
+        > .right {
             cursor: pointer;
         }
+
         .left {
 
         }
+
         .right {
 
         }
