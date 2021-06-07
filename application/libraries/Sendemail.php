@@ -3,9 +3,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Sendemail
 {
-	
+
 	private $config = array();
-	
+
     function __construct()
     {
         $this->CI = &get_instance();
@@ -60,7 +60,7 @@ class Sendemail
 				$link    = BORROW_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;
                 $show_type = 'b01';
 			}
-			
+
 			$content = $this->CI->parser->parse('email/verify_email', array('link' => $link, "type"=> $show_type , "mail_event"=> $mail_event),TRUE);
 			$subject = '普匯inFlux - 電子郵件認證';
 			$param = array(
@@ -76,17 +76,17 @@ class Sendemail
 		}
 		return false;
 	}
-	
+
 	public function verify_code($type="",$email="",$code=""){
 		if(!empty($type) && !empty($email) && !empty($code)){
-			
+
 			$param = array(
 				"type"		=> $type,
 				"email"		=> $email,
 				"status"	=> 0,
 				"code"		=> $code
 			);
-			
+
 			$rs = $this->CI->email_verify_model->get_by($param);
 			if($rs){
 				$this->CI->load->model('user/user_certification_model');
@@ -94,14 +94,19 @@ class Sendemail
 				$certification = $this->CI->user_certification_model->get($rs->certification_id);
 				if($certification && $certification->status==0){
 					$this->CI->load->library('Certification_lib');
-					$this->CI->certification_lib->set_success($rs->certification_id);
+                    // to do : 學生認證轉待驗證(未來加入sip後要改掉)
+                    if($certification->certification_id == 2){
+                        $this->CI->user_certification_model->update($rs->certification_id,['status'=>3]);
+                    }else{
+                        $this->CI->certification_lib->set_success($rs->certification_id);
+                    }
 				}
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	public function user_notification($user_id=0,$title="",$content="",$type=false,$attach=false,$replay_to=false,$replay_to_name=false){
 		if($user_id){
 			$user_info 		= $this->CI->user_model->get($user_id);
@@ -133,7 +138,7 @@ class Sendemail
 		}
 		return false;
 	}
-	
+
 	public function email_notification($email="",$title="",$content=""){
 		if($email){
 		    $mail_event = $this->CI->config->item('mail_event');
@@ -142,7 +147,7 @@ class Sendemail
 		}
 		return false;
 	}
-	
+
 	public function admin_notification($title="",$content=""){
 		$admin_email 	= $this->CI->config->item('admin_email');
 		$mail_event = $this->CI->config->item('mail_event');
@@ -177,7 +182,7 @@ class Sendemail
 			}
 		}
 	}
-	
+
     public function send($email,$subject,$content,$reply_to=false,$reply_to_name='')
     {
 		$this->CI->email->initialize($this->config);
@@ -241,7 +246,7 @@ class Sendemail
 		$title = "【好康標的】";
 		$content = "親愛的投資人請注意：
 			您的投資標的有一項重大變更！
-			您於" .  date("m月d日",strtotime($investment->tx_datetime)) . "投資債權，剛剛自主提升利率由			
+			您於" .  date("m月d日",strtotime($investment->tx_datetime)) . "投資債權，剛剛自主提升利率由
 			".$old_rate."%-->".$new_rate."%
 			同樣的項目，更高的潛在收益！
 			請登錄普匯APP 下標搶佔先手";
