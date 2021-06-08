@@ -169,7 +169,7 @@ class Id_card_lib {
 
 		$payload = array('headers' => json_encode($headers, true));
 		$requestUrl = $this->serviceAdapterUrl . "/id-card/send-request";
-		$apiResponse = curl_get($requestUrl, $data=$payload);
+		$apiResponse = curl_get($requestUrl, $data=$payload, [],10);
 
 		if($apiResponse){
 			$apiResponse = json_decode($apiResponse, true);
