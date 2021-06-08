@@ -78,7 +78,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .alesis-slate {
     position: relative;
     height  : 33rem;

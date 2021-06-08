@@ -410,7 +410,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .alesis-counters {
     margin: 4rem auto 5rem;
 }
