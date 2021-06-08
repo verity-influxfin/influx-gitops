@@ -2,7 +2,7 @@
     <div class="carousel">
         <div class="selector">
             <div class="left">
-                <div  @click="previous"><img class="image" src="/images/alesis-carousel-left.svg" alt=""></div>
+                <div @click="previous"><img class="image" src="/images/alesis-carousel-left.svg" alt=""></div>
             </div>
             <div class="lightbox">
                 <slot></slot>
@@ -11,7 +11,7 @@
                 <div @click="next"><img class="image" src="/images/alesis-carousel-right.svg" alt=""></div>
             </div>
         </div>
-        <div class="indicator">
+        <div class="indicator" v-if="indicator === true">
             <div class="item" v-for="i in length" :key="i" :class="{'-active': index == i-1}"></div>
         </div>
     </div>
@@ -21,6 +21,9 @@
 export default {
     name : "Carousel",
     props: {
+        indicator: {
+            default: true,
+        },
     },
     data() {
         return {
@@ -76,14 +79,32 @@ export default {
         > .left,
         > .right {
             cursor: pointer;
+                position: relative;
+    height: 100%;
         }
 
-        .left {
-
+        > .left {
+            > div {
+                position: absolute;
+                top: 0;
+                    bottom: 0;
+    max-height: 34rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
-        .right {
-
+        > .right {
+            > div {
+                position: absolute;
+                top: 0;
+                   bottom: 0;
+    max-height: 34rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         .lightbox {
