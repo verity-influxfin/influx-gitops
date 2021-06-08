@@ -43,7 +43,7 @@
         <!-- 申貸流程 -->
         <div class="alesis-flow">
             <index-section header="申貸流程" :secondary="true">
-                <global-carousel>
+                <global-carousel :indicator="false">
                     <!-- Step 1 -->
                     <div class="set">
                         <div class="item">
