@@ -72,9 +72,88 @@
         <!-- / 適用對象 -->
 
         <!-- 申貸媒合簡便四步驟 -->
-        <div class="alesis-">
+        <div class="alesis-steps">
             <index-section header="申貸媒合簡便四步驟">
+                <global-carousel :indicator="false">
+                    <!-- Step 1 -->
+                    <div class="set">
+                        <div class="item">
+                            <div class="step-1">
+                                <div class="left"></div>
+                                <div class="center">
+                                    <img src="/images/alesis-collegeloan-step1.svg" class="image">
+                                </div>
+                                <div class="right">
+                                    <div class="header">Step 1. 選擇額度</div>
+                                    <div class="content">
+                                        提供完整資訊<br>
+                                        有助提高額度
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Step 1 -->
 
+                    <!-- Step 2 -->
+                    <div class="set">
+                        <div class="item">
+                            <div class="step-2">
+                                <div class="left"></div>
+                                <div class="center">
+                                    <img src="/images/alesis-collegeloan-step2.svg" class="image">
+                                </div>
+                                <div class="right">
+                                    <div class="header">Step 2. 上傳資料</div>
+                                    <div class="content">
+                                        AI數據分析審核<br>
+                                        全程無人打擾
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Step 2 -->
+
+                    <!-- Step 3 -->
+                    <div class="set">
+                        <div class="item">
+                            <div class="step-3">
+                                <div class="left"></div>
+                                <div class="center">
+                                    <img src="/images/alesis-collegeloan-step3.svg" class="image">
+                                </div>
+                                <div class="right">
+                                    <div class="header">Step 3. 持證自拍</div>
+                                    <div class="content">
+                                        審核成功後<br>
+                                        立即上架幫您媒合投資人
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Step 3 -->
+
+                    <!-- Step 4 -->
+                    <div class="set">
+                        <div class="item">
+                            <div class="step-4">
+                                <div class="left"></div>
+                                <div class="center">
+                                    <img src="/images/alesis-collegeloan-step4.svg" class="image">
+                                </div>
+                                <div class="right">
+                                    <div class="header">Step 4. 上架媒合</div>
+                                    <div class="content">
+                                        24小時收到款項
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Step 4 -->
+                </global-carousel>
             </index-section>
         </div>
         <!-- / 申貸媒合簡便四步驟 -->
@@ -334,6 +413,57 @@ export default {
 <style lang="scss">
 .alesis-counters {
     margin: 4rem auto 5rem;
+}
+
+.alesis-steps {
+    .carousel {
+        .selector .lightbox .set {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .step-1,
+    .step-2,
+    .step-3,
+    .step-4 {
+        display              : grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap                  : 3rem;
+        max-width            : 800px;
+
+        .left {
+
+        }
+        .center {
+
+        }
+        .right {
+            display        : flex;
+            justify-content: center;
+            flex-direction : column;
+
+            .header {
+                color    : #112E53;
+                font-size: 1.3rem;
+            }
+            .content {
+                color    : #5D5555;
+                font-size: 1.1rem;
+            }
+        }
+    }
+    .step-1 {
+
+    }
+    .step-2 {
+
+    }
+    .step-3 {
+
+    }
+    .step-4 {
+
+    }
 }
 
 .alesis-form {
