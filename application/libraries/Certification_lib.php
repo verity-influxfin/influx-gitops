@@ -321,9 +321,7 @@ class Certification_lib{
 		// 取得對應的 image log
 		$imageLogs = [];
 		for ($i = 0; $i < count($imageIdTable); $i++) {
-			if (array_key_exists($imageIdTable[$i], $content)) {
-				$imageLogs[] = $this->CI->log_image_model->get([$content[$imageIdTable[$i]]]);
-			} else if (array_key_exists($imageUrlTable[$i], $content)) {
+			if (array_key_exists($imageUrlTable[$i], $content)) {
 				$imageLogs[] = $this->CI->log_image_model->get_by(['url' => $content[$imageUrlTable[$i]]]);
 			}
 		}
@@ -372,7 +370,7 @@ class Certification_lib{
 		// 如果有發送 OCR 辨識請求時，才會確認 OCR 結果
 		if ($requestedSuccessfullyCnt) {
 			$tryTimes = 0;
-			while ($tryTimes++ < 15) {
+			while ($tryTimes++ < 60) {
 				$checkOcrResultFunction();
 
 				if (count(array_filter($ocrResult, function ($ele) {
