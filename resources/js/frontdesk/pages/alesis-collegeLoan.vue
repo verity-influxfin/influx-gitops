@@ -412,7 +412,13 @@ export default {
 
 <style lang="scss" scoped>
 .alesis-counters {
-    margin: 4rem auto 5rem;
+    margin: 4rem auto 8rem;
+    max-width: 1280px;
+
+    .wrapper {
+      display        : flex;
+      justify-content: center;
+    }
 }
 
 .alesis-steps {
