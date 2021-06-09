@@ -189,6 +189,7 @@ class Cron extends CI_Controller {
 			$result = [];
 			$pendingUpdateData = [];
 			$this->load->library('Certification_lib');
+			$this->load->model('user/user_model');
 			foreach ($request as $key => $v) {
 				$user_certifications 	= $this->user_certification_model
 					->order_by('user_id ASC, id DESC', '')
@@ -198,6 +199,11 @@ class Cron extends CI_Controller {
 						'user_id' => $v->user_id,
 						'investor' => $v->investor
 					));
+
+				// 已被封鎖的就不再重驗
+				$user = $this->user_model->get_by(["id" => $v->user_id]);
+				if(isset($user) && $user->block_status != 0)
+					continue;
 
 				if(isset($user_certifications)) {
 					$tmpRs = $this->certification_lib->realname_verify($user_certifications);
