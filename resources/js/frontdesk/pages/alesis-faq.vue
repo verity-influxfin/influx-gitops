@@ -89,115 +89,133 @@ export default {
     background-image: url(/images/alesis-faq-bg.svg);
 
     .wrapper {
-        padding: 5rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    color: #FFF;
-    align-items: center;
-}
+        padding       : 5rem 0;
+        display       : flex;
+        flex-direction: column;
+        gap           : 1rem;
+        color         : #FFF;
+        align-items   : center;
 
         .header {
-                font-size: 2.4rem;
-                    text-shadow: 0 0 7px #000;
-
+            font-size  : 2.4rem;
+            text-shadow: 0 0 7px #000;
         }
+
         .helper {
-                font-size: 1.8rem;
-                color: #F2E627;
-                    text-shadow: 0 0 7px #000;
-
+            font-size  : 1.8rem;
+            color      : #F2E627;
+            text-shadow: 0 0 7px #000;
         }
+
         .search {
-                position: relative;
-    width: 50%;
-    max-width: 51rem;
+            position : relative;
+            width    : 50%;
+            max-width: 51rem;
 
             .icon {
-                width: 22px;
-    position: absolute;
-    left: 1.5rem;
-    top: 50%;
-    transform: translateY(-50%);
+                width    : 22px;
+                position : absolute;
+                left     : 1.5rem;
+                top      : 50%;
+                transform: translateY(-50%);
             }
-            .input {
-                appearance: none;
-    background: transparent;
-    color: #FFF;
-    border: 1px solid #FFF;
-    border-radius: 100rem;
-    line-height: 1.3;
-    font-size: 1.1rem;
-    padding: .7rem 2rem .6rem;
-    padding-left: 3.7rem;
-    width: 100%;
 
-    &::placeholder {
-        color: #FFF;
-    }
+            .input {
+                appearance   : none;
+                background   : transparent;
+                color        : #FFF;
+                border       : 1px solid #FFF;
+                border-radius: 100rem;
+                line-height  : 1.3;
+                font-size    : 1.1rem;
+                padding      : .7rem 2rem .6rem;
+                padding-left : 3.7rem;
+                width        : 100%;
+
+                &::placeholder {
+                    color: #FFF;
+                }
             }
         }
+
         .categories {
-                display: flex;
-    gap: 1.2rem;
-    margin-top: 1rem;
+            display   : flex;
+            gap       : 1.2rem;
+            margin-top: 1rem;
 
             .item {
-                display: inline-block;
-    background: #FFF;
-    color: #18599E;
-    font-weight: bold;
-    line-height: 1;
-    font-size: 1.1rem;
-        padding: 0.6rem 1.2rem 0.4rem;
-    border-radius: 0.4rem;
-    min-width: 5.5rem;
-    text-align: center;
-            &.-active {
-                background: #1E2973;
-    color: #FFF;
-    border: 1px solid #FFF;
+                display      : inline-block;
+                background   : #FFF;
+                color        : #18599E;
+                font-weight  : bold;
+                line-height  : 1;
+                font-size    : 1.1rem;
+                padding      : 0.6rem 1.2rem 0.4rem;
+                border-radius: 0.4rem;
+                min-width    : 5.5rem;
+                text-align   : center;
+
+                &.-active {
+                    background: #1E2973;
+                    color     : #FFF;
+                    border    : 1px solid #FFF;
+                }
             }
         }
     }
 }
+
 .alesis-questions {
         margin-top: 8rem;
 
     .items {
-            max-width: 690px;
-    display: flex;
-    margin: 0 auto;
-    flex-direction: column;
-    gap: 1.5rem;
+        max-width     : 690px;
+        display       : flex;
+        margin        : 0 auto;
+        flex-direction: column;
+        gap           : 1.5rem;
 
         .item {
-                display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+            display       : flex;
+            flex-direction: column;
+            gap           : 1.5rem;
 
             .header {
-                display: flex;
-    border: 1px solid #036EB7;
-    border-radius: .4rem;
-    padding: .5rem 1.5rem;
-    color: #036EB7;
-    font-size: 1.2rem;
+                display      : flex;
+                border       : 1px solid #036EB7;
+                border-radius: .4rem;
+                padding      : .5rem 1.5rem;
+                color        : #036EB7;
+                font-size    : 1.2rem;
 
                 .text {
-                        flex: 1;
+                    flex: 1;
                 }
+
                 .arrow {
-                    width: 20px;
+                    width    : 20px;
+                    transform: rotate(180deg);
                 }
             }
+
             .content {
-                display: flex;
-    border: 1px solid #5D5555;
-    border-radius: .4rem;
-    padding: 0.5rem 1.5rem 1rem;
-    color: #5D5555;
-    font-size: 1.2rem;
+                display      : none;
+                border       : 1px solid #5D5555;
+                border-radius: .4rem;
+                padding      : 0.5rem 1.5rem 1rem;
+                color        : #5D5555;
+                font-size    : 1.2rem;
+            }
+
+            &.-active {
+                .header {
+                    .arrow {
+                        transform: none;
+                    }
+                }
+                .content {
+                    display: flex;
+                }
             }
         }
     }
