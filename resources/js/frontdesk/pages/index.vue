@@ -447,6 +447,9 @@
 </template>
 
 <script>
+$( document ).ready(function() {
+    alert("親愛的普匯會員您好，疫情之因，政府1922 大量簡訊實聯制，影響部分地區簡訊收發延遲，若收不到驗證簡訊，請稍後再進行嘗試。\n另提醒借款會員，明天(6/10)為還款日，敬請按時繳款，以免影響信用紀錄。");
+});
 import { Splide, SplideSlide } from "@splidejs/vue-splide";
 //
 import investUp from "../component/svg/investDotUpComponent";
