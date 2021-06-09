@@ -163,6 +163,85 @@ class Cron extends CI_Controller {
 		die('1');
 	}
 
+
+	/**
+	 * 針對實名驗證已成功的所有用戶進行重新認證
+	 */
+	public function recheck_certifications() {
+
+		$this->load->model('user/user_certification_model');
+		$stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
+		$request = json_decode($stream_clean);
+		if(empty($request)) {
+			$user_certifications = $this->user_certification_model->order_by('user_id', 'ASC')->get_many_by(array(
+				'status' => 1,
+				'certification_id =' => 1,
+				// 借款投資都要驗
+				//'investor' => 0
+			));
+			echo json_encode(array_values(
+				array_unique(array_columns(
+					json_decode(json_encode($user_certifications), true),
+					['user_id', 'investor']),
+					SORT_REGULAR)
+				));
+		}else{
+			$result = [];
+			$pendingUpdateData = [];
+			$this->load->library('Certification_lib');
+			foreach ($request as $key => $v) {
+				$user_certifications 	= $this->user_certification_model
+					->order_by('user_id ASC, id DESC', '')
+					->get_by(array(
+						'status' => 1,
+						'certification_id =' => 1,
+						'user_id' => $v->user_id,
+						'investor' => $v->investor
+					));
+
+				if(isset($user_certifications)) {
+					$tmpRs = $this->certification_lib->realname_verify($user_certifications);
+					$result[] = $tmpRs;
+
+					$param = [
+						'status' => 3,
+						'remark' => json_encode($tmpRs['remark']),
+						'content' => json_encode($tmpRs['content']),
+						'sys_check' => 1,
+					];
+					$reviewStatus = 3;
+					if (!$tmpRs['ocrCheckFailed'] && $tmpRs['remark']['error'] == '' && !$tmpRs['ocrCheckFailed']) {
+						unset($param['status']);
+						$reviewStatus = 1;
+					}
+					if ($tmpRs['risVerified'] && $tmpRs['risVerificationFailed']) {
+						$param = [
+							'remark' => json_encode($tmpRs['remark']),
+							'content' => json_encode($tmpRs['content']),
+						];
+						$reviewStatus = 2;
+					}
+
+					$pendingUpdateData[] = [
+						'reviewStatus' => $reviewStatus,
+						'cer_id' => $user_certifications->id,
+						'param' => $param
+					];
+				}
+			}
+
+			array_map(function ($data) {
+				if($data['reviewStatus'] == 2)
+					$this->certification_lib->set_failed_for_recheck($data['cer_id'], '', true);
+
+				$this->user_certification_model->update($data['cer_id'], $data['param']);
+
+			}, $pendingUpdateData);
+
+			echo json_encode($result);
+		}
+	}
+
 	public function daily_tax()
 	{	//每天下午一點
 		$this->load->library('Payment_lib');

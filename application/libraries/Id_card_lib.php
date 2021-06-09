@@ -128,6 +128,13 @@ class Id_card_lib {
 			return $result;
 		}
 
+		preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $applyYyymmdd, $regexResult);
+		if(!empty($regexResult)) {
+			$applyYyymmdd = str_pad($regexResult['year'], 3, 0, STR_PAD_LEFT) .
+				str_pad($regexResult['month'], 2, 0, STR_PAD_LEFT) .
+				str_pad($regexResult['day'], 2, 0, STR_PAD_LEFT);
+		}
+
 		if(! preg_match('/^[0-9]{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/',$applyYyymmdd)){
 			$result['status'] = 401;
 			$result['response']['response']['checkIdCardApplyFormat'] = 'Parameters of applyYyymmdd Format Is Wrong';
@@ -162,7 +169,7 @@ class Id_card_lib {
 
 		$payload = array('headers' => json_encode($headers, true));
 		$requestUrl = $this->serviceAdapterUrl . "/id-card/send-request";
-		$apiResponse = curl_get($requestUrl, $data=$payload);
+		$apiResponse = curl_get($requestUrl, $data=$payload, [],10);
 
 		if($apiResponse){
 			$apiResponse = json_decode($apiResponse, true);

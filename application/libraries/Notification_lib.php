@@ -28,7 +28,25 @@ class Notification_lib{
 		$rs = $this->CI->user_notification_model->insert($param);
 		return $rs;
 	}
-	
+
+	public function recheck_certification($user_id,$investor,$fail=""){
+		$title = "【普匯系統通知】";
+		$content = "親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。";
+		$type = 'b03';
+
+		$param = array(
+			"user_id"	=> $user_id,
+			"investor"	=> $investor,
+			"title"		=> $title,
+			"content"	=> $content,
+		);
+		$rs = $this->CI->user_notification_model->insert($param);
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+
+		return $rs;
+	}
+
 	public function certification($user_id,$investor,$name,$status,$fail=""){
 	    $type = false;
 		if($status==1){

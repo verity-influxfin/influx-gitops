@@ -138,7 +138,7 @@ class Report_scan_lib
         $response = json_decode($result);
 
         if (!$result || !isset($response->status) || ($response->status != 200 && $response->status != 204) ) {
-            return;
+            return false;
         }
 
         return $response;
