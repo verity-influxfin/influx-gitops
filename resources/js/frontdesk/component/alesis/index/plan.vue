@@ -14,7 +14,7 @@
             <div class="item" v-for="(item, index) in features" :key="index">{{ item }}</div>
             <div class="unready" v-if="unready">敬請期待</div>
         </div>
-        <a class="action" href="#!"><index-button>{{ action }}</index-button></a>
+        <a class="action" href="#!"><index-button xPadding="0.9rem" yPadding="1rem" size="1.3rem">{{ action }}</index-button></a>
     </div>
 </template>
 
@@ -103,24 +103,13 @@ export default {
     }
 
     .action {
-        /*display      : block;
-        width        : 100%;
-        text-align   : center;
-        font-size    : 1.2rem;
-        font-weight  : bold;
-        color        : #036eb7;
-        border-radius: .4rem;
-        padding      : .5rem 0;
-        border       : 1px solid #2664a5;
-        margin-top   : auto;*/
         display   : block;
         width     : 100%;
         text-align: center;
         margin-top: auto;
 
         > div {
-            width    : 100%;
-            font-size: 1.2rem;
+            width: 100%;
         }
     }
 }
