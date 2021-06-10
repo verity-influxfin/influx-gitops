@@ -60,7 +60,7 @@
                     <div class="cover">
                         <img class="image" src="/images/報告書.png" alt="">
                     </div>
-                    <a class="more" href="#!"><index-button>查看更多</index-button></a>
+                    <a class="more" href="#!"><index-button yPadding="0.9rem" xPadding="2.5rem">查看更多</index-button></a>
                 </div>
 
             </index-section>
@@ -151,7 +151,6 @@ export default {
         display    : flex;
         align-items: center;
         position   : relative;
-        padding-top: 4rem;
 
         .header {
             flex      : 1;
@@ -160,19 +159,25 @@ export default {
             text-align: center;
 
             .text {
-                color         : #FFF;
-                padding-bottom: 0.2rem;
-                border-bottom : 1px solid #FFF;
-                display       : inline-block;
-                font-size     : 1.8rem;
-                font-weight   : bolder;
+                padding-bottom         : 0.2rem;
+                border-bottom          : 1px solid #FFF;
+                display                : inline-block;
+                font-weight            : bolder;
+                background-image       : linear-gradient(to right, #e7e7f4 0%, #4fb7ec 50%, #c4c4fc 75%);
+                -webkit-background-clip: text;
+                background-clip        : text;
+                width                  : fit-content;
+                color                  : rgba(255, 255, 255, 0);
+                font-size              : 2rem;
+                line-height            : 1.2;
             }
         }
         .showcase {
-            flex      : 2;
-            text-align: center;
-            z-index   : 1;
-            position  : relative;
+            flex       : 2;
+            text-align : center;
+            z-index    : 1;
+            position   : relative;
+            padding-top: 4rem;
 
             .image {
                 height: 520px;
@@ -386,11 +391,8 @@ export default {
             }
         }
         .more {
-            > div {
-                margin-top: 3rem;
-                width    : 100%;
-                font-size: 1.2rem;
-            }
+            margin-top: 3rem;
+            display   : inline-block;
         }
     }
 }
