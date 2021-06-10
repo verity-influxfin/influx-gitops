@@ -557,7 +557,9 @@ class Certification_lib{
 				preg_match('/(初|補|換)發$/', $ocr['issueType'], $requestApplyCode);
 			$requestApplyCode = isset($requestApplyCode[0]) ? $requestApplyCode[0] : '';
 			$reqestApplyYyymmdd = $content['id_card_date'];
-			preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/', $content['id_card_place'], $requestIssueSiteId);
+			preg_match('/(*UTF8)((\W{1}|新北)市|\W{1}縣)|(連江|金門)/', $ocr['id_card_place'], $requestIssueSiteId);
+			if(empty($requestIssueSiteId))
+				preg_match('/(*UTF8)(([^\(\)]{1,2}|新北)市|[^\(\)]{1,2}縣)|(連江|金門)/', $content['id_card_place'], $requestIssueSiteId);
 			$requestIssueSiteId = isset($requestIssueSiteId[0]) ? $requestIssueSiteId[0] : '';
 			$result = $this->CI->id_card_lib->send_request($requestPersonId, $requestApplyCode, $reqestApplyYyymmdd, $requestIssueSiteId, $resultUserId);
 			if ($result) {
