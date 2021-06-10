@@ -17,11 +17,11 @@
                 <div class="wrapper">
                     <img src="/images/alesis-report.svg" class="image" alt="">
                     <div class="links">
-                        <a href="#!" class="item"><index-button>2021年5月</index-button></a>
-                        <a href="#!" class="item"><index-button>2021年5月</index-button></a>
-                        <a href="#!" class="item"><index-button>2021年5月</index-button></a>
+                        <a href="#!" class="item"><index-button yPadding="0.9rem" xPadding="2.5rem">2021年5月</index-button></a>
+                        <a href="#!" class="item"><index-button yPadding="0.9rem" xPadding="2.5rem">2021年4月</index-button></a>
+                        <a href="#!" class="item"><index-button yPadding="0.9rem" xPadding="2.5rem">2021年3月</index-button></a>
                     </div>
-                    <a href="#!" class="cta"><index-button>立即投資</index-button></a>
+                    <a href="#!" class="cta"><index-button yPadding="0.9rem" xPadding="2.5rem">立即投資</index-button></a>
                 </div>
             </index-section>
         </div>
@@ -124,20 +124,28 @@ export default {
 }
 
 .alesis-report {
-        margin-top: 8rem;
+    margin-top: 8rem;
+
     .wrapper {
         text-align: center;
 
         .image {
-                width: 430px;
+            width: 430px;
         }
+
         .links {
-            margin-top: 1rem;
+            margin-top     : 1.5rem;
+            margin-bottom  : 1.5rem;
+            display        : flex;
+            gap            : 1rem;
+            align-items    : center;
+            justify-content: center;
 
             .item {
-
+                // padding: 0.9rem 2.5rem;
             }
         }
+
         .cta {
 
         }
