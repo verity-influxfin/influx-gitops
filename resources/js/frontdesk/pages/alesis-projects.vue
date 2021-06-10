@@ -3,7 +3,7 @@
         <!-- 標頭 -->
         <div class="alesis-slate">
             <div class="background">
-                <img class="image" src="/images/sshot-1848.png" alt="">
+                <img class="image" src="/images/sshot-1907.png" alt="">
             </div>
             <div class="mask">
                 <div class="header">查看案件</div>
@@ -190,33 +190,43 @@ export default {
     }
 
     .mask {
-        background-image: url(/images/alesis-shell-mask.svg);
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        text-shadow: 1px 1px 4px black;
-        color: #FFF;
-        font-size: 1.1rem;
-        padding-left: 12rem;
-        background-size: contain;
+        background-image : url(/images/alesis-shell-mask.svg);
+        position         : relative;
+        z-index          : 1;
+        display          : flex;
+        flex-direction   : column;
+        justify-content  : center;
+        text-shadow      : 1px 1px 4px black;
+        color            : #FFF;
+        font-size        : 1.1rem;
+        padding-left     : 12rem;
+        background-size  : contain;
         background-repeat: no-repeat;
-        min-width: 1485px;
-        height: 100%;
+        min-width        : 1485px;
+        height           : 100%;
 
         .header {
-            color         : #FFF;
-            padding-bottom: 0.2rem;
-            border-bottom : 1px solid #FFF;
-            display       : inline-block;
-            font-size     : 1.8rem;
-            font-weight   : bolder;
+            display      : inline-block;
+            font-size    : 2.2rem;
+            font-weight  : bolder;
+            color        : #F2E627;
+            border-bottom: 0;
+        }
+
+        .content {
+            margin-top : 1rem;
+            line-height: 1.8;
+            font-size  : 1.3rem;
         }
     }
 }
 
 .alesis-projects {
     margin-top: 8rem;
+
+    & + & {
+        margin-top: 3rem;
+    }
 
     .wrapper {
         width : min-content;
@@ -234,7 +244,7 @@ export default {
             white-space     : nowrap;
             border-bottom   : 1px solid #2664A5;
             padding-bottom  : .5rem;
-            padding-right   : 2rem;
+            padding-right   : 1rem;
             margin-bottom   : 2rem;
             margin-left     : 4rem;
 
