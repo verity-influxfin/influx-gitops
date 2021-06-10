@@ -132,7 +132,7 @@ class Data_verify_lib{
 		 *  []error_message] => 不過件原因
 		 * )
 		 */
-		public function check_investigation($data=[]){
+		public function check_investigation($verifiedResult, $data=[]){
 			// todo list 暫時轉人工
 			$res = [
 				'status_code' => 3,
@@ -142,13 +142,13 @@ class Data_verify_lib{
 				// 借款逾期、催收或呆帳記錄
 				if($k == 'liabilities_badDebtInfo'){
 					if($v!='無'){
-						$res['status_code'] = 2;
-						$res['error_message'][] = '聯徵借款逾期、催收或呆帳記錄不符合申貸標準';
+						$verifiedResult->addRejectMessage('聯徵借款逾期、催收或呆帳記錄不符合申貸標準');
 					}
 				}
 				// 大額存款不足退票資訊
 				if($k == 'checkingAccount_largeAmount'){
 					if($v!='無'){
+						$verifiedResult->addRejectMessage('聯徵借款逾期、催收或呆帳記錄不符合申貸標準');
 						$res['status_code'] = 2;
 						$res['error_message'][] = '聯徵大額存款不足退票資訊不符合申貸標準';
 					}
@@ -201,27 +201,47 @@ class Data_verify_lib{
 
 		/**
 		 * [check_job 工作認證過件檢核]
+		 * @param CertificationResult $verifiedResult [檢核結果]
+		 * @param string $user_id [使用者 ID]
 		 * @param  array  $data [工作認證 user meta]
-		 * @return array  $res  [檢核結果]
+		 * @param  array  $content [工作認證解析完資料]
+		 * @return CertificationResult [檢核結果]
 		 */
-		public function check_job($data=[]){
-			$res = [
-				'status_code' => 1,
-				'error_message' => [],
-			];
+		public function check_job($verifiedResult, $user_id='', $data=[], $content=[]){
 
-			$this->CI->config->load('top_enterprise');
-			$top_enterprise = $this->CI->config->item("top_enterprise");
+//			$this->CI->config->load('top_enterprise');
+//			$top_enterprise = $this->CI->config->item("top_enterprise");
 
-			// foreach($data as $key => $value){
-			// 	if($key == 'company_name'){
-			// 		if(in_array($value,$top_enterprise)){
-			//
-			// 		}
-			// 	}
-			// }
+			if($data['total_count'] < 3 || $data['this_company_count'] < 3 ) {
+				$verifiedResult->addMessage('總工作年資或現任公司年資沒有超過 3 個月', 3, MassageDisplay::Backend);
+			}
 
-			return $res;
+			if($data['last_insurance_info']['insuranceSalary'] < 23800) {
+				$verifiedResult->addMessage('投保薪資月薪小於 23800', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['last_insurance_info']['endDate'] != "" ||
+				preg_match('/部分工時/', $data['last_insurance_info']['comment']) ||
+				preg_match('/不適用就業保險/', $data['last_insurance_info']['comment']) ||
+				preg_match('/F/', $data['last_insurance_info']['comment']) ||
+				preg_match('/D/', $data['last_insurance_info']['comment'])
+				) {
+				$verifiedResult->addMessage('註記有部分工時、不適用就業保險、F、D', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if(!empty($content) && isset($content['gcis_info']['Company_Status_Desc'])) {
+				if(preg_match('/解散/', $content['gcis_info']['Company_Status_Desc'])) {
+					$verifiedResult->addMessage('任職公司非為營業中', 2, MassageDisplay::Client);
+				}else if(!preg_match('/核准設立/', $content['gcis_info']['Company_Status_Desc'])) {
+					$verifiedResult->addMessage('任職公司非為營業中', 3, MassageDisplay::Client);
+				}
+			}else{
+				$verifiedResult->addMessage('沒有查詢到公司狀態', 3, MassageDisplay::Backend);
+			}
+
+			return $verifiedResult;
 		}
 
 		/**

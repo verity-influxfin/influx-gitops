@@ -548,7 +548,7 @@ class Certification_lib{
 		$certification_content = isset($info->content) ? json_decode($info->content,true): [];
 		$url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file']: null;
 		$result = [];
-		$status = 3;
+		$verifiedResult = new InvestigationCertificationResult(3);
 		$time = time();
 		$printDatetime = '';
 
@@ -566,10 +566,7 @@ class Certification_lib{
 
 			// 自然人聯徵正確性驗證
 			$this->CI->load->library('verify/data_legalize_lib');
-			$res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data);
-			if($res['error_message']){
-				$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
-			}
+			$verifiedResult = $this->CI->data_legalize_lib->legalize_investigation($verifiedResult,$info->user_id,$data);
 
 			// 資料轉 result
 			$this->CI->load->library('mapping/user/Certification_data');
@@ -584,22 +581,18 @@ class Certification_lib{
 				$time = strtotime(date('Y-m-d H:i:s',$time)." + 1 month");
 
 				// 過件邏輯
-				if(!$res['error_message']){
+				if(!empty($verifiedResult->getAllMessage())){
 					$this->CI->load->library('verify/data_verify_lib');
-					$approve_status = $this->CI->data_verify_lib->check_investigation($result);
-					// 過件結果
-					if($approve_status){
-						$status = isset($approve_status['status_code']) ? $approve_status['status_code'] : $status;
-						if($approve_status['error_message']){
-							$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
-						}
-						$status = 3;
-					}
+					$verifiedResult = $this->CI->data_verify_lib->check_investigation($verifiedResult, $result);
+
+					$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage());
 				}else{
-					$status = 2;
+					$verifiedResult->setStatus(2);
 				}
 
 			}
+
+			$status = $verifiedResult->getStatus();
 
 			$group_id = isset(json_decode($info->content)->group_id) ? json_decode($info->content)->group_id : time();
 
@@ -693,15 +686,15 @@ class Certification_lib{
 
 	public function job_verify($info = array(),$url=null) {
 
-		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+		$realname_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
 
-		if($user_certification==false || $user_certification->status !=1){
+		if($realname_certification==false || $realname_certification->status != 1){
 			return false;
 		}
 
 		$certification_content = isset($info->content) ? json_decode($info->content,true) : [];
 
-		$status = 3;
+		$verifiedResult = new JobCertificationResult(3);
 		$res = [];
 		$gcis_res = [];
 		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
@@ -724,6 +717,7 @@ class Certification_lib{
 				$this->CI->load->library('gcis_lib');
 				$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
 				$certification_content['gcis_info'] = $gcis_res;
+				$res['gcis_info'] = $gcis_res;
 			}
 
 			if($res){
@@ -731,19 +725,17 @@ class Certification_lib{
 				$result = $this->CI->certification_data->transformJobToResult($res);
 				$certification_content['pdf_info'] = $result;
 			}else{
-				$remark['verify_result'][] = '勞保pdf解析失敗';
+				$verifiedResult->addPendingMessage('勞保pdf解析失敗');
 			}
 
 			//勞保 pdf 驗證
-			if($res && isset($res['pageList']) && isset($certification_content['tax_id'])){
+			if(isset($result) && isset($certification_content['tax_id'])){
 
 				$this->CI->load->library('verify/data_legalize_lib');
-				$verify_res = $this->CI->data_legalize_lib->legalize_job($info->user_id,$res);
-				if($verify_res['error_message']){
-					$remark['verify_result'] = array_merge($remark['verify_result'],$verify_res['error_message']);
-				}
-				// $this->CI->load->library('verify/data_verify_lib');
-				// $approve_status = $this->data_verify_lib->check_job($info->user_id,$result);
+				$verifiedResult = $this->CI->data_legalize_lib->legalize_job($verifiedResult,$info->user_id,$result,$certification_content,$info->created_at);
+
+				$this->CI->load->library('verify/data_verify_lib');
+				$verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult,$info->user_id,$result,$certification_content);
 
 				// to do : 是否千大企業員工
 				// $this->CI->config->load('top_enterprise');
@@ -751,15 +743,23 @@ class Certification_lib{
 
 			}
 
+			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
+			$status = $verifiedResult->getStatus();
+
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status,
 				'sys_check' => 1,
 				'remark' => json_encode($remark),
 				'content' => json_encode($certification_content),
 			));
+
+			if($status == 1) {
+				$this->job_success($info);
+			}
+
 			return true;
 		}
-			return false;
+		return false;
 	}
 
     public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
@@ -1063,6 +1063,7 @@ class Certification_lib{
 
 	private function job_success($info){
 		if($info){
+			$certification 	= $this->certification[$info->certification_id];
 			$content 	= $info->content;
 			$data 		= [
 				'job_status'			=> 1,
@@ -1085,6 +1086,7 @@ class Certification_lib{
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
+				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
                 return $this->fail_other_cer($info);
 			}
 		}
