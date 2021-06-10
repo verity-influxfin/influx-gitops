@@ -242,7 +242,7 @@ class Certification_lib{
 			),
 		);
 		$returnData = [
-			'remark'=>['error'=>[], 'OCR'=>[]],
+			'remark'=>$remark,
 			'content'=>$info->content,
 			'risVerified'=> False,
 			'risVerificationFailed'=> False,
@@ -267,10 +267,6 @@ class Certification_lib{
 
 		$fperson_count = is_array($person_token) ? count($person_token) : 0;
 		$ffront_count = is_array($front_token) ? count($front_token) : 0;
-		$remark['face_count'] = [
-			'person_count' => $fperson_count,
-			'front_count' => $ffront_count
-		];
 
 		//嘗試轉向找人臉
 		if ($fperson_count == 0) {
@@ -287,6 +283,11 @@ class Certification_lib{
 				$ffront_count = $rotate['count'];
 			}
 		}
+
+		$remark['face_count'] = [
+			'person_count' => $fperson_count,
+			'front_count' => $ffront_count
+		];
 
 		// content 存放圖片 ID 或 URL 的對應欄位名稱
 		$imageIdTable = ['front_image_id', 'back_image_id', 'healthcard_image_id'];
@@ -1016,7 +1017,8 @@ class Certification_lib{
 				else{
                     $base64 = base64_encode($image_data);
                     $this->CI->load->library('faceplusplus_lib');
-                    $count = count($this->CI->faceplusplus_lib->get_face_token_by_base64($base64,$user_id,$cer_id));
+                    $token = $this->CI->faceplusplus_lib->get_face_token_by_base64($base64,$user_id,$cer_id);
+                    $count = is_array($token) ? count($token) : 0;
                 }
                 if($count){
                     $this->CI->load->library('s3_upload');
