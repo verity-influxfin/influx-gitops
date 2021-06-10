@@ -83,7 +83,7 @@
                                         <div class="paragraph">
                                             <div class="label">方法 1</div>
                                             <div class="box">
-                                                <div class="bordered">自然人憑證</div>
+                                                <index-button size="1.2rem" xPadding="2rem" yPadding=".8rem">自然人憑證</index-button>
                                             </div>
                                         </div>
                                         <div class="content">至各縣市勞動部申請 : 申請後請拍照上傳至APP內</div>
@@ -91,7 +91,7 @@
                                         <div class="paragraph">
                                             <div class="label">方法 2</div>
                                             <div class="box">
-                                                <div class="bordered">至各縣市勞動部申請</div>
+                                                <index-button size="1.2rem" xPadding="2rem" yPadding=".8rem">至各縣市勞動部申請</index-button>
                                             </div>
                                         </div>
                                         <div class="content">
@@ -104,7 +104,7 @@
                                         <div class="paragraph">
                                             <div class="label">方法 1</div>
                                             <div class="box">
-                                                <div class="bordered">郵局</div>
+                                                <index-button size="1.2rem" xPadding="2rem" yPadding=".8rem">郵局</index-button>
                                             </div>
                                         </div>
                                         <div class="content">郵局：至郵局櫃台申請聯徵,並寄送至普匯金融科技 (台北市松江路111號11樓之2)</div>
@@ -112,7 +112,7 @@
                                         <div class="paragraph">
                                             <div class="label">方法 2</div>
                                             <div class="box">
-                                                <div class="bordered">自然人憑證</div>
+                                                <index-button size="1.2rem" xPadding="2rem" yPadding=".8rem">自然人憑證</index-button>
                                             </div>
                                         </div>
                                         <div class="content">
@@ -122,7 +122,7 @@
                                         <div class="paragraph">
                                             <div class="label">方法 3</div>
                                             <div class="box">
-                                                <div class="bordered">投資人行動網</div>
+                                                <index-button size="1.2rem" xPadding="2rem" yPadding=".8rem">投資人行動網</index-button>
                                             </div>
                                         </div>
                                         <div class="content">
@@ -235,7 +235,7 @@
                             <img src="/images/alesis-work-loan-phone.svg" class="image">
                         </div>
                         <div class="slogan">假日放款全年無休</div>
-                        <a href="#!" class="get"><index-button>取得資金</index-button></a>
+                        <a href="#!" class="get"><index-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</index-button></a>
                     </div>
                     <div class="right">
                         <div class="section">
@@ -648,11 +648,23 @@ export default {
 
 .alesis-flow {
     .carousel {
-        margin: 2rem auto;
+        margin   : 2rem auto;
         max-width: 1280px;
 
         .selector .lightbox .set {
             grid-template-columns: 1fr;
+        }
+
+        .selector .lightbox .set .item {
+            width          : 1020px;
+            min-height     : 550px;
+            display        : flex;
+            align-items    : center;
+            justify-content: initial;
+        }
+
+        .step-1, .step-2, .step-3, .step-4 {
+            min-width: 800px;
         }
 
         .step-1 {
@@ -696,6 +708,7 @@ export default {
             display              : grid;
             grid-template-columns: 470px 1fr;
             gap                  : 3rem;
+            margin               : 0 auto;
             max-width            : 800px;
 
             .left {
@@ -791,6 +804,7 @@ export default {
             display              : grid;
             grid-template-columns: 470px 1fr;
             gap                  : 3rem;
+            margin               : 0 auto;
             max-width            : 800px;
 
             .left {
@@ -823,6 +837,7 @@ export default {
             display              : grid;
             grid-template-columns: 470px 1fr;
             gap                  : 3rem;
+            margin               : 0 auto;
             max-width            : 800px;
 
             .left {
@@ -900,11 +915,8 @@ export default {
             }
 
             .get {
-                > div {
-                    margin-top: 1rem;
-                    width    : 100%;
-                    font-size: 1.2rem;
-                }
+                display   : inline-block;
+                margin-top: 1rem;
             }
         }
         .right {
