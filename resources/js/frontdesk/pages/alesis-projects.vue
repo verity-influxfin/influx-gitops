@@ -252,6 +252,10 @@ export default {
                 margin-top: -1rem;
             }
         }
+
+        .index-card {
+            min-width: 450px;
+        }
     }
 }
 </style>
