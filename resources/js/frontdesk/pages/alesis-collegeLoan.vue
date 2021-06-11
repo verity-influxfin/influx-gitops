@@ -159,10 +159,28 @@
         <!-- / 申貸媒合簡便四步驟 -->
 
         <!-- 服務範圍廣 -->
-        <div class="alesis-">
+        <div class="alesis-map">
             <index-section header="服務範圍廣" multiline="超過156所大學生，不論是生活急需、還是補習進修費，都在找普匯！
 成立三年已幫助超過2萬名學生，讓學生一想到借錢，就想到普匯！" :descriptionMulti="true" :secondary="true">
-
+                <div class="wrapper">
+                    <div class="projects">
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                    </div>
+                    <div class="map">
+                        <alesis-taiwan-map></alesis-taiwan-map>
+                    </div>
+                </div>
             </index-section>
         </div>
         <!-- / 服務範圍廣 -->
@@ -372,7 +390,9 @@ import indexHuman                      from "../component/alesis/index/human";
 import indexButton                     from "../component/alesis/index/button";
 import indexShanghai                   from "../component/alesis/index/shanghai";
 import globalCarousel                  from "../component/alesis/global-carousel";
+import indexProject                    from "../component/alesis/index/project";
 import AlesisLoanHeader                from "../component/alesis/loan-header";
+import AlesisTaiwanMap                 from "../component/alesis/taiwan-map";
 import AlesisApplicationRecommendation from "../component/alesis/application-recommendation";
 
 export default {
@@ -385,8 +405,10 @@ export default {
         indexHuman,
         indexButton,
         indexShanghai,
+        indexProject,
         globalCarousel,
         AlesisApplicationRecommendation,
+        AlesisTaiwanMap,
         AlesisLoanHeader
     },
     data: () => ({
@@ -418,6 +440,29 @@ export default {
     .wrapper {
       display        : flex;
       justify-content: center;
+    }
+}
+
+.alesis-map {
+    .wrapper {
+        display: grid;
+    max-width: 1620px;
+    margin: 8rem auto 0;
+    gap: 5rem;
+    grid-template-columns: 1fr 1fr;
+
+        .projects {
+                display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+
+            .item {
+
+            }
+        }
+        .map {
+
+        }
     }
 }
 
