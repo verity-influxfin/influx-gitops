@@ -65,7 +65,7 @@ export default {
     padding      : .5rem;
     overflow     : hidden;
     font-size    : .9rem;
-    min-width    : 450px;
+    min-width    : 400px;
 
     .header {
         display    : flex;
