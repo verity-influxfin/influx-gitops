@@ -41,19 +41,21 @@ class CertificationResult implements CertificationResultInterface
 	}
 
 	public function getMessage($status, $showFlag=MassageDisplay::All): array {
-		$result = array_filter($this->msgList, function ($msg) use ($showFlag) {
-			return $msg[1] <= $showFlag;
-		});
-		return array_values($result)[0];
+		if(array_key_exists($status, $this->msgList)) {
+			$result = array_filter($this->msgList[$status], function ($msg) use ($showFlag) {
+				return $msg[1] <= $showFlag;
+			});
+			if (is_array($result))
+				return array_unique(array_column($result, 0));
+		}
+		return [];
 	}
 
 	public function getAllMessage($showFlag=MassageDisplay::All): array
 	{
-		$allMsg = call_user_func_array('array_merge', $this->msgList);
-		$result = array_filter($allMsg, function ($msg) use ($showFlag) {
-			return $msg[1] <= $showFlag;
-		});
-		return array_unique(array_column($result, 0));
+		return array_reduce(range(1,3), function ($msg, $status) use ($showFlag) {
+			return array_merge($msg, $this->getMessage($status, $showFlag));
+		}, []);
 	}
 
 	public function getAPPMessage($status): array
@@ -68,7 +70,7 @@ class CertificationResult implements CertificationResultInterface
 	public function getStatus(): int
 	{
 		return array_key_exists(2, $this->msgList) ? 2
-			: array_key_exists(3, $this->msgList) ? 3 : $this->status;
+			: (array_key_exists(3, $this->msgList) ? 3 : $this->status);
 	}
 
 	public function setBanResubmit($resubmitExpirationMonth=null) {
@@ -77,12 +79,14 @@ class CertificationResult implements CertificationResultInterface
 		$this->banResubmit = true;
 	}
 
-	public function getCanResubmitDate(): string
+	public function getCanResubmitDate($timestamp=0): string
 	{
 		$canResubmitDate = '';
 
 		if ($this->banResubmit) {
 			$canResubmitDate = new DateTime;
+			if ($timestamp)
+				$canResubmitDate->setTimestamp($timestamp);
 			$canResubmitDate->modify( '+'.$this->resubmitExpirationMonth.' month' );
 			$canResubmitDate = $canResubmitDate->format('Y-m-d H:i:s');
 		}

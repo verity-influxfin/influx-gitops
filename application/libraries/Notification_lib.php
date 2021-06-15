@@ -39,11 +39,10 @@ class Notification_lib{
 		
 		if($status==2){
 			$title = "【認證失敗】您的".$name."未通過";
-			$content = "您好！您的 ".$name."未通過，請重新認證。".($fail?"
-退件原因：".$fail:'');
+			$content = "您好！您的 ".$name."未通過，請重新認證。".($fail?"退件原因：".(is_array($fail)?join("、", $fail):$fail):"");
             $type = 'b03';
         }
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,

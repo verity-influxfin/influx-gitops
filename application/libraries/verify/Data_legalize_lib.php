@@ -429,14 +429,14 @@ class Data_legalize_lib{
 	 *           )
 	 * )
 	 */
-	public function legalize_investigation(CertificationResult $verifiedResult, $user_id='', $data=[], $hsa_a11=0){
-		if($user_id){
+	public function legalize_investigation(CertificationResult $verifiedResult, $user_id='', $result=[], $created_at=0, $hsa_a11=0){
+		if($user_id) {
 			$this->CI->load->model('user/user_model');
-			$user_info = $this->CI->user_model->get_by(['id'=>$user_id]);
-			if($user_info && isset($data['id'])){
+			$user_info = $this->CI->user_model->get_by(['id' => $user_id]);
+			if (isset($user_info) && isset($result['personId'])) {
 
-				if($data['id'] != $user_info->id_number){
-					$verifiedResult->addMessage('聯徵身分證號與該實名用戶統一編號不一致', 2, MassageDisplay::Client);
+				if ($result['personId'] != $user_info->id_number) {
+					$verifiedResult->addMessage('聯徵報告身分證字號與實名認證不符', 2, MassageDisplay::Client);
 				}
 
 				// TODO: 微企貸的聯徵a11 return 及 $res 要改
@@ -447,8 +447,21 @@ class Data_legalize_lib{
 //					}
 //					$res['result']['a11_id'] = $data['a11_id'];
 //				}
-			}else{
+
+			} else {
 				$verifiedResult->addMessage('查無使用者相關資訊', 3, MassageDisplay::Backend);
+			}
+		}
+
+		if(isset($result['printDatetime']) && $result['printDatetime']) {
+			$this->CI->load->library('mapping/time');
+			$reportTime = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $result['printDatetime']);
+			$reportTime = $this->CI->time->ROCDateToUnixTimestamp($reportTime);
+
+			// 印表日期
+			$validReportTime = strtotime(date('Y-m-d H:i:s', $created_at) . " - 1 month");
+			if($reportTime < $validReportTime) {
+				$verifiedResult->addMessage('聯徵報告非近一個月申請', 2, MassageDisplay::Client);
 			}
 		}
 
