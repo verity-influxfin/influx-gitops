@@ -415,7 +415,8 @@ class Certification_lib{
 		$ocrCheckFailed = false;
 		for ($i = 0; $i < count($checkItemList); $i++) {
 			foreach ($checkItemList[$i] as $ocrResultKey => $contentKey) {
-				if (!isset($content[$contentKey]) || !isset($ocr[$ocrResultKey]) || $content[$contentKey] !== $ocr[$ocrResultKey]) {
+				$rawData = isset($content[$contentKey]) ? ($contentKey == 'id_number' ? strtoupper($content[$contentKey]) : $content[$contentKey]) : '';
+				if (!isset($content[$contentKey]) || !isset($ocr[$ocrResultKey]) || $rawData !== $ocr[$ocrResultKey]) {
 					$msg .= $ocrResultKey . '無法辨識<br />';
 					$ocrCheckFailed = true;
 				}
@@ -531,8 +532,10 @@ class Certification_lib{
 		if (count(array_filter($sameDataCheckList, function ($v, $k) use ($content, $ocr) {
 				if (isset($content[$k]))
 					return $content[$k] && isset($content[$v]) && $content[$k] == $content[$v];
-				else
-					return isset($ocr[$k]) && isset($content[$v]) && $ocr[$k] == $content[$v];
+				else {
+					$rawData = isset($content[$v]) ? ($v == 'id_number' ? strtoupper($content[$v]) : $content[$v]) : '';
+					return isset($ocr[$k]) && isset($content[$v]) && $ocr[$k] == $rawData;
+				}
 			}, ARRAY_FILTER_USE_BOTH)) != count($sameDataCheckList)) {
 			$msg .= '健保卡與身分證的資料不符<br/>';
 		}
