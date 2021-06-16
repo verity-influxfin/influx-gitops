@@ -64,8 +64,21 @@ export default {
     align-items    : center;
     justify-content: center;
 
+    @media (max-width: 767px) {
+        & {
+            flex-direction: column;
+        }
+    }
+
     .symbol {
         margin-right: 1rem;
+
+        @media (max-width: 767px) {
+            & {
+                margin-right: 0;
+                width       : 70px;
+            }
+        }
     }
 
     .content {
@@ -74,14 +87,33 @@ export default {
         flex-direction : column;
         justify-content: center;
 
+        @media (max-width: 767px) {
+            & {
+                margin-top : 1rem;
+                align-items: center;
+            }
+        }
+
         .header {
             font-size  : 1.2rem;
             font-weight: bold;
             color      : #353482;
+
+            @media (max-width: 767px) {
+                & {
+                    font-size: 1rem;
+                }
+            }
         }
 
         .counter {
             font-size: 1.2rem;
+
+            @media (max-width: 767px) {
+                & {
+                    font-size: 1rem;
+                }
+            }
 
             .number {
                 color: #646464;
@@ -91,6 +123,12 @@ export default {
                 font-size  : 1.2rem;
                 font-weight: bold;
                 color      : #353482;
+
+                @media (max-width: 767px) {
+                    & {
+                        font-size: 1rem;
+                    }
+                }
             }
         }
     }
