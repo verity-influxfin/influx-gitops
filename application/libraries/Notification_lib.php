@@ -767,7 +767,7 @@ $name 您好，
 		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));
 	}
 
-    public function function EDM($user_id, $title, $content, $EDM, $EDM_href, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [])
+    public function EDM($user_id, $title, $content, $EDM, $EDM_href, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [])
     {
         $user_list = [];
         $user_ids = false;
