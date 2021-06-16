@@ -459,6 +459,12 @@ export default {
 }
 
 .alesis-company-introduction {
+    @media (max-width: 767px) {
+        & {
+            padding: 0 2rem;
+        }
+    }
+
      .carousel {
         margin    : 0 auto 3rem;
         text-align: center;
@@ -480,9 +486,23 @@ export default {
         max-width: 1280px;
         margin   : 0 auto;
 
+        @media (max-width: 767px) {
+            & {
+                flex-direction: column;
+            }
+        }
+
         .showcase {
             flex      : 1;
             text-align: center;
+
+            .image {
+                @media (max-width: 767px) {
+                    & {
+                        width: 280px;
+                    }
+                }
+            }
         }
 
         .items {
@@ -506,6 +526,14 @@ export default {
         max-width      : 1280px;
         margin         : 0 auto;
 
+        @media (max-width: 767px) {
+            & {
+                flex-direction: column;
+                gap           : 3rem;
+                padding       : 0 3rem;
+            }
+        }
+
         .showcase {
             flex       : 0.75;
             text-align : center;
@@ -518,8 +546,23 @@ export default {
         .content {
             flex: 1;
 
+            @media (max-width: 767px) {
+                & {
+                    max-width: 450px;
+                    margin   : 0 auto;
+                }
+            }
+
             .bullet {
                 margin-left: 2.3rem;
+
+                .symbol {
+                    @media (max-width: 767px) {
+                        & {
+                            margin-right: 2rem;
+                        }
+                    }
+                }
             }
         }
 
@@ -529,7 +572,13 @@ export default {
                 margin-top: 3.5rem;
 
                 .moon {
-                    margin-right   : 3rem;
+                    margin-right: 3rem;
+
+                    @media (max-width: 767px) {
+                        & {
+                            margin-right: 1.5rem;
+                        }
+                    }
                 }
                 .content {
                     color: #5d5555;
@@ -544,6 +593,13 @@ export default {
         font-size  : 2rem;
         font-weight: bolder;
         margin-top : 4rem;
+
+        @media (max-width: 767px) {
+            & {
+                font-size : 1rem;
+                margin-top: 2rem;
+            }
+        }
     }
 }
 
@@ -560,6 +616,12 @@ export default {
 
             .image {
                 width: 590px;
+
+                @media (max-width: 767px) {
+                    & {
+                        width: 320px;
+                    }
+                }
             }
         }
 
@@ -616,12 +678,24 @@ export default {
         background-size : cover;
         padding         : .5rem 0;
 
+        @media (max-width: 767px) {
+            & {
+                padding: .5rem 1rem;
+            }
+        }
+
         .logos {
             display              : grid;
             grid-template-columns: repeat(4, 1fr);
             max-width            : 1280px;
             margin               : 2rem auto;
             gap                  : 1rem;
+
+            @media (max-width: 767px) {
+                & {
+                    margin: 1rem auto;
+                }
+            }
 
             &.-three {
                 grid-template-columns: repeat(3, 1fr);
@@ -631,6 +705,12 @@ export default {
                 height        : 60px;
                 margin        : 0 auto;
                 mix-blend-mode: darken;
+
+                @media (max-width: 767px) {
+                    & {
+                        height: 30px;
+                    }
+                }
             }
         }
     }
@@ -644,12 +724,25 @@ export default {
         max-width      : 1280px;
         margin         : 0 auto;
 
+        @media (max-width: 767px) {
+            & {
+                flex-direction: column;
+            }
+        }
+
         .calculator {
             flex           : 1;
             display        : flex;
             align-items    : center;
             justify-content: center;
             margin-right   : 7rem;
+
+            @media (max-width: 767px) {
+                & {
+                    width       : 380px;
+                    margin-right: 0;
+                }
+            }
 
             > div {
                     width: 600px;
