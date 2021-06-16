@@ -90,7 +90,7 @@
             <div class="logo">
                 <a href="/index"><img src="/images/logo_new.png" class="image"></a>
             </div>
-            <div class="centerx">
+            <div class="center">
                 <a class="item" href="/borrow">我要借款</a>
                 <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
                 <a class="item" href="/invest">我要投資</a>
