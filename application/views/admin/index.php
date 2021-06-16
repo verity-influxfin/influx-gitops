@@ -100,54 +100,28 @@
                             </a>
                         </div>
                     </div>
-                    <? if($type != 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="panel panel-yellow">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <i class="fa fa-usd fa-5x"></i>
-                                        </div>
-                                        <div class="col-xs-9 text-right">
-                                            <div class="huge"><?=$target_count["success"];?></div>
-                                            <div>待放款</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="<?=admin_url('Target/waiting_loan') ?>">
-                                    <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
-                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    <? } ?>
-                    <? if($type == 'judicial'){ ?>
-                        <div class="col-lg-3 col-md-6">
-                            <div class="panel panel-yellow">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-xs-3">
-                                            <i class="fa fa-usd fa-5x"></i>
-                                        </div>
-                                        <div class="col-xs-9 text-right">
-                                            <div class="huge"><?=$target_count["manual_handling"];?></div>
-                                            <div>人工處理</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="<?//=admin_url('Target/index?delay=1&status=5') ?>">
-                                    <div class="panel-footer">
-                                        <span class="pull-left">View Details</span>
-                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    <? } ?>
+                    <div class="col-lg-3 col-md-6">
+        				<div class="panel panel-yellow">
+        					<div class="panel-heading">
+        						<div class="row">
+        							<div class="col-xs-3">
+        								<i class="fa fa-usd fa-5x"></i>
+        							</div>
+        							<div class="col-xs-9 text-right">
+        								<div class="huge"><?=$bidding_count?></div>
+        								<div>已投標</div>
+        							</div>
+        						</div>
+        					</div>
+        					<a href="<?=admin_url('Transfer/bidding') ?>">
+        						<div class="panel-footer">
+        							<span class="pull-left">View Details</span>
+        							<span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+        							<div class="clearfix"></div>
+        						</div>
+        					</a>
+        				</div>
+        			</div>
                     <div class="col-lg-3 col-md-6">
                         <div class="panel panel-red">
                             <div class="panel-heading">
@@ -227,12 +201,12 @@
                                             <i class="fa fa-usd fa-5x"></i>
                                         </div>
                                         <div class="col-xs-9 text-right">
-                                            <div class="huge"><?=$target_count["transfer_success"];?></div>
-                                            <div>債權轉讓 - 待放款</div>
+                                            <div class="huge"><?=$target_count["success"];?></div>
+                                            <div>待放款</div>
                                         </div>
                                     </div>
                                 </div>
-                                <a href="<?=admin_url('Transfer/waiting_transfer_success') ?>">
+                                <a href="<?=admin_url('Target/waiting_loan') ?>">
                                     <div class="panel-footer">
                                         <span class="pull-left">View Details</span>
                                         <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
@@ -289,8 +263,60 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="col-lg-3 col-md-6"></div>
+                    <? } ?>
+                    <? if($type == 'judicial'){ ?>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="panel panel-yellow">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-usd fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge"><?=$target_count["manual_handling"];?></div>
+                                            <div>人工處理</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="<?//=admin_url('Target/index?delay=1&status=5') ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     <? } ?>
                     <? if($type != 'judicial'){ ?>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="panel panel-yellow">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <i class="fa fa-usd fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-9 text-right">
+                                            <div class="huge"><?=$target_count["transfer_success"];?></div>
+                                            <div>債權轉讓 - 待放款</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="<?=admin_url('Transfer/waiting_transfer_success') ?>">
+                                    <div class="panel-footer">
+                                        <span class="pull-left">View Details</span>
+                                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    <? } ?>
+                </div>
+                <div class="row">
+                    <? if($type != 'judicial'){ ?>
+                        <div class="col-lg-3 col-md-6"></div>
                         <div class="col-lg-3 col-md-6"></div>
                         <div class="col-lg-3 col-md-6">
                             <div class="panel panel-yellow">
@@ -316,7 +342,6 @@
                         </div>
                     <? } ?>
                 </div>
-
                 <div class="row">
                     <!-- /.col-lg-6 -->
                     <div class="col-lg-12">

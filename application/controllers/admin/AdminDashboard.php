@@ -190,8 +190,13 @@ class AdminDashboard extends MY_Admin_Controller {
 			$target_count["withdraw"] = count($list);
 		}
 
+		// 取得 0: 待付款 1: 待結標(款項已移至待交易) 2: 待放款(已結標) 的所有資料
+		$this->load->model('loan/investment_model');
+		$result = $this->investment_model->get_bidding_investment(["status" => [0,1,2]]);
+
 		$data["chart_list"] 	= $chart_list;
 		$data["target_count"] 	= $target_count;
+		$data["bidding_count"] = isset($result) ? count($result) : 0;
 		$data["contact_list"] 	= $contact_list;
 		$data["type"] = $type;
 		if($type == 'judicial'){

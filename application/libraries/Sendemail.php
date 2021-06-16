@@ -94,7 +94,12 @@ class Sendemail
 				$certification = $this->CI->user_certification_model->get($rs->certification_id);
 				if($certification && $certification->status==0){
 					$this->CI->load->library('Certification_lib');
-					$this->CI->certification_lib->set_success($rs->certification_id);
+                    // to do : 學生認證轉待驗證(未來加入sip後要改掉)
+                    if($certification->certification_id == 2){
+                        $this->CI->user_certification_model->update($rs->certification_id,['status'=>3]);
+                    }else{
+                        $this->CI->certification_lib->set_success($rs->certification_id);
+                    }
 				}
 				return true;
 			}
@@ -270,10 +275,10 @@ class Sendemail
 		return false;
 	}
 
-    public function EDM($mail, $title = "", $content = "", $EDM)
+    public function EDM($mail, $title = "", $content = "", $EDM, $EDM_href)
     {
         if ($mail) {
-            $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM), TRUE);
+            $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => $content, "EDM" => $EDM, "EDM_href" => $EDM_href), TRUE);
             return $this->send($mail, $title, $content);
         }
         return false;

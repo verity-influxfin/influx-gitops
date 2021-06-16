@@ -45,7 +45,7 @@ class Id_card_lib {
 			'屏縣' => '10013',
 			'東縣' => '10014',
 			'花縣' => '10015',
-			'彭縣' => '10016',
+			'澎縣' => '10016',
 			'基市' => '10017',
 			'竹市' => '10018',
 			'中市' => '66000',
@@ -55,6 +55,42 @@ class Id_card_lib {
 			'高市' => '64000',
 			'新北市' => '65000',
 			'桃市' => '68000',
+		],
+		'fullIssueSite' => [
+			'連江縣' => '連江',
+			'金門縣' => '金門',
+			'臺北縣' => '北縣',
+			'台北縣' => '北縣',
+			'宜蘭縣' => '宜縣',
+			'桃園縣' => '桃縣',
+			'新竹縣' => '竹縣',
+			'苗栗縣' => '苗縣',
+			'臺中縣' => '中縣',
+			'台中縣' => '中縣',
+			'彰化縣' => '彰縣',
+			'南投縣' => '投縣',
+			'雲林縣' => '雲縣',
+			'嘉義縣' => '嘉縣',
+			'臺南縣' => '南縣',
+			'台南縣' => '南縣',
+			'高雄縣' => '高縣',
+			'屏東縣' => '屏縣',
+			'臺東縣' => '東縣',
+			'台東縣' => '東縣',
+			'花蓮縣' => '花縣',
+			'澎湖縣' => '澎縣',
+			'基隆市' => '基市',
+			'新竹市' => '竹市',
+			'臺中市' => '中市',
+			'台中市' => '中市',
+			'嘉義市' => '嘉市',
+			'臺南市' => '南市',
+			'台南市' => '南市',
+			'臺北市' => '北市',
+			'台北市' => '北市',
+			'高雄市' => '高市',
+			'新北市' => '新北市',
+			'桃園市' => '桃市',
 		],
 	];
 
@@ -119,6 +155,7 @@ class Id_card_lib {
 		}
 		// pattern
 		$applyCodeFormat = isset($this->parametersMapping['applyCode'][$applyCode]) ? $this->parametersMapping['applyCode'][$applyCode] : '';
+		$issueSiteId = isset($this->parametersMapping['fullIssueSite'][$issueSiteId]) ? $this->parametersMapping['fullIssueSite'][$issueSiteId] : $issueSiteId;
 		$issueSiteIdFormat = isset($this->parametersMapping['issueSiteId'][$issueSiteId]) ? $this->parametersMapping['issueSiteId'][$issueSiteId] : '';
 
 		if(!$applyCodeFormat || !$issueSiteIdFormat){
@@ -126,6 +163,13 @@ class Id_card_lib {
 			$result['response']['response']['checkIdCardApplyFormat'] = 'Parameters Not Match';
 			// $this->CI->json_output->setStatusCode(401)->setResponse($result)->send();
 			return $result;
+		}
+
+		preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $applyYyymmdd, $regexResult);
+		if(!empty($regexResult)) {
+			$applyYyymmdd = str_pad($regexResult['year'], 3, 0, STR_PAD_LEFT) .
+				str_pad($regexResult['month'], 2, 0, STR_PAD_LEFT) .
+				str_pad($regexResult['day'], 2, 0, STR_PAD_LEFT);
 		}
 
 		if(! preg_match('/^[0-9]{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/',$applyYyymmdd)){
@@ -162,7 +206,7 @@ class Id_card_lib {
 
 		$payload = array('headers' => json_encode($headers, true));
 		$requestUrl = $this->serviceAdapterUrl . "/id-card/send-request";
-		$apiResponse = curl_get($requestUrl, $data=$payload);
+		$apiResponse = curl_get($requestUrl, $data=$payload, [],10);
 
 		if($apiResponse){
 			$apiResponse = json_decode($apiResponse, true);

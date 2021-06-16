@@ -377,7 +377,8 @@
                                                 <label>生日：</label><?=isset($remark["OCR"]["birthday"])&&$remark["OCR"]["birthday"]!=''?"".$remark["OCR"]["birthday"]:"";?><br>
                                                 <label>換發日期：</label><?=isset($remark["OCR"]["id_card_date"])&&$remark["OCR"]["id_card_date"]!=''?"".$remark["OCR"]["id_card_date"]:"";?><br>
                                                 <label>換發地區：</label><?=isset($remark["OCR"]["id_card_place"])&&$remark["OCR"]["id_card_place"]!=''?"".$remark["OCR"]["id_card_place"]:"";?><br>
-                                                <label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?"".$remark["OCR"]["id_number"]:"";?><br>
+												<label>發證方式：</label><?=isset($remark["OCR"]["issueType"])&&$remark["OCR"]["issueType"]!=''?"".$remark["OCR"]["issueType"]:"";?><br>
+												<label>身分證字號：</label><?=isset($remark["OCR"]["id_number"])&&$remark["OCR"]["id_number"]!=''?"".$remark["OCR"]["id_number"]:"";?><br>
                                             </td></tr>
                                     </table>
                                 </div>
@@ -399,7 +400,6 @@
                                                 <label>出生地：</label><?=isset($remark["OCR"]["born"])&&$remark["OCR"]["born"]!='' ? $remark["OCR"]["born"].'<br>': '' ;?><br>
                                                 <label>住址：</label><?=isset($remark["OCR"]["address"])&&$remark["OCR"]["address"]!='' ? $remark["OCR"]["address"].'<br>': '' ;?><br>
                                                 <label>綠色號碼：</label><?=isset($remark["OCR"]["gnumber"])&&$remark["OCR"]["gnumber"]!='' ? $remark["OCR"]["gnumber"].'<br>': '' ;?><br>
-                                                <label>膠膜號碼：</label><?=isset($remark["OCR"]["film_number"])&&$remark["OCR"]["film_number"]!='' ? $remark["OCR"]["film_number"]: '' ; ?><br>
                                             </td>
                                         </tr>
                                     </table>

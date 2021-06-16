@@ -410,8 +410,8 @@ defined('LINEBOT_URL')           	OR define('LINEBOT_URL'			    , getenv('ENV_LI
 
 
 //曠視
-defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, 'WW6FytNauCGA4U4UZuVbT4bqYq2tNtJo');
-defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, 'dYyem8PPlwd8Ue3EdErHHdBTNFSZ2-Yh');
+defined('FACEPLUSPLUS_KEY')      	OR define('FACEPLUSPLUS_KEY'		, getenv('ENV_FACEPLUSPLUS_KEY'));
+defined('FACEPLUSPLUS_SECRET')      OR define('FACEPLUSPLUS_SECRET'		, getenv('ENV_FACEPLUSPLUS_SECRET'));
 
 //新光
 defined('VESTA_ENDPOINT')           OR define('VESTA_ENDPOINT'          , getenv('ENV_VESTA_ENDPOINT'));

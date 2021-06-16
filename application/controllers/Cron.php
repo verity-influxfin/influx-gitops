@@ -164,6 +164,91 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+
+	/**
+	 * 針對實名驗證已成功的所有用戶進行重新認證
+	 */
+	public function recheck_certifications() {
+
+		$this->load->model('user/user_certification_model');
+		$stream_clean = $this->security->xss_clean($this->input->raw_input_stream);
+		$request = json_decode($stream_clean);
+		if(empty($request)) {
+			$user_certifications = $this->user_certification_model->order_by('user_id', 'ASC')->get_many_by(array(
+				'status' => 1,
+				'certification_id =' => 1,
+				// 借款投資都要驗
+				//'investor' => 0
+			));
+			echo json_encode(array_values(
+				array_unique(array_columns(
+					json_decode(json_encode($user_certifications), true),
+					['user_id', 'investor']),
+					SORT_REGULAR)
+				));
+		}else{
+			$result = [];
+			$pendingUpdateData = [];
+			$this->load->library('Certification_lib');
+			$this->load->model('user/user_model');
+			foreach ($request as $key => $v) {
+				$user_certifications 	= $this->user_certification_model
+					->order_by('user_id ASC, id DESC', '')
+					->get_by(array(
+						'status' => 1,
+						'certification_id =' => 1,
+						'user_id' => $v->user_id,
+						'investor' => $v->investor
+					));
+
+				// 已被封鎖的就不再重驗
+				$user = $this->user_model->get_by(["id" => $v->user_id]);
+				if(isset($user) && $user->block_status != 0)
+					continue;
+
+				if(isset($user_certifications)) {
+					$tmpRs = $this->certification_lib->realname_verify($user_certifications);
+					$result[] = $tmpRs;
+
+					$param = [
+						'status' => 3,
+						'remark' => json_encode($tmpRs['remark']),
+						'content' => json_encode($tmpRs['content']),
+						'sys_check' => 1,
+					];
+					$reviewStatus = 3;
+					if (!$tmpRs['ocrCheckFailed'] && $tmpRs['remark']['error'] == '' && !$tmpRs['ocrCheckFailed']) {
+						unset($param['status']);
+						$reviewStatus = 1;
+					}
+					if ($tmpRs['risVerified'] && $tmpRs['risVerificationFailed']) {
+						$param = [
+							'remark' => json_encode($tmpRs['remark']),
+							'content' => json_encode($tmpRs['content']),
+						];
+						$reviewStatus = 2;
+					}
+
+					$pendingUpdateData[] = [
+						'reviewStatus' => $reviewStatus,
+						'cer_id' => $user_certifications->id,
+						'param' => $param
+					];
+				}
+			}
+
+			array_map(function ($data) {
+				if($data['reviewStatus'] == 2)
+					$this->certification_lib->set_failed_for_recheck($data['cer_id'], '', true);
+
+				$this->user_certification_model->update($data['cer_id'], $data['param']);
+
+			}, $pendingUpdateData);
+
+			echo json_encode($result);
+		}
+	}
+
 	public function daily_tax()
 	{	//每天下午一點
 		$this->load->library('Payment_lib');
@@ -334,6 +419,7 @@ class Cron extends CI_Controller
         $title = $input->title;
         $content = $input->content;
         $EDM = $input->EDM;
+		$EDM_href = $input->EDM_href;
         $investor = isset($input->investor) ? $input->investor : 0;
         $school = isset($input->school) && $input->school != '' ? $input->school : false;
         $years = isset($input->years) && $input->years != '' ? $input->years : false;
@@ -344,13 +430,13 @@ class Cron extends CI_Controller
         $this->load->library('Notification_lib');
 
         $start_time = time();
-        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $investor, $school, $years, $sex, $app, $mail, $mail_list);
+        $count = $this->notification_lib->EDM($user_id, $title, $content, $EDM, $EDM_href, $investor, $school, $years, $sex, $app, $mail, $mail_list);
         $num = $count ? intval($count) : 0;
         $end_time = time();
         $data = [
             'script_name' => 'EDM',
             'num' => $num,
-            'parameter' => json_encode([$user_id, $title, $content, $EDM, $url, $investor, $school, $years, $sex, $app, $mail, $mail_list]),
+            'parameter' => json_encode([$user_id, $title, $content, $EDM, $EDM_href, $investor, $school, $years, $sex, $app, $mail, $mail_list]),
             'start_time' => $start_time,
             'end_time' => $end_time
         ];

@@ -162,6 +162,62 @@ class Transfer extends MY_Admin_Controller
         $this->load->view('admin/_footer');
     }
 
+	/**
+	 * 顯示已下標頁面，並可顯示全部或已付款之對應投資紀錄
+	 */
+	public function bidding()
+	{
+		$page_data = array('type' => 'list');
+		$input = $this->input->get(NULL, TRUE);
+		$show_status = array(2);
+		$where = array();
+		$target_no = '';
+		$fields = ['status', 'target_no', 'user_id'];
+
+		foreach ($fields as $field) {
+			if (isset($input[$field]) && $input[$field] != '') {
+				if ($field == 'target_no') {
+					$target_no = '%' . $input[$field] . '%';
+				} else {
+					$where[$field] = $input[$field];
+				}
+			}
+		}
+
+		// 0: 待付款 1: 待結標(款項已移至待交易) 2: 待放款(已結標)
+		$where['status'] = isset($input['status']) ? ($input['status'] == 'all' || $input['status'] == '') ? [0,1,2] : [intval($input['status'])] : [0,1,2];
+		isset($input['sdate']) && $input['sdate'] != '' ? $where['created_at >='] = strtotime($input['sdate']) : '';
+		isset($input['edate']) && $input['edate'] != '' ? $where['created_at <='] = strtotime($input['edate']) : '';
+
+		$result = $this->investment_model->get_bidding_investment($where, $target_no);
+
+		$page_data['show_status'] = $show_status;
+		$page_data['investment_status_list'] = $this->investment_model->bidding_status_list;
+		$page_data['list'] = $result;
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/target/targets_bidding_assets', $page_data);
+		$this->load->view('admin/_footer');
+	}
+
+  public function assets_export_new()
+  {
+      $this->load->library('sisyphus/assets_report_lib');
+      $assets_report = $this->assets_report_lib->getAssetsReport();
+
+      if ($assets_report){
+          $file_name = 'assets_'.date('Ymd-His').'.xlsx';
+          force_download($file_name, $assets_report);
+
+      }else{
+          echo '<script type="text/javascript"> alert("撈取失敗，請洽工程師\nError: get assets report failed (sisyphus)");
+          window.location.href="obligations";
+          </script>';
+      }
+
+  }
+
     public function assets_export()
     {
         $post = $this->input->post(NULL, TRUE);

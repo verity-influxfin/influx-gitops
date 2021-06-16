@@ -1623,6 +1623,8 @@ class Target_lib
                 $subloan_list = $this->CI->config->item('subloan_list');
                 foreach ($list as $product_id => $targets) {
                     foreach ($targets as $target_id => $value) {
+                    	if(!array_key_exists($value->product_id, $product_list))
+                    		continue;
                         $stage_cer = 0;
                         $product = $product_list[$value->product_id];
                         $sub_product_id = $value->sub_product_id;

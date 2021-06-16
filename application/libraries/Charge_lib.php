@@ -480,7 +480,7 @@ class Charge_lib
                                         ];
                                     }
 								}
-                                $msg[$user_to_info[$investment_id]['user_to']] = $value['total_amount'] + $prepayment_allowance;
+                                $msg[$user_to_info[$investment_id]['user_to']] = $value['total_amount'] + (isset($prepayment_allowance) ? $prepayment_allowance : 0);
 							}
 
 							if(intval($liquidated_damages)>0){
@@ -506,9 +506,11 @@ class Charge_lib
 									foreach($rs as $key => $value){
 										$this->CI->passbook_lib->enter_account($value);
 									}
-                                    foreach ($msg as $item_arr =>$item) {
-                                        $this->CI->notification_lib->prepay_success($item_arr,1,$target->target_no,$item);
-                                    }
+									foreach ($msg as $item_arr =>$item) {
+										// 由於提前清償會把已結清的紀錄計算進來，實際剩餘本金!=0的才是真正債權擁有者
+										if($item != 0)
+											$this->CI->notification_lib->prepay_success($item_arr,1,$target->target_no,$item);
+									}
 								}
 							}
 						}
