@@ -33,6 +33,13 @@ export default {
         .image {
             width : 100px;
             height: 100px;
+
+            @media (max-width: 767px) {
+                & {
+                    width : 86px;
+                    height: 86px;
+                }
+            }
         }
     }
 
@@ -46,11 +53,23 @@ export default {
             font-size  : 1.2rem;
             font-weight: bold;
             line-height: 2;
+
+            @media (max-width: 767px) {
+                & {
+                    font-size: 1rem;
+                }
+            }
         }
 
         .description {
             font-size: 1.2rem;
             color    : #5d5555;
+
+            @media (max-width: 767px) {
+                & {
+                    font-size: 1rem;
+                }
+            }
         }
     }
 }
