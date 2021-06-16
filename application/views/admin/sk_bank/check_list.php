@@ -3223,7 +3223,7 @@
   // 下拉選單列表
   let select_array = ['CompType_content','BusinessType_content','CompDuType_content','BizRegAddrOwner_content','IsBizAddrEqToBizRegAddr_content','BizTaxFileWay_content',
   'IsPrMarried_content','IsPrSpouseGu_content','RealPr_content','IsBizRegAddrSelfOwn_content','IsRealBizAddrSelfOwn_content','RealBizAddrOwner_content','OthRealPrRelWithPr_content',
-  'GuOneRelWithPr_content','GuOneCompany_content','GuTwoRelWithPr_content','GuTwoCompany_content','PrEduLevel_content'];
+  'GuOneRelWithPr_content','GuOneCompany_content','GuTwoRelWithPr_content','GuTwoCompany_content','PrEduLevel_content','CompMajorOwnership_content','CompMajorSetting_content'];
   // 原始檔案圖片-附件資料表
   let rawData_array = [
 	  'A01','A02','A03','A04','A05','A06','A07','A08'
