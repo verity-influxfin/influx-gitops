@@ -1,3 +1,4 @@
+@import "../../js/frontdesk/component/alesis/alesis";
 html {
     height: 100vh;
 }
@@ -212,10 +213,8 @@ $ci-color: #153a71;
     margin-top: 66px;
     overflow: auto;
 
-    @media (max-width: 767px) {
-        & {
-            margin-top: 56px;
-        }
+    @include rwd {
+        margin-top: 56px;
     }
 }
 
@@ -255,10 +254,8 @@ $ci-color: #153a71;
         text-align: center;
         font-size: 1.1rem;
 
-        @media (max-width: 767px) {
-            & {
-                display: none;
-            }
+        @include rwd {
+            display: none;
         }
 
         .item {
@@ -286,10 +283,8 @@ $ci-color: #153a71;
         white-space: nowrap;
         justify-content: flex-end;
 
-        @media (max-width: 767px) {
-            & {
-                display: none;
-            }
+        @include rwd {
+            display: none;
         }
 
         .item {
@@ -327,13 +322,11 @@ $ci-color: #153a71;
         display: grid;
         grid-template-columns: 1fr 2fr;
 
-        @media (max-width: 767px) {
-            & {
-                display: flex;
-                flex-direction: column;
-                max-width: 440px;
-                align-items: center;
-            }
+        @include rwd {
+            display: flex;
+            flex-direction: column;
+            max-width: 440px;
+            align-items: center;
         }
 
         > .introduction {
@@ -341,10 +334,8 @@ $ci-color: #153a71;
                 display: flex;
                 align-items: center;
 
-                @media (max-width: 767px) {
-                    & {
-                        justify-content: center;
-                    }
+                @include rwd {
+                    justify-content: center;
                 }
 
                 > .text {
@@ -371,32 +362,30 @@ $ci-color: #153a71;
             gap: 3rem;
             font-size: 0.9rem;
 
-            @media (max-width: 767px) {
-                & {
-                    grid-template-columns: 1fr 1fr;
-                    grid-template-rows: min-content 1fr 1fr;
-                    grid-template-areas:
-                        "loan invest"
-                        "loan about"
-                        "contact contact";
-                    text-align: center;
-                    gap: 0rem 8rem;
+            @include rwd {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: min-content 1fr 1fr;
+                grid-template-areas:
+                    "loan invest"
+                    "loan about"
+                    "contact contact";
+                text-align: center;
+                gap: 0rem 8rem;
 
-                    > .item:nth-child(1) {
-                        grid-area: loan;
-                    }
+                > .item:nth-child(1) {
+                    grid-area: loan;
+                }
 
-                    > .item:nth-child(2) {
-                        grid-area: invest;
-                    }
+                > .item:nth-child(2) {
+                    grid-area: invest;
+                }
 
-                    > .item:nth-child(3) {
-                        grid-area: about;
-                    }
+                > .item:nth-child(3) {
+                    grid-area: about;
+                }
 
-                    > .item:nth-child(4) {
-                        grid-area: contact;
-                    }
+                > .item:nth-child(4) {
+                    grid-area: contact;
                 }
             }
 
@@ -408,10 +397,8 @@ $ci-color: #153a71;
                     line-height: 2;
                     color: #fff;
 
-                    @media (max-width: 767px) {
-                        & {
-                            margin-right: 0rem;
-                        }
+                    @include rwd {
+                        margin-right: 0rem;
                     }
                 }
 
@@ -421,20 +408,16 @@ $ci-color: #153a71;
                     font-size: 0.9rem;
                     margin-top: 1.5rem;
 
-                    @media (max-width: 767px) {
-                        & {
-                            margin-top: 0rem;
-                        }
+                    @include rwd {
+                        margin-top: 0rem;
                     }
 
                     > a {
                         color: #fff;
                         margin: 0.25rem 0;
 
-                        @media (max-width: 767px) {
-                            & {
-                                margin: 0.7rem 0;
-                            }
+                        @include rwd {
+                            margin: 0.7rem 0;
                         }
                     }
                 }
@@ -445,10 +428,8 @@ $ci-color: #153a71;
                     gap: 0.5rem;
                     margin-top: 2rem;
 
-                    @media (max-width: 767px) {
-                        & {
-                            margin-top: 1rem;
-                        }
+                    @include rwd {
+                        margin-top: 1rem;
                     }
 
                     > .icon {
@@ -479,24 +460,20 @@ $ci-color: #153a71;
         display: flex;
         align-items: flex-end;
 
-        @media (max-width: 767px) {
-            & {
-                margin-top: 2rem;
-                flex-direction: column-reverse;
-                align-items: center;
-            }
+        @include rwd {
+            margin-top: 2rem;
+            flex-direction: column-reverse;
+            align-items: center;
         }
 
         .copyright {
             margin-right: 3rem;
             font-size: 0.8rem;
 
-            @media (max-width: 767px) {
-                & {
-                    margin-top: 1rem;
-                    margin-right: 0;
-                    text-align: center;
-                }
+            @include rwd {
+                margin-top: 1rem;
+                margin-right: 0;
+                text-align: center;
             }
 
             > .links {
