@@ -89,6 +89,7 @@ export default {
 
 .alesis-slate {
     background-image: url(/images/alesis-faq-bg.svg);
+    background-size : cover;
 
     .wrapper {
         padding       : 5rem 0;
