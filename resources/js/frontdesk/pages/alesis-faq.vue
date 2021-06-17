@@ -85,6 +85,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 .alesis-slate {
     background-image: url(/images/alesis-faq-bg.svg);
 
@@ -96,15 +98,29 @@ export default {
         color         : #FFF;
         align-items   : center;
 
+        @include rwd {
+            padding: 4rem 2rem;
+            gap    : .5rem;
+        }
+
         .header {
-            font-size  : 2.4rem;
+            font-size  : 1.4rem;
             text-shadow: 0 0 7px #000;
+
+            @include rwd {
+                font-size  : 1.4rem;
+                line-height: 1;
+            }
         }
 
         .helper {
             font-size  : 1.8rem;
             color      : #F2E627;
             text-shadow: 0 0 7px #000;
+
+            @include rwd {
+                font-size: 1.2rem;
+            }
         }
 
         .search {
@@ -112,12 +128,22 @@ export default {
             width    : 50%;
             max-width: 51rem;
 
+            @include rwd {
+                width: calc(100%);
+            }
+
             .icon {
                 width    : 22px;
                 position : absolute;
                 left     : 1.5rem;
                 top      : 50%;
                 transform: translateY(-50%);
+
+                @include rwd {
+                    width: 16px;
+                    left : .7rem;
+                }
+
             }
 
             .input {
@@ -132,6 +158,11 @@ export default {
                 padding-left : 3.7rem;
                 width        : 100%;
 
+                @include rwd {
+                    padding  : 0.3rem 2rem 0.25rem;
+                    font-size: .9rem;
+                }
+
                 &::placeholder {
                     color: #FFF;
                 }
@@ -142,6 +173,11 @@ export default {
             display   : flex;
             gap       : 1.2rem;
             margin-top: 1rem;
+
+            @include rwd {
+                flex-wrap      : wrap;
+                justify-content: center;
+            }
 
             .item {
                 display      : inline-block;
@@ -155,6 +191,10 @@ export default {
                 min-width    : 5.5rem;
                 text-align   : center;
 
+                @include rwd {
+                    font-size: 1rem;
+                }
+
                 &.-active {
                     background: #1E2973;
                     color     : #FFF;
@@ -166,7 +206,7 @@ export default {
 }
 
 .alesis-questions {
-        margin-top: 8rem;
+    margin-top: 8rem;
 
     .items {
         max-width     : 690px;
@@ -187,6 +227,10 @@ export default {
                 padding      : .5rem 1.5rem;
                 color        : #036EB7;
                 font-size    : 1.2rem;
+
+                @include rwd {
+                    font-size: .9rem;
+                }
 
                 .text {
                     flex: 1;
