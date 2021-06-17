@@ -1058,6 +1058,7 @@ class Labor_insurance_lib
 							}
 						}
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = isset($page_array[$key1][5]) ? preg_replace('/\s/','',$page_array[$key1][5]) : '';
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['arrearage'] = isset($page_array[$key1][6]) ? preg_replace('/\s/','',$page_array[$key1][6]) : '';
 					}else{
                         $response['pageList'][$key]['insuranceList'][$key1]['insuranceId'] = '';
                         $response['pageList'][$key]['insuranceList'][$key1]['companyName'] = '';
@@ -1065,6 +1066,7 @@ class Labor_insurance_lib
                         $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['startDate'] = '';
                         $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = '';
                         $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['arrearage'] = '';
                     }
 				}
 			}

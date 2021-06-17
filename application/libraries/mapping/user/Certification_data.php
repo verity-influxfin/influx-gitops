@@ -934,6 +934,7 @@ class Certification_data
                                     $company_list[$insurance_id]['startDate'] = $page_info_value['detailList'][0]['startDate'];
                                     $company_list[$insurance_id]['endDate'] = $page_info_value['detailList'][0]['endDate'];
                                     $company_list[$insurance_id]['comment'] = $page_info_value['detailList'][0]['comment'];
+                                    $company_list[$insurance_id]['arrearage'] = $page_info_value['detailList'][0]['arrearage'];
                                 }
                             }
                             if(!isset($company_list[$insurance_id])){
@@ -942,6 +943,7 @@ class Certification_data
                                 $company_list[$insurance_id]['startDate'] = $page_info_value['detailList'][0]['startDate'];
                                 $company_list[$insurance_id]['endDate'] = $page_info_value['detailList'][0]['endDate'];
                                 $company_list[$insurance_id]['comment'] = $page_info_value['detailList'][0]['comment'];
+                                $company_list[$insurance_id]['arrearage'] = $page_info_value['detailList'][0]['arrearage'];
 
                             }
                         }

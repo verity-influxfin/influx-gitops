@@ -234,8 +234,8 @@ class Data_verify_lib{
 			if($data['last_insurance_info']['endDate'] != "" ||
 				preg_match('/部分工時/', $data['last_insurance_info']['comment']) ||
 				preg_match('/不適用就業保險/', $data['last_insurance_info']['comment']) ||
-				preg_match('/F/', $data['last_insurance_info']['comment']) ||
-				preg_match('/D/', $data['last_insurance_info']['comment'])
+				preg_match('/F/', $data['last_insurance_info']['arrearage']) ||
+				preg_match('/D/', $data['last_insurance_info']['arrearage'])
 				) {
 				$verifiedResult->addMessage('註記有部分工時、不適用就業保險、F、D', 2, MassageDisplay::Backend);
 				$verifiedResult->setBanResubmit();
