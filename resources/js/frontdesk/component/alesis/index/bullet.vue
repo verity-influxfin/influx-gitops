@@ -22,6 +22,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../alesis";
+
 .item {
     display        : flex;
     justify-content: center;
@@ -34,11 +36,9 @@ export default {
             width : 100px;
             height: 100px;
 
-            @media (max-width: 767px) {
-                & {
-                    width : 86px;
-                    height: 86px;
-                }
+            @include rwd {
+                width : 86px;
+                height: 86px;
             }
         }
     }
@@ -54,10 +54,8 @@ export default {
             font-weight: bold;
             line-height: 2;
 
-            @media (max-width: 767px) {
-                & {
-                    font-size: 1rem;
-                }
+            @include rwd {
+                font-size: 1rem;
             }
         }
 
@@ -65,10 +63,8 @@ export default {
             font-size: 1.2rem;
             color    : #5d5555;
 
-            @media (max-width: 767px) {
-                & {
-                    font-size: 1rem;
-                }
+            @include rwd {
+                font-size: 1rem;
             }
         }
     }

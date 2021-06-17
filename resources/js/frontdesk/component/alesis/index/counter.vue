@@ -53,10 +53,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../alesis";
+
 .items {
     display        : flex;
     justify-content: center;
 }
+
 .item {
     flex           : 1;
     text-align     : center;
@@ -64,20 +67,16 @@ export default {
     align-items    : center;
     justify-content: center;
 
-    @media (max-width: 767px) {
-        & {
-            flex-direction: column;
-        }
+    @include rwd {
+        flex-direction: column;
     }
 
     .symbol {
         margin-right: 1rem;
 
-        @media (max-width: 767px) {
-            & {
-                margin-right: 0;
-                width       : 70px;
-            }
+        @include rwd {
+            margin-right: 0;
+            width       : 70px;
         }
     }
 
@@ -87,11 +86,9 @@ export default {
         flex-direction : column;
         justify-content: center;
 
-        @media (max-width: 767px) {
-            & {
-                margin-top : 1rem;
-                align-items: center;
-            }
+        @include rwd {
+            margin-top : 1rem;
+            align-items: center;
         }
 
         .header {
@@ -99,20 +96,16 @@ export default {
             font-weight: bold;
             color      : #353482;
 
-            @media (max-width: 767px) {
-                & {
-                    font-size: 1rem;
-                }
+            @include rwd {
+                font-size: 1rem;
             }
         }
 
         .counter {
             font-size: 1.2rem;
 
-            @media (max-width: 767px) {
-                & {
-                    font-size: 1rem;
-                }
+            @include rwd {
+                font-size: 1rem;
             }
 
             .number {
@@ -124,10 +117,8 @@ export default {
                 font-weight: bold;
                 color      : #353482;
 
-                @media (max-width: 767px) {
-                    & {
-                        font-size: 1rem;
-                    }
+                @include rwd {
+                    font-size: 1rem;
                 }
             }
         }

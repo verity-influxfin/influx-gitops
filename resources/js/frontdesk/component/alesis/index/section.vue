@@ -42,8 +42,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../alesis";
+
 .section {
     position: relative;
+
+    @include rwd {
+        padding: 0 2rem;
+    }
 
     &.-secondary {
         background: #ecedf180;
@@ -63,9 +69,6 @@ export default {
             }
         }
     }
-
-
-
 
     &.-multiline {
         > .header {
@@ -168,6 +171,10 @@ export default {
             font-size       : 2rem;
             line-height     : 1.2;
             white-space     : nowrap;
+
+            @include rwd {
+                font-size: 1.4rem;
+            }
         }
 
         .multiline {
