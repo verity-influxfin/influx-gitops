@@ -399,6 +399,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 .alesis-counters {
     margin         : 4rem auto 8rem;
     max-width      : 1280px;
@@ -459,10 +461,8 @@ export default {
 }
 
 .alesis-company-introduction {
-    @media (max-width: 767px) {
-        & {
-            padding: 0 2rem;
-        }
+    @include rwd {
+        padding: 0 2rem;
     }
 
      .carousel {
@@ -486,10 +486,8 @@ export default {
         max-width: 1280px;
         margin   : 0 auto;
 
-        @media (max-width: 767px) {
-            & {
-                flex-direction: column;
-            }
+        @include rwd {
+            flex-direction: column;
         }
 
         .showcase {
@@ -497,10 +495,8 @@ export default {
             text-align: center;
 
             .image {
-                @media (max-width: 767px) {
-                    & {
-                        width: 280px;
-                    }
+                @include rwd {
+                    width: 280px;
                 }
             }
         }
@@ -526,12 +522,10 @@ export default {
         max-width      : 1280px;
         margin         : 0 auto;
 
-        @media (max-width: 767px) {
-            & {
-                flex-direction: column;
-                gap           : 3rem;
-                padding       : 0 3rem;
-            }
+        @include rwd {
+            flex-direction: column;
+            gap           : 3rem;
+            padding       : 0 3rem;
         }
 
         .showcase {
@@ -546,21 +540,17 @@ export default {
         .content {
             flex: 1;
 
-            @media (max-width: 767px) {
-                & {
-                    max-width: 450px;
-                    margin   : 0 auto;
-                }
+            @include rwd {
+                max-width: 450px;
+                margin   : 0 auto;
             }
 
             .bullet {
                 margin-left: 2.3rem;
 
                 .symbol {
-                    @media (max-width: 767px) {
-                        & {
-                            margin-right: 2rem;
-                        }
+                    @include rwd {
+                        margin-right: 2rem;
                     }
                 }
             }
@@ -574,10 +564,8 @@ export default {
                 .moon {
                     margin-right: 3rem;
 
-                    @media (max-width: 767px) {
-                        & {
-                            margin-right: 1.5rem;
-                        }
+                    @include rwd {
+                        margin-right: 1.5rem;
                     }
                 }
                 .content {
@@ -594,11 +582,9 @@ export default {
         font-weight: bolder;
         margin-top : 4rem;
 
-        @media (max-width: 767px) {
-            & {
-                font-size : 1rem;
-                margin-top: 2rem;
-            }
+        @include rwd {
+            font-size : 1rem;
+            margin-top: 2rem;
         }
     }
 }
@@ -617,10 +603,8 @@ export default {
             .image {
                 width: 590px;
 
-                @media (max-width: 767px) {
-                    & {
-                        width: 320px;
-                    }
+                @include rwd {
+                    width: 320px;
                 }
             }
         }
@@ -678,10 +662,8 @@ export default {
         background-size : cover;
         padding         : .5rem 0;
 
-        @media (max-width: 767px) {
-            & {
-                padding: .5rem 1rem;
-            }
+        @include rwd {
+            padding: .5rem 1rem;
         }
 
         .logos {
@@ -691,10 +673,8 @@ export default {
             margin               : 2rem auto;
             gap                  : 1rem;
 
-            @media (max-width: 767px) {
-                & {
-                    margin: 1rem auto;
-                }
+            @include rwd {
+                margin: 1rem auto;
             }
 
             &.-three {
@@ -706,10 +686,8 @@ export default {
                 margin        : 0 auto;
                 mix-blend-mode: darken;
 
-                @media (max-width: 767px) {
-                    & {
-                        height: 30px;
-                    }
+                @include rwd {
+                    height: 30px;
                 }
             }
         }
@@ -724,10 +702,8 @@ export default {
         max-width      : 1280px;
         margin         : 0 auto;
 
-        @media (max-width: 767px) {
-            & {
-                flex-direction: column;
-            }
+        @include rwd {
+            flex-direction: column;
         }
 
         .calculator {
@@ -737,11 +713,9 @@ export default {
             justify-content: center;
             margin-right   : 7rem;
 
-            @media (max-width: 767px) {
-                & {
-                    width       : 380px;
-                    margin-right: 0;
-                }
+            @include rwd {
+                width       : 380px;
+                margin-right: 0;
             }
 
             > div {
