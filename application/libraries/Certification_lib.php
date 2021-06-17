@@ -617,29 +617,36 @@ class Certification_lib{
 
     public function idcard_verify($info = []) {
 		if($info && $info->status ==0 && $info->certification_id==1) {
+            $status = 3;
 			$result = $this->realname_verify($info);
 
 			// 1 成功 2 失敗 3 人工
 			$param = [
-				'status' => 3,
+                'status' => 3,
 				'remark' => json_encode($result['remark']),
 				'content' => json_encode($result['content']),
 				'sys_check' => 1,
 			];
 
 			if ($result['risVerified']) {
-				$param = [
-					'remark' => json_encode($result['remark']),
-					'content' => json_encode($result['content']),
-				];
 				if ($result['remark']['error'] == '' && !$result['risVerificationFailed'] && !$result['ocrCheckFailed']) {
-					$this->set_success($info->id, true);
+                    $status = 1;
+                    $param['status'] = 0;
 				} else if ($result['risVerificationFailed']) {
-					$this->set_failed($info->id, '親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。', true);
+                    $status = 2;
+                    $param['status'] = 0;
 				}
 			}
 
-			$this->CI->user_certification_model->update($info->id, $param);
+            $this->CI->user_certification_model->update($info->id, $param);
+
+            if($status == 1){
+                $this->set_success($info->id, true);
+            }
+
+            if($status == 2){
+                $this->set_failed($info->id, '親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。', true);
+            }
 			return true;
 
 		}
