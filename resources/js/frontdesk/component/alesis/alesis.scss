@@ -1,0 +1,7 @@
+@mixin rwd {
+    @media (max-width: 767px) {
+        & {
+            @content;
+        }
+    }
+}
