@@ -306,6 +306,10 @@ $ci-color: #153a71;
     color: #fff;
     position: relative;
 
+    @include rwd {
+        padding: 0.5rem 2rem;
+    }
+
     > .line {
         height: 1px;
         background: #2f95cb;
@@ -364,13 +368,12 @@ $ci-color: #153a71;
 
             @include rwd {
                 grid-template-columns: 1fr 1fr;
-                grid-template-rows: min-content 1fr 1fr;
                 grid-template-areas:
                     "loan invest"
                     "loan about"
                     "contact contact";
                 text-align: center;
-                gap: 0rem 8rem;
+                gap: 0rem 5rem;
 
                 > .item:nth-child(1) {
                     grid-area: loan;
@@ -429,7 +432,9 @@ $ci-color: #153a71;
                     margin-top: 2rem;
 
                     @include rwd {
-                        margin-top: 1rem;
+                        width: min-content;
+                        margin: 1rem auto 0;
+                        gap: 1rem 0.5rem;
                     }
 
                     > .icon {
@@ -440,6 +445,9 @@ $ci-color: #153a71;
                     }
 
                     > .text {
+                        @include rwd {
+                            text-align: left;
+                        }
                     }
                 }
 
