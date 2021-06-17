@@ -647,26 +647,25 @@ class Certification_lib{
 			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 			$status = $verifiedResult->getStatus();
 
-			$expire_time = new DateTime;
-			$expire_time->setTimestamp($printTimestamp);
-			$expire_time->modify( '+ 1 month' );
-			$expire_timestamp = $expire_time->getTimestamp();
+
 
 			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status,
+				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
 				'content' => json_encode($certification_content),
 				'remark' => json_encode($remark),
-				'expire_time' => $expire_timestamp
         	));
 
 			if($status == 1) {
-				$this->investigation_success($info);
+				$expire_time = new DateTime;
+				$expire_time->setTimestamp($printTimestamp);
+				$expire_time->modify('+ 1 month');
+				$expire_timestamp = $expire_time->getTimestamp();
+				$this->set_success($info->id, true, $expire_timestamp);
 			}else if($status == 2) {
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
 				$notificationContent = $verifiedResult->getAPPMessage(2);
-				$this->certi_failed($info,$notificationContent,$canResubmitDate,1);
-
+				$this->certi_failed($info->id,$notificationContent,$canResubmitDate,true);
 			}
 
 			return true;
@@ -752,30 +751,28 @@ class Certification_lib{
 			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 			$status = $verifiedResult->getStatus();
 
-			$expire_timestamp = 0;
-			preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $result['report_date'], $regexResult);
-			if(!empty($regexResult)) {
-				$date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year']) + 1911,
-					intval($regexResult['month']), intval($regexResult['day']));
-				$expire_time = DateTime::createFromFormat('Y-m-d', $date);
-				$expire_time->modify( '+ 1 month' );
-				$expire_timestamp = $expire_time->getTimestamp();
-			}
-
 			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status,
+				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
 				'remark' => json_encode($remark),
 				'content' => json_encode($certification_content),
-				'expire_time' => $expire_timestamp
 			));
 
 			if($status == 1) {
-				$this->job_success($info);
+				$expire_timestamp = 0;
+				preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $result['report_date'], $regexResult);
+				if(!empty($regexResult)) {
+					$date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year']) + 1911,
+						intval($regexResult['month']), intval($regexResult['day']));
+					$expire_time = DateTime::createFromFormat('Y-m-d', $date);
+					$expire_time->modify( '+ 1 month' );
+					$expire_timestamp = $expire_time->getTimestamp();
+				}
+				$this->set_success($info->id, true, $expire_timestamp);
 			}else if($status == 2) {
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
 				$notificationContent = $verifiedResult->getAPPMessage(2);
-				$this->certi_failed($info,$notificationContent,$canResubmitDate,1);
+				$this->certi_failed($info->id,$notificationContent,$canResubmitDate,true);
 			}
 
 			return true;
@@ -1114,8 +1111,9 @@ class Certification_lib{
 		return false;
 	}
 
-	private function certi_failed($info,$msg='',$resubmitDate='',$sys_check=true){
-		if($info){
+	private function certi_failed($id,$msg='',$resubmitDate='',$sys_check=true){
+		$info = $this->CI->user_certification_model->get($id);
+		if($info && $info->status != 2){
 			$certification 	= $this->certification[$info->certification_id];
 			$param = [
 				'status'    => 2,
@@ -1125,7 +1123,8 @@ class Certification_lib{
 
 			$rs = $this->CI->user_certification_model->update($info->id, $param);
 			if($rs){
-				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$msg);
+ 				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$msg);
+ 				return true;
 			}
 		}
 		return false;

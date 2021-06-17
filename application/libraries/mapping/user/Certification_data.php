@@ -649,6 +649,7 @@ class Certification_data
 
 				foreach($data['K2']['dataList'] as $key => $value){
 					// 信用紀錄幾個月
+					$value['previousPaymentStatus'] = preg_replace('/\s+/','',$value['previousPaymentStatus']);
 					if(preg_match('/^繳足最低.*無遲延$|不須繳款|^全額繳清.*無遲延$/',$value['previousPaymentStatus']) && $creditLogCountStatus){
 						$res['creditLogCount'] += 1;
 					}else{
