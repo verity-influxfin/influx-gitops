@@ -59,6 +59,7 @@ class Creditmanagementtable extends MY_Admin_Controller
 	public function getCreditManagementThisCase($user_id,$time){
 		$response = [];
 		$response['loan_list_total'] = 0;
+        $response['loan_list'] = [];
 		// $this->load->model('loan/target_model');
 		$target_infos = $this->target_model->get_many_by(['user_id'=>$user_id,'status'=>['2','3','4','5','10'],'created_at <'=>$time]);
 		// print_r($target_infos);exit;
@@ -186,11 +187,11 @@ class Creditmanagementtable extends MY_Admin_Controller
 	// 現放明細
 	public function getLoanInfo($user_id,$time){
 		$response = [];
+        $data = [];
 
 		$info = $this->getCreditManagementThisCase($user_id,$time);
 		// print_r($info);exit;
 		if($info['loan_list']){
-			$data = [];
 			foreach($info['loan_list'] as $k=>$v){
 				if(!isset($data[$v['credit_type']])){
 					$data['loan_total'][$v['credit_type']] = [
@@ -208,8 +209,9 @@ class Creditmanagementtable extends MY_Admin_Controller
 				}
 			}
 		}
-
-		$data['loan_total'] = array_values($data['loan_total']);
+        if($data && isset ($data['loan_total'])){
+            $data['loan_total'] = array_values($data['loan_total']);
+        }
 		return $data;
 	}
 	// 受審表資料
