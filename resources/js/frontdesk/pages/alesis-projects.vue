@@ -171,6 +171,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 .alesis-slate {
     position: relative;
     height  : 33rem;
@@ -181,6 +183,10 @@ export default {
         left    : 10rem;
         right   : 0;
         bottom  : 0;
+
+        @include rwd {
+            left: 0;
+        }
 
         .image {
             height    : 100%;
@@ -205,18 +211,36 @@ export default {
         min-width        : 1485px;
         height           : 100%;
 
+        @include rwd {
+            background-image: url(/images/alesis-wave-bg-rotated.svg);
+            padding-left    : 0;
+            background-size : 100vw;
+            min-width       : initial;
+            justify-content : initial;
+            padding-top     : 11vw;
+            align-items     : center;
+        }
+
         .header {
             display      : inline-block;
             font-size    : 2.2rem;
             font-weight  : bolder;
             color        : #F2E627;
             border-bottom: 0;
+
+            @include rwd {
+                font-size: 1.4rem;
+            }
         }
 
         .content {
             margin-top : 1rem;
             line-height: 1.8;
             font-size  : 1.3rem;
+
+            @include rwd {
+                font-size: 1rem;
+            }
         }
     }
 }
@@ -248,8 +272,21 @@ export default {
             margin-bottom   : 2rem;
             margin-left     : 4rem;
 
+            @include rwd {
+                font-size     : 1.5rem;
+                padding-bottom: 0.25rem;
+                margin-left   : 3rem;
+                padding-right : 1rem;
+            }
+
             &.-fast {
                 margin-top: -1rem;
+            }
+        }
+
+        .carousel .selector .lightbox .set {
+            @include rwd {
+                grid-template-columns: 1fr;
             }
         }
 
