@@ -493,6 +493,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 .alesis-fast-approve {
     margin-top: 8rem;
 
