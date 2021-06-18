@@ -17,11 +17,11 @@
                 <div class="wrapper">
                     <img src="/images/alesis-report.svg" class="image" alt="">
                     <div class="links">
-                        <a href="#!" class="item"><index-button yPadding="0.9rem" xPadding="2.5rem">2021年5月</index-button></a>
-                        <a href="#!" class="item"><index-button yPadding="0.9rem" xPadding="2.5rem">2021年4月</index-button></a>
-                        <a href="#!" class="item"><index-button yPadding="0.9rem" xPadding="2.5rem">2021年3月</index-button></a>
+                        <a href="#!" class="item"><index-button>2021年5月</index-button></a>
+                        <a href="#!" class="item"><index-button>2021年4月</index-button></a>
+                        <a href="#!" class="item"><index-button>2021年3月</index-button></a>
                     </div>
-                    <a href="#!" class="cta"><index-button yPadding="0.9rem" xPadding="2.5rem">立即投資</index-button></a>
+                    <a href="#!" class="cta"><index-button>立即投資</index-button></a>
                 </div>
             </index-section>
         </div>
@@ -79,6 +79,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 .alesis-slate {
     position: relative;
     height  : 33rem;
@@ -90,6 +92,10 @@ export default {
         right   : 0;
         bottom  : 0;
 
+        @include rwd {
+            left: 0;
+        }
+
         .image {
             height    : 100%;
             width     : 100%;
@@ -98,27 +104,39 @@ export default {
     }
 
     .mask {
-        background-image: url(/images/alesis-shell-mask.svg);
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        text-shadow: 1px 1px 4px black;
-        color: #FFF;
-        font-size: 1.1rem;
-        padding-left: 12rem;
-        background-size: contain;
+        background-image : url(/images/alesis-shell-mask.svg);
+        position         : relative;
+        z-index          : 1;
+        display          : flex;
+        align-items      : center;
+        padding-left     : 12rem;
+        background-size  : contain;
         background-repeat: no-repeat;
-        min-width: 1485px;
-        height: 100%;
+        min-width        : 1485px;
+        height           : 100%;
+
+        @include rwd {
+            background-image: url(/images/alesis-wave-bg-rotated.svg);
+            padding-left    : 0;
+            background-size : 100vw;
+            min-width       : initial;
+            align-items     : initial;
+            padding-top     : 21vw;
+            justify-content : center;
+        }
 
         .header {
-            color         : #FFF;
-            padding-bottom: 0.2rem;
-            border-bottom : 1px solid #FFF;
-            display       : inline-block;
-            font-size     : 1.8rem;
-            font-weight   : bolder;
+            padding-bottom         : 0.2rem;
+            border-bottom          : 1px solid #FFF;
+            display                : inline-block;
+            font-weight            : bolder;
+            background-image       : linear-gradient(to right, #e7e7f4 0%, #4fb7ec 50%, #c4c4fc 75%);
+            background-clip        : text;
+            width                  : fit-content;
+            color                  : rgba(255, 255, 255, 0);
+            font-size              : 1.8rem;
+            line-height            : 1.2;
+            height                 : min-content;
         }
     }
 }
@@ -131,6 +149,10 @@ export default {
 
         .image {
             width: 430px;
+
+            @include rwd {
+                width: 70vw;
+            }
         }
 
         .links {
@@ -143,11 +165,30 @@ export default {
 
             .item {
                 // padding: 0.9rem 2.5rem;
+
+                --font-size: 1.1rem;
+                --x-padding: 2.5rem;
+                --y-padding: 0.9rem;
+
+                @include rwd {
+                    --x-padding: 1.4rem;
+                    --y-padding: 0.7rem;
+
+                    white-space: nowrap;
+                }
             }
         }
 
         .cta {
+            --x-padding: 2.5rem;
+            --y-padding: 0.9rem;
 
+            @include rwd {
+                --x-padding: 1.7rem;
+                --y-padding: 0.7rem;
+
+                white-space: nowrap;
+            }
         }
     }
 }
