@@ -25,8 +25,12 @@ export default {
     },
     mounted() {
         this.$el.style.setProperty('--font-size', this.size)
-        this.$el.style.setProperty('--x-padding', this.xPadding)
-        this.$el.style.setProperty('--y-padding', this.yPadding)
+        if (this.xPadding !== "0") {
+            this.$el.style.setProperty('--x-padding', this.xPadding)
+        }
+        if (this.yPadding !== "0") {
+            this.$el.style.setProperty('--y-padding', this.yPadding)
+        }
     }
 };
 </script>
