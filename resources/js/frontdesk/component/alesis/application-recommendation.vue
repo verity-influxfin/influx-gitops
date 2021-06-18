@@ -25,6 +25,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "./alesis";
+
 .alesis-app {
     .wrapper {
         background-image: url('/images/sshot-1644.png');
@@ -35,9 +37,18 @@ export default {
         min-height      : 34rem;
         position        : relative;
 
+        @include rwd {
+            flex-direction: column;
+        }
+
         .content {
             flex      : 1;
             text-align: center;
+
+            @include rwd {
+                margin-top   : 3rem;
+                margin-bottom: 3rem;
+            }
 
             .button {
                 text-align      : center;
@@ -54,17 +65,24 @@ export default {
                 border-radius   : 1rem;
                 border          : 2px solid #036eb7;
             }
+
             .divider {
                 background: #2f95cb;
                 height    : 1px;
                 margin    : 2rem auto 2rem;
                 width     : 330px;
+
+                @include rwd {
+                    width: 270px;
+                }
             }
+
             .description {
                 font-size  : 1.1rem;
                 font-weight: bolder;
                 color      : #112e53;
             }
+
             .markets {
                     margin-top: 2rem;
 
@@ -73,21 +91,35 @@ export default {
                         margin-right: 1rem;
                     }
                 }
+
+                img {
+                    @include rwd {
+                        width: 160px;
+                    }
+                }
             }
         }
         .demo {
             flex: 1;
 
             .phone {
-
+                @include rwd {
+                    width        : 380px;
+                    margin-bottom: 2rem;
+                }
             }
 
             .edge {
-                position: absolute;
-                top     : 0;
-                right   : 0;
-                bottom  : 0;
-                height  : 100%;
+                position      : absolute;
+                top           : 0;
+                right         : 0;
+                bottom        : 0;
+                height        : 100%;
+                pointer-events: none;
+
+                @include rwd {
+                    opacity: 0.4;
+                }
             }
         }
     }
