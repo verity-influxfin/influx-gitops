@@ -116,6 +116,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 @keyframes fadein2 {
     0%   { opacity: 0; }
     50%  { opacity: 0; }
