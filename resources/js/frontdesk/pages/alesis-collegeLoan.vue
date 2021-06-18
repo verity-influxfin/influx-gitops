@@ -433,9 +433,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 .alesis-counters {
-    margin: 4rem auto 8rem;
+    margin   : 4rem auto 8rem;
     max-width: 1280px;
+
+    @include rwd {
+        margin-bottom: 3rem;
+    }
 
     .wrapper {
       display        : flex;
@@ -445,16 +451,16 @@ export default {
 
 .alesis-map {
     .wrapper {
-        display: grid;
-    max-width: 1620px;
-    margin: 8rem auto 0;
-    gap: 5rem;
-    grid-template-columns: 1fr 1fr;
+        display              : grid;
+        max-width            : 1620px;
+        margin               : 8rem auto 0;
+        gap                  : 5rem;
+        grid-template-columns: 1fr 1fr;
 
         .projects {
-                display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 3rem;
+            display              : grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap                  : 3rem;
 
             .item {
 
@@ -644,11 +650,22 @@ export default {
         align-items          : center;
         justify-content      : center;
 
+        @include rwd {
+            grid-template-columns: repeat(3, 1fr);
+            max-width            : 430px;
+            gap                  : 2rem 0;
+            white-space          : nowrap;
+        }
+
         .item {
             text-align: center;
 
             .image {
+                width: 130px;
 
+                @include rwd {
+                    width: 90px;
+                }
             }
 
             .name {
@@ -669,18 +686,31 @@ export default {
         align-items          : center;
         justify-content      : center;
 
+        @include rwd {
+            grid-template-columns: repeat(2, 1fr);
+            gap                  : 2rem 0rem;
+        }
+
         .item {
             text-align: center;
 
             .image {
+                width: 100px;
 
+                @include rwd {
+                    width: 80px;
+                }
             }
 
             .label {
                 margin-top : 1rem;
-                font-weight: bold;
                 color      : #112E53;
                 font-size  : 1.3rem;
+
+                @include rwd {
+                    font-size : 1rem;
+                    margin-top: .5rem;
+                }
             }
         }
     }
