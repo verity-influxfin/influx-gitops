@@ -143,6 +143,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
+
 .alesis-slate {
     background-image: url("/images/sshot-1647.png");
     background-size : cover;
@@ -187,6 +189,8 @@ export default {
 }
 
 .alesis-types {
+    margin-top: 7rem;
+
     .items {
         display              : grid;
         grid-template-columns: repeat(2, 1fr);
@@ -194,10 +198,21 @@ export default {
         margin               : 0 auto;
         gap                  : 3rem;
 
+        @include rwd {
+            grid-template-columns: 1fr;
+        }
+
         .item {
             border       : 1px solid #2664a5;
             padding      : 2.5rem 1rem;
             border-radius: 1rem;
+
+            @include rwd {
+                width      : min-content;
+                white-space: nowrap;
+                margin     : 0 auto;
+                min-width  : 19rem;
+            }
 
             .header {
                 text-align      : center;
@@ -210,12 +225,20 @@ export default {
                 font-size       : 1.6rem;
                 line-height     : 1.2;
                 white-space     : nowrap;
+
+                @include rwd {
+                    font-size: 1.3rem;
+                }
             }
 
             .divider {
                 height    : 1px;
                 background: #2664a5;
                 margin    : 2rem 0;
+
+                @include rwd {
+                    margin: 1rem 0;
+                }
             }
 
             .features {
@@ -226,6 +249,10 @@ export default {
                 .feature {
                     font-size  : 1.2rem;
                     color      : #5d5555;
+
+                    @include rwd {
+                        font-size: 1rem;
+                    }
 
                     &.-centered {
                         margin: 0 auto;
@@ -266,6 +293,13 @@ export default {
             margin-bottom   : 2rem;
             margin-left     : 4rem;
 
+            @include rwd {
+                font-size     : 1.5rem;
+                padding-bottom: 0.25rem;
+                margin-left   : 3rem;
+                padding-right : 1rem;
+            }
+
             &.-fast {
                 margin-top: -1rem;
             }
@@ -290,13 +324,20 @@ export default {
         margin   : 0 auto;
         gap      : 4rem;
 
-        .A, .B, .C {
-            text-align: center;
+        @include rwd {
+            grid-template-areas  : none;
+            grid-template-columns: 1fr;
+            grid-template-rows   : initial;
+            gap                  : 2rem;
         }
 
         .B, .C {
             img {
                 width: 530px;
+
+                @include rwd {
+                    width: 250px;
+                }
             }
         }
 
@@ -309,8 +350,21 @@ export default {
         .C {
             grid-area: C;
         }
+
+        .A, .B, .C {
+            text-align: center;
+
+            @include rwd {
+                grid-area: initial;
+            }
+        }
+
         img {
             width: 580px;
+
+            @include rwd {
+                width: 300px;
+            }
         }
     }
 }
@@ -325,9 +379,18 @@ export default {
         min-height      : 34rem;
         position        : relative;
 
+        @include rwd {
+            flex-direction: column;
+        }
+
         .content {
             flex      : 1;
             text-align: center;
+
+            @include rwd {
+                margin-top   : 3rem;
+                margin-bottom: 3rem;
+            }
 
             .button {
                 text-align      : center;
@@ -349,6 +412,10 @@ export default {
                 height    : 1px;
                 margin    : 2rem auto 2rem;
                 width     : 330px;
+
+                @include rwd {
+                    width: 270px;
+                }
             }
             .description {
                 font-size  : 1.1rem;
@@ -356,11 +423,17 @@ export default {
                 color      : #112e53;
             }
             .markets {
-                    margin-top: 2rem;
+                margin-top: 2rem;
 
                 .link {
                     &:first-child {
                         margin-right: 1rem;
+                    }
+
+                    img {
+                        @include rwd {
+                            width: 160px;
+                        }
                     }
                 }
             }
@@ -369,7 +442,10 @@ export default {
             flex: 1;
 
             .phone {
-
+                @include rwd {
+                    width        : 380px;
+                    margin-bottom: 2rem;
+                }
             }
 
             .edge {
@@ -391,7 +467,9 @@ export default {
         .cover {
 
             .image {
-
+                @include rwd {
+                    width: 60vw;
+                }
             }
         }
         .more {
