@@ -153,6 +153,12 @@ export default {
 @import "../component/alesis/alesis";
 
 .alesis-projects {
+    .section {
+        @include rwd {
+            background: none !important;
+        }
+    }
+
     .wrapper {
         .set {
             @include rwd {
