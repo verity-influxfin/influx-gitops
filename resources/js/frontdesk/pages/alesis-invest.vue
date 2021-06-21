@@ -1,15 +1,21 @@
 <template>
     <div class="index-wrapper">
+        <!-- 標頭 -->
         <div class="alesis-slate">
-            <div class="wrapper">
+            <div class="background">
+                <img class="image" src="/images/sshot-2112.png" alt="">
+            </div>
+            <div class="mask">
                 <div class="header">
                     <div class="text">普匯投資</div>
                 </div>
-                <div class="showcase">
-                    <img class="image" src="/images/直手機-14.png" alt="">
-                </div>
+            </div>
+            <div class="showcase">
+                <img class="image" src="/images/直手機-14.png" alt="">
             </div>
         </div>
+        <!-- 標頭 -->
+
         <div class="alesis-types">
             <index-section header="債權種類">
                 <div class="items">
@@ -145,7 +151,7 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
-.alesis-slate {
+/*.alesis-slate {
     background-image: url("/images/sshot-1647.png");
     background-size : cover;
 
@@ -183,6 +189,94 @@ export default {
 
             .image {
                 height: 520px;
+            }
+        }
+    }
+}*/
+
+.alesis-slate {
+    position: relative;
+    height  : 33rem;
+
+    @include rwd {
+        height: 162vw;
+    }
+
+    .background {
+        position: absolute;
+        top     : 0;
+        left    : 10rem;
+        right   : 0;
+        bottom  : 0;
+
+        @include rwd {
+            left: 0;
+        }
+
+        .image {
+            height    : 100%;
+            width     : 100%;
+            object-fit: cover;
+        }
+    }
+
+    .mask {
+        background-image : url(/images/alesis-shell-mask.svg);
+        position         : relative;
+        z-index          : 1;
+        display          : flex;
+        flex-direction   : column;
+        justify-content  : center;
+        padding-left     : 12rem;
+        background-size  : contain;
+        background-repeat: no-repeat;
+        min-width        : 1485px;
+        height           : 100%;
+
+        @include rwd {
+            background-image: url(/images/alesis-wave-bg-rotated.svg);
+            padding-left    : 0;
+            background-size : 100vw;
+            min-width       : initial;
+            justify-content : initial;
+            padding-top     : 21vw;
+            align-items     : center;
+        }
+
+        .header {
+            padding-bottom         : 0.2rem;
+            border-bottom          : 1px solid #FFF;
+            display                : inline-block;
+            font-weight            : bolder;
+            background-image       : linear-gradient(to right, #e7e7f4 0%, #4fb7ec 50%, #c4c4fc 75%);
+            background-clip        : text;
+            width                  : fit-content;
+            color                  : rgba(255, 255, 255, 0);
+            font-size              : 2rem;
+            line-height            : 1.2;
+
+            @include rwd {
+                font-size: 1.8rem;
+            }
+        }
+    }
+
+    .showcase {
+        position: absolute;
+        right   : 0;
+        left    : calc(50vw + 490px / 5);
+        bottom  : 0;
+
+        @include rwd {
+            left     : 50%;
+            transform: translateX(-50%);
+        }
+
+        .image {
+            height: 490px;
+
+            @include rwd {
+                height: 94vw;
             }
         }
     }
