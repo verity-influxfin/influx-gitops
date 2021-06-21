@@ -115,6 +115,49 @@ export default {
 };
 </script>
 
+<style lang="scss">
+@import "../component/alesis/alesis";
+
+.alesis-features {
+    .cards {
+
+        > .item {
+            .header .text .header {
+                @include rwd {
+                    font-size: 1.1rem !important;
+                }
+            }
+
+            .content .description {
+                @include rwd {
+                    font-size: .8rem !important;
+                }
+            }
+
+            .symbol {
+                @include rwd {
+                    width: 70px !important;
+                }
+
+                .image {
+                    @include rwd {
+                        width : 50px !important;
+                        height: 50px !important;
+                    }
+                }
+
+                .wrapper {
+                    @include rwd {
+                        top : -2rem  !important;
+                        left: 0.5rem !important;
+                    }
+                }
+            }
+        }
+    }
+}
+</style>
+
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
@@ -141,6 +184,10 @@ export default {
     padding         : 2rem 0 4rem;
     margin-bottom   : 8rem;
 
+    @include rwd {
+        height: 53rem;
+    }
+
     .header {
         text-align: center;
 
@@ -160,6 +207,10 @@ export default {
         margin   : 3rem auto 0;
         position : relative;
 
+        @include rwd {
+            flex-direction: column-reverse;
+        }
+
         .left {
             flex: 1;
             text-align: center;
@@ -169,6 +220,11 @@ export default {
                 position : absolute;
                 left     : -29rem;
                 animation: fadein3 2s;
+
+                @include rwd {
+                    left: -2rem;
+                    top : 15rem;
+                }
             }
         }
 
@@ -178,10 +234,19 @@ export default {
             margin-left: 8rem;
             position   : relative;
 
+            @include rwd {
+                margin-left: 0;
+            }
+
             .phone:first-child {
                 position : absolute;
                 left     : 21rem;
                 animation: fadein2 2s;
+
+                @include rwd {
+                    top : 12rem;
+                    left: 4rem;
+                }
             }
             .phone:last-child {
                 animation: fadein1 2s;
@@ -190,24 +255,34 @@ export default {
 
         .phone {
             .image {
-                height: 350px
+                height: 350px;
+
+                @include rwd {
+                    height: 209px;
+                }
             }
         }
     }
 }
 
 .alesis-features {
-  .cards {
-    display              : grid;
-    grid-template-columns: repeat(2, 1fr);
-    width                : 740px;
-    gap                  : 6rem;
-    margin               : 6rem auto 0;
-  }
+    .cards {
+        display              : grid;
+        grid-template-columns: repeat(2, 1fr);
+        width                : 740px;
+        gap                  : 6rem;
+        margin               : 6rem auto 0;
+
+        @include rwd {
+            min-width: 330px;
+            width    : auto;
+            gap      : 4rem 1rem;
+        }
+    }
 }
 
 .alesis-recommends {
-  .wrapper {
+    .wrapper {
         display        : flex;
         align-items    : center;
         justify-content: center;
