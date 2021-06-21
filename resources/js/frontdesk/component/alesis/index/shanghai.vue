@@ -18,8 +18,8 @@
                 <div class="item">額度最高達300萬，期間最長7年</div>
             </div>
             <div class="buttons">
-                <a class="button" href="#!"><index-button :fluid="true" yPadding=".4rem" size="1.1rem">了解更多</index-button></a>
-                <a class="button" href="#!" @click="() => isForm = true"><index-button :fluid="true" yPadding=".4rem" size="1.1rem">取得資格</index-button></a>
+                <a class="button" href="#!"><index-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">了解更多</index-button></a>
+                <a class="button" href="#!" @click="() => isForm = true"><index-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">取得資格</index-button></a>
             </div>
         </template>
     </div>
