@@ -148,6 +148,21 @@ export default {
 };
 </script>
 
+
+<style lang="scss">
+@import "../component/alesis/alesis";
+
+.alesis-projects {
+    .wrapper {
+        .set {
+            @include rwd {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    }
+}
+</style>
+
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
