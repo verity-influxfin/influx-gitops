@@ -166,6 +166,11 @@ class Data_verify_lib{
 				$verifiedResult->setBanResubmit();
 			}
 
+			if($data['repaymentDelay'] != '無') {
+				$verifiedResult->addMessage('有借款延遲記錄', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
 			if($data['creditLogCount'] < 1) {
 				$verifiedResult->addMessage('無信用記錄', 3, MassageDisplay::Backend);
 			}
