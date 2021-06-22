@@ -275,6 +275,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="bottom">
+                        <div class="slogan">假日放款全年無休</div>
+                        <a href="#!" class="get"><index-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</index-button></a>
+                    </div>
                 </div>
             </index-section>
         </div>
@@ -941,6 +945,7 @@ export default {
 
         @include rwd {
             flex-direction: column;
+            width         : min-content;
         }
 
         .left {
@@ -1024,6 +1029,28 @@ export default {
             }
         }
 
+        .bottom {
+            display   : none;
+            text-align: center;
+
+            @include rwd {
+                display: block;
+            }
+
+            .slogan {
+                text-align : center;
+                color      : #f29600;
+                font-size  : 1.4rem;
+                font-weight: bolder;
+                margin-top : 2rem;
+            }
+
+            .get {
+                display   : inline-block;
+                margin-top: 1rem;
+            }
+        }
+
         .section {
             display      : flex;
             margin-bottom: 5rem;
@@ -1034,6 +1061,10 @@ export default {
 
             .symbol {
                 margin-right: 1.5rem;
+
+                @include rwd {
+                    margin-right: 0;
+                }
 
                 .image {
 
@@ -1046,7 +1077,9 @@ export default {
                     display: none;
 
                     @include rwd {
-                        display: initial;
+                        display     : initial;
+                        width       : 70px;
+                        margin-right: 1rem;
                     }
                 }
             }
@@ -1056,6 +1089,10 @@ export default {
                 width      : 290px;
                 line-height: 1.6;
 
+                @include rwd {
+                    margin-top: 1.3rem;
+                }
+
                 .header {
                     display                : inline-block;
                     background-image       : linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
@@ -1064,6 +1101,10 @@ export default {
                     color                  : rgba(255, 255, 255, 0);
                     font-weight            : bolder;
                     font-size              : 1.6rem;
+
+                    @include rwd {
+                        font-size: 1.3rem;
+                    }
                 }
 
                 .divider {
