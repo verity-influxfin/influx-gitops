@@ -202,6 +202,7 @@
                         <div class="section">
                             <div class="symbol">
                                 <img src="/images/alesis-work-loan-feature1.svg" class="image">
+                                <img src="/images/alesis-workloan-feature-1-simplified.svg" class="rwd-image">
                             </div>
                             <div class="content">
                                 <div class="header">即時審核，快速媒合放款</div>
@@ -212,6 +213,7 @@
                         <div class="section">
                             <div class="symbol">
                                 <img src="/images/alesis-work-loan-feature2.svg" class="image">
+                                <img src="/images/alesis-workloan-feature-2-simplified.svg" class="rwd-image">
                             </div>
                             <div class="content">
                                 <div class="header">全線無人化</div>
@@ -222,6 +224,7 @@
                         <div class="section">
                             <div class="symbol">
                                 <img src="/images/alesis-work-loan-feature3.svg" class="image">
+                                <img src="/images/alesis-workloan-feature-3-simplified.svg" class="rwd-image">
                             </div>
                             <div class="content">
                                 <div class="header">隱私無照會</div>
@@ -241,6 +244,7 @@
                         <div class="section">
                             <div class="symbol">
                                 <img src="/images/alesis-work-loan-feature4.svg" class="image">
+                                <img src="/images/alesis-workloan-feature-4-simplified.svg" class="rwd-image">
                             </div>
                             <div class="content">
                                 <div class="header">聯徵不留紀錄</div>
@@ -251,6 +255,7 @@
                         <div class="section">
                             <div class="symbol">
                                 <img src="/images/alesis-work-loan-feature5.svg" class="image">
+                                <img src="/images/alesis-workloan-feature-5-simplified.svg" class="rwd-image">
                             </div>
                             <div class="content">
                                 <div class="header">費率單純透明</div>
@@ -261,6 +266,7 @@
                         <div class="section">
                             <div class="symbol">
                                 <img src="/images/alesis-work-loan-feature6.svg" class="image">
+                                <img src="/images/alesis-workloan-feature-6-simplified.svg" class="rwd-image">
                             </div>
                             <div class="content">
                                 <div class="header">金融機構合作</div>
@@ -1031,6 +1037,17 @@ export default {
 
                 .image {
 
+                    @include rwd {
+                        display: none;
+                    }
+                }
+
+                .rwd-image {
+                    display: none;
+
+                    @include rwd {
+                        display: initial;
+                    }
                 }
             }
 
