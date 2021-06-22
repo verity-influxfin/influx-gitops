@@ -545,13 +545,27 @@ export default {
             align-items          : center;
             gap                  : 1rem;
 
+            @include rwd {
+                grid-template-columns: 1fr;
+                gap                  : 0.5rem;
+            }
+
             &:not(:last-child) {
                 margin-bottom: 1.5rem;
+
+                @include rwd {
+                    margin-bottom: 0.5rem;
+                }
             }
 
             .label {
                 text-align: right;
                 font-size : 1.4rem;
+
+                @include rwd {
+                    text-align: left;
+                    font-size : 1rem;
+                }
             }
 
             .input {
@@ -565,6 +579,12 @@ export default {
                     text-align   : center;
                     color        : #036eb7;
                     padding-left : 45%;
+
+                    @include rwd {
+                        font-size   : 1rem;
+                        padding     : .5rem;
+                        padding-left: 37%;
+                    }
                 }
                 input {
                     width        : 100%;
@@ -574,6 +594,11 @@ export default {
                     border       : 1px solid #036eb7;
                     background   : transparent;
                     color        : #036eb7;
+
+                    @include rwd {
+                        font-size: 1rem;
+                        padding  : .5rem;
+                    }
                 }
                 button {
                     width        : 100%;
@@ -583,6 +608,11 @@ export default {
                     border       : 0;
                     background   : #326398;
                     color        : #FFF;
+
+                    @include rwd {
+                        font-size: 1rem;
+                        padding  : .5rem;
+                    }
                 }
             }
         }
@@ -594,12 +624,24 @@ export default {
         margin-top   : 8rem;
         margin-bottom: 2rem;
 
+        @include rwd {
+            margin-top    : 3rem;
+            margin-bottom : 0;
+            flex-direction: column;
+        }
+
         .showcase {
             flex      : 1;
             text-align: right;
 
             .image {
                 height: 350px;
+
+                @include rwd {
+                    width        : 70vw;
+                    height       : auto;
+                    margin-bottom: 2rem;
+                }
             }
         }
 
@@ -613,19 +655,35 @@ export default {
             flex                   : 1;
             margin-left            : 3rem;
 
+            @include rwd {
+                margin-left: 0;
+            }
+
             .header {
                 margin-bottom: 1.5rem;
                 font-size    : 1.8rem;
+
+                @include rwd {
+                    font-size: 1.2rem;
+                }
             }
             .content {
                 font-size    : 1.3rem;
                 line-height  : 1.7;
                 margin-bottom: 1.5rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                }
             }
             .values {
                 font-size    : 1.2rem;
                 line-height  : 1.8;
                 margin-bottom: 2rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                }
 
                 .row {
                     margin: 0;
@@ -875,6 +933,10 @@ export default {
         max-width: 1280px;
         margin   : 0 auto;
 
+        @include rwd {
+            flex-direction: column;
+        }
+
         .left {
             flex          : 1;
             display       : flex;
@@ -883,12 +945,24 @@ export default {
             margin-right  : -5rem;
             margin-left   : 5rem;
 
+            @include rwd {
+                margin: 0;
+            }
+
             .section {
                 flex-direction: row-reverse;
+
+                @include rwd {
+                    flex-direction: row;
+                }
 
                 .symbol {
                     margin-left : 1.5rem;
                     margin-right: 0;
+
+                    @include rwd {
+                        margin-left: 0;
+                    }
                 }
             }
         }
@@ -899,6 +973,10 @@ export default {
             top       : initial;
             left      : initial;
             transform : none;
+
+            @include rwd {
+                display: none;
+            }
 
             .showcase {
                 margin-top: 4rem;
@@ -926,15 +1004,27 @@ export default {
 
             .section:nth-child(2) {
                 margin-left: -2rem;
+
+                @include rwd {
+                    margin-left: 0;
+                }
             }
             .section:nth-child(3) {
                 margin-left: -3rem;
+
+                @include rwd {
+                    margin-left: 0;
+                }
             }
         }
 
         .section {
             display      : flex;
             margin-bottom: 5rem;
+
+            @include rwd {
+                margin-bottom: 0;
+            }
 
             .symbol {
                 margin-right: 1.5rem;
