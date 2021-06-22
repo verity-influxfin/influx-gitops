@@ -1,5 +1,5 @@
 <template>
-    <div class="section" :class="{'-secondary': secondary, '-multiline': multiline !== undefined, '-outlined': outlined, '-outlined-multiline': outlinedMulti, '-description-multiline': descriptionMulti}">
+    <div class="sectionx" :class="{'-secondary': secondary, '-multiline': multiline !== undefined, '-outlined': outlined, '-outlined-multiline': outlinedMulti, '-description-multiline': descriptionMulti}">
         <div class="header" v-if="header">
             <div class="before-dots">
                 <div class="dot"></div>
@@ -44,7 +44,7 @@ export default {
 <style lang="scss" scoped>
 @import "../alesis";
 
-.section {
+.sectionx {
     position: relative;
 
     @include rwd {
