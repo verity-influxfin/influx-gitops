@@ -410,8 +410,10 @@ export default {
             .moon {
                 .text {
                     @include rwd {
-                        display: flex;
-                        gap    : 1.5rem;
+                        display    : flex;
+                        gap        : 1.25rem;
+                        font-weight: 400;
+                        font-size  : 1rem;
                     }
 
                     .multiline {
