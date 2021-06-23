@@ -19,103 +19,133 @@
         <div class="alesis-projects">
             <index-section header="目前案件">
                 <div class="wrapper">
-                    <div class="header">學生貸</div>
-                    <global-carousel>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                        </div>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                        </div>
-                    </global-carousel>
-                </div>
-            </index-section>
-            <index-section>
-                <div class="wrapper">
-                    <div class="header -fast">上班族貸</div>
-                    <global-carousel>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
+                    <div class="selector">
+                        <button class="item -active">
+                            <div class="text">全部</div>
+                            <div class="label">99+</div>
+                        </button>
+                        <button class="item">
+                            <div class="text">學生</div>
+                            <div class="label">86</div>
+                        </button>
+                        <button class="item">
+                            <div class="text">上班族</div>
+                            <div class="label">60</div>
+                        </button>
+                    </div>
+                    <div class="orders">
+                        <a href="#!" class="item -active">上架日</a>
+                        <a href="#!" class="item">金額</a>
+                        <a href="#!" class="item">期數</a>
+                        <a href="#!" class="item">年利率</a>
+                        <a href="#!" class="item">信評</a>
+                        <div class="item">
+                            <div class="arrows">
+                                <img src="/images/alesis-work-loan-arrow-up.svg" class="up">
+                                <img src="/images/alesis-work-loan-arrow-down.svg" class="down">
                             </div>
                         </div>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
+                    </div>
+                    <div class="cards">
+                        <div class="item">
+                            <index-project></index-project>
                         </div>
-                    </global-carousel>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                    </div>
+                    <div class="paginations">
+                        <a href="#!" class="item">上一頁</a>
+                        <a href="#!" class="item">1</a>
+                        <a href="#!" class="item">2</a>
+                        <a href="#!" class="item">3</a>
+                        <a href="#!" class="item">4</a>
+                        <a href="#!" class="item">...</a>
+                        <a href="#!" class="item">30</a>
+                        <a href="#!" class="item">下一頁</a>
+                    </div>
                 </div>
             </index-section>
         </div>
         <!-- / 目前案件 -->
 
-        <!-- 目前案件 -->
+        <!-- 已成交案件 -->
         <div class="alesis-projects">
             <index-section header="已成交案件">
                 <div class="wrapper">
-                    <div class="header">學生貸</div>
-                    <global-carousel>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                        </div>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                        </div>
-                    </global-carousel>
-                </div>
-            </index-section>
-            <index-section>
-                <div class="wrapper">
-                    <div class="header -fast">上班族貸</div>
-                    <global-carousel>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
+                    <div class="selector">
+                        <button class="item -active">
+                            <div class="text">全部</div>
+                            <div class="label">99+</div>
+                        </button>
+                        <button class="item">
+                            <div class="text">學生</div>
+                            <div class="label">86</div>
+                        </button>
+                        <button class="item">
+                            <div class="text">上班族</div>
+                            <div class="label">60</div>
+                        </button>
+                    </div>
+                    <div class="orders">
+                        <a href="#!" class="item -active">上架日</a>
+                        <a href="#!" class="item">金額</a>
+                        <a href="#!" class="item">期數</a>
+                        <a href="#!" class="item">年利率</a>
+                        <a href="#!" class="item">信評</a>
+                        <div class="item">
+                            <div class="arrows">
+                                <img src="/images/alesis-work-loan-arrow-up.svg" class="up">
+                                <img src="/images/alesis-work-loan-arrow-down.svg" class="down">
                             </div>
                         </div>
-                        <div class="set">
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
-                            <div class="item">
-                                <index-project></index-project>
-                            </div>
+                    </div>
+                    <div class="cards">
+                        <div class="item">
+                            <index-project></index-project>
                         </div>
-                    </global-carousel>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                        <div class="item">
+                            <index-project></index-project>
+                        </div>
+                    </div>
+                    <div class="paginations">
+                        <a href="#!" class="item">上一頁</a>
+                        <a href="#!" class="item">1</a>
+                        <a href="#!" class="item">2</a>
+                        <a href="#!" class="item">3</a>
+                        <a href="#!" class="item">4</a>
+                        <a href="#!" class="item">...</a>
+                        <a href="#!" class="item">30</a>
+                        <a href="#!" class="item">下一頁</a>
+                    </div>
                 </div>
             </index-section>
         </div>
-        <!-- / 目前案件 -->
+        <!-- / 已成交案件 -->
     </div>
 </template>
 
@@ -253,8 +283,152 @@ export default {
     }
 
     .wrapper {
-        width : min-content;
         margin: 0 auto;
+
+        .cards {
+            max-width            : 950px;
+            margin               : 0 auto;
+            display              : grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap                  : 3rem;
+            margin-top           : 2rem;
+
+            @include rwd {
+                grid-template-columns: 1fr;
+            }
+
+            .item {
+                @include rwd {
+                    display        : flex;
+                    align-items    : center;
+                    justify-content: center;
+                }
+            }
+        }
+
+        .paginations {
+            display        : flex;
+            width          : min-content;
+            white-space    : nowrap;
+            margin         : 0 auto;
+            border         : 1px solid #326398;
+            border-radius  : .4rem;
+            align-items    : center;
+            justify-content: center;
+            margin-top     : 2rem;
+
+            .item {
+                line-height    : 1;
+                color          : #326398;
+                padding        : .5rem .7rem;
+                font-size      : 1.1rem;
+                border-right   : 1px solid #326398;
+                vertical-align : top;
+                text-decoration: none;
+
+                @include rwd {
+                    font-size: 1rem;
+                    padding  : .5rem .5rem;
+                }
+
+                &:last-child {
+                    border-right: 0;
+                }
+            }
+        }
+
+        .orders {
+            display        : flex;
+            align-items    : center;
+            justify-content: center;
+            margin-top     : 1rem;
+
+            @include rwd {
+                margin-top: 0;
+            }
+
+            .item {
+                padding        : 1rem 3rem;
+                font-size      : 1.2rem;
+                color          : #AAAAAA;
+                text-decoration: none;
+                white-space    : nowrap;
+
+                @include rwd {
+                    padding  : 1rem .7rem;
+                    font-size: 1rem;
+                }
+
+                &.-active {
+                    color: #4D4D4D;
+                }
+
+                .arrows {
+                    display       : flex;
+                    flex-direction: column;
+
+                    img {
+                        width: 16px;
+
+                        @include rwd {
+                            width: 12px;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        > .selector {
+            display        : flex;
+            align-items    : center;
+            justify-content: center;
+            gap            : 1rem;
+
+            .item {
+                border       : 1px solid #326398;
+                border-radius: .4rem;
+                background   : transparent;
+                appearance   : none;
+                padding      : .25rem .8rem;
+                font-size    : 1.5rem;
+                display      : flex;
+                align-items  : center;
+                gap          : .8rem;
+                white-space  : nowrap;
+                color        : #326398;
+
+                @include rwd {
+                    font-size: 1rem;
+                    padding  : .25rem .5rem;
+                    gap      : .4rem;
+                }
+
+                &.-active {
+                    background: #326398;
+                    color     : #FFF;
+                }
+
+                .text {
+
+                }
+
+                .label {
+                    font-size    : 1rem;
+                    border       : 1px solid #326398;
+                    padding      : .2rem .5rem;
+                    border-radius: .4rem;
+                    line-height  : 1;
+                    color        : #326398;
+                    background   : #FFF;
+
+                    @include rwd {
+                        font-size: .8rem;
+                    }
+                }
+            }
+
+        }
 
         > .header {
             text-align      : center;
@@ -292,6 +466,7 @@ export default {
 
         .index-card {
             min-width: 450px;
+            max-width: 450px;
         }
     }
 }
