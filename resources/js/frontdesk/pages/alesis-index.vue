@@ -398,6 +398,34 @@ export default {
 };
 </script>
 
+<style lang="scss">
+@import "../component/alesis/alesis";
+
+.alesis-fast-transfer {
+    .wrapper {
+        .moons {
+            @include rwd {
+                margin-left: -4rem;
+            }
+            .moon {
+                .text {
+                    @include rwd {
+                        display: flex;
+                        gap    : 1.5rem;
+                    }
+
+                    .multiline {
+                        @include rwd {
+                                margin-top: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+</style>
+
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
@@ -435,6 +463,13 @@ export default {
         .right {
             text-align: center;
             flex      : 1;
+
+            @include rwd {
+                display       : flex;
+                flex-direction: column;
+                gap           : 1rem;
+                align-items   : center;
+            }
         }
 
         .left {
@@ -453,8 +488,18 @@ export default {
             color        : #112e53;
             border       : 1px solid #1a5fa2;
 
+            @include rwd {
+                font-size: 1rem;
+                max-width: 7rem;
+                padding  : .2rem 1rem;
+            }
+
             &:not(:first-child) {
                 margin-left: 1rem;
+
+                @include rwd {
+                    margin-left: 0;
+                }
             }
         }
     }
@@ -596,6 +641,11 @@ export default {
         align-items: center;
         max-width  : 1000px;
 
+        @include rwd {
+            flex-direction: column;
+            gap           : 4rem;
+        }
+
         .graph {
             text-align: center;
             flex      : 1;
@@ -604,7 +654,7 @@ export default {
                 width: 590px;
 
                 @include rwd {
-                    width: 320px;
+                    width: 76vw;
                 }
             }
         }
