@@ -105,7 +105,11 @@
                 <div class="item">
                     <div class="login">SIGN IN</div>
                 </div>
+                <div class="item hamburger">
+                    <img src="/images/alesis-hamburger.svg">
+                </div>
             </div>
+
         </div>
 
 
