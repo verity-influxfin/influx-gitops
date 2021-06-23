@@ -608,4 +608,49 @@ class Cron extends CI_Controller {
 		}
 		echo json_encode($result);
 	}
+
+
+    public function test(){
+        $input = $this->input->get(NULL, TRUE);
+		$pdf_url  = isset($input['url']) ? $input['url'] : '';
+        // $pdf_url = 'https://dev-influxp2p-personal.s3-ap-northeast-1.amazonaws.com/user_upload/44221/new_job_sample1.pdf';
+        $this->load->library('Labor_insurance_lib');
+        $parser = new \Smalot\PdfParser\Parser();
+        $pdf    = $parser->parseFile($pdf_url);
+        $text = $pdf->getText();
+        $res = $this->labor_insurance_lib->transfrom_pdf_data($text);
+
+        $this->load->library('mapping/user/Certification_data');
+        // print_r($res);exit;
+        $result = $this->certification_data->transformJobToResult($res);
+        // print_r($result);exit;
+        $ty = floor($result['total_count']/12);
+        $tm = $result['total_count']%12;
+        $cy = floor($result['this_company_count']/12);
+        $cm = $result['this_company_count']%12;
+        $a = "
+        <table border='1'>
+            <tr>
+                <td>姓名</td><td>{$result['name']}</td>
+            </tr>
+            <tr>
+                <td>統一編號</td><td>{$result['person_id']}</td>
+            </tr>
+            <tr>
+                <td>印表日期</td><td>{$result['report_date']}</td>
+            </tr>
+            <tr>
+                <td>工作總年資</td><td>{$ty}年{$tm}月</td>
+            </tr>
+            <tr>
+                <td>現在任職公司年資</td><td>{$cy}年{$cm}月</td>
+            </tr>
+        </table>
+        <table border='1'>
+            <tr><td>保險證號</td><td>投保公司名稱</td><td>投保薪資</td><td>投保日期</td><td>退保日期</td><td>備註</td></tr>
+            <tr><td>{$result['last_insurance_info']['insuranceId']}</td><td>{$result['last_insurance_info']['companyName']}</td><td>{$result['last_insurance_info']['insuranceSalary']}</td><td>{$result['last_insurance_info']['startDate']}</td><td>{$result['last_insurance_info']['endDate']}</td><td>{$result['last_insurance_info']['comment']}</td><tr></table>";
+        echo$a;
+        exit;
+        print_r($result);exit;
+    }
 }

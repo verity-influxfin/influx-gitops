@@ -772,7 +772,7 @@ class Certification_lib{
 		$certification_content = isset($info->content) ? json_decode($info->content,true): [];
 		$url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file']: null;
 		$result = [];
-		$status = 3;
+		$verifiedResult = new InvestigationCertificationResult(3);
 		$time = time();
 		$printDatetime = '';
 
@@ -788,45 +788,17 @@ class Certification_lib{
 				'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId']: '',
 			];
 
-			// 自然人聯徵正確性驗證
-			$this->CI->load->library('verify/data_legalize_lib');
-			$res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data);
-			if($res['error_message']){
-				$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
-			}
-
 			// 資料轉 result
 			$this->CI->load->library('mapping/user/Certification_data');
 			$result = $this->CI->certification_data->transformJointCreditToResult($response);
-			// 民國轉西元
-			if(isset($result['printDatetime']) && $result['printDatetime']){
-				$this->CI->load->library('mapping/time');
-				$time = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/','',$result['printDatetime']);
-				$time = $this->CI->time->ROCDateToUnixTimestamp($time);
-				// 印表日期
-				$printDatetime = date('Y-m-d',$time);
-				$time = strtotime(date('Y-m-d H:i:s',$time)." + 1 month");
 
-				// 過件邏輯
-				if(!$res['error_message']){
-					$this->CI->load->library('verify/data_verify_lib');
-					$approve_status = $this->CI->data_verify_lib->check_investigation($result);
-					// 過件結果
-					if($approve_status){
-						$status = isset($approve_status['status_code']) ? $approve_status['status_code'] : $status;
-						if($approve_status['error_message']){
-							$remark['verify_result'] = array_merge($remark['verify_result'],$res['error_message']);
-						}
-						$status = 3;
-					}
-				}else{
-					$status = 2;
-				}
-
-			}
+			// 印表日期
+			$this->CI->load->library('mapping/time');
+			$printTimestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/','',$result['printDatetime']);
+			$printTimestamp = $this->CI->time->ROCDateToUnixTimestamp($printTimestamp);
+			$printDatetime = date('Y-m-d',$printTimestamp);
 
 			$group_id = isset(json_decode($info->content)->group_id) ? json_decode($info->content)->group_id : time();
-
 			$certification_content['group_id'] = $group_id;
 			$certification_content['result']["$group_id"] = $result;
 			$certification_content['times'] = isset($result['S1Count']) ? $result['S1Count'] : 0;
@@ -844,14 +816,17 @@ class Certification_lib{
 			$certification_content['total_repayment_enough'] = '';
 			// 每月還款是否小於投保金額
 			$certification_content['monthly_repayment_enough'] = '';
+			// 負債比
+			$certification_content['debt_to_equity_ratio'] = 0;
+
 			if(isset($job_certification->content)){
 				if(! is_array($job_certification->content)){
 					$job_certification_content = json_decode($job_certification->content,true);
 				}else{
 					$job_certification_content = $job_certification->content;
 				}
-				$certification_content['monthly_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? number_format($job_certification_content['salary']/1000,2) : '';
-				$certification_content['total_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? number_format($job_certification_content['salary']*22/1000,2) : '';
+				$certification_content['monthly_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? $job_certification_content['salary']/1000 : '';
+				$certification_content['total_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? $job_certification_content['salary']*22/1000 : '';
 			}
 
 			if(isset($result['totalMonthlyPayment'])  && $certification_content['monthly_repayment']){
@@ -881,12 +856,42 @@ class Certification_lib{
 				// $certification_content['mail_file_status'] = 2;
 			}
 
+			// 負債比計算，投保薪資不能為0
+			if(intval($certification_content['monthly_repayment']))
+				$certification_content['debt_to_equity_ratio'] = round($result['totalMonthlyPayment'] / $certification_content['monthly_repayment'] * 100, 2);
+
+			// 自然人聯徵正確性驗證
+			$this->CI->load->library('verify/data_legalize_lib');
+			$verifiedResult = $this->CI->data_legalize_lib->legalize_investigation($verifiedResult,$info->user_id,$result,$info->created_at);
+
+			// 過件邏輯
+			$this->CI->load->library('verify/data_verify_lib');
+			$verifiedResult = $this->CI->data_verify_lib->check_investigation($verifiedResult, $result, $certification_content);
+
+			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
+			$status = $verifiedResult->getStatus();
+
+
+
 			$this->CI->user_certification_model->update($info->id, array(
-               'status' => $status,
-               'sys_check' => 1,
-               'content' => json_encode($certification_content),
-			         'remark' => json_encode($remark)
-           ));
+				'status' => $status != 3 ? 0 : $status,
+				'sys_check' => 1,
+				'content' => json_encode($certification_content),
+				'remark' => json_encode($remark),
+        	));
+
+			if($status == 1) {
+				$expire_time = new DateTime;
+				$expire_time->setTimestamp($printTimestamp);
+				$expire_time->modify('+ 1 month');
+				$expire_timestamp = $expire_time->getTimestamp();
+				$this->set_success($info->id, true, $expire_timestamp);
+			}else if($status == 2) {
+				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
+				$notificationContent = $verifiedResult->getAPPMessage(2);
+				$this->certi_failed($info->id,$notificationContent,$canResubmitDate,true);
+			}
+
 			return true;
 		}
 		return false;
@@ -910,15 +915,15 @@ class Certification_lib{
 
 	public function job_verify($info = array(),$url=null) {
 
-		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+		$realname_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
 
-		if($user_certification==false || $user_certification->status !=1){
+		if($realname_certification==false || $realname_certification->status != 1){
 			return false;
 		}
 
 		$certification_content = isset($info->content) ? json_decode($info->content,true) : [];
 
-		$status = 3;
+		$verifiedResult = new JobCertificationResult(3);
 		$res = [];
 		$gcis_res = [];
 		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
@@ -927,7 +932,7 @@ class Certification_lib{
 		// 勞保異動明細 pdf
 		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
 
-		if($info && $info->certification_id == 10 && $info->status == 0 && $pdf_url){
+		if($info && $info->certification_id == 10 && $info->status == 0 && $pdf_url) {
 			// 勞保 pdf 解析
 			if($pdf_url){
 				$this->CI->load->library('Labor_insurance_lib');
@@ -937,30 +942,29 @@ class Certification_lib{
 				$res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
 			}
 
-			if(isset($certification_content['tax_id']) && $certification_content['tax_id']){
+			if(isset($certification_content['tax_id']) && $certification_content['tax_id']) {
 				$this->CI->load->library('gcis_lib');
 				$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
 				$certification_content['gcis_info'] = $gcis_res;
+				$res['gcis_info'] = $gcis_res;
 			}
 
-			if($res){
+			if($res) {
 				$this->CI->load->library('mapping/user/Certification_data');
 				$result = $this->CI->certification_data->transformJobToResult($res);
 				$certification_content['pdf_info'] = $result;
 			}else{
-				$remark['verify_result'][] = '勞保pdf解析失敗';
+				$verifiedResult->addMessage('勞保pdf解析失敗',3, MassageDisplay::Backend);
 			}
 
 			//勞保 pdf 驗證
-			if($res && isset($res['pageList']) && isset($certification_content['tax_id'])){
+			if(isset($result) && isset($certification_content['tax_id'])) {
 
 				$this->CI->load->library('verify/data_legalize_lib');
-				$verify_res = $this->CI->data_legalize_lib->legalize_job($info->user_id,$res);
-				if($verify_res['error_message']){
-					$remark['verify_result'] = array_merge($remark['verify_result'],$verify_res['error_message']);
-				}
-				// $this->CI->load->library('verify/data_verify_lib');
-				// $approve_status = $this->data_verify_lib->check_job($info->user_id,$result);
+				$verifiedResult = $this->CI->data_legalize_lib->legalize_job($verifiedResult,$info->user_id,$result,$certification_content,$info->created_at);
+
+				$this->CI->load->library('verify/data_verify_lib');
+				$verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult,$info->user_id,$result,$certification_content);
 
 				// to do : 是否千大企業員工
 				// $this->CI->config->load('top_enterprise');
@@ -968,15 +972,36 @@ class Certification_lib{
 
 			}
 
+			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
+			$status = $verifiedResult->getStatus();
+
 			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status,
+				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
 				'remark' => json_encode($remark),
 				'content' => json_encode($certification_content),
 			));
+
+			if($status == 1) {
+				$expire_timestamp = 0;
+				preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $result['report_date'], $regexResult);
+				if(!empty($regexResult)) {
+					$date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year']) + 1911,
+						intval($regexResult['month']), intval($regexResult['day']));
+					$expire_time = DateTime::createFromFormat('Y-m-d', $date);
+					$expire_time->modify( '+ 1 month' );
+					$expire_timestamp = $expire_time->getTimestamp();
+				}
+				$this->set_success($info->id, true, $expire_timestamp);
+			}else if($status == 2) {
+				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
+				$notificationContent = $verifiedResult->getAPPMessage(2);
+				$this->certi_failed($info->id,$notificationContent,$canResubmitDate,true);
+			}
+
 			return true;
 		}
-			return false;
+		return false;
 	}
 
     public function face_rotate($url='',$user_id=0,$cer_id=0,$system='azure'){
@@ -1289,6 +1314,7 @@ class Certification_lib{
 
 	private function job_success($info){
 		if($info){
+			$certification 	= $this->certification[$info->certification_id];
 			$content 	= $info->content;
 			$data 		= [
 				'job_status'			=> 1,
@@ -1311,7 +1337,27 @@ class Certification_lib{
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
+				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
                 return $this->fail_other_cer($info);
+			}
+		}
+		return false;
+	}
+
+	private function certi_failed($id,$msg='',$resubmitDate='',$sys_check=true){
+		$info = $this->CI->user_certification_model->get($id);
+		if($info && $info->status != 2){
+			$certification 	= $this->certification[$info->certification_id];
+			$param = [
+				'status'    => 2,
+				'sys_check' => ($sys_check==true?1:0),
+				'can_resubmit_at'=>$resubmitDate
+			];
+
+			$rs = $this->CI->user_certification_model->update($info->id, $param);
+			if($rs){
+ 				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$msg);
+ 				return true;
 			}
 		}
 		return false;
