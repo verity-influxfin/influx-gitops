@@ -284,10 +284,29 @@ $ci-color: #153a71;
         justify-content: flex-end;
 
         @include rwd {
-            display: none;
+            grid-template-columns: 1fr;
+            text-align: right;
         }
 
         .item {
+            @include rwd {
+                &:not(.hamburger) {
+                    display: none;
+                }
+            }
+
+            &.hamburger {
+                display: none;
+
+                @include rwd {
+                    display: block;
+                }
+
+                img {
+                    width: 20px;
+                }
+            }
+
             .login {
                 background: #2c4c9b;
                 color: #1d82be;
