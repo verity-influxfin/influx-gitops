@@ -558,7 +558,7 @@ class Data_legalize_lib{
 
 
 			if(isset($content['gcis_info']) && !empty($content['gcis_info'])){
-				if($content['gcis_info']['Company_Name'] != $data['last_insurance_info']['companyName']){
+				if(mb_substr($content['gcis_info']['Company_Name'], 0, 4, "utf-8") != mb_substr($data['last_insurance_info']['companyName'], 0, 4, "utf-8")){
 					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
 				}
 				if($content['gcis_info']['Business_Accounting_NO'] != $content['tax_id']){

@@ -249,7 +249,7 @@ class Data_verify_lib{
 			if(!empty($content) && isset($content['gcis_info']['Company_Status_Desc'])) {
 				if(preg_match('/解散/', $content['gcis_info']['Company_Status_Desc'])) {
 					$verifiedResult->addMessage('任職公司非為營業中', 2, MassageDisplay::Client);
-				}else if(!preg_match('/核准設立/', $content['gcis_info']['Company_Status_Desc'])) {
+				}else if(!preg_match('/核准設立|核准登記/', $content['gcis_info']['Company_Status_Desc'])) {
 					$verifiedResult->addMessage('任職公司非為營業中', 3, MassageDisplay::Client);
 				}
 			}else{
