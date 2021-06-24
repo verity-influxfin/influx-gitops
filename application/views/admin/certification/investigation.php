@@ -98,7 +98,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>信用卡使用率%</label>
-                                            <input type="number" class="form-control" name="credit_rate" value="<?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?>">
+                                            <input type="number" step="0.01" class="form-control" name="credit_rate" value="<?= isset($content['credit_rate']) ? $content['credit_rate'] : 0 ?>">
                                         </div>
                                         <div class="form-group">
                                             <label>信用記錄幾個月</label>

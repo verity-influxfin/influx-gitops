@@ -160,7 +160,7 @@
 															<tr>
 																<td data-color="text" data-link-color="link text color" data-link-style="text-decoration:underline; color:#797c82;" class="aligncenter" style="font:12px/16px Arial, Helvetica, sans-serif; color:#797c82; padding:0 0 10px;">
 																	此信件為系統自動發送，請勿直接回覆<br>
-																	Copyright ©2020 普匯金融科技股份有限公司
+																	Copyright © 2021 普匯金融科技股份有限公司
 																</td>
 															</tr>
 														</table>
