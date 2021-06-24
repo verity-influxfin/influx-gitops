@@ -162,10 +162,10 @@
 													<tr>
 														<td><?=isset($content['pdf_info']['last_insurance_info']['insuranceId']) ? $content['pdf_info']['last_insurance_info']['insuranceId'] : '' ?></td>
 														<td><?=isset($content['pdf_info']['last_insurance_info']['companyName']) ? $content['pdf_info']['last_insurance_info']['companyName'] : '' ?></td>
-														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList']['insuranceSalary']) ? $content['pdf_info']['last_insurance_info']['detailList']['insuranceSalary'] : '' ?></td>
-														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList']['startDate']) ? $content['pdf_info']['last_insurance_info']['detailList']['startDate'] : '' ?></td>
-														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList']['endDate']) ? $content['pdf_info']['last_insurance_info']['detailList']['endDate'] : '' ?></td>
-														<td><?=isset($content['pdf_info']['last_insurance_info']['detailList']['comment']) ? $content['pdf_info']['last_insurance_info']['detailList']['comment'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['insuranceSalary']) ? $content['pdf_info']['last_insurance_info']['insuranceSalary'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['startDate']) ? $content['pdf_info']['last_insurance_info']['startDate'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['endDate']) ? $content['pdf_info']['last_insurance_info']['endDate'] : '' ?></td>
+														<td><?=isset($content['pdf_info']['last_insurance_info']['comment']) ? $content['pdf_info']['last_insurance_info']['comment'] : '' ?></td>
 													</tr>
 												</tbody>
 											</table>
