@@ -85,6 +85,10 @@ export default {
     position: relative;
     height  : 33rem;
 
+    @include rwd {
+        height: 43rem;
+    }
+
     .background {
         position: absolute;
         top     : 0;
@@ -93,7 +97,8 @@ export default {
         bottom  : 0;
 
         @include rwd {
-            left: 0;
+            left      : 0;
+            margin-top: 40vw;
         }
 
         .image {
