@@ -122,9 +122,17 @@ export default {
     .cards {
 
         > .item {
+            .header {
+                @include rwd {
+                    padding-left: 0;
+                }
+            }
+
             .header .text .header {
                 @include rwd {
-                    font-size: 1.1rem !important;
+                    font-size    : 1.1rem !important;
+                    margin-left  : 1rem;
+                    padding-right: 0;
                 }
             }
 
