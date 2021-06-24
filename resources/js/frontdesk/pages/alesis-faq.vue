@@ -250,6 +250,10 @@ export default {
                 padding      : 0.5rem 1.5rem 1rem;
                 color        : #5D5555;
                 font-size    : 1.2rem;
+
+                @include rwd {
+                    font-size: .9rem;
+                }
             }
 
             &.-active {
