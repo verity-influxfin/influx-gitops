@@ -23,6 +23,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../alesis";
+
 .item {
     display        : flex;
     align-items    : center;
@@ -92,6 +94,10 @@ export default {
         width       : 60px;
         margin-right: -16px;
         background  : #000;
+
+        @include rwd {
+            margin-right: -10px;
+        }
     }
 
     .circle {
@@ -103,6 +109,11 @@ export default {
         left                   : 24px;
         border-top-left-radius : 113px;
         border-top-right-radius: 110px;
+
+        @include rwd {
+            width : 40px;
+            height: 20px;
+        }
     }
 
     .text {
