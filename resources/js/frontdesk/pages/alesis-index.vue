@@ -71,6 +71,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="mobile-roadmap">
+                    <img src="/images/alesis-index-vertical-path.svg">
+                </div>
                 <div class="introduction">
                     <div class="showcase">
                         <img class="image animate__animated" src="/images/alesis-intro-phone.svg" alt="">
@@ -418,7 +421,23 @@ export default {
 
                     .multiline {
                         @include rwd {
-                                margin-top: 0;
+                            margin-top: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.alesis-feature {
+    .wrapper {
+        .content {
+            .moons {
+                .moon {
+                    .text {
+                        @include rwd {
+                            font-size: 1rem;
                         }
                     }
                 }
@@ -491,7 +510,7 @@ export default {
             border       : 1px solid #1a5fa2;
 
             @include rwd {
-                font-size: 1rem;
+                font-size: .8rem;
                 max-width: 7rem;
                 padding  : .2rem 1rem;
             }
@@ -516,6 +535,10 @@ export default {
         margin    : 0 auto 3rem;
         text-align: center;
 
+        @include rwd {
+            display: none;
+        }
+
         .entity {
             display    : inline-flex;
             align-items: center;
@@ -525,6 +548,20 @@ export default {
                     max-width: 85%;
                 }
             }
+        }
+    }
+
+    .mobile-roadmap {
+        display   : none;
+        text-align: center;
+
+        @include rwd {
+            display: block;
+        }
+
+        img {
+            width        : 70vw;
+            margin-bottom: 4rem;
         }
     }
 
@@ -572,7 +609,7 @@ export default {
         @include rwd {
             flex-direction: column;
             gap           : 3rem;
-            padding       : 0 3rem;
+            padding       : 0 0rem;
         }
 
         .showcase {
@@ -595,6 +632,10 @@ export default {
             .bullet {
                 margin-left: 2.3rem;
 
+                @include rwd {
+                    margin-left: 0;
+                }
+
                 .symbol {
                     @include rwd {
                         margin-right: 2rem;
@@ -605,8 +646,14 @@ export default {
 
         .moons {
             > .item {
-                display: flex;
+                display   : flex;
                 margin-top: 3.5rem;
+
+                @include rwd {
+                    &:not(:first-child) {
+                        margin-top: 1.5rem;
+                    }
+                }
 
                 .moon {
                     margin-right: 3rem;
@@ -617,6 +664,10 @@ export default {
                 }
                 .content {
                     color: #5d5555;
+
+                    @include rwd {
+                        font-size: .9rem;
+                    }
                 }
             }
         }
@@ -665,6 +716,10 @@ export default {
             .moon {
                 &:not(:first-child) {
                     margin-top: 5rem;
+
+                    @include rwd {
+                        margin-top: 3rem;
+                    }
                 }
             }
         }
