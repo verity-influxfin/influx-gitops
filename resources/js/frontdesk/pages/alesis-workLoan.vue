@@ -513,14 +513,16 @@ export default {
         max-width            : 1280px;
         margin               : 0 auto 1rem;
         grid-template-columns: repeat(3, 1fr);
-        align-items          : center;
         justify-content      : center;
+        gap                  : 2rem;
 
         .item {
             text-align: center;
 
             .image {
-
+                @include rwd {
+                    width: 80px;
+                }
             }
 
             .label {
@@ -528,6 +530,10 @@ export default {
                 font-weight: bold;
                 color      : #112E53;
                 font-size  : 1.3rem;
+
+                @include rwd {
+                    font-size: .8rem;
+                }
             }
         }
     }
