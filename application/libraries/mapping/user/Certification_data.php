@@ -1032,13 +1032,6 @@ class Certification_data
 		return $res;
 	}
 
-    public function map_Spanish($n)
-    {print_r($n);
-
-        exit;
-        return [$n => $m];
-    }
-
 	/**
 	 * [transformSimplificationjobToMeta 工作資料 result 轉 meta data]
 	 * @param  array  $result    [工作資料 result]
