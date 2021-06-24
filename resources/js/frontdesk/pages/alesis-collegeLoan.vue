@@ -432,6 +432,24 @@ export default {
 };
 </script>
 
+<style lang="scss">
+@import "../component/alesis/alesis";
+
+
+.alesis-map {
+    .wrapper {
+        .map {
+            svg {
+                @include rwd {
+                    width : 70vw;
+                    height: 90vw;
+                }
+            }
+        }
+    }
+}
+</style>
+
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
@@ -456,6 +474,14 @@ export default {
         margin               : 8rem auto 0;
         gap                  : 5rem;
         grid-template-columns: 1fr 1fr;
+
+        @include rwd {
+            display       : flex;
+            flex-direction: column-reverse;
+            align-items   : center;
+            margin-top    : 4rem;
+            gap           : 1rem;
+        }
 
         .projects {
             display              : grid;
@@ -536,13 +562,27 @@ export default {
             align-items          : center;
             gap                  : 1rem;
 
+            @include rwd {
+                grid-template-columns: 1fr;
+                gap                  : 0.5rem;
+            }
+
             &:not(:last-child) {
                 margin-bottom: 1.5rem;
+
+                @include rwd {
+                    margin-bottom: 0.5rem;
+                }
             }
 
             .label {
                 text-align: right;
                 font-size : 1.4rem;
+
+                @include rwd {
+                    text-align: left;
+                    font-size : 1rem;
+                }
             }
 
             .input {
@@ -556,6 +596,12 @@ export default {
                     text-align   : center;
                     color        : #036eb7;
                     padding-left : 45%;
+
+                    @include rwd {
+                        font-size   : 1rem;
+                        padding     : .5rem;
+                        padding-left: 37%;
+                    }
                 }
                 input {
                     width        : 100%;
@@ -565,6 +611,11 @@ export default {
                     border       : 1px solid #036eb7;
                     background   : transparent;
                     color        : #036eb7;
+
+                    @include rwd {
+                        font-size: 1rem;
+                        padding  : .5rem;
+                    }
                 }
                 button {
                     width        : 100%;
@@ -574,6 +625,11 @@ export default {
                     border       : 0;
                     background   : #326398;
                     color        : #FFF;
+
+                    @include rwd {
+                        font-size: 1rem;
+                        padding  : .5rem;
+                    }
                 }
             }
         }
@@ -585,12 +641,24 @@ export default {
         margin-top   : 8rem;
         margin-bottom: 2rem;
 
+        @include rwd {
+            margin-top    : 3rem;
+            margin-bottom : 0;
+            flex-direction: column;
+        }
+
         .showcase {
             flex      : 1;
             text-align: right;
 
             .image {
                 height: 350px;
+
+                @include rwd {
+                    width        : 70vw;
+                    height       : auto;
+                    margin-bottom: 2rem;
+                }
             }
         }
 
@@ -604,19 +672,35 @@ export default {
             flex                   : 1;
             margin-left            : 3rem;
 
+            @include rwd {
+                margin-left: 0;
+            }
+
             .header {
                 margin-bottom: 1.5rem;
                 font-size    : 1.8rem;
+
+                @include rwd {
+                    font-size: 1.2rem;
+                }
             }
             .content {
                 font-size    : 1.3rem;
                 line-height  : 1.7;
                 margin-bottom: 1.5rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                }
             }
             .values {
                 font-size    : 1.2rem;
                 line-height  : 1.8;
                 margin-bottom: 2rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                }
 
                 .row {
                     margin: 0;
