@@ -14,13 +14,13 @@
                         class="loan"
                         href="/invest"
                         ><img src="../asset/images/light-b.svg" class="img-fluid" />
-                        <div class="text">立即投資</div></a
+                        <div class="text">我要投資</div></a
                         >
                         <a
                         class="borrow"
                         href="/borrow"
                         ><img src="../asset/images/light-y.svg" class="img-fluid" />
-                        <div class="text">立即借款</div></a
+                        <div class="text">我要借款</div></a
                         >
                     </div>
                 </div>
@@ -154,7 +154,13 @@
         <div class="alesis-solutions">
             <index-section header="產品方案" :secondary="true">
                 <div class="wrapper">
-                    <index-plan class="plan" :header="item.header" :targets="item.targets" :image="item.image" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :key="index"></index-plan>
+                    <div class="arrow" @click="prevSolution">
+                        <img src="/images/alesis-styled-arrow-left.svg" alt="">
+                    </div>
+                    <index-plan class="plan" :header="item.header" :targets="item.targets" :image="item.image" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :key="index" :class="{'-active': index == currentPlan}"></index-plan>
+                    <div class="arrow" @click="nextSolution">
+                        <img src="/images/alesis-styled-arrow-right.svg" alt="">
+                    </div>
                 </div>
             </index-section>
         </div>
@@ -162,7 +168,7 @@
 
         <!-- 普匯推薦 銀行速貸好條件 -->
         <div class="alesis-recommend-banks">
-            <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率！">
+            <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯推薦合作銀行，可享最高額度300萬，超低利率1.88%起！">
                 <div class="wrapper">
                     <index-shanghai></index-shanghai>
                 </div>
@@ -301,6 +307,7 @@ export default {
         rateCount  : 5,
         pmt        : 0,
         tweenedPmt : 0,
+        currentPlan: 0,
         plans      : [
             {
                 header: "學生貸",
@@ -366,6 +373,20 @@ export default {
         document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
     },
     methods: {
+        nextSolution() {
+            if (this.currentPlan + 1 > this.plans.length - 1) {
+                this.currentPlan = 0
+            } else {
+                this.currentPlan++
+            }
+        },
+        prevSolution() {
+            if (this.currentPlan - 1 < 0) {
+                this.currentPlan = this.plans.length - 1
+            } else {
+                this.currentPlan--
+            }
+        },
         updateCalculator(e) {
             console.log(e)
             this.pmt = e.pmt
@@ -403,6 +424,23 @@ export default {
 
 <style lang="scss">
 @import "../component/alesis/alesis";
+
+.alesis-humans {
+    .set {
+        @include rwd {
+            grid-template-columns: 1fr !important;
+            gap                  : 0 !important;
+        }
+
+        .item {
+            @include rwd {
+                &:not(:first-child) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
 
 .alesis-fast-transfer {
     .wrapper {
@@ -734,9 +772,36 @@ export default {
         margin               : 3rem auto 0;
         gap                  : 1.5rem;
 
+        @include rwd {
+            align-items          : center;
+            justify-content      : center;
+            grid-template-columns: min-content 1fr min-content;
+            max-width            : 400px;
+            min-height           : 465px;
+        }
+
+        .arrow {
+            display: none;
+
+            @include rwd {
+                text-align: center;
+                display   : block;
+            }
+
+            img {
+                width: 33px;
+            }
+        }
+
         .plan {
             padding: 1rem;
             flex   : 1;
+
+            @include rwd {
+                &:not(.-active) {
+                    display: none;
+                }
+            }
         }
     }
 }
@@ -834,8 +899,23 @@ export default {
             flex: 1;
 
             .row {
-                    margin: 0;
-                    margin-top: 1rem;
+                margin: 0;
+                margin-top: 1rem;
+
+                @include rwd {
+                    &:first-child {
+                        display     : inline-flex;
+                        margin-right: 1rem;
+                    }
+
+                    &:nth-child(2) {
+                        display: inline-flex;
+
+                        .input {
+                            width: 3rem;
+                        }
+                    }
+                }
 
                 .text {
                     text-align      : center;
@@ -847,6 +927,10 @@ export default {
                     font-size       : 2rem;
                     line-height     : 1.2;
                     white-space     : nowrap;
+
+                    @include rwd {
+                        font-size: 1.2rem;
+                    }
                 }
 
                 .input {
@@ -863,6 +947,13 @@ export default {
                     text-align    : center;
                     outline       : none;
                     pointer-events: none;
+
+                    @include rwd {
+                        font-size : 1.2rem;
+                        width     : 6rem;
+                        padding   : 0;
+                        margin-top: -.5rem;
+                    }
                 }
             }
         }
@@ -979,13 +1070,13 @@ export default {
                     }
 
                     .box {
-                        margin-top: 25rem;
+                        margin-top: 103vw;
 
                         %block {
                             width: 170px;
 
                             .text {
-                                font-size: 22px;
+                                font-size: 16px;
                             }
                         }
                     }
