@@ -3645,6 +3645,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "./../alesis/alesis";
+
 #ccrata {
   user-select: none;
 
@@ -3756,10 +3758,18 @@ export default {
   width: fit-content;
   margin: 0px auto;
 
+  @include rwd {
+     margin: 20px auto;
+  }
+
   .switch {
     width: 50px;
     cursor: pointer;
     user-select: none;
+
+    @include rwd {
+      width: 25px;
+    }
   }
 
   .periods {
@@ -3773,6 +3783,11 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     user-select: none;
+
+    @include rwd {
+      line-height: 40px;
+      font-size: 1rem;
+    }
   }
 
   .blue {
@@ -3781,6 +3796,10 @@ export default {
   .no-mode-translate-demo-wrapper {
     position: relative;
     width: 120px;
+
+    @include rwd {
+      width: 68px;
+    }
   }
 
   .no-mode-translate-fade-enter-active,
@@ -3796,19 +3815,6 @@ export default {
   }
   .no-mode-translate-fade-leave-active {
     transform: translateX(-31px) translate(-50%, -50%);
-  }
-
-  @media screen and (max-width: 767px) {
-    margin: 20px auto;
-
-    .switch {
-      width: 40px;
-    }
-
-    .periods {
-      line-height: 40px;
-      font-size: 30px;
-    }
   }
 }
 </style>
