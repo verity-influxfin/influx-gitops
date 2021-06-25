@@ -212,7 +212,7 @@
 
         <!-- 貸安吶 -->
         <div class="alesis-form">
-            <index-section header="貸安吶" multiline="請您依現在的真實狀況填寫以下題目" :outlinedMulti="true" :secondary="true">
+            <index-section header="試算您的信用額度<br>貸安吶" multiline="請您依現在的真實狀況填寫以下題目" :outlinedMulti="true" :secondary="true">
                 <div class="form">
                     <div class="row">
                         <div class="label">1.就讀學校：</div>
@@ -333,21 +333,21 @@
         <!-- / 貸安吶 -->
 
         <!-- 案例分享 -->
-        <div class="alesis-">
+        <div class="alesis-humans">
             <index-section header="案例分享 / 用戶分享" :outlined="true">
                 <global-carousel>
                     <div class="set">
                         <div class="item">
                             <index-human>
                                 <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
                         <div class="item">
                             <index-human>
                                 <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
@@ -356,14 +356,14 @@
                         <div class="item">
                             <index-human>
                                 <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
                         <div class="item">
                             <index-human>
                                 <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
@@ -435,6 +435,22 @@ export default {
 <style lang="scss">
 @import "../component/alesis/alesis";
 
+.alesis-humans {
+    .set {
+        @include rwd {
+            grid-template-columns: 1fr !important;
+            gap                  : 0 !important;
+        }
+
+        .item {
+            @include rwd {
+                &:not(:first-child) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
 
 .alesis-map {
     .wrapper {
@@ -444,6 +460,17 @@ export default {
                     width : 70vw;
                     height: 90vw;
                 }
+            }
+        }
+    }
+}
+
+.alesis-steps {
+    .carousel {
+        .selector {
+            @include rwd {
+                min-height : 520px;
+                align-items: initial;
             }
         }
     }
@@ -488,6 +515,11 @@ export default {
             grid-template-columns: repeat(2, 1fr);
             gap                  : 3rem;
 
+            @include rwd {
+                transform: scale(0.5);
+                margin   : -7rem 0;
+            }
+
             .item {
 
             }
@@ -514,12 +546,25 @@ export default {
         gap                  : 3rem;
         max-width            : 800px;
 
-        .left {
+        @include rwd {
+            grid-template-columns: repeat(1, 1fr);
+            align-items          : center;
+            justify-content      : center;
+        }
 
+        .left {
+            @include rwd {
+                display: none;
+            }
         }
         .center {
-
+            .image {
+                @include rwd {
+                    width: 200px;
+                }
+            }
         }
+
         .right {
             display        : flex;
             justify-content: center;
@@ -528,10 +573,20 @@ export default {
             .header {
                 color    : #112E53;
                 font-size: 1.3rem;
+
+                @include rwd {
+                    font-size: 1.1rem;
+                    padding-left: 1rem;
+                }
             }
             .content {
                 color    : #5D5555;
                 font-size: 1.1rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                    padding-left: 1rem;
+                }
             }
         }
     }
@@ -773,6 +828,8 @@ export default {
         @include rwd {
             grid-template-columns: repeat(2, 1fr);
             gap                  : 2rem 0rem;
+            margin-top           : 3rem;
+            max-width            : 310px;
         }
 
         .item {
@@ -800,7 +857,6 @@ export default {
     }
 }
 
-
 .alesis-why {
     .items {
         display              : grid;
@@ -810,11 +866,19 @@ export default {
         align-items          : center;
         justify-content      : center;
 
+        @include rwd {
+            grid-template-columns: repeat(2, 1fr);
+            max-width            : 400px;
+            gap                  : 3rem 0rem;
+        }
+
         .item {
             text-align: center;
 
             .image {
-
+                @include rwd {
+                    width: 70px;
+                }
             }
 
             .label {
@@ -822,6 +886,10 @@ export default {
                 font-weight: bold;
                 color      : #112E53;
                 font-size  : 1.3rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                }
             }
         }
     }
