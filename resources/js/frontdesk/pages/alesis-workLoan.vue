@@ -407,7 +407,7 @@
         <!-- / 額度利率評估問卷 -->
 
         <!-- 案例分享 -->
-        <div class="alesis-">
+        <div class="alesis-humans">
             <index-section header="案例分享 / 用戶分享" :outlined="true">
                 <global-carousel>
                     <div class="set">
@@ -501,6 +501,40 @@ export default {
     },
 };
 </script>
+
+<style lang="scss">
+@import "../component/alesis/alesis";
+
+.alesis-humans {
+
+    .left, .right {
+        img {
+            @include rwd {
+                width: 10px;
+            }
+        }
+    }
+
+    .right > div {
+        left: -1rem;
+    }
+
+    .set {
+        @include rwd {
+            grid-template-columns: 1fr !important;
+            gap                  : 0 !important;
+        }
+
+        .item {
+            @include rwd {
+                &:not(:first-child) {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+</style>
 
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
