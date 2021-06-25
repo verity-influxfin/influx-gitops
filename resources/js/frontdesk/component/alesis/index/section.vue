@@ -76,9 +76,17 @@ export default {
 
             .before-dots {
                 bottom: 6rem;
+
+                @include rwd {
+                    bottom: 4.5rem;
+                }
             }
             .after-dots {
                 top: 6.5rem;
+
+                @include rwd {
+                    top: 5rem;
+                }
             }
         }
     }
@@ -92,13 +100,25 @@ export default {
                     font-size  : 1.5rem;
                     white-space: pre;
                     line-height: 1.7;
+
+                    @include rwd {
+                        font-size: .9rem;
+                    }
                 }
             }
             .before-dots {
                 bottom: 8.5rem;
+
+                @include rwd {
+                    bottom: 5.5rem;
+                }
             }
             .after-dots {
                 top: 9rem;
+
+                @include rwd {
+                    top: 6rem;
+                }
             }
         }
     }
@@ -142,6 +162,10 @@ export default {
             left     : 50%;
             transform: translateX(-50%);
 
+            @include rwd {
+                bottom: 1.5rem;
+            }
+
             .dot:nth-child(1) {
                 opacity: 0.2;
                 width  : 3px;
@@ -173,12 +197,22 @@ export default {
             white-space     : nowrap;
 
             @include rwd {
-                font-size: 1.4rem;
+                font-size  : 1.3rem;
+                // white-space: initial;
+                // max-width  : 400px;
+                line-height: 1;
             }
         }
 
         .multiline {
             margin-top: 1rem;
+
+            @include rwd {
+                white-space: initial;
+
+                // &:not(.-outlined)
+                width      : 355px;
+            }
         }
 
         .after-dots {
@@ -186,6 +220,10 @@ export default {
             top      : 3rem;
             left     : 50%;
             transform: translateX(-50%);
+
+            @include rwd {
+                top: 2rem;
+            }
 
             .dot:nth-child(1) {
                 opacity: 0.75;
