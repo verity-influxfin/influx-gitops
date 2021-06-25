@@ -26,6 +26,7 @@ class Estatement_lib{
 				"investor"	=> 1,
 				"user_id"	=> $user_id
 			));
+			$virtual_account_record_count = 0;
 			if($virtual_account){
 				$date_range			= entering_date_range($edate);
 				$edatetime			= $date_range?$date_range["edatetime"]:"";
@@ -52,6 +53,7 @@ class Estatement_lib{
 									$allowance += $value->amount;
 									$allowance_count++;
 								}
+								$virtual_account_record_count++;
 							}
 							$total += intval($value->amount);
 						}
@@ -192,6 +194,11 @@ class Estatement_lib{
 						$ar_total_count = $ar_principal_count + $delay_ar_principal_count ;
 						$ar_total		= $ar_principal + $ar_interest + $delay_ar_principal + $delay_ar_interest;
 					}
+				}
+
+				// 無任何應收帳款合計&利息收入&違約補貼金&應收本金&應收利息&虛擬帳號出入記錄時，不寄送帳單
+				if(!$ar_total_count && !$interest_count && !$allowance_count && !$ar_principal_count && !$ar_interest_count && !$virtual_account_record_count) {
+					return false;
 				}
 
 				$data = array(
@@ -461,6 +468,11 @@ class Estatement_lib{
 					"delay_count"		=> $delay_count,//逾期筆數
 					"virtual_account"	=> $virtual_account->virtual_account,
 				);
+
+				if(!$normal_amount && !$normal_rapay && !$ar_principal && !$delay_rapay && !$delay_amount && !$delay_count) {
+					return false;
+				}
+
 				$html 	= $this->CI->parser->parse('estatement/borrower', $data,TRUE);
 				$update_estatement = $this->CI->user_estatement_model->get_by(array(
 					"user_id"	=> $user_id,
@@ -1040,9 +1052,11 @@ class Estatement_lib{
 				if($investor_list){
 					foreach($investor_list as $key => $user_id){
 						$rs = $this->get_estatement_investor($user_id,$sdate,$edate);
-						$count++;
-						$rs = $this->get_estatement_investor_detail($user_id,$sdate,$edate);
-						$count++;
+						if($rs) {
+							$count++;
+							$rs = $this->get_estatement_investor_detail($user_id, $sdate, $edate);
+							$count += $rs ? 1 : 0;
+						}
 					}
 				}
 				$borrower_list 	= $this->get_borrower_user_list($sdate,$edate);

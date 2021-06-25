@@ -355,7 +355,6 @@ class Charge_lib
 									'platform_fee'				=> 0,
 								];
 							}
-
                             if($value->status==2 && $value->source==SOURCE_PRINCIPAL){
                                 $instalment_paid 		= $value->instalment_no;
                                 //$last_settlement_date 	= $value->limit_date;
@@ -411,6 +410,7 @@ class Charge_lib
 								'remaining_principal'		=> [SOURCE_AR_PRINCIPAL,SOURCE_PRINCIPAL],
 							];
 							foreach($user_to_info as $investment_id => $value){
+
 								foreach($project_source as $k => $v){
 									$amount = $value[$k];
 									if(intval($amount)>0){
@@ -445,6 +445,7 @@ class Charge_lib
 									}
 								}
 
+								$prepayment_allowance = 0;
 								if($value['total_amount']>0){
 									//回款手續費
 									$transaction_param[] = [
@@ -461,7 +462,6 @@ class Charge_lib
 										'status'			=> 2
 									];
 
-                                    $prepayment_allowance = 0;
                                     $no_prepayment_allowance = $this->CI->config->item('no_prepayment_allowance');
                                     if(!in_array($target->product_id, $no_prepayment_allowance)){
                                         $prepayment_allowance	= intval(round($value['remaining_principal']/100*PREPAYMENT_ALLOWANCE_FEES,0));//提還補貼金
