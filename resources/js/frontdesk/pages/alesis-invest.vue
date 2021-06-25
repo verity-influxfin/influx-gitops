@@ -153,18 +153,44 @@ export default {
 @import "../component/alesis/alesis";
 
 .alesis-projects {
-    .section {
+    .sectionx {
         @include rwd {
             background: none !important;
         }
     }
 
+
+
     .wrapper {
-        .set {
+
+        .carousel {
             @include rwd {
-                grid-template-columns: 1fr !important;
+                margin: -7rem 0;
+            }
+
+            .lightbox {
+                @include rwd {
+                    width: 230px;
+                }
+
+                .set {
+                    @include rwd {
+                        grid-template-columns: 1fr !important;
+                        transform: scale(0.6) translateX(-50%);
+                        width    : 220px;
+                    }
+                }
+            }
+
+            .left, .right {
+                img {
+                    @include rwd {
+                        width: 10px;
+                    }
+                }
             }
         }
+
     }
 }
 </style>
@@ -368,7 +394,7 @@ export default {
             @include rwd {
                 font-size     : 1.5rem;
                 padding-bottom: 0.25rem;
-                margin-left   : 3rem;
+                margin-left   : 2rem;
                 padding-right : 1rem;
             }
 
