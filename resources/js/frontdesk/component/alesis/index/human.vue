@@ -44,6 +44,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "./../alesis";
+
 .item {
     box-shadow   : 0px 0px 5px 0px rgb(50 50 50 / 75%);
     flex         : 1;
@@ -56,9 +58,17 @@ export default {
         box-sizing   : border-box;
         border-radius: 20px 20px 0px 0;
 
+        @include rwd {
+            padding: 0.25rem .5rem;
+        }
+
         .symbol {
             position: relative;
             width   : 130px;
+
+            @include rwd {
+                width: 80px;
+            }
 
             .wrapper {
                 position     : absolute;
@@ -68,9 +78,18 @@ export default {
                 border-radius: 100rem;
                 box-shadow   : 0px 0px 5px 0px rgb(50 50 50 / 75%);
 
+                @include rwd {
+                    top: -1.5rem;
+                }
+
                 .image {
                     width : 90px;
                     height: 90px;
+
+                    @include rwd {
+                        width : 60px;
+                        height: 60px;
+                    }
                 }
             }
         }
@@ -87,17 +106,29 @@ export default {
                 padding    : .5rem 1rem;
                 line-height: 1;
                 white-space: nowrap;
+
+                @include rwd {
+                    padding: .5rem .5rem;
+                }
             }
 
             .label {
                 font-size  : 1.2rem;
                 font-weight: bold;
                 color      : #353482;
+
+                @include rwd {
+                    font-size: .8rem;
+                }
             }
 
             .number {
                 font-size: 1.2rem;
                 color    : #646464;
+
+                @include rwd {
+                    font-size: .8rem;
+                }
             }
         }
     }
@@ -106,8 +137,20 @@ export default {
         overflow     : hidden;
         border-radius: 0rem 0 20px 20px;
 
+        > div {
+            position      : relative;
+            width         : 100%;
+            height        : 0;
+            padding-bottom: 56.25%;
+        }
+
         iframe {
             vertical-align: top;
+            position      : absolute;
+            width         : 100%;
+            height        : 100%;
+            left          : 0;
+            top           : 0;
         }
     }
 }
