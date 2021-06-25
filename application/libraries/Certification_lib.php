@@ -755,7 +755,7 @@ class Certification_lib{
 				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
 				'remark' => json_encode($remark),
-				'content' => json_encode($certification_content),
+				'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE)
 			));
 
 			if($status == 1) {
