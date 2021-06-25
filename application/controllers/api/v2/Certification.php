@@ -1959,25 +1959,27 @@ class Certification extends REST_Controller {
             isset($input['game_work_image']) && !empty($input['game_work_image'])?$file_fields[]='game_work_image':'';
 			foreach ($file_fields as $field) {
                 $list = false;
-				$image_ids = isset($input[$field]) ? explode(',',$input[$field]) : [];
-				if(count($image_ids) > 0){
-                    if(count($image_ids)>15){
-                        $image_ids = array_slice($image_ids,0,15);
+    			$image_ids = isset($input[$field]) && !empty($input[$field]) ? explode(',',$input[$field]) : [];
+                if(!empty($image_ids)){
+                    if(count($image_ids) > 0){
+                        if(count($image_ids)>15){
+                            $image_ids = array_slice($image_ids,0,15);
+                        }
+                        $list = $this->log_image_model->get_many_by([
+                            'id'		=> $image_ids,
+                            'user_id'	=> $user_id,
+                        ]);
                     }
-                    $list = $this->log_image_model->get_many_by([
-                        'id'		=> $image_ids,
-                        'user_id'	=> $user_id,
-                    ]);
-                }
 
-				if($list && count($list)==count($image_ids)){
-					$content[$field] = [];
-					foreach($list as $k => $v){
-						$content[$field][] = $v->url;
-					}
-				}else{
-					$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-				}
+    				if($list && count($list)==count($image_ids)){
+    					$content[$field] = [];
+    					foreach($list as $k => $v){
+    						$content[$field][] = $v->url;
+    					}
+    				}else{
+    					$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+    				}
+                }
 			}
 
 			$param		= [

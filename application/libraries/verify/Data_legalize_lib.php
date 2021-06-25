@@ -549,7 +549,9 @@ class Data_legalize_lib{
 				if($data['name'] != $user_info->name){
 					$res->addMessage('勞保資料姓名與實名認證不符', 2, MassageDisplay::Client);
 				}
-				if($data['last_insurance_info']['companyName'] != $content['company']){
+				if(!preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $data['last_insurance_info']['companyName'])) {
+					$res->addMessage('勞保PDF資料解析完的公司名稱有非中文字元', 3, MassageDisplay::Backend);
+				}else if($data['last_insurance_info']['companyName'] != $content['company']){
 					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
 				}
 			}else{

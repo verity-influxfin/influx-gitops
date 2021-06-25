@@ -1008,11 +1008,11 @@ class Labor_insurance_lib
 			foreach($all_page_array as $key => $value){
 				// 切單條資訊項目
 
-				preg_match_all('/[0-9]*\s+[0-9]{8}[A-Z]{1}\s+[\W]*[0-9,]+\s+[0-9]{7}\s*/',$value,$info_array);
+				preg_match_all('/[0-9]*\s+[0-9]{8}[A-Z]{1}\s+([^\s]+|[\W]+)\s+[0-9,]+\s+[0-9]{7}\s*/',$value,$info_array);
 				$info_array = isset($info_array[0]) ? $info_array[0] : [];
 				// to do list : PREG_SPLIT_DELIM_CAPTURE flag not work
 				// 勞保退保訊息後半段
-				$info_array_extra = preg_split('/[0-9]*\s*[0-9]{8}[A-Z]{1}\s*[\W]*[0-9,]+\s*[0-9]{7}\s*/', $value);
+				$info_array_extra = preg_split('/[0-9]*\s+[0-9]{8}[A-Z]{1}\s+([^\s]+|[\W]+)\s+[0-9,]+\s+[0-9]{7}\s*/', $value);
 				if($info_array_extra){
 					unset($info_array_extra[0]);
 					$info_array_extra = array_values($info_array_extra);
