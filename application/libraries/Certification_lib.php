@@ -645,9 +645,8 @@ class Certification_lib{
 			$verifiedResult = $this->CI->data_verify_lib->check_investigation($verifiedResult, $result, $certification_content);
 
 			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
+			$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
 			$status = $verifiedResult->getStatus();
-
-
 
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status != 3 ? 0 : $status,
@@ -749,6 +748,7 @@ class Certification_lib{
 			}
 
 			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
+			$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
 			$status = $verifiedResult->getStatus();
 
 			$this->CI->user_certification_model->update($info->id, array(
