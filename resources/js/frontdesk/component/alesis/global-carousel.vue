@@ -63,6 +63,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "./alesis";
+
 .carousel {
     display        : flex;
     flex-direction : column;
@@ -97,12 +99,12 @@ export default {
 
         > .right {
             > div {
-                position: absolute;
-                top: 0;
-                   bottom: 0;
-    max-height: 34rem;
-                display: flex;
-                align-items: center;
+                position       : absolute;
+                top            : 0;
+                bottom         : 0;
+                max-height     : 34rem;
+                display        : flex;
+                align-items    : center;
                 justify-content: center;
             }
         }
@@ -132,6 +134,10 @@ export default {
         align-items    : center;
         justify-content: center;
         margin-top     : 2rem;
+
+        @include rwd {
+            display: none;
+        }
 
         .item {
             width        : 8px;
