@@ -25,9 +25,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "./alesis";
+
 .alesis-loan-header {
     position: relative;
     height  : 33rem;
+
+    @include rwd {
+        height: clamp(33rem, 155vw, 155vw);
+    }
 
     .background {
         position: absolute;
@@ -35,6 +41,11 @@ export default {
         left    : 10rem;
         right   : 0;
         bottom  : 0;
+
+        @include rwd {
+            top : 42vw;
+            left: 0;
+        }
 
         .image {
             height    : 100%;
@@ -56,21 +67,42 @@ export default {
         min-width        : 1485px;
         height           : 100%;
 
+        @include rwd {
+            background-image: url("/images/alesis-wave-bg-rotated.svg");
+            background-size : 100vw;
+            justify-content : initial;
+            padding         : 3vw 6vw;
+            min-width       : 100vw;
+        }
+
         .header {
             font-size  : 2.2rem;
             font-weight: bolder;
             color      : #F2E627;
+
+            @include rwd {
+                font-size: 6vw;
+            }
         }
 
         .content {
             margin-top : 1rem;
             line-height: 1.8;
             font-size  : 1.3rem;
+
+            @include rwd {
+                font-size: 3vw;
+            }
         }
 
         .action {
             margin-top : 3rem;
             margin-left: 7rem;
+
+            @include rwd {
+                margin-top : 0;
+                margin-left: 52vw;
+            }
 
             .item {
                 display        : inline-block;
@@ -81,6 +113,11 @@ export default {
                 font-weight    : bold;
                 border-radius  : 100rem;
                 border         : 2px solid #FFF;
+
+                @include rwd {
+                    border-radius: .4rem;
+                    font-size    : 3.5vw;
+                }
             }
         }
     }
