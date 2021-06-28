@@ -233,6 +233,11 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>前 10%</option>
+                                <option>前 30%</option>
+                                <option>前 50%</option>
+                                <option>前 70%</option>
+                                <option>70% 之後</option>
                             </select>
                         </div>
                     </div>
@@ -241,6 +246,8 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>是</option>
+                                <option>否</option>
                             </select>
                         </div>
                     </div>
@@ -249,6 +256,8 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>是</option>
+                                <option>否</option>
                             </select>
                         </div>
                     </div>
@@ -257,6 +266,8 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>是</option>
+                                <option>否</option>
                             </select>
                         </div>
                     </div>
@@ -265,6 +276,8 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>是</option>
+                                <option>否</option>
                             </select>
                         </div>
                     </div>
@@ -273,6 +286,11 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>低於 5,000 元</option>
+                                <option>5,000 元 - 10,000 元</option>
+                                <option>10,000 元 - 15,000 元</option>
+                                <option>15,000 元 - 20,000 元</option>
+                                <option>20,000 以上</option>
                             </select>
                         </div>
                     </div>
@@ -609,7 +627,7 @@ export default {
         margin   : 4rem auto 0;
 
         .row {
-            grid-template-columns: 1.05fr 1fr;
+            grid-template-columns: 1.06fr 1fr;
             display              : grid;
             margin               : 0;
             align-items          : center;
