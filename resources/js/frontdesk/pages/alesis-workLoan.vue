@@ -446,10 +446,6 @@
             </index-section>
         </div>
         <!-- / 案例分享 -->
-
-        <!-- 應用程式推薦 -->
-        <alesis-application-recommendation></alesis-application-recommendation>
-        <!-- / 應用程式推薦 -->
     </div>
 </template>
 
