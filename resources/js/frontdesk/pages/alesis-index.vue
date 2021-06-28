@@ -655,6 +655,10 @@ export default {
             text-align : center;
             padding-top: 4rem;
 
+            @include rwd {
+                padding-top: 0;
+            }
+
             .image {
                 width: 240px;
             }
@@ -704,7 +708,8 @@ export default {
                     color: #5d5555;
 
                     @include rwd {
-                        font-size: .9rem;
+                        font-size  : .9rem;
+                        line-height: 1.8;
                     }
                 }
             }
