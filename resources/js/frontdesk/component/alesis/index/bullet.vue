@@ -64,7 +64,7 @@ export default {
             color    : #5d5555;
 
             @include rwd {
-                font-size: 1rem;
+                font-size: .9rem;
             }
         }
     }
