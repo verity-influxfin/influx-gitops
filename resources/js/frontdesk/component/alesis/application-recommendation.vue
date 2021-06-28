@@ -2,7 +2,7 @@
     <div class="alesis-app">
         <div class="wrapper">
             <div class="content">
-                <a href="#!" class="button">立即投資</a>
+                <a href="#!" class="button">{{ action }}</a>
                 <div class="divider"></div>
                 <div class="description">前往APP下載區 立即啟動服務</div>
                 <div class="markets">
@@ -20,7 +20,13 @@
 
 <script>
 export default {
-    name: "ApplicationRecommendation"
+    name: "ApplicationRecommendation",
+    props: {
+        action: {
+            default: "立即投資",
+            type: String,
+        }
+    }
 };
 </script>
 
