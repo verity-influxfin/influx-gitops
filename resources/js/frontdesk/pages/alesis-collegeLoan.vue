@@ -1,7 +1,7 @@
 <template>
     <div class="index-wrapper">
         <!-- 標頭 -->
-        <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度12萬、最低利率5%<br>幫助年輕人完成夢想！" image="/images/sshot-1691.png"></alesis-loan-header>
+        <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度 18 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/sshot-1691.png"></alesis-loan-header>
         <!-- 標頭 -->
 
         <!-- 開頭計數器 -->
@@ -372,7 +372,7 @@
         <!-- / 案例分享 -->
 
         <!-- 應用程式推薦 -->
-        <alesis-application-recommendation></alesis-application-recommendation>
+        <alesis-application-recommendation action="我想借款"></alesis-application-recommendation>
         <!-- / 應用程式推薦 -->
     </div>
 </template>
