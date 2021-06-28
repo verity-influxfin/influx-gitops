@@ -3256,9 +3256,8 @@
 	  	}
 		if(rawData_array.includes($(`#${key}`).attr('id'))){
 			Object.keys(data[key]).forEach(function(key1) {
-				// console.log(data[key][key1]);
 				var a_tag = `<a href="${data[key][key1]}" data-fancybox="images">
-					<img src="${data[key][key1]}" style='width:30%;max-width:400px'>
+					<img id="${key}_${key1}"  src="${data[key][key1]}" style='width:30%;max-width:400px'>
 				</a>`;
 				$(`#${key}`).append(a_tag);
 			})
@@ -3285,10 +3284,10 @@
       });
   }
 
-  function getMappingMsgNo(target_id,data_type,result){
+  function getMappingMsgNo(target_id,action,data_type,result){
 	  $.ajax({
           type: "GET",
-          url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=send&data_type=${data_type}`,
+          url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
           success: function (response) {
 			  response = response.response;
               result(response);
@@ -3325,12 +3324,24 @@
 	return all_data;
   }
 
+  function getCheckListImagesData(){
+      $(".api_file_page").find("img").each(function(){ IDs.push(this.id); });
+      IDs.forEach((item,index)=>{
+        if(item){
+          key = item;
+          value = $(`#${key}`).attr('src');
+          all_data[key] = value;
+        }
+      });
+      return all_data;
+  }
+
   function save(send_type){
-	all_data = getCheckLisTexttData();
 	// 收件檢核表資料傳送
 	if(send_type == 'api_data_page'){
+        all_data = getCheckLisTexttData();
 		data_type = 'text';
-		getMappingMsgNo(target_id, data_type, function (data){
+		getMappingMsgNo(target_id, 'send', data_type, function (data){
 			msg_data = data;
 
 			if(!msg_data){
@@ -3363,7 +3374,9 @@
 		        url: '/api/skbank/v1/LoanRequest/apply_text',
 		        dataType: "json",
 		        success: function (response) {
-		          alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
+                    $('#msg_no').val(response.msg_no);
+                    $('#case_no').val(response.case_no);
+		            alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
 		        },
 		        error: function(error) {
 		          alert(error);
@@ -3372,23 +3385,49 @@
 		});
 	}
 	if(send_type =='api_file_page'){
-		$(".api_file_page").find("img").each(function(){ IDs.push(this.id); });
-		IDs.forEach((item,index)=>{
-	      if(item){
-          	key = item;
-	        value = $(`#${key}`).attr('src');
-	        // key = key.replace(/_content/g, '');
-			if(is_int_array.includes(key)){
-				if(value){
-					value = parseInt(value);
-				}else{
-					value = 0;
-				}
-			}
-	        all_data[key] = value;
-	      }
-	    });
-		// console.log(all_data);
+        all_data = getCheckListImagesData();
+        request_data = [];
+        new_request_data = [];
+        case_no = '';
+
+        Object.keys(all_data).forEach(function(key) {
+            new_string = key.split('_');
+            data_type = new_string[0];
+            getMappingMsgNo(target_id, 'send', key, function (data){
+                msg_data = data;
+                msg_no = msg_data.data.msg_no;
+                case_no = 2021052800000094;
+                request_data.push({
+                    'MsgNo' : msg_no,
+                    'CompId' : 69713453,
+                    'CaseNo' : case_no,
+                    'DocType' : new_string[0],
+                    'DocSeq' : parseInt(new_string[1])+1,
+                    'DocFileType' : 4,
+                    'DocUrl' : all_data[key]
+                });
+            });
+            // console.log(request_data);
+        })
+        setTimeout(function(){
+            if(request_data){
+                new_request_data['request_image_list'] = request_data;
+                console.log(new_request_data);
+                // $.ajax({
+                //     type: "POST",
+                //     data: JSON.stringify(request_data),
+                //     url: '/api/skbank/v1/LoanRequest/apply_image_list',
+                //     dataType: "json",
+                //     success: function (response) {
+                //       alert(response);
+                //     },
+                //     error: function(error) {
+                //       alert(error);
+                //     }
+                // });
+            }
+        },10000);
+
 		return;
 	}
   }

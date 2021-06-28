@@ -639,4 +639,8 @@ class Cron extends CI_Controller
 		}
 		echo json_encode($result);
 	}
+
+    public function test(){
+        $a = "https://dev-influxp2p-personal.s3.ap-northeast-1.amazonaws.com/user_upload/47239/image47239162193497851889.jpg";
+    }
 }

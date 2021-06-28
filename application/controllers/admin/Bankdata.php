@@ -212,10 +212,10 @@ class Bankdata extends MY_Admin_Controller
         $target_id = isset($input['target_id']) ? $input['target_id'] : $target_id;
 		$action_user = isset($this->login_info->id) ? $this->login_info->id : '';
 		$action = isset($input['action']) ? $input['action'] : '';
-		$data_type = isset($input['data_type']) ? $input['data_type'] : '';
+		$data_type = isset($input['data_type']) ? $input['data_type'] : 'text';
 
 		$this->load->library('mapping/sk_bank/msgno');
-		$response = $this->msgno->getSKBankInfoByTargetId($target_id);
+		$response = $this->msgno->getSKBankInfoByTargetId($target_id, $data_type);
 
 		if($action == 'send'){
 			$this->load->model('skbank/LoanTargetMappingMsgNo_model');
