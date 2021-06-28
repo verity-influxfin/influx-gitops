@@ -16,32 +16,30 @@
 
         <!-- 合作對象 -->
         <div class="alesis-coops">
-            <div class="group">
-                <div class="item">
-                    <img src="/images/alesis-bordered-ntpu.svg" class="image">
-                    <div class="name">國立臺北大學</div>
+            <index-section header="合作夥伴">
+                <div class="group">
+                    <div class="item">
+                        <img src="/images/alesis-bordered-ntpu.svg" class="image">
+                        <div class="name">國立臺北大學</div>
+                    </div>
+                    <div class="item">
+                        <img src="/images/alesis-bordered-ntu.svg" class="image">
+                        <div class="name">國立臺灣大學</div>
+                    </div>
+                    <div class="item">
+                        <img src="/images/alesis-bordered-ntub.svg" class="image">
+                        <div class="name">國立臺北商業大學</div>
+                    </div>
+                    <div class="item">
+                        <img src="/images/alesis-bordered-shanghai.svg" class="image">
+                        <div class="name">上海商業儲蓄銀行</div>
+                    </div>
+                    <div class="item">
+                        <img src="/images/alesis-bordered-skbank.svg" class="image">
+                        <div class="name">新光銀行</div>
+                    </div>
                 </div>
-                <div class="item">
-                    <img src="/images/alesis-bordered-ntu.svg" class="image">
-                    <div class="name">國立臺灣大學</div>
-                </div>
-                <div class="item">
-                    <img src="/images/alesis-bordered-ntub.svg" class="image">
-                    <div class="name">國立臺北商業大學</div>
-                </div>
-                <div class="item">
-                    <img src="/images/alesis-bordered-kgi.svg" class="image">
-                    <div class="name">凱基銀行</div>
-                </div>
-                <div class="item">
-                    <img src="/images/alesis-bordered-shanghai.svg" class="image">
-                    <div class="name">上海商業儲蓄銀行</div>
-                </div>
-                <div class="item">
-                    <img src="/images/alesis-bordered-skbank.svg" class="image">
-                    <div class="name">新光銀行</div>
-                </div>
-            </div>
+            </index-section>
         </div>
         <!-- / 合作對象 -->
 
@@ -780,24 +778,40 @@ export default {
 
 .alesis-coops {
     max-width: 1280px;
-    margin   : 0 auto;
+    margin   : 8rem auto -8rem;
 
     .group {
         display              : grid;
         margin               : 0 auto 8rem;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         align-items          : center;
         justify-content      : center;
 
         @include rwd {
-            grid-template-columns: repeat(3, 1fr);
-            max-width            : 430px;
-            gap                  : 2rem 0;
-            white-space          : nowrap;
+            max-width  : 430px;
+            gap        : 2rem 0;
+            display    : flex;
+            flex-wrap  : wrap;
+            white-space: nowrap;
         }
 
         .item {
             text-align: center;
+
+            @include rwd {
+                flex: calc(100% / 3);
+
+                &:nth-child(4) {
+                    .image, .name {
+                        margin-left: 4rem;
+                    }
+                }
+                &:nth-child(5) {
+                    .image, .name {
+                        margin-right: 4rem;
+                    }
+                }
+            }
 
             .image {
                 width: 130px;
@@ -811,6 +825,10 @@ export default {
                 margin-top : 1rem;
                 color      : #5D5555;
                 font-weight: bold;
+
+                @include rwd {
+                    font-size: .9rem;
+                }
             }
         }
     }
