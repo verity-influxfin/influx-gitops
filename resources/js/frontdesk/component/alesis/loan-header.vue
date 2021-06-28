@@ -61,7 +61,7 @@ export default {
         text-shadow      : 1px 1px 4px black;
         color            : #FFF;
         font-size        : 1.1rem;
-        padding          : 7rem 1rem 5rem;
+        padding          : 7rem 1rem 5rem 4rem;
         background-size  : contain;
         background-repeat: no-repeat;
         min-width        : 1485px;
@@ -113,6 +113,7 @@ export default {
                 font-weight    : bold;
                 border-radius  : 100rem;
                 border         : 2px solid #FFF;
+                font-size      : 1.3rem;
 
                 @include rwd {
                     border-radius: .4rem;
