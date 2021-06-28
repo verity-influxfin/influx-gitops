@@ -1,13 +1,13 @@
 <template>
     <div class="carousel">
         <div class="selector">
-            <div class="left">
+            <div class="left" :class="{'-hidden': index == 0 }">
                 <div @click="previous"><img class="image" src="/images/alesis-carousel-left.svg" alt=""></div>
             </div>
             <div class="lightbox">
                 <slot></slot>
             </div>
-            <div class="right">
+            <div class="right" :class="{'-hidden': index == length - 1 }">
                 <div @click="next"><img class="image" src="/images/alesis-carousel-right.svg" alt=""></div>
             </div>
         </div>
@@ -80,19 +80,23 @@ export default {
 
         > .left,
         > .right {
-            cursor: pointer;
-                position: relative;
-    height: 100%;
+            cursor  : pointer;
+            position: relative;
+            height  : 100%;
+
+            &.-hidden {
+                visibility: hidden;
+            }
         }
 
         > .left {
             > div {
-                position: absolute;
-                top: 0;
-                    bottom: 0;
-    max-height: 34rem;
-                display: flex;
-                align-items: center;
+                position       : absolute;
+                top            : 0;
+                bottom         : 0;
+                max-height     : 34rem;
+                display        : flex;
+                align-items    : center;
                 justify-content: center;
             }
         }
