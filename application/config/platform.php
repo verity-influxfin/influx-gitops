@@ -95,6 +95,10 @@ $config['admin_menu'] = [
         'estatement' => '個人對帳單',
         'index' => '收支統計表',
     ],
+	'PostLoan' => [
+		'parent_name' => '貸後管理',
+		'legal_doc' => '法訴文件管理',
+	],
     'Article' => [
         'parent_name' => '活動及最新消息',
         'index' => '最新活動',
