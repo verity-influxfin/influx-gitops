@@ -548,7 +548,7 @@ class Certification_lib{
 		$certification_content = isset($info->content) ? json_decode($info->content,true): [];
 		$url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file']: null;
 		$result = [];
-		$verifiedResult = new InvestigationCertificationResult(3);
+		$verifiedResult = new InvestigationCertificationResult(1);
 		$time = time();
 		$printDatetime = '';
 
@@ -698,7 +698,7 @@ class Certification_lib{
 
 		$certification_content = isset($info->content) ? json_decode($info->content,true) : [];
 
-		$verifiedResult = new JobCertificationResult(3);
+		$verifiedResult = new JobCertificationResult(1);
 		$res = [];
 		$gcis_res = [];
 		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
@@ -728,6 +728,7 @@ class Certification_lib{
 				$this->CI->load->library('mapping/user/Certification_data');
 				$result = $this->CI->certification_data->transformJobToResult($res);
 				$certification_content['pdf_info'] = $result;
+				$certification_content['salary'] = $result['last_insurance_info']['insuranceSalary'];
 			}else{
 				$verifiedResult->addMessage('勞保pdf解析失敗',3, MassageDisplay::Backend);
 			}

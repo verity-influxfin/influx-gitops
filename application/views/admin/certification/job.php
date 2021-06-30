@@ -222,7 +222,13 @@
                                     <form role="form" method="post">
                                     <div class="form-group">
 										<label>備註</label>
-
+										<?
+										if ($remark) {
+											if (isset($remark["fail"]) && $remark["fail"]) {
+												echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+											}
+										}
+										?>
 									</div>
 									<h4>審核</h4>
                                         <fieldset>
