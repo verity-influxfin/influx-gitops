@@ -293,6 +293,10 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>博士</option>
+                                <option>碩士</option>
+                                <option>學士</option>
+                                <option>學士以下</option>
                             </select>
                         </div>
                     </div>
@@ -309,47 +313,39 @@
                         <div class="input">
                             <select>
                                 <option selected disabled>-請選擇-</option>
+                                <option>是</option>
+                                <option>否</option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">4.我的投保月薪約為：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                            </select>
+                            <input type="text">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">5.我在銀行的貸款餘額約為：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                            </select>
+                            <input type="text">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">6.每月需攤還多少金額：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                            </select>
+                            <input type="text">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">7.信用卡總額度約為：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                            </select>
+                            <input type="text">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">8.近一個月信用卡帳單總金額約為：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                            </select>
+                            <input type="text">
                         </div>
                     </div>
                     <div class="row">
