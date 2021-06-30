@@ -16,11 +16,55 @@
                 }
             </style>
 			<script type="text/javascript">
+				let allInvestorsMode = false;
+				$( document ).ready(function() {
+					$('.investor-all').click(function () {
+						console.log($(this));
+						$(this).parent().prev().find('input').prop("checked", true);
+					});
+					$('.investor-cancel').click(function () {
+						$(this).parent().prev().find('input').prop("checked", false);
+					});
+					$('#all-target-investors').click(function () {
+						allInvestorsMode = !allInvestorsMode;
+						$('.panel-body').find('.investors > input').each(function() {
+							$(this).prop("checked", allInvestorsMode);
+						});
+					});
+					$('#exportBtn').click(function () {
+						if(form_onsubmit('即將匯出文件，過程可能需點時間，請勿直接關閉，確認是否執行？')) {
+							let result = {};
+
+							$('tr.list').each(function () {
+								let target_id = $(this).data('id');
+								result[target_id] = {};
+								result[target_id]['investor_userid'] = [];
+
+								$(this).find('td').each(function () {
+									let keyname = $(this).data('key');
+									if(keyname !== undefined) {
+										result[target_id][keyname] = $(this).text();
+									}
+								});
+
+								$(this).find('.investors > input:checked').each(function () {
+									result[target_id]['investor_userid'].push($(this).next('label').text());
+								});
+
+								result[target_id]['legal_confirm_letter'] = $(this).find('.legal_confirm_letter').prop("checked");
+								result[target_id]['send_datetime'] = $(this).find('.send_datetime').val();
+							});
+							console.log(result);
+						}
+					});
+
+				});
+
                 function showChang(){
                     var tsearch 			= $('#tsearch').val();
                     var dateRange           = 'sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
                     if(tsearch==''){
-                        if(confirm("即將撈取各狀態案件，過程可能需點時間，請勿直接關閉， 確認是否執行？")) {
+                        if(confirm("即將撈取各狀態案件，過程可能需點時間，請勿直接關閉，確認是否執行？")) {
                             top.location = './legal_doc?inquiry=1&'+dateRange;
                         }
                     }
@@ -28,12 +72,20 @@
                         top.location = './legal_doc?inquiry=1&tsearch='+tsearch+'&'+dateRange;
                     }
 				}
+
                 $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
                     code = (e.keyCode ? e.keyCode : e.which);
                     if (code == 13){
                         showChang();
                     }
                 });
+
+				function form_onsubmit(msg){
+					if(confirm(msg)){
+						return true;
+					}
+					return false;
+				}
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -47,10 +99,29 @@
 										<td class="tsearch" colspan="7"><input type="text" value="<?=isset($_GET['tsearch'])&&$_GET['tsearch']!=''?$_GET['tsearch']:''?>" id="tsearch" placeholder="使用者代號(UserID) / 姓名 / 身份證字號 / 案號" /></td>
 									</tr>
 									<tr style="vertical-align: baseline;">
+<!--										<td>從：</td>-->
+<!--										<td><input type="text" value="--><?//=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?><!--" id="sdate" data-toggle="datepicker" placeholder="不指定區間" /></td>-->
+<!--										<td style="">到：</td>-->
+<!--										<td><input type="text" value="--><?//=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?><!--" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>-->
 										<td>從：</td>
-										<td><input type="text" value="<?=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?>" id="sdate" data-toggle="datepicker" placeholder="不指定區間" /></td>
+										<td>
+											<select class="form-control" id="sdate">
+												<option value="0" <?=isset($_GET['sdate'])&&$_GET['sdate']==0?'selected="selected"':''?>>M1</option>
+												<option value="30" <?=isset($_GET['sdate'])&&$_GET['sdate']==30?'selected="selected"':''?>>M2</option>
+												<option value="60" <?=isset($_GET['sdate'])&&$_GET['sdate']==60?'selected="selected"':''?>>M3</option>
+												<option value="90" <?=isset($_GET['sdate'])&&$_GET['sdate']==90?'selected="selected"':''?>>M4</option>
+											</select>
+										</td>
 										<td style="">到：</td>
-										<td><input type="text" value="<?=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?>" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>
+										<td>
+											<select class="form-control" id="edate">
+												<option value="0" <?=isset($_GET['edate'])&&$_GET['edate']==0?'selected="selected"':''?>>M1</option>
+												<option value="30" <?=isset($_GET['edate'])&&$_GET['edate']==30?'selected="selected"':''?>>M2</option>
+												<option value="60" <?=isset($_GET['edate'])&&$_GET['edate']==60?'selected="selected"':''?>>M3</option>
+												<option value="90" <?=isset($_GET['edate'])&&$_GET['edate']==90?'selected="selected"':''?>>M4</option>
+												<option value="9999" <?=isset($_GET['edate'])&&$_GET['edate']==9999?'selected="selected"':''?>>-</option>
+											</select>
+										</td>
 										<td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
 									</tr>
 								</table>
@@ -59,8 +130,12 @@
 								display: flex;
 								justify-content: space-between;
 								align-self: flex-end;">
-								<a href="javascript:showChang();" class="btn btn-primary">全選</a>
-								<a href="javascript:showChang();" class="btn btn-primary">匯出文件</a>
+								<div class="btn-group-toggle" data-toggle="buttons" id="all-target-investors">
+									<label class="btn btn-primary">
+										<input type="checkbox"> 全選
+									</label>
+								</div>
+								<a class="btn btn-primary" id="exportBtn">匯出文件</a>
 							</div>
                         </div>
                         <!-- /.panel-heading -->
@@ -92,17 +167,17 @@
 											foreach($list as $key => $value){
 												$count++;
 									?>
-										<tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->target_id)?$value->target_id:'' ?>">
-											<td><?=isset($value->target_no)?$value->target_no:'' ?></td>
+										<tr class="<?=$count%2==0?"odd":"even"; ?> list" data-id="<?=isset($value->target_id)?$value->target_id:'' ?>">
+											<td data-key="target_no"><?=isset($value->target_no)?$value->target_no:'' ?></td>
 											<td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
 											<td><?=isset($value->user_id)?$value->user_id:'' ?></td>
 											<td><?=isset($value->loan_date)?$value->loan_date:'' ?></td>
-											<td><?=isset($value->min_limit_date)?$value->min_limit_date:'' ?></td>
-											<td><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
+											<td data-key="limit_date"><?=isset($value->min_limit_date)?$value->min_limit_date:'' ?></td>
+											<td data-key="delay_days"><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
 											<td>法催執行中
 												<a href="javascript:showChang();" class="btn btn-danger mt-4">取消執行</a>
 											</td>
-											<td>
+											<td class="investors">
 												<?php
 													foreach($value->investor_list as $investor) {
 												?>
@@ -113,18 +188,18 @@
 												?>
 											</td>
 											<td>
-												<a href="javascript:showChang();" class="btn btn-danger ">取消</a>
-												<a href="javascript:showChang();" class="btn btn-primary mt-2">全選</a>
+												<a class="btn btn-danger investor-cancel">取消</a>
+												<a class="btn btn-primary mt-2 investor-all">全選</a>
 											</td>
 											<td>
-												<input class="form-check-input" type="checkbox" value="" id="letterCheck">
-												<label class="form-check-label" for="letterCheck">
+												<input class="form-check-input legal_confirm_letter" type="checkbox" value="" >
+												<label class="form-check-label">
 													已寄送
 												</label>
 											</td>
-											<td><input type="text" value="<?=isset($_GET['action_date'])&&$_GET['action_date']!=''?$_GET['action_date']:''?>" id="edate" data-toggle="datepicker" style="width: 100px;"  placeholder="執行日期" /></td>
+											<td><input type="text" value="<?=isset($_GET['send_datetime'])&&$_GET['send_datetime']!=''?$_GET['send_datetime']:''?>" class="send_datetime" data-toggle="datepicker" style="width: 100px;"  placeholder="執行日期" /></td>
 											<td>2021/06/24進行法催</br>執行id:82,87(包含存證信函)，由[News]匯出</td>
-											<td><a href="<?=admin_url('target/edit')."?id=47174" ?>" class="btn btn-default">Detail</a></td>
+											<td><a href="<?=admin_url('target/edit')."?id=".$value->target_id ?>" class="btn btn-default">Detail</a></td>
 										</tr>
 									<?php
 										}}

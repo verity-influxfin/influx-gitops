@@ -52,15 +52,16 @@ class Transaction_model extends MY_Model
         return $list;
     }
 
-	public function getDelayTargetInfoList($where){
+	public function getDelayTargetInfoList($transaction_where, $target_where){
 		$transactions = $this->db->select('MIN(`limit_date`) as `min_limit_date`, `target_id`')
 			->from("`p2p_transaction`.`transactions`")
-			->where($where)
+			->where($transaction_where)
 			->group_by('target_id');
 		$subquery = $this->db->get_compiled_select('', TRUE);
 		$this->db
 			->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.target_no, ta.delay_days, t.*')
 			->from('`p2p_loan`.`targets` AS `ta`')
+			->where($target_where)
 			->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
 		$subquery2 = $this->db->get_compiled_select('', TRUE);
 		$this->db
