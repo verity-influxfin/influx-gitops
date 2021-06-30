@@ -42,17 +42,17 @@
 			<p>總共月繳：<?= ! is_null($data['totalMonthlyPayment']) ? $data['totalMonthlyPayment'] : '-'; ?>千元</p>
 			<p>是否小於投保薪資：<?= ! is_null($data['monthly_repayment_enough']) ? $data['monthly_repayment_enough'] : '-'; ?></p>
 			<p>
-				<span>投保薪資：<?= ! is_null($data['monthly_repayment']) ? number_format($data['monthly_repayment']) : '-'; ?>千元</span>；
+				<span>投保薪資：<?= ! is_null($data['monthly_repayment']) ? (strpos($data['monthly_repayment'], ',') === false ? number_format($data['monthly_repayment']) : $data['monthly_repayment']) : '-'; ?>千元</span>；
 				<span>總共月繳：<?= ! is_null($data['totalMonthlyPayment']) ? $data['totalMonthlyPayment'] : '-'; ?>千元</span>
 			</p>
 			<p>是否小於薪資22倍：<?= ! is_null($data['total_repayment_enough']) ? $data['total_repayment_enough'] : '-'; ?></p>
 			<p>
-				<span>薪資22倍：<?= ! is_null($data['total_repayment']) ? number_format($data['total_repayment']) : '-'; ?>千元</span>；
+				<span>薪資22倍：<?= ! is_null($data['total_repayment']) ? (strpos($data['total_repayment'], ',') === false ? number_format($data['total_repayment']) : $data['total_repayment']) : '-'; ?>千元</span>；
 				<span>借款總餘額：<?= ! is_null($data['liabilities_totalAmount']) ? $data['liabilities_totalAmount'] : '-'; ?></span>
 			</p>
 			<p>
 				<span>
-					負債比計算：<?= ! is_null($data['debt_to_equity_ratio']) ? $data['debt_to_equity_ratio'] : '-'; ?>%</span>
+					負債比計算：<?= isset($data['debt_to_equity_ratio']) ? $data['debt_to_equity_ratio'] : '-'; ?>%</span>
 				</span>
 			</p>
 		<?php
