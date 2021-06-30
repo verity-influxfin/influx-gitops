@@ -47,7 +47,7 @@ export default {
 @import "./../alesis";
 
 .item {
-    box-shadow   : 0px 0px 5px 0px rgb(50 50 50 / 75%);
+    box-shadow   : 0 3px 6px 0 rgb(0 0 0 / 30%);
     flex         : 1;
     border-radius: 20px;
 
@@ -76,7 +76,7 @@ export default {
                 background   : #FFF;
                 padding      : .5rem;
                 border-radius: 100rem;
-                box-shadow   : 0px 0px 5px 0px rgb(50 50 50 / 75%);
+                box-shadow   : 0 3px 6px 0 rgb(0 0 0 / 30%);
 
                 @include rwd {
                     top: -1.5rem;
