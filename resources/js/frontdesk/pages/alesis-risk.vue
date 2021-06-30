@@ -114,7 +114,7 @@ export default {
         z-index          : 1;
         display          : flex;
         align-items      : center;
-        padding-left     : 12rem;
+        padding-left     : 11rem;
         background-size  : contain;
         background-repeat: no-repeat;
         min-width        : 1485px;
@@ -139,7 +139,7 @@ export default {
             background-clip        : text;
             width                  : fit-content;
             color                  : rgba(255, 255, 255, 0);
-            font-size              : 1.8rem;
+            font-size              : 2rem;
             line-height            : 1.2;
             height                 : min-content;
         }
@@ -153,7 +153,7 @@ export default {
         text-align: center;
 
         .image {
-            width: 430px;
+            width: 30vw;
 
             @include rwd {
                 width: 70vw;
