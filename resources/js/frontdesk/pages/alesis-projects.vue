@@ -302,6 +302,9 @@ export default {
                     display        : flex;
                     align-items    : center;
                     justify-content: center;
+                    transform      : scale(0.8) translateX(4.3rem);
+                    margin-left    : -7rem;
+                    margin-top     : -3rem;
                 }
             }
         }
