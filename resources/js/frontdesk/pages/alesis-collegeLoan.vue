@@ -522,7 +522,7 @@ export default {
             display       : flex;
             flex-direction: column-reverse;
             align-items   : center;
-            margin-top    : 4rem;
+            margin-top    : 2rem;
             gap           : 1rem;
         }
 
@@ -532,8 +532,9 @@ export default {
             gap                  : 3rem;
 
             @include rwd {
-                transform: scale(0.5);
-                margin   : -7rem 0;
+                grid-template-columns: repeat(1, 1fr);
+                transform            : scale(0.9);
+                margin               : -3rem 0;
             }
 
             .item {
