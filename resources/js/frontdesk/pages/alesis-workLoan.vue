@@ -585,7 +585,7 @@ export default {
         margin   : 4rem auto 0;
 
         .row {
-            grid-template-columns: 1.05fr 1fr;
+            grid-template-columns: 1.06fr 1fr;
             display              : grid;
             margin               : 0;
             align-items          : center;
