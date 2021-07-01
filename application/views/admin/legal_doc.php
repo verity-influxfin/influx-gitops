@@ -15,6 +15,7 @@
                     width: 640px;
                 }
             </style>
+
 			<script type="text/javascript">
 				let allInvestorsMode = false;
 				$( document ).ready(function() {
@@ -27,34 +28,82 @@
 					});
 					$('#all-target-investors').click(function () {
 						allInvestorsMode = !allInvestorsMode;
-						$('.panel-body').find('.investors > input').each(function() {
+						$('.panel-body').find('.investors > div > input').each(function() {
 							$(this).prop("checked", allInvestorsMode);
 						});
 					});
+					$('.save-process').click(function () {
+						let status = $(this).prev('select').val();
+						let log_id = $(this).parent().closest('tr').data('logid');
+						let target_id = $(this).parent().closest('tr').data('id');
+						$.ajax({
+							type: 'POST',
+							url: "<?=admin_url('PostLoan/save_status')?>",
+							data: {log_id: log_id, target_id: target_id, status: status},
+							success: (json) => {
+								console.log('success2');
+							},
+							error: function (xhr, textStatus, thrownError) {
+								alert(textStatus);
+							}
+						});
+
+					});
 					$('#exportBtn').click(function () {
 						if(form_onsubmit('即將匯出文件，過程可能需點時間，請勿直接關閉，確認是否執行？')) {
-							let result = {};
+							let result = [];
 
+							let isSuccess = true;
 							$('tr.list').each(function () {
 								let target_id = $(this).data('id');
-								result[target_id] = {};
-								result[target_id]['investor_userid'] = [];
+								let size = result.length;
+								result[size] = {'doneTask': {}, 'status': 10};
+								result[size]['investorUserId'] = [];
+								result[size]['targetId'] = target_id;
 
 								$(this).find('td').each(function () {
 									let keyname = $(this).data('key');
 									if(keyname !== undefined) {
-										result[target_id][keyname] = $(this).text();
+										result[size][keyname] = $(this).text();
 									}
 								});
 
-								$(this).find('.investors > input:checked').each(function () {
-									result[target_id]['investor_userid'].push($(this).next('label').text());
+								$(this).find('.investors > div > input:checked').each(function () {
+									result[size]['investorUserId'].push($(this).next('label').text());
 								});
 
-								result[target_id]['legal_confirm_letter'] = $(this).find('.legal_confirm_letter').prop("checked");
-								result[target_id]['send_datetime'] = $(this).find('.send_datetime').val();
+								$(this).find('input.done-task').each(function () {
+									result[size]['doneTask'][$(this).val()] = $(this).prop("checked");
+								});
+
+								result[size]['sendDatetime'] = $(this).find('.send_datetime').val();
+
+								if(result[size]['investorUserId'].length) {
+									if (result[size]['sendDatetime'] === "") {
+										$(this).find('.send_datetime').prop('required', true);
+										$("form").find("#submit-hidden").click();
+										isSuccess = false;
+										return false;
+									}
+								}else{
+									result.splice(size, 1);
+								}
 							});
-							console.log(result);
+
+							console.log('result',result);
+							if(isSuccess) {
+								$.ajax({
+									type: 'POST',
+									url: "<?=admin_url('PostLoan/legal_doc')?>",
+									data: {data: result},
+									success: (json) => {
+										console.log('success');
+									},
+									error: function (xhr, textStatus, thrownError) {
+										alert(textStatus);
+									}
+								});
+							}
 						}
 					});
 
@@ -99,10 +148,6 @@
 										<td class="tsearch" colspan="7"><input type="text" value="<?=isset($_GET['tsearch'])&&$_GET['tsearch']!=''?$_GET['tsearch']:''?>" id="tsearch" placeholder="使用者代號(UserID) / 姓名 / 身份證字號 / 案號" /></td>
 									</tr>
 									<tr style="vertical-align: baseline;">
-<!--										<td>從：</td>-->
-<!--										<td><input type="text" value="--><?//=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?><!--" id="sdate" data-toggle="datepicker" placeholder="不指定區間" /></td>-->
-<!--										<td style="">到：</td>-->
-<!--										<td><input type="text" value="--><?//=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?><!--" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>-->
 										<td>從：</td>
 										<td>
 											<select class="form-control" id="sdate">
@@ -141,6 +186,8 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="table-responsive">
+								<form action="">
+								<input id="submit-hidden" type="submit" style="display: none" />
                                 <table class="table table-striped table-bordered table-hover" width="100%" id="dataTables-tables">
                                     <thead>
                                         <tr>
@@ -151,11 +198,11 @@
 											<th>逾期日</th>
 											<th>逾期天數</th>
 											<th>處理進度</th>
-											<th style="width: 12%">債權人</th>
+											<th>債權人</th>
 											<th>操作</th>
-                                            <th>存證信函</th>
+                                            <th>已完成作業</th>
                                             <th>法催執行日期</th>
-                                            <th style="width: 280px;">備註</th>
+                                            <th>備註</th>
                                             <th>Detail</th>
                                         </tr>
                                     </thead>
@@ -165,24 +212,38 @@
 											$subloan_list = $this->config->item('subloan_list');
 											$count = 0;
 											foreach($list as $key => $value){
+												$lastLog = null;
+												if(count($value->logs))
+													$lastLog = $value->logs[count($value->logs)-1];
 												$count++;
 									?>
-										<tr class="<?=$count%2==0?"odd":"even"; ?> list" data-id="<?=isset($value->target_id)?$value->target_id:'' ?>">
-											<td data-key="target_no"><?=isset($value->target_no)?$value->target_no:'' ?></td>
+										<tr class="<?=$count%2==0?"odd":"even"; ?> list" data-logid="<?=isset($lastLog->id)?$lastLog->id:'' ?>" data-id="<?=isset($value->target_id)?$value->target_id:'' ?>">
+											<td style="word-break: break-all; min-width: 50px;" data-key="target_no"><?=isset($value->target_no)?$value->target_no:'' ?></td>
 											<td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?><?=isset($value->target_no)?(preg_match('/'.$subloan_list.'/',$value->target_no)?'(產品轉換)':''):'' ?></td>
 											<td><?=isset($value->user_id)?$value->user_id:'' ?></td>
 											<td><?=isset($value->loan_date)?$value->loan_date:'' ?></td>
-											<td data-key="limit_date"><?=isset($value->min_limit_date)?$value->min_limit_date:'' ?></td>
-											<td data-key="delay_days"><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
-											<td>法催執行中
-												<a href="javascript:showChang();" class="btn btn-danger mt-4">取消執行</a>
+											<td data-key="limitDate"><?=isset($value->min_limit_date)?$value->min_limit_date:'' ?></td>
+											<td data-key="delayDays"><?=isset($value->delay_days)?intval($value->delay_days):"" ?></td>
+											<td>
+												<select class="form-control" style="min-width: 150px;" >
+													<?php
+														foreach($process_status as $status => $description) {
+													?>
+													<option value="<?=$status?>" <?=isset($lastLog)&&$lastLog->status==$status?"selected":""?> ><?= $description ?></option>
+													<?php
+														}
+													?>
+												</select>
+												<a class="btn btn-success mt-2 save-process">儲存處理進度</a>
 											</td>
-											<td class="investors">
+											<td class="investors" style="min-width: 58px;">
 												<?php
 													foreach($value->investor_list as $investor) {
 												?>
-													<input class="form-check-input" type="checkbox" value="">
+												<div>
+													<input class="form-check-input" type="checkbox" value="" <?= isset($lastLog->investors) && in_array($investor, $lastLog->investors) ? "checked" : "" ?> >
 													<label class="form-check-label"><?= $investor ?></label>
+												</div>
 												<?php
 													}
 												?>
@@ -192,20 +253,39 @@
 												<a class="btn btn-primary mt-2 investor-all">全選</a>
 											</td>
 											<td>
-												<input class="form-check-input legal_confirm_letter" type="checkbox" value="" >
-												<label class="form-check-label">
-													已寄送
-												</label>
+												<?php
+													foreach($task_list as $task => $description) {
+												?>
+												<div>
+													<input class="form-check-input done-task" type="checkbox" value="<?=$task?>" <?= isset($lastLog->done_task->$task) && $lastLog->done_task->$task == "true" ? "checked" : "" ?>>
+													<label class="form-check-label"><?=$description?></label>
+												</div>
+												<?php
+													}
+												?>
 											</td>
 											<td><input type="text" value="<?=isset($_GET['send_datetime'])&&$_GET['send_datetime']!=''?$_GET['send_datetime']:''?>" class="send_datetime" data-toggle="datepicker" style="width: 100px;"  placeholder="執行日期" /></td>
-											<td>2021/06/24進行法催</br>執行id:82,87(包含存證信函)，由[News]匯出</td>
+											<td>
+												<?php
+													foreach($value->logs as $log) {
+														if(isset($log->delay_days)) {
+															if($log->delay_days > 0)
+																echo (new DateTime($log->created_at))->format('Y-m-d') . " 進行法催</br>執行id: " . implode(",", $log->investors) . (isset($log->done_task->legalConfirmLetter) && $log->done_task->legalConfirmLetter == "true" ? "(包含存證信函)" : "") . "，由[" . $log->admin . "]匯出 </br>";
+														}else{
+															echo (new DateTime($log->created_at))->format('Y-m-d') . " 更換處理進度為".$process_status[$log->status]."</br> - [" . $log->admin . "] </br>";
+														}
+													}
+												?>
+											</td>
 											<td><a href="<?=admin_url('target/edit')."?id=".$value->target_id ?>" class="btn btn-default">Detail</a></td>
 										</tr>
 									<?php
 										}}
 									?>
                                     </tbody>
+
                                 </table>
+								</form>
                             </div>
                         </div>
                         <!-- /.panel-body -->
