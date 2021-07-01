@@ -1,6 +1,7 @@
 <template>
   <div class="bank-wrapper" id="bank-wrapper">
   	<div class="content-top skbank-top">
+        <a class="btn send-btn skbank-send-btn skbank-banner-btn" href="https://www.youtube.com/">立即申請</a>
 	</div>
     <div class="form">
 		<div class="event-form">
@@ -12,14 +13,18 @@
                 <span style="color:#E50012;">0.68</span>
                 <span style="color:#036EB7;">起</span>
             </div>
+            <div class="input-group skbank-blue-link" style="height:0px;width:40%;">
+            </div>
             <div class="input-group" style="height: 100%;width:100%;">
                 <img class="group-img" src="../asset/images/skBankMidContent.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent1.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent2.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent3.svg">
             </div>
-            <div class="input-group group-text skbank-blue-link">
+            <div class="input-group group-text">
                 <span style="color:#036EB7;">客製化您的貸款方案</span>
+            </div>
+            <div class="input-group skbank-blue-link" style="height:0px;width:40%;">
             </div>
             <div class="input-group" style="height: 100%;">
                 <img src="../asset/images/skBankBottomContent.svg">
@@ -107,6 +112,16 @@ export default {
 
     .skbank-top{
         background-image: url("../asset/images/skBankTop.svg");
+        padding-top: 30vw;
+        padding-left: 10vw;
+
+        .skbank-banner-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width:40vw;
+            font-size:4vw;
+        }
     }
 
     .skbank-blue-link {
@@ -175,21 +190,20 @@ export default {
         color: #495057;
       }
 
-	  .skbank-send-btn {
-		background-image: url("../asset/images/skBankButton.svg");
-    	background-repeat: no-repeat;
-		width: 43vw;
-		height: 7vw;
-        border: 0px;
-  		border-radius: 15px;
-		color: white;
-		width: 100%;
-		font-size: 27px;
-		font-weight: bold;
-	  }
     }
   }
-
+  .skbank-send-btn {
+    background-image: url("../asset/images/skBankButton.svg");
+    background-repeat: no-repeat;
+    width: 43vw;
+    height: 7vw;
+    border: 0px;
+    border-radius: 15px;
+    color: white;
+    width: 100%;
+    font-size: 3vw;
+    font-weight: bold;
+  }
   .skbank-content-bottom{
       background-color: #EEEEEF;
       position: relative;
@@ -212,6 +226,12 @@ export default {
 
       .skbank-top{
           background-image: url("../asset/images/skBankTopM.svg");
+          padding-top: 45vw;
+          padding-left: 30vw;
+
+          .skbank-banner-btn {
+              width:44vw;
+          }
       }
       .form {
     	padding: 5px;
@@ -236,8 +256,11 @@ export default {
 
 			.send-btn {
 				height: 16vw;
-				font-size: 25px;
 			}
+
+            skbank-send-btn {
+                font-size: 7vw;
+            }
     	  }
 
     	}
