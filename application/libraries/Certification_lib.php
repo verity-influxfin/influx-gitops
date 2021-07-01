@@ -415,7 +415,8 @@ class Certification_lib{
 		$ocrCheckFailed = false;
 		for ($i = 0; $i < count($checkItemList); $i++) {
 			foreach ($checkItemList[$i] as $ocrResultKey => $contentKey) {
-				if (!isset($content[$contentKey]) || !isset($ocr[$ocrResultKey]) || $content[$contentKey] !== $ocr[$ocrResultKey]) {
+				$rawData = isset($content[$contentKey]) ? ($contentKey == 'id_number' ? strtoupper($content[$contentKey]) : $content[$contentKey]) : '';
+				if (!isset($content[$contentKey]) || !isset($ocr[$ocrResultKey]) || $rawData !== $ocr[$ocrResultKey]) {
 					$msg .= $ocrResultKey . '無法辨識<br />';
 					$ocrCheckFailed = true;
 				}
@@ -531,8 +532,10 @@ class Certification_lib{
 		if (count(array_filter($sameDataCheckList, function ($v, $k) use ($content, $ocr) {
 				if (isset($content[$k]))
 					return $content[$k] && isset($content[$v]) && $content[$k] == $content[$v];
-				else
-					return isset($ocr[$k]) && isset($content[$v]) && $ocr[$k] == $content[$v];
+				else {
+					$rawData = isset($content[$v]) ? ($v == 'id_number' ? strtoupper($content[$v]) : $content[$v]) : '';
+					return isset($ocr[$k]) && isset($content[$v]) && $ocr[$k] == $rawData;
+				}
 			}, ARRAY_FILTER_USE_BOTH)) != count($sameDataCheckList)) {
 			$msg .= '健保卡與身分證的資料不符<br/>';
 		}
@@ -772,7 +775,7 @@ class Certification_lib{
 		$certification_content = isset($info->content) ? json_decode($info->content,true): [];
 		$url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file']: null;
 		$result = [];
-		$verifiedResult = new InvestigationCertificationResult(3);
+		$verifiedResult = new InvestigationCertificationResult(1);
 		$time = time();
 		$printDatetime = '';
 
@@ -922,7 +925,7 @@ class Certification_lib{
 
 		$certification_content = isset($info->content) ? json_decode($info->content,true) : [];
 
-		$verifiedResult = new JobCertificationResult(3);
+		$verifiedResult = new JobCertificationResult(1);
 		$res = [];
 		$gcis_res = [];
 		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
@@ -952,6 +955,7 @@ class Certification_lib{
 				$this->CI->load->library('mapping/user/Certification_data');
 				$result = $this->CI->certification_data->transformJobToResult($res);
 				$certification_content['pdf_info'] = $result;
+				$certification_content['salary'] = $result['last_insurance_info']['insuranceSalary'];
 			}else{
 				$verifiedResult->addMessage('勞保pdf解析失敗',3, MassageDisplay::Backend);
 			}
