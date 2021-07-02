@@ -72,38 +72,50 @@ class PostLoan extends MY_Admin_Controller {
 
 	public function save_status() {
 		$post = $this->input->post(NULL, TRUE);
+		$msg = "OK";
+		$success = true;
+
 		if(isset($post['log_id']) && isset($post['status']) && isset($post['target_id'])) {
+
 			$this->load->model('log/log_legaldoc_export_model');
 			$this->load->model('log/log_legaldoc_status_model');
 
-			if($post['log_id'] != "") {
-				$this->log_legaldoc_export_model->update_by(
-					[
-						'id' => $post['log_id']
-					],
-					[
+			$existed = $this->log_legaldoc_status_model->order_by('id','DESC')->limit(1)->get_by([
+				'target_id'=> $post['target_id']
+			]);
+			if(isset($existed) && $existed->status == $post['status']) {
+				$success = false;
+				$msg = "目標狀態相同";
+			}else {
+				if ($post['log_id'] != "") {
+					$this->log_legaldoc_export_model->update_by(
+						[
+							'id' => $post['log_id']
+						],
+						[
+							'status' => $post['status'],
+						]
+					);
+				} else {
+					$this->log_legaldoc_export_model->insert([
+						'admin_id' => $this->login_info->id,
+						'target_id' => $post['target_id'],
+						'limit_date' => '0000-00-00',
+						'delay_days' => '0',
+						'done_task' => '{}',
+						'send_date' => '0000-00-00',
 						'status' => $post['status'],
-					]
-				);
-			}else{
-				$this->log_legaldoc_export_model->insert([
-					'admin_id'=> $this->login_info->id,
-					'target_id'=> $post['target_id'],
-					'limit_date'=> '0000-00-00',
-					'delay_days'=> '0',
-					'done_task'=> '{}',
-					'send_date'=> '0000-00-00',
-					'status' => $post['status'],
-					'investors'=> '[]'
+						'investors' => '[]'
+					]);
+				}
+				$this->log_legaldoc_status_model->insert([
+					'admin_id' => $this->login_info->id,
+					'target_id' => $post['target_id'],
+					'status' => $post['status']
 				]);
 			}
-			$this->log_legaldoc_status_model->insert([
-				'admin_id'=> $this->login_info->id,
-				'target_id'=> $post['target_id'],
-				'status'=> $post['status']
-			]);
 		}
-
+		echo json_encode(['success'=> $success, 'msg' => $msg]);
 	}
 
 	public function legal_doc()

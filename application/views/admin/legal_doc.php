@@ -17,6 +17,7 @@
             </style>
 
 			<script type="text/javascript">
+
 				let allInvestorsMode = false;
 				$( document ).ready(function() {
 					$('.investor-all').click(function () {
@@ -32,22 +33,35 @@
 							$(this).prop("checked", allInvestorsMode);
 						});
 					});
-					$('.save-process').click(function () {
+					$('.save-process').click(function (e) {
+						e.preventDefault();
 						let status = $(this).prev('select').val();
 						let log_id = $(this).parent().closest('tr').data('logid');
 						let target_id = $(this).parent().closest('tr').data('id');
-						$.ajax({
-							type: 'POST',
-							url: "<?=admin_url('PostLoan/save_status')?>",
-							data: {log_id: log_id, target_id: target_id, status: status},
-							success: (json) => {
-								console.log('success2');
-							},
-							error: function (xhr, textStatus, thrownError) {
-								alert(textStatus);
-							}
-						});
+						let adminName = $('h5.navbar-brand').text();
+						adminName = adminName.substr(0, adminName.indexOf('[')-1);
 
+						Pace.track(() => {
+							$.ajax({
+								type: 'POST',
+								url: "<?=admin_url('PostLoan/save_status')?>",
+								data: {log_id: log_id, target_id: target_id, status: status},
+								success: (json) => {
+									console.log(json);
+									let rsp = JSON.parse(json);
+									if(rsp['success']) {
+										$(this).parent().closest('tr').find('td.memo').append(moment().format('YYYY-MM-DD') + " 更換處理進度為" + $(this).prev('select').find('option:selected').text() + "</br> - [" + adminName + "] </br>");
+										$(this).addClass('saved-animation'); // add the animation class
+										setTimeout(() => {
+											$(this).removeClass('saved-animation');
+										}, 1500);
+									}
+								},
+								error: function (xhr, textStatus, thrownError) {
+									alert(textStatus);
+								}
+							});
+						});
 					});
 					$('#exportBtn').click(function () {
 						if(form_onsubmit('即將匯出文件，過程可能需點時間，請勿直接關閉，確認是否執行？')) {
@@ -92,16 +106,22 @@
 
 							console.log('result',result);
 							if(isSuccess) {
-								$.ajax({
-									type: 'POST',
-									url: "<?=admin_url('PostLoan/legal_doc')?>",
-									data: {data: result},
-									success: (json) => {
-										console.log('success');
-									},
-									error: function (xhr, textStatus, thrownError) {
-										alert(textStatus);
-									}
+								Pace.track(() => {
+									$.ajax({
+										type: 'POST',
+										url: "<?=admin_url('PostLoan/legal_doc')?>",
+										data: {data: result},
+										success: (json) => {
+											console.log('success');
+											$(this).addClass('saved-animation'); // add the animation class
+											setTimeout(() => {
+												$(this).removeClass('saved-animation');
+											}, 1500);
+										},
+										error: function (xhr, textStatus, thrownError) {
+											alert(textStatus);
+										}
+									});
 								});
 							}
 						}
@@ -180,7 +200,7 @@
 										<input type="checkbox"> 全選
 									</label>
 								</div>
-								<a class="btn btn-primary" id="exportBtn">匯出文件</a>
+								<button class="btn btn-primary button-saved draw" id="exportBtn">匯出文件</button>
 							</div>
                         </div>
                         <!-- /.panel-heading -->
@@ -234,7 +254,7 @@
 														}
 													?>
 												</select>
-												<a class="btn btn-success mt-2 save-process">儲存處理進度</a>
+												<button class="btn btn-primary mt-2 save-process button-saved draw">儲存處理進度</button>
 											</td>
 											<td class="investors" style="min-width: 58px;">
 												<?php
@@ -265,7 +285,7 @@
 												?>
 											</td>
 											<td><input type="text" value="<?=isset($_GET['send_datetime'])&&$_GET['send_datetime']!=''?$_GET['send_datetime']:''?>" class="send_datetime" data-toggle="datepicker" style="width: 100px;"  placeholder="執行日期" /></td>
-											<td>
+											<td class="memo">
 												<?php
 													foreach($value->logs as $log) {
 														if(isset($log->delay_days)) {
@@ -277,7 +297,7 @@
 													}
 												?>
 											</td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->target_id ?>" class="btn btn-default">Detail</a></td>
+											<td><a href="<?=admin_url('target/edit')."?id=".$value->target_id ?>" class="btn btn-default" target="_blank" rel="noopener noreferrer">Detail</a></td>
 										</tr>
 									<?php
 										}}

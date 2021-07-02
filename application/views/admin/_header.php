@@ -19,6 +19,7 @@
     <!-- Custom Fonts -->
     <link href="<?=base_url()?>assets/admin/font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="<?=base_url()?>assets/admin/css/datepicker.css" rel="stylesheet">
+	<link href="<?=base_url()?>assets/admin/css/minimal.css" rel="stylesheet">
 	<link href="<?=base_url()?>assets/admin/css/bootstrap-datetimepicker.css" rel="stylesheet">
 	<link href="<?=base_url()?>assets/admin/css/bootstrap-table.css" rel="stylesheet">
 	<link href="<?=base_url()?>assets/admin/css/bootstrap-table-filter-control.css" rel="stylesheet">
@@ -36,6 +37,7 @@
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table-export.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table-filter-control.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/moment.min.js"></script>
+	<script data-pace-options='{ "ajax": true }' src="<?=base_url()?>assets/admin/scripts/pace.js"></script>
 
 	<script>
 		$(document).ready(function() {
