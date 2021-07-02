@@ -92,13 +92,13 @@ export default {
     .background {
         position: absolute;
         top     : 0;
-        left    : 10rem;
+        left    : 31rem;
         right   : 0;
         bottom  : 0;
 
         @include rwd {
             left      : 0;
-            margin-top: 40vw;
+            margin-top: 50vw;
         }
 
         .image {
