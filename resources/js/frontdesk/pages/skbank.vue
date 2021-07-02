@@ -33,7 +33,7 @@
                 <img src="../asset/images/skBankBottomContent1.svg">
             </div>
 			<div class="input-group " style="margin: 30px auto 30px auto;">
-			  <a class="btn send-btn skbank-send-btn" href="https://www.youtube.com/" style="align-items: center;display: flex;justify-content: center;">立即申請</a>
+			  <a class="btn send-btn skbank-send-btn" href="https://www.youtube.com/" style="display: flex;justify-content: center; margin: 0px auto;">立即申請</a>
 			</div>
 		</div>
 	</div>
@@ -194,7 +194,6 @@ export default {
   .skbank-send-btn {
     background-image: url("../asset/images/skBankButton.svg");
     background-repeat: no-repeat;
-    width: 43vw;
     height: 7vw;
     border: 0px;
     border-radius: 15px;
@@ -202,6 +201,9 @@ export default {
     width: 100%;
     font-size: 3vw;
     font-weight: bold;
+    align-items: center;
+    width: 75vw;
+    align-items:center;
   }
   .skbank-content-bottom{
       background-color: #EEEEEF;
@@ -253,7 +255,6 @@ export default {
 				background-size: contain;
 			    height: 16vw;
     			font-weight: bold;
-				font-size: 25px;
     			left: initial;
     		}
 
@@ -261,7 +262,12 @@ export default {
 				height: 16vw;
 			}
 
-            skbank-send-btn {
+            .skbank-send-btn {
+                font-size: 7vw;
+                align-items: initial;
+                width: 80%;
+            }
+            span {
                 font-size: 7vw;
             }
     	  }
