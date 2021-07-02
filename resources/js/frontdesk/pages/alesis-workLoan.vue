@@ -77,7 +77,7 @@
                                         <img src="/images/alesis-workloan-step2-1.svg" class="image">
                                         <img src="/images/alesis-workloan-step2-2.svg" class="image">
                                     </div>
-                                    <div class="section">
+                                    <div class="section" v-if="how === 'work'">
                                         <div class="header">工作證明</div>
                                         <div class="divider"></div>
                                         <div class="paragraph">
@@ -98,7 +98,7 @@
                                             自然人憑證 : 使用自然人憑證卡搭配電腦與讀卡機至勞保局網頁 (<a href="#!">https://edesk.bli.gov.tw/aa/</a>) 進行申請
                                         </div>
                                     </div>
-                                    <div class="section">
+                                    <div class="section" v-if="how === 'prove'">
                                         <div class="header">聯徵證明</div>
                                         <div class="divider"></div>
                                         <div class="paragraph">
@@ -140,8 +140,8 @@
                                     <br><br>
                                     <div class="header">需提供資料：</div>
                                     <div class="content">
-                                        近一個月勞保異動明細　<a href="#!" class="help">如何申請？</a><br>
-                                        近一個月信用報告　<a href="#!" class="help">如何申請？</a><br>
+                                        近一個月勞保異動明細　<a href="javascript:void(0);" class="help" @click="() => {how = 'work'}">如何申請？</a><br>
+                                        近一個月信用報告　<a href="javascript:void(0);" class="help" @click="() => {how = 'prove'}">如何申請？</a><br>
                                         學歷證明（畢業證書）
                                     </div>
                                 </div>
@@ -291,12 +291,12 @@
                     <div class="row">
                         <div class="label">1.我的教育程度：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                                <option>博士</option>
-                                <option>碩士</option>
-                                <option>學士</option>
-                                <option>學士以下</option>
+                            <select v-model="formGraduate">
+                                <option selected disabled value="">-請選擇-</option>
+                                <option value="phD">博士</option>
+                                <option value="master">碩士</option>
+                                <option value="bachelor">學士</option>
+                                <option value="below">學士以下</option>
                             </select>
                         </div>
                     </div>
@@ -311,41 +311,41 @@
                     <div class="row">
                         <div class="label">3.任職公司是否屬於上市櫃、金融機構或公家機關：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                                <option>是</option>
-                                <option>否</option>
+                            <select v-model="formCompany">
+                                <option selected disabled value="">-請選擇-</option>
+                                <option value="true">是</option>
+                                <option value="false">否</option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">4.我的投保月薪約為：</div>
                         <div class="input">
-                            <input type="text">
+                            <input type="text" v-model="formSalary">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">5.我在銀行的貸款餘額約為：</div>
                         <div class="input">
-                            <input type="text">
+                            <input type="text" v-model="formLoan">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">6.每月需攤還多少金額：</div>
                         <div class="input">
-                            <input type="text">
+                            <input type="text" v-model="formReturn">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">7.信用卡總額度約為：</div>
                         <div class="input">
-                            <input type="text">
+                            <input type="text" v-model="formCredit">
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">8.近一個月信用卡帳單總金額約為：</div>
                         <div class="input">
-                            <input type="text">
+                            <input type="text" v-model="formTotal">
                         </div>
                     </div>
                     <div class="row">
@@ -363,11 +363,11 @@
                     <div class="row">
                         <div class="label"></div>
                         <div class="input">
-                            <button>取得報告</button>
+                            <button @click="calculateForm">取得報告</button>
                         </div>
                     </div>
                 </div>
-                <div class="result">
+                <div class="result" v-if="formCalculated">
                     <div class="showcase">
                         <img src="/images/alesis-phone-and-cash.svg" class="image">
                     </div>
@@ -380,19 +380,19 @@
                         <div class="values">
                             <div class="row">
                                 <div class="label">1. 可借款額度：</div>
-                                <div class="value">200,000</div>
+                                <div class="value">{{ format(formAnswerTotal) }}</div>
                             </div>
                             <div class="row">
                                 <div class="label">2. 借款利率區間：</div>
-                                <div class="value">24</div>
+                                <div class="value">{{ formAnswerSpan }}</div>
                             </div>
                             <div class="row">
                                 <div class="label">3. 手續費金額：</div>
-                                <div class="value">15</div>
+                                <div class="value">{{ formAnswerFee }}</div>
                             </div>
                             <div class="row">
                                 <div class="label">4. 每期攤還金額約：</div>
-                                <div class="value">6000</div>
+                                <div class="value">{{ formAnswerPer }}</div>
                             </div>
                         </div>
                         <div class="description">►僅為初步評估，實際貸款條件依照您真實提供的資料而定。</div>
@@ -474,7 +474,19 @@ export default {
         AlesisLoanHeader
     },
     data: () => ({
-
+        how: "",
+        formGraduate: "",
+        formCompany: "",
+        formSalary: "",
+        formLoan: "",
+        formReturn: "",
+        formCredit: "",
+        formTotal: "",
+        formCalculated: false,
+        formAnswerTotal: 0,
+        formAnswerSpan: 0,
+        formAnswerFee: 0,
+        formAnswerPer: 0
     }),
     created() {
         $("title").text(`首頁 - inFlux普匯金融科技`);
@@ -482,6 +494,106 @@ export default {
     mounted() {
     },
     methods: {
+        calculateForm() {
+            var score = 0
+            switch (this.formGraduate) {
+                case "phD":
+                    score += 20
+                    break
+                case "master":
+                    score += 15
+                    break
+                case "bachelor":
+                    score += 10
+                    break
+                case "below":
+                    score += 0
+                    break
+            }
+
+            // 職業
+            score += 10
+
+            if (this.formCompany === "true") {
+                score += 15
+            } else {
+                score += 5
+            }
+
+            var salary = parseInt(this.formSalary)
+            if (!isNaN(salary)) {
+                if (salary > 23800 && salary < 35000) {
+                    score += 10
+                } else if (salary > 35000) {
+                    score += 15
+                }
+            }
+
+            var loan = parseInt(this.formLoan)
+            if (!isNaN(salary)) {
+                if (loan < (salary * 22)) {
+                    score += 5
+                }
+            }
+
+            var returnx = parseInt(this.formReturn)
+            if (!isNaN(returnx)) {
+                if (returnx > (salary * 0.3)) {
+                    score += 5
+                } else {
+                    score += 10
+                }
+            }
+
+            // 信用卡總額
+            score += 10
+            var credit = parseInt(this.formCredit)
+
+
+            var total = parseInt(this.formTotal)
+            if (!isNaN(total) && !isNaN(credit)) {
+                if (total > (credit * 0.7)) {
+                    score += 5
+                } else {
+                    score += 15
+                }
+            }
+
+            if (score >= 0 && score < 20) {
+                this.formAnswerTotal = 0
+                this.formAnswerSpan = 0
+                this.formAnswerFee = 15
+                this.formAnswerPer = 0
+            } else if (score >= 20 && score < 50) {
+                this.formAnswerTotal = 800000
+                this.formAnswerSpan = "14~16%"
+                this.formAnswerFee = 15
+                this.formAnswerPer = 0
+            } else if (score >= 50 && score < 70) {
+                this.formAnswerTotal = 120000
+                this.formAnswerSpan = "10~13%"
+                this.formAnswerFee = 0
+                this.formAnswerPer = 0
+            } else if (score >= 70 && score < 80) {
+                this.formAnswerTotal = 160000
+                this.formAnswerSpan = "8~10%"
+                this.formAnswerFee = 15
+                this.formAnswerPer = 0
+            } else if (score >= 80 && score < 90) {
+                this.formAnswerTotal = 200000
+                this.formAnswerSpan = "7~8%"
+                this.formAnswerFee = 15
+                this.formAnswerPer = 0
+            } else if (score >= 90 && score < 100) {
+                this.formAnswerTotal = 300000
+                this.formAnswerSpan = "6~7%"
+                this.formAnswerFee = 15
+                this.formAnswerPer = 0
+            }
+
+
+            this.formCalculated = true
+        },
         format(data) {
             data = parseInt(data);
             if (!isNaN(data)) {
@@ -788,7 +900,7 @@ export default {
             }
             .center {
                 .image {
-
+                    width: 210px;
                 }
             }
             .right {
@@ -812,6 +924,7 @@ export default {
             gap                  : 3rem;
             margin               : 0 auto;
             max-width            : 800px;
+            margin-left          : 9.1rem;
 
             .left {
                 display       : flex;
@@ -908,6 +1021,8 @@ export default {
             gap                  : 3rem;
             margin               : 0 auto;
             max-width            : 800px;
+            margin-left          : 9.1rem;
+
 
             .left {
                 display        : flex;
@@ -941,6 +1056,7 @@ export default {
             gap                  : 3rem;
             margin               : 0 auto;
             max-width            : 800px;
+            margin-left          : 9.1rem;
 
             .left {
                 text-align: center;
