@@ -210,7 +210,7 @@
 
         <!-- 貸安吶 -->
         <div class="alesis-form">
-            <index-section header="試算您的信用額度<br>貸安吶" multiline="請您依現在的真實狀況填寫以下題目" :outlinedMulti="true" :secondary="true">
+            <index-section topline="試算您的信用額度" header="貸安吶" multiline="請您依現在的真實狀況填寫以下題目" :outlinedMulti="true" :secondary="true">
                 <div class="form">
                     <div class="row">
                         <div class="label">1.就讀學校：</div>
@@ -231,23 +231,23 @@
                     <div class="row">
                         <div class="label">3.系上排名：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                                <option>前 10%</option>
-                                <option>前 30%</option>
-                                <option>前 50%</option>
-                                <option>前 70%</option>
-                                <option>70% 之後</option>
+                            <select v-model="formRank">
+                                <option disabled value="">-請選擇-</option>
+                                <option value="10%">前 10%</option>
+                                <option value="30%">前 30%</option>
+                                <option value="50%">前 50%</option>
+                                <option value="70%">前 70%</option>
+                                <option value="70%+">70% 之後</option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="label">4.是否拿過獎學金：</div>
                         <div class="input">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                                <option>是</option>
-                                <option>否</option>
+                            <select v-model="formHasAward">
+                                <option disabled value="">-請選擇-</option>
+                                <option value="true">是</option>
+                                <option value="false">否</option>
                             </select>
                         </div>
                     </div>
@@ -309,11 +309,11 @@
                     <div class="row">
                         <div class="label"></div>
                         <div class="input">
-                            <button>取得報告</button>
+                            <button @click="calculateForm">取得報告</button>
                         </div>
                     </div>
                 </div>
-                <div class="result">
+                <div class="result" v-if="formCalculated">
                     <div class="showcase">
                         <img src="/images/alesis-phone-and-cash.svg" class="image">
                     </div>
@@ -428,7 +428,9 @@ export default {
         AlesisLoanHeader
     },
     data: () => ({
-
+        formRank: "",
+        formHasAward: "",
+        formCalculated: false,
     }),
     created() {
         $("title").text(`首頁 - inFlux普匯金融科技`);
@@ -436,6 +438,9 @@ export default {
     mounted() {
     },
     methods: {
+        calculateForm() {
+            this.formCalculated = true
+        },
         format(data) {
             data = parseInt(data);
             if (!isNaN(data)) {
@@ -472,6 +477,9 @@ export default {
     .wrapper {
         .map {
             svg {
+                @include rwd-laptop {
+                    width: 100%;
+                }
                 @include rwd {
                     width : 70vw;
                     height: 90vw;
@@ -524,6 +532,10 @@ export default {
             align-items   : center;
             margin-top    : 2rem;
             gap           : 1rem;
+        }
+
+        @include rwd-laptop {
+            gap: 2rem;
         }
 
         .projects {
@@ -622,6 +634,11 @@ export default {
 }
 
 .alesis-form {
+    margin-top: 4rem;
+
+    @include rwd {
+        margin-top: 1rem;
+    }
 
     .form {
         max-width: 1280px;
