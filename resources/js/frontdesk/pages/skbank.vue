@@ -1,39 +1,39 @@
 <template>
   <div class="bank-wrapper" id="bank-wrapper">
   	<div class="content-top skbank-top">
-        <a class="btn send-btn skbank-send-btn skbank-banner-btn" href="https://reurl.cc/7r0XQ9">立即申請</a>
+        <a class="btn send-btn skbank-send-btn skbank-banner-btn" target="_blank" href="https://reurl.cc/7r0XQ9">立即申請</a>
 	</div>
     <div class="form">
 		<div class="event-form">
-            <div class="input-group "  style="margin: 30px auto 30px auto;">
-                <img src="../asset/images/skBankTopContent.svg">
+            <div class="input-group "  style="margin: 3vw auto 3vw auto;">
+                <img class="skbank-bottom-img" src="../asset/images/skBankTopContent.svg">
             </div>
-            <div class="input-group group-text " style="margin: 30px auto 4px auto;">
+            <div class="input-group group-text " style="margin: 3vw auto 4px auto;">
                 <span style="color:#036EB7;">前三期利率</span>
                 <span style="color:#E50012;">0.68</span>
                 <span style="color:#036EB7;">起</span>
             </div>
             <div class="input-group skbank-blue-link" style="height:0px;">
             </div>
-            <div class="input-group " style="height: 100%;width:100%; margin: 30px auto 30px auto;">
+            <div class="input-group" style="width:100%; margin: 3vw auto 3vw auto;">
                 <img class="group-img" src="../asset/images/skBankMidContent.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent1.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent2.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent3.svg">
             </div>
-            <div class="input-group group-text " style="margin: 30px auto 4px auto;">
+            <div class="input-group group-text " style="margin: 3vw auto 4px auto;">
                 <span style="color:#036EB7;">客製化您的貸款方案</span>
             </div>
             <div class="input-group skbank-blue-link" style="height:0px;">
             </div>
-            <div class="input-group " style="height: 100%; margin: 30px auto 30px auto;">
-                <img src="../asset/images/skBankBottomContent.svg">
+            <div class="input-group" style=" margin: 3vw auto 3vw auto;">
+                <img class="skbank-bottom-img" src="../asset/images/skBankBottomContent.svg" style="height: 100%;">
             </div>
-            <div class="input-group " style="height: 100%; margin: 30px auto 30px auto;">
-                <img src="../asset/images/skBankBottomContent1.svg">
+            <div class="input-group" style=" margin: 3vw auto 3vw auto;">
+                <img class="skbank-bottom-img" src="../asset/images/skBankBottomContent1.svg" style="height: 100%;">
             </div>
-			<div class="input-group " style="margin: 30px auto 30px auto;">
-			  <a class="btn send-btn skbank-send-btn" href="https://reurl.cc/7r0XQ9" style="display: flex;justify-content: center; margin: 0px auto;">立即申請</a>
+			<div class="input-group " style="margin: 3vw auto 3vw auto;">
+			  <a class="btn send-btn skbank-send-btn" href="https://reurl.cc/7r0XQ9" target="_blank" style="display: flex;justify-content: center; margin: 0px auto;">立即申請</a>
 			</div>
 		</div>
 	</div>
@@ -85,7 +85,7 @@ export default {
 	name: ""
   }),
   created() {
-    $("title").text(`普匯x上海商銀`);
+    $("title").text(`普匯x新光商銀`);
   },
   watch: {
     phone(newdata) {
@@ -142,6 +142,10 @@ export default {
         span {
             display:flex;
             font-size: 4vw;
+        }
+
+        .skbank-bottom-img {
+            width:100%;
         }
       }
 
@@ -249,8 +253,7 @@ export default {
     	  .input-group {
 			width: 100%;
       		height: 100%;
-			margin: 0px auto 2px auto;
-			padding: initial;
+			margin: 2px auto 2px auto;
 
             .group-img {
                 width: 100%;
@@ -274,9 +277,6 @@ export default {
             }
             span {
                 font-size: 7vw;
-            }
-            img {
-                width: 100%;
             }
     	  }
 
