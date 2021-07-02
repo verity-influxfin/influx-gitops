@@ -1,7 +1,7 @@
 <template>
   <div class="bank-wrapper" id="bank-wrapper">
   	<div class="content-top skbank-top">
-        <a class="btn send-btn skbank-send-btn skbank-banner-btn" href="https://www.youtube.com/">立即申請</a>
+        <a class="btn send-btn skbank-send-btn skbank-banner-btn" href="https://reurl.cc/7r0XQ9">立即申請</a>
 	</div>
     <div class="form">
 		<div class="event-form">
@@ -33,7 +33,7 @@
                 <img src="../asset/images/skBankBottomContent1.svg">
             </div>
 			<div class="input-group " style="margin: 30px auto 30px auto;">
-			  <a class="btn send-btn skbank-send-btn" href="https://www.youtube.com/" style="display: flex;justify-content: center; margin: 0px auto;">立即申請</a>
+			  <a class="btn send-btn skbank-send-btn" href="https://reurl.cc/7r0XQ9" style="display: flex;justify-content: center; margin: 0px auto;">立即申請</a>
 			</div>
 		</div>
 	</div>
