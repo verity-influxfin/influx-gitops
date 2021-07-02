@@ -245,6 +245,10 @@ export default {
 			margin: 0px auto 2px auto;
 			padding: initial;
 
+            .group-img {
+                width: 100%;
+            }
+
 			.form-control {
 				background-size: contain;
 			    height: 16vw;
