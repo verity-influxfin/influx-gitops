@@ -46,9 +46,10 @@ export default {
     display      : inline-block;
     border-radius: 17px;
     border       : 1px solid #2664a5;
-    padding      : 1.5rem 1rem;
-    max-width    : 290px;
+    padding      : 1.5rem 1.25rem;
+    max-width    : 310px;
     text-align   : justify;
+    font-size    : 1.1rem;
 
     .logo {
         margin : 0 auto;
