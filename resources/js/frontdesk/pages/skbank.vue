@@ -8,12 +8,12 @@
             <div class="input-group "  style="margin: 30px auto 30px auto;">
                 <img src="../asset/images/skBankTopContent.svg">
             </div>
-            <div class="input-group group-text " style="margin: 30px auto 0px auto;">
+            <div class="input-group group-text " style="margin: 30px auto 4px auto;">
                 <span style="color:#036EB7;">前三期利率</span>
                 <span style="color:#E50012;">0.68</span>
                 <span style="color:#036EB7;">起</span>
             </div>
-            <div class="input-group skbank-blue-link" style="height:0px;width:40%;">
+            <div class="input-group skbank-blue-link" style="height:0px;">
             </div>
             <div class="input-group " style="height: 100%;width:100%; margin: 30px auto 30px auto;">
                 <img class="group-img" src="../asset/images/skBankMidContent.svg">
@@ -21,10 +21,10 @@
                 <img class="group-img" src="../asset/images/skBankMidContent2.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent3.svg">
             </div>
-            <div class="input-group group-text " style="margin: 30px auto 0px auto;">
+            <div class="input-group group-text " style="margin: 30px auto 4px auto;">
                 <span style="color:#036EB7;">客製化您的貸款方案</span>
             </div>
-            <div class="input-group skbank-blue-link" style="height:0px;width:40%;">
+            <div class="input-group skbank-blue-link" style="height:0px;">
             </div>
             <div class="input-group " style="height: 100%; margin: 30px auto 30px auto;">
                 <img src="../asset/images/skBankBottomContent.svg">
@@ -124,11 +124,6 @@ export default {
         }
     }
 
-    .skbank-blue-link {
-        width: 50%;
-        height: 1px;
-        border-bottom: solid #036EB7 1px;
-    }
   .form {
 
     .event-form {
@@ -148,6 +143,12 @@ export default {
             display:flex;
             font-size: 4vw;
         }
+      }
+
+      .skbank-blue-link {
+          width: 24%;
+          height: 1px;
+          border-bottom: solid #036EB7 1px;
       }
 
       .group-text {
@@ -228,10 +229,14 @@ export default {
       .skbank-top{
           background-image: url("../asset/images/skBankTopM.svg");
           padding-top: 45vw;
-          padding-left: 30vw;
+          padding-left: 0vw;
 
           .skbank-banner-btn {
-              width:44vw;
+              width: 57%;
+              height: 100%;
+              align-items: inherit;
+              font-size: 20px;
+              margin: 0 auto;
           }
       }
       .form {
@@ -263,7 +268,7 @@ export default {
 			}
 
             .skbank-send-btn {
-                font-size: 7vw;
+                font-size: 5.5vw;
                 align-items: initial;
                 width: 80%;
             }
@@ -271,6 +276,10 @@ export default {
                 font-size: 7vw;
             }
     	  }
+
+          .skbank-blue-link {
+            width: 32%
+          }
 
     	}
       }
