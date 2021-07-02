@@ -5,34 +5,34 @@
 	</div>
     <div class="form">
 		<div class="event-form">
-            <div class="input-group">
+            <div class="input-group "  style="margin: 30px auto 30px auto;">
                 <img src="../asset/images/skBankTopContent.svg">
             </div>
-            <div class="input-group group-text">
+            <div class="input-group group-text " style="margin: 30px auto 0px auto;">
                 <span style="color:#036EB7;">前三期利率</span>
                 <span style="color:#E50012;">0.68</span>
                 <span style="color:#036EB7;">起</span>
             </div>
             <div class="input-group skbank-blue-link" style="height:0px;width:40%;">
             </div>
-            <div class="input-group" style="height: 100%;width:100%;">
+            <div class="input-group " style="height: 100%;width:100%; margin: 30px auto 30px auto;">
                 <img class="group-img" src="../asset/images/skBankMidContent.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent1.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent2.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent3.svg">
             </div>
-            <div class="input-group group-text">
+            <div class="input-group group-text " style="margin: 30px auto 0px auto;">
                 <span style="color:#036EB7;">客製化您的貸款方案</span>
             </div>
             <div class="input-group skbank-blue-link" style="height:0px;width:40%;">
             </div>
-            <div class="input-group" style="height: 100%;">
+            <div class="input-group " style="height: 100%; margin: 30px auto 30px auto;">
                 <img src="../asset/images/skBankBottomContent.svg">
             </div>
-            <div class="input-group" style="height: 100%;">
+            <div class="input-group " style="height: 100%; margin: 30px auto 30px auto;">
                 <img src="../asset/images/skBankBottomContent1.svg">
             </div>
-			<div class="input-group">
+			<div class="input-group " style="margin: 30px auto 30px auto;">
 			  <a class="btn send-btn skbank-send-btn" href="https://www.youtube.com/" style="align-items: center;display: flex;justify-content: center;">立即申請</a>
 			</div>
 		</div>
@@ -120,7 +120,7 @@ export default {
             align-items: center;
             justify-content: center;
             width:40vw;
-            font-size:4vw;
+            font-size:3vw;
         }
     }
 
@@ -142,7 +142,6 @@ export default {
 
       .input-group {
         width: 43vw;
-        margin: 0px auto 0.5rem auto;
         padding: 5px 10px;
 
         span {
@@ -212,7 +211,7 @@ export default {
       display: flex;
 
       img {
-          width: 35%;
+          width: 25%;
           margin: auto;
           display: block;
       }
