@@ -1,5 +1,5 @@
 <template>
-    <div class="sectionx" :class="{'-secondary': secondary, '-multiline': multiline !== undefined, '-outlined': outlined, '-outlined-multiline': outlinedMulti, '-description-multiline': descriptionMulti}">
+    <div class="sectionx" :class="{'-secondary': secondary, '-multiline': multiline !== undefined, '-topline': topline !== undefined, '-outlined': outlined, '-outlined-multiline': outlinedMulti, '-description-multiline': descriptionMulti}">
         <div class="header" v-if="header">
             <div class="before-dots">
                 <div class="dot"></div>
@@ -8,6 +8,9 @@
                 <div class="dot"></div>
             </div>
             <div class="text">
+                <template v-if="topline !== undefined">
+                    <div class="topline">{{ topline }}</div>
+                </template>
                 {{ header }}
                 <template v-if="multiline !== undefined">
                     <div class="multiline">{{ multiline }}</div>
@@ -30,6 +33,7 @@
 export default {
     name : "Section",
     props: {
+        topline: "",
         header   : "",
         secondary: false,
         multiline: "",
@@ -91,6 +95,8 @@ export default {
         }
     }
 
+
+
     &.-description-multiline {
         > .header {
             transform: translate(-50%, -15%);
@@ -136,6 +142,32 @@ export default {
 
             .after-dots {
                 top: 6.9rem;
+            }
+        }
+    }
+
+    &.-topline {
+        > .header {
+            transform: translate(-50%, -40%);
+
+            @include rwd {
+                transform: translate(-50%, -32%);
+            }
+
+            .before-dots {
+                bottom: 9rem;
+
+                @include rwd {
+                    bottom: 6rem;
+                }
+            }
+
+            .after-dots {
+                top: 9.9rem;
+
+                @include rwd {
+                    top: 6.9rem;
+                }
             }
         }
     }
