@@ -5,3 +5,11 @@
         }
     }
 }
+
+@mixin rwd-laptop {
+    @media (max-width: 1400px) {
+        & {
+            @content;
+        }
+    }
+}
