@@ -275,6 +275,9 @@ export default {
             span {
                 font-size: 7vw;
             }
+            img {
+                width: 100%;
+            }
     	  }
 
           .skbank-blue-link {
