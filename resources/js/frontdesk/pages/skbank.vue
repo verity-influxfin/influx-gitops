@@ -27,10 +27,10 @@
             <div class="input-group skbank-blue-link" style="height:0px;">
             </div>
             <div class="input-group" style=" margin: 3vw auto 3vw auto;">
-                <img class="skbank-bottom-img" src="../asset/images/skBankBottomContent.svg" style="height: 100%;">
+                <img class="skbank-bottom-img" src="../asset/images/skBankBottomContent.svg">
             </div>
             <div class="input-group" style=" margin: 3vw auto 3vw auto;">
-                <img class="skbank-bottom-img" src="../asset/images/skBankBottomContent1.svg" style="height: 100%;">
+                <img class="skbank-bottom-img" src="../asset/images/skBankBottomContent1.svg">
             </div>
 			<div class="input-group " style="margin: 3vw auto 3vw auto;">
 			  <a class="btn send-btn skbank-send-btn" href="https://reurl.cc/7r0XQ9" target="_blank" style="display: flex;justify-content: center; margin: 0px auto;">立即申請</a>
@@ -138,6 +138,7 @@ export default {
       .input-group {
         width: 43vw;
         padding: 5px 10px;
+        height:100%;
 
         span {
             display:flex;
@@ -161,7 +162,6 @@ export default {
       }
 
       .group-img {
-          height: 50%;
           width: 50%;
       }
 
@@ -277,6 +277,9 @@ export default {
             }
             span {
                 font-size: 7vw;
+            }
+            .skbank-bottom-img {
+                height: 100%;
             }
     	  }
 
