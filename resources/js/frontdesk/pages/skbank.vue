@@ -163,7 +163,7 @@ export default {
 
       .group-img {
           width: 50%;
-          height:auto;
+          height:100%;
       }
 
       .form-control {
