@@ -109,9 +109,72 @@
                     <img src="/images/alesis-hamburger.svg">
                 </div>
             </div>
-
+            <div class="rwd-list">
+                <div class="item -dropdown">
+                    <div class="text">我要借款</div>
+                    <div class="sub">
+                        <a href="/collegeLoan" class="item">學生貸款</a>
+                        <a href="/freshGraduateLoan" class="item">上班族貸款</a>
+                        <a href="/engineerLoan" class="item">資訊工程師專案</a>
+                        <div class="item -disabled">外匯車貸(coming soon)</div>
+                        <div class="item -disabled">新創企業主貸(coming soon)</div>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">我要投資</div>
+                    <div class="sub">
+                        <a href="/investment" class="item">債權投資</a>
+                        <a href="/transfer" class="item">債權轉讓</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">分期付款超市</div>
+                    <div class="sub">
+                        <a href="/mobileLoan" class="item">手機分期</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">關於我們</div>
+                    <div class="sub">
+                        <a href="/company" class="item">公司介紹</a>
+                        <a href="/news" class="item">最新消息</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">小學堂金融科技</div>
+                    <div class="sub">
+                        <a href="/blog" class="item">小學堂</a>
+                        <a href="/vlog" class="item">小學堂影音</a>
+                    </div>
+                </div>
+                <a href="/qa" class="item">
+                    <div class="text">常見問題</div>
+                </a>
+                <div class="item">
+                    <div @click="doLogin" class="login"><i class="fas fa-user"></i> SIGN IN</div>
+                </div>
+            </div>
         </div>
 
+        <script type="text/javascript">
+            window.addEventListener('load', function() {
+                document.querySelector(".item.hamburger").addEventListener("click", () => {
+                    document.querySelector(".rwd-list").classList.toggle("-active")
+                })
+
+
+                document.querySelectorAll(".rwd-list .item").forEach((v) => {
+                    v.addEventListener("click", (e) => {
+                        Array.prototype.filter.call(document.querySelectorAll(".rwd-list .item"), (j) => {
+                            return v !== j
+                        }).forEach((v) =>{
+                            v.classList.remove("-active")
+                        })
+                        v.classList.toggle("-active")
+                    })
+                })
+            })
+        </script>
 
         <!--<nav class="page-header navbar navbar-expand-lg sticky">
             <div class="web-logo">
