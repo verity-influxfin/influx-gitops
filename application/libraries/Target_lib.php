@@ -1083,7 +1083,7 @@ class Target_lib
             'status' => 10,
             'investment_id' => $investment->id
         ]);
-        $normalSchedule['transferOut'] = $transferOut->transfer_date;
+		$normalSchedule['transferOut'] = isset($transferOut->transfer_date) ? $transferOut->transfer_date : '';
 
         //correct some prepayment instalment numbers as those are incorrect
         if ($target->sub_status == 4 && !$transferOut) {
