@@ -1,1 +1,94 @@
-body{font-family:Arial,"\5FAE\8EDF\6B63\9ED1\9AD4",Helvetica Neue,Helvetica,sans-serif}.login-bg{width:100%;height:100vh;background-repeat:no-repeat;background-size:100% 100vh}.login-bg .login-form{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);width:500px;background:hsla(0,0%,100%,.75);padding:20px;text-align:center;border:1px solid #fff;border-radius:10px}.login-bg .login-form .login-title{text-align:center;color:#000;text-shadow:0 0 5px #676767}.login-bg .login-form .input-group{margin:20px 0}.login-bg .login-form .input-group .login-text{font-size:24px;color:#ff8100;width:38px;height:38px;text-shadow:2px 2px 3px #000}.login-bg .login-form .btn-login{margin:10px 0;background:#0031a0;border:0 solid hsla(0,0%,100%,0);color:#fff;border-radius:0;width:381px}#web_admin .navbar{display:block;box-shadow:0 3px 8px 0 #fff}#web_admin .navbar-dark{background:linear-gradient(90deg,#000,#6b6b6b)}#web_admin .dashbord{width:100%;height:92.9vh}.a.cke_dialog_tab{display:inline-block!important}::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{border-radius:10px;margin:10px 0}::-webkit-scrollbar-thumb{border-radius:4px;background:#a7a7a7}::-webkit-scrollbar-corner,::-webkit-scrollbar-track-piece{background:#fff}
+@charset "UTF-8";
+
+body {
+  font-family: Arial, "\5FAE\8EDF\6B63\9ED1\9AD4", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.login-bg {
+  width: 100%;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: 100% 100vh;
+}
+
+.login-bg .login-form {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+}
+
+.login-bg .login-form .login-title {
+  text-align: center;
+  color: #000000;
+  text-shadow: 0px 0px 5px #676767;
+}
+
+.login-bg .login-form .input-group {
+  margin: 20px 0px;
+}
+
+.login-bg .login-form .input-group .login-text {
+  font-size: 24px;
+  color: #ff8100;
+  width: 38px;
+  height: 38px;
+  text-shadow: 2px 2px 3px #000;
+}
+
+.login-bg .login-form .btn-login {
+  margin: 10px 0px;
+  background: #0031a0;
+  border: 0px solid #ffffff00;
+  color: #ffffff;
+  border-radius: 0px;
+  width: 381px;
+}
+
+#web_admin .navbar {
+  display: block;
+  box-shadow: 0px 3px 8px 0px white;
+}
+
+#web_admin .navbar-dark {
+  background: linear-gradient(90deg, black, #6b6b6b);
+}
+
+#web_admin .dashbord {
+  width: 100%;
+  height: 92.9vh;
+}
+
+.a.cke_dialog_tab {
+  display: inline-block !important;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  margin: 10px 0 10px 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #a7a7a7;
+}
+
+::-webkit-scrollbar-track-piece {
+  background: #ffffff;
+}
+
+::-webkit-scrollbar-corner {
+  background: #ffffff;
+}
+
