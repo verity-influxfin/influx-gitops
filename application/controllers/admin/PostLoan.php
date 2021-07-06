@@ -39,6 +39,7 @@ class PostLoan extends MY_Admin_Controller {
 		$this->load->model('user/virtual_account_model');
 		$this->load->model('transaction/frozen_amount_model');
 		$this->load->model('transaction/withdraw_model');
+		$this->load->model('loan/investment_model');
 		$this->load->library('passbook_lib');
 		$this->login_info = check_admin();
 	}
@@ -107,6 +108,14 @@ class PostLoan extends MY_Admin_Controller {
 						'status' => $post['status'],
 						'investors' => '[]'
 					]);
+				}
+				if($post['status']<10) {
+					$this->investment_model->update_by([
+						'target_id'=>$post['target_id'],
+						'status'=>3,
+					],
+						['legal_collection'=>0]
+					);
 				}
 				$this->log_legaldoc_status_model->insert([
 					'admin_id' => $this->login_info->id,
@@ -228,6 +237,13 @@ class PostLoan extends MY_Admin_Controller {
 			if(isset($post['data'])) {
 				foreach($post['data'] as $value) {
 					$data = $value;
+					$this->investment_model->update_by([
+							'user_id'=>$value['investorUserId'],
+							'target_id'=>$value['targetId'],
+							'status'=>3,
+						],
+						['legal_collection'=>1]
+					);
 					$this->log_legaldoc_export_model->insert([
 						'admin_id'=> $this->login_info->id,
 						'target_id'=> $value['targetId'],
