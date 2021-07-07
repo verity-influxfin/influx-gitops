@@ -528,6 +528,10 @@ a {
   margin-top: -1px;
 }
 
+.alesis-footer > .main > .information > .item > .meta > .text a {
+  color: #fff;
+}
+
 @media (max-width: 767px) {
   .alesis-footer > .main > .information > .item > .meta > .text {
     text-align: left;

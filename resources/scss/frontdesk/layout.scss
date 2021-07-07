@@ -538,6 +538,10 @@ $ci-color: #153a71;
                     }
 
                     > .text {
+                        a {
+                            color: #fff;
+                        }
+
                         @include rwd {
                             text-align: left;
                         }

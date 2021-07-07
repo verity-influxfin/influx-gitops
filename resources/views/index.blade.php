@@ -239,27 +239,27 @@
                     <div class="item">
                         <div class="header">我要申貸</div>
                         <div class="list">
-                            <a href="#!">學生貸款</a>
-                            <a href="#!">上班族貸款</a>
-                            <a href="#!">資訊工程師專案</a>
-                            <a href="#!">外匯車貸</a>
-                            <a href="#!">新創企業主貸</a>
-                            <a href="#!">手機分期</a>
+                            <a href="/collegeLoan">學生貸款</a>
+                            <a href="/freshGraduateLoan">上班族貸款</a>
+                            <a href="/engineerLoan">資訊工程師專案</a>
+                            <a href="/investment">外匯車貸</a>
+                            <a href="/investment">新創企業主貸</a>
+                            <a href="/mobileLoan">手機分期</a>
                         </div>
                     </div>
                     <div class="item">
                         <div class="header">我要投資</div>
                         <div class="list">
-                            <a href="#!">債權投資</a>
-                            <a href="#!">債權轉讓</a>
+                            <a href="/investment">債權投資</a>
+                            <a href="/transfer">債權轉讓</a>
                         </div>
                     </div>
                     <div class="item">
                         <div class="header">關於我們</div>
                         <div class="list">
-                            <a href="#!">關於我們</a>
-                            <a href="#!">最新消息</a>
-                            <a href="#!">AI金融科技新知</a>
+                            <a href="/company">關於我們</a>
+                            <a href="/news">最新消息</a>
+                            <a href="/blog">AI金融科技新知</a>
                         </div>
                     </div>
                     <div class="item">
@@ -269,18 +269,18 @@
                             <div class="text">服務時間  9:00 AM - 6:00 PM</div>
 
                             <div class="icon"><img src="/images/alesis-phone.svg" alt=""></div>
-                            <div class="text">02-2507-9990</div>
+                            <div class="text"><a href="tel:+886225079990" target="_blank">02-2507-9990</a></div>
 
                             <div class="icon"><img src="/images/alesis-email.svg" alt=""></div>
-                            <div class="text">service@influxfin.com</div>
+                            <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
 
                             <div class="icon"><img src="/images/alesis-address.svg" alt=""></div>
-                            <div class="text">台北市松江路111號11樓-2</div>
+                            <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市松江路111號11樓-2</a></div>
                         </div>
                         <div class="socials">
-                            <a href="#!" class="item"><img src="/images/alesis-facebook.svg" alt=""></a>
-                            <a href="#!" class="item"><img src="/images/alesis-line.svg" alt=""></a>
-                            <a href="#!" class="item"><img src="/images/alesis-instagram.svg" alt=""></a>
+                            <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg" alt=""></a>
+                            <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img src="/images/alesis-line.svg" alt=""></a>
+                            <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img src="/images/alesis-instagram.svg" alt=""></a>
                         </div>
                     </div>
                 </div>
@@ -289,17 +289,17 @@
                 <div class="copyright">
                     Copyright ©2020 普匯金融科技股份有限公司 All rights reserved.
                     <div class="links">
-                        <a href="#!" class="item">使用者條款</a> |
-                        <a href="#!" class="item">隱私條款政策</a> |
-                        <a href="#!" class="item">借款人服務條款</a>
+                        <a href="/userTerms" class="item">使用者條款</a> |
+                        <a href="/privacyTerms" class="item">隱私條款政策</a> |
+                        <a href="/loanerTerms" class="item">借款人服務條款</a>
                     </div>
                 </div>
                 <div class="links">
-                    <a href="#!" class="item">徵才服務</a> |
-                    <a href="#!" class="item">校園大使</a> |
-                    <a href="#!" class="item">社團合作</a> |
-                    <a href="#!" class="item">商行合作</a> |
-                    <a href="#!" class="item">企業合作</a>
+                    <a href="https://www.influxfin.com/recruiting" class="item">徵才服務</a> |
+                    <a href="https://www.influxfin.com/campuspartner" class="item">校園大使</a> |
+                    <a href="https://www.influxfin.com/clubcooperation" class="item">社團合作</a> |
+                    <a href="https://www.influxfin.com/firmcooperation" class="item">商行合作</a> |
+                    <a href="https://www.influxfin.com/companycooperation" class="item">企業合作</a>
                 </div>
                 <div class="externals">
                     <a class="item" href="/borrow">我想申貸</a>
@@ -307,105 +307,6 @@
                 </div>
             </div>
         </div>
-
-        <!--<div class="page-footer">
-            <div class="btm-line"></div>
-            <div class="top-content">
-                <div class="desc-card">
-                    <div class="d-a">
-                        <H2>About</H2>
-                        <div class="img"><img src="{{ asset('images/footer.svg') }}" class="img-fluid"></div>
-                    </div>
-                    <div class="cd">
-                        <div class="img"><img class="img-fluid" src="/images/ah-pu.svg"></div>
-                        <div class="cnt">
-                            <p class="c-s">「普匯．你的手機ATM」</p>
-                            <p class="c-s">inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。</p>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="loan-card">
-                    <H2>Product</H2>
-                    <ul class="list-column">
-                        <li>
-                            <router-link to="/collegeLoan">學生貸款</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/freshGraduateLoan">上班族貸款</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/engineerLoan">資訊工程師專案</router-link>
-                        </li>
-                        <li>
-                            <router-link to="">外匯車貸</router-link>
-                        </li>
-                        <li>
-                            <router-link to="">新創企業主貸</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/mobileLoan">手機分期</router-link>
-                        </li>
-                    </ul>
-                </div>
-                <div class="invest-card">
-                    <H2>Investment</H2>
-                    <ul class="list-column">
-                        <li>
-                            <router-link to="/investment">債權投資</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/transfer">債權轉讓</router-link>
-                        </li>
-                    </ul>
-                </div>
-                <div class="support-card">
-                    <H2>About Us</H2>
-                    <ul class="list-column">
-                        <li>
-                            <router-link to="/company">關於我們</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/news">最新消息</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/blog">AI金融科技新知</router-link>
-                        </li>
-                    </ul>
-                </div>
-                <div class="about-card">
-                    <H2>Follow Us</H2>
-                    <div class="text">
-                        <p><a href="tel:+886225079990" target="_blank"><span><i class="fas fa-phone"></i>&ensp;02-2507-9990</span></a></p>
-                        <p><a href="mailto:service@influxfin.com" target="_blank"><span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</span></a></p>
-                        <p><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i>&ensp;台北市松江路111號11樓-2</span></a></p>
-                    </div>
-                    <div class="community">
-                        <a target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook"></i></a>
-                        <a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
-                        <a target="_blank" href="https://www.instagram.com/pop.finance/"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
-            </div>
-            <hr />
-            <div class="bottom-content">
-                <div class="contact">
-                    <router-link to="/recruiting">徵才服務</router-link>|
-                    <router-link to="/campuspartner">校園大使</router-link>|
-                    <router-link to="/clubcooperation">社團合作</router-link>|
-                    <router-link to="/firmcooperation">商行合作</router-link>|
-                    <router-link to="/companycooperation">企業合作</router-link>
-                </div>
-                <div class="license">
-                    <p>Copyright ©2020 普匯金融科技股份有限公司 All rights reserved. </p>
-                    <p>
-                        <router-link to="/userTerms">使用者條款</router-link>|
-                        <router-link to="/privacyTerms">隱私條款政策</router-link>|
-                        <router-link to="/loanerTerms">借款人服務條款</router-link>
-                    </p>
-                </div>
-            </div>
-        </div>-->
 
         <a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
