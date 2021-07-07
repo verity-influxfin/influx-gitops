@@ -18,6 +18,22 @@
 
 			<script type="text/javascript">
 
+				function download(filename, dataUrl) {
+					// Construct the 'a' element
+					var link = document.createElement("a");
+					link.download = filename;
+					link.target = "_blank";
+
+					// Construct the URI
+					link.href = dataUrl;
+					document.body.appendChild(link);
+					link.click();
+
+					// Cleanup the DOM
+					document.body.removeChild(link);
+					delete link;
+				}
+
 				let allInvestorsMode = false;
 				$( document ).ready(function() {
 					$('.investor-all').click(function () {
@@ -117,6 +133,25 @@
 											setTimeout(() => {
 												$(this).removeClass('saved-animation');
 											}, 1500);
+
+											var timeoutID = setInterval(() => {
+												$.ajax({
+													type: 'POST',
+													url: "<?=admin_url('PostLoan/legal_doc_status')?>",
+													data: {data: result},
+													success: (json) => {
+														let rsp = JSON.parse(json);
+														console.log(rsp);
+														if(rsp['download_url'] !== '') {
+															download('test.txt', rsp['download_url']);
+															clearInterval(timeoutID);
+														}
+													},
+													error: function (xhr, textStatus, thrownError) {
+														alert(textStatus);
+													}
+												});
+											}, 5000);
 										},
 										error: function (xhr, textStatus, thrownError) {
 											alert(textStatus);

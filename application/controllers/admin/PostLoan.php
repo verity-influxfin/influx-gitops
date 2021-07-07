@@ -127,6 +127,12 @@ class PostLoan extends MY_Admin_Controller {
 		echo json_encode(['success'=> $success, 'msg' => $msg]);
 	}
 
+	public function legal_doc_status() {
+		// TODO: 跟法催子系統request，確認匯出進度的回傳格式
+		echo json_encode(['download_url'=> 'https://influxp2p-front-assets.s3.ap-northeast-1.amazonaws.com/json/config_school.json']);
+		//echo json_encode(['download_url'=> '']);
+	}
+
 	public function legal_doc()
 	{
 		$page_data = ['type' => 'list'];
