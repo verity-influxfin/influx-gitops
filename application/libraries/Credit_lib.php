@@ -234,7 +234,6 @@ class Credit_lib{
 //      $param['scoreHistory'] = $this->scoreHistory;
 		$param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
 
-
 		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
         }
@@ -650,6 +649,11 @@ class Credit_lib{
                 if($target){
                     $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id,$target);
                 }
+				// 黑名單的學校額度是0
+				$info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
+				if(isset($info) && !$this->get_school_point($info->meta_value)) {
+					$data['amount'] = 0;
+				}
                 return $data;
 			}
 		}
