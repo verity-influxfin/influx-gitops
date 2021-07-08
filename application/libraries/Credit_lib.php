@@ -447,7 +447,7 @@ class Credit_lib{
 				}
 			}
 
-            if(!empty($school_info)){
+            if(!empty($school_info)) {
                 $schoolPoing = $school_info['points'];
                 $point = $schoolPoing;
                 $this->scoreHistory[] = '學校得分:'.$school_name.' = '.$schoolPoing;
@@ -461,31 +461,33 @@ class Credit_lib{
                     $point += 500;
                     $this->scoreHistory[] = '學制:博士 = 500';
                 }
-            }
 
-			if(!empty($school_major)){
-			    $schoolMajorPoint = isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
-				$point += $schoolMajorPoint;
-                $this->scoreHistory[] = '大學學門分類:'.$school_major.' = '.$schoolMajorPoint;
-            }
+				if(!empty($school_major)){
+					$schoolMajorPoint = isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
+					$point += $schoolMajorPoint;
+					$this->scoreHistory[] = '大學學門分類:'.$school_major.' = '.$schoolMajorPoint;
+				}
 
-            if($school_department){
-                $school_data = trim(file_get_contents(FRONT_CDN_URL.'json/config_school.json'), "\xEF\xBB\xBF");
-                $school_data = json_decode($school_data, true);
-                $schoolDepartmentPoint = 0;
-                if(isset($school_data[$school_name]['score'][$school_department])){
-                    $schoolDepartmentPoint = $school_data[$school_name]['score'][$school_department];
-                    $point += $schoolDepartmentPoint;
-                    $this->scoreHistory[] = '大學科系加分:'.$school_department.' = '.$schoolDepartmentPoint;
-                }
-                else{
-                    asort($school_data[$school_name]['score']);
-                    foreach($school_data[$school_name]['score'] as $s) {
-                        $point += $s;
-                        $this->scoreHistory[] = '大學科系加分:'.$school_department.'(不在列表取該校科系最低加分) = '.$schoolDepartmentPoint;
-                        break;
-                    }
-                }
+				if($school_department) {
+					$school_config = @file_get_contents(FRONT_CDN_URL.'json/config_school.json');
+					if(!$school_config) {
+						$school_data = trim($school_config, "\xEF\xBB\xBF");
+						$school_data = json_decode($school_data, true);
+						$schoolDepartmentPoint = 0;
+						if (isset($school_data[$school_name]['score'][$school_department])) {
+							$schoolDepartmentPoint = $school_data[$school_name]['score'][$school_department];
+							$point += $schoolDepartmentPoint;
+							$this->scoreHistory[] = '大學科系加分:' . $school_department . ' = ' . $schoolDepartmentPoint;
+						} else {
+							asort($school_data[$school_name]['score']);
+							foreach ($school_data[$school_name]['score'] as $s) {
+								$point += $s;
+								$this->scoreHistory[] = '大學科系加分:' . $school_department . '(不在列表取該校科系最低加分) = ' . $schoolDepartmentPoint;
+								break;
+							}
+						}
+					}
+				}
             }
 		}
 		return $point;
