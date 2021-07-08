@@ -176,46 +176,6 @@
             })
         </script>
 
-        <!--<nav class="page-header navbar navbar-expand-lg sticky">
-            <div class="web-logo">
-                <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>
-            </div>
-
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ml-auto">
-                    <li v-for="item in menuList" class="nav-item dropdown">
-                        <router-link v-if="item.subMenu.length === 0" class="nav-link" :to="item.href">@{{item.title}}</router-link>
-                        <a v-else class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">@{{item.title}}</a>
-                        <ul class="dropdown-menu" v-if="item.subMenu.length !== 0">
-                            <li v-for="subItem in item.subMenu" :class="[(!subItem.isActive ? 'coming-soon' : '')]">
-                                <router-link class="dropdown-item" :to="subItem.href">@{{subItem.name}}@{{!subItem.isActive ? '(coming soon)' : ''}}</router-link>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>SIGN IN</p>
-                    </li>
-                    <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
-                        <ul class="dropdown-menu" style="min-width: 5rem;">
-                            <li v-if="isInvestor == 0">
-                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
-                            </li>
-                            <li v-else>
-                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
-                            </li>
-                            <li v-if="flag === 'login'">
-                                <p class="dropdown-item" @click="logout">登出</p>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>-->
-
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
