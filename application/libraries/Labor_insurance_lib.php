@@ -992,7 +992,7 @@ class Labor_insurance_lib
 
 				if(preg_match('/查詢結果|查\s詢\s結\s果/',$value)){
 
-					$page_array = $this->CI->l_regex->findNonGreedyPatternInBetween($value, "費註記|費\s註\s記", "(※注意事項)|(第.*[0-9]*頁)|(※\s注\s意\s事\s項)");
+					$page_array = $this->CI->l_regex->findNonGreedyPatternInBetween($value, "費註記|費\s註\s記", "(※注意事項)|(第.\s*[0-9]*\s*.頁)|(※\s注\s意\s事\s項)");
 					if($page_array){
 						foreach($page_array as $key1=>$value1){
 							$page_array[$key1] = trim($value1);
@@ -1034,9 +1034,8 @@ class Labor_insurance_lib
 				foreach($page_array as $key1=> $value1){
 					// 切單欄資訊內容
 					// 去除公司名稱中間空白符號
-                    if(preg_match('/(.*[^\w\s]+)\s+([^\w\s]+.*)/',$value1,$matches)){
-                        $value1 = $matches[1].$matches[2];
-                    }
+                    $value1 = preg_replace('/(?<=([\x{4e00}-\x{9fa5}])).\s+.(?=[\x{4e00}-\x{9fa5}])/u','',$value1);
+
 					$value1 = preg_replace('/\n/','',$value1);
 					$page_array[$key1] = preg_split('/\s/',$value1);
 

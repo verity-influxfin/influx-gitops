@@ -555,10 +555,11 @@ class Data_legalize_lib{
 					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
 				}
 			}else{
-				$res->addMessage('查無使用者身分證資訊', 3, MassageDisplay::Backend);
+				$res->addMessage('解析失敗：查無使用者身分證字號資訊', 3, MassageDisplay::Backend);
 			}
 
 
+			/* TODO: 更改為使用公司名稱進行勾稽 (商行號無法使用API查詢)
 			if(isset($content['gcis_info']) && !empty($content['gcis_info'])){
 				if(mb_substr($content['gcis_info']['Company_Name'], 0, 4, "utf-8") != mb_substr($data['last_insurance_info']['companyName'], 0, 4, "utf-8")){
 					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
@@ -570,6 +571,7 @@ class Data_legalize_lib{
 			else{
 				$res->addMessage('查無商業司資料', 3, MassageDisplay::Backend);
 			}
+			*/
 		}
 
 		preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $data['report_date'], $regexResult);
@@ -584,7 +586,7 @@ class Data_legalize_lib{
 				$res->addMessage('勞保非近一個月申請', 2, MassageDisplay::Client);
 			}
 		}else{
-			$res->addMessage('勞保印表日期解析失敗', 3, MassageDisplay::Backend);
+			$res->addMessage('解析失敗：勞保印表日期解析失敗', 3, MassageDisplay::Backend);
 		}
 
 		return $res;
