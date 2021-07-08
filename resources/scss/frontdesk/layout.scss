@@ -293,6 +293,9 @@ $ci-color: #153a71;
         }
 
         .item {
+            color: #fff;
+            text-decoration: none;
+
             @include rwd {
                 &:not(.hamburger) {
                     display: none;

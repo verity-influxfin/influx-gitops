@@ -96,12 +96,12 @@
                 <a class="item" href="/invest">我要投資</a>
             </div>
             <div class="aside">
-                <div class="item">分期付款超市</div>
-                <div class="item">關於我們</div>
-                <div class="item">小學堂金融科技</div>
-                <div class="item">了解更多</div>
-                <div class="item">平台公告</div>
-                <div class="item">下載APP</div>
+                <a href="/mobileLoan" class="item">分期付款超市</a>
+                <a href="/company" class="item">關於我們</a>
+                <a href="/vlog" class="item">小學堂金融科技</a>
+                <a href="/blog" class="item">了解更多</a>
+                <a href="/news" class="item">平台公告</a>
+                <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow" target="_blank" class="item">下載APP</a>
                 <div class="item">
                     <div class="login">SIGN IN</div>
                 </div>
