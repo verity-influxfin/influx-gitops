@@ -246,6 +246,7 @@ class Data_verify_lib{
 				$verifiedResult->setBanResubmit();
 			}
 
+			/* TODO: 更改為使用公司名稱進行勾稽 (商行號無法使用API查詢)
 			if(!empty($content) && isset($content['gcis_info']['Company_Status_Desc'])) {
 				if(preg_match('/解散/', $content['gcis_info']['Company_Status_Desc'])) {
 					$verifiedResult->addMessage('任職公司非為營業中', 2, MassageDisplay::Client);
@@ -255,6 +256,7 @@ class Data_verify_lib{
 			}else{
 				$verifiedResult->addMessage('沒有查詢到公司狀態', 3, MassageDisplay::Backend);
 			}
+			*/
 
 			return $verifiedResult;
 		}

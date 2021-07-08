@@ -53,9 +53,13 @@ class CertificationResult implements CertificationResultInterface
 
 	public function getAllMessage($showFlag=MassageDisplay::All): array
 	{
-		return array_reduce(array_keys($this->msgList), function ($msg, $status) use ($showFlag) {
-			return array_merge($msg, $this->getMessage($status, $showFlag));
-		}, []);
+		if(array_key_exists(2, $this->msgList)) {
+			return $this->getMessage(2, $showFlag);
+		}else {
+			return array_reduce(array_keys($this->msgList), function ($msg, $status) use ($showFlag) {
+				return array_merge($msg, $this->getMessage($status, $showFlag));
+			}, []);
+		}
 	}
 
 	public function getAPPMessage($status): array
