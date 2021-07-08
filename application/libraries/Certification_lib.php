@@ -924,61 +924,73 @@ class Certification_lib{
 		}
 
 		$certification_content = isset($info->content) ? json_decode($info->content,true) : [];
-
 		$verifiedResult = new JobCertificationResult(1);
 		$res = [];
 		$gcis_res = [];
 		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
 		$remark['verify_result'] = [];
 
-		// 勞保異動明細 pdf
-		$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
+		if($info && $info->certification_id == 10 && $info->status == 0 ) {
+			if(isset($certification_content['labor_image']) && count($certification_content['labor_image'])) {
+				// 紙本
+				$remark['fail'] = "需人工驗證";
+				$verifiedResult->setStatus(3);
+			} else {
+				// 勞保異動明細 pdf
+				$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
 
-		if($info && $info->certification_id == 10 && $info->status == 0 && $pdf_url) {
-			// 勞保 pdf 解析
-			if($pdf_url){
-				$this->CI->load->library('Labor_insurance_lib');
-				$parser = new \Smalot\PdfParser\Parser();
-				$pdf    = $parser->parseFile($pdf_url);
-				$text = $pdf->getText();
-				$res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
+				$mime = get_mime_by_extension($pdf_url);
+				if (strpos($mime, 'jpg') !== false || strpos($mime, 'jpeg') !== false || strpos($mime, 'jpe') !== false
+					|| strpos($mime, 'png') !== false || strpos($mime, 'heic') !== false) {
+					$verifiedResult->setStatus(3);
+					$remark['fail'] = "需人工驗證";
+				}else {
+
+					if ($pdf_url) {
+						$this->CI->load->library('Labor_insurance_lib');
+						$parser = new \Smalot\PdfParser\Parser();
+						$pdf = $parser->parseFile($pdf_url);
+						$text = $pdf->getText();
+						$res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
+					}
+
+					if (isset($certification_content['tax_id']) && $certification_content['tax_id']) {
+						$this->CI->load->library('gcis_lib');
+						$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
+						$certification_content['gcis_info'] = $gcis_res;
+						$res['gcis_info'] = $gcis_res;
+					}
+
+					if (!$res || strpos($text, '勞動部') === FALSE) {
+						$verifiedResult->addMessage('勞保PDF解析失敗', 3, MassageDisplay::Backend);
+						$remark['fail'] = "需人工驗證";
+					}else if ($res) {
+						$this->CI->load->library('mapping/user/Certification_data');
+						$result = $this->CI->certification_data->transformJobToResult($res);
+						$certification_content['pdf_info'] = $result;
+						$certification_content['salary'] = $result['last_insurance_info']['insuranceSalary'];
+					}
+
+					//勞保 pdf 驗證
+					if (isset($result) && isset($certification_content['tax_id'])) {
+
+						$this->CI->load->library('verify/data_legalize_lib');
+						$verifiedResult = $this->CI->data_legalize_lib->legalize_job($verifiedResult, $info->user_id, $result, $certification_content, $info->created_at);
+
+						$this->CI->load->library('verify/data_verify_lib');
+						$verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult, $info->user_id, $result, $certification_content);
+
+						// to do : 是否千大企業員工
+						// $this->CI->config->load('top_enterprise');
+						// $top_enterprise = $this->CI->config->item("top_enterprise");
+
+					}
+
+					$remark['verify_result'] = array_merge($remark['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
+					$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
+				}
 			}
-
-			if(isset($certification_content['tax_id']) && $certification_content['tax_id']) {
-				$this->CI->load->library('gcis_lib');
-				$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
-				$certification_content['gcis_info'] = $gcis_res;
-				$res['gcis_info'] = $gcis_res;
-			}
-
-			if($res) {
-				$this->CI->load->library('mapping/user/Certification_data');
-				$result = $this->CI->certification_data->transformJobToResult($res);
-				$certification_content['pdf_info'] = $result;
-				$certification_content['salary'] = $result['last_insurance_info']['insuranceSalary'];
-			}else{
-				$verifiedResult->addMessage('勞保pdf解析失敗',3, MassageDisplay::Backend);
-			}
-
-			//勞保 pdf 驗證
-			if(isset($result) && isset($certification_content['tax_id'])) {
-
-				$this->CI->load->library('verify/data_legalize_lib');
-				$verifiedResult = $this->CI->data_legalize_lib->legalize_job($verifiedResult,$info->user_id,$result,$certification_content,$info->created_at);
-
-				$this->CI->load->library('verify/data_verify_lib');
-				$verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult,$info->user_id,$result,$certification_content);
-
-				// to do : 是否千大企業員工
-				// $this->CI->config->load('top_enterprise');
-				// $top_enterprise = $this->CI->config->item("top_enterprise");
-
-			}
-
-			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
-			$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
 			$status = $verifiedResult->getStatus();
-
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
@@ -986,23 +998,22 @@ class Certification_lib{
 				'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE)
 			));
 
-			if($status == 1) {
+			if ($status == 1) {
 				$expire_timestamp = 0;
 				preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $result['report_date'], $regexResult);
-				if(!empty($regexResult)) {
+				if (!empty($regexResult)) {
 					$date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year']) + 1911,
 						intval($regexResult['month']), intval($regexResult['day']));
 					$expire_time = DateTime::createFromFormat('Y-m-d', $date);
-					$expire_time->modify( '+ 1 month' );
+					$expire_time->modify('+ 1 month');
 					$expire_timestamp = $expire_time->getTimestamp();
 				}
 				$this->set_success($info->id, true, $expire_timestamp);
-			}else if($status == 2) {
+			} else if ($status == 2) {
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
 				$notificationContent = $verifiedResult->getAPPMessage(2);
-				$this->certi_failed($info->id,$notificationContent,$canResubmitDate,true);
+				$this->certi_failed($info->id, $notificationContent, $canResubmitDate, true);
 			}
-
 			return true;
 		}
 		return false;
