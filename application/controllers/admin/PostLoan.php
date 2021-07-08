@@ -155,7 +155,7 @@ class PostLoan extends MY_Admin_Controller {
 					));
 					if ($name) {
 						foreach ($name as $k => $v) {
-							$where['user_id'][] = $v->id;
+							$target_where['user_id'][] = $v->id;
 						}
 					}
 				} else {
@@ -166,13 +166,13 @@ class PostLoan extends MY_Admin_Controller {
 						));
 						if ($id_number) {
 							foreach ($id_number as $k => $v) {
-								$where['user_id'][] = $v->id;
+								$target_where['user_id'][] = $v->id;
 							}
 						}
 					} elseif (preg_match_all('/\D/', $tsearch) == 0) {
-						$where['user_id'] = $tsearch;
+						$target_where['user_id'] = $tsearch;
 					} else {
-						$where['target_no like'] = '%' . $tsearch . '%';
+						$target_where['target_no like'] = '%' . $tsearch . '%';
 					}
 				}
 			}

@@ -196,7 +196,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
 						<div class="panel-heading" style=" display: flex;">
-							<div class="col-lg-8">
+							<div class="col-lg-9">
 								<table>
 									<tr>
 										<td>搜尋：</td>
@@ -226,7 +226,7 @@
 									</tr>
 								</table>
 							</div>
-							<div class="col-lg-4" style="
+							<div class="col-lg-3" style="
 								display: flex;
 								justify-content: space-between;
 								align-self: flex-end;">
