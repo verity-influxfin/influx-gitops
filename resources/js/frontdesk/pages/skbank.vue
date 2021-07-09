@@ -15,7 +15,7 @@
             </div>
             <div class="input-group skbank-blue-link" style="height:0px;">
             </div>
-            <div class="input-group" style="width:100%; margin: 3vw auto 3vw auto;">
+            <div class="input-group" style="width:70%; margin: 3vw auto 3vw auto;">
                 <img class="group-img" src="../asset/images/skBankMidContent.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent1.svg">
                 <img class="group-img" src="../asset/images/skBankMidContent2.svg">
@@ -142,7 +142,7 @@ export default {
 
         span {
             display:flex;
-            font-size: 4vw;
+            font-size: 3vw;
         }
 
         .skbank-bottom-img {
