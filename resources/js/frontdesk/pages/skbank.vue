@@ -111,7 +111,7 @@ export default {
 	}
 
     .skbank-top{
-        background-image: url("../asset/images/skBankTop.svg");
+        background-image: url("../asset/images/skBankTop.jpg");
         padding-top: 30vw;
         padding-left: 10vw;
 
@@ -232,7 +232,7 @@ export default {
       }
 
       .skbank-top{
-          background-image: url("../asset/images/skBankTopM.svg");
+          background-image: url("../asset/images/skBankTopM.jpg");
           padding-top: 45vw;
           padding-left: 0vw;
 
