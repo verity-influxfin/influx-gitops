@@ -832,8 +832,18 @@ class Charge_lib
                         foreach($user_to_info as $investment_id => $value) {
 							// 法催進行中需停止計息
 							$rs = $this->CI->investment_model->get_by(['id' => $value['investment_id']]);
+
+							try {
+								$today = new DateTime($date);
+								$legal_date = new DateTime($rs->legal_collection_at);
+							} catch (Exception $e) {
+								error_log("Parsing the date was failed on line".__LINE__);
+								$today = new DateTime();
+								$legal_date = new DateTime('0000-00-00');
+							}
+
 							$tran_rs = null;
-							if(isset($rs) && $rs->legal_collection) {
+							if(isset($rs) && $today > $legal_date && $legal_date > new DateTime('1911-01-01') ) {
 								$tran_rs = $this->CI->transaction_model->get_by(
 									[
 										'source' 		=> SOURCE_AR_DELAYINTEREST,
@@ -929,8 +939,18 @@ class Charge_lib
 							$delay_interest = 0;
 							// 法催進行中需停止計息
 							$rs = $this->CI->investment_model->get_by(['id' => $value['investment_id']]);
+
+							try {
+								$today = new DateTime($date);
+								$legal_date = new DateTime($rs->legal_collection_at);
+							} catch (Exception $e) {
+								error_log("Parsing the date was failed on line".__LINE__);
+								$today = new DateTime();
+								$legal_date = new DateTime('0000-00-00');
+							}
+
 							$tran_rs = null;
-							if(isset($rs) && $rs->legal_collection) {
+							if(isset($rs) && $today > $legal_date && $legal_date > new DateTime('1911-01-01')) {
 								$tran_rs = $this->CI->transaction_model->get_by(
 									[
 										'source' 		=> SOURCE_AR_DELAYINTEREST,

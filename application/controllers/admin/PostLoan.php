@@ -114,7 +114,7 @@ class PostLoan extends MY_Admin_Controller {
 						'target_id'=>$post['target_id'],
 						'status'=>3,
 					],
-						['legal_collection'=>0]
+						['legal_collection_at'=>'0000-00-00 00:00:00']
 					);
 				}
 				$this->log_legaldoc_status_model->insert([
@@ -144,6 +144,8 @@ class PostLoan extends MY_Admin_Controller {
 		$list = [];
 		$this->load->model('log/log_legaldoc_export_model');
 		$this->load->model('log/log_legaldoc_status_model');
+		$this->load->model('loan/transfer_model');
+		$this->load->library('Subloan_lib');
 
 		if (empty($post)) {
 			if (isset($input['tsearch']) && $input['tsearch'] != '') {
@@ -242,13 +244,18 @@ class PostLoan extends MY_Admin_Controller {
 		}else{
 			if(isset($post['data'])) {
 				foreach($post['data'] as $value) {
-					$data = $value;
+					$target 	= $this->target_model->get($value['targetId']);
+					if(!isset($target))
+						continue;
+
+					$this->investment_model->trans_start();
+					$this->log_legaldoc_export_model->trans_start();
 					$this->investment_model->update_by([
-							'user_id'=>$value['investorUserId'],
-							'target_id'=>$value['targetId'],
-							'status'=>3,
-						],
-						['legal_collection'=>1]
+						'user_id'=>$value['investorUserId'],
+						'target_id'=>$value['targetId'],
+						'status'=>3,
+					],
+						['legal_collection_at'=>$value['sendDatetime']]
 					);
 					$this->log_legaldoc_export_model->insert([
 						'admin_id'=> $this->login_info->id,
@@ -260,6 +267,39 @@ class PostLoan extends MY_Admin_Controller {
 						'status' => $value['status'],
 						'investors'=> json_encode($value['investorUserId'])
 					]);
+
+					// 取消案件產轉申請
+					$subloan = $this->subloan_lib->get_subloan(false,$target);
+					if (isset($subloan) && $subloan && $subloan->status == 0) {
+						$this->subloan_lib->cancel_subloan($subloan);
+					}
+
+					// 取消投資人債轉
+					$this->load->library('transfer_lib');
+					$investment = $this->investment_model->get_many_by([
+						'user_id'=>$value['investorUserId'],
+						'target_id'=>$value['targetId'],
+						'transfer_status'=>1,
+					]);
+					if(isset($investment) && count($investment)) {
+						$investmentList = array_column(json_decode(json_encode($investment), true), 'id');
+
+						// 0:待出借 1:待放款
+						$transfer_list = $this->transfer_model->get_many_by([
+							'investment_id' => $investmentList,
+							'status'     => [0,1]
+						]);
+						foreach($transfer_list as $key => $value){
+							if($value->combination!=0){
+								$transfer = $this->transfer_model->get_many_by(['combination' => $value->combination]);
+								$this->transfer_lib->cancel_combination_transfer($transfer);
+							}else{
+								$this->transfer_lib->cancel_transfer($value);
+							}
+						}
+					}
+					$this->investment_model->trans_complete();
+					$this->log_legaldoc_export_model->trans_complete();
 				}
 			}
 		}

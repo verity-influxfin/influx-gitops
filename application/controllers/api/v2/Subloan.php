@@ -70,6 +70,7 @@ class Subloan extends REST_Controller {
 	 * @apiSuccess {String} amount 金額
 	 * @apiSuccess {Object} instalment 期數
 	 * @apiSuccess {Object} repayment 還款方式
+	 * @apiSuccess {Number} legal_collection 法催中
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -106,7 +107,8 @@ class Subloan extends REST_Controller {
      * 	       			"name": "先息後本",
      * 	       			"value": 2
      * 	       		}
-     * 	       }
+     * 	       },
+	 *         "legal_collection": 0,
      * 		}
      *    }
 	 *
@@ -196,12 +198,23 @@ class Subloan extends REST_Controller {
                 }
             }
 
+			$legal_collection = $this->investment_model->getLegalCollectionInvestment([
+				'id' => $target->id
+			],[
+				'legal_collection_at >=' => '1911-01-01'
+			]);
+			$legalCollection = 0;
+			if(isset($legal_collection) && count($legal_collection)) {
+				$legalCollection = 1;
+			}
+
 			$info 			= $this->subloan_lib->get_info($target);
 			$data			= array(
 				'amount' 		 => $info['total'],
 				'instalment'	 => $product['instalment'],
 				'repayment'		 => $product['repayment'],
                 'certification' => $certification,
+                'legal_collection' => $legalCollection,
 			);
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));
@@ -295,6 +308,15 @@ class Subloan extends REST_Controller {
 		if(!empty($target) && $target->status == TARGET_REPAYMENTING ){
 			if($target->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
+			}
+
+			$legal_collection = $this->investment_model->getLegalCollectionInvestment([
+				'id' => $input['target_id']
+			],[
+				'legal_collection_at >=' => '1911-01-01'
+			]);
+			if(isset($legal_collection) && count($legal_collection)) {
+				$this->response(array('result' => 'ERROR','error' => TARGET_IN_LEGAL_COLLECTION ));
 			}
 
             if(!in_array($target->sub_status,[TARGET_SUBSTATUS_NORNAL,TARGET_SUBSTATUS_SUBLOAN_TARGET,TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])){

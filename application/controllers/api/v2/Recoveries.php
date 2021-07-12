@@ -761,6 +761,7 @@ class Recoveries extends REST_Controller
      * @apiSuccess {String} amortization_schedule.list.interest 還款利息
      * @apiSuccess {String} amortization_schedule.list.total_payment 本期還款金額
      * @apiSuccess {String} amortization_schedule.list.repayment 已還款金額
+	 * @apiSuccess {Number} legal_collection 進行法催中
      * @apiSuccessExample {Object} SUCCESS
      *    {
      *        "result":"SUCCESS",
@@ -855,7 +856,8 @@ class Recoveries extends REST_Controller
      *                        "ar_fees": 4
      *                    }
      *                }
-     *            }
+     *            },
+	 *			  "legal_collection" :0,
      *        }
      *    }
      *
@@ -1052,6 +1054,8 @@ class Recoveries extends REST_Controller
             }
 
             $investment_contract = $this->contract_lib->get_contract($investment->contract_id);
+			$checkDate = new DateTime("1911-01-01");
+			$legal_colletcion_date = new DateTime($investment->legal_collection_at);
             $data = [
                 'id' => intval($investment->id),
                 'loan_amount' => intval($investment->loan_amount),
@@ -1062,6 +1066,7 @@ class Recoveries extends REST_Controller
                 'transfer' => $transfer,
                 'target' => $target,
                 'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info, $investment),
+				'legal_collection' => $legal_colletcion_date > $checkDate ? 1 : 0,
             ];
             $investment->aiBidding == 1 ? $data['aiBidding'] = true : '';
 
@@ -1296,6 +1301,7 @@ class Recoveries extends REST_Controller
      * @apiSuccess {Float} interest_rate 平均年表利率(%)
      * @apiSuccess {Number} accounts_receivable 應收帳款
      * @apiSuccess {Object} contract 轉讓合約(多份)
+     * @apiSuccess {Object} legal_collection_list 進行法催的 investment id
      * @apiSuccessExample {Object} SUCCESS
      *    {
      *      "result": "SUCCESS",
@@ -1315,7 +1321,11 @@ class Recoveries extends REST_Controller
      *              "contract": [
      *                "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約",
      *                "我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約，我是合約"
-     *              ]
+     *              ],
+	 * 				"legal_collection_list" : [
+	 * 					1,
+	 * 					10
+	 * 				],
      *          }
      *    }
      *
@@ -1495,6 +1505,15 @@ class Recoveries extends REST_Controller
                 $data['interest_rate'] = round($interest_rate_n / $interest_rate_d, 2);
             }
 
+			$legal_collection = $this->investment_model->get_many_by([
+				'id' => $ids,
+				'legal_collection_at >' => '1911-01-01'
+			]);
+			$data['legal_collection_list'] = [];
+			if(isset($legal_collection) && count($legal_collection)) {
+				$data['legal_collection_list'] = array_column(json_decode(json_encode($legal_collection), true), 'id');
+			}
+
             $this->response(array('result' => 'SUCCESS', 'data' => $data));
         }
         $this->response(array('result' => 'ERROR', 'error' => TARGET_APPLY_NOT_EXIST));
@@ -1597,6 +1616,14 @@ class Recoveries extends REST_Controller
 
         $ids = explode(',', $input['ids']);
         $count = count($ids);
+		$legal_collection = $this->investment_model->get_many_by([
+			'id' => $ids,
+			'legal_collection_at >' => '1911-01-01'
+		]);
+		if(isset($legal_collection) && count($legal_collection)) {
+			$this->response(array('result' => 'ERROR', 'error' => TARGET_IN_LEGAL_COLLECTION));
+		}
+
         if (!empty($ids)) {//&&count($ids)==1
             foreach ($ids as $key => $id) {
                 $id = intval($id);

@@ -143,8 +143,8 @@
 														let rsp = JSON.parse(json);
 														console.log(rsp);
 														if(rsp['download_url'] !== '') {
-															download('test.txt', rsp['download_url']);
 															clearInterval(timeoutID);
+															download('test.txt', rsp['download_url']);
 														}
 													},
 													error: function (xhr, textStatus, thrownError) {
