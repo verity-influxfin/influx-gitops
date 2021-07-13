@@ -936,6 +936,10 @@ class Certification_lib{
 				$remark['fail'] = "需人工驗證";
 				$verifiedResult->setStatus(3);
 			} else {
+				// 尚未回信上傳檔案
+				if(!isset($certification_content['mail_file_status']) || !$certification_content['mail_file_status'])
+					return false;
+
 				// 勞保異動明細 pdf
 				$pdf_url = isset($certification_content['pdf_file']) ? $certification_content['pdf_file'] : '';
 
@@ -984,10 +988,10 @@ class Certification_lib{
 						// $this->CI->config->load('top_enterprise');
 						// $top_enterprise = $this->CI->config->item("top_enterprise");
 
+						$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
 					}
 
 					$remark['verify_result'] = array_merge($remark['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
-					$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
 				}
 			}
 			$status = $verifiedResult->getStatus();
