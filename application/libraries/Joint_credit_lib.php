@@ -238,8 +238,8 @@ class Joint_credit_lib{
 
 						$data_array['B1-extra']['dataList'][$k]['bankName'] = isset($content[$k][0]) ? preg_replace('/\s/','',$content[$k][0]) : '';
 						$data_array['B1-extra']['dataList'][$k]['yearMonth'] = isset($content[$k][1]) ? preg_replace('/\s/','',$content[$k][1]) : '';
-						$data_array['B1-extra']['dataList'][$k]['撥款'] = isset($content[$k][2]) ? preg_replace('/\s/','',$content[$k][2]) : '';
-						$data_array['B1-extra']['dataList'][$k]['還款'] = isset($content[$k][3]) ? preg_replace('/\s/','',$content[$k][3]) : '';
+						$data_array['B1-extra']['dataList'][$k]['appropriationAmount'] = isset($content[$k][2]) ? preg_replace('/\s/','',$content[$k][2]) : '';
+						$data_array['B1-extra']['dataList'][$k]['repaymentAmount'] = isset($content[$k][3]) ? preg_replace('/\s/','',$content[$k][3]) : '';
 						$data_array['B1-extra']['dataList'][$k]['accountDescription'] = isset($content[$k][4]) ? preg_replace('/\s/','',$content[$k][4]) : '';
 						$data_array['B1-extra']['dataList'][$k]['purpose'] = isset($content[$k][5]) ? preg_replace('/\s/','',$content[$k][5]) : '';
 						$data_array['B1-extra']['dataList'][$k]['pastOneYearDelayRepayment'] = isset($content[$k][6]) ? preg_replace('/\s/','',$content[$k][6]) : '';
@@ -772,12 +772,6 @@ class Joint_credit_lib{
 			foreach($credit_table_info as $k=>$v){
 				foreach($v as $k1=>$v1){
 					$response['applierInfo']['creditInfo'][$k][$k1]['existCreditInfo'] = $v1;
-					if(isset($ConvertIntegerMultiplier[$k][$k1]) && $ConvertIntegerMultiplier[$k][$k1]) {
-						preg_match('/(\d+[,]*)+/', $v1, $regexResult);
-						if (!empty($regexResult)) {
-							$response['applierInfo']['creditInfo'][$k][$k1]['existCreditInfo'] = intval(str_replace(",","",$regexResult[0])) * $ConvertIntegerMultiplier[$k][$k1];
-						}
-					}
 				}
 			}
 		}

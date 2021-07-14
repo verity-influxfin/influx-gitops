@@ -359,6 +359,7 @@ class Certification_data
 	 *  [printDatetime] => 印表時間
 	 *  [scoreComment] => 信用評分
 	 *  [liabilities_totalAmount] => 借款資訊B - 借款總餘額資訊,
+	 *  [liabilitiesWithoutAssureTotalAmount] => 借款資訊B - 借款總餘額資訊(不含擔保借款),
 	 *  [liabilities_metaInfo] => 借款資訊B - 共同債務/從債務/其他債務資訊,
 	 *  [liabilities_badDebtInfo] => 借款資訊B - 借款逾期、催收或呆帳記錄,
 	 *  [creditCard_cardInfo] => 信用卡資訊K - 信用卡持卡紀錄,
@@ -432,6 +433,7 @@ class Certification_data
 			'personId' => '',
 			'taxId' => '',
 			'liabilities_totalAmount'=>'',
+			'liabilitiesWithoutAssureTotalAmount'=>'',
 			'debt_to_equity_ratio'=> 0,
 			'liabilities_metaInfo'=>'',
 			'liabilities_badDebtInfo'=>'',
@@ -513,6 +515,7 @@ class Certification_data
 			$res['taxId'] = isset($data['applierInfo']['basicInfo']['taxId']) ? $data['applierInfo']['basicInfo']['taxId'] : '';
 			// 有無信用資訊項目
 			if(! empty($data['applierInfo']['creditInfo'])){
+				$ConvertIntegerMultiplier = ['liabilities' => ['totalAmount' => 1000], 'totalAmount' => ['totalAmount' => 1]];
 				foreach($data['applierInfo']['creditInfo'] as $k=>$v){
 					if(is_array($v)){
 						foreach($v as $k1=>$v1){
@@ -521,6 +524,12 @@ class Certification_data
 									$name = $k.'_'.$k1;
 									if(isset($res[$name])){
 										$res[$name] = $v1['existCreditInfo'];
+										if(isset($ConvertIntegerMultiplier[$k][$k1]) && $ConvertIntegerMultiplier[$k][$k1]) {
+											preg_match('/(\d+[,]*)+/', $res[$name], $regexResult);
+											if (!empty($regexResult)) {
+												$res[$name] = intval(str_replace(",","",$regexResult[0])) * $ConvertIntegerMultiplier[$k][$k1];
+											}
+										}
 									}
 								}
 							}
@@ -601,6 +610,46 @@ class Certification_data
 						}
 					}
 				}
+
+				foreach($data['B1-extra']['dataList'] as $value){
+					$value['appropriationAmount'] = isset($value['appropriationAmount'])?preg_replace('/\,|千元/','',$value['appropriationAmount']):0;
+					$value['repaymentAmount'] = isset($value['appropriationAmount'])?preg_replace('/\,|千元/','',$value['repaymentAmount']):0;
+
+					// 有還款也有撥款: 銀行補撥款，會是跟B1的同一筆，不需要再增加額外貸款金額跟借款筆數
+					// 有還款沒有撥款: 只單純抵銷借款金額，並不能當作借款筆數
+					// 沒還款有撥款: 新的借款，需要增加貸款金額及貸款筆數
+					if(is_numeric($value['appropriationAmount']) && is_numeric($value['repaymentAmount'])){
+						if($value['accountDescription']=='短期擔保放款'||$value['accountDescription']=='其他短期擔保放款'){
+							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
+								$res['totalAmountShortAssureCount'] += 1;
+								$res['totalAmountShortAssure'] += $value['appropriationAmount'];
+								$res['balanceShortAssure'] += $value['appropriationAmount'];
+							}else{
+								$res['balanceShortAssure'] -= $value['repaymentAmount'];
+							}
+						}
+						if($value['accountDescription']=='中期擔保放款'){
+							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
+								$res['totalAmountMidAssureCount'] += 1;
+								$res['totalAmountMidAssure'] += $value['appropriationAmount'];
+								$res['balanceMidAssure'] += $value['appropriationAmount'];
+							}else{
+								$res['balanceMidAssure'] -= $value['repaymentAmount'];
+							}
+						}
+						if($value['accountDescription']=='長期擔保放款'){
+							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
+								$res['totalAmountLongAssureCount'] += 1;
+								$res['totalAmountLongAssure'] += $value['appropriationAmount'];
+								$res['balanceLongAssure'] += $value['appropriationAmount'];
+							}else{
+								$res['balanceMidAssure'] -= $value['repaymentAmount'];
+							}
+						}
+					}
+				}
+				// 由於總借款餘額已經在解析時將千位數作轉換
+				$res['liabilitiesWithoutAssureTotalAmount'] = intval($res['liabilities_totalAmount']) - ($res['balanceShortAssure']+$res['balanceMidAssure']+$res['balanceLongAssure'])*1000;
 				
 				// 借款家數
 				$res['bankCount'] = count($bank_array);

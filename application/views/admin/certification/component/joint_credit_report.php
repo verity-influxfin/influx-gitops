@@ -48,7 +48,7 @@
 			<p>是否小於薪資22倍：<?= ! is_null($data['total_repayment_enough']) ? $data['total_repayment_enough'] : '-'; ?></p>
 			<p>
 				<span>薪資22倍：<?= ! is_null($data['total_repayment']) ? (strpos($data['total_repayment'], ',') === false ? number_format($data['total_repayment']*1000) : $data['total_repayment'] . '千元') : '-'; ?></span>；
-				<span>借款總餘額：<?= ! is_null($data['liabilities_totalAmount']) ? (strpos($data['liabilities_totalAmount'], ',') === false ? number_format($data['liabilities_totalAmount']) : $data['liabilities_totalAmount']) : '-'; ?></span>
+				<span>借款總餘額：<?= ! is_null($data['liabilitiesWithoutAssureTotalAmount']) ? (strpos($data['liabilitiesWithoutAssureTotalAmount'], ',') === false ? number_format($data['liabilitiesWithoutAssureTotalAmount']) : $data['liabilitiesWithoutAssureTotalAmount']) : '-'; ?></span>
 			</p>
 			<p>
 				<span>
