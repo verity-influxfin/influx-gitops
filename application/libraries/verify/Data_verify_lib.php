@@ -140,25 +140,25 @@ class Data_verify_lib{
 			}
 
 			if($data['totalMonthlyPayment'] >= $certification_content['monthly_repayment']) {
-				$verifiedResult->addMessage('還款力計算 >= 投保薪資', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：還款力計算 >= 投保薪資', 3, MassageDisplay::Backend);
 			}
 
 			if($data['debt_to_equity_ratio'] > 100) {
 				$verifiedResult->addMessage('負債比計算 > 100%', 2, MassageDisplay::Backend);
 				$verifiedResult->setBanResubmit();
 			}else if($data['debt_to_equity_ratio'] >= 70) {
-				$verifiedResult->addMessage('負債比計算 >= 70%', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：負債比計算 >= 70%', 3, MassageDisplay::Backend);
 			}
 
 			if($data['totalAmountQuota'] >= $certification_content['total_repayment']) {
-				$verifiedResult->addMessage('借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
 			}
 
 			if($data['creditUtilizationRate'] > 100) {
 				$verifiedResult->addMessage('信貸額度動用率 > 100%', 2, MassageDisplay::Backend);
 				$verifiedResult->setBanResubmit();
 			}else if($data['creditUtilizationRate'] >= 80) {
-				$verifiedResult->addMessage('負債比計算 >= 80%', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：負債比計算 >= 80%', 3, MassageDisplay::Backend);
 			}
 
 			if($data['liabilities_badDebtInfo'] != '無') {
@@ -172,14 +172,14 @@ class Data_verify_lib{
 			}
 
 			if($data['creditLogCount'] < 1) {
-				$verifiedResult->addMessage('無信用記錄', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：無信用記錄', 3, MassageDisplay::Backend);
 			}
 
 			if($data['creditCardUseRate'] > 90) {
 				$verifiedResult->addMessage('近一個月信用卡使用率 > 90%', 2, MassageDisplay::Backend);
 				$verifiedResult->setBanResubmit();
 			}else if($data['creditUtilizationRate'] >= 70) {
-				$verifiedResult->addMessage('近一個月信用卡使用率 >= 70%', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：90% >= 近一個月信用卡使用率 >= 70%%', 3, MassageDisplay::Backend);
 			}
 
 			if($data['delayLessMonth'] > 1) {
@@ -208,7 +208,7 @@ class Data_verify_lib{
 			}
 
 			if($data['S1Count'] >= 3) {
-				$verifiedResult->addMessage('被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MassageDisplay::Backend);
 			}
 
 			return $verifiedResult;

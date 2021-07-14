@@ -600,8 +600,8 @@ class Certification_data
 							$res['balanceCash'] += $value['noDelayAmount'] + $value['delayAmount'];
 						}
 					}
-
 				}
+				
 				// 借款家數
 				$res['bankCount'] = count($bank_array);
 				// 訂約金額總額度

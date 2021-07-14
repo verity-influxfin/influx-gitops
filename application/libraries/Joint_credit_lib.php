@@ -767,10 +767,17 @@ class Joint_credit_lib{
 
 		// 第一頁總表資訊
 		$credit_table_info = $this->checkHasInfo($text);
+		$ConvertIntegerMultiplier = ['liabilities' => ['totalAmount' => 1000], 'totalAmount' => ['totalAmount' => 1]];
 		if($credit_table_info){
 			foreach($credit_table_info as $k=>$v){
 				foreach($v as $k1=>$v1){
 					$response['applierInfo']['creditInfo'][$k][$k1]['existCreditInfo'] = $v1;
+					if(isset($ConvertIntegerMultiplier[$k][$k1]) && $ConvertIntegerMultiplier[$k][$k1]) {
+						preg_match('/(\d+[,]*)+/', $v1, $regexResult);
+						if (!empty($regexResult)) {
+							$response['applierInfo']['creditInfo'][$k][$k1]['existCreditInfo'] = intval(str_replace(",","",$regexResult[0])) * $ConvertIntegerMultiplier[$k][$k1];
+						}
+					}
 				}
 			}
 		}
