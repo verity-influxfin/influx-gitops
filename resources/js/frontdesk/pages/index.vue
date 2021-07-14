@@ -29,6 +29,26 @@
           </div>
         </div>
       </SplideSlide>
+      <SplideSlide class="puhey-banner">
+        <img :src="'/images/skBankIndex.jpg'" class="hidden-desktop img-fluid" />
+        <img :src="'/images/skBankIndexM.jpg'" class="hidden-phone img-fluid" />
+        <div class="content sk-bank-content">
+          <div class="sk-bank">
+            <a
+                class="loan"
+                href="/skbank"
+                target="_blank"
+            ><img src="../asset/images/skbankbuttom1.svg" class="img-fluid" /></a
+            >
+            <a
+                class="borrow"
+                href="https://reurl.cc/7r0XQ9"
+                target="_blank" style="margin-left:10vw;"
+            ><img src="../asset/images/skbankbuttom2.svg" class="img-fluid" /></a
+            >
+          </div>
+        </div>
+      </SplideSlide>
       <SplideSlide v-for="(item, index) in bannerData" class="puhey-banner" :key="index">
         <a :href="item.link" target="_blank">
           <img :src="`/upload/banner/${item.desktop}`" class="hidden-desktop img-fluid" />
@@ -796,6 +816,27 @@ export default {
 </script>
 
 <style lang="scss">
+.sk-bank-content {
+  left:30% !important;
+}
+.sk-bank {
+  display:flex;
+  margin-top:24vw;
+  a {
+      width:15vw;
+  }
+}
+@media screen and (max-width: 767px) {
+    .sk-bank-content {
+      left:65vw !important;
+    }
+    .sk-bank {
+      margin-top: -18vw;
+        a {
+        width:30vw;
+      }
+    }
+}
 .index-wrapper {
   width: 100%;
 
