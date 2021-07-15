@@ -100,6 +100,8 @@ export default {
         .image {
             vertical-align: top;
             width         : 100%;
+            height        : 190px;
+            object-fit    : cover;
         }
 
         .description {

@@ -28,8 +28,9 @@ export default {
 @import "./alesis";
 
 .alesis-loan-header {
-    position: relative;
-    height  : 33rem;
+    position  : relative;
+    height    : 33rem;
+    overflow-x: hidden;
 
     @include rwd {
         height: clamp(33rem, 155vw, 155vw);

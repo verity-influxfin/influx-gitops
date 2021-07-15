@@ -40,7 +40,8 @@ export default {
         display         : flex;
         align-items     : center;
         justify-content : center;
-        min-height      : 34rem;
+        min-height      : 23rem;
+        height          : 34vw;
         position        : relative;
 
         @include rwd {
@@ -109,6 +110,8 @@ export default {
             flex: 1;
 
             .phone {
+                width: 100%;
+
                 @include rwd {
                     width        : 380px;
                     margin-bottom: 2rem;

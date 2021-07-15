@@ -49,7 +49,8 @@ export default {
 @import "../alesis";
 
 .sectionx {
-    position: relative;
+    position  : relative;
+    max-width : 100vw;
 
     @include rwd {
         padding: 0 2rem;
