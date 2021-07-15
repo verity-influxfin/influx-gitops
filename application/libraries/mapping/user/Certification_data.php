@@ -687,6 +687,13 @@ class Certification_data
 				$totalAmount = 0;
 				$totalQuota = 0;
 
+				// 依照時間對 K2 紀錄遞減排序
+				usort($data['K2']['dataList'], function($a1, $a2) {
+					$v1 = $this->CI->time->ROCDateToUnixTimestamp($a1['date']);
+					$v2 = $this->CI->time->ROCDateToUnixTimestamp($a2['date']);
+					return $v2 - $v1; // $v2 - $v1 to reverse direction
+				});
+
 				if(isset($data['K2']['dataList'][0]['date']) && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$data['K2']['dataList'][0]['date'])){
 					$last_date = $this->CI->time->ROCDateToUnixTimestamp($data['K2']['dataList'][0]['date']);
 
@@ -696,11 +703,19 @@ class Certification_data
 					}
 				}
 
+				$totalQuota = 0;
+				$currentRecordDate = 0;
+				$recordDate = new \DateTime();
 				foreach($data['K2']['dataList'] as $key => $value){
 					// 信用紀錄幾個月
 					$value['previousPaymentStatus'] = preg_replace('/\s+/','',$value['previousPaymentStatus']);
+
+					$recordDate->setTimestamp($this->CI->time->ROCDateToUnixTimestamp($value['date']));
 					if(preg_match('/不須繳款|^全額繳清.*無遲延$/',$value['previousPaymentStatus']) && $creditLogCountStatus){
-						$res['creditLogCount'] += 1;
+						if($recordDate->format('Y-m') != $currentRecordDate) {
+							$res['creditLogCount'] += 1;
+							$currentRecordDate = $recordDate->format('Y-m');
+						}
 					}else{
 						if(preg_match('/.*遲延.*個月$|.*遲延.*個月以上$/',$value['previousPaymentStatus'])){
 							$res['creditCardHasDelay'] = '有';
@@ -724,29 +739,27 @@ class Certification_data
 						$res['delayMoreMonth'] += 1;
 					}
 
-					// creditCardUseRate
-					// to do : 信用卡月繳待修，須以銀行加卡名為基準判斷當期與前期之未到期待付款，目前以最後一筆日期直接推算
-					if($end_date && $end_date_before && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$value['date'])){
-
+					if($end_date_before && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$value['date'])){
 						$value['date'] = $this->CI->time->ROCDateToUnixTimestamp($value['date']);
-						if($end_date < $value['date']){
+						if($end_date_before < $value['date']){
 							$value['quotaAmount'] = preg_replace('/\,|元/','',$value['quotaAmount']);
 							$value['currentAmount'] = preg_replace('/\,|元/','',$value['currentAmount']);
 							$value['nonExpiredAmount'] = preg_replace('/\,|元/','',$value['nonExpiredAmount']);
 							if(is_numeric($value['quotaAmount']) && is_numeric($value['currentAmount']) && is_numeric($value['nonExpiredAmount'])){
-								$totalAmount += $value['currentAmount'] + $value['nonExpiredAmount'];
-
+								// 同一間銀行的額度皆相同，多張信用卡只需算一次額度
 								if(!in_array($value['bank'],$bank_array)){
 									$bank_array[] = $value['bank'];
 									$totalQuota += $value['quotaAmount'];
 								}
 							}
 						}
-
-						if($totalQuota != 0){
-							$res['creditCardUseRate'] = round($totalAmount/$totalQuota*100, 2);
-						}
 					}
+				}
+
+				// 信用卡使用率
+				if($totalQuota != 0) {
+					$totalAmount = intval(preg_replace('/\,|千元/','',$res['creditCard_totalAmount']));
+					$res['creditCardUseRate'] = round($totalAmount/$totalQuota*100, 2);
 				}
 
 				// 信用卡月繳
@@ -754,11 +767,15 @@ class Certification_data
 
 			}
 			// 被查詢記錄
+			$mappingInstitutionList = ['中信' => '中國信託'];
 			if(!empty($data['S1']['dataList'])){
 				$institution_array = [];
 				foreach($data['S1']['dataList'] as $key => $value){
-					if(preg_match('/新業務申請/',$value['reason']) && preg_match('/信貸|個金|消金|風控|信用審查|徵信|授信/',$value['institution'])){
-						$institution_name = preg_replace('/銀行.*/',"",$value['institution']);
+					if(preg_match('/新業務申請/',$value['reason']) && preg_match('/信貸|信用貸款|個金|個人金融|消金|消費金融|風控|風險控管|審查|授信|放款/',$value['institution'])){
+						$institution_name = preg_replace('/銀.*/',"",$value['institution']);
+						if(array_key_exists($institution_name, $mappingInstitutionList)) {
+							$institution_name = $mappingInstitutionList[$institution_name];
+						}
 						if(! in_array($institution_name,$institution_array)){
 							$institution_array[] = $institution_name;
 							$res['S1Count'] += 1;
