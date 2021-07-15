@@ -40,8 +40,7 @@ export default {
         display         : flex;
         align-items     : center;
         justify-content : center;
-        min-height      : 23rem;
-        height          : 34vw;
+        min-height      : 30rem;
         position        : relative;
 
         @include rwd {
@@ -107,10 +106,11 @@ export default {
             }
         }
         .demo {
-            flex: 1;
+            flex      : 1;
+            text-align: right;
 
             .phone {
-                width: 100%;
+                height: 100%;
 
                 @include rwd {
                     width        : 380px;

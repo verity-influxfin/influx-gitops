@@ -504,6 +504,12 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
+.alesis-app {
+    @include rwd {
+        display: none;
+    }
+}
+
 .alesis-counters {
     margin   : 4rem auto 8rem;
     max-width: 1280px;

@@ -643,6 +643,12 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
+.alesis-app {
+    @include rwd {
+        display: none;
+    }
+}
+
 .alesis-fast-approve {
     margin-top: 8rem;
 
