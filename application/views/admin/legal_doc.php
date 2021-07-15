@@ -106,10 +106,10 @@
 									result[size]['doneTask'][$(this).val()] = $(this).prop("checked");
 								});
 
-								result[size]['sendDatetime'] = $(this).find('.send_datetime').val();
+								result[size]['sendDate'] = $(this).find('.send_datetime').val();
 
 								if(result[size]['investorUserId'].length) {
-									if (result[size]['sendDatetime'] === "") {
+									if (result[size]['sendDate'] === "") {
 										$(this).find('.send_datetime').prop('required', true);
 										$("form").find("#submit-hidden").click();
 										isSuccess = false;
@@ -127,8 +127,13 @@
 										type: 'POST',
 										url: "<?=admin_url('PostLoan/legal_doc')?>",
 										data: {data: result},
-										success: (json) => {
-											console.log('success');
+										success: (rsp) => {
+											let sentResult = JSON.parse(rsp);
+
+											if(sentResult['status'] !== 200) {
+												return alert(rs['description']);
+											}
+
 											$(this).addClass('saved-animation'); // add the animation class
 											setTimeout(() => {
 												$(this).removeClass('saved-animation');
@@ -138,13 +143,13 @@
 												$.ajax({
 													type: 'POST',
 													url: "<?=admin_url('PostLoan/legal_doc_status')?>",
-													data: {data: result},
+													data: {tasksLogId: sentResult['response']['tasksLogId']},
 													success: (json) => {
-														let rsp = JSON.parse(json);
-														console.log(rsp);
-														if(rsp['download_url'] !== '') {
+														let legalDocResult = JSON.parse(json);
+
+														if(legalDocResult['status'] === 200 && legalDocResult['response']['result']['status'] === 'finished') {
 															clearInterval(timeoutID);
-															download('test.txt', rsp['download_url']);
+															download('支付命令資料.zip', legalDocResult['response']['result']['url']);
 														}
 													},
 													error: function (xhr, textStatus, thrownError) {

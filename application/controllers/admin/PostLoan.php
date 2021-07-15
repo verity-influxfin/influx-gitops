@@ -2,6 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+use Symfony\Component\HttpClient\HttpClient;
 
 class PostLoan extends MY_Admin_Controller {
 
@@ -128,9 +129,36 @@ class PostLoan extends MY_Admin_Controller {
 	}
 
 	public function legal_doc_status() {
-		// TODO: 跟法催子系統request，確認匯出進度的回傳格式
-		echo json_encode(['download_url'=> 'https://influxp2p-front-assets.s3.ap-northeast-1.amazonaws.com/json/config_school.json']);
-		//echo json_encode(['download_url'=> '']);
+		$post = $this->input->post(NULL, TRUE);
+
+		if(isset($post['tasksLogId'])) {
+			$httpClient = HttpClient::create();
+			$response = $httpClient->request('GET', ENV_ANUBIS_REQUEST_URL . 'payment_order?tasksLogId=' . $post['tasksLogId'], [
+				'headers' => [
+					'Content-Type' => 'application/json',
+					'timeout' => 2.5
+				]
+			]);
+
+			try {
+				$statusCode = $response->getStatusCode();
+			} catch (Exception $e) {
+				$statusCode = -1;
+			} finally {
+				if ($statusCode == 200) {
+					$statusDescription = 'OK!';
+					$data = $response->toArray();
+					echo json_encode($data);
+				} else {
+					$data = ['status' => $statusCode, 'response' => 'failed'];
+					$statusDescription = '無法連線到法催子系統';
+				}
+				$data['description'] = $statusDescription;
+				echo json_encode($data);
+			}
+		}else{
+			echo json_encode(['status' => 400, 'response' => 'The parameter is invalid.']);
+		}
 	}
 
 	public function legal_doc()
@@ -243,27 +271,26 @@ class PostLoan extends MY_Admin_Controller {
 
 		}else{
 			if(isset($post['data'])) {
+				$insertedIdList = [];
 				foreach($post['data'] as $value) {
 					$target 	= $this->target_model->get($value['targetId']);
 					if(!isset($target))
 						continue;
 
-					$this->investment_model->trans_start();
-					$this->log_legaldoc_export_model->trans_start();
 					$this->investment_model->update_by([
 						'user_id'=>$value['investorUserId'],
 						'target_id'=>$value['targetId'],
 						'status'=>3,
 					],
-						['legal_collection_at'=>$value['sendDatetime']]
+						['legal_collection_at'=>$value['sendDate']]
 					);
-					$this->log_legaldoc_export_model->insert([
+					$insertedIdList[] = $this->log_legaldoc_export_model->insert([
 						'admin_id'=> $this->login_info->id,
 						'target_id'=> $value['targetId'],
 						'limit_date'=> $value['limitDate'],
 						'delay_days'=> $value['delayDays'],
 						'done_task'=> json_encode($value['doneTask']),
-						'send_date'=> $value['sendDatetime'],
+						'send_date'=> $value['sendDate'],
 						'status' => $value['status'],
 						'investors'=> json_encode($value['investorUserId'])
 					]);
@@ -298,9 +325,45 @@ class PostLoan extends MY_Admin_Controller {
 							}
 						}
 					}
-					$this->investment_model->trans_complete();
-					$this->log_legaldoc_export_model->trans_complete();
 				}
+
+				array_walk($post['data'], function (&$item, $key) {
+					$item = array_merge($item, $item['doneTask']);
+					$item['adminId'] = $this->login_info->id;
+				});
+				$httpClient = HttpClient::create();
+				$response = $httpClient->request('POST', ENV_ANUBIS_REQUEST_URL.'payment_order' , [
+					'headers' => [
+						'Content-Type' => 'application/json',
+						'timeout' => 2.5
+					],
+					'body' => json_encode($post['data'])
+				]);
+
+				try {
+					$statusCode = $response->getStatusCode();
+				} catch (Exception $e) {
+					$statusCode = -1;
+				} finally {
+					if ($statusCode == 200) {
+						$statusDescription = 'OK!';
+						$data = $response->toArray();
+
+						if(isset($data['response']['tasksLogId'])) {
+							$this->log_legaldoc_export_model->update_by(
+								['id' => $insertedIdList],
+								['task_log_id' => $data['response']['tasksLogId']]
+							);
+						}
+
+					} else {
+						$data = ['status' => $statusCode, 'response' => 'failed'];
+						$statusDescription = '無法連線到法催子系統';
+					}
+					$data['description'] = $statusDescription;
+					echo json_encode($data);
+				}
+
 			}
 		}
 	}
