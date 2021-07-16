@@ -184,6 +184,9 @@ class Controller extends BaseController
         }
 
         try {
+            $this->inputs['amount'] = $result['amount'];
+            $this->inputs['rate'] = $result['rate'];
+            $this->inputs['period_range'] = $result['period_range'];
             DB::table('borrow_report')->insert($this->inputs);
         } catch (Exception $e) {
             return response()->json($e, 400);
