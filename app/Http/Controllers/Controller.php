@@ -123,11 +123,54 @@ class Controller extends BaseController
 
         $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
 
-        if ($input['type']) {
-            $filter[] = ['category', '=', $input['type']];
+        if (isset($input['category']) && !empty($input['category'])) {
+            $filter[] = ['category', '=', $input['category']];
         }
 
-        $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
+        $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type','amount','rate','period_range','spend_day'])->where($filter)->get();
+        if(empty($experiences)){
+            $experiences = [
+                0 => [
+                    'ID' => 1,
+                    'feedback' => '普匯跟其他保本型的商品比起來，投報率真的相對較高，也比較不需要花太多時間去關注，就可以獲得被動收入。',
+                    'imageSrc' => null,
+                    'video_link' => 'https://www.youtube.com/embed/oHg5SJYRHA0',
+                    'post_title' => '台北投資顧問 葉先生',
+                    'rank' => 'officeWorker',
+                    'type' => '【投資人專訪】',
+                    'amount' => 0,
+                    'rate' => 0,
+                    'period_range' => 0,
+                    'spend_day' => 0
+                ],
+                1 => [
+                    'ID' => 2,
+                    'feedback' => '在普匯投資除了可以有穩定的收益外，還可以幫助到有夢的大學生，所以覺得這個平台還滿特別的',
+                    'imageSrc' => '/upload/2019/11/test.jpg',
+                    'video_link' => null,
+                    'post_title' => '台北設計業 陳先生',
+                    'rank' => 'officeWorker',
+                    'type' => '【借款人專訪】',
+                    'amount' => 123,
+                    'rate' => 321,
+                    'period_range' => 12,
+                    'spend_day' => 3
+                ],
+                2 => [
+                    'ID' => 3,
+                    'feedback' => '有比較過其他平台，其他的債權金額都比較大，普匯可以小額投資，還可以進行債權轉讓，讓我可以即時的拿回投資的錢',
+                    'imageSrc' => null,
+                    'video_link' => 'https://www.youtube.com/embed/oHg5SJYRHA0',
+                    'post_title' => '銀行員 林小姐',
+                    'rank' => 'student',
+                    'type' => '【借款人專訪】',
+                    'amount' => 123,
+                    'rate' => 321,
+                    'period_range' => 12,
+                    'spend_day' => 3
+                ],
+            ];
+        }
         return response()->json($experiences, 200);
     }
 
