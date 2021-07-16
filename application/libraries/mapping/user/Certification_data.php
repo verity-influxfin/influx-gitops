@@ -955,9 +955,10 @@ class Certification_data
             if(!empty($keys)){
                 // 多家公司投保
                 if(count($keys)>1){
-                    $numbers = array_column($company_list, 'insuranceSalary');
+                	$employed_company_list = array_intersect_key($company_list,array_flip($keys));
+                    $numbers = array_column($employed_company_list, 'insuranceSalary');
                     $max = max($numbers);
-                    $keys = array_keys(array_combine(array_keys($company_list), array_column($company_list, 'insuranceSalary')),$max);
+                    $keys = array_keys(array_combine(array_keys($employed_company_list), $numbers),$max);
                     $insurance_id = $keys[0];
                     $last_insurance_info = $company_list[$insurance_id];
                 }
