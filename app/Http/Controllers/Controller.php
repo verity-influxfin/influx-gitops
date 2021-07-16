@@ -39,11 +39,17 @@ class Controller extends BaseController
 
         return response()->json($banner, 200);
     }
-    
+
     public function getCount()
     {
-        $count = DB::table('count')->select('*')->get();
-
+        $count = DB::table('count')->select(['transactionCount','memberCount','totalLoanAmount'])->latest('id')->get()->first();
+        if(empty($count)){
+            $count = [
+                'transactionCount' => 123,
+                'memberCount' => 321,
+                'totalLoanAmount' => 1234567
+            ];
+        }
         return response()->json($count, 200);
     }
 
