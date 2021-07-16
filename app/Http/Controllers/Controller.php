@@ -53,6 +53,144 @@ class Controller extends BaseController
         return response()->json($count, 200);
     }
 
+    // to do : 計算邏輯待拆離
+    public function getBorrowReport(Request $request)
+    {
+        $input = $request->all();
+        $result = [];
+        $report = [
+            0 => [
+                'amount' => 0,
+                'rate' => 0,
+                'period_range' => 0,
+            ],
+            1 => [
+                'amount' => 80000,
+                'rate' => '14~16',
+                'period_range' => 24,
+            ],
+            2 => [
+                'amount' => 120000,
+                'rate' => '10~13',
+                'period_range' => 24,
+            ],
+            3 => [
+                'amount' => 160000,
+                'rate' => '8~10',
+                'period_range' => 24,
+            ],
+            4 => [
+                'amount' => 200000,
+                'rate' => '7~8',
+                'period_range' => 24,
+            ],
+            5 => [
+                'amount' => 300000,
+                'rate' => '6~7',
+                'period_range' => 24,
+            ]
+        ];
+        $total_point = 0;
+
+        if(isset($input['identity']) && !empty($input ['identity'])){
+            // 學生
+            if($input ['identity'] == 1){
+                // 系排名
+                if($input['rank']>=30){
+                    $total_point += 0;
+                }elseif ($input['rank']>=10) {
+                    $total_point += 50;
+                }else {
+                    $total_point += 100;
+                }
+                // 是否拿過獎學金
+                if($input['is_get_prize'] == true){
+                    $total_point += 100;
+                }else{
+                    $total_point += 0;
+                }
+            }
+            // 上班族
+            if($input ['identity'] == 2){
+                // 教育程度
+                switch ($input['educational_level']) {
+                    case '學士以下':
+                        $total_point += 0;
+                        break;
+                    case '學士':
+                        $total_point += 10;
+                        break;
+                    case '碩士':
+                        $total_point += 15;
+                        break;
+                    case '博士':
+                        $total_point += 20;
+                        break;
+                    default:
+                        $total_point += 0;
+                        break;
+                }
+                // 職業
+                $total_point += 10;
+                // 是否為上市櫃、金融機構或公家機關
+                if($input['is_top_enterprises'] == true){
+                    $total_point += 15;
+                }else{
+                    $total_point += 5;
+                }
+                // 投保薪資
+                if($input['insurance_salary']>=35000){
+                    $total_point += 15;
+                }elseif ($input['insurance_salary']<35000 && $input['insurance_salary']>=23800) {
+                    $total_point += 10;
+                }else{
+                    $total_point += 0;
+                }
+                // 貸款餘額
+                if($input['debt_amount']>=4){
+                    $total_point += 0;
+                }else{
+                    $total_point += 5;
+                }
+                // 每月攤還金額
+                if($input['monthly_repayment']>=4){
+                    $total_point += 5;
+                }else{
+                    $total_point += 10;
+                }
+                // 信用卡額度
+                $total_point += 10;
+                // 信用卡帳單總金額
+                if($input['creditcard_bill']>7){
+                    $total_point += 5;
+                }else{
+                    $total_point += 15;
+                }
+            }
+
+            if($total_point >= 90){
+                $result = $report[5];
+            }elseif ($total_point >= 80) {
+                $result = $report[4];
+            }elseif ($total_point >= 50) {
+                $result = $report[3];
+            }elseif ($total_point >= 70) {
+                $result = $report[2];
+            }elseif ($total_point >= 20) {
+                $result = $report[1];
+            }else {
+                $result = $report[0];
+            }
+        }
+
+        try {
+            DB::table('borrow_report')->insert($this->inputs);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+
+        return response()->json($result, 200);
+    }
 
     public function getKnowledgeData(Request $request)
     {
