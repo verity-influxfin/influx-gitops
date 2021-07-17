@@ -184,12 +184,32 @@ class Controller extends BaseController
         }
 
         try {
-            $this->inputs['amount'] = $result['amount'];
-            $this->inputs['rate'] = $result['rate'];
-            $this->inputs['period_range'] = $result['period_range'];
-            DB::table('borrow_report')->insert($this->inputs);
+            $input['amount'] = $result['amount'];
+            $input['rate'] = $result['rate'];
+            $input['period_range'] = $result['period_range'];
+            DB::table('borrow_report')->insert($input);
         } catch (Exception $e) {
             return response()->json($e, 400);
+        }
+
+        return response()->json($result, 200);
+    }
+
+    public function getgetCase(Request $request){
+
+        $input = $request->all();
+
+        if(isset($input['status']) && $input['status'] == 10){
+            $input['limit'] = 100;
+        }
+        $params = http_build_query($input);
+        // url 待改，主站 api 待開發
+        $case_data = shell_exec('curl -X POST "' . $this->apiGetway . 'user/login" -d "' . $params . '"');
+
+        if ($data['result'] === "SUCCESS") {
+            $result = $case_data['data']['list'];
+        } else {
+            return response()->json($data, 400);
         }
 
         return response()->json($result, 200);
