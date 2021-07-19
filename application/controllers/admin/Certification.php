@@ -222,6 +222,7 @@ class Certification extends MY_Admin_Controller {
 				$page_data['school_system'] 		= $this->config->item('school_system');
 				$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
 				$page_data['from'] 					= $from;
+				$page_data['sys_check'] 			= $info->sys_check;
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title', $this->menu);
 				$this->load->view('admin/certification/' . $certification['alias'], $page_data);
