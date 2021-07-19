@@ -131,7 +131,7 @@
 											let sentResult = JSON.parse(rsp);
 
 											if(sentResult['status'] !== 200) {
-												return alert(rs['description']);
+												return alert(sentResult['description']);
 											}
 
 											$(this).addClass('saved-animation'); // add the animation class
