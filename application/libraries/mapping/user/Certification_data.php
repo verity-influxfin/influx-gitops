@@ -432,6 +432,7 @@ class Certification_data
 			'personId' => '',
 			'taxId' => '',
 			'liabilities_totalAmount'=>'',
+			'debt_to_equity_ratio'=> 0,
 			'liabilities_metaInfo'=>'',
 			'liabilities_badDebtInfo'=>'',
 			'creditCard_cardInfo'=>'',
@@ -484,6 +485,7 @@ class Certification_data
 			'creditLogCount' => '',
 			'cashAdvanced' => '無',
 			'delayLessMonth' => 0,
+			'delayMoreMonth' => 0,
 			'creditCardUseRate' => 0,
 			'S1Count' => 0,
 			'S2Count' => 0,
@@ -605,7 +607,7 @@ class Certification_data
 				$res['bankCount'] = count($bank_array);
 				// 訂約金額總額度
 				if($res['totalAmountShort'] != 0 || $res['totalAmountMid'] != 0 || $res['totalAmountLong'] != 0){
-					$res['creditUtilizationRate'] = ($res['balanceShort'] + $res['balanceMid'] + $res['balanceLong'])/($res['totalAmountShort'] + $res['totalAmountMid'] + $res['totalAmountLong']);
+					$res['creditUtilizationRate'] = round(($res['balanceShort'] + $res['balanceMid'] + $res['balanceLong'])/($res['totalAmountShort'] + $res['totalAmountMid'] + $res['totalAmountLong'])*100, 2);
 				}else{
 					$res['creditUtilizationRate'] = 0;
 				}
@@ -614,12 +616,15 @@ class Certification_data
 			// 信用卡持卡紀錄
 			if(!empty($data['K1']['dataList'])){
 				$bank_array = [];
+				$res['creditCardCount'] = 0;
 				foreach ($data['K1']['dataList'] as $key => $value) {
-					if(! in_array($value['authority'],$bank_array) && preg_match('/使用中/',$value['status'])){
-						$bank_array[] = $value['authority'];
+					if(preg_match('/使用中/',$value['status'])) {
+						if (!in_array($value['authority'], $bank_array)){
+							$bank_array[] = $value['authority'];
+						}
+						$res['creditCardCount']++;
 					}
 				}
-				$res['creditCardCount'] = count($bank_array);
 			}
 			// 信用卡帳款總餘額資訊
 			if(!empty($data['K2']['dataList'])){
@@ -634,12 +639,6 @@ class Certification_data
 				$bank_array = [];
 				$totalAmount = 0;
 				$totalQuota = 0;
-				// 當期應付款項
-				$currentAmount = 0;
-				// 當期未到期代付款
-				$nonExpiredAmount = 0;
-				// 前期到期代付款
-				$nonExpiredAmount_before = 0;
 
 				if(isset($data['K2']['dataList'][0]['date']) && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$data['K2']['dataList'][0]['date'])){
 					$last_date = $this->CI->time->ROCDateToUnixTimestamp($data['K2']['dataList'][0]['date']);
@@ -652,13 +651,14 @@ class Certification_data
 
 				foreach($data['K2']['dataList'] as $key => $value){
 					// 信用紀錄幾個月
-					if(preg_match('/^繳足最低.*無遲延$|不須繳款|^全額繳清.*無遲延$/',$value['previousPaymentStatus']) && $creditLogCountStatus){
+					$value['previousPaymentStatus'] = preg_replace('/\s+/','',$value['previousPaymentStatus']);
+					if(preg_match('/不須繳款|^全額繳清.*無遲延$/',$value['previousPaymentStatus']) && $creditLogCountStatus){
 						$res['creditLogCount'] += 1;
 					}else{
 						if(preg_match('/.*遲延.*個月$|.*遲延.*個月以上$/',$value['previousPaymentStatus'])){
 							$res['creditCardHasDelay'] = '有';
 						}
-						if(preg_match('/逾期|催收|呆帳/',$value['previousPaymentStatus'])){
+						if(preg_match('/逾期|催收|呆帳/',$value['claimsStatus'])){
 							$res['creditCardHasBadDebt'] = '有';
 						}
 
@@ -671,8 +671,11 @@ class Certification_data
 					}
 
 					// 延遲未滿一個月次數
+					$value['previousPaymentStatus'] = mb_convert_kana($value['previousPaymentStatus'], 'n');
 					if(preg_match('/遲延未滿1個月|遲延未滿１個月/',$value['previousPaymentStatus'])){
 						$res['delayLessMonth'] += 1;
+					}else if(preg_match('/遲延未滿[0-9]+個月|遲延[0-9]+個月以上/',$value['previousPaymentStatus'])){
+						$res['delayMoreMonth'] += 1;
 					}
 
 					// creditCardUseRate
@@ -688,10 +691,6 @@ class Certification_data
 							if(is_numeric($value['quotaAmount']) && is_numeric($value['currentAmount']) && is_numeric($value['nonExpiredAmount'])){
 								$totalAmount += $value['currentAmount'] + $value['nonExpiredAmount'];
 
-								// 信用卡月繳
-								$currentAmount += $value['currentAmount'];
-								$nonExpiredAmount += $value['nonExpiredAmount'];
-
 								if(!in_array($value['bank'],$bank_array)){
 									$bank_array[] = $value['bank'];
 									$totalQuota += $value['quotaAmount'];
@@ -699,22 +698,15 @@ class Certification_data
 							}
 						}
 
-						// 信用卡月繳
-						if($end_date < $value['date'] && $value['date'] < $end_date_before){
-							$value['nonExpiredAmount_before'] = preg_replace('/\,|元/','',$value['nonExpiredAmount']);
-							if(is_numeric($value['nonExpiredAmount_before'])){
-								$nonExpiredAmount_before += $value['nonExpiredAmount_before'];
-							}
-						}
 						if($totalQuota != 0){
-							$res['creditCardUseRate'] = $totalAmount/$totalQuota*100;
+							$res['creditCardUseRate'] = round($totalAmount/$totalQuota*100, 2);
 						}
-
 					}
-
 				}
+
 				// 信用卡月繳
-				$res['creditCardMonthlyPayment'] = number_format(($currentAmount*0.1 + $nonExpiredAmount - $nonExpiredAmount_before)/1000,2);
+				$res['creditCardMonthlyPayment'] = round(intval(preg_replace('/\,|元/', '', $data['K2']['totalAmount'])) * 0.1 / 1000, 2);
+
 			}
 			// 被查詢記錄
 			if(!empty($data['S1']['dataList'])){
@@ -896,89 +888,32 @@ class Certification_data
 		];
 		$total_count_end_date = '';
 		$total_count_start_date = '';
-		$first_log = true;
-		$previous_end_date_null = false;
-		if($data){
+		$has_job = false;
+        $company_list = [];
+        $last_insurance_info = [];
+        $previous_end_date_null = false;
+
+		if(!empty($data['pageList'])){
+            $this->CI->load->library('mapping/time');
 			$res['name'] = isset($data['pageList'][0]['name']) ? $data['pageList'][0]['name'] : '';
 			$res['person_id'] = isset($data['pageList'][0]['personId']) ? $data['pageList'][0]['personId'] : '';
 			$res['report_date'] = isset($data['pageList'][0]['reportDate']) ? $data['pageList'][0]['reportDate'] : '';
-			$last_page_array = end($data['pageList']);
-			$res['last_insurance_info'] = isset($last_page_array['insuranceList']) ? end($last_page_array['insuranceList']) : [];
-			$company = isset($res['last_insurance_info']['companyName']) ? $res['last_insurance_info']['companyName'] : '';
-			$this->CI->load->library('mapping/time');
 
-			$first_key = array_key_last($data['pageList']);
-			$second_key = isset($data['pageList'][$first_key]['insuranceList']) ? array_key_last($data['pageList'][$first_key]['insuranceList']) : '';
-
-			foreach($data['pageList'] as $key => $page_info){
-				if(isset($page_info['insuranceList'])){
-					foreach($page_info['insuranceList'] as $page_info_key => $page_info_value){
-						if(! preg_match('/部分工時/',$page_info_value['detailList'][0]['comment'])){
-							if(preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['startDate'])){
-								// 總年資開始
-								if($first_log){
-									$time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
-									$time = $this->CI->time->ROCDateToUnixTimestamp($time);
-									$total_count_start_date = date_create(date('Ymd',$time));
-									$first_log = false;
-								}
-							}
-							// 計算現在任職年資
-							if(isset($res['last_insurance_info']['insuranceId'])){
-								if(!empty($page_info_value['insuranceId']) && $page_info_value['insuranceId'] == $res['last_insurance_info']['insuranceId']){
-									if(empty($page_info_value['detailList'][0]['endDate'])){
-										if(!$previous_end_date_null){
-											$start_time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
-										}
-										if($first_key == $key && $second_key == $page_info_key){
-											if(!empty($res['report_date'])){
-												$end_time = substr($res['report_date'], 0,3).'/'.substr($res['report_date'], 3,2).'/'.substr($res['report_date'], 5);
-											}else{
-												if(!empty($page_info_value['detailList'][0]['endDate'])){
-													$end_time = substr($page_info_value['detailList'][0]['endDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['endDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['endDate'], 5);
-												}else{
-													$end_time = '';
-												}
-											}
-
-											if($start_time && $end_time){
-												$start_time = $this->CI->time->ROCDateToUnixTimestamp($start_time);
-												$end_time = $this->CI->time->ROCDateToUnixTimestamp($end_time);
-
-												$start_time = date_create(date('Ymd',$start_time));
-												$end_time = date_create(date('Ymd',$end_time));
-
-												$diff=date_diff($start_time,$end_time);
-												$res['this_company_count'] += $diff->format("%y")*12;
-												$res['this_company_count'] += $diff->format("%m");
-											}
-										}
-										$previous_end_date_null = true;
-									}else{
-										if(!$previous_end_date_null){
-											$start_time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
-										}
-										$previous_end_date_null = false;
-										$end_time = substr($page_info_value['detailList'][0]['endDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['endDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['endDate'], 5);
-
-										$start_time = $this->CI->time->ROCDateToUnixTimestamp($start_time);
-										$end_time = $this->CI->time->ROCDateToUnixTimestamp($end_time);
-
-										$start_time = date_create(date('Ymd',$start_time));
-										$end_time = date_create(date('Ymd',$end_time));
-
-										$diff=date_diff($start_time,$end_time);
-										$res['this_company_count'] += $diff->format("%y")*12;
-										$res['this_company_count'] += $diff->format("%m");
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			// echo'end Ha Ha';exit;
-			if(preg_match('/[0-9]{7}/',$res['report_date'])){
+            // 找總年資起始日期
+            foreach($data['pageList'] as $key => $page_info){
+                if(isset($page_info['insuranceList'])){
+                    foreach($page_info['insuranceList'] as $page_info_key => $page_info_value){
+                        if(! preg_match('/部分工時/',$page_info_value['detailList'][0]['comment']) && preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['startDate'])){
+                            $time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
+                            $time = $this->CI->time->ROCDateToUnixTimestamp($time);
+                            $total_count_start_date = date_create(date('Ymd',$time));
+                            break 2;
+                        }
+                    }
+                }
+            }
+            // 總年資結束日期
+            if(preg_match('/[0-9]{7}/',$res['report_date'])){
 				$time = substr($res['report_date'], 0,3).'/'.substr($res['report_date'], 3,2).'/'.substr($res['report_date'], 5);
 				$time = $this->CI->time->ROCDateToUnixTimestamp($time);
 				$total_count_end_date = date_create(date('Ymd',$time));
@@ -989,6 +924,115 @@ class Certification_data
 				$res['total_count'] += $diff->format("%y")*12;
 				$res['total_count'] += $diff->format("%m");
 			}
+
+            // 全公司
+            foreach($data['pageList'] as $key => $page_info){
+                if(isset($page_info['insuranceList'])){
+                    foreach($page_info['insuranceList'] as $page_info_key => $page_info_value){
+                        if(preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['startDate']) && (preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['endDate']) || $page_info_value['detailList'][0]['endDate'] == '')){
+                            $insurance_id = $page_info_value['insuranceId'];
+                            if(isset($company_list[$insurance_id])){
+                                if($company_list[$insurance_id]['startDate'] < $page_info_value['detailList'][0]['startDate']){
+                                    $company_list[$insurance_id]['companyName'] = $page_info_value['companyName'];
+                                    $company_list[$insurance_id]['insuranceSalary'] = $page_info_value['detailList'][0]['insuranceSalary'];
+                                    $company_list[$insurance_id]['startDate'] = $page_info_value['detailList'][0]['startDate'];
+                                    $company_list[$insurance_id]['endDate'] = $page_info_value['detailList'][0]['endDate'];
+                                    $company_list[$insurance_id]['comment'] = $page_info_value['detailList'][0]['comment'];
+                                    $company_list[$insurance_id]['arrearage'] = $page_info_value['detailList'][0]['arrearage'];
+                                }
+                            }
+                            if(!isset($company_list[$insurance_id])){
+                                $company_list[$insurance_id]['companyName'] = $page_info_value['companyName'];
+                                $company_list[$insurance_id]['insuranceSalary'] = $page_info_value['detailList'][0]['insuranceSalary'];
+                                $company_list[$insurance_id]['startDate'] = $page_info_value['detailList'][0]['startDate'];
+                                $company_list[$insurance_id]['endDate'] = $page_info_value['detailList'][0]['endDate'];
+                                $company_list[$insurance_id]['comment'] = $page_info_value['detailList'][0]['comment'];
+                                $company_list[$insurance_id]['arrearage'] = $page_info_value['detailList'][0]['arrearage'];
+
+                            }
+                        }
+                    }
+                }
+            }
+            // 是否有公司投保
+            $keys = array_keys(array_combine(array_keys($company_list), array_column($company_list, 'endDate')),'');
+            if(!empty($keys)){
+                // 多家公司投保
+                if(count($keys)>1){
+                	$employed_company_list = array_intersect_key($company_list,array_flip($keys));
+                    $numbers = array_column($employed_company_list, 'insuranceSalary');
+                    $max = max($numbers);
+                    $keys = array_keys(array_combine(array_keys($employed_company_list), $numbers),$max);
+                    $insurance_id = $keys[0];
+                    $last_insurance_info = $company_list[$insurance_id];
+                }
+                $has_job = true;
+            }else{
+                // 找最後投保資訊
+                $numbers = array_column($company_list, 'endDate');
+                $max = max($numbers);
+                $keys = array_keys(array_combine(array_keys($company_list), array_column($company_list, 'endDate')),$max);
+            }
+            $insurance_id = $keys[0];
+            $res['last_insurance_info'] = isset($company_list[$insurance_id]) ? $company_list[$insurance_id] : [];
+            $res['last_insurance_info']['insuranceId'] = !empty($insurance_id) ? $insurance_id : '';
+
+            // 現在任職公司年資
+            if(!empty($res['last_insurance_info']) && $res['last_insurance_info']['insuranceId'] != '' && $has_job === true){
+                foreach($data['pageList'] as $key => $page_info){
+                    foreach($page_info['insuranceList'] as $page_info_key => $page_info_value){
+                        if(!preg_match('/部分工時/',$page_info_value['detailList'][0]['comment']) && preg_match('/[0-9]{7}/',$page_info_value['detailList'][0]['startDate']) && $res['last_insurance_info']['insuranceId'] == $page_info_value['insuranceId']){
+                            if($page_info_value['detailList'][0]['endDate'] == ''){
+                                if(!$previous_end_date_null){
+                                    $start_time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
+                                }
+                                // 最後投保日期
+                                if(preg_match('/[0-9]{7}/',$res['report_date']) && $res['last_insurance_info']['startDate'] == $page_info_value['detailList'][0]['startDate']){
+                                    $end_time = substr($res['report_date'], 0,3).'/'.substr($res['report_date'], 3,2).'/'.substr($res['report_date'], 5);
+
+                                    // 計算年資
+                                    if($start_time && $end_time){
+                                        $start_time = $this->CI->time->ROCDateToUnixTimestamp($start_time);
+                                        $end_time = $this->CI->time->ROCDateToUnixTimestamp($end_time);
+
+                                        $start_time = date_create(date('Ymd',$start_time));
+                                        $end_time = date_create(date('Ymd',$end_time));
+
+                                        $diff=date_diff($start_time,$end_time);
+                                        $start_time = '';
+                                        $end_time = '';
+                                        $res['this_company_count'] += $diff->format("%y")*12;
+                                        $res['this_company_count'] += $diff->format("%m");
+                                    }
+                                }
+                                $previous_end_date_null = true;
+                            }
+                            if($page_info_value['detailList'][0]['endDate'] != ''){
+                                if(!$previous_end_date_null){
+		                            $start_time = substr($page_info_value['detailList'][0]['startDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['startDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['startDate'], 5);
+								}
+                                $end_time = substr($page_info_value['detailList'][0]['endDate'], 0,3).'/'.substr($page_info_value['detailList'][0]['endDate'], 3,2).'/'.substr($page_info_value['detailList'][0]['endDate'], 5);
+								$previous_end_date_null = false;
+
+                                // 計算年資
+                                if($start_time && $end_time){
+                                    $start_time = $this->CI->time->ROCDateToUnixTimestamp($start_time);
+                                    $end_time = $this->CI->time->ROCDateToUnixTimestamp($end_time);
+
+                                    $start_time = date_create(date('Ymd',$start_time));
+                                    $end_time = date_create(date('Ymd',$end_time));
+
+                                    $diff=date_diff($start_time,$end_time);
+                                    $start_time = '';
+                                    $end_time = '';
+                                    $res['this_company_count'] += $diff->format("%y")*12;
+                                    $res['this_company_count'] += $diff->format("%m");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 		}
 		return $res;
 	}

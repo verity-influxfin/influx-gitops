@@ -430,6 +430,11 @@ class Certification extends MY_Admin_Controller {
 							$game_work_level = 0;
 							$pro_level = 0;
 							$content 					= json_decode($info->content,TRUE);
+							$remark						= json_decode($info->remark, TRUE);
+							if(!is_array($remark)) {
+								$remark = [isset($remark) ? strval($remark) : ''];
+							}
+							$remark['verify_result'] 	= [$fail];
 							if(isset($post['license_status'])){
 								$license_status = is_numeric($post['license_status'])&&$post['license_status']<=3?$post['license_status']:0;
 							}
@@ -446,7 +451,8 @@ class Certification extends MY_Admin_Controller {
 							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
 							$expiretime < time() ? $post['status'] = 2 : '';
 							$this->user_certification_model->update($post['id'],[
-								'content'=>json_encode($content),
+								'content'=> json_encode($content,JSON_INVALID_UTF8_IGNORE),
+								'remark' => json_encode($remark),
 								'expire_time'=>$expiretime,
 							]);
 						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {

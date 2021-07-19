@@ -125,103 +125,140 @@ class Data_verify_lib{
 
 		/**
 		 * [check_credit_investigation 自然人聯徵信保標準檢核]
+		 * @param CertificationResult $verifiedResult [檢核結果]
 		 * @param  array $data [自然人聯徵 user meta]
-		 * @return array $res  [檢核結果]
+		 * @return CertificationResult [檢核結果]
 		 * (
 		 *  [status_code] => 1(通過)/2(退件)/3(轉人工)
 		 *  []error_message] => 不過件原因
 		 * )
 		 */
-		public function check_investigation($data=[]){
-			// todo list 暫時轉人工
-			$res = [
-				'status_code' => 3,
-				'error_message' => [],
-			];
-			foreach($data as  $k=>$v){
-				// 借款逾期、催收或呆帳記錄
-				if($k == 'liabilities_badDebtInfo'){
-					if($v!='無'){
-						$res['status_code'] = 2;
-						$res['error_message'][] = '聯徵借款逾期、催收或呆帳記錄不符合申貸標準';
-					}
-				}
-				// 大額存款不足退票資訊
-				if($k == 'checkingAccount_largeAmount'){
-					if($v!='無'){
-						$res['status_code'] = 2;
-						$res['error_message'][] = '聯徵大額存款不足退票資訊不符合申貸標準';
-					}
-				}
-				// 票據拒絕往來資訊
-				if($k == 'checkingAccount_rejectInfo'){
-					if($v!='無'){
-						$res['status_code'] = 2;
-						$res['error_message'][] = '聯徵票據拒絕往來資訊不符合申貸標準';
-					}
-				}
-				// 信用卡帳款總餘額資訊(有逾期紀錄)
-				if($k == 'creditCardHasDelay'){
-					if($v!='無'){
-						$res['status_code'] = 3;
-						$res['error_message'][] = '聯徵信用卡帳款總餘額資訊不符合申貸標準';
-					}
-				}
-				// 信用卡使用率
-				if($k == 'creditCardUseRate'){
-					if($v >= 100){
-						$res['status_code'] = 2;
-						$res['error_message'][] = '聯徵信用卡使用率不符合申貸標準';
-					}
-				}
-				// 信用卡有無催收、逾期、呆帳紀錄
-				if($k == 'creditCardHasBadDebt'){
-					if($v!='無'){
-						$res['status_code'] = 2;
-						$res['error_message'][] = '聯徵信用卡有無催收、逾期、呆帳紀錄不符合申貸標準';
-					}
-				}
-				// 信用卡延遲未滿一個月次數
-				if($k == 'delayLessMonth'){
-					if($v > 2){
-						$res['status_code'] = 2;
-						$res['error_message'][] = '聯徵信用卡延遲未滿一個月次數不符合申貸標準';
-					}
-				}
-				// 銀行借款家數
-				if($k == 'bankCount'){
-					if($v > 3){
-						$res['status_code'] = 3;
-						$res['error_message'][] = '聯徵銀行借款家數不符合申貸標準';
-					}
-				}
+		public function check_investigation(CertificationResult $verifiedResult, $data=[], $certification_content){
+			if($data['scoreComment'] < 450) {
+				$verifiedResult->addMessage('信用評分低於 450 分', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
 			}
-			return $res;
+
+			if($data['totalMonthlyPayment'] >= $certification_content['monthly_repayment']) {
+				$verifiedResult->addMessage('還款力計算 >= 投保薪資', 3, MassageDisplay::Backend);
+			}
+
+			if($data['debt_to_equity_ratio'] > 100) {
+				$verifiedResult->addMessage('負債比計算 > 100%', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}else if($data['debt_to_equity_ratio'] >= 70) {
+				$verifiedResult->addMessage('負債比計算 >= 70%', 3, MassageDisplay::Backend);
+			}
+
+			if($data['totalAmountQuota'] >= $certification_content['total_repayment']) {
+				$verifiedResult->addMessage('借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
+			}
+
+			if($data['creditUtilizationRate'] > 100) {
+				$verifiedResult->addMessage('信貸額度動用率 > 100%', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}else if($data['creditUtilizationRate'] >= 80) {
+				$verifiedResult->addMessage('負債比計算 >= 80%', 3, MassageDisplay::Backend);
+			}
+
+			if($data['liabilities_badDebtInfo'] != '無') {
+				$verifiedResult->addMessage('有借款餘額、催收或呆帳紀錄', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['repaymentDelay'] != '無') {
+				$verifiedResult->addMessage('有借款延遲記錄', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['creditLogCount'] < 1) {
+				$verifiedResult->addMessage('無信用記錄', 3, MassageDisplay::Backend);
+			}
+
+			if($data['creditCardUseRate'] > 90) {
+				$verifiedResult->addMessage('近一個月信用卡使用率 > 90%', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}else if($data['creditUtilizationRate'] >= 70) {
+				$verifiedResult->addMessage('近一個月信用卡使用率 >= 70%', 3, MassageDisplay::Backend);
+			}
+
+			if($data['delayLessMonth'] > 1) {
+				$verifiedResult->addMessage('延遲未滿一個月次數 > 1', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['delayMoreMonth'] > 0) {
+				$verifiedResult->addMessage('延遲超過一個月次數 > 0', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['creditCardHasBadDebt'] != '無') {
+				$verifiedResult->addMessage('有信用卡催收、呆帳紀錄', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['checkingAccount_largeAmount'] != '無') {
+				$verifiedResult->addMessage('有大額存款不足退票資訊紀錄', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['checkingAccount_rejectInfo'] != '無') {
+				$verifiedResult->addMessage('有票據拒絕往來資訊紀錄', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['S1Count'] >= 3) {
+				$verifiedResult->addMessage('被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MassageDisplay::Backend);
+			}
+
+			return $verifiedResult;
 		}
 
 		/**
 		 * [check_job 工作認證過件檢核]
+		 * @param CertificationResult $verifiedResult [檢核結果]
+		 * @param string $user_id [使用者 ID]
 		 * @param  array  $data [工作認證 user meta]
-		 * @return array  $res  [檢核結果]
+		 * @param  array  $content [工作認證解析完資料]
+		 * @return CertificationResult [檢核結果]
 		 */
-		public function check_job($data=[]){
-			$res = [
-				'status_code' => 1,
-				'error_message' => [],
-			];
+		public function check_job($verifiedResult, $user_id='', $data=[], $content=[]){
 
-			$this->CI->config->load('top_enterprise');
-			$top_enterprise = $this->CI->config->item("top_enterprise");
+//			$this->CI->config->load('top_enterprise');
+//			$top_enterprise = $this->CI->config->item("top_enterprise");
 
-			// foreach($data as $key => $value){
-			// 	if($key == 'company_name'){
-			// 		if(in_array($value,$top_enterprise)){
-			//
-			// 		}
-			// 	}
-			// }
+			if($data['total_count'] < 3 || $data['this_company_count'] < 3 ) {
+				$verifiedResult->addMessage('總工作年資或現任公司年資沒有超過 3 個月', 3, MassageDisplay::Backend);
+			}
 
-			return $res;
+			if($data['last_insurance_info']['insuranceSalary'] < 23800) {
+				$verifiedResult->addMessage('投保薪資月薪小於 23800', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			if($data['last_insurance_info']['endDate'] != "" ||
+				preg_match('/部分工時/', $data['last_insurance_info']['comment']) ||
+				preg_match('/不適用就業保險/', $data['last_insurance_info']['comment']) ||
+				preg_match('/F/', $data['last_insurance_info']['arrearage']) ||
+				preg_match('/D/', $data['last_insurance_info']['arrearage'])
+				) {
+				$verifiedResult->addMessage('註記有部分工時、不適用就業保險、F、D', 2, MassageDisplay::Backend);
+				$verifiedResult->setBanResubmit();
+			}
+
+			/* TODO: 更改為使用公司名稱進行勾稽 (商行號無法使用API查詢)
+			if(!empty($content) && isset($content['gcis_info']['Company_Status_Desc'])) {
+				if(preg_match('/解散/', $content['gcis_info']['Company_Status_Desc'])) {
+					$verifiedResult->addMessage('任職公司非為營業中', 2, MassageDisplay::Client);
+				}else if(!preg_match('/核准設立|核准登記/', $content['gcis_info']['Company_Status_Desc'])) {
+					$verifiedResult->addMessage('任職公司非為營業中', 3, MassageDisplay::Client);
+				}
+			}else{
+				$verifiedResult->addMessage('沒有查詢到公司狀態', 3, MassageDisplay::Backend);
+			}
+			*/
+
+			return $verifiedResult;
 		}
 
 		/**

@@ -984,7 +984,7 @@ class Labor_insurance_lib
 
 		// 表格內容
 		$all_page_array =[];
-		$text_of_page_array = array_filter(preg_split('/共.*[0-9]*頁/',$text));
+		$text_of_page_array = array_filter(preg_split('/共(\s+)?[0-9](\s)?頁/',$text));
 		// 切頁
 		if($text_of_page_array){
 			$page_array = [];
@@ -992,7 +992,7 @@ class Labor_insurance_lib
 
 				if(preg_match('/查詢結果|查\s詢\s結\s果/',$value)){
 
-					$page_array = $this->CI->l_regex->findNonGreedyPatternInBetween($value, "費註記|費\s註\s記", "(※注意事項)|(第.*[0-9]*頁)|(※\s注\s意\s事\s項)");
+					$page_array = $this->CI->l_regex->findNonGreedyPatternInBetween($value, "費註記|費\s註\s記", "(※注意事項)|(第.\s*[0-9]*\s*.頁)|(※\s注\s意\s事\s項)");
 					if($page_array){
 						foreach($page_array as $key1=>$value1){
 							$page_array[$key1] = trim($value1);
@@ -1006,34 +1006,21 @@ class Labor_insurance_lib
 		if($all_page_array){
 			$page_array =[];
 			foreach($all_page_array as $key => $value){
-				// 切單條資訊項目
 
-				preg_match_all('/[0-9]*\s+[0-9]{8}[A-Z]{1}\s+[\W]*[0-9,]+\s+[0-9]{7}\s*/',$value,$info_array);
+				preg_match_all('/[0-9]{1,3}\s+[0-9]{8}[A-Z]{1}\s+([^\s]+|[\W]+)\s+[0-9,]+\s+[0-9]{7}\s*([0-9]{7})?(([^\s\d]|[\W])+)?/',$value,$info_array);
 				$info_array = isset($info_array[0]) ? $info_array[0] : [];
-				// to do list : PREG_SPLIT_DELIM_CAPTURE flag not work
-				// 勞保退保訊息後半段
-				$info_array_extra = preg_split('/[0-9]*\s*[0-9]{8}[A-Z]{1}\s*[\W]*[0-9,]+\s*[0-9]{7}\s*/', $value);
-				if($info_array_extra){
-					unset($info_array_extra[0]);
-					$info_array_extra = array_values($info_array_extra);
 
-					$info_array_count = count($info_array);
-					if($info_array_count >0){
-						for($i=0;$i<$info_array_count;$i++){
-							$info_array[$i] = $info_array[$i].$info_array_extra[$i].' ';
-						}
-					}
-				}
-				if($info_array){
-					foreach($info_array as $key1 => $value1){
-							$info_array[$key1] = trim($value1);
-					}
-				}
+				array_walk($info_array, function (&$item, $key) {
+					$item = trim($item);
+					$item = str_replace("\n", "", $item);
+					// 去除公司名稱中間空白符號
+					$item = preg_replace('/(?<=([\x{4e00}-\x{9fa5}]))\s+(?=[\x{4e00}-\x{9fa5}])/u','',$item);
+				});
+
 				$page_array = array_values(array_filter($info_array));
-				// print_r($page_array);exit;
+
 				foreach($page_array as $key1=> $value1){
 					// 切單欄資訊內容
-					$value1 = preg_replace('/\n/','',$value1);
 					$page_array[$key1] = preg_split('/\s/',$value1);
 
 					// 刪除第一欄序號
@@ -1043,7 +1030,7 @@ class Labor_insurance_lib
 					if($page_array[$key1] && count($page_array[$key1]) >3){
 						$response['pageList'][$key]['insuranceList'][$key1]['insuranceId'] = isset($page_array[$key1][0]) ? preg_replace('/\s/','',$page_array[$key1][0]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['companyName'] = isset($page_array[$key1][1]) ? preg_replace('/\s/','',$page_array[$key1][1]) : '';
-						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = isset($page_array[$key1][2]) ? preg_replace('/\s/','',$page_array[$key1][2]) : '';
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = isset($page_array[$key1][2]) ? preg_replace('/\s|,/','',$page_array[$key1][2]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['startDate'] = isset($page_array[$key1][3]) ? preg_replace('/\s/','',$page_array[$key1][3]) : '';
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = '';
 						if(isset($page_array[$key1][4])){
@@ -1054,7 +1041,16 @@ class Labor_insurance_lib
 							}
 						}
 						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = isset($page_array[$key1][5]) ? preg_replace('/\s/','',$page_array[$key1][5]) : '';
-					}
+						$response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['arrearage'] = isset($page_array[$key1][6]) ? preg_replace('/\s/','',$page_array[$key1][6]) : '';
+					}else{
+                        $response['pageList'][$key]['insuranceList'][$key1]['insuranceId'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['companyName'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['insuranceSalary'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['startDate'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['endDate'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['comment'] = '';
+                        $response['pageList'][$key]['insuranceList'][$key1]['detailList'][0]['arrearage'] = '';
+                    }
 				}
 			}
 		}

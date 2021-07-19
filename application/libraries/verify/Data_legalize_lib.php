@@ -415,13 +415,11 @@ class Data_legalize_lib{
 
 	/**
 	 * [legalize_investigation description]
-	 * @param  string $user_id [使用者 ID]
-	 * @param  array  $data    [驗證資料]
-	 * @param  bool  $has_a11    [是否有 A11 資料]
-	 * (
-	 *  [id] => 統一編號
-	 * )
-	 * @return array  $res     [驗證結果]
+	 * @param CertificationResult $verifiedResult [驗證結果]
+	 * @param string $user_id [使用者 ID]
+	 * @param array $data [驗證資料]
+	 * @param int $hsa_a11
+	 * @return CertificationResult  $res     [驗證結果]
 	 * (
 	 *  [error_location] => 資料不正確欄位
 	 *  [error_message] => 資料錯誤說明備註
@@ -431,36 +429,43 @@ class Data_legalize_lib{
 	 *           )
 	 * )
 	 */
-	public function legalize_investigation($user_id='',$data=[],$hsa_a11=0){
-		$res = [
-			'error_location' => [],
-			'error_message' => [],
-			'result' => [],
-		];
-
-		if($user_id){
+	public function legalize_investigation(CertificationResult $verifiedResult, $user_id='', $result=[], $created_at=0, $hsa_a11=0){
+		if($user_id) {
 			$this->CI->load->model('user/user_model');
-			$user_info = $this->CI->user_model->get_by(['id'=>$user_id]);
-			if($user_info && isset($data['id'])){
+			$user_info = $this->CI->user_model->get_by(['id' => $user_id]);
+			if (isset($user_info) && isset($result['personId'])) {
 
-				if($data['id'] != $user_info->id_number){
-					$res['error_message'][] = '聯徵身分證號與該實名用戶統一編號不一致';
-					$res['error_location'][] = 'id';
+				if ($result['personId'] != $user_info->id_number) {
+					$verifiedResult->addMessage('聯徵報告身分證字號與實名認證不符', 2, MassageDisplay::Client);
 				}
-				$res['result']['id'] = $data['id'];
-				if($hsa_a11){
-					if($data['id'] != $user_info->id_number){
-						$res['error_message'][] = 'A11名稱與該實名用戶統一編號不一致';
-						$res['error_location'][] = 'a11_id';
-					}
-					$res['result']['a11_id'] = $data['a11_id'];
-				}
-			}else{
-				$res['error_message'][] = '查無使用者相關資訊';
+
+				// TODO: 微企貸的聯徵a11 return 及 $res 要改
+//				$res['result']['id'] = $data['id'];
+//				if($hsa_a11){
+//					if($data['id'] != $user_info->id_number){
+//						$verifiedResult->addPendingMessage('A11名稱與該實名用戶統一編號不一致');
+//					}
+//					$res['result']['a11_id'] = $data['a11_id'];
+//				}
+
+			} else {
+				$verifiedResult->addMessage('查無使用者相關資訊', 3, MassageDisplay::Backend);
 			}
 		}
 
-		return $res;
+		if(isset($result['printDatetime']) && $result['printDatetime']) {
+			$this->CI->load->library('mapping/time');
+			$reportTime = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $result['printDatetime']);
+			$reportTime = $this->CI->time->ROCDateToUnixTimestamp($reportTime);
+
+			// 印表日期
+			$validReportTime = strtotime(date('Y-m-d H:i:s', $created_at) . " - 1 month");
+			if($reportTime < $validReportTime) {
+				$verifiedResult->addMessage('聯徵報告非近一個月申請', 2, MassageDisplay::Client);
+			}
+		}
+
+		return $verifiedResult;
 	}
 
 	/**
@@ -525,41 +530,65 @@ class Data_legalize_lib{
 
 	/**
 	 * [legalize_job 工作認證正確性驗證]
-	 * @param  string $user_id [使用者 ID]
-	 * @param  array  $data    [驗證資料]
-	 * @return array  $res     [返回結果]
+	 * @param CertificationResult $res [驗證結果]
+	 * @param string $user_id [使用者 ID]
+	 * @param array $data [驗證資料]
+	 * @param array $content
+	 * @param int $created_at
+	 * @return CertificationResult  $res     [返回結果]
 	 */
-	public function legalize_job($user_id='',$data=[]){
-		$res = [
-			'error_location' => [],
-			'error_message' => [],
-			'result' => [],
-		];
+	public function legalize_job(CertificationResult $res, $user_id='', $data=[], $content=[], $created_at=0){
 
-		if($user_id && $data){
+		if($user_id && !empty($data) && !empty($content)) {
 			$this->CI->load->model('user/user_model');
 			$user_info = $this->CI->user_model->get_by(['id'=>$user_id]);
-			if($user_info && $data['pageList'][0]['personId']){
-				if($data['pageList'][0]['personId'] != $user_info->id_number){
-					$res['error_message'][] = '身分證號與該實名用戶統一編號不一致';
-					$res['error_location'][] = 'id_card';
+			if($user_info && $data['person_id']){
+				if($data['person_id'] != $user_info->id_number){
+					$res->addMessage('勞保資料身分證字號與實名認證不符', 2, MassageDisplay::Client);
 				}
-				if($data['pageList'][0]['name'] != $user_info->name){
-					$res['error_message'][] = '姓名與該實名用戶姓名不一致';
-					$res['error_location'][] = 'name';
+				if($data['name'] != $user_info->name){
+					$res->addMessage('勞保資料姓名與實名認證不符', 2, MassageDisplay::Client);
 				}
-			}else{
-				$res['error_message'][] = '查無使用者身分證資訊';
-			}
-			if(isset($data['gcis_info']) && $data['gcis_info']){
-				if($data['gcis_info']['Company_Name'] != $data['company_name']){
-					$res['error_message'][] = '公司名稱與商業司查詢不一致';
-					$res['error_location'][] = 'company_name';
+				if(!preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $data['last_insurance_info']['companyName'])) {
+					$res->addMessage('勞保PDF資料解析完的公司名稱有非中文字元', 3, MassageDisplay::Backend);
+				}else if($data['last_insurance_info']['companyName'] != $content['company']){
+					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
 				}
 			}else{
-				$res['error_message'][] = '查無商業司資料';
+				$res->addMessage('解析失敗：查無使用者身分證字號資訊', 3, MassageDisplay::Backend);
 			}
+
+
+			/* TODO: 更改為使用公司名稱進行勾稽 (商行號無法使用API查詢)
+			if(isset($content['gcis_info']) && !empty($content['gcis_info'])){
+				if(mb_substr($content['gcis_info']['Company_Name'], 0, 4, "utf-8") != mb_substr($data['last_insurance_info']['companyName'], 0, 4, "utf-8")){
+					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
+				}
+				if($content['gcis_info']['Business_Accounting_NO'] != $content['tax_id']){
+					$res->addMessage('任職公司統編錯誤', 2, MassageDisplay::Client);
+				}
+			}
+			else{
+				$res->addMessage('查無商業司資料', 3, MassageDisplay::Backend);
+			}
+			*/
 		}
+
+		preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $data['report_date'], $regexResult);
+		if(!empty($regexResult)) {
+			$date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year'])+1911,
+				intval($regexResult['month']), intval($regexResult['day']));
+			$reportDate = DateTime::createFromFormat('Y-m-d', $date);
+			$certificationSubmitDate = new DateTime();
+			$certificationSubmitDate->setTimestamp($created_at);
+			$diffDate = $certificationSubmitDate->diff($reportDate);
+			if($diffDate->m >= 1) {
+				$res->addMessage('勞保非近一個月申請', 2, MassageDisplay::Client);
+			}
+		}else{
+			$res->addMessage('解析失敗：勞保印表日期解析失敗', 3, MassageDisplay::Backend);
+		}
+
 		return $res;
 	}
 

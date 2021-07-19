@@ -57,8 +57,7 @@ class Notification_lib{
 
 		if($status==2){
 			$title = "【認證失敗】您的".$name."未通過";
-			$content = "您好！您的 ".$name."未通過，請重新認證。".($fail?"
-退件原因：".$fail:'');
+			$content = "您好！您的 ".$name."未通過，請重新認證。".($fail?"退件原因：".(is_array($fail)?join("、", $fail):$fail):"");
             $type = 'b03';
         }
 
@@ -73,6 +72,19 @@ class Notification_lib{
 		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 
 		return $rs;
+	}
+
+	public function temp_realname_failed($user_id){
+		$title = "普匯系統通知";
+		$content = "親愛的會員您好：
+普匯本公司為響應政府推出紓困優惠，全面提高額度，上班族高達30萬，邀請您重新體驗最方便的金融科技借貸平台！
+快快體驗提升額度的感覺，拿起手機更新您的實名認證！";
+		$type = 'b03';
+
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+
+		return true;
 	}
 
 	public function transaction_password($user_id,$investor){
