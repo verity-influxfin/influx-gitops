@@ -279,7 +279,7 @@ class Target_lib
 
             $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
             if (!$credit || $stage_cer != 0) {
-                if($product['checkOwner']){
+                if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
                     foreach ($mix_credit as $value) {
                         $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true);
@@ -1639,7 +1639,7 @@ class Target_lib
 							// 微企貸
 							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
 							$wait_associates = false;
-                            if($product['checkOwner']){
+                            if(isset($product['checkOwner']) && $product['checkOwner'] === true){
                                 $this->CI->load->model('loan/target_associate_model');
                                 if($value->sub_status == TARGET_SUBSTATUS_WAITING_ASSOCIATES) {
                                     $this->CI->certification_lib->check_associates($target_id);
@@ -2063,7 +2063,7 @@ class Target_lib
             'secondInstance' => $sub_product['secondInstance'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => $product['checkOwner'],
+            'checkOwner' => isset($product['checkOwner']) ? $product['checkOwner'] : false,
             'status' => $sub_product['status'],
         );
     }
