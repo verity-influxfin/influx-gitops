@@ -965,7 +965,7 @@ class Certification_lib{
 						$res['gcis_info'] = $gcis_res;
 					}
 
-					if (!$res || strpos($text, '勞動部') === FALSE) {
+					if (!$res || strpos($text, '勞動部勞工保險局ｅ化服務系統') === FALSE) {
 						$verifiedResult->addMessage('勞保PDF解析失敗', 3, MassageDisplay::Backend);
 						$remark['fail'] = "需人工驗證";
 					}else if ($res) {
