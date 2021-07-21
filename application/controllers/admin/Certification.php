@@ -159,6 +159,25 @@ class Certification extends MY_Admin_Controller {
 								$report_data['data']['total_repayment_enough'] = $info_content['total_repayment_enough'];
 								// 每月還款是否小於投保金額
 								$report_data['data']['monthly_repayment_enough'] = $info_content['monthly_repayment_enough'];
+
+								// 負債比
+								if(isset($info_content['debt_to_equity_ratio'])) {
+									$report_data['data']['debt_to_equity_ratio'] = $info_content['debt_to_equity_ratio'];
+								}else
+									$report_data['data']['debt_to_equity_ratio'] = round(floatval($report_data['data']['totalMonthlyPayment']) / floatval($report_data['data']['monthly_repayment']) * 100, 2);
+
+								$convertToIntegerList = ['liabilities_totalAmount', 'total_repayment'];
+								foreach($convertToIntegerList as $key) {
+									preg_match('/(\d+[,]*)+/', $report_data['data'][$key], $regexResult);
+									if (!empty($regexResult)) {
+										$multiplier = 1;
+										if (preg_match('/千元/', $report_data['data'][$key], $resultForThousand))
+											$multiplier = 1000;
+										$report_data['data'][$key] = floatval(str_replace(",", "", $regexResult[0])) * $multiplier;
+									}
+								}
+
+
 								$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
 							}
 						}
@@ -203,6 +222,7 @@ class Certification extends MY_Admin_Controller {
 				$page_data['school_system'] 		= $this->config->item('school_system');
 				$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
 				$page_data['from'] 					= $from;
+				$page_data['sys_check'] 			= $info->sys_check;
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title', $this->menu);
 				$this->load->view('admin/certification/' . $certification['alias'], $page_data);

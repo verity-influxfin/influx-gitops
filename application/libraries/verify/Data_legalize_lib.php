@@ -449,7 +449,7 @@ class Data_legalize_lib{
 //				}
 
 			} else {
-				$verifiedResult->addMessage('查無使用者相關資訊', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：查無使用者相關資訊', 3, MassageDisplay::Backend);
 			}
 		}
 
