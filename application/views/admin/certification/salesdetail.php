@@ -47,6 +47,14 @@
                                 }
                                 ?>
                             </div>
+                            <div class="form-group">
+                                <label>系統審核</label>
+                                <?
+                                if (isset($sys_check)) {
+                                    echo '<p class="form-control-static">' . ($sys_check==1?'是':'否') . '</p>';
+                                }
+                                ?>
+                            </div>
                             <h4>審核</h4>
                             <form role="form" method="post">
                                 <fieldset>
