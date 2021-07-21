@@ -212,6 +212,14 @@ class Charge_lib
             return false;
         }
         else{
+            $rs = $this->CI->investment_model->get_by(['target_id' => $target->id, 'status' => 3, 'legal_collection_at > ' => '1911-01-01']);
+
+            // 進入支付命令聲請的法催狀態時，該案件無法進行還款
+            if(isset($rs)) {
+                $this->notice_delay_target($target);
+                return false;
+            }
+
             $transaction 	= $this->CI->transaction_model->get_many_by([
                 'target_id'		=> $target->id,
                 'limit_date <=' => $date,
@@ -830,37 +838,11 @@ class Charge_lib
 					if($user_to_info){
 						$total_remaining_principal = 0;
                         foreach($user_to_info as $investment_id => $value) {
-							// 法催進行中需停止計息
-							$rs = $this->CI->investment_model->get_by(['id' => $value['investment_id']]);
-
-							try {
-								$today = new DateTime($date);
-								$legal_date = new DateTime($rs->legal_collection_at);
-							} catch (Exception $e) {
-								error_log("Parsing the date was failed on line".__LINE__);
-								$today = new DateTime();
-								$legal_date = new DateTime('0000-00-00');
-							}
-
-							$tran_rs = null;
-							if(isset($rs) && $today > $legal_date && $legal_date > new DateTime('1911-01-01') ) {
-								$tran_rs = $this->CI->transaction_model->get_by(
-									[
-										'source' 		=> SOURCE_AR_DELAYINTEREST,
-										'investment_id' => $value['investment_id'],
-									]
-								);
-							}
-
-							if(isset($tran_rs)) {
-								$user_to_info[$investment_id]['delay_interest'] = $tran_rs->amount;
-							}else {
-								if ($contract->format_id == 3) {
-									$user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
-								} else {
-									$user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
-								}
-							}
+                            if ($contract->format_id == 3) {
+                                $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
+                            } else {
+                                $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
+                            }
 
 							$total_remaining_principal 	+= $value['remaining_principal'];
 						}
@@ -937,45 +919,21 @@ class Charge_lib
 					if($user_to_info){
 						foreach($user_to_info as $investment_id => $value){
 							$delay_interest = 0;
-							// 法催進行中需停止計息
-							$rs = $this->CI->investment_model->get_by(['id' => $value['investment_id']]);
 
-							try {
-								$today = new DateTime($date);
-								$legal_date = new DateTime($rs->legal_collection_at);
-							} catch (Exception $e) {
-								error_log("Parsing the date was failed on line".__LINE__);
-								$today = new DateTime();
-								$legal_date = new DateTime('0000-00-00');
-							}
-
-							$tran_rs = null;
-							if(isset($rs) && $today > $legal_date && $legal_date > new DateTime('1911-01-01')) {
-								$tran_rs = $this->CI->transaction_model->get_by(
-									[
-										'source' 		=> SOURCE_AR_DELAYINTEREST,
-										'investment_id' => $value['investment_id'],
-									]
-								);
-							}
-							if(isset($tran_rs)) {
-								$delay_interest = $tran_rs->amount;
-							}else {
-								if ($contract->format_id == 3) {
-									$delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
-								} else {
-									$delay_interest = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
-								}
-								$this->CI->transaction_model->update_by(
-									[
-										'source' => SOURCE_AR_DELAYINTEREST,
-										'investment_id' => $value['investment_id'],
-									],
-									[
-										'amount' => $delay_interest
-									]
-								);
-							}
+                            if ($contract->format_id == 3) {
+                                $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
+                            } else {
+                                $delay_interest = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
+                            }
+                            $this->CI->transaction_model->update_by(
+                                [
+                                    'source' => SOURCE_AR_DELAYINTEREST,
+                                    'investment_id' => $value['investment_id'],
+                                ],
+                                [
+                                    'amount' => $delay_interest
+                                ]
+                            );
 
                             $total = $value['remaining_principal'] + $value['ar_interest'] + $delay_interest;
                             $ar_fee = $this->CI->financial_lib->get_ar_fee($total);
