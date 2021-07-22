@@ -237,6 +237,21 @@ class Notification_lib{
         return $rs;
     }
 
+    public function withdraw_invalid_target($user_id,$investor=0){
+        $title = "【系統通知】";
+        $content = "親愛的會員您好，配合民法規定，調降借貸最高利率至16%，為維護您的權益，請重新申請案件，謝謝您的配合！";
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> $investor,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+        return $rs;
+    }
 	
 	public function target_verify_success($target){
 		$target_no = $target->target_no;
