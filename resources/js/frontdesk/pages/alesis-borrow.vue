@@ -13,7 +13,7 @@
                 </div>
                 <div class="right">
                     <div class="phone">
-                        <img src="/images/alesis-phone-slide-right.svg" class="image" alt="">
+                        <img src="/images/alesis-phone-slide-right-2.svg" class="image" alt="">
                     </div>
                     <div class="phone">
                         <img src="/images/alesis-phone-slide-right.svg" class="image" alt="">
@@ -38,7 +38,7 @@
 
         <!-- 銀行合作專區 -->
         <div class="alesis-recommends">
-            <index-section header="銀行合作專區" multiline="透過普匯推薦合作銀行，可享最高額度300萬！" :secondary="true">
+            <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率1.88%起！" :secondary="true">
                 <div class="wrapper">
                     <index-shanghai></index-shanghai>
                 </div>
