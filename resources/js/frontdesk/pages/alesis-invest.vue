@@ -49,7 +49,7 @@
             <index-section header="投資工具比一比" :secondary="true">
                 <div class="grid">
                     <div class="A">
-                        <img src="/images/invest_chart_a.png" alt="">
+                        <img src="/images/invest_chart_a.svg" alt="">
                     </div>
                     <div class="B">
                         <img src="/images/invest_chart_b.png" alt="">
