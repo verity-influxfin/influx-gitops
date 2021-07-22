@@ -205,7 +205,11 @@ export default {
 
 .alesis-slate {
     position: relative;
-    height  : 119vw;
+    height  : 33rem;
+
+    @include rwd {
+        height: 119vw;
+    }
 
     .background {
         position: absolute;
