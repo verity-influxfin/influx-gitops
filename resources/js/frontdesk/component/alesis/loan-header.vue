@@ -7,7 +7,7 @@
             <div class="header">{{ header }}</div>
             <div class="content" v-html="content"></div>
             <div class="action">
-                <a href="#!" class="item">立即借款 &gt;</a>
+                <a href="/borrowLink" class="item">立即借款 &gt;</a>
             </div>
         </div>
     </div>
