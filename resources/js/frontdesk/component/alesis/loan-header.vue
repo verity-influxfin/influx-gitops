@@ -44,7 +44,7 @@ export default {
         bottom  : 0;
 
         @include rwd {
-            top : 42vw;
+            top : 53vw;
             left: 0;
         }
 
