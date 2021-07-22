@@ -80,7 +80,7 @@
                     </div>
                     <div class="items">
                         <index-bullet class="item" image="/images/alesis-ift.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></index-bullet>
-                        <index-bullet class="item" image="/images/alesis-brain.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾!"></index-bullet>
+                        <index-bullet class="item" image="/images/alesis-brain.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾！"></index-bullet>
                     </div>
                 </div>
             </index-section>
