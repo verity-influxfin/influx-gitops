@@ -721,6 +721,7 @@ export default {
             .label {
                 text-align: right;
                 font-size : 1.4rem;
+                color     : #5862a3;
 
                 @include rwd {
                     text-align: left;
@@ -754,6 +755,7 @@ export default {
                     border       : 1px solid #036eb7;
                     background   : transparent;
                     color        : #036eb7;
+                    outline      : none;
 
                     @include rwd {
                         font-size: 1rem;
