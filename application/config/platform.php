@@ -54,6 +54,10 @@ $config['admin_menu'] = [
         'cooperation?cooperation=2' => '經銷商申請列表',
         'cooperation?cooperation=1' => '經銷商管理列表',
     ],
+    'Creditmanagement' => [
+        'parent_name' => '授審表',
+        'index' => '列表(還沒做)',
+    ],
     'Certification' => [
         'parent_name' => '認證管理',
         'index' => '認證方式列表',
