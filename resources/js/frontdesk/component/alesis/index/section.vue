@@ -51,9 +51,11 @@ export default {
 .sectionx {
     position  : relative;
     max-width : 100vw;
+    padding   : var(--alesis-xsection-offset-top, 0) 0 var(--alesis-xsection-offset-bottom, 0);
 
     @include rwd {
-        padding: 0 2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 
     &.-secondary {
@@ -83,14 +85,14 @@ export default {
                 bottom: 6rem;
 
                 @include rwd {
-                    bottom: 4.5rem;
+                    bottom: 5rem;
                 }
             }
             .after-dots {
                 top: 6.5rem;
 
                 @include rwd {
-                    top: 5rem;
+                    top: 5.5rem;
                 }
             }
         }
