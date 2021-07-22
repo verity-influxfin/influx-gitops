@@ -205,7 +205,7 @@ export default {
 
 .alesis-slate {
     position: relative;
-    height  : 33rem;
+    height  : 119vw;
 
     .background {
         position: absolute;
@@ -216,6 +216,7 @@ export default {
 
         @include rwd {
             left: 0;
+            top : 50vw;
         }
 
         .image {
@@ -468,7 +469,7 @@ export default {
         }
 
         .index-card {
-            min-width: 450px;
+            min-width: 430px;
             max-width: 450px;
         }
     }
