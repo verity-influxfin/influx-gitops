@@ -9,49 +9,13 @@ class Website extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
+        if(!app_access()){
+            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
+        }
+
 		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
-        $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list'];
-		if (!in_array($method, $nonAuthMethods)) {
-            $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
-            $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
-            if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
-				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
-            }
-
-			//只限出借人
-			if($tokenData->investor != 1){
-				$this->response(array('result' => 'ERROR','error' => NOT_INVERTOR ));
-			}
-
-			$this->user_info = $this->user_model->get($tokenData->id);
-			if($tokenData->auth_otp != $this->user_info->auth_otp){
-				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
-			}
-
-			if($this->user_info->block_status != 0){
-				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
-			}
-
-			if($this->request->method != 'get'){
-				$this->load->model('log/log_request_model');
-				$this->log_request_model->insert([
-					'method' 	=> $this->request->method,
-					'url'	 	=> $this->uri->uri_string(),
-					'investor'	=> $tokenData->investor,
-					'user_id'	=> $tokenData->id,
-					'agent'		=> $tokenData->agent,
-				]);
-			}
-
-			$this->user_info->investor 		= $tokenData->investor;
-			$this->user_info->company 		= $tokenData->company;
-			$this->user_info->incharge 		= $tokenData->incharge;
-			$this->user_info->agent 		= $tokenData->agent;
-			$this->user_info->expiry_time 	= $tokenData->expiry_time;
-        }
     }
 
 	/**
@@ -263,6 +227,108 @@ class Website extends REST_Controller {
 		}
 
 		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
+    }
+
+    /**
+     * @api {get} /v2/website/credit_school 官網 取得學校評分
+     * @apiVersion 0.2.0
+     * @apiName Get_Credit_School
+     * @apiGroup Website
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+     * 				{
+     *                  "name": "國立清華大學",
+     *                  "points": 550,
+     *                  "national": 1
+     *              },
+     *              {
+     *                  "name": "國立臺灣大學",
+     *                  "points": 600,
+     *                  "national": 1
+     *              },
+     * 			]
+     * 		}
+     *    }
+     */
+
+    public function credit_school_get()
+    {
+        $input = $this->input->get();
+        $this->config->load('school_points');
+        $school_list = $this->config->item('school_points');
+        $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $school_list ] ));
+    }
+
+    /**
+     * @api {get} /v2/website/credit_department 官網 取得學校科系評分
+     * @apiVersion 0.2.0
+     * @apiName Get_Credit_Department
+     * @apiGroup Website
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+     * 				"台南應用科技大學": {
+     * 				    "score": {
+     * 				        "資訊管理系": 220,
+     * 				        "資訊管理系娛樂與網路應用組": 220,
+     * 				        "財務金融系": 130,
+     * 				        "企業管理系": 130,
+     * 				        "國際企業經營系": 130,
+     * 				        "會計資訊系": 120,
+     * 				        "美容造型設計系": 80,
+     * 				        "運動休閒與健康管理系": 80,
+     * 				        "旅館管理系": 70,
+     * 				        "生活服務產業系": 70,
+     * 				        "幼兒保育系": 70,
+     * 				        "養生休閒管理學位學程": 60,
+     * 				        "餐飲系": 60,
+     * 				        "服飾設計管理系": 50,
+     * 				        "漫畫學士學位學程": 50,
+     * 				        "商品設計系": 50,
+     * 				        "室內設計系": 50,
+     * 				        "時尚設計系": 40,
+     * 				        "多媒體動畫系": 40,
+     * 				        "視覺傳達設計系": 30,
+     * 				        "應用英語系": 20
+     * 				    }
+     * 				},
+     * 				"台北海洋科技大學": {
+     * 				    "score": {
+     * 				        "海空物流與行銷系(淡水校本部)": 100,
+     * 				        "旅遊管理系(淡水校本部)": 70,
+     * 				        "健康促進與銀髮保健系(淡水校本部)": 60,
+     * 				        "餐飲管理系(士林校區)": 50,
+     * 				        "健康照顧社會工作系(淡水校本部)": 40,
+     * 				        "食品科技與行銷系(士林校區)": 40,
+     * 				        "時尚造型設計管理系寵物美容設計組(淡水校本部)": 40,
+     * 				        "海洋運動休閒系(士林校區)": 30,
+     * 				        "海洋休閒觀光系(士林校區)": 30,
+     * 				        "時尚造型設計管理系整體造型設計組(淡水校本部)": 30,
+     * 				        "表演藝術系(淡水校本部)": 20,
+     * 				        "數位遊戲與動畫設計系(淡水校本部)": 10,
+     * 				        "視覺傳達設計系(淡水校本部)": 0
+     * 				    }
+     * 				}
+     * 			]
+     * 		}
+     *    }
+     */
+
+    public function credit_department_get()
+    {
+        $input = $this->input->get();
+        $this->config->load('school_points');
+        $department_list = $this->config->item('department_points');
+        $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $department_list ] ));
     }
 
     private function sub_product_profile($product,$sub_product){
