@@ -202,8 +202,8 @@
                             <a href="/collegeLoan">學生貸款</a>
                             <a href="/freshGraduateLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
-                            <a href="/investment">外匯車貸</a>
-                            <a href="/investment">新創企業主貸</a>
+                            <a href="/investment">車輛融資</a>
+                            <a href="/investment">企業融資</a>
                             <a href="/mobileLoan">手機分期</a>
                         </div>
                     </div>
@@ -268,7 +268,7 @@
             </div>
         </div>
 
-        <a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>
+        <!--<a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>-->
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div v-if="isReset" id="forgetPwdModal" class="modal-content">
