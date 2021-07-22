@@ -16,7 +16,10 @@
 
         <!-- 合作對象 -->
         <div class="alesis-coops">
-            <index-section header="合作夥伴">
+            <alesis-header>
+                <div class="header">合作夥伴</div>
+            </alesis-header>
+            <index-section>
                 <div class="group">
                     <div class="item">
                         <img src="/images/alesis-bordered-ntpu.svg" class="image">
@@ -45,8 +48,13 @@
 
         <!-- 適用對象 -->
         <div class="alesis-for">
-            <index-section :secondary="true" header="適用對象" multiline="滿20歲的在校生，準備您的雙證件、學生證、金融卡，
-在APP上拍照上傳，立即核准！" :descriptionMulti="true">
+            <alesis-header>
+                <div class="header">適用對象</div>
+                <div class="description">
+                    滿20歲的在校生，準備您的雙證件、學生證、金融卡，<br>在APP上拍照上傳，立即核准！
+                </div>
+            </alesis-header>
+            <index-section :secondary="true">
                 <div class="items">
                     <div class="item">
                         <img class="image" src="/images/alesis-symbol-student.svg" alt="">
@@ -71,7 +79,10 @@
 
         <!-- 申貸媒合簡便四步驟 -->
         <div class="alesis-steps">
-            <index-section header="申貸媒合簡便四步驟">
+            <alesis-header>
+                <div class="header">申貸媒合簡便四步驟</div>
+            </alesis-header>
+            <index-section>
                 <global-carousel :indicator="false">
                     <!-- Step 1 -->
                     <div class="set">
@@ -158,8 +169,13 @@
 
         <!-- 服務範圍廣 -->
         <div class="alesis-map">
-            <index-section header="服務範圍廣" multiline="超過156所大學生，不論是生活急需、還是補習進修費，都在找普匯！
-成立三年已幫助超過2萬名學生，讓學生一想到借錢，就想到普匯！" :descriptionMulti="true" :secondary="true">
+            <alesis-header>
+                <div class="header">服務範圍廣</div>
+                <div class="description">
+                    超過156所大學生，不論是生活急需、還是補習進修費，都在找普匯！<br>成立三年已幫助超過2萬名學生，讓學生一想到借錢，就想到普匯！
+                </div>
+            </alesis-header>
+            <index-section :secondary="true">
                 <div class="wrapper">
                     <div class="projects">
                         <div class="item">
@@ -185,7 +201,10 @@
 
         <!-- 為什麼選擇普匯 -->
         <div class="alesis-why">
-            <index-section header="為什麼選擇普匯">
+            <alesis-header>
+                <div class="header">為什麼選擇普匯</div>
+            </alesis-header>
+            <index-section>
                 <div class="items">
                     <div class="item">
                         <img class="image" src="/images/alesis-symbol-taiwan.svg" alt="">
@@ -210,7 +229,12 @@
 
         <!-- 貸安吶 -->
         <div class="alesis-form">
-            <index-section topline="試算您的信用額度" header="貸安吶" multiline="請您依現在的真實狀況填寫以下題目" :outlinedMulti="true" :secondary="true">
+            <alesis-header>
+                <div class="header">試算您的信用額度</div>
+                <div class="header">貸安吶</div>
+                <div class="header -outlined">請您依現在的真實狀況填寫以下題目</div>
+            </alesis-header>
+            <index-section :secondary="true">
                 <div class="form">
                     <div class="row">
                         <div class="label">1.就讀學校：</div>
@@ -350,7 +374,10 @@
 
         <!-- 案例分享 -->
         <div class="alesis-humans">
-            <index-section header="案例分享 / 用戶分享" :outlined="true">
+            <alesis-header class="-trailing">
+                <div class="header -outlined">案例分享 / 用戶分享</div>
+            </alesis-header>
+            <index-section>
                 <global-carousel>
                     <div class="set">
                         <div class="item">
@@ -409,6 +436,7 @@ import globalCarousel                  from "../component/alesis/global-carousel
 import indexProject                    from "../component/alesis/index/project";
 import AlesisLoanHeader                from "../component/alesis/loan-header";
 import AlesisTaiwanMap                 from "../component/alesis/taiwan-map";
+import AlesisHeader                    from "../component/alesis/index/header";
 import AlesisApplicationRecommendation from "../component/alesis/application-recommendation";
 
 export default {
@@ -425,6 +453,7 @@ export default {
         globalCarousel,
         AlesisApplicationRecommendation,
         AlesisTaiwanMap,
+        AlesisHeader,
         AlesisLoanHeader
     },
     data: () => ({
@@ -510,6 +539,12 @@ export default {
     }
 }
 
+.alesis-humans {
+    position: relative;
+    --alesis-xheader-offset: -70%;
+    --alesis-xsection-offset-top: 8rem;
+}
+
 .alesis-counters {
     margin   : 4rem auto 8rem;
     max-width: 1280px;
@@ -525,6 +560,14 @@ export default {
 }
 
 .alesis-map {
+    position: relative;
+    --alesis-xheader-offset: -5rem;
+    --alesis-xsection-offset-top: 8rem;
+
+    @include rwd {
+        --alesis-xheader-offset: -4.5rem;
+    }
+
     .wrapper {
         display              : grid;
         max-width            : 1620px;
@@ -566,6 +609,9 @@ export default {
 }
 
 .alesis-steps {
+    position: relative;
+    --alesis-xsection-offset-top: 8rem;
+
     .carousel {
         .selector .lightbox .set {
             grid-template-columns: 1fr;
@@ -640,9 +686,13 @@ export default {
 }
 
 .alesis-form {
+    position: relative;
     margin-top: 4rem;
+    --alesis-xheader-offset: -8rem;
+    --alesis-xsection-offset-top: 8rem;
 
     @include rwd {
+        --alesis-xheader-offset: -6rem;
         margin-top: 1rem;
     }
 
@@ -819,8 +869,10 @@ export default {
 }
 
 .alesis-coops {
+    position : relative;
     max-width: 1280px;
     margin   : 8rem auto -8rem;
+    --alesis-xsection-offset-top: 8rem;
 
     .group {
         display              : grid;
@@ -855,6 +907,19 @@ export default {
                 }
             }
 
+            @include rwd-minimum {
+                &:nth-child(4) {
+                    .image, .name {
+                        margin-left: 0;
+                    }
+                }
+                &:nth-child(5) {
+                    .image, .name {
+                        margin-right: 0;
+                    }
+                }
+            }
+
             .image {
                 width: 130px;
 
@@ -877,6 +942,11 @@ export default {
 }
 
 .alesis-for {
+    position: relative;
+    --alesis-xheader-offset: -33%;
+    --alesis-xsection-offset-top: 8rem;
+    --alesis-xsection-offset-bottom: 1rem;
+
     .items {
         display              : grid;
         max-width            : 1280px;
@@ -918,6 +988,8 @@ export default {
 }
 
 .alesis-why {
+    --alesis-xsection-offset-top: 7rem;
+
     .items {
         display              : grid;
         max-width            : 1280px;
