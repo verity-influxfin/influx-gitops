@@ -135,8 +135,7 @@ class Data_verify_lib{
 		 */
 		public function check_investigation(CertificationResult $verifiedResult, $data=[], $certification_content){
 			if($data['scoreComment'] < 450) {
-				$verifiedResult->addMessage('信用評分低於 450 分', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
+				$verifiedResult->addMessage('待人工驗證：信用評分低於 450 分', 3, MassageDisplay::Backend);
 			}
 
 			if($data['totalMonthlyPayment'] >= $certification_content['monthly_repayment']) {
