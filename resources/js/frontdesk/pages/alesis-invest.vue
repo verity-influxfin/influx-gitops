@@ -270,14 +270,18 @@ export default {
         right   : 0;
         left    : calc(50vw + 490px / 5);
         bottom  : 0;
+        overflow: hidden;
+        top     : 2rem;
+
 
         @include rwd {
             left     : 50%;
             transform: translateX(-50%);
+            top      : initial;
         }
 
         .image {
-            height: 490px;
+            height: 620px;
 
             @include rwd {
                 height: 94vw;
