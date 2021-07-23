@@ -166,7 +166,7 @@ class PostLoan extends MY_Admin_Controller {
 		$page_data = ['type' => 'list'];
 		$dateOfToday = get_entering_date();
 		$input = $this->input->get(NULL, TRUE);
-		$post = $this->input->post(NULL, TRUE);
+		$post = json_decode($this->input->raw_input_stream, true);
 		$where = ['status' => '1', 'limit_date <=' => $dateOfToday];
 		$target_where = [];
 		$list = [];
@@ -278,7 +278,7 @@ class PostLoan extends MY_Admin_Controller {
 						continue;
 
 					$this->investment_model->update_by([
-						'user_id'=>$value['investorUserId'],
+						'user_id'=>$value['investorUserIds'],
 						'target_id'=>$value['targetId'],
 						'status'=>3,
 					],
@@ -292,7 +292,7 @@ class PostLoan extends MY_Admin_Controller {
 						'done_task'=> json_encode($value['doneTask']),
 						'send_date'=> $value['sendDate'],
 						'status' => $value['status'],
-						'investors'=> json_encode($value['investorUserId'])
+						'investors'=> json_encode($value['investorUserIds'])
 					]);
 
 					// 取消案件產轉申請
@@ -304,7 +304,7 @@ class PostLoan extends MY_Admin_Controller {
 					// 取消投資人債轉
 					$this->load->library('transfer_lib');
 					$investment = $this->investment_model->get_many_by([
-						'user_id'=>$value['investorUserId'],
+						'user_id'=>$value['investorUserIds'],
 						'target_id'=>$value['targetId'],
 						'transfer_status'=>1,
 					]);
@@ -337,7 +337,7 @@ class PostLoan extends MY_Admin_Controller {
 						'Content-Type' => 'application/json',
 						'timeout' => 2.5
 					],
-					'body' => json_encode($post['data'])
+					'body' => json_encode(['payload' => $post['data']])
 				]);
 
 				try {

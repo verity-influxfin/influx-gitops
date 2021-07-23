@@ -88,7 +88,7 @@
 								let target_id = $(this).data('id');
 								let size = result.length;
 								result[size] = {'doneTask': {}, 'status': 10};
-								result[size]['investorUserId'] = [];
+								result[size]['investorUserIds'] = [];
 								result[size]['targetId'] = target_id;
 
 								$(this).find('td').each(function () {
@@ -99,16 +99,16 @@
 								});
 
 								$(this).find('.investors > div > input:checked').each(function () {
-									result[size]['investorUserId'].push($(this).next('label').text());
+									result[size]['investorUserIds'].push(parseInt($(this).next('label').text()));
 								});
 
 								$(this).find('input.done-task').each(function () {
-									result[size]['doneTask'][$(this).val()] = $(this).prop("checked");
+									result[size]['doneTask'][$(this).val()] = $(this).prop("checked") ? 1 : 0;
 								});
 
 								result[size]['sendDate'] = $(this).find('.send_datetime').val();
 
-								if(result[size]['investorUserId'].length) {
+								if(result[size]['investorUserIds'].length) {
 									if (result[size]['sendDate'] === "") {
 										$(this).find('.send_datetime').prop('required', true);
 										$("form").find("#submit-hidden").click();
@@ -126,7 +126,7 @@
 									$.ajax({
 										type: 'POST',
 										url: "<?=admin_url('PostLoan/legal_doc')?>",
-										data: {data: result},
+										data: JSON.stringify({data: result}),
 										success: (rsp) => {
 											let sentResult = JSON.parse(rsp);
 
