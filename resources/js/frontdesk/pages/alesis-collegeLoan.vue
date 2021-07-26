@@ -381,14 +381,14 @@
                 <global-carousel>
                     <div class="set">
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-student-symbol.svg">
                                 <div slot="video">
                                     <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-student-symbol.svg">
                                 <div slot="video">
                                     <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
@@ -397,14 +397,14 @@
                     </div>
                     <div class="set">
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-student-symbol.svg">
                                 <div slot="video">
                                     <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-student-symbol.svg">
                                 <div slot="video">
                                     <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>

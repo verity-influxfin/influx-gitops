@@ -45,7 +45,7 @@
             <index-section header="申貸流程" :secondary="true">
                 <global-carousel :indicator="false">
                     <!-- Step 1 -->
-                    <div class="set">
+                    <div class="set swiper-slide">
                         <div class="item">
                             <div class="step-1">
                                 <div class="left">
@@ -69,7 +69,7 @@
                     <!-- / Step 1 -->
 
                     <!-- Step 2 -->
-                    <div class="set">
+                    <div class="set swiper-slide">
                         <div class="item">
                             <div class="step-2">
                                 <div class="left">
@@ -151,7 +151,7 @@
                     <!-- / Step 2 -->
 
                     <!-- Step 3 -->
-                    <div class="set">
+                    <div class="set swiper-slide">
                         <div class="item">
                             <div class="step-3">
                                 <div class="left">
@@ -172,7 +172,7 @@
                     <!-- / Step 3 -->
 
                     <!-- Step 4 -->
-                    <div class="set">
+                    <div class="set swiper-slide">
                         <div class="item">
                             <div class="step-4">
                                 <div class="left">
@@ -406,32 +406,32 @@
         <div class="alesis-humans">
             <index-section header="案例分享 / 用戶分享" :outlined="true">
                 <global-carousel>
-                    <div class="set">
+                    <div class="set swiper-slide">
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-work-symbol.svg">
                                 <div slot="video">
                                     <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-work-symbol.svg">
                                 <div slot="video">
                                     <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
                     </div>
-                    <div class="set">
+                    <div class="set swiper-slide">
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-work-symbol.svg">
                                 <div slot="video">
                                     <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                             </index-human>
                         </div>
                         <div class="item">
-                            <index-human>
+                            <index-human image="/images/alesis-human-work-symbol.svg">
                                 <div slot="video">
                                     <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
