@@ -53,6 +53,31 @@ class Controller extends BaseController
         return response()->json($count, 200);
     }
 
+    public function sendQuestion(Request $request){
+        $input = $request->all();
+        if(isset($input['identity']) && isset($input['name']) && isset($input['mail']) && isset($input['phone']) && isset($input['content'])){
+
+            $data = [
+                'identity' => $input['identity'],
+                'name' => $input['name'],
+                'mail' => $input['mail'],
+                'phone' => $input['phone'],
+                'content' => $input['content'],
+                'origin_ip' => $_SERVER['REMOTE_ADDR'],
+                'created_at' => date('Y-m-d H:i:s', strtotime('+8 hours')),
+            ];
+            try {
+                DB::table('send_question')->insert($data);
+            } catch (Exception $e) {
+                return response()->json(['response' => 'error', 'message'=>$e], 501);
+            }
+
+            return response()->json(['response' => 'success', 'message' => ''], 200);
+        }else{
+            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+        }
+    }
+
     // to do : 計算邏輯待拆離
     public function getBorrowReport(Request $request)
     {
