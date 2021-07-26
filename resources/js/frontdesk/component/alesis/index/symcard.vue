@@ -9,6 +9,7 @@
             <div class="text">
                 <div class="header">{{ header }}</div>
                 <div class="line"></div>
+                <div v-if="subheader" class="subheader">{{ subheader }}</div>
             </div>
         </div>
         <div class="content">
@@ -27,6 +28,7 @@ export default {
         symbol     : "",
         image      : "",
         header     : "",
+        subheader  : "",
         description: "",
     }
 };
@@ -34,16 +36,23 @@ export default {
 
 <style lang="scss" scoped>
 .item {
-    box-shadow   : 0px 0px 5px 0px rgb(50 50 50 / 75%);
+    box-shadow   : 0px 4px 6px 0px rgb(0 0 0 / 30%);
     flex         : 1;
+    display: flex;
+    flex-direction: column;
     border-radius: 20px;
 
-    .header {
+    > .header {
         background   : #ecedf1;
         display      : flex;
         padding      : .5rem 1rem;
         box-sizing   : border-box;
         border-radius: 20px 20px 0px 0;
+        box-shadow: 0px 6px 6px 0px rgb(0 0 0 / 13%);
+        z-index: 1;
+        position: relative;
+        min-height: 78px;
+        align-items: center;
 
         .symbol {
             position: relative;
@@ -51,23 +60,24 @@ export default {
 
             .wrapper {
                 position     : absolute;
-                top          : -3rem;
+                top          : -4.5rem;
                 left: .5rem;
                 background   : #FFF;
                 padding      : .5rem;
                 border-radius: 100rem;
-                box-shadow   : 0px 0px 5px 0px rgb(50 50 50 / 75%);
+                box-shadow   : 0px 4px 6px 0px rgb(0 0 0 / 20%);
                 z-index: 1;
 
                 .image {
-                    width : 70px;
-                    height: 70px;
+                    width : 80px;
+                    height: 80px;
                 }
             }
         }
 
         .text {
             position: relative;
+            flex: 1;
 
             .header {
                 text-align: center;
@@ -77,17 +87,29 @@ export default {
                 color: rgba(255, 255, 255, 0);
                 margin: 0px auto;
                 font-weight: bolder;
-                font-size: 1.3rem;
-                line-height: 1.2;
+                font-size: 1.4rem;
+                line-height: 1.8;
+            }
+
+            .subheader {
+                text-align: center;
+                background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+                background-clip: text;
+                width: fit-content;
+                color: rgba(255, 255, 255, 0);
+                margin: 0px auto;
+                font-weight: bolder;
+                font-size: .9rem;
+                line-height: 1.7;
             }
 
             .line {
-                position:absolute;
                 height: 1px;
                 background: #2f95cb;
-                left: 30%;
-                right: 30%;
-                bottom: 1px;
+                width: 40%;
+                transform: translateX(-50%);
+                left: 50%;
+                position: relative;
             }
         }
 
@@ -95,7 +117,8 @@ export default {
     .content {
         position     : relative;
         overflow     : hidden;
-        border-radius: 0px 0px 10px 10px;
+        border-radius: 0px 0px 20px 20px;
+        flex: 1;
 
         .image {
             vertical-align: top;
