@@ -37,6 +37,7 @@
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table-export.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/bootstrap-table-filter-control.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/moment.min.js"></script>
+	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/progressbar.min.js"></script>
 	<script data-pace-options='{ "ajax": true }' src="<?=base_url()?>assets/admin/scripts/pace.js"></script>
 
 	<script>

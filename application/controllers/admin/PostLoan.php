@@ -76,6 +76,7 @@ class PostLoan extends MY_Admin_Controller {
 		$post = $this->input->post(NULL, TRUE);
 		$msg = "OK";
 		$success = true;
+		$this->load->library('output/json_output');
 
 		if(isset($post['log_id']) && isset($post['status']) && isset($post['target_id'])) {
 
@@ -125,17 +126,17 @@ class PostLoan extends MY_Admin_Controller {
 				]);
 			}
 		}
-		echo json_encode(['success'=> $success, 'msg' => $msg]);
+		$this->json_output->setStatusCode(200)->setResponse(['success'=> $success, 'msg' => $msg])->send();
 	}
 
 	public function legal_doc_status() {
 		$post = $this->input->post(NULL, TRUE);
+		$this->load->library('output/json_output');
 
 		if(isset($post['tasksLogId'])) {
 			$httpClient = HttpClient::create();
 			$response = $httpClient->request('GET', ENV_ANUBIS_REQUEST_URL . 'payment_order?tasksLogId=' . $post['tasksLogId'], [
 				'headers' => [
-					'Content-Type' => 'application/json',
 					'timeout' => 2.5
 				]
 			]);
@@ -148,16 +149,16 @@ class PostLoan extends MY_Admin_Controller {
 				if ($statusCode == 200) {
 					$statusDescription = 'OK!';
 					$data = $response->toArray();
-					echo json_encode($data);
+					$this->json_output->setStatusCode(200)->setResponse($data)->send();
 				} else {
 					$data = ['status' => $statusCode, 'response' => 'failed'];
 					$statusDescription = '無法連線到法催子系統';
 				}
 				$data['description'] = $statusDescription;
-				echo json_encode($data);
+				$this->json_output->setStatusCode($statusCode)->setResponse($data)->send();
 			}
 		}else{
-			echo json_encode(['status' => 400, 'response' => 'The parameter is invalid.']);
+			$this->json_output->setStatusCode(400)->setResponse(['status' => 400, 'response' => 'The parameter is invalid.'])->send();
 		}
 	}
 
@@ -271,6 +272,7 @@ class PostLoan extends MY_Admin_Controller {
 
 		}else{
 			if(isset($post['data'])) {
+				$this->load->library('output/json_output');
 				$insertedIdList = [];
 				foreach($post['data'] as $value) {
 					$target 	= $this->target_model->get($value['targetId']);
@@ -361,7 +363,7 @@ class PostLoan extends MY_Admin_Controller {
 						$statusDescription = '無法連線到法催子系統';
 					}
 					$data['description'] = $statusDescription;
-					echo json_encode($data);
+					$this->json_output->setStatusCode($statusCode)->setResponse($data)->send();
 				}
 
 			}

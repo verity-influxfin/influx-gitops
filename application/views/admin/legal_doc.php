@@ -35,9 +35,38 @@
 				}
 
 				let allInvestorsMode = false;
+				let progressBar;
 				$( document ).ready(function() {
+					progressBar = new ProgressBar.Line("#handle_progress", {
+						strokeWidth: 4,
+						easing: 'easeInOut',
+						duration: 1400,
+						color: '#FFEA82',
+						trailColor: '#eee',
+						trailWidth: 1,
+						svgStyle: {width: '100%', height: '100%'},
+						text: {
+							style: {
+								// Text color.
+								// Default: same as stroke color (options.color)
+								color: '#999',
+								position: 'absolute',
+								right: '0',
+								top: '15px',
+								padding: 0,
+								margin: 0,
+								transform: null
+							},
+							autoStyleContainer: false
+						},
+						from: {color: '#FFEA82'},
+						to: {color: '#ED6A5A'},
+						step: (state, bar) => {
+							bar.setText(Math.round(bar.value() * 100) + ' %');
+						}
+					});
+
 					$('.investor-all').click(function () {
-						console.log($(this));
 						$(this).parent().prev().find('input').prop("checked", true);
 					});
 					$('.investor-cancel').click(function () {
@@ -63,8 +92,7 @@
 								url: "<?=admin_url('PostLoan/save_status')?>",
 								data: {log_id: log_id, target_id: target_id, status: status},
 								success: (json) => {
-									console.log(json);
-									let rsp = JSON.parse(json);
+									let rsp = json['response'];
 									if(rsp['success']) {
 										$(this).parent().closest('tr').find('td.memo').append(moment().format('YYYY-MM-DD') + " 更換處理進度為" + $(this).prev('select').find('option:selected').text() + "</br> - [" + adminName + "] </br>");
 										$(this).addClass('saved-animation'); // add the animation class
@@ -120,7 +148,6 @@
 								}
 							});
 
-							console.log('result',result);
 							if(isSuccess) {
 								Pace.track(() => {
 									$.ajax({
@@ -128,15 +155,17 @@
 										url: "<?=admin_url('PostLoan/legal_doc')?>",
 										data: JSON.stringify({data: result}),
 										success: (rsp) => {
-											let sentResult = JSON.parse(rsp);
+											let sentResult = rsp['response'];
 
 											if(sentResult['status'] !== 200) {
 												return alert(sentResult['description']);
 											}
 
+
 											$(this).addClass('saved-animation'); // add the animation class
 											setTimeout(() => {
 												$(this).removeClass('saved-animation');
+												progressBar.animate(0);
 											}, 1500);
 
 											var timeoutID = setInterval(() => {
@@ -145,12 +174,16 @@
 													url: "<?=admin_url('PostLoan/legal_doc_status')?>",
 													data: {tasksLogId: sentResult['response']['tasksLogId']},
 													success: (json) => {
-														let legalDocResult = JSON.parse(json);
+														let legalDocResult = json['response'];
 
 														if(legalDocResult['status'] === 200 && legalDocResult['response']['result']['status'] === 'finished') {
+															progressBar.animate(1);
 															clearInterval(timeoutID);
-															download('支付命令資料.zip', legalDocResult['response']['result']['url']);
+															download('支付命令資料.zip', legalDocResult['response']['result']['msg']);
+														}else{
+															progressBar.animate(parseInt(legalDocResult['response']['result']['percentage'])/100.0);  // Value from 0.0 to 1.0
 														}
+
 													},
 													error: function (xhr, textStatus, thrownError) {
 														alert(textStatus);
@@ -231,16 +264,24 @@
 									</tr>
 								</table>
 							</div>
-							<div class="col-lg-3" style="
+							<div class="col-lg-3">
+								<div style="
 								display: flex;
 								justify-content: space-between;
-								align-self: flex-end;">
-								<div class="btn-group-toggle" data-toggle="buttons" id="all-target-investors">
-									<label class="btn btn-primary">
-										<input type="checkbox"> 全選
-									</label>
+								align-self: flex-end;
+								 ">
+									<div class="btn-group-toggle" data-toggle="buttons" id="all-target-investors">
+										<label class="btn btn-primary">
+											<input type="checkbox"> 全選
+										</label>
+									</div>
+									<button class="btn btn-primary button-saved draw" id="exportBtn">匯出文件</button>
 								</div>
-								<button class="btn btn-primary button-saved draw" id="exportBtn">匯出文件</button>
+
+								<div>
+									<div id="handle_progress" style="position: relative; height: 5px;"></div>
+
+								</div>
 							</div>
                         </div>
                         <!-- /.panel-heading -->
@@ -312,7 +353,7 @@
 												<a class="btn btn-danger investor-cancel">取消</a>
 												<a class="btn btn-primary mt-2 investor-all">全選</a>
 											</td>
-											<td>
+											<td style="width: 15px">
 												<?php
 													foreach($task_list as $task => $description) {
 												?>
