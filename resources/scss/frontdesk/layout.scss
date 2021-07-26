@@ -8,6 +8,7 @@ body {
     font-family: Arial, "微軟正黑體", "蘋果儷中黑", "Helvetica Neue", Helvetica,
         sans-serif;
     width: 100%;
+    overflow-x: hidden;
 }
 
 a {
@@ -212,6 +213,7 @@ $ci-color: #153a71;
     width: 100%;
     margin-top: 66px;
     overflow: auto;
+    overflow-x: hidden;
 
     @include rwd {
         margin-top: 56px;
