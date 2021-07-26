@@ -168,7 +168,11 @@
 
         <!-- 普匯推薦 銀行速貸好條件 -->
         <div class="alesis-recommend-banks">
-            <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯推薦合作銀行，可享最高額度300萬，超低利率1.88%起！">
+            <alesis-header>
+                <div class="header">普匯推薦 銀行速貸好條件</div>
+                <div class="header -second" style="margin-top: .8rem; line-height: 1.4;">透過普匯推薦合作銀行，可享最高額度300萬，超低利率1.88%起！</div>
+            </alesis-header>
+            <index-section>
                 <div class="wrapper">
                     <index-shanghai></index-shanghai>
                 </div>
@@ -283,6 +287,7 @@ import indexPlan      from "../component/alesis/index/plan";
 import indexHuman     from "../component/alesis/index/human";
 import indexButton    from "../component/alesis/index/button";
 import indexShanghai  from "../component/alesis/index/shanghai";
+import AlesisHeader                    from "../component/alesis/index/header";
 import globalCarousel from "../component/alesis/global-carousel";
 
 export default {
@@ -300,6 +305,7 @@ export default {
         indexHuman,
         indexButton,
         indexShanghai,
+        AlesisHeader,
         globalCarousel
     },
     data: () => ({
@@ -614,9 +620,12 @@ export default {
 
         .showcase {
             flex      : 1;
+            max-width : min(590px, 45vw);
             text-align: center;
 
             .image {
+                max-width: min(590px, 32vw);
+
                 @include rwd {
                     width: 280px;
                 }
@@ -812,13 +821,16 @@ export default {
 }
 
 .alesis-recommend-banks {
+    --alesis-xheader-offset     : -34%;
+    --alesis-xsection-offset-top: 7rem;
+
+    position: relative;
+
     .wrapper {
         display        : flex;
         align-items    : center;
         justify-content: center;
         margin         : 3rem 0;
-
-
     }
 }
 
@@ -867,7 +879,8 @@ export default {
                     mix-blend-mode: darken;
 
                     @include rwd {
-                        height: 30px;
+                        height    : 6vw;
+                        max-height: 30px;
                     }
                 }
             }
@@ -998,14 +1011,14 @@ export default {
                 p {
                     text-shadow   : 2px 6px 6px rgba(0, 0, 0, 0.75);
                     font-family   : NotoSansTC;
-                    font-size     : 40px;
+                    font-size     : 2.3vw;
                     letter-spacing: 2.4px;
                     color         : #ffffff;
                 }
 
                 span {
                     text-shadow   : 2px 6px 6px rgba(0, 0, 0, 0.75);
-                    font-size     : 36px;
+                    font-size     : 2.1vw;
                     letter-spacing: 1.8px;
                     color         : #f2e627;
                     text-align    : center;
@@ -1014,7 +1027,14 @@ export default {
 
             .box {
                 display   : flex;
-                margin-top: 9rem;
+                margin-top: 5vw;
+
+                a {
+                    img {
+                        width: 17vw;
+                        max-width: 230px;
+                    }
+                }
 
                 %block {
                     width   : 40%;
@@ -1032,7 +1052,7 @@ export default {
                         top      : 51%;
                         left     : 47%;
                         transform: translate(-50%, -50%);
-                        font-size: 25px;
+                        font-size: min(1.5vw, 26px);
                     }
                 }
 
@@ -1086,6 +1106,12 @@ export default {
 
                             .text {
                                 font-size: 16px;
+                            }
+                        }
+
+                        a {
+                            img {
+                                width: 100%;
                             }
                         }
                     }
