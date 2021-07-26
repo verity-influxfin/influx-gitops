@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="{{ asset('css/package/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/pagination.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/hover-min.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
