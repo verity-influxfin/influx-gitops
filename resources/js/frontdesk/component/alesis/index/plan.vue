@@ -51,6 +51,7 @@ export default {
         position     : absolute;
         top          : 0;
         left         : 50%;
+        border       : 8px solid #f5f6f8;
         transform    : translate(-50%, -50%);
         z-index      : 2;
         background   : #f5f6f8;
