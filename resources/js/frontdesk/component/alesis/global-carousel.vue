@@ -14,10 +14,39 @@
         <div class="indicator" v-if="indicator === true">
             <div class="item" v-for="i in length" :key="i" :class="{'-active': index == i-1}"></div>
         </div>
+        <div class="dsds">sadas</div>
+
+
+        <!-- Slider main container -->
+        <div class="swiper-container">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+            <!-- Slides -->
+            <slot></slot>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- If we need scrollbar -->
+        <div class="swiper-scrollbar"></div>
+        </div>
+
     </div>
 </template>
 
 <script>
+import 'swiper/swiper.scss';
+import "swiper/components/navigation/navigation.min.css"
+import SwiperCore, {
+  Navigation
+} from 'swiper/core';
+
+
+
 export default {
     name : "Carousel",
     props: {
@@ -31,9 +60,33 @@ export default {
             length: 0,
         }
     },
+    components: {
+    },
     mounted() {
         this.length = this.$el.querySelectorAll(".lightbox .set").length
         this.$el.querySelectorAll(".lightbox .set")[0].classList.add("-visible")
+        // install Swiper modules
+        SwiperCore.use([Navigation]);
+        const swiper = new Swiper('.swiper-container', {
+            // Optional parameters
+            loop: true,
+
+            // If we need pagination
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // And if we need scrollbar
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+            });
     },
     methods: {
         next() {
@@ -64,6 +117,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "./alesis";
+
+.swiper-container {
+    width: 370px;
+    height: 130px;
+}
 
 .carousel {
     display        : flex;
