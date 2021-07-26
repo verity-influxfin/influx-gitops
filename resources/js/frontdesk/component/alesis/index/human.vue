@@ -3,7 +3,7 @@
         <div class="header">
             <div class="symbol">
                 <div class="wrapper">
-                    <img class="image" src="/images/累積放款金額-01.svg" alt="">
+                    <img class="image" :src="image" alt="">
                 </div>
             </div>
             <div class="grid">
