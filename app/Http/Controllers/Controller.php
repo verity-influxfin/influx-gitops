@@ -78,6 +78,28 @@ class Controller extends BaseController
         }
     }
 
+    public function getCase(Request $request){
+        $input = $request->all();
+        if(isset($input['product_id']) && isset($input['status'])){
+            if(in_array($input['product_id'],[1,3]) || in_array($input['status'],[3,10])){
+                $params = http_build_query($input);
+                $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+                if(!empty($case_response)){
+                    $case_data = json_decode($case_response,true);
+                    if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
+                        return response()->json(['response' => 'success','data' => $case_data['data']['list']], 200);
+                    }
+                }else{
+                    return response()->json(['response' => 'error','message' => 'not response'], 501);
+                }
+            }else{
+                return response()->json(['response' => 'error','message' => 'parameter not correcct'], 501);
+            }
+        }else{
+            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+        }
+    }
+
     // to do : 計算邏輯待拆離
     public function getBorrowReport(Request $request)
     {
