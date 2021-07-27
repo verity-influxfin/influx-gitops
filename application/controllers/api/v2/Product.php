@@ -254,7 +254,7 @@ class Product extends REST_Controller {
                     'sub_product'		    => $value['sub_product'],
                     'hiddenMainProduct'		=> $value['hiddenMainProduct'],
                     'hiddenSubProduct'		=> $value['hiddenSubProduct'],
-                    'checkOwner' => $value['checkOwner'],
+                    'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
                     'target'                => isset($target[$value['id']][0])?$target[$value['id']][0]:[],
                     'certification'         => $certification,
                 );
