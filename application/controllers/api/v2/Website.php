@@ -85,7 +85,7 @@ class Website extends REST_Controller {
 		$input 			= $this->input->get();
 		$list			= [];
         $where			= [];
-		if(!isset($input['status']) || !in_array($input['status'],[5, 10])) {
+		if(!isset($input['status']) || !in_array($input['status'],[3, 10])) {
             $this->response(array('result' => 'SUCCESS','data' => [ 'list' => [] ] ));
         }else
             $where['status'] = $input['status'];
@@ -94,8 +94,8 @@ class Website extends REST_Controller {
             $where['product_id'] = $input['product_id'];
         }
 
-		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate','created_at'))?$input['orderby']:'credit_level';
-		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
+		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate','created_at'))?$input['orderby']:'created_at';
+		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'desc';
 		$this->target_model->order_by($orderby,$sort);
 
 		// 已結案的只能撈一百筆
