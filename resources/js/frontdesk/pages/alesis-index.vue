@@ -1052,7 +1052,8 @@ export default {
                 }
 
                 %block {
-                    width   : 40%;
+                    // width   : 40%;
+                    width   : 100%;
                     margin  : 0px auto;
                     position: relative;
 
