@@ -242,26 +242,6 @@ class Controller extends BaseController
         return response()->json($result, 200);
     }
 
-    public function getgetCase(Request $request){
-
-        $input = $request->all();
-
-        if(isset($input['status']) && $input['status'] == 10){
-            $input['limit'] = 100;
-        }
-        $params = http_build_query($input);
-        // url 待改，主站 api 待開發
-        $case_data = shell_exec('curl -X POST "' . $this->apiGetway . 'user/login" -d "' . $params . '"');
-
-        if ($data['result'] === "SUCCESS") {
-            $result = $case_data['data']['list'];
-        } else {
-            return response()->json($data, 400);
-        }
-
-        return response()->json($result, 200);
-    }
-
     public function getKnowledgeData(Request $request)
     {
         $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['status', '=', 'publish']])->orderBy('order', 'desc')->orderBy('post_date', 'desc')->get();
