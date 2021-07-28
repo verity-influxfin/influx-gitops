@@ -593,6 +593,10 @@ export default {
             align-items: center;
 
             .lightbox {
+                svg {
+                    width: 90vw;
+                    max-width: 1170px;
+                }
                 .image {
                     max-width: 85%;
                 }
