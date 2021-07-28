@@ -60,19 +60,20 @@
             <index-section header="公司簡介">
                 <div class="carousel">
                     <div class="entity">
-                        <div class="left">
+                        <!--<div class="left">
                             <img src="/images/alesis-carousel-left.svg" alt="">
-                        </div>
+                        </div>-->
                         <div class="lightbox">
-                            <img class="image" src="/images/alesis-roadmap.svg" />
+                            <horizontal-path></horizontal-path>
                         </div>
-                        <div class="right">
+                        <!--<div class="right">
                             <img src="/images/alesis-carousel-right.svg" alt="">
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="mobile-roadmap">
-                    <img src="/images/alesis-index-vertical-path.svg">
+                    <vertical-path></vertical-path>
+
                 </div>
                 <div class="introduction">
                     <div class="showcase">
@@ -287,8 +288,10 @@ import indexPlan      from "../component/alesis/index/plan";
 import indexHuman     from "../component/alesis/index/human";
 import indexButton    from "../component/alesis/index/button";
 import indexShanghai  from "../component/alesis/index/shanghai";
-import AlesisHeader                    from "../component/alesis/index/header";
+import AlesisHeader   from "../component/alesis/index/header";
 import globalCarousel from "../component/alesis/global-carousel";
+import verticalPath   from "../component/alesis/vertical-path";
+import horizontalPath from "../component/alesis/horizontal-path";
 
 export default {
     components: {
@@ -306,7 +309,9 @@ export default {
         indexButton,
         indexShanghai,
         AlesisHeader,
-        globalCarousel
+        globalCarousel,
+        verticalPath,
+        horizontalPath
     },
     data: () => ({
         amountCount: 5000,
@@ -603,7 +608,7 @@ export default {
             display: block;
         }
 
-        img {
+        svg {
             width        : 70vw;
             margin-bottom: 4rem;
         }
@@ -623,11 +628,16 @@ export default {
             max-width : min(590px, 45vw);
             text-align: center;
 
+            @include rwd {
+                max-width: initial;
+            }
+
             .image {
                 max-width: min(590px, 32vw);
 
                 @include rwd {
-                    width: 280px;
+                    max-width: 100%;
+                    width    : 100%;
                 }
             }
         }
@@ -963,7 +973,8 @@ export default {
                     box-sizing    : border-box;
                     background    : transparent;
                     color         : #f29600;
-                    font-size     : 1.6rem;
+                    font-size     : 2.3rem;
+                    margin-top    : -1rem;
                     line-height   : 1;
                     width         : 8rem;
                     text-align    : center;
