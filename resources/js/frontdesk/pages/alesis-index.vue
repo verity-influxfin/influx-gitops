@@ -980,7 +980,7 @@ export default {
                     font-size     : 2.3rem;
                     margin-top    : -1rem;
                     line-height   : 1;
-                    width         : 8rem;
+                    width         : 11rem;
                     text-align    : center;
                     outline       : none;
                     pointer-events: none;
