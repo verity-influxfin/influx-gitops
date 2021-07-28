@@ -142,19 +142,26 @@ class Controller extends BaseController
         if(isset($input['identity']) && !empty($input ['identity'])){
             // 學生
             if($input ['identity'] == 1){
-                // 系排名
-                if($input['rank']>=30){
-                    $total_point += 0;
-                }elseif ($input['rank']>=10) {
-                    $total_point += 50;
-                }else {
-                    $total_point += 100;
-                }
-                // 是否拿過獎學金
-                if($input['is_get_prize'] == true){
-                    $total_point += 100;
-                }else{
-                    $total_point += 0;
+                $this->apiGetway = 'http://127.0.0.1/api/v2/';
+                $school_points = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/credit_school"');
+                $department_points = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/credit_department"');
+                if(!empty($school_points) && !empty($department_points)){
+                    $school_points = json_decode($school_points,true);
+                    $department_points = json_decode($department_points,true);
+                    if(isset($school_points['data']['list']) && !empty($school_points['data']['list']) && isset($department_points['data']['list']) && !empty($department_points['data']['list'])){
+                        // print_r($department_points);exit;
+                        // 學校
+                        if(isset($input['school_name'])){
+                            $school_name_key = array_search($input['school_name'], array_column($school_points['data']['list'], 'name'));
+                            if(isset($school_points['data']['list'][$school_name_key]['points'])){
+                                $total_point += $school_points['data']['list'][$school_name_key]['points'];
+                            }
+                        }
+                        // 科系
+                        if(isset($input['department']) && isset($department_points['data']['list'][$input['school_name']]['score'][$input['department']]) ){
+                            $total_point += $department_points['data']['list'][$input['school_name']]['score'][$input['department']];
+                        }
+                    }
                 }
             }
             // 上班族
@@ -229,7 +236,7 @@ class Controller extends BaseController
                 $result = $report[0];
             }
         }
-
+print_r($result);exit;
         try {
             $input['amount'] = $result['amount'];
             $input['rate'] = $result['rate'];
