@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="alesis-questions">
-            <index-section header="會員訊息">
+            <!--<index-section header="會員訊息">
                 <div class="items">
                     <div class="item">
                         <div class="header">
@@ -36,6 +36,66 @@
                         </div>
                         <div class="content">
                             A1：所有提供資訊傳輸過程均由HTTPS方式利用SSL/TLS加密封包，<br>　　將所有資訊儲存於亞馬遜AWS雲端伺服器，資料傳輸穩定且安全。
+                        </div>
+                    </div>
+                </div>
+            </index-section>-->
+            <index-section header="學生貸">
+                <div class="items">
+                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.college" :key="index" @click="toggle(item)">
+                        <div class="header">
+                            <div class="text">{{item.title}}</div>
+                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+                        </div>
+                        <div class="content" v-html="item.content">
+                        </div>
+                    </div>
+                </div>
+            </index-section>
+            <index-section header="上班族貸">
+                <div class="items">
+                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.freshgraduate" :key="index" @click="toggle(item)">
+                        <div class="header">
+                            <div class="text">{{item.title}}</div>
+                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+                        </div>
+                        <div class="content" v-html="item.content">
+                        </div>
+                    </div>
+                </div>
+            </index-section>
+            <index-section header="工程師優惠專案">
+                <div class="items">
+                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.engineer" :key="index" @click="toggle(item)">
+                        <div class="header">
+                            <div class="text">{{item.title}}</div>
+                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+                        </div>
+                        <div class="content" v-html="item.content">
+                        </div>
+                    </div>
+                </div>
+            </index-section>
+            <index-section header="投資">
+                <div class="items">
+                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.invest" :key="index" @click="toggle(item)">
+                        <div class="header">
+                            <div class="text">{{item.title}}</div>
+                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+                        </div>
+                        <div class="content" v-html="item.content">
+                        </div>
+                    </div>
+                </div>
+            </index-section>
+            <index-section header="債權轉讓">
+                <div class="items">
+                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.transfer" :key="index" @click="toggle(item)">
+                        <div class="header">
+                            <div class="text">{{item.title}}</div>
+                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+                        </div>
+                        <div class="content" v-html="item.content">
                         </div>
                     </div>
                 </div>
@@ -72,14 +132,49 @@ export default {
         AlesisApplicationRecommendation,
         AlesisLoanHeader
     },
-    data: () => ({
-
-    }),
-    created() {
+    data: () => {
+        return {
+            questions: {
+                college      : [],
+                freshgraduate: [],
+                engineer     : [],
+                invest       : [],
+                transfer     : [],
+            },
+        }
     },
-    mounted() {
+    async mounted() {
+        try {
+            var resp = await fetch('http://localhost:8190/data/qaData.json')
+            var data = await resp.json()
+            this.questions.college = data.college.map((v) => {
+                v.active = false
+                return v
+            })
+            this.questions.freshgraduate = data.freshgraduate.map((v) => {
+                v.active = false
+                return v
+            })
+            this.questions.engineer = data.engineer.map((v) => {
+                v.active = false
+                return v
+            })
+            this.questions.invest = data.invest.map((v) => {
+                v.active = false
+                return v
+            })
+            this.questions.transfer = data.transfer.map((v) => {
+                v.active = false
+                return v
+            })
+        } catch (e) {
+            alert(e)
+        }
     },
     methods: {
+        toggle(item) {
+            item.active = !item.active
+        }
     },
 };
 </script>
