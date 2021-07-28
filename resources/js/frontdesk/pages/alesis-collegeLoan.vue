@@ -741,7 +741,7 @@ export default {
                     background   : transparent;
                     text-align   : center;
                     color        : #036eb7;
-                    padding-left : 45%;
+                    outline      : none;
 
                     @include rwd {
                         font-size   : 1rem;
