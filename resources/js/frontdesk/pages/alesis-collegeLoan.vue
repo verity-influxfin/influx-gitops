@@ -83,10 +83,12 @@
                 <div class="header">申貸媒合簡便四步驟</div>
             </alesis-header>
             <index-section>
-                <global-carousel :indicator="false">
-                    <!-- Step 1 -->
-                    <div class="set">
-                        <div class="item">
+                <!-- Slider main container -->
+                <div class="swiper-container steps-container">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Step 1 -->
+                        <div class="swiper-slide">
                             <div class="step-1">
                                 <div class="left"></div>
                                 <div class="center">
@@ -101,12 +103,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- / Step 1 -->
+                        <!-- / Step 1 -->
 
-                    <!-- Step 2 -->
-                    <div class="set">
-                        <div class="item">
+                        <!-- Step 2 -->
+                        <div class="swiper-slide">
                             <div class="step-2">
                                 <div class="left"></div>
                                 <div class="center">
@@ -121,12 +121,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- / Step 2 -->
+                        <!-- / Step 2 -->
 
-                    <!-- Step 3 -->
-                    <div class="set">
-                        <div class="item">
+                        <!-- Step 3 -->
+                        <div class="swiper-slide">
                             <div class="step-3">
                                 <div class="left"></div>
                                 <div class="center">
@@ -141,12 +139,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- / Step 3 -->
+                        <!-- / Step 3 -->
 
-                    <!-- Step 4 -->
-                    <div class="set">
-                        <div class="item">
+                        <!-- Step 4 -->
+                        <div class="swiper-slide">
                             <div class="step-4">
                                 <div class="left"></div>
                                 <div class="center">
@@ -160,9 +156,12 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- / Step 4 -->
                     </div>
-                    <!-- / Step 4 -->
-                </global-carousel>
+                    <!-- If we need navigation buttons -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             </index-section>
         </div>
         <!-- / 申貸媒合簡便四步驟 -->
@@ -380,40 +379,63 @@
                 <div class="header -outlined">案例分享 / 用戶分享</div>
             </alesis-header>
             <index-section>
-                <global-carousel>
-                    <div class="set">
-                        <div class="item">
-                            <index-human image="/images/alesis-human-student-symbol.svg">
-                                <div slot="video">
-                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <!-- Slider main container -->
+                <div class="swiper-container human-container">
+                    <!-- Additional required wrapper -->
+                    <div class="swiper-wrapper">
+                        <!-- Step 1 -->
+                        <div class="swiper-slide">
+                            <div class="set">
+                                <div class="item">
+                                    <index-human image="/images/alesis-human-student-symbol.svg">
+                                        <div slot="video">
+                                            <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        </div>
+                                    </index-human>
                                 </div>
-                            </index-human>
-                        </div>
-                        <div class="item">
-                            <index-human image="/images/alesis-human-student-symbol.svg">
-                                <div slot="video">
-                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <div class="item">
+                                    <index-human image="/images/alesis-human-student-symbol.svg">
+                                        <div slot="video">
+                                            <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        </div>
+                                    </index-human>
                                 </div>
-                            </index-human>
+                                </div>
                         </div>
+                        <!-- / Step 1 -->
+
+                        <!-- Step 2 -->
+                        <div class="swiper-slide">
+                            <div class="set">
+                                <div class="item">
+                                    <index-human image="/images/alesis-human-student-symbol.svg">
+                                        <div slot="video">
+                                            <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        </div>
+                                    </index-human>
+                                </div>
+                                <div class="item">
+                                    <index-human image="/images/alesis-human-student-symbol.svg">
+                                        <div slot="video">
+                                            <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        </div>
+                                    </index-human>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- / Step 2 -->
+
                     </div>
-                    <div class="set">
-                        <div class="item">
-                            <index-human image="/images/alesis-human-student-symbol.svg">
-                                <div slot="video">
-                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                        <div class="item">
-                            <index-human image="/images/alesis-human-student-symbol.svg">
-                                <div slot="video">
-                                    <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                    </div>
-                </global-carousel>
+
+                    <!-- If we need pagination -->
+                    <div class="swiper-pagination"></div>
+
+                    <!-- If we need navigation buttons -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+
             </index-section>
         </div>
         <!-- / 案例分享 -->
@@ -440,6 +462,12 @@ import AlesisLoanHeader                from "../component/alesis/loan-header";
 import AlesisTaiwanMap                 from "../component/alesis/taiwan-map";
 import AlesisHeader                    from "../component/alesis/index/header";
 import AlesisApplicationRecommendation from "../component/alesis/application-recommendation";
+import 'swiper/swiper.scss';
+import "swiper/components/navigation/navigation.min.css"
+import SwiperCore, {
+  Navigation
+} from 'swiper/core';
+
 
 export default {
     components: {
@@ -6813,11 +6841,32 @@ export default {
                         value: k,
                     })
                 })
-
             })
         })
 
-        console.log(this.schoolDisciplines)
+
+        SwiperCore.use([Navigation]);
+        const swiperA = new Swiper('.swiper-container.steps-container', {
+
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        const swiperB = new Swiper('.swiper-container.human-container', {
+            // If we need pagination
+            pagination: {
+                el: '.swiper-pagination',
+            },
+
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
     },
     methods: {
         calculateForm() {
@@ -6846,6 +6895,8 @@ export default {
         }
 
         .item {
+            max-width: 490px;
+
             @include rwd {
                 &:not(:first-child) {
                     display: none;
@@ -6890,6 +6941,36 @@ export default {
     @include rwd {
         display: none;
     }
+}
+
+.swiper-container.steps-container {
+    width: 900px;
+    height: 549px;
+
+    @include rwd {
+        width: 100%;
+    }
+}
+
+.swiper-container.human-container {
+    max-width: 1170px;
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+
+    .swiper-slide {
+        .set {
+            max-width: 90%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+            margin: 0 auto;
+        }
+    }
+}
+
+.swiper-button-next, .swiper-button-prev {
+    opacity: 0.6;
+    transform: scale(0.7);
 }
 
 .alesis-humans {
@@ -6978,7 +7059,7 @@ export default {
         display              : grid;
         grid-template-columns: repeat(3, 1fr);
         gap                  : 3rem;
-        max-width            : 800px;
+        max-width            : 900px;
 
         @include rwd {
             grid-template-columns: repeat(1, 1fr);
@@ -6992,6 +7073,8 @@ export default {
             }
         }
         .center {
+            text-align: center;
+
             .image {
                 @include rwd {
                     width: 200px;
@@ -7003,6 +7086,10 @@ export default {
             display        : flex;
             justify-content: center;
             flex-direction : column;
+
+            @include rwd {
+                margin: 0 auto;
+            }
 
             .header {
                 color    : #112E53;
