@@ -40235,6 +40235,396 @@ define({
                     }
                 ]
             }
+        },
+        {
+            "type": "get",
+            "url": "/v2/website/list",
+            "title": "取得標的列表",
+            "version": "0.2.0",
+            "name": "GetTargetList",
+            "group": "Website",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "allowedValues": [
+                                5,
+                                10,
+                            ],
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>案件狀態</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "product_id",
+                            "description": "<p>產品編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "credit_level",
+                                "instalment",
+                                "interest_rate",
+                                "created_at"
+                            ],
+                            "optional": true,
+                            "field": "orderby",
+                            "defaultValue": "credit_level",
+                            "description": "<p>排序值</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "asc",
+                                "desc"
+                            ],
+                            "optional": true,
+                            "field": "sort",
+                            "defaultValue": "asc",
+                            "description": "<p>降序/升序</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "target_no",
+                            "description": "<p>標的號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "product_id",
+                            "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "credit_level",
+                            "description": "<p>信用評等</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "user_id",
+                            "description": "<p>User ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "user",
+                            "description": "<p>借款人基本資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "user.sex",
+                            "description": "<p>性別 F/M</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "user.age",
+                            "description": "<p>年齡</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "user.company_name",
+                            "description": "<p>單位名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "loan_amount",
+                            "description": "<p>核准金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "interest_rate",
+                            "description": "<p>年化利率</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "instalment",
+                            "description": "<p>期數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "repayment",
+                            "description": "<p>還款方式</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "expire_time",
+                            "description": "<p>流標時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "invested",
+                            "description": "<p>目前投標量</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "reason",
+                            "description": "<p>借款原因</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_status",
+                            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "created_at",
+                            "description": "<p>申請日期</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "   {\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t\t{\n\t\t\t\t\t\"id\": 30,\n\t\t\t\t\t\"target_no\": \"STN2019011414457\",\n\t\t\t\t\t\"product_id\": 1,\n\t\t\t\t\t\"credit_level\": 6,\n\t\t\t\t\t\"user_id\": 1,\n\t\t\t\t\t\"user\": {\n\t\t\t\t\t\t\"sex\": \"M\",\n\t\t\t\t\t\t\"age\": 29,\n\t\t\t\t\t\t\"company_name\": \"國立宜蘭大學\"\n\t\t\t\t\t},\n\t\t\t\t\t\"loan_amount\": 5000,\n\t\t\t\t\t\"interest_rate\": 10,\n\t\t\t\t\t\"instalment\": 3,\n\t\t\t\t\t\"repayment\": 1,\n\t\t\t\t\t\"expire_time\": 1547792055,\n\t\t\t\t\t\"invested\": 0,\n\t\t\t\t\t\"reason\": \"\",\n\t\t\t\t\t\"status\": 3,\n\t\t\t\t\t\"sub_status\": 0,\n\t\t\t\t\t\"created_at\": 1547455529\n\t\t\t\t}\n\t\t\t]\n\t\t}\n   }",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>未授權的請求</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "401",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": [],\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Website.php",
+            "groupTitle": "Website",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/website/list"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/v2/website/credit_school",
+            "title": "取得學校評分",
+            "version": "0.2.0",
+            "name": "Get_Credit_School",
+            "group": "Website",
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"list\": [\n" +
+                            "            {\n" +
+                            "               \"name\": \"國立清華大學\",\n" +
+                            "               \"points\": 550,\n" +
+                            "               \"national\": 1\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "               \"name\": \"國立臺灣大學\",\n" +
+                            "               \"points\": 550,\n" +
+                            "               \"national\": 1\n" +
+                            "            },\n" +
+                            "        ]\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>未授權的請求</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "401",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Website.php",
+            "groupTitle": "Website",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/website/credit_school"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/v2/website/credit_department",
+            "title": "取得學校科系評分",
+            "version": "0.2.0",
+            "name": "Get_Credit_Department",
+            "group": "Website",
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"list\": [\n" +
+                            "            \"台南應用科技大學\" : {\n" +
+                            "                \"score\": {\n" +
+                            "                    \"資訊管理系\": 220,\n" +
+                            "                    \"資訊管理系娛樂與網路應用組\": 220,\n" +
+                            "                    \"財務金融系\": 130,\n" +
+                            "                    \"企業管理系\": 130,\n" +
+                            "                    \"國際企業經營系\": 130,\n" +
+                            "                    \"會計資訊系\": 120\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "            \"台北海洋科技大學\" : {\n" +
+                            "                \"score\": {\n" +
+                            "                    \"海空物流與行銷系(淡水校本部)\": 100,\n" +
+                            "                    \"旅遊管理系(淡水校本部)\": 70,\n" +
+                            "                    \"健康促進與銀髮保健系(淡水校本部)\": 60,\n" +
+                            "                    \"餐飲管理系(士林校區)\": 50,\n" +
+                            "                    \"健康照顧社會工作系(淡水校本部)\": 40,\n" +
+                            "                    \"食品科技與行銷系(士林校區)\": 40,\n" +
+                            "                    \"時尚造型設計管理系寵物美容設計組(淡水校本部)\": 40,\n" +
+                            "                    \"海洋運動休閒系(士林校區)\": 30,\n" +
+                            "                    \"海洋休閒觀光系(士林校區)\": 30\n" +
+                            "                }\n" +
+                            "            }\n" +
+                            "        ]\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "401",
+                            "description": "<p>未授權的請求</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "401",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"data\": {},\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Website.php",
+            "groupTitle": "Website",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/website/credit_department"
+                }
+            ]
         }
     ]
 });
