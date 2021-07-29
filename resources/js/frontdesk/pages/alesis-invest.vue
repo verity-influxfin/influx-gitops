@@ -18,7 +18,11 @@
 
         <!-- 債權種類 -->
         <div class="債權種類">
-            <alesis-section header="債權種類">
+            <alesis-header>
+                <div class="標題">債權種類</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="項目清單">
                     <div class="項目">
                         <div class="標題">債權投資</div>
@@ -44,13 +48,18 @@
                         </div>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 債權種類 -->
 
         <!-- 對比區域 -->
-        <div class="對比區域" >
-            <alesis-section header="投資工具比一比" :secondary="true">
+        <div class="對比區域">
+            <alesis-header>
+                <div class="標題">投資工具比一比</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
                 <div class="網格系統">
                     <div class="甲">
                         <img src="/images/invest_chart_a.svg">
@@ -62,13 +71,18 @@
                         <img src="/images/invest_chart_c.png">
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 對比區域 -->
 
         <!-- 風險報告 -->
         <div class="風險報告">
-            <alesis-section header="債權風險報告書">
+            <alesis-header>
+                <div class="標題">債權風險報告書</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <div class="封面">
                         <img class="圖片" src="/images/報告書.png">
@@ -77,63 +91,130 @@
                         <alesis-button yPadding="0.9rem" xPadding="2.5rem">查看更多</alesis-button>
                     </a>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 風險報告 -->
 
         <!-- 現有案件 -->
         <div class="現有案件">
+            <alesis-header>
+                <div class="標題">現有案件</div>
+            </alesis-header>
             <alesis-section header="現有案件" :secondary="true">
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <div class="標題">優質項目專區</div>
-                    <global-carousel>
-                        <div class="set">
-                            <div class="item">
-                                <alesis-project></alesis-project>
+                    <div class="swiper-container 幻燈片 幻燈片_優質項目">
+                        <div class="swiper-wrapper">
+                            <!-- 群組 -->
+                            <div class="swiper-slide">
+                                <div class="群組">
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="item">
-                                <alesis-project></alesis-project>
+                            <!-- / 群組 -->
+
+                            <!-- 群組 -->
+                            <div class="swiper-slide">
+                                <div class="群組">
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                </div>
                             </div>
+                            <!-- / 群組 -->
+
+                            <!-- 群組 -->
+                            <div class="swiper-slide">
+                                <div class="群組">
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- / 群組 -->
                         </div>
-                        <div class="set">
-                            <div class="item">
-                                <alesis-project></alesis-project>
-                            </div>
-                            <div class="item">
-                                <alesis-project></alesis-project>
-                            </div>
-                        </div>
-                    </global-carousel>
+
+                        <div class="swiper-pagination"></div>
+
+
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
             <alesis-section>
                 <div class="包裹容器">
                     <div class="標題 標題_快速的">快速變現專區</div>
-                    <global-carousel>
-                        <div class="set">
-                            <div class="item">
-                                <alesis-project></alesis-project>
+                    <div class="swiper-container 幻燈片 幻燈片_快速變現">
+                        <div class="swiper-wrapper">
+                            <!-- 群組 -->
+                            <div class="swiper-slide">
+                                <div class="群組">
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="item">
-                                <alesis-project></alesis-project>
+                            <!-- / 群組 -->
+
+                            <!-- 群組 -->
+                            <div class="swiper-slide">
+                                <div class="群組">
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                </div>
                             </div>
+                            <!-- / 群組 -->
+
+                            <!-- 群組 -->
+                            <div class="swiper-slide">
+                                <div class="群組">
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                    <div class="項目">
+                                        <alesis-project></alesis-project>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- / 群組 -->
                         </div>
-                        <div class="set">
-                            <div class="item">
-                                <alesis-project></alesis-project>
-                            </div>
-                            <div class="item">
-                                <alesis-project></alesis-project>
-                            </div>
-                        </div>
-                    </global-carousel>
+
+                        <div class="swiper-pagination"></div>
+
+
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 現有案件 -->
 
         <!-- 應用程式推薦 -->
-        <alesis-application-recommendation></alesis-application-recommendation>
+        <alesis-app-recommendation></alesis-app-recommendation>
         <!-- / 應用程式推薦 -->
     </div>
 </template>
@@ -158,6 +239,13 @@ import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 import AlesisSpace             from "../component/alesis/AlesisSpace";
 
+
+import 'swiper/swiper.scss';
+import "swiper/components/navigation/navigation.min.css"
+import SwiperCore, {
+  Navigation
+} from 'swiper/core';
+
 export default {
     components: {
         AlesisAppRecommendation,
@@ -179,6 +267,28 @@ export default {
         AlesisVerticalRoadmap,
         AlesisSpace,
     },
+    mounted() {
+        SwiperCore.use([Navigation]);
+        new Swiper('.swiper-container.幻燈片_優質項目', {
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        new Swiper('.swiper-container.幻燈片_快速變現', {
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+    }
 };
 </script>
 
@@ -337,6 +447,7 @@ export default {
  */
 
 .債權種類 {
+    position  : relative;
     margin-top: 7rem;
 }
 
@@ -424,6 +535,10 @@ export default {
  * 現有案件
  */
 
+.現有案件 {
+    position: relative;
+}
+
 .現有案件 .包裹容器 {
     width : min-content;
     margin: 0 auto;
@@ -457,6 +572,47 @@ export default {
     margin-top: -1rem;
 }
 
+.現有案件 .包裹容器 .幻燈片 {
+    width         : 1050px;
+    padding-bottom: 4rem;
+
+    @include rwd {
+        width: 80vw;
+    }
+}
+
+.現有案件 .包裹容器 .幻燈片 .swiper-button-prev,
+.現有案件 .包裹容器 .幻燈片 .swiper-button-next {
+    transform: scale(0.5);
+}
+
+.現有案件 .包裹容器 .幻燈片 .群組 {
+    grid-template-columns: 1fr 1fr;
+    display              : grid;
+    margin               : 0 6rem;
+    gap                  : 4rem;
+
+    @include rwd {
+        grid-template-columns: 1fr;
+        gap                  : 0;
+        margin               : 0 -1rem;
+    }
+}
+
+.現有案件 .包裹容器 .幻燈片 .項目 {
+    @include rwd {
+        transform: scale(0.7);
+    }
+}
+
+.現有案件 .包裹容器 .幻燈片.幻燈片_優質項目 {
+
+}
+
+.現有案件 .包裹容器 .幻燈片.幻燈片_快速變現 {
+
+}
+
 .alesis-projects {
     .wrapper {
 
@@ -475,6 +631,10 @@ export default {
 /**
  * 對比區域
  */
+
+.對比區域 {
+    position: relative;
+}
 
 .對比區域 .網格系統 {
     display              : grid;
@@ -527,12 +687,20 @@ export default {
     }
 }
 
-.對比區域 .網格系統 {
+.對比區域 .網格系統 .甲 img {
     width: 580px;
 
     @include rwd {
         width: 300px;
     }
+}
+
+/**
+ * 風險報告
+ */
+
+.風險報告 {
+    position: relative;
 }
 
 .風險報告 .包裹容器 {
