@@ -9,19 +9,19 @@
             <div class="網格系統">
                 <div class="價格">
                     <span class="標籤">借貸金額</span>
-                    <span class="數值">50,000 元</span>
+                    <span class="數值">{{ amount | format }} 元</span>
                 </div>
                 <div class="利率">
                     <span class="標籤">借貸利率</span>
-                    <span class="數值">10%</span>
+                    <span class="數值">{{interest}}%</span>
                 </div>
                 <div class="期數">
                     <span class="標籤">期數</span>
-                    <span class="數值">24期</span>
+                    <span class="數值">{{instalment}}期</span>
                 </div>
                 <div class="天數">
                     <span class="標籤">媒合時間</span>
-                    <span class="數值">3天</span>
+                    <span class="數值">{{spend}}天</span>
                 </div>
             </div>
         </div>
@@ -46,6 +46,28 @@ export default {
         },
         unit  : {
             default: "",
+        },
+        amount  : {
+            default: 50000,
+        },
+        interest  : {
+            default: 10,
+        },
+        instalment  : {
+            default: 24,
+        },
+        spend:{
+            default: 3,
+        }
+    },
+    methods: {
+        format(data) {
+            data = parseInt(data);
+            if (!isNaN(data)) {
+                let l10nEN = new Intl.NumberFormat("en-US");
+                return l10nEN.format(data.toFixed(0));
+            }
+            return 0;
         },
     }
 };
