@@ -20,6 +20,7 @@
                 <div class="標題">合作夥伴</div>
             </alesis-header>
             <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="群組">
                     <div class="項目">
                         <img src="/images/alesis-bordered-ntpu.svg" class="圖片">
@@ -42,6 +43,7 @@
                         <div class="名稱">新光銀行</div>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 合作對象 -->
@@ -55,6 +57,7 @@
                 </div>
             </alesis-header>
             <alesis-section :secondary="true">
+                <alesis-space size="large"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-student.svg">
@@ -73,6 +76,7 @@
                         <div class="標籤">電子信箱</div>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 適用對象 -->
@@ -83,6 +87,7 @@
                 <div class="標題">申貸媒合簡便四步驟</div>
             </alesis-header>
             <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="swiper-container steps-container">
                     <div class="swiper-wrapper">
                         <!-- 步驟一 -->
@@ -160,6 +165,7 @@
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 步驟說明 -->
@@ -173,6 +179,7 @@
                 </div>
             </alesis-header>
             <alesis-section :secondary="true">
+                <alesis-space size="large"></alesis-space>
                 <div class="包裹容器">
                     <div class="專案">
                         <div class="項目">
@@ -192,6 +199,7 @@
                         <alesis-taiwan-map></alesis-taiwan-map>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 服務範圍 -->
@@ -202,6 +210,7 @@
                 <div class="標題">為什麼選擇普匯</div>
             </alesis-header>
             <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-taiwan.svg">
@@ -220,6 +229,7 @@
                         <div class="標籤">學生核貸率100%</div>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 為何選擇 -->
@@ -232,6 +242,7 @@
                 <div class="標題 標題_外框線的">請您依現在的真實狀況填寫以下題目</div>
             </alesis-header>
             <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
                 <div class="表單">
                     <div class="列">
                         <div class="標籤">1.就讀學校：</div>
@@ -367,6 +378,7 @@
                         <div class="說明">►僅為初步評估，實際貸款條件依照您真實提供的資料而定。</div>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 貸安吶 -->
@@ -377,7 +389,9 @@
                 <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
             </alesis-header>
             <alesis-section>
+                <alesis-space size="small"></alesis-space>
                 <alesis-suggestion-reviews type="college"></alesis-suggestion-reviews>
+                <alesis-space size="small"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 案例分享 -->
@@ -407,6 +421,7 @@ import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
+import AlesisSpace             from "../component/alesis/AlesisSpace";
 // 遠端資料
 import CollegeSchools from "../data/college_schools"
 
@@ -437,6 +452,7 @@ export default {
         AlesisSymcard,
         AlesisTaiwanMap,
         AlesisVerticalRoadmap,
+        AlesisSpace,
     },
     data: () => ({
         formSchool          : "",
@@ -507,22 +523,6 @@ export default {
 
 <style lang="scss">
 @import "../component/alesis/alesis";
-
-.alesis-map {
-    .wrapper {
-        .map {
-            svg {
-                @include rwd-laptop {
-                    width: 100%;
-                }
-                @include rwd {
-                    width : 70vw;
-                    height: 90vw;
-                }
-            }
-        }
-    }
-}
 
 .alesis-steps {
     .carousel {
@@ -615,7 +615,7 @@ export default {
 .服務範圍 .包裹容器 {
     display              : grid;
     max-width            : 1620px;
-    margin               : 8rem auto 0;
+    margin               : 0 auto;
     gap                  : 5rem;
     grid-template-columns: 1fr 1fr;
 
@@ -636,11 +636,19 @@ export default {
     display              : grid;
     grid-template-columns: repeat(2, 1fr);
     gap                  : 3rem;
+    height               : min-content;
+    margin               : 0 2rem;
 
     @include rwd {
         grid-template-columns: repeat(1, 1fr);
         transform            : scale(0.9);
         margin               : -3rem 0;
+    }
+}
+
+.服務範圍 .包裹容器 .地圖 {
+    @include rwd {
+        margin-top: -4rem;
     }
 }
 
@@ -699,12 +707,13 @@ export default {
 .步驟說明 .步驟二 .右邊,
 .步驟說明 .步驟三 .右邊,
 .步驟說明 .步驟四 .右邊 {
-     display        : flex;
+    display        : flex;
     justify-content: center;
     flex-direction : column;
 
     @include rwd {
-        margin: 0 auto;
+        margin      : 0 auto;
+        padding-left: 1rem;
     }
 }
 
@@ -717,7 +726,6 @@ export default {
 
     @include rwd {
         font-size: 1.1rem;
-        padding-left: 1rem;
     }
 }
 
@@ -801,9 +809,8 @@ export default {
     outline      : none;
 
     @include rwd {
-        font-size   : 1rem;
-        padding     : .5rem;
-        padding-left: 37%;
+        font-size: 1rem;
+        padding  : .5rem;
     }
 }
 
@@ -1016,15 +1023,13 @@ export default {
     position: relative;
 
     --alesis-xheader-offset        : -33%;
-    --alesis-xsection-offset-top   : 8rem;
-    --alesis-xsection-offset-bottom: 1rem;
 }
 
 
 .適用對象 .項目列表 {
     display              : grid;
     max-width            : 1280px;
-    margin               : 6rem auto 0;
+    margin               : 0 auto;
     grid-template-columns: repeat(4, 1fr);
     align-items          : center;
     justify-content      : center;
@@ -1032,7 +1037,6 @@ export default {
     @include rwd {
         grid-template-columns: repeat(2, 1fr);
         gap                  : 2rem 0rem;
-        margin-top           : 3rem;
         max-width            : 310px;
     }
 }
@@ -1065,6 +1069,8 @@ export default {
  */
 
 .為何選擇 {
+    position: relative;
+
     --alesis-xsection-offset-top: 7rem;
 }
 
@@ -1103,5 +1109,15 @@ export default {
     @include rwd {
         font-size: 1rem;
     }
+}
+
+/**
+ * 案例分享
+ */
+
+.案例分享 {
+    position: relative;
+
+    --alesis-xheader-offset: -70%;
 }
 </style>
