@@ -64,7 +64,7 @@ export default {
 
 .區塊標題 .內容 .標題 {
     @include rwd {
-        font-size  : 1.3rem;
+        font-size  : 1.25rem;
         line-height: 1;
     }
 }
