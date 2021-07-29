@@ -242,6 +242,7 @@
                 <div class="標題 標題_外框線的">請您依現在的真實狀況填寫以下題目</div>
             </alesis-header>
             <alesis-section :secondary="true">
+                <alesis-space size="tiny"></alesis-space>
                 <alesis-space size="medium"></alesis-space>
                 <div class="表單">
                     <div class="列">
@@ -762,7 +763,7 @@ export default {
 
 .貸安吶 .表單 {
     max-width: 1280px;
-    margin   : 4rem auto 0;
+    margin   : 0 auto;
 }
 
 .貸安吶 .表單 .列 {
