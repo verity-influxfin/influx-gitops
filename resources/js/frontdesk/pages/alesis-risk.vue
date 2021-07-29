@@ -13,7 +13,11 @@
 
         <!-- 報告書 -->
         <div class="報告書">
-            <alesis-section header="違約率報告書">
+            <alesis-header>
+                <div class="標題">違約率報告書</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <img src="/images/alesis-report.svg" class="圖片">
                     <div class="連結">
@@ -31,6 +35,7 @@
                         <alesis-button>立即投資</alesis-button>
                     </a>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 報告書 -->
@@ -162,6 +167,7 @@ export default {
  */
 
 .報告書 {
+    position: relative;
     margin-top: 8rem;
 }
 
@@ -201,7 +207,7 @@ export default {
     }
 }
 
-.報告書 .包裹容器 .連結 .行動 {
+.報告書 .包裹容器 .行動 {
     --x-padding: 2.5rem;
     --y-padding: 0.9rem;
 
