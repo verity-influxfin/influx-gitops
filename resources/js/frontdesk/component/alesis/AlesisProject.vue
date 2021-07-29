@@ -5,40 +5,40 @@
                 <img class="圖片" src="/images/sshot-1591.png">
             </div>
             <div class="個人資料">
-                <div class="象徵">男 / 24歲</div>
+                <div class="象徵">{{ user.sex === 'M' ? '男' : '女'}} / {{ user.age }}歲</div>
                 <div class="階級指數">
-                    4級
+                    {{ credit_level }}級
                     <a class="說明" href="#!">
                         <img class="圖示" src="/images/sshot-1592.png">
                     </a>
                 </div>
             </div>
             <div class="個人身份">
-                <div class="來自">國立臺中科技大學</div>
-                <div class="編號">STN2021031875864</div>
+                <div class="來自">{{ user.company_name }}</div>
+                <div class="編號">{{ target_no }}</div>
             </div>
         </div>
-        <div class="原因">申貸原因：理財 – 跟朋友合作投資需要大筆資金投入</div>
+        <div class="原因">申貸原因：{{ reason }}</div>
         <div class="分隔線"></div>
         <div class="資訊">
             <div class="項目">
                 <div class="標題">金額</div>
-                <div class="數值">73,000 元</div>
+                <div class="數值">{{ loan_amount | format }} 元</div>
             </div>
             <div class="項目">
                 <div class="標題">期數(本息均攤)</div>
-                <div class="數值">24期</div>
+                <div class="數值">{{ instalment }}期</div>
             </div>
             <div class="項目">
                 <div class="標題">年化報酬率</div>
-                <div class="數值 數值_重要的">14.5%</div>
+                <div class="數值 數值_重要的">{{ interest_rate }}%</div>
             </div>
         </div>
         <div class="目標">
-            <div class="進度">
+            <div class="進度" :class="{'進度_媒合成功': invested >= loan_amount}">
                 <div class="標籤">
-                    <div class="種類">學生貸</div>
-                    <div class="剩餘">可投餘額72,000元</div>
+                    <div class="種類">{{ product_name }}</div>
+                    <div class="剩餘">{{ invested < loan_amount  ? '可投餘額'+format(loan_amount-invested)+'元' : '媒合成功'}}</div>
                 </div>
                 <div class="條"></div>
             </div>
@@ -52,6 +52,53 @@
 <script>
 export default {
     name: "AlesisProject",
+    props: {
+        credit_level: {
+            default: "",
+        },
+        user: {
+            default: {
+                sex: "M",
+                age: 0,
+                company_name: "",
+            }
+        },
+        target_no: {
+            default: "",
+        },
+        reason: {
+            default: "",
+        },
+        loan_amount: {
+            default: "",
+        },
+        instalment: {
+            default: "",
+        },
+        interest_rate: {
+            default: "",
+        },
+        product_name: {
+            default: "",
+        },
+        invested: {
+            default: 0,
+        },
+        loan_amount: {
+            default: 0,
+        }
+    },
+    methods: {
+        // format 會格式化數值成為有千分逗號的格式。
+        format(data) {
+            data = parseInt(data);
+            if (!isNaN(data)) {
+                let l10nEN = new Intl.NumberFormat("en-US");
+                return l10nEN.format(data.toFixed(0));
+            }
+            return 0;
+        },
+    }
 };
 </script>
 
@@ -142,6 +189,11 @@ export default {
     margin-right : .5rem;
 }
 
+.單張卡片 .目標 .進度.進度_媒合成功 .條 {
+    width: 98%;
+    background: #E8BB76;
+}
+
 .單張卡片 .目標 .進度 .標籤 {
     display    : flex;
     flex       : 1;
@@ -170,7 +222,7 @@ export default {
     z-index      : 0;
 }
 
-.單張卡片 .目標 .進度 .動作 .項目 {
+.單張卡片 .目標 .動作 .項目 {
     display      : block;
     padding      : .7rem 1.5rem;
     background   : #E8EBEE;
