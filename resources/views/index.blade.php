@@ -237,7 +237,7 @@
                             <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
 
                             <div class="icon"><img src="/images/alesis-address.svg"></div>
-                            <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市松江路111號11樓-2</a></div>
+                            <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市中山區松江路111號11樓之1</a></div>
                         </div>
                         <div class="socials">
                             <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg"></a>
