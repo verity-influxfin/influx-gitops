@@ -11,7 +11,11 @@
 
         <!-- 快速審核 -->
         <div class="快速審核">
-            <alesis-section header="針對上市櫃、公家機關員工 精英快審">
+            <alesis-header>
+                <div class="標題">針對上市櫃、公家機關員工 精英快審</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-registered.svg">
@@ -26,23 +30,33 @@
                         <div class="標籤">擴大核准額度至20萬</div>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 快速審核 -->
 
         <!-- 普匯銀行 -->
         <div class="普匯銀行">
-            <alesis-section header="上班族 普匯合作專區">
+            <alesis-header>
+                <div class="標題">上班族 普匯合作專區</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <alesis-shanghai></alesis-shanghai>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 普匯銀行 -->
 
         <!-- 申貸流程 -->
         <div class="申貸流程">
-            <alesis-section header="申貸流程" :secondary="true">
+            <alesis-header>
+                <div class="標題">申貸流程</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="small"></alesis-space>
                 <div class="swiper-container 幻燈片">
                     <div class="swiper-wrapper">
                         <!-- 步驟一 -->
@@ -50,8 +64,8 @@
                             <div class="項目">
                                 <div class="步驟一">
                                     <div class="左邊">
-                                        <a href="#!"><img src="/images/alesis-app-store.svg" class="圖片"></a>
-                                        <a href="#!"><img src="/images/alesis-google-play.svg" class="圖片"></a>
+                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_balnk"><img src="/images/alesis-app-store.svg" class="圖片"></a>
+                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW&gl=US" target="_blank"><img src="/images/alesis-google-play.svg" class="圖片"></a>
                                     </div>
                                     <div class="中間">
                                         <img src="/images/alesis-workloan-step1.svg" class="圖片">
@@ -195,13 +209,18 @@
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-button-next"></div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 申貸流程 -->
 
         <!-- 產品特色 -->
         <div class="產品特色">
-            <alesis-section header="上班族產品特色">
+            <alesis-header>
+                <div class="標題">上班族產品特色</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <div class="左邊">
                         <div class="區塊">
@@ -243,7 +262,9 @@
                             <img src="/images/alesis-work-loan-phone.svg" class="圖片">
                         </div>
                         <div class="標語">假日放款全年無休</div>
-                        <a href="#!" class="取得"><alesis-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</alesis-button></a>
+                        <a href="#!" class="取得">
+                            <alesis-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</alesis-button>
+                        </a>
                     </div>
                     <div class="右邊">
                         <div class="區塊">
@@ -282,16 +303,24 @@
                     </div>
                     <div class="底部">
                         <div class="標語">假日放款全年無休</div>
-                        <a href="#!" class="取得"><index-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</index-button></a>
+                        <a href="#!" class="取得">
+                            <alesis-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</alesis-button>
+                        </a>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
-        <!-- / 上班族產品特色 -->
+        <!-- / 產品特色 -->
 
         <!-- 額度利率評估問卷 -->
         <div class="評估問卷">
-            <alesis-section header="額度利率評估問卷" multiline="請您依現在的真實狀況填寫以下題目" :outlinedMulti="true" :secondary="true">
+            <alesis-header>
+                <div class="標題">額度利率評估問卷</div>
+                <div class="標題 標題_外框線的">請您依現在的真實狀況填寫以下題目</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
                 <div class="表單">
                     <div class="列">
                         <div class="標籤">1.我的教育程度：</div>
@@ -404,20 +433,26 @@
                         <div class="說明">►僅為初步評估，實際貸款條件依照您真實提供的資料而定。</div>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 評估問卷 -->
 
         <!-- 案例分享 -->
         <div class="案例分享">
-            <alesis-section header="案例分享 / 用戶分享" :outlined="true">
+            <alesis-header class="區塊標題_拖尾的">
+                <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <alesis-suggestion-reviews type="work"></alesis-suggestion-reviews>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 案例分享 -->
 
         <!-- 應用程式推薦 -->
-        <alesis-application-recommendation action="我想借款"></alesis-application-recommendation>
+        <alesis-app-recommendation action="我想借款"></alesis-app-recommendation>
         <!-- / 應用程式推薦 -->
     </div>
 </template>
@@ -659,6 +694,7 @@ export default {
  */
 
 .快速審核 {
+    position: relative;
     margin-top: 8rem;
 }
 
@@ -696,20 +732,27 @@ export default {
  * 普匯銀行
  */
 
+.普匯銀行 {
+    position: relative;
+}
+
 .普匯銀行 .包裹容器 {
     display        : flex;
     align-items    : center;
     justify-content: center;
-    margin         : 2rem 0 0;
 }
 
 /**
  * 評估問卷
  */
 
+.評估問卷 {
+    position: relative;
+}
+
 .評估問卷 .表單 {
     max-width: 1280px;
-    margin   : 4rem auto 0;
+    margin   : 0 auto;
 }
 
 .評估問卷 .表單 .列 {
@@ -886,15 +929,25 @@ export default {
  * 申貸流程
  */
 
+.申貸流程 {
+    position: relative;
+}
+
 .申貸流程 .幻燈片 {
-    margin        : 2rem auto;
+    margin        : 0 auto;
     max-width     : 1170px;
-    padding-bottom: 3rem;
-    padding-top   : 3rem;
+}
+
+.申貸流程 .幻燈片 .swiper-button-next,
+.申貸流程 .幻燈片 .swiper-button-prev {
+    transform: scale(0.6);
+}
+
+.申貸流程 .幻燈片 .swiper-button-disabled {
+    opacity: 0;
 }
 
 .申貸流程 .群組 {
-    max-width            : 90%;
     display              : grid;
     grid-template-columns: repeat(2, 1fr);
     gap                  : 3rem;
@@ -902,8 +955,8 @@ export default {
 }
 
 .申貸流程 .群組 .項目 {
-    width          : 1020px;
-    min-height     : 550px;
+    width          : 1170px;
+    min-height     : 430px;
     display        : flex;
     align-items    : center;
     justify-content: initial;
@@ -1127,6 +1180,10 @@ export default {
  * 產品特色
  */
 
+.產品特色 {
+    position: relative;
+}
+
 .產品特色 .包裹容器 {
     display  : flex;
     max-width: 1280px;
@@ -1188,7 +1245,7 @@ export default {
     height: 34rem;
 }
 
-.產品特色 .包裹容器 .中間 .展示區域 .標語 {
+.產品特色 .包裹容器 .中間 .標語 {
     text-align : center;
     color      : #f29600;
     font-size  : 2rem;
@@ -1196,7 +1253,7 @@ export default {
     margin-top : 7rem;
 }
 
-.產品特色 .包裹容器 .中間 .展示區域 .取得 {
+.產品特色 .包裹容器 .中間 .取得 {
     display   : inline-block;
     margin-top: 1rem;
 }
@@ -1238,7 +1295,7 @@ export default {
     margin-top : 2rem;
 }
 
-.產品特色 .包裹容器 .底部 .標語 .取得 {
+.產品特色 .包裹容器 .底部 .取得 {
     display   : inline-block;
     margin-top: 1rem;
 }
@@ -1311,5 +1368,20 @@ export default {
     color     : #5d5555;
     min-height: 5rem;
     text-align: justify;
+
+    @include rwd {
+        text-align: left;
+        width     : 63vw;
+    }
+}
+
+/**
+ * 案例分享
+ */
+
+.案例分享 {
+    position: relative;
+
+    --alesis-xheader-offset: -70%;
 }
 </style>
