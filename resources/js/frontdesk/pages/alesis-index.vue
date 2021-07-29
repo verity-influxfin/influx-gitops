@@ -1,28 +1,54 @@
 <template>
     <div class="index-wrapper">
-        <div class="banner">
-            <div class="puhey-banner">
-                <img src="/images/首頁BANNER.png" class="hidden-desktop img-fluid" />
-                <img src="/images/index-banner-m.png" class="hidden-phone img-fluid" />
-                <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
-                <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
-                <div class="content">
-                    <p>最貼近年輕人的金融科技平台</p>
-                    <span>普匯．你的手機ATM</span>
-                    <div class="box">
-                        <a
-                        class="loan"
-                        href="/investLink"
-                        ><img src="../asset/images/light-b.svg" class="img-fluid" />
-                        <div class="text">我要投資</div></a
-                        >
-                        <a
-                        class="borrow"
-                        href="/borrowLink"
-                        ><img src="../asset/images/light-y.svg" class="img-fluid" />
-                        <div class="text">我要借款</div></a
-                        >
+        <div class="swiper-container 標頭幻燈片">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div class="banner">
+                        <div class="puhey-banner">
+                            <img src="/images/首頁BANNER.png" class="hidden-desktop img-fluid" />
+                            <img src="/images/index-banner-m.png" class="hidden-phone img-fluid" />
+                            <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
+                            <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
+                            <div class="content">
+                                <p>最貼近年輕人的金融科技平台</p>
+                                <span>普匯．你的手機ATM</span>
+                                <div class="box">
+                                    <a
+                                    class="loan"
+                                    href="/investLink"
+                                    ><img src="../asset/images/light-b.svg" class="img-fluid" />
+                                    <div class="text">我要投資</div></a
+                                    >
+                                    <a
+                                    class="borrow"
+                                    href="/borrowLink"
+                                    ><img src="../asset/images/light-y.svg" class="img-fluid" />
+                                    <div class="text">我要借款</div></a
+                                    >
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="/images/skBankIndex.jpg" class="旗幟圖片">
+                    <img src="/images/skBankIndexM.jpg" class="旗幟圖片 旗幟圖片_手機的">
+                    <div class="新光銀行功能">
+                        <a href="https://www.influxfin.com/skbank" class="連結">
+                            <img src="/images/skbankbuttom1.svg">
+                        </a>
+                        <a href="https://reurl.cc/7r0XQ9" class="連結">
+                            <img src="/images/skbankbuttom2.svg">
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <a href="https://www.influxfin.com/scsbank?move=page">
+                        <img src="/images/banner.jpg" class="旗幟圖片">
+                    </a>
+                    <a href="https://www.influxfin.com/scsbank?move=page">
+                        <img src="/images/banner--.jpg" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
                 </div>
             </div>
         </div>
@@ -348,7 +374,19 @@ export default {
         $("title").text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
-        document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
+       // document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
+
+        SwiperCore.use([Navigation]);
+            new Swiper('.swiper-container.標頭幻燈片', {
+                // autoplay: {
+                //     delay: 3000,
+                // },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+
     },
     methods: {
         nextSolution() {
@@ -399,55 +437,65 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import "../component/alesis/alesis";
-
-
-.alesis-fast-transfer {
-    .wrapper {
-        .moons {
-            @include rwd {
-                margin-left: -4rem;
-            }
-            .moon {
-                .text {
-                    @include rwd {
-                        display    : flex;
-                        gap        : 1.25rem;
-                        font-weight: 400;
-                        font-size  : 1rem;
-                    }
-
-                    .multiline {
-                        @include rwd {
-                            margin-top: 0;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.alesis-feature {
-    .wrapper {
-        .content {
-            .moons {
-                .moon {
-                    .text {
-                        @include rwd {
-                            font-size: 1rem;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-</style>
-
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
+
+/**
+ * 標頭幻燈片
+ */
+
+.標頭幻燈片 {
+
+}
+
+.標頭幻燈片 .旗幟圖片 {
+    width: 100vw;
+
+    @include rwd {
+        display: none;
+    }
+}
+
+.標頭幻燈片 .旗幟圖片.旗幟圖片_手機的 {
+    display: none;
+
+    @include rwd {
+        display: block;
+    }
+}
+
+.標頭幻燈片 .新光銀行功能 {
+    position       : absolute;
+    z-index        : 100;
+    gap            : 3rem;
+    top            : initial;
+    bottom         : 1rem;
+    left           : 50%;
+    right          : initial;
+    width          : 32vw;
+    transform      : translateX(-113%);
+    align-items    : flex-end;
+    justify-content: center;
+    display        : flex;
+
+    @include rwd {
+        top         : -6%;
+        bottom      : 0;
+        left        : 0;
+        right       : 0;
+        height      : 100%;
+        width       : initial;
+        transform   : translateX(0);
+        align-items : center;
+    }
+}
+
+.標頭幻燈片 .新光銀行功能 .連結 {
+    display: block;
+    width  : 28vw;
+}
+
+
 
 /**
  * 計數器
