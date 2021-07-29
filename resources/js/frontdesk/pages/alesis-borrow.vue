@@ -1,109 +1,104 @@
 <template>
-    <div class="index-wrapper">
-        <!-- 產品方案 -->
-        <div class="alesis-slate">
-            <div class="header">
-                <div class="text">產品方案</div>
+    <div>
+        <!-- 頂部板岩 -->
+        <div class="頂部板岩">
+            <div class="標題">
+                <div class="文字">產品方案</div>
             </div>
-            <div class="phones">
-                <div class="left">
-                    <div class="phone">
-                        <img src="/images/alesis-phone-slide-left.svg" class="image" alt="">
+            <div class="手機區塊">
+                <div class="左側">
+                    <div class="手機">
+                        <img src="/images/alesis-phone-slide-left.svg" class="圖片">
                     </div>
                 </div>
-                <div class="right">
-                    <div class="phone">
-                        <img src="/images/alesis-phone-slide-right-2.svg" class="image" alt="">
+                <div class="右側">
+                    <div class="手機">
+                        <img src="/images/alesis-phone-slide-right-2.svg" class="圖片">
                     </div>
-                    <div class="phone">
-                        <img src="/images/alesis-phone-slide-right.svg" class="image" alt="">
+                    <div class="手機">
+                        <img src="/images/alesis-phone-slide-right.svg" class="圖片">
                     </div>
                 </div>
             </div>
         </div>
-        <!-- / 產品方案 -->
+        <!-- / 頂部板岩 -->
 
-        <!-- 簡單快速專區 -->
-        <div class="alesis-features">
-            <index-section header="簡單快速專區" multiline="全線上自動審核 無人打擾24小時立即到帳" :outlinedMulti="true">
-                <div class="cards">
-                <index-symcard class="symcard animate__animated" image="/images/business-team-manager-meeting1.jpg" header="企業融資" symbol="/images/alesis-companies.svg" description="支持中小企業，協助媒合百萬營運資金"></index-symcard>
-                <index-symcard class="symcard animate__animated" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg" header="上班族貸" subheader="產品申請手續費4%" symbol="/images/alesis-work.svg" description="急需資金不再慌張，AI審核立即入帳"></index-symcard>
-                <index-symcard class="symcard animate__animated" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg" header="學生貸" subheader="產品申請手續費3%" symbol="/images/alesis-student.svg" description="輕鬆分期不再煩腦，學生社群口碑最好"></index-symcard>
-                <index-symcard class="symcard animate__animated" image="/images/20200914172847-028f5b7b-me.jpg" header="車輛融資" symbol="/images/alesis-car.svg" description="敬請期待"></index-symcard>
+        <!-- 特色區域 -->
+        <div class="特色區域">
+            <alesis-header>
+                <div class="標題">簡單快速專區</div>
+                <div class="標題 標題_外框線的">全線上自動審核 無人打擾24小時立即到帳</div>
+            </alesis-header>
+            <alesis-section header="簡單快速專區" multiline="全線上自動審核 無人打擾24小時立即到帳" :outlinedMulti="true">
+                <div class="卡片區塊">
+                    <alesis-symcard class="symcard animate__animated" image="/images/business-team-manager-meeting1.jpg" header="企業融資" symbol="/images/alesis-companies.svg" description="支持中小企業，協助媒合百萬營運資金"></alesis-symcard>
+                    <alesis-symcard class="symcard animate__animated" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg" header="上班族貸" subheader="產品申請手續費4%" symbol="/images/alesis-work.svg" description="急需資金不再慌張，AI審核立即入帳"></alesis-symcard>
+                    <alesis-symcard class="symcard animate__animated" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg" header="學生貸" subheader="產品申請手續費3%" symbol="/images/alesis-student.svg" description="輕鬆分期不再煩腦，學生社群口碑最好"></alesis-symcard>
+                    <alesis-symcard class="symcard animate__animated" image="/images/20200914172847-028f5b7b-me.jpg" header="車輛融資" symbol="/images/alesis-car.svg" description="敬請期待"></alesis-symcard>
                 </div>
-            </index-section>
+            </alesis-section>
         </div>
-        <!-- / 簡單快速專區 -->
+        <!-- / 特色區域 -->
 
-        <!-- 銀行合作專區 -->
-        <div class="alesis-recommends">
-            <index-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率1.88%起！" :secondary="true">
-                <div class="wrapper">
-                    <index-shanghai></index-shanghai>
+        <!-- 普匯推薦 -->
+        <div class="普匯推薦">
+            <alesis-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率1.88%起！" :secondary="true">
+                <div class="包裹容器">
+                    <alesis-shanghai></alesis-shanghai>
                 </div>
-            </index-section>
+            </alesis-section>
         </div>
-        <!-- / 銀行合作專區 -->
+        <!-- / 普匯推薦 -->
 
         <!-- 聽聽他們怎麼說 -->
-        <div class="alesis-humans">
-            <index-section header="聽聽他們怎麼說" :outlined="true">
-                <global-carousel>
-                    <div class="set">
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                    </div>
-                    <div class="set">
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                    </div>
-                </global-carousel>
-            </index-section>
+        <div class="推薦人物">
+            <alesis-section header="聽聽他們怎麼說" :outlined="true">
+                <alesis-suggestion-reviews type="borrow"></alesis-suggestion-reviews>
+            </alesis-section>
         </div>
         <!-- / 聽聽他們怎麼說 -->
     </div>
 </template>
 
 <script>
-//
-import indexSection   from "../component/alesis/index/section";
-import indexSymcard   from "../component/alesis/index/symcard";
-import indexHuman     from "../component/alesis/index/human";
-import indexShanghai  from "../component/alesis/index/shanghai";
-import globalCarousel from "../component/alesis/global-carousel";
+// Alesis 元件
+import AlesisAppRecommendation from "../component/alesis/AlesisAppRecommendation";
+import AlesisBullet            from "../component/alesis/AlesisBullet";
+import AlesisButton            from "../component/alesis/AlesisButton";
+import AlesisCounter           from "../component/alesis/AlesisCounter";
+import AlesisHeader            from "../component/alesis/AlesisHeader";
+import AlesisHorizontalRoadmap from "../component/alesis/AlesisHorizontalRoadmap";
+import AlesisHuman             from "../component/alesis/AlesisHuman";
+import AlesisLoanHeader        from "../component/alesis/AlesisLoanHeader";
+import AlesisMoon              from "../component/alesis/AlesisMoon";
+import AlesisPlan              from "../component/alesis/AlesisPlan";
+import AlesisProject           from "../component/alesis/AlesisProject";
+import AlesisSection           from "../component/alesis/AlesisSection";
+import AlesisShanghai          from "../component/alesis/AlesisShanghai";
+import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
+import AlesisSymcard           from "../component/alesis/AlesisSymcard";
+import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
+import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 
 export default {
     components: {
-        indexSection,
-        indexSymcard,
-        indexHuman,
-        indexShanghai,
-        globalCarousel
+        AlesisAppRecommendation,
+        AlesisBullet,
+        AlesisButton,
+        AlesisCounter,
+        AlesisHeader,
+        AlesisHorizontalRoadmap,
+        AlesisHuman,
+        AlesisLoanHeader,
+        AlesisMoon,
+        AlesisPlan,
+        AlesisProject,
+        AlesisSection,
+        AlesisShanghai,
+        AlesisSuggestionReviews,
+        AlesisSymcard,
+        AlesisTaiwanMap,
+        AlesisVerticalRoadmap,
     },
     mounted() {
         document.querySelectorAll(".symcard").forEach((v, i) => {
@@ -182,7 +177,7 @@ export default {
     100% { opacity: 1; }
 }
 
-.alesis-slate {
+.頂部板岩 {
     display         : flex;
     flex-direction  : column;
     background-image: url("/images/未命名-2.png");
@@ -193,110 +188,117 @@ export default {
     @include rwd {
         height: 53rem;
     }
+}
 
-    .header {
-        text-align: center;
+.頂部板岩 .標題 {
+    text-align: center;
+}
 
-        .text {
-            color         :#FFF;
-            padding-bottom: .2rem;
-            border-bottom : 1px solid #FFF;
-            display       : inline-block;
-            font-size     : 1.8rem;
-            font-weight   : bolder;
-        }
-    }
+.頂部板岩 .標題 .文字 {
+    color         :#FFF;
+    padding-bottom: .2rem;
+    border-bottom : 1px solid #FFF;
+    display       : inline-block;
+    font-size     : 1.8rem;
+    font-weight   : bolder;
+}
 
-    .phones {
-        display  : flex;
-        max-width: 1280px;
-        margin   : 3rem auto 0;
-        position : relative;
+.頂部板岩 .手機區塊 {
+    display  : flex;
+    max-width: 1280px;
+    margin   : 3rem auto 0;
+    position : relative;
 
-        @include rwd {
-            flex-direction: column-reverse;
-        }
-
-        .left {
-            flex: 1;
-            text-align: center;
-            position: relative;
-
-            .phone {
-                position : absolute;
-                left     : -29rem;
-                animation: fadein3 2s;
-
-                @include rwd {
-                    left: -2rem;
-                    top : 15rem;
-                }
-            }
-        }
-
-        .right {
-            flex       : 1;
-            display    : flex;
-            margin-left: 8rem;
-            position   : relative;
-
-            @include rwd {
-                margin-left: 0;
-            }
-
-            .phone:first-child {
-                position : absolute;
-                left     : 21rem;
-                animation: fadein2 2s;
-
-                @include rwd {
-                    top : 12rem;
-                    left: 4rem;
-                }
-            }
-            .phone:last-child {
-                animation: fadein1 2s;
-            }
-        }
-
-        .phone {
-            .image {
-                height: 350px;
-
-                @include rwd {
-                    height: 209px;
-                }
-            }
-        }
+    @include rwd {
+        flex-direction: column-reverse;
     }
 }
 
-.alesis-features {
-    .cards {
-        display              : grid;
-        grid-template-columns: repeat(2, 1fr);
-        width                : 740px;
-        gap                  : 6rem;
-        margin               : 6rem auto 0;
+.頂部板岩 .手機區塊 .左側 {
+    flex      : 1;
+    text-align: center;
+    position  : relative;
+}
 
-        @include rwd {
-            min-width: 330px;
-            width    : auto;
-            gap      : 4rem 1rem;
-        }
+.頂部板岩 .手機區塊 .左側 .手機 {
+    position : absolute;
+    left     : -29rem;
+    animation: fadein3 2s;
+
+    @include rwd {
+        left: -2rem;
+        top : 15rem;
     }
 }
 
-.alesis-recommends {
-    .wrapper {
-        display        : flex;
-        align-items    : center;
-        justify-content: center;
-        margin         : 3rem 0 0;
+.頂部板岩 .手機區塊 .右側 {
+    flex       : 1;
+    display    : flex;
+    margin-left: 8rem;
+    position   : relative;
+
+    @include rwd {
+        margin-left: 0;
     }
 }
 
-.alesis-humans {
+.頂部板岩 .手機區塊 .右側 .手機:first-child {
+    position : absolute;
+    left     : 21rem;
+    animation: fadein2 2s;
+
+    @include rwd {
+        top : 12rem;
+        left: 4rem;
+    }
+}
+
+.頂部板岩 .手機區塊 .右側 .手機:last-child {
+    animation: fadein1 2s;
+}
+
+.頂部板岩 .手機區塊 .手機 .圖片 {
+    height: 350px;
+
+    @include rwd {
+        height: 209px;
+    }
+}
+
+.特色區域 {
+    position: relative;
+}
+
+.特色區域 .卡片區塊 {
+    display              : grid;
+    grid-template-columns: repeat(2, 1fr);
+    width                : 740px;
+    gap                  : 6rem;
+    margin               : 6rem auto 0;
+
+    @include rwd {
+        min-width: 330px;
+        width    : auto;
+        gap      : 4rem 1rem;
+    }
+}
+
+.普匯推薦 .包裹容器 {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    margin         : 3rem 0 0;
+}
+
+
+
+.普匯推薦 {
+    .包裹容器 {
+
+    }
+}
+
+.推薦人物 {
     .carousel {
         max-width  : 1280px;
         margin     : 2rem auto 0;
