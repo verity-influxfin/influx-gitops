@@ -34,9 +34,9 @@
             <alesis-section>
                 <alesis-space size="small"></alesis-space>
                 <div class="卡片區塊">
-                    <alesis-symcard class="symcard animate__animated" image="/images/business-team-manager-meeting1.jpg" header="企業融資" symbol="/images/alesis-companies.svg" description="支持中小企業，協助媒合百萬營運資金"></alesis-symcard>
-                    <alesis-symcard class="symcard animate__animated" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg" header="上班族貸" subheader="產品申請手續費4%" symbol="/images/alesis-work.svg" description="急需資金不再慌張，AI審核立即入帳"></alesis-symcard>
-                    <alesis-symcard class="symcard animate__animated" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg" header="學生貸" subheader="產品申請手續費3%" symbol="/images/alesis-student.svg" description="輕鬆分期不再煩腦，學生社群口碑最好"></alesis-symcard>
+                    <alesis-symcard link="/investment" class="symcard animate__animated" image="/images/business-team-manager-meeting1.jpg" header="企業融資" symbol="/images/alesis-companies.svg" description="支持中小企業，協助媒合百萬營運資金"></alesis-symcard>
+                    <alesis-symcard link="/workLoan" class="symcard animate__animated" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg" header="上班族貸" subheader="產品申請手續費4%" symbol="/images/alesis-work.svg" description="急需資金不再慌張，AI審核立即入帳"></alesis-symcard>
+                    <alesis-symcard link="/collegeLoan" class="symcard animate__animated" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg" header="學生貸" subheader="產品申請手續費3%" symbol="/images/alesis-student.svg" description="輕鬆分期不再煩腦，學生社群口碑最好"></alesis-symcard>
                     <alesis-symcard class="symcard animate__animated" image="/images/20200914172847-028f5b7b-me.jpg" header="車輛融資" symbol="/images/alesis-car.svg" description="敬請期待"></alesis-symcard>
                 </div>
                 <alesis-space size="medium"></alesis-space>

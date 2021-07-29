@@ -1,5 +1,5 @@
 <template>
-    <div class="特色卡片">
+    <a :href="link" class="特色卡片">
         <div class="標題">
             <div class="象徵">
                 <div class="包裹容器">
@@ -18,7 +18,7 @@
                 {{ description }}
             </div>
         </div>
-    </div>
+    </a>
 </template>
 
 <script>
@@ -40,17 +40,21 @@ export default {
         description: {
             default: "",
         },
+        link: {
+            default: "",
+        }
     }
 };
 </script>
 
 <style lang="scss" scoped>
 .特色卡片 {
-    box-shadow    : 0px 4px 6px 0px rgb(0 0 0 / 30%);
-    flex          : 1;
-    display       : flex;
-    flex-direction: column;
-    border-radius : 20px;
+    box-shadow     : 0px 4px 6px 0px rgb(0 0 0 / 30%);
+    flex           : 1;
+    display        : flex;
+    flex-direction : column;
+    border-radius  : 20px;
+    text-decoration: none;
 }
 
 .特色卡片 > .標題 {
