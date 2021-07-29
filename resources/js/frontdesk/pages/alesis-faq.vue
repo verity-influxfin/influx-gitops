@@ -1,177 +1,144 @@
 <template>
-    <div class="index-wrapper">
-        <div class="alesis-slate">
-            <div class="wrapper">
-                <div class="header">有任何疑問嗎？這裡為您解答</div>
-                <div class="helper">請輸入關鍵字</div>
-                <div class="search">
-                    <img class="icon" src="/images/alesis-search-icon.svg" alt="">
-                    <input type="text" class="input" placeholder="全站搜尋...">
+    <div>
+        <!-- 頂部板岩 -->
+        <div class="頂部板岩">
+            <div class="包裹容器">
+                <div class="標題">有任何疑問嗎？這裡為您解答</div>
+                <div class="說明">請輸入關鍵字</div>
+                <div class="搜尋">
+                    <img class="圖示" src="/images/alesis-search-icon.svg">
+                    <input class="輸入欄位" type="text" placeholder="全站搜尋...">
                 </div>
-                <div class="categories">
-                    <a href="#!" class="item -active">全部</a>
-                    <a href="#!" class="item">會員訊息</a>
-                    <a href="#!" class="item">借款</a>
-                    <a href="#!" class="item">投資</a>
-                    <a href="#!" class="item">還款</a>
+                <div class="分類">
+                    <a href="#!" class="項目 項目_啟用的">全部</a>
+                    <a href="#!" class="項目">會員訊息</a>
+                    <a href="#!" class="項目">借款</a>
+                    <a href="#!" class="項目">投資</a>
+                    <a href="#!" class="項目">還款</a>
                 </div>
             </div>
         </div>
-        <div class="alesis-questions">
-            <!--<index-section header="會員訊息">
-                <div class="items">
-                    <div class="item">
-                        <div class="header">
-                            <div class="text">Q1：我提供的訊息安全嗎？</div>
-                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+        <!-- / 頂部板岩 -->
+
+        <!-- 問題集 -->
+        <div class="問題集">
+            <alesis-section header="學生貸">
+                <div class="群組">
+                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.college" :key="index" @click="toggle(item)">
+                        <div class="標題">
+                            <div class="文字">{{item.title}}</div>
+                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
                         </div>
-                        <div class="content">
-                            A1：所有提供資訊傳輸過程均由HTTPS方式利用SSL/TLS加密封包，<br>　　將所有資訊儲存於亞馬遜AWS雲端伺服器，資料傳輸穩定且安全。
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="header">
-                            <div class="text">Q1：我提供的訊息安全嗎？</div>
-                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
-                        </div>
-                        <div class="content">
-                            A1：所有提供資訊傳輸過程均由HTTPS方式利用SSL/TLS加密封包，<br>　　將所有資訊儲存於亞馬遜AWS雲端伺服器，資料傳輸穩定且安全。
-                        </div>
+                        <div class="內容" v-html="item.content"></div>
                     </div>
                 </div>
-            </index-section>-->
-            <index-section header="學生貸">
-                <div class="items">
-                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.college" :key="index" @click="toggle(item)">
-                        <div class="header">
-                            <div class="text">{{item.title}}</div>
-                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+            </alesis-section>
+            <alesis-section header="上班族貸">
+                <div class="群組">
+                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.freshgraduate" :key="index" @click="toggle(item)">
+                        <div class="標題">
+                            <div class="文字">{{item.title}}</div>
+                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
                         </div>
-                        <div class="content" v-html="item.content">
-                        </div>
+                        <div class="內容" v-html="item.content"></div>
                     </div>
                 </div>
-            </index-section>
-            <index-section header="上班族貸">
-                <div class="items">
-                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.freshgraduate" :key="index" @click="toggle(item)">
-                        <div class="header">
-                            <div class="text">{{item.title}}</div>
-                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+            </alesis-section>
+            <alesis-section header="工程師優惠專案">
+                <div class="群組">
+                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.engineer" :key="index" @click="toggle(item)">
+                        <div class="標題">
+                            <div class="文字">{{item.title}}</div>
+                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
                         </div>
-                        <div class="content" v-html="item.content">
-                        </div>
+                        <div class="內容" v-html="item.content"></div>
                     </div>
                 </div>
-            </index-section>
-            <index-section header="工程師優惠專案">
-                <div class="items">
-                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.engineer" :key="index" @click="toggle(item)">
-                        <div class="header">
-                            <div class="text">{{item.title}}</div>
-                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+            </alesis-section>
+            <alesis-section header="投資">
+                <div class="群組">
+                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.invest" :key="index" @click="toggle(item)">
+                        <div class="標題">
+                            <div class="文字">{{item.title}}</div>
+                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
                         </div>
-                        <div class="content" v-html="item.content">
-                        </div>
+                        <div class="內容" v-html="item.content"></div>
                     </div>
                 </div>
-            </index-section>
-            <index-section header="投資">
-                <div class="items">
-                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.invest" :key="index" @click="toggle(item)">
-                        <div class="header">
-                            <div class="text">{{item.title}}</div>
-                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
+            </alesis-section>
+            <alesis-section header="債權轉讓">
+                <div class="群組">
+                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.transfer" :key="index" @click="toggle(item)">
+                        <div class="標題">
+                            <div class="文字">{{item.title}}</div>
+                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
                         </div>
-                        <div class="content" v-html="item.content">
-                        </div>
+                        <div class="內容" v-html="item.content"></div>
                     </div>
                 </div>
-            </index-section>
-            <index-section header="債權轉讓">
-                <div class="items">
-                    <div class="item" :class="{'-active': item.active}" v-for="(item, index) in questions.transfer" :key="index" @click="toggle(item)">
-                        <div class="header">
-                            <div class="text">{{item.title}}</div>
-                            <img class="arrow" src="/images/alesis-chevron-down.svg" alt="">
-                        </div>
-                        <div class="content" v-html="item.content">
-                        </div>
-                    </div>
-                </div>
-            </index-section>
+            </alesis-section>
         </div>
+        <!-- / 問題集 -->
     </div>
 </template>
 
 <script>
-// Alesis components
-import indexCounter                    from "../component/alesis/index/counter";
-import indexSection                    from "../component/alesis/index/section";
-import indexBullet                     from "../component/alesis/index/bullet";
-import indexMoon                       from "../component/alesis/index/moon";
-import indexPlan                       from "../component/alesis/index/plan";
-import indexHuman                      from "../component/alesis/index/human";
-import indexButton                     from "../component/alesis/index/button";
-import indexShanghai                   from "../component/alesis/index/shanghai";
-import globalCarousel                  from "../component/alesis/global-carousel";
-import AlesisLoanHeader                from "../component/alesis/loan-header";
-import AlesisApplicationRecommendation from "../component/alesis/application-recommendation";
+// Alesis 元件
+import AlesisAppRecommendation from "../component/alesis/AlesisAppRecommendation";
+import AlesisBullet            from "../component/alesis/AlesisBullet";
+import AlesisButton            from "../component/alesis/AlesisButton";
+import AlesisCounter           from "../component/alesis/AlesisCounter";
+import AlesisHeader            from "../component/alesis/AlesisHeader";
+import AlesisHorizontalRoadmap from "../component/alesis/AlesisHorizontalRoadmap";
+import AlesisHuman             from "../component/alesis/AlesisHuman";
+import AlesisLoanHeader        from "../component/alesis/AlesisLoanHeader";
+import AlesisMoon              from "../component/alesis/AlesisMoon";
+import AlesisPlan              from "../component/alesis/AlesisPlan";
+import AlesisProject           from "../component/alesis/AlesisProject";
+import AlesisSection           from "../component/alesis/AlesisSection";
+import AlesisShanghai          from "../component/alesis/AlesisShanghai";
+import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
+import AlesisSymcard           from "../component/alesis/AlesisSymcard";
+import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
+import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
+// 遠端資料
+import FAQData from "../data/faq_data"
+
 
 export default {
     components: {
-        indexCounter,
-        indexSection,
-        indexBullet,
-        indexMoon,
-        indexPlan,
-        indexHuman,
-        indexButton,
-        indexShanghai,
-        globalCarousel,
-        AlesisApplicationRecommendation,
-        AlesisLoanHeader
+        AlesisAppRecommendation,
+        AlesisBullet,
+        AlesisButton,
+        AlesisCounter,
+        AlesisHeader,
+        AlesisHorizontalRoadmap,
+        AlesisHuman,
+        AlesisLoanHeader,
+        AlesisMoon,
+        AlesisPlan,
+        AlesisProject,
+        AlesisSection,
+        AlesisShanghai,
+        AlesisSuggestionReviews,
+        AlesisSymcard,
+        AlesisTaiwanMap,
+        AlesisVerticalRoadmap,
     },
     data: () => {
         return {
-            questions: {
-                college      : [],
-                freshgraduate: [],
-                engineer     : [],
-                invest       : [],
-                transfer     : [],
-            },
+            questions: FAQData,
         }
     },
-    async mounted() {
-        try {
-            var resp = await fetch('http://localhost:8190/data/qaData.json')
-            var data = await resp.json()
-            this.questions.college = data.college.map((v) => {
-                v.active = false
-                return v
+    mounted() {
+        Object.keys(this.questions).forEach(v => {
+            this.questions[v].forEach((_, k) => {
+                this.$set(this.questions[v][k], 'active', false);
             })
-            this.questions.freshgraduate = data.freshgraduate.map((v) => {
-                v.active = false
-                return v
-            })
-            this.questions.engineer = data.engineer.map((v) => {
-                v.active = false
-                return v
-            })
-            this.questions.invest = data.invest.map((v) => {
-                v.active = false
-                return v
-            })
-            this.questions.transfer = data.transfer.map((v) => {
-                v.active = false
-                return v
-            })
-        } catch (e) {
-            alert(e)
-        }
+        })
     },
     methods: {
+        // toggle 會切換一個問答的展開狀態。
         toggle(item) {
             item.active = !item.active
         }
@@ -182,186 +149,190 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
-.alesis-slate {
+/**
+ * 頂部板岩
+ */
+
+.頂部板岩 {
     background-image: url(/images/alesis-faq-bg.svg);
     background-size : cover;
+}
 
-    .wrapper {
-        padding       : 5rem 0;
-        display       : flex;
-        flex-direction: column;
-        gap           : 1rem;
-        color         : #FFF;
-        align-items   : center;
+.頂部板岩 .包裹容器 {
+    padding       : 5rem 0;
+    display       : flex;
+    flex-direction: column;
+    gap           : 1rem;
+    color         : #FFF;
+    align-items   : center;
 
-        @include rwd {
-            padding: 4rem 2rem;
-            gap    : .5rem;
-        }
-
-        .header {
-            font-size  : 1.4rem;
-            text-shadow: 0 0 7px #000;
-
-            @include rwd {
-                font-size  : 1.4rem;
-                line-height: 1;
-            }
-        }
-
-        .helper {
-            font-size  : 1.8rem;
-            color      : #F2E627;
-            text-shadow: 0 0 7px #000;
-
-            @include rwd {
-                font-size: 1.2rem;
-            }
-        }
-
-        .search {
-            position : relative;
-            width    : 50%;
-            max-width: 51rem;
-
-            @include rwd {
-                width: calc(100%);
-            }
-
-            .icon {
-                width    : 22px;
-                position : absolute;
-                left     : 1.5rem;
-                top      : 50%;
-                transform: translateY(-50%);
-
-                @include rwd {
-                    width: 16px;
-                    left : .7rem;
-                }
-
-            }
-
-            .input {
-                appearance   : none;
-                background   : transparent;
-                color        : #FFF;
-                border       : 1px solid #FFF;
-                border-radius: 100rem;
-                line-height  : 1.3;
-                font-size    : 1.1rem;
-                padding      : .7rem 2rem .6rem;
-                padding-left : 3.7rem;
-                width        : 100%;
-
-                @include rwd {
-                    padding  : 0.3rem 2rem 0.25rem;
-                    font-size: .9rem;
-                }
-
-                &::placeholder {
-                    color: #FFF;
-                }
-            }
-        }
-
-        .categories {
-            display   : flex;
-            gap       : 1.2rem;
-            margin-top: 1rem;
-
-            @include rwd {
-                flex-wrap      : wrap;
-                justify-content: center;
-            }
-
-            .item {
-                display      : inline-block;
-                background   : #FFF;
-                color        : #18599E;
-                font-weight  : bold;
-                line-height  : 1;
-                font-size    : 1.1rem;
-                padding      : 0.6rem 1.2rem 0.4rem;
-                border-radius: 0.4rem;
-                min-width    : 5.5rem;
-                text-align   : center;
-
-                @include rwd {
-                    font-size: 1rem;
-                }
-
-                &.-active {
-                    background: #1E2973;
-                    color     : #FFF;
-                    border    : 1px solid #FFF;
-                }
-            }
-        }
+    @include rwd {
+        padding: 4rem 2rem;
+        gap    : .5rem;
     }
 }
 
-.alesis-questions {
-    margin-top: 8rem;
+.頂部板岩 .包裹容器 .標題 {
+    font-size  : 1.4rem;
+    text-shadow: 0 0 7px #000;
 
-    .items {
-        max-width     : 690px;
-        display       : flex;
-        margin        : 0 auto;
-        flex-direction: column;
-        gap           : 1.5rem;
-
-        .item {
-            display       : flex;
-            flex-direction: column;
-            gap           : 1.5rem;
-
-            .header {
-                display      : flex;
-                border       : 1px solid #036EB7;
-                border-radius: .4rem;
-                padding      : .5rem 1.5rem;
-                color        : #036EB7;
-                font-size    : 1.2rem;
-
-                @include rwd {
-                    font-size: .9rem;
-                }
-
-                .text {
-                    flex: 1;
-                }
-
-                .arrow {
-                    width    : 20px;
-                    transform: rotate(180deg);
-                }
-            }
-
-            .content {
-                display      : none;
-                border       : 1px solid #5D5555;
-                border-radius: .4rem;
-                padding      : 0.5rem 1.5rem 1rem;
-                color        : #5D5555;
-                font-size    : 1.2rem;
-
-                @include rwd {
-                    font-size: .9rem;
-                }
-            }
-
-            &.-active {
-                .header {
-                    .arrow {
-                        transform: none;
-                    }
-                }
-                .content {
-                    display: flex;
-                }
-            }
-        }
+    @include rwd {
+        font-size  : 1.4rem;
+        line-height: 1;
     }
+}
+
+.頂部板岩 .包裹容器 .說明 {
+    font-size  : 1.8rem;
+    color      : #F2E627;
+    text-shadow: 0 0 7px #000;
+
+    @include rwd {
+        font-size: 1.2rem;
+    }
+}
+
+.頂部板岩 .包裹容器 .搜尋 {
+    position : relative;
+    width    : 50%;
+    max-width: 51rem;
+
+    @include rwd {
+        width: calc(100%);
+    }
+}
+
+.頂部板岩 .包裹容器 .搜尋 .圖示 {
+    width    : 22px;
+    position : absolute;
+    left     : 1.5rem;
+    top      : 50%;
+    transform: translateY(-50%);
+
+    @include rwd {
+        width: 16px;
+        left : .7rem;
+    }
+}
+
+.頂部板岩 .包裹容器 .搜尋 .輸入欄位 {
+    appearance   : none;
+    background   : transparent;
+    color        : #FFF;
+    border       : 1px solid #FFF;
+    border-radius: 100rem;
+    line-height  : 1.3;
+    font-size    : 1.1rem;
+    padding      : .7rem 2rem .6rem;
+    padding-left : 3.7rem;
+    width        : 100%;
+
+    @include rwd {
+        padding  : 0.3rem 2rem 0.25rem;
+        font-size: .9rem;
+    }
+}
+
+.頂部板岩 .包裹容器 .搜尋 .輸入欄位::placeholder {
+    color: #FFF;
+}
+
+.頂部板岩 .包裹容器 .分類 {
+    display   : flex;
+    gap       : 1.2rem;
+    margin-top: 1rem;
+
+    @include rwd {
+        flex-wrap      : wrap;
+        justify-content: center;
+    }
+}
+
+.頂部板岩 .包裹容器 .分類 .項目 {
+    display      : inline-block;
+    background   : #FFF;
+    color        : #18599E;
+    font-weight  : bold;
+    line-height  : 1;
+    font-size    : 1.1rem;
+    padding      : 0.6rem 1.2rem 0.4rem;
+    border-radius: 0.4rem;
+    min-width    : 5.5rem;
+    text-align   : center;
+
+    @include rwd {
+        font-size: 1rem;
+    }
+}
+
+.頂部板岩 .包裹容器 .分類 .項目.項目_啟用的 {
+    background: #1E2973;
+    color     : #FFF;
+    border    : 1px solid #FFF;
+}
+
+/**
+ * 問題集
+ */
+
+.問題集 {
+    margin-top: 8rem;
+}
+
+.問題集 .群組 {
+    max-width     : 690px;
+    display       : flex;
+    margin        : 0 auto;
+    flex-direction: column;
+    gap           : 1.5rem;
+}
+
+.問題集 .群組 .項目 {
+    display       : flex;
+    flex-direction: column;
+    gap           : 1.5rem;
+}
+
+.問題集 .群組 .項目 .標題 {
+    display      : flex;
+    border       : 1px solid #036EB7;
+    border-radius: .4rem;
+    padding      : .5rem 1.5rem;
+    color        : #036EB7;
+    font-size    : 1.2rem;
+
+    @include rwd {
+        font-size: .9rem;
+    }
+}
+
+.問題集 .群組 .項目 .標題 .文字 {
+    flex: 1;
+}
+
+.問題集 .群組 .項目 .標題 .箭頭 {
+    width    : 20px;
+    transform: rotate(180deg);
+}
+
+.問題集 .群組 .項目.項目_啟用的 .標題 .箭頭 {
+    transform: none;
+}
+
+.問題集 .群組 .項目 .內容 {
+    display      : none;
+    border       : 1px solid #5D5555;
+    border-radius: .4rem;
+    padding      : 0.5rem 1.5rem 1rem;
+    color        : #5D5555;
+    font-size    : 1.2rem;
+
+    @include rwd {
+        font-size: .9rem;
+    }
+}
+
+.問題集 .群組 .項目.項目_啟用的 .內容 {
+    display: flex;
 }
 </style>
