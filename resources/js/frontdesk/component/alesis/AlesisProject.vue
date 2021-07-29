@@ -54,39 +54,36 @@ export default {
     name: "AlesisProject",
     props: {
         credit_level: {
-            default: "",
+            default: 4,
         },
         user: {
             default: {
                 sex: "M",
-                age: 0,
-                company_name: "",
+                age: 24,
+                company_name: "國立臺灣大學",
             }
         },
         target_no: {
-            default: "",
+            default: "STN2020122218828",
         },
         reason: {
-            default: "",
+            default: "理財 - 跟朋友合作投資需要大筆資金投入",
         },
         loan_amount: {
-            default: "",
+            default: 73000,
         },
         instalment: {
-            default: "",
+            default: 24,
         },
         interest_rate: {
-            default: "",
+            default: 14,
         },
         product_name: {
-            default: "",
+            default: "學生貸",
         },
         invested: {
             default: 0,
         },
-        loan_amount: {
-            default: 0,
-        }
     },
     methods: {
         // format 會格式化數值成為有千分逗號的格式。
