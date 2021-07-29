@@ -7,9 +7,9 @@
         <!-- 計數器 -->
         <div class="計數器">
             <div class="包裹容器">
-                <alesis-counter image="/images/alesis-registered.svg" header="普匯目前用戶" number="60000" unit="人"></alesis-counter>
+                <alesis-counter image="/images/alesis-registered.svg" header="普匯學生用戶" number="60000" unit="人"></alesis-counter>
                 <alesis-counter image="/images/alesis-totalmoney.svg" header="已媒合金額" number="15857" unit="萬"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalapproved.svg" header="服務學校達" number="37390" unit="所"></alesis-counter>
+                <alesis-counter image="/images/alesis-totalapproved.svg" header="服務學校遍及" number="37390" unit="所"></alesis-counter>
             </div>
         </div>
         <!-- / 計數器 -->
@@ -226,7 +226,7 @@
                     </div>
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-approve.svg">
-                        <div class="標籤">學生核貸率100%</div>
+                        <div class="標籤">核貸率高達90%以上</div>
                     </div>
                 </div>
                 <alesis-space size="medium"></alesis-space>
