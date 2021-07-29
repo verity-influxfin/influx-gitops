@@ -302,6 +302,7 @@ export default {
     margin               : 6rem auto 0;
 
     @include rwd {
+        grid-template-columns: repeat(1, 1fr);
         min-width: 330px;
         width    : auto;
         gap      : 4rem 1rem;
