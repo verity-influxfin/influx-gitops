@@ -136,9 +136,9 @@
                 <div class="item">
                     了解更多
                     <div class="sub">
-                        <a href="/blog" class="item">常見問題</a>
-                        <a href="/vlog" class="item">風險報告書</a>
-                        <a href="/vlog" class="item">案件總覽</a>
+                        <a href="/faq" class="item">常見問題</a>
+                        <a href="/risk" class="item">風險報告書</a>
+                        <a href="/projects" class="item">案件總覽</a>
                     </div>
                 </div>
                 <a href="/news" class="item">平台公告</a>
@@ -188,7 +188,7 @@
                         <a href="/vlog" class="item">小學堂影音</a>
                     </div>
                 </div>
-                <a href="/qa" class="item">
+                <a href="/faq" class="item">
                     <div class="text">常見問題</div>
                 </a>
                 <div class="item">
