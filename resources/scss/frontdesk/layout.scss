@@ -603,6 +603,7 @@ $ci-color: #153a71;
             position: fixed;
             bottom: 1rem;
             right: 1rem;
+            z-index: 1000;
             display: inline-flex;
             border-radius: 0.7rem;
             overflow: hidden;
