@@ -27,101 +27,106 @@
             </div>
         </div>
 
-        <!-- 開頭計數器 -->
-        <div class="alesis-counters">
-            <div class="wrapper">
-                <index-counter image="/images/alesis-registered.svg" header="累積註冊用戶" number="60000" unit="人"></index-counter>
-                <index-counter image="/images/alesis-totalmoney.svg" header="累積放款金額" number="15857" unit="萬"></index-counter>
-                <index-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" number="37390" unit="筆"></index-counter>
+        <!-- 計數器 -->
+        <div class="計數器">
+            <alesis-space size="small"></alesis-space>
+            <div class="包裹容器">
+                <alesis-counter image="/images/alesis-registered.svg" header="累積註冊用戶" number="60000" unit="人"></alesis-counter>
+                <alesis-counter image="/images/alesis-totalmoney.svg" header="累積放款金額" number="15857" unit="萬"></alesis-counter>
+                <alesis-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" number="37390" unit="筆"></alesis-counter>
             </div>
+            <alesis-space size="medium"></alesis-space>
         </div>
-        <!-- / 開頭計數器 -->
+        <!-- / 計數器 -->
 
-        <!-- 我們的服務 -->
-        <div class="alesis-our-service">
-            <index-section header="我們的服務" :secondary="true">
-                <img class="image" src="/images/p2p.svg" />
-                <div class="actions">
-                    <div class="left">
-                        <a href="/investLink" class="action">立即投資</a>
-                        <a href="/invest" class="action">了解更多</a>
+        <!-- 服務區塊 -->
+        <div class="服務區塊">
+            <alesis-header>
+                <div class="標題">我們的服務</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
+                <img class="圖片" src="/images/p2p.svg" />
+                <div class="動作區塊">
+                    <div class="左側">
+                        <a href="/investLink" class="動作">立即投資</a>
+                        <a href="/invest" class="動作">了解更多</a>
                     </div>
-                    <div class="right">
-                        <a href="/borrowLink" class="action">立即借款</a>
-                        <a href="/borrow" class="action">了解更多</a>
+                    <div class="右側">
+                        <a href="/borrowLink" class="動作">立即借款</a>
+                        <a href="/borrow" class="動作">了解更多</a>
                     </div>
                 </div>
-            </index-section>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
-        <!-- / 我們的服務 -->
+        <!-- / 服務區塊 -->
 
         <!-- 公司簡介 -->
-        <div class="alesis-company-introduction">
-            <index-section header="公司簡介">
-                <div class="carousel">
-                    <div class="entity">
-                        <!--<div class="left">
-                            <img src="/images/alesis-carousel-left.svg" alt="">
-                        </div>-->
-                        <div class="lightbox">
-                            <horizontal-path></horizontal-path>
-                        </div>
-                        <!--<div class="right">
-                            <img src="/images/alesis-carousel-right.svg" alt="">
-                        </div>-->
+        <div class="公司簡介">
+            <alesis-header>
+                <div class="標題">公司簡介</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
+                <div class="包裹容器">
+                    <alesis-horizontal-roadmap></alesis-horizontal-roadmap>
+                </div>
+                <div class="手機容器">
+                    <alesis-vertical-roadmap></alesis-vertical-roadmap>
+                </div>
+                <div class="介紹區域">
+                    <div class="展示區塊">
+                        <img class="圖片 animate__animated" src="/images/alesis-intro-phone.svg">
+                    </div>
+                    <div class="項目清單">
+                        <alesis-bullet class="項目" image="/images/alesis-ift.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></alesis-bullet>
+                        <alesis-bullet class="項目" image="/images/alesis-brain.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾！"></alesis-bullet>
                     </div>
                 </div>
-                <div class="mobile-roadmap">
-                    <vertical-path></vertical-path>
-
-                </div>
-                <div class="introduction">
-                    <div class="showcase">
-                        <img class="image animate__animated" src="/images/alesis-intro-phone.svg" alt="">
-                    </div>
-                    <div class="items">
-                        <index-bullet class="item" image="/images/alesis-ift.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></index-bullet>
-                        <index-bullet class="item" image="/images/alesis-brain.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾！"></index-bullet>
-                    </div>
-                </div>
-            </index-section>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
         <!-- / 公司簡介 -->
 
         <!-- 產品特色 -->
-        <div class="alesis-feature">
-            <index-section header="產品特色" :secondary="true">
-                <div class="wrapper">
-                    <div class="showcase">
-                        <img class="image" src="/images/步驟1-01.png" alt="">
+        <div class="產品特色">
+            <alesis-header>
+                <div class="標題">產品特色</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
+                <div class="包裹容器">
+                    <div class="展示區塊">
+                        <img class="圖片" src="/images/步驟1-01.png">
                     </div>
-                    <div class="content">
-                        <index-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></index-bullet>
-                        <div class="moons">
-                            <div class="item">
-                                <index-moon class="moon" header="簡單" level="1"></index-moon>
-                                <div class="content">
+                    <div class="內容區塊">
+                        <alesis-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
+                        <div class="半月列表">
+                            <div class="項目">
+                                <alesis-moon class="圖示" header="簡單" :level=1></alesis-moon>
+                                <div class="內容">
                                     AWS安全系統為架構，<br>
                                     輔以簡潔的操作界面。
                                 </div>
                             </div>
-                            <div class="item">
-                                <index-moon class="moon" header="快速" level="2"></index-moon>
-                                <div class="content">
+                            <div class="項目">
+                                <alesis-moon class="圖示" header="快速" :level=2></alesis-moon>
+                                <div class="內容">
                                     10分鐘快速填寫申請資料，<br>
                                     全程線上操作，無人干擾
                                 </div>
                             </div>
-                            <div class="item">
-                                <index-moon class="moon" header="安全" level="3"></index-moon>
-                                <div class="content">
+                            <div class="項目">
+                                <alesis-moon class="圖示" header="安全" :level=3></alesis-moon>
+                                <div class="內容">
                                     資訊傳輸由HTTPS方式利用SSL/TLS<br>
                                     加密，儲存於亞馬遜AWS雲端伺服器
                                 </div>
                             </div>
-                            <div class="item">
-                                <index-moon class="moon" header="隱私" level="4"></index-moon>
-                                <div class="content">
+                            <div class="項目">
+                                <alesis-moon class="圖示" header="隱私" :level=4></alesis-moon>
+                                <div class="內容">
                                     全台唯一無人化借貸平台，<br>
                                     讓手機成為您專屬的ATM
                                 </div>
@@ -129,146 +134,140 @@
                         </div>
                     </div>
                 </div>
-                <div class="slogan">假日放款全年無休</div>
-            </index-section>
+                <div class="標語">假日放款全年無休</div>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
         <!-- / 產品特色 -->
 
-        <!-- 普匯債權快速變現 -->
-        <div class="alesis-fast-transfer">
-            <index-section header="普匯債權快速變現" multiline="全台唯一債權轉讓功能">
-                <div class="wrapper">
-                    <div class="graph">
-                        <img class="image" src="/images/alesis-transfer-graph.svg" alt="">
+        <!-- 快速變現 -->
+        <div class="快速變現">
+            <alesis-header>
+                <div class="標題">普匯債權快速變現</div>
+                <div class="標題">全台唯一債權轉讓功能</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
+                <div class="包裹容器">
+                    <div class="圖表">
+                        <img class="圖片" src="/images/alesis-transfer-graph.svg">
                     </div>
-                    <div class="moons">
-                        <index-moon class="moon" header="債權轉讓" multiline="快速變現" level="3"></index-moon>
-                        <index-moon class="moon" header="小額資金" multiline="分散風險" level="2"></index-moon>
-                        <index-moon class="moon" header="智能投資" multiline="自動下標" level="1"></index-moon>
+                    <div class="半月列表">
+                        <alesis-moon class="項目" header="債權轉讓" multiline="快速變現" :level=3></alesis-moon>
+                        <alesis-moon class="項目" header="小額資金" multiline="分散風險" :level=2></alesis-moon>
+                        <alesis-moon class="項目" header="智能投資" multiline="自動下標" :level=1></alesis-moon>
                     </div>
                 </div>
-            </index-section>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
-        <!-- / 普匯債權快速變現 -->
+        <!-- / 快速變現 -->
 
         <!-- 產品方案 -->
-        <div class="alesis-solutions">
-            <index-section header="產品方案" :secondary="true">
-                <div class="wrapper">
-                    <div class="arrow" @click="prevSolution">
-                        <img src="/images/alesis-styled-arrow-left.svg" alt="">
+        <div class="產品方案">
+            <alesis-header>
+                <div class="標題">產品方案</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
+                <div class="包裹容器">
+                    <div class="箭頭" @click="prevSolution">
+                        <img class="圖示" src="/images/alesis-styled-arrow-left.svg">
                     </div>
-                    <index-plan class="plan" :header="item.header" :targets="item.targets" :image="item.image" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :key="index" :class="{'-active': index == currentPlan}"></index-plan>
-                    <div class="arrow" @click="nextSolution">
-                        <img src="/images/alesis-styled-arrow-right.svg" alt="">
+                    <alesis-plan class="方案表" :header="item.header" :targets="item.targets" :image="item.image" :action="item.action" :features="item.features" :unready="item.unready" v-for="(item, index) in plans" :link="item.link" :key="index" :class="{'方案表_已啟用': index == currentPlan}"></alesis-plan>
+                    <div class="箭頭" @click="nextSolution">
+                        <img class="圖示" src="/images/alesis-styled-arrow-right.svg">
                     </div>
                 </div>
-            </index-section>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
         <!-- / 產品方案 -->
 
-        <!-- 普匯推薦 銀行速貸好條件 -->
-        <div class="alesis-recommend-banks">
+        <!-- 普匯推薦 -->
+        <div class="普匯推薦">
             <alesis-header>
-                <div class="header">普匯推薦 銀行速貸好條件</div>
-                <div class="header -second" style="margin-top: .8rem; line-height: 1.4;">透過普匯推薦合作銀行，可享最高額度300萬，超低利率1.88%起！</div>
+                <div class="標題">普匯推薦 銀行速貸好條件</div>
+                <div class="標題" style="margin-top: .8rem; line-height: 1.4;">透過普匯推薦合作銀行，可享最高額度300萬，超低利率1.88%起！</div>
             </alesis-header>
-            <index-section>
-                <div class="wrapper">
-                    <index-shanghai></index-shanghai>
+            <alesis-section>
+                <alesis-space size="small"></alesis-space>
+                <div class="包裹容器">
+                    <alesis-shanghai></alesis-shanghai>
                 </div>
-            </index-section>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
-        <!-- / 普匯推薦 銀行速貸好條件 -->
+        <!-- / 普匯推薦 -->
 
-        <!-- 分期還款沒壓力 -->
-        <div class="alesis-calculator">
-            <index-section header="分期還款沒壓力" :secondary="true">
-                <div class="wrapper">
-                    <div class="calculator">
+        <!-- 分期計算機 -->
+        <div class="分期計算機">
+            <alesis-header>
+                <div class="標題">分期還款沒壓力</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
+                <div class="包裹容器">
+                    <div class="計算機">
                         <creditBoard amount="200000" v-on:update-calculator="updateCalculator"/>
                     </div>
-                    <div class="inputs">
-                        <div class="row">
-                            <div class="text">申請</div>
-                            <input type="text" class="input" v-model="amountCount">
-                            <div class="text">元</div>
+                    <div class="輸入群組">
+                        <div class="列">
+                            <div class="文字">申請</div>
+                            <input type="text" class="輸入欄位" v-model="amountCount">
+                            <div class="文字">元</div>
                         </div>
-                        <div class="row">
-                            <div class="text">分期償還</div>
-                            <input type="text" class="input" v-model="period">
-                            <div class="text">期</div>
+                        <div class="列">
+                            <div class="文字">分期償還</div>
+                            <input type="text" class="輸入欄位" v-model="period">
+                            <div class="文字">期</div>
                         </div>
-                        <div class="row">
-                            <div class="text">每月僅需約</div>
-                            <input type="text" class="input" v-model="pmt">
-                            <div class="text">元</div>
+                        <div class="列">
+                            <div class="文字">每月僅需約</div>
+                            <input type="text" class="輸入欄位" v-model="pmt">
+                            <div class="文字">元</div>
                         </div>
                     </div>
                 </div>
-            </index-section>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
-        <!-- / 分期還款沒壓力 -->
+        <!-- / 分期計算機 -->
 
-        <!-- 看看他們怎麼說 -->
-        <div class="alesis-humans">
-            <index-section header="看看他們怎麼說">
-                <global-carousel>
-                    <div class="set">
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                    </div>
-                    <div class="set">
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                        <div class="item">
-                            <index-human>
-                                <div slot="video">
-                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            </index-human>
-                        </div>
-                    </div>
-                </global-carousel>
-            </index-section>
+        <!-- 人物推薦 -->
+        <div class="人物推薦">
+            <alesis-header>
+                <div class="標題">看看他們怎麼說</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="small"></alesis-space>
+                <alesis-suggestion-reviews type="index"></alesis-suggestion-reviews>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
         </div>
-        <!-- / 看看他們怎麼說 -->
+        <!-- / 人物推薦 -->
 
-        <!-- 媒體報導支持 -->
-        <div class="alesis-news">
-            <index-section class="header" header="媒體報導支持" :outlined="true" :nospace="true"></index-section>
-            <div class="wrapper">
-                <div class="logos">
-                    <a class="item" href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html" target="_blank"><img class="image" src="/images/a645f762048f5f425d0f0a8486f34612.png" alt=""></a>
-                    <a class="item" href="http://n.yam.com/Article/20180803346949" target="_blank"><img class="image" src="/images/1JHY1QOLYPF0.png" alt=""></a>
-                    <a class="item" href="https://www.nownews.com/news/20180807/2798010/" target="_blank"><img class="image" src="/images/Now_News_logo.png" alt=""></a>
-                    <a class="item" href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv" target="_blank"><img class="image" src="/images/logo-chinatimes2019-1200x635.png" alt=""></a>
+        <!-- 媒體報導 -->
+        <div class="媒體報導">
+            <alesis-header class="區塊標題_拖尾的">
+                <div class="標題 標題_外框線的">媒體報導支持</div>
+            </alesis-header>
+            <alesis-space size="small"></alesis-space>
+            <div class="包裹容器">
+                <div class="商標區塊">
+                    <a class="項目" href="https://tw.money.yahoo.com/%E9%87%91%E8%9E%8D%E7%A7%91%E6%8A%80%E5%89%B5%E6%96%B0%E5%9C%92%E5%8D%809%E5%AE%B6%E5%BB%A0%E5%95%86%E5%8A%A0%E5%85%A5-%E4%BC%81%E6%A5%AD%E5%AF%A6%E9%A9%97%E5%AE%A4%E9%A6%96%E6%B3%A2%E5%85%AD%E5%A4%A7%E4%B8%BB%E9%A1%8C%E5%85%AC%E5%B8%83-083826449.html" target="_blank"><img class="圖片" src="/images/a645f762048f5f425d0f0a8486f34612.png"></a>
+                    <a class="項目" href="http://n.yam.com/Article/20180803346949" target="_blank"><img class="圖片" src="/images/1JHY1QOLYPF0.png"></a>
+                    <a class="項目" href="https://www.nownews.com/news/20180807/2798010/" target="_blank"><img class="圖片" src="/images/Now_News_logo.png"></a>
+                    <a class="項目" href="https://act.chinatimes.com/market/content.aspx?AdID=6585&chdtv" target="_blank"><img class="圖片" src="/images/logo-chinatimes2019-1200x635.png"></a>
                 </div>
-                <div class="logos -three">
-                    <a class="item" href="https://news.cnyes.com/news/id/4267004" target="_blank"><img class="image" src="/images/logo-cn-yes-1.png" alt=""></a>
-                    <a class="item" href="https://www.wealth.com.tw/home/articles/20567" target="_blank"><img class="image" src="/images/logo-red.png" alt=""></a>
-                    <a class="item" href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198" target="_blank"><img class="image" src="/images/logo300_90.png" alt=""></a>
+                <div class="商標區塊 商標區塊_三欄">
+                    <a class="項目" href="https://news.cnyes.com/news/id/4267004" target="_blank"><img class="圖片" src="/images/logo-cn-yes-1.png"></a>
+                    <a class="項目" href="https://www.wealth.com.tw/home/articles/20567" target="_blank"><img class="圖片" src="/images/logo-red.png"></a>
+                    <a class="項目" href="https://m.ctee.com.tw/livenews/aj/a95645002019042615564198" target="_blank"><img class="圖片" src="/images/logo300_90.png"></a>
                 </div>
             </div>
         </div>
-        <!-- / 媒體報導支持 -->
+        <!-- / 媒體報導 -->
 
         <float />
     </div>
@@ -279,19 +278,34 @@ import { Splide, SplideSlide } from "@splidejs/vue-splide";
 //
 import creditBoard from "../component/svg/creditBoardComponent";
 import float       from "../component/floatComponent";
-// Alesis components
-import indexCounter   from "../component/alesis/index/counter";
-import indexSection   from "../component/alesis/index/section";
-import indexBullet    from "../component/alesis/index/bullet";
-import indexMoon      from "../component/alesis/index/moon";
-import indexPlan      from "../component/alesis/index/plan";
-import indexHuman     from "../component/alesis/index/human";
-import indexButton    from "../component/alesis/index/button";
-import indexShanghai  from "../component/alesis/index/shanghai";
-import AlesisHeader   from "../component/alesis/index/header";
-import globalCarousel from "../component/alesis/global-carousel";
-import verticalPath   from "../component/alesis/vertical-path";
-import horizontalPath from "../component/alesis/horizontal-path";
+// Alesis 元件
+import AlesisAppRecommendation from "../component/alesis/AlesisAppRecommendation";
+import AlesisBullet            from "../component/alesis/AlesisBullet";
+import AlesisButton            from "../component/alesis/AlesisButton";
+import AlesisCounter           from "../component/alesis/AlesisCounter";
+import AlesisHeader            from "../component/alesis/AlesisHeader";
+import AlesisHorizontalRoadmap from "../component/alesis/AlesisHorizontalRoadmap";
+import AlesisHuman             from "../component/alesis/AlesisHuman";
+import AlesisLoanHeader        from "../component/alesis/AlesisLoanHeader";
+import AlesisMoon              from "../component/alesis/AlesisMoon";
+import AlesisPlan              from "../component/alesis/AlesisPlan";
+import AlesisProject           from "../component/alesis/AlesisProject";
+import AlesisSection           from "../component/alesis/AlesisSection";
+import AlesisShanghai          from "../component/alesis/AlesisShanghai";
+import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
+import AlesisSymcard           from "../component/alesis/AlesisSymcard";
+import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
+import AlesisSpace             from "../component/alesis/AlesisSpace";
+import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
+// 遠端資料
+import PlanData from "../data/index_plans"
+
+
+import 'swiper/swiper.scss';
+import "swiper/components/navigation/navigation.min.css"
+import SwiperCore, {
+  Navigation
+} from 'swiper/core';
 
 export default {
     components: {
@@ -300,18 +314,24 @@ export default {
         Splide,
         SplideSlide,
         //
-        indexCounter,
-        indexSection,
-        indexBullet,
-        indexMoon,
-        indexPlan,
-        indexHuman,
-        indexButton,
-        indexShanghai,
+        AlesisAppRecommendation,
+        AlesisBullet,
+        AlesisButton,
+        AlesisCounter,
         AlesisHeader,
-        globalCarousel,
-        verticalPath,
-        horizontalPath
+        AlesisHorizontalRoadmap,
+        AlesisHuman,
+        AlesisLoanHeader,
+        AlesisMoon,
+        AlesisPlan,
+        AlesisProject,
+        AlesisSection,
+        AlesisShanghai,
+        AlesisSuggestionReviews,
+        AlesisSymcard,
+        AlesisTaiwanMap,
+        AlesisSpace,
+        AlesisVerticalRoadmap,
     },
     data: () => ({
         amountCount: 5000,
@@ -319,63 +339,9 @@ export default {
         pmt        : 0,
         tweenedPmt : 0,
         currentPlan: 0,
-        plans      : [
-            {
-                header: "學生貸",
-                unready: false,
-                image: "/images/alesis-student-rotate.svg",
-                targets: [
-                    "大學、碩博士在學生",
-                    "20-35歲中華民國國民"
-                ],
-                action: "開始試算",
-                features: [
-                    "Instagram / Dcard 大學生最推薦資金媒合平台",
-                    "備妥雙證件即可，不打擾親友",
-                    "額度高達12萬",
-                    "3-24期分期方式選擇多元",
-                    "隱私安全、全線上申請、無人照會",
-                ]
-            },
-            {
-                header: "上班族貸",
-                unready: false,
-                image: "/images/alesis-work-rotate.svg",
-                targets: [
-                    "社會新鮮人、金融小白",
-                    "20-35歲中華民國國民"
-                ],
-                action: "開始試算",
-                features: [
-                    "超過200家上市櫃公司、千大企業員工最佳選擇",
-                    "申請紀錄不上聯徵，不影響未來銀行貸款額度",
-                    "可貸額度1萬-20萬",
-                    "3-24期分期方式選擇多元",
-                    "隱私安全、全線上申請、無人照會",
-                ]
-            },
-            {
-                header: "中小企業融資",
-                unready: false,
-                image: "/images/alesis-companies-rotate.svg",
-                targets: [],
-                action: "敬請期待",
-                features: [
-                    "信保微企貸",
-                    "申請速度最快，核准機率最高",
-                ]
-            },
-            {
-                header: "車輛融資",
-                unready: true,
-                image: "/images/alesis-car-rotate.svg",
-                targets: [],
-                action: "敬請期待",
-                features: []
-            }
-        ],
-        isForm: false,
-        period: 3
+        plans      : PlanData,
+        isForm     : false,
+        period     : 3
     }),
     created() {
         $("title").text(`首頁 - inFlux普匯金融科技`);
@@ -399,7 +365,6 @@ export default {
             }
         },
         updateCalculator(e) {
-            console.log(e)
             this.pmt = e.pmt
             switch (e.key) {
                 case 0:
@@ -436,22 +401,6 @@ export default {
 <style lang="scss">
 @import "../component/alesis/alesis";
 
-.alesis-humans {
-    .set {
-        @include rwd {
-            grid-template-columns: 1fr !important;
-            gap                  : 0 !important;
-        }
-
-        .item {
-            @include rwd {
-                &:not(:first-child) {
-                    display: none;
-                }
-            }
-        }
-    }
-}
 
 .alesis-fast-transfer {
     .wrapper {
@@ -499,502 +448,540 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
-.alesis-counters {
-    margin         : 4rem auto 8rem;
-    max-width      : 1280px;
+/**
+ * 計數器
+ */
 
-    .wrapper {
-      display        : flex;
-      justify-content: center;
+.計數器 {
+    margin   : 0 auto;
+    max-width: 1280px;
+}
+
+.計數器 .包裹容器 {
+    display        : flex;
+    justify-content: center;
+}
+
+/**
+ * 服務區塊
+ */
+
+.服務區塊 {
+    position: relative;
+}
+
+.服務區塊 .圖片 {
+    width    : 100%;
+    max-width: 920px;
+    margin   : 0 auto 3rem;
+    display  : block;
+    z-index  : 0;
+    position : relative;
+}
+
+.服務區塊 .動作區塊 {
+    position  : absolute;
+    display   : flex;
+    left      : 50%;
+    transform : translateX(-50%);
+    width     : 100%;
+    max-width : 1200px;
+    margin-top: -4rem;
+    z-index   : 1;
+}
+
+.服務區塊 .動作區塊 .左側,
+.服務區塊 .動作區塊 .右側 {
+    text-align: center;
+    flex      : 1;
+
+    @include rwd {
+        display       : flex;
+        flex-direction: column;
+        gap           : 1rem;
+        align-items   : center;
     }
 }
 
-.alesis-our-service {
-    .image {
-        width    : 100%;
-        max-width: 920px;
-        margin   : 0 auto 3rem;
-        display  : block;
-        z-index  : 0;
-        position : relative;
+.服務區塊 .動作區塊 .左側 {
+    margin-right: 4.5rem;
+}
+
+.服務區塊 .動作區塊 .右側 {
+    margin-left: 4.5rem;
+}
+
+.服務區塊 .動作區塊 .動作 {
+    border-radius: 1rem;
+    padding      : 0.3rem 1.5rem;
+    font-size    : 1.2rem;
+    font-weight  : bolder;
+    color        : #112e53;
+    border       : 1px solid #1a5fa2;
+
+    @include rwd {
+        font-size: .8rem;
+        max-width: 7rem;
+        padding  : .2rem 1rem;
     }
 
-    .actions {
-        position  : absolute;
-        display   : flex;
-        left      : 50%;
-        transform : translateX(-50%);
-        width     : 100%;
-        max-width : 1200px;
-        margin-top: -4rem;
-        z-index   : 1;
+    &:not(:first-child) {
+        margin-left: 1rem;
 
-        .left,
-        .right {
-            text-align: center;
-            flex      : 1;
-
-            @include rwd {
-                display       : flex;
-                flex-direction: column;
-                gap           : 1rem;
-                align-items   : center;
-            }
-        }
-
-        .left {
-            margin-right: 4.5rem;
-        }
-
-        .right {
-            margin-left: 4.5rem;
-        }
-
-        .action {
-            border-radius: 1rem;
-            padding      : 0.3rem 1.5rem;
-            font-size    : 1.2rem;
-            font-weight  : bolder;
-            color        : #112e53;
-            border       : 1px solid #1a5fa2;
-
-            @include rwd {
-                font-size: .8rem;
-                max-width: 7rem;
-                padding  : .2rem 1rem;
-            }
-
-            &:not(:first-child) {
-                margin-left: 1rem;
-
-                @include rwd {
-                    margin-left: 0;
-                }
-            }
+        @include rwd {
+            margin-left: 0;
         }
     }
 }
 
-.alesis-company-introduction {
+/**
+ * 公司簡介
+ */
+
+.公司簡介 {
+    position: relative;
+
     @include rwd {
         padding: 0 2rem;
     }
+}
 
-     .carousel {
-        margin    : 0 auto 3rem;
-        text-align: center;
+.公司簡介 .包裹容器 {
+    margin     : 0 auto 3rem;
+    text-align : center;
 
-        @include rwd {
-            display: none;
-        }
-
-        .entity {
-            display    : inline-flex;
-            align-items: center;
-
-            .lightbox {
-                svg {
-                    width: 90vw;
-                    max-width: 1170px;
-                }
-                .image {
-                    max-width: 85%;
-                }
-            }
-        }
+    @include rwd {
+        display: none;
     }
+}
 
-    .mobile-roadmap {
-        display   : none;
-        text-align: center;
+.公司簡介 .包裹容器 svg {
+    width    : 90vw;
+    max-width: 1170px;
+}
 
-        @include rwd {
-            display: block;
-        }
+.公司簡介 .手機容器 {
+    display   : none;
+    text-align: center;
 
-        svg {
-            width        : 70vw;
-            margin-bottom: 4rem;
-        }
+    @include rwd {
+        display: block;
     }
+}
 
-    .introduction {
-        display  : flex;
-        max-width: 1280px;
+.公司簡介 .手機容器 svg {
+    width        : 70vw;
+    margin-bottom: 4rem;
+}
+
+.公司簡介 .介紹區域 {
+    display  : flex;
+    max-width: 1280px;
+    margin   : 0 auto;
+
+    @include rwd {
+        flex-direction: column;
+    }
+}
+
+.公司簡介 .介紹區域 .展示區塊 {
+    flex      : 1;
+    max-width : min(590px, 45vw);
+    text-align: center;
+
+    @include rwd {
+        max-width: initial;
+    }
+}
+
+.公司簡介 .介紹區域 .展示區塊 .圖片 {
+    max-width: min(590px, 32vw);
+
+    @include rwd {
+        max-width: 100%;
+        width    : 100%;
+    }
+}
+
+.公司簡介 .介紹區域 .項目清單 {
+    flex           : 1;
+    display        : flex;
+    flex-direction : column;
+    align-items    : flex-start;
+    justify-content: center;
+}
+
+.公司簡介 .介紹區域 .項目清單 .項目 {
+    margin-top: 3rem;
+}
+
+/**
+ * 產品特色
+ */
+
+.產品特色 {
+    position: relative;
+}
+
+.產品特色 .包裹容器 {
+    display        : flex;
+    justify-content: center;
+    max-width      : 1280px;
+    margin         : 0 auto;
+
+    @include rwd {
+        flex-direction: column;
+        gap           : 3rem;
+        padding       : 0 0rem;
+    }
+}
+
+.產品特色 .包裹容器 .展示區塊 {
+    flex       : 0.75;
+    text-align : center;
+    padding-top: 4rem;
+
+    @include rwd {
+        padding-top: 0;
+    }
+}
+
+.產品特色 .包裹容器 .展示區塊 .圖片 {
+    width: 240px;
+}
+
+.產品特色 .包裹容器 .內容區塊 {
+    flex: 1;
+
+    @include rwd {
+        max-width: 450px;
         margin   : 0 auto;
+    }
+}
 
-        @include rwd {
-            flex-direction: column;
-        }
+.產品特色 .包裹容器 .內容區塊 .bullet {
+    margin-left: 2.3rem;
 
-        .showcase {
-            flex      : 1;
-            max-width : min(590px, 45vw);
-            text-align: center;
+    @include rwd {
+        margin-left: 0;
+    }
+}
 
-            @include rwd {
-                max-width: initial;
-            }
+.產品特色 .包裹容器 .內容區塊 .bullet .symbol {
+    @include rwd {
+        margin-right: 2rem;
+    }
+}
 
-            .image {
-                max-width: min(590px, 32vw);
+.產品特色 .包裹容器 .半月列表 > .項目 {
+    display   : flex;
+    margin-top: 3.5rem;
 
-                @include rwd {
-                    max-width: 100%;
-                    width    : 100%;
-                }
-            }
-        }
-
-        .items {
-            flex           : 1;
-            display        : flex;
-            flex-direction : column;
-            align-items    : flex-start;
-            justify-content: center;
-
-            .item {
-                margin-top: 3rem;
-            }
+    @include rwd {
+        &:not(:first-child) {
+            margin-top: 1.5rem;
         }
     }
 }
 
-.alesis-feature {
-    .wrapper {
-        display        : flex;
-        justify-content: center;
-        max-width      : 1280px;
-        margin         : 0 auto;
+.產品特色 .包裹容器 .半月列表 > .項目 .圖示 {
+    margin-right: 3rem;
 
-        @include rwd {
-            flex-direction: column;
-            gap           : 3rem;
-            padding       : 0 0rem;
-        }
-
-        .showcase {
-            flex       : 0.75;
-            text-align : center;
-            padding-top: 4rem;
-
-            @include rwd {
-                padding-top: 0;
-            }
-
-            .image {
-                width: 240px;
-            }
-        }
-        .content {
-            flex: 1;
-
-            @include rwd {
-                max-width: 450px;
-                margin   : 0 auto;
-            }
-
-            .bullet {
-                margin-left: 2.3rem;
-
-                @include rwd {
-                    margin-left: 0;
-                }
-
-                .symbol {
-                    @include rwd {
-                        margin-right: 2rem;
-                    }
-                }
-            }
-        }
-
-        .moons {
-            > .item {
-                display   : flex;
-                margin-top: 3.5rem;
-
-                @include rwd {
-                    &:not(:first-child) {
-                        margin-top: 1.5rem;
-                    }
-                }
-
-                .moon {
-                    margin-right: 3rem;
-
-                    @include rwd {
-                        margin-right: 1.5rem;
-                    }
-                }
-                .content {
-                    color: #5d5555;
-
-                    @include rwd {
-                        font-size  : .9rem;
-                        line-height: 1.8;
-                    }
-                }
-            }
-        }
+    @include rwd {
+        margin-right: 1.5rem;
     }
 
-    .slogan {
-        text-align : center;
-        color      : #f29600;
-        font-size  : 2rem;
-        font-weight: bolder;
-        margin-top : 4rem;
-
-        @include rwd {
-            font-size : 1rem;
-            margin-top: 2rem;
-        }
+    @include rwd-minimum {
+        margin-right: 0rem;
     }
 }
 
-.alesis-fast-transfer {
-    .wrapper {
-        display    : flex;
-        margin     : 3rem auto 0;
-        align-items: center;
-        max-width  : 1000px;
+.產品特色 .包裹容器 .半月列表 > .項目 .內容 {
+    color: #5d5555;
 
-        @include rwd {
-            flex-direction: column;
-            gap           : 4rem;
-        }
-
-        .graph {
-            text-align: center;
-            flex      : 1;
-
-            .image {
-                width: 590px;
-
-                @include rwd {
-                    width: 76vw;
-                }
-            }
-        }
-
-        .moons {
-            .moon {
-                &:not(:first-child) {
-                    margin-top: 5rem;
-
-                    @include rwd {
-                        margin-top: 3rem;
-                    }
-                }
-            }
-        }
+    @include rwd {
+        font-size  : .9rem;
+        line-height: 1.8;
     }
 }
 
-.alesis-solutions {
-    .wrapper {
-        display              : grid;
-        grid-template-columns: repeat(4, 1fr);
-        max-width            : 1100px;
-        margin               : 3rem auto 0;
-        gap                  : 1.5rem;
+.產品特色 .標語 {
+    text-align : center;
+    color      : #f29600;
+    font-size  : 2rem;
+    font-weight: bolder;
+    margin-top : 4rem;
 
-        @include rwd {
-            align-items          : center;
-            justify-content      : center;
-            grid-template-columns: min-content 1fr min-content;
-            max-width            : 400px;
-            min-height           : 465px;
-        }
+    @include rwd {
+        font-size : 1rem;
+        margin-top: 2rem;
+    }
+}
 
-        .arrow {
+/**
+ * 快速變現
+ */
+
+.快速變現 {
+    position: relative;
+}
+
+.快速變現 .包裹容器 {
+    display    : flex;
+    margin     : 0 auto;
+    align-items: center;
+    max-width  : 1000px;
+
+    @include rwd {
+        flex-direction: column;
+        gap           : 4rem;
+    }
+}
+
+.快速變現 .包裹容器 .圖表 {
+    text-align: center;
+    flex      : 1;
+}
+
+.快速變現 .包裹容器 .圖表 .圖片 {
+    width: 590px;
+
+    @include rwd {
+        width: 76vw;
+    }
+}
+
+.快速變現 .包裹容器 .半月列表 > .項目:not(:first-child) {
+    margin-top: 5rem;
+
+    @include rwd {
+        margin-top: 3rem;
+    }
+}
+
+/**
+ * 產品方案
+ */
+
+.產品方案 {
+    position: relative;
+}
+
+.產品方案 .包裹容器 {
+    display              : grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width            : 1100px;
+    margin               : 3rem auto 0;
+    gap                  : 1.5rem;
+
+    @include rwd {
+        align-items          : center;
+        justify-content      : center;
+        grid-template-columns: min-content 1fr min-content;
+        max-width            : 400px;
+        min-height           : 465px;
+    }
+}
+
+.產品方案 .包裹容器 .箭頭 {
+    display: none;
+
+    @include rwd {
+        text-align: center;
+        display   : block;
+    }
+}
+
+.產品方案 .包裹容器 .箭頭 .圖示 {
+    width: 33px;
+}
+
+.產品方案 .包裹容器 .方案表 {
+    padding: 1rem;
+    flex   : 1;
+
+    @include rwd {
+        &:not(.方案表_已啟用) {
             display: none;
-
-            @include rwd {
-                text-align: center;
-                display   : block;
-            }
-
-            img {
-                width: 33px;
-            }
-        }
-
-        .plan {
-            padding: 1rem;
-            flex   : 1;
-
-            @include rwd {
-                &:not(.-active) {
-                    display: none;
-                }
-            }
         }
     }
 }
 
-.alesis-recommend-banks {
+/**
+ * 普匯推薦
+ */
+
+.普匯推薦 {
     --alesis-xheader-offset     : -34%;
     --alesis-xsection-offset-top: 7rem;
 
     position: relative;
+}
 
-    .wrapper {
-        display        : flex;
-        align-items    : center;
-        justify-content: center;
-        margin         : 3rem 0;
+.普匯推薦 .包裹容器 {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    margin         : 0 0;
+}
+
+/**
+ * 媒體報導
+ */
+
+.媒體報導 {
+    position: relative;
+}
+
+.媒體報導 .包裹容器 {
+    background-image: url('/images/sshot-1644.png');
+    background-size : cover;
+    padding         : .5rem 1rem;
+
+    @include rwd {
+        padding: .5rem 1rem;
     }
 }
 
-.alesis-humans {
-    .carousel {
-        max-width  : 1280px;
-        margin     : 2rem auto 0;
+.媒體報導 .包裹容器 .商標區塊 {
+    display              : grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width            : 1280px;
+    margin               : 2rem auto;
+    gap                  : 1rem;
+
+    @include rwd {
+        margin: 1rem auto;
     }
 }
 
-.alesis-news {
-    .header {
-        padding-bottom: 5rem;
+.媒體報導 .包裹容器 .商標區塊.商標區塊_三欄 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.媒體報導 .包裹容器 .商標區塊 .項目 {
+    text-align: center;
+}
+
+.媒體報導 .包裹容器 .商標區塊 .項目 .圖片 {
+    height        : 60px;
+    margin        : 0 auto;
+    mix-blend-mode: darken;
+
+    @include rwd {
+        height    : 6vw;
+        max-height: 30px;
     }
+}
 
-    .wrapper {
-        background-image: url('/images/sshot-1644.png');
-        background-size : cover;
-        padding         : .5rem 0;
+/**
+ * 計算器
+ */
 
-        @include rwd {
-            padding: .5rem 1rem;
+.分期計算機 {
+    position: relative;
+}
+
+.分期計算機 .包裹容器 {
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    max-width      : 1280px;
+    margin         : 0 auto;
+
+    @include rwd {
+        flex-direction: column;
+    }
+}
+
+.分期計算機 .包裹容器 .計算機 {
+    flex           : 1;
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+    margin-right   : 7rem;
+
+    @include rwd {
+        width       : 380px;
+        margin-right: 0;
+    }
+}
+
+.分期計算機 .包裹容器 .計算機 > div {
+    width: 600px;
+}
+
+.分期計算機 .包裹容器 .輸入群組 {
+    flex: 1;
+}
+
+.分期計算機 .包裹容器 .輸入群組 .列 {
+    margin    : 0;
+    margin-top: 1rem;
+    display   : flex;
+
+    @include rwd {
+        &:first-child {
+            display     : inline-flex;
+            margin-right: 1rem;
         }
 
-        .logos {
-            display              : grid;
-            grid-template-columns: repeat(4, 1fr);
-            max-width            : 1280px;
-            margin               : 2rem auto;
-            gap                  : 1rem;
+        &:nth-child(2) {
+            display: inline-flex;
 
-            @include rwd {
-                margin: 1rem auto;
-            }
-
-            &.-three {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .item {
-                text-align: center;
-
-                .image {
-                    height        : 60px;
-                    margin        : 0 auto;
-                    mix-blend-mode: darken;
-
-                    @include rwd {
-                        height    : 6vw;
-                        max-height: 30px;
-                    }
-                }
+            .輸入欄位 {
+                width: 3rem;
             }
         }
     }
 }
 
-.alesis-calculator {
-    .wrapper {
-        display        : flex;
-        align-items    : center;
-        justify-content: center;
-        max-width      : 1280px;
-        margin         : 0 auto;
+.分期計算機 .包裹容器 .輸入群組 .列 .文字 {
+    text-align      : center;
+    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip : text;
+    width           : fit-content;
+    color           : rgba(255, 255, 255, 0);
+    font-weight     : bolder;
+    font-size       : 2rem;
+    line-height     : 1.2;
+    white-space     : nowrap;
 
-        @include rwd {
-            flex-direction: column;
-        }
-
-        .calculator {
-            flex           : 1;
-            display        : flex;
-            align-items    : center;
-            justify-content: center;
-            margin-right   : 7rem;
-
-            @include rwd {
-                width       : 380px;
-                margin-right: 0;
-            }
-
-            > div {
-                    width: 600px;
-            }
-        }
-
-        .inputs {
-            flex: 1;
-
-            .row {
-                margin: 0;
-                margin-top: 1rem;
-
-                @include rwd {
-                    &:first-child {
-                        display     : inline-flex;
-                        margin-right: 1rem;
-                    }
-
-                    &:nth-child(2) {
-                        display: inline-flex;
-
-                        .input {
-                            width: 3rem;
-                        }
-                    }
-                }
-
-                .text {
-                    text-align      : center;
-                    background-image: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
-                    background-clip : text;
-                    width           : fit-content;
-                    color           : rgba(255, 255, 255, 0);
-                    font-weight     : bolder;
-                    font-size       : 2rem;
-                    line-height     : 1.2;
-                    white-space     : nowrap;
-
-                    @include rwd {
-                        font-size: 1.2rem;
-                    }
-                }
-
-                .input {
-                    appearance    : none;
-                    border        : 0;
-                    border-bottom : 1px solid #2b8bc3;
-                    padding       : .25rem 1rem;
-                    box-sizing    : border-box;
-                    background    : transparent;
-                    color         : #f29600;
-                    font-size     : 2.3rem;
-                    margin-top    : -1rem;
-                    line-height   : 1;
-                    width         : 11rem;
-                    text-align    : center;
-                    outline       : none;
-                    pointer-events: none;
-
-                    @include rwd {
-                        font-size : 1.2rem;
-                        width     : 6rem;
-                        padding   : 0;
-                        margin-top: -.5rem;
-                    }
-                }
-            }
-        }
+    @include rwd {
+        font-size: 1.2rem;
     }
+}
+
+.分期計算機 .包裹容器 .輸入群組 .列 .輸入欄位 {
+    appearance    : none;
+    border        : 0;
+    border-bottom : 1px solid #2b8bc3;
+    padding       : .25rem 1rem;
+    box-sizing    : border-box;
+    background    : transparent;
+    color         : #f29600;
+    font-size     : 2.3rem;
+    margin-top    : -1rem;
+    line-height   : 1;
+    width         : 11rem;
+    text-align    : center;
+    outline       : none;
+    pointer-events: none;
+
+    @include rwd {
+        font-size : 1.2rem;
+        width     : 6rem;
+        padding   : 0;
+        margin-top: -.5rem;
+    }
+}
+
+/**
+ * 人物推薦
+ */
+
+.人物推薦 {
+    position: relative;
 }
 
 .index-wrapper {
