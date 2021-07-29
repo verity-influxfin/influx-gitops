@@ -100,6 +100,49 @@ class Controller extends BaseController
         }
     }
 
+    public function getOption(Request $request)
+    {
+        $input = $request->all();
+        $response = [];
+        $data = [];
+        $option_config = [
+            // 學校
+            'school' =>'website/credit_department',
+            // 科系
+            'department' => 'website/credit_department'
+        ];
+
+        if(isset($input['data']) && !empty($input['data'])){
+            if(isset($option_config[$input['data']])){
+                $api_url = $option_config[$input['data']];
+                $response = shell_exec('curl --location --request GET "' . $this->apiGetway . $api_url .'"');
+            }
+
+            if(!empty($response)){
+                $response = json_decode($response,true);
+                if(isset($response['data']['list'])){
+                    if($input['data'] == 'school'){
+                        $data = array_map(function($key) {
+                            return $key;
+                        }, array_keys($response['data']['list']), $response['data']['list']);
+                    }
+                    if($input['data'] == 'department'){
+                        $data = array_map(function($key,$values) {
+                            return [$key=>array_keys($values['score'])];
+                        }, array_keys($response['data']['list']), $response['data']['list']);
+
+                        $data = array_reduce($data, 'array_merge', array());
+                    }
+                }
+                return response()->json(['response' => 'success','data' => $data], 200);
+            }else{
+                return response()->json(['response' => 'error','message' => 'not response'], 501);
+            }
+        }else{
+            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+        }
+    }
+
     // to do : 計算邏輯待拆離、利率額度待串主站
     public function getBorrowReport(Request $request)
     {
