@@ -23,37 +23,52 @@
         </div>
         <!-- / 頂部板岩 -->
 
+        <alesis-space size="tiny"></alesis-space>
+
         <!-- 特色區域 -->
         <div class="特色區域">
             <alesis-header>
                 <div class="標題">簡單快速專區</div>
                 <div class="標題 標題_外框線的">全線上自動審核 無人打擾24小時立即到帳</div>
             </alesis-header>
-            <alesis-section header="簡單快速專區" multiline="全線上自動審核 無人打擾24小時立即到帳" :outlinedMulti="true">
+            <alesis-section>
+                <alesis-space size="small"></alesis-space>
                 <div class="卡片區塊">
                     <alesis-symcard class="symcard animate__animated" image="/images/business-team-manager-meeting1.jpg" header="企業融資" symbol="/images/alesis-companies.svg" description="支持中小企業，協助媒合百萬營運資金"></alesis-symcard>
                     <alesis-symcard class="symcard animate__animated" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg" header="上班族貸" subheader="產品申請手續費4%" symbol="/images/alesis-work.svg" description="急需資金不再慌張，AI審核立即入帳"></alesis-symcard>
                     <alesis-symcard class="symcard animate__animated" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg" header="學生貸" subheader="產品申請手續費3%" symbol="/images/alesis-student.svg" description="輕鬆分期不再煩腦，學生社群口碑最好"></alesis-symcard>
                     <alesis-symcard class="symcard animate__animated" image="/images/20200914172847-028f5b7b-me.jpg" header="車輛融資" symbol="/images/alesis-car.svg" description="敬請期待"></alesis-symcard>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 特色區域 -->
 
         <!-- 普匯推薦 -->
         <div class="普匯推薦">
-            <alesis-section header="普匯推薦 銀行速貸好條件" multiline="透過普匯結盟夥伴，可享最高額度300萬，超低利率1.88%起！" :secondary="true">
+            <alesis-header>
+                <div class="標題">普匯推薦 銀行速貸好條件</div>
+                <div class="標題">透過普匯結盟夥伴，可享最高額度300萬，超低利率1.88%起！</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <alesis-shanghai></alesis-shanghai>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 普匯推薦 -->
 
         <!-- 聽聽他們怎麼說 -->
         <div class="推薦人物">
+            <alesis-header class="區塊標題_拖尾的">
+                <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
+            </alesis-header>
             <alesis-section header="聽聽他們怎麼說" :outlined="true">
+                <alesis-space size="medium"></alesis-space>
                 <alesis-suggestion-reviews type="borrow"></alesis-suggestion-reviews>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 聽聽他們怎麼說 -->
@@ -179,6 +194,10 @@ export default {
     100% { opacity: 1; }
 }
 
+/**
+ * 頂部板岩
+ */
+
 .頂部板岩 {
     display         : flex;
     flex-direction  : column;
@@ -267,6 +286,10 @@ export default {
     }
 }
 
+/**
+ * 特色區域
+ */
+
 .特色區域 {
     position: relative;
 }
@@ -285,6 +308,14 @@ export default {
     }
 }
 
+/**
+ * 普匯推薦
+ */
+
+.普匯推薦 {
+    position: relative;
+}
+
 .普匯推薦 .包裹容器 {
     display        : flex;
     align-items    : center;
@@ -292,33 +323,13 @@ export default {
     margin         : 3rem 0 0;
 }
 
-
-
-.普匯推薦 {
-    .包裹容器 {
-
-    }
-}
+/**
+ * 推薦人物
+ */
 
 .推薦人物 {
-    .carousel {
-        max-width  : 1280px;
-        margin     : 2rem auto 0;
-        display    : flex;
-        align-items: center;
+    position: relative;
 
-        .left {
-
-        }
-        .lightbox {
-            flex                 : 1;
-            display              : grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap                  : 2rem;
-        }
-        .right {
-
-        }
-    }
+    --alesis-xheader-offset: -70%;
 }
 </style>
