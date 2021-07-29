@@ -106,6 +106,8 @@
 <script>
 import AlesisHuman from "./AlesisHuman";
 
+import InvestData from "./../../data/reviews_invest";
+
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
@@ -119,6 +121,11 @@ export default {
     props: {
         type: {
             default: "index",
+        }
+    },
+    data() {
+        return {
+            invests: InvestData
         }
     },
     mounted() {
