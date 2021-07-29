@@ -18,8 +18,8 @@
                 <div class="項目">額度最高達300萬，期間最長7年</div>
             </div>
             <div class="動作群組">
-                <a class="動作" href="#!"><alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">了解更多</alesis-button></a>
-                <a class="動作" href="#!" @click="() => isForm = true"><alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">取得資格</alesis-button></a>
+                <a class="動作" href="/scsbank"><alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">了解更多</alesis-button></a>
+                <a class="動作" @click="() => isForm = true"><alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">取得資格</alesis-button></a>
             </div>
         </template>
     </div>
@@ -112,6 +112,7 @@ export default {
 .上海容器 .動作群組 .動作 {
     flex         : 1;
     margin-right : 1rem;
+    cursor       : pointer;
 }
 
 .上海容器 .動作群組 .動作 + .動作 {
