@@ -105,7 +105,7 @@
                 <a href="/news" class="item">平台公告</a>
                 <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow" target="_blank" class="item">下載APP</a>
                 <div class="item">
-                    <div class="login">SIGN IN</div>
+                    <div @click="doLogin" class="login">SIGN IN</div>
                 </div>
                 <div class="item hamburger">
                     <img src="/images/alesis-hamburger.svg">
@@ -187,7 +187,7 @@
                 <div class="introduction">
                     <div class="brand">
                         <div class="text">認識</div>
-                        <img class="image" src="/images/footer@2x.png" alt="">
+                        <img class="image" src="/images/footer@2x.png">
                     </div>
                     <div class="paragraphy">
                         「普匯．你的手機ATM」<br>
@@ -227,22 +227,22 @@
                     <div class="item">
                         <div class="header">聯絡我們</div>
                         <div class="meta">
-                            <div class="icon"><img src="/images/alesis-clock.svg" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-clock.svg"></div>
                             <div class="text">服務時間  9:00 AM - 6:00 PM</div>
 
-                            <div class="icon"><img src="/images/alesis-phone.svg" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-phone.svg"></div>
                             <div class="text"><a href="tel:+886225079990" target="_blank">02-2507-9990</a></div>
 
-                            <div class="icon"><img src="/images/alesis-email.svg" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-email.svg"></div>
                             <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
 
-                            <div class="icon"><img src="/images/alesis-address.svg" alt=""></div>
+                            <div class="icon"><img src="/images/alesis-address.svg"></div>
                             <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市松江路111號11樓-2</a></div>
                         </div>
                         <div class="socials">
-                            <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg" alt=""></a>
-                            <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img src="/images/alesis-line.svg" alt=""></a>
-                            <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img src="/images/alesis-instagram.svg" alt=""></a>
+                            <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg"></a>
+                            <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img src="/images/alesis-line.svg"></a>
+                            <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img src="/images/alesis-instagram.svg"></a>
                         </div>
                     </div>
                 </div>
