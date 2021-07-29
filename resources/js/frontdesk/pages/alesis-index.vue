@@ -378,9 +378,10 @@ export default {
 
         SwiperCore.use([Navigation]);
             new Swiper('.swiper-container.標頭幻燈片', {
-                // autoplay: {
-                //     delay: 3000,
-                // },
+                autoplay: {
+                    delay: 3000,
+                },
+                loop: true,
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
