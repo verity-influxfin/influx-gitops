@@ -57,6 +57,10 @@ export default {
     text-decoration: none;
 }
 
+.特色卡片[href=''] {
+    pointer-events: none;
+}
+
 .特色卡片 > .標題 {
     background   : #ecedf1;
     display      : flex;
