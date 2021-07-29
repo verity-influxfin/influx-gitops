@@ -267,6 +267,44 @@ $ci-color: #153a71;
         .item {
             color: #fff;
             text-decoration: none;
+            cursor: pointer;
+
+            &.-active {
+                .sub {
+                    display: flex;
+                }
+            }
+
+            .sub {
+                background: #fff;
+                color: #153a71;
+                min-width: 160px;
+                text-align: left;
+                font-weight: 900;
+                font-size: 16px;
+                padding: 0.35rem 0;
+                position: absolute;
+                border-radius: 0.25rem;
+                margin: 0.25rem 0;
+                display: none;
+                flex-direction: column;
+                overflow: hidden;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+
+                .item {
+                    color: #153a71;
+                    padding: 0.4rem 1.5rem;
+
+                    &:hover {
+                        background-color: #f8f9fa;
+                    }
+
+                    &.-disabled {
+                        background-color: #55595c;
+                        color: #000;
+                    }
+                }
+            }
         }
 
         .separator {
@@ -297,10 +335,48 @@ $ci-color: #153a71;
         .item {
             color: #fff;
             text-decoration: none;
+            cursor: pointer;
 
             @include rwd {
                 &:not(.hamburger) {
                     display: none;
+                }
+            }
+
+            &.-active {
+                .sub {
+                    display: flex;
+                }
+            }
+
+            .sub {
+                background: #fff;
+                color: #153a71;
+                min-width: 160px;
+                text-align: left;
+                font-weight: 900;
+                font-size: 16px;
+                padding: 0.35rem 0;
+                position: absolute;
+                border-radius: 0.25rem;
+                margin: 0.25rem 0;
+                display: none;
+                flex-direction: column;
+                overflow: hidden;
+                border: 1px solid rgba(0, 0, 0, 0.15);
+
+                .item {
+                    color: #153a71;
+                    padding: 0.4rem 1.5rem;
+
+                    &:hover {
+                        background-color: #f8f9fa;
+                    }
+
+                    &.-disabled {
+                        background-color: #55595c;
+                        color: #000;
+                    }
                 }
             }
 

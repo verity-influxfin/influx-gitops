@@ -93,15 +93,54 @@
                 <a href="/index"><img src="/images/logo_new.png" class="image"></a>
             </div>
             <div class="center">
-                <a class="item" href="/borrow">我要借款</a>
+                <div class="item">
+                    我要借款
+                    <div class="sub">
+                        <a href="/collegeLoan" class="item">學生貸款</a>
+                        <a href="/workLoan" class="item">上班族貸款</a>
+                        <a href="/engineerLoan" class="item">資訊工程師專案</a>
+                        <div class="item -disabled">外匯車貸(coming soon)</div>
+                        <div class="item -disabled">新創企業主貸(coming soon)</div>
+                    </div>
+                </div>
                 <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
-                <a class="item" href="/invest">我要投資</a>
+                <div class="item">
+                    我要投資
+                    <div class="sub">
+                        <a href="/investment" class="item">債權投資</a>
+                        <a href="/transfer" class="item">債權轉讓</a>
+                    </div>
+                </div>
             </div>
             <div class="aside">
-                <a href="/mobileLoan" class="item">分期付款超市</a>
-                <a href="/company" class="item">關於我們</a>
-                <a href="/vlog" class="item">小學堂金融科技</a>
-                <a href="/blog" class="item">了解更多</a>
+                <div class="item">
+                    分期付款超市
+                    <div class="sub">
+                        <a href="/mobileLoan" class="item">手機分期</a>
+                    </div>
+                </div>
+                <div class="item">
+                    關於我們
+                    <div class="sub">
+                        <a href="/company" class="item">公司介紹</a>
+                        <a href="/news" class="item">最新消息</a>
+                    </div>
+                </div>
+                <div class="item">
+                    小學堂金融科技
+                    <div class="sub">
+                        <a href="/blog" class="item">小學堂</a>
+                        <a href="/vlog" class="item">小學堂影音</a>
+                    </div>
+                </div>
+                <div class="item">
+                    了解更多
+                    <div class="sub">
+                        <a href="/blog" class="item">常見問題</a>
+                        <a href="/vlog" class="item">風險報告書</a>
+                        <a href="/vlog" class="item">案件總覽</a>
+                    </div>
+                </div>
                 <a href="/news" class="item">平台公告</a>
                 <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow" target="_blank" class="item">下載APP</a>
                 <div class="item">
@@ -116,7 +155,7 @@
                     <div class="text">我要借款</div>
                     <div class="sub">
                         <a href="/collegeLoan" class="item">學生貸款</a>
-                        <a href="/freshGraduateLoan" class="item">上班族貸款</a>
+                        <a href="/workLoan" class="item">上班族貸款</a>
                         <a href="/engineerLoan" class="item">資訊工程師專案</a>
                         <div class="item -disabled">外匯車貸(coming soon)</div>
                         <div class="item -disabled">新創企業主貸(coming soon)</div>
@@ -164,6 +203,25 @@
                     document.querySelector(".rwd-list").classList.toggle("-active")
                 })
 
+                document.querySelector("body").addEventListener("click", (e) =>{
+                    if (e.target.closest(".item") !== null) {
+                        return
+                    }
+                        document.querySelectorAll(".aside > .item, .center > .item").forEach((v) => {
+                            v.classList.remove("-active")
+                        })
+                })
+
+                document.querySelectorAll(".aside > .item, .center > .item").forEach((v) => {
+                    v.addEventListener("click", (e) => {
+                        Array.prototype.filter.call(document.querySelectorAll(".aside .item , .center > .item"), (j) => {
+                            return v !== j
+                        }).forEach((v) =>{
+                            v.classList.remove("-active")
+                        })
+                        v.classList.toggle("-active")
+                    })
+                })
 
                 document.querySelectorAll(".rwd-list .item").forEach((v) => {
                     v.addEventListener("click", (e) => {
@@ -202,7 +260,7 @@
                         <div class="header">我要申貸</div>
                         <div class="list">
                             <a href="/collegeLoan">學生貸款</a>
-                            <a href="/freshGraduateLoan">上班族貸款</a>
+                            <a href="/workLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
                             <a href="/investment">車輛融資</a>
                             <a href="/investment">企業融資</a>
