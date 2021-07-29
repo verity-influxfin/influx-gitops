@@ -37,7 +37,7 @@ export default {
 
 <style lang="scss">
 .blog-quiklink {
-  z-index: 2;
+  z-index: 100;
   float: right;
   margin-top: 30%;
   margin-bottom: 1rem;
