@@ -3647,6 +3647,10 @@ export default {
 <style lang="scss">
 @import "./../alesis/alesis";
 
+svg {
+  touch-action: none;
+}
+
 #ccrata {
   user-select: none;
 
