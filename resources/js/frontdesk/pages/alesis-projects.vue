@@ -17,7 +17,11 @@
 
         <!-- 案件區塊 -->
         <div class="案件區塊">
-            <alesis-section header="目前案件">
+            <alesis-header>
+                <div class="標題">目前案件</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <div class="分類">
                         <button class="項目 項目_啟用的">
@@ -77,13 +81,18 @@
                         <a href="#!" class="項目">下一頁</a>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 案件區塊 -->
 
         <!-- 案件區塊 -->
         <div class="案件區塊">
-            <alesis-section header="已成交案件">
+            <alesis-header>
+                <div class="標題">已成交案件</div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <div class="分類">
                         <button class="項目 項目_啟用的">
@@ -143,6 +152,7 @@
                         <a href="#!" class="項目">下一頁</a>
                     </div>
                 </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 案件區塊 -->
@@ -246,7 +256,7 @@ export default {
     object-fit: cover;
 }
 
-.頂部板岩 .背景 .遮罩 {
+.頂部板岩 .遮罩 {
     background-image : url(/images/alesis-shell-mask.svg);
     position         : relative;
     z-index          : 1;
@@ -273,7 +283,7 @@ export default {
     }
 }
 
-.頂部板岩 .背景 .遮罩 .標題 {
+.頂部板岩 .遮罩 .標題 {
     display      : inline-block;
     font-size    : 2.2rem;
     font-weight  : bolder;
@@ -285,7 +295,7 @@ export default {
     }
 }
 
-.頂部板岩 .背景 .遮罩 .內容 {
+.頂部板岩 .遮罩 .內容 {
     margin-top : 1rem;
     line-height: 1.8;
     font-size  : 1.3rem;
@@ -300,6 +310,7 @@ export default {
  */
 
 .案件區塊 {
+    position: relative;
     margin-top: 8rem;
 }
 
@@ -422,7 +433,7 @@ export default {
     }
 }
 
-.案件區塊 .包裹容器 .卡片列表 .項目 .分頁導覽 {
+.案件區塊 .包裹容器 .分頁導覽 {
     display        : flex;
     width          : min-content;
     white-space    : nowrap;
@@ -434,7 +445,7 @@ export default {
     margin-top     : 2rem;
 }
 
-.案件區塊 .包裹容器 .卡片列表 .項目 .分頁導覽 .項目 {
+.案件區塊 .包裹容器 .分頁導覽 .項目 {
     line-height    : 1;
     color          : #326398;
     padding        : .5rem .7rem;
@@ -449,7 +460,7 @@ export default {
     }
 }
 
-.案件區塊 .包裹容器 .卡片列表 .項目 .分頁導覽 .項目:last-child {
+.案件區塊 .包裹容器 .分頁導覽 .項目:last-child {
     border-right: 0;
 }
 </style>
