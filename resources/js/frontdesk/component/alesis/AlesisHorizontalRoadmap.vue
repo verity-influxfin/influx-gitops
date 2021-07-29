@@ -36,7 +36,7 @@
           <g id="Group_585" data-name="Group 585">
             <text text-anchor="middle" id="_2019.05" data-name="2019.05" transform="translate(64 12)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][7] !== undefined ? sets[current_set_index][7].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space" data-name="FinTech Space" transform="translate(64 35.749)" fill="#157efb" font-size="17" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][7] !== undefined ? sets[current_set_index][7].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS" transform="translate(64 67.998)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][7] !== undefined ? sets[current_set_index][7].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS" transform="translate(64 67.998)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][7] !== undefined ? sets[current_set_index][7].content : ''"></text>
           </g>
           <line id="Line_60" data-name="Line 60" x2="123.533" transform="translate(0.989 48.583)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -44,7 +44,7 @@
           <g id="Group_587" data-name="Group 587" transform="translate(3.199)">
             <text text-anchor="middle" id="_2019.05-2" data-name="2019.05" transform="translate(64 12)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][6] !== undefined ? sets[current_set_index][6].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space-2" data-name="FinTech Space" transform="translate(64 35.955)" fill="#157efb" font-size="16" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][6] !== undefined ? sets[current_set_index][6].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS-2" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][6] !== undefined ? sets[current_set_index][6].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS-2" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][6] !== undefined ? sets[current_set_index][6].content : ''"></text>
           </g>
           <line id="Line_61" data-name="Line 61" x2="123.533" transform="translate(0 48.598)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -52,7 +52,7 @@
           <g id="Group_589" data-name="Group 589" transform="translate(5.308)">
             <text text-anchor="middle" id="_2019.05-3" data-name="2019.05" transform="translate(64 11)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][4] !== undefined ? sets[current_set_index][4].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space-3" data-name="FinTech Space" transform="translate(64 34.955)" fill="#157efb" font-size="15" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][4] !== undefined ? sets[current_set_index][4].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS-3" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][4] !== undefined ? sets[current_set_index][4].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS-3" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][4] !== undefined ? sets[current_set_index][4].content : ''"></text>
           </g>
           <line id="Line_62" data-name="Line 62" x2="123.533" transform="translate(0 47.99)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -60,7 +60,7 @@
           <g id="Group_591" data-name="Group 591" transform="translate(9.49)">
             <text text-anchor="middle" id="_2019.05-4" data-name="2019.05" transform="translate(64 10)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space-4" data-name="FinTech Space" transform="translate(64 33.352)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS-4" data-name="進駐FTS" transform="translate(64 66.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS-4" data-name="進駐FTS" transform="translate(64 66.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][2] !== undefined ? sets[current_set_index][2].content : ''"></text>
           </g>
           <line id="Line_63" data-name="Line 63" x2="123.533" transform="translate(0 46.175)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -68,7 +68,7 @@
           <g id="Group_593" data-name="Group 593" transform="translate(11.566)">
             <text text-anchor="middle" id="_2019.05-5" data-name="2019.05" transform="translate(64 9)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][0] !== undefined ? sets[current_set_index][0].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space-5" data-name="FinTech Space" transform="translate(64 32.352)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][0] !== undefined ? sets[current_set_index][0].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS-5" data-name="進駐FTS" transform="translate(64 65.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][0] !== undefined ? sets[current_set_index][0].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS-5" data-name="進駐FTS" transform="translate(64 65.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][0] !== undefined ? sets[current_set_index][0].content : ''"></text>
           </g>
           <line id="Line_64" data-name="Line 64" x2="123.533" transform="translate(0 45.529)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -76,7 +76,7 @@
           <g id="Group_595" data-name="Group 595" transform="translate(11.574 0)">
             <text text-anchor="middle" id="_2019.05-6" data-name="2019.05" transform="translate(64 9)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space-6" data-name="FinTech Space" transform="translate(64 32.352)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS-6" data-name="進駐FTS" transform="translate(64 65.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS-6" data-name="進駐FTS" transform="translate(64 65.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][1] !== undefined ? sets[current_set_index][1].content : ''"></text>
           </g>
           <line id="Line_65" data-name="Line 65" x2="123.533" transform="translate(0 45.563)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -84,7 +84,7 @@
           <g id="Group_597" data-name="Group 597" transform="translate(5.267 0)">
             <text text-anchor="middle" id="_2019.05-7" data-name="2019.05" transform="translate(64 11)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][3] !== undefined ? sets[current_set_index][3].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space-7" data-name="FinTech Space" transform="translate(64 34.955)" fill="#157efb" font-size="15" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][3] !== undefined ? sets[current_set_index][3].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS-7" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][3] !== undefined ? sets[current_set_index][3].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS-7" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][3] !== undefined ? sets[current_set_index][3].content : ''"></text>
           </g>
           <line id="Line_66" data-name="Line 66" x2="123.473" transform="translate(0 47.995)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -92,7 +92,7 @@
           <g id="Group_599" data-name="Group 599" transform="translate(3.211)">
             <text text-anchor="middle" id="_2019.05-8" data-name="2019.05" transform="translate(64 12)" fill="#157efb" font-size="14" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][5] !== undefined ? sets[current_set_index][5].hook_date : '' }}</text>
             <text text-anchor="middle" id="FinTech_Space-8" data-name="FinTech Space" transform="translate(64 35.955)" fill="#157efb" font-size="16" font-family="SegoeUI, Segoe UI">{{ sets[current_set_index][5] !== undefined ? sets[current_set_index][5].title : '' }}</text>
-            <text text-anchor="middle" id="進駐FTS-8" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][5] !== undefined ? sets[current_set_index][5].content : '' }}</text>
+            <text text-anchor="middle" id="進駐FTS-8" data-name="進駐FTS" transform="translate(64 67.203)" fill="#157efb" font-size="14" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][5] !== undefined ? sets[current_set_index][5].content : ''"></text>
           </g>
           <line id="Line_67" data-name="Line 67" x2="123.533" transform="translate(0 48.576)" fill="none" stroke="#1baeef" stroke-width="1"/>
         </g>
@@ -224,6 +224,10 @@ export default {
     methods: {
         // initRoadmap 會將接收到的資料以每八個為一組的方式切分。
         initRoadmap() {
+            this.paths = this.paths.sort((a, b) => {
+              return new Date(a.hook_date) - new Date(b.hook_date)
+            });
+
             this.paths.forEach((v) => {
               if (this.sets[this.sets.length-1].length === 8) {
                   this.sets.push([]);
