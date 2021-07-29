@@ -10,11 +10,11 @@
                     <input class="輸入欄位" type="text" placeholder="全站搜尋...">
                 </div>
                 <div class="分類">
-                    <a href="#!" class="項目 項目_啟用的">全部</a>
-                    <a href="#!" class="項目">會員訊息</a>
-                    <a href="#!" class="項目">借款</a>
-                    <a href="#!" class="項目">投資</a>
-                    <a href="#!" class="項目">還款</a>
+                    <a @click="category('all')" class="項目" :class="{'項目_啟用的': current_category === 'all'}">全部</a>
+                    <a @click="category('member')" class="項目" :class="{'項目_啟用的': current_category === 'member'}">會員訊息</a>
+                    <a @click="category('borrow')" class="項目" :class="{'項目_啟用的': current_category === 'borrow'}">借款</a>
+                    <a @click="category('invest')" class="項目" :class="{'項目_啟用的': current_category === 'invest'}">投資</a>
+                    <a @click="category('return')" class="項目" :class="{'項目_啟用的': current_category === 'return'}">還款</a>
                 </div>
             </div>
         </div>
@@ -22,9 +22,19 @@
 
         <!-- 問題集 -->
         <div class="問題集">
-            <alesis-section header="學生貸">
+            <alesis-header>
+                <div class="標題">
+                    <span v-if="current_category === 'all'">全部</span>
+                    <span v-if="current_category === 'member'">會員訊息</span>
+                    <span v-if="current_category === 'borrow'">借款</span>
+                    <span v-if="current_category === 'invest'">投資</span>
+                    <span v-if="current_category === 'return'">還款</span>
+                </div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="medium"></alesis-space>
                 <div class="群組">
-                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.college" :key="index" @click="toggle(item)">
+                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in current_questions" :key="index" @click="toggle(item)">
                         <div class="標題">
                             <div class="文字">{{item.title}}</div>
                             <img class="箭頭" src="/images/alesis-chevron-down.svg">
@@ -32,50 +42,7 @@
                         <div class="內容" v-html="item.content"></div>
                     </div>
                 </div>
-            </alesis-section>
-            <alesis-section header="上班族貸">
-                <div class="群組">
-                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.freshgraduate" :key="index" @click="toggle(item)">
-                        <div class="標題">
-                            <div class="文字">{{item.title}}</div>
-                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
-                        </div>
-                        <div class="內容" v-html="item.content"></div>
-                    </div>
-                </div>
-            </alesis-section>
-            <alesis-section header="工程師優惠專案">
-                <div class="群組">
-                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.engineer" :key="index" @click="toggle(item)">
-                        <div class="標題">
-                            <div class="文字">{{item.title}}</div>
-                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
-                        </div>
-                        <div class="內容" v-html="item.content"></div>
-                    </div>
-                </div>
-            </alesis-section>
-            <alesis-section header="投資">
-                <div class="群組">
-                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.invest" :key="index" @click="toggle(item)">
-                        <div class="標題">
-                            <div class="文字">{{item.title}}</div>
-                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
-                        </div>
-                        <div class="內容" v-html="item.content"></div>
-                    </div>
-                </div>
-            </alesis-section>
-            <alesis-section header="債權轉讓">
-                <div class="群組">
-                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in questions.transfer" :key="index" @click="toggle(item)">
-                        <div class="標題">
-                            <div class="文字">{{item.title}}</div>
-                            <img class="箭頭" src="/images/alesis-chevron-down.svg">
-                        </div>
-                        <div class="內容" v-html="item.content"></div>
-                    </div>
-                </div>
+                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 問題集 -->
@@ -103,7 +70,7 @@ import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 import AlesisSpace             from "../component/alesis/AlesisSpace";
 // 遠端資料
-import FAQData from "../data/faq_data"
+import FAQData from "../data/faq_data_latest"
 
 
 export default {
@@ -125,23 +92,33 @@ export default {
         AlesisSymcard,
         AlesisTaiwanMap,
         AlesisVerticalRoadmap,
+        AlesisSpace,
     },
     data: () => {
         return {
-            questions: FAQData,
+            questions        : FAQData.QA,
+            current_questions: [],
+            current_category : "all",
         }
     },
     mounted() {
-        Object.keys(this.questions).forEach(v => {
-            this.questions[v].forEach((_, k) => {
-                this.$set(this.questions[v][k], 'active', false);
-            })
+        this.questions.forEach((_, k) => {
+            this.$set(this.questions[k], 'active', false);
         })
+        this.category('all')
     },
     methods: {
         // toggle 會切換一個問答的展開狀態。
         toggle(item) {
             item.active = !item.active
+        },
+
+        // category 會切換目前的問題分類。
+        category(v) {
+            this.current_category = v;
+            this.current_questions = this.questions.filter((j) => {
+                return v !== 'all' ? j.type === v : true;
+            })
         }
     },
 };
@@ -227,6 +204,7 @@ export default {
     padding      : .7rem 2rem .6rem;
     padding-left : 3.7rem;
     width        : 100%;
+    outline      : 0;
 
     @include rwd {
         padding  : 0.3rem 2rem 0.25rem;
@@ -260,6 +238,7 @@ export default {
     border-radius: 0.4rem;
     min-width    : 5.5rem;
     text-align   : center;
+    cursor       : pointer;
 
     @include rwd {
         font-size: 1rem;
@@ -277,6 +256,7 @@ export default {
  */
 
 .問題集 {
+    position: relative;
     margin-top: 8rem;
 }
 
