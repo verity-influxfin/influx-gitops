@@ -14,7 +14,7 @@
             <div class="項目" v-for="(item, index) in features" :key="index">{{ item }}</div>
             <div class="尚未就緒" v-if="unready">敬請期待</div>
         </div>
-        <a class="動作" href="#!">
+        <a class="動作" :href="link" target="_blank">
             <alesis-button xPadding="0.9rem" yPadding="1rem" size="1.3rem">{{ action }}</alesis-button>
         </a>
     </div>
@@ -40,6 +40,9 @@ export default {
         },
         action  : {
             default: "",
+        },
+        link  : {
+            default: null,
         },
         image   : {
             default: "",
