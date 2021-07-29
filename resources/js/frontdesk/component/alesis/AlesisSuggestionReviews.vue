@@ -6,16 +6,16 @@
              <div class="swiper-slide">
                 <div class="群組">
                     <div class="項目">
-                        <alesis-human image="/images/alesis-human-student-symbol.svg">
+                        <alesis-human :image="image">
                             <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/4RqbVmH6aHU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </alesis-human>
                     </div>
                     <div class="項目">
-                        <alesis-human image="/images/alesis-human-student-symbol.svg">
+                        <alesis-human :image="image">
                             <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/we16JV8Hc1o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </alesis-human>
                     </div>
@@ -25,14 +25,14 @@
             <div class="swiper-slide">
                 <div class="群組">
                     <div class="項目">
-                        <alesis-human image="/images/alesis-human-student-symbol.svg">
+                        <alesis-human :image="image">
                             <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/tsd-YTxzRy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </alesis-human>
                     </div>
                     <div class="項目">
-                        <alesis-human image="/images/alesis-human-student-symbol.svg">
+                        <alesis-human :image="image">
                             <div slot="video">
                                 <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
@@ -125,10 +125,22 @@ export default {
     },
     data() {
         return {
+            image  : "",
             invests: InvestData
         }
     },
     mounted() {
+        switch (this.type) {
+            case "work":
+                this.image = "/images/alesis-human-work-symbol.svg";
+                break
+            case "student":
+            default:
+                this.image = "/images/alesis-human-student-symbol.svg";
+                break
+        }
+
+
         // 替 SwiperCore 載入 Navigation 導覽模組。
         SwiperCore.use([Navigation]);
         // 初始化這個案例分享容器幻燈片。
