@@ -397,7 +397,7 @@
         <!-- / 案例分享 -->
 
         <!-- 應用程式推薦 -->
-        <alesis-application-recommendation action="我想借款"></alesis-application-recommendation>
+        <alesis-app-recommendation action="我想借款"></alesis-app-recommendation>
         <!-- / 應用程式推薦 -->
     </div>
 </template>
