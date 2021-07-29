@@ -52,30 +52,30 @@
                             <path id="Path_4438" data-name="Path 4438" d="M1,18H285.476" transform="translate(1.276 22.965)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
                             <text id="_2017.12" data-name="2017.12" transform="translate(189.438 28)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300"><tspan x="0" y="0">{{ paths[0].hook_date }}</tspan></text>
                             <text transform="translate(0 28)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[0].title }}</text>
-                            <text transform="translate(1.138 69.516)" fill="#157efb" font-size="21" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[0].content }}</text>
-                            <image transform="matrix(1, 0, 0, 1, -160.3, -20.639)" height="120" width="120" href="https://www.influxfin.com/upload/milestone/milestone_06_20210305.svg"></image>
+                            <text transform="translate(1.138 69.516)" fill="#157efb" font-size="21" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[0].content"></text>
+                            <image transform="matrix(1, 0, 0, 1, -160.3, -20.639)" height="120" width="120" :href="paths[0].icon"></image>
                         </g>
                         <g id="Group_3579" data-name="Group 3579" transform="translate(194.195 558.507)">
                             <path id="Path_4439" data-name="Path 4439" d="M1,20H285.476" transform="translate(0.138 25.516)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
                             <text id="_2018.04" data-name="2018.04" transform="translate(188.301 32.552)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ paths[1].hook_date }}</text>
                             <text transform="translate(1.138 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[1].title }}</text>
-                            <text transform="translate(0 80.344)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[1].content }}</text>
-                            <image transform="matrix(1, 0, 0, 1, -168.3, -19.639)" height="120" width="120" href="https://www.influxfin.com/upload/milestone/milestone_06_20210305.svg"></image>
+                            <text transform="translate(0 80.344)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[1].content"></text>
+                            <image transform="matrix(1, 0, 0, 1, -168.3, -19.639)" height="120" width="120" :href="paths[1].icon"></image>
                         </g>
                         <g id="Group_3580" data-name="Group 3580" transform="translate(81.542 303.616)">
                             <path id="Path_4440" data-name="Path 4440" d="M1,20H285.476" transform="translate(-1 25.516)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
                             <text id="_2018.02" data-name="2018.02" transform="translate(285.72 31)" text-anchor="end" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ paths[2].hook_date }}</text>
                             <text transform="translate(4.72 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[2].title }}</text>
-                            <text transform="translate(289.446 80.344)" text-anchor="end" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[2].content }}</text>
-                            <image transform="matrix(1, 0, 0, 1, 329.7, -20.639)" height="120" width="120" href="https://www.influxfin.com/upload/milestone/milestone_06_20210305.svg"></image>
+                            <text transform="translate(289.446 80.344)" text-anchor="end" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[2].content"></text>
+                            <image transform="matrix(1, 0, 0, 1, 329.7, -20.639)" height="120" width="120" :href="paths[2].icon"></image>
                         </g>
                         <g id="Group_3581" data-name="Group 3581" transform="translate(131.61 813.397)">
                             <path id="Path_4441" data-name="Path 4441" d="M1,25H330.993" transform="translate(-1 31.895)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
                             <text id="_2018.08" data-name="2018.08" transform="translate(0.546 37.103)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ paths[3].hook_date }}</text>
                             <text transform="translate(330.72 38)" fill="#157efb" font-size="28" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[3].title }}</text>
                             <g id="Group" transform="translate(7.965 65.999)">
-                                <text transform="translate(319.467 31)" fill="#157efb" font-size="27" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[3].content }}</text>
-                                <image transform="matrix(1, 0, 0, 1, 373.7, -70.639)" height="120" width="120" href="https://www.influxfin.com/upload/milestone/milestone_06_20210305.svg"></image>
+                                <text transform="translate(319.467 31)" fill="#157efb" font-size="27" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[3].content"></text>
+                                <image transform="matrix(1, 0, 0, 1, 373.7, -70.639)" height="120" width="120" :href="paths[3].icon"></image>
                             </g>
                         </g>
                     </g>
@@ -96,7 +96,9 @@ import RoadmapData from "../../data/index_vertical_roadmap"
 export default {
     name: "VerticalPath",
     mounted() {
-
+        this.paths = this.paths.sort((a, b) => {
+            return new Date(a.hook_date) - new Date(b.hook_date)
+        });
     },
     data() {
         return {
