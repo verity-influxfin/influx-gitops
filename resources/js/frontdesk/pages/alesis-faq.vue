@@ -101,6 +101,7 @@ import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
+import AlesisSpace             from "../component/alesis/AlesisSpace";
 // 遠端資料
 import FAQData from "../data/faq_data"
 

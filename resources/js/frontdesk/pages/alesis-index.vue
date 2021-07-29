@@ -191,7 +191,8 @@
                 <div class="標題" style="margin-top: .8rem; line-height: 1.4;">透過普匯推薦合作銀行，可享最高額度300萬，超低利率1.88%起！</div>
             </alesis-header>
             <alesis-section>
-                <alesis-space size="small"></alesis-space>
+                <alesis-space size="tiny"></alesis-space>
+                <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <alesis-shanghai></alesis-shanghai>
                 </div>

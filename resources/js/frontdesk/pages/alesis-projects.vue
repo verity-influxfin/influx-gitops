@@ -168,6 +168,7 @@ import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
+import AlesisSpace             from "../component/alesis/AlesisSpace";
 
 export default {
     components: {
@@ -188,6 +189,7 @@ export default {
         AlesisSymcard,
         AlesisTaiwanMap,
         AlesisVerticalRoadmap,
+        AlesisSpace,
     },
     data: () => ({
 

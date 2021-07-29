@@ -441,6 +441,7 @@ import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
+import AlesisSpace             from "../component/alesis/AlesisSpace";
 // 遠端資料
 import WorkCategories from "../data/work_categories"
 // 幻燈片
@@ -469,6 +470,7 @@ export default {
         AlesisSymcard,
         AlesisTaiwanMap,
         AlesisVerticalRoadmap,
+        AlesisSpace,
     },
     data: () => ({
         how                  : "",
