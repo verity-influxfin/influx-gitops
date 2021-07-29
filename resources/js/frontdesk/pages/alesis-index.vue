@@ -922,6 +922,8 @@ export default {
     display   : flex;
 
     @include rwd {
+        justify-content: center;
+
         &:first-child {
             display     : inline-flex;
             margin-right: 1rem;
