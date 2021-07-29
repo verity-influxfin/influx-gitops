@@ -61,7 +61,7 @@
 .swiper-container {
     max-width     : 1170px;
     padding-bottom: 3rem;
-    padding-top   : 3rem;
+    padding-top   : 1.5rem;
 }
 
 .swiper-container .swiper-slide {
