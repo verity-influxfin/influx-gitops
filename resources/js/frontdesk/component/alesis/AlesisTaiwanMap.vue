@@ -553,6 +553,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "./alesis";
+
+svg {
+	@include rwd-laptop {
+		width: 100%;
+	}
+	@include rwd {
+		width : 70vw;
+		height: 90vw;
+	}
+}
+
 .location {
     cursor: pointer;
 
