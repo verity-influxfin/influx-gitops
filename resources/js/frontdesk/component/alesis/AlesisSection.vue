@@ -8,14 +8,9 @@
 export default {
     name : "Section",
     props: {
-        topline         : "",
-        header          : "",
-        secondary       : false,
-        multiline       : "",
-        outlined        : false,
-        nospace         : false,
-        outlinedMulti   : false,
-        descriptionMulti: false,
+        secondary: {
+            default: false,
+        },
     },
 };
 </script>
@@ -26,7 +21,7 @@ export default {
 .單個區塊 {
     position  : relative;
     max-width : 100vw;
-    padding   : var(--alesis-xsection-offset-top, 0) 0 var(--alesis-xsection-offset-bottom, 0);
+    //padding   : var(--alesis-xsection-offset-top, 0) 0 var(--alesis-xsection-offset-bottom, 0);
 
     @include rwd {
         padding-left: 2rem;
