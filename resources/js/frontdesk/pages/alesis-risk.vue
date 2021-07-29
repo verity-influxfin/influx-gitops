@@ -31,7 +31,7 @@
                             <alesis-button>2021年3月</alesis-button>
                         </a>
                     </div>
-                    <a href="#!" class="行動">
+                    <a href="/invest" class="行動">
                         <alesis-button>立即投資</alesis-button>
                     </a>
                 </div>
