@@ -1,79 +1,84 @@
 <template>
-    <div class="index-wrapper">
-        <!-- 標頭 -->
-        <div class="alesis-slate">
-            <div class="background">
-                <img class="image" src="/images/sshot-1848.png" alt="">
+    <div>
+        <!-- 頂部板岩 -->
+        <div class="頂部板岩">
+            <div class="背景">
+                <img class="圖片" src="/images/sshot-1848.png">
             </div>
-            <div class="mask">
-                <div class="header">風險報告書</div>
+            <div class="遮罩">
+                <div class="標題">風險報告書</div>
             </div>
         </div>
-        <!-- 標頭 -->
+        <!-- / 頂部板岩 -->
 
-        <!-- 違約率報告書 -->
-        <div class="alesis-report">
-            <index-section header="違約率報告書">
-                <div class="wrapper">
-                    <img src="/images/alesis-report.svg" class="image" alt="">
-                    <div class="links">
-                        <a href="#!" class="item"><index-button>2021年5月</index-button></a>
-                        <a href="#!" class="item"><index-button>2021年4月</index-button></a>
-                        <a href="#!" class="item"><index-button>2021年3月</index-button></a>
+        <!-- 報告書 -->
+        <div class="報告書">
+            <alesis-section header="違約率報告書">
+                <div class="包裹容器">
+                    <img src="/images/alesis-report.svg" class="圖片">
+                    <div class="連結">
+                        <a href="#!" class="項目">
+                            <alesis-button>2021年5月</alesis-button>
+                        </a>
+                        <a href="#!" class="項目">
+                            <alesis-button>2021年4月</alesis-button>
+                        </a>
+                        <a href="#!" class="項目">
+                            <alesis-button>2021年3月</alesis-button>
+                        </a>
                     </div>
-                    <a href="#!" class="cta"><index-button>立即投資</index-button></a>
+                    <a href="#!" class="行動">
+                        <alesis-button>立即投資</alesis-button>
+                    </a>
                 </div>
-            </index-section>
+            </alesis-section>
         </div>
-        <!-- / 違約率報告書 -->
+        <!-- / 報告書 -->
     </div>
 </template>
 
 <script>
-// Alesis components
-import indexCounter                    from "../component/alesis/index/counter";
-import indexSection                    from "../component/alesis/index/section";
-import indexBullet                     from "../component/alesis/index/bullet";
-import indexMoon                       from "../component/alesis/index/moon";
-import indexPlan                       from "../component/alesis/index/plan";
-import indexHuman                      from "../component/alesis/index/human";
-import indexButton                     from "../component/alesis/index/button";
-import indexShanghai                   from "../component/alesis/index/shanghai";
-import globalCarousel                  from "../component/alesis/global-carousel";
-import AlesisLoanHeader                from "../component/alesis/loan-header";
-import AlesisApplicationRecommendation from "../component/alesis/application-recommendation";
+// Alesis 元件
+import AlesisAppRecommendation from "../component/alesis/AlesisAppRecommendation";
+import AlesisBullet            from "../component/alesis/AlesisBullet";
+import AlesisButton            from "../component/alesis/AlesisButton";
+import AlesisCounter           from "../component/alesis/AlesisCounter";
+import AlesisHeader            from "../component/alesis/AlesisHeader";
+import AlesisHorizontalRoadmap from "../component/alesis/AlesisHorizontalRoadmap";
+import AlesisHuman             from "../component/alesis/AlesisHuman";
+import AlesisLoanHeader        from "../component/alesis/AlesisLoanHeader";
+import AlesisMoon              from "../component/alesis/AlesisMoon";
+import AlesisPlan              from "../component/alesis/AlesisPlan";
+import AlesisProject           from "../component/alesis/AlesisProject";
+import AlesisSection           from "../component/alesis/AlesisSection";
+import AlesisShanghai          from "../component/alesis/AlesisShanghai";
+import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
+import AlesisSymcard           from "../component/alesis/AlesisSymcard";
+import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
+import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 
 export default {
     components: {
-        indexCounter,
-        indexSection,
-        indexBullet,
-        indexMoon,
-        indexPlan,
-        indexHuman,
-        indexButton,
-        indexShanghai,
-        globalCarousel,
-        AlesisApplicationRecommendation,
-        AlesisLoanHeader
+        AlesisAppRecommendation,
+        AlesisBullet,
+        AlesisButton,
+        AlesisCounter,
+        AlesisHeader,
+        AlesisHorizontalRoadmap,
+        AlesisHuman,
+        AlesisLoanHeader,
+        AlesisMoon,
+        AlesisPlan,
+        AlesisProject,
+        AlesisSection,
+        AlesisShanghai,
+        AlesisSuggestionReviews,
+        AlesisSymcard,
+        AlesisTaiwanMap,
+        AlesisVerticalRoadmap,
     },
-    data: () => ({
-
-    }),
     created() {
         $("title").text(`首頁 - inFlux普匯金融科技`);
-    },
-    mounted() {
-    },
-    methods: {
-        format(data) {
-            data = parseInt(data);
-            if (!isNaN(data)) {
-                let l10nEN = new Intl.NumberFormat("en-US");
-                return l10nEN.format(data.toFixed(0));
-            }
-            return 0;
-        },
     },
 };
 </script>
@@ -81,120 +86,128 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
-.alesis-slate {
+/**
+ * 頂部板岩
+ */
+
+.頂部板岩 {
     position: relative;
     height  : 33rem;
 
     @include rwd {
         height: 43rem;
     }
+}
 
-    .background {
-        position: absolute;
-        top     : 0;
-        left    : 31rem;
-        right   : 0;
-        bottom  : 0;
+.頂部板岩 .背景 {
+    position: absolute;
+    top     : 0;
+    left    : 31rem;
+    right   : 0;
+    bottom  : 0;
 
-        @include rwd {
-            left      : 0;
-            margin-top: 50vw;
-        }
-
-        .image {
-            height    : 100%;
-            width     : 100%;
-            object-fit: cover;
-        }
-    }
-
-    .mask {
-        background-image : url(/images/alesis-shell-mask.svg);
-        position         : relative;
-        z-index          : 1;
-        display          : flex;
-        align-items      : center;
-        padding-left     : 11rem;
-        background-size  : contain;
-        background-repeat: no-repeat;
-        min-width        : 1485px;
-        height           : 100%;
-
-        @include rwd {
-            background-image: url(/images/alesis-wave-bg-rotated.svg);
-            padding-left    : 0;
-            background-size : 100vw;
-            min-width       : initial;
-            align-items     : initial;
-            padding-top     : 21vw;
-            justify-content : center;
-        }
-
-        .header {
-            padding-bottom         : 0.2rem;
-            border-bottom          : 1px solid #FFF;
-            display                : inline-block;
-            font-weight            : bolder;
-            background-image       : linear-gradient(to right, #e7e7f4 0%, #4fb7ec 50%, #c4c4fc 75%);
-            background-clip        : text;
-            width                  : fit-content;
-            color                  : rgba(255, 255, 255, 0);
-            font-size              : 2rem;
-            line-height            : 1.2;
-            height                 : min-content;
-        }
+    @include rwd {
+        left      : 0;
+        margin-top: 50vw;
     }
 }
 
-.alesis-report {
+.頂部板岩 .背景 .圖片 {
+    height    : 100%;
+    width     : 100%;
+    object-fit: cover;
+}
+
+.頂部板岩 .遮罩 {
+    background-image : url(/images/alesis-shell-mask.svg);
+    position         : relative;
+    z-index          : 1;
+    display          : flex;
+    align-items      : center;
+    padding-left     : 11rem;
+    background-size  : contain;
+    background-repeat: no-repeat;
+    min-width        : 1485px;
+    height           : 100%;
+
+    @include rwd {
+        background-image: url(/images/alesis-wave-bg-rotated.svg);
+        padding-left    : 0;
+        background-size : 100vw;
+        min-width       : initial;
+        align-items     : initial;
+        padding-top     : 21vw;
+        justify-content : center;
+    }
+}
+
+.頂部板岩 .遮罩 .標題 {
+    padding-bottom         : 0.2rem;
+    border-bottom          : 1px solid #FFF;
+    display                : inline-block;
+    font-weight            : bolder;
+    background-image       : linear-gradient(to right, #e7e7f4 0%, #4fb7ec 50%, #c4c4fc 75%);
+    background-clip        : text;
+    width                  : fit-content;
+    color                  : rgba(255, 255, 255, 0);
+    font-size              : 2rem;
+    line-height            : 1.2;
+    height                 : min-content;
+}
+
+/**
+ * 報告書
+ */
+
+.報告書 {
     margin-top: 8rem;
+}
 
-    .wrapper {
-        text-align: center;
+.報告書 .包裹容器 {
+    text-align: center;
+}
 
-        .image {
-            width: 30vw;
+.報告書 .包裹容器 .圖片 {
+    width: 30vw;
 
-            @include rwd {
-                width: 70vw;
-            }
-        }
+    @include rwd {
+        width: 70vw;
+    }
+}
 
-        .links {
-            margin-top     : 1.5rem;
-            margin-bottom  : 1.5rem;
-            display        : flex;
-            gap            : 1rem;
-            align-items    : center;
-            justify-content: center;
+.報告書 .包裹容器 .連結 {
+    margin-top     : 1.5rem;
+    margin-bottom  : 1.5rem;
+    display        : flex;
+    gap            : 1rem;
+    align-items    : center;
+    justify-content: center;
+}
 
-            .item {
-                // padding: 0.9rem 2.5rem;
+.報告書 .包裹容器 .連結 .項目 {
+    // padding: 0.9rem 2.5rem;
 
-                --font-size: 1.1rem;
-                --x-padding: 2.5rem;
-                --y-padding: 0.9rem;
+    --font-size: 1.1rem;
+    --x-padding: 2.5rem;
+    --y-padding: 0.9rem;
 
-                @include rwd {
-                    --x-padding: 1.4rem;
-                    --y-padding: 0.7rem;
+    @include rwd {
+        --x-padding: 1.4rem;
+        --y-padding: 0.7rem;
 
-                    white-space: nowrap;
-                }
-            }
-        }
+        white-space: nowrap;
+    }
+}
 
-        .cta {
-            --x-padding: 2.5rem;
-            --y-padding: 0.9rem;
+.報告書 .包裹容器 .連結 .行動 {
+    --x-padding: 2.5rem;
+    --y-padding: 0.9rem;
 
-            @include rwd {
-                --x-padding: 1.7rem;
-                --y-padding: 0.7rem;
+    @include rwd {
+        --x-padding: 1.7rem;
+        --y-padding: 0.7rem;
 
-                white-space: nowrap;
-            }
-        }
+        white-space: nowrap;
     }
 }
 </style>
