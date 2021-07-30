@@ -27,7 +27,7 @@
                     <div class="項目">
                         <alesis-human :image="image">
                             <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/tsd-YTxzRy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/tsd-YTxzRyI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </alesis-human>
                     </div>
