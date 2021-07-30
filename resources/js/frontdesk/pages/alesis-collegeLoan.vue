@@ -183,16 +183,16 @@
                 <div class="包裹容器">
                     <div class="專案">
                         <div class="項目">
-                            <alesis-project></alesis-project>
+                            <alesis-project v-bind="collegePreviews[0]"></alesis-project>
                         </div>
                         <div class="項目">
-                            <alesis-project></alesis-project>
+                            <alesis-project v-bind="collegePreviews[1]"></alesis-project>
                         </div>
                         <div class="項目">
-                            <alesis-project></alesis-project>
+                            <alesis-project v-bind="collegePreviews[2]"></alesis-project>
                         </div>
                         <div class="項目">
-                            <alesis-project></alesis-project>
+                            <alesis-project v-bind="collegePreviews[3]"></alesis-project>
                         </div>
                     </div>
                     <div class="地圖">
@@ -277,17 +277,7 @@
                         </div>
                     </div>
                     <div class="列">
-                        <div class="標籤">4.是否拿過獎學金：</div>
-                        <div class="輸入欄位">
-                            <select v-model="formHasAward">
-                                <option disabled value="">-請選擇-</option>
-                                <option value="true">是</option>
-                                <option value="false">否</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="列">
-                        <div class="標籤">5.是否有學貸：</div>
+                        <div class="標籤">3.是否有學貸：</div>
                         <div class="輸入欄位">
                             <select>
                                 <option selected disabled>-請選擇-</option>
@@ -297,7 +287,7 @@
                         </div>
                     </div>
                     <div class="列">
-                        <div class="標籤">6.是否有打工或兼職：</div>
+                        <div class="標籤">4.是否有打工或兼職：</div>
                         <div class="輸入欄位">
                             <select>
                                 <option selected disabled>-請選擇-</option>
@@ -307,17 +297,7 @@
                         </div>
                     </div>
                     <div class="列">
-                        <div class="標籤">7.是否有承擔家中經濟來源：</div>
-                        <div class="輸入欄位">
-                            <select>
-                                <option selected disabled>-請選擇-</option>
-                                <option>是</option>
-                                <option>否</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="列">
-                        <div class="標籤">8.每月經濟：</div>
+                        <div class="標籤">5.每月經濟收入：</div>
                         <div class="輸入欄位">
                             <select>
                                 <option selected disabled>-請選擇-</option>
@@ -425,7 +405,7 @@ import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 import AlesisSpace             from "../component/alesis/AlesisSpace";
 // 遠端資料
 import CollegeSchools from "../data/college_schools"
-
+import StudentDone   from "../data/projects_student_done"
 
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
@@ -463,7 +443,8 @@ export default {
         formCalculated      : false,
         schools             : [],
         schoolDisciplines   : {},
-        originalSchools     : CollegeSchools
+        originalSchools     : CollegeSchools,
+        collegePreviews     : StudentDone.data,
     }),
     created() {
         $("title").text(`學生貸 - inFlux普匯金融科技`);
