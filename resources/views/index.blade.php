@@ -164,7 +164,7 @@
                 <a href="/news" class="item">平台公告</a>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <div class="item">
-                    <div @click="doLogin" class="login">SIGN IN</div>
+                    <div @click="openLoginModal" class="login">SIGN IN</div>
                 </div>
                 <div class="item hamburger">
                     <img src="/images/alesis-hamburger.svg">
@@ -218,7 +218,7 @@
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <div class="item">
-                    <div @click="doLogin" class="login"><i class="fas fa-user"></i> SIGN IN</div>
+                    <div @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
                 </div>
             </div>
         </div>
