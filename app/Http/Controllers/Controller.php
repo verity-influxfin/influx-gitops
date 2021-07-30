@@ -111,6 +111,12 @@ class Controller extends BaseController
                         $case_response_3 = json_decode($case_response_3,true);
                         if(isset($case_response_1['result']) && $case_response_1['result'] == 'SUCCESS' && isset($case_response_3['result']) && $case_response_3['result'] == 'SUCCESS'){
                             $case_response = array_merge($case_response_1['data']['list'],$case_response_3['data']['list']);
+
+                            if(isset($input['orderby']) && !empty($input['orderby'])){
+                                usort($case_response, function($a, $b) use($input){
+                                    return $input['sort'] == 'desc' ?($a[$input['orderby']] - $b[$input['orderby']] < 0) :($a[$input['orderby']] - $b[$input['orderby']] > 0);
+                                });
+                            }
                             return response()->json(['response' => 'success','data' => $case_response], 200);
                         }
                     }else{
