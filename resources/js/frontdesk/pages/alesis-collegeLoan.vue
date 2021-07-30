@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 標頭 -->
-        <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度 18 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
+        <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度 15 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
         <!-- 標頭 -->
 
         <!-- 計數器 -->
@@ -22,26 +22,26 @@
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="群組">
-                    <div class="項目">
+                    <a href="https://new.ntpu.edu.tw/" target="_blank" class="項目">
                         <img src="/images/alesis-bordered-ntpu.svg" class="圖片">
                         <div class="名稱">國立臺北大學</div>
-                    </div>
-                    <div class="項目">
+                    </a>
+                    <a href="https://www.ntu.edu.tw/" target="_blank" class="項目">
                         <img src="/images/alesis-bordered-ntu.svg" class="圖片">
                         <div class="名稱">國立臺灣大學</div>
-                    </div>
-                    <div class="項目">
+                    </a>
+                    <a href="https://www.ntub.edu.tw/" target="_blank" class="項目">
                         <img src="/images/alesis-bordered-ntub.svg" class="圖片">
                         <div class="名稱">國立臺北商業大學</div>
-                    </div>
-                    <div class="項目">
+                    </a>
+                    <a href="https://www.scsb.com.tw/" target="_blank" class="項目">
                         <img src="/images/alesis-bordered-shanghai.svg" class="圖片">
                         <div class="名稱">上海商業儲蓄銀行</div>
-                    </div>
-                    <div class="項目">
+                    </a>
+                    <a href="https://www.skbank.com.tw/" target="_blank" class="項目">
                         <img src="/images/alesis-bordered-skbank.svg" class="圖片">
                         <div class="名稱">新光銀行</div>
-                    </div>
+                    </a>
                 </div>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
@@ -264,61 +264,48 @@
                         </div>
                     </div>
                     <div class="列">
-                        <div class="標籤">3.系上排名：</div>
-                        <div class="輸入欄位">
-                            <select v-model="formRank">
-                                <option disabled value="">-請選擇-</option>
-                                <option value="10%">前 10%</option>
-                                <option value="30%">前 30%</option>
-                                <option value="50%">前 50%</option>
-                                <option value="70%">前 70%</option>
-                                <option value="70%+">70% 之後</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="列">
                         <div class="標籤">3.是否有學貸：</div>
                         <div class="輸入欄位">
-                            <select>
+                            <select v-model="isStudentLoan">
                                 <option selected disabled>-請選擇-</option>
-                                <option>是</option>
-                                <option>否</option>
+                                <option value="true">是</option>
+                                <option value="false">否</option>
                             </select>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">4.是否有打工或兼職：</div>
                         <div class="輸入欄位">
-                            <select>
+                            <select v-model="isPartTimeJob">
                                 <option selected disabled>-請選擇-</option>
-                                <option>是</option>
-                                <option>否</option>
+                                <option value="true">是</option>
+                                <option value="false">否</option>
                             </select>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">5.每月經濟收入：</div>
                         <div class="輸入欄位">
-                            <select>
+                            <select v-model="monthlyEconomy">
                                 <option selected disabled>-請選擇-</option>
-                                <option>低於 5,000 元</option>
-                                <option>5,000 元 - 10,000 元</option>
-                                <option>10,000 元 - 15,000 元</option>
-                                <option>15,000 元 - 20,000 元</option>
-                                <option>20,000 以上</option>
+                                <option value="5000">低於 5,000 元</option>
+                                <option value="5000~10000">5,000 元 - 10,000 元</option>
+                                <option value="10000~15000">10,000 元 - 15,000 元</option>
+                                <option value="15000~20000">15,000 元 - 20,000 元</option>
+                                <option value="20000">20,000 以上</option>
                             </select>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">暱稱：</div>
                         <div class="輸入欄位">
-                            <input type="text">
+                            <input type="text" v-model="name">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">E-mail：</div>
                         <div class="輸入欄位">
-                            <input type="text">
+                            <input type="text" v-model="email">
                         </div>
                     </div>
                     <div class="列">
@@ -440,6 +427,11 @@ export default {
         formSchoolDiscipline: "",
         formRank            : "",
         formHasAward        : "",
+        name                : "",
+        email               : "",
+        isStudentLoan       : null,
+        isPartTimeJob       : null,
+        monthlyEconomy      : null,
         formCalculated      : false,
         schools             : [],
         schoolDisciplines   : {},
@@ -497,6 +489,26 @@ export default {
 
         // calculateForm 會計算表單。
         calculateForm() {
+            try {
+                fetch("/getBorrowReport", {
+                    method : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name            : this.name,
+                        email           : this.email,
+                        school_name     : this.formSchool,
+                        department      : this.formSchoolDiscipline,
+                        is_student_loan : this.isStudentLoan,
+                        is_part_time_job: this.isPartTimeJob,
+                        monthly_economy : this.monthlyEconomy,
+                    })
+                })
+            } catch (e) {
+                console.log(e)
+            }
+
             this.formCalculated = true
         },
     },
@@ -779,6 +791,10 @@ export default {
     }
 }
 
+.貸安吶 .表單 .列 .輸入欄位 button {
+    outline: none;
+}
+
 .貸安吶 .表單 .列 .輸入欄位 select {
     width        : 100%;
     padding      : .5rem 1rem;
@@ -944,7 +960,8 @@ export default {
 }
 
 .合作對象 .群組 .項目 {
-    text-align: center;
+    text-align     : center;
+    text-decoration: none;
 
     @include rwd {
         flex: calc(100% / 3);
