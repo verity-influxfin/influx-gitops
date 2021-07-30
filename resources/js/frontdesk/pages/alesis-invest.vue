@@ -87,7 +87,7 @@
                     <div class="封面">
                         <img class="圖片" src="/images/報告書.png">
                     </div>
-                    <a class="更多" href="#!">
+                    <a class="更多" href="/risk">
                         <alesis-button yPadding="0.9rem" xPadding="2.5rem">查看更多</alesis-button>
                     </a>
                 </div>
