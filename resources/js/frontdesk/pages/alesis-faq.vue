@@ -14,7 +14,7 @@
                     <a @click="category('member')" class="項目" :class="{'項目_啟用的': current_category === 'member'}">會員訊息</a>
                     <a @click="category('borrow')" class="項目" :class="{'項目_啟用的': current_category === 'borrow'}">借款</a>
                     <a @click="category('invest')" class="項目" :class="{'項目_啟用的': current_category === 'invest'}">投資</a>
-                    <a @click="category('return')" class="項目" :class="{'項目_啟用的': current_category === 'return'}">還款</a>
+                    <a @click="category('default')" class="項目" :class="{'項目_啟用的': current_category === 'default'}">還款</a>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                     <span v-if="current_category === 'member'">會員訊息</span>
                     <span v-if="current_category === 'borrow'">借款</span>
                     <span v-if="current_category === 'invest'">投資</span>
-                    <span v-if="current_category === 'return'">還款</span>
+                    <span v-if="current_category === 'default'">還款</span>
                 </div>
             </alesis-header>
             <alesis-section>
