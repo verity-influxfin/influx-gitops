@@ -50,6 +50,14 @@
                         <img src="/images/banner--.jpg" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
                 </div>
+                <div class="swiper-slide">
+                    <a href="https://www.influxfin.com/borrowLink">
+                        <img src="/images/210129首頁-全台首創banner.jpg" class="旗幟圖片">
+                    </a>
+                    <a href="https://www.influxfin.com/borrowLink">
+                        <img src="/images/210129首頁手機-全台首創banner (1).jpg" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -140,21 +148,21 @@
                                 <alesis-moon class="圖示" header="快速" :level=2></alesis-moon>
                                 <div class="內容">
                                     10分鐘快速填寫申請資料，<br>
-                                    全程線上操作，無人干擾
+                                    全程線上操作，無人干擾。
                                 </div>
                             </div>
                             <div class="項目">
                                 <alesis-moon class="圖示" header="安全" :level=3></alesis-moon>
                                 <div class="內容">
                                     資訊傳輸由HTTPS方式利用SSL/TLS<br>
-                                    加密，儲存於亞馬遜AWS雲端伺服器
+                                    加密，儲存於亞馬遜AWS雲端伺服器。
                                 </div>
                             </div>
                             <div class="項目">
                                 <alesis-moon class="圖示" header="隱私" :level=4></alesis-moon>
                                 <div class="內容">
                                     全台唯一無人化借貸平台，<br>
-                                    讓手機成為您專屬的ATM
+                                    讓手機成為您專屬的ATM。
                                 </div>
                             </div>
                         </div>
