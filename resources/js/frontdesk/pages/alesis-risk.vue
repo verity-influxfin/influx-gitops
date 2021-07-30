@@ -22,13 +22,13 @@
                     <img src="/images/alesis-report.svg" class="圖片">
                     <div class="連結">
                         <a href="#!" class="項目">
+                            <alesis-button>2021年6月</alesis-button>
+                        </a>
+                        <a href="#!" class="項目">
                             <alesis-button>2021年5月</alesis-button>
                         </a>
                         <a href="#!" class="項目">
                             <alesis-button>2021年4月</alesis-button>
-                        </a>
-                        <a href="#!" class="項目">
-                            <alesis-button>2021年3月</alesis-button>
                         </a>
                     </div>
                     <a href="/invest" class="行動">
@@ -190,6 +190,7 @@ export default {
     gap            : 1rem;
     align-items    : center;
     justify-content: center;
+    flex-wrap      : wrap;
 }
 
 .報告書 .包裹容器 .連結 .項目 {
