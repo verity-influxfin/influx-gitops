@@ -65,6 +65,11 @@ Route::post('/action', 'Controller@action');
 
 Route::post('/sendFeedback', 'Controller@sendFeedback');
 
+Route::post('/getBorrowReport', 'Controller@getBorrowReport');
+
+Route::post('/sendQuestion', 'Controller@sendQuestion');
+
+Route::post('/getCase', 'Controller@getCase');
 //Account
 
 Route::post('/getTerms', 'Accountcontroller@getTerms');

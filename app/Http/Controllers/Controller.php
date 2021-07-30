@@ -39,14 +39,438 @@ class Controller extends BaseController
 
         return response()->json($banner, 200);
     }
-    
+
     public function getCount()
     {
-        $count = DB::table('count')->select('*')->get();
-
+        $count = DB::table('count')->select(['transactionCount','memberCount','totalLoanAmount'])->latest('id')->get()->first();
+        if(empty($count)){
+            $count = [
+                'transactionCount' => 123,
+                'memberCount' => 321,
+                'totalLoanAmount' => 1234567
+            ];
+        }
         return response()->json($count, 200);
     }
 
+    public function sendQuestion(Request $request){
+        $input = $request->all();
+        if(isset($input['identity']) && isset($input['name']) && isset($input['mail']) && isset($input['phone']) && isset($input['content'])){
+
+            $data = [
+                'identity' => $input['identity'],
+                'name' => $input['name'],
+                'mail' => $input['mail'],
+                'phone' => $input['phone'],
+                'content' => $input['content'],
+                'origin_ip' => $_SERVER['REMOTE_ADDR'],
+                'created_at' => date('Y-m-d H:i:s', strtotime('+8 hours')),
+            ];
+            try {
+                DB::table('send_question')->insert($data);
+            } catch (Exception $e) {
+                return response()->json(['response' => 'error', 'message'=>$e], 501);
+            }
+
+            return response()->json(['response' => 'success', 'message' => ''], 200);
+        }else{
+            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+        }
+    }
+
+    public function getCase(Request $request){
+        $input = $request->all();
+        if(isset($input['product_id']) && isset($input['status'])){
+            if(in_array($input['product_id'],[1,3]) || in_array($input['status'],[3,10])){
+                $params = http_build_query($input);
+                $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+                if(!empty($case_response)){
+                    $case_data = json_decode($case_response,true);
+                    if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
+                        return response()->json(['response' => 'success','data' => $case_data['data']['list']], 200);
+                    }
+                }else{
+                    return response()->json(['response' => 'error','message' => 'not response'], 501);
+                }
+            }else{
+                return response()->json(['response' => 'error','message' => 'parameter not correcct'], 501);
+            }
+        }else{
+            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+        }
+    }
+
+    public function getOption(Request $request)
+    {
+        $input = $request->all();
+        $response = [];
+        $data = [];
+        $option_config = [
+            // 學校
+            'school' =>'website/credit_department',
+            // 科系
+            'department' => 'website/credit_department'
+        ];
+
+        if(isset($input['data']) && !empty($input['data'])){
+            if(isset($option_config[$input['data']])){
+                $api_url = $option_config[$input['data']];
+                $response = shell_exec('curl --location --request GET "' . $this->apiGetway . $api_url .'"');
+            }
+
+            if(!empty($response)){
+                $response = json_decode($response,true);
+                if(isset($response['data']['list'])){
+                    if($input['data'] == 'school'){
+                        $data = array_map(function($key) {
+                            return $key;
+                        }, array_keys($response['data']['list']), $response['data']['list']);
+                    }
+                    if($input['data'] == 'department'){
+                        $data = array_map(function($key,$values) {
+                            return [$key=>array_keys($values['score'])];
+                        }, array_keys($response['data']['list']), $response['data']['list']);
+
+                        $data = array_reduce($data, 'array_merge', array());
+                    }
+                }
+                return response()->json(['response' => 'success','data' => $data], 200);
+            }else{
+                return response()->json(['response' => 'error','message' => 'not response'], 501);
+            }
+        }else{
+            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+        }
+    }
+
+    // to do : 計算邏輯待拆離、利率額度待串主站
+    public function getBorrowReport(Request $request)
+    {
+        $input = $request->all();
+        $result = [
+            'amount' => 0,
+            'rate' => 0,
+            'period_range' => 0,
+        ];
+        // 學生
+        $student_report = [
+            0 => [
+                'amount' => 0,
+                'rate' => 0,
+                'period_range' => 0,
+            ],
+            1 => [
+                'amount' => 0,
+                'rate' => '9~13',
+                'period_range' => 24,
+            ],
+            2 => [
+                'amount' => 0,
+                'rate' => '8~12',
+                'period_range' => 24,
+            ],
+            3 => [
+                'amount' => 0,
+                'rate' => '7~11',
+                'period_range' => 24,
+            ],
+            4 => [
+                'amount' => 0,
+                'rate' => '6.5~8',
+                'period_range' => 24,
+            ],
+            5 => [
+                'amount' => 0,
+                'rate' => '5.5~7',
+                'period_range' => 24,
+            ],
+            6 => [
+                'amount' => 0,
+                'rate' => '5~6.5',
+                'period_range' => 24,
+            ],
+            7 => [
+                'amount' => 0,
+                'rate' => '4~5.5',
+                'period_range' => 24,
+            ]
+        ];
+        // 學生 0:下限分數, 1:上限分數, 2:額度
+        $student_amount = [
+        	[2751, 9999, 150000],
+        	[2731, 2750, 148800],
+        	[2711, 2730, 147600],
+        	[2691, 2710, 146400],
+        	[2671, 2690, 145200],
+        	[2651, 2670, 144000],
+        	[2631, 2650, 142800],
+        	[2611, 2630, 141600],
+        	[2591, 2610, 140400],
+        	[2571, 2590, 139200],
+        	[2551, 2570, 138000],
+        	[2531, 2550, 136800],
+        	[2511, 2530, 135600],
+        	[2491, 2510, 134400],
+        	[2471, 2490, 133200],
+        	[2451, 2470, 132000],
+        	[2431, 2450, 130800],
+        	[2411, 2430, 129600],
+        	[2391, 2410, 128400],
+        	[2371, 2390, 127200],
+        	[2351, 2370, 126000],
+        	[2331, 2350, 124800],
+        	[2311, 2330, 123600],
+        	[2291, 2310, 122400],
+        	[2271, 2290, 121200],
+        	[2251, 2270, 120000],
+        	[2231, 2250, 118800],
+        	[2211, 2230, 117600],
+        	[2191, 2210, 116400],
+        	[2171, 2190, 115200],
+        	[2151, 2170, 114000],
+        	[2131, 2150, 112800],
+        	[2111, 2130, 111600],
+        	[2091, 2110, 110400],
+        	[2071, 2090, 109200],
+        	[2051, 2070, 108000],
+        	[2031, 2050, 106800],
+        	[2011, 2030, 105600],
+        	[1991, 2010, 104400],
+        	[1971, 1990, 103200],
+        	[1951, 1970, 102000],
+        	[1931, 1950, 100800],
+        	[1911, 1930, 99600],
+        	[1891, 1910, 98400],
+        	[1871, 1890, 97200],
+        	[1851, 1870, 96000],
+        	[1831, 1850, 94800],
+        	[1811, 1830, 93600],
+        	[1791, 1810, 92400],
+        	[1771, 1790, 91200],
+        	[1751, 1770, 90000],
+        	[1731, 1750, 88800],
+        	[1711, 1730, 87600],
+        	[1691, 1710, 86400],
+        	[1671, 1690, 85200],
+        	[1651, 1670, 84000],
+        	[1631, 1650, 82800],
+        	[1611, 1630, 81600],
+        	[1591, 1610, 80400],
+        	[1571, 1590, 79200],
+        	[1551, 1570, 78000],
+        	[1531, 1550, 76800],
+        	[1511, 1530, 75600],
+        	[1491, 1510, 74400],
+        	[1471, 1490, 73200],
+        	[1451, 1470, 72000],
+        	[1431, 1450, 70800],
+        	[1411, 1430, 69600],
+        	[1391, 1410, 68400],
+        	[1371, 1390, 67200],
+        	[1351, 1370, 66000],
+        	[1331, 1350, 64800],
+        	[1311, 1330, 63600],
+        	[1291, 1310, 62400],
+        	[1271, 1290, 61200],
+        	[1251, 1270, 60000],
+        	[1231, 1250, 58800],
+        	[1211, 1230, 57600],
+        	[1191, 1210, 56400],
+        	[1171, 1190, 55200],
+        	[1151, 1170, 54000]
+        ];
+        // 上班族
+        $report = [
+            0 => [
+                'amount' => 0,
+                'rate' => 0,
+                'period_range' => 0,
+            ],
+            1 => [
+                'amount' => 80000,
+                'rate' => '14~16',
+                'period_range' => 24,
+            ],
+            2 => [
+                'amount' => 120000,
+                'rate' => '10~13',
+                'period_range' => 24,
+            ],
+            3 => [
+                'amount' => 160000,
+                'rate' => '8~10',
+                'period_range' => 24,
+            ],
+            4 => [
+                'amount' => 200000,
+                'rate' => '7~8',
+                'period_range' => 24,
+            ],
+            5 => [
+                'amount' => 300000,
+                'rate' => '6~7',
+                'period_range' => 24,
+            ]
+        ];
+        $total_point = 0;
+
+        if(isset($input['identity']) && !empty($input ['identity'])){
+            if(! isset($input['name']) || ! isset($input['email']) || empty($input['name']) || empty($input['email'])){
+                return response()->json(['result'=>'error', 'message'=>'parameter must not null'], 200);
+            }
+            // 學生
+            if($input ['identity'] == 1){
+                $total_point += 1150;
+                $school_points = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/credit_school"');
+                $department_points = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/credit_department"');
+                if(!empty($school_points) && !empty($department_points)){
+                    $school_points = json_decode($school_points,true);
+                    $department_points = json_decode($department_points,true);
+                    if(isset($school_points['data']['list']) && !empty($school_points['data']['list']) && isset($department_points['data']['list']) && !empty($department_points['data']['list'])){
+                        // 學校
+                        if(isset($input['school_name'])){
+                            $school_name_key = array_search($input['school_name'], array_column($school_points['data']['list'], 'name'));
+                            if(isset($school_points['data']['list'][$school_name_key]['points'])){
+                                $total_point += $school_points['data']['list'][$school_name_key]['points'];
+                            }
+                        }
+                        // 科系
+                        if(isset($input['department']) && isset($department_points['data']['list'][$input['school_name']]['score'][$input['department']]) ){
+                            $total_point += $department_points['data']['list'][$input['school_name']]['score'][$input['department']];
+                        }
+                        // 是否有學貸
+                        if(isset($input['is_student_loan']) && $input['is_student_loan'] == false){
+                            $total_point += 50;
+                        }
+                        // 是否有打工或兼職
+                        if(isset($input['is_part_time_job']) && $input['is_part_time_job'] == true){
+                            $total_point += 100;
+                        }
+                        // 每月經濟收入
+                        if(isset($input['monthly_economy'])){
+                            if($input['monthly_economy']>=20000){
+                                $total_point += 200;
+                            }elseif ($input['monthly_economy']<20000 && $input['monthly_economy']>=15000) {
+                                $total_point += 150;
+                            }elseif ($input['monthly_economy']<15000 && $input['monthly_economy']>=10000) {
+                                $total_point += 100;
+                            }elseif ($input['monthly_economy']<10000 && $input['monthly_economy']>=5000) {
+                                $total_point += 50;
+                            }
+                        }
+                    }
+                }
+                // 學生額度利率
+                if ($total_point >= 2571) {
+                    $result = $student_report[7];
+                }elseif ($total_point >= 2371) {
+                    $result = $student_report[6];
+                }elseif ($total_point >= 2071) {
+                    $result = $student_report[5];
+                }elseif ($total_point >= 1771) {
+                    $result = $student_report[4];
+                }elseif ($total_point >= 1471) {
+                    $result = $student_report[3];
+                }elseif ($total_point >= 1171) {
+                    $result = $student_report[2];
+                }elseif ($total_point >= 1151) {
+                    $result = $student_report[1];
+                }else{
+                    $result = $student_report[0];
+                }
+                foreach($student_amount as $amount_config){
+                    if($amount_config[1] > $total_point && $amount_config[0] <= $total_point){
+                        $result['amount'] = $amount_config[2];
+                        break;
+                    }
+                }
+            }
+            // 上班族
+            if($input ['identity'] == 2){
+                // 教育程度
+                switch ($input['educational_level']) {
+                    case '學士以下':
+                        $total_point += 0;
+                        break;
+                    case '學士':
+                        $total_point += 10;
+                        break;
+                    case '碩士':
+                        $total_point += 15;
+                        break;
+                    case '博士':
+                        $total_point += 20;
+                        break;
+                    default:
+                        $total_point += 0;
+                        break;
+                }
+                // 職業
+                $total_point += 10;
+                // 是否為上市櫃、金融機構或公家機關
+                if($input['is_top_enterprises'] == true){
+                    $total_point += 15;
+                }else{
+                    $total_point += 5;
+                }
+                // 投保薪資
+                if($input['insurance_salary']>=35000){
+                    $total_point += 15;
+                }elseif ($input['insurance_salary']<35000 && $input['insurance_salary']>=23800) {
+                    $total_point += 10;
+                }else{
+                    $total_point += 0;
+                }
+                // 貸款餘額
+                if($input['debt_amount']>=4){
+                    $total_point += 0;
+                }else{
+                    $total_point += 5;
+                }
+                // 每月攤還金額
+                if($input['monthly_repayment']>=4){
+                    $total_point += 5;
+                }else{
+                    $total_point += 10;
+                }
+                // 信用卡額度
+                $total_point += 10;
+                // 信用卡帳單總金額
+                if($input['creditcard_bill']>7){
+                    $total_point += 5;
+                }else{
+                    $total_point += 15;
+                }
+
+                // 上班族額度利率
+                if($total_point >= 90){
+                    $result = $report[5];
+                }elseif ($total_point >= 80) {
+                    $result = $report[4];
+                }elseif ($total_point >= 50) {
+                    $result = $report[3];
+                }elseif ($total_point >= 70) {
+                    $result = $report[2];
+                }elseif ($total_point >= 20) {
+                    $result = $report[1];
+                }else {
+                    $result = $report[0];
+                }
+            }
+
+        }
+        try {
+            $input['amount'] = $result['amount'];
+            $input['rate'] = $result['rate'];
+            $input['period_range'] = $result['period_range'];
+            $input['created_at'] = date('Y-m-d H:i:s', strtotime('+8 hours'));
+            DB::table('borrow_report')->insert($input);
+        } catch (Exception $e) {
+            return response()->json($e, 400);
+        }
+
+        return response()->json($result, 200);
+    }
 
     public function getKnowledgeData(Request $request)
     {
@@ -117,11 +541,54 @@ class Controller extends BaseController
 
         $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
 
-        if ($input['type']) {
-            $filter[] = ['category', '=', $input['type']];
+        if (isset($input['category']) && !empty($input['category'])) {
+            $filter[] = ['category', '=', $input['category']];
         }
 
-        $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type'])->where($filter)->get();
+        $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type','amount','rate','period_range','spend_day'])->where($filter)->get();
+        if(empty($experiences)){
+            $experiences = [
+                0 => [
+                    'ID' => 1,
+                    'feedback' => '普匯跟其他保本型的商品比起來，投報率真的相對較高，也比較不需要花太多時間去關注，就可以獲得被動收入。',
+                    'imageSrc' => null,
+                    'video_link' => 'https://www.youtube.com/embed/oHg5SJYRHA0',
+                    'post_title' => '台北投資顧問 葉先生',
+                    'rank' => 'officeWorker',
+                    'type' => '【投資人專訪】',
+                    'amount' => 0,
+                    'rate' => 0,
+                    'period_range' => 0,
+                    'spend_day' => 0
+                ],
+                1 => [
+                    'ID' => 2,
+                    'feedback' => '在普匯投資除了可以有穩定的收益外，還可以幫助到有夢的大學生，所以覺得這個平台還滿特別的',
+                    'imageSrc' => '/upload/2019/11/test.jpg',
+                    'video_link' => null,
+                    'post_title' => '台北設計業 陳先生',
+                    'rank' => 'officeWorker',
+                    'type' => '【借款人專訪】',
+                    'amount' => 123,
+                    'rate' => 321,
+                    'period_range' => 12,
+                    'spend_day' => 3
+                ],
+                2 => [
+                    'ID' => 3,
+                    'feedback' => '有比較過其他平台，其他的債權金額都比較大，普匯可以小額投資，還可以進行債權轉讓，讓我可以即時的拿回投資的錢',
+                    'imageSrc' => null,
+                    'video_link' => 'https://www.youtube.com/embed/oHg5SJYRHA0',
+                    'post_title' => '銀行員 林小姐',
+                    'rank' => 'student',
+                    'type' => '【借款人專訪】',
+                    'amount' => 123,
+                    'rate' => 321,
+                    'period_range' => 12,
+                    'spend_day' => 3
+                ],
+            ];
+        }
         return response()->json($experiences, 200);
     }
 
