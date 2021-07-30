@@ -95,7 +95,7 @@ class Website extends REST_Controller {
             $where['product_id'] = $input['product_id'];
         }
 
-		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate','created_at'))?$input['orderby']:'created_at';
+		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('loan_amount', 'credit_level','instalment','interest_rate','created_at'))?$input['orderby']:'created_at';
 		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'desc';
 		$this->target_model->order_by($orderby,$sort);
 
