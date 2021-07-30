@@ -199,9 +199,10 @@ class Subloan extends REST_Controller {
             }
 
 			$legal_collection = $this->investment_model->getLegalCollectionInvestment([
-				'id' => $target->id
+				't.id' => $target->id
 			],[
-				'legal_collection_at >=' => '1911-01-01'
+				'legal_collection_at >=' => '1911-01-01',
+				'status' => 3
 			]);
 			$legalCollection = 0;
 			if(isset($legal_collection) && count($legal_collection)) {
@@ -311,9 +312,10 @@ class Subloan extends REST_Controller {
 			}
 
 			$legal_collection = $this->investment_model->getLegalCollectionInvestment([
-				'id' => $input['target_id']
+				't.id' => $input['target_id']
 			],[
-				'legal_collection_at >=' => '1911-01-01'
+				'legal_collection_at >=' => '1911-01-01',
+				'status' => 3
 			]);
 			if(isset($legal_collection) && count($legal_collection)) {
 				$this->response(array('result' => 'ERROR','error' => TARGET_IN_LEGAL_COLLECTION ));

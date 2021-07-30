@@ -719,9 +719,10 @@ class Repayment extends REST_Controller {
             }
 
 			$legal_collection = $this->investment_model->getLegalCollectionInvestment([
-				'id' => $target->id
+				't.id' => $target->id
 			],[
-				'legal_collection_at >=' => '1911-01-01'
+				'legal_collection_at >=' => '1911-01-01',
+				'status' => 3
 			]);
 			$legalCollection = 0;
 			if(isset($legal_collection) && count($legal_collection)) {
