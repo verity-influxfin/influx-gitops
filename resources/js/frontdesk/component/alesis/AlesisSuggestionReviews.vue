@@ -32,11 +32,11 @@
                         </alesis-human>
                     </div>
                     <div class="項目">
-                        <alesis-human :image="image">
+                        <!--<alesis-human :image="image">
                             <div slot="video">
                                 <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
-                        </alesis-human>
+                        </alesis-human>-->
                     </div>
                 </div>
             </div>
