@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Calculate;
 use App\Rules\mobile;
 use App\Rules\identity;
 use Illuminate\Support\Facades\Validator;
@@ -193,6 +194,7 @@ class Controller extends BaseController
             'amount' => 0,
             'rate' => 0,
             'period_range' => 0,
+            'repayment' => 0
         ];
         // 學生
         $student_report = [
@@ -501,6 +503,18 @@ class Controller extends BaseController
             }
 
         }
+
+        if($result['amount'] != 0 && $result['period_range'] != 0 && $result['rate'] != 0){
+            $rate_array = explode('~',$result['rate']);
+            // print_r($rate_array);exit;
+            if(isset($rate_array[0]) && isset($rate_array[1])){
+                $Calculate = new Calculate();
+                $repayment_1 = $Calculate->PMT_calculate($rate_array[0], $result['period_range'], $result['amount']);
+                $repayment_2 = $Calculate->PMT_calculate($rate_array[1], $result['period_range'], $result['amount']);
+                $result['repayment'] = number_format($repayment_1, 0).'~'.number_format($repayment_2, 0);
+            }
+        }
+
         try {
             $input['amount'] = $result['amount'];
             $input['rate'] = $result['rate'];
