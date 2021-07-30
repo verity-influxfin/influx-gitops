@@ -300,12 +300,14 @@ export default {
     width                : 740px;
     gap                  : 6rem;
     margin               : 6rem auto 0;
+    transform            : scale(1.1);
 
     @include rwd {
         grid-template-columns: repeat(1, 1fr);
         min-width: 330px;
         width    : auto;
         gap      : 4rem 1rem;
+        transform: scale(1);
     }
 }
 
