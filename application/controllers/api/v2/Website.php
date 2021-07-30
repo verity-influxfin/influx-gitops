@@ -16,6 +16,7 @@ class Website extends REST_Controller {
 		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
+        $this->load->library('Transfer_lib');
     }
 
 	/**
@@ -227,6 +228,298 @@ class Website extends REST_Controller {
 		}
 
 		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
+    }
+
+    /**
+     * @api {get} /v2/transfer/transfer_list 出借方 債權標的列表
+	 * @apiVersion 0.2.0
+	 * @apiName GetTransferList
+     * @apiGroup Transfer
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {String=credit_level,instalment,interest_rate} [orderby="credit_level"] 排序值
+	 * @apiParam {String=asc,desc} [sort=asc] 降序/升序
+     *
+	 * @apiSuccess {Object} result SUCCESS
+	 * @apiSuccess {Number} id Transfer ID
+	 * @apiSuccess {Number} amount 價金
+     * @apiSuccess {Boolean} same_user 是出借方本人
+	 * @apiSuccess {Number} principal 剩餘本金
+	 * @apiSuccess {Number} interest 已發生利息
+	 * @apiSuccess {Number} delay_interest 已發生延滯利息
+	 * @apiSuccess {Float} bargain_rate 增減價比率(%)
+	 * @apiSuccess {Number} instalment 剩餘期數
+	 * @apiSuccess {Number} combination Combination ID
+	 * @apiSuccess {Number} expire_time 流標時間
+	 * @apiSuccess {Number} accounts_receivable 應收帳款
+	 * @apiSuccess {Object} target 原案資訊
+	 * @apiSuccess {String} target.target_no 案號
+	 * @apiSuccess {Number} target.product_id 產品ID
+	 * @apiSuccess {Number} target.credit_level 信用指數
+	 * @apiSuccess {Number} target.user_id User ID
+	 * @apiSuccess {Number} target.loan_amount 核准金額
+	 * @apiSuccess {Number} target.interest_rate 核可利率
+	 * @apiSuccess {Number} target.instalment 期數
+	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
+	 * @apiSuccess {Number} target.delay_days 逾期天數
+	 * @apiSuccess {String} target.reason 借款原因
+	 * @apiSuccess {String} target.remark 備註
+	 * @apiSuccess {Number} target.status 狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
+	 * @apiSuccess {Number} target.sub_status 狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還
+	 * @apiSuccess {Number} target.created_at 申請日期
+	 * @apiSuccess {Object} target.user 借款人基本資訊
+	 * @apiSuccess {Number} target.user.age 年齡
+	 * @apiSuccess {String} target.user.sex 性別 F/M
+	 * @apiSuccess {Object} combination_list 整包債權列表
+     * @apiSuccess {Number} combination_list.id Combination ID
+     * @apiSuccess {Boolean} same_user 是出借方本人
+     * @apiSuccess {String} combination_list.combination_no 整包轉讓號
+     * @apiSuccess {Boolean} combination_list.password 是否需要密碼
+     * @apiSuccess {Number} combination_list.count 筆數
+     * @apiSuccess {Number} combination_list.amount 整包轉讓價金
+     * @apiSuccess {Number} combination_list.principal 整包剩餘本金
+     * @apiSuccess {Number} combination_list.interest 整包已發生利息
+     * @apiSuccess {Number} combination_list.delay_interest 整包已發生延滯息
+     * @apiSuccess {Number} combination_list.max_instalment 最大剩餘期數
+     * @apiSuccess {Number} combination_list.min_instalment 最小剩餘期數
+     * @apiSuccess {Float} combination_list.bargain_rate 增減價比率(%)
+     * @apiSuccess {Float} combination_list.interest_rate 平均年表利率(%)
+     * @apiSuccess {Number} combination_list.accounts_receivable 整包應收帳款
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     * 		"result":"SUCCESS",
+     * 		"data":{
+     * 			"list":[
+     * 			{
+     * 				"id": 17,
+     *                                 "same_user":true,
+     * 				"amount": 4010,
+     * 				"principal": 5000,
+     * 				"interest": 6,
+     * 				"delay_interest": 0,
+     * 				"bargain_rate": -19.9,
+     * 				"instalment": 18,
+     * 				"combination": 2,
+     * 				"expire_time": 1547913599,
+     * 				"accounts_receivable": 5398,
+     * 				"target": {
+     * 					"id": 9,
+     * 					"target_no": "STN2019011414213",
+     * 					"product_id": 1,
+     * 					"credit_level": 3,
+     * 					"user_id": 19,
+     * 					"loan_amount": 5000,
+     * 					"interest_rate": 7,
+     * 					"instalment": 3,
+     * 					"repayment": 1,
+     * 					"delay": 0,
+     * 					"delay_days": 0,
+     * 					"reason": "",
+     * 					"remark": "",
+     * 					"status": 5,
+     * 					"sub_status": 0,
+     * 					"created_at": 1547444954,
+     * 					"user": {
+     * 						"sex": "M",
+     * 						"age": 30
+     * 					}
+     * 				}
+     * 			}
+     * 			],
+     * 			"combination_list": [
+     * 			{
+     * 				"id": 2,
+     *                                 "same_user":true,
+     * 				"combination_no": "PKG1547810358209546",
+     * 				"password": false,
+     * 				"count": 3,
+     * 				"amount": 12028,
+     * 				"principal": 15000,
+     * 				"interest": 16,
+     * 				"max_instalment": 18,
+     * 				"min_instalment": 3,
+     * 				"delay_interest": 0,
+     * 				"bargain_rate": -19.9,
+     * 				"interest_rate": 8.56,
+     * 				"accounts_receivable": 15626
+     * 			}
+     * 			]
+     * 		}
+     *    }
+	 *
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 *
+     */
+
+    public function transfer_list_get()
+    {
+        $input 			= $this->input->get();
+        $list			= [];
+        $combination_list = [];
+        $combination_ids = [];
+        $product_list 	= $this->config->item('product_list');
+        $orderby 		= isset($input['orderby'])&&in_array($input['orderby'],['credit_level','instalment','interest_rate'])?$input['orderby']:'';
+        $sort			= isset($input['sort'])&&in_array($input['sort'],['desc','asc'])?$input['sort']:'asc';
+        $transfer 		= $this->transfer_lib->get_transfer_list(['status' => [0,1,2]]);
+        $my_investment  = array();
+        $my_combination = array();
+        // $user_id 			= $this->user_info->id;
+        // $investments		= $this->investment_model->get_many_by([
+        //     'user_id'	=> $user_id,
+        //     'status'	=> 3
+        // ]);
+        // foreach($investments as $key => $value){
+        //     array_push($my_investment,$value->id);
+        // }
+
+        if(!empty($transfer)){
+
+            foreach($transfer as $key => $value){
+                $target 	= $this->target_model->get($value->target_id);
+                $product = $product_list[$target->product_id];
+                $sub_product_id = $target->sub_product_id;
+                $product_name = $product['name'];
+                if($this->is_sub_product($product,$sub_product_id)){
+                    $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name = $product['name'];
+                }
+                // $user_info 	= $this->user_model->get($target->user_id);
+                // $user		= [];
+                // if($user_info){
+                //     $user = array(
+                //         'sex' 	=> $user_info->sex,
+                //         'age'	=> get_age($user_info->birthday),
+                //     );
+                // }
+
+                //動態回寫accounts_receivable
+                if($value->accounts_receivable == 0){
+                    $investment           = $this->investment_model->get($value->investment_id);
+                    if($investment->status != 10){
+                        $get_pretransfer_info = $this->transfer_lib->get_pretransfer_info($investment,0,0,true,$target);
+                        $accounts_receivable= $get_pretransfer_info['accounts_receivable'];
+                        $this->load->model('loan/transfer_model');
+                        $this->transfer_model->update($value->id,['accounts_receivable' => $accounts_receivable]);
+                        $value->accounts_receivable = $accounts_receivable;
+                    }
+                }
+
+                $reason = $target->reason;
+                $json_reason = json_decode($reason);
+                if(isset($json_reason->reason)){
+                    $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                }
+
+                // $target_info = [
+                //     'id' 				=> intval($target->id),
+                //     'target_no' 		=> $target->target_no,
+                //     'product_name' => $product_name,
+                //     'product_id' 		=> intval($target->product_id),
+                //     'credit_level' 		=> intval($target->credit_level),
+                //     'user_id' 			=> intval($target->user_id),
+                //     'loan_amount' 		=> intval($target->loan_amount),
+                //     'interest_rate' 	=> floatval($target->interest_rate),
+                //     'instalment' 		=> intval($target->instalment),
+                //     'repayment' 		=> intval($target->repayment),
+                //     'delay' 			=> intval($target->delay),
+                //     'delay_days' 		=> intval($target->delay_days),
+                //     'reason' 			=> $reason,
+                //     'remark' 			=> $target->remark,
+                //     'status' 			=> intval($target->status),
+                //     'sub_status' 		=> intval($target->sub_status),
+                //     'created_at' 		=> intval($target->created_at),
+                //     'user' 				=> $user,
+                // ];
+
+                $list[] 	= [
+                    'id'				=> intval($value->id),
+                    'same_user'		    => in_array($value->investment_id,$my_investment),
+                    'amount'			=> intval($value->amount),
+                    'principal'			=> intval($value->principal),
+                    'interest'			=> intval($value->interest),
+                    'delay_interest'	=> intval($value->delay_interest),
+                    'bargain_rate'		=> floatval($value->bargain_rate),
+                    'instalment'		=> intval($value->instalment),
+                    'combination'		=> intval($value->combination),
+                    'expire_time'		=> intval($value->expire_time),
+                    'accounts_receivable'	=> intval($value->accounts_receivable),
+                    'target'			=> [],
+                ];
+
+                if(in_array($value->investment_id,$my_investment)){
+                    array_push($my_combination,$value->combination);
+                }
+
+                if($value->combination > 0){
+                    $combination_ids[$value->combination] = $value->combination;
+                }
+            }
+
+            if(!empty($combination_ids)){
+                $this->load->model('loan/transfer_combination_model');
+                $combinations = $this->transfer_combination_model->get_many($combination_ids);
+                if($combinations){
+                    foreach($combinations as $key => $value){
+                        $combination_list[] 	= [
+                            'id'				=> intval($value->id),
+                            'same_user'         => in_array($value->id,$my_combination),
+                            'combination_no'	=> $value->combination_no,
+                            'password'			=> empty($value->password)?false:true,
+                            'count'				=> intval($value->count),
+                            'amount'			=> intval($value->amount),
+                            'principal'			=> intval($value->principal),
+                            'interest'			=> intval($value->interest),
+                            'max_instalment'	=> intval($value->max_instalment),
+                            'min_instalment'	=> intval($value->min_instalment),
+                            'delay_interest'	=> intval($value->delay_interest),
+                            'bargain_rate'		=> floatval($value->bargain_rate),
+                            'interest_rate'		=> floatval($value->interest_rate),
+                            'accounts_receivable'	=> intval($value->accounts_receivable),
+                        ];
+                    }
+                }
+            }
+
+
+            if(!empty($orderby) && !empty($sort) && !empty($list)){
+                $num = count($list);
+                for($i = 0 ; $i < $num ; $i++){
+                    for ($j=$i+1;$j<$num;$j++) {
+                        switch($orderby){
+                            case 'credit_level':
+                                $a = $list[$i]['target']['credit_level'];
+                                $b = $list[$j]['target']['credit_level'];
+                                break;
+                            case 'instalment':
+                                $a = $list[$i]['instalment'];
+                                $b = $list[$j]['instalment'];
+                                break;
+                            case 'interest_rate':
+                                $a = $list[$i]['target']['interest_rate'];
+                                $b = $list[$j]['target']['interest_rate'];
+                                break;
+                            default:
+                                break;
+                        }
+                        if ($sort=='desc') {
+                            if( $a > $b ){
+                                $tmp      = $list[$i];
+                                $list[$i] = $list[$j];
+                                $list[$j] = $tmp;
+                            }
+                        }else{
+                            if( $a < $b ){
+                                $tmp      = $list[$i];
+                                $list[$i] = $list[$j];
+                                $list[$j] = $tmp;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ,'combination_list' => $combination_list] ));
     }
 
     /**
