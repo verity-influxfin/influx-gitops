@@ -2,12 +2,12 @@
     <div class="應用推薦">
         <div class="包裹容器">
             <div class="內容">
-                <a href="#!" class="按鈕">{{ action }}</a>
+                <a class="按鈕">{{ action }}</a>
                 <div class="分隔線"></div>
                 <div class="註釋">前往APP下載區 立即啟動服務</div>
                 <div class="市集應用">
-                    <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_balnk"><img src="/images/alesis-app-store.svg"></a>
-                    <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW&gl=US" class="連結"><img src="/images/alesis-google-play.svg"></a>
+                    <a :href="action == '立即投資' ? 'https://www.influxfin.com/investLink' : 'https://www.influxfin.com/borrowLink'" target="_balnk"><img src="/images/alesis-app-store.svg"></a>
+                    <a :href="action == '立即投資' ? 'https://www.influxfin.com/investLink' : 'https://www.influxfin.com/borrowLink'" class="連結"><img src="/images/alesis-google-play.svg"></a>
                 </div>
             </div>
             <div class="展示區塊">
