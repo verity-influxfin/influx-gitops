@@ -27,42 +27,42 @@ export default {
 }
 
 .空白.空白_微小 {
-    --alesis-space-gap: 4rem;
+    --alesis-space-gap: 3rem;
 
     @include rwd {
-        --alesis-space-gap: 2rem;
+        --alesis-space-gap: 1rem;
     }
 }
 
 .空白.空白_小 {
-    --alesis-space-gap: 6rem;
+    --alesis-space-gap: 5rem;
 
     @include rwd {
-        --alesis-space-gap: 4rem;
+        --alesis-space-gap: 3rem;
     }
 }
 
 .空白.空白_中 {
-    --alesis-space-gap: 10rem;
+    --alesis-space-gap: 9rem;
 
     @include rwd {
-        --alesis-space-gap: 8rem;
+        --alesis-space-gap: 7rem;
     }
 }
 
 .空白.空白_大 {
-    --alesis-space-gap: 14rem;
+    --alesis-space-gap: 13rem;
 
     @include rwd {
-        --alesis-space-gap: 12rem;
+        --alesis-space-gap: 11rem;
     }
 }
 
 .空白.空白_巨大 {
-    --alesis-space-gap: 18rem;
+    --alesis-space-gap: 17rem;
 
     @include rwd {
-        --alesis-space-gap: 16rem;
+        --alesis-space-gap: 15rem;
     }
 }
 </style>
