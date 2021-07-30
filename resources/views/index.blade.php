@@ -29,6 +29,12 @@
     <link rel="stylesheet" href="{{ asset('css/package/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/pagination.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/hover-min.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
 
     <!-- local -->
     <link rel="stylesheet" href="{{ asset('css/web.css?'.csrf_token()) }}">
@@ -102,148 +108,247 @@
         please turn on your jacascript
     </noscript>
     <div id="web_index" @mousemove="clicked">
-        <nav class="page-header navbar navbar-expand-lg sticky">
-            <div class="web-logo">
-                <router-link to="index"><img src=" {{ asset('images/logo_new.png') }}" class="img-fluid"></router-link>
+        <div class="alesis-header">
+            <div class="logo">
+                <a href="/index"><img src="/images/logo_new.png" class="image"></a>
             </div>
+            <div class="center">
+                <div class="item">
+                    我要借款
+                    <div class="sub">
+                        <a href="/collegeLoan" class="item">學生貸款</a>
+                        <a href="/workLoan" class="item">上班族貸款</a>
+                        <a href="/engineerLoan" class="item">資訊工程師專案</a>
+                        <div class="item -disabled">外匯車貸(coming soon)</div>
+                        <div class="item -disabled">新創企業主貸(coming soon)</div>
+                    </div>
+                </div>
+                <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
+                <div class="item">
+                    我要投資
+                    <div class="sub">
+                        <a href="/investment" class="item">債權投資</a>
+                        <a href="/transfer" class="item">債權轉讓</a>
+                    </div>
+                </div>
+            </div>
+            <div class="aside">
+                <div class="item">
+                    分期付款超市
+                    <div class="sub">
+                        <a href="/mobileLoan" class="item">手機分期</a>
+                    </div>
+                </div>
+                <div class="item">
+                    關於我們
+                    <div class="sub">
+                        <a href="/company" class="item">公司介紹</a>
+                        <a href="/news" class="item">最新消息</a>
+                    </div>
+                </div>
+                <div class="item">
+                    小學堂金融科技
+                    <div class="sub">
+                        <a href="/blog" class="item">小學堂</a>
+                        <a href="/vlog" class="item">小學堂影音</a>
+                    </div>
+                </div>
+                <div class="item">
+                    了解更多
+                    <div class="sub">
+                        <a href="/faq" class="item">常見問題</a>
+                        <a href="/risk" class="item">風險報告書</a>
+                        <a href="/projects" class="item">案件總覽</a>
+                    </div>
+                </div>
+                <a href="/news" class="item">平台公告</a>
+                <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow" target="_blank" class="item">下載APP</a>
+                <div class="item">
+                    <div @click="doLogin" class="login">SIGN IN</div>
+                </div>
+                <div class="item hamburger">
+                    <img src="/images/alesis-hamburger.svg">
+                </div>
+            </div>
+            <div class="rwd-list">
+                <div class="item -dropdown">
+                    <div class="text">我要借款</div>
+                    <div class="sub">
+                        <a href="/collegeLoan" class="item">學生貸款</a>
+                        <a href="/workLoan" class="item">上班族貸款</a>
+                        <a href="/engineerLoan" class="item">資訊工程師專案</a>
+                        <div class="item -disabled">外匯車貸(coming soon)</div>
+                        <div class="item -disabled">新創企業主貸(coming soon)</div>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">我要投資</div>
+                    <div class="sub">
+                        <a href="/investment" class="item">債權投資</a>
+                        <a href="/transfer" class="item">債權轉讓</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">分期付款超市</div>
+                    <div class="sub">
+                        <a href="/mobileLoan" class="item">手機分期</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">關於我們</div>
+                    <div class="sub">
+                        <a href="/company" class="item">公司介紹</a>
+                        <a href="/news" class="item">最新消息</a>
+                    </div>
+                </div>
+                <div class="item -dropdown">
+                    <div class="text">小學堂金融科技</div>
+                    <div class="sub">
+                        <a href="/blog" class="item">小學堂</a>
+                        <a href="/vlog" class="item">小學堂影音</a>
+                    </div>
+                </div>
+                <a href="/faq" class="item">
+                    <div class="text">常見問題</div>
+                </a>
+                <div class="item">
+                    <div @click="doLogin" class="login"><i class="fas fa-user"></i> SIGN IN</div>
+                </div>
+            </div>
+        </div>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="menu">
-                <ul class="navbar-nav ml-auto">
-                    <li v-for="item in menuList" class="nav-item dropdown">
-                        <router-link v-if="item.subMenu.length === 0" class="nav-link" :to="item.href">@{{item.title}}</router-link>
-                        <a v-else class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">@{{item.title}}</a>
-                        <ul class="dropdown-menu" v-if="item.subMenu.length !== 0">
-                            <li v-for="subItem in item.subMenu" :class="[(!subItem.isActive ? 'coming-soon' : '')]">
-                                <router-link class="dropdown-item" :to="subItem.href">@{{subItem.name}}@{{!subItem.isActive ? '(coming soon)' : ''}}</router-link>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-item" v-if="!flag || flag === 'logout'">
-                        <p class="nav-link l" href="#" @click="openLoginModal()"><i class="fas fa-user"></i>SIGN IN</p>
-                    </li>
-                    <li v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
-                        <ul class="dropdown-menu" style="min-width: 5rem;">
-                            <li v-if="isInvestor == 0">
-                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
-                            </li>
-                            <li v-else>
-                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
-                            </li>
-                            <li v-if="flag === 'login'">
-                                <p class="dropdown-item" @click="logout">登出</p>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <script type="text/javascript">
+            window.addEventListener('load', function() {
+                document.querySelector(".item.hamburger").addEventListener("click", () => {
+                    document.querySelector(".rwd-list").classList.toggle("-active")
+                })
+
+                document.querySelector("body").addEventListener("click", (e) =>{
+                    if (e.target.closest(".item") !== null) {
+                        return
+                    }
+                        document.querySelectorAll(".aside > .item, .center > .item").forEach((v) => {
+                            v.classList.remove("-active")
+                        })
+                })
+
+                document.querySelectorAll(".aside > .item, .center > .item").forEach((v) => {
+                    v.addEventListener("click", (e) => {
+                        Array.prototype.filter.call(document.querySelectorAll(".aside .item , .center > .item"), (j) => {
+                            return v !== j
+                        }).forEach((v) =>{
+                            v.classList.remove("-active")
+                        })
+                        v.classList.toggle("-active")
+                    })
+                })
+
+                document.querySelectorAll(".rwd-list .item").forEach((v) => {
+                    v.addEventListener("click", (e) => {
+                        Array.prototype.filter.call(document.querySelectorAll(".rwd-list .item"), (j) => {
+                            return v !== j
+                        }).forEach((v) =>{
+                            v.classList.remove("-active")
+                        })
+                        v.classList.toggle("-active")
+                    })
+                })
+            })
+        </script>
+
         <div class="content-wrapper">
             <router-view></router-view>
         </div>
-        <div class="page-footer">
-            <div class="btm-line"></div>
-            <div class="top-content">
-                <div class="desc-card">
-                    <div class="d-a">
-                        <H2>About</H2>
-                        <div class="img"><img src="{{ asset('images/footer.svg') }}" class="img-fluid"></div>
+        <div class="alesis-footer">
+            <div class="line"></div>
+            <div class="main">
+                <div class="introduction">
+                    <div class="brand">
+                        <div class="text">認識</div>
+                        <img class="image" src="/images/footer@2x.png">
                     </div>
-                    <div class="cd">
-                        <div class="img"><img class="img-fluid" src="/images/ah-pu.svg"></div>
-                        <div class="cnt">
-                            <p class="c-s">「普匯．你的手機ATM」</p>
-                            <p class="c-s">inFlux普匯金融科技，以普惠金融為志業，希望落實傳統銀行無法提供的金融服務。「金融專業」為核心，「高端科技」為輔具，提供「最有溫度」的社群服務，拉近人與人的距離，讓金融年輕化。</p>
+                    <div class="paragraphy">
+                        「普匯．你的手機ATM」<br>
+                        inFlux普匯金融科技，以普惠金融為志業，希望落實傳統
+                        銀行無法提供的金融服務。「金融專業」為核心，「高端
+                        科技」為輔具，提供「最有溫度」的社群服務，拉近人與
+                        人的距離，讓金融年輕化。
+                    </div>
+                </div>
+                <div class="information">
+                    <div class="item">
+                        <div class="header">我要申貸</div>
+                        <div class="list">
+                            <a href="/collegeLoan">學生貸款</a>
+                            <a href="/workLoan">上班族貸款</a>
+                            <a href="/engineerLoan">資訊工程師專案</a>
+                            <a href="/investment">車輛融資</a>
+                            <a href="/investment">企業融資</a>
+                            <a href="/mobileLoan">手機分期</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">我要投資</div>
+                        <div class="list">
+                            <a href="/investment">債權投資</a>
+                            <a href="/transfer">債權轉讓</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">關於我們</div>
+                        <div class="list">
+                            <a href="/company">關於我們</a>
+                            <a href="/news">最新消息</a>
+                            <a href="/blog">AI金融科技新知</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">聯絡我們</div>
+                        <div class="meta">
+                            <div class="icon"><img src="/images/alesis-clock.svg"></div>
+                            <div class="text">服務時間  9:00 AM - 6:00 PM</div>
 
+                            <div class="icon"><img src="/images/alesis-phone.svg"></div>
+                            <div class="text"><a href="tel:+886225079990" target="_blank">02-2507-9990</a></div>
+
+                            <div class="icon"><img src="/images/alesis-email.svg"></div>
+                            <div class="text"><a href="mailto:service@influxfin.com" target="_blank">service@influxfin.com</a></div>
+
+                            <div class="icon"><img src="/images/alesis-address.svg"></div>
+                            <div class="text"><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank">台北市中山區松江路111號11樓之1</a></div>
+                        </div>
+                        <div class="socials">
+                            <a href="https://m.facebook.com/inFluxtw/" target="_blank" class="item"><img src="/images/alesis-facebook.svg"></a>
+                            <a href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="item"><img src="/images/alesis-line.svg"></a>
+                            <a href="https://www.instagram.com/pop.finance/" target="_blank" class="item"><img src="/images/alesis-instagram.svg"></a>
                         </div>
                     </div>
                 </div>
-                <div class="loan-card">
-                    <H2>Product</H2>
-                    <ul class="list-column">
-                        <li>
-                            <router-link to="/collegeLoan">學生貸款</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/freshGraduateLoan">上班族貸款</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/engineerLoan">資訊工程師專案</router-link>
-                        </li>
-                        <li>
-                            <router-link to="">外匯車貸</router-link>
-                        </li>
-                        <li>
-                            <router-link to="">新創企業主貸</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/mobileLoan">手機分期</router-link>
-                        </li>
-                    </ul>
-                </div>
-                <div class="invest-card">
-                    <H2>Investment</H2>
-                    <ul class="list-column">
-                        <li>
-                            <router-link to="/investment">債權投資</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/transfer">債權轉讓</router-link>
-                        </li>
-                    </ul>
-                </div>
-                <div class="support-card">
-                    <H2>About Us</H2>
-                    <ul class="list-column">
-                        <li>
-                            <router-link to="/company">關於我們</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/news">最新消息</router-link>
-                        </li>
-                        <li>
-                            <router-link to="/blog">AI金融科技新知</router-link>
-                        </li>
-                    </ul>
-                </div>
-                <div class="about-card">
-                    <H2>Follow Us</H2>
-                    <div class="text">
-                        <p><a href="tel:+886225079990" target="_blank"><span><i class="fas fa-phone"></i>&ensp;02-2507-9990</span></a></p>
-                        <p><a href="mailto:service@influxfin.com" target="_blank"><span><i class="far fa-envelope"></i>&ensp;service@influxfin.com</span></a></p>
-                        <p><a href="https://goo.gl/maps/5J27gauTT5Fw87PD8" target="_blank"><span><i class="fas fa-map-marker-alt"></i>&ensp;台北市松江路111號11樓-2</span></a></p>
-                    </div>
-                    <div class="community">
-                        <a target="_blank" href="https://m.facebook.com/inFluxtw/"><i class="fab fa-facebook"></i></a>
-                        <a target="_blank" href="https://line.me/R/ti/p/%40kvd1654s"><i class="fab fa-line"></i></a>
-                        <a target="_blank" href="https://www.instagram.com/pop.finance/"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
             </div>
-            <hr />
-            <div class="bottom-content">
-                <div class="contact">
-                    <router-link to="/recruiting">徵才服務</router-link>|
-                    <router-link to="/campuspartner">校園大使</router-link>|
-                    <router-link to="/clubcooperation">社團合作</router-link>|
-                    <router-link to="/firmcooperation">商行合作</router-link>|
-                    <router-link to="/companycooperation">企業合作</router-link>
+            <div class="secondary">
+                <div class="copyright">
+                    Copyright ©2020 普匯金融科技股份有限公司 All rights reserved.
+                    <div class="links">
+                        <a href="/userTerms" class="item">使用者條款</a> |
+                        <a href="/privacyTerms" class="item">隱私條款政策</a> |
+                        <a href="/loanerTerms" class="item">借款人服務條款</a>
+                    </div>
                 </div>
-                <div class="license">
-                    <p>Copyright ©2020 普匯金融科技股份有限公司 All rights reserved. </p>
-                    <p>
-                        <router-link to="/userTerms">使用者條款</router-link>|
-                        <router-link to="/privacyTerms">隱私條款政策</router-link>|
-                        <router-link to="/loanerTerms">借款人服務條款</router-link>
-                    </p>
+                <div class="links">
+                    <a href="https://www.influxfin.com/recruiting" class="item">徵才服務</a> |
+                    <a href="https://www.influxfin.com/campuspartner" class="item">校園大使</a> |
+                    <a href="https://www.influxfin.com/clubcooperation" class="item">社團合作</a> |
+                    <a href="https://www.influxfin.com/firmcooperation" class="item">商行合作</a> |
+                    <a href="https://www.influxfin.com/companycooperation" class="item">企業合作</a>
+                </div>
+                <div class="externals">
+                    <a class="item" href="/borrow">我想申貸</a>
+                    <a class="item -invest" href="/invest">我想投資</a>
                 </div>
             </div>
         </div>
 
-        <a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>
+        <!--<a class="back-top" @click="backtotop"><img src="{{ asset('images/top.svg') }}" class="img-fluid" /></a>-->
         <div id="loginForm" class="modal fade" ref="loginForm" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div v-if="isReset" id="forgetPwdModal" class="modal-content">

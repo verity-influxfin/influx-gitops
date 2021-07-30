@@ -221,7 +221,7 @@ export default {
         background: #d37e00;
       }
     }
-  
+
     $bgcolor: #3198f4,#2f91ed,#2d8ae6,#2a83df,#287cd8,#2675d1,#236fca,#2068c3,#1d61bc,#1a5bb5,#1754af,#134ea8,#0f48a1,#0a419b,#053b94;
 
     @for $i from 1 through 15 {
@@ -241,12 +241,12 @@ export default {
     }
 
     .center {
-      width: 250px;
+      /*width: 250px;
       height: 250px;
       line-height: 250px;
       top: 65%;
       left: 50%;
-      @extend %bg;
+      @extend %bg;*/
     }
 
     .center-low {

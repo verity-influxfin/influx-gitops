@@ -1,8 +1,5 @@
-import index from "../pages/index";
-import collegeLoan from "../pages/collegeLoan";
 import freshGraduateLoan from "../pages/freshGraduateLoan";
 import engineerLoan from "../pages/engineerLoan";
-import invest from "../pages/invest";
 import transfer from "../pages/transfer";
 import mobileLoan from "../pages/mobileLoan";
 import qa from "../pages/qa";
@@ -33,10 +30,27 @@ import event from '../pages/event';
 import scsbank from '../pages/scsbank';
 import skbank from '../pages/skbank';
 
+import index from "../pages/alesis-index";
+import borrow from '../pages/alesis-borrow';
+import invest from '../pages/alesis-invest';
+import faq from '../pages/alesis-faq';
+import risk from '../pages/alesis-risk';
+import projects from '../pages/alesis-projects';
+import workLoan from '../pages/alesis-workLoan';
+import collegeLoan from "../pages/alesis-collegeLoan";
+
 let routers = [
     { path: '*', redirect: '/index' },
     { path: '/index', component: index },
+    { path: '/borrow', component: borrow },
+
+    { path: '/workLoan', component: workLoan },
     { path: '/collegeLoan', component: collegeLoan },
+    { path: '/faq', component: faq },
+    { path: '/risk', component: risk },
+    { path: '/projects', component: projects },
+
+
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
     { path: '/mobileLoan', component: mobileLoan },
     { path: '/engineerLoan', component: engineerLoan },
@@ -46,6 +60,7 @@ let routers = [
     { path: '/news', component: news },
     { path: '/blog', component: blog },
     { path: '/vlog', component: vlog },
+    { path: '/invest', component: invest },
     { path: '/qa', component: qa },
     { path: '/videopage', component: videoPage },
     { path: '/articlepage', component: articlePage },

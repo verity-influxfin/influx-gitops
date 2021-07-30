@@ -10,7 +10,7 @@
     <div class="cards">
       <div class="countdown">00:<span>10</span></div>
       <template >
-        <span :class="'card'+(index%2===0?'B':'A')" v-for="(d, index) in randkeys">
+        <span :class="'card'+(index%2===0?'B':'A')" v-for="(d, index) in randkeys" :key="index">
           <span class="cardFlip card-front" @click.once="timer()">
             <span class="cardNum">{{faceNum[index]}}</span>
             <img class="cardFace" :src="'/images/cardGame'+(index+1)+'.png'">
@@ -18,8 +18,8 @@
           <span class="cardFlip card-back">
             <span class="cardQuestion" :data-id="d">
               <span v-html="imgs[d].question"></span><br /><br />
-              <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="A">(A){{imgs[d].selection[0]}}</div>
-              <div class="cardAns" @click.once="ans" @click.once="stopTime()" data-ans="B">(B){{imgs[d].selection[1]}}</div>
+              <div class="cardAns" @click.once="(e) => {ans(e); stopTime()}" data-ans="A">(A){{imgs[d].selection[0]}}</div>
+              <div class="cardAns" @click.once="(e) => {ans(e); stopTime()}" data-ans="B">(B){{imgs[d].selection[1]}}</div>
             </span>
           </span>
         </span>

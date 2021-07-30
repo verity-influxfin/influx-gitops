@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="161" height="161" viewBox="0 0 161 161">
+  <defs>
+    <filter id="Ellipse_68" x="0" y="0" width="161" height="161" filterUnits="userSpaceOnUse">
+      <feOffset dy="4" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="11" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Ellipse_68)">
+    <g id="Ellipse_68-2" data-name="Ellipse 68" transform="translate(33 29)" fill="#fff" stroke="#326398" stroke-width="1">
+      <circle cx="47.5" cy="47.5" r="47.5" stroke="none"/>
+      <circle cx="47.5" cy="47.5" r="47" fill="none"/>
+    </g>
+  </g>
+  <g id="詢問漂浮-05" transform="translate(48.438 52.75)">
+    <path id="Path_1223" data-name="Path 1223" d="M56.191.63H11.85A6.954,6.954,0,0,0,4.9,7.58V25.216a6.954,6.954,0,0,0,6.95,6.95h3.115V42.4L27.943,32.166H56.191a6.954,6.954,0,0,0,6.95-6.95V7.566A6.951,6.951,0,0,0,56.191.63Z" transform="translate(0.983 -0.63)" fill="none" stroke="#2694e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+    <path id="Path_1224" data-name="Path 1224" d="M52.111,4.7H7.77A6.954,6.954,0,0,0,.82,11.65V29.286a6.954,6.954,0,0,0,6.95,6.95h3.115V46.474L23.863,36.236H52.111a6.954,6.954,0,0,0,6.95-6.95V11.65A6.954,6.954,0,0,0,52.111,4.7Z" transform="translate(-0.82 1.169)" fill="#fff" stroke="#2694e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+    <g id="Group_653" data-name="Group 653" transform="translate(6.417 16.828)">
+      <circle id="Ellipse_65" data-name="Ellipse 65" cx="4.989" cy="4.989" r="4.989" fill="none" stroke="#2694e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <circle id="Ellipse_66" data-name="Ellipse 66" cx="4.989" cy="4.989" r="4.989" transform="translate(17.722)" fill="none" stroke="#2694e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      <circle id="Ellipse_67" data-name="Ellipse 67" cx="4.989" cy="4.989" r="4.989" transform="translate(35.444)" fill="none" stroke="#2694e0" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+    </g>
+  </g>
+</svg>
