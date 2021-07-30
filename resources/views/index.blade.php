@@ -213,7 +213,7 @@
                     <div class="sub">
                         <a href="/faq" class="item">常見問題</a>
                         <a href="/risk" class="item">風險報告書</a>
-                        <a href="/projects" class="item">案件總覽</a>
+                        <a href="/projects" class="item">查看案件</a>
                     </div>
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
