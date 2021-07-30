@@ -70,6 +70,8 @@ Route::post('/getBorrowReport', 'Controller@getBorrowReport');
 Route::post('/sendQuestion', 'Controller@sendQuestion');
 
 Route::post('/getCase', 'Controller@getCase');
+
+Route::post('/getTransferCase', 'Controller@getTransferCase');
 //Account
 
 Route::post('/getTerms', 'Accountcontroller@getTerms');

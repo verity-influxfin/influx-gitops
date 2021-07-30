@@ -78,12 +78,48 @@ class Controller extends BaseController
         }
     }
 
+    public function getTransferCase(Request $request){
+        $input = $request->all();
+
+        $params = http_build_query($input);
+        $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/transfer_list?' . $params . '"');
+        if(!empty($case_response)){
+            $case_data = json_decode($case_response,true);
+            if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
+                return response()->json(['response' => 'success','data' => $case_data['data']['list']], 200);
+            }
+        }else{
+            return response()->json(['response' => 'error','message' => 'not response'], 501);
+        }
+    }
+
     public function getCase(Request $request){
         $input = $request->all();
         if(isset($input['product_id']) && isset($input['status'])){
-            if(in_array($input['product_id'],[1,3]) || in_array($input['status'],[3,10])){
-                $params = http_build_query($input);
-                $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+            if(in_array($input['product_id'],[0,1,3]) || in_array($input['status'],[3,10])){
+                if($input['product_id'] == 0){
+                    $input['product_id'] = 1;
+                    $params = http_build_query($input);
+                    $case_response_1 = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+
+                    $input['product_id'] = 3;
+                    $params = http_build_query($input);
+                    $case_response_3 = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+                    $case_response = '';
+                    if(!empty($case_response_1) && !empty($case_response_3)){
+                        $case_response_1 = json_decode($case_response_1,true);
+                        $case_response_3 = json_decode($case_response_3,true);
+                        if(isset($case_response_1['result']) && $case_response_1['result'] == 'SUCCESS' && isset($case_response_3['result']) && $case_response_3['result'] == 'SUCCESS'){
+                            $case_response = array_merge($case_response_1['data']['list'],$case_response_3['data']['list']);
+                            return response()->json(['response' => 'success','data' => $case_response], 200);
+                        }
+                    }else{
+                        return response()->json(['response' => 'error','message' => 'not response'], 501);
+                    }
+                }else{
+                    $params = http_build_query($input);
+                    $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+                }
                 if(!empty($case_response)){
                     $case_data = json_decode($case_response,true);
                     if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
