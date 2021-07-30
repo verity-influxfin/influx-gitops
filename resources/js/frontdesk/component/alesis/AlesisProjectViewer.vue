@@ -8,11 +8,11 @@
                 </button>
                 <button @click="changeCategoryBy('student')" class="項目" :class="{'項目_啟用的': categoryBy === 'student'}">
                     <div class="文字">學生</div>
-                    <div class="標籤">86</div>
+                    <div class="標籤">{{ this.status === 3 ? studentWorking.length : studentDone.length }}</div>
                 </button>
                 <button @click="changeCategoryBy('work')" class="項目" :class="{'項目_啟用的': categoryBy === 'work'}">
                     <div class="文字">上班族</div>
-                    <div class="標籤">60</div>
+                    <div class="標籤">{{ this.status === 3 ? workWorking.length : workDone.length }}</div>
                 </button>
             </div>
             <div class="排序條件">
@@ -33,7 +33,7 @@
                     <alesis-project v-bind="result"></alesis-project>
                 </div>
             </div>
-            <div class="分頁導覽">
+            <div class="分頁導覽" v-if="results.length > 0">
                 <a @click="prevPage" class="項目">上一頁</a>
                 <a href="#!" class="項目">1</a>
                 <a href="#!" class="項目">2</a>
