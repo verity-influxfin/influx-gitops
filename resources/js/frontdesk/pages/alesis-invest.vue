@@ -558,7 +558,7 @@ export default {
     padding-bottom  : .5rem;
     padding-right   : 2rem;
     margin-bottom   : 2rem;
-    margin-left     : 4rem;
+    margin-left     : 6rem;
 
     @include rwd {
         font-size     : 1.5rem;
@@ -574,7 +574,7 @@ export default {
 
 .現有案件 .包裹容器 .幻燈片 {
     width         : 1050px;
-    padding-bottom: 4rem;
+    padding-bottom: 2rem;
 
     @include rwd {
         width: 80vw;
@@ -591,6 +591,7 @@ export default {
     display              : grid;
     margin               : 0 6rem;
     gap                  : 4rem;
+    padding-bottom       : 1rem;
 
     @include rwd {
         grid-template-columns: 1fr;
