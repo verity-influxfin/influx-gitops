@@ -59,7 +59,7 @@ export default [
 "ID":32,
 "title":"銀行合作",
 "hook_date":"2020-11-01",
-"content":`<tspan x="0" dy="0">與金控銀行、金控物流</tspan><tspan x="0" dy="1.2em">共同開發微企信保線上融資產品</tspan>`,
+"content":`<tspan x="0" dy="0">與金控銀行、</tspan><tspan x="0" dy="1.2em">金控物流</tspan><tspan x="0" dy="1.2em">共同開發微企信保</tspan><tspan x="0" dy="1.2em">線上融資產品</tspan>`,
 "icon":"https://www.influxfin.com/upload/milestone/milestone_09_20210305.svg"
 },
 {
@@ -115,7 +115,7 @@ export default [
 "ID":24,
 "title":"產品上線",
 "hook_date":"2019-12-01",
-"content":`<tspan x="0" dy="0">推出第四個工程師貸款產品</tspan>`,
+"content":`<tspan x="0" dy="0">推出第四個工程師</tspan><tspan x="0" dy="1.2em">貸款產品</tspan>`,
 "icon":"https://www.influxfin.com/upload/milestone/milestone_07_20210305.svg"
 },
 {
@@ -164,7 +164,7 @@ export default [
 "ID":6,
 "title":"FinTech Space",
 "hook_date":"2019-05-01",
-"content":`<tspan x="0" dy="0">進駐FTS金融創新園區</tspan>`,
+"content":`<tspan x="0" dy="0">進駐FTS</tspan><tspan x="0" dy="1.2em">金融創新園區</tspan>`,
 "icon":"https://www.influxfin.com/upload/milestone/fts.svg"
 },
 {

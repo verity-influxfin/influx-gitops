@@ -103,7 +103,7 @@
           </g>
           <g id="Group_602" data-name="Group 602" transform="translate(24.026 24.004)">
             <circle id="_x37_y1buxosue_1_" cx="57.998" cy="57.998" r="57.998" fill="url(#linear-gradient)"/>
-            <image transform="matrix(1, 0, 0, 1, -1.3, -6.639)" height="120" width="120" :href="sets[current_set_index][7] !== undefined ? sets[current_set_index][7].icon : ''"></image>
+            <image transform="matrix(1, 0, 0, 1, 6.7, 10.361)" height="100" width="100" :href="sets[current_set_index][7] !== undefined ? sets[current_set_index][7].icon : ''"></image>
           </g>
         </g>
         <path id="Path_1165" data-name="Path 1165" d="M1725.863,604.726a58.963,58.963,0,1,1,58.963-58.963A58.973,58.973,0,0,1,1725.863,604.726Zm0-116.057a57.094,57.094,0,1,0,57.094,57.094A57.1,57.1,0,0,0,1725.863,488.669Z" transform="translate(-521.908 1716.048)" fill="url(#linear-gradient-2)"/>
