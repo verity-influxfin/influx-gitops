@@ -27,7 +27,7 @@
                     </div>
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-upcash.svg">
-                        <div class="標籤">擴大核准額度至20萬</div>
+                        <div class="標籤">擴大核准額度至30萬</div>
                     </div>
                 </div>
                 <alesis-space size="medium"></alesis-space>
