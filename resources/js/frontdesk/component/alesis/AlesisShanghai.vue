@@ -102,6 +102,8 @@ export default {
 
 .上海容器 .特色清單 .項目 {
     display: list-item;
+    line-height: 1.5em;
+    padding-bottom: 1em;
 }
 
 .上海容器 .動作群組 {

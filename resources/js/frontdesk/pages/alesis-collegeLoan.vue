@@ -14,40 +14,6 @@
         </div>
         <!-- / 計數器 -->
 
-        <!-- 合作對象 -->
-        <div class="合作對象">
-            <alesis-header>
-                <div class="標題">合作夥伴</div>
-            </alesis-header>
-            <alesis-section>
-                <alesis-space size="medium"></alesis-space>
-                <div class="群組">
-                    <div class="項目">
-                        <img src="/images/alesis-bordered-ntpu.svg" class="圖片">
-                        <div class="名稱">國立臺北大學</div>
-                    </div>
-                    <div class="項目">
-                        <img src="/images/alesis-bordered-ntu.svg" class="圖片">
-                        <div class="名稱">國立臺灣大學</div>
-                    </div>
-                    <div class="項目">
-                        <img src="/images/alesis-bordered-ntub.svg" class="圖片">
-                        <div class="名稱">國立臺北商業大學</div>
-                    </div>
-                    <div class="項目">
-                        <img src="/images/alesis-bordered-shanghai.svg" class="圖片">
-                        <div class="名稱">上海商業儲蓄銀行</div>
-                    </div>
-                    <div class="項目">
-                        <img src="/images/alesis-bordered-skbank.svg" class="圖片">
-                        <div class="名稱">新光銀行</div>
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 合作對象 -->
-
         <!-- 適用對象 -->
         <div class="適用對象">
             <alesis-header>
@@ -244,11 +210,12 @@
             <alesis-section :secondary="true">
                 <alesis-space size="tiny"></alesis-space>
                 <alesis-space size="medium"></alesis-space>
-                <div class="表單">
+                <form class="表單" ref="borrowReport">
                     <div class="列">
                         <div class="標籤">1.就讀學校：</div>
                         <div class="輸入欄位">
-                            <select v-model="formSchool">
+                            <input type="hidden" name="identity" value="1"/>
+                            <select v-model="formSchool" name="school_name">
                                 <option selected disabled value="">-請選擇-</option>
                                 <option v-for="item, index in schools" :key="index" :value="item.title">{{ item.title }}</option>
                             </select>
@@ -257,7 +224,7 @@
                     <div class="列">
                         <div class="標籤">2.科系：</div>
                         <div class="輸入欄位">
-                            <select v-model="formSchoolDiscipline">
+                            <select v-model="formSchoolDiscipline" name="department">
                                 <option selected disabled value="">-請選擇-</option>
                                 <option :disabled="item.disabled" v-for="item, index in schoolDisciplines[formSchool]" :key="index" :value="item.value">{{ item.title }}</option>
                             </select>
@@ -279,55 +246,55 @@
                     <div class="列">
                         <div class="標籤">3.是否有學貸：</div>
                         <div class="輸入欄位">
-                            <select>
+                            <select name="is_student_loan">
                                 <option selected disabled>-請選擇-</option>
-                                <option>是</option>
-                                <option>否</option>
+                                <option value="True">是</option>
+                                <option value="False">否</option>
                             </select>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">4.是否有打工或兼職：</div>
                         <div class="輸入欄位">
-                            <select>
+                            <select name="is_part_time_job">
                                 <option selected disabled>-請選擇-</option>
-                                <option>是</option>
-                                <option>否</option>
+                                <option value="True">是</option>
+                                <option value="False">否</option>
                             </select>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">5.每月經濟收入：</div>
                         <div class="輸入欄位">
-                            <select>
+                            <select name="monthly_economy">
                                 <option selected disabled>-請選擇-</option>
-                                <option>低於 5,000 元</option>
-                                <option>5,000 元 - 10,000 元</option>
-                                <option>10,000 元 - 15,000 元</option>
-                                <option>15,000 元 - 20,000 元</option>
-                                <option>20,000 以上</option>
+                                <option value="<5000">低於 5,000 元</option>
+                                <option value="5000-10000">5,000 元 - 10,000 元</option>
+                                <option value="10000-15000">10,000 元 - 15,000 元</option>
+                                <option value="15000-20000">15,000 元 - 20,000 元</option>
+                                <option value=">20000">20,000 以上</option>
                             </select>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">暱稱：</div>
                         <div class="輸入欄位">
-                            <input type="text">
+                            <input type="text" name="name" required>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">E-mail：</div>
                         <div class="輸入欄位">
-                            <input type="text">
+                            <input type="email" name="email" required>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤"></div>
                         <div class="輸入欄位">
-                            <button @click="calculateForm">取得報告</button>
+                            <button @click="calculateForm" type="button" :disabled="!isFormValid">取得報告</button>
                         </div>
                     </div>
-                </div>
+                </form>
                 <div class="結果" v-if="formCalculated">
                     <div class="展示區塊">
                         <img src="/images/alesis-phone-and-cash.svg" class="圖片">
@@ -341,19 +308,19 @@
                         <div class="數值">
                             <div class="列">
                                 <div class="標籤">1. 可借款額度：</div>
-                                <div class="值">200,000</div>
+                                <div class="值">{{borrowReportResult.amount | amount}}</div>
                             </div>
                             <div class="列">
                                 <div class="標籤">2. 借款利率區間：</div>
-                                <div class="值">24</div>
+                                <div class="值">{{borrowReportResult.rate}}</div>
                             </div>
                             <div class="列">
                                 <div class="標籤">3. 手續費金額：</div>
-                                <div class="值">15</div>
+                                <div class="值">{{borrowReportResult.period_range}}</div>
                             </div>
                             <div class="列">
                                 <div class="標籤">4. 每期攤還金額約：</div>
-                                <div class="值">6000</div>
+                                <div class="值">{{borrowReportResult.repayment}}</div>
                             </div>
                         </div>
                         <div class="說明">►僅為初步評估，實際貸款條件依照您真實提供的資料而定。</div>
@@ -376,6 +343,42 @@
             </alesis-section>
         </div>
         <!-- / 案例分享 -->
+
+        <!-- 合作對象 -->
+        <div class="合作對象">
+            <alesis-header>
+                <div class="標題">合作夥伴</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <div class="container">
+                    <alesis-space size="medium"></alesis-space>
+                    <div class="群組">
+                        <div class="項目">
+                            <img src="/images/alesis-bordered-ntpu.svg" class="圖片">
+                            <div class="名稱">國立臺北大學</div>
+                        </div>
+                        <div class="項目">
+                            <img src="/images/alesis-bordered-ntu.svg" class="圖片">
+                            <div class="名稱">國立臺灣大學</div>
+                        </div>
+                        <div class="項目">
+                            <img src="/images/alesis-bordered-ntub.svg" class="圖片">
+                            <div class="名稱">國立臺北商業大學</div>
+                        </div>
+                        <div class="項目">
+                            <img src="/images/alesis-bordered-shanghai.svg" class="圖片">
+                            <div class="名稱">上海商業儲蓄銀行</div>
+                        </div>
+                        <div class="項目">
+                            <img src="/images/alesis-bordered-skbank.svg" class="圖片">
+                            <div class="名稱">新光銀行</div>
+                        </div>
+                    </div>
+                </div>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
+        </div>
+        <!-- / 合作對象 -->
 
         <!-- 應用程式推薦 -->
         <alesis-app-recommendation action="我想借款"></alesis-app-recommendation>
@@ -435,6 +438,11 @@ export default {
         AlesisVerticalRoadmap,
         AlesisSpace,
     },
+    filters: {
+        amount: (value) => {
+            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+        }
+    },
     data: () => ({
         formSchool          : "",
         formSchoolDiscipline: "",
@@ -445,6 +453,8 @@ export default {
         schoolDisciplines   : {},
         originalSchools     : CollegeSchools,
         collegePreviews     : StudentDone.data,
+        borrowReportResult  : {},
+        isFormValid         : true,
     }),
     created() {
         $("title").text(`學生貸 - inFlux普匯金融科技`);
@@ -497,7 +507,29 @@ export default {
 
         // calculateForm 會計算表單。
         calculateForm() {
-            this.formCalculated = true
+            this.isFormValid = false
+            let data = new FormData(this.$refs.borrowReport)
+
+            axios({
+                url: `${location.origin}/getBorrowReport`,
+                method: 'post',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                }
+            }).then((res) => {
+                this.borrowReportResult.amount = res.data.amount
+                this.borrowReportResult.rate = res.data.rate
+                this.borrowReportResult.period_range = res.data.period_range
+                this.borrowReportResult.repayment = res.data.repayment
+                this.formCalculated = true
+                this.isFormValid = true
+            })
+            .catch((error) => {
+                console.error('getBorrowReport 發生錯誤，請稍後再試');
+            });
+
         },
     },
 };
@@ -528,6 +560,11 @@ export default {
     @include rwd {
         width: 100%;
     }
+}
+
+button:disabled,
+button[disabled] {
+    cursor: no-drop;
 }
 
 .swiper-container.human-container {
@@ -921,8 +958,7 @@ export default {
 
 .合作對象 {
     position : relative;
-    max-width: 1280px;
-    margin   : 8rem auto -8rem;
+    margin   : 4rem auto -4rem;
 
     --alesis-xsection-offset-top: 8rem;
 }
