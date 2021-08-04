@@ -149,7 +149,7 @@
                 <div class="包裹容器">
                     <div class="專案">
                         <div class="項目">
-                            <alesis-project v-bind="collegePreviews[0]" :data="collegePreviews[0]"></alesis-project>
+                            <alesis-project v-bind="collegePreviews[0]"></alesis-project>
                         </div>
                         <div class="項目">
                             <alesis-project v-bind="collegePreviews[1]"></alesis-project>

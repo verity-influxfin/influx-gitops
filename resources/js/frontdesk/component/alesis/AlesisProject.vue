@@ -2,7 +2,7 @@
     <div class="單張卡片">
         <div class="標題">
             <div class="階級">
-                <img class="圖片" src="/images/sshot-1591.png">
+                <img class="圖片" style="max-width:70px;" v-bind:src="'/images/credit_' + credit_level + '.png'">
             </div>
             <div class="個人資料">
                 <div class="象徵">{{ user.sex === 'M' ? '男' : '女'}} / {{ user.age }}歲</div>

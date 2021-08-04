@@ -111,23 +111,10 @@
                             <div class="swiper-slide">
                                 <div class="群組">
                                     <div class="項目">
-                                        <alesis-project></alesis-project>
+                                        <alesis-project v-bind="goodCase[0]"></alesis-project>
                                     </div>
                                     <div class="項目">
-                                        <alesis-project></alesis-project>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- / 群組 -->
-
-                            <!-- 群組 -->
-                            <div class="swiper-slide">
-                                <div class="群組">
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
-                                    </div>
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
+                                        <alesis-project v-bind="goodCase[1]"></alesis-project>
                                     </div>
                                 </div>
                             </div>
@@ -137,10 +124,23 @@
                             <div class="swiper-slide">
                                 <div class="群組">
                                     <div class="項目">
-                                        <alesis-project></alesis-project>
+                                        <alesis-project v-bind="goodCase[2]"></alesis-project>
                                     </div>
                                     <div class="項目">
-                                        <alesis-project></alesis-project>
+                                        <alesis-project v-bind="goodCase[3]"></alesis-project>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- / 群組 -->
+
+                            <!-- 群組 -->
+                            <div class="swiper-slide">
+                                <div class="群組">
+                                    <div class="項目">
+                                        <alesis-project v-bind="goodCase[4]"></alesis-project>
+                                    </div>
+                                    <div class="項目">
+                                        <alesis-project v-bind="goodCase[5]"></alesis-project>
                                     </div>
                                 </div>
                             </div>
@@ -267,6 +267,12 @@ export default {
         AlesisVerticalRoadmap,
         AlesisSpace,
     },
+    data: () => ({
+        goodCase : {},
+    }),
+    created() {
+        this.getGoodCase();
+    },
     mounted() {
         SwiperCore.use([Navigation]);
         new Swiper('.swiper-container.幻燈片_優質項目', {
@@ -288,6 +294,24 @@ export default {
                 prevEl: '.swiper-button-prev',
             },
         });
+    },
+    methods: {
+        // 優質項目專區
+        getGoodCase() {
+            let studenCase = new FormData();
+            studenCase.append('status',10);
+            studenCase.append('product_id',0);
+
+            axios.post(
+                `${location.origin}/getCase`,
+                studenCase
+            ).then((res) => {
+                this.goodCase = res.data
+            })
+            .catch((error) => {
+                console.error('getCase 發生錯誤，請稍後再試');
+            });
+        },
     }
 };
 </script>
