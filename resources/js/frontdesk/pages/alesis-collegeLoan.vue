@@ -504,7 +504,7 @@ export default {
                 `${location.origin}/getCase`,
                 studenCase
             ).then((res) => {
-                this.collegePreviews = res.data.data
+                this.collegePreviews = res.data
             })
             .catch((error) => {
                 console.error('getCase 發生錯誤，請稍後再試');
