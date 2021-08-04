@@ -149,7 +149,7 @@
                 <div class="包裹容器">
                     <div class="專案">
                         <div class="項目">
-                            <alesis-project v-bind="collegePreviews[0]"></alesis-project>
+                            <alesis-project v-bind="collegePreviews[0]" :data="collegePreviews[0]"></alesis-project>
                         </div>
                         <div class="項目">
                             <alesis-project v-bind="collegePreviews[1]"></alesis-project>
@@ -452,12 +452,13 @@ export default {
         schools             : [],
         schoolDisciplines   : {},
         originalSchools     : CollegeSchools,
-        collegePreviews     : StudentDone.data,
+        collegePreviews     : {},
         borrowReportResult  : {},
         isFormValid         : true,
     }),
     created() {
         $("title").text(`學生貸 - inFlux普匯金融科技`);
+        this.getStudentCase();
     },
     mounted() {
         this.initSchools();
@@ -492,6 +493,22 @@ export default {
                     })
                 })
             })
+        },
+        // 學生案件
+        getStudentCase() {
+            let studenCase = new FormData();
+            studenCase.append('status',10);
+            studenCase.append('product_id',1);
+
+            axios.post(
+                `${location.origin}/getCase`,
+                studenCase
+            ).then((res) => {
+                this.collegePreviews = res.data.data
+            })
+            .catch((error) => {
+                console.error('getCase 發生錯誤，請稍後再試');
+            });
         },
 
         // initSteps 會初始化步驟教學幻燈片。

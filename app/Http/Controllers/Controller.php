@@ -70,12 +70,12 @@ class Controller extends BaseController
             try {
                 DB::table('send_question')->insert($data);
             } catch (Exception $e) {
-                return response()->json(['response' => 'error', 'message'=>$e], 501);
+                return response()->json([$e], 501);
             }
 
-            return response()->json(['response' => 'success', 'message' => ''], 200);
+            return response()->json(['success'], 200);
         }else{
-            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+            return response()->json(['success'], 501);
         }
     }
 
@@ -87,10 +87,10 @@ class Controller extends BaseController
         if(!empty($case_response)){
             $case_data = json_decode($case_response,true);
             if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
-                return response()->json(['response' => 'success','data' => $case_data['data']['list']], 200);
+                return response()->json($case_data['data']['list'], 200);
             }
         }else{
-            return response()->json(['response' => 'error','message' => 'not response'], 501);
+            return response()->json(['not response'], 501);
         }
     }
 
@@ -118,10 +118,10 @@ class Controller extends BaseController
                                     return $input['sort'] == 'desc' ?($a[$input['orderby']] - $b[$input['orderby']] < 0) :($a[$input['orderby']] - $b[$input['orderby']] > 0);
                                 });
                             }
-                            return response()->json(['response' => 'success','data' => $case_response], 200);
+                            return response()->json($case_response, 200);
                         }
                     }else{
-                        return response()->json(['response' => 'error','message' => 'not response'], 501);
+                        return response()->json(['not response'], 501);
                     }
                 }else{
                     $params = http_build_query($input);
@@ -130,16 +130,16 @@ class Controller extends BaseController
                 if(!empty($case_response)){
                     $case_data = json_decode($case_response,true);
                     if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
-                        return response()->json(['response' => 'success','data' => $case_data['data']['list']], 200);
+                        return response()->json($case_data['data']['list'], 200);
                     }
                 }else{
-                    return response()->json(['response' => 'error','message' => 'not response'], 501);
+                    return response()->json(['not response'], 501);
                 }
             }else{
-                return response()->json(['response' => 'error','message' => 'parameter not correcct'], 501);
+                return response()->json(['parameter not correcct'], 501);
             }
         }else{
-            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+            return response()->json(['parameter not found'], 501);
         }
     }
 
@@ -177,12 +177,12 @@ class Controller extends BaseController
                         $data = array_reduce($data, 'array_merge', array());
                     }
                 }
-                return response()->json(['response' => 'success','data' => $data], 200);
+                return response()->json($data, 200);
             }else{
-                return response()->json(['response' => 'error','message' => 'not response'], 501);
+                return response()->json(['not response'], 501);
             }
         }else{
-            return response()->json(['response' => 'error','message' => 'parameter not found'], 501);
+            return response()->json(['parameter not found'], 501);
         }
     }
 
@@ -360,7 +360,7 @@ class Controller extends BaseController
 
         if(isset($input['identity']) && !empty($input ['identity'])){
             if(! isset($input['name']) || ! isset($input['email']) || empty($input['name']) || empty($input['email'])){
-                return response()->json(['result'=>'error', 'message'=>'parameter must not null'], 200);
+                return response()->json(['parameter must not null'], 200);
             }
             // 學生
             if($input ['identity'] == 1){

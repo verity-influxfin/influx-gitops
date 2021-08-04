@@ -13,3 +13,5 @@ yarn-error.log
 composer.lock
 
 /public/upload
+public/js/web.js
+public/mix-manifest.json
