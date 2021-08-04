@@ -193,7 +193,7 @@ class Controller extends BaseController
         $result = [
             'amount' => 0,
             'rate' => 0,
-            'period_range' => 0,
+            'platform_fee' => 0,
             'repayment' => 0
         ];
         // 學生
@@ -201,42 +201,42 @@ class Controller extends BaseController
             0 => [
                 'amount' => 0,
                 'rate' => 0,
-                'period_range' => 0,
+                'platform_fee' => 0,
             ],
             1 => [
                 'amount' => 0,
                 'rate' => '9~13',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             2 => [
                 'amount' => 0,
                 'rate' => '8~12',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             3 => [
                 'amount' => 0,
                 'rate' => '7~11',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             4 => [
                 'amount' => 0,
                 'rate' => '6.5~8',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             5 => [
                 'amount' => 0,
                 'rate' => '5.5~7',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             6 => [
                 'amount' => 0,
                 'rate' => '5~6.5',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             7 => [
                 'amount' => 0,
                 'rate' => '4~5.5',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ]
         ];
         // 學生 0:下限分數, 1:上限分數, 2:額度
@@ -328,32 +328,32 @@ class Controller extends BaseController
             0 => [
                 'amount' => 0,
                 'rate' => 0,
-                'period_range' => 0,
+                'platform_fee' => 500,
             ],
             1 => [
                 'amount' => 80000,
                 'rate' => '14~16',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             2 => [
                 'amount' => 120000,
                 'rate' => '10~13',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             3 => [
                 'amount' => 160000,
                 'rate' => '8~10',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             4 => [
                 'amount' => 200000,
                 'rate' => '7~8',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ],
             5 => [
                 'amount' => 300000,
                 'rate' => '6~7',
-                'period_range' => 24,
+                'platform_fee' => 500,
             ]
         ];
         $total_point = 0;
@@ -392,14 +392,22 @@ class Controller extends BaseController
                         }
                         // 每月經濟收入
                         if(isset($input['monthly_economy'])){
-                            if($input['monthly_economy']>=20000){
-                                $total_point += 200;
-                            }elseif ($input['monthly_economy']<20000 && $input['monthly_economy']>=15000) {
-                                $total_point += 150;
-                            }elseif ($input['monthly_economy']<15000 && $input['monthly_economy']>=10000) {
-                                $total_point += 100;
-                            }elseif ($input['monthly_economy']<10000 && $input['monthly_economy']>=5000) {
-                                $total_point += 50;
+                            switch ($input['monthly_economy']) {
+                                case '>20000':
+                                    $total_point += 200;
+                                    break;
+                                case '15000-20000':
+                                    $total_point += 150;
+                                    break;
+                                case '10000-15000':
+                                    $total_point += 100;
+                                    break;
+                                case '5000-10000':
+                                    $total_point += 50;
+                                    break;
+                                default:
+                                    $total_point += 0;
+                                    break;
                             }
                         }
                     }
@@ -504,21 +512,30 @@ class Controller extends BaseController
 
         }
 
-        if($result['amount'] != 0 && $result['period_range'] != 0 && $result['rate'] != 0){
+        // 攤還金額
+        if($result['amount'] != 0 && $result['rate'] != 0){
             $rate_array = explode('~',$result['rate']);
-            // print_r($rate_array);exit;
             if(isset($rate_array[0]) && isset($rate_array[1])){
                 $Calculate = new Calculate();
-                $repayment_1 = $Calculate->PMT_calculate($rate_array[0], $result['period_range'], $result['amount']);
-                $repayment_2 = $Calculate->PMT_calculate($rate_array[1], $result['period_range'], $result['amount']);
+                $repayment_1 = $Calculate->PMT_calculate($rate_array[0], 24, $result['amount']);
+                $repayment_2 = $Calculate->PMT_calculate($rate_array[1], 24, $result['amount']);
                 $result['repayment'] = number_format($repayment_1, 0).'~'.number_format($repayment_2, 0);
             }
         }
 
+        // 平台手續費
+        if($result['platform_fee'] != 0){
+            $platform_fee = intval(round($result['amount'] / 100 * 3, 0));
+            if($platform_fee > $result['platform_fee']){
+                $result['platform_fee'] = $platform_fee;
+            }
+        }
+        $result['rate'] .= '%';
+
         try {
             $input['amount'] = $result['amount'];
             $input['rate'] = $result['rate'];
-            $input['period_range'] = $result['period_range'];
+            $input['platform_fee'] = $result['platform_fee'];
             $input['created_at'] = date('Y-m-d H:i:s', strtotime('+8 hours'));
             DB::table('borrow_report')->insert($input);
         } catch (Exception $e) {
@@ -602,49 +619,7 @@ class Controller extends BaseController
         }
 
         $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type','amount','rate','period_range','spend_day'])->where($filter)->get();
-        if(empty($experiences)){
-            $experiences = [
-                0 => [
-                    'ID' => 1,
-                    'feedback' => '普匯跟其他保本型的商品比起來，投報率真的相對較高，也比較不需要花太多時間去關注，就可以獲得被動收入。',
-                    'imageSrc' => null,
-                    'video_link' => 'https://www.youtube.com/embed/oHg5SJYRHA0',
-                    'post_title' => '台北投資顧問 葉先生',
-                    'rank' => 'officeWorker',
-                    'type' => '【投資人專訪】',
-                    'amount' => 0,
-                    'rate' => 0,
-                    'period_range' => 0,
-                    'spend_day' => 0
-                ],
-                1 => [
-                    'ID' => 2,
-                    'feedback' => '在普匯投資除了可以有穩定的收益外，還可以幫助到有夢的大學生，所以覺得這個平台還滿特別的',
-                    'imageSrc' => '/upload/2019/11/test.jpg',
-                    'video_link' => null,
-                    'post_title' => '台北設計業 陳先生',
-                    'rank' => 'officeWorker',
-                    'type' => '【借款人專訪】',
-                    'amount' => 123,
-                    'rate' => 321,
-                    'period_range' => 12,
-                    'spend_day' => 3
-                ],
-                2 => [
-                    'ID' => 3,
-                    'feedback' => '有比較過其他平台，其他的債權金額都比較大，普匯可以小額投資，還可以進行債權轉讓，讓我可以即時的拿回投資的錢',
-                    'imageSrc' => null,
-                    'video_link' => 'https://www.youtube.com/embed/oHg5SJYRHA0',
-                    'post_title' => '銀行員 林小姐',
-                    'rank' => 'student',
-                    'type' => '【借款人專訪】',
-                    'amount' => 123,
-                    'rate' => 321,
-                    'period_range' => 12,
-                    'spend_day' => 3
-                ],
-            ];
-        }
+
         return response()->json($experiences, 200);
     }
 
