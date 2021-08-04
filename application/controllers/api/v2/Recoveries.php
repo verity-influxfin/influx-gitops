@@ -356,7 +356,8 @@ class Recoveries extends REST_Controller
      *                    "principal": 5000,
      *                    "interest": 83,
      *                    "delay_interest": 0
-     *                }
+     *                },
+     *                "legal_collection": 1
      *            }
      *            ]
      *        }
@@ -483,6 +484,7 @@ class Recoveries extends REST_Controller
                     'target' => $target,
                     'next_repayment' => isset($instalment_data[$value->id]) ? $instalment_data[$value->id]['next_repayment'] : [],
                     'accounts_receivable' => isset($instalment_data[$value->id]) ? $instalment_data[$value->id]['accounts_receivable'] : [],
+                    'legal_collection' => $this->target_lib->isLegalCollection($value->legal_collection_at),
                 );
 
                 $value->aiBidding == 1 ? $temp['aiBidding'] = true : '';
@@ -1052,10 +1054,8 @@ class Recoveries extends REST_Controller
                     ];
                 }
             }
-
             $investment_contract = $this->contract_lib->get_contract($investment->contract_id);
-			$checkDate = new DateTime("1911-01-01");
-			$legal_colletcion_date = new DateTime($investment->legal_collection_at);
+
             $data = [
                 'id' => intval($investment->id),
                 'loan_amount' => intval($investment->loan_amount),
@@ -1066,7 +1066,7 @@ class Recoveries extends REST_Controller
                 'transfer' => $transfer,
                 'target' => $target,
                 'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info, $investment),
-				'legal_collection' => $legal_colletcion_date > $checkDate ? 1 : 0,
+				'legal_collection' => $this->target_lib->isLegalCollection($investment->legal_collection_at),
             ];
             $investment->aiBidding == 1 ? $data['aiBidding'] = true : '';
 

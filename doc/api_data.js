@@ -18607,6 +18607,13 @@ define({
                             "optional": false,
                             "field": "amortization_schedule.list.repayment",
                             "description": "<p>已還款金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "legal_collection",
+                            "description": "<p>法催進行中</p>"
                         }
                     ]
                 },
@@ -18672,7 +18679,8 @@ define({
                             "          \"ar_fees\": 7\n" +
                             "        }\n" +
                             "      }\n" +
-                            "    }\n" +
+                            "    },\n" +
+                            "    \"legal_collection\": 0,\n" +
                             "  }\n" +
                             "}",
                         "type": "Object"
@@ -19044,7 +19052,14 @@ define({
                             "optional": false,
                             "field": "amortization_schedule.schedule.repayment",
                             "description": "<p>已還款金額</p>"
-                        }
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "legal_collection",
+                            "description": "<p>法催進行中</p>"
+                        },
                     ]
                 },
                 "examples": [
@@ -19365,7 +19380,14 @@ define({
                             "optional": false,
                             "field": "accounts_receivable.delay_interest",
                             "description": "<p>應收延滯息</p>"
-                        }
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "legal_collection",
+                            "description": "<p>法催進行中</p>"
+                        },
                     ]
                 },
                 "examples": [
@@ -19399,6 +19421,7 @@ define({
                             "        },\n" +
                             "        \"next_repayment\": [],\n" +
                             "        \"accounts_receivable\": []\n" +
+                            "        \"legal_collection\": 1,\n" +
                             "      }\n" +
                             "    ]\n" +
                             "  }\n" +
@@ -22565,7 +22588,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催中</p>"
+                            "description": "<p>法催進行中</p>"
                         },
 
                     ]
