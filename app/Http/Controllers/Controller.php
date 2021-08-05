@@ -86,7 +86,7 @@ class Controller extends BaseController
         $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/transfer_list?' . $params . '"');
         if(!empty($case_response)){
             $case_data = json_decode($case_response,true);
-            if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
+            if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS' && !empty($case_data['data']['list'])){
                 return response()->json($case_data['data']['list'], 200);
             }
         }else{

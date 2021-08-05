@@ -108,12 +108,12 @@
                     <div class="swiper-container 幻燈片 幻燈片_優質項目">
                         <div class="swiper-wrapper">
                             <!-- 群組 -->
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" v-if="goodCase[0] || goodCase[1]">
                                 <div class="群組">
-                                    <div class="項目">
+                                    <div class="項目" v-if="goodCase[0]">
                                         <alesis-project v-bind="goodCase[0]"></alesis-project>
                                     </div>
-                                    <div class="項目">
+                                    <div class="項目" v-if="goodCase[1]">
                                         <alesis-project v-bind="goodCase[1]"></alesis-project>
                                     </div>
                                 </div>
@@ -121,12 +121,12 @@
                             <!-- / 群組 -->
 
                             <!-- 群組 -->
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" v-if="goodCase[2] || goodCase[3]">
                                 <div class="群組">
-                                    <div class="項目">
+                                    <div class="項目" v-if="goodCase[2]">
                                         <alesis-project v-bind="goodCase[2]"></alesis-project>
                                     </div>
-                                    <div class="項目">
+                                    <div class="項目" v-if="goodCase[3]">
                                         <alesis-project v-bind="goodCase[3]"></alesis-project>
                                     </div>
                                 </div>
@@ -134,12 +134,12 @@
                             <!-- / 群組 -->
 
                             <!-- 群組 -->
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" v-if="goodCase[4] || goodCase[5]">
                                 <div class="群組">
-                                    <div class="項目">
+                                    <div class="項目" v-if="goodCase[4]">
                                         <alesis-project v-bind="goodCase[4]"></alesis-project>
                                     </div>
-                                    <div class="項目">
+                                    <div class="項目" v-if="goodCase[5]">
                                         <alesis-project v-bind="goodCase[5]"></alesis-project>
                                     </div>
                                 </div>
@@ -162,39 +162,39 @@
                     <div class="swiper-container 幻燈片 幻燈片_快速變現">
                         <div class="swiper-wrapper">
                             <!-- 群組 -->
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" v-if="transferCase[0] || transferCase[1]">
                                 <div class="群組">
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
+                                    <div class="項目" v-if="transferCase[0]">
+                                        <transferCase v-bind="transferCase[0]"></transferCase>
                                     </div>
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
+                                    <div class="項目" v-if="transferCase[1]">
+                                        <transferCase v-bind="transferCase[1]"></transferCase>
                                     </div>
                                 </div>
                             </div>
                             <!-- / 群組 -->
 
                             <!-- 群組 -->
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" v-if="transferCase[2] || transferCase[3]">
                                 <div class="群組">
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
+                                    <div class="項目" v-if="transferCase[2]">
+                                        <transferCase v-bind="transferCase[2]"></transferCase>
                                     </div>
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
+                                    <div class="項目" v-if="transferCase[3]">
+                                        <transferCase v-bind="transferCase[3]"></transferCase>
                                     </div>
                                 </div>
                             </div>
                             <!-- / 群組 -->
 
                             <!-- 群組 -->
-                            <div class="swiper-slide">
+                            <div class="swiper-slide" v-if="transferCase[4] || transferCase[5]">
                                 <div class="群組">
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
+                                    <div class="項目" v-if="transferCase[4]">
+                                        <transferCase v-bind="transferCase[4]"></transferCase>
                                     </div>
-                                    <div class="項目">
-                                        <alesis-project></alesis-project>
+                                    <div class="項目" v-if="transferCase[5]">
+                                        <transferCase v-bind="transferCase[5]"></transferCase>
                                     </div>
                                 </div>
                             </div>
@@ -238,7 +238,7 @@ import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 import AlesisSpace             from "../component/alesis/AlesisSpace";
-
+import TransferCase             from "../component/TransferCase";
 
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
@@ -266,12 +266,15 @@ export default {
         AlesisTaiwanMap,
         AlesisVerticalRoadmap,
         AlesisSpace,
+        TransferCase
     },
     data: () => ({
         goodCase : {},
+        transferCase : {},
     }),
     created() {
         this.getGoodCase();
+        this.getTransferCase();
     },
     mounted() {
         SwiperCore.use([Navigation]);
@@ -299,17 +302,30 @@ export default {
         // 優質項目專區
         getGoodCase() {
             let studenCase = new FormData();
-            studenCase.append('status',10);
+            studenCase.append('status',3);
             studenCase.append('product_id',0);
 
+            self = this;
             axios.post(
                 `${location.origin}/getCase`,
                 studenCase
             ).then((res) => {
-                this.goodCase = res.data
+                self.goodCase = res.data
             })
             .catch((error) => {
                 console.error('getCase 發生錯誤，請稍後再試');
+            });
+        },
+        // 快速變現
+        getTransferCase() {
+            self = this;
+            axios.post(
+                `${location.origin}/getTransferCase`
+            ).then((res) => {
+                self.transferCase = res.data
+            })
+            .catch((error) => {
+                console.error('getTransferCase 發生錯誤，請稍後再試');
             });
         },
     }

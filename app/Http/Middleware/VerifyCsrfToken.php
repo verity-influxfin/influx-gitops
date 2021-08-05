@@ -14,6 +14,8 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'uploadKnowledgeImg',
         'uploadVideoImg',
-        'uploadNewsImg'
+        'uploadNewsImg',
+        'getTransferCase',
+        'getCase'
     ];
 }
