@@ -174,6 +174,8 @@ class PostLoan extends MY_Admin_Controller {
 		$this->load->model('log/log_legaldoc_export_model');
 		$this->load->model('log/log_legaldoc_status_model');
 		$this->load->model('loan/transfer_model');
+        $this->load->model('loan/investment_model');
+        $this->load->library('Notification_lib');
 		$this->load->library('Subloan_lib');
 
 		if (empty($post)) {
@@ -325,13 +327,16 @@ class PostLoan extends MY_Admin_Controller {
 							'investment_id' => $investmentList,
 							'status'     => [0,1]
 						]);
-						foreach($transfer_list as $key => $value){
+						foreach($transfer_list as $value){
 							if($value->combination!=0){
 								$transfer = $this->transfer_model->get_many_by(['combination' => $value->combination]);
 								$this->transfer_lib->cancel_combination_transfer($transfer);
 							}else{
 								$this->transfer_lib->cancel_transfer($value);
 							}
+                            $transfer_investment = $this->investment_model->get($value->investment_id);
+                            $this->notification_lib->legal_collection_cancel_transfer($transfer_investment->user_id,$target->target_no,$target->user_id);
+
 						}
 					}
 				}
