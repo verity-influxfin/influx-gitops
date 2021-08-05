@@ -1288,6 +1288,7 @@ export default {
 
     @include rwd {
         display: block;
+        margin-left: -20%;
     }
 }
 
