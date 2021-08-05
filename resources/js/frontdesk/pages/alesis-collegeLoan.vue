@@ -958,6 +958,10 @@ button[disabled] {
     display: flex;
 }
 
+.貸安吶 .結果 .內容 .數值 .列 .標籤 {
+    color: #036EB7;
+}
+
 .貸安吶 .結果 .內容 .數值 .列 .值 {
     color      : #5d5555;
     font-weight: normal;
