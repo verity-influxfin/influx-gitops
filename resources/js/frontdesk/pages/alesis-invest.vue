@@ -62,7 +62,7 @@
                 <alesis-space size="medium"></alesis-space>
                 <div class="網格系統">
                     <div class="甲">
-                        <img src="/images/invest_chart_a.svg">
+                        <img src="/images/invest_chart_a.png">
                     </div>
                     <div class="乙">
                         <img src="/images/invest_chart_b.png">
