@@ -374,7 +374,6 @@ class Website extends REST_Controller {
         // }
 
         if(!empty($transfer)){
-            $user = [];
             foreach($transfer as $key => $value){
                 $target 	= $this->target_model->get($value->target_id);
                 $product = $product_list[$target->product_id];
@@ -384,14 +383,14 @@ class Website extends REST_Controller {
                     $product = $this->trans_sub_product($product,$sub_product_id);
                     $product_name = $product['name'];
                 }
-                // $user_info 	= $this->user_model->get($target->user_id);
-                // $user		= [];
-                // if($user_info){
-                //     $user = array(
-                //         'sex' 	=> $user_info->sex,
-                //         'age'	=> get_age($user_info->birthday),
-                //     );
-                // }
+                $user_info 	= $this->user_model->get($target->user_id);
+                $user		= [];
+                if($user_info){
+                    $user = array(
+                        'sex' 	=> $user_info->sex,
+                        'age'	=> get_age($user_info->birthday),
+                    );
+                }
 
                 //動態回寫accounts_receivable
                 if($value->accounts_receivable == 0){
