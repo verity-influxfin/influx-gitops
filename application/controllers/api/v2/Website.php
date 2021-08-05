@@ -411,26 +411,26 @@ class Website extends REST_Controller {
                     $reason = $json_reason->reason.' - '.$json_reason->reason_description;
                 }
 
-                // $target_info = [
-                //     'id' 				=> intval($target->id),
-                //     'target_no' 		=> $target->target_no,
-                //     'product_name' => $product_name,
-                //     'product_id' 		=> intval($target->product_id),
-                //     'credit_level' 		=> intval($target->credit_level),
-                //     'user_id' 			=> intval($target->user_id),
-                //     'loan_amount' 		=> intval($target->loan_amount),
-                //     'interest_rate' 	=> floatval($target->interest_rate),
-                //     'instalment' 		=> intval($target->instalment),
-                //     'repayment' 		=> intval($target->repayment),
-                //     'delay' 			=> intval($target->delay),
-                //     'delay_days' 		=> intval($target->delay_days),
-                //     'reason' 			=> $reason,
-                //     'remark' 			=> $target->remark,
-                //     'status' 			=> intval($target->status),
-                //     'sub_status' 		=> intval($target->sub_status),
-                //     'created_at' 		=> intval($target->created_at),
-                //     'user' 				=> $user,
-                // ];
+                $target_info = [
+                    'id' 				=> intval($target->id),
+                    'target_no' 		=> $target->target_no,
+                    'product_name' => $product_name,
+                    'product_id' 		=> intval($target->product_id),
+                    'credit_level' 		=> intval($target->credit_level),
+                    'user_id' 			=> intval($target->user_id),
+                    'loan_amount' 		=> intval($target->loan_amount),
+                    'interest_rate' 	=> floatval($target->interest_rate),
+                    'instalment' 		=> intval($target->instalment),
+                    'repayment' 		=> intval($target->repayment),
+                    'delay' 			=> intval($target->delay),
+                    'delay_days' 		=> intval($target->delay_days),
+                    'reason' 			=> $reason,
+                    'remark' 			=> $target->remark,
+                    'status' 			=> intval($target->status),
+                    'sub_status' 		=> intval($target->sub_status),
+                    'created_at' 		=> intval($target->created_at),
+                    'user' 				=> $user,
+                ];
 
                 $list[] 	= [
                     'id'				=> intval($value->id),
@@ -444,7 +444,7 @@ class Website extends REST_Controller {
                     'combination'		=> intval($value->combination),
                     'expire_time'		=> intval($value->expire_time),
                     'accounts_receivable'	=> intval($value->accounts_receivable),
-                    'target'			=> [],
+                    'target'			=> $target_info,
                 ];
 
                 if(in_array($value->investment_id,$my_investment)){
