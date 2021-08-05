@@ -146,8 +146,7 @@
                             <div class="項目">
                                 <alesis-moon class="圖示" header="安全" :level=3></alesis-moon>
                                 <div class="內容">
-                                    資訊傳輸由HTTPS方式利用SSL/TLS<br>
-                                    加密，儲存於亞馬遜AWS雲端伺服器
+                                    資訊傳輸由HTTPS方式利用SSL/TLS加密，儲存於亞馬遜AWS雲端伺服器
                                 </div>
                             </div>
                             <div class="項目">
