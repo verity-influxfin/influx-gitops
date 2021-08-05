@@ -50,7 +50,7 @@
         <!-- 步驟說明 -->
         <div class="步驟說明">
             <alesis-header>
-                <div class="標題">申貸媒合簡便四步驟</div>
+                <div class="標題">申貸四步驟</div>
             </alesis-header>
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
@@ -784,6 +784,14 @@ button[disabled] {
         padding-left: 1rem;
     }
 }
+.步驟說明 .swiper-button-next,
+.步驟說明 .swiper-button-prev {
+
+    @include rwd {
+        margin-top: -7rem;
+    }
+}
+
 
 /**
  * 貸安吶
