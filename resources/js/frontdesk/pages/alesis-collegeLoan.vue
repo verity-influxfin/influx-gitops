@@ -618,7 +618,14 @@ button[disabled] {
 /**
  * 計數器
  */
-
+@media only screen and (max-width: 767px) {
+    .計數器 {
+        display: none;
+    }
+    .適用對象 {
+        margin-top: 100px;
+    }
+}
 .計數器 {
     margin   : 4rem auto 8rem;
     max-width: 1280px;
