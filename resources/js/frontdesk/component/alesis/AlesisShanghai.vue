@@ -47,7 +47,7 @@ export default {
     border-radius: 17px;
     border       : 1px solid #2664a5;
     padding      : 1.5rem 1.25rem;
-    max-width    : 310px;
+    max-width    : 380px;
     text-align   : justify;
     font-size    : 1.1rem;
 }
@@ -104,6 +104,13 @@ export default {
     display: list-item;
     line-height: 1.5em;
     padding-bottom: 1em;
+}
+
+@media only screen and (max-width: 767px) {
+
+    .上海容器 .特色清單 .項目 {
+        font-size: 15px;
+    }
 }
 
 .上海容器 .動作群組 {
