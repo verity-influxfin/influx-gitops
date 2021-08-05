@@ -802,7 +802,7 @@ export default {
     @include rwd {
         font-size   : 1rem;
         padding     : .5rem;
-        padding-left: 37%;
+        text-align  : left;
     }
 }
 
