@@ -374,7 +374,7 @@ class Website extends REST_Controller {
         // }
 
         if(!empty($transfer)){
-
+            $user = [];
             foreach($transfer as $key => $value){
                 $target 	= $this->target_model->get($value->target_id);
                 $product = $product_list[$target->product_id];
