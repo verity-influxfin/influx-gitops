@@ -243,7 +243,8 @@ export default {
     margin               : 0 auto;
     display              : flex;
     grid-template-columns: repeat(2, 1fr);
-    gap                  : 10%;
+    justify-content      : center;
+    gap                  : 2rem;
     margin-top           : 2rem;
     flex-wrap: wrap;
 
