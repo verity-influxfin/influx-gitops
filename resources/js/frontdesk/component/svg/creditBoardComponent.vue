@@ -3077,7 +3077,7 @@
 
         <g>
           <text transform="matrix(1 0 0 1 528.9983 445.407)" class="st5 st13 st14">
-            5%
+            {{ minRate }}%
           </text>
           <text transform="matrix(1 0 0 1 572.5278 267.037)" class="st5 st6 st14">
             年化
@@ -3086,7 +3086,7 @@
             {{ rateCount }}%
           </text>
           <text transform="matrix(1 0 0 1 520.5284 74.5681)" class="st5 st13 st14">
-            20%
+            {{ maxRate }}%
           </text>
           <g>
             <g>
@@ -3465,13 +3465,15 @@
 
 <script>
 export default {
-  props: ["amount", "color"],
+  props: ["amount", "color", "minRate", "maxRate"],
   data: () => ({
     bigR: window.innerWidth > 767 ? 21.4 : 30,
     smallR: window.innerWidth > 767 ? 12.9 : 25,
     key: 0,
     amountCount: 5000,
     rateCount: 5,
+    minRate: 5,
+    maxRate: 16,
     pmt: 0,
     tweenedPmt: 0,
     moveEl: "",
@@ -3615,9 +3617,8 @@ export default {
 
           if ((ang >= 0 && ang <= 75) || (ang >= -75 && ang <= 0)) {
             let deg = (ang - 75) * -1;
-            let rateCount = (15 * (deg - 0)) / 149 + 5;
-            this.rateCount = rateCount - (rateCount % 0.5);
-
+            let rateCount = ((this.maxRate) * (deg - 0) / 149) + this.minRate;
+            this.rateCount = (rateCount - (rateCount % 0.5));
             this.rotate(ang);
           }
         }
