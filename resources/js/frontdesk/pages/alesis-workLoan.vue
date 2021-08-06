@@ -6,7 +6,7 @@
         　　　　　簡單明瞭、隱私無照會
         <br><br>
         適用對象：已畢業且有穩定收入的上班族<br>
-        　　　　　皆可申請！" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg"></alesis-loan-header>
+        　　　　　皆可申請！" image="/images/business_man_watching_smart_phone.jpg"></alesis-loan-header>
         <!-- 標頭 -->
 
         <!-- 快速審核 -->
