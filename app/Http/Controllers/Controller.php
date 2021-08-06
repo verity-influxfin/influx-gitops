@@ -202,41 +202,49 @@ class Controller extends BaseController
                 'amount' => 0,
                 'rate' => 0,
                 'platform_fee' => 0,
+                'repayment' => 0
             ],
             1 => [
                 'amount' => 0,
                 'rate' => '9~13',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             2 => [
                 'amount' => 0,
                 'rate' => '8~12',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             3 => [
                 'amount' => 0,
                 'rate' => '7~11',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             4 => [
                 'amount' => 0,
                 'rate' => '6.5~8',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             5 => [
                 'amount' => 0,
                 'rate' => '5.5~7',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             6 => [
                 'amount' => 0,
                 'rate' => '5~6.5',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             7 => [
                 'amount' => 0,
                 'rate' => '4~5.5',
                 'platform_fee' => 500,
+                'repayment' => 0
             ]
         ];
         // 學生 0:下限分數, 1:上限分數, 2:額度
@@ -329,31 +337,37 @@ class Controller extends BaseController
                 'amount' => 0,
                 'rate' => 0,
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             1 => [
                 'amount' => 80000,
                 'rate' => '14~16',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             2 => [
                 'amount' => 120000,
                 'rate' => '10~13',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             3 => [
                 'amount' => 160000,
                 'rate' => '8~10',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             4 => [
                 'amount' => 200000,
                 'rate' => '7~8',
                 'platform_fee' => 500,
+                'repayment' => 0
             ],
             5 => [
                 'amount' => 300000,
                 'rate' => '6~7',
                 'platform_fee' => 500,
+                'repayment' => 0
             ]
         ];
         $total_point = 0;
@@ -430,9 +444,10 @@ class Controller extends BaseController
                 }else{
                     $result = $student_report[0];
                 }
-                foreach($student_amount as $amount_config){
-                    if($amount_config[1] > $total_point && $amount_config[0] <= $total_point){
-                        $result['amount'] = $amount_config[2];
+
+                foreach($student_amount as $key=>$values){
+                    if($values[1] >= $total_point && $values[0] <= $total_point){
+                        $result['amount'] = $values[2];
                         break;
                     }
                 }
@@ -466,32 +481,40 @@ class Controller extends BaseController
                     $total_point += 5;
                 }
                 // 投保薪資
-                if($input['insurance_salary']>=35000){
-                    $total_point += 15;
-                }elseif ($input['insurance_salary']<35000 && $input['insurance_salary']>=23800) {
-                    $total_point += 10;
-                }else{
-                    $total_point += 0;
+                if(is_numeric($input['insurance_salary'])){
+                    if($input['insurance_salary']>=35000){
+                        $total_point += 15;
+                    }elseif ($input['insurance_salary']<35000 && $input['insurance_salary']>=23800) {
+                        $total_point += 10;
+                    }else{
+                        $total_point += 0;
+                    }
                 }
                 // 貸款餘額
-                if($input['debt_amount']>=4){
-                    $total_point += 0;
-                }else{
-                    $total_point += 5;
+                if(is_numeric($input['debt_amount']) && is_numeric($input['insurance_salary'])){
+                    if($input['debt_amount'] >= $input['insurance_salary'] * 22){
+                        $total_point += 0;
+                    }else{
+                        $total_point += 5;
+                    }
                 }
                 // 每月攤還金額
-                if($input['monthly_repayment']>=4){
-                    $total_point += 5;
-                }else{
-                    $total_point += 10;
+                if(is_numeric($input['monthly_repayment']) && is_numeric($input['insurance_salary'])){
+                    if($input['monthly_repayment'] >= $input['insurance_salary'] * 0.3){
+                        $total_point += 5;
+                    }else{
+                        $total_point += 10;
+                    }
                 }
                 // 信用卡額度
                 $total_point += 10;
                 // 信用卡帳單總金額
-                if($input['creditcard_bill']>7){
-                    $total_point += 5;
-                }else{
-                    $total_point += 15;
+                if(is_numeric($input['creditcard_bill']) && is_numeric($input['creditcard_quota'])){
+                    if($input['creditcard_bill'] > $input['creditcard_quota'] * 0.7){
+                        $total_point += 5;
+                    }else{
+                        $total_point += 15;
+                    }
                 }
 
                 // 上班族額度利率
