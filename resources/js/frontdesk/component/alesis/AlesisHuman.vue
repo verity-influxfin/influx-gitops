@@ -170,6 +170,7 @@ export default {
 .推薦介紹 .內容 {
     overflow     : hidden;
     border-radius: 0rem 0 20px 20px;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .推薦介紹 .內容 > div {
