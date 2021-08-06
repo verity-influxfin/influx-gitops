@@ -102,7 +102,7 @@
                 <div class="標題">現有案件</div>
             </alesis-header>
             <alesis-section header="現有案件" :secondary="true">
-                <alesis-space size="medium"></alesis-space>
+                <alesis-space size="small"></alesis-space>
                 <div class="包裹容器">
                     <div class="標題">優質項目專區</div>
                     <div class="swiper-container 幻燈片 幻燈片_優質項目">
@@ -154,12 +154,11 @@
                         <div class="swiper-button-next"></div>
                     </div>
                 </div>
-                <alesis-space size="medium"></alesis-space>
             </alesis-section>
             <alesis-section>
                 <div class="包裹容器">
                     <div class="標題 標題_快速的">快速變現專區</div>
-                    <div class="swiper-container 幻燈片 幻燈片_快速變現">
+                    <div class="swiper-container 幻燈片 幻燈片_快速變現" style="margin-bottom: 40px;">
                         <div class="swiper-wrapper">
                             <!-- 群組 -->
                             <div class="swiper-slide" v-if="transferCase[0] || transferCase[1]">
@@ -203,12 +202,10 @@
 
                         <div class="swiper-pagination"></div>
 
-
                         <div class="swiper-button-prev"></div>
                         <div class="swiper-button-next"></div>
                     </div>
                 </div>
-                <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 現有案件 -->
