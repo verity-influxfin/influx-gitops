@@ -1229,5 +1229,20 @@ $ci-color: #153a71;
     }
 }
 
+.header_app_dl_link img {
+    height: 2.8rem;
+}
+
+.header_app_dl_link_mobile{
+    margin: 0 auto;
+    float: right;
+    a {
+        margin-right: 1rem;
+    }
+    img {
+        height: 3rem;
+    }
+}
+
 @import "contentPage";
 @import "inputStyle";

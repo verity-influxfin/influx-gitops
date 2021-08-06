@@ -6,9 +6,24 @@
         <div class="遮罩">
             <div class="標題">{{ header }}</div>
             <div class="內容" v-html="content"></div>
-            <div class="動作">
-                <a href="/borrowLink" class="項目">立即借款 &gt;</a>
+            <div class="動作 hidden-phone header_app_dl_link_mobile">
+                <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW&gl=US">
+                    <img src="/images/android_download_link_mobile.svg">
+                </a>
+                <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_balnk">
+                    <img src="/images/ios_download_link_mobile.svg">
+                </a>
             </div>
+
+            <div class="動作 hidden-desktop header_app_dl_link">
+                <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_balnk">
+                    <img src="/images/ios_download_link_desktop.png">
+                </a>
+                <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW&gl=US">
+                    <img src="/images/android_download_link_desktop.png">
+                </a>
+            </div>
+
         </div>
     </div>
 </template>
