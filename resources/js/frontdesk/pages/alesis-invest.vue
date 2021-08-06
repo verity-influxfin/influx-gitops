@@ -110,6 +110,7 @@
                             <!-- 群組 -->
                             <div class="swiper-slide" v-if="goodCase[0] || goodCase[1]">
                                 <div class="群組">
+
                                     <div class="項目" v-if="goodCase[0]">
                                         <alesis-project v-bind="goodCase[0]"></alesis-project>
                                     </div>
@@ -624,16 +625,21 @@ export default {
 }
 
 .現有案件 .包裹容器 .幻燈片 .群組 {
-    grid-template-columns: 1fr 1fr;
     display              : grid;
     margin               : 0 6rem;
     gap                  : 4rem;
     padding-bottom       : 1rem;
+    grid-template-columns: repeat(auto-fill, 100%);
+    grid-template-rows   : repeat(auto-fill, 220px);
+    align-items          : center;
+    justify-content      : start;
+    justify-items        : center;
 
     @include rwd {
-        grid-template-columns: 1fr;
-        gap                  : 0;
-        margin               : 0 -1rem;
+        gap    : 0;
+        margin : 0 auto;
+        width  : 100%;
+        height : 410px;
     }
 }
 
