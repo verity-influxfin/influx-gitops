@@ -440,7 +440,7 @@ export default {
     },
     filters: {
         amount: (value) => {
-            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+              return Number(parseFloat(value).toFixed(3)).toLocaleString('en')
         }
     },
     data: () => ({
