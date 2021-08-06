@@ -139,6 +139,9 @@ export default {
 
 .單張卡片 .原因 {
     font-size: .9rem;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
 }
 
 .單張卡片 .分隔線 {
