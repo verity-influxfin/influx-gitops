@@ -46,11 +46,6 @@
         <!-- 分頁導覽指示器 -->
         <div class="swiper-pagination"></div>
         <!-- / 分頁導覽指示器 -->
-
-        <!-- 導覽按鈕 -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-        <!-- / 導覽按鈕 -->
     </div>
     <!-- / 主要幻燈片容器 -->
 </template>
@@ -75,6 +70,8 @@
     margin               : 0 auto;
 
     @include rwd {
+        max-width            : 100%;
+        transform            : scale(0.92);
         grid-template-columns: 1fr !important;
         gap                  : 0 !important;
     }
@@ -88,18 +85,6 @@
             display: none;
         }
     }
-}
-
-// 導覽按鈕
-.swiper-container .swiper-button-next,
-.swiper-container .swiper-button-prev {
-    opacity  : 0.6;
-    transform: scale(0.7);
-}
-
-.swiper-container .swiper-button-next.swiper-button-disabled,
-.swiper-container .swiper-button-prev.swiper-button-disabled {
-    display: none;
 }
 </style>
 
