@@ -235,7 +235,7 @@
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <div class="計算機">
-                        <creditBoard amount="200000" v-on:update-calculator="updateCalculator"/>
+                        <creditBoard amount="300000" minRate="5" maxRate="16" v-on:update-calculator="updateCalculator"/>
                     </div>
                     <div class="輸入群組">
                         <div class="列">
