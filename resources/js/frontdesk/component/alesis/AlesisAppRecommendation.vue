@@ -10,7 +10,7 @@
                     <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW&gl=US" class="連結"><img src="/images/alesis-google-play.svg"></a>
                 </div>
             </div>
-            <div class="展示區塊">
+            <div class="展示區塊 hidden-desktop">
                 <img class="手機" src="/images/alesis-phone-lay.svg">
                 <img class="邊緣手機" src="/images/alesis-outer-edge-phones.svg">
             </div>
@@ -54,6 +54,7 @@ export default {
     @include rwd {
         margin-top   : 3rem;
         margin-bottom: 3rem;
+        flex         : none;
     }
 }
 

@@ -23,7 +23,6 @@
                     <img src="/images/android_download_link_desktop.png">
                 </a>
             </div>
-
         </div>
     </div>
 </template>
