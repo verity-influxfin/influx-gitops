@@ -316,7 +316,7 @@
                             </div>
                             <div class="列">
                                 <div class="標籤">3. 手續費金額：</div>
-                                <div class="值">{{borrowReportResult.period_range}}</div>
+                                <div class="值">{{borrowReportResult.platform_fee | amount}}</div>
                             </div>
                             <div class="列">
                                 <div class="標籤">4. 每期攤還金額約：</div>
@@ -440,7 +440,7 @@ export default {
     },
     filters: {
         amount: (value) => {
-            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+              return Number(parseFloat(value).toFixed(3)).toLocaleString('en')
         }
     },
     data: () => ({
@@ -538,7 +538,7 @@ export default {
             }).then((res) => {
                 this.borrowReportResult.amount = res.data.amount
                 this.borrowReportResult.rate = res.data.rate
-                this.borrowReportResult.period_range = res.data.period_range
+                this.borrowReportResult.platform_fee = res.data.platform_fee
                 this.borrowReportResult.repayment = res.data.repayment
                 this.formCalculated = true
                 this.isFormValid = true
