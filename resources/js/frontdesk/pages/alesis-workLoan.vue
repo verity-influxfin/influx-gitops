@@ -321,11 +321,12 @@
             </alesis-header>
             <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
-                <div class="表單">
+                <form class="表單" ref="borrowReport">
+                    <input type="hidden" name="identity" value="2" />
                     <div class="列">
                         <div class="標籤">1.我的教育程度：</div>
                         <div class="輸入欄位">
-                            <select v-model="formGraduate">
+                            <select v-model="formGraduate" name="educational_level">
                                 <option selected disabled value="">-請選擇-</option>
                                 <option value="phD">博士</option>
                                 <option value="master">碩士</option>
@@ -337,7 +338,7 @@
                     <div class="列">
                         <div class="標籤">2.我的職業屬於：</div>
                         <div class="輸入欄位">
-                            <select>
+                            <select name="job">
                                 <option selected disabled>-請選擇-</option>
                                 <option :disabled="item.disabled" v-for="item, index in flattenWorkCategories" :key="index" :value="item.value">{{ item.title }}</option>
                             </select>
@@ -346,62 +347,62 @@
                     <div class="列">
                         <div class="標籤">3.任職公司是否屬於上市櫃、金融機構或公家機關：</div>
                         <div class="輸入欄位">
-                            <select v-model="formCompany">
+                            <select v-model="formCompany" name="is_top_enterprises">
                                 <option selected disabled value="">-請選擇-</option>
-                                <option value="true">是</option>
-                                <option value="false">否</option>
+                                <option value="1">是</option>
+                                <option value="0">否</option>
                             </select>
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">4.我的投保月薪約為：</div>
                         <div class="輸入欄位">
-                            <input type="text" v-model="formSalary">
+                            <input type="number" min="0" step="100" v-model="formSalary" name="insurance_salary">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">5.我在銀行的貸款餘額約為：</div>
                         <div class="輸入欄位">
-                            <input type="text" v-model="formLoan">
+                            <input type="number" min="0" step="100" v-model="formLoan" name="debt_amount">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">6.每月需攤還多少金額：</div>
                         <div class="輸入欄位">
-                            <input type="text" v-model="formReturn">
+                            <input type="number" min="0" step="100" v-model="formReturn" name="monthly_repayment">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">7.信用卡總額度約為：</div>
                         <div class="輸入欄位">
-                            <input type="text" v-model="formCredit">
+                            <input type="number" min="0" step="100" v-model="formCredit" name="creditcard_quota">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">8.近一個月信用卡帳單總金額約為：</div>
                         <div class="輸入欄位">
-                            <input type="text" v-model="formTotal">
+                            <input type="number" min="0" step="100" v-model="formTotal" name="creditcard_bill">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">暱稱：</div>
                         <div class="輸入欄位">
-                            <input type="text">
+                            <input type="text" name="name">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤">E-mail：</div>
                         <div class="輸入欄位">
-                            <input type="text">
+                            <input type="email" name="email">
                         </div>
                     </div>
                     <div class="列">
                         <div class="標籤"></div>
                         <div class="輸入欄位">
-                            <button @click="calculateForm">取得報告</button>
+                            <button @click="calculateForm" type="button" :disabled="!isFormValid">取得報告</button>
                         </div>
                     </div>
-                </div>
+                </form>
                 <div class="結果" v-if="formCalculated">
                     <div class="展示區塊">
                         <img src="/images/alesis-phone-and-cash.svg" class="圖片">
@@ -415,19 +416,19 @@
                         <div class="數值">
                             <div class="列">
                                 <div class="標籤">1. 可借款額度：</div>
-                                <div class="值">{{ format(formAnswerTotal) }}</div>
+                                <div class="值">{{borrowReportResult.amount | amount}}</div>
                             </div>
                             <div class="列">
                                 <div class="標籤">2. 借款利率區間：</div>
-                                <div class="值">{{ formAnswerSpan }}</div>
+                                <div class="值">{{borrowReportResult.rate}}</div>
                             </div>
                             <div class="列">
                                 <div class="標籤">3. 手續費金額：</div>
-                                <div class="值">{{ formAnswerFee }}</div>
+                                <div class="值">{{borrowReportResult.platform_fee | amount}}</div>
                             </div>
                             <div class="列">
                                 <div class="標籤">4. 每期攤還金額約：</div>
-                                <div class="值">{{ formAnswerPer }}</div>
+                                <div class="值">{{borrowReportResult.repayment}}</div>
                             </div>
                         </div>
                         <div class="說明">►僅為初步評估，實際貸款條件依照您真實提供的資料而定。</div>
@@ -507,6 +508,11 @@ export default {
         AlesisVerticalRoadmap,
         AlesisSpace,
     },
+    filters: {
+        amount: (value) => {
+            return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+        }
+    },
     data: () => ({
         how                  : "",
         formGraduate         : "",
@@ -522,6 +528,8 @@ export default {
         formAnswerFee        : 0,
         formAnswerPer        : 0,
         flattenWorkCategories: [],
+        borrowReportResult   : {},
+        isFormValid          : true,
         workCategories       : WorkCategories
     }),
     created() {
@@ -575,104 +583,127 @@ export default {
     },
     methods: {
         calculateForm() {
-            var score = 0
-            switch (this.formGraduate) {
-                case "phD":
-                    score += 20
-                    break
-                case "master":
-                    score += 15
-                    break
-                case "bachelor":
-                    score += 10
-                    break
-                case "below":
-                    score += 0
-                    break
-            }
+            this.isFormValid = false
+            let data = new FormData(this.$refs.borrowReport)
 
-            // 職業
-            score += 10
-
-            if (this.formCompany === "true") {
-                score += 15
-            } else {
-                score += 5
-            }
-
-            var salary = parseInt(this.formSalary)
-            if (!isNaN(salary)) {
-                if (salary > 23800 && salary < 35000) {
-                    score += 10
-                } else if (salary > 35000) {
-                    score += 15
+            axios({
+                url: `${location.origin}/getBorrowReport`,
+                method: 'post',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
                 }
-            }
+            }).then((res) => {
+                this.borrowReportResult.amount = res.data.amount
+                this.borrowReportResult.rate = res.data.rate
+                this.borrowReportResult.platform_fee = res.data.platform_fee
+                this.borrowReportResult.repayment = res.data.repayment
+                this.formCalculated = true
+                this.isFormValid = true
+            })
+            .catch((error) => {
+                console.error('getBorrowReport 發生錯誤，請稍後再試');
+            });
 
-            var loan = parseInt(this.formLoan)
-            if (!isNaN(salary)) {
-                if (loan < (salary * 22)) {
-                    score += 5
-                }
-            }
+            // var score = 0
+            // switch (this.formGraduate) {
+            //     case "phD":
+            //         score += 20
+            //         break
+            //     case "master":
+            //         score += 15
+            //         break
+            //     case "bachelor":
+            //         score += 10
+            //         break
+            //     case "below":
+            //         score += 0
+            //         break
+            // }
 
-            var returnx = parseInt(this.formReturn)
-            if (!isNaN(returnx)) {
-                if (returnx > (salary * 0.3)) {
-                    score += 5
-                } else {
-                    score += 10
-                }
-            }
+            // // 職業
+            // score += 10
 
-            // 信用卡總額
-            score += 10
-            var credit = parseInt(this.formCredit)
+            // if (this.formCompany === "true") {
+            //     score += 15
+            // } else {
+            //     score += 5
+            // }
 
+            // var salary = parseInt(this.formSalary)
+            // if (!isNaN(salary)) {
+            //     if (salary > 23800 && salary < 35000) {
+            //         score += 10
+            //     } else if (salary > 35000) {
+            //         score += 15
+            //     }
+            // }
 
-            var total = parseInt(this.formTotal)
-            if (!isNaN(total) && !isNaN(credit)) {
-                if (total > (credit * 0.7)) {
-                    score += 5
-                } else {
-                    score += 15
-                }
-            }
+            // var loan = parseInt(this.formLoan)
+            // if (!isNaN(salary)) {
+            //     if (loan < (salary * 22)) {
+            //         score += 5
+            //     }
+            // }
 
-            if (score >= 0 && score < 20) {
-                this.formAnswerTotal = 0
-                this.formAnswerSpan = 0
-                this.formAnswerFee = 15
-                this.formAnswerPer = 0
-            } else if (score >= 20 && score < 50) {
-                this.formAnswerTotal = 800000
-                this.formAnswerSpan = "14~16%"
-                this.formAnswerFee = 15
-                this.formAnswerPer = 0
-            } else if (score >= 50 && score < 70) {
-                this.formAnswerTotal = 120000
-                this.formAnswerSpan = "10~13%"
-                this.formAnswerFee = 0
-                this.formAnswerPer = 0
-            } else if (score >= 70 && score < 80) {
-                this.formAnswerTotal = 160000
-                this.formAnswerSpan = "8~10%"
-                this.formAnswerFee = 15
-                this.formAnswerPer = 0
-            } else if (score >= 80 && score < 90) {
-                this.formAnswerTotal = 200000
-                this.formAnswerSpan = "7~8%"
-                this.formAnswerFee = 15
-                this.formAnswerPer = 0
-            } else if (score >= 90 && score < 100) {
-                this.formAnswerTotal = 300000
-                this.formAnswerSpan = "6~7%"
-                this.formAnswerFee = 15
-                this.formAnswerPer = 0
-            }
+            // var returnx = parseInt(this.formReturn)
+            // if (!isNaN(returnx)) {
+            //     if (returnx > (salary * 0.3)) {
+            //         score += 5
+            //     } else {
+            //         score += 10
+            //     }
+            // }
+
+            // // 信用卡總額
+            // score += 10
+            // var credit = parseInt(this.formCredit)
 
 
-            this.formCalculated = true
+            // var total = parseInt(this.formTotal)
+            // if (!isNaN(total) && !isNaN(credit)) {
+            //     if (total > (credit * 0.7)) {
+            //         score += 5
+            //     } else {
+            //         score += 15
+            //     }
+            // }
+
+            // if (score >= 0 && score < 20) {
+            //     this.formAnswerTotal = 0
+            //     this.formAnswerSpan = 0
+            //     this.formAnswerFee = 15
+            //     this.formAnswerPer = 0
+            // } else if (score >= 20 && score < 50) {
+            //     this.formAnswerTotal = 800000
+            //     this.formAnswerSpan = "14~16%"
+            //     this.formAnswerFee = 15
+            //     this.formAnswerPer = 0
+            // } else if (score >= 50 && score < 70) {
+            //     this.formAnswerTotal = 120000
+            //     this.formAnswerSpan = "10~13%"
+            //     this.formAnswerFee = 0
+            //     this.formAnswerPer = 0
+            // } else if (score >= 70 && score < 80) {
+            //     this.formAnswerTotal = 160000
+            //     this.formAnswerSpan = "8~10%"
+            //     this.formAnswerFee = 15
+            //     this.formAnswerPer = 0
+            // } else if (score >= 80 && score < 90) {
+            //     this.formAnswerTotal = 200000
+            //     this.formAnswerSpan = "7~8%"
+            //     this.formAnswerFee = 15
+            //     this.formAnswerPer = 0
+            // } else if (score >= 90 && score < 100) {
+            //     this.formAnswerTotal = 300000
+            //     this.formAnswerSpan = "6~7%"
+            //     this.formAnswerFee = 15
+            //     this.formAnswerPer = 0
+            // }
+
+
+            // this.formCalculated = true
         },
         format(data) {
             data = parseInt(data);
