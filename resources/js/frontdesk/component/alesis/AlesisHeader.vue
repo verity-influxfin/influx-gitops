@@ -29,11 +29,12 @@ export default {
 @import "./alesis";
 
 .區塊標題 {
-    position : absolute;
-    left     : 50%;
-    top      : 0;
-    transform: translate(-50%, var(--alesis-xheader-offset, -50%));
-    z-index  : 10;
+    position   : absolute;
+    left       : 50%;
+    top        : 0;
+    transform  : translate(-50%, var(--alesis-xheader-offset, -50%));
+    z-index    : 10;
+    text-align : center;
 }
 
 .區塊標題_拖尾的 .文字之後 {
@@ -93,7 +94,8 @@ export default {
 }
 
 .區塊標題 .文字之前 {
-    margin-bottom: .5rem;
+    margin-bottom: -0.5rem;
+    display      : inline-block;
 }
 
 .區塊標題 .文字之前 .點:nth-child(1) {

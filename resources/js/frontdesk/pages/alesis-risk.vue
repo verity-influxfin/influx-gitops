@@ -10,7 +10,6 @@
             </div>
         </div>
         <!-- / 頂部板岩 -->
-
         <!-- 報告書 -->
         <div class="報告書">
             <alesis-header>
@@ -21,14 +20,8 @@
                 <div class="包裹容器">
                     <img src="/images/alesis-report.svg" class="圖片">
                     <div class="連結">
-                        <a href="#!" class="項目">
-                            <alesis-button>2021年5月</alesis-button>
-                        </a>
-                        <a href="#!" class="項目">
-                            <alesis-button>2021年4月</alesis-button>
-                        </a>
-                        <a href="#!" class="項目">
-                            <alesis-button>2021年3月</alesis-button>
+                        <a href="javascript:;" class="項目">
+                            <alesis-button>2021年7月</alesis-button>
                         </a>
                     </div>
                     <a href="/invest" class="行動">
