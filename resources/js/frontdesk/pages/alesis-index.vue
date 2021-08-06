@@ -140,20 +140,20 @@
                                 <alesis-moon class="圖示" header="快速" :level=2></alesis-moon>
                                 <div class="內容">
                                     10分鐘快速填寫申請資料，<br>
-                                    全程線上操作，無人干擾
+                                    全程線上操作，無人干擾。
                                 </div>
                             </div>
                             <div class="項目">
                                 <alesis-moon class="圖示" header="安全" :level=3></alesis-moon>
-                                <div class="內容">
-                                    資訊傳輸由HTTPS方式利用SSL/TLS加密，儲存於亞馬遜AWS雲端伺服器
+                                <div class="內容 security">
+                                    資訊傳輸由HTTPS方式利用SSL/TLS加密，儲存於亞馬遜AWS雲端伺服器。
                                 </div>
                             </div>
                             <div class="項目">
                                 <alesis-moon class="圖示" header="隱私" :level=4></alesis-moon>
                                 <div class="內容">
                                     全台唯一無人化借貸平台，<br>
-                                    讓手機成為您專屬的ATM
+                                    讓手機成為您專屬的ATM。
                                 </div>
                             </div>
                         </div>
@@ -742,6 +742,14 @@ export default {
 
     @include rwd-minimum {
         margin-right: 0rem;
+    }
+}
+
+.產品特色 .包裹容器 .半月列表 > .項目 .內容.security {
+    max-width: 18em;
+
+    @include rwd {
+        max-width: none;
     }
 }
 
