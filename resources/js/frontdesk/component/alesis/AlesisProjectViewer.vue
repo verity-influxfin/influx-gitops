@@ -4,15 +4,12 @@
             <div class="分類">
                 <button @click="changeCategoryBy('')" class="項目" :class="{'項目_啟用的': categoryBy === ''}">
                     <div class="文字">全部</div>
-                    <div class="標籤">{{ results.length }}</div>
                 </button>
                 <button @click="changeCategoryBy('student')" class="項目" :class="{'項目_啟用的': categoryBy === 'student'}">
                     <div class="文字">學生</div>
-                    <div class="標籤">{{ this.status === 3 ? studentWorking.length : studentDone.length }}</div>
                 </button>
                 <button @click="changeCategoryBy('work')" class="項目" :class="{'項目_啟用的': categoryBy === 'work'}">
                     <div class="文字">上班族</div>
-                    <div class="標籤">{{ this.status === 3 ? workWorking.length : workDone.length }}</div>
                 </button>
             </div>
             <div class="排序條件">
@@ -33,7 +30,7 @@
                     <alesis-project v-bind="result"></alesis-project>
                 </div>
             </div>
-            <div class="分頁導覽" v-if="results.length > 0">
+            <div class="分頁導覽">
                 <a @click="prevPage" class="項目">上一頁</a>
                 <a href="#!" class="項目">1</a>
                 <a href="#!" class="項目">2</a>
@@ -69,27 +66,32 @@ export default {
     mounted() {
         // 3 代表進行中 Working
         if (this.status === 3) {
-            this.results = [...StudentWorking.data, ...WorkWorking.data]
+            this.getCase(3);
         } else {
-            this.results = [...StudentDone.data, ...WorkDone.data]
+            this.getCase(10);
         }
         this.paginate(6, 1)
     },
-    data() {
-        return {
-            categoryBy     : "",
-            sortBy         : "date",
-            orderBy        : "asc",
-            results        : [],
-            current_results: [],
-            studentDone    : StudentDone.data,
-            studentWorking : StudentWorking.data,
-            workDone       : WorkDone.data,
-            workWorking    : WorkWorking.data,
-            page           : 1,
-        }
-    },
+    data: () => ({
+        current_results : []
+    }),
     methods: {
+        getCase(caseStatus) {
+            let influxCase = new FormData();
+            influxCase.append('status',caseStatus);
+            influxCase.append('product_id',0);
+
+            self = this;
+            axios.post(
+                `${location.origin}/getCase`,
+                influxCase
+            ).then((res) => {
+                self.current_results =  res.data
+            })
+            .catch((error) => {
+                console.error('getCase 發生錯誤，請稍後再試');
+            });
+        },
         changeCategoryBy(v) {
             this.categoryBy = v;
         },
@@ -98,79 +100,79 @@ export default {
             this.changeOrderBy(this.orderBy);
         },
         nextPage() {
-            var maxPage = parseInt(this.results.length / 6, 10);
-            if (this.page >= maxPage) {
-                return
-            }
-            this.page++;
-            this.paginate(6, this.page)
+            // var maxPage = parseInt(this.results.length / 6, 10);
+            // if (this.page >= maxPage) {
+            //     return
+            // }
+            // this.page++;
+            // this.paginate(6, this.page)
         },
         prevPage() {
-            if (this.page <= 1) {
-                return
-            }
-            this.page--;
-            this.paginate(6, this.page)
+            // if (this.page <= 1) {
+            //     return
+            // }
+            // this.page--;
+            // this.paginate(6, this.page)
         },
         paginate(size, page) {
-            return this.current_results = this.results.slice((page - 1) * size, page * size);
+            // return this.current_results = this.results.slice((page - 1) * size, page * size);
         },
         jumpPage() {
 
         },
         changeSortBy(v) {
-            this.sortBy = v
-            switch (v) {
-                case "date":
-                    this.results.sort((a, b) => {
-                        if (this.orderBy === "asc") {
-                            return a.created_at > b.created_at
-                        } else {
-                            return a.created_at < b.created_at
-                        }
-                    })
-                    break
-                case "instalment":
-                    this.results.sort((a, b) => {
-                        if (this.orderBy === "asc") {
-                            return a.instalment > b.instalment
-                        } else {
-                            return a.instalment < b.instalment
-                        }
-                    })
-                    break
-                case "amount":
-                    this.results.sort((a, b) => {
-                        if (this.orderBy === "asc") {
-                            return a.loan_amount > b.loan_amount
-                        } else {
-                            return a.loan_amount < b.loan_amount
-                        }
-                    })
-                    break
-                case "interest":
-                     this.results.sort((a, b) => {
-                        if (this.orderBy === "asc") {
-                            return a.interest_rate > b.interest_rate
-                        } else {
-                            return a.interest_rate < b.interest_rate
-                        }
-                    })
-                    break
-                case "creditLevel":
-                    this.results.sort((a, b) => {
-                        if (this.orderBy === "asc") {
-                            return a.credit_level > b.credit_level
-                        } else {
-                            return a.credit_level < b.credit_level
-                        }
-                    })
-                    break
-            }
+            // this.sortBy = v
+            // switch (v) {
+            //     case "date":
+            //         this.results.sort((a, b) => {
+            //             if (this.orderBy === "asc") {
+            //                 return a.created_at > b.created_at
+            //             } else {
+            //                 return a.created_at < b.created_at
+            //             }
+            //         })
+            //         break
+            //     case "instalment":
+            //         this.results.sort((a, b) => {
+            //             if (this.orderBy === "asc") {
+            //                 return a.instalment > b.instalment
+            //             } else {
+            //                 return a.instalment < b.instalment
+            //             }
+            //         })
+            //         break
+            //     case "amount":
+            //         this.results.sort((a, b) => {
+            //             if (this.orderBy === "asc") {
+            //                 return a.loan_amount > b.loan_amount
+            //             } else {
+            //                 return a.loan_amount < b.loan_amount
+            //             }
+            //         })
+            //         break
+            //     case "interest":
+            //          this.results.sort((a, b) => {
+            //             if (this.orderBy === "asc") {
+            //                 return a.interest_rate > b.interest_rate
+            //             } else {
+            //                 return a.interest_rate < b.interest_rate
+            //             }
+            //         })
+            //         break
+            //     case "creditLevel":
+            //         this.results.sort((a, b) => {
+            //             if (this.orderBy === "asc") {
+            //                 return a.credit_level > b.credit_level
+            //             } else {
+            //                 return a.credit_level < b.credit_level
+            //             }
+            //         })
+            //         break
+            // }
         },
         changeOrderBy(v) {
-            this.orderBy = (v === "asc") ? "desc" : "asc";
-            changeSortBy(this.sortBy)
+            // this.orderBy = (v === "asc") ? "desc" : "asc";
+            // changeSortBy(this.sortBy)
         }
     }
 }
@@ -283,10 +285,11 @@ export default {
 .案件區塊 .包裹容器 .卡片列表 {
     max-width            : 950px;
     margin               : 0 auto;
-    display              : grid;
+    display              : flex;
     grid-template-columns: repeat(2, 1fr);
     gap                  : 3rem;
     margin-top           : 2rem;
+    flex-wrap: wrap;
 
     @include rwd {
         grid-template-columns: 1fr;
