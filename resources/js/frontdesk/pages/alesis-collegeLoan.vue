@@ -231,19 +231,6 @@
                         </div>
                     </div>
                     <div class="列">
-                        <div class="標籤">3.系上排名：</div>
-                        <div class="輸入欄位">
-                            <select v-model="formRank">
-                                <option disabled value="">-請選擇-</option>
-                                <option value="10%">前 10%</option>
-                                <option value="30%">前 30%</option>
-                                <option value="50%">前 50%</option>
-                                <option value="70%">前 70%</option>
-                                <option value="70%+">70% 之後</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="列">
                         <div class="標籤">3.是否有學貸：</div>
                         <div class="輸入欄位">
                             <select name="is_student_loan">
