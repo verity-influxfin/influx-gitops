@@ -6,7 +6,7 @@
                 <img class="圖片" src="/images/sshot-1848.png">
             </div>
             <div class="遮罩">
-                <div class="標題">風險報告書</div>
+                <img class="標題" style="height: 1.2em;padding-bottom: 8px;" src="/images/風險報告書標題.svg">
             </div>
         </div>
         <!-- / 頂部板岩 -->
@@ -102,7 +102,7 @@ export default {
     height  : 33rem;
 
     @include rwd {
-        height: 43rem;
+        height: clamp(33rem, 155vw, 155vw);
     }
 }
 
