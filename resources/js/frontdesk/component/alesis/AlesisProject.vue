@@ -107,7 +107,7 @@ export default {
     padding      : .5rem;
     overflow     : hidden;
     font-size    : .9rem;
-    min-width    : 400px;
+    width    : 400px;
 }
 
 .單張卡片 .標題 {
