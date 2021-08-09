@@ -208,94 +208,93 @@ class Charge_lib
         // 取得借款人虛擬帳戶餘額
         $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
         $balance = $funds['total'] - $funds['frozen'];
-
-        //if ($balance < $total_accounts_payable) {
         $total_recovery_list = [];
-        foreach($sorting_charge_ar_sources as $ar_source) {
-            $origin_balance = $balance;
+        if ($balance < $total_accounts_payable) {
+            foreach($sorting_charge_ar_sources as $ar_source) {
+                $origin_balance = $balance;
 
-            foreach ($account_payable_map as $target_id => $target_list) {
-                if (!is_numeric($target_id) || $total_accounts_payable_list[$ar_source] == 0)
-                    continue;
-
-                $target_repayment_amount = min($target_list['total_amount'][$ar_source] / $total_accounts_payable_list[$ar_source] * $origin_balance, $target_list['total_amount'][$ar_source]);
-                if ($target_repayment_amount <= 0)
-                    continue;
-
-                foreach ($target_list as $investment_id => $investment_list) {
-                    if (!is_numeric($investment_id) || $investment_list['total_amount'][$ar_source] <= 0)
+                foreach ($account_payable_map as $target_id => $target_list) {
+                    if (!is_numeric($target_id) || $total_accounts_payable_list[$ar_source] == 0)
                         continue;
 
-                    $investment_repayment_amount = intval(round(($investment_list['total_amount'][$ar_source] / $target_list['total_amount'][$ar_source] * $target_repayment_amount), 0));
-                    if($investment_repayment_amount == 0)
+                    $target_repayment_amount = min($target_list['total_amount'][$ar_source] / $total_accounts_payable_list[$ar_source] * $origin_balance, $target_list['total_amount'][$ar_source]);
+                    if ($target_repayment_amount <= 0)
                         continue;
 
-                    // 總還款金額不能大於餘額
-                    $investment_repayment_amount = min($investment_repayment_amount, $balance);
+                    foreach ($target_list as $investment_id => $investment_list) {
+                        if (!is_numeric($investment_id) || $investment_list['total_amount'][$ar_source] <= 0)
+                            continue;
 
-                    $paid_balance = $this->charge_part_fee($target_id, $investment_repayment_amount, $investment_list['transactions'][$ar_source]);
-                    $paid_amount = ($investment_repayment_amount - $paid_balance);
-                    $balance -= $paid_amount;
+                        $investment_repayment_amount = intval(round(($investment_list['total_amount'][$ar_source] / $target_list['total_amount'][$ar_source] * $target_repayment_amount), 0));
+                        if($investment_repayment_amount == 0)
+                            continue;
 
-                    // 累加需回款平台手續費的交易金額
-                    if(in_array($ar_source, $platform_fee_ar_sources)) {
-                        $total_recovery_list[$target_id][$investment_id] = (isset($total_recovery_list[$target_id][$investment_id]) ? $total_recovery_list[$target_id][$investment_id] : 0) + intval($paid_amount);
+                        // 總還款金額不能大於餘額
+                        $investment_repayment_amount = min($investment_repayment_amount, $balance);
+
+                        $paid_balance = $this->charge_part_fee($target_id, $investment_repayment_amount, $investment_list['transactions'][$ar_source]);
+                        $paid_amount = ($investment_repayment_amount - $paid_balance);
+                        $balance -= $paid_amount;
+
+                        // 累加需回款平台手續費的交易金額
+                        if(in_array($ar_source, $platform_fee_ar_sources)) {
+                            $total_recovery_list[$target_id][$investment_id] = (isset($total_recovery_list[$target_id][$investment_id]) ? $total_recovery_list[$target_id][$investment_id] : 0) + intval($paid_amount);
+                        }
+                    }
+                }
+            }
+
+            foreach ($total_recovery_list as $target_id => $target_list) {
+                foreach ($target_list as $investment_id => $total_recovery) {
+                    // 找到最近一期的本金交易紀錄
+                    $principle_transaction = new stdClass();
+                    array_reduce($account_payable_map[$target_id][$investment_id]['transactions'][SOURCE_AR_PRINCIPAL], function($min, $details) use (&$principle_transaction) {
+                        if($details->instalment_no < $min) {
+                            $principle_transaction = $details;
+                            return $details->instalment_no;
+                        }else
+                            return $min;
+                    }, PHP_INT_MAX);
+
+                    $ar_fee = $this->CI->financial_lib->get_ar_fee($total_recovery);
+                    if ($ar_fee > 0) {
+                        // 處理已付平台服務費交易紀錄
+                        $paid_fee_transaction = [
+                            'source' => SOURCE_FEES,
+                            'entering_date' => $date,
+                            'user_from' => $principle_transaction->user_to,
+                            'bank_account_from' => $principle_transaction->bank_account_to,
+                            'amount' => $ar_fee,
+                            'target_id' => $target_id,
+                            'investment_id' => $investment_id,
+                            'instalment_no' => $principle_transaction->instalment_no,
+                            'user_to' => 0,
+                            'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
+                            'status' => 2
+                        ];
+                        $fee_transaction = $paid_fee_transaction;
+                        $fee_transaction['source'] = SOURCE_AR_FEES;
+                        $transaction_param[] = $paid_fee_transaction;
+                        $transaction_param[] = $fee_transaction;
+
+                        // 更新應收平台服務費交易紀錄
+                        $ar_fee_transaction = $this->CI->transaction_model->get_by([
+                            'investment_id' => $investment_id,
+                            'source' => SOURCE_AR_FEES,
+                            'status' => 1
+                        ]);
+                        if (isset($ar_fee_transaction)) {
+                            $remaining_fee = max(0, $ar_fee_transaction->amount - $ar_fee);
+                            $this->CI->transaction_model->update_by(['id' => $ar_fee_transaction->id, 'status' => 1],
+                                [
+                                    'amount' => $remaining_fee,
+                                ]);
+
+                        }
                     }
                 }
             }
         }
-
-        foreach ($total_recovery_list as $target_id => $target_list) {
-            foreach ($target_list as $investment_id => $total_recovery) {
-                // 找到最近一期的本金交易紀錄
-                $principle_transaction = new stdClass();
-                array_reduce($account_payable_map[$target_id][$investment_id]['transactions'][SOURCE_AR_PRINCIPAL], function($min, $details) use (&$principle_transaction) {
-                    if($details->instalment_no < $min) {
-                        $principle_transaction = $details;
-                        return $details->instalment_no;
-                    }else
-                        return $min;
-                }, PHP_INT_MAX);
-
-                $ar_fee = $this->CI->financial_lib->get_ar_fee($total_recovery);
-                if ($ar_fee > 0) {
-                    // 處理已付平台服務費交易紀錄
-                    $paid_fee_transaction = [
-                        'source' => SOURCE_FEES,
-                        'entering_date' => $date,
-                        'user_from' => $principle_transaction->user_to,
-                        'bank_account_from' => $principle_transaction->bank_account_to,
-                        'amount' => $ar_fee,
-                        'target_id' => $target_id,
-                        'investment_id' => $investment_id,
-                        'instalment_no' => $principle_transaction->instalment_no,
-                        'user_to' => 0,
-                        'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
-                        'status' => 2
-                    ];
-                    $fee_transaction = $paid_fee_transaction;
-                    $fee_transaction['source'] = SOURCE_AR_FEES;
-                    $transaction_param[] = $paid_fee_transaction;
-                    $transaction_param[] = $fee_transaction;
-
-                    // 更新應收平台服務費交易紀錄
-                    $ar_fee_transaction = $this->CI->transaction_model->get_by([
-                        'investment_id' => $investment_id,
-                        'source' => SOURCE_AR_FEES,
-                        'status' => 1
-                    ]);
-                    if (isset($ar_fee_transaction)) {
-                        $remaining_fee = max(0, $ar_fee_transaction->amount - $ar_fee);
-                        $this->CI->transaction_model->update_by(['id' => $ar_fee_transaction->id, 'status' => 1],
-                            [
-                                'amount' => $remaining_fee,
-                            ]);
-
-                    }
-                }
-            }
-        }
-        //}
 
         $rs = $this->CI->transaction_model->insert_many($transaction_param);
         if ($rs) {
@@ -309,41 +308,42 @@ class Charge_lib
             $this->CI->transaction_model->trans_commit();
             $this->CI->virtual_passbook_model->trans_commit();
 
-
             // 針對有回款的投資人取消申請中之債轉
-            $investment_id_list = array_map(function ($x) {
-                return key($x);
-            }, array_values($total_recovery_list));
-            $this->CI->load->library('transfer_lib');
-            $this->CI->load->model('loan/transfer_model');
-            $investment = $this->CI->investment_model->get_many_by([
-                'id' => $investment_id_list,
-                'transfer_status'=>1,
-            ]);
-            if(isset($investment) && count($investment)) {
-                $investmentList = array_column(json_decode(json_encode($investment), true), 'id');
-
-                // 0:待出借 1:待放款
-                $transfer_list = $this->CI->transfer_model->get_many_by([
-                    'investment_id' => $investmentList,
-                    'status'        => [0,1]
+            if(!empty($total_recovery_list)) {
+                $investment_id_list = array_map(function ($x) {
+                    return key($x);
+                }, array_values($total_recovery_list));
+                $this->CI->load->library('transfer_lib');
+                $this->CI->load->model('loan/transfer_model');
+                $investment = $this->CI->investment_model->get_many_by([
+                    'id' => $investment_id_list,
+                    'transfer_status' => 1,
                 ]);
-                foreach($transfer_list as $value){
-                    if($value->combination!=0){
-                        $transfer = $this->CI->transfer_model->get_many_by(['combination' => $value->combination]);
-                        $this->CI->transfer_lib->cancel_combination_transfer($transfer);
-                    }else{
-                        $this->CI->transfer_lib->cancel_transfer($value);
+                if (isset($investment) && count($investment)) {
+                    $investmentList = array_column(json_decode(json_encode($investment), true), 'id');
+
+                    // 0:待出借 1:待放款
+                    $transfer_list = $this->CI->transfer_model->get_many_by([
+                        'investment_id' => $investmentList,
+                        'status' => [0, 1]
+                    ]);
+                    foreach ($transfer_list as $value) {
+                        if ($value->combination != 0) {
+                            $transfer = $this->CI->transfer_model->get_many_by(['combination' => $value->combination]);
+                            $this->CI->transfer_lib->cancel_combination_transfer($transfer);
+                        } else {
+                            $this->CI->transfer_lib->cancel_transfer($value);
+                        }
                     }
                 }
-            }
 
-            // 取消案件產轉申請
-            foreach ($targets as $target) {
-                $subloan = $this->CI->subloan_lib->get_subloan($target);
-                if (isset($subloan) && $subloan) {
-                    if (in_array($subloan->status, array(0, 1, 2))) {
-                        $this->CI->subloan_lib->cancel_subloan($subloan);
+                // 取消案件產轉申請
+                foreach ($targets as $target) {
+                    $subloan = $this->CI->subloan_lib->get_subloan($target);
+                    if (isset($subloan) && $subloan) {
+                        if (in_array($subloan->status, array(0, 1, 2))) {
+                            $this->CI->subloan_lib->cancel_subloan($subloan);
+                        }
                     }
                 }
             }
