@@ -275,7 +275,7 @@
             </alesis-header>
             <alesis-section>
                 <alesis-space size="small"></alesis-space>
-                <alesis-suggestion-reviews type="index"></alesis-suggestion-reviews>
+                <alesis-suggestion-reviews type="index" category="loan"></alesis-suggestion-reviews>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
@@ -384,17 +384,16 @@ export default {
        // document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
 
         SwiperCore.use([Navigation]);
-            new Swiper('.swiper-container.標頭幻燈片', {
-                autoplay: {
-                    delay: 3000,
-                },
-                loop: true,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-            });
-
+        new Swiper('.swiper-container.標頭幻燈片', {
+            autoplay: {
+                delay: 3000,
+            },
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
     },
     methods: {
         nextSolution() {

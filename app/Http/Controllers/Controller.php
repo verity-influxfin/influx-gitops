@@ -633,6 +633,7 @@ class Controller extends BaseController
 
     public function getExperiencesData(Request $request)
     {
+
         $input = $request->all();
 
         $filter = [['isActive', '=', 'on'], ['isRead', '=', '1']];
@@ -641,7 +642,19 @@ class Controller extends BaseController
             $filter[] = ['category', '=', $input['category']];
         }
 
-        $experiences = DB::table('interview')->select(['ID', 'feedback', 'imageSrc', 'video_link', 'post_title', 'rank', 'type','amount','rate','period_range','spend_day'])->where($filter)->get();
+        $experiences = DB::table('interview')->select([
+            'ID',
+            'feedback',
+            'imageSrc',
+            'video_link',
+            'post_title',
+            'rank',
+            'type',
+            'amount',
+            'rate',
+            'period_range',
+            'spend_day'
+        ])->where($filter)->get();
 
         return response()->json($experiences, 200);
     }

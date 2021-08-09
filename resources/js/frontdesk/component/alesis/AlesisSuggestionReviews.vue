@@ -3,40 +3,22 @@
     <div class="swiper-container">
         <!-- 內容包覆容器 -->
         <div class="swiper-wrapper">
-             <div class="swiper-slide">
+             <div class="swiper-slide" v-for="slide in slides">
                 <div class="群組">
-                    <div class="項目">
-                        <alesis-human :image="image">
+                    <div class="項目" v-for="item in slide">
+                        <alesis-human
+                            :image="image"
+                            :amount="item.amount"
+                            :interest="item.rate"
+                            :instalment="item.period_range"
+                            :spend="item.spend_day"
+                        >
                             <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/4RqbVmH6aHU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                <iframe v-bind:src="item.video_link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </alesis-human>
                     </div>
-                    <div class="項目">
-                        <alesis-human :image="image">
-                            <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/we16JV8Hc1o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                        </alesis-human>
-                    </div>
-                </div>
-            </div>
-
-            <div class="swiper-slide">
-                <div class="群組">
-                    <div class="項目">
-                        <alesis-human :image="image">
-                            <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/tsd-YTxzRyI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                        </alesis-human>
-                    </div>
-                    <div class="項目">
-                        <!--<alesis-human :image="image">
-                            <div slot="video">
-                                <iframe src="https://www.youtube.com/embed/THjekE5p2aw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                        </alesis-human>-->
+                    <div class="項目" v-if="slide.length < 2">
                     </div>
                 </div>
             </div>
@@ -106,14 +88,15 @@ export default {
     props: {
         type: {
             default: "index",
+        },
+        category: {
+            default: 'loan'
         }
     },
-    data() {
-        return {
-            image  : "",
-            invests: InvestData
-        }
-    },
+    data: () => ({
+        image: '',
+        slides: []
+    }),
     mounted() {
         switch (this.type) {
             case "work":
@@ -124,20 +107,51 @@ export default {
                 this.image = "/images/alesis-human-student-symbol.svg";
                 break
         }
+        this.getExperiences();
+    },
+    methods: {
+        getExperiences() {
+            var self = this;
 
+            let data = new FormData();
+            // 借款端|投資端
+            // let category = this.category == 'loan' ? 'loan' : 'invest';
+            let category = 'loan';
+            data.append('category', category)
 
-        // 替 SwiperCore 載入 Navigation 導覽模組。
-        SwiperCore.use([Navigation]);
-        // 初始化這個案例分享容器幻燈片。
-        const swiper = new Swiper('.swiper-container', {
-            pagination: {
-                el: '.swiper-pagination',
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
+            axios({
+                url: '/getExperiencesData',
+                method: 'post',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                }
+            }).then((resp) => {
+                let chunk = 2;
+
+                let data = resp.data.filter(x => x.video_link);
+
+                for (i=0; i< data.length; i+=chunk) {
+                    self.slides.push(data.slice(i, i+chunk))
+                }
+
+                // 替 SwiperCore 載入 Navigation 導覽模組。
+                SwiperCore.use([Navigation]);
+
+                // 初始化這個案例分享容器幻燈片。
+                const swiper = new Swiper('.swiper-container', {
+                    pagination: {
+                        el: '.swiper-pagination',
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+
+            })
+        },
     }
 }
 </script>
