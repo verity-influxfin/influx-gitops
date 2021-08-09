@@ -440,16 +440,14 @@ export default {
 }
 
 .頂部板岩 .遮罩 .標題 {
-    padding-bottom         : 0.2rem;
-    border-bottom          : 1px solid #FFF;
-    display                : inline-block;
-    font-weight            : bolder;
-    background-image       : linear-gradient(to right, #e7e7f4 0%, #4fb7ec 50%, #c4c4fc 75%);
-    background-clip        : text;
-    width                  : fit-content;
-    color                  : rgba(255, 255, 255, 0);
-    font-size              : 2rem;
-    line-height            : 1.2;
+    padding-bottom: 0.2rem;
+    border-bottom : 1px solid #FFF;
+    display       : inline-block;
+    font-weight   : bolder;
+    color         : #FFF;
+    width         : fit-content;
+    font-size     : 2rem;
+    line-height   : 1.2;
 
     @include rwd {
         font-size: 1.8rem;

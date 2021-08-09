@@ -42,6 +42,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "./alesis";
+
 .上海容器 {
     display      : inline-block;
     border-radius: 17px;
@@ -49,7 +51,12 @@ export default {
     padding      : 1.5rem 1.25rem;
     max-width    : 380px;
     text-align   : justify;
-    font-size    : 1.1rem;
+    font-size    : 1.3rem;
+
+    @include rwd {
+        padding  : 1.5rem 1.25rem;
+        font-size: 1.1rem;
+    }
 }
 
 .上海容器 .商標 {

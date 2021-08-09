@@ -158,13 +158,13 @@
                     <div class="sub">
                         <a href="/faq" class="item">常見問題</a>
                         <a href="/risk" class="item">風險報告書</a>
-                        <a href="/projects" class="item">案件總覽</a>
+                        <a href="/projects" class="item">查看案件</a>
                     </div>
                 </div>
                 <a href="/news" class="item">平台公告</a>
-                <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow" target="_blank" class="item">下載APP</a>
+                <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <div class="item">
-                    <div @click="doLogin" class="login">SIGN IN</div>
+                    <div @click="openLoginModal" class="login">SIGN IN</div>
                 </div>
                 <div class="item hamburger">
                     <img src="/images/alesis-hamburger.svg">
@@ -208,11 +208,17 @@
                         <a href="/vlog" class="item">小學堂影音</a>
                     </div>
                 </div>
-                <a href="/faq" class="item">
-                    <div class="text">常見問題</div>
-                </a>
+                <div class="item -dropdown">
+                    <div class="text">了解更多</div>
+                    <div class="sub">
+                        <a href="/faq" class="item">常見問題</a>
+                        <a href="/risk" class="item">風險報告書</a>
+                        <a href="/projects" class="item">查看案件</a>
+                    </div>
+                </div>
+                <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <div class="item">
-                    <div @click="doLogin" class="login"><i class="fas fa-user"></i> SIGN IN</div>
+                    <div @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
                 </div>
             </div>
         </div>
@@ -282,8 +288,8 @@
                             <a href="/collegeLoan">學生貸款</a>
                             <a href="/workLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
-                            <a href="/investment">車輛融資</a>
-                            <a href="/investment">企業融資</a>
+                            <a>車輛融資</a>
+                            <a>企業融資</a>
                             <a href="/mobileLoan">手機分期</a>
                         </div>
                     </div>
@@ -342,8 +348,8 @@
                     <a href="https://www.influxfin.com/companycooperation" class="item">企業合作</a>
                 </div>
                 <div class="externals">
-                    <a class="item" href="/borrow">我想申貸</a>
-                    <a class="item -invest" href="/invest">我想投資</a>
+                    <a class="item" href="https://www.influxfin.com/borrowLink">我想申貸</a>
+                    <a class="item -invest" href="https://www.influxfin.com/investLink">我想投資</a>
                 </div>
             </div>
         </div>

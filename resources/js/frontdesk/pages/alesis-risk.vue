@@ -183,6 +183,7 @@ export default {
     gap            : 1rem;
     align-items    : center;
     justify-content: center;
+    flex-wrap      : wrap;
 }
 
 .報告書 .包裹容器 .連結 .項目 {

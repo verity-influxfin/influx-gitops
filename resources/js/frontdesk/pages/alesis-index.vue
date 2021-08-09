@@ -50,6 +50,14 @@
                         <img src="/images/banner--.jpg" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
                 </div>
+                <div class="swiper-slide">
+                    <a href="https://www.influxfin.com/borrowLink">
+                        <img src="/images/210129首頁-全台首創banner.jpg" class="旗幟圖片">
+                    </a>
+                    <a href="https://www.influxfin.com/borrowLink">
+                        <img src="/images/210129首頁手機-全台首創banner (1).jpg" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
             </div>
         </div>
 

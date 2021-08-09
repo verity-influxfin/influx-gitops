@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 標頭 -->
-        <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度 18 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
+        <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度 15 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
         <!-- 標頭 -->
 
         <!-- 計數器 -->
@@ -435,6 +435,11 @@ export default {
         formSchoolDiscipline: "",
         formRank            : "",
         formHasAward        : "",
+        name                : "",
+        email               : "",
+        isStudentLoan       : null,
+        isPartTimeJob       : null,
+        monthlyEconomy      : null,
         formCalculated      : false,
         schools             : [],
         schoolDisciplines   : {},
@@ -835,6 +840,10 @@ button[disabled] {
     }
 }
 
+.貸安吶 .表單 .列 .輸入欄位 button {
+    outline: none;
+}
+
 .貸安吶 .表單 .列 .輸入欄位 select {
     width        : 100%;
     padding      : .5rem 1rem;
@@ -1003,7 +1012,8 @@ button[disabled] {
 }
 
 .合作對象 .群組 .項目 {
-    text-align: center;
+    text-align     : center;
+    text-decoration: none;
 
     @include rwd {
         flex: calc(100% / 3);

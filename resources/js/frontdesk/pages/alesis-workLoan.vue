@@ -64,8 +64,8 @@
                             <div class="項目">
                                 <div class="步驟一">
                                     <div class="左邊">
-                                        <a href="https://apps.apple.com/tw/app/%E6%99%AE%E5%8C%AFinflux/id1463581445" target="_balnk"><img src="/images/alesis-app-store.svg" class="圖片"></a>
-                                        <a href="https://play.google.com/store/apps/details?id=com.influxfin.borrow&hl=zh_TW&gl=US" target="_blank"><img src="/images/alesis-google-play.svg" class="圖片"></a>
+                                        <a href="https://www.influxfin.com/borrowLink" target="_balnk"><img src="/images/alesis-app-store.svg" class="圖片"></a>
+                                        <a href="https://www.influxfin.com/borrowLink" target="_blank"><img src="/images/alesis-google-play.svg" class="圖片"></a>
                                     </div>
                                     <div class="中間">
                                         <img src="/images/alesis-workloan-step1.svg" class="圖片">
@@ -816,6 +816,10 @@ export default {
         text-align: left;
         font-size : 1rem;
     }
+}
+
+.評估問卷 .表單 .列 .輸入欄位 button {
+    outline: none
 }
 
 .評估問卷 .表單 .列 .輸入欄位 select {
