@@ -74,6 +74,7 @@ export default {
     height    : 100%;
     width     : 100%;
     object-fit: cover;
+    object-position: top;
 }
 
 .貸款標頭 .遮罩 {

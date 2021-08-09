@@ -56,16 +56,14 @@
                 <div class="標題">申貸流程</div>
             </alesis-header>
             <alesis-section :secondary="true">
-                <alesis-space size="small"></alesis-space>
-                <div class="swiper-container 幻燈片">
+                <alesis-space size="medium"></alesis-space>
+                <div class="swiper-container steps-container">
                     <div class="swiper-wrapper">
                         <!-- 步驟一 -->
                         <div class="群組 swiper-slide">
                             <div class="項目">
                                 <div class="步驟一">
                                     <div class="左邊">
-                                        <a href="https://www.influxfin.com/borrowLink" target="_balnk"><img src="/images/alesis-app-store.svg" class="圖片"></a>
-                                        <a href="https://www.influxfin.com/borrowLink" target="_blank"><img src="/images/alesis-google-play.svg" class="圖片"></a>
                                     </div>
                                     <div class="中間">
                                         <img src="/images/alesis-workloan-step1.svg" class="圖片">
@@ -76,6 +74,12 @@
                                             下載「普匯influx」APP<br>
                                             註冊會員<br>
                                             申請「上班族貸」<br>
+                                            <a href="https://www.influxfin.com/borrowLink" target="_balnk">
+                                                <img src="/images/alesis-app-store.svg" class="圖片">
+                                            </a>
+                                            <a href="https://www.influxfin.com/borrowLink" target="_blank">
+                                                <img src="/images/alesis-google-play.svg" class="圖片">
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -85,101 +89,67 @@
 
                         <!-- 步驟二 -->
                         <div class="群組 swiper-slide">
-                            <div class="項目">
-                                <div class="步驟二">
-                                    <div class="左邊">
-                                        <div class="手機區塊">
-                                            <img src="/images/alesis-workloan-step2-1.svg" class="圖片">
-                                            <img src="/images/alesis-workloan-step2-2.svg" class="圖片">
-                                        </div>
-                                        <div class="內容" v-if="how === 'work'">
-                                            <div class="標題">工作證明</div>
-                                            <div class="分隔線"></div>
-                                            <div class="文章段落">
-                                                <div class="標籤">方法 1</div>
-                                                <div class="容器">
-                                                    <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">自然人憑證</alesis-button>
-                                                </div>
-                                            </div>
-                                            <div class="內容">至各縣市勞動部申請 : 申請後請拍照上傳至APP內</div>
-                                            <div class="分隔線"></div>
-                                            <div class="文章段落">
-                                                <div class="標籤">方法 2</div>
-                                                <div class="容器">
-                                                    <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">至各縣市勞動部申請</alesis-button>
-                                                </div>
-                                            </div>
-                                            <div class="內容">
-                                                自然人憑證 : 使用自然人憑證卡搭配電腦與讀卡機至勞保局網頁 (<a href="#!">https://edesk.bli.gov.tw/aa/</a>) 進行申請
-                                            </div>
-                                        </div>
-                                        <div class="內容" v-if="how === 'prove'">
-                                            <div class="標題">聯徵證明</div>
-                                            <div class="分隔線"></div>
-                                            <div class="文章段落">
-                                                <div class="標籤">方法 1</div>
-                                                <div class="容器">
-                                                    <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">郵局</alesis-button>
-                                                </div>
-                                            </div>
-                                            <div class="內容">郵局：至郵局櫃台申請聯徵,並寄送至普匯金融科技 (台北市松江路111號11樓之2)</div>
-                                            <div class="分隔線"></div>
-                                            <div class="文章段落">
-                                                <div class="標籤">方法 2</div>
-                                                <div class="容器">
-                                                    <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">自然人憑證</alesis-button>
-                                                </div>
-                                            </div>
-                                            <div class="內容">
-                                                自然人憑證 : 使用自然人憑證卡搭配電腦與讀卡機至財團法人金融聯合中心網頁 (<a href="#!">https://apply.jcic.org.tw/CreditQueryInput.do</a>) 進行申請
-                                            </div>
-                                            <div class="分隔線"></div>
-                                            <div class="文章段落">
-                                                <div class="標籤">方法 3</div>
-                                                <div class="容器">
-                                                    <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">投資人行動網</alesis-button>
-                                                </div>
-                                            </div>
-                                            <div class="內容">
-                                                投資人行動網 : 下載投資人行動網APP(TWID)並選擇您開立證券戶之券商
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="右邊">
-                                        <div class="標題">Step 2.：</div>
-                                        <div class="內容">
-                                            選擇申請金額、期數<br>
-                                            完成實名認證<br>
-                                            上傳申貸資料<br>
-                                        </div>
-                                        <br><br>
-                                        <div class="標題">需提供資料：</div>
-                                        <div class="內容">
-                                            近一個月勞保異動明細　<a href="javascript:void(0);" class="help" @click="() => {how = 'work'}">如何申請？</a><br>
-                                            近一個月信用報告　<a href="javascript:void(0);" class="help" @click="() => {how = 'prove'}">如何申請？</a><br>
-                                            學歷證明（畢業證書）
-                                        </div>
+                            <div class="步驟二">
+                                <div class="左邊"></div>
+                                <div class="中間">
+                                    <img src="/images/alesis-workloan-step2-1.svg" class="圖片">
+                                </div>
+                                <div class="右邊">
+                                    <div class="標題">Step 2.：</div>
+                                    <div class="內容">
+                                        選擇申請金額、期數<br/>完成實名認證<br/>上傳申貸資料
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- / 步驟二 -->
 
-                        <!-- 步驟三 -->
+                        <!-- 步驟二b -->
                         <div class="群組 swiper-slide">
-                            <div class="項目">
-                                <div class="步驟三">
-                                    <div class="左邊">
-                                        <img src="/images/alesis-workloan-step3-1.svg" class="圖片">
-                                        <img src="/images/alesis-workloan-step3-2.svg" class="圖片">
+                            <div class="步驟二b">
+                                <div class="左邊"></div>
+                                <div class="中間">
+                                    <img src="/images/alesis-workloan-step2-2.svg" class="圖片">
+                                </div>
+                                <div class="右邊">
+                                    <div class="標題">需提供資料：</div>
+                                    <div class="內容">
+                                        近一個月勞保異動明細<button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal" @click="how='work'">如何申請？</button><br/>
+                                        近一個月信用報告<button type="button" class="btn btn-link" data-toggle="modal" data-target="#myModal" @click="how='prove'">如何申請？</button><br/>
+                                        學歷證明（畢業證書）
                                     </div>
-                                    <div class="右邊">
-                                        <div class="標題">Step 3.：</div>
-                                        <div class="內容">
-                                            審核通過<br>
-                                            線上簽約<br>
-                                            立即上架媒和<br>
-                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / 步驟二b -->
+
+                        <!-- 步驟三 -->
+                        <div class="swiper-slide">
+                            <div class="步驟三">
+                                <div class="左邊"></div>
+                                <div class="中間">
+                                    <img src="/images/alesis-workloan-step3-1.svg" class="圖片">
+                                </div>
+                                <div class="右邊">
+                                    <div class="標題">Step 3.：</div>
+                                    <div class="內容">
+                                        審核通過<br/>線上簽約<br/>立即上架媒合
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / 步驟三 -->
+
+                        <!-- 步驟三 -->
+                        <div class="swiper-slide">
+                            <div class="步驟三b">
+                                <div class="左邊"></div>
+                                <div class="中間">
+                                    <img src="/images/alesis-workloan-step3-2.svg" class="圖片">
+                                </div>
+                                <div class="右邊">
+                                    <div class="內容">
+                                        立即上架媒合
                                     </div>
                                 </div>
                             </div>
@@ -187,18 +157,16 @@
                         <!-- / 步驟三 -->
 
                         <!-- 步驟四 -->
-                        <div class="群組 swiper-slide">
-                            <div class="項目">
-                                <div class="步驟四">
-                                    <div class="左邊">
-                                        <img src="/images/alesis-donezo.svg" class="圖片">
-                                    </div>
-                                    <div class="右邊">
-                                        <div class="標題">Step 4.：</div>
-                                        <div class="內容">
-                                            成功媒合投資人<br>
-                                            立即放款
-                                        </div>
+                        <div class="swiper-slide">
+                            <div class="步驟四">
+                                <div class="左邊"></div>
+                                <div class="中間">
+                                    <img src="/images/alesis-workloan-step4.svg" class="圖片">
+                                </div>
+                                <div class="右邊">
+                                    <div class="標題">Step 4.：</div>
+                                    <div class="內容">
+                                        成功媒合投資人<br/>立即放款
                                     </div>
                                 </div>
                             </div>
@@ -211,6 +179,71 @@
                 </div>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <div class="內容" v-if="how=='work'">
+                                <div class="標題">工作證明</div>
+                                <div class="分隔線"></div>
+                                <div class="文章段落">
+                                    <div class="標籤">方法 1</div>
+                                    <div class="容器">
+                                        <alesis-button size="1.2rem" xPadding="2rem" yPadding=".8rem">自然人憑證</alesis-button>
+                                    </div>
+                                </div>
+                                <div class="內容">至各縣市勞動部申請 : 申請後請拍照上傳至APP內</div>
+                                <div class="分隔線"></div>
+                                <div class="文章段落">
+                                    <div class="標籤">方法 2</div>
+                                    <div class="容器">
+                                        <alesis-button size="1.2rem" xPadding="1rem" yPadding=".8rem">至各縣市勞動部申請</alesis-button>
+                                    </div>
+                                </div>
+                                <div class="內容">
+                                    自然人憑證 : 使用自然人憑證卡搭配電腦與讀卡機至 <a class="external_link" title="https://edesk.bli.gov.tw/aa/" href="https://edesk.bli.gov.tw/aa/" target="_blank">勞保局網頁</a> 進行申請
+                                </div>
+                            </div>
+                            <div class="內容" v-if="how=='prove'">
+                                <div class="標題">聯徵證明</div>
+                                <div class="分隔線"></div>
+                                <div class="文章段落">
+                                    <div class="標籤">方法 1</div>
+                                    <div class="容器">
+                                        <alesis-button size="1.2rem" xPadding="1rem" yPadding=".8rem">郵局</alesis-button>
+                                    </div>
+                                </div>
+                                <div class="內容">郵局：至郵局櫃台申請聯徵,並寄送至普匯金融科技 (台北市松江路111號11樓之2)</div>
+                                <div class="分隔線"></div>
+                                <div class="文章段落">
+                                    <div class="標籤">方法 2</div>
+                                    <div class="容器">
+                                        <alesis-button size="1.2rem" xPadding="1rem" yPadding=".8rem">自然人憑證</alesis-button>
+                                    </div>
+                                </div>
+                                <div class="內容">
+                                    自然人憑證 : 使用自然人憑證卡搭配電腦與讀卡機至 <a class="external_link" title="https://apply.jcic.org.tw/CreditQueryInput.do" href="https://apply.jcic.org.tw/CreditQueryInput.do" target="_blank">財團法人金融聯合中心網頁</a> 進行申請
+                                </div>
+                                <div class="分隔線"></div>
+                                <div class="文章段落">
+                                    <div class="標籤">方法 3</div>
+                                    <div class="容器">
+                                        <alesis-button size="1.2rem" xPadding="1rem" yPadding=".8rem">投資人行動網</alesis-button>
+                                    </div>
+                                </div>
+                                <div class="內容">
+                                    投資人行動網 : 下載投資人行動網APP(TWID)並選擇您開立證券戶之券商
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- / 申貸流程 -->
 
@@ -568,7 +601,7 @@ export default {
         })
 
         SwiperCore.use([Navigation]);
-         const swiperA = new Swiper('.swiper-container.flow-container', {
+         const swiperA = new Swiper('.swiper-container.steps-container', {
             // If we need pagination
             pagination: {
                 el: '.swiper-pagination',
@@ -965,257 +998,6 @@ export default {
 }
 
 /**
- * 申貸流程
- */
-
-.申貸流程 {
-    position: relative;
-}
-
-.申貸流程 .幻燈片 {
-    margin        : 0 auto;
-    max-width     : 1170px;
-}
-
-.申貸流程 .幻燈片 .swiper-button-next,
-.申貸流程 .幻燈片 .swiper-button-prev {
-    transform: scale(0.6);
-}
-
-.申貸流程 .幻燈片 .swiper-button-disabled {
-    opacity: 0;
-}
-
-.申貸流程 .群組 {
-    display              : grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap                  : 3rem;
-    margin               : 0 auto;
-}
-
-.申貸流程 .群組 .項目 {
-    width          : 1170px;
-    min-height     : 430px;
-    display        : flex;
-    align-items    : center;
-    justify-content: initial;
-    margin         : 0 auto;
-}
-
-.申貸流程 .步驟一,
-.申貸流程 .步驟二,
-.申貸流程 .步驟三,
-.申貸流程 .步驟四 {
-    min-width: 800px;
-}
-
-.申貸流程 .步驟一 {
-    display              : inline-grid;
-    grid-template-columns: repeat(3, 1fr);
-    margin               : 0 auto;
-    gap                  : 6rem;
-}
-
-.申貸流程 .步驟一 .左邊 {
-    display        : flex;
-    align-items    : flex-end;
-    justify-content: center;
-    flex-direction : column;
-    gap            : 1.5rem;
-}
-
-.申貸流程 .步驟一 .中間 .圖片 {
-    width: 210px;
-}
-
-.申貸流程 .步驟一 .右邊 {
-    display        : flex;
-    justify-content: center;
-    flex-direction : column;
-}
-
-.申貸流程 .步驟一 .右邊 .標題 {
-    color    : #112E53;
-    font-size: 1.3rem;
-}
-
-.申貸流程 .步驟一 .右邊 .內容 {
-    color    : #5D5555;
-    font-size: 1.1rem;
-}
-
-.申貸流程 .步驟二 {
-    display              : grid;
-    grid-template-columns: 470px 1fr;
-    gap                  : 3rem;
-    margin               : 0 auto;
-    max-width            : 800px;
-    margin-left          : 9.1rem;
-}
-
-.申貸流程 .步驟二 .左邊 {
-    display       : flex;
-    flex-direction: column;
-    align-items   : center;
-}
-
-.申貸流程 .步驟二 .左邊 .手機區塊 {
-    display: flex;
-    gap    : 3rem;
-}
-
-.申貸流程 .步驟二 .左邊 .手機區塊 .圖片 {
-    width: 210px;
-}
-
-.申貸流程 .步驟二 .左邊 > .內容 {
-    border       : 1px solid #2664A5;
-    border-radius: .8rem;
-    padding      : 1.5rem;
-    margin-top   : 3rem;
-}
-
-.申貸流程 .步驟二 .左邊 .內容 .標題 {
-    text-align: center;
-    font-size : 1.5rem;
-    color     : #036EB7;
-}
-
-.申貸流程 .步驟二 .左邊 .內容 .分隔線 {
-    height    : 1px;
-    background: #2664A5;
-    margin    : 1rem 0;
-}
-
-.申貸流程 .步驟二 .左邊 .內容 .文章段落 {
-    display              : grid;
-    grid-template-columns: 1fr 4fr;
-    align-items          : center;
-}
-
-.申貸流程 .步驟二 .左邊 .內容 .文章段落 .標籤 {
-    font-size: 1.2rem;
-    color    : #036EB7;
-}
-
-.申貸流程 .步驟二 .左邊 .內容 .文章段落 .容器.容器_框線的 {
-    position       : relative;
-    padding        : 1rem 1.5rem;
-    display        : inline-flex;
-    align-items    : center;
-    justify-content: center;
-    line-height    : 1;
-    font-size      : 1.1rem;
-    font-weight    : bold;
-    color          : #036eb7;
-
-    background-image   : url(/images/alesis-button-lines.svg);
-    background-size    : contain;
-    background-repeat  : no-repeat;
-    background-position: center;
-}
-
-.申貸流程 .步驟二 .左邊 .內容 .內容 {
-    line-height: 1.8;
-    margin-top : .8rem;
-    color      : #5D5555;
-}
-
-.申貸流程 .步驟二 .左邊 .內容 .內容 a {
-    text-decoration: underline;
-}
-
-.申貸流程 .步驟二 .右邊 {
-    padding-top: 6rem;
-}
-
-.申貸流程 .步驟二 .右邊 .標題 {
-    color    : #112E53;
-    font-size: 1.3rem;
-}
-
-.申貸流程 .步驟二 .右邊 .內容 {
-    color    : #5D5555;
-    font-size: 1.1rem;
-}
-
-.申貸流程 .步驟二 .右邊 .說明 {
-    font-size      : .9rem;
-    text-decoration: underline;
-    color          : #112E53;
-}
-
-.申貸流程 .步驟三 {
-    display              : grid;
-    grid-template-columns: 470px 1fr;
-    gap                  : 3rem;
-    margin               : 0 auto;
-    max-width            : 800px;
-    margin-left          : 9.1rem;
-}
-
-.申貸流程 .步驟三 .左邊 {
-    display        : flex;
-    align-items    : flex-end;
-    justify-content: center;
-    flex-direction : row;
-    gap            : 3rem;
-}
-
-.申貸流程 .步驟三 .左邊 .圖片 {
-    width: 210px;
-}
-
-.申貸流程 .步驟三 .右邊 {
-    display        : flex;
-    justify-content: center;
-    flex-direction : column;
-}
-
-.申貸流程 .步驟三 .右邊 .標題 {
-    color    : #112E53;
-    font-size: 1.3rem;
-}
-
-.申貸流程 .步驟三 .右邊 .內容 {
-    color    : #5D5555;
-    font-size: 1.1rem;
-}
-
-.申貸流程 .步驟四 {
-    display              : grid;
-    grid-template-columns: 470px 1fr;
-    gap                  : 3rem;
-    margin               : 0 auto;
-    max-width            : 800px;
-    margin-left          : 9.1rem;
-}
-
-.申貸流程 .步驟四 .左邊 {
-    text-align: center;
-}
-
-.申貸流程 .步驟四 .左邊 .圖片 {
-    width: 260px;
-}
-
-.申貸流程 .步驟四 .右邊 {
-    display        : flex;
-    justify-content: center;
-    flex-direction : column;
-}
-
-.申貸流程 .步驟四 .右邊 .標題 {
-    color    : #112E53;
-    font-size: 1.3rem;
-}
-
-.申貸流程 .步驟四 .右邊 .內容 {
-    color    : #5D5555;
-    font-size: 1.1rem;
-}
-
-/**
  * 產品特色
  */
 
@@ -1421,7 +1203,259 @@ export default {
 
 .案例分享 {
     position: relative;
-
     --alesis-xheader-offset: -70%;
+}
+
+/**
+ * 申貸流程
+ */
+
+.申貸流程 {
+    position: relative;
+    --alesis-xsection-offset-top: 8rem;
+}
+
+.申貸流程 .swiper-container.steps-container {
+    width: 900px;
+    height: fit-content;
+
+    @include rwd {
+        width: 100%;
+    }
+}
+.申貸流程 .modal-dialog {
+    margin-top: 25vh;
+    @include rwd {
+        margin-top: inherit;
+    }
+}
+
+.申貸流程 .modal-content {
+    border-radius: .8rem;
+}
+
+.申貸流程 .modal-body {
+    padding: .5rem;
+}
+
+.申貸流程 .modal-body button.close {
+    position: relative;
+    top: 5px;
+    right: 10px;
+}
+
+.申貸流程 .步驟一,
+.申貸流程 .步驟二,
+.申貸流程 .步驟二b,
+.申貸流程 .步驟三,
+.申貸流程 .步驟三b,
+.申貸流程 .步驟四 {
+    display              : grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap                  : 3rem;
+    max-width            : 900px;
+
+    @include rwd {
+        grid-template-columns: repeat(1, 1fr);
+        align-items          : center;
+        justify-content      : center;
+    }
+}
+
+.申貸流程 .步驟一 .左邊,
+.申貸流程 .步驟二 .左邊,
+.申貸流程 .步驟二b .左邊,
+.申貸流程 .步驟三 .左邊,
+.申貸流程 .步驟三b .左邊,
+.申貸流程 .步驟四 .左邊 {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    @include rwd {
+        display: none;
+    }
+}
+
+.申貸流程 .步驟一 .中間,
+.申貸流程 .步驟二 .中間,
+.申貸流程 .步驟二b .中間,
+.申貸流程 .步驟三 .中間,
+.申貸流程 .步驟三b .中間,
+.申貸流程 .步驟四 .中間 {
+    text-align: center;
+}
+
+.申貸流程 .步驟一 .中間 .圖片,
+.申貸流程 .步驟二 .中間 .圖片,
+.申貸流程 .步驟二b .中間 .圖片,
+.申貸流程 .步驟三 .中間 .圖片,
+.申貸流程 .步驟三b .中間 .圖片,
+.申貸流程 .步驟四 .中間 .圖片 {
+    
+    width: 275px;
+
+    @include rwd {
+        width: 200px;
+    }
+}
+.申貸流程 .步驟四 .中間 .圖片 {
+    min-height: 547px;
+    @include rwd {
+        min-height: 397px;
+    }
+}
+
+.申貸流程 .步驟一 .右邊,
+.申貸流程 .步驟二 .右邊,
+.申貸流程 .步驟二b .右邊,
+.申貸流程 .步驟三 .右邊,
+.申貸流程 .步驟三b .右邊,
+.申貸流程 .步驟四 .右邊 {
+    display        : flex;
+    justify-content: center;
+    flex-direction : column;
+
+    @include rwd {
+        margin      : 0 auto;
+        max-width   : 167px;
+        width       : fit-content;
+    }
+}
+
+.申貸流程 .步驟一 .右邊 a img.圖片 {
+    margin-top: 10px;
+    width: 160px;
+    @include rwd {
+        margin: 10px auto 0;
+    }
+}
+
+.申貸流程 .步驟一 .右邊 .標題,
+.申貸流程 .步驟二 .右邊 .標題,
+.申貸流程 .步驟二b .右邊 .標題,
+.申貸流程 .步驟三 .右邊 .標題,
+.申貸流程 .步驟三b .右邊 .標題,
+.申貸流程 .步驟四 .右邊 .標題 {
+    color    : #112E53;
+    font-size: 1.3rem;
+
+    @include rwd {
+        font-size: 1.1rem;
+    }
+}
+
+.申貸流程 .內容 .btn.btn-link{
+    padding: 0;
+    line-height: 1.3em;
+    display: block;
+    text-decoration: underline;
+    vertical-align: top;
+    font-size: .89em;
+}
+
+.申貸流程 .swiper-button-next,
+.申貸流程 .swiper-button-prev {
+    transform: scale(0.7);
+    @include rwd {
+
+    }
+}
+
+.申貸流程 .步驟一 .右邊 .標題 .內容,
+.申貸流程 .步驟二 .右邊 .標題 .內容,
+.申貸流程 .步驟二b .右邊 .標題 .內容,
+.申貸流程 .步驟三 .右邊 .標題 .內容,
+.申貸流程 .步驟三b .右邊 .標題 .內容,
+.申貸流程 .步驟四 .右邊 .標題 .內容 {
+    color    : #5D5555;
+    font-size: 1.1rem;
+
+    @include rwd {
+        font-size: 1rem;
+        padding-left: 1rem;
+    }
+}
+.申貸流程 .swiper-button-next,
+.申貸流程 .swiper-button-prev {
+
+    @include rwd {
+        margin-top: -7rem;
+    }
+}
+
+.申貸流程 .modal-body > .內容 {
+    border       : 1px solid #2664A5;
+    border-radius: .8rem;
+    padding      : 1.5rem;
+}
+
+.申貸流程 .modal-body .內容 .標題 {
+    text-align: center;
+    font-size : 1.5rem;
+    color     : #036EB7;
+}
+
+.申貸流程 .modal-body .內容 .分隔線 {
+    height    : 1px;
+    background: #2664A5;
+    margin    : 1rem 0;
+}
+
+.申貸流程 .modal-body .內容 .文章段落 {
+    display              : grid;
+    grid-template-columns: 1fr 4fr;
+    align-items          : center;
+    @include rwd {
+        grid-template-columns: 2fr 5fr;
+    }
+}
+
+.申貸流程 .modal-body .內容 .文章段落 .標籤 {
+    font-size: 1.2rem;
+    color    : #036EB7;
+}
+
+.申貸流程 .modal-body .內容 .文章段落 .容器.容器_框線的 {
+    position       : relative;
+    padding        : 1rem 1.5rem;
+    display        : inline-flex;
+    align-items    : center;
+    justify-content: center;
+    line-height    : 1;
+    font-size      : 1.1rem;
+    font-weight    : bold;
+    color          : #036eb7;
+
+    background-image   : url(/images/alesis-button-lines.svg);
+    background-size    : contain;
+    background-repeat  : no-repeat;
+    background-position: center;
+}
+
+.申貸流程 .modal-body .內容 .內容 {
+    line-height: 1.8;
+    margin-top : .8rem;
+    color      : #5D5555;
+}
+
+.申貸流程 .modal-body .內容 .內容 a {
+    text-decoration: underline;
+}
+
+.申貸流程 .modal-body .文章段落 .容器 .按鈕 {
+    text-decoration: underline;
+}
+a.external_link {
+    color: #036eb7;
+}
+a.external_link::after {
+    content: "\f35d";
+    font-family: 'Font Awesome\ 5 Free';
+    font-weight: 600;
+    font-size: .2em;
+    margin-left: 1.5em;
 }
 </style>

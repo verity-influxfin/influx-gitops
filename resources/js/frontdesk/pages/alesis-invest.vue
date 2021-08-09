@@ -628,7 +628,7 @@ export default {
     gap                  : 0;
     padding-bottom       : 1rem;
     grid-template-rows   : repeat(auto-fill, 220px);
-        grid-template-columns: repeat(auto-fill, 50%);
+    grid-template-columns: repeat(auto-fill, 50%);
     align-items          : center;
     justify-content      : start;
     justify-items        : center;
