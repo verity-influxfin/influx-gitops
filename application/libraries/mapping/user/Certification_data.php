@@ -359,6 +359,7 @@ class Certification_data
 	 *  [printDatetime] => 印表時間
 	 *  [scoreComment] => 信用評分
 	 *  [liabilities_totalAmount] => 借款資訊B - 借款總餘額資訊,
+	 *  [liabilitiesWithoutAssureTotalAmount] => 借款資訊B - 借款總餘額資訊(不含擔保借款),
 	 *  [liabilities_metaInfo] => 借款資訊B - 共同債務/從債務/其他債務資訊,
 	 *  [liabilities_badDebtInfo] => 借款資訊B - 借款逾期、催收或呆帳記錄,
 	 *  [creditCard_cardInfo] => 信用卡資訊K - 信用卡持卡紀錄,
@@ -432,6 +433,7 @@ class Certification_data
 			'personId' => '',
 			'taxId' => '',
 			'liabilities_totalAmount'=>'',
+			'liabilitiesWithoutAssureTotalAmount'=>'',
 			'debt_to_equity_ratio'=> 0,
 			'liabilities_metaInfo'=>'',
 			'liabilities_badDebtInfo'=>'',
@@ -513,6 +515,7 @@ class Certification_data
 			$res['taxId'] = isset($data['applierInfo']['basicInfo']['taxId']) ? $data['applierInfo']['basicInfo']['taxId'] : '';
 			// 有無信用資訊項目
 			if(! empty($data['applierInfo']['creditInfo'])){
+				$ConvertIntegerMultiplier = ['liabilities' => ['totalAmount' => 1000], 'totalAmount' => ['totalAmount' => 1]];
 				foreach($data['applierInfo']['creditInfo'] as $k=>$v){
 					if(is_array($v)){
 						foreach($v as $k1=>$v1){
@@ -521,6 +524,12 @@ class Certification_data
 									$name = $k.'_'.$k1;
 									if(isset($res[$name])){
 										$res[$name] = $v1['existCreditInfo'];
+										if(isset($ConvertIntegerMultiplier[$k][$k1]) && $ConvertIntegerMultiplier[$k][$k1]) {
+											preg_match('/(\d+[,]*)+/', $res[$name], $regexResult);
+											if (!empty($regexResult)) {
+												$res[$name] = intval(str_replace(",","",$regexResult[0])) * $ConvertIntegerMultiplier[$k][$k1];
+											}
+										}
 									}
 								}
 							}
@@ -600,8 +609,48 @@ class Certification_data
 							$res['balanceCash'] += $value['noDelayAmount'] + $value['delayAmount'];
 						}
 					}
-
 				}
+
+				foreach($data['B1-extra']['dataList'] as $value){
+					$value['appropriationAmount'] = isset($value['appropriationAmount'])?preg_replace('/\,|千元/','',$value['appropriationAmount']):0;
+					$value['repaymentAmount'] = isset($value['appropriationAmount'])?preg_replace('/\,|千元/','',$value['repaymentAmount']):0;
+
+					// 有還款也有撥款: 銀行補撥款，會是跟B1的同一筆，不需要再增加額外貸款金額跟借款筆數
+					// 有還款沒有撥款: 只單純抵銷借款金額，並不能當作借款筆數
+					// 沒還款有撥款: 新的借款，需要增加貸款金額及貸款筆數
+					if(is_numeric($value['appropriationAmount']) && is_numeric($value['repaymentAmount'])){
+						if($value['accountDescription']=='短期擔保放款'||$value['accountDescription']=='其他短期擔保放款'){
+							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
+								$res['totalAmountShortAssureCount'] += 1;
+								$res['totalAmountShortAssure'] += $value['appropriationAmount'];
+								$res['balanceShortAssure'] += $value['appropriationAmount'];
+							}else{
+								$res['balanceShortAssure'] -= $value['repaymentAmount'];
+							}
+						}
+						if($value['accountDescription']=='中期擔保放款'){
+							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
+								$res['totalAmountMidAssureCount'] += 1;
+								$res['totalAmountMidAssure'] += $value['appropriationAmount'];
+								$res['balanceMidAssure'] += $value['appropriationAmount'];
+							}else{
+								$res['balanceMidAssure'] -= $value['repaymentAmount'];
+							}
+						}
+						if($value['accountDescription']=='長期擔保放款'){
+							if($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0) {
+								$res['totalAmountLongAssureCount'] += 1;
+								$res['totalAmountLongAssure'] += $value['appropriationAmount'];
+								$res['balanceLongAssure'] += $value['appropriationAmount'];
+							}else{
+								$res['balanceMidAssure'] -= $value['repaymentAmount'];
+							}
+						}
+					}
+				}
+				// 由於總借款餘額已經在解析時將千位數作轉換
+				$res['liabilitiesWithoutAssureTotalAmount'] = intval($res['liabilities_totalAmount']) - ($res['balanceShortAssure']+$res['balanceMidAssure']+$res['balanceLongAssure'])*1000;
+				
 				// 借款家數
 				$res['bankCount'] = count($bank_array);
 				// 訂約金額總額度
@@ -638,6 +687,13 @@ class Certification_data
 				$totalAmount = 0;
 				$totalQuota = 0;
 
+				// 依照時間對 K2 紀錄遞減排序
+				usort($data['K2']['dataList'], function($a1, $a2) {
+					$v1 = $this->CI->time->ROCDateToUnixTimestamp($a1['date']);
+					$v2 = $this->CI->time->ROCDateToUnixTimestamp($a2['date']);
+					return $v2 - $v1; // $v2 - $v1 to reverse direction
+				});
+
 				if(isset($data['K2']['dataList'][0]['date']) && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$data['K2']['dataList'][0]['date'])){
 					$last_date = $this->CI->time->ROCDateToUnixTimestamp($data['K2']['dataList'][0]['date']);
 
@@ -647,11 +703,19 @@ class Certification_data
 					}
 				}
 
+				$totalQuota = 0;
+				$currentRecordDate = 0;
+				$recordDate = new \DateTime();
 				foreach($data['K2']['dataList'] as $key => $value){
 					// 信用紀錄幾個月
 					$value['previousPaymentStatus'] = preg_replace('/\s+/','',$value['previousPaymentStatus']);
+
+					$recordDate->setTimestamp($this->CI->time->ROCDateToUnixTimestamp($value['date']));
 					if(preg_match('/不須繳款|^全額繳清.*無遲延$/',$value['previousPaymentStatus']) && $creditLogCountStatus){
-						$res['creditLogCount'] += 1;
+						if($recordDate->format('Y-m') != $currentRecordDate) {
+							$res['creditLogCount'] += 1;
+							$currentRecordDate = $recordDate->format('Y-m');
+						}
 					}else{
 						if(preg_match('/.*遲延.*個月$|.*遲延.*個月以上$/',$value['previousPaymentStatus'])){
 							$res['creditCardHasDelay'] = '有';
@@ -675,29 +739,27 @@ class Certification_data
 						$res['delayMoreMonth'] += 1;
 					}
 
-					// creditCardUseRate
-					// to do : 信用卡月繳待修，須以銀行加卡名為基準判斷當期與前期之未到期待付款，目前以最後一筆日期直接推算
-					if($end_date && $end_date_before && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$value['date'])){
-
+					if($end_date_before && preg_match('/[0-9]{3}\/[0-9]{2}\/[0-9]{2}/',$value['date'])){
 						$value['date'] = $this->CI->time->ROCDateToUnixTimestamp($value['date']);
-						if($end_date < $value['date']){
+						if($end_date_before < $value['date']){
 							$value['quotaAmount'] = preg_replace('/\,|元/','',$value['quotaAmount']);
 							$value['currentAmount'] = preg_replace('/\,|元/','',$value['currentAmount']);
 							$value['nonExpiredAmount'] = preg_replace('/\,|元/','',$value['nonExpiredAmount']);
 							if(is_numeric($value['quotaAmount']) && is_numeric($value['currentAmount']) && is_numeric($value['nonExpiredAmount'])){
-								$totalAmount += $value['currentAmount'] + $value['nonExpiredAmount'];
-
+								// 同一間銀行的額度皆相同，多張信用卡只需算一次額度
 								if(!in_array($value['bank'],$bank_array)){
 									$bank_array[] = $value['bank'];
 									$totalQuota += $value['quotaAmount'];
 								}
 							}
 						}
-
-						if($totalQuota != 0){
-							$res['creditCardUseRate'] = round($totalAmount/$totalQuota*100, 2);
-						}
 					}
+				}
+
+				// 信用卡使用率
+				if($totalQuota != 0) {
+					$totalAmount = intval(preg_replace('/\,|千元/','',$res['creditCard_totalAmount']));
+					$res['creditCardUseRate'] = round($totalAmount/$totalQuota*100, 2);
 				}
 
 				// 信用卡月繳
@@ -705,11 +767,15 @@ class Certification_data
 
 			}
 			// 被查詢記錄
+			$mappingInstitutionList = ['中信' => '中國信託'];
 			if(!empty($data['S1']['dataList'])){
 				$institution_array = [];
 				foreach($data['S1']['dataList'] as $key => $value){
-					if(preg_match('/新業務申請/',$value['reason']) && preg_match('/信貸|個金|消金|風控|信用審查|徵信|授信/',$value['institution'])){
-						$institution_name = preg_replace('/銀行.*/',"",$value['institution']);
+					if(preg_match('/新業務申請/',$value['reason']) && preg_match('/信貸|信用貸款|個金|個人金融|消金|消費金融|風控|風險控管|審查|授信|放款/',$value['institution'])){
+						$institution_name = preg_replace('/銀.*/',"",$value['institution']);
+						if(array_key_exists($institution_name, $mappingInstitutionList)) {
+							$institution_name = $mappingInstitutionList[$institution_name];
+						}
 						if(! in_array($institution_name,$institution_array)){
 							$institution_array[] = $institution_name;
 							$res['S1Count'] += 1;
@@ -955,9 +1021,10 @@ class Certification_data
             if(!empty($keys)){
                 // 多家公司投保
                 if(count($keys)>1){
-                    $numbers = array_column($company_list, 'insuranceSalary');
+                	$employed_company_list = array_intersect_key($company_list,array_flip($keys));
+                    $numbers = array_column($employed_company_list, 'insuranceSalary');
                     $max = max($numbers);
-                    $keys = array_keys(array_combine(array_keys($company_list), array_column($company_list, 'insuranceSalary')),$max);
+                    $keys = array_keys(array_combine(array_keys($employed_company_list), $numbers),$max);
                     $insurance_id = $keys[0];
                     $last_insurance_info = $company_list[$insurance_id];
                 }

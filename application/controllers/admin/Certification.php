@@ -159,6 +159,25 @@ class Certification extends MY_Admin_Controller {
 								$report_data['data']['total_repayment_enough'] = $info_content['total_repayment_enough'];
 								// 每月還款是否小於投保金額
 								$report_data['data']['monthly_repayment_enough'] = $info_content['monthly_repayment_enough'];
+
+								// 負債比
+								if(isset($info_content['debt_to_equity_ratio'])) {
+									$report_data['data']['debt_to_equity_ratio'] = $info_content['debt_to_equity_ratio'];
+								}else
+									$report_data['data']['debt_to_equity_ratio'] = round(floatval($report_data['data']['totalMonthlyPayment']) / floatval($report_data['data']['monthly_repayment']) * 100, 2);
+
+								$convertToIntegerList = ['liabilities_totalAmount', 'total_repayment'];
+								foreach($convertToIntegerList as $key) {
+									preg_match('/(\d+[,]*)+/', $report_data['data'][$key], $regexResult);
+									if (!empty($regexResult)) {
+										$multiplier = 1;
+										if (preg_match('/千元/', $report_data['data'][$key], $resultForThousand))
+											$multiplier = 1000;
+										$report_data['data'][$key] = floatval(str_replace(",", "", $regexResult[0])) * $multiplier;
+									}
+								}
+
+
 								$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
 							}
 						}
@@ -203,6 +222,7 @@ class Certification extends MY_Admin_Controller {
 				$page_data['school_system'] 		= $this->config->item('school_system');
 				$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
 				$page_data['from'] 					= $from;
+				$page_data['sys_check'] 			= $info->sys_check;
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title', $this->menu);
 				$this->load->view('admin/certification/' . $certification['alias'], $page_data);
@@ -347,6 +367,11 @@ class Certification extends MY_Admin_Controller {
 							$game_work_level = 0;
 							$pro_level = 0;
 							$content 					= json_decode($info->content,TRUE);
+							$remark						= json_decode($info->remark, TRUE);
+							if(!is_array($remark)) {
+								$remark = [isset($remark) ? strval($remark) : ''];
+							}
+							$remark['verify_result'] 	= [$fail];
 							if(isset($post['license_status'])){
 								$license_status = is_numeric($post['license_status'])&&$post['license_status']<=3?$post['license_status']:0;
 							}
@@ -363,7 +388,8 @@ class Certification extends MY_Admin_Controller {
 							$expiretime = isset($post['printDate']) ? strtotime('+ 30 days',strtotime($post['printDate'])) : strtotime('+ 30 days',time());
 							$expiretime < time() ? $post['status'] = 2 : '';
 							$this->user_certification_model->update($post['id'],[
-								'content'=>json_encode($content),
+								'content'=> json_encode($content,JSON_INVALID_UTF8_IGNORE),
+								'remark' => json_encode($remark),
 								'expire_time'=>$expiretime,
 							]);
 						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
@@ -573,48 +599,51 @@ class Certification extends MY_Admin_Controller {
 				$this->certification_lib->set_success($info->user_certification_id);
 				$this->user_bankaccount_model->update($id,array('verify'=>1));
 
-				$this->load->library('target_lib');
-				$target = $this->target_model->get_by([
-					'user_id' => $info->user_id,
-					'status' => TARGET_WAITING_VERIFY,
-				]);
-				$product_list = $this->config->item('product_list');
-				$product = $product_list[$target->product_id];
-				$sub_product_id = $target->sub_product_id;
-				if($this->is_sub_product($product,$sub_product_id)){
-					$product = $this->trans_sub_product($product,$sub_product_id);
-				}
+				// 如果是借款人的金融帳號通過，才需要對案件進行處理
+				if($info->investor == 0) {
+					$this->load->library('target_lib');
+					$target = $this->target_model->get_by([
+						'user_id' => $info->user_id,
+						'status' => TARGET_WAITING_VERIFY,
+					]);
+					$product_list = $this->config->item('product_list');
+					$product = $product_list[$target->product_id];
+					$sub_product_id = $target->sub_product_id;
+					if ($this->is_sub_product($product, $sub_product_id)) {
+						$product = $this->trans_sub_product($product, $sub_product_id);
+					}
 
-				$allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
-				if (in_array($target->product_id, $allow_fast_verify_product)
-					&& $target->sub_product_id != STAGE_CER_TARGET
-					&& $target->sub_status != 8
-				) {
-					$targetData = json_decode($target->target_data);
-					$faceDetect = isset($targetData->autoVerifyLog)
-						? count($targetData->autoVerifyLog) >= 2
-							? false : true
-						: true;
-					if ($faceDetect) {
-						$this->load->library('certification_lib');
-						$faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $target->person_image);
-						if ($faceDetect_res['error'] == '') {
-							$target->status = TARGET_WAITING_VERIFY;
-							$targetData->autoVerifyLog[] = [
-								'faceDetect' => $faceDetect_res,
-								'res' => TARGET_WAITING_BIDDING,
-								'verify_at' => time()
-							];
-							$param['target_data'] = json_encode($targetData);
-							$this->target_lib->target_verify_success($target, 0, $param);
-						} else {
-							$targetData->autoVerifyLog[] = [
-								'faceDetect' => $faceDetect_res,
-								'res' => TARGET_WAITING_SIGNING,
-								'verify_at' => time()
-							];
-							$param['target_data'] = json_encode($targetData);
-							$this->target_lib->target_sign_failed($target, 0, $product['name'], $param);
+					$allow_fast_verify_product = $this->config->item('allow_fast_verify_product');
+					if (in_array($target->product_id, $allow_fast_verify_product)
+						&& $target->sub_product_id != STAGE_CER_TARGET
+						&& $target->sub_status != 8
+					) {
+						$targetData = json_decode($target->target_data);
+						$faceDetect = isset($targetData->autoVerifyLog)
+							? count($targetData->autoVerifyLog) >= 2
+								? false : true
+							: true;
+						if ($faceDetect) {
+							$this->load->library('certification_lib');
+							$faceDetect_res = $this->certification_lib->veify_signing_face($target->user_id, $target->person_image);
+							if ($faceDetect_res['error'] == '') {
+								$target->status = TARGET_WAITING_VERIFY;
+								$targetData->autoVerifyLog[] = [
+									'faceDetect' => $faceDetect_res,
+									'res' => TARGET_WAITING_BIDDING,
+									'verify_at' => time()
+								];
+								$param['target_data'] = json_encode($targetData);
+								$this->target_lib->target_verify_success($target, 0, $param);
+							} else {
+								$targetData->autoVerifyLog[] = [
+									'faceDetect' => $faceDetect_res,
+									'res' => TARGET_WAITING_SIGNING,
+									'verify_at' => time()
+								];
+								$param['target_data'] = json_encode($targetData);
+								$this->target_lib->target_sign_failed($target, 0, $product['name'], $param);
+							}
 						}
 					}
 				}

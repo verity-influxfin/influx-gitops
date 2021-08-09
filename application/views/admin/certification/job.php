@@ -222,8 +222,22 @@
                                     <form role="form" method="post">
                                     <div class="form-group">
 										<label>備註</label>
-
+										<?
+										if ($remark) {
+											if (isset($remark["fail"]) && $remark["fail"]) {
+												echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+											}
+										}
+										?>
 									</div>
+                                    <div class="form-group">
+                                        <label>系統審核</label>
+                                        <?
+                                        if (isset($sys_check)) {
+                                            echo '<p class="form-control-static">' . ($sys_check==1?'是':'否') . '</p>';
+                                        }
+                                        ?>
+                                    </div>
 									<h4>審核</h4>
                                         <fieldset>
        										<div class="form-group">

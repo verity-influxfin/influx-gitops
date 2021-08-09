@@ -67,6 +67,39 @@ class Cron extends CI_Controller {
 		die('1');
 	}
 
+	public function temp_handle_invalid_target() {
+        $this->load->model('loan/target_model');
+        $this->load->library('subloan_lib');
+        $this->load->library('Notification_lib');
+
+        $get 	= $this->input->get(NULL, TRUE);
+        $target_ids = isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):null;
+        if(isset($target_ids)) {
+            $targets = $this->target_model->get_many_by(['id' => $target_ids]);
+        }else{
+            $targets = $this->target_model->get_many_by(['status' => [0,1,2,3], 'interest_rate > ' => 16]);
+        }
+        foreach ($targets as $key => $value) {
+            if($value->interest_rate > 16) {
+                // 待出借(待上架)
+                if ($value->status == 3) {
+                    if ($value->sub_status == 8) {
+                        $this->subloan_lib->subloan_cancel_bidding($value, 0, null);
+                    } else {
+                        $this->target_lib->target_cancel_bidding($value, 0, null);
+                    }
+                }
+
+                if (in_array($value->status, [0,1,2,3]) && in_array($value->sub_status,[0,8,9,10])) {
+                    // 針對 status in (0,1,2) 的案件做取消，前面 3 的會先下架，但 value 狀態沒有更新，所以要有 3
+                    $this->target_lib->cancel_target($value,$value->user_id,0);
+                    $this->notification_lib->withdraw_invalid_target($value->user_id,0);
+                }
+            }
+        }
+
+    }
+
 	public function approve_target()
 	{	//每五分鐘
 		$this->load->library('Target_lib');
@@ -247,6 +280,49 @@ class Cron extends CI_Controller {
 			echo json_encode($result);
 		}
 	}
+
+	// 一次性的針對6/19 10:00以前的人工審核狀態實名進行處理
+	public function temp_handle_pending_realname() {
+		$this->load->model('user/user_certification_model');
+		$this->load->model('loan/target_model');
+		$this->load->library('Certification_lib');
+		$this->load->library('Notification_lib');
+
+		$info_list = $this->user_certification_model->get_many_by([
+			'certification_id' => "1",
+			'updated_at <' => 1624068044,
+			'status' => 3,
+		]);
+		$successCnt = $failedCnt = 0;
+		foreach ($info_list as $key => $info) {
+			if ($info->investor == 1) {
+				$this->certification_lib->set_success($info->id, true);
+				$successCnt++;
+			} else {
+				$target = $this->target_model->get_by([
+					'user_id' => $info->user_id,
+					'status' => [0, 1, 2, 3, 4, 20, 21, 22, 23, 24],
+				]);
+				// 找不到 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標） 20:待報價 21:待簽約(分期) 22:待驗證(分期) 23:待出貨(分期) 24:待債轉上架 的紀錄
+				if(!isset($target)) {
+					// 找不到 還款中(5) && delay_days > 0 的紀錄
+					$delay_target = $this->target_model->get_by([
+						'user_id' => $info->user_id,
+						'status' => 5,
+						'delay_days > ' => 0,
+					]);
+					if(!isset($delay_target)) {
+						$this->certification_lib->set_failed($info->id, '親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。', true);
+						$this->notification_lib->temp_realname_failed($info->user_id);
+						$failedCnt++;
+					}
+				}
+			}
+		}
+		echo "successCnt:".$successCnt;
+		echo "failedCnt:".$failedCnt;
+	}
+
 
 	public function daily_tax()
 	{	//每天下午一點
