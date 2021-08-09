@@ -625,19 +625,19 @@ export default {
 .現有案件 .包裹容器 .幻燈片 .群組 {
     display              : grid;
     margin               : 0 6rem;
-    gap                  : 4rem;
+    gap                  : 0;
     padding-bottom       : 1rem;
-    grid-template-columns: repeat(auto-fill, 100%);
     grid-template-rows   : repeat(auto-fill, 220px);
+        grid-template-columns: repeat(auto-fill, 50%);
     align-items          : center;
     justify-content      : start;
     justify-items        : center;
 
     @include rwd {
-        gap    : 0;
         margin : 0 auto;
         width  : 100%;
         height : 410px;
+        grid-template-columns: repeat(auto-fill, 100%);
     }
 }
 
