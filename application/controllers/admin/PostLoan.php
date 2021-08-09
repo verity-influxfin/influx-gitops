@@ -304,11 +304,6 @@ class PostLoan extends MY_Admin_Controller {
 					if (isset($subloan) && $subloan) {
 					    if(in_array($subloan->status,array(0,1,2))) {
 					        $this->subloan_lib->cancel_subloan($subloan);
-					    }else {
-					        $new_target = $this->target_model->get($subloan->new_target_id);
-					        if ($new_target->status == 3) {
-					            $this->subloan_lib->subloan_cancel_bidding($new_target, 0, null);
-					        }
 					    }
 					}
 
