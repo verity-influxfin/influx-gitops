@@ -241,7 +241,7 @@ export default {
 .case-items {
     max-width            : 950px;
     margin               : 0 auto;
-    display              : flex;
+    display              : grid;
     grid-template-columns: repeat(2, 1fr);
     justify-content      : center;
     gap                  : 2rem;
