@@ -937,4 +937,18 @@ class MY_Model extends CI_Model
         $method = ($multi) ? 'result' : 'row';
         return $this->_temporary_return_type == 'array' ? $method . '_array' : $method;
     }
+
+	public function trans_start() {
+		$this->_database->trans_start();
+    }
+
+    public function trans_complete() {
+		$this->_database->trans_complete();
+    }
+
+    public function trans_status() {
+		$this->_database->trans_status();
+    }
+
+
 }

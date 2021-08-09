@@ -2021,4 +2021,16 @@ class Target_lib
         }
         return true;
     }
+
+    public function isLegalCollection($legal_collection_at) {
+        $checkDate = new DateTime("1911-01-01");
+        $legal_collection = 0;
+        try {
+            $legal_collection_date = new DateTime($legal_collection_at);
+            $legal_collection = $legal_collection_date > $checkDate ? 1 : 0;
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
+        return $legal_collection;
+    }
 }
