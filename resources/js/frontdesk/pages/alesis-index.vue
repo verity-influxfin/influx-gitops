@@ -43,7 +43,7 @@
                     <img src="/images/banner--.jpg" class="旗幟圖片 旗幟圖片_手機的">
 
                     <div class="上海商銀功能">
-                        <a href="https://www.influxfin.com/scsbank?move=page" class="連結">
+                        <a href="/scsbank?move=page" class="連結">
                             <img src="/images/skbankbuttom1.svg">
                         </a>
                         <a href="javascript:;" class="連結" data-toggle="modal" data-target="#event-modal" @click="bank_event='scsbank'">
@@ -184,7 +184,7 @@
                                     ►僅為初步評估，實際貸款條件依照您真實提供的資料而定。
                                 </div>
                                 <div class="列">
-                                    <button class="btn btn-primary" type="button" data-dismiss="modal">返回</button>
+                                    <button class="btn btn-primary" type="button" @click="formCalculated=false">返回</button>
 
                                     <!-- 新光銀行 -->
                                     <a class="btn btn-primary" href="https://servicedesk.skbank.com.tw/CloudDesk/AuthOTP/SMSOTPForm3/36?CMPN_ID=20201214100035&CMPN_REF=inFlux_apply&CMPN_SRC=zOTHER" target="_target" v-if="bank_event=='skbank'">
@@ -211,7 +211,7 @@
                             <p>信用貸款總費用年百分率說明：貸款總費用年百分率約2.62%~7.72%。例如：貸款金額：30萬元，貸款期間：5年，貸款年利率：前三個月1.88% (固定利率)，第四個月起2.25%~7.92%，開辦費為新臺幣3,000元，其總費用年百分率約為2.62%~7.72%。(1)本廣告揭露之年百分率係按主管機關備查之標準計算範例予以計算，實際貸款條件，以本行提供之產品為準，且每一顧客實際之年百分率仍以其個別貸款產品及授信條件而有所不同。(2)總費用年百分率不等於貸款利率。(3)本總費用年百分率之計算基準日係依據活動專案適用起日之本行貸款定儲指數(G)調整日期訂定之(當期利率請至本行網站查詢)，請詳閱本行官網定儲指數說明。例如：110年04月23日之貸款定儲指數(G)為0.80%。(4)上海商銀保有依申貸人資信條件核定貸款條件、實際核貸金額以及最終核准貸款與否之權利。</p>
                         </div>
                         <div class="col-xs-12">
-                            <a href="/scsbank?move=page" class="btn btn-modal btn-block" target="_self">
+                            <a href="https://bit.ly/3xRNTdE" class="btn btn-modal btn-block" target="_self">
                                 確認前往申貸頁面
                             </a>
                         </div>
@@ -605,28 +605,54 @@ export default {
     },
     methods: {
         calculateForm() {
-            this.isFormValid = false
-            let data = new FormData(this.$refs.borrowReport)
+            this.isFormValid = false;
+            let data = new FormData(this.$refs.borrowReport);
 
-            axios({
-                url: `${location.origin}/getBorrowReport`,
-                method: 'post',
-                data: data,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                }
-            }).then((res) => {
-                this.borrowReportResult.amount = res.data.amount
-                this.borrowReportResult.rate = res.data.rate
-                this.borrowReportResult.platform_fee = res.data.platform_fee
-                this.borrowReportResult.repayment = res.data.repayment
-                this.formCalculated = true
-                this.isFormValid = true
-            })
-            .catch((error) => {
-                console.error('getBorrowReport 發生錯誤，請稍後再試');
-            });
+            try {
+
+                let attrs = [
+                    'identity',
+                    'educational_level',
+                    'job',
+                    'is_top_enterprises',
+                    'insurance_salary',
+                    'debt_amount',
+                    'monthly_repayment',
+                    'creditcard_quota',
+                    'creditcard_bill',
+                    'name',
+                    'email',
+                ];
+
+                attrs.forEach( attr => {
+                    if ('' == data.get(attr)) {
+                        throw new Error(`Invalid value ` + attr);
+                    }
+                });
+                axios({
+                    url: `${location.origin}/getBorrowReport`,
+                    method: 'post',
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json',
+                    }
+                }).then((res) => {
+                    this.borrowReportResult.amount = res.data.amount
+                    this.borrowReportResult.rate = res.data.rate
+                    this.borrowReportResult.platform_fee = res.data.platform_fee
+                    this.borrowReportResult.repayment = res.data.repayment
+                    this.formCalculated = true
+                    this.isFormValid = true
+                })
+                .catch((error) => {
+                    console.error('getBorrowReport 發生錯誤，請稍後再試');
+                });
+
+            } catch (e) {
+                this.isFormValid = true;
+                alert('請提供正確資料');
+            }
         },
         nextSolution() {
             if (this.currentPlan + 1 > this.plans.length - 1) {

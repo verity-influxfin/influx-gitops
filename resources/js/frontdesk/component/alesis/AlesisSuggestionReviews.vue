@@ -28,6 +28,11 @@
         <!-- 分頁導覽指示器 -->
         <div class="swiper-pagination"></div>
         <!-- / 分頁導覽指示器 -->
+
+        <!-- 導覽按鈕 -->
+        <div class="swiper-button-prev hidden-desktop"></div>
+        <div class="swiper-button-next hidden-desktop"></div>
+        <!-- / 導覽按鈕 -->
     </div>
     <!-- / 主要幻燈片容器 -->
 </template>
@@ -132,7 +137,7 @@ export default {
 
                 let data = resp.data.filter(x => x.video_link);
 
-                for (i=0; i< data.length; i+=chunk) {
+                for (let i=0; i< data.length; i+=chunk) {
                     self.slides.push(data.slice(i, i+chunk))
                 }
 

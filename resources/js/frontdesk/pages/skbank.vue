@@ -163,7 +163,7 @@
                                 ►僅為初步評估，實際貸款條件依照您真實提供的資料而定。
                             </div>
                             <div class="列">
-                                <button class="btn btn-primary" type="button" data-dismiss="modal">返回</button>
+                                <button class="btn btn-primary" type="button" @click="formCalculated=false">返回</button>
                                 <a class="btn btn-primary" href="https://servicedesk.skbank.com.tw/CloudDesk/AuthOTP/SMSOTPForm3/36?CMPN_ID=20201214100035&CMPN_REF=inFlux_apply&CMPN_SRC=zOTHER" target="_target">
                                     前往銀行申請頁面
                                 </a>
@@ -281,28 +281,54 @@ export default {
     },
     methods: {
         calculateForm() {
-            this.isFormValid = false
-            let data = new FormData(this.$refs.borrowReport)
+            this.isFormValid = false;
+            let data = new FormData(this.$refs.borrowReport);
 
-            axios({
-                url: `${location.origin}/getBorrowReport`,
-                method: 'post',
-                data: data,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                }
-            }).then((res) => {
-                this.borrowReportResult.amount = res.data.amount
-                this.borrowReportResult.rate = res.data.rate
-                this.borrowReportResult.platform_fee = res.data.platform_fee
-                this.borrowReportResult.repayment = res.data.repayment
-                this.formCalculated = true
-                this.isFormValid = true
-            })
-            .catch((error) => {
-                console.error('getBorrowReport 發生錯誤，請稍後再試');
-            });
+            try {
+
+                let attrs = [
+                    'identity',
+                    'educational_level',
+                    'job',
+                    'is_top_enterprises',
+                    'insurance_salary',
+                    'debt_amount',
+                    'monthly_repayment',
+                    'creditcard_quota',
+                    'creditcard_bill',
+                    'name',
+                    'email',
+                ];
+
+                attrs.forEach( attr => {
+                    if ('' == data.get(attr)) {
+                        throw new Error(`Invalid value ` + attr);
+                    }
+                });
+                axios({
+                    url: `${location.origin}/getBorrowReport`,
+                    method: 'post',
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Accept': 'application/json',
+                    }
+                }).then((res) => {
+                    this.borrowReportResult.amount = res.data.amount
+                    this.borrowReportResult.rate = res.data.rate
+                    this.borrowReportResult.platform_fee = res.data.platform_fee
+                    this.borrowReportResult.repayment = res.data.repayment
+                    this.formCalculated = true
+                    this.isFormValid = true
+                })
+                .catch((error) => {
+                    console.error('getBorrowReport 發生錯誤，請稍後再試');
+                });
+
+            } catch (e) {
+                this.isFormValid = true;
+                alert('請提供正確資料');
+            }
         },
     }
 };
