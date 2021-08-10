@@ -13,18 +13,14 @@
                                 <p>最貼近年輕人的金融科技平台</p>
                                 <span>普匯．你的手機ATM</span>
                                 <div class="box">
-                                    <a
-                                    class="loan"
-                                    href="/investLink"
-                                    ><img src="../asset/images/light-b.svg" class="img-fluid" />
-                                    <div class="text">我要投資</div></a
-                                    >
-                                    <a
-                                    class="borrow"
-                                    href="/borrowLink"
-                                    ><img src="../asset/images/light-y.svg" class="img-fluid" />
-                                    <div class="text">我要借款</div></a
-                                    >
+                                    <a class="loan" href="/investLink">
+                                        <img src="../asset/images/light-b.svg" class="img-fluid" />
+                                        <div class="text">我要投資</div>
+                                    </a>
+                                    <a class="borrow" href="/borrowLink">
+                                        <img src="../asset/images/light-y.svg" class="img-fluid" />
+                                        <div class="text">我要借款</div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -37,18 +33,23 @@
                         <a href="https://www.influxfin.com/skbank" class="連結">
                             <img src="/images/skbankbuttom1.svg">
                         </a>
-                        <a href="https://reurl.cc/7r0XQ9" class="連結">
+                        <a href="javascript:;" class="連結" data-toggle="modal" data-target="#event-modal" @click="bank_event='skbank'">
                             <img src="/images/skbankbuttom2.svg">
                         </a>
                     </div>
                 </div>
                 <div class="swiper-slide">
-                    <a href="https://www.influxfin.com/scsbank?move=page">
-                        <img src="/images/banner.jpg" class="旗幟圖片">
-                    </a>
-                    <a href="https://www.influxfin.com/scsbank?move=page">
-                        <img src="/images/banner--.jpg" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
+                    <img src="/images/banner.jpg" class="旗幟圖片">
+                    <img src="/images/banner--.jpg" class="旗幟圖片 旗幟圖片_手機的">
+
+                    <div class="上海商銀功能">
+                        <a href="https://www.influxfin.com/scsbank?move=page" class="連結">
+                            <img src="/images/skbankbuttom1.svg">
+                        </a>
+                        <a href="javascript:;" class="連結" data-toggle="modal" data-target="#event-modal" @click="bank_event='scsbank'">
+                            <img src="/images/skbankbuttom2.svg">
+                        </a>
+                    </div>
                 </div>
                 <div class="swiper-slide">
                     <a href="https://www.influxfin.com/borrowLink">
@@ -57,6 +58,164 @@
                     <a href="https://www.influxfin.com/borrowLink">
                         <img src="/images/210129首頁手機-全台首創banner (1).jpg" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="event-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-body 評估問卷">
+                        <form class="表單" ref="borrowReport" v-if="!formCalculated">
+                            <input type="hidden" name="identity" value="2" />
+                            <div class="列">
+                                <div class="標籤">1.我的教育程度：</div>
+                                <div class="輸入欄位">
+                                    <select v-model="formGraduate" name="educational_level">
+                                        <option selected disabled value="">-請選擇-</option>
+                                        <option value="phD">博士</option>
+                                        <option value="master">碩士</option>
+                                        <option value="bachelor">學士</option>
+                                        <option value="below">學士以下</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">2.我的職業屬於：</div>
+                                <div class="輸入欄位">
+                                    <select name="job">
+                                        <option selected disabled>-請選擇-</option>
+                                        <option :disabled="item.disabled" v-for="item, index in flattenWorkCategories" :key="index" :value="item.value">{{ item.title }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">3.任職公司是否屬於上市櫃、金融機構或公家機關：</div>
+                                <div class="輸入欄位">
+                                    <select v-model="formCompany" name="is_top_enterprises">
+                                        <option selected disabled value="">-請選擇-</option>
+                                        <option value="1">是</option>
+                                        <option value="0">否</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">4.我的投保月薪約為：</div>
+                                <div class="輸入欄位">
+                                    <input type="number" min="0" step="100" v-model="formSalary" name="insurance_salary">
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">5.我在銀行的貸款餘額約為：</div>
+                                <div class="輸入欄位">
+                                    <input type="number" min="0" step="100" v-model="formLoan" name="debt_amount">
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">6.每月需攤還多少金額：</div>
+                                <div class="輸入欄位">
+                                    <input type="number" min="0" step="100" v-model="formReturn" name="monthly_repayment">
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">7.信用卡總額度約為：</div>
+                                <div class="輸入欄位">
+                                    <input type="number" min="0" step="100" v-model="formCredit" name="creditcard_quota">
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">8.近一個月信用卡帳單總金額約為：</div>
+                                <div class="輸入欄位">
+                                    <input type="number" min="0" step="100" v-model="formTotal" name="creditcard_bill">
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">暱稱：</div>
+                                <div class="輸入欄位">
+                                    <input type="text" name="name">
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤">E-mail：</div>
+                                <div class="輸入欄位">
+                                    <input type="email" name="email">
+                                </div>
+                            </div>
+                            <div class="列">
+                                <div class="標籤"></div>
+                                <div class="輸入欄位">
+                                    <button @click="calculateForm" type="button" :disabled="!isFormValid">取得報告</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="結果" v-if="formCalculated">
+                            <div class="展示區塊">
+                                <img src="/images/alesis-phone-and-cash.svg" class="圖片">
+                            </div>
+                            <div class="內容">
+                                <div class="標題">親愛的用戶您好：</div>
+                                <div class="段落">
+                                    感謝您使用普匯的上班族貸款額度利率評估服務，<br>
+                                    經系統自動評估後，符合您的額度及利率區間如下：
+                                </div>
+                                <div class="數值">
+                                    <div class="列">
+                                        <div class="標籤">1. 可借款額度：</div>
+                                        <div class="值">{{borrowReportResult.amount | amount}}</div>
+                                    </div>
+                                    <div class="列">
+                                        <div class="標籤">2. 借款利率區間：</div>
+                                        <div class="值">{{borrowReportResult.rate}}</div>
+                                    </div>
+                                    <div class="列">
+                                        <div class="標籤">3. 手續費金額：</div>
+                                        <div class="值">{{borrowReportResult.platform_fee | amount}}</div>
+                                    </div>
+                                    <div class="列">
+                                        <div class="標籤">4. 每期攤還金額約：</div>
+                                        <div class="值">{{borrowReportResult.repayment}}</div>
+                                    </div>
+                                </div>
+                                <div class="說明 red">
+                                    ►申請普匯上班族貸不留任何信用紀錄，不佔銀行額度，不影響銀行信用評估結果。
+                                </div>
+                                <div class="說明 yellow">
+                                    ►僅為初步評估，實際貸款條件依照您真實提供的資料而定。
+                                </div>
+                                <div class="列">
+                                    <button class="btn btn-primary" type="button" data-dismiss="modal">返回</button>
+
+                                    <!-- 新光銀行 -->
+                                    <a class="btn btn-primary" href="https://servicedesk.skbank.com.tw/CloudDesk/AuthOTP/SMSOTPForm3/36?CMPN_ID=20201214100035&CMPN_REF=inFlux_apply&CMPN_SRC=zOTHER" target="_target" v-if="bank_event=='skbank'">
+                                        前往銀行申請頁面
+                                    </a>
+
+                                    <!-- 上海商銀 -->
+                                    <button class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#scsbank-event-modal" v-if="bank_event=='scsbank'">
+                                        前往銀行申請頁面
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="scsbank-event-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="col-xs-12">
+                            <p>信用貸款總費用年百分率說明：貸款總費用年百分率約2.62%~7.72%。例如：貸款金額：30萬元，貸款期間：5年，貸款年利率：前三個月1.88% (固定利率)，第四個月起2.25%~7.92%，開辦費為新臺幣3,000元，其總費用年百分率約為2.62%~7.72%。(1)本廣告揭露之年百分率係按主管機關備查之標準計算範例予以計算，實際貸款條件，以本行提供之產品為準，且每一顧客實際之年百分率仍以其個別貸款產品及授信條件而有所不同。(2)總費用年百分率不等於貸款利率。(3)本總費用年百分率之計算基準日係依據活動專案適用起日之本行貸款定儲指數(G)調整日期訂定之(當期利率請至本行網站查詢)，請詳閱本行官網定儲指數說明。例如：110年04月23日之貸款定儲指數(G)為0.80%。(4)上海商銀保有依申貸人資信條件核定貸款條件、實際核貸金額以及最終核准貸款與否之權利。</p>
+                        </div>
+                        <div class="col-xs-12">
+                            <a href="/scsbank?move=page" class="btn btn-modal btn-block" target="_self">
+                                確認前往申貸頁面
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -333,6 +492,7 @@ import AlesisSpace             from "../component/alesis/AlesisSpace";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 // 遠端資料
 import PlanData from "../data/index_plans"
+import WorkCategories from "../data/work_categories"
 
 
 import 'swiper/swiper.scss';
@@ -368,20 +528,68 @@ export default {
         AlesisVerticalRoadmap,
     },
     data: () => ({
-        amountCount: 5000,
-        rateCount  : 5,
-        pmt        : 0,
-        tweenedPmt : 0,
-        currentPlan: 0,
-        plans      : PlanData,
-        isForm     : false,
-        period     : 3
+        bank_event            : 'skbank',
+        amountCount           : 5000,
+        rateCount             : 5,
+        pmt                   : 0,
+        tweenedPmt            : 0,
+        currentPlan           : 0,
+        plans                 : PlanData,
+        isForm                : false,
+        period                : 3,
+        flattenWorkCategories : [],
+        formGraduate          : "",
+        formCompany           : "",
+        formSalary            : "",
+        formLoan              : "",
+        formReturn            : "",
+        formCredit            : "",
+        formTotal             : "",
+        formCalculated        : false,
+        formAnswerTotal       : 0,
+        formAnswerSpan        : 0,
+        formAnswerFee         : 0,
+        formAnswerPer         : 0,
+        isFormValid           : true,
+        borrowReportResult    : {},
+        workCategories        : WorkCategories
     }),
     created() {
         $("title").text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
        // document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
+
+        // 管理與財經
+        this.workCategories.n = this.workCategories.n.map(v => {
+            this.flattenWorkCategories.push({
+                disabled: true,
+                title: v.des,
+                value: "",
+            })
+
+            // 經營幕僚
+            v.n = v.n.map((j) => {
+                j.des = `　　${j.des}`
+                this.flattenWorkCategories.push({
+                    disabled: true,
+                    title: j.des,
+                    value: "",
+                })
+                // 儲備幹部
+                j.n = j.n.map((l, k) => {
+                    l.des = `　　　　${l.des}`
+                    this.flattenWorkCategories.push({
+                        disabled: false,
+                        title: l.des,
+                        value: l.no,
+                    })
+                    return l
+                })
+                return j
+            })
+            return v
+        });
 
         SwiperCore.use([Navigation]);
         new Swiper('.swiper-container.標頭幻燈片', {
@@ -396,6 +604,30 @@ export default {
         });
     },
     methods: {
+        calculateForm() {
+            this.isFormValid = false
+            let data = new FormData(this.$refs.borrowReport)
+
+            axios({
+                url: `${location.origin}/getBorrowReport`,
+                method: 'post',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                }
+            }).then((res) => {
+                this.borrowReportResult.amount = res.data.amount
+                this.borrowReportResult.rate = res.data.rate
+                this.borrowReportResult.platform_fee = res.data.platform_fee
+                this.borrowReportResult.repayment = res.data.repayment
+                this.formCalculated = true
+                this.isFormValid = true
+            })
+            .catch((error) => {
+                console.error('getBorrowReport 發生錯誤，請稍後再試');
+            });
+        },
         nextSolution() {
             if (this.currentPlan + 1 > this.plans.length - 1) {
                 this.currentPlan = 0
@@ -471,37 +703,67 @@ export default {
     }
 }
 
-.標頭幻燈片 .新光銀行功能 {
-    position       : absolute;
-    z-index        : 100;
-    gap            : 3rem;
-    top            : initial;
-    bottom         : 1rem;
-    left           : 50%;
-    right          : initial;
-    width          : 32vw;
-    transform      : translateX(-113%);
-    align-items    : flex-end;
-    justify-content: center;
-    display        : flex;
+.標頭幻燈片 {
+    .新光銀行功能 {
+        position       : absolute;
+        z-index        : 100;
+        gap            : 3rem;
+        top            : initial;
+        bottom         : 1rem;
+        left           : 50%;
+        right          : initial;
+        width          : 32vw;
+        transform      : translateX(-113%);
+        align-items    : flex-end;
+        justify-content: center;
+        display        : flex;
 
-    @include rwd {
-        top         : -6%;
-        bottom      : 0;
-        left        : 0;
-        right       : 0;
-        height      : 100%;
-        width       : initial;
-        transform   : translateX(0);
-        align-items : center;
+        @include rwd {
+            top         : -6%;
+            bottom      : 0;
+            left        : 0;
+            right       : 0;
+            height      : 100%;
+            width       : initial;
+            transform   : translateX(0);
+            align-items : center;
+        }
+        .連結 {
+            display: block;
+            width  : 28vw;
+        }
+    }
+    .上海商銀功能 {
+        position       : absolute;
+        z-index        : 100;
+        gap            : 5rem;
+        top            : initial;
+        bottom         : 3rem;
+        left           : 50%;
+        right          : initial;
+        width          : 34vw;
+        transform      : translateX(-113%);
+        align-items    : flex-end;
+        justify-content: center;
+        display        : flex;
+
+        @include rwd {
+            top: 37%;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2rem;
+            width: 18rem;
+            transform: translateX(0);
+            align-items: center;
+            gap: 1rem;
+        }
+        .連結 {
+            display: block;
+            width  : 28vw;
+        }
     }
 }
-
-.標頭幻燈片 .新光銀行功能 .連結 {
-    display: block;
-    width  : 28vw;
-}
-
 
 
 /**
@@ -1135,7 +1397,6 @@ export default {
             }
         }
     }
-
 
     @media screen and (max-width: 767px) {
         .banner {
