@@ -260,25 +260,20 @@
             <alesis-header>
                 <div class="標題">公司簡介</div>
             </alesis-header>
-            <alesis-section>
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <alesis-horizontal-roadmap></alesis-horizontal-roadmap>
+            <div class="h-c">
+              <div class="arrows al">
+                <div @click="pre()">
+                  <img src="../asset/images/left-arrow.svg" class="img-fluid" />
                 </div>
-                <div class="手機容器">
-                    <alesis-vertical-roadmap></alesis-vertical-roadmap>
+              </div>
+              <routeMap v-if="isDesktop" :routeData="routeData" />
+              <routeMapM v-else :routeData="routeData" />
+              <div class="arrows ar">
+                <div @click="next()">
+                  <img src="../asset/images/right-arrow.svg" class="img-fluid" />
                 </div>
-                <div class="介紹區域">
-                    <div class="展示區塊">
-                        <img class="圖片 animate__animated" src="/images/alesis-intro-phone.svg">
-                    </div>
-                    <div class="項目清單">
-                        <alesis-bullet class="項目" image="/images/alesis-ift.svg" header="普匯•你的手機ATM" description="快速申貸、債權投資/轉讓，活用資金，一機搞定"></alesis-bullet>
-                        <alesis-bullet class="項目" image="/images/alesis-brain.svg" header="“高端AI科技，FinTech專家”" description="普匯不是銀行，我們是FinTech金融科技專家，運用AI智能科技與安全風控模組，全程無人為干擾！"></alesis-bullet>
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
+              </div>
+            </div>
         </div>
         <!-- / 公司簡介 -->
 
@@ -490,10 +485,12 @@ import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisSpace             from "../component/alesis/AlesisSpace";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
+import histroyDot from "../component/svg/histroyDotComponent";
 // 遠端資料
 import PlanData from "../data/index_plans"
 import WorkCategories from "../data/work_categories"
-
+import routeMap from "../component/svg/routeMapComponent";
+import routeMapM from "../component/svg/routeMapMComponent.vue";
 
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
@@ -526,8 +523,17 @@ export default {
         AlesisTaiwanMap,
         AlesisSpace,
         AlesisVerticalRoadmap,
+        routeMap,
+        routeMapM,
     },
     data: () => ({
+        isDesktop: window.innerWidth > 767 ? true : false,
+        load2: false,
+        load3: false,
+        routeIndex: {
+          start: 0,
+          end: 0,
+        },
         bank_event            : 'skbank',
         amountCount           : 5000,
         rateCount             : 5,
@@ -552,9 +558,11 @@ export default {
         formAnswerPer         : 0,
         isFormValid           : true,
         borrowReportResult    : {},
+        routeData: [],
         workCategories        : WorkCategories
     }),
     created() {
+    this.getMilestoneData();
         $("title").text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
@@ -603,7 +611,32 @@ export default {
             },
         });
     },
+    watch : {
+        "routeIndex.start"() {
+          this.routeData = [];
+          this.milestone.forEach((item, index) => {
+            if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
+              this.routeData.push(item);
+            }
+          });
+        },
+    },
     methods: {
+        async getMilestoneData() {
+          let res = await axios.post(`${location.origin}/getMilestoneData`);
+
+          this.milestone = res.data.reverse();
+
+          this.routeIndex.end = this.milestone.length - 1;
+          this.routeIndex.start =
+            window.innerWidth > 767 ? this.milestone.length - 6 : this.milestone.length - 4;
+
+          this.milestone.forEach((item, index) => {
+            if (this.routeIndex.start <= index && this.routeIndex.end >= index) {
+              this.routeData.push(item);
+            }
+          });
+        },
         calculateForm() {
             this.isFormValid = false;
             let data = new FormData(this.$refs.borrowReport);
@@ -697,6 +730,18 @@ export default {
                 return l10nEN.format(data.toFixed(0));
             }
             return 0;
+        },
+        pre() {
+          if (this.routeIndex.start > 0) {
+            this.routeIndex.start--;
+            this.routeIndex.end--;
+          }
+        },
+        next() {
+          if (this.routeIndex.end < this.milestone.length - 1) {
+            this.routeIndex.start++;
+            this.routeIndex.end++;
+          }
         },
     },
 };
@@ -1428,8 +1473,61 @@ export default {
             }
         }
     }
+    .histroy-card {
+      padding: 40px 30px;
+      background-color: #ecedf1;
+
+      .h-c {
+        display: flex;
+
+        .arrows {
+          position: relative;
+          width: 100px;
+          z-index: 1;
+
+          div {
+            width: 100px;
+            position: absolute;
+            top: 50%;
+            transform: translate(0px, -50%);
+            cursor: pointer;
+          }
+        }
+      }
+    }
 
     @media screen and (max-width: 767px) {
+    .histroy-card {
+      padding: 10px;
+
+      .h-c {
+        width: 100%;
+        padding: 10px 0px;
+        flex-direction: column;
+
+        .al {
+          div {
+            right: 0px;
+            transform: translate(0px, 50%) rotate(90deg);
+          }
+        }
+
+        .ar {
+          div {
+            left: 0px;
+            transform: translate(0px, -100%) rotate(90deg);
+          }
+        }
+
+        .arrows {
+          width: 100%;
+
+          div {
+            width: 70px;
+          }
+        }
+      }
+    }
         .banner {
             .puhey-banner {
                 .diagram {
