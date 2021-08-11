@@ -242,7 +242,7 @@ class Target_lib
     }
 
     //核可額度利率
-    public function approve_target($target = [], $remark = false, $renew = false, $targetData = false, $stage_cer = false, $subloan_status = false, $matchBrookesia = false)
+    public function approve_target($target = [], $remark = false, $renew = false, $targetData = false, $stage_cer = false, $subloan_status = false, $matchBrookesia = false, $second_instance_check = false)
     {
         $this->CI->load->library('credit_lib');
         $this->CI->load->library('contract_lib');
@@ -338,6 +338,7 @@ class Target_lib
                                 ];
                                 $evaluation_status = $target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET;
                                 if (!$product_info['secondInstance']
+                                    && !$second_instance_check
                                     && !$matchBrookesia
                                     && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
                                     && $this->judicialyuan($user_id)
@@ -1619,7 +1620,8 @@ class Target_lib
                             $finish = true;
                             $finish_stage_cer = [];
                             $cer = [];
-                            $matchBrookesia = false;
+                            $matchBrookesia = false;        // 反詐欺狀態
+                            $second_instance_check = false; // 進待二審
                             foreach ($certifications as $key => $certification) {
                                 if ($finish && in_array($certification['id'], $product_certification)) {
                                     if ($certification['user_status'] != '1') {
@@ -1632,7 +1634,7 @@ class Target_lib
 									// 工作認證有專業技能證書進待二審
 									if($certification['id'] == 10 && isset($certification['content'])){
 										if(isset($certification['content']['license_image']) || isset($certification['content']['pro_certificate_image']) || isset($certification['content']['game_work_image'])){
-											$subloan_status = true;
+											$second_instance_check = true;
 										}
 									}
                                     $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
@@ -1669,7 +1671,7 @@ class Target_lib
                                 !isset($targetData) ? $targetData = new stdClass() : '';
                                 $targetData->certification_id = $cer;
                                 $count++;
-                                $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia);
+                                $this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
                             } else {
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
@@ -2018,5 +2020,17 @@ class Target_lib
             }
         }
         return true;
+    }
+
+    public function isLegalCollection($legal_collection_at) {
+        $checkDate = new DateTime("1911-01-01");
+        $legal_collection = 0;
+        try {
+            $legal_collection_date = new DateTime($legal_collection_at);
+            $legal_collection = $legal_collection_date > $checkDate ? 1 : 0;
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+        }
+        return $legal_collection;
     }
 }

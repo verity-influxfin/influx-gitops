@@ -385,10 +385,30 @@ class Subloan_lib{
 		if($subloan && in_array($subloan->status,array(0,1,2))){
 			$rs = $this->CI->subloan_model->update($subloan->id,array('status'=>8));
 			if($rs){
+                $info = $this->CI->target_model->get($subloan->new_target_id);
+                if(isset($info)) {
+                    if($info->status==4) {
+                        // 滿標待放款也需要退
+                        $this->CI->target_lib->cancel_success_target($info, $admin_id);
+                    }else{
+                        // 如果新案件是上架後，需退掉投資人的錢
+                        if($info->status == 3) {
+                            $this->CI->load->model('loan/investment_model');
+                            $investments = $this->CI->investment_model->get_many_by([
+                                'target_id' => $subloan->new_target_id,
+                                'status' => [0, 1]
+                            ]);
+                            foreach ($investments as $inv_val) {
+                                $this->CI->target_lib->cancel_investment($info, $inv_val, $user_id);
+                            }
+                        }
+                        $this->CI->target_model->update($subloan->new_target_id,array('status'=>8));
+                        $this->CI->target_lib->insert_change_log($subloan->new_target_id,array('status'=>8),$user_id,$admin_id);
+                    }
+                }
 				$this->CI->target_lib->insert_change_log($subloan->target_id,array('sub_status'=>0),$user_id,$admin_id);
-				$this->CI->target_lib->insert_change_log($subloan->new_target_id,array('status'=>8),$user_id,$admin_id);
 				$this->CI->target_model->update($subloan->target_id,array('sub_status'=>0));
-				$this->CI->target_model->update($subloan->new_target_id,array('status'=>8));
+
 				return $rs;
 			}
 		}

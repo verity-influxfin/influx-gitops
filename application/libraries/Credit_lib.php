@@ -3,9 +3,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Credit_lib{
-	
+
 	private $credit = [];
-	
+
 	public function __construct()
     {
         $this->CI = &get_instance();
@@ -17,7 +17,7 @@ class Credit_lib{
 		$this->product_list = $this->CI->config->item('product_list');
 		$this->scoreHistory = [];
     }
-	
+
 	//信用評比
 	public function approve_credit($user_id,$product_id,$sub_product_id=0, $approvalExtra = null, $stage_cer = false, $credit = false){
 		if($user_id && $product_id){
@@ -65,7 +65,7 @@ class Credit_lib{
 		}
 		return false;
 	}
-	
+
 	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit){
 
         $total = 0;
@@ -241,7 +241,7 @@ class Credit_lib{
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
-	
+
 	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit){
 		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit);
 	}
@@ -370,7 +370,7 @@ class Credit_lib{
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
-	
+
 	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit){
 		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit);
 	}
@@ -468,10 +468,8 @@ class Credit_lib{
 				}
 
 				if($school_department) {
-					$school_config = @file_get_contents(FRONT_CDN_URL.'json/config_school.json');
-					if(!$school_config) {
-						$school_data = trim($school_config, "\xEF\xBB\xBF");
-						$school_data = json_decode($school_data, true);
+					$school_data = $school_list['department_points'];
+					if(!empty($school_data)) {
 						$schoolDepartmentPoint = 0;
 						if (isset($school_data[$school_name]['score'][$school_department])) {
 							$schoolDepartmentPoint = $school_data[$school_name]['score'][$school_department];
@@ -491,7 +489,7 @@ class Credit_lib{
 		}
 		return $point;
 	}
-	
+
 	public function get_job_salary_point($job_salary = 0){
 		$point 	= 0;
 		if($job_salary >= 23000 && $job_salary < 30000){
@@ -582,7 +580,7 @@ class Credit_lib{
 	public function get_job_industry_point($industry = ''){
 		$point300 = ['K','O','Q','P'];
 		$point200 = ['M','D','J'];
-		
+
 		if(in_array($industry,$point300)){
 			return 300;
 		}else if(in_array($industry,$point200)){
@@ -591,7 +589,7 @@ class Credit_lib{
 			return 100;
 		}
 	}
-	
+
 	public function get_investigation_times_point($times = 0){
 		$point 	= 0;
 		if($times > 0 && $times <= 3){
@@ -627,7 +625,7 @@ class Credit_lib{
 		}
 		return $point;
 	}
-	
+
 	//取得信用評分
 	public function get_credit($user_id,$product_id,$sub_product_id=0,$target=false){
 		if($user_id && $product_id){
@@ -651,10 +649,15 @@ class Credit_lib{
                 if($target){
                     $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id,$target);
                 }
-				// 黑名單的學校額度是0
+
 				$info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-				if(isset($info) && !$this->get_school_point($info->meta_value)) {
-					$data['amount'] = 0;
+				if(isset($info->meta_value)) {
+                    $school_points_data = $this->get_school_point($info->meta_value);
+                    $school_config = $this->CI->config->item('school_points');
+                    // 黑名單的學校額度是0
+                    if(in_array($info->meta_value,$school_config['lock_school']) || !$school_points_data){
+                        $data['amount'] = 0;
+                    }
 				}
                 return $data;
 			}
@@ -672,11 +675,11 @@ class Credit_lib{
 					}
 				}
 			}
-			
+
 		}
 		return false;
 	}
-	
+
 	public function get_rate($level,$instalment,$product_id,$sub_product_id=0,$target=[]){
 		$credit = $this->CI->config->item('credit');
 		if(isset($this->credit['credit_level_'.$product_id][$level])){
@@ -709,27 +712,27 @@ class Credit_lib{
 		}
 		return false;
 	}
-	
+
 	public function delay_credit($user_id,$delay_days=0){
 		if($user_id && $delay_days > GRACE_PERIOD){
 			$param = array(
 				'user_id'			=> $user_id,
 			);
-			
+
 			$amount 		= 0;
 			$points 		= -1;
 			$level 			= 11;
-			
+
 			if($delay_days>30){
 				$points 	= -501;
 				$level 		= 12;
 			}
-			
+
 			if($delay_days>60){
 				$points 	= -1501;
 				$level 		= 13;
 			}
-			
+
 			$product_id = [];
 			$rs 		= $this->CI->credit_model->order_by('created_at','desc')->get_many_by($param);
 			if($rs){
@@ -739,7 +742,7 @@ class Credit_lib{
 						$product_id[$value->product_id] = $value->product_id;
 					}
 				}
-				
+
 				if($product_id){
 					foreach($product_id as $key => $value){
 						$param = array(
@@ -748,12 +751,12 @@ class Credit_lib{
 							'points'		=> $points,
 							'amount'		=> $amount,
 							'level'			=> $level,
-							
+
 						);
 						$rs = $this->CI->credit_model->insert($param);
 					}
 				}
-				
+
 				return $level;
 			}
 		}
