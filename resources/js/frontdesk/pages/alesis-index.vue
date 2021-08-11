@@ -238,7 +238,7 @@
                 <div class="標題">我們的服務</div>
             </alesis-header>
             <alesis-section :secondary="true">
-                <alesis-space size="medium"></alesis-space>
+                <alesis-space class="hidden-phone" size="medium"></alesis-space>
                 <img class="圖片" src="/images/p2p.svg" />
                 <div class="動作區塊">
                     <div class="左側">
@@ -250,7 +250,7 @@
                         <a href="/borrow" class="動作">了解更多</a>
                     </div>
                 </div>
-                <alesis-space size="medium"></alesis-space>
+                <alesis-space class="hidden-phone" size="medium"></alesis-space>
             </alesis-section>
         </div>
         <!-- / 服務區塊 -->
@@ -260,6 +260,7 @@
             <alesis-header>
                 <div class="標題">公司簡介</div>
             </alesis-header>
+            <alesis-space size="medium"></alesis-space>
             <div class="h-c">
               <div class="arrows al">
                 <div @click="pre">
@@ -274,6 +275,7 @@
                 </div>
               </div>
             </div>
+            <alesis-space size="medium"></alesis-space>
         </div>
         <!-- / 公司簡介 -->
 
@@ -1581,10 +1583,49 @@ export default {
 }
 
 .公司簡介 {
+    .route-map {
+        position: relative;
+        width: calc(100% - 200px);
+        max-width: 1200px;
+        margin: 0 auto;
+    }
     .arrows {
-        &.al, &.ar {
+        position: absolute;
+        top: 270px;
+        cursor: pointer;
+        &.ar {
+            right: 6rem;
+        }
+        &.al {
+            left: 6rem;
+        }
+    }
+    @include rwd {
+        .arrows {
+            top: initial;
+            left: initial;
+            right: initial;
             position: relative;
-            z-index: 999;
+
+            &.al, &.ar {
+                z-index: 10;
+                width: 70px;
+            }
+            &.al {
+                left: 85%;
+                transform: translate(0px, 50%) rotate(90deg);
+                top: 3rem;
+            }
+            &.ar {
+                left: 0;
+                transform: translate(0px, 50%) rotate(90deg);
+                bottom: 5rem;
+            }
+        }
+        .h-c {
+            .routeM-map {
+                pointer-events: none;
+            }
         }
     }
 }
