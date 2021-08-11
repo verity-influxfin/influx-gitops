@@ -902,6 +902,11 @@ export default {
 .公司簡介 .包裹容器 svg {
     width    : 90vw;
     max-width: 1170px;
+    height   : 550px;
+
+    @include rwd {
+        height : initial;
+    }
 }
 
 .公司簡介 .手機容器 {
