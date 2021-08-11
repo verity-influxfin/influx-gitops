@@ -385,3 +385,8 @@
         margin-right: .5rem;
     }
 }
+.event-modal .modal-dialog {
+    @include rwd {
+        top: 10vh;
+    }
+}
