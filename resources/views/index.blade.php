@@ -366,15 +366,15 @@
                     </div>
                 </div>
                 <div class="links">
-                    <a href="https://www.influxfin.com/recruiting" class="item">徵才服務</a> |
-                    <a href="https://www.influxfin.com/campuspartner" class="item">校園大使</a> |
-                    <a href="https://www.influxfin.com/clubcooperation" class="item">社團合作</a> |
-                    <a href="https://www.influxfin.com/firmcooperation" class="item">商行合作</a> |
-                    <a href="https://www.influxfin.com/companycooperation" class="item">企業合作</a>
+                    <a href="/recruiting" class="item">徵才服務</a> |
+                    <a href="/campuspartner" class="item">校園大使</a> |
+                    <a href="/clubcooperation" class="item">社團合作</a> |
+                    <a href="/firmcooperation" class="item">商行合作</a> |
+                    <a href="/companycooperation" class="item">企業合作</a>
                 </div>
                 <div class="externals">
-                    <a class="item" href="https://www.influxfin.com/borrowLink">我想申貸</a>
-                    <a class="item -invest" href="https://www.influxfin.com/investLink">我想投資</a>
+                    <a class="item" href="/borrowLink">我想申貸</a>
+                    <a class="item -invest" href="/investLink">我想投資</a>
                 </div>
             </div>
         </div>
