@@ -1,0 +1,23 @@
+@mixin rwd {
+    @media (max-width: 767px) {
+        & {
+            @content;
+        }
+    }
+}
+
+@mixin rwd-minimum {
+    @media (max-width: 410px) {
+        & {
+            @content;
+        }
+    }
+}
+
+@mixin rwd-laptop {
+    @media (max-width: 1400px) {
+        & {
+            @content;
+        }
+    }
+}

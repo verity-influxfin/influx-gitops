@@ -18,7 +18,11 @@
         <p class="license">*{{ $props.license }}</p>
       </template>
       <div class="credit-slider">
-        <creditBoard :amount="amount" color="#170e9c" />
+        <creditBoard 
+        :amount="amount"
+        minRate="5"
+        maxRate="16"
+        color="#170e9c" />
       </div>
     </div>
   </div>

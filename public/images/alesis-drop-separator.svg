@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="33.931" height="64.303" viewBox="0 0 33.931 64.303">
+  <defs>
+    <linearGradient id="linear-gradient" x1="-0.071" y1="1" x2="1.071" gradientUnits="objectBoundingBox">
+      <stop offset="0"/>
+      <stop offset="0.139" stop-color="#000206"/>
+      <stop offset="0.339" stop-color="#00071a"/>
+      <stop offset="0.576" stop-color="#001139"/>
+      <stop offset="0.594" stop-color="#00123c"/>
+      <stop offset="0.63" stop-color="#001c4b"/>
+      <stop offset="0.7" stop-color="#003673"/>
+      <stop offset="0.796" stop-color="#0061b2"/>
+      <stop offset="0.874" stop-color="#0088ec"/>
+      <stop offset="0.989" stop-color="#fff"/>
+    </linearGradient>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.5" r="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0.12" stop-color="#fff"/>
+      <stop offset="0.165" stop-color="#0088ec"/>
+      <stop offset="0.175" stop-color="#007ddc"/>
+      <stop offset="0.21" stop-color="#005dab"/>
+      <stop offset="0.243" stop-color="#004283"/>
+      <stop offset="0.277" stop-color="#002d64"/>
+      <stop offset="0.309" stop-color="#001e4e"/>
+      <stop offset="0.339" stop-color="#001540"/>
+      <stop offset="0.366" stop-color="#00123c"/>
+      <stop offset="0.385" stop-color="#001139"/>
+      <stop offset="0.638" stop-color="#00071a"/>
+      <stop offset="0.852" stop-color="#000206"/>
+      <stop offset="1"/>
+    </radialGradient>
+  </defs>
+  <g id="Group_340" data-name="Group 340" transform="translate(162.383 239.302) rotate(180)">
+    <rect id="Rectangle_92" data-name="Rectangle 92" width="2.133" height="48.218" transform="translate(144.349 191.084)" fill="url(#linear-gradient)" style="mix-blend-mode: screen;isolation: isolate"/>
+    <path id="Path_330" data-name="Path 330" d="M162.383,191.965A16.966,16.966,0,1,1,145.418,175,16.966,16.966,0,0,1,162.383,191.965Z" transform="translate(0 0)" fill="url(#radial-gradient)" style="mix-blend-mode: screen;isolation: isolate"/>
+  </g>
+</svg>
