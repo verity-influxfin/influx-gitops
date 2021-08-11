@@ -1018,18 +1018,6 @@ button[disabled] {
     @include rwd {
         flex: calc(100% / 3);
 
-        &:nth-child(4) {
-            .圖片,
-            .名稱 {
-                margin-left: 4rem;
-            }
-        }
-        &:nth-child(5) {
-            .圖片,
-            .名稱 {
-                margin-right: 4rem;
-            }
-        }
     }
 
     @include rwd-minimum {
