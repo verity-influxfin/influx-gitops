@@ -9,7 +9,6 @@ class Charge_lib
     {
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
-        $this->CI->load->model('transaction/virtual_passbook_model');
 		$this->CI->load->model('user/virtual_account_model');
 		$this->CI->load->library('Passbook_lib');
 		$this->CI->load->library('Transaction_lib');
@@ -122,6 +121,7 @@ class Charge_lib
     public function charge_expired_target($user_id=0) {
         $this->CI->load->library('financial_lib');
         $this->CI->load->library('subloan_lib');
+        $this->CI->load->model('transaction/virtual_passbook_model');
 		$date               = get_entering_date();
         $transaction_param = [];
         $target_key_list = [];
@@ -558,6 +558,14 @@ class Charge_lib
             return false;
         }
         else{
+            $rs = $this->CI->investment_model->get_by(['target_id' => $target->id, 'status' => 3, 'legal_collection_at > ' => '1911-01-01']);
+
+            // 進入支付命令聲請的法催狀態時，該案件無法進行還款
+            if(isset($rs)) {
+                $this->notice_delay_target($target);
+                return false;
+            }
+
             $transaction 	= $this->CI->transaction_model->get_many_by([
                 'target_id'		=> $target->id,
                 'limit_date <=' => $date,
@@ -1117,6 +1125,7 @@ class Charge_lib
 
 	public function handle_delay_target($target=[],$delay_days=0,$gracePeriod){
 		if($target->status == 5 && $delay_days > $gracePeriod){
+			$this->CI->load->model('loan/investment_model');
 			if(in_array($delay_days,[8,31,61])){
 				$this->CI->load->library('credit_lib');
 				$level = $this->CI->credit_lib->delay_credit($target->user_id,$delay_days);
@@ -1272,6 +1281,8 @@ class Charge_lib
 				}else{
 					if($user_to_info){
 						foreach($user_to_info as $investment_id => $value) {
+                            $delay_interest = 0;
+
                             if ($contract->format_id == 3) {
                                 $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
                             } else {
