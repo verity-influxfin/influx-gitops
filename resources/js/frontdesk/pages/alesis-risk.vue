@@ -13,9 +13,11 @@
         <!-- 報告書 -->
         <div class="報告書">
             <alesis-header>
-                <div class="標題">違約率報告書</div>
+                <!-- <div class="標題">違約率報告書</div> -->
+                <div class="標題">敬請期待</div>
             </alesis-header>
-            <alesis-section>
+            <alesis-space size="medium"></alesis-space>
+            <!-- <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <img src="/images/alesis-report.svg" class="圖片">
@@ -29,7 +31,7 @@
                     </a>
                 </div>
                 <alesis-space size="medium"></alesis-space>
-            </alesis-section>
+            </alesis-section> -->
         </div>
         <!-- / 報告書 -->
     </div>
