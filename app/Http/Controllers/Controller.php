@@ -81,13 +81,21 @@ class Controller extends BaseController
 
     public function getTransferCase(Request $request){
         $input = $request->all();
+        $case_data_return = [];
 
         $params = http_build_query($input);
         $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/transfer_list?' . $params . '"');
         if(!empty($case_response)){
             $case_data = json_decode($case_response,true);
             if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS' && !empty($case_data['data']['list'])){
-                return response()->json($case_data['data']['list'], 200);
+                if(count($case_data['data']['list']) > 6){
+                    for($i=0; $i<6; $i++){
+                        $case_data_return[] = $case_data['data']['list'][$i];
+                    }
+                }else{
+                    $case_data_return = $case_data['data']['list'];
+                }
+                return response()->json($case_data_return, 200);
             }
         }else{
             return response()->json(['not response'], 501);
@@ -96,6 +104,8 @@ class Controller extends BaseController
 
     public function getCase(Request $request){
         $input = $request->all();
+        $case_data_return = [];
+
         if(isset($input['product_id']) && isset($input['status'])){
             if(in_array($input['product_id'],[0,1,3]) || in_array($input['status'],[3,10])){
                 if($input['product_id'] == 0){
@@ -118,7 +128,14 @@ class Controller extends BaseController
                                     return $input['sort'] == 'desc' ?($a[$input['orderby']] - $b[$input['orderby']] < 0) :($a[$input['orderby']] - $b[$input['orderby']] > 0);
                                 });
                             }
-                            return response()->json($case_response, 200);
+                            if(count($case_response) > 6){
+                                for($i=0; $i<6; $i++){
+                                    $case_data_return[] = $case_response[$i];
+                                }
+                            }else{
+                                $case_data_return = $case_response;
+                            }
+                            return response()->json($case_data_return, 200);
                         }
                     }else{
                         return response()->json(['not response'], 501);
@@ -130,7 +147,14 @@ class Controller extends BaseController
                 if(!empty($case_response)){
                     $case_data = json_decode($case_response,true);
                     if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
-                        return response()->json($case_data['data']['list'], 200);
+                        if(count($case_data['data']['list']) > 6){
+                            for($i=0; $i<6; $i++){
+                                $case_data_return[] = $case_data['data']['list'][$i];
+                            }
+                        }else{
+                            $case_data_return = $case_data['data']['list'];
+                        }
+                        return response()->json($case_data_return, 200);
                     }
                 }else{
                     return response()->json(['not response'], 501);
