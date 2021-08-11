@@ -473,7 +473,7 @@
         <!-- / 評估問卷 -->
 
         <!-- 案例分享 -->
-        <div class="案例分享">
+        <!-- <div class="案例分享">
             <alesis-header class="區塊標題_拖尾的">
                 <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
             </alesis-header>
@@ -482,7 +482,7 @@
                 <alesis-suggestion-reviews type="work"></alesis-suggestion-reviews>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
-        </div>
+        </div> -->
         <!-- / 案例分享 -->
 
         <!-- 應用程式推薦 -->

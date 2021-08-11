@@ -120,10 +120,13 @@ export default {
             var self = this;
 
             let data = new FormData();
-            // 借款端|投資端
+            // 借款端: loan|投資端: invest|全撈: 不給值
             // let category = this.category == 'loan' ? 'loan' : 'invest';
             let category = 'loan';
             data.append('category', category)
+
+            // 上班族: officeWorker|學生: student|全撈: 不給值
+            // data.append('rank', 'student')
 
             axios({
                 url: '/getExperiencesData',

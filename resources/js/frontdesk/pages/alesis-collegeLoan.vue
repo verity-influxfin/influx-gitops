@@ -310,7 +310,7 @@
         <!-- / 貸安吶 -->
 
         <!-- 案例分享 -->
-        <div class="案例分享">
+        <!-- <div class="案例分享">
             <alesis-header class="區塊標題_拖尾的">
                 <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
             </alesis-header>
@@ -319,7 +319,7 @@
                 <alesis-suggestion-reviews type="college"></alesis-suggestion-reviews>
                 <alesis-space size="small"></alesis-space>
             </alesis-section>
-        </div>
+        </div> -->
         <!-- / 案例分享 -->
 
         <!-- 合作對象 -->
@@ -327,7 +327,7 @@
             <alesis-header>
                 <div class="標題">合作夥伴</div>
             </alesis-header>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <div class="container">
                     <alesis-space size="medium"></alesis-space>
                     <div class="群組">
