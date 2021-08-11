@@ -164,7 +164,21 @@
                 <a href="/news" class="item">平台公告</a>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <div class="item">
-                    <div @click="openLoginModal" class="login">SIGN IN</div>
+                    <div v-if="!flag || flag === 'logout'"  @click="openLoginModal" class="login nav-item">SIGN IN</div>
+                    <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" style="color: #fff;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
+                        <ul class="dropdown-menu" style="min-width: 5rem;">
+                            <li v-if="isInvestor == 0">
+                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
+                            </li>
+                            <li v-else>
+                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                            </li>
+                            <li v-if="flag === 'login'">
+                                <p class="dropdown-item" @click="logout">登出</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="item hamburger">
                     <img src="/images/alesis-hamburger.svg">
@@ -218,7 +232,21 @@
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
                 <div class="item">
-                    <div @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
+                    <div v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
+                    <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" style="color: #fff;" href="#" data-toggle="dropdown">您好 @{{userData.name}}</a>
+                        <ul class="dropdown-menu" style="min-width: 5rem;">
+                            <li v-if="isInvestor == 0">
+                                <router-link class="dropdown-item loan-link" to="/loannotification">借款人</router-link>
+                            </li>
+                            <li v-else>
+                                <router-link class="dropdown-item invest-link" to="/investnotification">投資人</router-link>
+                            </li>
+                            <li v-if="flag === 'login'">
+                                <p class="dropdown-item" @click="logout">登出</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -449,6 +477,8 @@
 <script type="text/javascript" src="{{ asset('js/package/es6-promise.auto.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/jQuery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/jquery-ui.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/package/popper.min.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{{ asset('js/package/bootstrap.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/gasp.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/package/slick.min.js') }}"></script>
