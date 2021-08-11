@@ -548,7 +548,15 @@ class Controller extends BaseController
 
         // 平台手續費
         if($result['platform_fee'] != 0){
-            $platform_fee = intval(round($result['amount'] / 100 * 3, 0));
+            $platform_fee_rate = 3;
+            if($input ['identity'] == 1){
+                $platform_fee_rate = 3;
+            }
+
+            if($input ['identity'] == 2){
+                $platform_fee_rate = 4;
+            }
+            $platform_fee = intval(round($result['amount'] / 100 * $platform_fee_rate, 0));
             if($platform_fee > $result['platform_fee']){
                 $result['platform_fee'] = $platform_fee;
             }
