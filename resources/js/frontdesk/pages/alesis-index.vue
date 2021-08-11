@@ -1593,6 +1593,7 @@ export default {
         position: absolute;
         top: 270px;
         cursor: pointer;
+        z-index: 10;
         &.ar {
             right: 6rem;
         }
