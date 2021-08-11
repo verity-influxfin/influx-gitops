@@ -77,7 +77,7 @@
         <!-- / 對比區域 -->
 
         <!-- 風險報告 -->
-        <div class="風險報告">
+        <!-- <div class="風險報告">
             <alesis-header>
                 <div class="標題">債權風險報告書</div>
             </alesis-header>
@@ -93,7 +93,7 @@
                 </div>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
-        </div>
+        </div> -->
         <!-- / 風險報告 -->
 
         <!-- 現有案件 -->
@@ -101,7 +101,7 @@
             <alesis-header>
                 <div class="標題">現有案件</div>
             </alesis-header>
-            <alesis-section header="現有案件" :secondary="true">
+            <alesis-section header="現有案件">
                 <alesis-space size="small"></alesis-space>
                 <div class="包裹容器">
                     <div class="標題">優質項目專區</div>
@@ -156,7 +156,7 @@
                     </div>
                 </div>
             </alesis-section>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <div class="包裹容器">
                     <div class="標題 標題_快速的">快速變現專區</div>
                     <div class="swiper-container 幻燈片 幻燈片_快速變現" style="margin-bottom: 40px;">
