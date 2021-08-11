@@ -262,14 +262,14 @@
             </alesis-header>
             <div class="h-c">
               <div class="arrows al">
-                <div @click="pre()">
+                <div @click="pre">
                   <img src="../asset/images/left-arrow.svg" class="img-fluid" />
                 </div>
               </div>
               <routeMap v-if="isDesktop" :routeData="routeData" />
               <routeMapM v-else :routeData="routeData" />
               <div class="arrows ar">
-                <div @click="next()">
+                <div @click="next">
                   <img src="../asset/images/right-arrow.svg" class="img-fluid" />
                 </div>
               </div>
@@ -1576,6 +1576,15 @@ export default {
                     }
                 }
             }
+        }
+    }
+}
+
+.公司簡介 {
+    .arrows {
+        &.al, &.ar {
+            position: relative;
+            z-index: 999;
         }
     }
 }
