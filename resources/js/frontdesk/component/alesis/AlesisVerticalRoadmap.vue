@@ -86,7 +86,9 @@
 </template>
 
 <style scoped lang="scss">
-
+    svg {
+        pointer-events: none;
+    }
 </style>
 
 <script>
