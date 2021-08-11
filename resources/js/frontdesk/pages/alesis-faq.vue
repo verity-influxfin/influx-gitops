@@ -7,7 +7,7 @@
                 <div class="說明">請輸入關鍵字</div>
                 <div class="搜尋">
                     <img class="圖示" src="/images/alesis-search-icon.svg">
-                    <input class="輸入欄位" type="text" placeholder="全站搜尋...">
+                    <input class="輸入欄位" type="text" placeholder="全站搜尋..." name="global-search" autocomplete="off" />
                 </div>
                 <div class="分類">
                     <a @click="category('all')" class="項目" :class="{'項目_啟用的': current_category === 'all'}">全部</a>
