@@ -61,7 +61,7 @@ export default {
     font-weight     : bolder;
     font-size       : 2rem;
     line-height     : 1.2;
-    padding-top     : 0.1rem;
+    margin-top      : 1px;
 }
 
 .區塊標題 .內容 .標題 {
@@ -91,6 +91,8 @@ export default {
 
     @include rwd {
         font-size: .9rem;
+        max-width: 17rem;
+        margin: .6rem auto;
     }
 }
 

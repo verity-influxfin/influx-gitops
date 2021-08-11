@@ -4,16 +4,7 @@
         <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度 15 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
         <!-- 標頭 -->
 
-        <!-- 計數器 -->
-        <div class="計數器">
-            <div class="包裹容器">
-                <alesis-counter image="/images/alesis-registered.svg" header="普匯學生用戶" number="60000" unit="人"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalmoney.svg" header="已媒合金額" number="15857" unit="萬"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalapproved.svg" header="服務學校遍及" number="37390" unit="所"></alesis-counter>
-            </div>
-        </div>
-        <!-- / 計數器 -->
-
+        <alesis-space size="medium"></alesis-space>
         <!-- 適用對象 -->
         <div class="適用對象">
             <alesis-header>
@@ -22,7 +13,7 @@
                     滿20歲的在校生，準備您的雙證件、學生證、金融卡，<br>在APP上拍照上傳，立即核准！
                 </div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <alesis-space size="large"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
@@ -52,7 +43,7 @@
             <alesis-header>
                 <div class="標題">申貸四步驟</div>
             </alesis-header>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
                 <div class="swiper-container steps-container">
                     <div class="swiper-wrapper">
@@ -144,7 +135,7 @@
                     超過156所大學生，不論是生活急需、還是補習進修費，都在找普匯！<br>成立三年已幫助超過2萬名學生，讓學生一想到借錢，就想到普匯！
                 </div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <alesis-space size="large"></alesis-space>
                 <div class="包裹容器">
                     <div class="專案">
@@ -175,7 +166,7 @@
             <alesis-header>
                 <div class="標題">為什麼選擇普匯</div>
             </alesis-header>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
@@ -207,7 +198,7 @@
                 <div class="標題">貸安吶</div>
                 <div class="標題 標題_外框線的">請您依現在的真實狀況填寫以下題目</div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <alesis-space size="tiny"></alesis-space>
                 <alesis-space size="medium"></alesis-space>
                 <form class="表單" ref="borrowReport">
@@ -323,7 +314,7 @@
             <alesis-header class="區塊標題_拖尾的">
                 <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
             </alesis-header>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <alesis-space size="small"></alesis-space>
                 <alesis-suggestion-reviews type="college"></alesis-suggestion-reviews>
                 <alesis-space size="small"></alesis-space>
@@ -336,7 +327,7 @@
             <alesis-header>
                 <div class="標題">合作夥伴</div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <div class="container">
                     <alesis-space size="medium"></alesis-space>
                     <div class="群組">

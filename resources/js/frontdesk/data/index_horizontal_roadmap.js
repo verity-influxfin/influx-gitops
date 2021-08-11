@@ -213,7 +213,7 @@ export default [
 "ID":12,
 "title":"公司成立",
 "hook_date":"2017-12-08",
-"content":`<tspan x="0" dy="0">台灣第一專屬年輕人金融科技平台</tspan>`,
+"content":`<tspan x="0" dy="0">台灣第一</tspan><tspan x="0" dy="1.2em">專屬年輕人金融科技平台</tspan>`,
 "icon":"https://www.influxfin.com/upload/milestone/corpotate.svg"
 }
 ]
