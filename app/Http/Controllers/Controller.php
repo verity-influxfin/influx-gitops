@@ -675,6 +675,10 @@ class Controller extends BaseController
             $filter[] = ['category', '=', $input['category']];
         }
 
+        if (isset($input['rank']) && !empty($input['rank'])) {
+            $filter[] = ['rank', '=', $input['rank']];
+        }
+
         $experiences = DB::table('interview')->select([
             'ID',
             'feedback',
