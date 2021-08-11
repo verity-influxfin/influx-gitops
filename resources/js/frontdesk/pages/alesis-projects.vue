@@ -239,7 +239,7 @@ export default {
 }
 
 .case-items {
-    max-width            : 950px;
+    max-width            : fit-content;
     margin               : 0 auto;
     display              : grid;
     grid-template-columns: repeat(2, 1fr);
@@ -249,6 +249,7 @@ export default {
     flex-wrap: wrap;
 
     @include rwd {
+        max-width            : 950px;
         grid-template-columns: 1fr;
     }
 }
