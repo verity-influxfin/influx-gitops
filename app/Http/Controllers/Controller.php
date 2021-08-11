@@ -522,9 +522,9 @@ class Controller extends BaseController
                     $result = $report[5];
                 }elseif ($total_point >= 80) {
                     $result = $report[4];
-                }elseif ($total_point >= 50) {
-                    $result = $report[3];
                 }elseif ($total_point >= 70) {
+                    $result = $report[3];
+                }elseif ($total_point >= 50) {
                     $result = $report[2];
                 }elseif ($total_point >= 20) {
                     $result = $report[1];
