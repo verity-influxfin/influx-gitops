@@ -2351,7 +2351,7 @@
         <text transform="matrix(1 0 0 1 283.3365 294.6068)" class="st5 st6 st7">
           每期需還本息
         </text>
-        <text x="285" y="250" class="st5 st6 st7 cce">${{ format(tweenedPmt) }}</text>
+        <text x="359" y="250" class="st5 st6 st7 cce" text-anchor="middle">${{ format(tweenedPmt) }}</text>
         <circle class="st8" cx="365.2" cy="254.8" r="147.7" />
 
         <linearGradient
@@ -3077,7 +3077,7 @@
 
         <g>
           <text transform="matrix(1 0 0 1 528.9983 445.407)" class="st5 st13 st14">
-            5%
+            {{ minRate }}%
           </text>
           <text transform="matrix(1 0 0 1 572.5278 267.037)" class="st5 st6 st14">
             年化
@@ -3086,7 +3086,7 @@
             {{ rateCount }}%
           </text>
           <text transform="matrix(1 0 0 1 520.5284 74.5681)" class="st5 st13 st14">
-            20%
+            {{ maxRate }}%
           </text>
           <g>
             <g>
@@ -3465,13 +3465,15 @@
 
 <script>
 export default {
-  props: ["amount", "color"],
+  props: ["amount", "color", "minRate", "maxRate"],
   data: () => ({
     bigR: window.innerWidth > 767 ? 21.4 : 30,
     smallR: window.innerWidth > 767 ? 12.9 : 25,
     key: 0,
     amountCount: 5000,
     rateCount: 5,
+    minRate: 5,
+    maxRate: 16,
     pmt: 0,
     tweenedPmt: 0,
     moveEl: "",
@@ -3501,9 +3503,26 @@ export default {
   },
   watch: {
     pmt(newVal) {
+      this.$emit("update-calculator", {
+        pmt: newVal,
+        key: this.key,
+        amountCount: this.amountCount,
+      })
       gsap.to(this.$data, { duration: 0.5, tweenedPmt: newVal });
     },
-    key() {
+    amountCount(newVal) {
+      this.$emit("update-calculator", {
+        pmt: this.pmt,
+        key: this.key,
+        amountCount: newVal,
+      })
+    },
+    key(newVal) {
+      this.$emit("update-calculator", {
+        pmt: this.pmt,
+        key: newVal,
+        amountCount: this.amountCount,
+      })
       this.calculation();
     },
   },
@@ -3598,9 +3617,8 @@ export default {
 
           if ((ang >= 0 && ang <= 75) || (ang >= -75 && ang <= 0)) {
             let deg = (ang - 75) * -1;
-            let rateCount = (15 * (deg - 0)) / 149 + 5;
-            this.rateCount = rateCount - (rateCount % 0.5);
-
+            let rateCount = ((this.maxRate) * (deg - 0) / 149) + this.minRate;
+            this.rateCount = (rateCount - (rateCount % 0.5));
             this.rotate(ang);
           }
         }
@@ -3628,6 +3646,12 @@ export default {
 </script>
 
 <style lang="scss">
+@import "./../alesis/alesis";
+
+svg {
+  touch-action: none;
+}
+
 #ccrata {
   user-select: none;
 
@@ -3650,7 +3674,7 @@ export default {
     fill: #73a6c8;
   }
   .st5 {
-    fill: #ffffff;
+    fill: #326398;
   }
   .st6 {
     font-family: "微軟正黑體";
@@ -3739,14 +3763,22 @@ export default {
   width: fit-content;
   margin: 0px auto;
 
+  @include rwd {
+     margin: 20px auto;
+  }
+
   .switch {
     width: 50px;
     cursor: pointer;
     user-select: none;
+
+    @include rwd {
+      width: 25px;
+    }
   }
 
   .periods {
-    color: #ffffff;
+    color: #326398;
     text-align: center;
     line-height: 50px;
     font-size: 36px;
@@ -3756,6 +3788,11 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
     user-select: none;
+
+    @include rwd {
+      line-height: 40px;
+      font-size: 1rem;
+    }
   }
 
   .blue {
@@ -3764,6 +3801,10 @@ export default {
   .no-mode-translate-demo-wrapper {
     position: relative;
     width: 120px;
+
+    @include rwd {
+      width: 68px;
+    }
   }
 
   .no-mode-translate-fade-enter-active,
@@ -3779,19 +3820,6 @@ export default {
   }
   .no-mode-translate-fade-leave-active {
     transform: translateX(-31px) translate(-50%, -50%);
-  }
-
-  @media screen and (max-width: 767px) {
-    margin: 20px auto;
-
-    .switch {
-      width: 40px;
-    }
-
-    .periods {
-      line-height: 40px;
-      font-size: 30px;
-    }
   }
 }
 </style>

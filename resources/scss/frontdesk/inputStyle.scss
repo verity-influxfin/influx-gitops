@@ -153,3 +153,240 @@
         height: 10px;
     }
 }
+
+
+/**
+ * 評估問卷
+ */
+
+.評估問卷 {
+    position: relative;
+
+    .表單 {
+        max-width: 1280px;
+        margin   : 0 auto;
+        .列 {
+            grid-template-columns: 1.06fr 1fr;
+            display              : grid;
+            margin               : 0;
+            align-items          : center;
+            gap                  : 1rem;
+
+            @include rwd {
+                grid-template-columns: 1fr;
+                gap                  : 0.5rem;
+            }
+
+            &:not(:last-child) {
+                margin-bottom: 1.5rem;
+
+                @include rwd {
+                    margin-bottom: 0.5rem;
+                }
+            }
+            .標籤 {
+                text-align: right;
+                font-size : 1.4rem;
+                color     : #5862a3;
+
+                @include rwd {
+                    text-align: left;
+                    font-size : 1rem;
+                }
+            }
+        }
+        .輸入欄位 {
+            button {
+                width        : 100%;
+                padding      : 0.5rem 1rem;
+                font-size    : 1.4rem;
+                border-radius: 0.4rem;
+                border       : 0;
+                background   : #326398;
+                color        : #FFF;
+                outline      : none;
+
+                @include rwd {
+                    font-size: 1rem;
+                    padding  : .5rem;
+                }
+            }
+            select {
+                width        : 100%;
+                padding      : .5rem 1rem;
+                font-size    : 1.4rem;
+                border-radius: .4rem;
+                border       : 1px solid #036eb7;
+                background   : transparent;
+                text-align   : center;
+                color        : #036eb7;
+                // padding-left : 45%;
+                outline      : none;
+
+                @include rwd {
+                    font-size   : 1rem;
+                    padding     : .5rem;
+                    text-align  : left;
+                }
+            }
+
+            input {
+                width        : 100%;
+                padding      : .5rem 1rem;
+                font-size    : 1.4rem;
+                border-radius: .4rem;
+                border       : 1px solid #036eb7;
+                background   : transparent;
+                color        : #036eb7;
+                outline      : none;
+
+                @include rwd {
+                    font-size: 1rem;
+                    padding  : .5rem;
+                }
+            }
+        }
+    }
+
+    .結果 {
+        display      : flex;
+        align-items  : center;
+        margin-top   : 2rem;
+        margin-bottom: 2rem;
+
+        @include rwd {
+            margin-top    : 3rem;
+            margin-bottom : 0;
+            flex-direction: column;
+        }
+
+        .展示區塊 {
+            flex      : 1;
+            text-align: right;
+            max-width : 430px;
+
+            .圖片 {
+                width: 350px;
+
+                @include rwd {
+                    width        : 70vw;
+                    height       : auto;
+                    margin-bottom: 2rem;
+                }
+            }
+        }
+
+        .內容 {
+            background-image       : linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+            -webkit-background-clip: text;
+            background-clip        : text;
+            color                  : rgba(255, 255, 255, 0);
+            font-weight            : bolder;
+            font-size              : 2rem;
+            flex                   : 1;
+            margin-left            : 3rem;
+
+            @include rwd {
+                margin-left: 0;
+            }
+
+            .標題 {
+                margin-bottom: 1.5rem;
+                font-size    : 1.8rem;
+
+                @include rwd {
+                    font-size: 1.2rem;
+                }
+            }
+
+            .段落 {
+                font-size    : 1.3rem;
+                line-height  : 1.7;
+                margin-bottom: 1.5rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                }
+            }
+
+            .數值 {
+                font-size    : 1.2rem;
+                line-height  : 1.8;
+                margin-bottom: 2rem;
+
+                @include rwd {
+                    font-size: 1rem;
+                }
+                .列 {
+                    margin : 0;
+                    display: flex;
+
+                    .標籤 {
+                        color: #036EB7;
+                    }
+
+                    .值 {
+                        color      : #5d5555;
+                        font-weight: normal;
+                    }
+                }
+            }
+
+            .說明 {
+                font-size  : .9rem;
+                font-weight: normal;
+                &.yellow {
+                    color : #f29600;
+                }
+                &.red {
+                    color : red;
+                }
+            }
+        }
+        .列 {
+            margin-top: 1rem;
+
+            .btn.btn-primary {
+                padding      : .5rem 2rem;
+                font-size    : 1.15rem;
+                border-radius: 0.4rem;
+                border       : 0;
+                background   : #326398;
+                color        : #FFF;
+                outline      : none;
+                min-width    : 140px;
+
+                @include rwd {
+                    font-size: 1rem;
+                    padding  : .5rem;
+                }
+                &:first-child {
+                    margin-right: .5rem;
+                }
+            }
+        }
+    }
+}
+.btn.btn-modal {
+    padding      : .5rem 2rem;
+    font-size    : 1.15rem;
+    border-radius: 0.4rem;
+    border       : 0;
+    background   : #326398;
+    color        : #FFF;
+    outline      : none;
+    min-width    : 140px;
+
+    @include rwd {
+        font-size: 1rem;
+        padding  : .5rem;
+    }
+    &:first-child {
+        margin-right: .5rem;
+    }
+}
+.event-modal .modal-dialog {
+    @include rwd {
+        top: 10vh;
+    }
+}
