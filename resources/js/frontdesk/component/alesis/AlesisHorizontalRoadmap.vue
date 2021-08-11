@@ -1,5 +1,5 @@
 <template>
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1171" height="505.332" viewBox="0 0 1171 505.332">
+    <svg class="horizontal_roadmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1171" height="505.332" viewBox="0 0 1171 505.332">
       <defs>
         <linearGradient id="linear-gradient" x1="-5.447" y1="-2.375" x2="-5.443" y2="-2.38" gradientUnits="objectBoundingBox">
           <stop offset="0" stop-color="#e2e1e6"/>
@@ -186,8 +186,7 @@
         </g>
         <path id="Path_1180" data-name="Path 1180" d="M421.028,239.756a35.028,35.028,0,1,1,35.028-35.028A35.019,35.019,0,0,1,421.028,239.756Zm0-68.971a33.883,33.883,0,1,0,33.883,33.883A33.874,33.874,0,0,0,421.028,170.785Z" transform="translate(-13.255 1841.971)" fill="#e6e6e6"/>
       </g>
-</svg>
-
+    </svg>
 </template>
 
 
@@ -198,6 +197,9 @@ text {
 
 .導覽箭頭 {
     cursor: pointer;
+}
+svg.horizontal_roadmap text {
+    font-size: .72em;
 }
 </style>
 
