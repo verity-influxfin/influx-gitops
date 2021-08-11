@@ -91,6 +91,8 @@ export default {
 
     @include rwd {
         font-size: .9rem;
+        max-width: 17rem;
+        margin: .6rem auto;
     }
 }
 
