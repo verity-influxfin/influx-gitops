@@ -58,8 +58,7 @@
 
     @include rwd {
         max-width            : 100%;
-        transform            : scale(0.92);
-        grid-template-columns: 1fr !important;
+        grid-template-columns: repeat(2, 100%);
         gap                  : 0 !important;
     }
 }
@@ -68,6 +67,8 @@
     max-width: 490px;
 
     @include rwd {
+        max-width: 100%;
+
         &:not(:first-child) {
             display: none;
         }
