@@ -456,16 +456,16 @@ class Controller extends BaseController
             if($input ['identity'] == 2){
                 // 教育程度
                 switch ($input['educational_level']) {
-                    case '學士以下':
+                    case 'below':
                         $total_point += 0;
                         break;
-                    case '學士':
+                    case 'bachelor':
                         $total_point += 10;
                         break;
-                    case '碩士':
+                    case 'master':
                         $total_point += 15;
                         break;
-                    case '博士':
+                    case 'phD':
                         $total_point += 20;
                         break;
                     default:
@@ -556,6 +556,7 @@ class Controller extends BaseController
         $result['rate'] .= '%';
 
         try {
+            $input['total_point'] = $total_point;
             $input['amount'] = $result['amount'];
             $input['rate'] = $result['rate'];
             $input['platform_fee'] = $result['platform_fee'];
