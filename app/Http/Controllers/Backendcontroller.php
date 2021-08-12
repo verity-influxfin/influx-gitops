@@ -186,6 +186,20 @@ class Backendcontroller extends BaseController
         }
     }
 
+    public function uploadPartnerImg(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            if ($file->isValid()) {
+                $filename = $file->getClientOriginalName();
+                $file->move('upload/partner', "$filename");
+                return response()->json($filename, 200);
+            }
+        } else {
+            echo '<script type="text/javascript">alert("上傳失敗");</script>';
+        }
+    }
+
     public function uploadKnowledgeIntroImg(Request $request)
     {
         if ($request->hasFile('file')) {
