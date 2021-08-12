@@ -33,7 +33,7 @@
                         <a href="https://www.influxfin.com/skbank" class="連結">
                             <img src="/images/skbankbuttom1.svg">
                         </a>
-                        <a href="javascript:;" class="連結" data-toggle="modal" data-target="#event-modal" @click="bank_event='skbank'">
+                        <a href="https://servicedesk.skbank.com.tw/CloudDesk/AuthOTP/SMSOTPForm3/36?CMPN_ID=20201214100035&CMPN_REF=inFlux_apply&CMPN_SRC=zOTHER" class="連結" target="_blank" @click="bank_event='skbank'">
                             <img src="/images/skbankbuttom2.svg">
                         </a>
                     </div>
