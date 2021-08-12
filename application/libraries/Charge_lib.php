@@ -14,7 +14,14 @@ class Charge_lib
 		$this->CI->load->library('Transaction_lib');
     }
 
-    public function charge_part_fee($target_id, $balance, $transactions) {
+
+    /**
+     * 針對應收款項進行清償，餘額不足額時可部分清償
+     * @param int $balance 帳戶餘額
+     * @param array $transactions transaction list
+     * @return int 剩餘餘額
+     */
+    public function charge_partial_fee($balance, array $transactions) {
 	    // 沒有餘額可還款時直接返回
 	    if(!$balance)
 	        return $balance;
@@ -22,20 +29,7 @@ class Charge_lib
         $date = get_entering_date();
         $origin_balance = $balance;
 
-        // 交易科目償還順序
-        $charge_arsource_order = [SOURCE_AR_DAMAGE, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST, SOURCE_AR_PRINCIPAL];
-        // 應付轉為已付科目 mapping list
-        $charge_source_list = [
-            SOURCE_AR_PRINCIPAL		=> SOURCE_PRINCIPAL,
-            SOURCE_AR_INTEREST		=> SOURCE_INTEREST,
-            SOURCE_AR_DAMAGE		=> SOURCE_DAMAGE,
-            SOURCE_AR_DELAYINTEREST	=> SOURCE_DELAYINTEREST,
-            SOURCE_AR_FEES			=> SOURCE_FEES,
-        ];
         $transaction_param = [];
-
-        $total_recovery = 0;
-        $investor_userid = $investment_id = $investor_bank_account = $instalment= 0;
 
         foreach ($transactions as $transaction) {
             // 沒有餘額可扣款時跳離
@@ -85,7 +79,7 @@ class Charge_lib
             }
 
             if ($rs) {
-                $charge_source = $charge_source_list[$paid_transaction->source];
+                $charge_source = convertARSourceToChargeSource($paid_transaction->source);
                 $transaction_param[] = [
                     'source' => $charge_source,
                     'entering_date' => $date,
@@ -118,18 +112,26 @@ class Charge_lib
         return $balance;
     }
 
+
+    /**
+     * 使用餘額沖償逾期戶的所有逾期案，可部分金額清償
+     * @param int $user_id 使用者編號
+     * @return bool
+     */
     public function charge_expired_target($user_id=0) {
         $this->CI->load->library('financial_lib');
         $this->CI->load->library('subloan_lib');
+        $this->CI->load->library('Notification_lib');
         $this->CI->load->model('transaction/virtual_passbook_model');
 		$date               = get_entering_date();
         $transaction_param = [];
         $target_key_list = [];
+        $legal_collection_target_id_list = [];
 
         // 償還交易科目 (需按照合約順序)
-        $sorting_charge_ar_sources = [SOURCE_AR_DAMAGE, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST, SOURCE_AR_PRINCIPAL];
+        $sorting_charge_ar_sources = getSortingARSourceList();
         // 需計算回款平台服務費的交易科目
-        $platform_fee_ar_sources = [SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST, SOURCE_AR_PRINCIPAL];
+        $platform_fee_ar_sources = getPlatformFeeRelatedARSourceList();
 
         // TODO: 借款端虛擬帳號入金時，需判斷有無法催帳號，有的話需先轉移差額至法催帳號，避免入金後被部分沖償而沒清還法催帳號 (寫在入金函數)
 
@@ -146,9 +148,15 @@ class Charge_lib
             $target_id_list = array_column($account_payable_list, 'target_id');
             $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list]);
 
+            // 撈取法催中的案件編號
+            $legal_collection_investment = $this->CI->investment_model->get_many_by(['target_id' => $target_id_list,
+                'legal_collection_at >' => '1911-01-01 00:00:00',
+                'status' => INVESTMENT_STATUS_REPAYING]);
+            $legal_collection_target_id_list = array_unique(array_column($legal_collection_investment, 'target_id'));
+
             if($targets) {
                 $target_key_list = array_reduce($targets, function ($list, $item) {
-                    $list[$item->id] = ['product_id' => $item->product_id];
+                    $list[$item->id] = json_decode(json_encode($item), true);
                     return $list;
                 }, []);
             }
@@ -160,8 +168,10 @@ class Charge_lib
         // array[target_id][investment_id]['total_priority_account_payable'] = Total priority account payable of investment_id
         $account_payable_map = [];
 		foreach ($account_payable_list as $value) {
-		    // 外匯車的逾期案暫時不處理
-		    if(isset($target_key_list[$value->target_id]['product_id']) && $target_key_list[$value->target_id]['product_id'] == PRODUCT_FOREX_CAR_VEHICLE)
+		    // 法催中/寬限期/外匯車的逾期案不處理
+		    if( in_array($value->target_id, $legal_collection_target_id_list)
+                || (!isDelayed($target_key_list[$value->target_id]['delay_days'] ?? 0))
+		        || ($target_key_list[$value->target_id]['product_id'] ?? PRODUCT_FOREX_CAR_VEHICLE) == PRODUCT_FOREX_CAR_VEHICLE)
 		        continue;
 
 			if (!isset($account_payable_map[$value->target_id])) {
@@ -199,7 +209,8 @@ class Charge_lib
         // 取得借款人的可使用帳戶 (目前只處理非外匯車之項目)
         // $virtual = $target->product_id != PRODUCT_FOREX_CAR_VEHICLE ? CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE : TAISHIN_VIRTUAL_CODE;
         $virtual = CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE;
-        $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($user_id,0,1,2,$virtual);
+        $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($user_id, USER_BORROWER,
+            VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $virtual);
         if (!$virtual_account) {
             $trans_rollback();
             return FALSE;
@@ -208,10 +219,15 @@ class Charge_lib
         // 取得借款人虛擬帳戶餘額
         $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
         $balance = $funds['total'] - $funds['frozen'];
+        $available_balance = $balance;
+
+        // 當餘額滿足所有逾期案之總和時，將交給全額清償的流程去處理，這邊不做清償
         $total_recovery_list = [];
-        if ($balance < $total_accounts_payable) {
+        $target_paid_amount_list = [];
+        $repay_notification_list = [];
+        if ($available_balance < $total_accounts_payable) {
             foreach($sorting_charge_ar_sources as $ar_source) {
-                $origin_balance = $balance;
+                $origin_balance = $available_balance;
 
                 foreach ($account_payable_map as $target_id => $target_list) {
                     if (!is_numeric($target_id) || $total_accounts_payable_list[$ar_source] == 0)
@@ -230,11 +246,14 @@ class Charge_lib
                             continue;
 
                         // 總還款金額不能大於餘額
-                        $investment_repayment_amount = min($investment_repayment_amount, $balance);
+                        $investment_repayment_amount = min($investment_repayment_amount, $available_balance);
 
-                        $paid_balance = $this->charge_part_fee($target_id, $investment_repayment_amount, $investment_list['transactions'][$ar_source]);
+                        $paid_balance = $this->charge_partial_fee($investment_repayment_amount, $investment_list['transactions'][$ar_source]);
                         $paid_amount = ($investment_repayment_amount - $paid_balance);
-                        $balance -= $paid_amount;
+                        $available_balance -= $paid_amount;
+
+                        // 案件累加還款金額
+                        $target_paid_amount_list[$target_id] = ($target_paid_amount_list[$target_id] ?? 0) + $paid_amount;
 
                         // 累加需回款平台手續費的交易金額
                         if(in_array($ar_source, $platform_fee_ar_sources)) {
@@ -245,6 +264,8 @@ class Charge_lib
             }
 
             foreach ($total_recovery_list as $target_id => $target_list) {
+                $repay_notification_list[$target_id] = [];
+
                 foreach ($target_list as $investment_id => $total_recovery) {
                     // 找到最近一期的本金交易紀錄
                     $principle_transaction = new stdClass();
@@ -255,6 +276,10 @@ class Charge_lib
                         }else
                             return $min;
                     }, PHP_INT_MAX);
+                    $repay_notification_list[$target_id][$investment_id] = [
+                        'user_from' => $principle_transaction->user_from,
+                        'user_to' => $principle_transaction->user_to,
+                    ];
 
                     $ar_fee = $this->CI->financial_lib->get_ar_fee($total_recovery);
                     if ($ar_fee > 0) {
@@ -270,7 +295,7 @@ class Charge_lib
                             'instalment_no' => $principle_transaction->instalment_no,
                             'user_to' => 0,
                             'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
-                            'status' => 2
+                            'status' => TRANSACTION_STATUS_PAID_OFF
                         ];
                         $fee_transaction = $paid_fee_transaction;
                         $fee_transaction['source'] = SOURCE_AR_FEES;
@@ -281,11 +306,11 @@ class Charge_lib
                         $ar_fee_transaction = $this->CI->transaction_model->get_by([
                             'investment_id' => $investment_id,
                             'source' => SOURCE_AR_FEES,
-                            'status' => 1
+                            'status' => TRANSACTION_STATUS_TO_BE_PAID
                         ]);
                         if (isset($ar_fee_transaction)) {
                             $remaining_fee = max(0, $ar_fee_transaction->amount - $ar_fee);
-                            $this->CI->transaction_model->update_by(['id' => $ar_fee_transaction->id, 'status' => 1],
+                            $this->CI->transaction_model->update_by(['id' => $ar_fee_transaction->id, 'status' => TRANSACTION_STATUS_TO_BE_PAID],
                                 [
                                     'amount' => $remaining_fee,
                                 ]);
@@ -308,6 +333,22 @@ class Charge_lib
             $this->CI->transaction_model->trans_commit();
             $this->CI->virtual_passbook_model->trans_commit();
 
+            // 通知投資人已部分還款
+            foreach ($total_recovery_list as $target_id => $target_list) {
+                foreach ($target_list as $investment_id => $total_recovery) {
+                    $this->CI->notification_lib->repay_partial_success($repay_notification_list[$target_id][$investment_id]['user_to'],
+                        1, $target_key_list[$target_id]['target_no'], $total_recovery, 0);
+                }
+            }
+
+            // 通知借款人已部分還款
+            foreach ($target_paid_amount_list as $target_id => $paid_amount) {
+                $total_target_accounts_payable = array_sum($account_payable_map[$target_id]['total_amount']);
+                $this->CI->notification_lib->repay_partial_success($user_id, 0,
+                    $target_key_list[$target_id]['target_no'], $paid_amount,
+                    $total_target_accounts_payable - $paid_amount);
+            }
+
             // 針對有回款的投資人取消申請中之債轉
             if(!empty($total_recovery_list)) {
                 $investment_id_list = array_map(function ($x) {
@@ -320,19 +361,26 @@ class Charge_lib
                     'transfer_status' => 1,
                 ]);
                 if (isset($investment) && count($investment)) {
-                    $investmentList = array_column(json_decode(json_encode($investment), true), 'id');
+                    $investmentList = array_reduce(json_decode(json_encode($investment), true), function ($list, $item) {
+                        $list[$item['id']] = $item;
+                        return $list;
+                    }, []);
 
                     // 0:待出借 1:待放款
                     $transfer_list = $this->CI->transfer_model->get_many_by([
-                        'investment_id' => $investmentList,
+                        'investment_id' => array_keys($investmentList),
                         'status' => [0, 1]
                     ]);
                     foreach ($transfer_list as $value) {
                         if ($value->combination != 0) {
                             $transfer = $this->CI->transfer_model->get_many_by(['combination' => $value->combination]);
-                            $this->CI->transfer_lib->cancel_combination_transfer($transfer);
+                            $result = $this->CI->transfer_lib->cancel_combination_transfer($transfer);
                         } else {
-                            $this->CI->transfer_lib->cancel_transfer($value);
+                            $result = $this->CI->transfer_lib->cancel_transfer($value);
+                        }
+                        if($result) {
+                            $this->CI->notification_lib->cancel_transfer_bidding($investmentList[$value->investment_id]['user_id'],
+                                $target_key_list[$investmentList[$value->investment_id]['target_id']]['target_no']);
                         }
                     }
                 }
@@ -342,7 +390,9 @@ class Charge_lib
                     $subloan = $this->CI->subloan_lib->get_subloan($target);
                     if (isset($subloan) && $subloan) {
                         if (in_array($subloan->status, array(0, 1, 2))) {
-                            $this->CI->subloan_lib->cancel_subloan($subloan);
+                            if($this->CI->subloan_lib->cancel_subloan($subloan)) {
+                                $this->CI->notification_lib->cancel_subloan_bidding($target);
+                            }
                         }
                     }
                 }
@@ -351,13 +401,13 @@ class Charge_lib
             $trans_rollback();
         }
 
-        // TODO: APP通知借款端還款了餘額
-
-        $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($user_id,0,2,1,$virtual);
+        $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($user_id, USER_BORROWER,
+            VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $virtual);
         if (!$virtual_account) {
             echo "TODO:發生錯誤，帳務需rollback?";
         }
 
+        return TRUE;
 	}
 
 	public function charge_normal_target($target=[]){
