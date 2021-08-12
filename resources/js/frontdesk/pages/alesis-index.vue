@@ -30,10 +30,10 @@
                     <img src="/images/skBankIndex.jpg" class="旗幟圖片">
                     <img src="/images/skBankIndexM.jpg" class="旗幟圖片 旗幟圖片_手機的">
                     <div class="新光銀行功能">
-                        <a href="https://www.influxfin.com/skbank" class="連結">
+                        <a href="/skbank" class="連結">
                             <img src="/images/skbankbuttom1.svg">
                         </a>
-                        <a href="https://servicedesk.skbank.com.tw/CloudDesk/AuthOTP/SMSOTPForm3/36?CMPN_ID=20201214100035&CMPN_REF=inFlux_apply&CMPN_SRC=zOTHER" class="連結" target="_blank" @click="bank_event='skbank'">
+                        <a href="https://reurl.cc/7r0XQ9" class="連結" target="_blank" @click="bank_event='skbank'">
                             <img src="/images/skbankbuttom2.svg">
                         </a>
                     </div>
@@ -187,7 +187,7 @@
                                     <button class="btn btn-primary" type="button" @click="formCalculated=false">返回</button>
 
                                     <!-- 新光銀行 -->
-                                    <a class="btn btn-primary" href="https://servicedesk.skbank.com.tw/CloudDesk/AuthOTP/SMSOTPForm3/36?CMPN_ID=20201214100035&CMPN_REF=inFlux_apply&CMPN_SRC=zOTHER" target="_target" v-if="bank_event=='skbank'">
+                                    <a class="btn btn-primary" href="https://reurl.cc/7r0XQ9" target="_target" v-if="bank_event=='skbank'">
                                         前往銀行申請頁面
                                     </a>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="bank-wrapper" id="bank-wrapper">
       <div class="content-top skbank-top">
-        <a class="btn send-btn skbank-send-btn skbank-banner-btn" data-toggle="modal" data-target="#survey-modal">立即申請</a>
+        <a class="btn send-btn skbank-send-btn skbank-banner-btn" href="https://reurl.cc/7r0XQ9" target="_blank">立即申請</a>
     </div>
     <div class="form">
         <div class="event-form">
