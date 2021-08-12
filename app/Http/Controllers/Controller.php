@@ -614,7 +614,7 @@ class Controller extends BaseController
 
         $result = [];
         if ($input['filter'] !== 'share') {
-            $result = DB::table('interview')->select('*')->where('category', '=', $input['filter'])->orderBy('post_date', 'desc')->get();
+            $result = DB::table('interview')->select('*')->where('category', '=', $input['filter'])->orderBy('post_modified', 'desc')->get();
         } else {
             $result = DB::table('knowledge_article')->select('*')->where([['type', '=', 'video'], ['status', '=', 'publish']])->orderBy('post_modified', 'desc')->get();
         }

@@ -151,7 +151,7 @@
                     小學堂金融科技
                     <div class="sub">
                         <a href="/blog" class="item">小學堂</a>
-                        <a href="/vlog" class="item">小學堂影音</a>
+                        <a href="/vlog?q=share" class="item">小學堂影音</a>
                     </div>
                 </div>
                 <div class="item">
@@ -220,7 +220,7 @@
                     <div class="text">小學堂金融科技</div>
                     <div class="sub">
                         <a href="/blog" class="item">小學堂</a>
-                        <a href="/vlog" class="item">小學堂影音</a>
+                        <a href="/vlog?q=share" class="item">小學堂影音</a>
                     </div>
                 </div>
                 <div class="item -dropdown">
