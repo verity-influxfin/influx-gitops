@@ -11,8 +11,9 @@
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
     <title>百萬信保檢核表</title>
+    <style>
+    </style>
   </head>
-
   <body>
 	<div>
 	  <table >
@@ -3274,6 +3275,7 @@
       $.ajax({
           type: "GET",
           url: `/admin/bankdata/report?target_id=${target_id}&table_type=${table_type}`,
+          async:false,
           success: function (response) {
             // console.log(response);
               result(response);
@@ -3288,6 +3290,7 @@
 	  $.ajax({
           type: "GET",
           url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
+          async:false,
           success: function (response) {
 			  response = response.response;
               result(response);
@@ -3388,45 +3391,42 @@
         all_data = getCheckListImagesData();
         request_data = [];
         new_request_data = [];
-        case_no = '';
+        case_no = $('#case_no').val();
+        count = 0;
 
-        Object.keys(all_data).forEach(function(key) {
-            new_string = key.split('_');
-            data_type = new_string[0];
-            getMappingMsgNo(target_id, 'send', key, function (data){
-                msg_data = data;
-                msg_no = msg_data.data.msg_no;
-                case_no = 2021052800000094;
-                request_data.push({
-                    'MsgNo' : msg_no,
-                    'CompId' : 69713453,
-                    'CaseNo' : case_no,
-                    'DocType' : new_string[0],
-                    'DocSeq' : parseInt(new_string[1])+1,
-                    'DocFileType' : 4,
-                    'DocUrl' : all_data[key]
+        if(case_no){
+            Object.keys(all_data).forEach(function(key) {
+                new_string = key.split('_');
+                data_type = new_string[0];
+                getMappingMsgNo(target_id, 'send', key, function (data){
+                    msg_data = data;
+                    msg_no = msg_data.data.msg_no;
+                    request_data.push({
+                        'MsgNo' : msg_no,
+                        'CompId' : 69713453,
+                        'CaseNo' : case_no,
+                        'DocType' : new_string[0],
+                        'DocSeq' : parseInt(new_string[1])+1,
+                        'DocFileType' : 4,
+                        'DocUrl' : all_data[key]
+                    });
+                    count += 1;
                 });
-            });
-            // console.log(request_data);
-        })
-        setTimeout(function(){
-            if(request_data){
-                new_request_data['request_image_list'] = request_data;
-                console.log(new_request_data);
-                // $.ajax({
-                //     type: "POST",
-                //     data: JSON.stringify(request_data),
-                //     url: '/api/skbank/v1/LoanRequest/apply_image_list',
-                //     dataType: "json",
-                //     success: function (response) {
-                //       alert(response);
-                //     },
-                //     error: function(error) {
-                //       alert(error);
-                //     }
-                // });
+            })
+        }
+        new_request_data['request_image_list'] = request_data;
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify(request_data),
+            url: '/api/skbank/v1/LoanRequest/apply_image_list',
+            dataType: "json",
+            success: function (response) {
+              alert(response);
+            },
+            error: function(error) {
+              alert(error);
             }
-        },10000);
+        });
 
 		return;
 	}
