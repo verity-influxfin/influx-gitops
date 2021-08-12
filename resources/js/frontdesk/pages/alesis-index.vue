@@ -224,9 +224,9 @@
         <div class="計數器">
             <alesis-space size="small"></alesis-space>
             <div class="包裹容器">
-                <alesis-counter image="/images/alesis-registered.svg" header="累積註冊用戶" number="60000" unit="人"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalmoney.svg" header="累積放款金額" number="15857" unit="萬"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" number="37390" unit="筆"></alesis-counter>
+                <alesis-counter image="/images/alesis-registered.svg" header="累積註冊用戶" :number="indexCounter.memberCount" unit="人"></alesis-counter>
+                <alesis-counter image="/images/alesis-totalmoney.svg" header="累積放款金額" :number="indexCounter.totalLoanAmount" unit="萬"></alesis-counter>
+                <alesis-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" :number="indexCounter.transactionCount" unit="筆"></alesis-counter>
             </div>
             <alesis-space size="medium"></alesis-space>
         </div>
@@ -494,6 +494,8 @@ import WorkCategories from "../data/work_categories"
 import routeMap from "../component/svg/routeMapComponent";
 import routeMapM from "../component/svg/routeMapMComponent.vue";
 
+import {alesisIndexCounter} from "./api"
+
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
@@ -561,7 +563,8 @@ export default {
         isFormValid           : true,
         borrowReportResult    : {},
         routeData: [],
-        workCategories        : WorkCategories
+        workCategories        : WorkCategories,
+        indexCounter: {}
     }),
     created() {
     this.getMilestoneData();
@@ -569,6 +572,12 @@ export default {
     },
     mounted() {
        // document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
+
+         alesisIndexCounter().then((v) => {
+             this.indexCounter = v
+        });
+
+
 
         // 管理與財經
         this.workCategories.n = this.workCategories.n.map(v => {
