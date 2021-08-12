@@ -10,7 +10,8 @@ if(ENVIRONMENT=="development"){
 	$config['access_ip_list']	= array(
 		'114.34.172.44',
 		'13.112.224.83',
-        '52.194.4.73'
+        '52.194.4.73',
+        '18.179.183.180'
 	);
     // TODO: 待確認是否為私網IP, ex: 172.xx.xx.xx
     // octopoda ip

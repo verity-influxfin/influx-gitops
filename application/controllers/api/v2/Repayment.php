@@ -463,6 +463,7 @@ class Repayment extends REST_Controller {
 	 * @apiSuccess {String} amortization_schedule.list.repayment 已還款金額
 	 * @apiSuccess {String} amortization_schedule.list.delay_interest 延滯息
 	 * @apiSuccess {String} amortization_schedule.list.liquidated_damages 違約金（提還費）
+	 * @apiSuccess {Number} legal_collection 法催中
      * @apiSuccessExample {Object} SUCCESS
      *    {
      * 		"result":"SUCCESS",
@@ -543,7 +544,8 @@ class Repayment extends REST_Controller {
      * 						"repayment_date": "2019-05-10"
      * 					}
      * 				}
-     *    		}
+     *    		},
+	 * 			"legal_collection": 0
      *    	}
      *    }
 	 *
@@ -720,6 +722,17 @@ class Repayment extends REST_Controller {
                 $reason = $json_reason->reason.' - '.$json_reason->reason_description;
             }
 
+			$legal_collection = $this->investment_model->getLegalCollectionInvestment([
+				't.id' => $target->id
+			],[
+				'legal_collection_at >=' => '1911-01-01',
+				'status' => 3
+			]);
+			$legalCollection = 0;
+			if(isset($legal_collection) && count($legal_collection)) {
+				$legalCollection = 1;
+			}
+
 			$data = [
 				'id' 				=> intval($target->id),
 				'target_no' 		=> $target->target_no,
@@ -746,6 +759,7 @@ class Repayment extends REST_Controller {
 				'created_at' 		=> intval($target->created_at),
 				'next_repayment' 	=> $next_repayment,
 				'amortization_schedule' => $this->target_lib->get_amortization_table($target),
+				'legal_collection'	=> $legalCollection
 			];
 
 			$this->response(array('result' => 'SUCCESS','data' => $data ));

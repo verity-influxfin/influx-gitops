@@ -68,6 +68,39 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+	public function temp_handle_invalid_target() {
+        $this->load->model('loan/target_model');
+        $this->load->library('subloan_lib');
+        $this->load->library('Notification_lib');
+
+        $get 	= $this->input->get(NULL, TRUE);
+        $target_ids = isset($get['ids'])&&$get['ids']?explode(',',$get['ids']):null;
+        if(isset($target_ids)) {
+            $targets = $this->target_model->get_many_by(['id' => $target_ids]);
+        }else{
+            $targets = $this->target_model->get_many_by(['status' => [0,1,2,3], 'interest_rate > ' => 16]);
+        }
+        foreach ($targets as $key => $value) {
+            if($value->interest_rate > 16) {
+                // 待出借(待上架)
+                if ($value->status == 3) {
+                    if ($value->sub_status == 8) {
+                        $this->subloan_lib->subloan_cancel_bidding($value, 0, null);
+                    } else {
+                        $this->target_lib->target_cancel_bidding($value, 0, null);
+                    }
+                }
+
+                if (in_array($value->status, [0,1,2,3]) && in_array($value->sub_status,[0,8,9,10])) {
+                    // 針對 status in (0,1,2) 的案件做取消，前面 3 的會先下架，但 value 狀態沒有更新，所以要有 3
+                    $this->target_lib->cancel_target($value,$value->user_id,0);
+                    $this->notification_lib->withdraw_invalid_target($value->user_id,0);
+                }
+            }
+        }
+
+    }
+
 	public function approve_target()
 	{	//每五分鐘
 		$this->load->library('Target_lib');

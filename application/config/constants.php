@@ -293,7 +293,7 @@ defined('TARGET_AGITATE_EXIST') or define('TARGET_AGITATE_EXIST', 819);
 //defined('TARGET_WAS_DELAY') 			OR define('TARGET_WAS_DELAY'			, 902);
 defined('TARGET_HAD_SUBSTATUS') 		OR define('TARGET_HAD_SUBSTATUS'		, 903);
 defined('TARGET_SUBLOAN_NOT_EXIST') 	OR define('TARGET_SUBLOAN_NOT_EXIST'	, 904);
-
+defined('TARGET_IN_LEGAL_COLLECTION')  		OR define('TARGET_IN_LEGAL_COLLECTION'		, 905);
 
 //Admin
 defined('SESSION_APP_ADMIN_INFO')   OR define('SESSION_APP_ADMIN_INFO'	, getenv('ENV_SESSION_APP_ADMIN_INFO')); //Use in Admin Login
@@ -537,3 +537,7 @@ defined('ENV_NOTIFICATION_REQUEST_URL')  OR define('ENV_NOTIFICATION_REQUEST_URL
 
 // 普匯OCR子系統
 defined('INFLUX_OCR_ENDPOINT')      OR define('INFLUX_OCR_ENDPOINT'     , getenv('ENV_INFLUX_OCR_ENDPOINT'));
+
+// legal document automatically
+defined('ENV_ANUBIS_ENDPOINT')  OR define('ENV_ANUBIS_ENDPOINT' , getenv('ENV_ANUBIS_ENDPOINT'));
+defined('ENV_ANUBIS_REQUEST_URL')  OR define('ENV_ANUBIS_REQUEST_URL' , getenv('ENV_ANUBIS_ENDPOINT').'/anubis/api/v1.0/');
