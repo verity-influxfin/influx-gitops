@@ -40,12 +40,16 @@ function faker(data) {
 
 
 // alesisCompanyIntroductions 是首頁 - 公司簡介
-export const alesisCompanyIntroductions = async b => (await faker(dataAlesisCompanyIntroductions));
+// * dataAlesisCompanyIntroductions
+// * /getMilestoneData
+export const alesisCompanyIntroductions = async b => (await superagent.post(host + "getMilestoneData").send(b)).body;
 // alesisIndexHumans 是首頁 - 用戶分享區
 export const alesisIndexHumans = async b => (await faker(dataAlesisIndexHumans));
 // alesisIndexBanners 是首頁 - Banner
 export const alesisIndexBanners = async b => (await faker(dataAlesisIndexBanners));
 // alesisIndexCounter 是首頁 - 累積註冊用戶
+// * dataAlesisIndexCounter
+// * /getCount
 export const alesisIndexCounter = async b => (await superagent.get(host + "getCount").send(b)).body;
 // alesisCollegeHumans 是學生貸 - 用戶分享區
 export const alesisCollegeHumans = async b => (await faker(dataAlesisCollegeHumans));
@@ -58,8 +62,8 @@ export const alesisCollegeCounter = async b => (await faker(dataAlesisCollegeCou
 // alesisCollegeCases 是學生貸 - 服務範圍
 export const alesisCollegeCases = async b => (await faker(dataAlesisCollegeCases));
 // alesisCollegeForm 是學生貸 - 表單
-export const alesisCollegeForm = async b => (await faker(dataAlesisCollegeForm));
+// export const alesisCollegeForm = async b => (await faker(dataAlesisCollegeForm));
 // alesisWorkForm 是工作貸 - 表單
-export const alesisWorkForm = async b => (await faker(dataAlesisWorkForm));
+// export const alesisWorkForm = async b => (await faker(dataAlesisWorkForm));
 
 // 全站搜尋？

@@ -209,21 +209,19 @@ svg.horizontal_roadmap text {
 </style>
 
 <script>
-// 遠端資料
-import RoadmapData from "../../data/index_horizontal_roadmap"
+import {alesisCompanyIntroductions} from './../../pages/api'
 
 export default {
     name: "AlesisHorizontalRoadmap",
     mounted() {
-        // var result = await fetch("");
-        // result = await result.json();
-        // var result = this.paths
-
-        this.initRoadmap();
+         alesisCompanyIntroductions().then(v => {
+            this.paths = v;
+            this.initRoadmap();
+        })
     },
     data() {
         return {
-            paths            : RoadmapData,
+            paths            : {},
             sets             : [[]],
             current_set_index: 0,
         }

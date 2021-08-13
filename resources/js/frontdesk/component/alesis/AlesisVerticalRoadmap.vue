@@ -18,8 +18,8 @@
             <linearGradient id="vertical-linear-gradient-8" x1="-10.494" y1="-40.022" x2="-10.494" y2="-41.023" xlink:href="#vertical-linear-gradient-2"/>
         </defs>
         <g id="bg-2" transform="translate(-0.67 -0.09)">
-            <image class="導覽箭頭" @click="prev" transform="rotate(270, 50, 1050) translate(50.067 1050.043)" height="60" width="60" href="/images/alesis-carousel-left.svg"></image>
-            <image class="導覽箭頭" @click="next" transform="rotate(270, 580, 90) translate(580.067 90.043)" height="60" width="60" href="/images/alesis-carousel-right.svg"></image>
+            <image class="導覽箭頭" @click="next" transform="rotate(270, 50, 1050) translate(50.067 1050.043)" height="60" width="60" href="/images/alesis-carousel-left.svg"></image>
+            <image class="導覽箭頭" @click="prev" transform="rotate(270, 580, 90) translate(580.067 90.043)" height="60" width="60" href="/images/alesis-carousel-right.svg"></image>
 
 
             <g id="Group_3583" data-name="Group 3583" transform="translate(1.17 0.59)">
@@ -96,21 +96,19 @@
 </style>
 
 <script>
-// 遠端資料
-import RoadmapData from "../../data/index_vertical_roadmap"
+import {alesisCompanyIntroductions} from './../../pages/api'
 
 export default {
     name: "VerticalPath",
     mounted() {
-        // var result = await fetch("");
-        // result = await result.json();
-        // var result = this.paths
-
-        this.initRoadmap();
+        alesisCompanyIntroductions().then(v => {
+            this.paths = v;
+            this.initRoadmap();
+        })
     },
     data() {
         return {
-            paths            : RoadmapData,
+            paths            : {},
             sets             : [[]],
             current_set_index: 0,
         }
