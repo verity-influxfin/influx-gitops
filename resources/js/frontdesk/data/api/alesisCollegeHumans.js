@@ -1,29 +1,67 @@
 export default [
     {
-        "ID": 2,
-        "feedback": "在普匯投資除了可以有穩定的收益外，還可以幫助到有夢的大學生，所以覺得這個平台還滿特別的",
-        "imageSrc": null,
-        "video_link": "https://www.youtube.com/embed/4RqbVmH6aHU",
-        "post_title": "台北科技業 劉先生",
-        "rank": "officeWorker",
-        "type": "【投資人專訪】"
+        "ID": 9,
+        "feedback": "覺得普匯是一個很安心的平台，個資都很安全，不會有其他人打電話來，也不用讓學生冒著生命危險，很像是海裡面找到一塊浮木吧!",
+        "imageSrc": "/upload/2019/11/學生_-1.jpg",
+        "video_link": null,
+        "post_title": "方同學",
+        "rank": "student",
+        "type": "loan",
+        "amount": "0",
+        "rate": "0",
+        "period_range": "0",
+        "spend_day": "0"
     },
     {
-        "ID": 3,
-        "feedback": "有比較過其他平台，其他的債權金額都比較大，普匯可以小額投資，還可以進行債權轉讓，讓我可以即時的拿回投資的錢",
-        "imageSrc": null,
-        "video_link": "https://www.youtube.com/embed/we16JV8Hc1o",
-        "post_title": "台北設計業 陳先生",
-        "rank": "officeWorker",
-        "type": "【投資人專訪】"
+        "ID": 10,
+        "feedback": "有比較過其他平台，普匯不管是在審核，或到最後的放款，我覺得跟其他平台相對來說是最快的，平台的手續費也收最低，真的是很仁慈的一件事!",
+        "imageSrc": "/upload/2019/11/學生_2.jpg",
+        "video_link": null,
+        "post_title": "宋同學",
+        "rank": "student",
+        "type": "【借款人專訪】",
+        "amount": "0",
+        "rate": "0",
+        "period_range": "0",
+        "spend_day": "0"
     },
     {
-        "ID": 4,
-        "feedback": "在普匯上投資，平均都可以獲得12%的年化報酬率 和以往投資的經驗比較起來， 報酬率跟風險管控都更加穩健！ 否則平常上班也無法一直盯盤注意市場變化",
-        "imageSrc": null,
-        "video_link": "https://www.youtube.com/embed/tsd-YTxzRyI",
-        "post_title": "台北服飾業 何小姐",
-        "rank": "officeWorker",
-        "type": "【投資人專訪】"
+        "ID": 11,
+        "feedback": "這次借款是為了繳交校外的房租，看到廣告就決定來申請看看，我覺得對於學生非常方便也輕鬆還，謝謝有普匯這個平台。",
+        "imageSrc": "/upload/2019/11/學生_3.jpg",
+        "video_link": null,
+        "post_title": "洪同學",
+        "rank": "student",
+        "type": "【借款人專訪】",
+        "amount": "0",
+        "rate": "0",
+        "period_range": "0",
+        "spend_day": "0"
+    },
+    {
+        "ID": 12,
+        "feedback": "先前有比較過各個P2P借貸，覺得普匯不僅撥款速度快，使用介面及流程也很清楚好用，尤其有貼心又專業的客服可以詢問，謝謝普匯的貼心服務。",
+        "imageSrc": "/upload/2019/11/學生_4.jpg",
+        "video_link": null,
+        "post_title": "康同學",
+        "rank": "student",
+        "type": "【借款人專訪】",
+        "amount": "0",
+        "rate": "0",
+        "period_range": "0",
+        "spend_day": "0"
+    },
+    {
+        "ID": 13,
+        "feedback": "我覺得平台對於像我這種臨時急需用錢的人很方便，而且不用面對太多的人，整個借款流程讓我很放心。",
+        "imageSrc": "/upload/2019/11/學生_5.jpg",
+        "video_link": null,
+        "post_title": "羅同學",
+        "rank": "student",
+        "type": "【借款人專訪】",
+        "amount": "0",
+        "rate": "0",
+        "period_range": "0",
+        "spend_day": "0"
     }
 ]
