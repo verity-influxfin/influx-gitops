@@ -261,19 +261,11 @@
                 <div class="標題">公司簡介</div>
             </alesis-header>
             <alesis-space size="medium"></alesis-space>
-            <div class="h-c">
-              <div class="arrows al">
-                <div @click="pre">
-                  <img src="../asset/images/left-arrow.svg" class="img-fluid" />
-                </div>
-              </div>
-              <routeMap v-if="isDesktop" :routeData="routeData" />
-              <routeMapM v-else :routeData="routeData" />
-              <div class="arrows ar">
-                <div @click="next">
-                  <img src="../asset/images/right-arrow.svg" class="img-fluid" />
-                </div>
-              </div>
+            <div class="包裹容器">
+                <alesis-horizontal-roadmap></alesis-horizontal-roadmap>
+            </div>
+            <div class="手機容器">
+                <alesis-vertical-roadmap></alesis-vertical-roadmap>
             </div>
             <alesis-space size="medium"></alesis-space>
         </div>
