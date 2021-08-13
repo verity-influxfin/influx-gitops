@@ -212,14 +212,6 @@ class Charge_lib
             return false;
         }
         else{
-            $rs = $this->CI->investment_model->get_by(['target_id' => $target->id, 'status' => 3, 'legal_collection_at > ' => '1911-01-01']);
-
-            // 進入支付命令聲請的法催狀態時，該案件無法進行還款
-            if(isset($rs)) {
-                $this->notice_delay_target($target);
-                return false;
-            }
-
             $transaction 	= $this->CI->transaction_model->get_many_by([
                 'target_id'		=> $target->id,
                 'limit_date <=' => $date,
