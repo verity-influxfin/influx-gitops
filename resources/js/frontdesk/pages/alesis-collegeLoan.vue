@@ -673,6 +673,8 @@ button[disabled] {
 }
 
 .服務範圍 .包裹容器 .地圖 {
+    pointer-events: none;
+
     @include rwd {
         margin-top: -4rem;
     }
