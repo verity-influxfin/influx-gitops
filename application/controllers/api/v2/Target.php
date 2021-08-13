@@ -1735,7 +1735,9 @@ class Target extends REST_Controller {
         $Judicialperson = $this->user_info->investor == 1 && $this->user_info->company == 1?true:false;
 
 		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
+        $this->load->library('Certification_lib');
+        $idcard = $this->certification_lib->get_certification_info($this->user_info->id,1,$this->user_info->investor);
+		if(empty($this->user_info->id_number) || $this->user_info->id_number=='' || !$idcard || $idcard->status!=1) {
 			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ]);
 		}
 
