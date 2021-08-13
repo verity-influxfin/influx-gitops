@@ -11,7 +11,7 @@ import dataAlesisCollegeCases from "./../data/api/alesisCollegeCases";
 import dataAlesisCollegeForm from "./../data/api/alesisCollegeForm";
 import dataAlesisWorkForm from "./../data/api/alesisWorkForm";
 
-var host = "https://www.influxfin.com/"
+var host = "/"
 
 export const doLogin = async b => (await superagent.post(host + "doLogin").send(b)).body;
 export const doRegister = async b => (await superagent.post(host + "doRegister").send(b)).body;
