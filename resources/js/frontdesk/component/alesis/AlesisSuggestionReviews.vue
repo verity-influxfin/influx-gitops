@@ -3,23 +3,25 @@
     <div class="swiper-container">
         <!-- 內容包覆容器 -->
         <div class="swiper-wrapper">
-             <div class="swiper-slide" v-for="slide in slides">
+             <div class="swiper-slide" v-for="(slide, key) in slides" :key="key">
                 <div class="群組">
-                    <div class="項目" v-for="item in slide">
+                    <div class="項目" v-for="(item, item_key) in slide" :key="item_key">
                         <alesis-human
-                            :image="image"
                             :amount="item.amount"
                             :interest="item.rate"
                             :instalment="item.period_range"
                             :spend="item.spend_day"
+                            :rank="item.rank"
                         >
                             <div slot="video">
                                 <iframe v-bind:src="item.video_link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             </div>
                         </alesis-human>
                     </div>
-                    <div class="項目" v-if="slide.length < 2">
-                    </div>
+
+                    <!-- 填空欄位 -->
+                    <div class="項目" v-if="slide.length < 2"></div>
+                    <!-- / 填空欄位 -->
                 </div>
             </div>
         </div>
@@ -44,9 +46,6 @@
     max-width     : 1170px;
     padding-bottom: 3rem;
     padding-top   : 1.5rem;
-}
-
-.swiper-container .swiper-slide {
 }
 
 .swiper-container .swiper-slide .群組 {
@@ -77,10 +76,11 @@
 </style>
 
 <script>
-import AlesisHuman from "./AlesisHuman";
-
-import InvestData from "./../../data/reviews_invest";
-
+import AlesisHuman          from "./AlesisHuman";
+import {alesisIndexHumans,
+        alesisCollegeHumans,
+        alesisWorkHumans,
+        alesisBorrowHumans} from "./../../pages/api";
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
@@ -100,66 +100,49 @@ export default {
         }
     },
     data: () => ({
-        image: '',
         slides: []
     }),
     mounted() {
-        switch (this.type) {
-            case "work":
-                this.image = "/images/alesis-human-work-symbol.svg";
-                break
-            case "student":
-            default:
-                this.image = "/images/alesis-human-student-symbol.svg";
-                break
-        }
         this.getExperiences();
     },
     methods: {
+        process(v) {
+            let chunk = 2;
+            // 只留下有影片連結的項目。
+            v = v.filter(x => x.video_link);
+            //
+            for (let i=0; i< v.length; i+=chunk) {
+                this.slides.push(v.slice(i, i+chunk))
+            }
+            // 替 SwiperCore 載入 Navigation 導覽模組。
+            SwiperCore.use([Navigation]);
+            // 初始化這個案例分享容器幻燈片。
+            const swiper = new Swiper('.swiper-container', {
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+        },
+        //
         getExperiences() {
-            var self = this;
-
-            let data = new FormData();
-            // 借款端: loan|投資端: invest|全撈: 不給值
-            // let category = this.category == 'loan' ? 'loan' : 'invest';
-            let category = 'loan';
-            data.append('category', category)
-
-            // 上班族: officeWorker|學生: student|全撈: 不給值
-            // data.append('rank', 'student')
-
-            axios({
-                url: '/getExperiencesData',
-                method: 'post',
-                data: data,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json',
-                }
-            }).then((resp) => {
-                let chunk = 2;
-
-                let data = resp.data.filter(x => x.video_link);
-
-                for (let i=0; i< data.length; i+=chunk) {
-                    self.slides.push(data.slice(i, i+chunk))
-                }
-
-                // 替 SwiperCore 載入 Navigation 導覽模組。
-                SwiperCore.use([Navigation]);
-
-                // 初始化這個案例分享容器幻燈片。
-                const swiper = new Swiper('.swiper-container', {
-                    pagination: {
-                        el: '.swiper-pagination',
-                    },
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                });
-
-            })
+            switch (this.type) {
+                case "borrow":
+                    alesisBorrowHumans().then(this.process)
+                    break
+                case "college":
+                    alesisCollegeHumans().then(this.process)
+                    break
+                case "index":
+                    alesisIndexHumans().then(this.process)
+                    break
+                case "work":
+                    alesisWorkHumans().then(this.process)
+                    break
+            }
         },
     }
 }

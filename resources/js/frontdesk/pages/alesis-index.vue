@@ -421,7 +421,7 @@
             </alesis-header>
             <alesis-section>
                 <alesis-space size="small"></alesis-space>
-                <alesis-suggestion-reviews type="index" category="loan"></alesis-suggestion-reviews>
+                <alesis-suggestion-reviews type="index"></alesis-suggestion-reviews>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
