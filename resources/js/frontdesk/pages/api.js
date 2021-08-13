@@ -35,16 +35,19 @@ function faker(data) {
   });
 }
 
-// DATA IS FORMDATA as PHP Legacy
-// (await superagent.post(host + "getMilestoneData").send(b)).body;
-
-
 // alesisCompanyIntroductions 是首頁 - 公司簡介
 // * dataAlesisCompanyIntroductions
 // * /getMilestoneData
 export const alesisCompanyIntroductions = async b => (await superagent.post(host + "getMilestoneData").send(b)).body;
 // alesisIndexHumans 是首頁 - 用戶分享區
-export const alesisIndexHumans = async b => (await faker(dataAlesisIndexHumans));
+// * dataAlesisIndexHumans
+// * /getExperiencesData
+export const alesisIndexHumans = async b => {
+    var data = new FormData();
+    data.append('category', 'loan');
+    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    //return (await faker(dataAlesisIndexHumans))
+};
 // alesisIndexBanners 是首頁 - Banner
 // * dataAlesisIndexBanners
 // * /getIndexBanner
@@ -54,15 +57,38 @@ export const alesisIndexBanners = async b => (await superagent.post(host + "getI
 // * /getCount
 export const alesisIndexCounter = async b => (await superagent.get(host + "getCount").send(b)).body;
 // alesisCollegeHumans 是學生貸 - 用戶分享區
-export const alesisCollegeHumans = async b => (await faker(dataAlesisCollegeHumans));
+// * dataAlesisCollegeHumans
+// * /getExperiencesData
+export const alesisCollegeHumans = async b => {
+    var data = new FormData();
+    data.append('category', 'loan');
+    data.append('rank', 'student');
+    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    //return (await faker(dataAlesisCollegeHumans))
+};
 // alesisWorkHumans 是工作貸 - 用戶分享區
-export const alesisWorkHumans = async b => (await faker(dataAlesisWorkHumans));
+// * dataAlesisWorkHumans
+// * /getExperiencesData
+export const alesisWorkHumans = async b => {
+    var data = new FormData();
+    data.append('category', 'loan');
+    data.append('rank', 'officeWorker');
+    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    //return (await faker(dataAlesisWorkHumans))
+};
 // alesisBorrowHumans 是我要借款 - 用戶分享區
-export const alesisBorrowHumans = async b => (await faker(dataAlesisBorrowHumans));
+// * dataAlesisBorrowHumans
+// * /getExperiencesData
+export const alesisBorrowHumans = async b => {
+    var data = new FormData();
+    data.append('category', 'loan');
+    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    //return (await faker(dataAlesisBorrowHumans))
+};
 // alesisCollegeCounter 是學生貸 - 累積註冊用戶
-export const alesisCollegeCounter = async b => (await faker(dataAlesisCollegeCounter));
+// export const alesisCollegeCounter = async b => (await faker(dataAlesisCollegeCounter));
 // alesisCollegeCases 是學生貸 - 服務範圍
-export const alesisCollegeCases = async b => (await faker(dataAlesisCollegeCases));
+// export const alesisCollegeCases = async b => (await faker(dataAlesisCollegeCases));
 // alesisCollegeForm 是學生貸 - 表單
 // export const alesisCollegeForm = async b => (await faker(dataAlesisCollegeForm));
 // alesisWorkForm 是工作貸 - 表單
