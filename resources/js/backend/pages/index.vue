@@ -39,7 +39,7 @@
       <router-link class="center-low left" to="news" v-if="userData.identity == 1"
         >最新消息</router-link
       >
-      <router-link class="center" to="knowledge">AI金融科技新知</router-link>
+      <router-link class="center-mid-high right" to="knowledge">AI金融科技新知</router-link>
       <router-link class="center-low right" to="video">小學堂影音</router-link>
       <router-link
         class="center-lower-mid right"
