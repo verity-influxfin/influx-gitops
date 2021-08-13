@@ -46,7 +46,9 @@ export const alesisCompanyIntroductions = async b => (await superagent.post(host
 // alesisIndexHumans 是首頁 - 用戶分享區
 export const alesisIndexHumans = async b => (await faker(dataAlesisIndexHumans));
 // alesisIndexBanners 是首頁 - Banner
-export const alesisIndexBanners = async b => (await faker(dataAlesisIndexBanners));
+// * dataAlesisIndexBanners
+// * /getIndexBanner
+export const alesisIndexBanners = async b => (await superagent.post(host + "getIndexBanner").send(b)).body;
 // alesisIndexCounter 是首頁 - 累積註冊用戶
 // * dataAlesisIndexCounter
 // * /getCount

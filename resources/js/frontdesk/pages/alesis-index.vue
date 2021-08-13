@@ -26,6 +26,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="swiper-slide" v-for="item in swiperItems" :key="item.desktop">
+                    <a :href="item.link">
+                        <img :src="item.desktop" class="旗幟圖片">
+                        <img :src="item.mobile" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
                 <div class="swiper-slide">
                     <img src="/images/skBankIndex.jpg" class="旗幟圖片">
                     <img src="/images/skBankIndexM.jpg" class="旗幟圖片 旗幟圖片_手機的">
@@ -50,14 +56,6 @@
                             <img src="/images/skbankbuttom2.svg">
                         </a>
                     </div>
-                </div>
-                <div class="swiper-slide">
-                    <a href="https://www.influxfin.com/borrowLink">
-                        <img src="/images/210129首頁-全台首創banner.jpg" class="旗幟圖片">
-                    </a>
-                    <a href="https://www.influxfin.com/borrowLink">
-                        <img src="/images/210129首頁手機-全台首創banner (1).jpg" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
                 </div>
             </div>
         </div>
@@ -486,7 +484,7 @@ import WorkCategories from "../data/work_categories"
 import routeMap from "../component/svg/routeMapComponent";
 import routeMapM from "../component/svg/routeMapMComponent.vue";
 
-import {alesisIndexCounter} from "./api"
+import {alesisIndexCounter, alesisIndexBanners} from "./api"
 
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
@@ -523,12 +521,12 @@ export default {
         routeMapM,
     },
     data: () => ({
-        isDesktop: window.innerWidth > 767 ? true : false,
-        load2: false,
-        load3: false,
-        routeIndex: {
+        isDesktop             : window.innerWidth > 767 ? true : false,
+        load2                 : false,
+        load3                 : false,
+        routeIndex            : {
           start: 0,
-          end: 0,
+          end  : 0,
         },
         bank_event            : 'skbank',
         amountCount           : 5000,
@@ -554,22 +552,35 @@ export default {
         formAnswerPer         : 0,
         isFormValid           : true,
         borrowReportResult    : {},
-        routeData: [],
+        routeData             : [],
         workCategories        : WorkCategories,
-        indexCounter: {}
+        indexCounter          : {},
+        swiperItems           : [],
     }),
     created() {
     this.getMilestoneData();
         $("title").text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
-       // document.querySelector(".alesis-company-introduction .animate__animated").classList.add("animate__fadeInUp")
-
          alesisIndexCounter().then((v) => {
              this.indexCounter = v
         });
 
+        alesisIndexBanners().then((v) => {
+            this.swiperItems = v
 
+             SwiperCore.use([Navigation]);
+            new Swiper('.swiper-container.標頭幻燈片', {
+                autoplay: {
+                    delay: 3000,
+                },
+                loop: true,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });
+        })
 
         // 管理與財經
         this.workCategories.n = this.workCategories.n.map(v => {
@@ -602,17 +613,7 @@ export default {
             return v
         });
 
-        SwiperCore.use([Navigation]);
-        new Swiper('.swiper-container.標頭幻燈片', {
-            autoplay: {
-                delay: 3000,
-            },
-            loop: true,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
+
     },
     watch : {
         "routeIndex.start"() {
