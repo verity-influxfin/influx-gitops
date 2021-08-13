@@ -168,7 +168,7 @@ class MY_Model extends CI_Model
     public function get_many_by()
     {
         $where = func_get_args();
-        
+
         $this->_set_where($where);
 
         return $this->get_all();
@@ -896,7 +896,7 @@ class MY_Model extends CI_Model
                     }
                 }
             }
-        } 
+        }
         else if (count($params) == 1)
         {
             $this->_database->where($params[0]);
@@ -905,7 +905,7 @@ class MY_Model extends CI_Model
 		{
             if (is_array($params[1]))
             {
-                $this->_database->where_in($params[0], $params[1]);    
+                $this->_database->where_in($params[0], $params[1]);
             }
             else
             {
@@ -920,7 +920,7 @@ class MY_Model extends CI_Model
         {
             if (is_array($params[1]))
             {
-                $this->_database->where_in($params[0], $params[1]);    
+                $this->_database->where_in($params[0], $params[1]);
             }
             else
             {
@@ -938,17 +938,27 @@ class MY_Model extends CI_Model
         return $this->_temporary_return_type == 'array' ? $method . '_array' : $method;
     }
 
-	public function trans_start() {
-		$this->_database->trans_start();
+    public function trans_begin() {
+        return $this->_database->trans_begin();
+    }
+
+    public function trans_commit() {
+        return $this->_database->trans_commit();
+    }
+
+    public function trans_rollback() {
+        return $this->_database->trans_rollback();
+    }
+
+    public function trans_start() {
+        return $this->_database->trans_start();
     }
 
     public function trans_complete() {
-		$this->_database->trans_complete();
+        return $this->_database->trans_complete();
     }
 
     public function trans_status() {
-		$this->_database->trans_status();
+        return $this->_database->trans_status();
     }
-
-
 }
