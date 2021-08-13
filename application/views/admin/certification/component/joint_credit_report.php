@@ -92,33 +92,33 @@
 	  </td>
 	</tr>
 	<tr>
-	  <td>訂約金額(千元)</td>
+	  <td>訂約金額</td>
 	  <td>
-		<p>訂約金額(千元)額度總額：<?= ! is_null($data['totalAmountQuota']) ? (strpos($data['totalAmountQuota'], ',') === false ? number_format($data['totalAmountQuota']*1000) : $data['totalAmountQuota'] . '(千元)') : '-'; ?></p>
-		<p>助學貸款訂約金額(千元)：<?= ! is_null($data['totalAmountStudentLoans']) ? (strpos($data['totalAmountStudentLoans'], ',') === false ? number_format($data['totalAmountStudentLoans']*1000) : $data['totalAmountStudentLoans'] . '(千元)') : '-'; ?></p>
-		<p>短期訂約金額(千元)：<?= ! is_null($data['totalAmountShort']) ? (strpos($data['totalAmountShort'], ',') === false ? number_format($data['totalAmountShort']*1000) : $data['totalAmountShort'] . '(千元)') : '-'; ?></p>
-		<p>中期訂約金額(千元)：<?= ! is_null($data['totalAmountMid']) ? (strpos($data['totalAmountMid'], ',') === false ? number_format($data['totalAmountMid']*1000) : $data['totalAmountMid'] . '(千元)') : '-'; ?></p>
-		<p>長期訂約金額(千元)：<?= ! is_null($data['totalAmountLong']) ? (strpos($data['totalAmountLong'], ',') === false ? number_format($data['totalAmountLong']*1000) : $data['totalAmountLong'] . '(千元)') : '-'; ?></p>
-		<p>短期擔保訂約金額(千元)：<?= ! is_null($data['totalAmountShortAssure']) ? (strpos($data['totalAmountShortAssure'], ',') === false ? number_format($data['totalAmountShortAssure']*1000) : $data['totalAmountShortAssure'] . '(千元)') : '-'; ?></p>
-		<p>中期擔保訂約金額(千元)：<?= ! is_null($data['totalAmountMidAssure']) ? (strpos($data['totalAmountMidAssure'], ',') === false ? number_format($data['totalAmountMidAssure']*1000) : $data['totalAmountMidAssure'] . '(千元)') : '-'; ?></p>
-		<p>長期擔保訂約金額(千元)：<?= ! is_null($data['totalAmountLongAssure']) ? (strpos($data['totalAmountLongAssure'], ',') === false ? number_format($data['totalAmountLongAssure']*1000) : $data['totalAmountLongAssure'] . '(千元)') : '-'; ?></p>
-		<p>信用卡訂約金額(千元)：<?= ! is_null($data['totalAmountCreditCard']) ? (strpos($data['totalAmountCreditCard'], ',') === false ? number_format($data['totalAmountCreditCard']*1000) : $data['totalAmountCreditCard'] . '(千元)') : '-'; ?></p>
-		<p>現金卡訂約金額(千元)：<?= ! is_null($data['totalAmountCash']) ? (strpos($data['totalAmountCash'], ',') === false ? number_format($data['totalAmountCash']*1000) : $data['totalAmountCash'] . '(千元)') : '-'; ?></p>
+		<p>訂約金額額度總額：<?= ! is_null($data['totalAmountQuota']) ? (strpos($data['totalAmountQuota'], ',') === false ? number_format($data['totalAmountQuota']*1000) : $data['totalAmountQuota'] . '') : '-'; ?></p>
+		<p>助學貸款訂約金額：<?= ! is_null($data['totalAmountStudentLoans']) ? (strpos($data['totalAmountStudentLoans'], ',') === false ? number_format($data['totalAmountStudentLoans']*1000) : $data['totalAmountStudentLoans'] . '(千元)') : '-'; ?></p>
+		<p>短期訂約金額：<?= ! is_null($data['totalAmountShort']) ? (strpos($data['totalAmountShort'], ',') === false ? number_format($data['totalAmountShort']*1000) : $data['totalAmountShort'] . '(千元)') : '-'; ?></p>
+		<p>中期訂約金額：<?= ! is_null($data['totalAmountMid']) ? (strpos($data['totalAmountMid'], ',') === false ? number_format($data['totalAmountMid']*1000) : $data['totalAmountMid'] . '(千元)') : '-'; ?></p>
+		<p>長期訂約金額：<?= ! is_null($data['totalAmountLong']) ? (strpos($data['totalAmountLong'], ',') === false ? number_format($data['totalAmountLong']*1000) : $data['totalAmountLong'] . '(千元)') : '-'; ?></p>
+		<p>短期擔保訂約金額：<?= ! is_null($data['totalAmountShortAssure']) ? (strpos($data['totalAmountShortAssure'], ',') === false ? number_format($data['totalAmountShortAssure']*1000) : $data['totalAmountShortAssure'] . '(千元)') : '-'; ?></p>
+		<p>中期擔保訂約金額：<?= ! is_null($data['totalAmountMidAssure']) ? (strpos($data['totalAmountMidAssure'], ',') === false ? number_format($data['totalAmountMidAssure']*1000) : $data['totalAmountMidAssure'] . '(千元)') : '-'; ?></p>
+		<p>長期擔保訂約金額：<?= ! is_null($data['totalAmountLongAssure']) ? (strpos($data['totalAmountLongAssure'], ',') === false ? number_format($data['totalAmountLongAssure']*1000) : $data['totalAmountLongAssure'] . '(千元)') : '-'; ?></p>
+		<p>信用卡訂約金額：<?= ! is_null($data['totalAmountCreditCard']) ? (strpos($data['totalAmountCreditCard'], ',') === false ? number_format($data['totalAmountCreditCard']*1000) : $data['totalAmountCreditCard'] . '(千元)') : '-'; ?></p>
+		<p>現金卡訂約金額：<?= ! is_null($data['totalAmountCash']) ? (strpos($data['totalAmountCash'], ',') === false ? number_format($data['totalAmountCash']*1000) : $data['totalAmountCash'] . '(千元)') : '-'; ?></p>
 	  </td>
 	</tr>
 	<tr>
-	  <td>借款餘額(千元)</td>
+	  <td>借款餘額</td>
 	  <td>
-		<p>借款餘額(千元)額度總額：<?= ! is_null($data['balanceQuota']) ? (strpos($data['balanceQuota'], ',') === false ? number_format($data['balanceQuota']*1000) : $data['balanceQuota'] . '(千元)') : '-'; ?></p>
-		<p>助學貸款借款金額(千元)：<?= ! is_null($data['balanceStudentLoans']) ? (strpos($data['balanceStudentLoans'], ',') === false ? number_format($data['balanceStudentLoans']*1000) : $data['balanceStudentLoans'] . '(千元)') : '-'; ?></p>
-		<p>短期借款金額(千元)：<?= ! is_null($data['balanceShort']) ? (strpos($data['balanceShort'], ',') === false ? number_format($data['balanceShort']*1000) : $data['balanceShort'] . '(千元)') : '-'; ?></p>
-		<p>中期借款金額(千元)：<?= ! is_null($data['balanceMid']) ? (strpos($data['balanceMid'], ',') === false ? number_format($data['balanceMid']*1000) : $data['balanceMid'] . '(千元)') : '-'; ?></p>
-		<p>長期借款金額(千元)：<?= ! is_null($data['balanceLong']) ? (strpos($data['balanceLong'], ',') === false ? number_format($data['balanceLong']*1000) : $data['balanceLong'] . '(千元)') : '-'; ?></p>
-		<p>短期擔保借款金額(千元)：<?= ! is_null($data['balanceShortAssure']) ? (strpos($data['balanceShortAssure'], ',') === false ? number_format($data['balanceShortAssure']*1000) : $data['balanceShortAssure'] . '(千元)') : '-'; ?></p>
-		<p>中期擔保借款金額(千元)：<?= ! is_null($data['balanceMidAssure']) ? (strpos($data['balanceMidAssure'], ',') === false ? number_format($data['balanceMidAssure']*1000) : $data['balanceMidAssure'] . '(千元)') : '-'; ?></p>
-		<p>長期擔保借款金額(千元)：<?= ! is_null($data['balanceLongAssure']) ? (strpos($data['balanceLongAssure'], ',') === false ? number_format($data['balanceLongAssure']*1000) : $data['balanceLongAssure'] . '(千元)') : '-'; ?></p>
-		<p>信用卡借款餘額(千元)：<?= ! is_null($data['balanceCreditCard']) ? (strpos($data['balanceCreditCard'], ',') === false ? number_format($data['balanceCreditCard']*1000) : $data['balanceCreditCard'] . '(千元)') : '-'; ?></p>
-		<p>現金卡借款餘額(千元)：<?= ! is_null($data['balanceCash']) ? (strpos($data['balanceCash'], ',') === false ? number_format($data['balanceCash']*1000) : $data['balanceCash'] . '(千元)') : '-'; ?></p>
+		<p>借款餘額額度總額：<?= ! is_null($data['balanceQuota']) ? (strpos($data['balanceQuota'], ',') === false ? number_format($data['balanceQuota']*1000) : $data['balanceQuota'] . '(千元)') : '-'; ?></p>
+		<p>助學貸款借款金額：<?= ! is_null($data['balanceStudentLoans']) ? (strpos($data['balanceStudentLoans'], ',') === false ? number_format($data['balanceStudentLoans']*1000) : $data['balanceStudentLoans'] . '(千元)') : '-'; ?></p>
+		<p>短期借款金額：<?= ! is_null($data['balanceShort']) ? (strpos($data['balanceShort'], ',') === false ? number_format($data['balanceShort']*1000) : $data['balanceShort'] . '(千元)') : '-'; ?></p>
+		<p>中期借款金額：<?= ! is_null($data['balanceMid']) ? (strpos($data['balanceMid'], ',') === false ? number_format($data['balanceMid']*1000) : $data['balanceMid'] . '(千元)') : '-'; ?></p>
+		<p>長期借款金額：<?= ! is_null($data['balanceLong']) ? (strpos($data['balanceLong'], ',') === false ? number_format($data['balanceLong']*1000) : $data['balanceLong'] . '(千元)') : '-'; ?></p>
+		<p>短期擔保借款金額：<?= ! is_null($data['balanceShortAssure']) ? (strpos($data['balanceShortAssure'], ',') === false ? number_format($data['balanceShortAssure']*1000) : $data['balanceShortAssure'] . '(千元)') : '-'; ?></p>
+		<p>中期擔保借款金額：<?= ! is_null($data['balanceMidAssure']) ? (strpos($data['balanceMidAssure'], ',') === false ? number_format($data['balanceMidAssure']*1000) : $data['balanceMidAssure'] . '(千元)') : '-'; ?></p>
+		<p>長期擔保借款金額：<?= ! is_null($data['balanceLongAssure']) ? (strpos($data['balanceLongAssure'], ',') === false ? number_format($data['balanceLongAssure']*1000) : $data['balanceLongAssure'] . '(千元)') : '-'; ?></p>
+		<p>信用卡借款餘額：<?= ! is_null($data['balanceCreditCard']) ? (strpos($data['balanceCreditCard'], ',') === false ? number_format($data['balanceCreditCard']*1000) : $data['balanceCreditCard'] . '(千元)') : '-'; ?></p>
+		<p>現金卡借款餘額：<?= ! is_null($data['balanceCash']) ? (strpos($data['balanceCash'], ',') === false ? number_format($data['balanceCash']*1000) : $data['balanceCash'] . '(千元)') : '-'; ?></p>
 	  </td>
 	</tr>
 	<tr>
