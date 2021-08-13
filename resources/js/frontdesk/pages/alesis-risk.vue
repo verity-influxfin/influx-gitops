@@ -13,14 +13,13 @@
         <!-- 報告書 -->
         <div class="報告書">
             <alesis-header>
-                <!-- <div class="標題">違約率報告書</div> -->
-                <div class="標題">敬請期待</div>
+                <div class="標題">違約率報告書</div>
             </alesis-header>
             <alesis-space size="medium"></alesis-space>
-            <!-- <alesis-section>
+            <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
-                    <img src="/images/alesis-report.svg" class="圖片">
+                    <img src="/images/risk07-report.jpg" class="圖片">
                     <div class="連結">
                         <a href="javascript:;" class="項目">
                             <alesis-button>2021年7月</alesis-button>
@@ -31,7 +30,7 @@
                     </a>
                 </div>
                 <alesis-space size="medium"></alesis-space>
-            </alesis-section> -->
+            </alesis-section>
         </div>
         <!-- / 報告書 -->
     </div>
