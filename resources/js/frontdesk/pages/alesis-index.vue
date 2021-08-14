@@ -225,7 +225,7 @@
             <alesis-space size="small"></alesis-space>
             <div class="包裹容器">
                 <alesis-counter image="/images/alesis-registered.svg" header="累積註冊用戶" number="68370" unit="人"></alesis-counter>
-                <alesis-counter image="/images/alesis-totalmoney.svg" header="累積放款金額" number="19342" unit="萬"></alesis-counter>
+                <alesis-counter image="/images/alesis-totalmoney.svg" header="累積媒合金額" number="271235184" unit="元"></alesis-counter>
                 <alesis-counter image="/images/alesis-totalapproved.svg" header="累積成交筆數" number="51679" unit="筆"></alesis-counter>
             </div>
             <alesis-space size="medium"></alesis-space>
