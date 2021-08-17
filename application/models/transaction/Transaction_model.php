@@ -110,20 +110,20 @@ class Transaction_model extends MY_Model
         return $this->db->get()->result();
     }
 
-	public function getDelayTargetInfoList($transaction_where, $target_where){
+	public function getDelayedTargetInfoList($transaction_where, $target_where){
 		$transactions = $this->db->select('MIN(`limit_date`) as `min_limit_date`, `target_id`')
 			->from("`p2p_transaction`.`transactions`")
 			->where($transaction_where)
 			->group_by('target_id');
 		$subquery = $this->db->get_compiled_select('', TRUE);
 		$this->db
-			->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.target_no, ta.delay_days, t.*')
+			->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.target_no, ta.delay_days, ta.script_status, t.*')
 			->from('`p2p_loan`.`targets` AS `ta`')
 			->where($target_where)
 			->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
 		$subquery2 = $this->db->get_compiled_select('', TRUE);
 		$this->db
-			->select('i.target_id, i.user_id as investor_userid, r.user_id, r.loan_date, r.product_id, r.sub_product_id, r.target_no, r.min_limit_date, r.delay_days')
+			->select('i.target_id, i.user_id as investor_userid, r.user_id, r.loan_date, r.product_id, r.sub_product_id, r.target_no, r.min_limit_date, r.delay_days, r.script_status')
 			->from('`p2p_loan`.`investments` AS `i`')
 			->where('status', 3)
 			->where('transfer_status <', '2')

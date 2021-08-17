@@ -118,7 +118,7 @@ class Charge_lib
      * @param int $user_id 使用者編號
      * @return bool
      */
-    public function charge_expired_target($user_id=0) {
+    public function charge_delayed_target($user_id=0) {
         $this->CI->load->library('financial_lib');
         $this->CI->load->library('subloan_lib');
         $this->CI->load->library('Notification_lib');
@@ -126,6 +126,7 @@ class Charge_lib
 		$date               = get_entering_date();
         $transaction_param = [];
         $target_key_list = [];
+        $target_id_list = [];
         $legal_collection_target_id_list = [];
 
         // 償還交易科目 (需按照合約順序)
@@ -137,15 +138,11 @@ class Charge_lib
 
 		$this->CI->transaction_model->trans_begin();
         $this->CI->virtual_passbook_model->trans_begin();
-        $trans_rollback = function () {
-            $this->CI->transaction_model->trans_rollback();
-            $this->CI->virtual_passbook_model->trans_rollback();
-        };
 
         $account_payable_list = $this->CI->transaction_model->
             getDelayedAccountPayable("tra.*", 0, $sorting_charge_ar_sources, $user_id, $date, '');
         if(!empty($account_payable_list)) {
-            $target_id_list = array_column($account_payable_list, 'target_id');
+            $target_id_list = array_unique(array_column($account_payable_list, 'target_id'));
             $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list]);
 
             // 撈取法催中的案件編號
@@ -160,6 +157,20 @@ class Charge_lib
                     return $list;
                 }, []);
             }
+        }
+
+        $trans_rollback = function ($disableScriptStatus = TRUE) use ($target_id_list) {
+            $this->CI->transaction_model->trans_rollback();
+            $this->CI->virtual_passbook_model->trans_rollback();
+            if($disableScriptStatus)
+                $this->CI->target_model->setScriptStatus($target_id_list, 16, 0);
+        };
+
+        // 將所有案子鎖script狀態
+        $result = $this->CI->target_model->setScriptStatus($target_id_list, 0, 16);
+        if(count($result) != count($target_id_list)) {
+            $trans_rollback(FALSE);
+            return FALSE;
         }
 
         // 轉換所有交易紀錄成對應的結構
@@ -228,6 +239,8 @@ class Charge_lib
         if ($available_balance < $total_accounts_payable) {
             foreach($sorting_charge_ar_sources as $ar_source) {
                 $origin_balance = $available_balance;
+                if($available_balance <= 0)
+                    break;
 
                 foreach ($account_payable_map as $target_id => $target_list) {
                     if (!is_numeric($target_id) || $total_accounts_payable_list[$ar_source] == 0)
@@ -332,6 +345,7 @@ class Charge_lib
             $this->CI->virtual_passbook_model->trans_status() === TRUE ) {
             $this->CI->transaction_model->trans_commit();
             $this->CI->virtual_passbook_model->trans_commit();
+            $this->CI->target_model->setScriptStatus($target_id_list, 16, 0);
 
             // 通知投資人已部分還款
             foreach ($total_recovery_list as $target_id => $target_list) {
@@ -404,7 +418,7 @@ class Charge_lib
         $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($user_id, USER_BORROWER,
             VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $virtual);
         if (!$virtual_account) {
-            echo "TODO:發生錯誤，帳務需rollback?";
+            error_log("Changing status of virtual account was failed.");
         }
 
         return TRUE;
@@ -1432,6 +1446,30 @@ class Charge_lib
 		}
 		return false;
 	}
+
+    public function script_charge_delayed_targets_partial_fee() {
+        $script  	= 16;
+        $count 		= 0;
+
+        $result =$this->CI->virtual_account_model->getDelayedVirtualAccountList(USER_BORROWER);
+        $virtualAccountList = array_reduce($result, function ($list, $item) {
+            $list[$item['virtual_account']] = $item;
+            return $list;
+        }, []);
+
+        if(!empty($virtualAccountList)) {
+            $funds = $this->CI->virtual_passbook_model->getVirtualAccFunds(array_keys($virtualAccountList));
+
+            foreach ($funds as $fund) {
+                if($fund['balance'] <= 0)
+                    continue;
+
+                if($this->charge_delayed_target($virtualAccountList[$fund['virtual_account']]['user_id']))
+                    $count++;
+            }
+        }
+        return $count;
+    }
 
     // // 判斷當前時刻，是否為每月17號晚上23點50分到18號0點10分之間
     // public function checkExcludePeriodTime($deafult_date = null)

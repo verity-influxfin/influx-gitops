@@ -170,7 +170,7 @@ class Payment_lib{
                 $delayed_target = $this->CI->target_model->get_many_by(['user_id' => $user_ids, 'delay_days >' => GRACE_PERIOD, 'status' => 5]);
                 $delayed_userid_list = array_unique(array_column($delayed_target, 'user_id'));
                 foreach ($delayed_userid_list as $user_id) {
-                    $this->CI->charge_lib->charge_expired_target($user_id);
+                    $this->CI->charge_lib->charge_delayed_target($user_id);
                 }
             }
 			return $count;

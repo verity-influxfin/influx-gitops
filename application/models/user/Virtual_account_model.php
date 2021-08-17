@@ -72,4 +72,22 @@ class Virtual_account_model extends MY_Model
 
         return $virtual_account;
     }
+
+    public function getDelayedVirtualAccountList($investor = 0, $delayedDay = GRACE_PERIOD){
+        $this->db
+            ->distinct()
+            ->select('user_id')
+            ->from("`p2p_loan`.`targets`")
+            ->where(['delay_days >' => $delayedDay, 'status' => 5])
+            ->group_by('user_id');
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('va.user_id, va.virtual_account')
+            ->from('`p2p_user`.`virtual_account` AS `va`')
+            ->where('investor', $investor)
+            ->where('status', 1)
+            ->join("($subquery) as `r`", "`va`.`user_id` = `r`.`user_id`");
+
+        return $this->db->get()->result_array();
+    }
 }
