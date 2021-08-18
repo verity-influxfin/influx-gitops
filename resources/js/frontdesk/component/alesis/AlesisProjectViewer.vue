@@ -2,42 +2,37 @@
     <div class="案件區塊">
         <div class="包裹容器">
             <div class="分類">
-                <button @click="changeCategoryBy('')" class="項目" :class="{'項目_啟用的': categoryBy === ''}">
+                <button @click="changeProductID(0)" class="項目" :class="{'項目_啟用的': product_id === 0}">
                     <div class="文字">全部</div>
                 </button>
-                <button @click="changeCategoryBy('student')" class="項目" :class="{'項目_啟用的': categoryBy === 'student'}">
+                <button @click="changeProductID(1)" class="項目" :class="{'項目_啟用的': product_id === 1}">
                     <div class="文字">學生</div>
                 </button>
-                <button @click="changeCategoryBy('work')" class="項目" :class="{'項目_啟用的': categoryBy === 'work'}">
+                <button @click="changeProductID(3)" class="項目" :class="{'項目_啟用的': product_id === 3}">
                     <div class="文字">上班族</div>
                 </button>
             </div>
             <div class="排序條件">
-                <a @click="changeSortBy('date')" class="項目" :class="{'項目_啟用的': sortBy === 'date'}">上架日</a>
-                <a @click="changeSortBy('amount')" class="項目" :class="{'項目_啟用的': sortBy === 'amount'}">金額</a>
-                <a @click="changeSortBy('instalment')" class="項目" :class="{'項目_啟用的': sortBy === 'instalment'}">期數</a>
-                <a @click="changeSortBy('interest')" class="項目" :class="{'項目_啟用的': sortBy === 'interest'}">年利率</a>
-                <a @click="changeSortBy('creditLevel')" class="項目" :class="{'項目_啟用的': sortBy === 'creditLevel'}">信評</a>
+                <!--<a @click="changeOrderBy('date')" class="項目" :class="{'項目_啟用的': order_by === 'date'}">上架日</a>-->
+                <!--<a @click="changeOrderBy('amount')" class="項目" :class="{'項目_啟用的': order_by === 'amount'}">金額</a>-->
+                <a @click="changeOrderBy('instalment')" class="項目" :class="{'項目_啟用的': order_by === 'instalment'}">期數</a>
+                <a @click="changeOrderBy('interest')" class="項目" :class="{'項目_啟用的': order_by === 'interest'}">年利率</a>
+                <a @click="changeOrderBy('creditLevel')" class="項目" :class="{'項目_啟用的': order_by === 'creditLevel'}">信評</a>
                 <div class="項目">
                     <div class="箭頭群組">
-                        <img src="/images/alesis-work-loan-arrow-up.svg" class="上">
-                        <img src="/images/alesis-work-loan-arrow-down.svg" class="下">
+                        <img @click="changeSortBy('desc')" class="排序項目 排序項目_上" :class="{'排序項目_啟用的': sort_by === 'desc'}" src="/images/alesis-work-loan-arrow-up.svg">
+                        <img @click="changeSortBy('asc')" class="排序項目 排序項目_下" :class="{'排序項目_啟用的': sort_by === 'asc'}" src="/images/alesis-work-loan-arrow-down.svg">
                     </div>
                 </div>
             </div>
             <div class="卡片列表">
-                <div class="項目" v-for="result in current_results" :key="result.id">
+                <div class="項目" v-for="result in paginated_results[page]" :key="result.id">
                     <alesis-project v-bind="result"></alesis-project>
                 </div>
             </div>
             <div class="分頁導覽">
                 <a @click="prevPage" class="項目">上一頁</a>
-                <a href="#!" class="項目">1</a>
-                <a href="#!" class="項目">2</a>
-                <a href="#!" class="項目">3</a>
-                <a href="#!" class="項目">4</a>
-                <a href="#!" class="項目">...</a>
-                <a href="#!" class="項目">30</a>
+                <a @click="jumpPage(page-1)" class="項目" v-for="page in (this.max_page < 10 ? this.max_page : 10)" :key="page">{{ page }}</a>
                 <a @click="nextPage" class="項目">下一頁</a>
             </div>
         </div>
@@ -47,11 +42,8 @@
 <script>
 // Alesis 元件
 import AlesisProject           from "./AlesisProject";
-// 遠端資料
-import StudentDone    from "./../../data/projects_student_done";
-import StudentWorking from "./../../data/projects_student_working";
-import WorkDone       from "./../../data/projects_work_done";
-import WorkWorking    from "./../../data/projects_work_working";
+//
+import { alesisProjects } from "./../../pages/api"
 
 export default {
     components: {
@@ -59,120 +51,74 @@ export default {
     },
     name: "AlesisProjectViewer",
     props: {
-        status: {
-            default: 3,
-        }
+        initialStatus: {
+            type   : Number,
+            default: 3
+        },
     },
     mounted() {
-        // 3 代表進行中 Working
-        if (this.status === 3) {
-            this.getCase(3);
-        } else {
-            this.getCase(10);
-        }
-        this.paginate(6, 1)
+        this.status = this.initialStatus;
+        this.getCases()
     },
     data: () => ({
-        current_results : []
+        product_id       : 0,            // 0 = 全部, 1 = 學生, 3 = 上班族
+        order_by         : "instalment",
+        sort_by          : "desc",
+        count            : 6,
+        page             : 0,
+        max_page         : 0,
+        status           : 3,            // 3 = 上架中, 10 = 已結案
+        paginated_results: [],
+        results          : []
     }),
     methods: {
-        getCase(caseStatus) {
-            let influxCase = new FormData();
-            influxCase.append('status',caseStatus);
-            influxCase.append('product_id',0);
-
-            self = this;
-            axios.post(
-                `${location.origin}/getCase`,
-                influxCase
-            ).then((res) => {
-                self.current_results =  res.data
+        getCases() {
+            this.page = 0
+            this.max_page = 0
+            //
+            alesisProjects({
+                product_id: this.product_id,
+                status    : this.status,
+                orderby   : this.order_by,
+                sort      : this.sort_by,
+            }).then((v) => {
+                //
+                this.results = v;
+                //
+                this.paginated_results = []
+                //
+                for (let i=0; i< v.length; i+=this.count) {
+                    this.paginated_results.push(this.results.slice(i, i+this.count))
+                }
+                this.max_page = parseInt(this.results.length / this.count, 10);
             })
-            .catch((error) => {
-                console.error('getCase 發生錯誤，請稍後再試');
-            });
         },
-        changeCategoryBy(v) {
-            this.categoryBy = v;
-        },
-        changeStatus(v) {
-            this.status = v;
-            this.changeOrderBy(this.orderBy);
+        changeProductID(v) {
+            this.product_id = v;
+            this.getCases()
         },
         nextPage() {
-            // var maxPage = parseInt(this.results.length / 6, 10);
-            // if (this.page >= maxPage) {
-            //     return
-            // }
-            // this.page++;
-            // this.paginate(6, this.page)
+            if (this.page + 1 >= this.max_page) {
+                return
+            }
+            this.page++;
         },
         prevPage() {
-            // if (this.page <= 1) {
-            //     return
-            // }
-            // this.page--;
-            // this.paginate(6, this.page)
+            if (this.page === 0) {
+                return
+            }
+            this.page--;
         },
-        paginate(size, page) {
-            // return this.current_results = this.results.slice((page - 1) * size, page * size);
-        },
-        jumpPage() {
-
+        jumpPage(page) {
+            this.page = page;
         },
         changeSortBy(v) {
-            // this.sortBy = v
-            // switch (v) {
-            //     case "date":
-            //         this.results.sort((a, b) => {
-            //             if (this.orderBy === "asc") {
-            //                 return a.created_at > b.created_at
-            //             } else {
-            //                 return a.created_at < b.created_at
-            //             }
-            //         })
-            //         break
-            //     case "instalment":
-            //         this.results.sort((a, b) => {
-            //             if (this.orderBy === "asc") {
-            //                 return a.instalment > b.instalment
-            //             } else {
-            //                 return a.instalment < b.instalment
-            //             }
-            //         })
-            //         break
-            //     case "amount":
-            //         this.results.sort((a, b) => {
-            //             if (this.orderBy === "asc") {
-            //                 return a.loan_amount > b.loan_amount
-            //             } else {
-            //                 return a.loan_amount < b.loan_amount
-            //             }
-            //         })
-            //         break
-            //     case "interest":
-            //          this.results.sort((a, b) => {
-            //             if (this.orderBy === "asc") {
-            //                 return a.interest_rate > b.interest_rate
-            //             } else {
-            //                 return a.interest_rate < b.interest_rate
-            //             }
-            //         })
-            //         break
-            //     case "creditLevel":
-            //         this.results.sort((a, b) => {
-            //             if (this.orderBy === "asc") {
-            //                 return a.credit_level > b.credit_level
-            //             } else {
-            //                 return a.credit_level < b.credit_level
-            //             }
-            //         })
-            //         break
-            // }
+            this.sort_by = v;
+            this.getCases()
         },
         changeOrderBy(v) {
-            // this.orderBy = (v === "asc") ? "desc" : "asc";
-            // changeSortBy(this.sortBy)
+            this.order_by = v;
+            this.getCases()
         }
     }
 }
@@ -274,12 +220,19 @@ export default {
     flex-direction: column;
 }
 
-.案件區塊 .包裹容器 .排序條件 .項目 .箭頭群組 img {
-    width: 16px;
+.案件區塊 .包裹容器 .排序條件 .項目 .箭頭群組 .排序項目.排序項目_上,
+.案件區塊 .包裹容器 .排序條件 .項目 .箭頭群組 .排序項目.排序項目_下 {
+    cursor : pointer;
+    opacity: 0.5;
+    width  : 16px;
 
     @include rwd {
         width: 12px;
     }
+}
+
+.案件區塊 .包裹容器 .排序條件 .項目 .箭頭群組 .排序項目.排序項目_啟用的 {
+    opacity: 1;
 }
 
 .案件區塊 .包裹容器 .卡片列表 {
