@@ -22,11 +22,7 @@
             </alesis-header>
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
-                <div class="case-items">
-                    <div class="項目" v-for="result in onSellCase">
-                        <alesis-project v-bind="result"></alesis-project>
-                    </div>
-                </div>
+                <alesis-project-viewer :initialStatus="3"></alesis-project-viewer>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
@@ -39,11 +35,7 @@
             </alesis-header>
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
-                <div class="case-items">
-                    <div class="項目" v-for="result in finishCase">
-                        <alesis-project v-bind="result"></alesis-project>
-                    </div>
-                </div>
+                <alesis-project-viewer :initialStatus="10"></alesis-project-viewer>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
@@ -99,37 +91,13 @@ export default {
 
     },
     data: () => ({
-        finishCase : [],
-        onSellCase : []
     }),
     created() {
         $("title").text(`首頁 - inFlux普匯金融科技`);
     },
     mounted() {
-        this.getCase(10);
-        this.getCase(3);
     },
     methods: {
-        getCase(caseStatus) {
-            let influxCase = new FormData();
-            influxCase.append('status',caseStatus);
-            influxCase.append('product_id',0);
-
-            self = this;
-            axios.post(
-                `${location.origin}/getCase`,
-                influxCase
-            ).then((res) => {
-                if(caseStatus == 3){
-                    self.onSellCase = res.data
-                }else{
-                    self.finishCase = res.data
-                }
-            })
-            .catch((error) => {
-                console.error('getCase 發生錯誤，請稍後再試');
-            });
-        },
         format(data) {
             data = parseInt(data);
             if (!isNaN(data)) {

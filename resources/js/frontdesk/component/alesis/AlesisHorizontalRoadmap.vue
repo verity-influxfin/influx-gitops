@@ -1,5 +1,5 @@
 <template>
-    <svg class="horizontal_roadmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1171" height="505.332" viewBox="0 0 1171 505.332">
+    <svg class="horizontal_roadmap" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1171" height="555.332" viewBox="0 0 1171 555.332">
       <defs>
         <linearGradient id="linear-gradient" x1="-5.447" y1="-2.375" x2="-5.443" y2="-2.38" gradientUnits="objectBoundingBox">
           <stop offset="0" stop-color="#e2e1e6"/>
@@ -198,27 +198,30 @@ text {
 .導覽箭頭 {
     cursor: pointer;
 }
+
+svg {
+    touch-action: manipulation;
+}
+
 svg.horizontal_roadmap text {
     font-size: .72em;
 }
 </style>
 
 <script>
-// 遠端資料
-import RoadmapData from "../../data/index_horizontal_roadmap"
+import {alesisCompanyIntroductions} from './../../pages/api'
 
 export default {
     name: "AlesisHorizontalRoadmap",
     mounted() {
-        // var result = await fetch("");
-        // result = await result.json();
-        // var result = this.paths
-
-        this.initRoadmap();
+         alesisCompanyIntroductions().then(v => {
+            this.paths = v;
+            this.initRoadmap();
+        })
     },
     data() {
         return {
-            paths            : RoadmapData,
+            paths            : {},
             sets             : [[]],
             current_set_index: 0,
         }
@@ -226,6 +229,11 @@ export default {
     methods: {
         // initRoadmap 會將接收到的資料以每八個為一組的方式切分。
         initRoadmap() {
+            this.paths = this.paths.map(v => {
+              v.content = `<tspan x="0" dy="0">${v.content.split("\n").join(`</tspan><tspan x="0" dy="1.2em">`)}</tspan>`
+              return v
+            })
+
             this.paths = this.paths.sort((a, b) => {
               return new Date(a.hook_date) - new Date(b.hook_date)
             });

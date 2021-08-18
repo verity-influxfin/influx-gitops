@@ -310,7 +310,7 @@
         <!-- / 貸安吶 -->
 
         <!-- 案例分享 -->
-        <!-- <div class="案例分享">
+        <div class="案例分享">
             <alesis-header class="區塊標題_拖尾的">
                 <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
             </alesis-header>
@@ -319,7 +319,7 @@
                 <alesis-suggestion-reviews type="college"></alesis-suggestion-reviews>
                 <alesis-space size="small"></alesis-space>
             </alesis-section>
-        </div> -->
+        </div>
         <!-- / 案例分享 -->
 
         <!-- 合作對象 -->
@@ -673,6 +673,8 @@ button[disabled] {
 }
 
 .服務範圍 .包裹容器 .地圖 {
+    pointer-events: none;
+
     @include rwd {
         margin-top: -4rem;
     }

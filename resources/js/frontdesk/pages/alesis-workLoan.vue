@@ -473,7 +473,7 @@
         <!-- / 評估問卷 -->
 
         <!-- 案例分享 -->
-        <!-- <div class="案例分享">
+        <div class="案例分享">
             <alesis-header class="區塊標題_拖尾的">
                 <div class="標題 標題_外框線的">案例分享 / 用戶分享</div>
             </alesis-header>
@@ -482,7 +482,7 @@
                 <alesis-suggestion-reviews type="work"></alesis-suggestion-reviews>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
-        </div> -->
+        </div>
         <!-- / 案例分享 -->
 
         <!-- 應用程式推薦 -->
@@ -1194,7 +1194,7 @@ export default {
 .申貸流程 .步驟三 .中間 .圖片,
 .申貸流程 .步驟三b .中間 .圖片,
 .申貸流程 .步驟四 .中間 .圖片 {
-    
+
     width: 275px;
 
     @include rwd {

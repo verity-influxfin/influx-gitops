@@ -18,6 +18,10 @@
             <linearGradient id="vertical-linear-gradient-8" x1="-10.494" y1="-40.022" x2="-10.494" y2="-41.023" xlink:href="#vertical-linear-gradient-2"/>
         </defs>
         <g id="bg-2" transform="translate(-0.67 -0.09)">
+            <image class="導覽箭頭" @click="next" transform="rotate(270, 50, 1050) translate(50.067 1050.043)" height="60" width="60" href="/images/alesis-carousel-left.svg"></image>
+            <image class="導覽箭頭" @click="prev" transform="rotate(270, 580, 90) translate(580.067 90.043)" height="60" width="60" href="/images/alesis-carousel-right.svg"></image>
+
+
             <g id="Group_3583" data-name="Group 3583" transform="translate(1.17 0.59)">
                 <g id="Group_3582" data-name="Group 3582" transform="translate(0)">
                     <g id="Group_3577" data-name="Group 3577">
@@ -50,32 +54,32 @@
                     <g v-if="paths.length > 0">
                         <g id="Group_3578" data-name="Group 3578" transform="translate(188.505 35.07)">
                             <path id="Path_4438" data-name="Path 4438" d="M1,18H285.476" transform="translate(1.276 22.965)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
-                            <text id="_2017.12" data-name="2017.12" transform="translate(189.438 28)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300"><tspan x="0" y="0">{{ paths[0].hook_date }}</tspan></text>
-                            <text transform="translate(0 28)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[0].title }}</text>
-                            <text transform="translate(1.138 69.516)" fill="#157efb" font-size="21" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[0].content"></text>
-                            <image transform="matrix(1, 0, 0, 1, -160.3, -20.639)" height="120" width="120" :href="paths[0].icon"></image>
+                            <text id="_2017.12" data-name="2017.12" transform="translate(189.438 28)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300"><tspan x="0" y="0">{{ sets[current_set_index][0] !== undefined ? sets[current_set_index][0].hook_date : '' }}</tspan></text>
+                            <text transform="translate(0 28)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][0] !== undefined ? sets[current_set_index][0].title : '' }}</text>
+                            <text transform="translate(1.138 69.516)" fill="#157efb" font-size="21" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][0] !== undefined ? sets[current_set_index][0].content : ''"></text>
+                            <image transform="matrix(1, 0, 0, 1, -160.3, -20.639)" height="120" width="120" :href="sets[current_set_index][0] !== undefined ? sets[current_set_index][0].icon : ''"></image>
                         </g>
                         <g id="Group_3579" data-name="Group 3579" transform="translate(194.195 558.507)">
                             <path id="Path_4439" data-name="Path 4439" d="M1,20H285.476" transform="translate(0.138 25.516)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
-                            <text id="_2018.04" data-name="2018.04" transform="translate(188.301 32.552)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ paths[1].hook_date }}</text>
-                            <text transform="translate(1.138 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[1].title }}</text>
-                            <text transform="translate(0 80.344)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[1].content"></text>
-                            <image transform="matrix(1, 0, 0, 1, -168.3, -19.639)" height="120" width="120" :href="paths[1].icon"></image>
+                            <text id="_2018.04" data-name="2018.04" transform="translate(188.301 32.552)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].hook_date : '' }}</text>
+                            <text transform="translate(1.138 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].title : '' }}</text>
+                            <text transform="translate(0 80.344)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][1] !== undefined ? sets[current_set_index][1].content : ''"></text>
+                            <image transform="matrix(1, 0, 0, 1, -168.3, -19.639)" height="120" width="120" :href="sets[current_set_index][1] !== undefined ? sets[current_set_index][1].icon : ''"></image>
                         </g>
                         <g id="Group_3580" data-name="Group 3580" transform="translate(81.542 303.616)">
                             <path id="Path_4440" data-name="Path 4440" d="M1,20H285.476" transform="translate(-1 25.516)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
-                            <text id="_2018.02" data-name="2018.02" transform="translate(285.72 31)" text-anchor="end" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ paths[2].hook_date }}</text>
-                            <text transform="translate(4.72 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[2].title }}</text>
-                            <text transform="translate(289.446 80.344)" text-anchor="end" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[2].content"></text>
-                            <image transform="matrix(1, 0, 0, 1, 329.7, -20.639)" height="120" width="120" :href="paths[2].icon"></image>
+                            <text id="_2018.02" data-name="2018.02" transform="translate(285.72 31)" text-anchor="end" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].hook_date : '' }}</text>
+                            <text transform="translate(4.72 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].title : '' }}</text>
+                            <text transform="translate(289.446 80.344)" text-anchor="end" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][2] !== undefined ? sets[current_set_index][2].content : ''"></text>
+                            <image transform="matrix(1, 0, 0, 1, 329.7, -20.639)" height="120" width="120" :href="sets[current_set_index][2] !== undefined ? sets[current_set_index][2].icon : ''"></image>
                         </g>
                         <g id="Group_3581" data-name="Group 3581" transform="translate(131.61 813.397)">
                             <path id="Path_4441" data-name="Path 4441" d="M1,25H330.993" transform="translate(-1 31.895)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
-                            <text id="_2018.08" data-name="2018.08" transform="translate(0.546 37.103)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ paths[3].hook_date }}</text>
-                            <text transform="translate(330.72 38)" fill="#157efb" font-size="28" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ paths[3].title }}</text>
+                            <text id="_2018.08" data-name="2018.08" transform="translate(0.546 37.103)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][3] !== undefined ? sets[current_set_index][3].hook_date : '' }}</text>
+                            <text transform="translate(330.72 38)" fill="#157efb" font-size="28" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][3] !== undefined ? sets[current_set_index][3].title : '' }}</text>
                             <g id="Group" transform="translate(7.965 65.999)">
-                                <text transform="translate(319.467 31)" fill="#157efb" font-size="27" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="paths[3].content"></text>
-                                <image transform="matrix(1, 0, 0, 1, 373.7, -70.639)" height="120" width="120" :href="paths[3].icon"></image>
+                                <text transform="translate(319.467 31)" fill="#157efb" font-size="27" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][3] !== undefined ? sets[current_set_index][3].content : ''"></text>
+                                <image transform="matrix(1, 0, 0, 1, 373.7, -70.639)" height="120" width="120" :href="sets[current_set_index][3] !== undefined ? sets[current_set_index][3].icon : ''"></image>
                             </g>
                         </g>
                     </g>
@@ -87,34 +91,65 @@
 
 <style scoped lang="scss">
     svg {
-        pointer-events: none;
+        touch-action: manipulation;
     }
 </style>
 
 <script>
-// 遠端資料
-import RoadmapData from "../../data/index_vertical_roadmap"
+import {alesisCompanyIntroductions} from './../../pages/api'
 
 export default {
     name: "VerticalPath",
     mounted() {
-        this.paths = this.paths.sort((a, b) => {
-            return new Date(a.hook_date) - new Date(b.hook_date)
-        });
+        alesisCompanyIntroductions().then(v => {
+            this.paths = v;
+            this.initRoadmap();
+        })
     },
     data() {
         return {
-            paths         : RoadmapData,
-            current_offset: 0,
-            current_page  : 0,
+            paths            : {},
+            sets             : [[]],
+            current_set_index: 0,
         }
     },
     methods: {
+        // initRoadmap 會將接收到的資料以每四個為一組的方式切分。
+        initRoadmap() {
+            this.paths = this.paths.map(v => {
+              v.content = `<tspan x="0" dy="0">${v.content.split("\n").join(`</tspan><tspan x="0" dy="1.2em">`)}</tspan>`
+              return v
+            })
+
+            this.paths = this.paths.sort((a, b) => {
+              return new Date(a.hook_date) - new Date(b.hook_date)
+            });
+
+            this.paths.forEach((v) => {
+              if (this.sets[this.sets.length-1].length === 4) {
+                  this.sets.push([]);
+              }
+              this.sets[this.sets.length-1].push(v);
+          })
+        },
+
+        // next 會往下一組檢視。
         next() {
+            if(this.current_set_index + 1 > this.sets.length-1) {
+                this.current_set_index = 0;
+            } else {
+                this.current_set_index++;
+            }
 
         },
-        prev() {
 
+        // prev 會往上一組檢視。
+        prev() {
+            if(this.current_set_index - 1 < 0) {
+                this.current_set_index = this.sets.length-1;
+            } else {
+                this.current_set_index--;
+            }
         },
     }
 }
