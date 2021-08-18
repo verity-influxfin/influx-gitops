@@ -10,6 +10,7 @@ import dataAlesisCollegeCounter from "./../data/api/alesisCollegeCounter";
 import dataAlesisCollegeCases from "./../data/api/alesisCollegeCases";
 import dataAlesisCollegeForm from "./../data/api/alesisCollegeForm";
 import dataAlesisWorkForm from "./../data/api/alesisWorkForm";
+import dataAlesisProjects from "./../data/api/alesisProjects";
 
 var host = "/"
 
@@ -85,13 +86,15 @@ export const alesisBorrowHumans = async b => {
     return (await superagent.post(host + "getExperiencesData").send(data)).body
     //return (await faker(dataAlesisBorrowHumans))
 };
-// alesisCollegeCounter 是學生貸 - 累積註冊用戶
-// export const alesisCollegeCounter = async b => (await faker(dataAlesisCollegeCounter));
-// alesisCollegeCases 是學生貸 - 服務範圍
-// export const alesisCollegeCases = async b => (await faker(dataAlesisCollegeCases));
-// alesisCollegeForm 是學生貸 - 表單
-// export const alesisCollegeForm = async b => (await faker(dataAlesisCollegeForm));
-// alesisWorkForm 是工作貸 - 表單
-// export const alesisWorkForm = async b => (await faker(dataAlesisWorkForm));
-
-// 全站搜尋？
+// alesisProjects 是案件總覽 - 目前案件/已成交案件
+// * dataAlesisProjects
+// * /getCase
+export const alesisProjects = async b => {
+    var data = new FormData();
+    data.append('product_id', b.product_id);
+    data.append('status', b.status);
+    data.append('orderby', b.orderby);
+    data.append('sort', b.sort);
+    return (await superagent.post(host + "getCase").send(data)).body
+    //return (await faker(dataAlesisProjects))
+};
