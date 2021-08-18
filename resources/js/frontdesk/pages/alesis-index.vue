@@ -569,17 +569,19 @@ export default {
         alesisIndexBanners().then((v) => {
             this.swiperItems = v
 
-             SwiperCore.use([Navigation]);
-            new Swiper('.swiper-container.標頭幻燈片', {
-                autoplay: {
-                    delay: 3000,
-                },
-                loop: true,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-            });
+            setTimeout(() => {
+                SwiperCore.use([Navigation]);
+                new Swiper('.swiper-container.標頭幻燈片', {
+                    autoplay: {
+                        delay: 3000,
+                    },
+                    loop: true,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+             }, 500)
         })
 
         // 管理與財經
