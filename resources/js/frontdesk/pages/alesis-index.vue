@@ -581,7 +581,7 @@ export default {
                         prevEl: '.swiper-button-prev',
                     },
                 });
-             }, 500)
+             }, 100)
         })
 
         // 管理與財經
