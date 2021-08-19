@@ -131,40 +131,39 @@ class S3_lib {
 		));
 		
 	}
-	public function credit_mail_pdf($content, $user_id = 0, $name = 'credit', $type = 'test')
+	public function credit_mail_pdf($attachment, $user_id = 0, $name = 'credit', $type = 'test')
 	{
+		$filename = '';
 		try {
+			if(!$attachment)
+				return '';
 			$dir = 'pdf/';
-			$inputFile = $dir . "org{$user_id}.pdf";
-			$outputFile = $dir . "output{$user_id}.pdf";
-			$fp = fopen($inputFile, "w+");
-			fwrite($fp, $content); //寫入資料到 $fp 所開啟的檔案內
-			fclose($fp); //關閉開啟的檔案
-			shell_exec("gs  -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile={$outputFile} -c  3000000 setvmthreshold -f {$inputFile}  2>&1");
-			$content = file_get_contents($outputFile);
+			$filename = $attachment->save($dir, TRUE, PhpMimeMailParser\Parser::ATTACHMENT_RANDOM_FILENAME);
+			$path_parts = pathinfo($filename);
+			$content = file_get_contents($filename);
+
 			$result = $this->client->putObject(array(
 				'Bucket' 		=> S3_BUCKET,
-				'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . '.pdf',
+				'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . "." . $path_parts['extension'],
 				'Body'   		=> $content
 			));
 		} catch (S3Exception $e) {
-			unlink($inputFile);
-			unlink($outputFile);
-			echo '洽工程師 檢查連線問題';
-			exit();
+			error_log('Connecting to S3 was failed. Error in '.$e->getFile()." at line ".$e->getLine());
+		} finally {
+			if ($filename != '')
+				unlink($filename);
 		}
-		unlink($inputFile);
-		unlink($outputFile);
+
 		if (isset($result['ObjectURL'])) {
 			return $result['ObjectURL'];
 		} else {
-			return false;
+			return '';
 		}
 	}
 
 
 
-	}
+}
 
 ?>
 
