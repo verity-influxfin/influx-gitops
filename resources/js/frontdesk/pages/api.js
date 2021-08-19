@@ -46,7 +46,7 @@ export const alesisCompanyIntroductions = async b => (await axios.post(`${locati
 export const alesisIndexHumans = async b => {
     var data = new FormData();
     data.append('category', 'loan');
-    return (await axios.post(`${location.origin}/getExperiencesData`, b)).data;
+    return (await axios.post(`${location.origin}/getExperiencesData`, data)).data;
     //return (await faker(dataAlesisIndexHumans))
 };
 // alesisIndexBanners 是首頁 - Banner
