@@ -29,34 +29,34 @@ export const getBorrowReport = async b => (await superagent.post(host + "getBorr
 export const getCase = async b => (await superagent.post(host + "getCase").send(b)).body;
 
 function faker(data) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(data);
-    }, 500);
-  });
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(data);
+        }, 500);
+    });
 }
 
 // alesisCompanyIntroductions 是首頁 - 公司簡介
 // * dataAlesisCompanyIntroductions
 // * /getMilestoneData
-export const alesisCompanyIntroductions = async b => (await superagent.post(host + "getMilestoneData").send(b)).body;
+export const alesisCompanyIntroductions = async b => (await axios.post(`${location.origin}/getMilestoneData`, b)).data;
 // alesisIndexHumans 是首頁 - 用戶分享區
 // * dataAlesisIndexHumans
 // * /getExperiencesData
 export const alesisIndexHumans = async b => {
     var data = new FormData();
     data.append('category', 'loan');
-    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    return (await axios.post(`${location.origin}/getExperiencesData`, b)).data;
     //return (await faker(dataAlesisIndexHumans))
 };
 // alesisIndexBanners 是首頁 - Banner
 // * dataAlesisIndexBanners
 // * /getIndexBanner
-export const alesisIndexBanners = async b => (await superagent.post(host + "getIndexBanner").send(b)).body;
+export const alesisIndexBanners = async b => (await axios.post(`${location.origin}/getIndexBanner`, b)).data;
 // alesisIndexCounter 是首頁 - 累積註冊用戶
 // * dataAlesisIndexCounter
 // * /getCount
-export const alesisIndexCounter = async b => (await superagent.get(host + "getCount").send(b)).body;
+export const alesisIndexCounter = async b => (await axios.get(`${location.origin}/getCount`, b)).data;
 // alesisCollegeHumans 是學生貸 - 用戶分享區
 // * dataAlesisCollegeHumans
 // * /getExperiencesData
@@ -64,7 +64,7 @@ export const alesisCollegeHumans = async b => {
     var data = new FormData();
     data.append('category', 'loan');
     data.append('rank', 'student');
-    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    return (await axios.post(`${location.origin}/getExperiencesData`, data)).data
     //return (await faker(dataAlesisCollegeHumans))
 };
 // alesisWorkHumans 是工作貸 - 用戶分享區
@@ -74,7 +74,7 @@ export const alesisWorkHumans = async b => {
     var data = new FormData();
     data.append('category', 'loan');
     data.append('rank', 'officeWorker');
-    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    return (await axios.post(`${location.origin}/getExperiencesData`, data)).data
     //return (await faker(dataAlesisWorkHumans))
 };
 // alesisBorrowHumans 是我要借款 - 用戶分享區
@@ -83,7 +83,7 @@ export const alesisWorkHumans = async b => {
 export const alesisBorrowHumans = async b => {
     var data = new FormData();
     data.append('category', 'loan');
-    return (await superagent.post(host + "getExperiencesData").send(data)).body
+    return (await axios.post(`${location.origin}/getExperiencesData`, data)).data
     //return (await faker(dataAlesisBorrowHumans))
 };
 // alesisProjects 是案件總覽 - 目前案件/已成交案件
@@ -95,6 +95,6 @@ export const alesisProjects = async b => {
     data.append('status', b.status);
     data.append('orderby', b.orderby);
     data.append('sort', b.sort);
-    return (await superagent.post(host + "getCase").send(data)).body
+    return (await axios.post(`${location.origin}/getCase`, data)).data
     //return (await faker(dataAlesisProjects))
 };
