@@ -72,10 +72,9 @@ class Sns extends REST_Controller {
                     if (!empty($attachments)) {
                         // 非圖片或PDF格式的檔案 或 認證項目是成功/失敗狀態者 轉為不明檔案
                         $mime = get_mime_by_extension($attachments[0]->getFileName());
-                        if ((strpos($mime, 'jpg') !== false || strpos($mime, 'jpeg') !== false || strpos($mime, 'jpe') !== false
-                            || strpos($mime, 'png') !== false || strpos($mime, 'heic') !== false || strpos($mime, 'pdf') !== false)
+                        if ((is_image($mime) || is_pdf($mime))
                             && !in_array($info[0]->status, [1,2])) {
-                            $this->process_mail($info, $attachments[0], $user_info, $s3_url, $certification_id);
+                            $this->process_mail($info, $attachments, $user_info, $s3_url, $certification_id);
                         }else{
                             $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                         }
@@ -92,16 +91,16 @@ class Sns extends REST_Controller {
 		}
 	}
 
-	private function process_mail($info, $attachment, $user_info, $s3_url,$certification_id)
+	private function process_mail($info, $attachments, $user_info, $s3_url,$certification_id)
 	{
-		$url = $this->attachment_pdf($attachment, $user_info, $s3_url,$certification_id);
+		$url = $this->attachment_pdf($attachments, $user_info, $s3_url,$certification_id);
 		$this->certification_lib->save_mail_url($info['0'],$url);
 	}
 
-	private function attachment_pdf($attachment,$user_info,$s3_url,$certification_id)
+	private function attachment_pdf($attachments,$user_info,$s3_url,$certification_id)
 	{
 		$name=($certification_id===9)? 'investigation':'job';
-        $url = $this->s3_lib->credit_mail_pdf($attachment, $user_info->id, $name, 'user_upload/' . $user_info->id);
+        $url = $this->s3_lib->credit_mail_pdf($attachments, $user_info->id, $name, 'user_upload/' . $user_info->id);
         if ($url !== '') { //刪S3資料
             $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
         }

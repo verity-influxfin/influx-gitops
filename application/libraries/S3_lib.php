@@ -131,27 +131,47 @@ class S3_lib {
 		));
 		
 	}
-	public function credit_mail_pdf($attachment, $user_id = 0, $name = 'credit', $type = 'test')
+	public function credit_mail_pdf($attachments, $user_id = 0, $name = 'credit', $type = 'test')
 	{
-		$filename = '';
+		$images = [];
+		$fileList = [];
+		$pdfPath = '';
 		try {
-			if(!$attachment)
+			if (!$attachments)
 				return '';
 			$dir = 'pdf/';
-			$filename = $attachment->save($dir, TRUE, PhpMimeMailParser\Parser::ATTACHMENT_RANDOM_FILENAME);
-			$path_parts = pathinfo($filename);
-			$content = file_get_contents($filename);
 
+			foreach ($attachments as $attachment) {
+				$filename = $attachment->save($dir, TRUE, PhpMimeMailParser\Parser::ATTACHMENT_RANDOM_FILENAME);
+				$fileList[] = $filename;
+
+				$fileType = get_mime_by_extension($filename);
+				if(is_image($fileType))
+					$images[] = $filename;
+				else if(is_pdf($fileType))
+					$pdfPath = $filename;
+			}
+
+			// 合併多張圖片至PDF檔案
+			if(!empty($images) && $pdfPath == '') {
+				$pdfPath = $dir . $user_id . round(microtime(true) * 1000) . '_combined.pdf';
+				$pdfImagick = new Imagick($images);
+				$pdfImagick->setImageFormat('pdf');
+				$pdfImagick->writeImages($pdfPath, true);
+			}
+
+			$content = file_get_contents($pdfPath);
 			$result = $this->client->putObject(array(
 				'Bucket' 		=> S3_BUCKET,
-				'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . "." . $path_parts['extension'],
+				'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . ".pdf",
 				'Body'   		=> $content
 			));
 		} catch (S3Exception $e) {
 			error_log('Connecting to S3 was failed. Error in '.$e->getFile()." at line ".$e->getLine());
 		} finally {
-			if ($filename != '')
+			foreach ($fileList as $filename) {
 				unlink($filename);
+			}
 		}
 
 		if (isset($result['ObjectURL'])) {
