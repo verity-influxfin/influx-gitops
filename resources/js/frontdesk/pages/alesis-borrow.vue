@@ -47,8 +47,8 @@
         <!-- 普匯推薦 -->
         <div class="普匯推薦">
             <alesis-header>
-                <div class="標題">普匯推薦 銀行速貸好條件</div>
-                <div class="標題">透過普匯結盟夥伴，可享最高額度300萬，超低利率1.88%起！</div>
+                <div class="標題">普惠推薦 銀行速貸</div>
+                <div class="標題">透過普匯，可享最高額度300萬，超低利率1.88%起！</div>
             </alesis-header>
             <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
