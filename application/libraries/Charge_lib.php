@@ -143,7 +143,10 @@ class Charge_lib
             getDelayedAccountPayable("tra.*", 0, $sorting_charge_ar_sources, $user_id, $date, '');
         if(!empty($account_payable_list)) {
             $target_id_list = array_unique(array_column($account_payable_list, 'target_id'));
-            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list]);
+
+            // 欲處理之案件列表，目前只處理學生貸和上班貸
+            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list, 'product_id' => [1, 3]]);
+            $target_id_list = array_column($targets, 'id');
 
             // 撈取法催中的案件編號
             $legal_collection_investment = $this->CI->investment_model->get_many_by(['target_id' => $target_id_list,
@@ -166,7 +169,7 @@ class Charge_lib
                 $this->CI->target_model->setScriptStatus($target_id_list, 16, 0);
         };
 
-        // 將所有案子鎖script狀態
+        // 將欲處理之案件鎖 script 狀態
         $result = $this->CI->target_model->setScriptStatus($target_id_list, 0, 16);
         if(count($result) != count($target_id_list)) {
             $trans_rollback(FALSE);
@@ -174,15 +177,16 @@ class Charge_lib
         }
 
         // 轉換所有交易紀錄成對應的結構
-        // array[target_id][investment_id]['transactions'][source] = stdclass of transaction
-        // array[target_id][investment_id]['total_account_payable'] = Total account payable of investment_id
-        // array[target_id][investment_id]['total_priority_account_payable'] = Total priority account payable of investment_id
+        // array[target_id][investment_id]['transactions'][<source>] = [{stdclass of transaction}, {}, ..]
+        // array[target_id][investment_id]['total_amount'][<source>] = Total account payable of source
         $account_payable_map = [];
 		foreach ($account_payable_list as $value) {
-		    // 法催中/寬限期/外匯車的逾期案不處理
-		    if( in_array($value->target_id, $legal_collection_target_id_list)
-                || (!isDelayed($target_key_list[$value->target_id]['delay_days'] ?? 0))
-		        || ($target_key_list[$value->target_id]['product_id'] ?? PRODUCT_FOREX_CAR_VEHICLE) == PRODUCT_FOREX_CAR_VEHICLE)
+		    // 交易科目可能會與欲處理案件列表有差異，不處理案件列表會沒有element
+		    if( isset($target_key_list[$value->target_id]) &&
+                // 法催中/寬限期內不處理
+                (in_array($value->target_id, $legal_collection_target_id_list)
+                || !isDelayed($target_key_list[$value->target_id]['delay_days'] ?? 0))
+            )
 		        continue;
 
 			if (!isset($account_payable_map[$value->target_id])) {
@@ -1348,6 +1352,7 @@ class Charge_lib
                             $delay_interest = 0;
 
                             if ($contract->format_id == 3) {
+                                // 消費貸不能做部分清償，所以依舊使用原先方式計算
                                 $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
                             } else {
 								$delay_days	= get_range_days($target->handle_date, $date);
