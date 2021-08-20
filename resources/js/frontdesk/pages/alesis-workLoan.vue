@@ -12,18 +12,18 @@
         <!-- 快速審核 -->
         <div class="快速審核">
             <alesis-header>
-                <div class="標題">針對上市櫃、公家機關員工 精英快審</div>
+                <div class="標題">金融、上市櫃、公家機關、菁英快審</div>
             </alesis-header>
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-registered.svg">
-                        <div class="標籤">立即申請→立即審核</div>
+                        <div class="標籤">立即申請→火速審核</div>
                     </div>
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-cash.svg">
-                        <div class="標籤">加快投資人媒合速度→立即放款</div>
+                        <div class="標籤">加快媒合→立即放款</div>
                     </div>
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-upcash.svg">
