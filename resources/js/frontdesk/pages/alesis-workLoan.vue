@@ -12,18 +12,18 @@
         <!-- 快速審核 -->
         <div class="快速審核">
             <alesis-header>
-                <div class="標題">針對上市櫃、公家機關員工 精英快審</div>
+                <div class="標題">金融、上市櫃、公家機關、菁英快審</div>
             </alesis-header>
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-registered.svg">
-                        <div class="標籤">立即申請→立即審核</div>
+                        <div class="標籤">立即申請→火速審核</div>
                     </div>
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-cash.svg">
-                        <div class="標籤">加快投資人媒合速度→立即放款</div>
+                        <div class="標籤">加快媒合→立即放款</div>
                     </div>
                     <div class="項目">
                         <img class="圖示" src="/images/alesis-symbol-upcash.svg">
@@ -264,7 +264,7 @@
                             <div class="內容">
                                 <div class="標題">即時審核，快速媒合放款</div>
                                 <div class="分隔線"></div>
-                                <div class="文字">系統自動化審核加快申貸的速度，平均3分鐘完成申請、10分鐘核准、60分鐘到帳！</div>
+                                <div class="文字">系統自動化審核加快申貸的速度，平均5分鐘完成申請、10分鐘核准、60分鐘到帳！</div>
                             </div>
                         </div>
                         <div class="區塊">
@@ -319,7 +319,7 @@
                             <div class="內容">
                                 <div class="標題">費率單純透明</div>
                                 <div class="分隔線"></div>
-                                <div class="文字">只收取一次手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。</div>
+                                <div class="文字">只收取一次性成交手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。</div>
                             </div>
                         </div>
                         <div class="區塊">
@@ -330,7 +330,7 @@
                             <div class="內容">
                                 <div class="標題">金融機構合作</div>
                                 <div class="分隔線"></div>
-                                <div class="文字">在會員用戶逐漸成長的情況下，普匯專業優質的名聲，吸引許多金融機構相邀合作，包含「凱基銀行」、「上海商銀」等，共同為台灣金融科技發展貢獻一份力。</div>
+                                <div class="文字">在會員用戶逐漸成長的情況下，普匯專業優質的名聲，吸引許多金融機構相邀合作，包含「新光銀行」、「上海商銀」等，共同為台灣金融科技發展貢獻一份力。</div>
                             </div>
                         </div>
                     </div>
