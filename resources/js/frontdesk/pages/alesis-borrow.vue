@@ -28,15 +28,14 @@
         <!-- 特色區域 -->
         <div class="特色區域">
             <alesis-header>
-                <div class="標題">簡單快速專區</div>
                 <div class="標題 標題_外框線的">全線上自動審核 無人打擾24小時立即到帳</div>
             </alesis-header>
             <alesis-section>
                 <alesis-space size="small"></alesis-space>
                 <div class="卡片區塊">
                     <alesis-symcard class="symcard animate__animated" image="/images/business-team-manager-meeting1.jpg" header="企業融資" symbol="/images/alesis-companies.svg" description="支持中小企業，協助媒合百萬營運資金"></alesis-symcard>
-                    <alesis-symcard link="/workLoan" class="symcard animate__animated" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg" header="上班族貸" subheader="產品申請手續費4%" symbol="/images/alesis-work.svg" description="急需資金不再慌張，AI審核立即入帳"></alesis-symcard>
-                    <alesis-symcard link="/collegeLoan" class="symcard animate__animated" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg" header="學生貸" subheader="產品申請手續費3%" symbol="/images/alesis-student.svg" description="輕鬆分期不再煩腦，學生社群口碑最好"></alesis-symcard>
+                    <alesis-symcard link="/workLoan" class="symcard animate__animated" image="/images/螢幕擷取畫面-2021-07-14-113234.jpg" header="上班族貸" subheader="成交手續費4%" symbol="/images/alesis-work.svg" description="急需資金不再慌張，AI審核立即入帳"></alesis-symcard>
+                    <alesis-symcard link="/collegeLoan" class="symcard animate__animated" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg" header="學生貸" subheader="成交手續費3%" symbol="/images/alesis-student.svg" description="輕鬆分期不再煩腦，學生社群口碑最好"></alesis-symcard>
                     <alesis-symcard class="symcard animate__animated" image="/images/20200914172847-028f5b7b-me.jpg" header="車輛融資" symbol="/images/alesis-car.svg" description="敬請期待"></alesis-symcard>
                 </div>
                 <alesis-space size="medium"></alesis-space>
@@ -47,8 +46,8 @@
         <!-- 普匯推薦 -->
         <div class="普匯推薦">
             <alesis-header>
-                <div class="標題">普匯推薦 銀行速貸好條件</div>
-                <div class="標題">透過普匯結盟夥伴，可享最高額度300萬，超低利率1.88%起！</div>
+                <div class="標題">普惠推薦 銀行速貸</div>
+                <div class="標題">透過普匯，可享最高額度300萬，超低利率1.88%起！</div>
             </alesis-header>
             <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
