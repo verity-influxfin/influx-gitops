@@ -28,7 +28,6 @@
         <!-- 特色區域 -->
         <div class="特色區域">
             <alesis-header>
-                <div class="標題">簡單快速專區</div>
                 <div class="標題 標題_外框線的">全線上自動審核 無人打擾24小時立即到帳</div>
             </alesis-header>
             <alesis-section>

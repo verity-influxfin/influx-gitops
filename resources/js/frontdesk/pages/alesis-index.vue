@@ -237,6 +237,8 @@
             <alesis-header>
                 <div class="標題">我們的服務</div>
             </alesis-header>
+
+            <alesis-space size="small"></alesis-space>
             <alesis-section :secondary="true">
                 <alesis-space class="hidden-phone" size="medium"></alesis-space>
                 <img class="圖片" src="/images/p2p.svg" />
@@ -254,6 +256,8 @@
             </alesis-section>
         </div>
         <!-- / 服務區塊 -->
+
+        <alesis-space size="small"></alesis-space>
 
         <!-- 公司簡介 -->
         <div class="公司簡介">
