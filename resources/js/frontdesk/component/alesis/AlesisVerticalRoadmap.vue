@@ -140,7 +140,7 @@ export default {
         // next 會往下一組檢視。
         next() {
             if(this.current_set_index + 1 > this.sets.length-1) {
-                return
+                this.current_set_index = 0;
             } else {
                 this.current_set_index++;
             }
@@ -150,7 +150,7 @@ export default {
         // prev 會往上一組檢視。
         prev() {
             if(this.current_set_index - 1 < 0) {
-                return
+                this.current_set_index = this.sets.length-1;
             } else {
                 this.current_set_index--;
             }
