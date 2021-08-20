@@ -32,21 +32,21 @@
                             <circle id="Ellipse_83" data-name="Ellipse 83" cx="61.174" cy="61.174" r="61.174" transform="translate(0 0)"/>
                             <circle id="Ellipse_84" data-name="Ellipse 84" cx="61.174" cy="61.174" r="61.174" transform="translate(0 0)" fill="url(#vertical-linear-gradient-3)"/>
                         </g>
-                        <path id="Path_4434" data-name="Path 4434" d="M228.1,234.075a13.154,13.154,0,1,1,0-.182v.182Z" transform="translate(257.059 280.394)" fill="url(#vertical-linear-gradient-4)"/>
-                        <path id="Path_4435" data-name="Path 4435" d="M171.81,199.767h0a81.477,81.477,0,0,1,81.474-81.5h0a81.5,81.5,0,0,1,81.5,81.5h0a81.574,81.574,0,0,1-61.9,79.137,25.376,25.376,0,0,0-19.595,24.465v35.6" transform="translate(218.81 149.547)" fill="none" stroke="#76c3ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
-                        <g id="Group_3574" data-name="Group 3574" transform="translate(406.369 283.407)">
+                        <path id="Path_4434" v-if="sets[current_set_index].length >= 2" data-name="Path 4434" d="M228.1,234.075a13.154,13.154,0,1,1,0-.182v.182Z" transform="translate(257.059 280.394)" fill="url(#vertical-linear-gradient-4)"/>
+                        <path id="Path_4435" v-if="sets[current_set_index].length >= 2" data-name="Path 4435" d="M171.81,199.767h0a81.477,81.477,0,0,1,81.474-81.5h0a81.5,81.5,0,0,1,81.5,81.5h0a81.574,81.574,0,0,1-61.9,79.137,25.376,25.376,0,0,0-19.595,24.465v35.6" transform="translate(218.81 149.547)" fill="none" stroke="#76c3ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
+                        <g id="Group_3574" v-if="sets[current_set_index].length >= 2" data-name="Group 3574" transform="translate(406.369 283.407)">
                             <circle id="Ellipse_85" data-name="Ellipse 85" cx="65.725" cy="65.725" r="65.725"/>
                             <circle id="Ellipse_86" data-name="Ellipse 86" cx="65.725" cy="65.725" r="65.725" fill="url(#vertical-linear-gradient-3)"/>
                         </g>
-                        <circle id="Ellipse_87" data-name="Ellipse 87" cx="16.067" cy="16.067" r="16.067" transform="translate(69.981 761.805)" fill="url(#vertical-linear-gradient-6)"/>
-                        <path id="Path_4436" data-name="Path 4436" d="M0,146.972H0a86.046,86.046,0,0,0,86.1,86.046h0a86.046,86.046,0,0,0,86.044-86.046h0a86.124,86.124,0,0,0-65.43-83.552A26.824,26.824,0,0,1,86.1,37.565V0" transform="translate(172.142 750.219) rotate(180)" fill="none" stroke="#76c3ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
-                        <g id="Group_3575" data-name="Group 3575" transform="translate(15.771 532.79)">
+                        <circle id="Ellipse_87" v-if="sets[current_set_index].length >= 3" data-name="Ellipse 87" cx="16.067" cy="16.067" r="16.067" transform="translate(69.981 761.805)" fill="url(#vertical-linear-gradient-6)"/>
+                        <path id="Path_4436" v-if="sets[current_set_index].length >= 3" data-name="Path 4436" d="M0,146.972H0a86.046,86.046,0,0,0,86.1,86.046h0a86.046,86.046,0,0,0,86.044-86.046h0a86.124,86.124,0,0,0-65.43-83.552A26.824,26.824,0,0,1,86.1,37.565V0" transform="translate(172.142 750.219) rotate(180)" fill="none" stroke="#76c3ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
+                        <g id="Group_3575" v-if="sets[current_set_index].length >= 3" data-name="Group 3575" transform="translate(15.771 532.79)">
                             <circle id="Ellipse_88" data-name="Ellipse 88" cx="70.277" cy="70.277" r="70.277"/>
                             <circle id="Ellipse_89" data-name="Ellipse 89" cx="70.277" cy="70.277" r="70.277" fill="url(#vertical-linear-gradient-3)"/>
                         </g>
-                        <circle id="Ellipse_90" data-name="Ellipse 90" cx="22.28" cy="22.28" r="22.28" transform="translate(552.271 1031.488)" fill="url(#vertical-linear-gradient-8)"/>
-                        <path id="Path_4437" data-name="Path 4437" d="M213.21,431.986h0a88.327,88.327,0,0,1,88.276-88.326h0a88.331,88.331,0,0,1,88.327,88.326h0a88.38,88.38,0,0,1-67.089,85.769A27.531,27.531,0,0,0,301.486,544.3v38.559" transform="translate(271.629 437.102)" fill="none" stroke="#76c3ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
-                        <g id="Group_3576" data-name="Group 3576" transform="translate(500.61 796.352)">
+                        <circle id="Ellipse_90" v-if="sets[current_set_index].length >= 4" data-name="Ellipse 90" cx="22.28" cy="22.28" r="22.28" transform="translate(552.271 1031.488)" fill="url(#vertical-linear-gradient-8)"/>
+                        <path id="Path_4437" v-if="sets[current_set_index].length >= 4" data-name="Path 4437" d="M213.21,431.986h0a88.327,88.327,0,0,1,88.276-88.326h0a88.331,88.331,0,0,1,88.327,88.326h0a88.38,88.38,0,0,1-67.089,85.769A27.531,27.531,0,0,0,301.486,544.3v38.559" transform="translate(271.629 437.102)" fill="none" stroke="#76c3ff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" fill-rule="evenodd"/>
+                        <g id="Group_3576" v-if="sets[current_set_index].length >= 4" data-name="Group 3576" transform="translate(500.61 796.352)">
                             <circle id="Ellipse_91" data-name="Ellipse 91" cx="72.553" cy="72.553" r="72.553"/>
                             <circle id="Ellipse_92" data-name="Ellipse 92" cx="72.553" cy="72.553" r="72.553" fill="url(#vertical-linear-gradient-3)"/>
                         </g>
@@ -59,21 +59,21 @@
                             <text transform="translate(1.138 69.516)" fill="#157efb" font-size="21" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][0] !== undefined ? sets[current_set_index][0].content : ''"></text>
                             <image transform="matrix(1, 0, 0, 1, -160.3, -20.639)" height="120" width="120" :href="sets[current_set_index][0] !== undefined ? sets[current_set_index][0].icon : ''"></image>
                         </g>
-                        <g id="Group_3579" data-name="Group 3579" transform="translate(194.195 558.507)">
+                        <g id="Group_3579" v-if="sets[current_set_index].length >= 3" data-name="Group 3579" transform="translate(194.195 558.507)">
                             <path id="Path_4439" data-name="Path 4439" d="M1,20H285.476" transform="translate(0.138 25.516)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
-                            <text id="_2018.04" data-name="2018.04" transform="translate(188.301 32.552)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].hook_date : '' }}</text>
-                            <text transform="translate(1.138 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].title : '' }}</text>
-                            <text transform="translate(0 80.344)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][1] !== undefined ? sets[current_set_index][1].content : ''"></text>
-                            <image transform="matrix(1, 0, 0, 1, -168.3, -19.639)" height="120" width="120" :href="sets[current_set_index][1] !== undefined ? sets[current_set_index][1].icon : ''"></image>
+                            <text id="_2018.04" data-name="2018.04" transform="translate(188.301 32.552)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].hook_date : '' }}</text>
+                            <text transform="translate(1.138 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].title : '' }}</text>
+                            <text transform="translate(0 80.344)" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][2] !== undefined ? sets[current_set_index][2].content : ''"></text>
+                            <image transform="matrix(1, 0, 0, 1, -168.3, -19.639)" height="120" width="120" :href="sets[current_set_index][2] !== undefined ? sets[current_set_index][2].icon : ''"></image>
                         </g>
-                        <g id="Group_3580" data-name="Group 3580" transform="translate(81.542 303.616)">
+                        <g id="Group_3580" v-if="sets[current_set_index].length >= 2" data-name="Group 3580" transform="translate(81.542 303.616)">
                             <path id="Path_4440" data-name="Path 4440" d="M1,20H285.476" transform="translate(-1 25.516)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
-                            <text id="_2018.02" data-name="2018.02" transform="translate(285.72 31)" text-anchor="end" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].hook_date : '' }}</text>
-                            <text transform="translate(4.72 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][2] !== undefined ? sets[current_set_index][2].title : '' }}</text>
-                            <text transform="translate(289.446 80.344)" text-anchor="end" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][2] !== undefined ? sets[current_set_index][2].content : ''"></text>
-                            <image transform="matrix(1, 0, 0, 1, 329.7, -20.639)" height="120" width="120" :href="sets[current_set_index][2] !== undefined ? sets[current_set_index][2].icon : ''"></image>
+                            <text id="_2018.02" data-name="2018.02" transform="translate(285.72 31)" text-anchor="end" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].hook_date : '' }}</text>
+                            <text transform="translate(4.72 31)" fill="#157efb" font-size="27" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][1] !== undefined ? sets[current_set_index][1].title : '' }}</text>
+                            <text transform="translate(289.446 80.344)" text-anchor="end" fill="#157efb" font-size="24" font-family="YuGothicUI-Regular, Yu Gothic UI" v-html="sets[current_set_index][1] !== undefined ? sets[current_set_index][1].content : ''"></text>
+                            <image transform="matrix(1, 0, 0, 1, 329.7, -20.639)" height="120" width="120" :href="sets[current_set_index][1] !== undefined ? sets[current_set_index][1].icon : ''"></image>
                         </g>
-                        <g id="Group_3581" data-name="Group 3581" transform="translate(131.61 813.397)">
+                        <g id="Group_3581" v-if="sets[current_set_index].length >= 4" data-name="Group 3581" transform="translate(131.61 813.397)">
                             <path id="Path_4441" data-name="Path 4441" d="M1,25H330.993" transform="translate(-1 31.895)" fill="none" stroke="#76c3ff" stroke-width="1" fill-rule="evenodd"/>
                             <text id="_2018.08" data-name="2018.08" transform="translate(0.546 37.103)" fill="#157efb" font-size="24" font-family="SegoeUI-Light, Segoe UI" font-weight="300">{{ sets[current_set_index][3] !== undefined ? sets[current_set_index][3].hook_date : '' }}</text>
                             <text transform="translate(330.72 38)" fill="#157efb" font-size="28" text-anchor="end" font-family="YuGothicUI-Regular, Yu Gothic UI">{{ sets[current_set_index][3] !== undefined ? sets[current_set_index][3].title : '' }}</text>
@@ -102,7 +102,7 @@ export default {
     name: "VerticalPath",
     mounted() {
         alesisCompanyIntroductions().then(v => {
-            this.paths = v;
+            this.paths = JSON.parse(JSON.stringify(v));
             this.initRoadmap();
         })
     },
@@ -117,19 +117,23 @@ export default {
         // initRoadmap 會將接收到的資料以每四個為一組的方式切分。
         initRoadmap() {
             this.paths = this.paths.map(v => {
-              v.content = `<tspan x="0" dy="0">${v.content.split("\n").join(`</tspan><tspan x="0" dy="1.2em">`)}</tspan>`
-              return v
+                // 以換行符號進行換行。
+                //v.content = `<tspan x="0" dy="0">${v.content.split("\n").join(`</tspan><tspan x="0" dy="1.2em">`)}</tspan>`
+
+                // 自動字數換行。
+                v.content = `<tspan x="0" dy="0">${v.content.match(/.{1,15}/g).join(`</tspan><tspan x="0" dy="1.2em">`)}</tspan>`
+                return v
             })
 
             this.paths = this.paths.sort((a, b) => {
-              return new Date(a.hook_date) - new Date(b.hook_date)
+                return new Date(a.hook_date) - new Date(b.hook_date)
             });
 
             this.paths.forEach((v) => {
-              if (this.sets[this.sets.length-1].length === 4) {
-                  this.sets.push([]);
-              }
-              this.sets[this.sets.length-1].push(v);
+                if (this.sets[this.sets.length-1].length === 4) {
+                    this.sets.push([]);
+                }
+                this.sets[this.sets.length-1].push(v);
           })
         },
 

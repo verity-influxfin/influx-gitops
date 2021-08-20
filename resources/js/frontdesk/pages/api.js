@@ -40,6 +40,8 @@ function faker(data) {
 // * dataAlesisCompanyIntroductions
 // * /getMilestoneData
 export const alesisCompanyIntroductions = async b => (await axios.post(`${location.origin}/getMilestoneData`, b)).data;
+//export const alesisCompanyIntroductions = async b => (await faker(dataAlesisCompanyIntroductions));
+
 // alesisIndexHumans 是首頁 - 用戶分享區
 // * dataAlesisIndexHumans
 // * /getExperiencesData
