@@ -60,6 +60,11 @@
                     </a>
                 </div>
             </div>
+
+            <!-- 導覽按鈕 -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <!-- / 導覽按鈕 -->
         </div>
 
         <!-- Modal -->
@@ -756,12 +761,17 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
+
+
 /**
  * 標頭幻燈片
  */
 
 .標頭幻燈片 {
-
+    .swiper-button-prev,
+    .swiper-button-next {
+        top: 42%;
+    }
 }
 
 .標頭幻燈片 .旗幟圖片 {
