@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+    <script data-pace-options='{ "ajax": true }' src="/assets/admin/scripts/pace.js"></script>
     <title>百萬信保檢核表</title>
     <style>
     </style>
@@ -3119,8 +3120,7 @@
             <tr>
               <td class="white-border">
                 <center>
-                  <input  type="button"
-                  onclick="save('api_data_page')" value="送出測試">
+                  <input id="text_list"  type="button" class = "sendBtn" value="送出測試">
                 </center>
               </td>
             </tr>
@@ -3199,8 +3199,7 @@
             <tr>
               <td class="white-border">
                 <center>
-                  <input  type="button"
-                  onclick="save('api_file_page')" value="送出測試">
+                  <input id="image_list"  type="button" class = "sendBtn" value="送出測試">
                 </center>
               </td>
             </tr>
@@ -3221,6 +3220,7 @@
   let IDs = [];
   let key = '';
   let value = '';
+  let image_list_data = [];
   // 下拉選單列表
   let select_array = ['CompType_content','BusinessType_content','CompDuType_content','BizRegAddrOwner_content','IsBizAddrEqToBizRegAddr_content','BizTaxFileWay_content',
   'IsPrMarried_content','IsPrSpouseGu_content','RealPr_content','IsBizRegAddrSelfOwn_content','IsRealBizAddrSelfOwn_content','RealBizAddrOwner_content','OthRealPrRelWithPr_content',
@@ -3275,9 +3275,7 @@
       $.ajax({
           type: "GET",
           url: `/admin/bankdata/report?target_id=${target_id}&table_type=${table_type}`,
-          async:false,
           success: function (response) {
-            // console.log(response);
               result(response);
           },
           error: function(error) {
@@ -3290,9 +3288,8 @@
 	  $.ajax({
           type: "GET",
           url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
-          async:false,
           success: function (response) {
-			  response = response.response;
+              response = response.response;
               result(response);
           },
           error: function(error) {
@@ -3340,96 +3337,103 @@
   }
 
   function save(send_type){
-	// 收件檢核表資料傳送
-	if(send_type == 'api_data_page'){
-        all_data = getCheckLisTexttData();
-		data_type = 'text';
-		getMappingMsgNo(target_id, 'send', data_type, function (data){
-			msg_data = data;
+      // 收件檢核表資料傳送
+      if(send_type == 'text_list'){
+          $("#text_list").val("資料處理中");
+          all_data = getCheckLisTexttData();
+          data_type = 'text';
+          getMappingMsgNo(target_id, 'send', data_type, function (data){
+              msg_data = data;
 
-			if(!msg_data){
-				return 'no response';
-			}
+              if(!msg_data){
+                  return 'no response';
+              }
 
-			if(msg_data.status.code == 201 || msg_data.status.code == 202){
-				msg_no = msg_data.data.msg_no;
-			}else{
-				alert(`status code = ${msg_data.status.code}, error message = ${msg_data.status.message}`);
-				return;
-			}
-			if(msg_no == ''){
-				alert('交易序號為空');
-				return;
-			}
-		    request_data = {
-		      'MsgNo': msg_no,
-		      'CompId':`${all_data.CompId}`,
-		      'PrincipalId':`${all_data.PrincipalId}`,
-		    }
-			delete all_data.CompId;
-			delete all_data.PrincipalId;
-			request_data.Data = all_data;
-		    request_data = JSON.stringify(request_data);
+              if(msg_data.status.code == 201 || msg_data.status.code == 202){
+                  msg_no = msg_data.data.msg_no;
+              }else{
+                  alert(`status code = ${msg_data.status.code}, error message = ${msg_data.status.message}`);
+                  return;
+              }
+              if(msg_no == ''){
+                  alert('交易序號為空');
+                  return;
+              }
+              request_data = {
+                'MsgNo': msg_no,
+                'CompId':`${all_data.CompId}`,
+                'PrincipalId':`${all_data.PrincipalId}`,
+              }
+              delete all_data.CompId;
+              delete all_data.PrincipalId;
+              request_data.Data = all_data;
+              request_data = JSON.stringify(request_data);
 
-		    $.ajax({
-		        type: "POST",
-		        data: request_data,
-		        url: '/api/skbank/v1/LoanRequest/apply_text',
-		        dataType: "json",
-		        success: function (response) {
-                    $('#msg_no').val(response.msg_no);
-                    $('#case_no').val(response.case_no);
-		            alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
-		        },
-		        error: function(error) {
-		          alert(error);
-		        }
-		    });
-		});
-	}
-	if(send_type =='api_file_page'){
-        all_data = getCheckListImagesData();
-        request_data = [];
-        new_request_data = [];
-        case_no = $('#case_no').val();
-        count = 0;
+              $.ajax({
+                  type: "POST",
+                  data: request_data,
+                  url: '/api/skbank/v1/LoanRequest/apply_text',
+                  dataType: "json",
+                  success: function (response) {
+                      $('#msg_no').val(response.msg_no);
+                      $('#case_no').val(response.case_no);
+                      alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
+                  },
+                  error: function(error) {
+                    alert(error);
+                  }
+              });
+              $("#text_list").val("送出測試");
+              $(".sendBtn").prop("disabled", false);
+          });
+      }
+      if(send_type =='image_list'){
+          $("#image_list").val("資料處理中");
+          all_data = getCheckListImagesData();
+          request_data = [];
+          image_list_data = [];
+          case_no = $('#case_no').val();
+          data_count = Object.keys(all_data).length;
+          let compId_imput = $('#CompId_content').val();
 
-        if(case_no){
-            Object.keys(all_data).forEach(function(key) {
-                new_string = key.split('_');
-                data_type = new_string[0];
-                getMappingMsgNo(target_id, 'send', key, function (data){
-                    msg_data = data;
-                    msg_no = msg_data.data.msg_no;
-                    request_data.push({
-                        'MsgNo' : msg_no,
-                        'CompId' : 69713453,
-                        'CaseNo' : case_no,
-                        'DocType' : new_string[0],
-                        'DocSeq' : parseInt(new_string[1])+1,
-                        'DocFileType' : 4,
-                        'DocUrl' : all_data[key]
-                    });
-                    count += 1;
-                });
-            })
-        }
-        new_request_data['request_image_list'] = request_data;
-        $.ajax({
-            type: "POST",
-            data: JSON.stringify(request_data),
-            url: '/api/skbank/v1/LoanRequest/apply_image_list',
-            dataType: "json",
-            success: function (response) {
-              alert(response);
-            },
-            error: function(error) {
-              alert(error);
-            }
-        });
+          if(case_no){
+              Object.keys(all_data).forEach( (key) => {
+                  new_string = key.split('_');
+                  data_type = new_string[0];
+                  getMappingMsgNo(target_id, 'send', key,  (data) => {
+                      msg_data = data;
+                      msg_no = msg_data.data.msg_no;
+                      request_data.push({
+                          'MsgNo' : msg_no,
+                          'CompId' : compId_imput,
+                          'CaseNo' : case_no,
+                          'DocType' : new_string[0],
+                          'DocSeq' : parseInt(new_string[1])+1,
+                          'DocFileType' : 4,
+                          'DocUrl' : all_data[key]
+                      });
+                      if(Object.keys(request_data).length == data_count){
+                          image_list_data = JSON.stringify({"request_image_list":request_data});
+                          $.ajax({
+                              type: "POST",
+                              data: image_list_data,
+                              url: '/api/skbank/v1/LoanRequest/apply_image_list',
+                              dataType: "json",
+                              success: function (response) {
+                                alert(response);
+                              },
+                              error: function(error) {
+                                alert(error);
+                              }
+                          });
+                          $("#image_list").val("送出測試");
+                          $(".sendBtn").prop("disabled", false);
+                      }
+                  });
+              })
 
-		return;
-	}
+          }
+      }
   }
 
   $(document).ready(function() {
@@ -3456,10 +3460,11 @@
         }
     });
 
-	// 當前紀錄
-	// getMappingMsgNo(target_id, function (data){
-	// 	console.log(data);
-	// });
+    $('.sendBtn').click(function() {
+        $(".sendBtn").prop("disabled", true);
+        save(this.id);
+    });
+
   });
   </script>
 </html>
