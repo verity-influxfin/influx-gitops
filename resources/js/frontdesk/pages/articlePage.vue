@@ -214,7 +214,7 @@ export default {
 
         img {
           width: 100% !important;
-          height: auto;
+          height: auto !important;
         }
       }
     }
