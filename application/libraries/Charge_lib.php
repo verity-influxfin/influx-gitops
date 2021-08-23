@@ -262,6 +262,13 @@ class Charge_lib
                         if($investment_repayment_amount == 0)
                             continue;
 
+                        // 處理金額平均分配後因為誤差而殘留的餘額
+                        $remaining_balance = $available_balance - $investment_repayment_amount;
+                        if($remaining_balance > 0 && $remaining_balance < 3) {
+                            $investment_repayment_amount += $remaining_balance;
+                            $investment_repayment_amount = min($investment_list['total_amount'][$ar_source], $investment_repayment_amount);
+                        }
+
                         // 總還款金額不能大於餘額
                         $investment_repayment_amount = min($investment_repayment_amount, $available_balance);
 
