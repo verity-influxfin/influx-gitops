@@ -10,7 +10,7 @@
             <alesis-header>
                 <div class="標題">適用對象</div>
                 <div class="註釋">
-                    滿20歲的在校生，準備您的雙證件、學生證、金融卡，<br>在APP上拍照上傳，立即核准！
+                    滿20歲的在校生，準備您的雙證件、學生證、金融卡，APP拍照上傳，<br>10分鐘申請、30分鐘審核、60分鐘極速到帳！
                 </div>
             </alesis-header>
             <alesis-section>
@@ -132,7 +132,8 @@
             <alesis-header>
                 <div class="標題">服務範圍廣</div>
                 <div class="註釋">
-                    超過156所大學生，不論是生活急需、還是補習進修費，都在找普匯！<br>成立三年已幫助超過2萬名學生，讓學生一想到借錢，就想到普匯！
+                    超過156所大學，不論是生活急需、還是補習進修，都是找普匯！<br>
+                    成立以來，幫助數萬名學生，陪伴度過資金難關！
                 </div>
             </alesis-header>
             <alesis-section>
@@ -607,6 +608,9 @@ button[disabled] {
     }
     .適用對象 {
         margin-top: 100px;
+        .註釋 {
+            max-width: 19rem !important;
+        }
     }
 }
 .計數器 {

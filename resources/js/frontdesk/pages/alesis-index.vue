@@ -6,20 +6,19 @@
                     <div class="banner">
                         <div class="puhey-banner">
                             <img src="/images/首頁BANNER.png" class="hidden-desktop img-fluid" />
-                            <img src="/images/index-banner-m.png" class="hidden-phone img-fluid" />
+                            <img src="/images/index-banner-m.jpg" class="hidden-phone img-fluid" />
                             <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
                             <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
-                            <div class="content">
-                                <p>最貼近年輕人的金融科技平台</p>
-                                <span>普匯．你的手機ATM</span>
+
+                            <div class="content hidden-desktop">
                                 <div class="box">
                                     <a class="loan" href="/investLink">
-                                        <img src="../asset/images/light-b.svg" class="img-fluid" />
-                                        <div class="text">我要投資</div>
+                                        <img src="/images/home_banner_button_bg_blue.svg" class="img-fluid" />
+                                        <div class="text">我要投資 <i class="fa fa-angle-double-right"></i></div>
                                     </a>
                                     <a class="borrow" href="/borrowLink">
-                                        <img src="../asset/images/light-y.svg" class="img-fluid" />
-                                        <div class="text">我要借款</div>
+                                        <img src="/images/home_banner_button_bg_blue.svg" class="img-fluid" />
+                                        <div class="text">我要借款 <i class="fa fa-angle-double-right"></i></div>
                                     </a>
                                 </div>
                             </div>
@@ -58,6 +57,11 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 導覽按鈕 -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <!-- / 導覽按鈕 -->
         </div>
 
         <!-- Modal -->
@@ -235,6 +239,8 @@
             <alesis-header>
                 <div class="標題">我們的服務</div>
             </alesis-header>
+
+            <alesis-space size="small"></alesis-space>
             <alesis-section :secondary="true">
                 <alesis-space class="hidden-phone" size="medium"></alesis-space>
                 <img class="圖片" src="/images/p2p.svg" />
@@ -252,6 +258,8 @@
             </alesis-section>
         </div>
         <!-- / 服務區塊 -->
+
+        <alesis-space size="small"></alesis-space>
 
         <!-- 公司簡介 -->
         <div class="公司簡介">
@@ -756,12 +764,17 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
+
+
 /**
  * 標頭幻燈片
  */
 
 .標頭幻燈片 {
-
+    .swiper-button-prev,
+    .swiper-button-next {
+        top: 42%;
+    }
 }
 
 .標頭幻燈片 .旗幟圖片 {
@@ -1411,14 +1424,19 @@ export default {
                 top     : 11%;
                 left    : 29%;
                 width   : 50%;
+                opacity : 30%;
             }
 
             .content {
                 position  : absolute;
-                top       : 45%;
+                top       : 62%;
                 left      : 35%;
                 transform : translate(-50%, -50%);
                 text-align: center;
+
+                @include rwd {
+                    top: 45%;
+                }
 
                 p {
                     text-shadow   : 2px 6px 6px rgba(0, 0, 0, 0.75);
@@ -1451,8 +1469,11 @@ export default {
                 %block {
                     // width   : 40%;
                     width   : 100%;
-                    margin  : 0px auto;
+                    margin  : 0px 2rem;
                     position: relative;
+                    @include rwd {
+                        margin  : 0px auto;
+                    }
 
                     :hover {
                         color          : #ffffff;
@@ -1466,6 +1487,11 @@ export default {
                         left     : 47%;
                         transform: translate(-50%, -50%);
                         font-size: min(1.5vw, 26px);
+                        width    : 100%;
+
+                        i.fa {
+                            font-size: 1.5rem;
+                        }
                     }
                 }
 
@@ -1551,7 +1577,7 @@ export default {
                     font-size: 16px;
                     width    : 100%;
                     left     : 50%;
-                    top      : 50%;
+                    top      : 55%;
 
                     p {
                         font-size     : 25px;
@@ -1571,6 +1597,10 @@ export default {
 
                             .text {
                                 font-size: 16px;
+
+                                i.fa {
+                                    font-size: .9rem;
+                                }
                             }
                         }
 
