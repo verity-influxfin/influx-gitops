@@ -2258,8 +2258,14 @@ class Target_lib
                         $temp['owner'] = $data;
                     }else{
                         $temp['agitate'][] = $data;
-                        $temp['remaining_guarantor']--;
+                        if($value->guarantor == 1){
+                            $temp['remaining_guarantor']--;
+                        }
                     }
+                }
+                // 如果需要添加實際負責人與配偶，但未添加則加保證人人數設為0等待際負責人與配偶更新完成
+                if($temp['addspouse'] == true || $temp['addrealcharacter'] == true){
+                    $temp['remaining_guarantor'] = 0;
                 }
                 $target->associate = $temp;
             }
