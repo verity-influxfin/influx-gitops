@@ -90,8 +90,8 @@ class Controller extends BaseController
         if(!empty($case_response)){
             $case_data = json_decode($case_response,true);
             if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS' && !empty($case_data['data']['list'])){
-                if(count($case_data['data']['list']) > 100){
-                    for($i=0; $i<100; $i++){
+                if(count($case_data['data']['list']) > 50){
+                    for($i=0; $i<50; $i++){
                         $case_data_return[] = $case_data['data']['list'][$i];
                     }
                 }else{
@@ -132,8 +132,8 @@ class Controller extends BaseController
                                     return $input['sort'] == 'desc' ?($a[$input['orderby']] - $b[$input['orderby']] < 0) :($a[$input['orderby']] - $b[$input['orderby']] > 0);
                                 });
                             }
-                            if(count($case_response) > 100){
-                                for($i=0; $i<100; $i++){
+                            if(count($case_response) > 50){
+                                for($i=0; $i<50; $i++){
                                     $case_data_return[] = $case_response[$i];
                                 }
                             }else{
@@ -151,8 +151,8 @@ class Controller extends BaseController
                 if(!empty($case_response)){
                     $case_data = json_decode($case_response,true);
                     if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
-                        if(count($case_data['data']['list']) > 100){
-                            for($i=0; $i<100; $i++){
+                        if(count($case_data['data']['list']) > 50){
+                            for($i=0; $i<50; $i++){
                                 $case_data_return[] = $case_data['data']['list'][$i];
                             }
                         }else{
