@@ -83,8 +83,8 @@ class Controller extends BaseController
         $input = $request->all();
         $case_data_return = [];
 
-        // 限制案件最新一百筆
-        $input['limited'] = 100;
+        // 限制案件最新五十筆
+        $input['limited'] = 50;
         $params = http_build_query($input);
         $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/transfer_list?' . $params . '"');
         if(!empty($case_response)){
@@ -110,8 +110,8 @@ class Controller extends BaseController
 
         if(isset($input['product_id']) && isset($input['status'])){
             if(in_array($input['product_id'],[0,1,3]) || in_array($input['status'],[3,10])){
-                // 限制案件最新一百筆
-                $input['limited'] = 100;
+                // 限制案件最新五十筆
+                $input['limited'] = 50;
                 if($input['product_id'] == 0){
                     $input['product_id'] = 1;
                     $params = http_build_query($input);
