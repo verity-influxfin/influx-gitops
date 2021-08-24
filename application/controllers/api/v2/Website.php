@@ -363,7 +363,7 @@ class Website extends REST_Controller {
         $orderby 		= isset($input['orderby'])&&in_array($input['orderby'],['credit_level','instalment','interest_rate'])?$input['orderby']:'';
         $sort			= isset($input['sort'])&&in_array($input['sort'],['desc','asc'])?$input['sort']:'asc';
 
-        $this->CI->load->model('loan/transfer_model');
+        $this->load->model('loan/transfer_model');
         $this->transfer_model->order_by($orderby,$sort);
 
 		// 已結案的只能撈五十筆
