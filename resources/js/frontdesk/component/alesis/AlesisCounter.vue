@@ -28,21 +28,28 @@ export default {
             default: "",
         }
     },
+    watch: {
+      	number: function(newVal, oldVal) { // watch it
+            this.countdown()
+        }
+      },
     mounted() {
         if (this.number != 0) {
             this.displayNumber = Math.round(this.number / 1.5)
         }
-
-        var adder = setInterval(() => {
-            this.displayNumber += 100
-
-            if(this.displayNumber >= this.number) {
-                this.displayNumber = this.number
-                clearInterval(adder)
-            }
-        }, 50)
     },
     methods: {
+        countdown() {
+            var adder = setInterval(() => {
+                this.displayNumber += 100
+
+                if(this.displayNumber >= this.number) {
+                    this.displayNumber = this.number
+                    clearInterval(adder)
+                }
+            }, 50)
+        },
+
         // format 會格式化數值成為有千分逗號的格式。
         format(data) {
             data = parseInt(data);

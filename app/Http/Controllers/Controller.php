@@ -83,13 +83,15 @@ class Controller extends BaseController
         $input = $request->all();
         $case_data_return = [];
 
+        // 限制案件最新五十筆
+        $input['limited'] = 50;
         $params = http_build_query($input);
         $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/transfer_list?' . $params . '"');
         if(!empty($case_response)){
             $case_data = json_decode($case_response,true);
             if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS' && !empty($case_data['data']['list'])){
-                if(count($case_data['data']['list']) > 6){
-                    for($i=0; $i<6; $i++){
+                if(count($case_data['data']['list']) > 50){
+                    for($i=0; $i<50; $i++){
                         $case_data_return[] = $case_data['data']['list'][$i];
                     }
                 }else{
@@ -108,6 +110,8 @@ class Controller extends BaseController
 
         if(isset($input['product_id']) && isset($input['status'])){
             if(in_array($input['product_id'],[0,1,3]) || in_array($input['status'],[3,10])){
+                // 限制案件最新五十筆
+                $input['limited'] = 50;
                 if($input['product_id'] == 0){
                     $input['product_id'] = 1;
                     $params = http_build_query($input);
@@ -128,8 +132,8 @@ class Controller extends BaseController
                                     return $input['sort'] == 'desc' ?($a[$input['orderby']] - $b[$input['orderby']] < 0) :($a[$input['orderby']] - $b[$input['orderby']] > 0);
                                 });
                             }
-                            if(count($case_response) > 6){
-                                for($i=0; $i<6; $i++){
+                            if(count($case_response) > 50){
+                                for($i=0; $i<50; $i++){
                                     $case_data_return[] = $case_response[$i];
                                 }
                             }else{
@@ -147,8 +151,8 @@ class Controller extends BaseController
                 if(!empty($case_response)){
                     $case_data = json_decode($case_response,true);
                     if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS'){
-                        if(count($case_data['data']['list']) > 6){
-                            for($i=0; $i<6; $i++){
+                        if(count($case_data['data']['list']) > 50){
+                            for($i=0; $i<50; $i++){
                                 $case_data_return[] = $case_data['data']['list'][$i];
                             }
                         }else{
