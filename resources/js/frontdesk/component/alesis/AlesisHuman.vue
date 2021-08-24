@@ -9,7 +9,7 @@
             <div class="網格系統">
                 <div class="價格">
                     <span class="標籤">借貸金額</span>
-                    <span class="數值">{{ amount | format }} 元</span>
+                    <span class="數值">{{ format(amount) }} 元</span>
                 </div>
                 <div class="利率">
                     <span class="標籤">借貸利率</span>
@@ -34,10 +34,12 @@
 <script>
 export default {
     name : "AlesisHuman",
+    data() {
+        return {
+            image: ""
+        }
+    },
     props: {
-        image : {
-            default: "",
-        },
         header: {
             default: "",
         },
@@ -58,6 +60,20 @@ export default {
         },
         spend:{
             default: 3,
+        },
+        rank: {
+            default: "student"
+        }
+    },
+    mounted() {
+        switch (this.rank) {
+            case "officeWorker":
+                this.image = "/images/alesis-human-work-symbol.svg";
+                break
+            case "student":
+            default:
+                this.image = "/images/alesis-human-student-symbol.svg";
+                break
         }
     },
     methods: {

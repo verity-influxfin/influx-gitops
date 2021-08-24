@@ -258,7 +258,7 @@
                     document.querySelector(".rwd-list").classList.toggle("-active")
                 })
 
-                document.querySelector("body").addEventListener("click", (e) =>{
+                /*document.querySelector("body").addEventListener("click", (e) =>{
                     if (e.target.closest(".item") !== null) {
                         return
                     }
@@ -276,7 +276,7 @@
                         })
                         v.classList.toggle("-active")
                     })
-                })
+                })*/
 
                 document.querySelectorAll(".rwd-list .item").forEach((v) => {
                     v.addEventListener("click", (e) => {

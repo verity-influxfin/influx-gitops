@@ -243,5 +243,5 @@ O2O身份認證的金融科技創新技術產品`,
 "content":`台灣第一
 專屬年輕人金融科技平台`,
 "icon":"https://www.influxfin.com/upload/milestone/corpotate.svg"
-}
+},
 ]

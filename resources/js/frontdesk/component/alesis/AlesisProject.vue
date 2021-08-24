@@ -1,5 +1,5 @@
 <template>
-    <div class="單張卡片">
+    <div class="單張卡片" :class="{'單張卡片_媒合成功': invested >= loan_amount}">
         <div class="標題">
             <div class="階級">
                 <img class="圖片" style="max-width:70px;" v-bind:src="'/images/credit_' + credit_level + '.png'">
@@ -108,6 +108,10 @@ export default {
     overflow     : hidden;
     font-size    : .9rem;
     width    : 400px;
+}
+
+.單張卡片.單張卡片_媒合成功 {
+    background: #f5f5f5;
 }
 
 .單張卡片 .標題 {

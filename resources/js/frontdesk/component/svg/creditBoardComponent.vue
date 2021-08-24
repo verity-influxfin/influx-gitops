@@ -1,5 +1,9 @@
 <template>
-  <div>
+  <div style="position: relative;">
+    <div class="mask1"></div>
+    <div class="mask2"></div>
+    <div class="mask3"></div>
+    <div class="mask4"></div>
     <svg
       version="1.1"
       id="ccrata"
@@ -3644,6 +3648,41 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.mask1 {
+    width: 37%;
+    height: 80%;
+    position: absolute;
+    left: 53%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+}
+.mask2{
+    width: 8%;
+    height: 80%;
+    position: absolute;
+    left: 0%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+}
+.mask3 {
+    width: 68%;
+    height: 30%;
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+}
+.mask4 {
+    width: 8%;
+    height: 80%;
+    position: absolute;
+    right: -10%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+}
+</style>
 
 <style lang="scss">
 @import "./../alesis/alesis";

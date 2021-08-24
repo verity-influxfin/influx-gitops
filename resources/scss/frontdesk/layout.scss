@@ -269,6 +269,8 @@ $ci-color: #153a71;
             text-decoration: none;
             cursor: pointer;
 
+            &:focus-within,
+            &:hover,
             &.-active {
                 .sub {
                     display: flex;
@@ -285,7 +287,6 @@ $ci-color: #153a71;
                 padding: 0.35rem 0;
                 position: absolute;
                 border-radius: 0.25rem;
-                margin: 0.25rem 0;
                 display: none;
                 flex-direction: column;
                 overflow: hidden;
@@ -343,6 +344,13 @@ $ci-color: #153a71;
                 }
             }
 
+            &:focus-within,
+            &:hover {
+                .sub {
+                    display: flex;
+                }
+            }
+
             &.-active {
                 .sub {
                     display: flex;
@@ -359,7 +367,6 @@ $ci-color: #153a71;
                 padding: 0.35rem 0;
                 position: absolute;
                 border-radius: 0.25rem;
-                margin: 0.25rem 0;
                 display: none;
                 flex-direction: column;
                 overflow: hidden;
@@ -1240,7 +1247,7 @@ $ci-color: #153a71;
     height: 2.8rem;
 }
 
-.header_app_dl_link_mobile{
+.header_app_dl_link_mobile {
     margin: 0 auto;
     float: right;
     a {
