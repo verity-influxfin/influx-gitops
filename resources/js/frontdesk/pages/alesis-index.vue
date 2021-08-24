@@ -6,7 +6,7 @@
                     <div class="banner">
                         <div class="puhey-banner">
                             <img src="/images/首頁BANNER.png" class="hidden-desktop img-fluid" />
-                            <img src="/images/index-banner-m.jpg" class="hidden-phone img-fluid" />
+                            <img src="/images/index-banner-m.jpeg" class="hidden-phone img-fluid" />
                             <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
                             <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
 
