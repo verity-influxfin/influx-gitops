@@ -139,7 +139,7 @@ class Data_verify_lib{
 			}
 
 			if($data['totalMonthlyPayment'] >= $certification_content['monthly_repayment']) {
-				$verifiedResult->addMessage('待人工驗證：還款力計算 >= 投保薪資', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：總共月繳 >= 投保薪資', 3, MassageDisplay::Backend);
 			}
 
 			if($data['debt_to_equity_ratio'] > 100) {
