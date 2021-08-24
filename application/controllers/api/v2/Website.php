@@ -99,10 +99,11 @@ class Website extends REST_Controller {
 		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'desc';
 		$this->target_model->order_by($orderby,$sort);
 
-		// 已結案的只能撈一百筆
-		if($input['status'] == 10) {
-            $this->target_model->limit(100);
+		// 已結案的只能撈五十筆
+		if(! isset($input['limited']) || empty($input['limited']) || $input['limited'] >= 50) {
+            $input['limited'] = 50;
         }
+        $this->target_model->limit($input['limited']);
         $target_list  = $this->target_model->get_many_by($where);
         $product_list = $this->config->item('product_list');
         $user_meta = new stdClass();
@@ -361,7 +362,16 @@ class Website extends REST_Controller {
         $product_list 	= $this->config->item('product_list');
         $orderby 		= isset($input['orderby'])&&in_array($input['orderby'],['credit_level','instalment','interest_rate'])?$input['orderby']:'';
         $sort			= isset($input['sort'])&&in_array($input['sort'],['desc','asc'])?$input['sort']:'asc';
-        $transfer 		= $this->transfer_lib->get_transfer_list(['status' => [0,1,2]]);
+
+        $this->CI->load->model('loan/transfer_model');
+        $this->transfer_model->order_by($orderby,$sort);
+
+		// 已結案的只能撈五十筆
+		if(! isset($input['limited']) || empty($input['limited']) || $input['limited'] >= 50) {
+            $input['limited'] = 50;
+        }
+        $this->transfer_model->limit($input['limited']);
+        $transfer = $this->transfer_model->get_many_by(['status' => [0,1,2]]);
         $my_investment  = array();
         $my_combination = array();
         // $user_id 			= $this->user_info->id;
@@ -398,8 +408,8 @@ class Website extends REST_Controller {
                     if($investment->status != 10){
                         $get_pretransfer_info = $this->transfer_lib->get_pretransfer_info($investment,0,0,true,$target);
                         $accounts_receivable= $get_pretransfer_info['accounts_receivable'];
-                        $this->load->model('loan/transfer_model');
-                        $this->transfer_model->update($value->id,['accounts_receivable' => $accounts_receivable]);
+                        // $this->load->model('loan/transfer_model');
+                        // $this->transfer_model->update($value->id,['accounts_receivable' => $accounts_receivable]);
                         $value->accounts_receivable = $accounts_receivable;
                     }
                 }
