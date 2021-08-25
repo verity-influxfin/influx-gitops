@@ -139,6 +139,12 @@ export default {
 .單張卡片 .標題 .個人身份 {
     border-left : 1px solid #D4DAE4;
     padding-left: .8rem;
+    width: 50%;
+    .來自 {
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+    }
 }
 
 .單張卡片 .原因 {
