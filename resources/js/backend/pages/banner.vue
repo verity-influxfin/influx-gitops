@@ -54,7 +54,7 @@
               </div>
               <div style="display: grid">
                 <img
-                  :src="'/upload/banner/' + desktop"
+                  :src="desktop"
                   class="img-fluid"
                   style="width: 300px"
                 />
@@ -68,7 +68,7 @@
               </div>
               <div style="display: grid">
                 <img
-                  :src="'/upload/banner/' + mobile"
+                  :src="mobile"
                   class="img-fluid"
                   style="width: 300px"
                 />
@@ -153,8 +153,8 @@ let bannerRow = Vue.extend({
   template: `
     <li class="banner-row">
       <div class="type">{{type[item.type]}}</div>
-      <div class="desktop"><img class="img-fluid" :src="'upload/banner/'+item.desktop"></div>
-      <div class="mobile"><img class="img-fluid" :src="'upload/banner/'+item.mobile"></div>
+      <div class="desktop"><img class="img-fluid" :src="item.desktop"></div>
+      <div class="mobile"><img class="img-fluid" :src="item.mobile"></div>
       <div class="link"><a v-if="item.link" target="_blank" :href="item.link"><i class="fas fa-external-link-alt"></i></a></div>
       <div class="isActive">{{item.isActive}}</div>
       <div class="action-row">
@@ -263,7 +263,7 @@ export default {
           data: {
             ID: this.ID,
             desktop: this.desktop,
-            mobile: this.mobile,
+            mobile:  this.mobile,
             type: this.type,
             link: this.link,
             isActive: this.isActive,

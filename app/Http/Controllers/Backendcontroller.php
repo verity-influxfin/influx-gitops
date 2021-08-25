@@ -745,6 +745,7 @@ class Backendcontroller extends BaseController
             if ($file->isValid()) {
                 $filename = $file->getClientOriginalName();
                 $file->move('upload/banner', "$filename");
+                 $filename = 'upload/banner/'.$filename;
                 return response()->json($filename, 200);
             }
         } else {
