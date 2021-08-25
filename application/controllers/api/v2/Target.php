@@ -1735,11 +1735,15 @@ class Target extends REST_Controller {
         $Judicialperson = $this->user_info->investor == 1 && $this->user_info->company == 1?true:false;
 
 		//檢查認證 NOT_VERIFIED
-		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
+        $this->load->library('Certification_lib');
+        $idcard = $this->certification_lib->get_certification_info($this->user_info->id,CERTIFICATION_IDCARD,$this->user_info->investor);
+        $email = $this->certification_lib->get_certification_info($this->user_info->id,CERTIFICATION_EMAIL,$this->user_info->investor);
+		if(empty($this->user_info->id_number) || !$idcard || $idcard->status!=1 ||
+            !$email || $email->status!=1) {
 			$this->response(['result' => 'ERROR','error' => NOT_VERIFIED ]);
 		}
 
-		if(!$Judicialperson){
+        if(!$Judicialperson){
             //檢查認證 NOT_VERIFIED_EMAIL
             if(empty($this->user_info->email) || $this->user_info->email==''){
                 $this->response(['result' => 'ERROR','error' => NOT_VERIFIED_EMAIL]);

@@ -237,6 +237,39 @@ class Notification_lib{
         return $rs;
     }
 
+    public function legal_collection_cancel_transfer($user_id,$target_no,$loan_userid){
+        $title = "【下架通知】逾期案件「債權轉讓」下架通知！";
+        $content = "親愛的用戶，您好！
+很抱歉通知您，平台案號：" . $target_no . " (逾期債務人ID: " . $loan_userid . ")，
+正在進行償還部分款項，故必須下架該案債轉媒合，造成不便，還請見諒！";
+
+        $param = array(
+            "user_id" => $user_id,
+            "investor" => 1,
+            "title" => $title,
+            "content" => $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03');
+        return $rs;
+    }
+
+    public function withdraw_invalid_target($user_id,$investor=0){
+        $title = "【系統通知】";
+        $content = "親愛的會員您好，配合民法規定，調降借貸最高利率至16%，為維護您的權益，請重新申請案件，謝謝您的配合！";
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> $investor,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+        return $rs;
+    }
 	
 	public function target_verify_success($target){
 		$target_no = $target->target_no;

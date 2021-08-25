@@ -74,4 +74,30 @@ class Investment_model extends MY_Model
 			$this->db->where('target_no like ', $target_no);
 		return $this->db->get()->result();
 	}
+
+	public function getLegalCollectionInvestment($target_where, $investment_where) {
+		$this->db->select("*");
+		foreach($investment_where as $key => $v) {
+			if(is_array($v))
+				$this->db->where_in($key, $v);
+			else
+				$this->db->where($key, $v);
+		}
+		$subquery = $this->db->get_compiled_select('p2p_loan.investments', TRUE);
+
+		foreach($target_where as $key => $v) {
+			if(is_array($v))
+				$this->db->where_in($key, $v);
+			else
+				$this->db->where($key, $v);
+		}
+
+		$this->db
+			->select("")
+			->from('`p2p_loan.targets` as `t`')
+			->join("($subquery) as `i`", "`t`.`id` = `i`.`target_id`")
+			->order_by('`i`.`created_at`', 'ASC');
+
+		return $this->db->get()->result();
+	}
 }

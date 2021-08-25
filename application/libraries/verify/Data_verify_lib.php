@@ -139,7 +139,7 @@ class Data_verify_lib{
 			}
 
 			if($data['totalMonthlyPayment'] >= $certification_content['monthly_repayment']) {
-				$verifiedResult->addMessage('待人工驗證：還款力計算 >= 投保薪資', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：總共月繳 >= 投保薪資', 3, MassageDisplay::Backend);
 			}
 
 			if($data['debt_to_equity_ratio'] > 100) {
@@ -149,7 +149,7 @@ class Data_verify_lib{
 				$verifiedResult->addMessage('待人工驗證：負債比計算 >= 70%', 3, MassageDisplay::Backend);
 			}
 
-			if($data['totalAmountQuota'] >= $certification_content['total_repayment']) {
+			if(($data['liabilitiesWithoutAssureTotalAmount']/1000) >= $certification_content['total_repayment']) {
 				$verifiedResult->addMessage('待人工驗證：借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
 			}
 
@@ -177,8 +177,8 @@ class Data_verify_lib{
 			if($data['creditCardUseRate'] > 90) {
 				$verifiedResult->addMessage('近一個月信用卡使用率 > 90%', 2, MassageDisplay::Backend);
 				$verifiedResult->setBanResubmit();
-			}else if($data['creditUtilizationRate'] >= 70) {
-				$verifiedResult->addMessage('待人工驗證：90% >= 近一個月信用卡使用率 >= 70%%', 3, MassageDisplay::Backend);
+			}else if($data['creditCardUseRate'] >= 70) {
+				$verifiedResult->addMessage('待人工驗證：90% >= 近一個月信用卡使用率 >= 70%', 3, MassageDisplay::Backend);
 			}
 
 			if($data['delayLessMonth'] > 1) {

@@ -771,6 +771,7 @@ class Charge_lib
 
 	public function handle_delay_target($target=[],$delay_days=0,$gracePeriod){
 		if($target->status == 5 && $delay_days > $gracePeriod){
+			$this->CI->load->model('loan/investment_model');
 			if(in_array($delay_days,[8,31,61])){
 				$this->CI->load->library('credit_lib');
 				$level = $this->CI->credit_lib->delay_credit($target->user_id,$delay_days);
@@ -828,12 +829,13 @@ class Charge_lib
 
 					if($user_to_info){
 						$total_remaining_principal = 0;
-                        foreach($user_to_info as $investment_id => $value){
+                        foreach($user_to_info as $investment_id => $value) {
                             if ($contract->format_id == 3) {
                                 $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
                             } else {
                                 $user_to_info[$investment_id]['delay_interest'] = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
                             }
+
 							$total_remaining_principal 	+= $value['remaining_principal'];
 						}
 
@@ -908,20 +910,22 @@ class Charge_lib
 				}else{
 					if($user_to_info){
 						foreach($user_to_info as $investment_id => $value){
+							$delay_interest = 0;
+
                             if ($contract->format_id == 3) {
                                 $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
                             } else {
                                 $delay_interest = $this->CI->financial_lib->get_delay_interest($value['remaining_principal'], $delay_days);
                             }
-							$this->CI->transaction_model->update_by(
-								[
-									'source' 		=> SOURCE_AR_DELAYINTEREST,
-									'investment_id' => $value['investment_id'],
-								],
-								[
-									'amount' => $delay_interest
-								]
-							);
+                            $this->CI->transaction_model->update_by(
+                                [
+                                    'source' => SOURCE_AR_DELAYINTEREST,
+                                    'investment_id' => $value['investment_id'],
+                                ],
+                                [
+                                    'amount' => $delay_interest
+                                ]
+                            );
 
                             $total = $value['remaining_principal'] + $value['ar_interest'] + $delay_interest;
                             $ar_fee = $this->CI->financial_lib->get_ar_fee($total);
