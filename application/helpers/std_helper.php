@@ -356,4 +356,18 @@
 			$arr
 		);
 	}
+
+	/**
+	 * 依照前綴詞取得目前已定義的常數項
+	 * @param array $constants: 變數列表
+	 * @param string $prefix: 前綴詞
+	 * @return array
+	 */
+	function returnConstants (array $constants, string $prefix): array
+	{
+		foreach ($constants as $key=>$value)
+			if (substr($key,0,strlen($prefix))==$prefix)  $dump[$key] = $value;
+		if(empty($dump)) { return []; }
+		else { return $dump; }
+	}
 ?>

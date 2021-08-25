@@ -177,6 +177,11 @@ defined('CERTIFICATION_FINANCIAL')     OR define('CERTIFICATION_FINANCIAL'      
 defined('CERTIFICATION_DIPLOMA')       OR define('CERTIFICATION_DIPLOMA'           , 8);
 defined('CERTIFICATION_INVESTIGATION') OR define('CERTIFICATION_INVESTIGATION'     , 9);
 defined('CERTIFICATION_JOB')           OR define('CERTIFICATION_JOB'               , 10);
+// Certification Status
+defined('CERTIFICATION_STATUS_PENDING')           OR define('CERTIFICATION_STATUS_PENDING'               , 0);
+defined('CERTIFICATION_STATUS_VERIFIED')           OR define('CERTIFICATION_STATUS_VERIFIED'             , 1);
+defined('CERTIFICATION_STATUS_FAILED')           OR define('CERTIFICATION_STATUS_FAILED'               , 2);
+defined('CERTIFICATION_STATUS_REVIEW')           OR define('CERTIFICATION_STATUS_REVIEW'               , 3);
 
 defined('CERTIFICATION_BUSINESSTAX')           OR define('CERTIFICATION_BUSINESSTAX'               , 1000);
 defined('CERTIFICATION_BALANCESHEET')           OR define('CERTIFICATION_BALANCESHEET'               , 1001);
