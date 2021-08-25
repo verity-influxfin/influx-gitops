@@ -238,7 +238,7 @@ export default {
 .案件區塊 .包裹容器 .卡片列表 {
     max-width            : 950px;
     margin               : 0 auto;
-    display              : flex;
+    display              : grid;
     grid-template-columns: repeat(2, 1fr);
     gap                  : 3rem;
     margin-top           : 2rem;
@@ -257,6 +257,7 @@ export default {
         transform      : scale(0.8) translateX(4.3rem);
         margin-left    : -7rem;
         margin-top     : -3rem;
+        justify-content: center;
     }
 }
 
