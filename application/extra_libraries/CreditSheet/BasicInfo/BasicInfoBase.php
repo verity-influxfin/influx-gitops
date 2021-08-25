@@ -1,9 +1,7 @@
 <?php
+namespace CreditSheet\BasicInfo;
 
-
-namespace CreditSheet;
-
-interface CreditSheetDefinition
+interface BasicInfoBase
 {
     // 核貸層次
     public const CREDIT_REVIEW_LEVEL_SYSTEM = 1;
@@ -30,7 +28,7 @@ interface CreditSheetDefinition
     ];
 
     // 取得基本資料
-    public function getBasicInfo();
-    public function getCreditCategoryList();
-    public function getReviewLevelList();
+    public function getBasicInfo() : array;
+    public function getCreditCategoryList() : array;
+    public function getReviewLevelList() : array;
 }

@@ -1,5 +1,7 @@
 <?php
 namespace CreditSheet;
+use CreditSheet\BasicInfo\PersonalBasicInfo;
+use CreditSheet\BasicInfo\ArchivingPersonalBasicInfo;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CreditSheetFactory {
@@ -11,11 +13,12 @@ class CreditSheetFactory {
 
         if($target->status != 0) {
             // 已封存之個金授審表
-            return new ArchivingPersonalCreditSheet($target);
+            $basicInfo = new ArchivingPersonalBasicInfo($target);
         }else{
             // 未封存之個金授審表
-            return new PersonalCreditSheet($target);
+            $basicInfo = new PersonalBasicInfo($target);
         }
+        return new PersonalCreditSheet($basicInfo);
     }
 
 }

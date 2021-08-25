@@ -370,4 +370,12 @@
 		if(empty($dump)) { return []; }
 		else { return $dump; }
 	}
+
+	function birthdayDateFormat($birthday) {
+		if(preg_match("/^([0-9]{1,3})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/u",
+			$birthday, $matches)){
+			$birthday = "$matches[1]/$matches[2]/$matches[3]";
+		}
+		return $birthday;
+	}
 ?>

@@ -56,14 +56,14 @@ class Creditmanagement extends MY_Admin_Controller
 
     public function get_structural_data(){
         $response = [];
-        $response['reviewLevel'] = $this->creditSheet->getReviewLevelList();
-        $response['categoryList'] = $this->creditSheet->getCreditCategoryList();
+        $response['reviewLevelList'] = $this->creditSheet->basicInfo->getReviewLevelList();
+        $response['creditCategoryList'] = $this->creditSheet->basicInfo->getCreditCategoryList();
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
     public function get_data(){
-        $response = $this->creditSheet->getBasicInfo();
+        $response = $this->creditSheet->basicInfo->getBasicInfo();
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
