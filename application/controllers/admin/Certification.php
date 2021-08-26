@@ -227,35 +227,37 @@ class Certification extends MY_Admin_Controller {
 				$page_data['ocr']['url'] = [];
 				// 給人工編輯跳轉網址
 				$page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$ocr_content);
-
-					// $ocr_type = $this->certification_ocr[$info->certification_id]['url'];
-					// $img = $this->certification_ocr[$info->certification_id]['img'];
-					// $this->load->model('log/log_image_model');
-					// $ocr_content = isset($info->content) ? json_decode($info->content,TRUE) : '';
-					//
-					// $ocr_img_id = [];
-					// if(isset($ocr_content['group_id'])){
-					// 	$ocr_img_id[] = $ocr_content['group_id'];
-					// 	$page_data['ocr']['url'][] = base_url("admin/ocr/report?id={$ocr_img_id[0]}&type={$ocr_type}&certification={$info->id}");
-					// }else{
-					// 	$ocr_img_info = $this->log_image_model->getIDByUrl($ocr_content[$img]);
-					// 	$ocr_img_id = [];
-					// 	foreach($ocr_img_info as $v){
-					// 		if(! in_array($v->id,$ocr_img_id)){
-					// 			$ocr_img_id[] = $v->id;
-					// 			$page_data['ocr']['url'][] = base_url("admin/ocr/report?id={$v->id}&type={$ocr_type}&certification={$info->id}");
-					// 		}
-					// 	}
-					// }
-				// 找使用者上傳檔案位置
-				$image = $this->certification_table->getUserPostFilesKey($info->certification_id);
-				$page_data['ocr']['img'] = isset($ocr_content[$image]) ? $ocr_content[$image] : [];
+				// 找使用者上傳圖片
+				$image_key_list = $this->certification_table->getUserPostImagesKey($info->certification_id);
+                $page_data['ocr']['img'] = [];
+                if(!empty($image_key_list)){
+                    foreach($image_key_list as $key_name){
+                        if(isset($ocr_content[$key_name]) && !empty($ocr_content[$key_name])){
+                            if(is_array($ocr_content[$key_name])){
+                                $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$ocr_content[$key_name]);
+                            }else{
+                                $page_data['ocr']['img'][] = $ocr_content[$key_name];
+                            }
+                        }
+                        // 針對圖片連結未直接放在第一層結構資料處理
+                        if(isset($ocr_content['result']) && !empty($ocr_content['result'])){
+                            $image_in_result = array_reduce($ocr_content['result'], 'array_merge', array());
+                            if(isset($image_in_result[$key_name]) && !empty($image_in_result[$key_name])){
+                                if(is_array($image_in_result[$key_name])){
+                                    $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$image_in_result[$key_name]);
+                                }else{
+                                    $page_data['ocr']['img'][] = $image_in_result[$key_name];
+                                }
+                            }
+                        }
+                    }
+                }
 
 				// ocr 總表相關資料生成
-				$data_infos = isset($ocr_content['result']) ? $ocr_content['result'] : '';
+				$data_infos = isset($ocr_content['result']) ? $ocr_content['result'] : [];
 				$error_location = isset($ocr_content['error_location']) ? $ocr_content['error_location'] : [];
 				$total_table = [];
-				if($data_infos){
+				if(!empty($data_infos)){
 					if($info->certification_id == 1003 || $info->certification_id == 9){
 						$total_table['data'] = array_reduce($data_infos, 'array_merge', array());
 						$total_table['type'] = $info->certification_id == 9 ? 'person' : 'company';

@@ -7,6 +7,7 @@
 <table class="table table-striped table-bordered table-hover dataTable total-table">
   <tbody>
     <?php
+    // print_r(json_encode($data));exit;
     if(! empty($data)){
       foreach($data as $v){
         if(! empty($v['title']) && ! empty($v['value'])){

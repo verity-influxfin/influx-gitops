@@ -8,6 +8,7 @@ class Certification_table
 		'11' => [
 			'type' => 'profile',
 			'file_location' => 'profile',
+            'image_location' => ['profile'],
 			'total_table' => [
 				'action_user' => '編輯人',
 				'send_time' => '編輯時間',
@@ -60,10 +61,12 @@ class Certification_table
 		'1000' => [
 			'type' => 'business_tax_return',
 			'file_location' => 'business_tax_image',
+            'image_location' => ['business_tax_image'],
 		],
 		'12' => [
 			'type' => 'credit_investigation',
 			'file_location' => 'person_mq_image',
+            'image_location' => ['person_mq_image'],
 			'total_table' => [
 				'action_user' => '編輯人',
 				'send_time' => '編輯時間',
@@ -75,10 +78,12 @@ class Certification_table
 		'1001' => [
 			'type' => 'balance_sheet',
 			'file_location' => 'balance_sheet_image',
+            'image_location' => ['balance_sheet_image'],
 		],
 		'1002' => [
 			'type' => 'income_statement',
 			'file_location' => 'income_statement_image',
+            'image_location' => ['income_statement_image'],
 			'total_table' =>[
 				'action_user' => '編輯人',
 				'send_time' => '編輯時間',
@@ -95,6 +100,7 @@ class Certification_table
 		'1003' => [
 			'type' => 'credit_investigation',
 			'file_location' => 'legal_person_mq_image',
+            'image_location' => ['legal_person_mq_image'],
 			'total_table' =>[
 				'action_user' => '編輯人',
 				'send_time' => '編輯時間',
@@ -106,6 +112,7 @@ class Certification_table
 		'1007' => [
 			'type' => 'amendment_of_register',
 			'file_location' => 'governmentauthorities_image',
+            'image_location' => ['governmentauthorities_image'],
 			'total_table' => [
 				'action_user' => '編輯人',
 				'send_time' => '編輯時間',
@@ -124,6 +131,7 @@ class Certification_table
 		'1017' => [
 			'type' => 'insurance_table',
 			'file_location' => 'employeeinsurancelist_image',
+            'image_location' => ['employeeinsurancelist_image'],
 			'total_table' => [
 				'action_user' => '編輯人',
 				'send_time' => '編輯時間',
@@ -136,7 +144,8 @@ class Certification_table
 		],
 		'1018' => [
 			'type' => 'profilejudicial',
-			'file_location' => 'profilejudicial',
+			'file_location' => '',
+            'image_location' => ['BizLandOwnership', 'BizHouseOwnership', 'RealLandOwnership', 'RealHouseOwnership'],
 			'total_table' => [
 				'action_user' => '編輯人',
 				'send_time' => '編輯時間',
@@ -188,10 +197,6 @@ class Certification_table
                 'DirectorFId' => '公司董監事 F 統編' ,
                 'DirectorGName' => '公司董監事 G 姓名' ,
                 'DirectorGId' => '公司董監事 G 統編' ,
-                'BizLandOwnership' => '土地所有權狀' ,
-                'BizHouseOwnership' => '建物所有權狀' ,
-                'RealLandOwnership' => '實際土地所有權狀' ,
-                'RealHouseOwnership' => '實際建物所有權狀' ,
                 'main_business' => '主要業務範疇' ,
                 'main_product' => '主要產品' ,
                 'history' => '組織沿革' ,
@@ -200,6 +205,7 @@ class Certification_table
         '1019' => [
             'type' => 'companyemail',
             'file_location' => 'companyemail',
+            'image_location' => ['companyemail'],
             'total_table' => [
                 'action_user' => '編輯人',
                 'send_time' => '編輯時間',
@@ -210,6 +216,7 @@ class Certification_table
         '1020' => [
             'type' => 'judicialguarantee',
             'file_location' => 'judicialguarantee',
+            'image_location' => ['judicialguarantee'],
             'total_table' => [
                 'action_user' => '編輯人',
                 'send_time' => '編輯時間',
@@ -220,6 +227,7 @@ class Certification_table
 		'501' => [
 			'type' => 'simplificationjob',
 			'file_location' => 'labor_image',
+            'image_location' => ['labor_image'],
             'total_table' => [
                 'action_user' => '編輯人',
                 'send_time' => '編輯時間',
@@ -298,6 +306,14 @@ class Certification_table
 		return $key_name;
 	}
 
+    public function getUserPostImagesKey($certification_id=''){
+        $key_name = [];
+        if(isset($this->certification_mapping[$certification_id]['image_location'])){
+            $key_name = $this->certification_mapping[$certification_id]['image_location'];
+        }
+        return $key_name;
+    }
+
 	/**
 	 * [getTotalTableDataArray 組裝資料表格資料]
 	 * @param  string $certification_id [認證類型ID]
@@ -307,7 +323,6 @@ class Certification_table
 	 */
 	public function getTotalTableDataArray($certification_id='',$data_infos=[],$error_location=[]){
 		$data = [];
-// print_r($data_infos);exit;
 		foreach($data_infos as $k=>$v){
 			foreach($v as $k1=>$v1){
 				if($k1 == 'action_user'){
