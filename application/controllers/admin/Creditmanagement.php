@@ -56,14 +56,21 @@ class Creditmanagement extends MY_Admin_Controller
 
     public function get_structural_data(){
         $response = [];
-        $response['reviewLevelList'] = $this->creditSheet->basicInfo->getReviewLevelList();
-        $response['creditCategoryList'] = $this->creditSheet->basicInfo->getCreditCategoryList();
+        $response['basicInfo']['reviewLevelList'] = $this->creditSheet->basicInfo->getReviewLevelList();
+        $response['basicInfo']['creditCategoryList'] = $this->creditSheet->basicInfo->getCreditCategoryList();
+
+        $response['creditLineInfo']['drawdownTypeList'] = $this->creditSheet->creditLineInfo->getDrawdownTypeList();
+        $response['creditLineInfo']['interestTypeList'] = $this->creditSheet->creditLineInfo->getInterestTypeList();
+        $response['creditLineInfo']['applyLineTypeList'] = $this->creditSheet->creditLineInfo->getApplyLineTypeList();
+        $response['creditLineInfo']['reviewerList'] = $this->creditSheet->creditLineInfo->getReviewerList();
+
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
     public function get_data(){
-        $response = $this->creditSheet->basicInfo->getBasicInfo();
+        $response['basicInfo'] = $this->creditSheet->basicInfo->getBasicInfo();
+        $response['creditLineInfo'] = $this->creditSheet->creditLineInfo->getCreditLineInfo();
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }

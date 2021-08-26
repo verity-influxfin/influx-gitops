@@ -1,11 +1,12 @@
 <?php
 namespace CreditSheet\BasicInfo;
+use CreditSheet\CreditSheetTrait;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class PersonalBasicInfo implements BasicInfoBase {
+    use CreditSheetTrait;
 
-    protected $target, $user;
     protected $repayableTargets;
     protected $CI;
     protected $certificationProcessList = [
@@ -15,15 +16,12 @@ class PersonalBasicInfo implements BasicInfoBase {
         CERTIFICATION_EMAIL => ['email'],
     ];
 
-    function __construct($target)
+    function __construct()
     {
         $this->CI = &get_instance();
         $this->CI->load->model('loan/credit_model');
         $this->CI->load->model('user/user_meta_model');
         $this->CI->load->library('Certification_lib');
-
-        $this->target = $target;
-        $this->user = $this->CI->user_model->get_by(['id'=> $this->target->user_id ?? 0]);
     }
 
     /**
@@ -33,11 +31,7 @@ class PersonalBasicInfo implements BasicInfoBase {
     public function getBasicInfo(): array
     {
         $response = [];
-        if(isset($this->target)) {
-            $description = json_decode($this->target->reason,true);
-            $reason = $description['reason_description'] ?? $this->target->reason;
-            $response['reason'] = $reason;
-
+        if(isset($this->creditSheet->target)) {
             $response = array_merge($response, $this->getAllCertification());
             $response['birthday'] = birthdayDateFormat($response['birthday'] ?? '');
 
@@ -92,7 +86,7 @@ class PersonalBasicInfo implements BasicInfoBase {
      */
     protected function getCertInfo($certId, $selectColumnList) {
         $result = [];
-        $info = $this->CI->certification_lib->get_certification_info($this->user->id, $certId, 0);
+        $info = $this->CI->certification_lib->get_certification_info($this->creditSheet->user->id, $certId, 0);
         if($info && $info->status == 1) {
             foreach ($selectColumnList as $columnName) {
                 $result[$columnName] = isset($info->content[$columnName]) ? $info->content[$columnName] : '';
@@ -107,8 +101,9 @@ class PersonalBasicInfo implements BasicInfoBase {
      * 獲得初貸日期
      * @return string
      */
-    protected function getFirstApplyDate() {
-        $target = $this->CI->target_model->order_by('id','ASC')->get_by(['user_id'=>$this->user->id]);
+    protected function getFirstApplyDate(): string
+    {
+        $target = $this->CI->target_model->order_by('id','ASC')->get_by(['user_id'=>$this->creditSheet->user->id]);
         $rs = "";
         if(isset($target)) {
             $dateStr = date('Y/m/d', $target->created_at);
@@ -123,8 +118,8 @@ class PersonalBasicInfo implements BasicInfoBase {
      */
     protected function getProductCategories() {
         $this->repayableTargets = $this->CI->target_model->order_by('id','ASC')->get_many_by(
-                ['user_id'=>$this->user->id, 'status' => 5]);
-        return array_unique(array_column($this->repayableTargets, 'product_id'));
+                ['user_id'=>$this->creditSheet->user->id, 'status' => 5]);
+        return array_map('intval', array_unique(array_column($this->repayableTargets, 'product_id')));
     }
 
     /**
@@ -147,12 +142,12 @@ class PersonalBasicInfo implements BasicInfoBase {
     {
         $this->CI->load->model('loan/credit_model');
         $credit = $this->CI->credit_model->order_by('created_at', 'DESC')->
-            get_by(['user_id' => $this->user->id, 'created_at <=' => 'UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(created_at), INTERVAL 6 MONTH))']);
-        if(!isset($credit) || $this->target->product_id != $credit->product_id) {
+            get_by(['user_id' => $this->creditSheet->user->id, 'created_at <=' => 'UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(created_at), INTERVAL 6 MONTH))']);
+        if(!isset($credit) || $this->creditSheet->target->product_id != $credit->product_id) {
             return self::CREDIT_CATEGORY_NEW_TARGET;
-        }else if($this->target->sub_status == 8) {
+        }else if($this->creditSheet->target->sub_status == 8) {
             return self::CREDIT_CATEGORY_SUBLOAN;
-        }else if($credit->instalment != $this->target->instalment) {
+        }else if($credit->instalment != $this->creditSheet->target->instalment) {
             return self::CREDIT_CATEGORY_CHANGE_LOAN;
         }else if(count($this->repayableTargets)) {
             return self::CREDIT_CATEGORY_INCREMENTAL_LOAN;
@@ -195,5 +190,6 @@ class PersonalBasicInfo implements BasicInfoBase {
     {
         return [];
     }
+
 
 }

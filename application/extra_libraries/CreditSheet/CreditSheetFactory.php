@@ -2,23 +2,30 @@
 namespace CreditSheet;
 use CreditSheet\BasicInfo\PersonalBasicInfo;
 use CreditSheet\BasicInfo\ArchivingPersonalBasicInfo;
+use CreditSheet\CreditLine\CreditLineInfo;
+use CreditSheet\CreditLine\ArchivingCreditLineInfo;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CreditSheetFactory {
     public static function getInstance($targetId) {
         $CI = &get_instance();
         $CI->load->model('user/user_model');
+        $CI->load->model('loan/credit_sheet_model');
+
         $target = $CI->target_model->get_by(['id'=>$targetId]);
         $user = $CI->user_model->get_by(['id'=> $target->user_id ?? 0]);
+        $creditSheetRecord = $CI->credit_sheet_model->get_by(['target_id' => $target->id]);
 
-        if($target->status != 0) {
+        if(isset($creditSheetRecord)) {
             // 已封存之個金授審表
-            $basicInfo = new ArchivingPersonalBasicInfo($target);
+            $basicInfo = new ArchivingPersonalBasicInfo();
+            $creditLineInfo = new ArchivingCreditLineInfo();
         }else{
             // 未封存之個金授審表
-            $basicInfo = new PersonalBasicInfo($target);
+            $basicInfo = new PersonalBasicInfo();
+            $creditLineInfo = new CreditLineInfo();
         }
-        return new PersonalCreditSheet($basicInfo);
+        return new PersonalCreditSheet($target, $user, $basicInfo, $creditLineInfo);
     }
 
 }

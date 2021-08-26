@@ -4,19 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
 
-    private $creditSheetRecord;
-    private $creditRecord;
-
-    function __construct($target)
+    function __construct()
     {
-        parent::__construct($target);
+        parent::__construct();
         $this->CI->load->model('user/user_certification_model');
-        $this->CI->load->model('loan/credit_sheet_model');
-        $this->CI->load->model('loan/credit_model');
-
-        $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id]);
-        if(isset($this->creditSheetRecord))
-            $this->creditRecord = $this->CI->credit_model->get_by(['id' => $this->creditSheetRecord->credit_id]);
     }
 
     /**
@@ -27,8 +18,8 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
     {
         $response = [];
 
-        if(isset($this->creditSheetRecord->certification_list))
-            $certificationIdList = json_decode($this->creditSheetRecord->certification_list,true);
+        if(isset($this->creditSheet->creditSheetRecord->certification_list))
+            $certificationIdList = json_decode($this->creditSheet->creditSheetRecord->certification_list,true);
 
         if(isset($certificationIdList) && is_array($certificationIdList)) {
             $certs = $this->CI->user_certification_model->get_many_by(['id' => $certificationIdList]);
@@ -41,7 +32,7 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
         }
 
         foreach ($this->certificationProcessList as $certId => $columnList) {
-            $response = array_merge($response, $this->getArchivingCertInfo(isset($certList[$certId]) ? $certList[$certId] : False, $columnList));
+            $response = array_merge($response, $this->getArchivingCertInfo($certList[$certId] ?? False, $columnList));
         }
         return $response;
     }
@@ -58,7 +49,7 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
         if($info) {
             $info->content = json_decode($info->content,true);
             foreach ($selectColumnList as $columnName) {
-                $result[$columnName] = isset($info->content[$columnName]) ? $info->content[$columnName] : '';
+                $result[$columnName] = $info->content[$columnName] ?? '';
                 if(is_numeric($result[$columnName]))
                     $result[$columnName] = intval($result[$columnName]);
             }
@@ -74,7 +65,7 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
      */
     protected function getReviewedLevel(): int
     {
-        if ($this->target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET) {
+        if ($this->creditSheet->target->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET) {
             // 二審過件
             return self::CREDIT_REVIEW_LEVEL_MANUAL;
         }else{
@@ -89,8 +80,8 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
      */
     protected function getReportDate(): string
     {
-        if(isset($this->creditSheetRecord->created_at))
-            return date("Y/m/d", strtotime($this->creditSheetRecord->created_at));
+        if(isset($this->creditSheet->creditSheetRecord->created_at))
+            return date("Y/m/d", strtotime($this->creditSheet->creditSheetRecord->created_at));
         else
             return '';
     }
@@ -101,8 +92,8 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
      */
     protected function getCreditDate(): string
     {
-        if(isset($this->creditRecord->created_at)) {
-            return date("Y/m/d", strtotime($this->creditRecord->created_at));
+        if(isset($this->creditSheet->creditRecord->created_at)) {
+            return date("Y/m/d", strtotime($this->creditSheet->creditRecord->created_at));
         }else
             return '';
     }
@@ -113,9 +104,6 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
      */
     protected function getCreditRank(): string
     {
-        if(isset($this->creditRecord->level)) {
-            return $this->creditRecord->level;
-        }else
-            return '';
+        return $this->creditSheet->creditRecord->level ?? '';
     }
 }
