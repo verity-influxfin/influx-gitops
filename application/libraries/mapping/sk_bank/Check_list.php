@@ -280,6 +280,11 @@ class Check_list
 				'location' => 'A02',
 				'raw_data_name' => ['front_image','back_image','healthcard_image']
 			],
+            // 公司資料表
+			'1018' => [
+				'location' => 'A03',
+				'raw_data_name' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership', 'RealHouseOwnership']
+			],
 			// 自然人連徵
 			'12' => [
 				'location' => 'A06',
