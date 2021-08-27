@@ -4,7 +4,7 @@ namespace Utility;
 class ViewCoverter extends ViewCoverterBase
 {
     public function chineseThousandUnit($number) : string {
-        return $number/1000 . "仟";
+        return intval($number)/1000 . "仟";
     }
 
     public function percentSymbol($number) : string {

@@ -45,7 +45,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         $this->creditLineInfo = $creditLineInfo;
         $this->creditLineInfo->setCreditSheet($this);
 
-        $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id]);
+        $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
         if(isset($this->creditSheetRecord))
             $this->creditRecord = $this->CI->credit_model->get_by(['id' => $this->creditSheetRecord->credit_id]);
 
