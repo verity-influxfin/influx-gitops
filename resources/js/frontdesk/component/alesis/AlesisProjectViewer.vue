@@ -32,7 +32,7 @@
             </div>
             <div class="分頁導覽">
                 <a @click="prevPage" class="項目">上一頁</a>
-                <a @click="jumpPage(page-1)" class="項目" v-for="page in (this.max_page < 10 ? this.max_page : 10)" :key="page">{{ page }}</a>
+                <a @click="jumpPage(p-1)" class="項目" :class="{'項目_啟用的': page === p-1}" v-for="p in (this.max_page < 10 ? this.max_page : 10)" :key="p">{{ p }}</a>
                 <a @click="nextPage" class="項目">下一頁</a>
             </div>
         </div>
@@ -242,7 +242,9 @@ export default {
     grid-template-columns: repeat(2, 1fr);
     gap                  : 3rem;
     margin-top           : 2rem;
-    flex-wrap: wrap;
+    flex-wrap            : wrap;
+    align-items          : center;
+    justify-content      : center;
 
     @include rwd {
         grid-template-columns: 1fr;
@@ -290,5 +292,10 @@ export default {
 
 .案件區塊 .包裹容器 .分頁導覽 .項目:last-child {
     border-right: 0;
+}
+
+.案件區塊 .包裹容器 .分頁導覽 .項目.項目_啟用的 {
+    background: #326398;
+    color     : #FFF;
 }
 </style>
