@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 use CreditSheet\CreditSheetFactory;
+use CreditSheet\CreditSheetBase;
 
 class Creditmanagement extends MY_Admin_Controller
 {
@@ -32,9 +33,8 @@ class Creditmanagement extends MY_Admin_Controller
 
         if(empty($this->target_id) || empty($this->type)){
             $this->json_output->setStatusCode(200)->setResponse(['parameter can not empty'])->send();
-        }else if(in_array($method, $this->api_method)) {
-            $this->creditSheet = CreditSheetFactory::getInstance($this->target_id);
         }
+        $this->creditSheet = CreditSheetFactory::getInstance($this->target_id);
 	}
 
     public function index()
@@ -46,31 +46,21 @@ class Creditmanagement extends MY_Admin_Controller
     }
 
     public function report(){
-        if($this->type == 'person'){
+        if($this->creditSheet->getType() == CreditSheetBase::TYPE_PERSONAL) {
             $this->load->view('admin/target/credit_management/person_report');
-        }
-        if($this->type == 'judicial'){
+        }else if($this->creditSheet->getType() == CreditSheetBase::TYPE_JUDICIAL) {
             $this->load->view('admin/target/judicial_reort');
         }
     }
 
     public function get_structural_data(){
-        $response = [];
-        $response['basicInfo']['reviewLevelList'] = $this->creditSheet->basicInfo->getReviewLevelList();
-        $response['basicInfo']['creditCategoryList'] = $this->creditSheet->basicInfo->getCreditCategoryList();
-
-        $response['creditLineInfo']['drawdownTypeList'] = $this->creditSheet->creditLineInfo->getDrawdownTypeList();
-        $response['creditLineInfo']['interestTypeList'] = $this->creditSheet->creditLineInfo->getInterestTypeList();
-        $response['creditLineInfo']['applyLineTypeList'] = $this->creditSheet->creditLineInfo->getApplyLineTypeList();
-        $response['creditLineInfo']['reviewerList'] = $this->creditSheet->creditLineInfo->getReviewerList();
-
+        $response = $this->creditSheet->getStructuralData();
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
     public function get_data(){
-        $response['basicInfo'] = $this->creditSheet->basicInfo->getBasicInfo();
-        $response['creditLineInfo'] = $this->creditSheet->creditLineInfo->getCreditLineInfo();
+        $response = $this->creditSheet->getData();
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }

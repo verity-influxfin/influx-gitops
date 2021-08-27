@@ -23,7 +23,7 @@ interface CreditLineBase
         self::INTEREST_TYPE_INTEREST_ONLY => "按月繳息，本金到期一次清償",
     ];
 
-    // 利息方式
+    // 申貸額度及條件
     public const APPLY_LINE_TYPE_SINGLE = 1;
     public const APPLY_LINE_TYPE_MIXED = 2;
     public const APPLY_LINE_TYPE_LIST = [

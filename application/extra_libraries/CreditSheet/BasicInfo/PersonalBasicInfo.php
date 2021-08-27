@@ -66,6 +66,17 @@ class PersonalBasicInfo implements BasicInfoBase {
         return self::CREDIT_REVIEW_LEVEL_LIST;
     }
 
+    public function getProductCategoryList(): array
+    {
+        $productList 	= $this->CI->config->item('product_list');
+        $allowProductList = array_filter($productList, function ($item) {
+            return in_array($item['id'], $this->creditSheet::ALLOW_PRODUCT_LIST);
+        });
+
+        return array_column($allowProductList, 'name', 'id');
+
+    }
+
     /**
      * 取得所需認證項目之對應數值
      * @return array

@@ -18,6 +18,8 @@ class PersonalCreditSheet extends CreditSheetBase {
 
     function __construct($target, $user, PersonalBasicInfo $personalBasicInfo, CreditLineInfo $creditLineInfo)
     {
+        $this->type = self::TYPE_PERSONAL;
+
         $this->target = $target;
         $this->user = $user;
 
@@ -36,6 +38,33 @@ class PersonalCreditSheet extends CreditSheetBase {
 
     }
 
+    /**
+     * 取得結構資料
+     * @return mixed
+     */
+    public function getStructuralData() {
+        $response = [];
+        $response['basicInfo']['reviewLevelList'] = $this->basicInfo->getReviewLevelList();
+        $response['basicInfo']['creditCategoryList'] = $this->basicInfo->getCreditCategoryList();
+        $response['basicInfo']['productCategoryList'] = $this->basicInfo->getProductCategoryList();
 
+        $response['creditLineInfo']['drawdownTypeList'] = $this->creditLineInfo->getDrawdownTypeList();
+        $response['creditLineInfo']['interestTypeList'] = $this->creditLineInfo->getInterestTypeList();
+        $response['creditLineInfo']['applyLineTypeList'] = $this->creditLineInfo->getApplyLineTypeList();
+        $response['creditLineInfo']['reviewerList'] = $this->creditLineInfo->getReviewerList();
 
+        return $response;
+    }
+
+    /**
+     * 取得資料
+     * @return mixed
+     */
+    public function getData(){
+        $response = [];
+        $response['basicInfo'] = $this->basicInfo->getBasicInfo();
+        $response['creditLineInfo'] = $this->creditLineInfo->getCreditLineInfo();
+
+        return $response;
+    }
 }

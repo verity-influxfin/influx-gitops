@@ -8,6 +8,8 @@ class ArchivingCreditLineInfo extends CreditLineInfo {
     function __construct()
     {
         parent::__construct();
+        $this->CI = &get_instance();
+        $this->CI->load->model('loan/credit_sheet_review_model');
     }
 
     /**
@@ -61,8 +63,23 @@ class ArchivingCreditLineInfo extends CreditLineInfo {
      * 取得已審查的資料列表
      * @return array
      */
-    public function getReviewerList(): array
+    public function getReviewedInfoList(): array
     {
-        // TODO: 取得授審紀錄的相關意見
+        $reviewerInfo = array_fill_keys(array_keys(self::REVIEWER_LIST), [
+            'name' => '',
+            'opinion' => '',
+            'score' => ''
+        ]);
+        $creditSheetReviewList = $this->CI->credit_sheet_review_model->get_many_by(
+            ['credit_sheet_id' => $this->creditSheet->creditSheetRecord->id]);
+        foreach ($creditSheetReviewList as $reviewer) {
+            $reviewerInfo[$reviewer->group] = [
+                'name' => $reviewer->name,
+                'opinion' => $reviewer->opinion,
+                'score' => $reviewer->score
+            ];
+        }
+
+        return $reviewerInfo;
     }
 }

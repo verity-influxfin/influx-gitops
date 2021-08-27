@@ -31,4 +31,5 @@ interface BasicInfoBase
     public function getBasicInfo() : array;
     public function getCreditCategoryList() : array;
     public function getReviewLevelList() : array;
+    public function getProductCategoryList() : array;
 }
