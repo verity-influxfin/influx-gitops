@@ -20,8 +20,7 @@ class Creditmanagement extends MY_Admin_Controller
 		parent::__construct();
 		$this->load->model('loan/target_model');
         $this->load->model('user/user_certification_model');
-        // $this->load->library('report/loan/Credit_management');
-
+   
         $input = $this->input->get(NULL, TRUE);
         $this->target_id = $input['target_id'] ?? '';
         $this->type = $input['type'] ?? '';
@@ -45,21 +44,17 @@ class Creditmanagement extends MY_Admin_Controller
         $this->load->view('admin/_footer');
     }
 
-    public function report(){
-        if($this->creditSheet->getType() == CreditSheetBase::TYPE_PERSONAL) {
-            $this->load->view('admin/target/credit_management/person_report');
-        }else if($this->creditSheet->getType() == CreditSheetBase::TYPE_JUDICIAL) {
-            $this->load->view('admin/target/judicial_reort');
-        }
+    public function report() {
+        $this->load->view($this->creditSheet->getViewPath());
     }
 
-    public function get_structural_data(){
+    public function get_structural_data() {
         $response = $this->creditSheet->getStructuralData();
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
-    public function get_data(){
+    public function get_data() {
         $response = $this->creditSheet->getData();
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
