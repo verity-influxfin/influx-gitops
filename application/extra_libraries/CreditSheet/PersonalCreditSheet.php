@@ -2,6 +2,7 @@
 namespace CreditSheet;
 use CreditSheet\BasicInfo\PersonalBasicInfo;
 use CreditSheet\CreditLine\CreditLineInfo;
+use Utility\ViewCoverter;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
@@ -30,7 +31,7 @@ class PersonalCreditSheet extends CreditSheetBase {
      */
     function __construct($target, $user, PersonalBasicInfo $personalBasicInfo, CreditLineInfo $creditLineInfo)
     {
-
+        $this->viewConverter = new ViewCoverter();
 
         $this->target = $target;
         $this->user = $user;

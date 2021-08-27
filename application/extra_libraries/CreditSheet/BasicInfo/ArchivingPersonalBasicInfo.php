@@ -93,7 +93,7 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
     protected function getCreditDate(): string
     {
         if(isset($this->creditSheet->creditRecord->created_at)) {
-            return date("Y/m/d", strtotime($this->creditSheet->creditRecord->created_at));
+            return date("Y/m/d", $this->creditSheet->creditRecord->created_at);
         }else
             return '';
     }

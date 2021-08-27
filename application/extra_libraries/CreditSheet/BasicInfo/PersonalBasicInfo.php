@@ -39,7 +39,7 @@ class PersonalBasicInfo implements BasicInfoBase {
             $response['productCategory'] = $this->getProductCategories();
             $response['creditCategory'] = $this->getCreditCategory();
             $response['reviewedLevel'] = $this->getReviewedLevel();
-            $response['reportDate'] = $this->getReportDate();
+            $response['reportDate'] = $this->creditSheet->viewConverter->dateSlashToChinese($this->getReportDate());
             $response['creditDate'] = $this->getCreditDate();
             $response['creditRank'] = $this->getCreditRank();
             $response['relation'] = $this->getRelation();

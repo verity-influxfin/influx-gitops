@@ -44,16 +44,17 @@ class CreditLineInfo implements CreditLineBase {
             foreach ($this->approvedCreditList as $creditRecord) {
                 $credit = [];
                 $credit['bookkeeping'] = $this->getBookkeepingType($creditRecord->instalment);
-                $credit['unusedCreditLine'] = $creditRecord->unused_credit_line;
-                $credit['instalment'] = $creditRecord->instalment;
-                $credit['interestRate'] = $creditRecord->interest_rate;
+                $credit['unusedCreditLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($creditRecord->unused_credit_line);
+                $credit['applyLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($creditRecord->amount);
+                $credit['instalment'] = $this->creditSheet->viewConverter->chineseMonthUnit($creditRecord->instalment);
+                $credit['interestRate'] = $this->creditSheet->viewConverter->percentSymbol($creditRecord->interest_rate);
                 $credit['interestType'] = $creditRecord->interest_type;
                 $credit['drawdownType'] = $creditRecord->drawdown_type;
                 $response['approvedCreditList'][] = $credit;
             }
 
-            $response['totalUnusedCreditLine'] = $this->getUnusedCreditLine();
-            $response['TotalApplyLine'] = $this->getTodayApplyLine();
+            $response['totalUnusedCreditLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($this->getUnusedCreditLine());
+            $response['totalApplyLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($this->getTodayApplyLine());
 
             $targets = $this->getTodayTargets();
             $reasonList = [];
@@ -65,7 +66,7 @@ class CreditLineInfo implements CreditLineBase {
             $response['reasonList'] = $reasonList;
             $response['paymentType'] = $this->getPaymentType();
             $response['otherCondition'] = $this->getOtherCondition();
-            $response['unusedCreditLine2'] = $this->getUnusedCreditLine();
+            $response['unusedCreditLine2'] = $this->creditSheet->viewConverter->chineseThousandUnit($this->getUnusedCreditLine());
             $response['reviewedInfoList'] = $this->getReviewedInfoList();
         }
         return $response;

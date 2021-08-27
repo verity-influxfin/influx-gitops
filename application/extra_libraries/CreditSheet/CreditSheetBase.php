@@ -15,6 +15,9 @@ abstract class CreditSheetBase
         self::TYPE_JUDICIAL => "judicial",
     ];
 
+    // 顯示欄位的轉換器
+    public $viewConverter;
+
     // 授審表類型
     protected $type;
 
