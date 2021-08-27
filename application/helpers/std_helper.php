@@ -356,4 +356,33 @@
 			$arr
 		);
 	}
+
+	function is_image($file_type)
+	{
+		// IE will sometimes return odd mime-types during upload, so here we just standardize all
+		// jpegs or pngs to the same file type.
+
+		$png_mimes  = array('image/x-png');
+		$jpeg_mimes = array('image/jpg', 'image/jpe', 'image/jpeg', 'image/pjpeg');
+
+		if (in_array($file_type, $png_mimes))
+		{
+			$file_type = 'image/png';
+		}
+		elseif (in_array($file_type, $jpeg_mimes))
+		{
+			$file_type = 'image/jpeg';
+		}
+
+		$img_mimes = array('image/gif',	'image/jpeg', 'image/png');
+
+		return in_array($file_type, $img_mimes, TRUE);
+	}
+
+	function is_pdf($file_type)
+	{
+		$pdf_mimes = array('application/pdf');
+
+		return in_array($file_type, $pdf_mimes, TRUE);
+	}
 ?>
