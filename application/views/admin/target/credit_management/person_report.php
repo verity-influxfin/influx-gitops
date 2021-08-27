@@ -10,6 +10,9 @@
             span {
                 white-space: nowrap;
             }
+            .is-line-up {
+                display: flex;
+            }
             .btn {
                 width: 30px;
                 height: 30px;
@@ -74,20 +77,15 @@
                         <p>單位：新台幣千元</p>
                     </div>
                     <div>
-                        <form>
-                            <input type="radio" name="case-type" checked>新案
-                            <input type="radio" name="case-type">增貸
-                            <input type="radio" name="case-type">續約
-                            <input type="radio" name="case-type">改貸
-                            <input type="radio" name="case-type">產品轉換
+                        <!-- 案件類型 -->
+                        <form id="creditCategoryList" class="is-line-up">
                         </form>
                     </div>
                     <div>
-                        <p>
-                            本件核貸層次：<input type="radio" name="action-user">二審人員
-                            <input type="radio" name="action-user">風控長
-                            <input type="radio" name="action-user">總經理
-                        </p>
+                        <!-- 審核人員 -->
+                        <form id="reviewLevelList" class="is-line-up">
+                            <span>本件核貸層次：</span>
+                        </form>
                     </div>
                     <table class="table">
                         <tbody>
@@ -98,8 +96,8 @@
                                 </td>
                                 <td colspan="2" rowspan="2">
 									<form name="user_type">
-										<div><input type="radio" value="1" name="user_type_radio"><span>學生</span></div>
-	                                    <div><input type="radio" value="2" name="user_type_radio"><span>上班族</span></div>
+										<div><input type="radio" value="1" name="user_type_radio"><span>個人</span></div>
+	                                    <div><input type="radio" value="2" name="user_type_radio"><span>法人</span></div>
 									</form>
                                 </td>
                                 <td rowspan="2"><span>戶籍地址</span></td>
@@ -148,12 +146,11 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4"><span>產品類別：</span>
-                                    <div><input type="radio" name="is-credit-guarantee" checked><span>學生貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>學生工程師貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>上班族貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>上班族工程師貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>上班族簡易速貸</span></div>
+                                <!-- 產品類別： -->
+                                <td colspan="4">
+                                    <span>產品類別：</span>
+                                    <form id="productCategoryList">
+                                    </form>
                                 </td>
                                 <td><span>信評等級</span></td>
                                 <td>
@@ -174,8 +171,8 @@
                             <tr>
                                 <td><span>申貸額度及條件</span></td>
                                 <td>
-                                    <input type="radio" name="quota-type" checked><span>單項額度</span><br>
-                                    <input type="radio" name="quota-type"><span>綜合額度</span>
+                                    <form id="applyLineTypeList">
+                                    </form>
                                 </td>
                                 <td>額度合計</td>
                                 <td colspan="2"><input type="text" id="total_amount"></td>
@@ -452,6 +449,46 @@
             ctx.lineTo(0, item.height);
             ctx.stroke();
         });
+
+        // 授審表選單項目html
+        function create_item_option_html(type,name,option_name){
+            return `<div><input type="${type}" name="${name}" checked><span>${option_name}</span></div>`;
+        }
+
+        // 取得授審表選單項目
+        function get_default_item(target_id,type){
+            let report_item = {};
+            $.ajax({
+                type: "GET",
+                url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=${type}`,
+                async: false,
+                success: function (response) {
+                    report_item = response.response;
+                },
+                error: function(error) {
+                    alert(error);
+                }
+            });
+            return report_item;
+        }
+
+        // 取得案件資料
+        function get_report_data(target_id,type){
+            let report_data = {};
+            $.ajax({
+                type: "GET",
+                url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=${type}`,
+                async: false,
+                success: function (response) {
+                    report_data = response.response;
+                },
+                error: function(error) {
+                    alert(error);
+                }
+            });
+            return report_data;
+        }
+
         $(document).ready(function () {
           let urlString = window.location.href;
           let url = new URL(urlString);
@@ -459,59 +496,83 @@
           let type = url.searchParams.get("type");
 		  let td_array = ['relationship','loan_list','loan_total'];
 
-          $.ajax({
-              type: "GET",
-              url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=${type}`,
-              success: function (response) {
-                  if (!response) {
-                      alert(response);
-                      return;
-                  }
-                  // console.log(response);
-                  // return
-                  if(response.response){
-                    Object.keys(response.response).forEach(function (key) {
-						// console.log(key);
-						if( td_array.includes(key)){
-							if(Array.isArray(response.response[key])){
-								// console.log(response.response[key]);
-								Object.keys(response.response[key]).forEach(function (key1) {
-									// console.log(response.response[key][key1]);
-									html_id = key;
-									td_string = '<tr>';
-									Object.keys(response.response[key][key1]).forEach(function (key2) {
-										td_string += `<td><input type="text" value="${response.response[key][key1][key2]}"></td>`;
-									})
-									if(key == 'loan_total' && key1 == 0){
-										html_id = key + '0';
-										td_string += `<td><input type="text"></td><td><input type="text"></td>`;
-									}
-									if(key == 'loan_total' && key1 == 1){
-										html_id = key + '1';
-										td_string += `<td colspan="2" rowspan="$param" style="vertical-align:text-top;">
-											<div>其他說明:</div>
-											<div><input type="text"></div>
-										</td>`;
-									}
-									// console.log(response.response[key][key1][key2]);
-									td_string += '</tr>';
-									$(`#${html_id}`).append(td_string);
-								})
-							}
-						}else{
-							if(key == 'company_type'){
-								document.company_type.company_type_radio.value=response.response[key];
-							}else{
-								$(`#${key}`).val(response.response[key]);
-							}
-						}
-                    })
-                  }
-              },
-              error: function(error) {
-                  alert(response);
-              }
-          });
+          report_item = get_default_item(target_id,type);
+
+          if(jQuery.isEmptyObject(report_item)){
+              alert('無法取得項目選單，請聯絡開發人員');
+              return;
+          }
+
+          Object.keys(report_item).forEach(function (area_name) {
+              Object.keys(report_item[area_name]).forEach(function (form_title) {
+                  Object.keys(report_item[area_name][form_title]).forEach(function (form_option) {
+                      if(form_title == 'productCategoryList'){
+                          type = 'checkbox';
+                      }else{
+                          type = 'radio';
+                      }
+                      option_html = create_item_option_html(type,form_title + type,report_item[area_name][form_title][form_option]);
+                      $(`#${form_title}`).append(option_html);
+                  })
+              })
+          })
+
+          report_data = get_report_data(target_id,type);
+
+          if(jQuery.isEmptyObject(report_data)){
+              alert('無法取得受審表資料，請聯絡開發人員');
+              return;
+          }
+
+          console.log(report_data);
+          return;
+          // $.ajax({
+          //     type: "GET",
+          //     url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=${type}`,
+          //     success: function (response) {
+          //         if (!response) {
+          //             alert(response);
+          //             return;
+          //         }
+          //         if(response.response){
+          //           Object.keys(response.response).forEach(function (key) {
+			// 			if( td_array.includes(key)){
+			// 				if(Array.isArray(response.response[key])){
+			// 					Object.keys(response.response[key]).forEach(function (key1) {
+			// 						html_id = key;
+			// 						td_string = '<tr>';
+			// 						Object.keys(response.response[key][key1]).forEach(function (key2) {
+			// 							td_string += `<td><input type="text" value="${response.response[key][key1][key2]}"></td>`;
+			// 						})
+			// 						if(key == 'loan_total' && key1 == 0){
+			// 							html_id = key + '0';
+			// 							td_string += `<td><input type="text"></td><td><input type="text"></td>`;
+			// 						}
+			// 						if(key == 'loan_total' && key1 == 1){
+			// 							html_id = key + '1';
+			// 							td_string += `<td colspan="2" rowspan="$param" style="vertical-align:text-top;">
+			// 								<div>其他說明:</div>
+			// 								<div><input type="text"></div>
+			// 							</td>`;
+			// 						}
+			// 						td_string += '</tr>';
+			// 						$(`#${html_id}`).append(td_string);
+			// 					})
+			// 				}
+			// 			}else{
+			// 				if(key == 'company_type'){
+			// 					document.company_type.company_type_radio.value=response.response[key];
+			// 				}else{
+			// 					$(`#${key}`).val(response.response[key]);
+			// 				}
+			// 			}
+          //           })
+          //         }
+          //     },
+          //     error: function(error) {
+          //         alert(response);
+          //     }
+          // });
         });
     </script>
 
