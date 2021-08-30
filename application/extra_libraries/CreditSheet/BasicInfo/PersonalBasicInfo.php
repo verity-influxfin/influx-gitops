@@ -1,10 +1,11 @@
 <?php
 namespace CreditSheet\BasicInfo;
+use CreditSheet\CreditSheetDefinition;
 use CreditSheet\CreditSheetTrait;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class PersonalBasicInfo implements BasicInfoBase {
+class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
     use CreditSheetTrait;
 
     protected $repayableTargets;
@@ -39,7 +40,7 @@ class PersonalBasicInfo implements BasicInfoBase {
             $response['productCategory'] = $this->getProductCategories();
             $response['creditCategory'] = $this->getCreditCategory();
             $response['reviewedLevel'] = $this->getReviewedLevel();
-            $response['reportDate'] = $this->creditSheet->viewConverter->dateSlashToChinese($this->getReportDate());
+            $response['reportDate'] = $this->creditSheet->viewConverter->dateFormatToChinese($this->getReportDate());
             $response['creditDate'] = $this->getCreditDate();
             $response['creditRank'] = $this->getCreditRank();
             $response['relation'] = $this->getRelation();

@@ -4,6 +4,8 @@ use CreditSheet\BasicInfo\PersonalBasicInfo;
 use CreditSheet\BasicInfo\ArchivingPersonalBasicInfo;
 use CreditSheet\CreditLine\CreditLineInfo;
 use CreditSheet\CreditLine\ArchivingCreditLineInfo;
+use CreditSheet\CashLoan\CashLoanInfo;
+use CreditSheet\CashLoan\ArchivingCashLoanInfo;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CreditSheetFactory {
@@ -20,12 +22,14 @@ class CreditSheetFactory {
             // 已封存之個金授審表
             $basicInfo = new ArchivingPersonalBasicInfo();
             $creditLineInfo = new ArchivingCreditLineInfo();
+            $cashLoanInfo = new ArchivingCashLoanInfo();
         }else{
             // 未封存之個金授審表
             $basicInfo = new PersonalBasicInfo();
             $creditLineInfo = new CreditLineInfo();
+            $cashLoanInfo = new CashLoanInfo();
         }
-        return new PersonalCreditSheet($target, $user, $basicInfo, $creditLineInfo);
+        return new PersonalCreditSheet($target, $user, $basicInfo, $creditLineInfo, $cashLoanInfo);
     }
 
 }

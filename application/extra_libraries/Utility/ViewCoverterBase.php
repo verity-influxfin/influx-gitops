@@ -5,11 +5,11 @@ abstract class ViewCoverterBase
 {
 
     /**
-     * 把數字轉換為 x 仟
+     * 把數字轉換為仟元
      * @param $number
      * @return string
      */
-    public function chineseThousandUnit($number) : string { return $number; }
+    public function thousandUnit($number) : string { return $number; }
 
     /**
      * 把數字加上 % 符號
@@ -23,7 +23,7 @@ abstract class ViewCoverterBase
      * @param string
      * @return string
      */
-    public function dateSlashToChinese(string $date) : string { return $date; }
+    public function dateFormatToChinese(string $date) : string { return $date; }
 
     /**
      * 把月加上中文月份單位

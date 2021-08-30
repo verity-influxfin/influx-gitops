@@ -1,12 +1,12 @@
 <?php
 namespace CreditSheet\CreditLine;
+use CreditSheet\CreditSheetDefinition;
 use CreditSheet\CreditSheetTrait;
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class CreditLineInfo implements CreditLineBase {
+class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
     use CreditSheetTrait;
-    use CreditLineTrait;
 
     protected $CI;
 
@@ -35,17 +35,17 @@ class CreditLineInfo implements CreditLineBase {
         if(isset($this->creditSheet->target)) {
             $this->approvedCreditList = $this->getApprovedCreditList();
 
-            $response['unusedCreditLine'] = $this->getUnusedCreditLine();
+            $response['unusedCreditLine'] = $this->creditSheet->viewConverter->thousandUnit($this->getUnusedCreditLine());
             $response['applyLineType'] = $this->getApplyLineType();
-            $response['todayApplyLine'] = $this->getTodayApplyLine();
+            $response['todayApplyLine'] = $this->creditSheet->viewConverter->thousandUnit($this->getTodayApplyLine());
             $response['creditLineExpiredDate'] = $this->getCreditLineExpiredDate();
 
             $response['approvedCreditList'] = [];
             foreach ($this->approvedCreditList as $creditRecord) {
                 $credit = [];
                 $credit['bookkeeping'] = $this->getBookkeepingType($creditRecord->instalment);
-                $credit['unusedCreditLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($creditRecord->unused_credit_line);
-                $credit['applyLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($creditRecord->amount);
+                $credit['unusedCreditLine'] = $this->creditSheet->viewConverter->thousandUnit($creditRecord->unused_credit_line);
+                $credit['applyLine'] = $this->creditSheet->viewConverter->thousandUnit($creditRecord->amount);
                 $credit['instalment'] = $this->creditSheet->viewConverter->chineseMonthUnit($creditRecord->instalment);
                 $credit['interestRate'] = $this->creditSheet->viewConverter->percentSymbol($creditRecord->interest_rate);
                 $credit['interestType'] = $creditRecord->interest_type;
@@ -53,8 +53,8 @@ class CreditLineInfo implements CreditLineBase {
                 $response['approvedCreditList'][] = $credit;
             }
 
-            $response['totalUnusedCreditLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($this->getUnusedCreditLine());
-            $response['totalApplyLine'] = $this->creditSheet->viewConverter->chineseThousandUnit($this->getTodayApplyLine());
+            $response['totalUnusedCreditLine'] = $this->creditSheet->viewConverter->thousandUnit($this->getUnusedCreditLine());
+            $response['totalApplyLine'] = $this->creditSheet->viewConverter->thousandUnit($this->getTodayApplyLine());
 
             $targets = $this->getTodayTargets();
             $reasonList = [];
@@ -66,7 +66,7 @@ class CreditLineInfo implements CreditLineBase {
             $response['reasonList'] = $reasonList;
             $response['paymentType'] = $this->getPaymentType();
             $response['otherCondition'] = $this->getOtherCondition();
-            $response['unusedCreditLine2'] = $this->creditSheet->viewConverter->chineseThousandUnit($this->getUnusedCreditLine());
+            $response['unusedCreditLine2'] = $this->creditSheet->viewConverter->thousandUnit($this->getUnusedCreditLine());
             $response['reviewedInfoList'] = $this->getReviewedInfoList();
         }
         return $response;
@@ -180,42 +180,6 @@ class CreditLineInfo implements CreditLineBase {
     public function getOtherCondition(): string
     {
         return '需在額度核准後2個月內動用';
-    }
-
-    protected function _getApprovedCreditList($endDate): array {
-        return $this->CI->credit_sheet_model->getCreditSheetWithTarget(
-            [
-                'user_id' => $this->creditSheet->user->id,
-            ],
-            [
-                'created_at <=' => $endDate
-            ]
-        );
-
-//        return $this->CI->target_model->getLastPaymentDate(
-//            [
-//                'user_id' => $this->creditSheet->basicInfo->user->id,
-//                'status' => 5
-//            ],
-//            [
-//                'tra.source' => SOURCE_AR_PRINCIPAL,
-//                'tra.status' => 1,
-//                't.instalment' => 'tra.instalment_no'
-//            ]
-//        );
-
-    }
-
-    public function _getTodayTargets($startDate, $endDate) {
-        return $this->CI->credit_sheet_model->getCreditSheetWithTarget(
-            [
-                'user_id' => $this->creditSheet->user->id,
-            ],
-            [
-                'created_at >=' => $startDate,
-                'created_at <=' => $endDate
-            ]
-        );
     }
 
     /**

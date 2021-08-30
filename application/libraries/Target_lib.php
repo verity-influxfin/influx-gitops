@@ -2033,4 +2033,51 @@ class Target_lib
         }
         return $legal_collection;
     }
+
+    /**
+     * 取得第一期還款日
+     * @param $loanDate: 借貸日期
+     * @param $formatId: 合約格式編號
+     * @return string
+     */
+    public function getFirstPaymentDate($loanDate, $formatId): string {
+        $increasedMonth = 0;
+        $day = date('d', strtotime($loanDate));
+        if($day === false)
+            return $loanDate;
+
+        switch ($formatId) {
+            // 借貸契約
+            case 1:
+                if (intval($day <= 10))
+                    $increasedMonth = 1;
+                else
+                    $increasedMonth = 2;
+
+                break;
+        }
+        return date('Y-m-10', strtotime("+".$increasedMonth." months",
+            strtotime($loanDate)));
+    }
+
+    /**
+     * 取得最後一期還款日
+     * @param $loanDate: 借貸日期
+     * @param $formatId: 合約格式編號
+     * @param $instalment: 借款期數
+     * @return string
+     */
+    public function getLastPaymentDate($loanDate, $formatId, $instalment): string {
+        $date = "";
+        $firstPaymentDate = $this->getFirstPaymentDate($loanDate, $formatId);
+
+        switch ($formatId) {
+            // 借貸契約
+            case 1:
+                $date = date('Y-m-d', strtotime("+".($instalment-1)." months",
+                    strtotime($firstPaymentDate)));
+                break;
+        }
+        return $date;
+    }
 }

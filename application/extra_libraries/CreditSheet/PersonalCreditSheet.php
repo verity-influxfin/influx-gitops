@@ -1,6 +1,7 @@
 <?php
 namespace CreditSheet;
 use CreditSheet\BasicInfo\PersonalBasicInfo;
+use CreditSheet\CashLoan\CashLoanInfo;
 use CreditSheet\CreditLine\CreditLineInfo;
 use Utility\ViewCoverter;
 
@@ -9,6 +10,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class PersonalCreditSheet extends CreditSheetBase {
     public $basicInfo;
     public $creditLineInfo;
+    public $cashLoanInfo;
+
     public $target;
     public $user;
     protected $CI;
@@ -22,6 +25,8 @@ class PersonalCreditSheet extends CreditSheetBase {
     // 允許承作的產品類別列表
     public const ALLOW_PRODUCT_LIST = [1, 3];
 
+
+
     /**
      * PersonalCreditSheet constructor.
      * @param $target
@@ -29,15 +34,19 @@ class PersonalCreditSheet extends CreditSheetBase {
      * @param PersonalBasicInfo $personalBasicInfo
      * @param CreditLineInfo $creditLineInfo
      */
-    function __construct($target, $user, PersonalBasicInfo $personalBasicInfo, CreditLineInfo $creditLineInfo)
+    function __construct($target, $user, PersonalBasicInfo $personalBasicInfo, CreditLineInfo $creditLineInfo, CashLoanInfo $cashLoanInfo)
     {
+        $this->CI = &get_instance();
+        $this->CI->load->model('loan/credit_sheet_model');
+
         $this->viewConverter = new ViewCoverter();
 
         $this->target = $target;
         $this->user = $user;
 
-        $this->CI = &get_instance();
-        $this->CI->load->model('loan/credit_sheet_model');
+        $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
+        if(isset($this->creditSheetRecord))
+            $this->creditRecord = $this->CI->credit_model->get_by(['id' => $this->creditSheetRecord->credit_id]);
 
         $this->basicInfo = $personalBasicInfo;
         $this->basicInfo->setCreditSheet($this);
@@ -45,10 +54,8 @@ class PersonalCreditSheet extends CreditSheetBase {
         $this->creditLineInfo = $creditLineInfo;
         $this->creditLineInfo->setCreditSheet($this);
 
-        $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
-        if(isset($this->creditSheetRecord))
-            $this->creditRecord = $this->CI->credit_model->get_by(['id' => $this->creditSheetRecord->credit_id]);
-
+        $this->cashLoanInfo = $cashLoanInfo;
+        $this->cashLoanInfo->setCreditSheet($this);
     }
 
     /**
@@ -87,6 +94,7 @@ class PersonalCreditSheet extends CreditSheetBase {
         $response = [];
         $response['basicInfo'] = $this->basicInfo->getBasicInfo();
         $response['creditLineInfo'] = $this->creditLineInfo->getCreditLineInfo();
+        $response['cashLoanInfo'] = $this->cashLoanInfo->getCashLoanInfo();
 
         return $response;
     }
