@@ -381,7 +381,6 @@
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <alesis-shanghai></alesis-shanghai>
-                    <alesis-obankcard></alesis-obankcard>
                 </div>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>

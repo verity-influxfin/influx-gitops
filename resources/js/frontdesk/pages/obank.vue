@@ -254,6 +254,7 @@ export default {
             justify-content: center;
             background-color: #ffffff;
             height: 50px;
+            border-radius: initial;
         }
 
         .obank-notice-list {
@@ -401,9 +402,17 @@ export default {
             }
             .obank-table {
                 div {
-                  margin: 2px 1px 1px 2px;
+                  margin: 2px 10px 1px 10px;
                   white-space:initial;
                 }
+
+                span {
+                  display: initial;
+                  font-size: 10px;
+                }
+            }
+
+            .obank-notice-list {
 
                 span {
                   display: initial;
