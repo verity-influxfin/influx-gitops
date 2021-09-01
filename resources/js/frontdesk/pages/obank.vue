@@ -1,7 +1,7 @@
 <template>
   <div class="bank-wrapper" id="bank-wrapper">
       <div class="content-top obank-top">
-        <a class="btn send-btn obank-send-btn obank-banner-btn" href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" target="_blank"></a>
+        <a class="btn send-btn obank-send-btn obank-banner-btn" href="https://www.o-bank.com/ebank/apps/services/www/ibmb/desktopbrowser/default/indexs.html?product=LN.PL.TERM.LOAN.BP&productGroup=PERSONAL.LOANS&project=112111S&campaign=UPL&txn=FLN03003&requestType=400&SourceCode=InFlux-Loan&CampaignCode=R-PL2021071601" target="_blank"></a>
       </div>
     <div class="obank-form">
         <div class="event-form">
@@ -77,9 +77,9 @@
                 </table>
             </div>
             <div class="input-group obank-down-btn" style="margin: 3vw auto 3vw auto;">
-              <a class="btn send-btn obank-send-btn" href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" target="_blank" style="display: flex;justify-content: center; margin: 0px auto;"></a>
+              <a class="btn send-btn obank-send-btn" href="https://www.o-bank.com/ebank/apps/services/www/ibmb/desktopbrowser/default/indexs.html?product=LN.PL.TERM.LOAN.BP&productGroup=PERSONAL.LOANS&project=112111S&campaign=UPL&txn=FLN03003&requestType=400&SourceCode=InFlux-Loan&CampaignCode=R-PL2021071601" target="_blank" style="display: flex;justify-content: center; margin: 0px auto;"></a>
             </div>
-            <div class="input-group" style="margin: 3vw auto;">
+            <div class="input-group" style="margin: 3vw auto;border-radius: initial;">
                 <a type="button" @click="click_notice()" class="obank-notice">
                 <div>注意事項</div>
                 <svg id="plus" style="margin-left: 10px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
@@ -407,7 +407,7 @@ export default {
 
                 span {
                   display: initial;
-                  font-size: 5px;
+                  font-size: 10px;
                 }
             }
 
