@@ -888,7 +888,7 @@ export default {
         @include rwd {
             top: 37%;
             bottom: 0;
-            left: 12%;
+            left: 14%;
             right: 0;
             height: 2rem;
             width: 18rem;

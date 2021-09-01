@@ -47,7 +47,7 @@ export default {
     border-radius: 17px;
     border       : 1px solid #2664a5;
     padding      : 1.5rem 1.25rem;
-    max-width    : 380px;
+    width    : 380px;
     text-align   : justify;
     font-size    : 1.3rem;
     margin-right: 50px;
@@ -57,6 +57,7 @@ export default {
         font-size: 1.1rem;
         margin-bottom: 10px;
         margin-righ: unset;
+        max-width: 80vw;
     }
 
     .商標 {
