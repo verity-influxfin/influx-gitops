@@ -36,10 +36,10 @@
                     <img src="/images/oBankIndexBannerM.jpg" class="旗幟圖片 旗幟圖片_手機的">
 
                     <div class="王道銀行功能">
-                        <a href="/obank" class="連結" target= _blank>
+                        <a href="/obank" class="連結" target="_blank">
                             <img src="/images/oBankIndexButtonLeft.svg">
                         </a>
-                        <a href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" class="連結" target= _blank>
+                        <a href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" class="連結" target="_blank">
                             <img src="/images/oBankIndexButtonRight.svg">
                         </a>
                     </div>

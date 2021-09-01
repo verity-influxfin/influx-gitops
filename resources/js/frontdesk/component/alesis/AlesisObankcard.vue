@@ -9,11 +9,11 @@
                 <div class="項目">開辦費只要1999元</div>
             </div>
             <div class="動作群組">
-                <a class="動作" href="/obank">
+                <a class="動作" href="/obank" target="_blank">
                     <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">了解更多</alesis-button>
                 </a>
 
-                <a class="動作" href="javascript:;">
+                <a class="動作" href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" target="_blank">
                     <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">取得資格</alesis-button>
                 </a>
             </div>
