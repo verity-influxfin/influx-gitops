@@ -1,6 +1,6 @@
 <template>
     <div class="王道容器">
-        <img class="商標" src="/images/oBankBottom.svg">
+        <img class="商標" src="/images/oBankBottom.svg" style="height: 33px;width: 243px;">
         <div class="分隔線"></div>
         <template>
             <div class="特色清單">
@@ -9,11 +9,11 @@
                 <div class="項目">開辦費只要1999元</div>
             </div>
             <div class="動作群組">
-                <a class="動作" href="/obank">
+                <a class="動作" href="/obank" target="_blank">
                     <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">了解更多</alesis-button>
                 </a>
 
-                <a class="動作" href="javascript:;">
+                <a class="動作" href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" target="_blank">
                     <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">取得資格</alesis-button>
                 </a>
             </div>
@@ -33,37 +33,6 @@ export default {
     data() {
     },
     mounted() {
-
-        // 管理與財經
-        this.workCategories.n = this.workCategories.n.map(v => {
-            this.flattenWorkCategories.push({
-                disabled: true,
-                title: v.des,
-                value: "",
-            })
-
-            // 經營幕僚
-            v.n = v.n.map((j) => {
-                j.des = `　　${j.des}`
-                this.flattenWorkCategories.push({
-                    disabled: true,
-                    title: j.des,
-                    value: "",
-                })
-                // 儲備幹部
-                j.n = j.n.map((l, k) => {
-                    l.des = `　　　　${l.des}`
-                    this.flattenWorkCategories.push({
-                        disabled: false,
-                        title: l.des,
-                        value: l.no,
-                    })
-                    return l
-                })
-                return j
-            })
-            return v
-        });
     },
     methods: {
     }
@@ -81,11 +50,14 @@ export default {
     width    : 380px;
     text-align   : justify;
     font-size    : 1.3rem;
-    margin-left: 50px;
+    margin-right: 50px;
 
     @include rwd {
         padding  : 1.5rem 1.25rem;
         font-size: 1.1rem;
+        margin-bottom: 10px;
+        margin-righ: unset;
+        max-width: 80vw;
     }
 
     .商標 {

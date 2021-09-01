@@ -32,6 +32,19 @@
                     </a>
                 </div>
                 <div class="swiper-slide">
+                    <img src="/images/oBankIndexBanner.jpg" class="旗幟圖片">
+                    <img src="/images/oBankIndexBannerM.jpg" class="旗幟圖片 旗幟圖片_手機的">
+
+                    <div class="王道銀行功能">
+                        <a href="/obank" class="連結" target="_blank">
+                            <img src="/images/oBankIndexButtonLeft.svg">
+                        </a>
+                        <a href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" class="連結" target="_blank">
+                            <img src="/images/oBankIndexButtonRight.svg">
+                        </a>
+                    </div>
+                </div>
+                <div class="swiper-slide">
                     <img src="/images/skBankIndex.jpg" class="旗幟圖片">
                     <img src="/images/skBankIndexM.jpg" class="旗幟圖片 旗幟圖片_手機的">
                     <div class="新光銀行功能">
@@ -380,6 +393,7 @@
                 <alesis-space size="tiny"></alesis-space>
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
+                    <alesis-obankcard></alesis-obankcard>
                     <alesis-shanghai></alesis-shanghai>
                 </div>
                 <alesis-space size="medium"></alesis-space>
@@ -856,6 +870,38 @@ export default {
             width  : 28vw;
         }
     }
+
+    .王道銀行功能 {
+        position       : absolute;
+        z-index        : 100;
+        gap            : 5rem;
+        top            : initial;
+        bottom         : 3rem;
+        left           : 96%;
+        right          : initial;
+        width          : 34vw;
+        transform      : translateX(-113%);
+        align-items    : flex-end;
+        justify-content: center;
+        display        : flex;
+
+        @include rwd {
+            top: 37%;
+            bottom: 0;
+            left: 14%;
+            right: 0;
+            height: 2rem;
+            width: 18rem;
+            transform: translateX(0);
+            align-items: center;
+            gap: 1rem;
+        }
+        .連結 {
+            display: block;
+            width  : 28vw;
+        }
+    }
+
 }
 
 
@@ -1247,6 +1293,9 @@ export default {
     align-items    : center;
     justify-content: center;
     margin         : 0 0;
+    @include rwd {
+        display: unset;
+    }
 }
 
 /**

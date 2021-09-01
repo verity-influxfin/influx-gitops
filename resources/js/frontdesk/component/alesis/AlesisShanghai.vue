@@ -311,13 +311,14 @@ export default {
         border-radius: 17px;
         border       : 1px solid #2664a5;
         padding      : 1.5rem 1.25rem;
-        max-width    : 380px;
+        width    : 380px;
         text-align   : justify;
         font-size    : 1.3rem;
 
         @include rwd {
             padding  : 1.5rem 1.25rem;
             font-size: 1.1rem;
+            max-width: 80vw;
         }
 
         .商標 {
