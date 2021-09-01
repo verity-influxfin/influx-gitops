@@ -16,7 +16,7 @@ class CreditSheetFactory {
 
         $target = $CI->target_model->get_by(['id'=>$targetId]);
         $user = $CI->user_model->get_by(['id'=> $target->user_id ?? 0]);
-        $creditSheetRecord = $CI->credit_sheet_model->get_by(['target_id' => $target->id ?? 0]);
+        $creditSheetRecord = $CI->credit_sheet_model->get_by(['target_id' => $target->id ?? 0, 'status' => 1]);
 
         if(isset($creditSheetRecord)) {
             // 已封存之個金授審表

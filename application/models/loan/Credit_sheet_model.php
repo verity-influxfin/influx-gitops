@@ -18,14 +18,14 @@ class Credit_sheet_model extends MY_Model
 	
 	protected function before_data_c($data)
     {
-        $data['created_at'] 	= $data['updated_at'] = time();
+        $data['created_at'] 	= $data['updated_at'] = date('Y-m-d H:i:s');
         $data['created_ip'] 	= $data['updated_ip'] = get_ip();
         return $data;
     }
 	
 	protected function before_data_u($data)
     {
-        $data['updated_at'] = time();
+        $data['updated_at'] = date('Y-m-d H:i:s');
         $data['updated_ip'] = get_ip();
         return $data;
     }
@@ -53,5 +53,21 @@ class Credit_sheet_model extends MY_Model
             ->join("($subquery2) as `t`", "`t`.`id` = `cs`.`target_id`")
             ->order_by('cs.created_at', 'desc');
         return $this->db->get()->result();
+    }
+
+    public function insertWhenEmpty($insertData, $condition) {
+        $this->db
+            ->select('*')
+            ->from('`p2p_loan`.`credit_sheet`')
+            ->where($condition);
+        $subQuery = $this->db->get_compiled_select('', TRUE);
+        $keys = array_keys($insertData);
+        $values = array_values($insertData);
+        $sql = 'INSERT INTO `p2p_loan`.`credit_sheet` ('.
+            implode(', ', $keys).') SELECT '.
+            implode(', ', array_fill(0, count($values), '?')).
+            " WHERE NOT EXISTS ($subQuery)";
+
+        return $this->db->query($sql, $values);
     }
 }
