@@ -11,10 +11,13 @@
                 </div>
                 <div class="分類">
                     <a @click="category('all')" class="項目" :class="{'項目_啟用的': current_category === 'all'}">全部</a>
-                    <a @click="category('member')" class="項目" :class="{'項目_啟用的': current_category === 'member'}">會員訊息</a>
-                    <a @click="category('borrow')" class="項目" :class="{'項目_啟用的': current_category === 'borrow'}">借款</a>
-                    <a @click="category('invest')" class="項目" :class="{'項目_啟用的': current_category === 'invest'}">投資</a>
-                    <a @click="category('default')" class="項目" :class="{'項目_啟用的': current_category === 'default'}">還款</a>
+                    <a @click="category('product')" class="項目" :class="{'項目_啟用的': current_category === 'product'}">產品相關</a>
+                    <a @click="category('product_apply')" class="項目" :class="{'項目_啟用的': current_category === 'product_apply'}">申請相關</a>
+                    <a @click="category('cost')" class="項目" :class="{'項目_啟用的': current_category === 'cost'}">費用相關</a>
+                    <a @click="category('post_loan')" class="項目" :class="{'項目_啟用的': current_category === 'post_loan'}">貸後/還款相關</a>
+                    <a @click="category('invest')" class="項目" :class="{'項目_啟用的': current_category === 'invest'}">投資相關</a>
+                    <a @click="category('default')" class="項目" :class="{'項目_啟用的': current_category === 'default'}">逾期/法律相關</a>
+                    <a @click="category('influx')" class="項目" :class="{'項目_啟用的': current_category === 'influx'}">關於普匯</a>
                 </div>
             </div>
         </div>
@@ -25,10 +28,13 @@
             <alesis-header>
                 <div class="標題">
                     <span v-if="current_category === 'all'">全部</span>
-                    <span v-if="current_category === 'member'">會員訊息</span>
-                    <span v-if="current_category === 'borrow'">借款</span>
-                    <span v-if="current_category === 'invest'">投資</span>
-                    <span v-if="current_category === 'default'">還款</span>
+                    <span v-if="current_category === 'product'">產品相關</span>
+                    <span v-if="current_category === 'product_apply'">申請相關</span>
+                    <span v-if="current_category === 'cost'">費用相關</span>
+                    <span v-if="current_category === 'post_loan'">貸後/還款相關</span>
+                    <span v-if="current_category === 'invest'">投資相關</span>
+                    <span v-if="current_category === 'default'">逾期/法律相關</span>
+                    <span v-if="current_category === 'influx'">關於普匯</span>
                 </div>
             </alesis-header>
             <alesis-section>
@@ -315,5 +321,6 @@ export default {
 
 .問題集 .群組 .項目.項目_啟用的 .內容 {
     display: flex;
+    flex-wrap: wrap;
 }
 </style>
