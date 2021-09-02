@@ -1,5 +1,5 @@
 <template>
-  <div class="bank-wrapper" id="bank-wrapper">
+  <div class="skbank-bank-wrapper" id="skbank-bank-wrapper">
       <div class="content-top skbank-top">
         <a class="btn send-btn skbank-send-btn skbank-banner-btn" href="https://reurl.cc/7r0XQ9" target="_blank">立即申請</a>
     </div>
@@ -10,7 +10,7 @@
             </div>
             <div class="input-group group-text " style="margin: 3vw auto 4px auto;">
                 <span style="color:#036EB7;">前三期利率</span>
-                <span style="color:#E50012;">0.68</span>
+                <span style="color:#E50012;">0.68%</span>
                 <span style="color:#036EB7;">起</span>
             </div>
             <div class="input-group skbank-blue-link" style="height:0px;">
@@ -35,6 +35,20 @@
             <div class="input-group " style="margin: 3vw auto 3vw auto;">
               <a class="btn send-btn skbank-send-btn" href="https://reurl.cc/7r0XQ9" target="_blank" style="display: flex;justify-content: center; margin: 0px auto;">立即申請</a>
             </div>
+        </div>
+        <div class="input-group skbank-notice" style="margin: 3vw auto 3vw auto;width:80%;">
+            <span>※總費用年百分率之計算範例及注意事項：</span>
+            <ol>
+                <li>範例說明：貸款金額30萬，貸款期間5年，貸款年利率：前三個月0.68%起，第四個月起2.98%~14.88%，各項費用總金額：9,000元，總費用年百分率：3.99%~14.95%。</li>
+                <li>依據主管機關規定，申請人於全體金融機構之無擔保貸款總餘額不能超過其月收入的22倍。</li>
+                <li>本廣告揭露之年百分率係按主管機關備查之標準計算範例予以計算，實際貸款條件，仍以本行提供之產品為準，且每一客戶實際之年百分率仍視其個別貸款產品及授信條件而有所不同。</li>
+                <li>針對銀行法及金融控股公司法下本行利害關係人及本行「辦理準利害關係人授信業務控管辦法」所稱準利害關係人辦理無擔保貸款授信總金額，於加計本次無擔保核貸之金額後，以捌拾萬元整為上限；上述授信總金額，於加計其本行信用卡循環信用餘額後，則以壹佰萬元整為上限。</li>
+                <li>總費用年百分率不等於貸款利率。</li>
+                <li>總費用年百分率之計算基準日為110年04月15日。</li>
+                <li>本行保有依客戶實際狀況，決定承作方式及核准與否之權利；如欲查詢專案最新資訊，請洽詢本行各營業單位。</li>
+                <li>若未按時依約繳款，其紀錄將登錄於財團法人金融聯合徵信中心，而影響您未來申辦其他貸款之權益。</li>
+                <li>貼心提醒：如有資金需求，請洽本行辦理，切勿透由代辦貸款業者，以免個資外洩或額外支付高額代辦費用。</li>
+            </ol>
         </div>
     </div>
     <div class="skbank-content-bottom">
@@ -336,7 +350,7 @@ export default {
 </script>
 
 <style lang="scss">
-.bank-wrapper {
+.skbank-bank-wrapper {
     overflow: hidden;
     width: 100%;
     position: relative;
@@ -465,7 +479,7 @@ export default {
   }
 }
 @media screen and (max-width: 767px) {
-  .bank-wrapper {
+  .skbank-bank-wrapper {
       .content-top {
           height: 117vw;
       }
@@ -477,9 +491,9 @@ export default {
 
           .skbank-banner-btn {
               width: 57%;
-              height: 100%;
+              height: auto;
               align-items: inherit;
-              font-size: 20px;
+              font-size: 16px;
               margin: 0 auto;
           }
       }
@@ -531,6 +545,9 @@ export default {
       }
       .content-bottom {
           height: 48vw;
+      }
+      .skbank-notice {
+        font-size: 12px;
       }
   }
 }
