@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 標頭 -->
-        <alesis-loan-header header="學生貸" content="快速、安全、隱私<br>最受學生信賴的線上借貸平台！<br>最高額度 15 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
+        <alesis-loan-header header="學生貸" content="快速、安全、隱私、簡單<br>最受學生信賴的線上借貸平台！<br>最高額度 15 萬、最低利率 5%<br>幫助年輕人完成夢想！" image="/images/asian-student-sitting-campus-stairs-outdoors-with-smartphone-staring-distance1.jpg"></alesis-loan-header>
         <!-- 標頭 -->
 
         <alesis-space size="medium"></alesis-space>
@@ -127,73 +127,8 @@
         </div>
         <!-- / 步驟說明 -->
 
-        <!-- 服務範圍 -->
-        <div class="服務範圍">
-            <alesis-header>
-                <div class="標題">服務範圍廣</div>
-                <div class="註釋">
-                    超過156所大學，不論是生活急需、還是補習進修，都是找普匯！<br>
-                    成立以來，幫助數萬名學生，陪伴度過資金難關！
-                </div>
-            </alesis-header>
-            <alesis-section>
-                <alesis-space size="large"></alesis-space>
-                <div class="包裹容器">
-                    <div class="專案">
-                        <div class="項目">
-                            <alesis-project v-bind="collegePreviews[0]"></alesis-project>
-                        </div>
-                        <div class="項目">
-                            <alesis-project v-bind="collegePreviews[1]"></alesis-project>
-                        </div>
-                        <div class="項目">
-                            <alesis-project v-bind="collegePreviews[2]"></alesis-project>
-                        </div>
-                        <div class="項目">
-                            <alesis-project v-bind="collegePreviews[3]"></alesis-project>
-                        </div>
-                    </div>
-                    <div class="地圖">
-                        <alesis-taiwan-map></alesis-taiwan-map>
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 服務範圍 -->
-
-        <!-- 為何選擇 -->
-        <div class="為何選擇">
-            <alesis-header>
-                <div class="標題">為什麼選擇普匯</div>
-            </alesis-header>
-            <alesis-section :secondary="true">
-                <alesis-space size="medium"></alesis-space>
-                <div class="項目列表">
-                    <div class="項目">
-                        <img class="圖示" src="/images/alesis-symbol-taiwan.svg">
-                        <div class="標籤">全台學生貸市佔量最高</div>
-                    </div>
-                    <div class="項目">
-                        <img class="圖示" src="/images/alesis-symbol-dnd.svg">
-                        <div class="標籤">全程使用APP  無人打擾</div>
-                    </div>
-                    <div class="項目">
-                        <img class="圖示" src="/images/alesis-symbol-cash.svg">
-                        <div class="標籤">放款不受休假限制</div>
-                    </div>
-                    <div class="項目">
-                        <img class="圖示" src="/images/alesis-symbol-approve.svg">
-                        <div class="標籤">核貸率高達90%以上</div>
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 為何選擇 -->
-
         <!-- 貸安吶 -->
-        <div class="貸安吶">
+        <div class="貸安吶" id="credit_report">
             <alesis-header>
                 <div class="標題">試算您的信用額度</div>
                 <div class="標題">貸安吶</div>
@@ -310,6 +245,71 @@
         </div>
         <!-- / 貸安吶 -->
 
+        <!-- 服務範圍 -->
+        <div class="服務範圍">
+            <alesis-header>
+                <div class="標題">服務範圍廣</div>
+                <div class="註釋">
+                    超過156所大學，不論是生活急需、還是補習進修，都是找普匯！<br>
+                    成立以來，幫助數萬名學生，陪伴度過資金難關！
+                </div>
+            </alesis-header>
+            <alesis-section>
+                <alesis-space size="large"></alesis-space>
+                <div class="包裹容器">
+                    <div class="專案">
+                        <div class="項目">
+                            <alesis-project v-bind="collegePreviews[0]"></alesis-project>
+                        </div>
+                        <div class="項目">
+                            <alesis-project v-bind="collegePreviews[1]"></alesis-project>
+                        </div>
+                        <div class="項目">
+                            <alesis-project v-bind="collegePreviews[2]"></alesis-project>
+                        </div>
+                        <div class="項目">
+                            <alesis-project v-bind="collegePreviews[3]"></alesis-project>
+                        </div>
+                    </div>
+                    <div class="地圖">
+                        <alesis-taiwan-map></alesis-taiwan-map>
+                    </div>
+                </div>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
+        </div>
+        <!-- / 服務範圍 -->
+
+        <!-- 為何選擇 -->
+        <div class="為何選擇">
+            <alesis-header>
+                <div class="標題">為什麼選擇普匯</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
+                <div class="項目列表">
+                    <div class="項目">
+                        <img class="圖示" src="/images/alesis-symbol-taiwan.svg">
+                        <div class="標籤">全台學生貸市佔量最高</div>
+                    </div>
+                    <div class="項目">
+                        <img class="圖示" src="/images/alesis-symbol-dnd.svg">
+                        <div class="標籤">全程使用APP  無人打擾</div>
+                    </div>
+                    <div class="項目">
+                        <img class="圖示" src="/images/alesis-symbol-cash.svg">
+                        <div class="標籤">放款不受休假限制</div>
+                    </div>
+                    <div class="項目">
+                        <img class="圖示" src="/images/alesis-symbol-approve.svg">
+                        <div class="標籤">核貸率高達90%以上</div>
+                    </div>
+                </div>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
+        </div>
+        <!-- / 為何選擇 -->
+
         <!-- 案例分享 -->
         <div class="案例分享">
             <alesis-header class="區塊標題_拖尾的">
@@ -395,7 +395,14 @@ import SwiperCore, {
   Navigation
 } from 'swiper/core';
 
-
+$( document ).ready(function() {
+    setTimeout(() => {
+        let toPoint = location.hash;
+        if(toPoint){
+            document.getElementById("credit_report").scrollIntoView();
+        }
+    },5000)
+});
 export default {
     components: {
         AlesisAppRecommendation,
@@ -442,7 +449,6 @@ export default {
     }),
     created() {
         $("title").text(`學生貸 - inFlux普匯金融科技`);
-        this.getStudentCase();
     },
     mounted() {
         this.initSchools();

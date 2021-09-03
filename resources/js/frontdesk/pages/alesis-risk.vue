@@ -19,10 +19,10 @@
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
-                    <img src="/images/risk07-report.jpg" class="圖片">
+                    <img src="/images/risk08-report.jpg" class="圖片">
                     <div class="連結">
                         <a href="javascript:;" class="項目">
-                            <alesis-button>2021年7月</alesis-button>
+                            <alesis-button>2021年8月</alesis-button>
                         </a>
                     </div>
                     <a href="/invest" class="行動">
