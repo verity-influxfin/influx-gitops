@@ -582,7 +582,7 @@ class Product extends REST_Controller {
 					}
 				}
 				
-				if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
+				if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 55 ){
 					$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 				}
 				
