@@ -299,3 +299,7 @@ Route::view('/cardgame/{path?}', 'cardgame');
 
 
 Route::view('/{path?}', 'index');
+
+Route::get('/campaign/2021-campus-ambassador', function () {
+    return view('campaigns/2021_campus_ambassador');
+});
