@@ -27,8 +27,7 @@ class CreateEventCampusMembers extends Migration
             $table->text('fb_link', 2083)->nullable(true)->comment('個人臉書連結');
             $table->text('ig_link', 2083)->nullable(true)->comment('個人IG連結');
             $table->text('bonus', 2083)->nullable(true)->comment('其他加分項');
-            $table->foreignId('team_id')->constrained('event_campus_teams')->onDelete('cascade')->comment('團隊 ID');
-            // $table->foreign('team_id')->references('id')->on('event_campus_teams');
+            $table->unsignedBigInteger('team_id')->comment('團隊 ID');
             $table->timestamps();
         });
     }
