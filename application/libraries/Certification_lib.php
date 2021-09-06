@@ -3146,7 +3146,6 @@ class Certification_lib{
             $this->set_failed($investigation_cert->id, '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。', false);
         }
     }
-
     public function get_social_report($limit = 10){
         $certification_list = $this->CI->user_certification_model->order_by('user_id', 'desc')->get_many_by([
             'certification_id' => 4,
