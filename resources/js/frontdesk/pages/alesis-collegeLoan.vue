@@ -254,7 +254,7 @@
                     成立以來，幫助數萬名學生，陪伴度過資金難關！
                 </div>
             </alesis-header>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <alesis-space size="large"></alesis-space>
                 <div class="包裹容器">
                     <div class="專案">
@@ -285,7 +285,7 @@
             <alesis-header>
                 <div class="標題">為什麼選擇普匯</div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="項目列表">
                     <div class="項目">
@@ -328,7 +328,7 @@
             <alesis-header>
                 <div class="標題">合作夥伴</div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <div class="container">
                     <alesis-space size="medium"></alesis-space>
                     <div class="群組">

@@ -238,7 +238,7 @@
                 <div class="標題">額度利率評估問卷</div>
                 <div class="標題 標題_外框線的">請您依現在的真實狀況填寫以下題目</div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <form class="表單" ref="borrowReport">
                     <input type="hidden" name="identity" value="2" />
@@ -363,7 +363,7 @@
             <alesis-header>
                 <div class="標題">上班族產品特色</div>
             </alesis-header>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <div class="左邊">
@@ -475,7 +475,7 @@
             <alesis-header>
                 <div class="標題">上班族 普匯合作專區</div>
             </alesis-header>
-            <alesis-section>
+            <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <alesis-shanghai></alesis-shanghai>
