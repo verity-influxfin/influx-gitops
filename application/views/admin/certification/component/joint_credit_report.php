@@ -48,7 +48,7 @@
 			<p>是否小於薪資22倍：<?= ! is_null($data['total_repayment_enough']) ? $data['total_repayment_enough'] : '-'; ?></p>
 			<p>
 				<span>薪資22倍：<?= ! is_null($data['total_repayment']) ? (strpos($data['total_repayment'], ',') === false ? number_format($data['total_repayment']*1000) : $data['total_repayment'] . '千元') : '-'; ?></span>；
-				<span>借款總餘額：<?= isset($data['liabilitiesWithoutAssureTotalAmount']) ? (strpos($data['liabilitiesWithoutAssureTotalAmount'], ',') === false ? number_format($data['liabilitiesWithoutAssureTotalAmount']) : $data['liabilitiesWithoutAssureTotalAmount']) : '-'; ?></span>
+				<span>借款總餘額：<?= isset($data['liabilitiesWithoutAssureTotalAmount']) && is_numeric($data['liabilitiesWithoutAssureTotalAmount']) ? (strpos($data['liabilitiesWithoutAssureTotalAmount'], ',') === false ? number_format($data['liabilitiesWithoutAssureTotalAmount']) : $data['liabilitiesWithoutAssureTotalAmount']) : '-'; ?></span>
 			</p>
 			<p>
 				<span>
@@ -75,7 +75,7 @@
 	<tr>
 	  <td rowspan="6">一、借款資訊</td>
 	  <td rowspan="4">1.借款總餘額資訊</td>
-	  <td rowspan="4"><?= ! is_null($data['liabilities_totalAmount']) ? (strpos($data['liabilities_totalAmount'], ',') === false ? number_format($data['liabilities_totalAmount']) : $data['liabilities_totalAmount']) : '-'; ?></td>
+	  <td rowspan="4"><?= isset($data['liabilities_totalAmount']) && is_numeric($data['liabilities_totalAmount']) ? (strpos($data['liabilities_totalAmount'], ',') === false ? number_format($data['liabilities_totalAmount']) : $data['liabilities_totalAmount']) : '-'; ?></td>
 	  <td>總覽</td>
 	  <td>
 		<p>有無遲延還款：<?= ! is_null($data['repaymentDelay']) ? $data['repaymentDelay']: '-'; ?></p>
