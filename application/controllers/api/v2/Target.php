@@ -553,7 +553,7 @@ class Target extends REST_Controller {
                         } elseif ($value == 7){
                             $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
                             $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
-                            $description = '(自填) 總收入/月：'. $financial_input . '<br>(自填) 總支出/月：' . $financial_output;
+                            $description = '(自填) 總收入/月：'. $financial_input . '元<br>(自填) 總支出/月：' . $financial_output . '元';
                             isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
                         } elseif ($value == 8){
                             $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
@@ -573,7 +573,7 @@ class Target extends REST_Controller {
                             $industry_name 			  = $this->config->item('industry_name');
                             $description .= ('產業別：' . isset($contents->industry) ? $industry_name[$contents->industry] : '').
                                 "<br>任職公司規模：".(isset($contents->employee) ? $employee_range[$contents->employee] : '').
-                                "<br>投保月薪：" . ($contents->salary ?? '') .
+                                "<br>投保月薪：" . ($contents->salary ?? '') . '元'.
                                 "<br>現職年資：" . (isset($contents->job_seniority) ? $seniority_range[$contents->job_seniority] : '') .
                                 "<br>總年資：" . (isset($contents->seniority) ? $seniority_range[$contents->seniority] : '');
                         }
