@@ -838,6 +838,12 @@ class Controller extends BaseController
         }
     }
 
+    /**
+     * 校園大使檔案上傳
+     *
+     * @param      \Illuminate\Http\Request  $request  The request
+     *
+     */
     public function campusUploadFile(Request $request)
     {
         $this->inputs = $request->all();
@@ -862,55 +868,101 @@ class Controller extends BaseController
         }
     }
 
+    /**
+     * 校園大使報名
+     *
+     * @param      \Illuminate\Http\Request  $request  The request
+     *
+     * @return     Response                  API 回應
+     */
     public function campusSignup(Request $request)
     {
-        $this->inputs = $request->all();
 
-        $this->validate($request, [
-            'teamName' => 'required',
-        ]);
+        try
+        {
 
-        foreach ($this->inputs['memberList'] as $key => $value) {
-            $memberValidator[$key]  = Validator::make($value, [
-                'name' => 'required',
-                'mobile' => ['required', new mobile()],
-                'email' => 'required|email',
-                'school' => 'required',
-                'selfIntro' => 'required',
-                'department' => 'required',
-                'grade' => 'required',
-                'resume' => 'required',
+            // 取得 $_POST['data']
+            if (empty($data = $request->input('data')))
+            {
+                throw new Exception('Invalid Input Data.');
+            }
+
+            // data decode
+            $data = json_decode(urldecode(base64_decode(urldecode($data))), true);
+
+            // 資料驗證
+            $validate = Validator::make($data, [
+                'school'               => 'required',
+                'team_name'            => 'required',
+                'members'              => 'required|array|min:1|max:3',
+                'members.*.name'       => 'required|string|max:100',
+                'members.*.dept'       => 'required|string|max:100',
+                'members.*.grade'      => 'required|integer|min:1|max:8',
+                'members.*.mobile'     => ['required', new mobile()],
+                'members.*.email'      => 'required|email',
+                'members.*.self_intro' => 'required|string|max:300',
+                'members.*.motivation' => 'required|string|max:300',
+                'members.*.resume'     => 'required',
+                'members.*.bonus'      => 'string|max:2880',
             ]);
 
-            if ($memberValidator[$key]->fails()) {
-                return response()->json(['index' => $key, 'errors' => $memberValidator[$key]->errors()], 400);
+            if (! empty($err_msg = $validate->errors()->first()))
+            {
+                throw new Exception($err_msg);
             }
+
+            // 寫入 DB
+            $team = DB::transaction(function() use ($data) {
+
+                // 檢查同校隊名
+                if ($team = \App\Models\EventCampusTeam::where([
+                    'school' => $data['school'],
+                    'name'   => $data['team_name'],
+                ])->first())
+                {
+                    throw new Exception(sprintf('隊名 "%s" 已被使用', $data['team_name']));
+                }
+
+                // 新增隊伍
+                $team = \App\Models\EventCampusTeam::firstOrCreate([
+                    'school' => $data['school'],
+                    'name'   => $data['team_name'],
+                    'intro'  => $data['team_intro'] ?? null,
+                ]);
+
+                // 新增隊員
+                foreach ($data['members'] as $m) {
+                    $team_member = \App\Models\EventCampusMember::create([
+                        'team_id'    => $team->id,
+                        'name'       => $m['name'],
+                        'dept'       => $m['dept'],
+                        'grade'      => $m['grade'],
+                        'mobile'     => $m['mobile'],
+                        'email'      => $m['email'],
+                        'self_intro' => $m['self_intro'],
+                        'resume'     => $m['resume'],
+                        'motivation' => $m['motivation'],
+                        'portfolio'  => $m['portfolio'] ?? null,
+                        'fb_link'    => $m['fb_link'] ?? null,
+                        'ig_link'    => $m['ig_link'] ?? null,
+                        'bonus'      => $m['bonus'],
+                    ]);
+                };
+                return $team;
+            });
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'team_id' => $team->id
+                ]
+            ]);
         }
-
-        try {
-            $exception = DB::transaction(function () {
-                $id =  DB::table('campusTeam')->insertGetId(['teamName' => $this->inputs['teamName']]);
-
-                foreach ($this->inputs['memberList'] as $key => $value) {
-                    $this->inputs['memberList'][$key]['teamID'] = $id;
-                }
-
-                DB::table('campusMember')->insert($this->inputs['memberList']);
-            }, 5);
-            if (is_null($exception)) {
-                foreach ($this->inputs['memberList'] as $memberData) {
-                    try {
-                        app('App\Http\Controllers\SendEmailController')->sendNoticeMail($memberData);
-                    } catch (Exception $e) {
-                        return response()->json('m', 400);
-                    }
-                }
-                return response()->json('', 200);
-            } else {
-                return response()->json($exception,  400);
-            }
-        } catch (Exception $e) {
-            return response()->json($e, 400);
+        catch (\Throwable $ex)
+        {
+            return response()->json([
+                'success' => false,
+                'message' => $ex->getMessage()
+            ]);
         }
     }
 

@@ -7,8 +7,8 @@ function image_url(string $filename) {
 @extends('campaigns.layout', [
     'page' => [
         'title'         => '普匯校園大使 - inFlux普匯金融科技',
-        'description'   => '普匯校園大使首屆擴大招募，不只法商文組，連資訊科系學生也搶破頭想進入的Fintech產業，歡迎你來大展身手！從教育訓練、CEO面對面提案，一直到執行專案、成果檢視，不限科系，只要你充滿熱情、勇於挑戰，即獲取報名門票。',
-        'cover_image'   => url('/images/og_cover.jpg'),
+        'description'   => '普匯校園大使首屆擴大招募，不只法商文組，連資訊理工科系學生也搶破頭想進入的Fintech產業，歡迎你來大展身手！從教育訓練、CEO面對面提案，一直到執行專案、成果檢視，不限科系，只要你充滿熱情、勇於挑戰，即獲取報名門票。',
+        'cover_image'   => url('/images/banner.jpg'),
         'site_url'      => url()->current(),
         'meta_keywords' => [
             '2021普匯校園大使',
@@ -56,7 +56,7 @@ function image_url(string $filename) {
                     </div>
 
                     <div class="signup">
-                        <a href="javascript:;" class="button">
+                        <a href="{{url('campaign/2021-campus-ambassador/signup')}}" class="button">
                             <img src="{{image_url('hero_middle_button_text.svg')}}" alt="點我報名" />
                         </a>
                         <svg class="lines" xmlns="http://www.w3.org/2000/svg" width="100%" height="31">
@@ -86,7 +86,7 @@ function image_url(string $filename) {
             </p>
             <hr class="light"/>
             <p>
-                不只法商文組，連資訊科系學生也搶破頭想進入的FinTech產業，歡迎你來大展身手<br/>
+                不只法商文組，連資訊理工科系學生也搶破頭想進入的FinTech產業，歡迎你來大展身手<br/>
                 從教育訓練、CEO面對面提案，一直到實際執行專案、成果檢視<br/>
                 加入普匯校園大使，保證給你最接地氣的職場體驗
             </p>
@@ -104,11 +104,7 @@ function image_url(string $filename) {
                     </div>
                 </div>
                 <div class="col-xl-7 mb-3">
-                    <p class="description">
-                        公司參訪與定期進度回報、提案回饋，並安排專業培訓課程，
-                        包含提案技巧與行銷企劃，以及學校不會教的FinTech產業新
-                        知，讓你充分接觸金融科技大趨勢。
-                    </p>
+                    <p class="description">公司參訪與定期進度回報、提案回饋，並安排專業培訓課程，包含提案技巧與行銷企劃，以及學校不會教的FinTech產業新知，讓你充分接觸金融科技大趨勢。</p>
                 </div>
             </div>
             <div class="row my-3">
@@ -119,12 +115,7 @@ function image_url(string $filename) {
                     </div>
                 </div>
                 <div class="col-xl-7 mb-3">
-                    <p class="description">
-                        任期間累積的優秀人脈包你想到都會笑！
-                        大使期滿還會頒發外面買不到的「普匯校園大使」結業證書。
-                        期間表現優秀的同學還能優先獲取履歷健檢以及實習生與正職
-                        的面試機會哦～
-                    </p>
+                    <p class="description">任期間累積的優秀人脈包你想到都會笑！大使期滿還會頒發外面買不到的「普匯校園大使」結業證書。期間表現優秀的同學還能優先獲取履歷健檢以及實習生與正職的面試機會哦～</p>
                 </div>
             </div>
             <div class="row my-3">
@@ -135,11 +126,7 @@ function image_url(string $filename) {
                     </div>
                 </div>
                 <div class="col-xl-7 mb-3">
-                    <p class="description">
-                        給予AI金融科技協會優惠待遇及資源，並提供專案報酬，凡是
-                        有用生命在完成大使任務者，加碼表現績優獎金。還有定期舉
-                        辦的大使聚餐增進感情哦，來這裡絕對不會淪為免費勞工啦！
-                    </p>
+                    <p class="description">給予AI金融科技協會優惠待遇及資源，並提供專案報酬，凡是有用生命在完成大使任務者，加碼表現績優獎金。還有定期舉辦的大使聚餐增進感情哦，來這裡絕對不會淪為免費勞工啦！</p>
                 </div>
             </div>
         </section>
@@ -151,33 +138,23 @@ function image_url(string $filename) {
                 <div class="col-lg-6 column">
                     <h3 class="title">品牌與學生的專屬橋梁</h3>
                     <hr/>
-                    <div class="d-flex flex-row align-items-center list-item">
-                        <img class="icon" src="{{image_url('yellow_circle_check.svg')}}">
-                        <p class="text">進行校園情報蒐集與分析</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center list-item">
-                        <img class="icon" src="{{image_url('yellow_circle_check.svg')}}">
-                        <p class="text">普匯品牌線上線下推廣</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center list-item">
-                        <img class="icon" src="{{image_url('yellow_circle_check.svg')}}">
-                        <p class="text">協助品牌活動宣傳執行</p>
+                    <div class="list">
+                        <div class="wrapper">
+                            <p class="item">進行校園情報蒐集與分析</p>
+                            <p class="item">普匯品牌線上線下推廣</p>
+                            <p class="item">協助品牌活動宣傳執行</p>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6 column">
                     <h3 class="title">校園專案規劃與執行</h3>
                     <hr/>
-                    <div class="d-flex flex-row align-items-center list-item">
-                        <img class="icon" src="{{image_url('yellow_circle_check.svg')}}">
-                        <p class="text">合作進行校園專案發想與提案</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center list-item">
-                        <img class="icon" src="{{image_url('yellow_circle_check.svg')}}">
-                        <p class="text">不限渠道不限形式，創意揮灑大空間</p>
-                    </div>
-                    <div class="d-flex flex-row align-items-center list-item">
-                        <img class="icon" src="{{image_url('yellow_circle_check.svg')}}">
-                        <p class="text">執行進度回報，檢視自我成長</p>
+                    <div class="list">
+                        <div class="wrapper">
+                            <p class="item">合作進行校園專案發想與提案</p>
+                            <p class="item">不限渠道不限形式，創意揮灑大空間</p>
+                            <p class="item">執行進度回報，檢視自我成長</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -199,7 +176,7 @@ function image_url(string $filename) {
                             <ul>
                                 <li>報名期間：2021/09/03-2021/09/28</li>
                                 <li>徵選期間：2021/09/03-2021/10/15</li>
-                                <li>大使任期：2021/10-2022/06</li>
+                                <li>大使任期：2021/10/22-2022/06/20</li>
                             </ul>
                         </div>
                     </div>
@@ -219,7 +196,7 @@ function image_url(string $filename) {
                         <div class="card-body" style="min-height: calc(24em + 3px)">
                             <div class="signup">
                                 <img class="bg-image-object" src="{{image_url('grey_arrow_right.svg')}}" />
-                                <a href="javascript:;" class="button">
+                                <a href="{{url('campaign/2021-campus-ambassador/signup')}}" class="button">
                                     點我報名
                                 </a>
                             </div>
@@ -376,8 +353,7 @@ function image_url(string $filename) {
         </section>
     </div>
     <div class="row">
-        <section class="bg-light-blue" style="min-height:90px;">
-        </section>
+        @include('campaigns.2021_campus_ambassador.footer')
     </div>
 </div>
 @endsection
@@ -412,12 +388,8 @@ function image_url(string $filename) {
         background-color: #153a71;
         color: white;
     }
-    .bg-light-blue {
-        background-color: #145da1;
-        color: white;
-    }
     .bg-yellow {
-        background-color: #f29600;
+        background-color: #fdb409;
         color: white;
     }
     .bg-white {
@@ -444,7 +416,7 @@ function image_url(string $filename) {
     section > .heading {
         min-width: 18vw;
         box-shadow: 3px 6px 6px 0 rgb(0 0 0 / 36%);
-        font-size: 1.5em;
+        font-size: 2em;
         font-weight: bold;
         display: inline-block;
         position: absolute;
@@ -453,7 +425,7 @@ function image_url(string $filename) {
         transform: translateX(-50%);
         text-align: center;
         padding: 7px 40px;
-        border-radius: 1rem;
+        border-radius: 0.25em;
         white-space: nowrap;
     }
     section h2,
@@ -515,6 +487,10 @@ function image_url(string $filename) {
         .hero .top img.left {
             margin-top: 1em;
         }
+        .hero .top img.right {
+            float: left;
+            clear: both;
+        }
         .hero .middle .title img {
             width: 100%;
             max-height: none;
@@ -541,7 +517,7 @@ function image_url(string $filename) {
         display: flex;
         width: 28vw;
         max-width: 280px;
-        background-color: #f29600;
+        background-color: #fdb409;
         box-shadow: 0 3px 5px rgb(0 0 0 / 36%);
         border-radius: 2em;
         transition: box-shadow ease .3s;
@@ -620,19 +596,33 @@ function image_url(string $filename) {
     .mission .column {
         margin-bottom: 8rem;
     }
-    .mission .list-item {
-        max-width: fit-content;
-        margin-bottom: 30px;
-        margin-left: calc(100% - 31vw);
+    .mission .list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .mission .list .wrapper {
+        display: grid;
+    }
+    .mission .list .item {
         font-weight: normal;
+        display: inline-block;
+        margin-bottom: 1em;
+        font-size: 0.9em;
+        text-indent: -1.9em;
+        margin-left: 1.9em;
     }
-    .mission .list-item .icon {
-        height: 2.3rem;
-    }
-    .mission .list-item .text {
-        padding-left: 1rem;
-        font-size: 0.95em;
-        margin-bottom: 0;
+    .mission .list .item:before {
+        content: "";
+        background-image: url('{{image_url('yellow_circle_check.svg')}}');
+        background-repeat: no-repeat;
+        background-position: center;
+        display: inline-block;
+        width: 1.4em;
+        height: 1.4em;
+        background-size: cover;
+        margin-bottom: -.3em;
+        margin-right: .5em;
     }
     .mission .remark {
         font-weight: normal;
@@ -646,16 +636,8 @@ function image_url(string $filename) {
         .mission .title {
             font-size: 1.5em;
         }
-        .mission .list-item {
-            margin-left: 18%;
-            margin-bottom: 2rem;
-        }
-        .mission .list-item .icon {
-            height: 1.8em;
-        }
-        .mission .list-item .text {
-            padding-left: 1.5rem;
-            font-size: 1.1em;
+        .mission .list .item {
+            font-size: 1.2em;
         }
         .mission .remark {
             max-width: 30rem;
@@ -706,7 +688,7 @@ function image_url(string $filename) {
     }
     .how-to .card .signup a.button {
         position: relative;
-        background-color: #f29600;
+        background-color: #fdb409;
         box-shadow: 0 3px 5px rgb(0 0 0 / 36%);
         border-radius: 9px;
         color: white;
@@ -797,7 +779,7 @@ function image_url(string $filename) {
             transform: scale(0.94);
         }
         .workflow .flows {
-            margin: 1em -45px 2em;
+            margin: 1em -45px 1em;
         }
         .workflow .step {
             transform: scale(0.87);
@@ -811,4 +793,3 @@ function image_url(string $filename) {
     }
 </style>
 @endsection
-    {{--  --}}

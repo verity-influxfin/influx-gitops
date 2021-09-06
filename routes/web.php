@@ -300,6 +300,8 @@ Route::view('/cardgame/{path?}', 'cardgame');
 
 Route::view('/{path?}', 'index');
 
-Route::get('/campaign/2021-campus-ambassador', function () {
-    return view('campaigns/2021_campus_ambassador');
+Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
+
+    $name = str_replace('-', '_', strtolower($name));
+    return view(sprintf('campaigns/%s/%s', $name, $path));
 });
