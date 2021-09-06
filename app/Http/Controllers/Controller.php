@@ -859,7 +859,7 @@ class Controller extends BaseController
             }
 
             if ($file->isValid()) {
-                $newFile =  date('YmdHis') . "_" . $file->getClientOriginalName();
+                $newFile =  $file->getClientOriginalName();
                 $file->move('upload/campus/' . $this->inputs['fileType'], $newFile);
                 return response()->json($newFile, 200);
             }
@@ -940,9 +940,9 @@ class Controller extends BaseController
                         'mobile'     => $m['mobile'],
                         'email'      => $m['email'],
                         'self_intro' => $m['self_intro'],
-                        'resume'     => '/public/upload/campus/resume/' . $m['resume'],
+                        'resume'     => 'upload/campus/resume/' . $m['resume'],
                         'motivation' => $m['motivation'],
-                        'portfolio'  => empty($m['portfolio']) ? null : '/public/upload/campus/portfolio/' . $m['portfolio'],
+                        'portfolio'  => empty($m['portfolio']) ? null : 'upload/campus/portfolio/' . $m['portfolio'],
                         'fb_link'    => $m['fb_link'] ?? null,
                         'ig_link'    => $m['ig_link'] ?? null,
                         'bonus'      => $m['bonus'],

@@ -416,10 +416,14 @@ function image_url(string $filename) {
             set_member_file(e, index) {
                 let name = e.target.id.replace(/_[0-9]$/, '');
                 let file = event.target.files[0];
+                let time = moment().format('YYYYMMDDhhmmss');
 
                 if (file.type == 'application/pdf') {
-                    this.files[index][name] = file;
-                    this.data.members[index][name] = file.name;
+                    let blob = file.slice(0, file.size, file.type); 
+                    nfile = new File([blob], `${time}_${file.name}`, {type: file.type});
+
+                    this.files[index][name] = nfile;
+                    this.data.members[index][name] = nfile.name;
                 } else {
                     this.data.members[index][name] = null;
                 }
