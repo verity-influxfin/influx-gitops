@@ -430,6 +430,26 @@ class Joint_credit_lib{
 				for( $i = 0, $count = count( $array); $i < $count-1; $i += 2){
 						$v = preg_split('/\t/',$array[$i] ."\t". $array[$i + 1]);
 
+                        if(isset($v[2]) && preg_match('/[0-9,]+元$/', $v[2]))
+                            array_splice($v, 2, 0, ['']);
+
+                        if(isset($v[6])) {
+                            $v[6] =preg_replace('/\s+/','',$v[6]);
+                            if(!preg_match('/.*遲延.*個月$|不須繳款|^全額繳清.*無遲延$|繳足/', $v[6])) {
+                                array_splice($v, 6, 0, ['']);
+                            }
+                        }
+
+                        if(count(array_filter($v, function($value) { return !is_null($value) && $value !== ''; })) < 4) {
+                            $rowData = $array[$i].$array[$i + 1];
+                            $rowData = preg_replace('/\s+/','',$rowData);
+                            if(preg_match("/(\d+\/\d+\/\d+)([\x{4e00}-\x{9fa5}\s]+)([a-zA-Z,]+)?([\d,]+元)?([\d,]+元)?([\d,]+元)?(.*遲延.*個月|不須繳款|全額繳清.*無遲延|繳足最低-無遲延)?(無|有)?(呆帳)?/u", $rowData, $m)) {
+                                array_splice($m, 0, 1);
+                                $v = $m;
+                            }else
+                                continue;
+                        }
+
 						$data_array['K2']['dataList'][] = [
 							'date' => isset($v[0]) ? $v[0] : '',
 							'bank' => isset($v[1]) ? $v[1] : '',
@@ -813,11 +833,11 @@ class Joint_credit_lib{
 
 			// 信用卡戶帳款資訊
 			if(preg_match('/有|[0-9]*(,[0-9]*)*元/',$response['applierInfo']['creditInfo']['creditCard']['totalAmount']['existCreditInfo'])){
-				if(preg_match('/([0-9]*(,[0-9]*)*元)?\s信用卡帳款總餘額\s([0-9]*(,[0-9]*)*元)?/',$content)){
-					preg_match('/([0-9]*(,[0-9]*)*元)?\s信用卡帳款總餘額\s([0-9]*(,[0-9]*)*元)?/',$content,$sub_content);
+				if(isset($response['applierInfo']["creditInfo"]["creditCard"]["totalAmount"]["existCreditInfo"]) &&
+                    preg_match('/([0-9]*(,[0-9]*)*元)?/', $response['applierInfo']["creditInfo"]["creditCard"]["totalAmount"]["existCreditInfo"], $sub_content)){
 					$sub_content = isset($sub_content[0]) ? $sub_content[0] : '';
 					if($sub_content){
-						$response['K2']['totalAmount'] = preg_replace('/\s信用卡帳款總餘額\s/','',$sub_content);
+						$response['K2']['totalAmount'] = $sub_content;
 					}
 				}
 				if($response['applierInfo']['creditInfo']['creditCard']['cardInfo']['existCreditInfo']=='有'){

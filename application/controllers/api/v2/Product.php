@@ -1546,7 +1546,7 @@ class Product extends REST_Controller {
                 : false;
 
             $new_rate = floatval($param['rate']);
-            $new_rate <= $target->interest_rate && $new_rate <= $product['interest_rate_e']
+            $new_rate <= $target->interest_rate || $new_rate > $product['interest_rate_e']
                 ? $this->response(array('result' => 'ERROR', 'error' => PRODUCT_RATE_ERROR))
                 : false;
 
