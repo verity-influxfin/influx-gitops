@@ -29,6 +29,7 @@ import feedback from '../pages/feedback';
 import event from '../pages/event';
 import scsbank from '../pages/scsbank';
 import skbank from '../pages/skbank';
+import obank from '../pages/obank';
 
 import index from "../pages/alesis-index";
 import borrow from '../pages/alesis-borrow';
@@ -91,6 +92,7 @@ let routers = [
     { path: '/event', component: event },
 	{ path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
+    { path: '/obank', component: obank },
 ];
 
 export default routers;
