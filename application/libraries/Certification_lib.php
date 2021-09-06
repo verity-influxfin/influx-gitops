@@ -902,8 +902,8 @@ class Certification_lib{
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
-				'content' => json_encode($certification_content),
-				'remark' => json_encode($remark),
+				'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE),
+				'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
         	));
 
 			if($status == 1) {

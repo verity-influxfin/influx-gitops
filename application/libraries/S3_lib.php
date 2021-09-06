@@ -125,9 +125,11 @@ class S3_lib {
 	public function unknown_mail($s3_url,$bucket=S3_BUCKET_MAILBOX)
 	{  
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
+		$content = file_get_contents($s3_url);
 		$result= $this->client_us2->putObject(array(
 			'Bucket' 		=> $bucket,
-			'Key'    		=> 'unknown/'.$key
+			'Key'    		=> 'unknown/'.$key,
+			'Body'			=> $content
 		));
 		
 	}
