@@ -526,7 +526,7 @@ $( document ).ready(function() {
         if(toPoint){
             document.getElementById("credit_report").scrollIntoView();
         }
-    },4000)
+    },3500)
 });
 export default {
     components: {
