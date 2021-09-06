@@ -1466,8 +1466,8 @@ class Certification_lib{
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
-				'content' => json_encode($certification_content),
-				'remark' => json_encode($remark),
+				'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE),
+				'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
         	));
 
 			if($status == 1) {
@@ -1857,6 +1857,9 @@ class Certification_lib{
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
 				$notificationContent = $verifiedResult->getAPPMessage(2);
 				$this->certi_failed($info->id, $notificationContent, $canResubmitDate, true);
+
+				// 退工作認證時，需把聯徵也一起退掉 issue #1202
+                $this->withdraw_investigation($info->user_id, $info->investor);
 			}
 			return true;
 		}
@@ -3120,6 +3123,27 @@ class Certification_lib{
                     }
                 }
             }
+        }
+    }
+
+    public function withdraw_investigation($user_id, $investor) {
+        $investigation_cert = $this->CI->user_certification_model->get_by(
+            [
+                'certification_id' => CERTIFICATION_INVESTIGATION,
+                'user_id' => $user_id,
+                'investor' => $investor,
+                'status' => [0, 1, 3]
+            ]);
+        if(isset($investigation_cert)) {
+            $temp_remark						= json_decode($investigation_cert->remark, TRUE);
+            if(!is_array($temp_remark))
+                $temp_remark = [isset($temp_remark) ? strval($temp_remark) : ''];
+
+            $temp_remark['verify_result'] 	= ['經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。'];
+            $this->CI->user_certification_model->update($investigation_cert->id,[
+                'remark' => json_encode($temp_remark),
+            ]);
+            $this->set_failed($investigation_cert->id, '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。', false);
         }
     }
 

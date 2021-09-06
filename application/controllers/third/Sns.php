@@ -37,74 +37,83 @@ class Sns extends REST_Controller {
 		// curl_close($ch);
 		//第一次SNS認證 --
 		$list = $this->s3_lib->get_mailbox_list();
+        $process_unknown_mail = function ($s3_url, $bucket) {
+            $this->s3_lib->unknown_mail($s3_url, $bucket);
+            $this->s3_lib->public_delete_s3object($s3_url, $bucket);
+        };
 
 		if (!empty($list)) {
 			foreach ($list as $s3_url) {
 				$filename=$this->s3_lib->public_get_filename($s3_url,S3_BUCKET_MAILBOX);
 				$file_content  =  file_get_contents('s3://'.S3_BUCKET_MAILBOX.'/'.$filename);
-				$mailfrom = substr($file_content, strpos($file_content, 'X-Original-Sender: ') + 19, strpos($file_content, 'X-Original-Authentication-Results: mx.google.com') - strpos($file_content, 'X-Original-Sender: ') - 21);
-				$user_info = $this->user_model->order_by('created_at', 'desc')->get_by('email', $mailfrom);
-				$subject=substr($file_content, (strpos($file_content, 'Subject: ')+19) ,100);
-				$subject=explode( "\n" , $subject);
-				$get_subject=substr($subject[0],0,-3);
-				$mail_title= base64_decode($get_subject);
-				$re_investigation_mail=strpos($mail_title, '聯合徵信申請');
-				$re_job_mail=strpos($mail_title, '工作認證申請');
-				if (empty($user_info)||(($re_investigation_mail === false)&&($re_job_mail === false))) {
-					$this->s3_lib->unknown_mail($s3_url,S3_BUCKET_MAILBOX);
-					$this->s3_lib->public_delete_s3object($s3_url,S3_BUCKET_MAILBOX);
-					return null;
-				}
-				$certification_id=($re_job_mail===false)? 9:10;
-				$have_pdf_file  = strpos($file_content, 'application/pdf');
-				$have_attachment = strpos($file_content, 'ttachment');
-				$info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $user_info->id, 'investor' => 0, 'certification_id' =>$certification_id]);
-				if (($have_pdf_file !== false) && ($have_attachment !== false)) {
-					$this->process_mail($info,$file_content, $user_info,$s3_url,$certification_id);
-				}else{
-					if((count($info)>=3)&&$info[0]->status==0){
-						$this->process_mail($info,$file_content, $user_info,$s3_url,$certification_id);					
-					}else{
-						$this->certification_lib->set_failed($info[0]->id,'資料缺少附件',true);
-						$this->s3_lib->public_delete_s3object($s3_url,S3_BUCKET_MAILBOX);		
-					}
-					//每次寄信若沒附件就直接退認證 set_fail
-					//若連續第三次 此次認證不退 轉人工 人工status
-				}
+                $parser = new PhpMimeMailParser\Parser();
+                $parser->setText($file_content);
+                $mailfrom = $parser->getAddresses('from');
+                $mailfrom = !empty($mailfrom) ? $mailfrom[0]['address'] : '';
+                $mail_title = $parser->getHeader('subject');
+                $re_investigation_mail=strpos($mail_title, '聯合徵信申請');
+                $re_job_mail=strpos($mail_title, '工作認證申請');
+                $attachments = $parser->getAttachments();
+
+                $certification_id=($re_job_mail===false)? 9:10;
+                $cert_info = $this->user_certification_model->order_by('created_at', 'desc')->get_by(['investor' => 0, 'certification_id' => 6, 'status' => 1, "JSON_EXTRACT(`content`, '$.email') = " => $mailfrom]);
+
+                if (!isset($cert_info) || ($re_investigation_mail === false && $re_job_mail === false)) {
+                    // 沒有找到對應使用者和勞保聯徵標題關鍵字
+                    $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
+                    return null;
+                }else{
+                    $info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $cert_info->user_id, 'investor' => 0, 'certification_id' => $certification_id]);
+                    if(empty($info)) {
+                        $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
+                        return null;
+                    }
+
+                    if (!empty($attachments)) {
+                        // 非圖片或PDF格式的檔案 或 認證項目是成功/失敗狀態者 轉為不明檔案
+                        $mime = get_mime_by_extension($attachments[0]->getFileName());
+                        if ((is_image($mime) || is_pdf($mime))
+                            && !in_array($info[0]->status, [1,2])
+                        ) {
+                            $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
+                        }else{
+                            $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
+                        }
+                    } else if (($drive = strpos($file_content, 'https://drive.google.com/')) !== false ||
+                        ((count($info) >= 3) && $info[0]->status == 0)) {
+                        // 沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工
+                        $remark           = $info[0]->remark!=''?json_decode($info[0]->remark,true):[];
+                        $remark['fail']   = $drive !== false ? "該附件由Google雲端夾帶，需人工檢驗" : "收信無附件次數達三次，請人工檢驗";
+                        $this->user_certification_model->update_by(['id' => $info[0]->id], [
+                            'status' => 3,
+                            'remark'    => json_encode($remark)
+                        ]);
+                        $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
+                    } else {
+                        // 沒附件直接失敗
+                        $this->certification_lib->set_failed($info[0]->id, '資料缺少附件', true);
+                        $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+                    }
+                }
 			}
 		}
 	}
 
-	private function process_mail($info, $file_content, $user_info, $s3_url,$certification_id)
+	private function process_mail($info, $attachments, $cert_info, $s3_url,$certification_id)
 	{
-		$url = $this->attachment_pdf($file_content, $user_info, $s3_url,$certification_id);
+		$url = $this->attachment_pdf($attachments, $cert_info, $s3_url,$certification_id);
 		$this->certification_lib->save_mail_url($info['0'],$url);
 	}
 
-	private function attachment_pdf($file_content,$user_info,$s3_url,$certification_id)
+	private function attachment_pdf($attachments,$cert_info,$s3_url,$certification_id)
 	{
 		$name=($certification_id===9)? 'investigation':'job';
-		$get_pdf_file  = strpos($file_content, 'JVBERi0xLjQKJ');//pdf keyword
-		$file_len=strlen($file_content);
-		$file =substr($file_content,$get_pdf_file ,$file_len-$get_pdf_file);
-		$file =explode( "\n" , $file);
-		$mailrole=array_search("\r",$file);
-		if($mailrole){//hotmail
-			$get_file=array_slice($file,0,$mailrole);
-			$fileContent=implode("\n" , $get_file);
-			$url = $this->s3_lib->credit_mail_pdf(base64_decode($fileContent), $user_info->id, $name, 'user_upload/' . $user_info->id);
-			if (!empty($url) && ($url !== false)) { //刪S3資料
-				$this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
-			}
-			return $url;
-		}else{ //gmail yahoo
-			$fileContent=implode("\n" , $file);
-			$url = $this->s3_lib->credit_mail_pdf(base64_decode($fileContent), $user_info->id, $name, 'user_upload/' . $user_info->id);
-			if (!empty($url) && ($url !== false)) { //刪S3資料
-				$this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
-			}
-			return $url;
-		}
-		
+        $url = "";
+		if(isset($attachments)) {
+            $url = $this->s3_lib->credit_mail_pdf($attachments, $cert_info->user_id, $name, 'user_upload/' . $cert_info->user_id);
+        }
+        $this->s3_lib->public_delete_s3object($s3_url, S3_BUCKET_MAILBOX);
+
+        return $url;
 	}
 }
