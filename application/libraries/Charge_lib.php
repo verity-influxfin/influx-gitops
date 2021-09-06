@@ -182,7 +182,7 @@ class Charge_lib
         $account_payable_map = [];
 		foreach ($account_payable_list as $value) {
 		    // 交易科目可能會與欲處理案件列表有差異，不處理案件列表會沒有element
-		    if( isset($target_key_list[$value->target_id]) &&
+		    if( !isset($target_key_list[$value->target_id]) ||
                 // 法催中/寬限期內不處理
                 (in_array($value->target_id, $legal_collection_target_id_list)
                 || !isDelayed($target_key_list[$value->target_id]['delay_days'] ?? 0))
