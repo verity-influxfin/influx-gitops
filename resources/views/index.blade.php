@@ -368,7 +368,7 @@
                 </div>
                 <div class="links">
                     <a href="/recruiting" class="item">徵才服務</a> |
-                    <a href="/campuspartner" class="item">校園大使</a> |
+                    <a href="/campaign/2021-campus-ambassador" class="item">校園大使</a> |
                     <a href="/clubcooperation" class="item">社團合作</a> |
                     <a href="/firmcooperation" class="item">商行合作</a> |
                     <a href="/companycooperation" class="item">企業合作</a>

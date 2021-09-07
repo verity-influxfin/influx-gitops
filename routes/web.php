@@ -299,3 +299,9 @@ Route::view('/cardgame/{path?}', 'cardgame');
 
 
 Route::view('/{path?}', 'index');
+
+Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
+
+    $name = str_replace('-', '_', strtolower($name));
+    return view(sprintf('campaigns/%s/%s', $name, $path));
+});
