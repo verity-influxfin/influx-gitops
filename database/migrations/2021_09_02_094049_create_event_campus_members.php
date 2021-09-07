@@ -17,7 +17,7 @@ class CreateEventCampusMembers extends Migration
             $table->id();
             $table->text('name', 100)->comment('姓名');
             $table->text('dept', 100)->comment('科系');
-            $table->smallInteger('grade')->comment('年級');
+            $table->text('grade', 100)->comment('學位年級');
             $table->text('mobile', 10)->comment('手機');
             $table->text('email', 255)->comment('Email');
             $table->text('self_intro', 300)->comment('自我簡介');

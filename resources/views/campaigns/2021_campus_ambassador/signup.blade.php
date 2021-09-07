@@ -119,10 +119,10 @@ function image_url(string $filename) {
 
                                 <div class="row mb-3">
                                     <label :for="elid('grade', index)" class="col-sm-3 col-form-label">
-                                        年級 <span class="text-danger">*</span>
+                                        學位年級 <span class="text-danger">*</span>
                                     </label>
                                     <div class="col-sm-9">
-                                        <input v-model="m.grade" :id="elid('grade', index)" type="number" min="1" max="8" class="form-control" placeholder="請填寫年級" :class="{'is-invalid':errors.members[index].grade}" required>
+                                        <input v-model="m.grade" :id="elid('grade', index)" type="text" class="form-control" placeholder="請填寫年級 範例：學士大三/ 碩士大二" :class="{'is-invalid':errors.members[index].grade}" required>
                                         <div class="invalid-feedback">沒有填寫年級喔</div>
                                     </div>
                                 </div>
@@ -143,7 +143,7 @@ function image_url(string $filename) {
                                     </label>
                                     <div class="col-sm-9">
                                         <input v-model="m.email" :id="elid('email', index)" type="email" class="form-control" placeholder="請填寫電子信箱" :class="{'is-invalid':errors.members[index].email}" required>
-                                        <div class="invalid-feedback">沒有填寫電子信箱喔</div>
+                                        <div class="invalid-feedback">電子信箱不正確喔</div>
                                     </div>
                                 </div>
 
@@ -415,16 +415,17 @@ function image_url(string $filename) {
             },
             set_member_file(e, index) {
                 let name = e.target.id.replace(/_[0-9]$/, '');
-                let file = event.target.files[0];
+                let file = e.target.files[0];
                 let time = moment().format('YYYYMMDDhhmmss');
 
-                if (file.type == 'application/pdf') {
+                if (file && file.type == 'application/pdf') {
                     let blob = file.slice(0, file.size, file.type); 
                     nfile = new File([blob], `${time}_${file.name}`, {type: file.type});
 
                     this.files[index][name] = nfile;
                     this.data.members[index][name] = nfile.name;
                 } else {
+                    this.files[index][name] = null;
                     this.data.members[index][name] = null;
                 }
             },
@@ -499,11 +500,13 @@ function image_url(string $filename) {
                                 )
                             }
                         }).then(resp => {
-                            self.submited = false;
                             if (resp.data?.message) {
                                 self.response.message = resp.data.message;
                             }
                             self.response.success = resp.data.success;
+                            if (! resp.data.success) {
+                                self.submited = false;
+                            }
                             dialog_model.show();
                         });
                     });

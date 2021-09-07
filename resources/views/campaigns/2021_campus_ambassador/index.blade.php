@@ -174,8 +174,8 @@ function image_url(string $filename) {
                         <div class="card-body">
                             <h3 class="card-title">徵選時程</h3>
                             <ul>
-                                <li>報名期間：2021/09/03-2021/09/28</li>
-                                <li>徵選期間：2021/09/03-2021/10/15</li>
+                                <li>報名期間：2021/09/07-2021/09/28</li>
+                                <li>徵選期間：2021/09/07-2021/10/15</li>
                                 <li>大使任期：2021/10/22-2022/06/20</li>
                             </ul>
                         </div>
@@ -661,10 +661,19 @@ function image_url(string $filename) {
         color: #153a71;
         margin: 0.8em auto 1em 1em;
     }
-    .how-to .card ul li::marker {
+    .how-to .card ul li {
+        list-style-type: none;
+        margin-left: -1em;
+    }
+    .how-to .card ul li:before {
         content: "\f272";
         font-family: bootstrap-icons !important;
-        line-height: 1;
+        line-height: 1.5em;
+        display: inline-block;
+        width: 1em;
+        height: 1.5em;
+        margin-left: -.4em;
+        margin-right: .3em;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }

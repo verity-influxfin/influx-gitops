@@ -897,7 +897,7 @@ class Controller extends BaseController
                 'members'              => 'required|array|min:1|max:3',
                 'members.*.name'       => 'required|string|max:100',
                 'members.*.dept'       => 'required|string|max:100',
-                'members.*.grade'      => 'required|integer|min:1|max:8',
+                'members.*.grade'      => 'required|string|max:100',
                 'members.*.mobile'     => ['required', new mobile()],
                 'members.*.email'      => 'required|email',
                 'members.*.self_intro' => 'required|string|max:300',
