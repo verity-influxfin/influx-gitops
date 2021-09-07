@@ -41,13 +41,14 @@ export default {
     methods: {
         countdown() {
             var adder = setInterval(() => {
-                this.displayNumber += 100
+                var adder_number = parseInt(this.number / 40)
+                this.displayNumber += adder_number
 
                 if(this.displayNumber >= this.number) {
                     this.displayNumber = this.number
                     clearInterval(adder)
                 }
-            }, 50)
+            }, 100)
         },
 
         // format 會格式化數值成為有千分逗號的格式。
