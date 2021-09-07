@@ -35,21 +35,6 @@
         </div>
         <!-- / 快速審核 -->
 
-        <!-- 普匯銀行 -->
-        <div class="普匯銀行">
-            <alesis-header>
-                <div class="標題">上班族 普匯合作專區</div>
-            </alesis-header>
-            <alesis-section>
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <alesis-shanghai></alesis-shanghai>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 普匯銀行 -->
-
         <!-- 申貸流程 -->
         <div class="申貸流程">
             <alesis-header>
@@ -247,112 +232,13 @@
         </div>
         <!-- / 申貸流程 -->
 
-        <!-- 產品特色 -->
-        <div class="產品特色">
-            <alesis-header>
-                <div class="標題">上班族產品特色</div>
-            </alesis-header>
-            <alesis-section>
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <div class="左邊">
-                        <div class="區塊">
-                            <div class="象徵">
-                                <img src="/images/alesis-work-loan-feature1.svg" class="圖片">
-                                <img src="/images/alesis-workloan-feature-1-simplified.svg" class="響應式圖片">
-                            </div>
-                            <div class="內容">
-                                <div class="標題">即時審核，快速媒合放款</div>
-                                <div class="分隔線"></div>
-                                <div class="文字">系統自動化審核加快申貸的速度，平均5分鐘完成申請、10分鐘核准、60分鐘到帳！</div>
-                            </div>
-                        </div>
-                        <div class="區塊">
-                            <div class="象徵">
-                                <img src="/images/alesis-work-loan-feature2.svg" class="圖片">
-                                <img src="/images/alesis-workloan-feature-2-simplified.svg" class="響應式圖片">
-                            </div>
-                            <div class="內容">
-                                <div class="標題">全線無人化</div>
-                                <div class="分隔線"></div>
-                                <div class="文字">運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。</div>
-                            </div>
-                        </div>
-                        <div class="區塊">
-                            <div class="象徵">
-                                <img src="/images/alesis-work-loan-feature3.svg" class="圖片">
-                                <img src="/images/alesis-workloan-feature-3-simplified.svg" class="響應式圖片">
-                            </div>
-                            <div class="內容">
-                                <div class="標題">隱私無照會</div>
-                                <div class="分隔線"></div>
-                                <div class="文字">申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="中間">
-                        <div class="展示區域">
-                            <img src="/images/alesis-work-loan-phone.svg" class="圖片">
-                        </div>
-                        <div class="標語">假日放款全年無休</div>
-                        <a href="#!" class="取得">
-                            <alesis-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</alesis-button>
-                        </a>
-                    </div>
-                    <div class="右邊">
-                        <div class="區塊">
-                            <div class="象徵">
-                                <img src="/images/alesis-work-loan-feature4.svg" class="圖片">
-                                <img src="/images/alesis-workloan-feature-4-simplified.svg" class="響應式圖片">
-                            </div>
-                            <div class="內容">
-                                <div class="標題">聯徵不留紀錄</div>
-                                <div class="分隔線"></div>
-                                <div class="文字">不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。</div>
-                            </div>
-                        </div>
-                        <div class="區塊">
-                            <div class="象徵">
-                                <img src="/images/alesis-work-loan-feature5.svg" class="圖片">
-                                <img src="/images/alesis-workloan-feature-5-simplified.svg" class="響應式圖片">
-                            </div>
-                            <div class="內容">
-                                <div class="標題">費率單純透明</div>
-                                <div class="分隔線"></div>
-                                <div class="文字">只收取一次性成交手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。</div>
-                            </div>
-                        </div>
-                        <div class="區塊">
-                            <div class="象徵">
-                                <img src="/images/alesis-work-loan-feature6.svg" class="圖片">
-                                <img src="/images/alesis-workloan-feature-6-simplified.svg" class="響應式圖片">
-                            </div>
-                            <div class="內容">
-                                <div class="標題">金融機構合作</div>
-                                <div class="分隔線"></div>
-                                <div class="文字">在會員用戶逐漸成長的情況下，普匯專業優質的名聲，吸引許多金融機構相邀合作，包含「新光銀行」、「上海商銀」等，共同為台灣金融科技發展貢獻一份力。</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="底部">
-                        <div class="標語">假日放款全年無休</div>
-                        <a href="#!" class="取得">
-                            <alesis-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</alesis-button>
-                        </a>
-                    </div>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 產品特色 -->
-
         <!-- 額度利率評估問卷 -->
-        <div class="評估問卷">
+        <div class="評估問卷" id="credit_report">
             <alesis-header>
                 <div class="標題">額度利率評估問卷</div>
                 <div class="標題 標題_外框線的">請您依現在的真實狀況填寫以下題目</div>
             </alesis-header>
-            <alesis-section :secondary="true">
+            <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <form class="表單" ref="borrowReport">
                     <input type="hidden" name="identity" value="2" />
@@ -472,6 +358,105 @@
         </div>
         <!-- / 評估問卷 -->
 
+        <!-- 產品特色 -->
+        <div class="產品特色">
+            <alesis-header>
+                <div class="標題">上班族產品特色</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
+                <div class="包裹容器">
+                    <div class="左邊">
+                        <div class="區塊">
+                            <div class="象徵">
+                                <img src="/images/alesis-work-loan-feature1.svg" class="圖片">
+                                <img src="/images/alesis-workloan-feature-1-simplified.svg" class="響應式圖片">
+                            </div>
+                            <div class="內容">
+                                <div class="標題">即時審核，快速媒合放款</div>
+                                <div class="分隔線"></div>
+                                <div class="文字">系統自動化審核加快申貸的速度，平均5分鐘完成申請、10分鐘核准、60分鐘到帳！</div>
+                            </div>
+                        </div>
+                        <div class="區塊">
+                            <div class="象徵">
+                                <img src="/images/alesis-work-loan-feature2.svg" class="圖片">
+                                <img src="/images/alesis-workloan-feature-2-simplified.svg" class="響應式圖片">
+                            </div>
+                            <div class="內容">
+                                <div class="標題">全線無人化</div>
+                                <div class="分隔線"></div>
+                                <div class="文字">運用AI整合會員資料進行大數據分析，自動線上完成徵信、授信、甚至續約程序，操作方便簡單。</div>
+                            </div>
+                        </div>
+                        <div class="區塊">
+                            <div class="象徵">
+                                <img src="/images/alesis-work-loan-feature3.svg" class="圖片">
+                                <img src="/images/alesis-workloan-feature-3-simplified.svg" class="響應式圖片">
+                            </div>
+                            <div class="內容">
+                                <div class="標題">隱私無照會</div>
+                                <div class="分隔線"></div>
+                                <div class="文字">申貸全程無人干擾，更不會接到任何業務員的照會電話，也不會主動聯絡借款人及其緊急聯絡人。</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="中間">
+                        <div class="展示區域">
+                            <img src="/images/alesis-work-loan-phone.svg" class="圖片">
+                        </div>
+                        <div class="標語">假日放款全年無休</div>
+                        <a href="#!" class="取得">
+                            <alesis-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</alesis-button>
+                        </a>
+                    </div>
+                    <div class="右邊">
+                        <div class="區塊">
+                            <div class="象徵">
+                                <img src="/images/alesis-work-loan-feature4.svg" class="圖片">
+                                <img src="/images/alesis-workloan-feature-4-simplified.svg" class="響應式圖片">
+                            </div>
+                            <div class="內容">
+                                <div class="標題">聯徵不留紀錄</div>
+                                <div class="分隔線"></div>
+                                <div class="文字">不會留下任何貸款相關紀錄，不影響未來信用狀況，也不佔任何銀行額度。</div>
+                            </div>
+                        </div>
+                        <div class="區塊">
+                            <div class="象徵">
+                                <img src="/images/alesis-work-loan-feature5.svg" class="圖片">
+                                <img src="/images/alesis-workloan-feature-5-simplified.svg" class="響應式圖片">
+                            </div>
+                            <div class="內容">
+                                <div class="標題">費率單純透明</div>
+                                <div class="分隔線"></div>
+                                <div class="文字">只收取一次性成交手續費，且費率以及每月需還本息金額公開透明，不用擔心被收取其他費用。</div>
+                            </div>
+                        </div>
+                        <div class="區塊">
+                            <div class="象徵">
+                                <img src="/images/alesis-work-loan-feature6.svg" class="圖片">
+                                <img src="/images/alesis-workloan-feature-6-simplified.svg" class="響應式圖片">
+                            </div>
+                            <div class="內容">
+                                <div class="標題">金融機構合作</div>
+                                <div class="分隔線"></div>
+                                <div class="文字">在會員用戶逐漸成長的情況下，普匯專業優質的名聲，吸引許多金融機構相邀合作，包含「新光銀行」、「上海商銀」等，共同為台灣金融科技發展貢獻一份力。</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="底部">
+                        <div class="標語">假日放款全年無休</div>
+                        <a href="#!" class="取得">
+                            <alesis-button size="1.3rem" xPadding="3rem" yPadding=".8rem">取得資金</alesis-button>
+                        </a>
+                    </div>
+                </div>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
+        </div>
+        <!-- / 產品特色 -->
+
         <!-- 案例分享 -->
         <div class="案例分享">
             <alesis-header class="區塊標題_拖尾的">
@@ -484,6 +469,21 @@
             </alesis-section>
         </div>
         <!-- / 案例分享 -->
+
+        <!-- 普匯銀行 -->
+        <div class="普匯銀行">
+            <alesis-header>
+                <div class="標題">上班族 普匯合作專區</div>
+            </alesis-header>
+            <alesis-section :secondary="true">
+                <alesis-space size="medium"></alesis-space>
+                <div class="包裹容器">
+                    <alesis-shanghai></alesis-shanghai>
+                </div>
+                <alesis-space size="medium"></alesis-space>
+            </alesis-section>
+        </div>
+        <!-- / 普匯銀行 -->
 
         <!-- 應用程式推薦 -->
         <alesis-app-recommendation action="我想借款"></alesis-app-recommendation>
@@ -520,6 +520,14 @@ import SwiperCore, {
   Navigation
 } from 'swiper/core';
 
+$( document ).ready(function() {
+    setTimeout(() => {
+        let toPoint = location.hash;
+        if(toPoint){
+            document.getElementById("credit_report").scrollIntoView();
+        }
+    },3500)
+});
 export default {
     components: {
         AlesisAppRecommendation,
@@ -566,7 +574,7 @@ export default {
         workCategories       : WorkCategories
     }),
     created() {
-        $("title").text(`首頁 - inFlux普匯金融科技`);
+        $("title").text(`上班族貸 - inFlux普匯金融科技`);
     },
     mounted() {
         // 管理與財經
