@@ -1369,11 +1369,11 @@ class Charge_lib
 									'source'	=> SOURCE_PRINCIPAL,
 									'target_id' => $target->id,
 									'investment_id' => $investment_id,
-									'entering_date >=' => $target->handle_date,
+									'entering_date >' => $target->handle_date,
 									'status'	=> 2
 								]);
 								$unsettlement_delay_interest = 0;
-								for($i=0; $i<$delay_days; $i++) {
+								for($i=1; $i<=$delay_days; $i++) {
 									$over_handle_date_paid_amount = 0;
 									foreach ($paid_principal_transaction_list as $paid_principal_transaction) {
 										if(date("Y-m-d",strtotime($paid_principal_transaction->entering_date)) >= date("Y-m-d",strtotime($target->handle_date.' +'.$i.' day'))) {
