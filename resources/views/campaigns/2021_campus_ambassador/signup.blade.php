@@ -9,7 +9,7 @@ function image_url(string $filename) {
     'page' => [
         'title'         => '2021普匯校園大使徵選開跑 - inFlux普匯金融科技',
         'description'   => '普匯校園大使首屆擴大招募！不只法商文組，連資訊理工科系學生也搶破頭想進入的FinTech產業，即日起至9月28日熱烈徵選，歡迎你來大展身手！從教育訓練、CEO面對面提案，一直到執行專案、成果檢視，不限科系，只要你充滿熱情、勇於挑戰，即獲取報名門票。',
-        'cover_image'   => url('/images/banner.jpg'),
+        'cover_image'   => image_url('/images/banner.jpg'),
         'site_url'      => url()->current(),
         'meta_keywords' => [
             '2021普匯校園大使',
