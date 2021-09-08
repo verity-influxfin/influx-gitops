@@ -43,7 +43,7 @@
                 <div class="條"></div>
             </div>
             <div class="動作">
-                <a href="#!" class="項目">看更多</a>
+                <a href="https://event.influxfin.com/R/url?p=webbanner" target="_blank" class="項目">看更多</a>
             </div>
         </div>
     </div>
@@ -132,8 +132,8 @@ export default {
 }
 
 .單張卡片 .標題 .個人資料 .階級指數 .說明 .圖示 {
-    width : 28px;
-    height: 28px;
+    width : 17px;
+    height: 17px;
 }
 
 .單張卡片 .標題 .個人身份 {
