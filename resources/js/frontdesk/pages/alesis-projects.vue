@@ -21,7 +21,7 @@
                 <div class="標題">目前案件</div>
             </alesis-header>
             <alesis-section>
-                <alesis-space size="medium"></alesis-space>
+                <alesis-space size="tiny"></alesis-space>
                 <alesis-project-viewer :initialStatus="3"></alesis-project-viewer>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
@@ -34,7 +34,7 @@
                 <div class="標題">已成交案件</div>
             </alesis-header>
             <alesis-section>
-                <alesis-space size="medium"></alesis-space>
+                <alesis-space size="tiny"></alesis-space>
                 <alesis-project-viewer :initialStatus="10"></alesis-project-viewer>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
