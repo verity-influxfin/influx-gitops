@@ -800,12 +800,16 @@ class Certification_lib{
 					$remark['fail'] = "需人工驗證";
 				}else {
 					$parser = new \Smalot\PdfParser\Parser();
-					$pdf = $parser->parseFile($url);
-					$text = $pdf->getText();
-					$response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
-					$data = [
-						'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId'] : '',
-					];
+					try {
+                        $pdf = $parser->parseFile($url);
+                        $text = $pdf->getText();
+                        $response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
+                        $data = [
+                            'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId'] : '',
+                        ];
+                    }catch (Exception $e) {
+                        $response = False;
+                    }
 
 					if (!$response || strpos($text, '綜合信用報告') === FALSE) {
 						$verifiedResult->addMessage('聯徵PDF解析失敗', 3, MassageDisplay::Backend);
@@ -977,12 +981,16 @@ class Certification_lib{
 					if ($pdf_url) {
 						$this->CI->load->library('Labor_insurance_lib');
 						$parser = new \Smalot\PdfParser\Parser();
-						$pdf = $parser->parseFile($pdf_url);
-						$text = $pdf->getText();
-						$res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
+                        try {
+                            $pdf = $parser->parseFile($pdf_url);
+                            $text = $pdf->getText();
+                            $res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
+                        }catch (Exception $e) {
+                            $res = False;
+                        }
 					}
 
-					if (isset($certification_content['tax_id']) && $certification_content['tax_id']) {
+					if ($res && isset($certification_content['tax_id']) && $certification_content['tax_id']) {
 						$this->CI->load->library('gcis_lib');
 						$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
 						$certification_content['gcis_info'] = $gcis_res;
