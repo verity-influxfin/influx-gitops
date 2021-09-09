@@ -36409,7 +36409,63 @@ define({
                             "optional": false,
                             "field": "created_at",
                             "description": "<p>申請日期</p>"
-                        }
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_type",
+                            "description": "<p>公司類型</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_du_type",
+                            "description": "<p>行業別</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_du_type",
+                            "description": "<p>行業別</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_name",
+                            "description": "<p>公司名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_set_date",
+                            "description": "<p>公司設立日期</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "comp_capital",
+                            "description": "<p>公司實收資本額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "smeg_guarantee_percent",
+                            "description": "<p>擔保條件</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "pr_name",
+                            "description": "<p>負責人</p>"
+                        },
                     ]
                 },
                 "examples": [
@@ -36425,6 +36481,177 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/target/list"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/api/v2/target/judicial_list",
+            "title": "出借方 取得企金標的列表",
+            "version": "0.2.0",
+            "name": "GetTargetJudicialList",
+            "group": "Target",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "credit_level",
+                                "instalment",
+                                "interest_rate"
+                            ],
+                            "optional": true,
+                            "field": "orderby",
+                            "defaultValue": "credit_level",
+                            "description": "<p>排序值</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "asc",
+                                "desc"
+                            ],
+                            "optional": true,
+                            "field": "sort",
+                            "defaultValue": "asc",
+                            "description": "<p>降序/升序</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "target_no",
+                            "description": "<p>標的號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "product_id",
+                            "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "credit_level",
+                            "description": "<p>信用評等</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "user_id",
+                            "description": "<p>User ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "loan_amount",
+                            "description": "<p>核准金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "interest_rate",
+                            "description": "<p>年化利率</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "instalment",
+                            "description": "<p>期數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "repayment",
+                            "description": "<p>還款方式</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "expire_time",
+                            "description": "<p>流標時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "invested",
+                            "description": "<p>目前投標量</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "reason",
+                            "description": "<p>借款原因</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 504:銀行待放款</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_status",
+                            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "created_at",
+                            "description": "<p>申請日期</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n\"result\":\"SUCCESS\",\n\"data\":{\n\t\"list\":[\n\t\t{\n\t\t\t\"id\":19878,\n\t\t\t\"target_no\":\"SSM2021052526182\",\n\t\t\t\"product_name\":\"\u767e\u842c\u4fe1\u4fdd\u5fae\u4f01\u8cb8\",\n\t\t\t\"product_id\":1002,\n\t\t\t\"sub_product_id\":0,\n\t\t\t\"credit_level\":0,\n\t\t\t\"user_id\":47236,\n\t\t\t\"loan_amount\":0,\n\t\t\t\"interest_rate\":0,\n\t\t\t\"instalment\":36,\n\t\t\t\"repayment\":1,\n\t\t\t\"expire_time\":0,\n\t\t\t\"invested\":0,\n\t\t\t\"reason\":\"\u71df\u904b\u9031\u8f49\u91d1\",\n\t\t\t\"isTargetOpaque\":false,\n\t\t\t\"status\":504,\n\t\t\t\"sub_status\":9,\n\t\t\t\"created_at\":1621922591,\n\t\t\t\"comp_type\":\"21\",\n\t\t\t\"comp_du_type\":\"03\",\n\t\t\t\"comp_name\":\"\u65b0\u5149\u71df\u9020\u6e2c\",\n\t\t\t\"comp_set_date\":\"19980305\",\n\t\t\t\"comp_capital\":3000000,\n\t\t\t\"pr_name\":\"\u65b0\u5149\u71df\u9020\u6e2c\",\n\t\t\t\"smeg_guarantee_percent\":\"\u4fe1\u4fdd\u57fa\u91d19.0\u6210\"\n\t\t},...\n\t]}\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Target.php",
+            "groupTitle": "Target",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/target/judicial_list"
                 }
             ]
         },

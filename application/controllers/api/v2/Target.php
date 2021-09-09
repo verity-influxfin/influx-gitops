@@ -13,7 +13,7 @@ class Target extends REST_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list'];
+        $nonAuthMethods = ['list','judicial_list'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -251,6 +251,128 @@ class Target extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
     }
 
+    // 法人標的列表
+    // {
+    //     "credit_level" : "3",
+    //     "comp_type" : "中小企業",
+    //     "comp_du_type" : "其他金融業",
+    //     "comp_name" : "普惠金融科技股份有限公司",
+    //     "target_no" : "SSM2021081991257",
+    //     "reason" : "短期營運週轉",
+    //     // 設立日期
+    //     "comp_set_date" : "2017.12.31",
+    //     // 實收資本額
+    //     "comp_capital" : 1450,
+    //     // 還款來源
+    //     "payment_source" : "營業收入",
+    //     // 擔保條件
+    //     "smeg_guarantee_percent" : "信保基金9.5成",
+    //     // 保證人
+    //     "pr_name" : "祖法強",
+    //     "loan_amount" : 1000000,
+    //     "instalment" : 36,
+    //     "repayment" : 1,
+    //     "loan_rate" : 5,
+    //     "status" : 504,
+    // }
+    // 暫時只有撈微企貸案件資料ˊ
+    public function judicial_list_get(){
+        $input 			= $this->input->get();
+		$list			= [];
+		$where			= array( 'status' => [504] );
+		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'credit_level';
+		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
+		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
+        // 資訊不在案件本身內容
+        $out_of_target_info = [];
+
+        $product_list = $this->config->item('product_list');
+        if(!empty($target_list)){
+            foreach($target_list as $key => $value){
+                $product = isset($product_list[$value->product_id]) ? $product_list[$value->product_id] : [];
+                if(!empty($product)){
+                    $param = [];
+                    $sub_product_id = $value->sub_product_id;
+                    $out_of_target_info['product_name'] = $product['name'];
+                    if($this->is_sub_product($product,$sub_product_id)){
+                        $product = $this->trans_sub_product($product,$sub_product_id);
+                        $out_of_target_info['product_name'] = $product['name'];
+                    }
+
+                    $json_reason = json_decode($value->reason);
+                    if(isset($json_reason->reason)){
+                        $value->reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                    }
+
+                    // 撈微企貸資料
+                    if($product['visul_id'] == 'J2'){
+                        $this->load->library('mapping/sk_bank/msgno');
+                		$response = $this->msgno->getSKBankInfoByTargetId($value->id);
+                        if(!empty($response) && isset($response['data']['send_log']['request_content'])){
+                            if(!empty($response['data']['send_log']['request_content'])){
+                                $sk_bank_send_log = json_decode($response['data']['send_log']['request_content'],true);
+                                $out_of_target_info['comp_type'] = isset($sk_bank_send_log['unencrypted']['Data']['CompType']) ? $sk_bank_send_log['unencrypted']['Data']['CompType'] : '';
+                                $out_of_target_info['comp_du_type'] = isset($sk_bank_send_log['unencrypted']['Data']['CompDuType']) ? $sk_bank_send_log['unencrypted']['Data']['CompDuType']: '';
+                                $out_of_target_info['comp_name'] = isset($sk_bank_send_log['unencrypted']['Data']['CompName']) ? $sk_bank_send_log['unencrypted']['Data']['CompName']: '';
+                                $out_of_target_info['comp_set_date'] = isset($sk_bank_send_log['unencrypted']['Data']['CompSetDate']) ? $sk_bank_send_log['unencrypted']['Data']['CompSetDate']: '';
+                                $out_of_target_info['comp_capital'] = isset($sk_bank_send_log['unencrypted']['Data']['CompCapital']) ? $sk_bank_send_log['unencrypted']['Data']['CompCapital']: '';
+                                $out_of_target_info['pr_name'] = isset($sk_bank_send_log['unencrypted']['Data']['PrName']) ? $sk_bank_send_log['unencrypted']['Data']['PrName']: '';
+                            }
+                        }
+
+                        // 撈新光回應資料
+                        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+                        $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->order_by('id','desc')->limit(1)->get_by(['target_id' => $value->id, 'type' => 'text']);
+                        if(!empty($loanTargetMappingInfo) && isset($loanTargetMappingInfo->msg_no)){
+                            $this->load->model('skbank/LoanSendRequestLog_model');
+                            $loanRequestLogInfo = $this->LoanSendRequestLog_model->get_by(['msg_no' => $loanTargetMappingInfo->msg_no]);
+                            if(!empty($loanRequestLogInfo) && isset($loanRequestLogInfo->case_no)){
+                                $this->load->model('skbank/LoanResult_model');
+                                $loanResult = $this->LoanResult_model->get_by(['case_no' => $loanRequestLogInfo->case_no]);
+                                if(!empty($loanResult) && isset($loanResult->smeg_guarantee_percent) && is_numeric($loanResult->smeg_guarantee_percent)){
+                                    // number_format($number, 2, '.', '');
+                                    $out_of_target_info['smeg_guarantee_percent'] = isset($loanResult->smeg_guarantee_percent) ? '信保基金'.number_format($loanResult->smeg_guarantee_percent/10, 1, '.', '').'成' : '';
+                                }
+                            }
+                        }
+                    }
+
+                    $param = [
+                        'id' 				=> intval($value->id),
+                        'target_no' 		=> $value->target_no,
+                        'product_name' => isset($out_of_target_info['product_name']) ? $out_of_target_info['product_name'] : '',
+                        'product_id' 		=> intval($value->product_id),
+                        'sub_product_id' => intval($value->sub_product_id),
+                        'credit_level' 		=> intval($value->credit_level),
+                        'user_id' 			=> intval($value->user_id),
+                        'loan_amount' 		=> intval($value->loan_amount),
+                        'interest_rate' 	=> floatval($value->interest_rate),
+                        'instalment' 		=> intval($value->instalment),
+                        'repayment' 		=> intval($value->repayment),
+                        'expire_time' 		=> intval($value->expire_time),
+                        'invested' 			=> intval($value->invested),
+                        'reason' 			=> $value->reason,
+                        'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
+                        'status' 			=> intval($value->status),
+                        'sub_status' 		=> intval($value->sub_status),
+                        'created_at' 		=> intval($value->created_at),
+                        'comp_type' => isset($out_of_target_info['comp_type']) ? $out_of_target_info['comp_type']: '',
+                        'comp_du_type' => isset($out_of_target_info['comp_du_type']) ? $out_of_target_info['comp_du_type']: '',
+                        'comp_name' => isset($out_of_target_info['comp_name']) ? $out_of_target_info['comp_name']: '',
+                        'comp_set_date' => isset($out_of_target_info['comp_set_date']) ? $out_of_target_info['comp_set_date']: '',
+                        'comp_capital' => isset($out_of_target_info['comp_capital']) && is_numeric($out_of_target_info['comp_capital']) ? intval($out_of_target_info['comp_capital']): '',
+                        'pr_name' => isset($out_of_target_info['pr_name']) ? $out_of_target_info['pr_name']: '',
+                        'smeg_guarantee_percent' => isset($out_of_target_info['smeg_guarantee_percent']) ? $out_of_target_info['smeg_guarantee_percent']: '',
+                    ];
+
+                    $list[] = $param;
+                }
+			}
+        }
+
+        $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
+    }
+
 	/**
      * @api {get} /v2/target/info/:id 出借方 取得標的資訊
 	 * @apiVersion 0.2.0
@@ -399,7 +521,7 @@ class Target extends REST_Controller {
 		$data				= [];
         $user_meta = '';
 
-        if(!empty($target) && in_array($target->status,[3,4])){
+        if(!empty($target) && in_array($target->status,[3,4,504])){
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
