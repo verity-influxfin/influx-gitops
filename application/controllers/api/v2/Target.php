@@ -330,7 +330,6 @@ class Target extends REST_Controller {
                                 $this->load->model('skbank/LoanResult_model');
                                 $loanResult = $this->LoanResult_model->get_by(['case_no' => $loanRequestLogInfo->case_no]);
                                 if(!empty($loanResult) && isset($loanResult->smeg_guarantee_percent) && is_numeric($loanResult->smeg_guarantee_percent)){
-                                    // number_format($number, 2, '.', '');
                                     $out_of_target_info['smeg_guarantee_percent'] = isset($loanResult->smeg_guarantee_percent) ? '信保基金'.number_format($loanResult->smeg_guarantee_percent/10, 1, '.', '').'成' : '';
                                 }
                             }
