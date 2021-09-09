@@ -99,7 +99,38 @@ class LoanResponse extends REST_Controller {
                     if ($newLoanResultId) {
                         $response['result'] = 'SUCCESS';
 
-                        // TODO: process target, wait to implement
+                        // TODO: merge all sql query in one
+                        if(isset($insertData['apply_agree']) && isset($insertData['apply_accept']) && $insertData['apply_agree'] == 'A' && $insertData['apply_accept'] == 'A'){
+                            // search loan request log data
+                            $this->CI->load->model('skbank/LoanSendRequestLog_model');
+            				$loanRequestLogInfo = $this->CI->LoanSendRequestLog_model->get_by(['case_no' => $input['case_no']]);
+                            if ($loanRequestLogInfo) {
+                                // search mapping info by loan request msg_no
+                                $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+                                $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $loanRequestLogInfo->msg_no]);
+                                if ($loanTargetMappingInfo) {
+                                    // check target exist and update info
+                                    $this->load->model('loan/target_model');
+                                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target,'product_id' => 1002]);
+                                    if($targetInfo){
+                                        // transfer repayment type 
+                                        $repayment = '';
+                                        if (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'A') {
+                                            $repayment = 1;
+                                        }elseif (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'B') {
+                                            $repayment = 2;
+                                        }
+                                        if(!empty($repayment)){
+                                            $updateTarget = $this->target_model->update($targetInfo->id,[
+                                                'loan_amount' => $insertData['loan_amount'],
+                                                'interest_rate' => $insertData['loan_rate'],
+                                                'repayment' => $repayment,
+                                            ]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
                     } else {
                         $response['error'] = 'database insert fail';
