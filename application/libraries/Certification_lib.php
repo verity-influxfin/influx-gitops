@@ -19,6 +19,45 @@ class Certification_lib{
 		$this->certification = $this->CI->config->item('certifications');
     }
 
+    /**
+     * 篩選特定狀態的認證項目
+     * @param $userCertifications
+     * @param int[] $findStatusList
+     * @return int[]|string[]
+     */
+    public function filterCertIdsInStatusList($userCertifications, $findStatusList=[1]) {
+        return array_unique(array_keys(array_filter($userCertifications,
+            function ($x) use ($findStatusList) { return (is_array($x) && in_array($x['status'], $findStatusList))
+                || (is_object($x) && in_array($x->status, $findStatusList)); })));
+    }
+    
+    /**
+     * 取得產品的各階段徵信檢核項目列表
+     * @param $product_id
+     * @return mixed|null
+     */
+    public function getCertificationsStageList($product_id) {
+        $productList = $this->CI->config->item('product_list');
+        return isset($productList[$product_id]) &&
+            isset($productList[$product_id]['certifications_stage']) ?
+            $productList[$product_id]['certifications_stage'] : null;
+    }
+
+    /**
+     * 確認特定驗證階段是否都有紀錄
+     * @param $product_id
+     * @param $certificationList
+     * @param $stage
+     * @return bool
+     */
+    public function checkVerifiedStage($product_id, $certificationList, $stage) {
+        $certificationsStageList = $this->getCertificationsStageList($product_id);
+
+        return isset($certificationsStageList) &&
+            (count(array_intersect($certificationsStageList[$stage], $certificationList))
+            == count($certificationsStageList[$stage]));
+    }
+
 	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false){
 		if($user_id && $certification_id){
 			$param = array(
