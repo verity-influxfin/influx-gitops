@@ -113,7 +113,7 @@ class LoanResponse extends REST_Controller {
                                     $this->load->model('loan/target_model');
                                     $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target,'product_id' => 1002]);
                                     if($targetInfo){
-                                        // transfer repayment type 
+                                        // transfer repayment type
                                         $repayment = '';
                                         if (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'A') {
                                             $repayment = 1;
@@ -125,6 +125,7 @@ class LoanResponse extends REST_Controller {
                                                 'loan_amount' => $insertData['loan_amount'],
                                                 'interest_rate' => $insertData['loan_rate'],
                                                 'repayment' => $repayment,
+                                                'status' => 504,
                                             ]);
                                         }
                                     }
