@@ -51,15 +51,14 @@ class Sns extends REST_Controller {
 				}
                 $parser = new PhpMimeMailParser\Parser();
                 $parser->setText($file_content);
-                $mailfrom = $parser->getAddresses('from');
-                $mailfrom = !empty($mailfrom) ? $mailfrom[0]['address'] : '';
+                $headers = $parser->getHeaders();
+                $mailfrom = $headers['x-original-sender'] ?? '';
                 $mail_title = $parser->getHeader('subject');
                 $re_investigation_mail=strpos($mail_title, '聯合徵信申請');
                 $re_job_mail=strpos($mail_title, '工作認證申請');
                 $attachments = $parser->getAttachments();
-
                 $certification_id=($re_job_mail===false)? 9:10;
-                $cert_info = $this->user_certification_model->order_by('created_at', 'desc')->get_by(['investor' => 0, 'certification_id' => 6, 'status' => 1, "JSON_EXTRACT(`content`, '$.email') = " => $mailfrom]);
+                $cert_info = $this->user_certification_model->order_by('created_at', 'desc')->get_by(['investor' => 0, 'certification_id' => 6, 'status' => 1, "TRIM(BOTH '\"' FROM LOWER(JSON_EXTRACT(`content`, '$.email'))) = " => strtolower($mailfrom)]);
 
                 if (!isset($cert_info) || ($re_investigation_mail === false && $re_job_mail === false)) {
                     // 沒有找到對應使用者和勞保聯徵標題關鍵字
