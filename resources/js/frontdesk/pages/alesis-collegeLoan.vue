@@ -449,6 +449,7 @@ export default {
     }),
     created() {
         $("title").text(`學生貸 - inFlux普匯金融科技`);
+        this.getStudentCase();
     },
     mounted() {
         this.initSchools();
@@ -494,7 +495,7 @@ export default {
                 `${location.origin}/getCase`,
                 studenCase
             ).then((res) => {
-                this.collegePreviews = res.data
+                this.collegePreviews = res.data;
             })
             .catch((error) => {
                 console.error('getCase 發生錯誤，請稍後再試');

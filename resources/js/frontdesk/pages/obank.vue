@@ -106,6 +106,7 @@
                     <div><span>8.上述貸款利率及開辦費優惠僅適用申辦信用貸款二段式專案，若因資金需求轉換為資金整合貸款專案者，將不適用本優惠專案。</span></div>
                     <div><span>9.各信用貸款專案內容及條件均有不同，如需了解更多，請洽O-Bank數位貸款團隊。</span></div>
                 </div>
+            </div>
         </div>
     </div>
     <div class="obank-content-bottom">
