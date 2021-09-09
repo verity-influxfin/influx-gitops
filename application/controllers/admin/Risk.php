@@ -78,9 +78,19 @@ class Risk extends MY_Admin_Controller {
             }
         }
 
+
         if($list){
+			$userStatusList = $this->target_model->getUserStatusByTargetId(array_keys($list));
+			$userStatusList = array_column($userStatusList, 'total_count', 'user_id');
+
 			ksort($list);
 			foreach($list as $key => $value){
+				if(isset($userStatusList[$value->user_id]) && $userStatusList[$value->user_id] > 0) {
+					$value->user_status = 1;
+				}else{
+					$value->user_status = 0;
+				}
+
                 $status = $company ? $value : false;
                 !isset($cer_list[$value->user_id]) ? $cer_list[$value->user_id] = $this->certification_lib->get_last_status($value->user_id, 0, 0, $status) : '';
                 $list[$key]->certification = $cer_list[$value->user_id];

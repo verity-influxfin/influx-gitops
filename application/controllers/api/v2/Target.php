@@ -515,8 +515,29 @@ class Target extends REST_Controller {
                     } else {
                         $description = false;
                         $contents = json_decode($cur_cer[$value]->content);
+                        $liveAddress = "";
                         if( $value == 1){
-                            $description .= '發證地點：' . $contents->id_card_place . '<br>發證時間：' . $contents->id_card_date;
+                            $orderList = [['省', '市'], ['縣', '市'], ['鄉', '鎮', '市', '區'], ['村', '里'], ['鄰'], ['路']];
+                            $count = 2;
+                            $temp_address = $contents->address;
+                            while($count) {
+                                $orderIdx = 0;
+                                while($count && $orderIdx < count($orderList)) {
+                                    foreach ($orderList[$orderIdx] as $needle) {
+                                        $pos = mb_stripos($temp_address, $needle);
+                                        if ($pos !== false) {
+                                            $count--;
+                                            $liveAddress = $liveAddress . mb_substr($temp_address, 0, $pos+1);
+                                            $temp_address = mb_substr($temp_address, $pos+1);
+                                            break;
+                                        }
+                                    }
+                                    $orderIdx++;
+                                }
+                                if($orderIdx < count($orderList))
+                                    break;
+                            }
+                            $description .= '發證地點：' . $contents->id_card_place . '<br>發證時間：' . $contents->id_card_date . '<br>戶籍地址：' . $liveAddress;
                         } elseif( $value == 2){
                             isset($contents->pro_certificate) ? $description .= '有提供專業證書；' . str_replace(',','、', $contents->pro_certificate) : '';
                             $description .= '學門：' . $contents->major. '<br>系所：' . $contents->department . '<br>學制：' . $this->config->item('school_system')[$contents->system];
@@ -524,7 +545,7 @@ class Target extends REST_Controller {
                             $description = '已驗證個人金融帳號';
                         } elseif ($value == 4){
                             $ig = isset($contents->instagram) ? $contents->instagram : $contents->info;
-                            $description .= 'Instagram' . '<br>貼文：' . $ig->counts->media . '<br>追蹤者：' . $ig->counts->followed_by . '<br>追蹤中：' . $ig->counts->follows;
+                            $description .= 'FB：已綁定<br>Instagram' . '<br>貼文：' . (isset($ig->counts) ? $ig->counts->media : '') . '<br>追蹤者：' . (isset($ig->counts) ? $ig->counts->followed_by : '') . '<br>追蹤中：' . (isset($ig->counts) ? $ig->counts->follows : '') ;
                         } elseif ($value == 5){
                             $description = '已輸入父母作為緊急聯絡人';
                         } elseif ($value == 6){
@@ -532,19 +553,29 @@ class Target extends REST_Controller {
                         } elseif ($value == 7){
                             $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
                             $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
-                            $description = '(自填) 平均月收入：'. $financial_input . '<br>(自填) 平均月支出：' . $financial_output;
+                            $description = '(自填) 總收入/月：'. $financial_input . '元<br>(自填) 總支出/月：' . $financial_output . '元';
                             isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
                         } elseif ($value == 8){
                             $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
                         } elseif ($value == 9){
-                            if(isset($contents->result->messages)){
-                                foreach ($contents->result->messages as $creditValue){
-                                    $creditValue->stage == 'credit_scores' ? $description .= $creditValue->message : '';
+                            if(isset($contents->result)){
+                                $info = reset($contents->result);
+                                if(isset($info)) {
+                                    $description = "負債比：" . (isset($info->debt_to_equity_ratio) ? $info->debt_to_equity_ratio . "%" : '') .
+                                        "<br>延遲繳款紀錄：" . ($info->creditCardHasDelay ?? '') .
+                                        "<br>信用卡使用率：" . (isset($info->creditCardUseRate) ? $info->creditCardUseRate . "%" : '') .
+                                        "<br>預借現金：" . ($info->cashAdvanced ?? '');
                                 }
                             }
                         } elseif ($value == 10){
-                            isset($contents->industry) ? $description .= '公司類型：' . $this->config->item('industry_name')[$contents->industry] : '';
-                            isset($contents->job_seniority) ? $description .= '<br>此公司工作期間：' . $this->config->item('seniority_range')[$contents->job_seniority] : '';
+                            $employee_range 		  = $this->config->item('employee_range');
+                            $seniority_range 		  = $this->config->item('seniority_range');
+                            $industry_name 			  = $this->config->item('industry_name');
+                            $description .= ('產業別：' . isset($contents->industry) ? $industry_name[$contents->industry] : '').
+                                "<br>任職公司規模：".(isset($contents->employee) ? $employee_range[$contents->employee] : '').
+                                "<br>投保月薪：" . ($contents->salary ?? '') . '元'.
+                                "<br>現職年資：" . (isset($contents->job_seniority) ? $seniority_range[$contents->job_seniority] : '') .
+                                "<br>總年資：" . (isset($contents->seniority) ? $seniority_range[$contents->seniority] : '');
                         }
                         $cer['user_status'] = $cur_cer[$value]->status == 2 ? 1 : intval($cur_cer[$value]->status);
                         $cer['certification_id'] = intval($cur_cer[$value]->id);

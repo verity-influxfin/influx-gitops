@@ -213,7 +213,7 @@
 											</td>
 											<td>
 												<a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >
-													<?=isset($value->user_id)?$value->user_id:"" ?>
+													<?=isset($value->user_id)?$value->user_id:"" ?> <?=$value->user_status==1?"舊戶":"新戶" ?>
 												</a>
 											</td>
                                             <td><?

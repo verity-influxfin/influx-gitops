@@ -45,7 +45,10 @@ class Sns extends REST_Controller {
 		if (!empty($list)) {
 			foreach ($list as $s3_url) {
 				$filename=$this->s3_lib->public_get_filename($s3_url,S3_BUCKET_MAILBOX);
-				$file_content  =  file_get_contents('s3://'.S3_BUCKET_MAILBOX.'/'.$filename);
+				$file_content = file_get_contents('s3://'.S3_BUCKET_MAILBOX.'/'.$filename);
+				if(!$file_content) {
+					continue;
+				}
                 $parser = new PhpMimeMailParser\Parser();
                 $parser->setText($file_content);
                 $mailfrom = $parser->getAddresses('from');
@@ -61,12 +64,11 @@ class Sns extends REST_Controller {
                 if (!isset($cert_info) || ($re_investigation_mail === false && $re_job_mail === false)) {
                     // 沒有找到對應使用者和勞保聯徵標題關鍵字
                     $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
-                    return null;
                 }else{
                     $info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $cert_info->user_id, 'investor' => 0, 'certification_id' => $certification_id]);
                     if(empty($info)) {
                         $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
-                        return null;
+                        continue;
                     }
 
                     if (!empty($attachments)) {
@@ -77,7 +79,7 @@ class Sns extends REST_Controller {
                         ) {
                             $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
                         }else{
-                            $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
+                            $this->attachment_pdf($attachments, $cert_info, $s3_url,$certification_id);
                         }
                     } else if (($drive = strpos($file_content, 'https://drive.google.com/')) !== false ||
                         ((count($info) >= 3) && $info[0]->status == 0)) {
