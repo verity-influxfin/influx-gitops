@@ -102,8 +102,8 @@ class LoanResponse extends REST_Controller {
                         // TODO: merge all sql query in one
                         if(isset($insertData['apply_agree']) && isset($insertData['apply_accept']) && $insertData['apply_agree'] == 'A' && $insertData['apply_accept'] == 'A'){
                             // search loan request log data
-                            $this->CI->load->model('skbank/LoanSendRequestLog_model');
-            				$loanRequestLogInfo = $this->CI->LoanSendRequestLog_model->get_by(['case_no' => $input['case_no']]);
+                            $this->load->model('skbank/LoanSendRequestLog_model');
+            				$loanRequestLogInfo = $this->LoanSendRequestLog_model->get_by(['case_no' => $input['case_no']]);
                             if ($loanRequestLogInfo) {
                                 // search mapping info by loan request msg_no
                                 $this->load->model('skbank/LoanTargetMappingMsgNo_model');
