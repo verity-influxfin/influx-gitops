@@ -125,13 +125,18 @@ class S3_lib {
 	public function unknown_mail($s3_url,$bucket=S3_BUCKET_MAILBOX)
 	{  
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
-		$content = file_get_contents($s3_url);
-		$result= $this->client_us2->putObject(array(
-			'Bucket' 		=> $bucket,
-			'Key'    		=> 'unknown/'.$key,
-			'Body'			=> $content
-		));
-		
+		$filename = $this->public_get_filename($s3_url,$bucket);
+		$content  = file_get_contents('s3://'.$bucket.'/'.$filename);
+		if($content) {
+			$result = $this->client_us2->putObject(array(
+				'Bucket' => $bucket,
+				'Key' => 'unknown/' . $key,
+				'Body' => $content
+			));
+		}else{
+			error_log("unknown_mail: The resource can't be accessed. ($s3_url)");
+			echo "unknown_mail: The resource can't be accessed. ($s3_url)";
+		}
 	}
 	public function credit_mail_pdf($attachments, $user_id = 0, $name = 'credit', $type = 'test')
 	{
