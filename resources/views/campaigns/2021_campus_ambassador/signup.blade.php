@@ -14,7 +14,8 @@ function image_url(string $filename) {
         'meta_keywords' => [
             '2021普匯校園大使',
             '金融科技'
-        ]
+        ],
+        'GTM' => env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'
     ],
     'event' => [
         'name'        => '2021普匯校園大使徵選開跑',

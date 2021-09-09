@@ -2,6 +2,16 @@
 <html lang="Zh-Hant-TW" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
 
 <head>
+    @if ($page['GTM'] ?? false)
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{$page['GTM']}}');</script>
+    <!-- End Google Tag Manager -->
+    @endif
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -100,39 +110,16 @@
      <img height="1" width="1" src="https://www.facebook.com/tr?id=2521369841313676&ev=PageView&noscript=1"/>
     </noscript>
     <!-- End Facebook Pixel Code -->
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117279688-9"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'AW-692812197');
-    </script>
-    <script>
-        window.addEventListener("load", function(event) {
-          setTimeout(function(){
-                document.querySelectorAll("a[href*='investLink']").forEach(function(e){
-                    e.addEventListener('click',function(){
-                        gtag('event', 'conversion', {'send_to': 'AW-692812197/vcdCCJyj_ZkCEKXzrcoC'});
-                });
-            });
-
-            document.querySelectorAll("a[href*='borrowLink']").forEach(function(e){
-                    e.addEventListener('click',function(){
-                        gtag('event', 'conversion', {'send_to': 'AW-692812197/WE5GCNWzgpoCEKXzrcoC'});
-                });
-            });
-          },2000)
-      });
-    </script>
-    <!-- End Google Analytics -->
     @yield('styles')
 </head>
 <body>
+@if ($page['GTM'] ?? false)
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{$page['GTM']}}"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+@endif
+
 @yield('content')
 </body>
 
