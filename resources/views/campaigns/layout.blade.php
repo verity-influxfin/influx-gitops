@@ -105,12 +105,11 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117279688-9"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-        gtag('config', 'AW-692812197');
+        gtag('config', 'UA-117279688-9');
+
+        // gtag('config', 'AW-692812197');
     </script>
     <script>
         window.addEventListener("load", function(event) {
