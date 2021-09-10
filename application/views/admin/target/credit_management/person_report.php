@@ -51,11 +51,11 @@
 			textarea {
 				word-break:keep-all;
 				padding: 0;
-				width: 670px;
-				max-width: 670px;
+                width: 100%;
 				box-sizing: border-box;
 				height: 300px;
 				overflow: auto;
+                resize : none;
 			}
         </style>
     </head>
@@ -69,7 +69,7 @@
                     <h1 style="text-align:center;">授信審核表</h1>
                     <div style="float:right;">
                         <p>
-                            <input id="reportDate" >
+                            <input id="reportDate" style="border: 0px;">
                         </p>
                     </div>
                     <div>
@@ -186,29 +186,19 @@
                                 <td>動撥方式</td>
                             </tr>
                         </tbody>
-                        <tbody id="loan_list">
-                            <!-- <tr>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                            </tr> -->
+                        <tbody id="creditLineInfo_approvedCreditList">
                         </tbody>
                         <tbody>
                             <tr>
                                 <th>授信總額度</th>
-                                <td><input id="totalUnusedCreditLine"></td>
-                                <td><input id="totalApplyLine"></td>
+                                <td><input type="text" id="totalUnusedCreditLine"></td>
+                                <td><input type="text" id="totalApplyLine"></td>
                                 <td colspan="4"><canvas class="slash" style="width: 100%;height: 18px;margin: -1px;"></canvas></td>
                             </tr>
                         </tbody>
                     </table>
                     <form>
-                         <p>借款原因：<input class="input" type="text" id="reason" name="txt_CreditUse" size="115"
-                                style="text-align: left;border:1px; border-bottom-style: solid;"></p>
+                        <p>借款原因：<textarea id="reasonList" type="text" style="height: 100px;width: 100%;"></textarea></p>
                         <p>還款方式：<input class="input" type="text" id="paymentType" name="txt_RepaymentSources" size="115"
                                 style="text-align: left;border:1px; border-bottom-style: solid;"></p>
                         <p>其他條件：<input class="input" type="text" id="otherCondition" name="txt_OtherConditions" size="115"
@@ -236,8 +226,9 @@
                         <tr>
                             <td colspan="2">
                                 <div>ㄧ審意見：</div>
-                                <div><textarea type="text" style="height: 100px;"></textarea></div>
-                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                                <div><textarea type="text" id="1_opinion" style="height: 100px;"></textarea></div>
+                                <div style="display:none; width: 35%;"><span>一審評分：</span><input type="text" id="1_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="1_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
 						<tr>
@@ -246,8 +237,9 @@
                         <tr>
                             <td colspan="2">
                                 <div>二審意見：</div>
-                                <div><textarea type="text" style="height: 100px;"></textarea></div>
-                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                                <div><textarea type="text" id="2_opinion" style="height: 100px;"></textarea></div>
+                                <div><span style="width: 35%;">專家分數調整（±400）：</span><input type="text" id="2_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="2_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
 						<tr>
@@ -256,9 +248,9 @@
                         <tr>
                             <td colspan="2">
                                 <div>風控長意見：</div>
-                                <div><textarea type="text" style="height: 100px;"></textarea></div>
-                                <div><span>專家分數調整（±400）：</span><input type="text" style="width: 75%;height: 20px;"></div>
-                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                                <div><textarea type="text" id="3_opinion" style="height: 100px;"></textarea></div>
+                                <div><span style="width: 35%;">專家分數調整（±400）：</span><input type="text" id="3_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="3_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
 						<tr>
@@ -267,9 +259,9 @@
                         <tr>
                             <td colspan="2">
                                 <div>總經理意見：</div>
-                                <div><textarea type="text" style="height: 100px;"></textarea></div>
-								<div><span>專家分數調整（±1500）：</span><input type="text" style="width: 75%;height: 20px;"></div>
-                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                                <div><textarea type="text" id="4_opinion" style="height: 100px;"></textarea></div>
+								<div><span style="width: 35%;">專家分數調整（±1500）：</span><input type="text" id="4_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="4_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
                     </table>
@@ -385,8 +377,8 @@
                     <p>單位：新台幣千元</p>
                 </div>
                 <h3>現放明細</h3>
-                <table class="table">
-                    <tbody>
+                <div style="display:flex;">
+                    <table class="table " style="width:75%;">
                         <tr>
                             <td rowspan="2">授信種類(會計科目)</td>
                             <td>現有核准額度</td>
@@ -394,57 +386,37 @@
                             <td rowspan="2">利(費)率</td>
                             <td rowspan="2">額度到期日</td>
                             <td rowspan="2">餘額最後到期日</td>
-                            <td colspan="2">
-                                <input id="approvedDate">
-                            </td>
                         </tr>
                         <tr>
-                            <td colspan="2">
-                                <inpu id="lastYearDate">
-                            </td>
-                            <td>最高額度</td>
-                            <td>最高餘額</td>
+                            <td colspan="2"><input type="text" id="approvedDate"></td>
                         </tr>
-                    </tbody>
-                    <tbody id="loan_total0">
-                        <!-- <tr>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                        </tr> -->
-                    </tbody>
-                    <tbody id="loan_total1">
-
-                        <tr>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td colspan="2" rowspan="$param" style="vertical-align:text-top;">
-                                <div>其他說明:</div>
-                                <div><input type="text"></div>
-                            </td>
-                        </tr>
-                    </tbody>
-					<tbody id="loan_total">
-					</tbody>
-                    <tbody>
+                        <tbody id="cashLoanInfo_approvedCreditList">
+                        </tbody>
                         <tr>
                             <td>合計</td>
-                            <td><canvas class="slash" style="width: 100%;height: 18px;margin: -1px;"></canvas></td>
-                            <td><input type="text"></td>
-                            <td colspan="3"><canvas class="slash" style="width: 100%;height: 18px;margin: -1px;"></canvas>
+                            <td><canvas class="slash" style="width: 100%;height: 17px;margin: -1px;"></canvas></td>
+                            <td><input type="text" id="lastYearTotalLoanAmount"></td>
+                            <td colspan="3"><canvas class="slash" style="width: 100%;height: 17px;margin: -1px;"></canvas>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                    </table>
+                    <table class="table "style="width:25%;">
+                        <tr>
+                            <td colspan="2" style="white-space: nowrap;">最近一年內(<input type="text" style="width:50%;" id="lastYearDate">)</td>
+                        </tr>
+                        <tr>
+                            <td>總額度</td>
+                            <td>總餘額</td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="lastYearTotalLine"></td>
+                            <td><input type="text" id="lastYearTotalLoanAmount2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input id="note" type="text"></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
         </div>
@@ -461,9 +433,9 @@
             ctx.stroke();
         });
 
-        // 授審表選單項目html
-        function create_item_option_html(type,name,option_name){
-            return `<div><input type="${type}" name="${name}"><span>${option_name}</span></div>`;
+        // 授審表選單項目 html
+        function create_item_option_html(type,name,option_name,option_value){
+            return `<div><input type="${type}" name="${name}" value="${option_value}"><span>${option_name}</span></div>`;
         }
 
         // 取得授審表選單項目
@@ -500,12 +472,27 @@
             return report_data;
         }
 
+        // 生成資料列 html
+        function create_table_list_html(data_list){
+            let html = '';
+            if(data_list){
+                html = '<tr>';
+                Object.keys(data_list).forEach(function (key) {
+                    html += `<td><input type="text" value="${data_list[key]}"></td>`;
+                })
+                html += '</tr>';
+            }
+            return html;
+        }
+
         $(document).ready(function () {
           let urlString = window.location.href;
           let url = new URL(urlString);
           let target_id = url.searchParams.get("target_id");
           let type = url.searchParams.get("type");
 		  let td_array = ['relationship','loan_list','loan_total'];
+          let is_checkbox = ['productCategory', 'creditCategory', 'reviewedLevel', 'applyLineType'];
+          let is_data_array = ['approvedCreditList', 'reasonList', 'reviewedInfoList', 'approvedCreditList','relation'];
 
           report_item = get_default_item(target_id,type);
 
@@ -514,6 +501,7 @@
               return;
           }
 
+          // 生成表格選單項目
           Object.keys(report_item).forEach(function (area_name) {
               Object.keys(report_item[area_name]).forEach(function (form_title) {
                   Object.keys(report_item[area_name][form_title]).forEach(function (form_option) {
@@ -522,7 +510,7 @@
                       }else{
                           type = 'radio';
                       }
-                      option_html = create_item_option_html(type,form_title + type,report_item[area_name][form_title][form_option]);
+                      option_html = create_item_option_html(type,form_title,report_item[area_name][form_title][form_option],form_option);
                       $(`#${form_title}`).append(option_html);
                   })
               })
@@ -535,73 +523,56 @@
               return;
           }
 
-          console.log(report_data);
-
+          // 填寫資料
           Object.keys(report_data).forEach(function (area_name) {
               Object.keys(report_data[area_name]).forEach(function (input_title) {
+                  // 資料非物件
                   if(typeof(report_data[area_name][input_title]) !== 'object'){
-                      $(`#${input_title}`).val(report_data[area_name][input_title]);
+                      // 判斷是否為選單
+                      if(is_checkbox.includes(input_title)){
+                          let checkbox_name = input_title + 'List';
+                          let radios = $(`input:radio[name=${checkbox_name}]`);
+                          radios.filter(`[value=${report_data[area_name][input_title]}]`).prop('checked', true);
+                      }else{
+                          $(`#${input_title}`).val(report_data[area_name][input_title]);
+                      }
+                  }else{
+                      // 判斷是否為表格資料
+                      if(is_data_array.includes(input_title)){
+                          // 借款原因
+                          if(input_title == 'reasonList'){
+                              let data_reason = '';
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+                                  data_reason += report_data[area_name][input_title][list_key] + '、\n';
+                              })
+                              $(`#reasonList`).val(data_reason);
+                              // 核貸層級批示
+                          }else if(input_title == 'reviewedInfoList'){
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+                                  $(`#${list_key}_name`).val(report_data[area_name][input_title][list_key]['name']);
+                                  $(`#${list_key}_opinion`).val(report_data[area_name][input_title][list_key]['opinion']);
+                                  $(`#${list_key}_score`).val(report_data[area_name][input_title][list_key]['score']);
+                              })
+                          }else{
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+                                  list_html = create_table_list_html(report_data[area_name][input_title][list_key]);
+                                  $(`#${area_name}_${input_title}`).append(list_html);
+                              })
+                          }
+                      }
+                      if(is_checkbox.includes(input_title)){
+                          let checkbox_name = input_title + 'List';
+                          let radios = $(`input:checkbox[name=${checkbox_name}]`);
+                          if(input_title == 'productCategory'){
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+                                  radios.filter(`[value=${report_data[area_name][input_title][list_key]}]`).prop('checked', true);
+                              })
+                          }
+                      }
                   }
-                  // Object.keys(report_item[area_name][form_title]).forEach(function (form_option) {
-                  //     if(form_title == 'productCategoryList'){
-                  //         type = 'checkbox';
-                  //     }else{
-                  //         type = 'radio';
-                  //     }
-                  //     option_html = create_item_option_html(type,form_title + type,report_item[area_name][form_title][form_option]);
-                  //     $(`#${form_title}`).append(option_html);
-                  // })
               })
           })
-
           return;
-          // $.ajax({
-          //     type: "GET",
-          //     url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=${type}`,
-          //     success: function (response) {
-          //         if (!response) {
-          //             alert(response);
-          //             return;
-          //         }
-          //         if(response.response){
-          //           Object.keys(response.response).forEach(function (key) {
-			// 			if( td_array.includes(key)){
-			// 				if(Array.isArray(response.response[key])){
-			// 					Object.keys(response.response[key]).forEach(function (key1) {
-			// 						html_id = key;
-			// 						td_string = '<tr>';
-			// 						Object.keys(response.response[key][key1]).forEach(function (key2) {
-			// 							td_string += `<td><input type="text" value="${response.response[key][key1][key2]}"></td>`;
-			// 						})
-			// 						if(key == 'loan_total' && key1 == 0){
-			// 							html_id = key + '0';
-			// 							td_string += `<td><input type="text"></td><td><input type="text"></td>`;
-			// 						}
-			// 						if(key == 'loan_total' && key1 == 1){
-			// 							html_id = key + '1';
-			// 							td_string += `<td colspan="2" rowspan="$param" style="vertical-align:text-top;">
-			// 								<div>其他說明:</div>
-			// 								<div><input type="text"></div>
-			// 							</td>`;
-			// 						}
-			// 						td_string += '</tr>';
-			// 						$(`#${html_id}`).append(td_string);
-			// 					})
-			// 				}
-			// 			}else{
-			// 				if(key == 'company_type'){
-			// 					document.company_type.company_type_radio.value=response.response[key];
-			// 				}else{
-			// 					$(`#${key}`).val(response.response[key]);
-			// 				}
-			// 			}
-          //           })
-          //         }
-          //     },
-          //     error: function(error) {
-          //         alert(response);
-          //     }
-          // });
         });
     </script>
 
