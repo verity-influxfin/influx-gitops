@@ -69,12 +69,8 @@
                     <h1 style="text-align:center;">授信審核表</h1>
                     <div style="float:right;">
                         <p>
-                            <script language="javascript">
-                                var Today = new Date();
-                                document.write(Today.getFullYear() + " 年 " + (Today.getMonth() + 1) + " 月 " + Today.getDate() + " 日");
-                            </script>
+                            <input id="reportDate" >
                         </p>
-                        <p>單位：新台幣千元</p>
                     </div>
                     <div>
                         <!-- 案件類型 -->
@@ -113,7 +109,7 @@
                             <tr>
                                 <td colspan="2"><span>任職公司：</span></td>
                                 <td colspan="2">
-                                    <input type="text" id="company_name">
+                                    <input type="text" id="company">
                                 </td>
                                 <td rowspan="2"><span>常用信箱</span></td>
                                 <td colspan="3" rowspan="2">
@@ -125,7 +121,7 @@
                             <tr>
                                 <td colspan="2"><span>就讀(畢業)學校/科系：</span></td>
                                 <td colspan="2">
-                                    <input type="text" id="director_id">
+                                    <input type="text" id="school">
                                 </td>
                             </tr>
                             <tr>
@@ -142,7 +138,7 @@
                                 </td>
                                 <td><span>信評時間</span></td>
                                 <td>
-                                    <input type="text">
+                                    <input id="creditDate"  type="text">
                                 </td>
                             </tr>
                             <tr>
@@ -154,19 +150,22 @@
                                 </td>
                                 <td><span>信評等級</span></td>
                                 <td>
-                                    <input type="text">
+                                    <input id="creditRank" type="text">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div id="white"></div>
+                    <div style="float:right;">
+                        <p>單位：新台幣千元</p>
+                    </div>
                     <table class="table">
                         <tbody>
                             <tr>
                                 <td colspan="2"><span>核貸授信總額度(含本案)</span></td>
-                                <td colspan="3"><input type="text"id="loan_list_total"></td>
+                                <td colspan="3"><input type="text"id="unusedCreditLine"></td>
                                 <td rowspan="2"><span>額度到期日</span></td>
-                                <td rowspan="2"><input type="text"></td>
+                                <td rowspan="2"><input id="creditLineExpiredDate" type="text"></td>
                             </tr>
                             <tr>
                                 <td><span>申貸額度及條件</span></td>
@@ -175,7 +174,7 @@
                                     </form>
                                 </td>
                                 <td>額度合計</td>
-                                <td colspan="2"><input type="text" id="total_amount"></td>
+                                <td colspan="2"><input type="text" id="todayApplyLine"></td>
                             </tr>
                             <tr>
                                 <td>授信種類</td>
@@ -201,8 +200,8 @@
                         <tbody>
                             <tr>
                                 <th>授信總額度</th>
-                                <td id="loan_list_amount">0</td>
-                                <td id="loan_list_applied_amount">0</td>
+                                <td><input id="totalUnusedCreditLine"></td>
+                                <td><input id="totalApplyLine"></td>
                                 <td colspan="4"><canvas class="slash" style="width: 100%;height: 18px;margin: -1px;"></canvas></td>
                             </tr>
                         </tbody>
@@ -210,9 +209,9 @@
                     <form>
                          <p>借款原因：<input class="input" type="text" id="reason" name="txt_CreditUse" size="115"
                                 style="text-align: left;border:1px; border-bottom-style: solid;"></p>
-                        <p>還款方式：<input class="input" type="text" name="txt_RepaymentSources" size="115"
+                        <p>還款方式：<input class="input" type="text" id="paymentType" name="txt_RepaymentSources" size="115"
                                 style="text-align: left;border:1px; border-bottom-style: solid;"></p>
-                        <p>其他條件：<input class="input" type="text" name="txt_OtherConditions" size="115"
+                        <p>其他條件：<input class="input" type="text" id="otherCondition" name="txt_OtherConditions" size="115"
                                 style="text-align: left;border:1px; border-bottom-style: solid;"></p>
                     </form>
                     <div id="white"></div>
@@ -227,9 +226,19 @@
                     <div id="white"></div>
                     <table class="table">
                         <tr>
-                            <td rowspan="7" style="width: 80px;">核貸層級批示</td>
+                            <td rowspan="9" style="width: 80px;">核貸層級批示</td>
                             <td>本次核准額度(仟元)：</td>
-                            <td><input type="text"></td>
+                            <td><input id="unusedCreditLine" type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">一審</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div>ㄧ審意見：</div>
+                                <div><textarea type="text" style="height: 100px;"></textarea></div>
+                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                            </td>
                         </tr>
 						<tr>
                             <td colspan="2" style="text-align: center;">二審</td>
@@ -292,6 +301,9 @@
                     </tr> -->
                 </table>
                 <div id="white"></div>
+                <div style="float:right;">
+                    <p>單位：新台幣千元</p>
+                </div>
                 <h3>擔保品明細</h3>
                 <table class="table">
                     <tbody>
@@ -369,6 +381,9 @@
                     </tr>
                 </table>
                 <div id="white"></div>
+                <div style="float:right;">
+                    <p>單位：新台幣千元</p>
+                </div>
                 <h3>現放明細</h3>
                 <table class="table">
                     <tbody>
@@ -380,16 +395,12 @@
                             <td rowspan="2">額度到期日</td>
                             <td rowspan="2">餘額最後到期日</td>
                             <td colspan="2">
-                                <div style="display: flex;">最近一年內（<input type="text"
-                                        style="height:initial;width: 20px;">年<input type="text"
-                                        style="height:initial;width: 20px;">月）</div>
+                                <input id="approvedDate">
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <div style="display: flex;">（<input type="text" style="height:initial;width: 20px;">年<input
-                                        type="text" style="height:initial;width: 20px;">月<input type="text"
-                                        style="height:initial;width: 20px;">日）</div>
+                                <inpu id="lastYearDate">
                             </td>
                             <td>最高額度</td>
                             <td>最高餘額</td>
@@ -452,7 +463,7 @@
 
         // 授審表選單項目html
         function create_item_option_html(type,name,option_name){
-            return `<div><input type="${type}" name="${name}" checked><span>${option_name}</span></div>`;
+            return `<div><input type="${type}" name="${name}"><span>${option_name}</span></div>`;
         }
 
         // 取得授審表選單項目
@@ -525,6 +536,24 @@
           }
 
           console.log(report_data);
+
+          Object.keys(report_data).forEach(function (area_name) {
+              Object.keys(report_data[area_name]).forEach(function (input_title) {
+                  if(typeof(report_data[area_name][input_title]) !== 'object'){
+                      $(`#${input_title}`).val(report_data[area_name][input_title]);
+                  }
+                  // Object.keys(report_item[area_name][form_title]).forEach(function (form_option) {
+                  //     if(form_title == 'productCategoryList'){
+                  //         type = 'checkbox';
+                  //     }else{
+                  //         type = 'radio';
+                  //     }
+                  //     option_html = create_item_option_html(type,form_title + type,report_item[area_name][form_title][form_option]);
+                  //     $(`#${form_title}`).append(option_html);
+                  // })
+              })
+          })
+
           return;
           // $.ajax({
           //     type: "GET",
