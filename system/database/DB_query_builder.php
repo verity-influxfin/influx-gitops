@@ -142,6 +142,13 @@ abstract class CI_DB_query_builder extends CI_DB_driver {
 	 */
 	protected $qb_orderby			= array();
 
+    /**
+     * QB FOR UPDATE BY data
+     *
+     * @var	array
+     */
+    protected $qb_for_update		= FALSE;
+
 	/**
 	 * QB data sets
 	 *
@@ -312,6 +319,20 @@ abstract class CI_DB_query_builder extends CI_DB_driver {
 		return $this;
 	}
 
+    /**
+     * Select For Update
+     *
+     * Generates the SELECT ... FOR UPDATE portion of the query
+     *
+     * @param	string
+     * @param	mixed
+     * @return	CI_DB_query_builder
+     */
+    public function select_for_update($select = '*', $escape = NULL)
+    {
+        $this->qb_for_update = TRUE;
+        return $this->select($select, $escape);
+    }
 	// --------------------------------------------------------------------
 
 	/**
@@ -2364,6 +2385,12 @@ abstract class CI_DB_query_builder extends CI_DB_driver {
 		{
 			return $this->_limit($sql."\n");
 		}
+
+        // Write the "FOR UPDATE" portion of the query
+        if ($this->qb_for_update === TRUE)
+        {
+            $sql .= "\nFOR UPDATE ";
+        }
 
 		return $sql;
 	}

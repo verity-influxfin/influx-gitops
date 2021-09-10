@@ -65,12 +65,29 @@ interface CreditSheetDefinition
     ];
 
     // 可審查人員
-    public const REVIEWER_CREDIT_ANALYST = 1;
-    public const REVIEWER_CHIEF_RISK_OFFICER = 2;
-    public const REVIEWER_CHIEF_EXECUTIVE_OFFICER = 3;
+    public const REVIEWER_CREDIT_SYSTEM = 1;
+    public const REVIEWER_CREDIT_ANALYST = 2;
+    public const REVIEWER_CHIEF_RISK_OFFICER = 3;
+    public const REVIEWER_CHIEF_EXECUTIVE_OFFICER = 4;
     public const REVIEWER_LIST = [
+        self::REVIEWER_CREDIT_SYSTEM => "一審",
         self::REVIEWER_CREDIT_ANALYST => "二審",
         self::REVIEWER_CHIEF_RISK_OFFICER => "風控長",
         self::REVIEWER_CHIEF_EXECUTIVE_OFFICER => "總經理",
     ];
+
+    // 回應代碼
+    public const RESPONSE_CODE_OK = 0;
+    public const RESPONSE_CODE_NO_PERMISSION = 1;
+    public const RESPONSE_CODE_TRANSACTION_ROLLBACK = 2;
+    public const RESPONSE_CODE_REPEATED_APPROVAL = 3;
+    public const RESPONSE_CODE_INVALID_ACTION = 4;
+    public const RESPONSE_CODE_LIST = [
+        self::RESPONSE_CODE_OK => "已完成",
+        self::RESPONSE_CODE_NO_PERMISSION => "沒有操作權限",
+        self::RESPONSE_CODE_TRANSACTION_ROLLBACK => "此次操作失敗，請重新再試",
+        self::RESPONSE_CODE_REPEATED_APPROVAL => "無法重複審核",
+        self::RESPONSE_CODE_INVALID_ACTION => "無效的操作",
+    ];
+
 }
