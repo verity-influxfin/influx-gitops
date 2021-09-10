@@ -16,6 +16,7 @@ $config['admin_menu'] = [
         'waiting_loan' => '待放款',
         'repayment' => '還款中',
         'finished' => '已結案',
+        'index?delay=1&status=5' => '逾期中',
         'prepayment' => '提前還款',
         'order_target' => '消費貸 - 案件列表',
         'waiting_approve_order_transfer' => '消費貸 - 債轉待批覆',
@@ -106,6 +107,72 @@ $config['admin_menu'] = [
     ],
     'Agreement' => ['name' => '協議書'],
     'Contract' => ['name' => '合約書'],
+];
+
+
+$config['role_permission'] = [
+    'RolePostLoan' => [
+        'name' => '角色-貸後權限',
+        'permission' => [
+            'Passbook' => [
+              'display' => [
+                  'validator' => [
+                      'className' =>'RequestValidator\PostLoan\VirtualPassbookValidator',
+                      'parameters' => ['virtual_account' => '*']
+                  ],
+                  'menu_display' => false,
+              ]
+            ],
+            'User' => [
+                'display' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\UserValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                    'menu_display' => false,
+                ]
+            ],
+            'Target' => [
+                'edit' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                ],
+                'index?delay=1&status=5' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['status' => [5], 'delay' => 1]
+                    ],
+                ],
+                'transaction_display' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                ]
+            ],
+            'Risk' => [
+                'index?investor=0&company=0' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['investor' => 0, 'company' => 0],
+                    ],
+                    'role_parameters' => [
+                        'group' => [0]    // group: 身份驗證(0) 收件檢核(1) 審核中(2)
+                    ]
+                ]
+            ],
+            'Certification' => [
+                'user_certification_edit' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\CertificationValidator',
+                        'parameters' => ['id' => '*'],
+                    ],
+                ]
+            ]
+        ]
+    ]
 ];
 
 //內部通知Email

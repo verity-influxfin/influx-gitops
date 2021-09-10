@@ -123,6 +123,8 @@ class Risk extends MY_Admin_Controller {
                     }
                 }
 			}
+			if(!empty($this->role_info['group']))
+                $listStage = array_intersect_key($listStage, array_flip($this->role_info['group']));
 		}
 
 		$page_data['list'] 					= $listStage;

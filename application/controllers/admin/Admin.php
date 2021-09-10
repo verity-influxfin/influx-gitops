@@ -248,6 +248,7 @@ class Admin extends MY_Admin_Controller {
 		if(!empty($admin_menu)){
 			unset($admin_menu['AdminDashboard']);
 		}
+        $admin_menu = array_merge($admin_menu, $this->config->item('role_permission'));
 		$page_data 	= array(
 			'type'			=> 'edit',
 			'status_list'	=> $status_list,
