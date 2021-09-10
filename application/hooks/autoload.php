@@ -6,6 +6,8 @@ function autoload()
     spl_autoload_register();
     spl_autoload_register(function($class) {
         $class = str_replace('\\', '/', $class);
-        require_once $class.EXT;
+        if(file_exists(APPPATH.'extra_libraries/'.$class.EXT)) {
+            require_once $class . EXT;
+        }
     }, false);
 }

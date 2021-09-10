@@ -81,7 +81,7 @@ class PersonalCreditSheet extends CreditSheetBase {
     public function getStructuralData(): array
     {
         $response = [];
-        $response['basicInfo']['reviewLevelList'] = $this->basicInfo->getReviewLevelList();
+        $response['basicInfo']['reviewedLevelList'] = $this->basicInfo->getReviewLevelList();
         $response['basicInfo']['creditCategoryList'] = $this->basicInfo->getCreditCategoryList();
         $response['basicInfo']['productCategoryList'] = $this->basicInfo->getProductCategoryList();
 
