@@ -1358,6 +1358,10 @@ class Charge_lib
 						foreach($user_to_info as $investment_id => $value) {
                             $delay_interest = 0;
 
+                            // 對象是平台不處理延滯息及投資人的回款平台服務費
+                            if($investment_id == 0)
+                                continue;
+
                             if ($contract->format_id == 3) {
                                 // 消費貸不能做部分清償，所以依舊使用原先方式計算
                                 $delay_interest = $this->CI->financial_lib->get_interest_by_days($delay_days, $value['remaining_principal'], $instalment, 20, $limit_date);
