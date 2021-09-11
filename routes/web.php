@@ -239,9 +239,13 @@ Route::post('/bakUpdateImgOrder', 'Backendcontroller@updateImgOrder');
 Route::post('/bakDeleteFeedbackImg', 'Backendcontroller@deleteFeedbackImg');
 
 // campusJoin
-
-Route::get('/campusJoin', function () {
-    return view('campusJoin');
+// 校園大使舊版頁面轉址
+Route::get('/campusJoin',  function () {
+    return redirect('/campaign/2021-campus-ambassador');
+});
+// 校園大使舊版頁面轉址
+Route::get('/campuspartner',  function () {
+    return redirect('/campaign/2021-campus-ambassador');
 });
 
 Route::post('/campusUploadFile', 'Controller@campusUploadFile');
