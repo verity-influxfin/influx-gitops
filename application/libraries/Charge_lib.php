@@ -145,14 +145,16 @@ class Charge_lib
             $target_id_list = array_unique(array_column($account_payable_list, 'target_id'));
 
             // 欲處理之案件列表，目前只處理學生貸和上班貸
-            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list, 'product_id' => [1, 3]]);
+            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list, 'product_id' => [1, 3], 'delay_days > ' => GRACE_PERIOD]);
             $target_id_list = array_column($targets, 'id');
 
             // 撈取法催中的案件編號
-            $legal_collection_investment = $this->CI->investment_model->get_many_by(['target_id' => $target_id_list,
-                'legal_collection_at >' => '1911-01-01 00:00:00',
-                'status' => INVESTMENT_STATUS_REPAYING]);
-            $legal_collection_target_id_list = array_unique(array_column($legal_collection_investment, 'target_id'));
+            if(!empty($target_id_list)) {
+                $legal_collection_investment = $this->CI->investment_model->get_many_by(['target_id' => $target_id_list,
+                    'legal_collection_at >' => '1911-01-01 00:00:00',
+                    'status' => INVESTMENT_STATUS_REPAYING]);
+                $legal_collection_target_id_list = array_unique(array_column($legal_collection_investment, 'target_id'));
+            }
 
             if($targets) {
                 $target_key_list = array_reduce($targets, function ($list, $item) {
@@ -240,6 +242,7 @@ class Charge_lib
         $total_recovery_list = [];
         $target_paid_amount_list = [];
         $repay_notification_list = [];
+
         if ($available_balance < $total_accounts_payable) {
             foreach($sorting_charge_ar_sources as $ar_source) {
                 $origin_balance = $available_balance;
@@ -430,6 +433,15 @@ class Charge_lib
             VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $virtual);
         if (!$virtual_account) {
             error_log("Changing status of virtual account was failed.");
+        }
+
+        // 餘額超過逾期總額，採用正常還款方式清償
+        if ($available_balance >= $total_accounts_payable) {
+            foreach ($target_key_list as $value) {
+                // convert to stdClass
+                $target = json_decode(json_encode($value));
+                $this->charge_normal_target($target);
+            }
         }
 
         return TRUE;
