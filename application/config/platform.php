@@ -251,53 +251,6 @@ $config['product_list'] = [
         'hiddenMainProduct' => false,
         'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
     ],
-    1002 => [
-        'id' => 1,
-        'visul_id' => 'N1',
-        'type' => 1,
-        'identity' => 1,
-        'alias' => 'STN',
-        'name' => '學生貸',
-        'loan_range_s' => 6000,
-        'loan_range_e' => 144000,
-        'interest_rate_s' => 4,
-        'interest_rate_e' => 16,
-        'charge_platform' => PLATFORM_FEES,
-        'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [5000, STAGE_CER_TARGET, 1],
-        'certifications' => [
-            CERTIFICATION_IDCARD,
-            CERTIFICATION_STUDENT,
-            CERTIFICATION_DEBITCARD,
-            CERTIFICATION_SOCIAL,
-            CERTIFICATION_EMERGENCY,
-            CERTIFICATION_EMAIL,
-            CERTIFICATION_FINANCIAL
-        ],
-        'certifications_stage' => [
-            [
-                CERTIFICATION_IDCARD,
-                CERTIFICATION_STUDENT,
-                CERTIFICATION_DEBITCARD,
-            ],
-            [
-                CERTIFICATION_SOCIAL,
-                CERTIFICATION_EMERGENCY,
-                CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL
-            ]
-        ],
-        'instalment' => [3, 6, 12, 18, 24],
-        'repayment' => [1],
-        'targetData' => [],
-        'secondInstance' => false,
-        'weight' => [],
-        'status' => 1,
-        'dealer' => [0],
-        'multi_target' => 0,
-        'hiddenMainProduct' => false,
-        'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
-    ],
     2 => [
         'id' => 2,
         'visul_id' => 'N2',
