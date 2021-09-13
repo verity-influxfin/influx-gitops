@@ -21,7 +21,7 @@ function image_url(string $filename) {
         'description' => '成為普匯校園大使，完成屬於自己大學生涯的校園專案，不限科系，只要你充滿熱情、勇於挑戰，即獲取報名門票！',
         'start_date'  => '2021-09-01',
         'end_date'    => '2021-09-28',
-        'signup_url'  => url('/campaign/2021-campus-ambassador/sign-up'),
+        'signup_url'  => url('/campaign/2021-campus-ambassador/signup'),
     ]
 ])
 

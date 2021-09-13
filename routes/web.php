@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /*
 |--------------------------------------------------------------------------
@@ -307,5 +308,9 @@ Route::view('/{path?}', 'index');
 Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
 
     $name = str_replace('-', '_', strtolower($name));
-    return view(sprintf('campaigns/%s/%s', $name, $path));
+    if (view()->exists($path = sprintf('campaigns/%s/%s', $name, $path)))
+    {
+        return view($path);
+    }
+    throw new NotFoundHttpException();
 });
