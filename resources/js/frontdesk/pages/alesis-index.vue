@@ -6,7 +6,7 @@
                     <div class="banner">
                         <div class="puhey-banner">
                             <img src="/images/首頁BANNER.png" class="hidden-desktop img-fluid" />
-                            <img src="/images/index-banner-m.jpeg" class="hidden-phone img-fluid" />
+                            <img src="/images/index-banner-m.jpg" class="hidden-phone img-fluid" />
                             <img src="/images/diagram-d.svg" class="diagram hidden-desktop" />
                             <img src="/images/diagram-m.svg" class="diagram hidden-phone" />
 
@@ -14,11 +14,11 @@
                                 <div class="box">
                                     <a class="loan" href="/investLink">
                                         <img src="/images/home_banner_button_bg_blue.svg" class="img-fluid" />
-                                        <div class="text">我要投資 <i class="fa fa-angle-double-right"></i></div>
+                                        <div class="text">我想投資 <i class="fa fa-angle-double-right"></i></div>
                                     </a>
                                     <a class="borrow" href="/borrowLink">
-                                        <img src="/images/home_banner_button_bg_blue.svg" class="img-fluid" />
-                                        <div class="text">我要借款 <i class="fa fa-angle-double-right"></i></div>
+                                        <img src="/images/home_banner_button_bg_grey.svg" class="img-fluid" />
+                                        <div class="text">我想借款 <i class="fa fa-angle-double-right"></i></div>
                                     </a>
                                 </div>
                             </div>
@@ -1481,7 +1481,7 @@ export default {
 
             .content {
                 position  : absolute;
-                top       : 62%;
+                top       : 73%;
                 left      : 35%;
                 transform : translate(-50%, -50%);
                 text-align: center;
@@ -1508,8 +1508,7 @@ export default {
             }
 
             .box {
-                display   : flex;
-                margin-top: 5vw;
+                display: flex;
 
                 a {
                     img {
@@ -1528,17 +1527,16 @@ export default {
                     }
 
                     :hover {
-                        color          : #ffffff;
                         text-decoration: none;
                     }
 
                     .text {
-                        color    : #ffffff;
                         position : absolute;
                         top      : 51%;
                         left     : 47%;
                         transform: translate(-50%, -50%);
                         font-size: min(1.5vw, 26px);
+                        font-weight:bold;
                         width    : 100%;
 
                         i.fa {
@@ -1549,10 +1547,26 @@ export default {
 
                 .loan {
                     @extend %block;
+
+                    :hover {
+                        color: #ffffff;
+                    }
+
+                    .text {
+                        color: #ffffff;
+                    }
                 }
 
                 .borrow {
                     @extend %block;
+
+                    :hover {
+                        color: #064280;
+                    }
+
+                    .text {
+                        color: #064280;
+                    }
                 }
             }
         }
