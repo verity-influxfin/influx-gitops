@@ -36,7 +36,7 @@ class Target extends MY_Admin_Controller {
 			    $where[$field] = $input[$field];
             }
         }
-        if(isset($input[$field])&&$input['tsearch']!=''){
+        if(isset($input[$field])&&isset($input['tsearch'])&&$input['tsearch']!=''){
             $tsearch = $input['tsearch'];
             if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
             {

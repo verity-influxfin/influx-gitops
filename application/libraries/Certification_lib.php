@@ -19,6 +19,45 @@ class Certification_lib{
 		$this->certification = $this->CI->config->item('certifications');
     }
 
+    /**
+     * 篩選特定狀態的認證項目
+     * @param $userCertifications
+     * @param int[] $findStatusList
+     * @return int[]|string[]
+     */
+    public function filterCertIdsInStatusList($userCertifications, $findStatusList=[1]) {
+        return array_unique(array_keys(array_filter($userCertifications,
+            function ($x) use ($findStatusList) { return (is_array($x) && in_array($x['status'], $findStatusList))
+                || (is_object($x) && in_array($x->status, $findStatusList)); })));
+    }
+    
+    /**
+     * 取得產品的各階段徵信檢核項目列表
+     * @param $product_id
+     * @return mixed|null
+     */
+    public function getCertificationsStageList($product_id) {
+        $productList = $this->CI->config->item('product_list');
+        return isset($productList[$product_id]) &&
+            isset($productList[$product_id]['certifications_stage']) ?
+            $productList[$product_id]['certifications_stage'] : null;
+    }
+
+    /**
+     * 確認特定驗證階段是否都有紀錄
+     * @param $product_id
+     * @param $certificationList
+     * @param $stage
+     * @return bool
+     */
+    public function checkVerifiedStage($product_id, $certificationList, $stage) {
+        $certificationsStageList = $this->getCertificationsStageList($product_id);
+
+        return isset($certificationsStageList) &&
+            (count(array_intersect($certificationsStageList[$stage], $certificationList))
+            == count($certificationsStageList[$stage]));
+    }
+
 	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false){
 		if($user_id && $certification_id){
 			$param = array(
@@ -800,12 +839,16 @@ class Certification_lib{
 					$remark['fail'] = "需人工驗證";
 				}else {
 					$parser = new \Smalot\PdfParser\Parser();
-					$pdf = $parser->parseFile($url);
-					$text = $pdf->getText();
-					$response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
-					$data = [
-						'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId'] : '',
-					];
+					try {
+                        $pdf = $parser->parseFile($url);
+                        $text = $pdf->getText();
+                        $response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
+                        $data = [
+                            'id' => isset($response['applierInfo']['basicInfo']['personId']) ? $response['applierInfo']['basicInfo']['personId'] : '',
+                        ];
+                    }catch (Exception $e) {
+                        $response = False;
+                    }
 
 					if (!$response || strpos($text, '綜合信用報告') === FALSE) {
 						$verifiedResult->addMessage('聯徵PDF解析失敗', 3, MassageDisplay::Backend);
@@ -902,8 +945,8 @@ class Certification_lib{
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status != 3 ? 0 : $status,
 				'sys_check' => 1,
-				'content' => json_encode($certification_content),
-				'remark' => json_encode($remark),
+				'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE),
+				'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
         	));
 
 			if($status == 1) {
@@ -977,12 +1020,16 @@ class Certification_lib{
 					if ($pdf_url) {
 						$this->CI->load->library('Labor_insurance_lib');
 						$parser = new \Smalot\PdfParser\Parser();
-						$pdf = $parser->parseFile($pdf_url);
-						$text = $pdf->getText();
-						$res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
+                        try {
+                            $pdf = $parser->parseFile($pdf_url);
+                            $text = $pdf->getText();
+                            $res = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
+                        }catch (Exception $e) {
+                            $res = False;
+                        }
 					}
 
-					if (isset($certification_content['tax_id']) && $certification_content['tax_id']) {
+					if ($res && isset($certification_content['tax_id']) && $certification_content['tax_id']) {
 						$this->CI->load->library('gcis_lib');
 						$gcis_res = $this->CI->gcis_lib->account_info($certification_content['tax_id']);
 						$certification_content['gcis_info'] = $gcis_res;
@@ -1041,6 +1088,9 @@ class Certification_lib{
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
 				$notificationContent = $verifiedResult->getAPPMessage(2);
 				$this->certi_failed($info->id, $notificationContent, $canResubmitDate, true);
+
+				// 退工作認證時，需把聯徵也一起退掉 issue #1202
+                $this->withdraw_investigation($info->user_id, $info->investor);
 			}
 			return true;
 		}
@@ -1960,6 +2010,27 @@ class Certification_lib{
             return $remark;
         }
         return false;
+    }
+
+    public function withdraw_investigation($user_id, $investor) {
+        $investigation_cert = $this->CI->user_certification_model->get_by(
+            [
+                'certification_id' => CERTIFICATION_INVESTIGATION,
+                'user_id' => $user_id,
+                'investor' => $investor,
+                'status' => [0, 1, 3]
+            ]);
+        if(isset($investigation_cert)) {
+            $temp_remark						= json_decode($investigation_cert->remark, TRUE);
+            if(!is_array($temp_remark))
+                $temp_remark = [isset($temp_remark) ? strval($temp_remark) : ''];
+
+            $temp_remark['verify_result'] 	= ['經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。'];
+            $this->CI->user_certification_model->update($investigation_cert->id,[
+                'remark' => json_encode($temp_remark),
+            ]);
+            $this->set_failed($investigation_cert->id, '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。', false);
+        }
     }
 
     public function get_social_report($limit = 10){

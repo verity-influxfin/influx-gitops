@@ -241,6 +241,22 @@ class Target_model extends MY_Model
         return $query->result();
     }
 
+    public function getUserStatusByTargetId($targetIds) {
+        $this->db->select('*')
+            ->from("`p2p_loan`.`targets`")
+            ->where_in('id', $targetIds);
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.user_id, COUNT(*) as total_count')
+            ->from('`p2p_loan`.`targets` AS `t`')
+            ->join("($subquery) as `r`", "`t`.`user_id` = `r`.`user_id`")
+            ->where('t.created_at < r.created_at')
+            ->where("FROM_UNIXTIME(`t`.`created_at`, '%Y-%m-%d %H:%i:%s') >= DATE_SUB(FROM_UNIXTIME(`r`.`created_at`, '%Y-%m-%d %H:%i:%s'), INTERVAL 6 MONTH)")
+            ->group_by('t.user_id');
+
+        return $this->db->get()->result();
+    }
+    
     /**
      * 設定案件的的腳本使用狀態 (成功:回傳案件的物件/不成功:回傳空陣列)
      * @param $target_ids

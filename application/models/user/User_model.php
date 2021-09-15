@@ -61,55 +61,71 @@ class User_model extends MY_Model
 
 	public function getStudents($filters, $offset = 0, $limit = 20)
 	{
-		$this->db->select('users.*')
-				 ->from ('p2p_user.users')
-				 ->join('p2p_user.user_meta as meta', 'users.id = meta.user_id');
+        $this->db->select('users.*')
+                 ->from ('p2p_user.users')
+                 ->join('p2p_user.user_meta as meta', 'users.id = meta.user_id');
 
-		foreach ($filters as $filter) {
-			if ($filter[0] == 'status') {
-				$this->db->where('users.status ' . $filter[1], $filter[2]);
-			}
-			if ($filter[0] == 'created_at') {
-				$this->db->where('users.created_at ' . $filter[1], $filter[2]);
-			}
-			if ($filter[0] == 'meta_key') {
-				$this->db->where('meta.meta_key ' . $filter[1], $filter[2]);
-			}
-			if ($filter[0] == 'promote_code') {
-				if ($filter[1] == "!=") {
-					$this->db->where('users.promote_code ' . $filter[1], $filter[2]);
-				} elseif ($filter[1] == "in") {
-					$this->db->where_in('users.promote_code', $filter[2]);
-				} elseif ($filter[1] == "not in") {
-					$this->db->where_not_in('users.promote_code', $filter[2]);
-				} else {
-					$this->db->where('users.promote_code', $filter[2]);
-				}
-			}
-		}
+        foreach ($filters as $filter) {
+            if ($filter[0] == 'status') {
+                $this->db->where('users.status ' . $filter[1], $filter[2]);
+            }
+            if ($filter[0] == 'created_at') {
+                $this->db->where('users.created_at ' . $filter[1], $filter[2]);
+            }
+            if ($filter[0] == 'meta_key') {
+                $this->db->where('meta.meta_key ' . $filter[1], $filter[2]);
+            }
+            if ($filter[0] == 'promote_code') {
+                if ($filter[1] == "!=") {
+                    $this->db->where('users.promote_code ' . $filter[1], $filter[2]);
+                } elseif ($filter[1] == "in") {
+                    $this->db->where_in('users.promote_code', $filter[2]);
+                } elseif ($filter[1] == "not in") {
+                    $this->db->where_not_in('users.promote_code', $filter[2]);
+                } else {
+                    $this->db->where('users.promote_code', $filter[2]);
+                }
+            }
+        }
 
-		$this->db->limit($limit, $offset);
+        $this->db->limit($limit, $offset);
 
-			$query = $this->db->get();
+            $query = $this->db->get();
 
-			return $query->result();
-		}
+            return $query->result();
+    }
 
-		public function getUsersBy($criteria, $column_not_null=[], $offset = 0, $limit = 1){
-			$this->db->select('*')
-					 ->from('p2p_user.users as user');
-			 if (isset($criteria['certification_id'])) {
-						 $this->db->join('p2p_user.user_certification as certification', 'user.id = certification.user_id')
-						 ->where('certification.certification_id', $criteria['certification_id'])
-						 ->where('certification.status =', 1);
-				}
-				if(! empty($column_not_null)){
-					foreach($column_not_null as $value){
-						$this->db->where('user.'.$value.' != ', '');
-					}
-				}
-				$this->db->limit($limit, $offset);
-				$query = $this->db->get();
-			return $query->result();
-		}
+    public function getUsersBy($criteria, $column_not_null=[], $offset = 0, $limit = 1){
+        $this->db->select('*')
+                 ->from('p2p_user.users as user');
+         if (isset($criteria['certification_id'])) {
+                     $this->db->join('p2p_user.user_certification as certification', 'user.id = certification.user_id')
+                     ->where('certification.certification_id', $criteria['certification_id'])
+                     ->where('certification.status =', 1);
+            }
+            if(! empty($column_not_null)){
+                foreach($column_not_null as $value){
+                    $this->db->where('user.'.$value.' != ', '');
+                }
+            }
+            $this->db->limit($limit, $offset);
+            $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getDelayedTargetByInvestor($user_id) {
+        $this->db->select('*')
+            ->from("`p2p_loan`.`investments`")
+            ->where('user_id', $user_id)
+            ->where('status', 3);
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.*')
+            ->from('`p2p_loan`.`targets` AS `t`')
+            ->join("($subquery) as `i`", "`t`.`id` = `i`.`target_id`")
+            ->where('t.delay_days > ', GRACE_PERIOD);
+
+        return $this->db->get()->result();
+    }
+
 }

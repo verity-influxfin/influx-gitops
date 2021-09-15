@@ -1440,7 +1440,7 @@ class Product extends REST_Controller {
                 : false;
 
             $new_rate = floatval($param['rate']);
-            $new_rate <= $target->interest_rate && $new_rate <= $product['interest_rate_e']
+            $new_rate <= $target->interest_rate || $new_rate > $product['interest_rate_e']
                 ? $this->response(array('result' => 'ERROR', 'error' => PRODUCT_RATE_ERROR))
                 : false;
 
@@ -2474,7 +2474,7 @@ class Product extends REST_Controller {
 
         $company = ['DS2P1'];
         if(!in_array($product['visul_id'],$company)){
-            if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 35 ){
+            if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 55 ){
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
         }
