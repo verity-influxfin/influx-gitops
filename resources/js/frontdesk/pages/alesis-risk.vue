@@ -19,9 +19,13 @@
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
-                    <img src="/images/risk08-report.jpg" class="圖片">
+                    <img v-if="current_risk_month === '07'" src="/images/risk07-report.jpg" class="圖片">
+                    <img v-if="current_risk_month === '08'" src="/images/risk08-report.jpg" class="圖片">
                     <div class="連結">
-                        <a href="javascript:;" class="項目">
+                        <a @click="current_risk_month = '07'" href="javascript:;" class="項目">
+                            <alesis-button>2021年7月</alesis-button>
+                        </a>
+                        <a @click="current_risk_month = '08'" href="javascript:;" class="項目">
                             <alesis-button>2021年8月</alesis-button>
                         </a>
                     </div>
@@ -77,6 +81,11 @@ export default {
         AlesisTaiwanMap,
         AlesisVerticalRoadmap,
         AlesisSpace,
+    },
+    data: () => {
+        return {
+            current_risk_month : "08",
+        }
     },
     created() {
         $("title").text(`首頁 - inFlux普匯金融科技`);
