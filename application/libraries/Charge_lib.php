@@ -10,6 +10,7 @@ class Charge_lib
         $this->CI = &get_instance();
 		$this->CI->load->model('transaction/transaction_model');
 		$this->CI->load->model('user/virtual_account_model');
+        $this->CI->load->library('Financial_lib');
 		$this->CI->load->library('Passbook_lib');
 		$this->CI->load->library('Transaction_lib');
     }
@@ -54,7 +55,7 @@ class Charge_lib
                         'user_to' => $transaction->user_to,
                         'limit_date' => $transaction->limit_date,
                         'bank_account_to' => $transaction->bank_account_to,
-                        'status' => 1
+                        'status' => TRANSACTION_STATUS_TO_BE_PAID
                     ];
                     // 結清應付帳款
                     $paid_transaction->amount = $balance;
@@ -70,7 +71,7 @@ class Charge_lib
                         'user_to' => $transaction->user_to,
                         'bank_account_to' => $transaction->bank_account_to,
                         'limit_date' => $transaction->limit_date,
-                        'status' => 2
+                        'status' => TRANSACTION_STATUS_PAID_OFF
                     ];
                 }
             }else{
@@ -91,7 +92,7 @@ class Charge_lib
                     'instalment_no' => $paid_transaction->instalment_no,
                     'user_to' => $paid_transaction->user_to,
                     'bank_account_to' => $paid_transaction->bank_account_to,
-                    'status' => 2
+                    'status' => TRANSACTION_STATUS_PAID_OFF
                 ];
                 $balance -= $paid_transaction->amount;
 
@@ -665,10 +666,16 @@ class Charge_lib
                         if (!isset($user_to[$value->investment_id])) {
                             $user_to[$value->investment_id] = [
                                 'amount' => 0,
+                                'recovery_amount' => 0,
                                 'user_id' => $value->user_to,
                             ];
                         }
                         $user_to[$value->investment_id]['amount'] += $value->amount;
+
+                        // 投資人回款總金額
+                        if(in_array($value->source, getPlatformFeeRelatedARSourceList())) {
+                            $user_to[$value->investment_id]['recovery_amount'] += $value->amount;
+                        }
                     }
                 }
                 if ($amount > 0) {
@@ -688,7 +695,17 @@ class Charge_lib
                             $transaction_param = [];
                             $pass_book = [];
                             foreach ($transaction as $key => $value) {
-                                $rs = $this->CI->transaction_model->update($value->id, ['status' => 2]);
+                                if($value->source == SOURCE_AR_FEES) {
+                                    // 由於增加餘額部分清償會有精度問題，需重新計算回款手續費
+                                    $ar_fee = $this->CI->financial_lib->get_ar_fee($user_to[$value->investment_id]['recovery_amount']);
+                                    $rs = $this->CI->transaction_model->update($value->id,
+                                        ['amount' => $ar_fee,
+                                            'status' => TRANSACTION_STATUS_PAID_OFF]);
+                                    $value->amount = $ar_fee;
+                                }else {
+                                    $rs = $this->CI->transaction_model->update($value->id, ['status' => TRANSACTION_STATUS_PAID_OFF]);
+                                }
+
                                 if ($rs) {
                                     $charge_source = $charge_source_list[$value->source];
                                     $pass_book[] = $value->id;
@@ -1224,7 +1241,7 @@ class Charge_lib
 			$date			= get_entering_date();
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
 				'target_id' => $target->id,
-				'status'	=> 1
+				'status'	=> TRANSACTION_STATUS_TO_BE_PAID
 			]);
 			if($transaction){
                 $this->CI->load->model('loan/contract_model');
@@ -1269,13 +1286,13 @@ class Charge_lib
                     }
 				}
 
-				// 由於部分金額清償可還掉延滯息，故有結清的應還延滯息時，不應該再計算違約金等金額
-                $paid_delay_transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
-                    'source'    => SOURCE_AR_DELAYINTEREST,
+				// 第一次逾期時需結算並產生違約金紀錄，故若有違約金紀錄，不應再結算一次
+                $damage_transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
+                    'source'    => SOURCE_AR_DAMAGE,
                     'target_id' => $target->id,
-                    'status'	=> 2
+                    'status'	=> [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF]
                 ]);
-				if(!empty($paid_delay_transaction))
+				if(!empty($damage_transaction))
                     $settlement = false;
 
 				// 第一次逾期時，需統整本息等項目成每一科目一筆金額及增加違約金等
@@ -1312,7 +1329,7 @@ class Charge_lib
 								'user_to'			=> $value['user_to'],
 								'limit_date'		=> $limit_date,
 								'bank_account_to'	=> $value['bank_account_to'],
-								'status'			=> 1
+								'status'			=> TRANSACTION_STATUS_TO_BE_PAID
 							];
 
 							$transaction_param[] = [
@@ -1327,7 +1344,7 @@ class Charge_lib
 								'user_to'			=> $value['user_to'],
 								'limit_date'		=> $limit_date,
 								'bank_account_to'	=> $value['bank_account_to'],
-								'status'			=> 1
+								'status'			=> TRANSACTION_STATUS_TO_BE_PAID
 							];
 
                             $total = $value['remaining_principal'] + $value['ar_interest'] + $value['delay_interest'];
@@ -1336,7 +1353,7 @@ class Charge_lib
                                 [
                                     'source' 		=> SOURCE_AR_FEES,
                                     'investment_id' => $value['investment_id'],
-                                    'status'        => 1
+                                    'status'        => TRANSACTION_STATUS_TO_BE_PAID
                                 ],
                                 [
                                     'amount' => $ar_fee
@@ -1357,7 +1374,7 @@ class Charge_lib
 								'user_to'			=> 0,
 								'limit_date'		=> $limit_date,
 								'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
-								'status'			=> 1
+								'status'			=> TRANSACTION_STATUS_TO_BE_PAID
 							];
 						}
 
@@ -1406,7 +1423,7 @@ class Charge_lib
 								$delay_interest = $value['delay_interest'] + $unsettlement_delay_interest;
                             }
 
-                            $ar_fee = $value['platform_fee'] + $this->CI->financial_lib->get_ar_fee($delay_interest);
+                            $ar_fee = $value['platform_fee'] + $this->CI->financial_lib->get_ar_fee($delay_interest-$value['delay_interest']);
 
                             if($value['delay_interest']) {
                                 // 已有延滯息科目，對現有科目更新
@@ -1414,6 +1431,7 @@ class Charge_lib
                                     [
                                         'source' 		=> SOURCE_AR_DELAYINTEREST,
                                         'investment_id' => $value['investment_id'],
+                                        'status' => TRANSACTION_STATUS_TO_BE_PAID,
                                     ],
                                     [
                                         'amount' => $delay_interest
@@ -1433,7 +1451,7 @@ class Charge_lib
                                     'user_to' => $value['user_to'],
                                     'limit_date' => $limit_date,
                                     'bank_account_to' => $value['bank_account_to'],
-                                    'status' => 1
+                                    'status' => TRANSACTION_STATUS_TO_BE_PAID
                                 ]);
                             }
 
@@ -1443,7 +1461,7 @@ class Charge_lib
                                     [
                                         'source' 		=> SOURCE_AR_FEES,
                                         'investment_id' => $value['investment_id'],
-                                        'status' => 1,
+                                        'status' => TRANSACTION_STATUS_TO_BE_PAID,
                                     ],
                                     [
                                         'amount' => $ar_fee
@@ -1463,7 +1481,7 @@ class Charge_lib
                                     'user_to' => 0,
                                     'limit_date' => $limit_date,
                                     'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
-                                    'status' => 1
+                                    'status' => TRANSACTION_STATUS_TO_BE_PAID
                                 ]);
                             }
 						}
