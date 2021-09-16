@@ -128,4 +128,26 @@ class User_model extends MY_Model
         return $this->db->get()->result();
     }
 
+    /**
+     * 取得指定時間範圍內申貸成功的推薦用戶數量
+     * @param string $promote_code: 推薦碼
+     * @param int $start_date: 搜尋起始時間點
+     * @param int $end_date: 搜尋結束時間點
+     * @return mixed
+     */
+    public function getPromotedCount(string $promote_code, int $start_date, int $end_date) {
+        $this->db->select('id')
+            ->from("`p2p_user`.`users`")
+            ->where('promote_code', $promote_code)
+            ->where('created_at >=', $start_date)
+            ->where('created_at <=', $end_date);
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('u.id, COUNT(t.id) as count')
+            ->from('`p2p_loan`.`targets` AS `t`')
+            ->join("($subquery) as `u`", "`u`.`id` = `t`.`user_id`")
+            ->where_in('`t`.`status`', [5, 10])
+            ->group_by('t.user_id');
+        return $this->db->get()->result();
+    }
 }
