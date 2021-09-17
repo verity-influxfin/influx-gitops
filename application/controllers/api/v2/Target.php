@@ -534,7 +534,7 @@ class Target extends REST_Controller {
                                     }
                                     $orderIdx++;
                                 }
-                                if($orderIdx < count($orderList))
+                                if($orderIdx == count($orderList))
                                     break;
                             }
                             $description .= '發證地點：' . $contents->id_card_place . '<br>發證時間：' . $contents->id_card_date . '<br>戶籍地址：' . $liveAddress;
@@ -551,8 +551,8 @@ class Target extends REST_Controller {
                         } elseif ($value == 6){
                             $description = '已驗證常用電子信箱';
                         } elseif ($value == 7){
-                            $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
-                            $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
+                            $financial_input = round((($contents->parttime ?? 0) + ($contents->allowance ?? 0) + ($contents->other_income ?? 0)) + (($contents->scholarship ?? 0) * 2) / 12);
+                            $financial_output = round((($contents->restaurant ?? 0) + ($contents->transportation ?? 0) + ($contents->entertainment ?? 0) + ($contents->other_expense ?? 0)));
                             $description = '(自填) 總收入/月：'. $financial_input . '元<br>(自填) 總支出/月：' . $financial_output . '元';
                             isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
                         } elseif ($value == 8){
