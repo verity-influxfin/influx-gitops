@@ -1231,8 +1231,8 @@ class User extends REST_Controller {
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-        $beginDate = '2020-02-09 23:00';
-        $lastday = '2020-02-29 23:59';
+        $beginDate = '2021-09-20 00:00';
+        $lastday = '2021-12-31 23:59';
 
 //        $check= $this->line_lib->check_thirty_points();
 //      if ($check !== 'success') {
@@ -1240,12 +1240,10 @@ class User extends REST_Controller {
 //      }
 		
         //檢查是否有推薦其他人
-        $promote_count    = $this->user_model->get_many_by([
-            'promote_code'  => $promote_code,
-			'created_at >=' => strtotime($beginDate),
-			'created_at <=' => strtotime($lastday)
-        ]);
-        $promotecount=count($promote_count);
+        $promote_count = $this->user_model->getPromotedCount($promote_code,
+            strtotime($beginDate),
+            strtotime($lastday));
+        $promotecount = count($promote_count);
 
         $collect_count= floor($promotecount/3);
 		$my_detail    = $this->user_model->get_by([
@@ -1276,7 +1274,8 @@ class User extends REST_Controller {
             'promote_count'            => count($promote_count),//檢查推薦幾人
             'collect_count'            => intval($collect_count), //跟30點有關 可領取次數
             'done_collect_count'       =>  intval($check_30send),//跟30點有關 已領取次數
-            'game_status'               => true
+            'game_status'              => true,
+            'promote_endtime'          => $lastday
 		);
 		$this->response(array('result' => 'SUCCESS','data' => $data));
     }
@@ -1297,8 +1296,8 @@ class User extends REST_Controller {
 		$promote_code	  = $this->user_info->my_promote_code;
         $url              = 'https://event.influxfin.com/R/url?p='.$promote_code;
 		$qrcode			  = get_qrcode($url);
-        $beginDate = '2020-02-09 23:00';
-        $lastday = '2020-02-29 23:59';
+        $beginDate = '2021-09-20 00:00';
+        $lastday = '2021-12-31 23:59';
 
 //        $check= $this->line_lib->check_thirty_points();
 //        if ($check !== 'success') {
@@ -1306,12 +1305,10 @@ class User extends REST_Controller {
 //        }
 		
         //檢查是否有推薦其他人
-        $promote_count    = $this->user_model->get_many_by([
-            'promote_code'  => $promote_code,
-			'created_at >=' => strtotime($beginDate),
-			'created_at <=' => strtotime($lastday)
-        ]);
-        $promotecount=count($promote_count);
+        $promote_count = $this->user_model->getPromotedCount($promote_code,
+            strtotime($beginDate),
+            strtotime($lastday));
+        $promotecount = count($promote_count);
 
         $collect_count= floor($promotecount/3);
 		$my_detail    = $this->user_model->get_by([
