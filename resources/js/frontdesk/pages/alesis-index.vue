@@ -298,11 +298,14 @@
             <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
+                    <div class="內容區塊 hidden-phone">
+                        <alesis-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
+                    </div>
                     <div class="展示區塊">
                         <img class="圖片" src="/images/步驟1-01.png">
                     </div>
                     <div class="內容區塊">
-                        <alesis-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
+                        <alesis-bullet class="bullet hidden-new-desktop" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
                         <div class="半月列表">
                             <div class="項目">
                                 <alesis-moon class="圖示" header="簡單" :level=1></alesis-moon>
@@ -781,7 +784,14 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
-
+/*
+ * display rwd for flex css
+ */
+.hidden-new-desktop {
+    @include rwd {
+        display: none;
+    }
+}
 
 /**
  * 標頭幻燈片
