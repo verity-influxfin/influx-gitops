@@ -317,8 +317,8 @@
                             <div class="項目">
                                 <alesis-moon class="圖示" header="快速" :level=2></alesis-moon>
                                 <div class="內容">
-                                    10分鐘快速填寫申請資料，<br>
-                                    全程線上操作，無人干擾。
+                                    5分鐘申貸、10分鐘審核、<br>
+                                    1小時核准、24小時媒合放款。<br>
                                 </div>
                             </div>
                             <div class="項目">
@@ -337,7 +337,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="標語">假日放款全年無休</div>
+                <div class="標語">全年無休假日放款</div>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
@@ -346,7 +346,7 @@
         <!-- 快速變現 -->
         <div class="快速變現">
             <alesis-header>
-                <div class="標題">普匯債權快速變現</div>
+                <div class="標題">普匯債權、快速變現</div>
                 <div class="標題">全台唯一債權轉讓功能</div>
             </alesis-header>
             <alesis-section>
