@@ -1274,7 +1274,8 @@ class User extends REST_Controller {
             'promote_count'            => count($promote_count),//檢查推薦幾人
             'collect_count'            => intval($collect_count), //跟30點有關 可領取次數
             'done_collect_count'       =>  intval($check_30send),//跟30點有關 已領取次數
-            'game_status'               => true
+            'game_status'              => true,
+            'promote_endtime'          => $lastday
 		);
 		$this->response(array('result' => 'SUCCESS','data' => $data));
     }
