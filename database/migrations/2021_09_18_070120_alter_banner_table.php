@@ -20,7 +20,7 @@ class AlterBannerTable extends Migration
                     DB::statement("ALTER TABLE `banner` CHANGE `ID` `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT");
                 }
                 if (Schema::hasColumn('banner', 'post_modified')) {
-                    $table->dropColumn('post_modified');
+                    DB::statement("ALTER TABLE `banner` CHANGE `post_modified` `updated_at` TIMESTAMP NULL DEFAULT NULL");
                 }
                 if (Schema::hasColumn('banner', 'type')) {
                     DB::statement("ALTER TABLE `banner` CHANGE `type` `type` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'index'");

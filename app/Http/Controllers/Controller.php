@@ -607,7 +607,7 @@ class Controller extends BaseController
 
     public function getKnowledgeData(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['isActive', '=', 'on']])->orderBy('id', 'desc')->orderBy('id', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->whereIn('type', ['article','investtonic'])->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
 
         return response()->json($knowledge, 200);
     }
@@ -618,9 +618,9 @@ class Controller extends BaseController
 
         $result = [];
         if ($input['filter'] !== 'share') {
-            $result = DB::table('interview')->select('*')->where('category', '=', $input['filter'])->orderBy('id', 'desc')->get();
+            $result = DB::table('interview')->select('*','id as ID')->where('category', '=', $input['filter'])->orderBy('id', 'desc')->get();
         } else {
-            $result = DB::table('knowledge_article')->select('*')->where([['type', '=', 'video'], ['isActive', '=', 'on']])->orderBy('id', 'desc')->get();
+            $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where([['type', '=', 'video'], ['isActive', '=', 'on']])->orderBy('id', 'desc')->get();
         }
 
         return response()->json($result, 200);
@@ -628,7 +628,7 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
-        $news = DB::table('news')->select('*')->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
+        $news = DB::table('news')->select('*','id as ID')->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
 
         return response()->json($news, 200);
     }
@@ -644,7 +644,7 @@ class Controller extends BaseController
 
     public function getInvestTonicData(Request $request)
     {
-        $result = DB::table('knowledge_article')->select('*')->where('category', '=', 'investtonic')->orderBy('id', 'desc')->get();
+        $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where('type', '=', 'investtonic')->orderBy('id', 'desc')->get();
 
         return response()->json($result, 200);
     }
@@ -654,7 +654,7 @@ class Controller extends BaseController
         $input = $request->all();
 
         @list($type, $params) = explode('-', $input['filter']);
-        $result = DB::table('knowledge_article')->select('*')->where('id', '=', $params)->orderBy('id', 'desc')->first();
+        $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where('id', '=', $params)->orderBy('id', 'desc')->first();
 
         return response()->json($result, 200);
     }
@@ -663,7 +663,7 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $knowledge = DB::table('knowledge_article')->select('*')->where('id', '=', $input['filter'])->orderBy('id', 'desc')->first();
+        $knowledge = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where('id', '=', $input['filter'])->orderBy('id', 'desc')->first();
 
         return response()->json($knowledge, 200);
     }

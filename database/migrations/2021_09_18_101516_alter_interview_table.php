@@ -22,7 +22,7 @@ class AlterInterviewTable extends Migration
                     DB::statement("ALTER TABLE `interview` CHANGE `category` `category` VARCHAR(11) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL");
                 }
                 if (Schema::hasColumn('interview', 'post_modified')) {
-                    $table->dropColumn('post_modified');
+                    DB::statement("ALTER TABLE `interview` CHANGE `post_modified` `updated_at` TIMESTAMP NULL DEFAULT NULL");
                 }
                 if (Schema::hasColumn('interview', 'rank')) {
                     DB::statement("ALTER TABLE `interview` CHANGE `rank` `rank` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'student'");
