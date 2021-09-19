@@ -83,6 +83,8 @@ class BannerController extends Controller
     {
         $grid = new Grid(new Banner);
 
+        $grid->model()->orderBy('id', 'desc');
+
 		// 關閉選擇器
 		$grid->disableRowSelector();
 		$grid->disableExport();
@@ -95,6 +97,15 @@ class BannerController extends Controller
 		$grid->filter(function($filter){
 			$filter->disableIdFilter();
 				// 在这里添加字段过滤器
+                $filter->equal('type','頁面位置')->radio([
+                    ''   => '全部',
+                    'index' => '首頁',
+                    'freshGraduate' => '上班族貸款',
+                    'college'=>'學生貸款',
+                    'engineer'=>'資訊工程師專案',
+                    'invest'=>'債權投資',
+                    'transfer'=>'債權轉讓'
+                ]);
                 $filter->equal('isActive','是否上架')->radio([
                     ''   => '全部',
                     'on'    => '是',
@@ -119,9 +130,9 @@ class BannerController extends Controller
 		$grid->column('desktop', '網頁版圖片')->image('/', 400, 400);
         $grid->column('mobile', '手機版圖片')->image('/', 400, 400);
 		$grid->column('link', '連結')->editable()->qrcode();
-        $grid->column('isActive', '是否上架')->using(['on'=>'<div style="color:blue;">是</div>','off'=>'<div style="color:red;">否</div>']);
-        $grid->column('created_at','創建時間');
-        $grid->column('updated_at','最後更新時間');
+        $grid->column('isActive', '是否上架')->using(['on'=>'<div style="color:blue;text-align: center;">是</div>','off'=>'<div style="color:red;text-align: center;">否</div>']);
+        $grid->column('created_at','創建時間')->sortable();
+        $grid->column('updated_at','最後更新時間')->sortable();
         return $grid;
     }
 
