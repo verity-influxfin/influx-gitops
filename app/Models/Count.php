@@ -8,7 +8,7 @@ use DateTimeInterface;
 class Count extends Model
 {
 	protected $table = 'count';
-	protected $primaryKey = 'ID';
+	protected $primaryKey = 'id';
 
     /**
      * Prepare a date for array / JSON serialization.
