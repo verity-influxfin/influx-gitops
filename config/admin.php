@@ -405,6 +405,11 @@ return [
     |
     */
     'extensions' => [
-
+        'ckeditor' => [
+            'enable' => true,
+            'config' => [
+                'filebrowserImageUploadUrl' => '/admin/fileupload', // Add here
+            ]
+        ]
     ],
 ];
