@@ -17,4 +17,6 @@ Route::group([
     $router->resource('knowledge_article', KnowledgeArticleController::class);
     $router->resource('milestone', MilestoneController::class);
     $router->resource('news', NewsController::class);
+    $router->resource('event_campus_teams', EventCampusTeamController::class);
+    $router->resource('event_campus_members', EventCampusMemberController::class);
 });
