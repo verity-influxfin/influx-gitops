@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\KnowledgeArticle;
+use App\Models\News;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
@@ -11,7 +11,7 @@ use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\DB;
 
-class KnowledgeArticleController extends Controller
+class NewsController extends Controller
 {
 
    use HasResourceActions;
@@ -25,7 +25,7 @@ class KnowledgeArticleController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('小學堂')
+            ->header('最新消息')
             ->description('列表')
             ->body($this->grid());
     }
@@ -40,7 +40,7 @@ class KnowledgeArticleController extends Controller
     public function show($id, Content $content)
     {
         return $content
-            ->header('小學堂')
+            ->header('最新消息')
             ->description('檢視')
             ->body($this->detail($id));
     }
@@ -55,7 +55,7 @@ class KnowledgeArticleController extends Controller
     public function edit($id, Content $content)
     {
         return $content
-            ->header('小學堂')
+            ->header('最新消息')
             ->description('編輯')
             ->body($this->form()->edit($id));
     }
@@ -69,7 +69,7 @@ class KnowledgeArticleController extends Controller
     public function create(Content $content)
     {
         return $content
-            ->header('小學堂')
+            ->header('最新消息')
             ->description('新建')
             ->body($this->form());
     }
@@ -81,7 +81,7 @@ class KnowledgeArticleController extends Controller
      */
     protected function grid()
     {
-        $grid = new Grid(new KnowledgeArticle);
+        $grid = new Grid(new News);
 
         $grid->model()->orderBy('id', 'desc');
 
@@ -96,16 +96,11 @@ class KnowledgeArticleController extends Controller
 		$grid->filter(function($filter){
 			$filter->disableIdFilter();
 				// 在这里添加字段过滤器
+                $filter->ilike('post_title', '標題');
                 $filter->equal('isActive','是否上架')->radio([
                     ''   => '全部',
                     'on'    => '是',
                     'off'    => '否',
-                ]);
-                $filter->equal('type','文章類型')->radio([
-                    ''   => '全部',
-                    'article' => '小學堂',
-                    'video'=>'小學堂影音',
-                    'investtonic'=>'投資理財大補帖'
                 ]);
 		});
 		$grid->actions(function ($actions) {
@@ -122,8 +117,7 @@ class KnowledgeArticleController extends Controller
 			$tools->append(new \App\Admin\Extensions\Tools\UserGender(admin_base_path('notice/check_switch'),$switch));
 		});*/
         $grid->column('post_title', '標題');
-		$grid->column('media_link', '圖片連結')->image('/', 400, 400);
-        $grid->column('type', '文章類型')->using(['article' => '小學堂','video'=>'小學堂影音','investtonic'=>'投資理財大補帖']);
+		$grid->column('image_url', '圖片連結')->image('/', 400, 400);
         $grid->column('isActive', '是否呈現')->using(['on' => '是','off'=>'否']);
         $grid->column('created_at', '創建日期')->sortable();
         $grid->column('updated_at', '最後更新日期')->sortable();
@@ -138,7 +132,7 @@ class KnowledgeArticleController extends Controller
      */
     protected function detail($id)
     {
-        $show = new Show(KnowledgeArticle::findOrFail($id));
+        $show = new Show(News::findOrFail($id));
 
         $show->setting_id('Setting id');
 
@@ -152,7 +146,7 @@ class KnowledgeArticleController extends Controller
      */
     protected function form()
     {
-        $form = new Form(new KnowledgeArticle);
+        $form = new Form(new News);
 
 		$form->tools(function (Form\Tools $tools) {
 			$tools->disableView();
@@ -183,9 +177,7 @@ class KnowledgeArticleController extends Controller
 
 		});
         $form->text('post_title', '標題')->required();
-        $form->select('type', '文章類型')->options(['article' => '小學堂','video'=>'小學堂影音','investtonic'=>'投資理財大補帖'])->required()->default('article');
-        $form->image('media_link', '圖片')->required()->move('/upload/article')->rules('max:8192',['max'=>'圖片檔案大小不能超過8MB']);
-        $form->url('video_link', '影片連結')->help('文章類型為小學堂影音再填寫');
+        $form->image('image_url', '圖片')->required()->move('/upload/article')->rules('max:8192',['max'=>'圖片檔案大小不能超過8MB']);
         $form->ckeditor('post_content','內容');
         $form->switch('isActive', '是否上架')->states([
 			'on'  => ['value' => 'on', 'text' => '是', 'color' => 'primary'],

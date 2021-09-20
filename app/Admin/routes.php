@@ -16,4 +16,5 @@ Route::group([
     $router->resource('count', CountController::class);
     $router->resource('knowledge_article', KnowledgeArticleController::class);
     $router->resource('milestone', MilestoneController::class);
+    $router->resource('news', NewsController::class);
 });
