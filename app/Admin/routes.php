@@ -19,4 +19,5 @@ Route::group([
     $router->resource('news', NewsController::class);
     $router->resource('event_campus_teams', EventCampusTeamController::class);
     $router->resource('event_campus_members', EventCampusMemberController::class);
+    $router->resource('media', MediaController::class);
 });
