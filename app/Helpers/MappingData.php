@@ -13,7 +13,9 @@ class MappingData
           'name',
           'id'
         );
-        $data =  $plucked->all();
+        if(!empty($plucked)){
+            $data =  $plucked->all();
+        }
         return $data;
     }
 }

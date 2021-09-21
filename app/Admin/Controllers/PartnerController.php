@@ -120,6 +120,7 @@ class PartnerController extends Controller
         $grid->column('order', '排序')->sortable();
         $grid->column('name', '單位名稱');
         $grid->column('title', '標題');
+        $grid->column('link', '網站連結');
 		$grid->column('imageSrc', '圖片連結')->image('/', 400, 400);
         $grid->column('type', '單位類型')->using(['edu'=>'大學院校','society'=>'不知道是啥的分類，看到請告訴我打啥']);
         $grid->column('created_at', '創建日期')->sortable();
@@ -181,24 +182,22 @@ class PartnerController extends Controller
 		});
         $form->text('name', '單位名稱')->required();
         $form->text('title', '標題')->required();
-        $form->url('link', '報導連結')->required();
+        $form->url('link', '網站連結');
         $form->image('imageSrc', '圖片連結')->required()->move('/upload/partner')->rules('max:8192',['max'=>'圖片檔案大小不能超過8MB']);
         $form->select('type', '單位類型')->options(['edu'=>'大學院校','society'=>'不知道是啥的分類，看到請告訴我打啥'])->required();
+        $form->textarea('text', '說明');
 
         // 找最後排序數字
-        $aa = Partner::all()->pluck(
+        $new_default_last_order = 1;
+        $all_order = Partner::all()->pluck(
           'order',
           'id'
         );
-        $new_default_last_order = is_numeric(max($aa->all())) ? max($aa->all()) + 1 : 1;
+        if(! empty($all_order)){
+            $new_default_last_order = is_numeric(max($all_order->all())) ? max($all_order->all()) + 1 : 1;
+        }
 
         $form->number('order', '排序')->required()->min(1)->default($new_default_last_order)->rules(function ($form) {
-			//all order
-			$all = [];
-			$all = \App\Models\Partner::all()->pluck(
-              'order',
-              'id'
-            );
 			if ($id = $form->model()->id) {
 				return "unique:partner,order,$id,id";
 			}
