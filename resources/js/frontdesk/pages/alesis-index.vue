@@ -298,11 +298,14 @@
             <alesis-section :secondary="true">
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
+                    <div class="內容區塊 hidden-phone">
+                        <alesis-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
+                    </div>
                     <div class="展示區塊">
                         <img class="圖片" src="/images/步驟1-01.png">
                     </div>
                     <div class="內容區塊">
-                        <alesis-bullet class="bullet" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
+                        <alesis-bullet class="bullet hidden-new-desktop" image="/images/alesis-stonk.svg" header="“以「普惠金融」為志業”" description="透過P2P、區塊鏈技術，進行大量、小額、分散借貸投資及債權轉讓，深受學生、社會新鮮人、中小企業及眾多投資人喜愛。"></alesis-bullet>
                         <div class="半月列表">
                             <div class="項目">
                                 <alesis-moon class="圖示" header="簡單" :level=1></alesis-moon>
@@ -314,8 +317,8 @@
                             <div class="項目">
                                 <alesis-moon class="圖示" header="快速" :level=2></alesis-moon>
                                 <div class="內容">
-                                    10分鐘快速填寫申請資料，<br>
-                                    全程線上操作，無人干擾。
+                                    5分鐘申貸、10分鐘審核、<br>
+                                    1小時核准、24小時媒合放款。<br>
                                 </div>
                             </div>
                             <div class="項目">
@@ -334,7 +337,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="標語">假日放款全年無休</div>
+                <div class="標語">全年無休假日放款</div>
                 <alesis-space size="medium"></alesis-space>
             </alesis-section>
         </div>
@@ -343,7 +346,7 @@
         <!-- 快速變現 -->
         <div class="快速變現">
             <alesis-header>
-                <div class="標題">普匯債權快速變現</div>
+                <div class="標題">普匯債權、快速變現</div>
                 <div class="標題">全台唯一債權轉讓功能</div>
             </alesis-header>
             <alesis-section>
@@ -781,7 +784,14 @@ export default {
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
 
-
+/*
+ * display rwd for flex css
+ */
+.hidden-new-desktop {
+    @include rwd {
+        display: none;
+    }
+}
 
 /**
  * 標頭幻燈片
