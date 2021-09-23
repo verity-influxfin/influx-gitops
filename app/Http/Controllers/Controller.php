@@ -36,7 +36,7 @@ class Controller extends BaseController
 
     public function getIndexBanner(Request $request)
     {
-        $banner = DB::table('banner')->select(['desktop', 'mobile', 'link'])->where([['isActive', '=', 'on'], ['type', '=', 'index']])->orderBy('post_modified', 'desc')->get();
+        $banner = DB::table('banner')->select(['desktop', 'mobile', 'link'])->where([['isActive', '=', 'on'], ['type', '=', 'index']])->orderBy('id', 'desc')->get();
 
         return response()->json($banner, 200);
     }
@@ -607,7 +607,7 @@ class Controller extends BaseController
 
     public function getKnowledgeData(Request $request)
     {
-        $knowledge = DB::table('knowledge_article')->select('*')->where([['type', '=', 'article'], ['status', '=', 'publish']])->orderBy('order', 'desc')->orderBy('post_date', 'desc')->get();
+        $knowledge = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->whereIn('type', ['article','investtonic'])->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
 
         return response()->json($knowledge, 200);
     }
@@ -618,9 +618,9 @@ class Controller extends BaseController
 
         $result = [];
         if ($input['filter'] !== 'share') {
-            $result = DB::table('interview')->select('*')->where('category', '=', $input['filter'])->orderBy('post_modified', 'desc')->get();
+            $result = DB::table('interview')->select('*','id as ID')->where('category', '=', $input['filter'])->orderBy('id', 'desc')->get();
         } else {
-            $result = DB::table('knowledge_article')->select('*')->where([['type', '=', 'video'], ['status', '=', 'publish']])->orderBy('post_modified', 'desc')->get();
+            $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where([['type', '=', 'video'], ['isActive', '=', 'on']])->orderBy('id', 'desc')->get();
         }
 
         return response()->json($result, 200);
@@ -628,7 +628,7 @@ class Controller extends BaseController
 
     public function getNewsData(Request $request)
     {
-        $news = DB::table('news')->select('*')->where('status', '=', 'on')->orderBy('post_date', 'desc')->get();
+        $news = DB::table('news')->select('*','id as ID')->where('isActive', '=', 'on')->orderBy('id', 'desc')->get();
 
         return response()->json($news, 200);
     }
@@ -637,14 +637,14 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $news = DB::table('news')->select('*')->where('ID', '=', $input['ID'])->first();
+        $news = DB::table('news')->select('*')->where('id', '=', $input['ID'])->first();
 
         return response()->json($news, 200);
     }
 
     public function getInvestTonicData(Request $request)
     {
-        $result = DB::table('knowledge_article')->select('*')->where('category', '=', 'investtonic')->orderBy('post_date', 'desc')->get();
+        $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where('type', '=', 'investtonic')->orderBy('id', 'desc')->get();
 
         return response()->json($result, 200);
     }
@@ -654,7 +654,7 @@ class Controller extends BaseController
         $input = $request->all();
 
         @list($type, $params) = explode('-', $input['filter']);
-        $result = DB::table('knowledge_article')->select('*')->where('ID', '=', $params)->orderBy('post_date', 'desc')->first();
+        $result = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where('id', '=', $params)->orderBy('id', 'desc')->first();
 
         return response()->json($result, 200);
     }
@@ -663,7 +663,7 @@ class Controller extends BaseController
     {
         $input = $request->all();
 
-        $knowledge = DB::table('knowledge_article')->select('*')->where('ID', '=', $input['filter'])->orderBy('post_date', 'desc')->first();
+        $knowledge = DB::table('knowledge_article')->select('*','created_at as post_date','id as ID','updated_at as post_modified')->where('id', '=', $input['filter'])->orderBy('id', 'desc')->first();
 
         return response()->json($knowledge, 200);
     }
@@ -684,7 +684,7 @@ class Controller extends BaseController
         }
 
         $experiences = DB::table('interview')->select([
-            'ID',
+            'id',
             'feedback',
             'imageSrc',
             'video_link',
@@ -703,7 +703,7 @@ class Controller extends BaseController
     public function getFeedbackImg(Request $request)
     {
         $input = $request->all();
-        $feedbackImg = DB::table('feedbackImg')->select(['image'])->where('feedbackID', '=', $input['ID'])->orderBy('order', 'asc')->get();
+        $feedbackImg = DB::table('feedbackImg')->select(['image'])->where('feedbackID', '=', $input['ID'])->orderBy('id', 'desc')->get();
         return response()->json($feedbackImg, 200);
     }
 
@@ -748,7 +748,7 @@ class Controller extends BaseController
 
     public function getPartnerData(Request $request)
     {
-        $partner = DB::table('partner')->select('*')->orderBy('order')->get();
+        $partner = DB::table('partner')->select('*')->orderBy('order', 'asc')->get();
 
         return response()->json($partner, 200);
     }
@@ -759,7 +759,7 @@ class Controller extends BaseController
 
         $bannerData = json_decode(file_get_contents('data/bannerData.json'), true);
 
-        $banner = DB::table('banner')->select(['desktop', 'mobile', 'link'])->where([['isActive', '=', 'on'], ['type', '=', $input['filter']]])->orderBy('post_modified', 'desc')->get();
+        $banner = DB::table('banner')->select(['desktop', 'mobile', 'link'])->where([['isActive', '=', 'on'], ['type', '=', $input['filter']]])->orderBy('id', 'desc')->get();
 
         $data[] = $bannerData[$input['filter']];
 
