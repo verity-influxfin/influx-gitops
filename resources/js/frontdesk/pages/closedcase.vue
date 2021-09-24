@@ -9,8 +9,8 @@
     </div>
     <div id="accordion" role="tablist" v-else>
       <div class="c-title">
-        <div class="p-type">案件類型</div>
-        <div class="p-count">案件件數</div>
+        <div class="p-type">產品類型</div>
+        <div class="p-count">貸放筆數</div>
         <div class="p-total">已回收本金</div>
         <div class="p-total">已回收利息</div>
       </div>
