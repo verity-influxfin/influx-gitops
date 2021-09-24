@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DateTimeInterface;
 
 class EventCampusMember extends Model
 {
@@ -28,4 +29,8 @@ class EventCampusMember extends Model
         'bonus',
         'team_id'
     ];
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

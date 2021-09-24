@@ -56,7 +56,7 @@
         <div v-for="(item, index) in media" class="report-row" :key="index">
           <div class="press">
             <a :href="item.link" target="_blank">
-              <img :src="`/images/${item.imgSrc}`" />
+              <img :src="`/${item.imgSrc}`" />
             </a>
           </div>
           <div class="news-title" @click="openModel(item)">
