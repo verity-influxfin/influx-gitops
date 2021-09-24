@@ -15,7 +15,9 @@ class S3_upload {
 	public $vedio_type = array(
 		'video/mp4' =>	'.mp4' ,
 		'video/mov'	 => '.mov' ,
+		'video/wav'	 => '.wav' ,
 		'audio/wave'	 => '.wav' ,
+
 	);
 	private $client;
 	
