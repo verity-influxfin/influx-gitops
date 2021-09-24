@@ -145,8 +145,9 @@ class Charge_lib
         if(!empty($account_payable_list)) {
             $target_id_list = array_unique(array_column($account_payable_list, 'target_id'));
 
-            // 欲處理之案件列表，目前只處理學生貸和上班貸
-            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list, 'product_id' => [1, 3], 'delay_days > ' => GRACE_PERIOD]);
+            // 欲處理之案件列表，目前只處理學生貸和上班貸 (不處理有法催帳戶的案件 sub_status = 13)
+            $targets = $this->CI->target_model->get_many_by(['id' => $target_id_list, 'product_id' => [1, 3],
+                'delay_days > ' => GRACE_PERIOD, 'status' => 5, 'sub_status != ' => 13]);
             $target_id_list = array_column($targets, 'id');
 
             // 撈取法催中的案件編號
@@ -157,7 +158,7 @@ class Charge_lib
                 $legal_collection_target_id_list = array_unique(array_column($legal_collection_investment, 'target_id'));
             }
 
-            if($targets) {
+            if(!empty($targets)) {
                 $target_key_list = array_reduce($targets, function ($list, $item) {
                     $list[$item->id] = json_decode(json_encode($item), true);
                     return $list;
