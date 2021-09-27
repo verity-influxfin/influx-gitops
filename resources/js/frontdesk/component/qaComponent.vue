@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="row">
-      <router-link class="btn link" style="margin: 0px auto" to="qa">
+      <router-link class="btn link" style="margin: 0px auto" to="faq">
         更多問題
         <i class="fas fa-angle-double-right" />
       </router-link>

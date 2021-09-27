@@ -9,8 +9,8 @@
     </div>
     <div id="accordion" role="tablist" v-else>
       <div class="c-title">
-        <div class="p-type">案件類型</div>
-        <div class="p-count">案件件數</div>
+        <div class="p-type">產品類型</div>
+        <div class="p-count">貸放筆數</div>
         <div class="p-total">已回收本金</div>
         <div class="p-total">已回收利息</div>
       </div>
@@ -117,7 +117,7 @@ export default {
     groupList: [],
     detailData: {},
     finishedData: {},
-    productList: ["", "學生貸", "上班族貸", "工程師貸"],
+    productList: ["", "學生貸", "上班族貸", "工程師貸", "手機貸"],
     ageTextList: {
       normal: "正常案",
       observed: "觀察案",
