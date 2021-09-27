@@ -230,7 +230,7 @@ class Charge_lib
         $virtual = CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE;
         $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($user_id, USER_BORROWER,
             VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $virtual);
-        if (!$virtual_account) {
+        if (empty($virtual_account)) {
             $trans_rollback();
             return FALSE;
         }
@@ -433,7 +433,7 @@ class Charge_lib
 
         $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($user_id, USER_BORROWER,
             VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $virtual);
-        if (!$virtual_account) {
+        if (empty($virtual_account)) {
             error_log("Changing status of virtual account was failed.");
         }
 
@@ -673,15 +673,10 @@ class Charge_lib
                 }
                 if ($amount > 0) {
                     $virtual = $target->product_id != PRODUCT_FOREX_CAR_VEHICLE ? CATHAY_VIRTUAL_CODE : TAISHIN_VIRTUAL_CODE;
-                    $virtual_account = $this->CI->virtual_account_model->get_by([
-                        'user_id'	=> $target->user_id,
-                        'investor'	=> 0,
-                        'status' => 1,
-                        'virtual_account like' => $virtual . '%'
-                    ]);
-                    if ($virtual_account) {
-                        $this->CI->virtual_account_model->update($virtual_account->id, ['status' => 2]);
+                    $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($target->user_id, USER_BORROWER,
+                        VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $virtual);
 
+                    if (!empty($virtual_account)) {
                         $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
                         $total = $funds['total'] - $funds['frozen'];
                         if ($total >= $amount) {
