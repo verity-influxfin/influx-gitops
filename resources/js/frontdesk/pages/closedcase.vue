@@ -117,7 +117,7 @@ export default {
     groupList: [],
     detailData: {},
     finishedData: {},
-    productList: ["", "學生貸", "上班族貸", "工程師貸", "消費貸"],
+    productList: ["", "學生貸", "上班族貸", "工程師貸", "手機貸"],
     ageTextList: {
       normal: "正常案",
       observed: "觀察案",
