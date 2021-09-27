@@ -285,6 +285,7 @@ class Notification_lib{
 			"title"		=> $title,
 			"content"	=> $content,
 		);
+        $this->CI->load->model('user/user_meta_model');
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->admin_notification("案件已上架 會員ID：".$target->user_id,"案件已上架 會員ID：".$target->user_id." 案號：".$target->target_no);
@@ -950,5 +951,79 @@ $name 您好，
 		}finally {
 			return ['code'=>$statusCode, 'msg'=>$statusDescription];
 	   }
+	}
+
+    public function cancel_subloan_bidding($target) {
+        $title = "【產品轉換下架通知】產品轉換金額不符";
+        $content = "親愛的用戶，
+您好！您的標的 $target->target_no ，
+因您的逾期金額已有部分完成清償，
+導致您申請之產品轉換媒合金額與原先不符，系統已將您的案件先行下架。
+非常感謝您的申請及對我們的信任，
+若有任何問題請不吝連繫客服協助處理，謝謝。";
+
+        $param = array(
+            "user_id"	=> $target->user_id,
+            "investor"	=> 0,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($target->user_id,$title,nl2br($content),'b03');
+        return $rs;
+    }
+
+    public function cancel_transfer_bidding($user_id, $target_no='') {
+        $title = "【債權轉讓下架通知】出讓債權金額不符";
+        $content = "親愛的出讓人，
+您好！您投資的標的 $target_no ，
+因此案債務人已完成部分清償，
+導致您申請出讓之債權媒合金額與原先不符，系統已將您的案件先行下架，
+若還有出讓需求，請重新操作一遍，
+非常感謝您對我們的信任，
+若有任何問題請不吝連繫客服協助處理，謝謝。";
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> 1,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+        return $rs;
+    }
+
+    public function repay_partial_success($user_id,$investor=0,$target_no='',$amount=0,$remaining_amount=0){
+        if($investor==1){
+            $title 		= "【標的還款成功】 您投資的標的 $target_no 已回款";
+            $content 	= "親愛的投資人，您好！
+您投資的標的 $target_no ，已回款，
+回款金額為 $amount 元，感謝您。";
+            $type = 'i04';
+        }else{
+            $title 		= "【借款部分清償成功】您的借款已成功部分清償，清償金額 $amount 元";
+            $content 	= "親愛的用戶，您好！
+您的借款 $target_no 。
+是否已逾期：是。
+部分清償金額 $amount 元已清償成功。
+剩餘需清償金額：$remaining_amount 元
+感謝您每一次的信用積累。";
+            $type = 'b04';
+        }
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> $investor,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+        return $rs;
 	}
 }

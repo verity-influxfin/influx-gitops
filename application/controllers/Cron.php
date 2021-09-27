@@ -160,6 +160,29 @@ class Cron extends CI_Controller {
 		die('1');
 	}
 
+    public function charge_delayed_targets_partial_fee() {
+        // 處理逾期案部分清償
+        $script     = 16;
+        $start_time = time();
+
+        // 每五分鐘
+        $this->load->library('Charge_lib');
+
+        $count      = $this->charge_lib->script_charge_delayed_targets_partial_fee();
+        $num        = $count?intval($count):0;
+        $end_time   = time();
+        $data = [
+            'script_name'   => 'charge_partial_delayed_targets',
+            'num'           => $num,
+            'start_time'    => $start_time,
+            'end_time'      => $end_time
+        ];
+
+        $this->log_script_model->insert($data);
+
+        die('1');
+    }
+
 	public function prepayment_targets()
 	{	//每五分鐘
 		$this->load->library('Charge_lib');

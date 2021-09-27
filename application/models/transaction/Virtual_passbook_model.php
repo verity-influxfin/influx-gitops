@@ -37,4 +37,25 @@ class Virtual_passbook_model extends MY_Model
 		return isset($result)?intval($result->balance):0;
 	}
 
+    public function getVirtualAccFunds($virtualAccountList){
+        $this->db
+            ->select('virtual_account, SUM(amount) AS total')
+            ->from("`p2p_transaction`.`virtual_passbook`")
+            ->where_in('virtual_account', $virtualAccountList)
+            ->group_by('virtual_account');
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('virtual_account, SUM(amount) AS frozen')
+            ->from("`p2p_transaction`.`frozen_amount`")
+            ->where_in('virtual_account', $virtualAccountList)
+            ->where('status', 1)
+            ->group_by('virtual_account');
+        $subquery2 = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('vp.virtual_account, vp.total, IFNULL(fa.frozen, 0), vp.total - IFNULL(fa.frozen, 0) AS balance')
+            ->from("($subquery) as `vp`")
+            ->join("($subquery2) as `fa`", "`vp`.`virtual_account` = `fa`.`virtual_account`", "left");
+
+        return $this->db->get()->result_array();
+    }
 }
