@@ -1036,7 +1036,7 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==3 && $info->sub_status==0){
+			if($info && $info->status==4 && $info->loan_status==3){
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->lending_failed($id,$this->login_info->id);
 				echo '更新成功';die();
