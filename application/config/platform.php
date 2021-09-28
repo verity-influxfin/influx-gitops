@@ -16,6 +16,7 @@ $config['admin_menu'] = [
         'waiting_loan' => '待放款',
         'repayment' => '還款中',
         'finished' => '已結案',
+        'index?delay=1&status=5' => '逾期中',
         'prepayment' => '提前還款',
         'order_target' => '消費貸 - 案件列表',
         'waiting_approve_order_transfer' => '消費貸 - 債轉待批覆',
@@ -115,6 +116,72 @@ $config['admin_menu'] = [
     // ],
     'Agreement' => ['name' => '協議書'],
     'Contract' => ['name' => '合約書'],
+];
+
+
+$config['role_permission'] = [
+    'RolePostLoan' => [
+        'name' => '角色-貸後權限',
+        'permission' => [
+            'Passbook' => [
+              'display' => [
+                  'validator' => [
+                      'className' =>'RequestValidator\PostLoan\VirtualPassbookValidator',
+                      'parameters' => ['virtual_account' => '*']
+                  ],
+                  'menu_display' => false,
+              ]
+            ],
+            'User' => [
+                'display' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\UserValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                    'menu_display' => false,
+                ]
+            ],
+            'Target' => [
+                'edit' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                ],
+                'index?delay=1&status=5' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['status' => [5], 'delay' => 1]
+                    ],
+                ],
+                'transaction_display' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                ]
+            ],
+            'Risk' => [
+                'index?investor=0&company=0' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['investor' => 0, 'company' => 0],
+                    ],
+                    'role_parameters' => [
+                        'group' => [0]    // group: 身份驗證(0) 收件檢核(1) 審核中(2)
+                    ]
+                ]
+            ],
+            'Certification' => [
+                'user_certification_edit' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\CertificationValidator',
+                        'parameters' => ['id' => '*'],
+                    ],
+                ]
+            ]
+        ]
+    ]
 ];
 
 //內部通知Email
@@ -223,6 +290,19 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_STUDENT,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL
+            ]
+        ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
         'targetData' => [],
@@ -256,6 +336,19 @@ $config['product_list'] = [
             CERTIFICATION_EMERGENCY,
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
+        ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_STUDENT,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL
+            ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -299,6 +392,21 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_DIPLOMA,
+                CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_JOB
+            ]
+        ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
         'targetData' => [],
@@ -336,6 +444,21 @@ $config['product_list'] = [
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
+        ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_DIPLOMA,
+                CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_JOB
+            ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
@@ -633,6 +756,21 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_DIPLOMA,
+                CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_JOB
+            ]
+        ],
         'instalment' => [180],
         'repayment' => [3],
         'targetData' => [],
@@ -720,6 +858,28 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATIONJUDICIAL,
 			CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
+        ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+
+            ],
+            [
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_PROFILE,
+                CERTIFICATION_SIMPLIFICATIONJOB,
+                // CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+                CERTIFICATION_GOVERNMENTAUTHORITIES,
+                CERTIFICATION_JUDICIALGUARANTEE,
+                CERTIFICATION_PROFILEJUDICIAL,
+                CERTIFICATION_PASSBOOKCASHFLOW,
+                CERTIFICATION_EMPLOYEEINSURANCELIST,
+                CERTIFICATION_INCOMESTATEMENT,
+                CERTIFICATION_INVESTIGATIONJUDICIAL,
+    			CERTIFICATION_INVESTIGATIONA11,
+                CERTIFICATION_COMPANYEMAIL,
+            ]
         ],
         'instalment' => [36],
         'repayment' => [1],
@@ -948,6 +1108,19 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'certification_verify_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
@@ -979,6 +1152,21 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
+                ],
+                'certification_verify_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB
+                    ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1236,6 +1424,19 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
@@ -1271,6 +1472,21 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
+                ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB
+                    ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1353,6 +1569,19 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
@@ -1384,6 +1613,21 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
+                ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB
+                    ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1623,13 +1867,13 @@ $config['seniority_range'] = [
 ];
 
 $config['employee_range'] = [
-    0 => '1~20（含）',
-    1 => '20~50（含）',
-    2 => '50~100（含）',
-    3 => '100~500（含）',
-    4 => '500~1000（含）',
-    5 => '1000~5000（含）',
-    6 => '5000以上',
+    0 => '1~20（含）人',
+    1 => '20~50（含）人',
+    2 => '50~100（含）人',
+    3 => '100~500（含）人',
+    4 => '500~1000（含）人',
+    5 => '1000~5000（含）人',
+    6 => '5000人以上',
 ];
 
 $config['position_name'] = [

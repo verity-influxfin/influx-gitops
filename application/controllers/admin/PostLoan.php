@@ -218,7 +218,7 @@ class PostLoan extends MY_Admin_Controller {
 					$target_where['delay_days > '] = $start;
 					$target_where['delay_days <= '] = $end;
 				}
-				$result = $this->transaction_model->getDelayTargetInfoList($where, $target_where);
+				$result = $this->transaction_model->getDelayedTargetInfoList($where, $target_where);
 
 				foreach ($result as $v) {
 					if (!isset($list[$v->target_id])) {

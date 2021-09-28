@@ -24,7 +24,7 @@ class Risk extends MY_Admin_Controller {
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
 		$list 						= array();
-		$plist 						= array();
+		$listStage 						= array();
 		$cer_list 					= array();
 		$certification_investor_list = array();
 		$cer = $this->config->item('certifications');
@@ -77,21 +77,22 @@ class Risk extends MY_Admin_Controller {
 					$certification_investor_list[$value]['bank_account']  = $bank_account;
 				}
 			}
-		}else{
-			$useCer = [];
-			$target_parm = [
-				'status'	=> $target_status
-			];
-			isset($input['company'])
-				? $input['company'] == 1
-				?$target_parm['product_id >='] = PRODUCT_FOR_JUDICIAL
-				:$target_parm['product_id <'] = PRODUCT_FOR_JUDICIAL
-				: '';
+		}
 
-			isset($input['target_id']) ? $target_parm['id'] = $input['target_id'] : '';
-			$targets = $this->target_model->order_by('user_id','desc')->get_many_by($target_parm);
-			if($targets){
-				foreach($targets as $key => $value) $list[$value->id] = $value;
+		if($user_list){
+            $target_parm = [
+                'user_id'	=> $user_list,
+                'status'	=> $target_status
+            ];
+            isset($input['company'])
+                ? $input['company'] == 1
+                    ?$target_parm['product_id >='] = 1000
+                    :$target_parm['product_id <'] = 1000
+                : '';
+            isset($input['target_id']) ? $target_parm['id'] = $input['target_id'] : '';
+            $targets = $this->target_model->order_by('user_id','desc')->get_many_by($target_parm);
+            if($targets){
+                foreach($targets as $key => $value) $list[$value->id] = $value;
 				ksort($list);
 				foreach($list as $key => $value){
 					$product = $product_list[$value->product_id];
@@ -144,12 +145,59 @@ class Risk extends MY_Admin_Controller {
 					// 所有認證最後更新時間
 					$lastUpdate = max(array_column($cer_list[$value->user_id], 'updated_at'));
 					$list[$key]->lastUpdate = ! empty($lastUpdate) ? $lastUpdate : $list[$key]->updated_at;
-					$plist[$value->product_id][$key] = $list[$key];
+					$listStage[$value->product_id][$key] = $list[$key];
+            }
+        }
+
+        if($list){
+			$userStatusList = $this->target_model->getUserStatusByTargetId(array_keys($list));
+			$userStatusList = array_column($userStatusList, 'total_count', 'user_id');
+
+			ksort($list);
+			foreach($list as $key => $value){
+				if(isset($userStatusList[$value->user_id]) && $userStatusList[$value->user_id] > 0) {
+					$value->user_status = 1;
+				}else{
+					$value->user_status = 0;
 				}
+
+                $status = $company ? $value : false;
+                !isset($cer_list[$value->user_id]) ? $cer_list[$value->user_id] = $this->certification_lib->get_last_status($value->user_id, 0, 0, $status) : '';
+                $value->certification = $cer_list[$value->user_id];
+				if(isset($value->certification[3]['certification_id'])){
+					$bank_account 	= $this->user_bankaccount_model->get_by(array(
+						'user_certification_id'	=> $value->certification[3]['certification_id'],
+					));
+					$value->bank_account 	 	 = $bank_account;
+					$value->bank_account_verify = $bank_account->verify==1?1:0;
+				}
+				elseif($value->product_id >= 1000){
+                    $value->bank_account 	 	 = '';
+                    $value->bank_account_verify = 1;
+                }
+                $value->certification_stage_list = $this->certification_lib->getCertificationsStageList($value->product_id);
+                $tempCertList = array_reduce($cer_list[$value->user_id], function ($list, $item) {
+				    $list[$item['id']] = ['id' => $item['id'], 'status' => $item['user_status']];
+				    return $list;
+                }, []);
+				$filteredCertIds = $this->certification_lib->filterCertIdsInStatusList($tempCertList, [1]);
+                $certStage1 = $this->certification_lib->checkVerifiedStage($value->product_id, $filteredCertIds, 0);
+                if(!$certStage1) {
+                    $listStage[0][] = $list[$key];
+                }else{
+                    $certStage2 = $this->certification_lib->checkVerifiedStage($value->product_id, $filteredCertIds, 1);
+                    if(!$certStage2) {
+                        $listStage[1][] = $list[$key];
+                    }else{
+                        $listStage[2][] = $list[$key];
+                    }
+                }
 			}
+			if(!empty($this->role_info['group']))
+                $listStage = array_intersect_key($listStage, array_flip($this->role_info['group']));
 		}
 
-		$page_data['list'] 					= $plist;
+		$page_data['list'] 					= $listStage;
 		$page_data['certification_investor_list'] 	= $certification_investor_list;
 		$page_data['certification'] 		= $useCer;
 		$page_data['status_list'] 			= $this->target_model->status_list;
