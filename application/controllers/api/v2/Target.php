@@ -13,7 +13,7 @@ class Target extends REST_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list','judicial_list'];
+        $nonAuthMethods = ['list','judicial_list','judicial_info'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -718,6 +718,253 @@ class Target extends REST_Controller {
 				'amortization_schedule' => $amortization_schedule,
 			);
 
+            count($certification_list)>0 ? $data['certification'] = $certification_list : '';
+
+            if($target->sub_product_id == STAGE_CER_TARGET){
+                $target_tips = $this->config->item('target_tips');
+                $data['target_tips'] = $target_tips;
+            }
+
+            $target->order_id!=0?$data['order_image']=$target->person_image:null;
+
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
+		}
+		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
+    }
+
+    public function judicial_info_get($target_id)
+    {
+		$input 				= $this->input->get(NULL, TRUE);
+		$target 			= $this->target_model->get($target_id);
+		$data				= [];
+        $user_meta = '';
+
+        if(!empty($target) && in_array($target->status,[504])){
+
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            $product_name = $product['name'];
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name = $product['name'];
+            }
+
+            $target->investor = 1;
+			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
+
+			$user_info 	= $this->user_model->get($target->user_id);
+			$user		= [];
+			if($user_info){
+				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
+				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
+				$age  		= get_age($user_info->birthday);
+                $user_meta = new stdClass();
+                if($product['identity']==1){
+					$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
+                    if(is_object($user_meta)){
+                        $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
+                    }
+                    else{
+                        $user_meta->meta_value='未提供學校資訊';
+                    }
+				} elseif ($product_list[$target->product_id]['identity'] == 2) {
+                    $meta_info = $this->user_meta_model->get_many_by([
+                        'user_id' => $target->user_id,
+                        'meta_key' => ['job_company', 'diploma_name']
+                    ]);
+                    if ($meta_info) {
+                        $job_company = ($meta_info[0]->meta_key == 'job_company'
+                            ? $meta_info[0]->meta_value
+                            : (isset($meta_info[1]) >= 2
+                                ? $meta_info[1]->meta_value
+                                : false));
+                        $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
+                            ? $meta_info[0]->meta_value
+                            : (isset($meta_info[1]) >= 2
+                                ? $meta_info[1]->meta_value
+                                : false);
+                        $user_meta->meta_value = $job_company ? $job_company : $diploma_name;
+                    } else {
+                        $user_meta->meta_value = '未提供相關資訊';
+                    }
+                }
+
+				$user = array(
+					'name' 			=> $name,
+					'id_number'		=> $id_number,
+					'sex' 			=> $user_info->sex,
+					'age'			=> $age,
+					'company_name'	=> isset($user_meta->meta_value)?$user_meta->meta_value:'',
+				);
+			}
+
+			$targetDatas = [];
+            $targetData = json_decode($target->target_data);
+            if($product['visul_id'] == 'DS2P1'){
+                $targetDatas = [
+                    'brand' => $targetData->brand,
+                    'name' => $targetData->name,
+                    'selected_image' => $targetData->selected_image,
+                    'purchase_time' => $targetData->purchase_time,
+                    'factory_time' => $targetData->factory_time,
+                    'product_description' => $targetData->product_description,
+                ];
+                foreach ($product['targetData'] as $key => $value) {
+                    if(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
+                        if(isset($targetData->$key) && !empty($targetData->$key)){
+                            $pic_array = [];
+                            foreach ($targetData->$key as $svalue){
+                                preg_match('/image.+/', $svalue,$matches);
+                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
+                            }
+                            $targetDatas[$key] = $pic_array;
+                        }
+                        else{
+                            $targetDatas[$key] = '';
+                        }
+                    }
+                }
+                $user = array(
+                    'name' 			=> $user_info->name,
+                    'id_number'		=> '',
+                    'sex' 			=> '',
+                    'age'			=> '',
+                    'company_name'	=> '',
+                    'tax_id'	=> $user_info->id_number,
+                );
+            }
+
+            $certification_list = [];
+            $targetData_cer = isset($targetData->certification_id) ? $targetData->certification_id : false;
+            if ($targetData_cer) {
+                $this->load->model('user/user_certification_model');
+                $this->load->library('Certification_lib');
+                $certification = $this->config->item('certifications');
+                $certifications = $this->user_certification_model->get_many_by([
+                    'id' => $targetData_cer,
+                    'user_id' => $target->user_id,
+                ]);
+                foreach ($certifications as $key => $value) {
+                    $cur_cer[$value->certification_id] = $value;
+                }
+                foreach ($product['certifications'] as $key => $value) {
+                    $cer = $certification[$value];
+                    if (!isset($cur_cer[$value])) {
+                        $cer['description'] = '未' . $cer['description'];
+                        $cer['user_status'] = 2;
+                        $cer['certification_id'] = null;
+                        $cer['updated_at'] = null;
+                    } else {
+                        $description = false;
+                        $contents = json_decode($cur_cer[$value]->content);
+                        if( $value == 1){
+                            $description .= '發證地點：' . $contents->id_card_place . '<br>發證時間：' . $contents->id_card_date;
+                        } elseif( $value == 2){
+                            isset($contents->pro_certificate) ? $description .= '有提供專業證書；' . str_replace(',','、', $contents->pro_certificate) : '';
+                            $description .= '學門：' . $contents->major. '<br>系所：' . $contents->department . '<br>學制：' . $this->config->item('school_system')[$contents->system];
+                        } elseif ($value == 3){
+                            $description = '已驗證個人金融帳號';
+                        } elseif ($value == 4){
+                            $ig = isset($contents->instagram) ? $contents->instagram : $contents->info;
+                            if(!empty($ig)){
+                                $description .= 'Instagram' . '<br>貼文：' . $ig->counts->media . '<br>追蹤者：' . $ig->counts->followed_by . '<br>追蹤中：' . $ig->counts->follows;
+                            }
+                        } elseif ($value == 5){
+                            $description = '已輸入父母作為緊急聯絡人';
+                        } elseif ($value == 6){
+                            $description = '已驗證常用電子信箱';
+                        } elseif ($value == 7){
+                            $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
+                            $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
+                            $description = '(自填) 平均月收入：'. $financial_input . '<br>(自填) 平均月支出：' . $financial_output;
+                            isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
+                        } elseif ($value == 8){
+                            $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
+                        } elseif ($value == 9){
+                            if(isset($contents->result->messages)){
+                                foreach ($contents->result->messages as $creditValue){
+                                    $creditValue->stage == 'credit_scores' ? $description .= $creditValue->message : '';
+                                }
+                            }
+                        } elseif ($value == 10){
+                            isset($contents->industry) ? $description .= '公司類型：' . $this->config->item('industry_name')[$contents->industry] : '';
+                            isset($contents->job_seniority) ? $description .= '<br>此公司工作期間：' . $this->config->item('seniority_range')[$contents->job_seniority] : '';
+                        }
+                        $cer['user_status'] = $cur_cer[$value]->status == 2 ? 1 : intval($cur_cer[$value]->status);
+                        $cer['certification_id'] = intval($cur_cer[$value]->id);
+                        $cer['updated_at'] = intval($cur_cer[$value]->updated_at);
+                        $description ? $cer['description'] = $description : '';
+                    }
+                    unset($cer['optional']);
+                    $certification_list[] = $cer;
+                }
+            }
+            $contract_data = $this->contract_lib->get_contract($target->contract_id);
+            $contract = $contract_data ? $contract_data['content'] : '';
+
+            $reason = $target->reason;
+            $json_reason = json_decode($reason);
+            if(isset($json_reason->reason)){
+                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+            }
+
+            // 資訊不在案件本身內容
+            $out_of_target_info = [];
+
+            // 新光送出資料
+            $this->load->library('mapping/sk_bank/msgno');
+            $response = $this->msgno->getSKBankInfoByTargetId($target_id);
+            if(!empty($response) && isset($response['data']['send_log']['request_content'])){
+                if(!empty($response['data']['send_log']['request_content'])){
+                    $sk_bank_send_log = json_decode($response['data']['send_log']['request_content'],true);
+                    $out_of_target_info['compName'] = isset($sk_bank_send_log['unencrypted']['Data']['CompName']) ? $sk_bank_send_log['unencrypted']['Data']['CompName']: '';
+                    $out_of_target_info['compIdNum'] = isset($sk_bank_send_log['unencrypted']['CompId']) ? $sk_bank_send_log['unencrypted']['CompId']: '';
+                    $out_of_target_info['bornDate'] = isset($sk_bank_send_log['unencrypted']['Data']['CompSetDate']) ? $sk_bank_send_log['unencrypted']['Data']['CompSetDate'] : '';
+                    $out_of_target_info['income'] = isset($sk_bank_send_log['unencrypted']['Data']['CompCapital']) ? $sk_bank_send_log['unencrypted']['Data']['CompCapital']: '';
+                    $out_of_target_info['owner'] = isset($sk_bank_send_log['unencrypted']['Data']['PrName']) ? $sk_bank_send_log['unencrypted']['Data']['PrName'] : '';
+                    $out_of_target_info['scale'] = isset($sk_bank_send_log['unencrypted']['Data']['BusinessType']) ? $sk_bank_send_log['unencrypted']['Data']['BusinessType'] : '';
+                    $out_of_target_info['comeType'] = isset($sk_bank_send_log['unencrypted']['Data']['CompDuType']) ? $sk_bank_send_log['unencrypted']['Data']['CompDuType'] : '';
+                    $out_of_target_info['comeType'] = isset($sk_bank_send_log['unencrypted']['Data']['CompDuType']) ? $sk_bank_send_log['unencrypted']['Data']['CompDuType'] : '';
+                }
+            }
+
+            $this->load->model('loan/target_associate_model');
+            $guarantorInfo = $this->target_associate_model->get_many_by(['target_id' => $target_id, 'product_id' => $target->product_id, 'status' => 2]);
+            // print_r($guarantorInfo);exit;
+            // if(){
+            //
+            // }
+
+			$data = array(
+				'id' 				=> intval($target->id),
+				'target_no' 		=> $target->target_no,
+                'product_name' => $product_name,
+				'product_id' 		=> intval($target->product_id),
+                'sub_product_id' => intval($target->sub_product_id),
+				'user_id' 			=> intval($target->user_id),
+				'loan_amount' 		=> intval($target->loan_amount),
+				'credit_level' 		=> intval($target->credit_level),
+				'interest_rate' 	=> floatval($target->interest_rate),
+				'original_interest_rate' 	=> (isset($targetData->original_interest_rate) ? $targetData->original_interest_rate : null),
+				'reason'		=> $reason,
+				'remark' 			=> $target->remark,
+				'targetDatas' => $targetDatas,
+				'instalment' 		=> intval($target->instalment),
+				'repayment' 		=> intval($target->repayment),
+				'expire_time' 		=> intval($target->expire_time),
+				'invested' 			=> intval($target->invested),
+                'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
+                'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target->interest_rate ? true : false),
+                'status' 			=> intval($target->status),
+				'sub_status' 		=> intval($target->sub_status),
+				'created_at' 		=> intval($target->created_at),
+				'contract' 			=> $contract,
+				'user' 				=> $user,
+				'amortization_schedule' => $amortization_schedule,
+			);
+
+            $data = array_merge($data,$out_of_target_info);
             count($certification_list)>0 ? $data['certification'] = $certification_list : '';
 
             if($target->sub_product_id == STAGE_CER_TARGET){
