@@ -2101,7 +2101,7 @@ class Target_lib
                 }
                 return false;
             }elseif($verdictsStatuses['status'] == 200){
-                if($verdictsStatuses['response']['status'] != '爬蟲執行完成'){
+                if( isset($verdictsStatuses['response']['status']) || $verdictsStatuses['response']['status'] != '爬蟲執行完成'){
                     return false;
                 }
             }
