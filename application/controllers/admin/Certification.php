@@ -142,6 +142,11 @@ class Certification extends MY_Admin_Controller {
 				}elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 					$content = json_decode($info->content);
 					$page_data['report_page'] = '';
+
+					// initialize
+					$report_data['type'] = 'person';
+					$report_data['data'] = [];
+
 					if ($content->return_type !== 0 && isset($content->pdf_file) && isset($content->result)) {
 						//聯徵檔案報告產生
 						$info_content = json_decode($info->content, true);
@@ -177,13 +182,12 @@ class Certification extends MY_Admin_Controller {
 									}
 								}
 
-
-								$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
 							}
 						}
 						// $this->joint_credits();
 						// return;
 					}
+					$page_data['report_page'] = $this->load->view('admin/certification/component/joint_credit_report', $report_data , true);
 				}
 				elseif($info->certification_id == CERTIFICATION_JOB){
 					// if(isset(json_decode($info->content)->pdf_file)) {
@@ -392,6 +396,11 @@ class Certification extends MY_Admin_Controller {
 								'remark' => json_encode($remark),
 								'expire_time'=>$expiretime,
 							]);
+							if($post['status'] == 2) {
+								// 退工作認證時，需把聯徵也一起退掉 issue #1202
+								$this->load->library('Certification_lib');
+								$this->certification_lib->withdraw_investigation($info->user_id, $info->investor);
+							}
 						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
 							$content 					= json_decode($info->content,TRUE);
 							$content['times'] 			= isset($post['times'])?intval($post['times']):0;

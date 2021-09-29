@@ -240,4 +240,57 @@ class Target_model extends MY_Model
 
         return $query->result();
     }
+
+    public function getUserStatusByTargetId($targetIds) {
+        $this->db->select('*')
+            ->from("`p2p_loan`.`targets`")
+            ->where_in('id', $targetIds);
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.user_id, COUNT(*) as total_count')
+            ->from('`p2p_loan`.`targets` AS `t`')
+            ->join("($subquery) as `r`", "`t`.`user_id` = `r`.`user_id`")
+            ->where('t.created_at < r.created_at')
+            ->where("FROM_UNIXTIME(`t`.`created_at`, '%Y-%m-%d %H:%i:%s') >= DATE_SUB(FROM_UNIXTIME(`r`.`created_at`, '%Y-%m-%d %H:%i:%s'), INTERVAL 6 MONTH)")
+            ->group_by('t.user_id');
+
+        return $this->db->get()->result();
+    }
+    
+    /**
+     * 設定案件的的腳本使用狀態 (成功:回傳案件的物件/不成功:回傳空陣列)
+     * @param $target_ids
+     * @param $old_status
+     * @param $new_status
+     * @return array|stdClass
+     */
+    public function setScriptStatus($target_ids, $old_status, $new_status) {
+        if(!is_array($target_ids) || empty($target_ids))
+            return [];
+
+        $this->db->trans_begin();
+        $targets = $this->db->select_for_update('*')->where_in('id', $target_ids)
+            ->where('script_status', $old_status)
+            ->from('`p2p_loan`.`targets`')
+            ->get()->result();
+
+        if(is_array($targets) && !empty($targets)) {
+            $this->db->where_in('id', $target_ids)
+                ->where('script_status', $old_status)
+                ->set(['script_status' => $new_status])
+                ->update('`p2p_loan`.`targets`');
+
+            // 更新失敗需回傳 empty array
+            if($this->db->affected_rows() != count($target_ids)) {
+                $this->db->trans_rollback();
+                return [];
+            }
+        }
+        $this->db->trans_commit();
+
+        foreach ($targets as $target) {
+            $target->script_status = $new_status;
+        }
+        return $targets;
+    }
 }
