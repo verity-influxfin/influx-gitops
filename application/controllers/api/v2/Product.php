@@ -558,9 +558,9 @@ class Product extends REST_Controller {
         $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
         if ($product) {
             //檢核身分
-            if($product['identity'] == 3 && $this->user_info->company != 1 && !$product['checkOwner']){
+            if($product['identity'] == 3 && $this->user_info->company != 1 && (!isset($product['checkOwner']) || !$product['checkOwner'])){
                 $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
-            }elseif($product['identity'] != 3 && $this->user_info->company == 1){
+            }else if($product['identity'] != 3 && $this->user_info->company == 1){
                 $this->response(array('result' => 'ERROR', 'error' => IS_COMPANY));
             }
 
