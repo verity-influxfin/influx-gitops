@@ -2628,7 +2628,7 @@ class Certification extends REST_Controller {
                 }
             }
 
-            if(empty($user_id) || empty($investor)){
+            if(empty($user_id) || $investor != 0){
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
             }
 
