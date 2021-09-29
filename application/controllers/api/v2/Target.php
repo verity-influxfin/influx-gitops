@@ -784,85 +784,9 @@ class Target extends REST_Controller {
 
 			$user_info 	= $this->user_model->get($target->user_id);
 			$user		= [];
-			if($user_info){
-				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
-				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
-				$age  		= get_age($user_info->birthday);
-                $user_meta = new stdClass();
-                if($product['identity']==1){
-					$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
-                    if(is_object($user_meta)){
-                        $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
-                    }
-                    else{
-                        $user_meta->meta_value='未提供學校資訊';
-                    }
-				} elseif ($product_list[$target->product_id]['identity'] == 2) {
-                    $meta_info = $this->user_meta_model->get_many_by([
-                        'user_id' => $target->user_id,
-                        'meta_key' => ['job_company', 'diploma_name']
-                    ]);
-                    if ($meta_info) {
-                        $job_company = ($meta_info[0]->meta_key == 'job_company'
-                            ? $meta_info[0]->meta_value
-                            : (isset($meta_info[1]) >= 2
-                                ? $meta_info[1]->meta_value
-                                : false));
-                        $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
-                            ? $meta_info[0]->meta_value
-                            : (isset($meta_info[1]) >= 2
-                                ? $meta_info[1]->meta_value
-                                : false);
-                        $user_meta->meta_value = $job_company ? $job_company : $diploma_name;
-                    } else {
-                        $user_meta->meta_value = '未提供相關資訊';
-                    }
-                }
-
-				$user = array(
-					'name' 			=> $name,
-					'id_number'		=> $id_number,
-					'sex' 			=> $user_info->sex,
-					'age'			=> $age,
-					'company_name'	=> isset($user_meta->meta_value)?$user_meta->meta_value:'',
-				);
-			}
 
 			$targetDatas = [];
             $targetData = json_decode($target->target_data);
-            if($product['visul_id'] == 'DS2P1'){
-                $targetDatas = [
-                    'brand' => $targetData->brand,
-                    'name' => $targetData->name,
-                    'selected_image' => $targetData->selected_image,
-                    'purchase_time' => $targetData->purchase_time,
-                    'factory_time' => $targetData->factory_time,
-                    'product_description' => $targetData->product_description,
-                ];
-                foreach ($product['targetData'] as $key => $value) {
-                    if(in_array($key,['car_photo_front_image','car_photo_back_image','car_photo_all_image','car_photo_date_image','car_photo_mileage_image'])){
-                        if(isset($targetData->$key) && !empty($targetData->$key)){
-                            $pic_array = [];
-                            foreach ($targetData->$key as $svalue){
-                                preg_match('/image.+/', $svalue,$matches);
-                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
-                            }
-                            $targetDatas[$key] = $pic_array;
-                        }
-                        else{
-                            $targetDatas[$key] = '';
-                        }
-                    }
-                }
-                $user = array(
-                    'name' 			=> $user_info->name,
-                    'id_number'		=> '',
-                    'sex' 			=> '',
-                    'age'			=> '',
-                    'company_name'	=> '',
-                    'tax_id'	=> $user_info->id_number,
-                );
-            }
 
             $certification_list = [];
             $targetData_cer = isset($targetData->certification_id) ? $targetData->certification_id : false;
@@ -958,12 +882,96 @@ class Target extends REST_Controller {
                 }
             }
 
+            // 案件關係人資料
+            $guarantorInfo_list = [];
+
             $this->load->model('loan/target_associate_model');
-            $guarantorInfo = $this->target_associate_model->get_many_by(['target_id' => $target_id, 'product_id' => $target->product_id, 'status' => 2]);
-            // print_r($guarantorInfo);exit;
-            // if(){
-            //
-            // }
+            $guarantorInfo = $this->target_associate_model->get_many_by(['target_id' => $target_id, 'product_id' => $target->product_id, 'status' => 2, 'guarantor' => 1]);
+            if(! empty($guarantorInfo)){
+                $guarantor_info_list = [];
+                // 關係
+                $guarantorInfo = json_decode(json_encode($guarantorInfo),true);
+                $guarantor_list = [];
+                $guarantor_list = array_map(function($key,$values) {
+                    $list = [];
+                    if(isset($values['user_id'])){
+                        $list['user_id'] = $values['user_id'];
+                    }
+                    if(isset($values['character'])){
+                        $list['character'] = $values['character'];
+                    }
+                    return [$key=>$list];
+                }, array_keys($guarantorInfo), $guarantorInfo);
+                $guarantor_info_list = array_reduce($guarantor_list, 'array_merge', array());
+
+                // 關係人基本資訊
+                $user_list = array_column($guarantor_info_list, 'user_id');
+                $user_info_list = [];
+                if(! empty($user_list)){
+                    $user_info_list = $this->user_model->get_many($user_list);
+                    if(! empty($user_info_list)){
+                        $user_info_list = json_decode(json_encode($user_info_list),true);
+                        $user_info_list = array_map(function($key,$values) {
+                            $list = [];
+                            if(isset($values['name'])){
+                                $list['userName'] = mb_substr($values['name'],0,1,'UTF-8').'**';
+                            }
+                            if(isset($values['id_number'])){
+                                $list['txtIdNum'] = strlen($values['id_number'])==10?substr($values['id_number'],0,5).'*****':'';
+                            }
+                            if(isset($values['birthday'])){
+                                $list['userAge'] = get_age($values['birthday']);
+                            }
+                            if(isset($values['id']) && $values['id'] != ''){
+                                $list['user_id'] = $values['id'];
+                                // 任職公司
+                                $meta_info = $this->user_meta_model->get_many_by([
+                                    'user_id' => $values['id'],
+                                    'meta_key' => ['job_company', 'diploma_name']
+                                ]);
+                                if (! empty($meta_info)) {
+                                    $job_company = ($meta_info[0]->meta_key == 'job_company'
+                                        ? $meta_info[0]->meta_value
+                                        : (isset($meta_info[1]) >= 2
+                                            ? $meta_info[1]->meta_value
+                                            : false));
+                                    $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
+                                        ? $meta_info[0]->meta_value
+                                        : (isset($meta_info[1]) >= 2
+                                            ? $meta_info[1]->meta_value
+                                            : false);
+                                    $list['txtCompany'] = $job_company ? $job_company : $diploma_name;
+                                } else {
+                                    $list['txtCompany'] = '未提供相關資訊';
+                                }
+                            }
+
+                            return [$key=>$list];
+                        }, array_keys($user_info_list), $user_info_list);
+
+                        $user_info_list = array_reduce($user_info_list, 'array_merge', array());
+
+                    }
+                }
+
+                if(!empty($user_info_list) && ! empty($guarantor_info_list)){
+                    $new_guarantor = [];
+                    foreach($guarantor_info_list as $key => $values){
+                        if(isset($values['user_id'])){
+                            $new_guarantor[$values['user_id']] = $values;
+                        }
+                    }
+                    $new_user = [];
+                    foreach($user_info_list as $key => $values){
+                        if(isset($values['user_id'])){
+                            $new_user[$values['user_id']] = $values;
+                        }
+                    }
+                    if(!empty($new_user) && !empty($new_guarantor)){
+                        $guarantorInfo_list['guarantorInfo'] = array_map(function ($a1, $b1) { return $a1 + $b1; }, $new_user, $new_guarantor);
+                    }
+                }
+            }
 
 			$data = array(
 				'id' 				=> intval($target->id),
@@ -994,6 +1002,7 @@ class Target extends REST_Controller {
 			);
 
             $data = array_merge($data,$out_of_target_info);
+            $data = array_merge($data,$guarantorInfo_list);
             count($certification_list)>0 ? $data['certification'] = $certification_list : '';
 
             if($target->sub_product_id == STAGE_CER_TARGET){
