@@ -2624,7 +2624,7 @@ class Certification extends REST_Controller {
 
                 if(!empty($this->user_info)){
                     $user_id = $this->user_info->id;
-                    $investor = $this->user_info->investor;
+                    $investor = $this->user_info->investor_status;
                 }
             }
 
