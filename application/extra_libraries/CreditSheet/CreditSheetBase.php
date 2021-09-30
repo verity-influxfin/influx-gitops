@@ -27,19 +27,6 @@ abstract class CreditSheetBase implements CreditSheetDefinition
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
     /**
-     * 設定最終核准層次
-     * @param int $level
-     * @return bool
-     */
-    public function setFinalReviewerLevel(int $level): bool {
-        $this->finalReviewerLevel = $level;
-        $this->CI->load->model('loan/credit_sheet_model');
-        $this->CI->credit_sheet_model->update_by(['id' => $this->creditSheetRecord->id ?? 0],
-            ['review_level' => $this->finalReviewerLevel]);
-        return TRUE;
-    }
-
-    /**
      * 取得視圖的檔案路徑
      * @return string
      */
@@ -66,6 +53,31 @@ abstract class CreditSheetBase implements CreditSheetDefinition
      * @return int
      */
     abstract public function approve(int $groupId, string $opinion, int $score=0, int $adminId=0): int;
+
+    /**
+     * 所有核可層級通過後，會審核未核可的案件
+     */
+    abstract protected function finallyApprove();
+
+    /**
+     * 封存授審表 (審核通過)
+     * @param array $credit: 信用評級 Model
+     * @return bool
+     */
+    abstract public function archive(array $credit): bool;
+
+    /**
+     * 設定最終核准層次
+     * @param int $level
+     * @return bool
+     */
+    public function setFinalReviewerLevel(int $level): bool {
+        $this->finalReviewerLevel = $level;
+        $this->CI->load->model('loan/credit_sheet_model');
+        $this->CI->credit_sheet_model->update_by(['id' => $this->creditSheetRecord->id ?? 0],
+            ['review_level' => $this->finalReviewerLevel]);
+        return TRUE;
+    }
 
     /**
      * 取得授審表類型
@@ -109,7 +121,7 @@ abstract class CreditSheetBase implements CreditSheetDefinition
         if($targetGroup <= $this->finalReviewerLevel && ($targetGroup == self::REVIEWER_CREDIT_SYSTEM ||
             count(array_filter($reviewedGroupList, function($v) use ($targetGroup) {
                 return $v < $targetGroup;
-            })) === $targetGroup-self::REVIEWER_CREDIT_ANALYST)) {
+            })) === $targetGroup-self::REVIEWER_CREDIT_SYSTEM)) {
             return TRUE;
         }
         return FALSE;
@@ -137,6 +149,63 @@ abstract class CreditSheetBase implements CreditSheetDefinition
     public function convertResponseCodeToMsg($code): string
     {
         return self::RESPONSE_CODE_LIST[$code] ?? '';
+    }
+
+    /**
+     * 取得有效的歸戶最大額度
+     * @param $startTime: 篩選的時間標記
+     * @return int
+     */
+    public function getMaxCreditLine($startTime): int
+    {
+        $this->CI->load->model('loan/credit_model');
+        $param = [
+            'user_id' => $this->user->id,
+            'status' => 1,
+            'expire_time >=' => $startTime,
+            'product_id' => $this::ALLOW_PRODUCT_LIST,
+        ];
+        $credit = $this->CI->credit_model->order_by('amount', 'desc')->get_by($param);
+        return isset($credit) ? $credit->amount : 0;
+    }
+
+
+    /**
+     * 取得可動用額度
+     * @param int $unusedCreditLine
+     * @return int
+     */
+    public function getUnusedCreditLine(int $unusedCreditLine=0): int
+    {
+        if(!$unusedCreditLine)
+            $unusedCreditLine = $this->getMaxCreditLine(time());
+
+        // 取得所有產品申請或進行中的案件
+        $targetList = $this->CI->target_model->get_many_by([
+            'id !=' => $this->target->id,
+            'user_id' => $this->user->id,
+            'status NOT' => [TARGET_CANCEL, TARGET_FAIL, TARGET_REPAYMENTED],
+            'product_id' => $this::ALLOW_PRODUCT_LIST,
+        ]);
+
+        if ($targetList) {
+            // 無條件進位使用額度(千元) ex: 1001 -> 1100
+            $usedCreditLine = array_column($targetList, 'loan_amount');
+            $usedCreditLine = $usedCreditLine % 1000 != 0 ? ceil($usedCreditLine * 0.001) * 1000 : $usedCreditLine;
+
+            // 取得案件已還款金額
+            $paidTransactions = $this->CI->transaction_model->get_many_by(array(
+                "source" => SOURCE_PRINCIPAL,
+                "user_from" => $this->user->id,
+                "target_id" => $targetList,
+                "status" => TRANSACTION_STATUS_PAID_OFF
+            ));
+            $repaidAmount = array_sum(array_column($paidTransactions, 'amount'));
+
+            $unusedCreditLine = $unusedCreditLine - $usedCreditLine + $repaidAmount;
+        }
+
+        return $unusedCreditLine;
     }
 
 }

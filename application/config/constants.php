@@ -268,6 +268,12 @@ defined('MOBILE_PHONE_VENDOR') or define('MOBILE_PHONE_VENDOR', 0); //手機商
 defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
 
 
+defined('PRODUCT_TYPE_NORMAL') or define('PRODUCT_TYPE_NORMAL', 1);                 // 一般貸類型
+defined('PRODUCT_TYPE_ORDER') or define('PRODUCT_TYPE_ORDER', 2);                   // 消費貸類型
+defined('PRODUCT_ID_STUDENT') or define('PRODUCT_ID_STUDENT', 1);                   // 學生貸
+defined('PRODUCT_ID_STUDENT_ORDER') or define('PRODUCT_ID_STUDENT_ORDER', 2);       // 學生手機貸款
+defined('PRODUCT_ID_SALARY_MAN') or define('PRODUCT_ID_SALARY_MAN', 3);             // 上班族貸
+defined('PRODUCT_ID_SALARY_MAN_ORDER') or define('PRODUCT_ID_SALARY_MAN_ORDER', 4); // 上班族消費貸
 defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000); //外匯車商
 
 
