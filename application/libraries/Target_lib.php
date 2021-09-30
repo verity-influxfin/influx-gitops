@@ -2224,6 +2224,7 @@ class Target_lib
                             $user_certification	= $this->CI->certification_lib->get_certification_info($value->user_id,1,0);
                             if($user_certification){
                                 $temp['addspouse'] = isset($user_certification->content['SpouseName']) && $user_certification->content['SpouseName'] != '';
+                                $temp['addspouse'] = isset($user_certification->content['hasSpouse']) && $user_certification->content['hasSpouse'] != '' ? $user_certification->content['hasSpouse'] : false;
                             }
                         }
 

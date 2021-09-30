@@ -1362,5 +1362,30 @@ class Certification extends MY_Admin_Controller {
 		}
 	}
 
+    // 加入是否有配偶
+    public function hasSpouse(){
+        $post = $this->input->post();
+
+        if(! isset($post['hasSpouse'])){
+            alert('資料更改失敗，缺少參數', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+        $certification_info = $this->user_certification_model->get_by(['id' => $post['id']]);
+
+        if(! $certification_info){
+            alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        if(isset($certification_info->status) && $certification_info->status != 3){
+            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+        $content['hasSpouse'] = $post['hasSpouse'] == 1 ? true : false;
+        $this->user_certification_model->update_by(
+            ['id'  => $post['id']],
+            ['content' => json_encode($content)]
+        );
+        alert('資料更新成功', admin_url('certification/user_certification_edit?id='.$post['id']));
+    }
 }
 ?>
