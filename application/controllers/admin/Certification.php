@@ -280,7 +280,7 @@ class Certification extends MY_Admin_Controller {
 					$page_data['ocr']['total_table'] = '';
 				}
 
-				if(($info->certification_id == 1003 || $info->certification_id == 9) && ($info->status == 0 || $info->status == 3)){
+				if(($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) && ($info->status == 0 || $info->status == 3)){
 						$input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
 						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
 					}

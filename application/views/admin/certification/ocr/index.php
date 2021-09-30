@@ -69,7 +69,7 @@
                                     </div>
                                 </fieldset>
                             </div>
-							<? if( ($data->certification_id == 9 || $data->certification_id == 1003) && isset($ocr['upload_page']) ){ ?>
+							<? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
 							<div class="form-group">
 							  <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
 							</div>
