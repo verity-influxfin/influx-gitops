@@ -3,16 +3,19 @@
     <div class="header">
       <h2>AI金融科技新知</h2>
       <div class="input-custom">
-        <i class="fas fa-search"></i>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Search"
-          autocomplete="off"
-          name="blog_articlesearch"
-          v-model="filter"
-        />
-        <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
+        <form autocomplete="off" onsubmit="return false">
+            <i class="fas fa-search"></i>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Search"
+              autocomplete="new-password"
+              autofill="off"
+              name="blog_articlesearch"
+              v-model="filter"
+            />
+            <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
+        </form>
       </div>
     </div>
     <template v-if="filterKnowledge.length === 0">
