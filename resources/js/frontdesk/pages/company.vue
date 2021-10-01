@@ -266,6 +266,7 @@ export default {
           text-align: center;
           color: #4a4a4a;
           margin: 15px 10px;
+          min-height: 5em;
 
           &:hover {
             cursor: pointer;
