@@ -90,7 +90,7 @@
                 </svg>
                 </a>
                 <div id="obank_notice_list" class="obank-notice-list" style="display:none">
-                    <div><span>1.專案期間至110年9月30日(含)截止，以王道銀行(以下簡稱為本行)系統進件日為準。</span></div>
+                    <div><span>1.專案期間至110年11月30日(含)截止，以王道銀行(以下簡稱為本行)系統進件日為準。</span></div>
                     <div><span>2.信用貸款二段式(本息攤還型)總費用年百分率計算範例(計算基準日：民國110年8月23日：貸款金額NT30萬元，貸款期間5年(限制清償期最長為24期)，貸款年利率首期固定0.07%，第二期起2.98%~16%(機動計息)，各項相關費用總金額：NT1,999元/筆，</span><span style="color:red;">總費用年百分率：3.15%~15.71%。</span></div>
                     <div><span>3.上述第二期起機動計息係按本行一個月期定儲利率指數依計算基準日(i目前為0.80%)加碼2.18%~15.2%，調整時間為每月21日(調整日期倘遇假日，將順延至次一營業日，且適用期間之首日將隨調整日期變動而順延)。</span></div>
                     <div>
@@ -186,7 +186,7 @@ export default {
 
     .obank-top{
         background-image: url("../asset/images/oBankBanner.jpg");
-        padding-top: 34vw;
+        padding-top: 31vw;
         padding-left: 57vw;
 
         .obank-banner-btn {
@@ -352,7 +352,7 @@ export default {
 
       .obank-top{
           background-image: url("../asset/images/oBankTopM.jpg");
-          padding-top: 65vw;
+          padding-top: 60vw;
           padding-left: 0vw;
 
           .obank-banner-btn {
