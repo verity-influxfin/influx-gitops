@@ -9,6 +9,7 @@
           class="form-control"
           placeholder="Search"
           autocomplete="off"
+          name="blog_articlesearch"
           v-model="filter"
         />
         <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
