@@ -37,6 +37,12 @@
                             <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
                                 <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                             </a>
+                            <?php if($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12){ ?>
+                            <div class="form-group">
+                                <label>交件方式</label>
+                                <p class="form-control-static"><?= !empty ($return_type) ? $return_type : "" ?></p>
+                            </div>
+                            <?php }?>
                         </div>
                       </div>
                       <!-- ocr head end -->

@@ -280,9 +280,30 @@ class Certification extends MY_Admin_Controller {
 					$page_data['ocr']['total_table'] = '';
 				}
 
-				if(($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) && ($info->status == 0 || $info->status == 3)){
-						$input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
-						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
+				if($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) {
+                        // 上傳檔案功能
+                        if($info->status == 0 || $info->status == 3){
+                            $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
+    						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
+                        }
+                        $return_config = [
+                            '1003' => [
+                                '1' => '郵局申請(紙本)',
+                                '0' => '臨櫃申請(紙本)'
+                            ],
+                            '9' => [
+                                '0' => '郵局申請(紙本)',
+                                '1' => '自然人憑證',
+                                '2' => '投資人行動網',
+                                '3' => '臨櫃申請(紙本)',
+                            ],
+                            '12' => [
+                                '0' => '郵局申請(紙本)',
+                                '1' => '臨櫃申請(紙本)',
+                            ],
+                        ];
+                        $ocr_content['return_type'] = isset($ocr_content['return_type']) ? $ocr_content['return_type'] : '';
+                        $page_data['return_type'] = isset($return_config[$info->certification_id][$ocr_content['return_type']]) ? $return_config[$info->certification_id][$ocr_content['return_type']] : '';
 					}
 				}
 

@@ -270,6 +270,9 @@ class Certification_table
 		$data = [];
 		$this->CI->load->model('log/log_image_model');
 		$ocr_type = $this->certification_mapping[$certification_id]['type'];
+        if($certification_id == 1017){
+            $ocr_type = 'insurance_table_company';
+        }
 		$img = $this->getUserPostFilesKey($certification_id);
 
 		$ocr_img_id = [];

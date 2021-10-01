@@ -61,7 +61,7 @@ class Ocr extends MY_Admin_Controller
         $offset = isset($input['offset']) ? intval($input['offset']) : 1;
         $limit = isset($input['limit']) ? intval($input['limit']) : 60;
 
-        $types = ['income_statements', 'balance_sheets', 'business_tax_return_reports', 'insurance_tables', 'amendment_of_registers','credit_investigations'];
+        $types = ['income_statements', 'balance_sheets', 'business_tax_return_reports', 'insurance_tables', 'amendment_of_registers','credit_investigations', 'insurance_table_company'];
         $this->load->library('output/json_output');
         if (!in_array($type, $types)) {
             $this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
@@ -150,11 +150,16 @@ class Ocr extends MY_Admin_Controller
 							$user_type = isset($response->response->insurance_table_logs->items[0]->insurance_table->type) ? $response->response->insurance_table_logs->items[0]->insurance_table->type : '';
 							if($user_type && $user_type == 'company'){
 								$type = 'company';
-							}else{
+							}
+                            if($user_type && $user_type == 'person'){
 								$type = 'person';
 							}
               $this->load->view("admin/ocr/insurance_tables/insurance_{$type}");
 							return;
+            }
+            if($type == 'insurance_table_company'){
+                $this->load->view("admin/ocr/insurance_tables/insurance_company");
+                return;
             }
 
 						if ($type == 'amendment_of_register') {
@@ -208,6 +213,9 @@ class Ocr extends MY_Admin_Controller
         }
 
         $types = [$type];
+        if($type == 'insurance_table_company'){
+            $type = 'insurance_table';
+        }
         $this->load->library('output/json_output');
         if (!in_array($type, $types)) {
             $this->json_output->setStatusCode(400)->setErrorCode(ArgumentError)->send();
