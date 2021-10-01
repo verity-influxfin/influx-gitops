@@ -207,13 +207,14 @@
                             <div class="form-group">
                                 <label>配偶</label>
                                 <p class="form-control-static"><?=isset($content['SpouseName'])?$content['SpouseName']:""?></p>
+                                <label>有無配偶</label>
+                                <p class="form-control-static"><?=isset($content['hasSpouse']) && $content['hasSpouse'] == true ? "有":"無"?></p>
                                 <?php
                                     // 沒配偶的話可改動
                                     if((! isset($content['SpouseName']) || $content['SpouseName'] == '') && $data->status==3){
                                         echo '
                                                 <form role="form" method="post" action="/admin/certification/hasSpouse">
                                                 <div class="form-group">
-                                                    <label>有無配偶</label>
                                                     <select id="hasSpouse" name="hasSpouse" class="form-control">
                                                         <option value="" disabled selected>選擇回覆內容</option>
                                                         <option value="1" >有</option>
