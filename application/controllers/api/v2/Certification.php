@@ -2520,7 +2520,7 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['legal_person_mq_image'];
+            $fields 	= ['return_type','legal_person_mq_image'];
             foreach ($fields as $field) {
                 if (empty($input[$field])) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -2583,7 +2583,7 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['person_mq_image'];
+            $fields 	= ['return_type','person_mq_image'];
             foreach ($fields as $field) {
                 if (empty($input[$field])) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
