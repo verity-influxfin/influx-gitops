@@ -1633,11 +1633,9 @@ class Target_lib
                             $product = $this->trans_sub_product($product, $sub_product_id);
                         }
                         $product_certification = $product['certifications'];
-                        if ($value->status != '1' || $value->sub_product_id == STAGE_CER_TARGET) {
-                            $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
-                            $company = $value->product_id >= 1000 ? 1 : 0;
 
-							// 微企貸
+                        if($value->status != '1' && $value->product_id == 1002){
+                            // 微企貸歸戶
 							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
 							$wait_associates = false;
                             if(isset($product['checkOwner']) && $product['checkOwner'] === true){
@@ -1666,6 +1664,10 @@ class Target_lib
                                     $wait_associates = false;
                                 }
                             }
+                        }
+                        if ($value->status != '1' || $value->sub_product_id == STAGE_CER_TARGET) {
+                            $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
+                            $company = $value->product_id >= 1000 ? 1 : 0;
 
                             $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
                             $finish = true;
