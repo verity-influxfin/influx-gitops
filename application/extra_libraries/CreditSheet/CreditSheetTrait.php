@@ -12,11 +12,38 @@ Trait CreditSheetTrait
         $this->setCreditSheetCallback($creditSheet);
     }
 
+
+    /**
+     * 取得核准紀錄列表
+     * @param $endDate
+     * @return array
+     */
     protected function _getApprovedCreditList($endDate): array {
         $this->CI->load->model('loan/credit_sheet_model');
+
         return $this->CI->credit_sheet_model->getCreditSheetWithTarget(
             [
                 'user_id' => $this->creditSheet->user->id,
+            ],
+            [
+                'created_at <=' => $endDate
+            ]
+        );
+    }
+
+    /**
+     * 取得已放款之核准紀錄列表
+     * @param $endDate
+     * @return array
+     */
+    protected function getLoanedCreditList($endDate): array {
+        $this->CI->load->model('loan/credit_sheet_model');
+
+        return $this->CI->credit_sheet_model->getCreditSheetWithTarget(
+            [
+                'user_id' => $this->creditSheet->user->id,
+                'status' => [TARGET_REPAYMENTING,TARGET_REPAYMENTED],
+                'loan_date <= ' => $endDate,
             ],
             [
                 'created_at <=' => $endDate

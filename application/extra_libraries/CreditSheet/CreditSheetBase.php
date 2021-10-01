@@ -190,14 +190,14 @@ abstract class CreditSheetBase implements CreditSheetDefinition
 
         if ($targetList) {
             // 無條件進位使用額度(千元) ex: 1001 -> 1100
-            $usedCreditLine = array_column($targetList, 'loan_amount');
+            $usedCreditLine = array_sum(array_column($targetList, 'loan_amount'));
             $usedCreditLine = $usedCreditLine % 1000 != 0 ? ceil($usedCreditLine * 0.001) * 1000 : $usedCreditLine;
 
             // 取得案件已還款金額
             $paidTransactions = $this->CI->transaction_model->get_many_by(array(
                 "source" => SOURCE_PRINCIPAL,
                 "user_from" => $this->user->id,
-                "target_id" => $targetList,
+                "target_id" => array_column($targetList, 'id'),
                 "status" => TRANSACTION_STATUS_PAID_OFF
             ));
             $repaidAmount = array_sum(array_column($paidTransactions, 'amount'));
