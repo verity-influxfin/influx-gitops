@@ -308,9 +308,16 @@ Route::view('/{path?}', 'index');
 Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
 
     $name = str_replace('-', '_', strtolower($name));
-    if (view()->exists($path = sprintf('campaigns/%s/%s', $name, $path)))
+
+    switch (true)
     {
-        return view($path);
+
+        // 報名截止跳轉活動介紹頁
+        case $name == '2021_campus_ambassador' && $path != 'index':
+            return redirect('/campaign/2021-campus-ambassador');
+
+        case view()->exists($path = sprintf('campaigns/%s/%s', $name, $path)):
+            return view($path);
     }
     throw new NotFoundHttpException();
 });

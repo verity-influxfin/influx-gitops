@@ -27,6 +27,20 @@ function image_url(string $filename) {
 
 @section('content')
 <div class="container-fluid">
+    <div class="modal fade" id="event_closed" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h2 class="mb-2">殘念...</h2>
+                    <p class="mb-2">報名截止了 (扶額</p>
+                    <a href="https://zh.wikipedia.org/wiki/%E5%BA%93%E4%BC%AF%E5%8B%92-%E7%BD%97%E4%B8%9D%E6%A8%A1%E5%9E%8B" target="_blank" style="text-decoration:none;font-size:.8em">😱😡🥺😭🙂</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">好喔</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <section class="hero">
             <div class="col">
@@ -57,9 +71,10 @@ function image_url(string $filename) {
                     </div>
 
                     <div class="signup">
-                        <a href="{{url('campaign/2021-campus-ambassador/signup')}}" class="button">
+                        <a href="javascript:;" class="button" data-bs-toggle="modal" data-bs-target="#event_closed">
                             <img src="{{image_url('hero_middle_button_text.svg')}}" alt="點我報名" />
                         </a>
+
                         <svg class="lines" xmlns="http://www.w3.org/2000/svg" width="100%" height="31">
                           <g transform="translate(-76.5 -159.5)">
                             <line x2="100%" transform="translate(76.5 160.5)" stroke="#153a71" stroke-width="0.5" stroke-dasharray="70%" stroke-dashoffset="35%"/>
@@ -197,7 +212,7 @@ function image_url(string $filename) {
                         <div class="card-body" style="min-height: calc(24em + 3px)">
                             <div class="signup">
                                 <img class="bg-image-object" src="{{image_url('grey_arrow_right.svg')}}" />
-                                <a href="{{url('campaign/2021-campus-ambassador/signup')}}" class="button">
+                                <a href="javascript:;" class="button" data-bs-toggle="modal" data-bs-target="#event_closed">
                                     點我報名
                                 </a>
                             </div>
