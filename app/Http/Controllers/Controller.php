@@ -86,7 +86,7 @@ class Controller extends BaseController
         // 限制案件最新五十筆
         $input['limited'] = 50;
         $params = http_build_query($input);
-        $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/transfer_list?' . $params . '"');
+        $case_response = shell_exec('curl --location --request -k GET "' . $this->apiGetway . 'website/transfer_list?' . $params . '"');
         if(!empty($case_response)){
             $case_data = json_decode($case_response,true);
             if(isset($case_data['result']) && $case_data['result'] == 'SUCCESS' && !empty($case_data['data']['list'])){
@@ -115,11 +115,11 @@ class Controller extends BaseController
                 if($input['product_id'] == 0){
                     $input['product_id'] = 1;
                     $params = http_build_query($input);
-                    $case_response_1 = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+                    $case_response_1 = shell_exec('curl --location --request -k GET "' . $this->apiGetway . 'website/list?' . $params . '"');
 
                     $input['product_id'] = 3;
                     $params = http_build_query($input);
-                    $case_response_3 = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+                    $case_response_3 = shell_exec('curl --location --request -k GET "' . $this->apiGetway . 'website/list?' . $params . '"');
                     $case_response = '';
                     if(!empty($case_response_1) && !empty($case_response_3)){
                         $case_response_1 = json_decode($case_response_1,true);
@@ -146,7 +146,7 @@ class Controller extends BaseController
                     }
                 }else{
                     $params = http_build_query($input);
-                    $case_response = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/list?' . $params . '"');
+                    $case_response = shell_exec('curl --location --request -k GET "' . $this->apiGetway . 'website/list?' . $params . '"');
                 }
                 if(!empty($case_response)){
                     $case_data = json_decode($case_response,true);
@@ -186,7 +186,7 @@ class Controller extends BaseController
         if(isset($input['data']) && !empty($input['data'])){
             if(isset($option_config[$input['data']])){
                 $api_url = $option_config[$input['data']];
-                $response = shell_exec('curl --location --request GET "' . $this->apiGetway . $api_url .'"');
+                $response = shell_exec('curl --location --request -k GET "' . $this->apiGetway . $api_url .'"');
             }
 
             if(!empty($response)){
@@ -407,8 +407,8 @@ class Controller extends BaseController
             // 學生
             if($input ['identity'] == 1){
                 $total_point += 1150;
-                $school_points = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/credit_school"');
-                $department_points = shell_exec('curl --location --request GET "' . $this->apiGetway . 'website/credit_department"');
+                $school_points = shell_exec('curl --location --request -k GET "' . $this->apiGetway . 'website/credit_school"');
+                $department_points = shell_exec('curl --location --request -k GET "' . $this->apiGetway . 'website/credit_department"');
                 if(!empty($school_points) && !empty($department_points)){
                     $school_points = json_decode($school_points,true);
                     $department_points = json_decode($department_points,true);
