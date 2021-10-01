@@ -33,7 +33,7 @@ class Eventcontroller extends BaseController
 
         if (isset($input['promo']) && $input['promo'] != '') {
             $params = http_build_query($input);
-            $curlCountDownload = shell_exec('curl -X POST "' . $this->apiGetway . 'article/countdownload" -d "' . $params . '"');
+            $curlCountDownload = shell_exec('curl -k -X POST "' . $this->apiGetway . 'article/countdownload" -d "' . $params . '"');
             $downloadNum = json_decode($curlCountDownload, true);
             $userNum = DB::table('event_users')->select('*')->where('promo', '=', $input['promo'])->count();
         }
@@ -70,7 +70,7 @@ class Eventcontroller extends BaseController
 
         $params = http_build_query($postData);
 
-        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
 

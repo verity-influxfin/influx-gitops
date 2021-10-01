@@ -51,14 +51,14 @@ class Accountcontroller extends BaseController
 
         $params = http_build_query($input);
 
-        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . 'user/login" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/login" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
 
         if ($data['result'] === "SUCCESS") {
             Session::put('token', $data['data']['token']);
 
-            $curlScrapedPage = shell_exec('curl -X GET "' . $this->apiGetway . 'user/info" -H "' . "request_token:" . $data['data']['token'] . '"');
+            $curlScrapedPage = shell_exec('curl -k -X GET "' . $this->apiGetway . 'user/info" -H "' . "request_token:" . $data['data']['token'] . '"');
             $data = json_decode($curlScrapedPage, true);
 
             Session::put('userData', $data['data']);
@@ -94,7 +94,7 @@ class Accountcontroller extends BaseController
         unset($input['type']);
         $params = http_build_query($input);
 
-        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . 'user/' . $function . '" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/' . $function . '" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
 
@@ -115,7 +115,7 @@ class Accountcontroller extends BaseController
         unset($input['new_password_confirmation']);
         $params = http_build_query($input);
 
-        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . 'user/forgotpw" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/forgotpw" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
 
@@ -136,7 +136,7 @@ class Accountcontroller extends BaseController
         unset($input['confirmPassword']);
         $params = http_build_query($input);
 
-        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
 
