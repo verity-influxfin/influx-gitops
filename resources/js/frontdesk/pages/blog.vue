@@ -18,7 +18,7 @@
         </form>
       </div>
     </div>
-    <template v-if="filterKnowledge.length === 0">
+    <template v-if="Array.isArray(filterKnowledge) && filterKnowledge.length === 0">
       <div class="empty">
         <div class="empty-img">
           <img src="../asset/images/empty.svg" class="img-fluid" />
@@ -57,7 +57,7 @@ export default {
   data: () => ({
     filter: "",
     pageHtml: "",
-    filterKnowledge: [],
+    filterKnowledge: null,
   }),
   computed: {
     knowledge() {
@@ -88,11 +88,9 @@ export default {
       this.pagination();
     },
     filter(newVal) {
-      this.filterKnowledge = [];
-      this.knowledge.forEach((row, index) => {
-        if (row.post_title.toLowerCase().indexOf(newVal.toLowerCase()) !== -1) {
-          this.filterKnowledge.push(row);
-        }
+      newVal = newVal.toLowerCase();
+      this.filterKnowledge = this.knowledge.filter(item => {
+        return item.post_title.toLowerCase().indexOf(newVal) > -1;
       });
     },
     filterKnowledge() {
