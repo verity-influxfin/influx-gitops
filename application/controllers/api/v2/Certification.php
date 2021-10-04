@@ -2522,7 +2522,7 @@ class Certification extends REST_Controller {
             //必填欄位
             $fields 	= ['return_type','legal_person_mq_image'];
             foreach ($fields as $field) {
-                if (empty($input[$field])) {
+                if (empty($input[$field]) && $input[$field] != 0) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                 }else{
                     $content[$field] = $input[$field];
@@ -2585,7 +2585,7 @@ class Certification extends REST_Controller {
             //必填欄位
             $fields 	= ['return_type','person_mq_image'];
             foreach ($fields as $field) {
-                if (empty($input[$field])) {
+                if (empty($input[$field]) && $input[$field] != 0) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                 }else{
                     $content[$field] = $input[$field];
