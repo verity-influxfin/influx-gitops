@@ -597,12 +597,12 @@ class Product extends REST_Controller {
             }
 
             // 角色判斷
-            if($product['checkOwner']){
+            // if($product['checkOwner']){
                 // character 法人角色 0:非實際負責人 1:實際負責人
 //                if(isset($input['character']) && $input['character'] == 2){
 //                    $input['instalment'] = 36;
 //                }
-            }
+            // }
 
             // 外匯車判斷
             if($product['id'] == PRODUCT_FOREX_CAR_VEHICLE){
