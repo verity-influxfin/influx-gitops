@@ -806,8 +806,12 @@ $name 您好，
 
 	public function notify_target_product_1002_associates($mail, $username, $subProduct, $character){
 
-		$title = "【合作夥伴】專案{$character}";
-		$content = "{$username}公司已申請加入您作為保證人，請至普匯inFlux申請，詳見inFlux 信保微企貸。";
+		$title = "【百萬信保微企貸】新增 「{$character}」";
+		$content = "「{$username}」公司已申請加入您作為「負責人配偶/保證人」
+請下載「普匯 influx」APP，並完成以下流程：
+1.註冊「一般使用者」並登入帳號，並從「資料中心」完成實名認證
+2.至「產品列表」中「百萬信保微企AI速貸」點選「查看狀態」
+3.完成其餘資料更新（個人資料表、聯徵報告...）";
 
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));
