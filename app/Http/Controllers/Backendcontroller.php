@@ -29,7 +29,7 @@ class Backendcontroller extends BaseController
         $input['email'] = strpos($input['email'], '@') ? base64_encode($input['email']) : $input['email'];
         $params = http_build_query($input);
 
-        $curlScrapedPage = shell_exec('curl -X POST "' . $this->apiGetway . 'certification/verifyemail" -d "' . $params . '"');
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'certification/verifyemail" -d "' . $params . '"');
         $data = json_decode($curlScrapedPage, true);
 
         if ($data['result'] === 'SUCCESS') {
