@@ -293,7 +293,7 @@ class Certification extends REST_Controller {
                         $fields 	= [];
 						break;
 					case 12:
-                        $fields 	= ['investigationa11'];
+                        $fields 	= ['investigationa11', 'return_type'];
 						break;
 					case 500:
                         $fields 	= [];
@@ -311,7 +311,7 @@ class Certification extends REST_Controller {
 						$fields 	= ['incomestatement'];
 						break;
 					case 1003:
-						$fields 	= ['investigationjudicial'];
+						$fields 	= ['investigationjudicial', 'return_type'];
 						break;
 					case 1004:
 						$fields 	= ['passbookcashflow'];
