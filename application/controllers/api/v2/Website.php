@@ -633,6 +633,23 @@ class Website extends REST_Controller {
         $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $department_list ] ));
     }
 
+    public function department_get()
+    {
+        $input = $this->input->get();
+        $this->config->load('school_points');
+        $department_list = $this->config->item('department_points');
+
+        $data = array_map(function($key,$values) {
+            if(isset($values['score'])){
+                unset($values['score']);
+            }
+            return [$key=>$values];
+        }, array_keys($department_list), $department_list);
+
+        $data = array_reduce($data, 'array_merge', array());
+        $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $data ] ));
+    }
+
     private function sub_product_profile($product,$sub_product){
         return array(
             'id' => $product['id'],
