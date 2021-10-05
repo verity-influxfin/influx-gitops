@@ -2418,34 +2418,37 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['income_statement_image'];
-            foreach ($fields as $field) {
-                if (empty($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
-                    $content[$field] = $input[$field];
-                }
-            }
+            //改圖片欄位可選填，公司成立小於一年沒有損益表
+            // $fields 	= ['income_statement_image'];
+            // foreach ($fields as $field) {
+            //     if (empty($input[$field])) {
+            //         $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            //     }else{
+            //         $content[$field] = $input[$field];
+            //     }
+            // }
 
             $file_fields = ['income_statement_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
-                $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>6){
-                    $image_ids = array_slice($image_ids,0,6);
-                }
-                $list = $this->log_image_model->get_many_by([
-                    'id'		=> $image_ids,
-                    'user_id'	=> $user_id,
-                ]);
-
-                if($list && count($list)==count($image_ids)){
-                    $content[$field] = [];
-                    foreach($list as $k => $v){
-                        $content[$field][] = $v->url;
+                if(isset($input[$field]) && !empty($input[$field])){
+                    $image_ids = explode(',',$input[$field]);
+                    if(count($image_ids)>6){
+                        $image_ids = array_slice($image_ids,0,6);
                     }
-                }else{
-                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $user_id,
+                    ]);
+
+                    if($list && count($list)==count($image_ids)){
+                        $content[$field] = [];
+                        foreach($list as $k => $v){
+                            $content[$field][] = $v->url;
+                        }
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
                 }
             }
 
