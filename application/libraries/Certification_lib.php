@@ -30,7 +30,7 @@ class Certification_lib{
             function ($x) use ($findStatusList) { return (is_array($x) && in_array($x['status'], $findStatusList))
                 || (is_object($x) && in_array($x->status, $findStatusList)); })));
     }
-    
+
     /**
      * 取得產品的各階段徵信檢核項目列表
      * @param $product_id
@@ -1354,12 +1354,12 @@ class Certification_lib{
 			// }else{
 			// 	$status = 3;
 			// }
-			$this->CI->user_certification_model->update($info->id, array(
-			    'status' => $status,
-			    'sys_check' => 1,
-			    'content' => json_encode($info->content),
-			    'remark' => json_encode($info->remark)
-			  ));
+			// $this->CI->user_certification_model->update($info->id, array(
+			//     'status' => $status,
+			//     'sys_check' => 1,
+			//     'content' => json_encode($info->content),
+			//     'remark' => json_encode($info->remark)
+			//   ));
 
             $this->certification_lib->set_success($info->id, true);
             return true;
@@ -1542,6 +1542,7 @@ class Certification_lib{
 		if ($info && $info->certification_id == 12 && $info->status == 0 && !empty($info->content)) {
 			// pdf 連結
 			$url = isset($info->content['pdf_file']) ? $info->content['pdf_file']: '';
+            $verifiedResult = new InvestigationCertificationResult(1);
 			$status = 3;
 			$data = [];
 			$response = [];
@@ -1582,11 +1583,12 @@ class Certification_lib{
 			if($response && $data){
 				// 自然人聯徵正確性驗證
 				$this->CI->load->library('verify/data_legalize_lib');
-				$res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data,1);
+                // $verifiedResult = $this->CI->data_legalize_lib->legalize_investigation($verifiedResult, $info->user_id, $result, $info->created_at);
+				// $res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data,1);
 
 				// 資料轉 result
 				$this->CI->load->library('mapping/user/Certification_data');
-				$result = $this->CI->certification_data->transformJointCreditToResult($response);
+				// $result = $this->CI->certification_data->transformJointCreditToResult($response);
 
 				// 寫入資料
 				$info->content['result'][$group_id] = $result;
@@ -1648,11 +1650,11 @@ class Certification_lib{
 			if($data){
 				// 法人聯徵正確性驗證
 				$this->CI->load->library('verify/data_legalize_lib');
-				$res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data);
+				// $res = $this->CI->data_legalize_lib->legalize_investigation($info->user_id,$data);
 
 				// 資料轉 result
 				$this->CI->load->library('mapping/user/Certification_data');
-				$result = $this->CI->certification_data->transformJointCreditToResult($response);
+				// $result = $this->CI->certification_data->transformJointCreditToResult($response);
 
 				// 寫入資料
 				$info->content['result'][$info->content['group_id']] = $result;

@@ -2263,7 +2263,7 @@ class Certification extends REST_Controller {
                     }
                 }
             }
-            $res['result'][$time] = $content;
+            $res = $content;
 
             $param = [
                 'user_id' => $user_id,
@@ -3574,7 +3574,7 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $res['result'][$time] = $content;
+            $res = $content;
 
             $param = [
                 'user_id' => $user_id,

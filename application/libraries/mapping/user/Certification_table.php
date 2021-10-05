@@ -80,35 +80,35 @@ class Certification_table
 			'file_location' => 'balance_sheet_image',
             'image_location' => ['balance_sheet_image'],
 		],
-		'1002' => [
-			'type' => 'income_statement',
-			'file_location' => 'income_statement_image',
-            'image_location' => ['income_statement_image'],
-			'total_table' =>[
-				'action_user' => '編輯人',
-				'send_time' => '編輯時間',
-				'status' => '編輯狀態',
-				'report_time' => '所得期間',
-				'company_tax_id' => '統一編號',
-				'company_name' => '公司名稱',
-				'input_89' => '標準代號(89)',
-				'input_90' => '營業收入淨額(90)',
-				'input_4_1' => '結算申報書營業收入(年度、營收)(04)-帳載結算金額',
-				'input_4_2' => '結算申報書營業收入(年度、營收)(04)-自行依法調整後金額',
-			],
-		],
-		'1003' => [
-			'type' => 'credit_investigation',
-			'file_location' => 'legal_person_mq_image',
-            'image_location' => ['legal_person_mq_image'],
-			'total_table' =>[
-				'action_user' => '編輯人',
-				'send_time' => '編輯時間',
-				'status' => '編輯狀態',
-				'id-card' => '統一編號',
-				'name' => '戶名'
-			],
-		],
+		// '1002' => [
+		// 	'type' => 'income_statement',
+		// 	'file_location' => 'income_statement_image',
+        //     'image_location' => ['income_statement_image'],
+		// 	'total_table' =>[
+		// 		'action_user' => '編輯人',
+		// 		'send_time' => '編輯時間',
+		// 		'status' => '編輯狀態',
+		// 		'report_time' => '所得期間',
+		// 		'company_tax_id' => '統一編號',
+		// 		'company_name' => '公司名稱',
+		// 		'input_89' => '標準代號(89)',
+		// 		'input_90' => '營業收入淨額(90)',
+		// 		'input_4_1' => '結算申報書營業收入(年度、營收)(04)-帳載結算金額',
+		// 		'input_4_2' => '結算申報書營業收入(年度、營收)(04)-自行依法調整後金額',
+		// 	],
+		// ],
+		// '1003' => [
+		// 	'type' => 'credit_investigation',
+		// 	'file_location' => 'legal_person_mq_image',
+        //     'image_location' => ['legal_person_mq_image'],
+		// 	'total_table' =>[
+		// 		'action_user' => '編輯人',
+		// 		'send_time' => '編輯時間',
+		// 		'status' => '編輯狀態',
+		// 		'id-card' => '統一編號',
+		// 		'name' => '戶名'
+		// 	],
+		// ],
 		// '1007' => [
 		// 	'type' => 'amendment_of_register',
 		// 	'file_location' => 'governmentauthorities_image',
@@ -128,80 +128,80 @@ class Certification_table
 		// 		'director_id' => '董事/監察人名單首欄(身分證號或法人統一編號)',
 		// 	],
 		// ],
-		'1017' => [
-			'type' => 'insurance_table',
-			'file_location' => 'employeeinsurancelist_image',
-            'image_location' => ['employeeinsurancelist_image'],
-			'total_table' => [
-				'action_user' => '編輯人',
-				'send_time' => '編輯時間',
-				'status' => '編輯狀態',
-				'company_name' => '公司名稱',
-				'report_time' => '印表日期',
-				'range' => '計費年月',
-				'average' => '月底生效人數近一年平均',
-			],
-		],
-		'1018' => [
-			'type' => 'profilejudicial',
-			'file_location' => '',
-            'image_location' => ['BizLandOwnership', 'BizHouseOwnership', 'RealLandOwnership', 'RealHouseOwnership'],
-			'total_table' => [
-				'action_user' => '編輯人',
-				'send_time' => '編輯時間',
-				'status' => '編輯狀態',
-                'CompMajorAddrZip' => '公司主要營業場所-郵遞區號' ,
-                'CompMajorAddrZipName' => '公司主要營業場所-名稱' ,
-                'CompMajorAddress' => '公司主要營業場所-地址' ,
-                'CompMajorCityName' => '主要營業場所建號-縣市名' ,
-                'CompMajorAreaName' => '主要營業場所建號-地區' ,
-                'CompMajorSecName' => '主要營業場所建號-段名' ,
-                'CompMajorSecNo' => '主要營業場所建號-段號' ,
-                'CompMajorOwnership' => '主要營業場所所有權' ,
-                'CompMajorSetting' => '營業場所設定' ,
-                'CompTelAreaCode' => '公司聯絡電話-區碼' ,
-                'CompTelNo' => '公司聯絡電話-電話號碼' ,
-                'CompTelExt' => '公司聯絡電話-分機碼' ,
-                'BusinessType' => '營業種類' ,
-                'Comptype' => '公司產業別' ,
-                'IsBizRegAddrSelfOwn' => '營業登記地址' ,
-                'BizRegAddrOwner' => '營業登記地址_自有' ,
-                'IsBizAddrEqToBizRegAddr' => '實際營業地址_是否同營業登記地址' ,
-                'RealBizAddrCityName' => '實際營業地址_選擇縣市' ,
-                'RealBizAddrAreaName' => '實際營業地址_選擇鄉鎮市區' ,
-                'RealBizAddrRoadName' => '實際營業地址_路街名稱(不含路、街)' ,
-                'RealBizAddrRoadType' => '實際營業地址_路 OR 街' ,
-                'RealBizAddrSec' => '實際營業地址_段' ,
-                'RealBizAddrLn' => '實際營業地址_巷' ,
-                'RealBizAddrAly' => '實際營業地址_弄' ,
-                'RealBizAddrNo' => '實際營業地址_號(不含之號)' ,
-                'RealBizAddrNoExt' => '實際營業地址_之號' ,
-                'RealBizAddrFloor' => '實際營業地址_樓(不含之樓、室)' ,
-                'RealBizAddrFloorExt' => '實際營業地址_之樓' ,
-                'RealBizAddrRoom' => '實際營業地址_室' ,
-                'RealBizAddrOtherMemo' => '實際營業地址_其他備註' ,
-                'IsRealBizAddrSelfOwn' => '實際營業地址' ,
-                'RealBizAddrOwner' => '實際營業地址_自有' ,
-                'BizTaxFileWay' => '營業稅申報方式' ,
-                'DirectorAName' => '公司董監事 A 姓名' ,
-                'DirectorAId' => '公司董監事 A 統編' ,
-                'DirectorBName' => '公司董監事 B 姓名' ,
-                'DirectorBId' => '公司董監事 B 統編' ,
-                'DirectorCName' => '公司董監事 C 姓名' ,
-                'DirectorCId' => '公司董監事 C 統編' ,
-                'DirectorDName' => '公司董監事 D 姓名' ,
-                'DirectorDId' => '公司董監事 D 統編' ,
-                'DirectorEName' => '公司董監事 E 姓名' ,
-                'DirectorEId' => '公司董監事 E 統編' ,
-                'DirectorFName' => '公司董監事 F 姓名' ,
-                'DirectorFId' => '公司董監事 F 統編' ,
-                'DirectorGName' => '公司董監事 G 姓名' ,
-                'DirectorGId' => '公司董監事 G 統編' ,
-                'main_business' => '主要業務範疇' ,
-                'main_product' => '主要產品' ,
-                'history' => '組織沿革' ,
-			],
-		],
+		// '1017' => [
+		// 	'type' => 'insurance_table',
+		// 	'file_location' => 'employeeinsurancelist_image',
+        //     'image_location' => ['employeeinsurancelist_image'],
+		// 	'total_table' => [
+		// 		'action_user' => '編輯人',
+		// 		'send_time' => '編輯時間',
+		// 		'status' => '編輯狀態',
+		// 		'company_name' => '公司名稱',
+		// 		'report_time' => '印表日期',
+		// 		'range' => '計費年月',
+		// 		'average' => '月底生效人數近一年平均',
+		// 	],
+		// ],
+		// '1018' => [
+		// 	'type' => 'profilejudicial',
+		// 	'file_location' => '',
+        //     'image_location' => ['BizLandOwnership', 'BizHouseOwnership', 'RealLandOwnership', 'RealHouseOwnership'],
+		// 	'total_table' => [
+		// 		'action_user' => '編輯人',
+		// 		'send_time' => '編輯時間',
+		// 		'status' => '編輯狀態',
+        //         'CompMajorAddrZip' => '公司主要營業場所-郵遞區號' ,
+        //         'CompMajorAddrZipName' => '公司主要營業場所-名稱' ,
+        //         'CompMajorAddress' => '公司主要營業場所-地址' ,
+        //         'CompMajorCityName' => '主要營業場所建號-縣市名' ,
+        //         'CompMajorAreaName' => '主要營業場所建號-地區' ,
+        //         'CompMajorSecName' => '主要營業場所建號-段名' ,
+        //         'CompMajorSecNo' => '主要營業場所建號-段號' ,
+        //         'CompMajorOwnership' => '主要營業場所所有權' ,
+        //         'CompMajorSetting' => '營業場所設定' ,
+        //         'CompTelAreaCode' => '公司聯絡電話-區碼' ,
+        //         'CompTelNo' => '公司聯絡電話-電話號碼' ,
+        //         'CompTelExt' => '公司聯絡電話-分機碼' ,
+        //         'BusinessType' => '營業種類' ,
+        //         'Comptype' => '公司產業別' ,
+        //         'IsBizRegAddrSelfOwn' => '營業登記地址' ,
+        //         'BizRegAddrOwner' => '營業登記地址_自有' ,
+        //         'IsBizAddrEqToBizRegAddr' => '實際營業地址_是否同營業登記地址' ,
+        //         'RealBizAddrCityName' => '實際營業地址_選擇縣市' ,
+        //         'RealBizAddrAreaName' => '實際營業地址_選擇鄉鎮市區' ,
+        //         'RealBizAddrRoadName' => '實際營業地址_路街名稱(不含路、街)' ,
+        //         'RealBizAddrRoadType' => '實際營業地址_路 OR 街' ,
+        //         'RealBizAddrSec' => '實際營業地址_段' ,
+        //         'RealBizAddrLn' => '實際營業地址_巷' ,
+        //         'RealBizAddrAly' => '實際營業地址_弄' ,
+        //         'RealBizAddrNo' => '實際營業地址_號(不含之號)' ,
+        //         'RealBizAddrNoExt' => '實際營業地址_之號' ,
+        //         'RealBizAddrFloor' => '實際營業地址_樓(不含之樓、室)' ,
+        //         'RealBizAddrFloorExt' => '實際營業地址_之樓' ,
+        //         'RealBizAddrRoom' => '實際營業地址_室' ,
+        //         'RealBizAddrOtherMemo' => '實際營業地址_其他備註' ,
+        //         'IsRealBizAddrSelfOwn' => '實際營業地址' ,
+        //         'RealBizAddrOwner' => '實際營業地址_自有' ,
+        //         'BizTaxFileWay' => '營業稅申報方式' ,
+        //         'DirectorAName' => '公司董監事 A 姓名' ,
+        //         'DirectorAId' => '公司董監事 A 統編' ,
+        //         'DirectorBName' => '公司董監事 B 姓名' ,
+        //         'DirectorBId' => '公司董監事 B 統編' ,
+        //         'DirectorCName' => '公司董監事 C 姓名' ,
+        //         'DirectorCId' => '公司董監事 C 統編' ,
+        //         'DirectorDName' => '公司董監事 D 姓名' ,
+        //         'DirectorDId' => '公司董監事 D 統編' ,
+        //         'DirectorEName' => '公司董監事 E 姓名' ,
+        //         'DirectorEId' => '公司董監事 E 統編' ,
+        //         'DirectorFName' => '公司董監事 F 姓名' ,
+        //         'DirectorFId' => '公司董監事 F 統編' ,
+        //         'DirectorGName' => '公司董監事 G 姓名' ,
+        //         'DirectorGId' => '公司董監事 G 統編' ,
+        //         'main_business' => '主要業務範疇' ,
+        //         'main_product' => '主要產品' ,
+        //         'history' => '組織沿革' ,
+		// 	],
+		// ],
         '1019' => [
             'type' => 'companyemail',
             'file_location' => 'companyemail',
@@ -243,8 +243,21 @@ class Certification_table
 
     public $ocr_url = [
         '1007' => [
-			'type' => 'amendment_of_register'
+			'type' => 'amendment_of_register',
+            'image_name' => ['governmentauthorities_image'],
 		],
+        '1017' => [
+            'type' => 'insurance_table_company',
+            'image_name' => ['employeeinsurancelist_image'],
+        ],
+        '1002' => [
+            'type' => 'income_statement',
+            'image_name' => ['income_statement_image'],
+        ],
+        '1003' => [
+            'type' => 'credit_investigation',
+            'image_name' => ['employeeinsurancelist_image'],
+        ]
     ];
 	public function __construct()
 	{
@@ -275,9 +288,6 @@ class Certification_table
 		$data = [];
 		$this->CI->load->model('log/log_image_model');
 		$ocr_type = $this->ocr_url[$certification_id]['type'];
-        if($certification_id == 1017){
-            $ocr_type = 'insurance_table_company';
-        }
 		$img = $this->getUserPostFilesKey($certification_id);
 
 		$ocr_img_id = [];
@@ -285,18 +295,33 @@ class Certification_table
 			$ocr_img_id[] = $certification_content['group_id'];
 			$data[] = base_url("admin/ocr/report?id={$ocr_img_id[0]}&type={$ocr_type}&certification={$user_certification_id}");
 		}else{
-			if(isset($certification_content[$img])){
-				$ocr_img_info = $this->CI->log_image_model->getIDByUrl($certification_content[$img]);
-				$ocr_img_id = [];
-				if($ocr_img_info){
-					foreach($ocr_img_info as $v){
-						if(! in_array($v->id,$ocr_img_id)){
-							$ocr_img_id[] = $v->id;
-							$data[] = base_url("admin/ocr/report?id={$v->id}&type={$ocr_type}&certification={$user_certification_id}");
-						}
-					}
-				}
-			}
+            if(!empty($img)){
+                foreach($img as $name){
+                    if(isset($certification_content[$name])){
+                        $img_url_list = [];
+                        if(is_array($certification_content[$name])){
+                            foreach($certification_content[$name] as $image_url){
+                                $img_url_list[] = $image_url;
+                            }
+                        }
+                        if(is_string($certification_content[$name])){
+                            $img_url_list[] = $certification_content[$name];
+                        }
+                        if(!empty($img_url_list)){
+                            $ocr_img_info = $this->CI->log_image_model->getIDByUrl($img_url_list);
+                            $ocr_img_id = [];
+                            if($ocr_img_info){
+                                foreach($ocr_img_info as $v){
+                                    if(! in_array($v->id,$ocr_img_id)){
+                                        $ocr_img_id[] = $v->id;
+                                        $data[] = base_url("admin/ocr/report?id={$v->id}&type={$ocr_type}&certification={$user_certification_id}");
+                                    }
+                                }
+                            }
+                        }
+        			}
+                }
+            }
 		}
 		return $data;
 	}
@@ -307,9 +332,12 @@ class Certification_table
 	 * @return string $key_name         [連結的 Key值]
 	 */
 	public function getUserPostFilesKey($certification_id=''){
-		$key_name = '';
-		if(isset($this->certification_mapping[$certification_id]['file_location'])){
-			$key_name = $this->certification_mapping[$certification_id]['file_location'];
+		$key_name = [];
+		if(isset($this->ocr_url[$certification_id])){
+            foreach($this->ocr_url[$certification_id]['image_name'] as $image_name){
+                $key_name[] = $image_name;
+            }
+
 		}
 		return $key_name;
 	}

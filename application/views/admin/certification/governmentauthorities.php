@@ -164,11 +164,13 @@
                                 <div class="form-group">
                                     <label>事業變更登記表</label><br>
                                     <? isset($content['governmentauthorities_image']) && !is_array($content['governmentauthorities_image']) ? $content['governmentauthorities_image'] = array($content['governmentauthorities_image']) : '';
-                                    foreach ($content['governmentauthorities_image'] as $key => $value) { ?>
-                                        <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                            <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                        </a>
-                                    <? } ?>
+                                    if(!empty($content['governmentauthorities_image'])){
+                                        foreach ($content['governmentauthorities_image'] as $key => $value) { ?>
+                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <? }
+                                    }?>
                                 </div>
                             </fieldset>
                         </div>

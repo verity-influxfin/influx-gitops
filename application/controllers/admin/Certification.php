@@ -225,11 +225,36 @@ class Certification extends MY_Admin_Controller {
 				$this->load->library('mapping/user/Certification_table');
 				$is_template = $this->certification_table->isInTemplate($info->certification_id);
 
-                if($info->certification_id == 1007){
-                    $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
+                $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
+                if(in_array($info->certification_id,['1007','1017','1002','1003'])){
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
+                if($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) {
+                    // 上傳檔案功能
+                    if($info->status == 0 || $info->status == 3){
+                        $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
+						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
+                    }
+                    $return_config = [
+                        '1003' => [
+                            '1' => '郵局申請(紙本)',
+                            '0' => '臨櫃申請(紙本)'
+                        ],
+                        '9' => [
+                            '0' => '郵局申請(紙本)',
+                            '1' => '自然人憑證',
+                            '2' => '投資人行動網',
+                            '3' => '臨櫃申請(紙本)',
+                        ],
+                        '12' => [
+                            '0' => '郵局申請(紙本)',
+                            '1' => '臨櫃申請(紙本)',
+                        ],
+                    ];
+                    $return_type = isset($certification_content['return_type']) ? $certification_content['return_type'] : '';
+                    $page_data['return_type'] = isset($return_config[$info->certification_id][$return_type]) ? $return_config[$info->certification_id][$return_type] : '';
+				}
 			if($is_template){
 				$ocr_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
 				$page_data['ocr'] = [];
@@ -284,32 +309,6 @@ class Certification extends MY_Admin_Controller {
 				}else{
 					$page_data['ocr']['total_table'] = '';
 				}
-
-				if($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) {
-                        // 上傳檔案功能
-                        if($info->status == 0 || $info->status == 3){
-                            $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
-    						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
-                        }
-                        $return_config = [
-                            '1003' => [
-                                '1' => '郵局申請(紙本)',
-                                '0' => '臨櫃申請(紙本)'
-                            ],
-                            '9' => [
-                                '0' => '郵局申請(紙本)',
-                                '1' => '自然人憑證',
-                                '2' => '投資人行動網',
-                                '3' => '臨櫃申請(紙本)',
-                            ],
-                            '12' => [
-                                '0' => '郵局申請(紙本)',
-                                '1' => '臨櫃申請(紙本)',
-                            ],
-                        ];
-                        $ocr_content['return_type'] = isset($ocr_content['return_type']) ? $ocr_content['return_type'] : '';
-                        $page_data['return_type'] = isset($return_config[$info->certification_id][$ocr_content['return_type']]) ? $return_config[$info->certification_id][$ocr_content['return_type']] : '';
-					}
 				}
 
 				if(isset($page_data['content']['programming_language'])){
@@ -1459,6 +1458,17 @@ class Certification extends MY_Admin_Controller {
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+
+        // 公司資料表
+        if($certification_info->certification_id == 1018 && !empty($content)){
+            $replace_content = $content;
+            foreach($replace_content as $key => $value){
+                if(is_array($value)){
+                    unset($replace_content[$key]);
+                }
+            }
+            $response_data = $replace_content;
+        }
 
         if(isset($content['skbank_form']) && !empty($content['skbank_form'])){
             $response_data = $content['skbank_form'];
