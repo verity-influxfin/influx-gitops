@@ -48,6 +48,7 @@
                                 <form role="form" action="/admin/certification/sendSkbank" method="post">
                                     <table class="table table-striped table-bordered table-hover dataTable">
                                         <tbody>
+                                            <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                             <tr><td><span>公司統一編號(變卡)</span></td><td><input class="sk-input" type="text" name="CompId"></td></tr>
                                             <tr><td><span>公司戶名(變卡)</span></td><td><input class="sk-input" type="text" name="CompName"></td></tr>
@@ -78,7 +79,7 @@
                                             <tr><td><span>營業登記地址_號(不含之號)(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrNo"></td></tr>
                                             <tr><td><span>營業登記地址_之號(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrNoExt"></td></tr>
                                             <tr><td><span>營業登記地址_樓(不含之樓、室)(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrFloor"></td></tr>
-                                            <tr><td><span>營業登記地址_之樓(變卡)</span></td><td><input class="sk-input" type="text" name=""></td></tr>
+                                            <tr><td><span>營業登記地址_之樓(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrFloorExt"></td></tr>
                                             <tr><td><span>營業登記地址_室(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrRoom"></td></tr>
                                             <tr><td><span>營業登記地址_其他備註(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrOtherMemo"></td></tr>
                                             <tr><td><span>公司最後核准變更實收資本額日期(商業司)</span></td><td><input class="sk-input" type="text" name="LastPaidInCapitalDate"></td></tr>
@@ -186,5 +187,34 @@
 <script>
 $('select').selectize({
     sortField: 'text',
+});
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: `/admin/certification/getSkbank?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
+        dataType: "json",
+        success: function (response) {
+            if(response.status.code == 200 && response.response != ''){
+                Object.keys(response.response).forEach(function(key) {
+                    console.log(key);
+                    console.log(response.response[key]);
+                    if($(`[name='${key}']`).length){
+                        if($(`[name='${key}']`).is("input")){
+                            $(`[name='${key}']`).val(response.response[key]);
+                        }else{
+                            let $select = $(`[name='${key}']`).selectize();
+                            let selectize = $select[0].selectize;
+                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
+                        }
+                    }
+                })
+            }else{
+                console.log(response);
+            }
+        },
+        error: function(error) {
+          alert(error);
+        }
+    });
 });
 </script>
