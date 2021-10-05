@@ -1249,8 +1249,10 @@ class Charge_lib
                             'investment_id'			=> 0,
                             'remaining_principal'	=> 0,
                             'delay_interest'		=> 0,
+                            'ar_delay_interest_existed'		=> false,
                             'ar_interest'		    => 0,
                             'platform_fee'          => 0,
+                            'ar_platform_fee_existed'		=> false,
                         ];
                     }
                     if($value->source==SOURCE_AR_PRINCIPAL){
@@ -1268,9 +1270,10 @@ class Charge_lib
                         $user_to_info[$value->investment_id]['ar_interest']	= $value->amount;
 					}else if($value->source==SOURCE_AR_DELAYINTEREST){
                         $user_to_info[$value->investment_id]['delay_interest'] += $value->amount;
-						$settlement = false;
+                        $user_to_info[$value->investment_id]['ar_delay_interest_existed'] = true;
 					}else if($value->source==SOURCE_AR_FEES){
                         $user_to_info[$value->investment_id]['platform_fee'] += $value->amount;
+                        $user_to_info[$value->investment_id]['ar_platform_fee_existed'] = true;
                     }
 				}
 
@@ -1413,7 +1416,7 @@ class Charge_lib
 
                             $ar_fee = $value['platform_fee'] + $this->CI->financial_lib->get_ar_fee($delay_interest-$value['delay_interest']);
 
-                            if($value['delay_interest']) {
+                            if($value['ar_delay_interest_existed']) {
                                 // 已有延滯息科目，對現有科目更新
                                 $this->CI->transaction_model->update_by(
                                     [
@@ -1443,7 +1446,7 @@ class Charge_lib
                                 ]);
                             }
 
-                            if($value['platform_fee']) {
+                            if($value['ar_platform_fee_existed']) {
                                 // 已有平台應收服務費科目，對現有交易更新
                                 $this->CI->transaction_model->update_by(
                                     [
