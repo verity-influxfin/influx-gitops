@@ -1193,7 +1193,7 @@ class Product extends REST_Controller {
                     }
             }
 
-            if($product['checkOwner']){
+            if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                 $associatess = $this->target_lib->get_associates_list($target_id, false, $product, $user_id, $certification);
                 if($target->user_id != $user_id && !$associatess){
                     $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));

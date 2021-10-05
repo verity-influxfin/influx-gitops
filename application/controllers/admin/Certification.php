@@ -225,6 +225,11 @@ class Certification extends MY_Admin_Controller {
 				$this->load->library('mapping/user/Certification_table');
 				$is_template = $this->certification_table->isInTemplate($info->certification_id);
 
+                if($info->certification_id == 1007){
+                    $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
+                    $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
+                }
+
 			if($is_template){
 				$ocr_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
 				$page_data['ocr'] = [];
@@ -1407,6 +1412,34 @@ class Certification extends MY_Admin_Controller {
             ['content' => json_encode($content)]
         );
         alert('資料更新成功', admin_url('certification/user_certification_edit?id='.$post['id']));
+    }
+
+    // 新光送件檢核表
+    public function sendSkbank(){
+        $post = $this->input->post();
+
+        if(! isset($post['id']) || empty($post['id'])){
+            alert('資料更改失敗，缺少參數', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $certification_info = $this->user_certification_model->get_by(['id' => $post['id']]);
+
+        if(! $certification_info){
+            alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        if(isset($certification_info->status) && $certification_info->status != 3){
+            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+        unset($post['id']);
+        $content['skbank_form'] = $post;
+        $this->user_certification_model->update_by(
+            ['id'  => $certification_info->id],
+            ['content' => json_encode($content)]
+        );
+        alert('資料更新成功', admin_url('certification/user_certification_edit?id='.$certification_info->id));
     }
 }
 ?>

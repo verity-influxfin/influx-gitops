@@ -109,25 +109,25 @@ class Certification_table
 				'name' => '戶名'
 			],
 		],
-		'1007' => [
-			'type' => 'amendment_of_register',
-			'file_location' => 'governmentauthorities_image',
-            'image_location' => ['governmentauthorities_image'],
-			'total_table' => [
-				'action_user' => '編輯人',
-				'send_time' => '編輯時間',
-				'status' => '編輯狀態',
-				'tax_id' => '統一編號',
-				'name' => '公司名稱',
-				'capital' => '資本總額/實收資本總額',
-				'address' => '公司所在地',
-				'owner' => '公司負責人',
-				'owner_id' => '公司負責人統一編號',
-				'director_title' => '董事/監察人名單首欄(職稱)',
-				'director_name' => '董事/監察人名單首欄(姓名)',
-				'director_id' => '董事/監察人名單首欄(身分證號或法人統一編號)',
-			],
-		],
+		// '1007' => [
+		// 	'type' => 'amendment_of_register',
+		// 	'file_location' => 'governmentauthorities_image',
+        //     'image_location' => ['governmentauthorities_image'],
+		// 	'total_table' => [
+		// 		'action_user' => '編輯人',
+		// 		'send_time' => '編輯時間',
+		// 		'status' => '編輯狀態',
+		// 		'tax_id' => '統一編號',
+		// 		'name' => '公司名稱',
+		// 		'capital' => '資本總額/實收資本總額',
+		// 		'address' => '公司所在地',
+		// 		'owner' => '公司負責人',
+		// 		'owner_id' => '公司負責人統一編號',
+		// 		'director_title' => '董事/監察人名單首欄(職稱)',
+		// 		'director_name' => '董事/監察人名單首欄(姓名)',
+		// 		'director_id' => '董事/監察人名單首欄(身分證號或法人統一編號)',
+		// 	],
+		// ],
 		'1017' => [
 			'type' => 'insurance_table',
 			'file_location' => 'employeeinsurancelist_image',
@@ -241,6 +241,11 @@ class Certification_table
 		],
 	];
 
+    public $ocr_url = [
+        '1007' => [
+			'type' => 'amendment_of_register'
+		],
+    ];
 	public function __construct()
 	{
 		$this->CI = &get_instance();
@@ -269,7 +274,7 @@ class Certification_table
 	public function getOcrUrl($user_certification_id='',$certification_id='',$certification_content=[]){
 		$data = [];
 		$this->CI->load->model('log/log_image_model');
-		$ocr_type = $this->certification_mapping[$certification_id]['type'];
+		$ocr_type = $this->ocr_url[$certification_id]['type'];
         if($certification_id == 1017){
             $ocr_type = 'insurance_table_company';
         }
