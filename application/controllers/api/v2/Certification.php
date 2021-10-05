@@ -2231,7 +2231,29 @@ class Certification extends REST_Controller {
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
+    // 確認使用者與登記負責人關係
+    public function profile_get()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        if(isset($input['target_id']) && is_numeric($input['target_id'])){
+            $user_id = $this->user_info->id;
+            $this->load->model('loan/target_associate_model');
 
+            $this->target_associate_model->limit(1)->order_by("id", "desc");
+            $target_associate_info = $this->target_associate_model->get_by(['user_id'=>$user_id,'target_id'=>$input['target_id'],]);
+            if($target_associate_info){
+                $response = [
+                    'relaction_type' => isset($target_associate_info->character) && is_numeric($target_associate_info->character) ? (int)$target_associate_info->character : '',
+                ];
+
+                $this->response(array('result' => 'SUCCESS', 'data' => $response));
+            }else{
+                // 找不到資料
+                $this->response(array('result' => 'ERROR', 'error' => KEY_FAIL));
+            }
+        }
+        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+    }
 
     public function profile_post()
     {
