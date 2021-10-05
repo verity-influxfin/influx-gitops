@@ -7,7 +7,7 @@
                 <div class="說明">請輸入關鍵字</div>
                 <div class="搜尋">
                     <img class="圖示" src="/images/alesis-search-icon.svg">
-                    <input class="輸入欄位" type="text" placeholder="全站搜尋..." name="global-search" autocomplete="off" />
+                    <input class="輸入欄位" type="text" placeholder="搜尋..." v-model="keyword" autocomplete="off" />
                 </div>
                 <div class="分類">
                     <a @click="category('all')" class="項目" :class="{'項目_啟用的': current_category === 'all'}">全部</a>
@@ -40,12 +40,12 @@
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="群組">
-                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in current_questions" :key="index" @click="toggle(item)">
+                    <div class="項目" :class="{'項目_啟用的': item.active}" v-for="(item, index) in filtered_current_questions()" :key="index" @click="toggle(item)">
                         <div class="標題">
                             <div class="文字">{{item.title}}</div>
                             <img class="箭頭" src="/images/alesis-chevron-down.svg">
                         </div>
-                        <div class="內容" v-html="item.content"></div>
+                        <div class="內容" v-html="highlight_keyword(item.content)"></div>
                     </div>
                 </div>
                 <alesis-space size="medium"></alesis-space>
@@ -105,6 +105,14 @@ export default {
             questions        : FAQData.QA,
             current_questions: [],
             current_category : "all",
+            keyword: '',
+        }
+    },
+    watch: {
+        keyword: function(value) {
+            this.keyword = value.trim().replace(
+                /[<>\'\"]/g, ''
+            );
         }
     },
     mounted() {
@@ -125,6 +133,35 @@ export default {
             this.current_questions = this.questions.filter((j) => {
                 return v !== 'all' ? j.type === v : true;
             })
+        },
+
+        // 篩選搜尋結果
+        filtered_current_questions() {
+            if (this.keyword) {
+                let keyword = this.keyword.toLowerCase();
+
+                return this.current_questions.filter(item => {
+                    switch (true) {
+                        case item.title.toLowerCase().indexOf(keyword) > -1:
+                        case item.content.toLowerCase().indexOf(keyword) > -1:
+                            return true;
+                    }
+                    return false;
+                });
+            }
+            return this.current_questions
+        },
+
+        // 內容提示篩選關鍵字
+        highlight_keyword: function(content) {
+            let retval = content;
+            if (this.keyword) {
+                retval = retval.replaceAll(
+                    new RegExp(this.keyword, 'g'),
+                    `<span class='highlight'>${this.keyword}</span>`
+                );
+            }
+            return `<p>${retval}</p>`;
         }
     },
 };
