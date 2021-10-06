@@ -2382,7 +2382,7 @@ class Product extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => $product['checkOwner'],
+            'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
         );
     }
