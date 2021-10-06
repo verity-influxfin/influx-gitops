@@ -2237,10 +2237,22 @@ class Certification extends REST_Controller {
         $input = $this->input->get(NULL, TRUE);
         if(isset($input['target_id']) && is_numeric($input['target_id'])){
             $user_id = $this->user_info->id;
+
+            // 使用者為法人時
+            if($this->user_info->company_status == 1){
+                $user_id = '';
+                $investor = '';
+                $this->user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0, 'investor_status' => 0));
+
+                if(!empty($this->user_info)){
+                    $user_id = $this->user_info->id;
+                }
+            }
+
             $this->load->model('loan/target_associate_model');
 
             $this->target_associate_model->limit(1)->order_by("id", "desc");
-            $target_associate_info = $this->target_associate_model->get_by(['user_id'=>$user_id,'target_id'=>$input['target_id'],]);
+            $target_associate_info = $this->target_associate_model->get_by(['user_id'=>$user_id,'target_id'=>$input['target_id']]);
             if($target_associate_info){
                 $response = [
                     'relaction_type' => isset($target_associate_info->character) && is_numeric($target_associate_info->character) ? (int)$target_associate_info->character : '',
@@ -2249,7 +2261,7 @@ class Certification extends REST_Controller {
                 $this->response(array('result' => 'SUCCESS', 'data' => $response));
             }else{
                 // 找不到資料
-                $this->response(array('result' => 'ERROR', 'error' => KEY_FAIL));
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_EXIST));
             }
         }
         $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
