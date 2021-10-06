@@ -226,7 +226,7 @@ class Certification extends MY_Admin_Controller {
 				$is_template = $this->certification_table->isInTemplate($info->certification_id);
 
                 $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
-                if(in_array($info->certification_id,['1007','1017','1002','1003'])){
+                if(in_array($info->certification_id,['1007','1017','1002','1003','12'])){
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 

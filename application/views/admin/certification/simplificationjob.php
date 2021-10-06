@@ -1,4 +1,11 @@
-		<script type="text/javascript">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<style>
+    .sk-input {
+        width : 100%;
+    }
+</style>
+        <script type="text/javascript">
 			function check_fail(){
 				var status = $('#status :selected').val();
 				if(status==2){
@@ -37,12 +44,74 @@
 										</a>
 									</div>
                                     <div class="form-group">
-                                        <label>被保險人勞保異動查詢日期</label>
-                                        <p class="form-control-static"><?=isset($content['LaborQryDate'])?$content['LaborQryDate']:""?></p>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>最近期投保薪資</label>
-                                        <p class="form-control-static"><?=isset($content['LaborInsSalary'])?$content['LaborInsSalary']:""?></p>
+                                        <div>
+                                            <ul class="nav nav-tabs" id="skbank_form_tab" role="tablist">
+                                                <li role="presentation" class="active">
+                                                    <a href="#Pr" role="tab" data-toggle="tab" aria-expanded="true">負責人</a>
+                                                </li>
+                                                <li role="presentation">
+                                                    <a href="#Spouse" role="tab" data-toggle="tab" aria-expanded="false">配偶</a>
+                                                </li>
+                                                <li role="presentation">
+                                                    <a href="#GuOne" role="tab" data-toggle="tab" aria-expanded="false">保證人甲</a>
+                                                </li>
+                                                <li role="presentation">
+                                                    <a href="#GuTwo" role="tab" data-toggle="tab" aria-expanded="false">保證人乙</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="table-responsive" id="Pr">
+                                            <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                                <table class="table table-striped table-bordered table-hover dataTable">
+                                                    <tbody>
+                                                        <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                        <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                        <tr><td><span>負責人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="PrLaborQryDate"></td></tr>
+                                                        <tr><td><span>負責人-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="PrLaborInsSalary"></td></tr>
+                                                        <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
+                                        <div class="table-responsive" id="Spouse">
+                                            <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                                <table class="table table-striped table-bordered table-hover dataTable">
+                                                    <tbody>
+                                                        <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                        <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                        <tr><td><span>配偶-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="SpouseLaborQryDate"></td></tr>
+                                                        <tr><td><span>配偶-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="SpouseLaborInsSalary"></td></tr>
+                                                        <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
+                                        <div class="table-responsive" id="GuOne">
+                                            <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                                <table class="table table-striped table-bordered table-hover dataTable">
+                                                    <tbody>
+                                                        <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                        <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                        <tr><td><span>甲保證人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="GuOneLaborQryDate"></td></tr>
+                                                        <tr><td><span>甲保證人-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="GuOneLaborInsSalary"></td></tr>
+                                                        <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
+                                        <div class="table-responsive" id="GuTwo">
+                                            <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                                <table class="table table-striped table-bordered table-hover dataTable">
+                                                    <tbody>
+                                                        <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                        <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                        <tr><td><span>乙保證人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="GuTwoLaborQryDate"></td></tr>
+                                                        <tr><td><span>乙保證人-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="GuTwoLaborInsSalary"></td></tr>
+                                                        <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </form>
+                                        </div>
                                     </div>
                                     <? if(isset($content['labor_type'])){?>
                                         <div class="form-group">
@@ -112,3 +181,43 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
+<script>
+$('select').selectize({
+    sortField: 'text',
+});
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: `/admin/certification/getSkbank?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
+        dataType: "json",
+        success: function (response) {
+            if(response.status.code == 200 && response.response != ''){
+                Object.keys(response.response).forEach(function(key) {
+                    console.log(key);
+                    console.log(response.response[key]);
+                    if($(`[name='${key}']`).length){
+                        if($(`[name='${key}']`).is("input")){
+                            $(`[name='${key}']`).val(response.response[key]);
+                        }else{
+                            let $select = $(`[name='${key}']`).selectize();
+                            let selectize = $select[0].selectize;
+                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
+                        }
+                    }
+                })
+            }else{
+                console.log(response);
+            }
+        },
+        error: function(error) {
+          alert(error);
+        }
+    });
+    $('#skbank_form_tab a').click(function (e) {
+        let show_id = $(this).attr("href");
+        $(".table-responsive").hide()
+        $(show_id).show()
+    })
+    $( "#skbank_form_tab :first-child :first-child" ).trigger( "click" );
+});
+</script>
