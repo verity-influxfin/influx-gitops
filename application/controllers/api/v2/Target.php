@@ -863,7 +863,15 @@ class Target extends REST_Controller {
             }
 
             // 資訊不在案件本身內容
-            $out_of_target_info = [];
+            $out_of_target_info = [
+                'compName' => '',
+                'compIdNum' => '',
+                'bornDate' => '',
+                'income' => '',
+                'owner' => '',
+                'scale' => '',
+                'comeType' => '',
+            ];
 
             // 新光送出資料
             $this->load->library('mapping/sk_bank/msgno');
@@ -877,7 +885,6 @@ class Target extends REST_Controller {
                     $out_of_target_info['income'] = isset($sk_bank_send_log['unencrypted']['Data']['CompCapital']) ? $sk_bank_send_log['unencrypted']['Data']['CompCapital']: '';
                     $out_of_target_info['owner'] = isset($sk_bank_send_log['unencrypted']['Data']['PrName']) ? $sk_bank_send_log['unencrypted']['Data']['PrName'] : '';
                     $out_of_target_info['scale'] = isset($sk_bank_send_log['unencrypted']['Data']['BusinessType']) ? $sk_bank_send_log['unencrypted']['Data']['BusinessType'] : '';
-                    $out_of_target_info['comeType'] = isset($sk_bank_send_log['unencrypted']['Data']['CompDuType']) ? $sk_bank_send_log['unencrypted']['Data']['CompDuType'] : '';
                     $out_of_target_info['comeType'] = isset($sk_bank_send_log['unencrypted']['Data']['CompDuType']) ? $sk_bank_send_log['unencrypted']['Data']['CompDuType'] : '';
                 }
             }
