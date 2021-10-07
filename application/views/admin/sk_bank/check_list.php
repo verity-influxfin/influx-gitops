@@ -3336,6 +3336,22 @@
       return all_data;
   }
 
+  //儲存送出資料
+  function saveCheckListData(msg_no,data_type,data){
+	  $.ajax({
+          type: "POST",
+          url: `/admin/bankdata/saveCheckListData?msg_no=${msg_no}&data_type=${data_type}`,
+          data: request_data,
+          dataType: "json",
+          success: function (response) {
+              return response;
+          },
+          error: function(error) {
+              alert(error);
+          }
+      });
+  }
+
   function save(send_type){
       // 收件檢核表資料傳送
       if(send_type == 'text_list'){
@@ -3369,20 +3385,24 @@
               request_data.Data = all_data;
               request_data = JSON.stringify(request_data);
 
-              $.ajax({
-                  type: "POST",
-                  data: request_data,
-                  url: '/api/skbank/v1/LoanRequest/apply_text',
-                  dataType: "json",
-                  success: function (response) {
-                      $('#msg_no').val(response.msg_no);
-                      $('#case_no').val(response.case_no);
-                      alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
-                  },
-                  error: function(error) {
-                    alert(error);
-                  }
-              });
+              save_response = saveCheckListData(msg_no,'text',request_data);
+
+              console.log(save_response);
+              // $.ajax({
+              //     type: "POST",
+              //     data: request_data,
+              //     url: '/api/skbank/v1/LoanRequest/apply_text',
+              //     dataType: "json",
+              //     success: function (response) {
+              //         $('#msg_no').val(response.msg_no);
+              //         $('#case_no').val(response.case_no);
+              //         alert(`新光送出結果 ： ${response.success}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
+              //     },
+              //     error: function(error) {
+              //       alert(error);
+              //     }
+              // });
+
               $("#text_list").val("送出測試");
               $(".sendBtn").prop("disabled", false);
           });

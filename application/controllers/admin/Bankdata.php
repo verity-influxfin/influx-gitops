@@ -56,8 +56,6 @@ class Bankdata extends MY_Admin_Controller
 		if($target_info){
 			$target_data = isset($target_info->target_data) ? json_decode($target_info->target_data,true): '';
 			if($table_type == 'check'){
-				$this->load->model('user/user_certification_model');
-				$this->load->model('user/user_meta_model');
 				$this->load->library('mapping/sk_bank/check_list');
 				// 取得交易序號相關資料
 				$msg_no_info = $this->getMappingMsgNo($target_id);
@@ -70,11 +68,10 @@ class Bankdata extends MY_Admin_Controller
 					}else{
 						$response['send_success'] = '未送出';
 					}
-                    // print_r($msg_no_info);exit;
+
                     if(!empty($msg_no_info['data']['send_log'])){
                         $return_msg = json_decode($msg_no_info['data']['send_log']['response_content'],true);
                         // 填入上筆送出資料
-                        // $msg_no_info['data']['send_log']
                         if(!empty($msg_no_info['data']['send_log']['request_content'])){
                             $send_request_data = json_decode($msg_no_info['data']['send_log']['request_content'],true);
                             $response['CompId_content'] = isset($send_request_data['unencrypted']['CompId']) ? $send_request_data['unencrypted']['CompId'] : '';
@@ -95,99 +92,61 @@ class Bankdata extends MY_Admin_Controller
                     }
 					$response['action_user'] = isset($msg_no_info['data']['send_log']['action_user']) ? $msg_no_info['data']['send_log']['action_user'] : '';
 				}
-				// 法人徵提資料
-
-				// foreach($target_data['certification_id'] as $certification_id){
-				// 	$certification_info = $this->user_certification_model->get_by(['id'=>$certification_id]);
-				// 	if($certification_info){
-				// 		if(isset($this->mapping_config['check'][$certification_info->certification_id]) && isset($certification_info->content)){
-				// 			$name_of_get_data_function = 'get_'.$this->mapping_config['check'][$certification_info->certification_id].'_data';
-				// 			$certification_content = json_decode($certification_info->content,true);
-				// 			$meragre_array = $this->$name_of_get_data_function($certification_content);
-				// 			$response = array_merge($response,$meragre_array);
-				// 		}
-				// 	}
-				// }
 
 				//
 				if(empty($send_request_data)){
-					foreach($this->mapping_config['check'] as $v){
-						$user_meta = $this->user_meta_model->get_by(['user_id'=>$target_info->user_id,'meta_key'=>$v]);
-						$function_name = "get_{$v}_data";
-						if($user_meta && isset($user_meta->meta_value) && method_exists($this->check_list,$function_name)){
-							$meragre_array = $this->check_list->$function_name($user_meta->meta_value);
-							$response = array_merge($response,$meragre_array);
-						}
-					}
-
+                    $user_list = [];
 					$this->load->library('Target_lib');
+                    // 加入法人ID
+                    $user_list[] = $target_info->user_id;
 					// 找案件的相關人員(負責人、實際負責人、配偶、保證人) User ID
 					$guarantors = $this->target_lib->get_associates_user_data($target_id, 'all', [0 ,1], false);
-					// print_r($guarantors);exit;
 					if($guarantors && is_array($guarantors)){
 						foreach($guarantors as $k=>$v){
-							if($v->status == 1){
-								$user_id = isset($v->user_id) ? $v->user_id : '';
-								if($user_id){
-									// 負責人
-									if($v->character == 0 || $v->character == 1){
-										$user_role = 'Pr';
-									}
-									// 配偶
-									if($v->character == 3){
-										$user_role = 'Spouse';
-									}
-									// 甲保證人
-									if($v->character == 4){
-										$user_role = 'GuOne';
-									}
-									// 乙保證人
-									if($v->character == 5){
-										$user_role = 'GuTwo';
-									}
-									// 身份證資料
-									$identity_info = $this->user_certification_model->get_by(['user_id'=>$user_id, 'certification_id'=>'1']);
-									// print_r($identity_info);exit;
-									if($identity_info){
-										if(isset($identity_info->content)){
-											$identity_info_content = json_decode($identity_info->content,true);
-											$meragre_array = $this->check_list->get_company_user_data($identity_info_content,$user_role);
-											$response = array_merge($response,$meragre_array);
-										}
-									}
-									// 勞保異動明細資料
-									$security_info = $this->user_certification_model->get_by(['user_id'=>$user_id, 'certification_id'=>'10']);
-									if($security_info){
-										if(isset($security_info->content)){
-											$security_content = json_decode($security_info->content,true);
-											$meragre_array = $this->check_list->get_insurance_table_user_data($security_content,$user_role);
-											$response = array_merge($response,$meragre_array);
-										}
-									}
-									// 自然人聯徵資料
-									$credit_investigation = $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'9_credit_investigation']);
-									if($credit_investigation){
-										if(isset($credit_investigation->meta_value)){
-											$credit_investigation_content = json_decode($credit_investigation->meta_value,true);
-											$meragre_array = $this->check_list->get_9_credit_investigation_data($credit_investigation_content,$user_role);
-											$response = array_merge($response,$meragre_array);
-										}
-									}
-									// 個人資料表
-									$profile_info = $this->user_meta_model->get_by(['user_id'=>$user_id,'meta_key'=>'11_profile']);
-									if($profile_info){
-										if(isset($profile_info->meta_value)){
-											$profile_content = json_decode($profile_info->meta_value,true);
-											$meragre_array = $this->check_list->get_11_profile_data($profile_content);
-											$response = array_merge($response,$meragre_array);
-										}
-									}
-
-								}
-							}
+                            $user_list[] = isset($v->user_id) ? $v->user_id : '';
+							// if($v->status == 1){
+							// 	$user_id = isset($v->user_id) ? $v->user_id : '';
+							// 	if($user_id){
+							// 		// 負責人
+							// 		if($v->character == 0 || $v->character == 1){
+							// 			$user_role = 'Pr';
+							// 		}
+							// 		// 配偶
+							// 		if($v->character == 3){
+							// 			$user_role = 'Spouse';
+							// 		}
+							// 		// 甲保證人
+							// 		if($v->character == 4){
+							// 			$user_role = 'GuOne';
+							// 		}
+							// 		// 乙保證人
+							// 		if($v->character == 5){
+							// 			$user_role = 'GuTwo';
+							// 		}
+							// 	}
+							// }
 						}
 
 					}
+
+                    if(!empty($user_list)){
+                        $this->load->model('user/user_certification_model');
+                        $certification_info = $this->user_certification_model->get_skbank_check_list($user_list);
+
+                        if(!empty($certification_info)){
+                            foreach($certification_info as $info_value){
+                                $content = json_decode($info_value->content,true);
+                                if(is_array($content) && isset($content['skbank_form']) && !empty($content['skbank_form'])){
+                                    $data = array_map(function($key,$values) {
+                                        $key = $key.'_content';
+                                        return [$key=>$values];
+                                    }, array_keys($content['skbank_form']), $content['skbank_form']);
+                                    $data = array_reduce($data, 'array_merge', array());
+                                    $response = array_merge($response,$data);
+                                }
+                            }
+                        }
+                    }
 				}
 				// 附件檢核表
 				$meragre_array = $this->check_list->get_raw_data($target_info);
@@ -238,4 +197,17 @@ class Bankdata extends MY_Admin_Controller
 			return $response;
 		}
 	}
+
+    public function saveCheckListData(){
+        $input = $this->input->get(NULL, TRUE);
+        // $request_data = $this->input->post(NULL, TRUE);
+        $request_data = $this->input->raw_input_stream;
+        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no'=>$input['msg_no'],'type'=>$input['data_type']]);
+
+        if($mapping_info){
+            $mapping_info = $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
+        }
+        // print_r($input);exit;
+    }
 }
