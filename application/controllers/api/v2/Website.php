@@ -9,9 +9,6 @@ class Website extends REST_Controller {
     public function __construct()
     {
         parent::__construct();
-        if(!app_access()){
-            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
-        }
 
 		$this->load->model('loan/investment_model');
 		$this->load->model('user/user_meta_model');
@@ -83,6 +80,9 @@ class Website extends REST_Controller {
 
 	public function list_get()
     {
+        if(!app_access()){
+            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
+        }
 		$input 			= $this->input->get();
 		$list			= [];
         $where			= [];
@@ -355,6 +355,9 @@ class Website extends REST_Controller {
 
     public function transfer_list_get()
     {
+        if(!app_access()){
+            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
+        }
         $input 			= $this->input->get();
         $list			= [];
         $combination_list = [];
@@ -560,6 +563,9 @@ class Website extends REST_Controller {
 
     public function credit_school_get()
     {
+        if(!app_access()){
+            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
+        }
         $input = $this->input->get();
         $this->config->load('school_points');
         $school_list = $this->config->item('school_points');
@@ -627,6 +633,9 @@ class Website extends REST_Controller {
 
     public function credit_department_get()
     {
+        if(!app_access()){
+            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
+        }
         $input = $this->input->get();
         $this->config->load('school_points');
         $department_list = $this->config->item('department_points');
