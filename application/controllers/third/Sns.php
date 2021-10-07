@@ -53,6 +53,10 @@ class Sns extends REST_Controller {
                 $parser->setText($file_content);
                 $headers = $parser->getHeaders();
                 $mailfrom = $headers['x-original-sender'] ?? '';
+                if($mailfrom == '') {
+                    $mailfrom = $parser->getAddresses('from');
+                    $mailfrom = isset($mailfrom[0]) ? $mailfrom[0]['address'] : "";
+                }
                 $mail_title = $parser->getHeader('subject');
                 $re_investigation_mail=strpos($mail_title, '聯合徵信申請');
                 $re_job_mail=strpos($mail_title, '工作認證申請');
