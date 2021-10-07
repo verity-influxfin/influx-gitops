@@ -773,11 +773,11 @@ class Certification_lib{
     }
 
     public function emergency_verify($info = array()){
-		if($info && $info->status ==0 && $info->certification_id==5){
+		if($info && $info->status ==0 && $info->certification_id==CERTIFICATION_EMERGENCY){
 			$content	= json_decode($info->content,true);
 			$name 		= $content['name'];
 
-			$idcard		= $this->get_certification_info($info->user_id,1,0);
+			$idcard		= $this->get_certification_info($info->user_id,CERTIFICATION_IDCARD,$info->investor);
 			if($idcard && $idcard->status==1){
 				$status 		= 3;
 
