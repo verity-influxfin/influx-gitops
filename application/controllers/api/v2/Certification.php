@@ -2557,7 +2557,7 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['return_type','legal_person_mq_image'];
+            $fields 	= ['return_type','postal_image'];
             foreach ($fields as $field) {
                 if (empty($input[$field]) && $input[$field] != 0) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -2566,7 +2566,7 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $file_fields = ['legal_person_mq_image'];
+            $file_fields = ['postal_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$content[$field]);

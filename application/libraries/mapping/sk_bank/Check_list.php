@@ -298,7 +298,7 @@ class Check_list
 			// 法人連徵
 			'1003' => [
 				'location' => 'A06',
-				'raw_data_name' => ['legal_person_mq_image']
+				'raw_data_name' => ['postal_image']
 			],
 			// 月末投保人數
 			'1017' => [
