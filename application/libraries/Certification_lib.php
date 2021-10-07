@@ -2609,12 +2609,10 @@ class Certification_lib{
 					$content = $info->content;
 					$this->CI->load->library('mapping/user/Certification_data');
 					$result = ! empty($content['result']) ? $content['result'] : [];
+                    // TODO:暫時不寫入 meta
 					$meta = [];//$this->CI->certification_data->transformEmployeeinsurancelistToMeta($result);
-					$data = [
-						$info->certification_id.'_employeeinsurancelist' => json_encode($meta),
-					];
 					$rs = [];//$this->user_meta_progress($data,$info);
-					if($rs){
+					if(1){
 							return $this->fail_other_cer($info);
 					}
 			}
