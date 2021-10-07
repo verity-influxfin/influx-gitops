@@ -3159,14 +3159,14 @@ class Certification_lib{
                     }
                 }
             }
+            // 負責人加入配偶的話配偶自動同意
+            $this->CI->target_associate_model->update_by([
+                'character' => 3,
+                'status' => 0
+            ], [
+                'ststus' => 1,
+            ]);
         }
-        // 負責人加入配偶的話配偶自動同意
-        $this->CI->target_associate_model->update_by([
-            'relationship' => 0,
-            'status' => 0
-        ], [
-            'ststus' => 1,
-        ]);
     }
 
     public function withdraw_investigation($user_id, $investor) {
