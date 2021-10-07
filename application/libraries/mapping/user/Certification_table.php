@@ -202,17 +202,17 @@ class Certification_table
         //         'history' => '組織沿革' ,
 		// 	],
 		// ],
-        '1019' => [
-            'type' => 'companyemail',
-            'file_location' => 'companyemail',
-            'image_location' => ['companyemail'],
-            'total_table' => [
-                'action_user' => '編輯人',
-                'send_time' => '編輯時間',
-                'status' => '編輯狀態',
-                'email' => '公司電子信箱',
-            ],
-        ],
+        // '1019' => [
+        //     'type' => 'companyemail',
+        //     'file_location' => 'companyemail',
+        //     'image_location' => ['companyemail'],
+        //     'total_table' => [
+        //         'action_user' => '編輯人',
+        //         'send_time' => '編輯時間',
+        //         'status' => '編輯狀態',
+        //         'email' => '公司電子信箱',
+        //     ],
+        // ],
         '1020' => [
             'type' => 'judicialguarantee',
             'file_location' => 'judicialguarantee',

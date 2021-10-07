@@ -3698,12 +3698,12 @@ class Certification extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
             }
 
-            $res['result'][$time] = $content;
+            // $res['result'][$time] = $content;
             $param		= [
                 'user_id'			=> $user_id,
                 'certification_id'	=> $certification_id,
                 'investor'			=> $investor,
-                'content'			=> json_encode($res),
+                'content'			=> json_encode($content),
             ];
             $insert = $this->user_certification_model->insert($param);
             if($insert){
