@@ -1361,7 +1361,7 @@ class Certification_lib{
 			//     'remark' => json_encode($info->remark)
 			//   ));
 
-            $this->certification_lib->set_success($info->id, true);
+            $this->set_success($info->id, true);
             return true;
         }
         return false;
