@@ -3749,6 +3749,7 @@ class Certification extends REST_Controller {
             }
 
             // 更新歸戶資料，加入對保自拍圖片
+            $data_content = [];
             $data_content = isset($judicial_person_info->sign_video) && json_decode($judicial_person_info->sign_video,true) ? json_decode($judicial_person_info->sign_video,true) : [];
             $data_content['image_url'] = $image_info->url;
             $this->judicial_person_model->update_by(['company_user_id' => $user_id],['sign_video' => json_encode($data_content), 'status' => 0]);
