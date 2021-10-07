@@ -2223,18 +2223,18 @@ class Certification_lib{
 	}
 
 	private function investigation_success($info){
-		if($info){
-			$content = $info->content;
-			$this->CI->load->library('mapping/user/Certification_data');
-			$result = ! empty($content['result']) ? $content['result'] : [];
-			$meta = $this->CI->certification_data->transformJointCreditToMeta($result);
+        if($info){
+			$content 	= $info->content;
 			$data 		= [
-				$info->certification_id.'_investigation' => json_encode($meta),
+				'investigation_status'		=> 1,
+				'investigation_times'		=> isset($content['times']) ? $content['times'] : '',
+				'investigation_credit_rate'	=> isset($content['credit_rate']) ? $content['credit_rate'] : '',
+				'investigation_months'		=> isset($content['months']) ? $content['months'] : '',
 			];
 
-			$rs = $this->user_meta_progress($data,$info);
+            $rs = $this->user_meta_progress($data,$info);
 			if($rs){
-					return $this->fail_other_cer($info);
+                return $this->fail_other_cer($info);
 			}
 		}
 		return false;
@@ -2244,13 +2244,11 @@ class Certification_lib{
 		if($info){
 			// $content = $info->content;
 			// $this->CI->load->library('mapping/user/Certification_data');
-			// $result = ! empty($content['result']) ? $content['result'] : [];
-			// $meta = $this->CI->certification_data->transformJointCreditToMeta($result);
-			$data 		= [
-				$info->certification_id.'_investigationa11' => ''//json_encode($meta),
-			];
+            // TODO:暫時不寫入 meta
+			$result = ! empty($content['result']) ? $content['result'] : [];
+			$meta = [];//$this->CI->certification_data->transformJointCreditToMeta($result);
 
-			$rs = $this->user_meta_progress($data,$info);
+			$rs = [];//$this->user_meta_progress($data,$info);
 			if($rs){
 					return $this->fail_other_cer($info);
 			}
@@ -2338,11 +2336,10 @@ class Certification_lib{
 					$content = $info->content;
 					$this->CI->load->library('mapping/user/Certification_data');
 					$result = ! empty($content['result']) ? $content['result'] : [];
-					$meta = $this->CI->certification_data->transformIncomestatementToMeta($result);
-					$data = [
-						$info->certification_id.'_incomestatement' => json_encode($meta),
-					];
-					$rs = $this->user_meta_progress($data,$info);
+                    // TODO:暫時不寫入 meta
+					$meta = [];//$this->CI->certification_data->transformIncomestatementToMeta($result);
+
+					$rs = [];//$this->user_meta_progress($data,$info);
 					if($rs){
 							return $this->fail_other_cer($info);
 					}
@@ -2352,15 +2349,13 @@ class Certification_lib{
 
     private function investigationjudicial_success($info){
         if($info){
-						$content = $info->content;
-						$this->CI->load->library('mapping/user/Certification_data');
-						$result = ! empty($content['result']) ? $content['result'] : [];
-						$meta = $this->CI->certification_data->transformJointCreditToMeta($result);
-            $data 		= [
-							$info->certification_id.'_credit_investigation' => json_encode($meta),
-						];
+    		$content = $info->content;
+    		$this->CI->load->library('mapping/user/Certification_data');
+    		$result = ! empty($content['result']) ? $content['result'] : [];
+            // TODO:暫時不寫入 meta
+    		$meta = [];//$this->CI->certification_data->transformJointCreditToMeta($result);
 
-            $rs = $this->user_meta_progress($data,$info);
+            $rs = [];//$this->user_meta_progress($data,$info);
             if($rs){
                 return $this->fail_other_cer($info);
             }
@@ -2385,15 +2380,14 @@ class Certification_lib{
                 $content = $info->content;
                 $this->CI->load->library('mapping/user/Certification_data');
                 $result = !empty($content['result']) ? $content['result'] : [];
-                $meta = $this->CI->certification_data->transformGovernmentauthoritiesToMeta($result);
-                $data = [
-                    $info->certification_id . '_governmentauthorities' => json_encode($meta),
-                ];
+                // TODO:暫時不寫入 meta
+                $meta = [];//$this->CI->certification_data->transformGovernmentauthoritiesToMeta($result);
                 // 寫入法人基本資料
                 $this->CI->load->model('user/user_model');
                 $this->CI->user_model->update($info->user_id, array(
-                    'name' => isset($meta['name']) ? $meta['name'] : '',
-                    'address' => isset($meta['address']) ? $meta['address'] : '',
+                    'name' => isset($content['skbank_form']['CompName']) ? $content['skbank_form']['CompName'] : '',
+                    // 地址暫時不寫入
+                    'address' => isset($content['address']) ? $content['address'] : '',
                 ));
                 // 找自然人資料
                 $this->CI->load->model('user/user_model');
@@ -2404,10 +2398,10 @@ class Certification_lib{
                     // 新建法人歸戶資料
                     $param = [
                         'user_id' => $user->id,
-                        'company_type' => isset($meta['company_type']) ? $meta['company_type'] : '',
-                        'company' => isset($meta['name']) ? $meta['name'] : '',
+                        'company_type' => isset($content['skbank_form']['CompType']) ? $content['skbank_form']['CompType'] : '',
+                        'company' => isset($content['skbank_form']['CompName']) ? $content['skbank_form']['CompName'] : '',
                         'company_user_id' => $info->user_id,
-                        'tax_id' => isset($meta['tax_id']) ? $meta['tax_id'] : '',
+                        'tax_id' => isset($content['skbank_form']['CompId']) ? $content['skbank_form']['CompId'] : '',
                         'status' => 3,
                         'enterprise_registration' => json_encode(['enterprise_registration_image' => $info->content['governmentauthorities_image']])
                     ];
@@ -2419,10 +2413,10 @@ class Certification_lib{
 						$rs = $this->CI->judicial_person_model->insert($param);
 					}
                 }
-                $rs = $this->user_meta_progress($data,$info);
-                if($rs){
-                    return $this->fail_other_cer($info);
-                }
+                // $rs = $this->user_meta_progress($data,$info);
+                // if($rs){
+                //     return $this->fail_other_cer($info);
+                // }
             }
             return false;
 		}
@@ -2615,11 +2609,11 @@ class Certification_lib{
 					$content = $info->content;
 					$this->CI->load->library('mapping/user/Certification_data');
 					$result = ! empty($content['result']) ? $content['result'] : [];
-					$meta = $this->CI->certification_data->transformEmployeeinsurancelistToMeta($result);
+					$meta = [];//$this->CI->certification_data->transformEmployeeinsurancelistToMeta($result);
 					$data = [
 						$info->certification_id.'_employeeinsurancelist' => json_encode($meta),
 					];
-					$rs = $this->user_meta_progress($data,$info);
+					$rs = [];//$this->user_meta_progress($data,$info);
 					if($rs){
 							return $this->fail_other_cer($info);
 					}
@@ -2646,12 +2640,10 @@ class Certification_lib{
 			$content = $info->content;
             $this->CI->load->library('mapping/user/Certification_data');
             $result = ! empty($content['result']) ? $content['result'] : [];
-            $meta = $this->CI->certification_data->transformSimplificationjobToMeta($result);
-            $data = [
-                $info->certification_id.'_simplificationjob' => json_encode($meta),
-            ];
+            // TODO:暫時不寫入 meta
+            $meta = [];//$this->CI->certification_data->transformSimplificationjobToMeta($result);
 
-            $rs = $this->user_meta_progress($data, $info);
+            $rs = [];//$this->user_meta_progress($data, $info);
             if ($rs) {
                 return $this->fail_other_cer($info);
             }
@@ -2664,11 +2656,9 @@ class Certification_lib{
             $content = $info->content;
             $this->CI->load->library('mapping/user/Certification_data');
             $result = ! empty($content['result']) ? $content['result'] : [];
-            $meta = $this->CI->certification_data->transformProfileToMeta($result);
-            $data = [
-                $info->certification_id.'_profile' => json_encode($meta),
-            ];
-            $rs = $this->user_meta_progress($data,$info);
+            // TODO:暫時不寫入 meta
+            $meta = [];//$this->CI->certification_data->transformProfileToMeta($result);
+            $rs = [];//$this->user_meta_progress($data,$info);
             if($rs){
                 return $this->fail_other_cer($info);
             }
@@ -2681,11 +2671,10 @@ class Certification_lib{
             $content = $info->content;
             $this->CI->load->library('mapping/user/Certification_data');
             $result = ! empty($content['result']) ? $content['result'] : [];
-            $meta = $this->CI->certification_data->transformProfilejudicialToMeta($result);
-            $data = [
-                $info->certification_id.'_profilejudicial' => json_encode($meta),
-            ];
-            $rs = $this->user_meta_progress($data,$info);
+            // TODO:暫時不寫入 meta
+            $meta = [];//$this->CI->certification_data->transformProfilejudicialToMeta($result);
+
+            $rs = [];//$this->user_meta_progress($data,$info);
             if($rs){
                 return $this->fail_other_cer($info);
             }
