@@ -2264,7 +2264,7 @@ class Certification extends REST_Controller {
                 $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_EXIST));
             }
         }
-        $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+        $this->response(array('result' => 'SUCCESS', 'data' => []));
     }
 
     public function profile_post()
