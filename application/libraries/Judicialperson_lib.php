@@ -223,7 +223,7 @@ class Judicialperson_lib{
             // to do : 自動過件邏輯
             if(true){
                 //閥值通過的過件邏輯
-                $status = 1;
+                $status = 3;
                 $this->CI->judicial_agent_model->insert([
                     'incharge'			=> 1,
                     'company_user_id'	=> $judicial_person_info->company_user_id,

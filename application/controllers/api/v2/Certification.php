@@ -3735,9 +3735,9 @@ class Certification extends REST_Controller {
             // 檢查是否存在歸戶資料
             $this->load->model('user/judicial_person_model');
             $judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
-            if(!$judicial_person_info){
-                $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
-            }
+            // if(!$judicial_person_info){
+            //     $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
+            // }
 
             // 檢查圖片是否存在
             $image_info = $this->log_image_model->get_by([
