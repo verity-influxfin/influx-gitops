@@ -2249,7 +2249,7 @@ class Certification_lib{
 			$meta = [];//$this->CI->certification_data->transformJointCreditToMeta($result);
 
 			$rs = [];//$this->user_meta_progress($data,$info);
-			if($rs){
+			if(1){
 					return $this->fail_other_cer($info);
 			}
 		}
@@ -2340,7 +2340,7 @@ class Certification_lib{
 					$meta = [];//$this->CI->certification_data->transformIncomestatementToMeta($result);
 
 					$rs = [];//$this->user_meta_progress($data,$info);
-					if($rs){
+					if(1){
 							return $this->fail_other_cer($info);
 					}
 			}
@@ -2356,7 +2356,7 @@ class Certification_lib{
     		$meta = [];//$this->CI->certification_data->transformJointCreditToMeta($result);
 
             $rs = [];//$this->user_meta_progress($data,$info);
-            if($rs){
+            if(1){
                 return $this->fail_other_cer($info);
             }
         }
@@ -2414,9 +2414,9 @@ class Certification_lib{
 					}
                 }
                 // $rs = $this->user_meta_progress($data,$info);
-                // if($rs){
-                //     return $this->fail_other_cer($info);
-                // }
+                if(1){
+                    return $this->fail_other_cer($info);
+                }
             }
             return false;
 		}
@@ -2644,7 +2644,7 @@ class Certification_lib{
             $meta = [];//$this->CI->certification_data->transformSimplificationjobToMeta($result);
 
             $rs = [];//$this->user_meta_progress($data, $info);
-            if ($rs) {
+            if (1) {
                 return $this->fail_other_cer($info);
             }
         }
@@ -2659,7 +2659,7 @@ class Certification_lib{
             // TODO:暫時不寫入 meta
             $meta = [];//$this->CI->certification_data->transformProfileToMeta($result);
             $rs = [];//$this->user_meta_progress($data,$info);
-            if($rs){
+            if(1){
                 return $this->fail_other_cer($info);
             }
         }
@@ -2675,7 +2675,7 @@ class Certification_lib{
             $meta = [];//$this->CI->certification_data->transformProfilejudicialToMeta($result);
 
             $rs = [];//$this->user_meta_progress($data,$info);
-            if($rs){
+            if(1){
                 return $this->fail_other_cer($info);
             }
         }
