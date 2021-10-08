@@ -8,7 +8,7 @@ abstract class EdmEventBase implements EdmEventDefinition
     protected $CI;
     protected $event_id = 1;
     protected $receivers;
-    protected $user_ids;
+    protected $user_ids = [];
     public $sentCountList = [];
 
     /**
@@ -67,9 +67,18 @@ abstract class EdmEventBase implements EdmEventDefinition
     public function getSendEmailList($investor): array
     {
         $this->CI->load->model('user/user_certification_model');
+        $this->CI->load->model("user/user_model");
 
         $emailList = [];
-        $this->user_ids = array_column($this->receivers, 'user_id');
+        $user_ids = array_column($this->receivers, 'user_id');
+        if(!empty($user_ids)) {
+            // 去除被鎖定的用戶
+            $users = $this->CI->user_model->get_many_by([
+                'id' => $user_ids,
+                'block_status' => 0
+            ]);
+            $this->user_ids = array_column($users, 'id');
+        }
 
         if (!empty($this->user_ids)) {
             $certs = $this->CI->user_certification_model->get_many_by([

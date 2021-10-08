@@ -84,8 +84,8 @@ class User_lib {
         foreach ($events as $event) {
             $edmEvent = EdmEventFactory::getInstance($event);
             if(isset($edmEvent)) {
-                $this->totalCount += $edmEvent->send();
                 $this->CI->edm_event_model->update_by(['id' => $event['id']], ['triggered_at' => date('Y-m-d H:i:s')]);
+                $this->totalCount += $edmEvent->send();
             }
         }
 

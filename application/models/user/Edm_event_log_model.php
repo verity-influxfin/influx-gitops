@@ -44,7 +44,6 @@ class Edm_event_log_model extends MY_Model
             ->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
             ->or_group_start()
             ->where('status', TARGET_FAIL)
-            ->like("remark", '經AI系統')
             ->group_end()
             ->group_end()
             ->where_not_in('user_id', $sub_query, FALSE);
