@@ -2242,10 +2242,12 @@ class Certification extends REST_Controller {
             if($this->user_info->company_status == 1){
                 $user_id = '';
                 $investor = '';
-                $this->user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0, 'investor_status' => 0));
-
-                if(!empty($this->user_info)){
-                    $user_id = $this->user_info->id;
+                print_r($this->user_info->phone);exit;
+                $user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0));
+                if(!empty($user_info)){
+                    $user_id = $user_info->id;
+                }else{
+                    $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
                 }
             }
 
