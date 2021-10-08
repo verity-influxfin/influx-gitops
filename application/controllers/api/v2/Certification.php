@@ -2288,11 +2288,7 @@ class Certification extends REST_Controller {
             $fields 	= ['PrCurAddrZip','PrCurAddrZipName','PrCurlAddress','PrTelAreaCode','PrTelNo','PrTelExt','PrMobileNo','RealPr','IsPrSpouseGu','PrStartYear','PrEduLevel','OthRealPrRelWithPr','OthRealPrName','OthRealPrId','OthRealPrBirth','OthRealPrStartYear','OthRealPrTitle','OthRealPrSHRatio','GuOneRelWithPr','GuOneCompany','GuTwoRelWithPr','GuTwoCompany','SpouseCurAddrZip','SpouseCurAddrZipName','SpouseCurlAddress','SpouseMobileNo','SpouseTelAreaCode','SpouseTelNo','SpouseTelExt','GuOneCurAddrZip','GuOneCurAddrZipName','GuOneCurlAddress','GuOneTelAreaCode','GuOneTelNo','GuOneTelExt','GuOneMobileNo','GuTwoCurAddrZip','GuTwoCurAddrZipName','GuTwoCurlAddress','GuTwoTelAreaCode','GuTwoTelNo','GuTwoTelExt','GuTwoMobileNo','CompType','EmployeeNum','ShareholderNum'];
             foreach ($fields as $field) {
                 if (isset($input[$field]) && $input[$field] != '') {
-                    if(isset($cer_profilejudicial[$field])){
-                        $content[$field] = $cer_profilejudicial[$field][$input[$field]];
-                    }else{
-                        $content[$field] = $input[$field];
-                    }
+                    $content[$field] = $input[$field];
                 }
             }
             $content['skbank_form'] = $content;
@@ -2306,7 +2302,7 @@ class Certification extends REST_Controller {
             ];
             $insert = $this->user_certification_model->insert($param);
             if ($insert) {
-                $this->certification_lib->set_success($insert);
+                // $this->certification_lib->set_success($insert);
                 $this->response(['result' => 'SUCCESS']);
             } else {
                 $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
@@ -3576,11 +3572,7 @@ class Certification extends REST_Controller {
             $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting'];
             foreach ($fields as $field) {
                 if (isset($input[$field]) && $input[$field] != '') {
-                    if(isset($cer_profilejudicial[$field])){
-                        $content[$field] = $cer_profilejudicial[$field][$input[$field]];
-                    }else{
-                        $content[$field] = $input[$field];
-                    }
+                    $content[$field] = $input[$field];
                 }
             }
             $content['skbank_form'] = $content;
