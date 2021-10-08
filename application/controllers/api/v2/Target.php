@@ -123,7 +123,7 @@ class Target extends REST_Controller {
 		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
 		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
         $product_list = $this->config->item('product_list');
-        $user_meta = '';
+        $user_meta = new stdClass();
 
         if(!empty($target_list)){
             foreach($target_list as $key => $value){
