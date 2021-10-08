@@ -49,6 +49,7 @@ class Bankdata extends MY_Admin_Controller
 		$response = [];
 		$return_msg = [];
         $send_request_data = [];
+        $skbank_save_data = [];
 		$this->load->library('output/json_output');
 
 		$this->load->model('loan/target_model');
@@ -69,7 +70,7 @@ class Bankdata extends MY_Admin_Controller
 						$response['send_success'] = '未送出';
 					}
 
-                    if(!empty($msg_no_info['data']['send_log'])){
+                    if(!empty($msg_no_info['data']['send_log']) && isset($msg_no_info['data']['send_log']['response_content'])){
                         $return_msg = json_decode($msg_no_info['data']['send_log']['response_content'],true);
                         // 填入上筆送出資料
                         if(!empty($msg_no_info['data']['send_log']['request_content'])){
@@ -93,8 +94,27 @@ class Bankdata extends MY_Admin_Controller
 					$response['action_user'] = isset($msg_no_info['data']['send_log']['action_user']) ? $msg_no_info['data']['send_log']['action_user'] : '';
 				}
 
-				//
-				if(empty($send_request_data)){
+                // 新光收件檢核表儲存資料
+                $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+                $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
+    			$skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$target_id,'type'=>'text','content !='=>'']);
+
+                if($skbank_save_info){
+                    if(isset($skbank_save_info->content)){
+                        $skbank_save_data = json_decode($skbank_save_info->content,true);
+                        $response['CompId_content'] = isset($skbank_save_data['CompId']) ? $skbank_save_data['CompId'] : '';
+                        $response['PrincipalId_content'] = isset($skbank_save_data['PrincipalId']) ? $skbank_save_data['PrincipalId'] : '';
+                        $skbank_save_data = !empty($skbank_save_data['Data']) ? $skbank_save_data['Data'] : [];
+                        if(!empty($skbank_save_data)){
+                            foreach($skbank_save_data as $skbank_save_data_key => $skbank_save_data_value){
+                                $response[$skbank_save_data_key.'_content'] = $skbank_save_data_value;
+                            }
+                        }
+                    }
+                }
+
+				//銀行沒有紀錄且沒有暫存資料
+				if(empty($send_request_data) && empty($skbank_save_data)){
                     $user_list = [];
 					$this->load->library('Target_lib');
                     // 加入法人ID

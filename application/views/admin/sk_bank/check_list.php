@@ -3120,7 +3120,7 @@
             <tr>
               <td class="white-border">
                 <center>
-                  <input id="text_list"  type="button" class = "sendBtn" value="送出測試">
+                  <input id="text_list"  type="button" class = "sendBtn" value="儲存資料">
                 </center>
               </td>
             </tr>
@@ -3195,15 +3195,6 @@
 				  </tr>
 			  </tbody>
 		  </table>
-		  <table class="input-width">
-            <tr>
-              <td class="white-border">
-                <center>
-                  <input id="image_list"  type="button" class = "sendBtn" value="送出測試">
-                </center>
-              </td>
-            </tr>
-          </table>
   	  </div>
 	</div>
   </body>
@@ -3403,7 +3394,7 @@
               //     }
               // });
 
-              $("#text_list").val("送出測試");
+              $("#text_list").val("儲存資料");
               $(".sendBtn").prop("disabled", false);
           });
       }
@@ -3432,23 +3423,23 @@
                           'DocFileType' : 4,
                           'DocUrl' : all_data[key]
                       });
-                      if(Object.keys(request_data).length == data_count){
-                          image_list_data = JSON.stringify({"request_image_list":request_data});
-                          $.ajax({
-                              type: "POST",
-                              data: image_list_data,
-                              url: '/api/skbank/v1/LoanRequest/apply_image_list',
-                              dataType: "json",
-                              success: function (response) {
-                                alert(response);
-                              },
-                              error: function(error) {
-                                alert(error);
-                              }
-                          });
-                          $("#image_list").val("送出測試");
-                          $(".sendBtn").prop("disabled", false);
-                      }
+                      // if(Object.keys(request_data).length == data_count){
+                      //     image_list_data = JSON.stringify({"request_image_list":request_data});
+                      //     $.ajax({
+                      //         type: "POST",
+                      //         data: image_list_data,
+                      //         url: '/api/skbank/v1/LoanRequest/apply_image_list',
+                      //         dataType: "json",
+                      //         success: function (response) {
+                      //           alert(response);
+                      //         },
+                      //         error: function(error) {
+                      //           alert(error);
+                      //         }
+                      //     });
+                      //     $("#image_list").val("儲存資料");
+                      //     $(".sendBtn").prop("disabled", false);
+                      // }
                   });
               })
 
