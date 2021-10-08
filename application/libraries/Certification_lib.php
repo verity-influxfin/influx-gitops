@@ -1225,69 +1225,71 @@ class Certification_lib{
 			$status = 3;
 			$data = [];
 
-			foreach($info->content['result'] as $k=>$v){
-				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
-					$imageIds[] = $k;
-					foreach($v as $k1=>$v1){
-						if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k1)){
-							if(preg_match('/NumOfInsuredYM/',$k1)){
-								$k1 = preg_replace('/NumOfInsuredYM|NumOfInsured/','',$k1);
-								$data[$k]['table'][$k1]['yearMonth'] = $v1;
-							}
-							if(preg_match('/NumOfInsured/',$k1)){
-								$k1 = preg_replace('/NumOfInsuredYM|NumOfInsured/','',$k1);
-								$data[$k]['table'][$k1]['insuredCount'] = $v1;
-							}
-						}
-						if($k1 =='company_name'){
-							$data[$k]['company_name'] = isset($v1) ? $v1 : '';
-						}
-						if($k1 =='range'){
-							$data[$k]['range'] = isset($v1) ? $v1 : '';
-						}
-						if($k1 =='report_time'){
-							$data[$k]['report_time'] = isset($v1) ? $v1 : '';
-						}
-					}
-					if(array_key_exists('table',$data[$k])){
-						$data[$k]['table'] = array_values($data[$k]['table']);
-					}
-				}
-				if(! isset($v['origin_type'])){
-					// 找所有圖片ID
-					$this->CI->load->model('log/log_image_model');
-					if(is_array($info->content['employeeinsurancelist_image'])){
-						$imgurl = $info->content['employeeinsurancelist_image'];
-					}else{
-						$imgurl = [$info->content['employeeinsurancelist_image']];
-					}
-					$image_info = $this->CI->log_image_model->get_many_by([
-							'url' => $imgurl,
-					]);
-					if($image_info){
-						foreach($image_info as $v){
-							$imageIds[] = $v->id;
-						}
-					}
+			if(isset($info->content['result']) && !empty($info->content['result'])){
+                foreach($info->content['result'] as $k=>$v){
+    				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
+    					$imageIds[] = $k;
+    					foreach($v as $k1=>$v1){
+    						if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k1)){
+    							if(preg_match('/NumOfInsuredYM/',$k1)){
+    								$k1 = preg_replace('/NumOfInsuredYM|NumOfInsured/','',$k1);
+    								$data[$k]['table'][$k1]['yearMonth'] = $v1;
+    							}
+    							if(preg_match('/NumOfInsured/',$k1)){
+    								$k1 = preg_replace('/NumOfInsuredYM|NumOfInsured/','',$k1);
+    								$data[$k]['table'][$k1]['insuredCount'] = $v1;
+    							}
+    						}
+    						if($k1 =='company_name'){
+    							$data[$k]['company_name'] = isset($v1) ? $v1 : '';
+    						}
+    						if($k1 =='range'){
+    							$data[$k]['range'] = isset($v1) ? $v1 : '';
+    						}
+    						if($k1 =='report_time'){
+    							$data[$k]['report_time'] = isset($v1) ? $v1 : '';
+    						}
+    					}
+    					if(array_key_exists('table',$data[$k])){
+    						$data[$k]['table'] = array_values($data[$k]['table']);
+    					}
+    				}
+    				if(! isset($v['origin_type'])){
+    					// 找所有圖片ID
+    					$this->CI->load->model('log/log_image_model');
+    					if(is_array($info->content['employeeinsurancelist_image'])){
+    						$imgurl = $info->content['employeeinsurancelist_image'];
+    					}else{
+    						$imgurl = [$info->content['employeeinsurancelist_image']];
+    					}
+    					$image_info = $this->CI->log_image_model->get_many_by([
+    							'url' => $imgurl,
+    					]);
+    					if($image_info){
+    						foreach($image_info as $v){
+    							$imageIds[] = $v->id;
+    						}
+    					}
 
-					// 找所有ocr資料
-					$this->CI->load->library('ocr/report_scan_lib');
-					$response = $this->CI->report_scan_lib->requestForResult('insurance_tables', $imageIds);
-					if ($response && $response->status == 200) {
-						$response = isset($response->response->insurance_table_logs->items[0]) ? $response->response->insurance_table_logs->items[0] : [];
-						if($response && $response->status=='finished'){
-							$data[$imageIds[0]]['company_name'] = isset($response->insurance_table->companyInfo) ? $response->insurance_table->companyInfo : '';
-							$data[$imageIds[0]]['range'] = isset($response->insurance_table->insurancePeriod) ? $response->insurance_table->insurancePeriod: '';
-							$data[$imageIds[0]]['report_time'] = isset($response->insurance_table->reportTime) ? $response->insurance_table->reportTime: '';
-							$data[$imageIds[0]]['table'] = isset($response->insurance_table->insuredList) ? $response->insurance_table->insuredList: [];
-						}
-					}
-				}
-			}
+    					// 找所有ocr資料
+    					$this->CI->load->library('ocr/report_scan_lib');
+    					$response = $this->CI->report_scan_lib->requestForResult('insurance_tables', $imageIds);
+    					if ($response && $response->status == 200) {
+    						$response = isset($response->response->insurance_table_logs->items[0]) ? $response->response->insurance_table_logs->items[0] : [];
+    						if($response && $response->status=='finished'){
+    							$data[$imageIds[0]]['company_name'] = isset($response->insurance_table->companyInfo) ? $response->insurance_table->companyInfo : '';
+    							$data[$imageIds[0]]['range'] = isset($response->insurance_table->insurancePeriod) ? $response->insurance_table->insurancePeriod: '';
+    							$data[$imageIds[0]]['report_time'] = isset($response->insurance_table->reportTime) ? $response->insurance_table->reportTime: '';
+    							$data[$imageIds[0]]['table'] = isset($response->insurance_table->insuredList) ? $response->insurance_table->insuredList: [];
+    						}
+    					}
+    				}
+    			}
+            }
 
 			if($data){
 				$this->CI->load->library('verify/data_legalize_lib');
-				$res = $this->CI->data_legalize_lib->legalize_employeeinsurancelist($info->user_id,$data);
+				$res = [];//$this->CI->data_legalize_lib->legalize_employeeinsurancelist($info->user_id,$data);
 
 				$info->remark = $res['error_message'];
 				$info->content['error_location'][$imageIds[0]] = $res['error_location'];
