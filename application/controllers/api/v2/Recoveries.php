@@ -1848,7 +1848,7 @@ class Recoveries extends REST_Controller
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
-            'checkOwner' => $product['checkOwner'],
+            'checkOwner' => isset($product['checkOwner']) ? $product['checkOwner'] : true,
             'status' => $sub_product['status'],
         );
     }
