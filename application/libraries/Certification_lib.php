@@ -1303,9 +1303,9 @@ class Certification_lib{
 					'average' => $res['result']['average'],
 					'list' => $res['result']['list'],
 				];
-				if(empty($res['error_message'])){
-				  $status = 1;
-				}
+				// if(empty($res['error_message'])){
+				//   $status = 1;
+				// }
 			}
 
 			$this->CI->user_certification_model->update($info->id, array(
