@@ -3133,16 +3133,18 @@ class Certification_lib{
         return false;
     }
 
-    public function check_associates($target_id){
+    public function check_associates($target_id){print_r($target_id);echo'----';
         $this->CI->load->model('loan/target_associate_model');
         $params = [
             "target_id" => $target_id,
             "status" => 0,
         ];
         $associate_list = $this->CI->target_associate_model->get_many_by($params);
+        print_r($associate_list);echo'----';
         if($associate_list){
             $this->CI->load->model("user/user_model");
             foreach($associate_list as $key => $value){
+                // print_r($value);
                 if($value->user_id == null && $value->content !=null){
                     $data = json_decode($value->content);
                     $user = $this->CI->user_model->get_by([
@@ -3150,22 +3152,22 @@ class Certification_lib{
 //                        'phone' => $data->phone,
                         'id_number' => $data->id_number,
                     ]);
+                    print_r($user);echo'----';
                     if($user){
+                        $update_info = [
+                            'user_id' => $user->id
+                        ];
+                        // 負責人加入配偶的話配偶自動同意
+                        if($value->character == 3){
+                            $update_info['status'] = 1;
+                        }
+                        print_r($update_info);echo'---';
                         $this->CI->target_associate_model->update_by([
                             'id' => $value->id,
-                        ], [
-                            'user_id' => $user->id,
-                        ]);
+                        ], $update_info);
                     }
                 }
             }
-            // 負責人加入配偶的話配偶自動同意
-            $this->CI->target_associate_model->update_by([
-                'character' => 3,
-                'status' => 0
-            ], [
-                'ststus' => 1,
-            ]);
         }
     }
 
