@@ -3158,7 +3158,6 @@ class Certification_lib{
                         if($value->character == 3){
                             $update_info['status'] = 1;
                         }
-                        print_r($update_info);echo'---';
                         $this->CI->target_associate_model->update_by([
                             'id' => $value->id,
                         ], $update_info);
