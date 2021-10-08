@@ -21,13 +21,13 @@ class User_certification_model extends MY_Model
 		'bank_account' => 3,
 		'address' => 1,
 	];
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->_database = $this->load->database('default',TRUE);
  	}
-	
+
 	protected function before_data_c($data)
     {
         $data['created_at'] 	= $data['updated_at'] = time();
@@ -37,7 +37,7 @@ class User_certification_model extends MY_Model
         $data['created_ip'] 	= $data['updated_ip'] = get_ip();
         return $data;
     }
-	
+
 	protected function before_data_u($data)
     {
         $data['updated_at'] = time();
@@ -85,4 +85,22 @@ class User_certification_model extends MY_Model
 
 		return $query->result();
 	}
+
+    public function get_skbank_check_list($userIdList=[]){
+
+        if(empty($userIdList) || !is_array($userIdList)){
+            return [];
+        }
+
+        $query = $this->db->select_max('id')
+                    ->select(['user_id','certification_id','content'])
+        			->from('p2p_user.user_certification')
+        			->where_in('user_id', $userIdList)
+                    ->where_in('certification_id',['11','12','500','501','1002','1003','1007','1017','1018'])
+                    ->where_not_in('status', ['2'])
+                    ->where('content !=', '')
+                    ->group_by(['user_id','certification_id'])->get();
+
+        return $query->result();
+    }
 }
