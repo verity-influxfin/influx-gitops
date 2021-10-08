@@ -306,6 +306,69 @@
         $(document).off("click","#closeWindow").on("click","#closeWindow" ,  function(){
             window.close();
         });
+
+        //新光收件檢核表送出
+        $(document).off("click","#skbank_text_send_btn").on("click","#skbank_text_send_btn" ,  function(){
+            $("#skbank_text_send_btn").prop("disabled", true);
+            $("#skbank_text_send_btn").text("資料處理中");
+            $.ajax({
+                type: "GET",
+                url: "/admin/target/skbank_text_send" + "?target_id=" + caseId,
+                success: function (response) {
+                    if(response.status.code == 200){
+                        $('#skbankCompId').text(response.CompId);
+                        $.ajax({
+                           type: "POST",
+                           data: JSON.stringify(response.response),
+                           url: '/api/skbank/v1/LoanRequest/apply_text',
+                           dataType: "json",
+                           success: function (response) {
+                               // console.log(response.meta_info);
+                               let skbank_response = response.success ? '成功' : '失敗';
+                               $('#skbankMsgNo').text(response.msg_no);
+                               $('#skbankReturn').text(skbank_response);
+                               $('#skbankCaseNo').text(response.case_no);
+                               $('#skbankMetaInfo').text(response.meta_info);
+                               console.log(response);
+                               alert(`新光送出結果 ： ${skbank_response}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
+                           },
+                           error: function(error) {
+                             alert(error);
+                           }
+                       });
+                       $("#skbank_text_send_btn").prop("disabled", false);
+                       $("#skbank_text_send_btn").text("收件檢核表送出");
+                    }
+                }
+            });
+        });
+
+        $(document).off("click","#skbank_img_send_btn").on("click","#skbank_img_send_btn" ,  function(){
+            console.log(2);
+            // if(Object.keys(request_data).length == data_count){
+            //     image_list_data = JSON.stringify({"request_image_list":request_data});
+            //     $.ajax({
+            //         type: "POST",
+            //         data: image_list_data,
+            //         url: '/api/skbank/v1/LoanRequest/apply_image_list',
+            //         dataType: "json",
+            //         success: function (response) {
+            //           alert(response);
+            //         },
+            //         error: function(error) {
+            //           alert(error);
+            //         }
+            //     });
+            //     $("#image_list").val("儲存資料");
+            //     $(".sendBtn").prop("disabled", false);
+            // }
+        });
+
+        $(document).off("click","#skbank_approve_send_btn").on("click","#skbank_approve_send_btn" ,  function(){
+            console.log(3);
+            // apply_image_complete_post
+        });
+
     });
 </script>
 <div id="page-wrapper">
@@ -524,10 +587,60 @@
                             </div>
                         </div>
                     </div>
+                    <? if($targetInfo->product_id == 1002){ ?>
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">新光送出回應</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive center-text">
+                                            <table class="table table-bordered table-hover table-striped">
+                                                <thead>
+                                                <tr class="odd list">
+                                                    <th width="20%" hidden>統一編號</th>
+                                                    <th width="20%">申請序號</th>
+                                                    <th width="20%">案件編號</th>
+                                                    <th width="20%">送出結果</th>
+                                                    <th width="40%">回應內容</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="odd list">
+                                                    <td class="center-text fake-fields" hidden>
+                                                        <p class="form-control-static" id="skbankCompId"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="skbankMsgNo"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="skbankCaseNo"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="skbankReturn"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="skbankMetaInfo"></p>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <? } ?>
                     <div class="targetAction">
                         <? if($active){ ?>
                         <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
                         <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
+                        <? } ?>
+                        <? if($targetInfo->product_id == 1002){ ?>
+                            <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
+                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="" disabled>圖片送出</button>
+                            <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="" disabled>通過</button>
                         <? } ?>
                     </div>
                 </div>

@@ -2060,5 +2060,26 @@ class Target extends MY_Admin_Controller {
         }
         return true;
     }
+
+    // 新光送件 API
+    public function skbank_text_send(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+
+        if(!$this->input->is_ajax_request() || !isset($get['target_id']) || empty($get) || !is_numeric($get['target_id'])){
+            $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
+        }
+
+        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+        $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
+        $skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'']);
+
+        if(!$skbank_save_info || !isset($skbank_save_info->content) || empty($skbank_save_info->content)){
+            $this->json_output->setStatusCode(400)->setErrorCode(ItemNotFound)->send();
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse(json_decode($skbank_save_info->content,true))->send();
+
+    }
 }
 ?>
