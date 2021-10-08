@@ -2137,7 +2137,7 @@ class Certification_lib{
 		if($info){
 			$content 	= $info->content;
             $this->CI->load->library('mapping/user/Certification_data');
-            $result = ! empty($content['result']) ? $content['result'] : [];
+            // $result = ! empty($content['result']) ? $content['result'] : [];
             $meta = $this->CI->certification_data->transformCompanyEmailMeta($result);
             $data = [
                 'company_email' => json_encode($meta)
@@ -2247,7 +2247,7 @@ class Certification_lib{
 			// $content = $info->content;
 			// $this->CI->load->library('mapping/user/Certification_data');
             // TODO:暫時不寫入 meta
-			$result = ! empty($content['result']) ? $content['result'] : [];
+			// $result = ! empty($content['result']) ? $content['result'] : [];
 			$meta = [];//$this->CI->certification_data->transformJointCreditToMeta($result);
 
 			$rs = [];//$this->user_meta_progress($data,$info);
@@ -2353,7 +2353,7 @@ class Certification_lib{
         if($info){
     		$content = $info->content;
     		$this->CI->load->library('mapping/user/Certification_data');
-    		$result = ! empty($content['result']) ? $content['result'] : [];
+    		// $result = ! empty($content['result']) ? $content['result'] : [];
             // TODO:暫時不寫入 meta
     		$meta = [];//$this->CI->certification_data->transformJointCreditToMeta($result);
 
@@ -2610,7 +2610,7 @@ class Certification_lib{
 			if($info){
 					$content = $info->content;
 					$this->CI->load->library('mapping/user/Certification_data');
-					$result = ! empty($content['result']) ? $content['result'] : [];
+					// $result = ! empty($content['result']) ? $content['result'] : [];
                     // TODO:暫時不寫入 meta
 					$meta = [];//$this->CI->certification_data->transformEmployeeinsurancelistToMeta($result);
 					$rs = [];//$this->user_meta_progress($data,$info);
@@ -2639,7 +2639,7 @@ class Certification_lib{
         if ($info) {
 			$content = $info->content;
             $this->CI->load->library('mapping/user/Certification_data');
-            $result = ! empty($content['result']) ? $content['result'] : [];
+            // $result = ! empty($content['result']) ? $content['result'] : [];
             // TODO:暫時不寫入 meta
             $meta = [];//$this->CI->certification_data->transformSimplificationjobToMeta($result);
 
@@ -2655,7 +2655,7 @@ class Certification_lib{
         if($info){
             $content = $info->content;
             $this->CI->load->library('mapping/user/Certification_data');
-            $result = ! empty($content['result']) ? $content['result'] : [];
+            // $result = ! empty($content['result']) ? $content['result'] : [];
             // TODO:暫時不寫入 meta
             $meta = [];//$this->CI->certification_data->transformProfileToMeta($result);
             $rs = [];//$this->user_meta_progress($data,$info);
@@ -2670,7 +2670,7 @@ class Certification_lib{
         if($info){
             $content = $info->content;
             $this->CI->load->library('mapping/user/Certification_data');
-            $result = ! empty($content['result']) ? $content['result'] : [];
+            // $result = ! empty($content['result']) ? $content['result'] : [];
             // TODO:暫時不寫入 meta
             $meta = [];//$this->CI->certification_data->transformProfilejudicialToMeta($result);
 

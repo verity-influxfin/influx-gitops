@@ -2281,11 +2281,7 @@ class Certification extends REST_Controller {
             $user_id 	= $this->user_info->id;
             $investor 	= $this->user_info->investor;
             $time = time();
-            $content	= [
-                'action_user' => 'system',
-                'send_time' => $time,
-                'status' => '1',
-            ];
+            $content	= [];
 
             $cer_profilejudicial = $this->config->item('cer_profile');
             //選填欄位
@@ -2299,6 +2295,7 @@ class Certification extends REST_Controller {
                     }
                 }
             }
+            $content['skbank_form'] = $content;
             $res = $content;
 
             $param = [
@@ -3540,11 +3537,7 @@ class Certification extends REST_Controller {
             $user_id 	= $this->user_info->id;
             $investor 	= $this->user_info->investor;
             $time = time();
-            $content	= [
-                'action_user' => 'system',
-                'send_time' => $time,
-                'status' => '0',
-            ];
+            $content	= [];
 
             $cer_exists = $this->user_certification_model->get_by([
                 'user_id' => $user_id,
@@ -3590,6 +3583,7 @@ class Certification extends REST_Controller {
                     }
                 }
             }
+            $content['skbank_form'] = $content;
 
             $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership'];
             //多個檔案欄位
