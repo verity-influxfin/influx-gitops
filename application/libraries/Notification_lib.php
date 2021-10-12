@@ -817,7 +817,7 @@ $name 您好，
 		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));
 	}
 
-    public function EDM($user_id, $title, $content, $EDM, $EDM_href, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [])
+    public function EDM($user_id, $title, $content, $EDM, $EDM_href, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [], $disable_output=FALSE)
     {
         $user_list = [];
         $user_ids = false;
@@ -894,8 +894,10 @@ $name 您好，
             }
             $this->CI->load->library('parser');
 		}
-		echo $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => nl2br($content), "EDM" => $EDM), TRUE);
-		echo '已發送 ' . $count . ' 位使用者';
+		if(!$disable_output) {
+            echo $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => nl2br($content), "EDM" => $EDM), TRUE);
+            echo '已發送 ' . $count . ' 位使用者';
+        }
         return $count;
 
     }

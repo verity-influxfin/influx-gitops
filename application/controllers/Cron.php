@@ -346,7 +346,27 @@ class Cron extends CI_Controller
 		echo "successCnt:".$successCnt;
 		echo "failedCnt:".$failedCnt;
 	}
+	
+    public function trigger_edm_event()
+    {	//每一小時
+        $this->load->library('user_lib');
+        $this->load->model('user/user_model');
+        $this->load->library('Notification_lib');
 
+
+        $start_time = time();
+        $count 		= $this->user_lib->script_trigger_edm_event();
+        $num		= $count?intval($count):0;
+        $end_time 	= time();
+        $data		= [
+            'script_name'	=> 'trigger_edm_event',
+            'num'			=> $num,
+            'start_time'	=> $start_time,
+            'end_time'		=> $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
 
 	public function daily_tax()
 	{	//每天下午一點
