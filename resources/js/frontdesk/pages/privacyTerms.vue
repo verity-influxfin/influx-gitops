@@ -1,6 +1,6 @@
 <template>
   <div class="terms-wrapper">
-    <h2 class="title">隱私政策政策</h2>
+    <h2 class="title">隱私權條款</h2>
     <div class="terms-page">
       <p>第一條 使用者個人資料之收集與運用</p>
       <ol>
