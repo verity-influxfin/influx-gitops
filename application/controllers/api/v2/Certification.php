@@ -2553,7 +2553,7 @@ class Certification extends REST_Controller {
             //必填欄位
             $fields 	= ['return_type','postal_image'];
             foreach ($fields as $field) {
-                if (empty($input[$field]) && $input[$field] != 0) {
+                if (! isset($input[$field])) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                 }else{
                     $content[$field] = $input[$field];
