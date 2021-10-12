@@ -2480,46 +2480,8 @@ class Certification extends REST_Controller {
                 }
             }
 
-						// 使用者手填資料
-						if(! empty($input['nearly_a_year_image_id'])){
-							$content['result'][$input['nearly_a_year_image_id']] = [
-								'action_user' => 'user',
-								'send_time' => time(),
-								'status' => 1,
-								'origin_type' => 'user_confirm',
-								'name' => isset($input['CompName1']) ? $input['CompName1'] : '',
-								'report_time' => isset($input['AnnualIncomeYear1']) ? $input['AnnualIncomeYear1'] : '',
-								'tax_id' => isset($input['CompId1']) ? $input['CompId1'] : '',
-								'input_89' => isset($input['IndustryCode1']) ? $input['IndustryCode1'] : '',
-								"input_90" => isset($input['AnnualIncome1']) ? $input['AnnualIncome1'] : '',
-							];
-						}
-						if(! empty($input['nearly_two_year_image_id'])){
-							$content['result'][$input['nearly_two_year_image_id']] = [
-								'action_user' => 'user',
-								'send_time' => time(),
-								'status' => 1,
-								'origin_type' => 'user_confirm',
-								'name' => isset($input['CompName2']) ? $input['CompName2'] : '',
-								'report_time' => isset($input['AnnualIncomeYear2']) ? $input['AnnualIncomeYear2'] : '',
-								'tax_id' => isset($input['CompId2']) ? $input['CompId2'] : '',
-								'input_89' => isset($input['IndustryCode2']) ? $input['IndustryCode2'] : '',
-								"input_90" => isset($input['AnnualIncome2']) ? $input['AnnualIncome2'] : '',
-							];
-						}
-						if(! empty($input['nearly_three_year_image_id'])){
-							$content['result'][$input['nearly_three_year_image_id']] = [
-								'action_user' => 'user',
-								'send_time' => time(),
-								'status' => 1,
-								'origin_type' => 'user_confirm',
-								'name' => isset($input['CompName3']) ? $input['CompName3'] : '',
-								'report_time' => isset($input['AnnualIncomeYear3']) ? $input['AnnualIncomeYear3'] : '',
-								'tax_id' => isset($input['CompId3']) ? $input['CompId3'] : '',
-								'input_89' => isset($input['IndustryCode3']) ? $input['IndustryCode3'] : '',
-								"input_90" => isset($input['AnnualIncome3']) ? $input['AnnualIncome3'] : '',
-							];
-						}
+			// 使用者手填資料
+			$content['skbank_form'] = $input;
 
             $param		= [
                 'user_id'			=> $user_id,
