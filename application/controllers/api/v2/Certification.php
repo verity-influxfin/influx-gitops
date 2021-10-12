@@ -2650,23 +2650,21 @@ class Certification extends REST_Controller {
             // 如果從發人端登入上傳則將資料上傳位置更換為自然人ID
             if($this->user_info->company_status == 1){
                 $user_id = '';
-                $investor = '';
-                $this->user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0, 'status' => 1, 'block_status' => 0, 'investor_status' => 0));
+                $this->user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0, 'status' => 1, 'block_status' => 0));
 
                 if(!empty($this->user_info)){
                     $user_id = $this->user_info->id;
-                    $investor = $this->user_info->investor_status;
                 }
             }
 
-            if(empty($user_id) || $investor != 0){
+            if(empty($user_id)){
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
             }
 
             $param		= [
                 'user_id'			=> $user_id,
                 'certification_id'	=> $certification_id,
-                'investor'			=> $investor,
+                'investor'			=> 0,
                 'content'			=> json_encode($content),
             ];
             $insert = $this->user_certification_model->insert($param);
