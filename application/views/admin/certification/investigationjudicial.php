@@ -142,9 +142,9 @@
                             <fieldset disabled>
                                 <div class="form-group">
                                     <label>法人聯徵資料</label><br>
-                                    <? isset($content['postal_image']) && !is_array($content['postal_image']) ? $content['postal_image'] = array($content['postal_image']) : '';
-                                    if(!empty($content['postal_image'])){
-                                        foreach ($content['postal_image'] as $key => $value) { ?>
+                                    <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : '';
+                                    if(!empty($content['legal_person_mq_image'])){
+                                        foreach ($content['legal_person_mq_image'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
                                             </a>
