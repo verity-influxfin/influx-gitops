@@ -319,6 +319,7 @@ class Check_list
 			// ]
 		];
 
+        // TODO: 改撈法人關係再撈全徵提資料圖片
 		if($target_info && isset($target_info->target_data)){
 			$this->CI->load->model('user/user_certification_model');
 			$target_data = json_decode($target_info->target_data,true);
@@ -345,8 +346,6 @@ class Check_list
 					}
 				}
 			}
-			// print_r($response);exit;
-
 		}
 		return $response;
 	}

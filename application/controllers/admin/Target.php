@@ -2061,7 +2061,7 @@ class Target extends MY_Admin_Controller {
         return true;
     }
 
-    // 新光送件 API
+    // 新光收件檢核表送件 API
     public function skbank_text_send(){
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
@@ -2080,6 +2080,21 @@ class Target extends MY_Admin_Controller {
 
         $this->json_output->setStatusCode(200)->setResponse(json_decode($skbank_save_info->content,true))->send();
 
+    }
+
+    // 新光取得圖片
+    public function skbank_image_get(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+
+        $target_info 	= $this->target_model->get_by(['id'=>$get['target_id']]);
+        if(!$target_info){
+            $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
+        }
+        $this->load->library('mapping/sk_bank/check_list');
+        $image_url = $this->check_list->get_raw_data($target_info);
+
+        $this->json_output->setStatusCode(200)->setResponse($image_url)->send();
     }
 }
 ?>

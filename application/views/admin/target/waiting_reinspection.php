@@ -323,13 +323,16 @@
                            url: '/api/skbank/v1/LoanRequest/apply_text',
                            dataType: "json",
                            success: function (response) {
-                               // console.log(response.meta_info);
                                let skbank_response = response.success ? '成功' : '失敗';
                                $('#skbankMsgNo').text(response.msg_no);
                                $('#skbankReturn').text(skbank_response);
                                $('#skbankCaseNo').text(response.case_no);
                                $('#skbankMetaInfo').text(response.meta_info);
-                               console.log(response);
+
+                               if(skbank_response == '成功'){
+                                   $("#skbank_img_send_btn").prop("disabled", true);
+
+                               }
                                alert(`新光送出結果 ： ${skbank_response}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
                            },
                            error: function(error) {
@@ -343,31 +346,80 @@
             });
         });
 
+        // 新光圖片附件送出
         $(document).off("click","#skbank_img_send_btn").on("click","#skbank_img_send_btn" ,  function(){
-            console.log(2);
-            // if(Object.keys(request_data).length == data_count){
-            //     image_list_data = JSON.stringify({"request_image_list":request_data});
-            //     $.ajax({
-            //         type: "POST",
-            //         data: image_list_data,
-            //         url: '/api/skbank/v1/LoanRequest/apply_image_list',
-            //         dataType: "json",
-            //         success: function (response) {
-            //           alert(response);
-            //         },
-            //         error: function(error) {
-            //           alert(error);
-            //         }
-            //     });
-            //     $("#image_list").val("儲存資料");
-            //     $(".sendBtn").prop("disabled", false);
-            // }
+            $("#skbank_img_send_btn").prop("disabled", true);
+            $("#skbank_img_send_btn").text("資料處理中");
+            $.ajax({
+                type: "GET",
+                url: "/admin/target/skbank_image_get" + "?target_id=" + caseId,
+                success: function (response) {
+                  if(response.status.code == 200){
+                      let case_no = $('#skbankMsgNo').text();
+                      let comp_id = $('#skbankCompId').text();
+                      if(case_no && comp_id){
+                          let request_data = [];
+                          let data_count = Object.keys(response.response).length;
+                          Object.keys(response.response).forEach( (image_type_key) => {
+                              Object.keys(response.response[image_type_key]).forEach( (key) => {
+                                  console.log(response.response[image_type_key][key]);
+                                  let skbank_image_type = image_type_key;
+                                  let skbank_image_url = response.response[image_type_key][key];
+                                  let image_count = key;
+                                  getMappingMsgNo(caseId, 'send', image_type_key,  (data) => {
+                                      msg_data = data;
+                                      msg_no = msg_data.data.msg_no;
+                                      request_data.push({
+                                          'MsgNo' : msg_no,
+                                          'CompId' : comp_id,
+                                          'CaseNo' : case_no,
+                                          'DocType' : image_type_key,
+                                          'DocSeq' : parseInt(image_count)+1,
+                                          'DocFileType' : 4,
+                                          'DocUrl' : skbank_image_url
+                                      });
+                                      if(Object.keys(request_data).length == data_count){
+                                          image_list_data = JSON.stringify({"request_image_list":request_data});
+                                          $.ajax({
+                                              type: "POST",
+                                              data: image_list_data,
+                                              url: '/api/skbank/v1/LoanRequest/apply_image_list',
+                                              dataType: "json",
+                                              success: function (response) {
+                                                alert(response);
+                                              },
+                                              error: function(error) {
+                                                alert(error);
+                                              }
+                                          });
+                                          $("#skbank_img_send_btn").prop("disabled", false);
+                                          $("#skbank_img_send_btn").text("圖片送出");
+                                      }
+                                  });
+                              })
+                          })
+                      }
+                  }
+                },
+                error: function(error) {
+                  alert(error);
+                }
+            });
         });
 
-        $(document).off("click","#skbank_approve_send_btn").on("click","#skbank_approve_send_btn" ,  function(){
-            console.log(3);
-            // apply_image_complete_post
-        });
+        function getMappingMsgNo(target_id,action,data_type,result){
+      	  $.ajax({
+                type: "GET",
+                url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
+                success: function (response) {
+                    response = response.response;
+                    result(response);
+                },
+                error: function(error) {
+                    alert(error);
+                }
+            });
+        }
 
     });
 </script>

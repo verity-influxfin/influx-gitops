@@ -7,7 +7,7 @@ class Instagram_lib
     {
         $this->CI = &get_instance();
         $judicialYuanServerPort = '9998';
-        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/instagram/";
+        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":{$judicialYuanServerPort}/scraper/api/v1.0/instagram_deep/";
         if(isset($params['ip'])){
           $this->scraperUrl = "http://{$params['ip']}/scraper/api/v1.0/";
         }
