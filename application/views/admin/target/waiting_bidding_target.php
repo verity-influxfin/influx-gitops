@@ -106,8 +106,8 @@
 											</td>
 											<td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
                                             <td><?=isset($value->company)?$value->company:'' ?><?=isset($value->company)&&isset($value->school_name)?' / ':'' ?><?=isset($value->school_name)?$value->school_name:'' ?></td>
-                                            <?=isset($value->school_department) && $typeKey == 'personal' ? '<td>'.$value->school_department.'</td>':'' ?>
-                                            <?=isset($value->amount) && $typeKey != 'judicialPersonFormBank' ? '<td>'. $value->amount . '</td>':'' ?>
+                                            <?=isset($value->school_department) && $typeKey == 'personal' ? '<td>'.$value->school_department.'</td>':'<td></td>' ?>
+                                            <?=isset($value->amount) && $typeKey != 'judicialPersonFormBank' ? '<td>'. $value->amount . '</td>':'<td></td>' ?>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
                                             <td><? echo isset($value->interest_rate)&&$value->interest_rate != ''?floatval($value->interest_rate).'%':'-' ?></td>
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
