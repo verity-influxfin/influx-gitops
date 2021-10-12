@@ -181,6 +181,34 @@ $config['role_permission'] = [
                 ]
             ]
         ]
+    ],
+    'Bankdata' => [
+        'name' => '角色-新光微企貸收件檢核表',
+        'permission' =>[
+            'Bankdata' => [
+                'report' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['id' => '*'],
+                    ],
+                    'menu_display' => false,
+                ]
+            ]
+        ]
+    ],
+    'Creditmanagementtable' => [
+        'name' => '角色-授審表',
+        'permission' =>[
+            'Bankdata' => [
+                'report' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['id' => '*'],
+                    ],
+                    'menu_display' => false,
+                ]
+            ]
+        ]
     ]
 ];
 
