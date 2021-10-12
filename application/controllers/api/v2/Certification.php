@@ -2785,36 +2785,30 @@ class Certification extends REST_Controller {
                 }
             }
 
-						// 寫入使用者手填資料
-						$content['result'][$content['group_id']] = [
-						  'action_user' => 'user',
-						  'send_time' => time(),
-						  'status' => 0,
-						  'tax_id' => isset($input['CompId']) ? $input['CompId'] : '',
-						  'name' => isset($input['CompName']) ? $input['CompName'] : '',
-						  'capital' => isset($input['CompCapital']) ? $input['CompCapital'] : '',
-						  'address' => isset($input['CompRegAddress']) ? $input['CompRegAddress'] : '',
-						  'owner' => isset($input['PrName']) ? $input['PrName'] : '',
-						  'owner_id' => isset($inout['PrincipalId']) ? $inout['PrincipalId'] : ''
-						];
+			// 寫入使用者手填資料
+			$content['skbank_form'] = [
+			  'CompId' => isset($input['CompId']) ? $input['CompId'] : '',
+			  'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
+			  'CompCapital' => isset($input['CompCapital']) ? $input['CompCapital'] : '',
+			  'CompRegAddress' => isset($input['CompRegAddress']) ? $input['CompRegAddress'] : '',
+			  'PrName' => isset($input['PrName']) ? $input['PrName'] : '',
+			  'PrincipalId' => isset($inout['PrincipalId']) ? $inout['PrincipalId'] : ''
+			];
 
-						// 董監事
-						$count_array =[
-							'1' => 'A',
-							'2' => 'B',
-							'3' => 'C',
-							'4' => 'D',
-							'5' => 'E',
-							'6' => 'F',
-							'7' => 'G',
-						];
-						for($i=1;$i<=7;$i++){
-							$content['result'][$content['group_id']]["Director{$count_array[$i]}Id"] = isset($input["Director{$count_array[$i]}Id"]) ? $input["Director{$count_array[$i]}Id"] : '';
-							$content['result'][$content['group_id']]["Director{$count_array[$i]}Name"] = isset($input["Director{$count_array[$i]}Name"]) ? $input["Director{$count_array[$i]}Name"] : '';
-						}
-						if(isset($content['result'][$content['group_id']]['tax_id'])){
-							$content['result'][$content['group_id']]['origin_type'] = 'user_confirm';
-						}
+			// 董監事
+			$count_array =[
+				'1' => 'A',
+				'2' => 'B',
+				'3' => 'C',
+				'4' => 'D',
+				'5' => 'E',
+				'6' => 'F',
+				'7' => 'G',
+			];
+			for($i=1;$i<=7;$i++){
+				$content['skbank_form']["Director{$count_array[$i]}Id"] = isset($input["Director{$count_array[$i]}Id"]) ? $input["Director{$count_array[$i]}Id"] : '';
+				$content['skbank_form']["Director{$count_array[$i]}Name"] = isset($input["Director{$count_array[$i]}Name"]) ? $input["Director{$count_array[$i]}Name"] : '';
+			}
 
             $param		= [
                 'user_id'			=> $user_id,
