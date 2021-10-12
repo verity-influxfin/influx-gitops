@@ -38,7 +38,6 @@ class Profit_and_loss_account
 
     public function generateTotalReport($investmentIds)
     {
-        $investments = $this->investment_model->order_by('target_id', 'ASC')->get_many($investmentIds);
 
         $rows = ['normal' => [], 'overdue' => [], 'prepayment' => []];
         if (!$investments) {

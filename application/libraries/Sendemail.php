@@ -48,10 +48,10 @@ class Sendemail
 		return false;
 	}
 
-	public function send_verify_email($certification_id,$email="",$investor=0){
+    public function send_verify_email($certification_id, $email = "", $investor = 0, $type = 'email')
+    {
 		if($certification_id && !empty($email)){
 		    $mail_event = $this->CI->config->item('mail_event');
-			$type	 = 'email';
 			$code	 = md5($email.time());
 			if($investor){
 				$link    = LENDING_URL."/verifyemail?type=$type&email=".urlencode(base64_encode($email))."&code=".$code;

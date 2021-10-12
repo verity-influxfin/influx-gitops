@@ -1,3 +1,10 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
+<style>
+    .sk-input {
+        width : 100%;
+    }
+</style>
 <script type="text/javascript">
     function check_fail() {
         var status = $('#status :selected').val();
@@ -36,6 +43,49 @@
                                 <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
+                            </div>
+                            <div class="form-group">
+                                <label>交件方式</label>
+                                <p class="form-control-static">
+                                    <?php
+                                        if(defined('return_type')){
+                                            echo $return_type;
+                                        }elseif(isset($content['return_type'])){
+                                            if($content['return_type'] == 1){
+                                                echo '電子郵件';
+                                            }else{
+                                                echo '紙本';
+                                            }
+                                            echo $content['return_type'];
+                                        }else{
+                                            echo '';
+                                        }
+                                    ?>
+                                </p>
+                            </div>
+                            <div class="form-group">
+                                <form role="form" action="/admin/certification/sendSkbank" method="post">
+                                    <table class="table table-striped table-bordered table-hover dataTable">
+                                        <tbody>
+                                            <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                            <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                            <tr><td><span>企業聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="CompJCICQueryDate"></td></tr>
+                                            <tr><td><span>公司中期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="MidTermLnYM"></td></tr>
+                                            <tr><td><span>公司中期放款餘額</span></td><td><input class="sk-input" type="text" name="MidTermLnBal"></td></tr>
+                                            <tr><td><span>公司短期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="ShortTermLnYM"></td></tr>
+                                            <tr><td><span>公司短期放款餘額</span></td><td><input class="sk-input" type="text" name="ShortTermLnBal"></td></tr>
+                                            <tr><td><span>企業聯徵J02資料年月</span></td><td><input class="sk-input" type="text" name="CompJCICDataDate"></td></tr>
+                                            <tr><td><span>企業信用評分</span></td><td><input class="sk-input" type="text" name="CompCreditScore"></td></tr>
+                                            <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                        </tbody>
+                                    </table>
+                                </form>
+                            </div>
+                            <div class="form-group">
+                              <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
+                              foreach ($ocr['url'] as $key => $value) { ?>
+                                  <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
+                              <? } ?>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
@@ -92,14 +142,21 @@
                             <fieldset disabled>
                                 <div class="form-group">
                                     <label>法人聯徵資料</label><br>
-                                    <? isset($content['legal_person_mq_image']) && !is_array($content['legal_person_mq_image']) ? $content['legal_person_mq_image'] = array($content['legal_person_mq_image']) : '';
-                                    foreach ($content['legal_person_mq_image'] as $key => $value) { ?>
-                                        <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                            <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                        </a>
-                                    <? } ?>
+                                    <? isset($content['postal_image']) && !is_array($content['postal_image']) ? $content['postal_image'] = array($content['postal_image']) : '';
+                                    if(!empty($content['postal_image'])){
+                                        foreach ($content['postal_image'] as $key => $value) { ?>
+                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <? }
+                                    }?>
                                 </div>
                             </fieldset>
+                            <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
+							<div class="form-group" style="background:#f5f5f5;border-style:double;">
+							  <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
+							</div>
+							<? } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->
@@ -113,3 +170,37 @@
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+<script>
+$('select').selectize({
+    sortField: 'text',
+});
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: `/admin/certification/getSkbank?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
+        dataType: "json",
+        success: function (response) {
+            if(response.status.code == 200 && response.response != ''){
+                Object.keys(response.response).forEach(function(key) {
+                    console.log(key);
+                    console.log(response.response[key]);
+                    if($(`[name='${key}']`).length){
+                        if($(`[name='${key}']`).is("input")){
+                            $(`[name='${key}']`).val(response.response[key]);
+                        }else{
+                            let $select = $(`[name='${key}']`).selectize();
+                            let selectize = $select[0].selectize;
+                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
+                        }
+                    }
+                })
+            }else{
+                console.log(response);
+            }
+        },
+        error: function(error) {
+          alert(error);
+        }
+    });
+});
+</script>

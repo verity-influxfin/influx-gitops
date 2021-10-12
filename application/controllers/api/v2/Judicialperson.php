@@ -5,14 +5,14 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class Judicialperson extends REST_Controller {
 
 	public $user_info;
-	
+
     public function __construct()
     {
         parent::__construct();
 		$this->load->model('user/judicial_person_model');
 		$this->load->model('user/judicial_agent_model');
 		$this->load->model('log/log_image_model');
-		
+
         $method = $this->router->fetch_method();
         $class 	= $this->router->fetch_class();
         $nonAuthMethods = ['login'];
@@ -22,7 +22,7 @@ class Judicialperson extends REST_Controller {
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
-			
+
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
@@ -42,7 +42,7 @@ class Judicialperson extends REST_Controller {
 					'agent'		=> $tokenData->agent,
 				));
 			}
-			
+
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->company 		= $tokenData->company;
 			$this->user_info->incharge 		= $tokenData->incharge;
@@ -57,7 +57,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiName GetJudicialpersonList
      * @apiGroup Judicialperson
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {Number} company_type 公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司
 	 * @apiSuccess {String} company 公司名稱
@@ -116,7 +116,7 @@ class Judicialperson extends REST_Controller {
 		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
     }
 
-	
+    // 合併至 User - register_post()
 	/**
      * @api {post} /v2/judicialperson/apply 法人會員 申請法人身份
 	 * @apiVersion 0.2.0
@@ -131,8 +131,8 @@ class Judicialperson extends REST_Controller {
 	 * @apiParam {Number} [store_image] 店內正面照(經銷商必填)( 圖片ID )
 	 * @apiParam {Number} [front_image] 銀行流水帳正面(經銷商必填)( 圖片ID )
 	 * @apiParam {String} [passbook_image] 銀行流水帳內頁(經銷商必填)( 圖片IDs 以逗號隔開，最多三個)
-	 * 
-	 * 
+	 *
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -175,207 +175,221 @@ class Judicialperson extends REST_Controller {
      *     }
 	 *
      */
-	public function apply_post()
-    {
-		//$this->not_support_company();
-		$input 		= $this->input->post(NULL, TRUE);
-		$user_id 	= $this->user_info->id;
-		$investor 	= $this->user_info->investor;
-		$param		= array('user_id'=> $user_id);
-		$bank_parm  = [];
+	// public function apply_post()
+ //    {
+	// 	//$this->not_support_company();
+	// 	$input 		= $this->input->post(NULL, TRUE);
+	// 	$user_id 	= $this->user_info->id;
+	// 	$investor 	= $this->user_info->investor;
+	// 	$param		= array('user_id'=> $user_id);
+	// 	$bank_parm  = [];
 
-		//必填欄位
-		$fields 	= ['company_type','tax_id','bank_code','branch_code','bank_account'];
-		foreach ($fields as $field) {
-			if (!isset($input[$field]) && !$input[$field]) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			}else{
-			    !preg_match('/bank|branch_code/i',$field)?$param[$field]=$input[$field]:$bank_parm[$field]=$input[$field];
-			}
-		}
-		$param['cooperation'] = isset($input['cooperation'])&&$input['cooperation']?2:0;
+	// 	//必填欄位
+	// 	$fields 	= ['company_type','tax_id','bank_code','branch_code','bank_account'];
+	// 	foreach ($fields as $field) {
+	// 		if (!isset($input[$field]) && !$input[$field]) {
+	// 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+	// 		}else{
+	// 		    !preg_match('/bank|branch_code/i',$field)?$param[$field]=$input[$field]:$bank_parm[$field]=$input[$field];
+	// 		}
+	// 	}
 
-        if($param['tax_id'] && strlen($param['tax_id'])==8){
+ //        $fields 	= ['meeting_date'];
+ //        foreach ($fields as $field) {
+ //            if (empty($input[$field])) {
+ //                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+ //            }
+ //        }
 
-			//檢查認證 NOT_VERIFIED
-			if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-			}
+	// 	$param['cooperation'] = isset($input['cooperation'])&&$input['cooperation']?2:0;
 
-			//檢查認證 NOT_VERIFIED_EMAIL
-			if(empty($this->user_info->email) || $this->user_info->email==''){
-				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
-			}
+ //        if($param['tax_id'] && strlen($param['tax_id'])==8){
 
-			if(get_age($this->user_info->birthday) < 20){
-				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
-			}
+	// 		//檢查認證 NOT_VERIFIED
+	// 		if(empty($this->user_info->id_number) || $this->user_info->id_number==''){
+	// 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
+	// 		}
 
-			$this->load->library('Gcis_lib');
-			$company_data = $this->gcis_lib->check_responsible($param['tax_id'],$this->user_info->name);
-			if(!$company_data){
-                $business_data = $this->gcis_lib->check_responsible_businesss($param['tax_id'],$this->user_info->name);
-                $company_data['Company_Name'] = $business_data['Business_Name'];
-                if(!$business_data) {
-                    $this->response(array('result' => 'ERROR', 'error' => NOT_IN_CHARGE));
-                }
-			}
+	// 		//檢查認證 NOT_VERIFIED_EMAIL
+	// 		if(empty($this->user_info->email) || $this->user_info->email==''){
+	// 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
+	// 		}
 
-			$param['company'] = $company_data['Company_Name'];
-			$exist = $this->judicial_person_model->get_by(array(
-				'tax_id' 	=> $param['tax_id'],
-				'status !=' => 2
-			));
-			if($exist){
-				$this->response(array('result' => 'ERROR','error' => COMPANY_EXIST ));
-			}
+	// 		if(get_age($this->user_info->birthday) < 20){
+	// 			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
+	// 		}
 
-			//綁定金融帳號
-            $this->load->model('user/user_bankaccount_model');
-            $this->certification = $this->config->item('certifications');
-            $certification 		 = $this->certification[3];
-            if($certification && $certification['status']==1) {
-                if (strlen($bank_parm['bank_code']) != 3) {
-                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_CODE_ERROR));
-                }
-                if (strlen($bank_parm['branch_code']) != 4) {
-                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BRANCH_CODE_ERROR));
-                }
-                if (strlen(intval($bank_parm['bank_account'])) < 8 || strlen($bank_parm['bank_account']) < 10 || strlen($bank_parm['bank_account']) > 14 || is_virtual_account($bank_parm['bank_account'])) {
-                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_ERROR));
-                }
+	// 		$this->load->library('Gcis_lib');
+	// 		$company_data = $this->gcis_lib->check_responsible($param['tax_id'],$this->user_info->name);
+	// 		if(!$company_data){
+ //                $business_data = $this->gcis_lib->check_responsible_businesss($param['tax_id'],$this->user_info->name);
+ //                $company_data['Company_Name'] = $business_data['Business_Name'];
+ //                if(!$business_data) {
+ //                    $this->response(array('result' => 'ERROR', 'error' => NOT_IN_CHARGE));
+ //                }
+	// 		}
 
-                $where = [
-                    'investor' => $investor,
-                    'bank_code' => $bank_parm['bank_code'],
-                    'bank_account' => $bank_parm['bank_account'],
-                    'status' => 1,
-                ];
+	// 		$param['company'] = $company_data['Company_Name'];
+	// 		$exist = $this->judicial_person_model->get_by(array(
+	// 			'tax_id' 	=> $param['tax_id'],
+	// 			'status !=' => 2
+	// 		));
+	// 		if($exist){
+	// 			$this->response(array('result' => 'ERROR','error' => COMPANY_EXIST ));
+	// 		}
 
-                $user_bankaccount = $this->user_bankaccount_model->get_by($where);
-                if ($user_bankaccount && $param['company_type']!=1) {
-                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_EXIST));
-                }
+	// 		//綁定金融帳號
+ //            $this->load->model('user/user_bankaccount_model');
+ //            $this->certification = $this->config->item('certifications');
+ //            $certification 		 = $this->certification[3];
+ //            if($certification && $certification['status']==1) {
+ //                if (strlen($bank_parm['bank_code']) != 3) {
+ //                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_CODE_ERROR));
+ //                }
+ //                if (strlen($bank_parm['branch_code']) != 4) {
+ //                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BRANCH_CODE_ERROR));
+ //                }
+ //                if (strlen(intval($bank_parm['bank_account'])) < 8 || strlen($bank_parm['bank_account']) < 10 || strlen($bank_parm['bank_account']) > 14 || is_virtual_account($bank_parm['bank_account'])) {
+ //                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_ERROR));
+ //                }
 
-                //銀行存簿
-                $file_fields 	 = ['passbook_image'];
-                foreach ($file_fields as $field) {
-                    if(isset($input[$field])){
-                        $image_ids = explode(',',$input[$field]);
-                        if(count($image_ids)>4){
-                            $image_ids = array_slice($image_ids,0,4);
-                        }
-                        $list = $this->log_image_model->get_many_by([
-                            'id'		=> $image_ids,
-                            'user_id'	=> $user_id,
-                        ]);
-                        if($list && count($list)==count($image_ids)){
-                            $file_fields_image[$field] = [];
-                            foreach ($list as $k => $v) {
-                                $file_fields_image[$field][] = $v->url;
-                            }
-                        }
-                    }
-                    else{
-                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-                    }
-                }
+ //                $where = [
+ //                    'investor' => $investor,
+ //                    'bank_code' => $bank_parm['bank_code'],
+ //                    'bank_account' => $bank_parm['bank_account'],
+ //                    'status' => 1,
+ //                ];
 
-                //銀行存簿
-                $bankbook_images = [];
-                $file_fields 	 = ['bankbook_image'];
-                foreach ($file_fields as $field) {
-                    if(isset($input[$field])){
-                        $image_ids = explode(',',$input[$field]);
-                        if(count($image_ids)>4){
-                            $image_ids = array_slice($image_ids,0,4);
-                        }
-                        $list = $this->log_image_model->get_many_by([
-                            'id'		=> $image_ids,
-                            'user_id'	=> $user_id,
-                        ]);
-                        if($list && count($list)==count($image_ids)){
-                            $bankbook_images[$field] = [];
-                            foreach($list as $k => $v){
-                                $bankbook_images[$field][] = $v->url;
-                            }
-                        }
-                    }
-                    else{
-                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-                    }
-                }
-                $bankbook_images = json_encode($bankbook_images);
+ //                $user_bankaccount = $this->user_bankaccount_model->get_by($where);
+ //                if ($user_bankaccount && $param['company_type']!=1) {
+ //                    $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_BANK_ACCOUNT_EXIST));
+ //                }
 
-                //營利事業登記證
-                $pic = [];
-                $file_fields 	= ['enterprise_registration_image'];
-                foreach ($file_fields as $field) {
-                    if(isset($input[$field])){
-                        $image_ids = explode(',',$input[$field]);
-                        if(count($image_ids)>4){
-                            $image_ids = array_slice($image_ids,0,4);
-                        }
-                        $list = $this->log_image_model->get_many_by([
-                            'id'		=> $image_ids,
-                            'user_id'	=> $user_id,
-                        ]);
-                        if($list && count($list)==count($image_ids)){
-                            $pic[$field] = [];
-                            foreach($list as $k => $v){
-                                $pic[$field][] = $v->url;
-                            }
-                        }
-                    }
-                else{
-                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
-                    }
-                }
-                $param['enterprise_registration'] = isset($pic)?json_encode($pic):'';
+ //                //銀行存簿
+ //                $file_fields 	 = ['passbook_image'];
+ //                foreach ($file_fields as $field) {
+ //                    if(isset($input[$field])){
+ //                        $image_ids = explode(',',$input[$field]);
+ //                        if(count($image_ids)>4){
+ //                            $image_ids = array_slice($image_ids,0,4);
+ //                        }
+ //                        $list = $this->log_image_model->get_many_by([
+ //                            'id'		=> $image_ids,
+ //                            'user_id'	=> $user_id,
+ //                        ]);
+ //                        if($list && count($list)==count($image_ids)){
+ //                            $file_fields_image[$field] = [];
+ //                            foreach ($list as $k => $v) {
+ //                                $file_fields_image[$field][] = $v->url;
+ //                            }
+ //                        }
+ //                    }
+ //                    else{
+ //                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+ //                    }
+ //                }
 
-            }
+ //                //銀行存簿
+ //                $bankbook_images = [];
+ //                $file_fields 	 = ['bankbook_image'];
+ //                foreach ($file_fields as $field) {
+ //                    if(isset($input[$field])){
+ //                        $image_ids = explode(',',$input[$field]);
+ //                        if(count($image_ids)>4){
+ //                            $image_ids = array_slice($image_ids,0,4);
+ //                        }
+ //                        $list = $this->log_image_model->get_many_by([
+ //                            'id'		=> $image_ids,
+ //                            'user_id'	=> $user_id,
+ //                        ]);
+ //                        if($list && count($list)==count($image_ids)){
+ //                            $bankbook_images[$field] = [];
+ //                            foreach($list as $k => $v){
+ //                                $bankbook_images[$field][] = $v->url;
+ //                            }
+ //                        }
+ //                    }
+ //                    else{
+ //                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+ //                    }
+ //                }
+ //                $bankbook_images = json_encode($bankbook_images);
 
-            if($param['cooperation']==2){
-                $param = $this->cooperation_post($param,$file_fields_image['passbook_image']);
-            }
-            else{
-                $param['cooperation_content'] = json_encode($file_fields_image['passbook_image']);
-            }
+ //                //營利事業登記證
+ //                $pic = [];
+ //                $file_fields 	= ['enterprise_registration_image'];
+ //                foreach ($file_fields as $field) {
+ //                    if(isset($input[$field])){
+ //                        $image_ids = explode(',',$input[$field]);
+ //                        if(count($image_ids)>4){
+ //                            $image_ids = array_slice($image_ids,0,4);
+ //                        }
+ //                        $list = $this->log_image_model->get_many_by([
+ //                            'id'		=> $image_ids,
+ //                            'user_id'	=> $user_id,
+ //                        ]);
+ //                        if($list && count($list)==count($image_ids)){
+ //                            $pic[$field] = [];
+ //                            foreach($list as $k => $v){
+ //                                $pic[$field][] = $v->url;
+ //                            }
+ //                        }
+ //                    }
+ //                else{
+ //                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+ //                    }
+ //                }
+ //                $param['enterprise_registration'] = isset($pic)?json_encode($pic):'';
 
-			$content=[];
-			$content['transaction_password']=$this->user_info->transaction_password;
-			$content['bank_code']=$bank_parm['bank_code'];
-			$content['branch_code']=$bank_parm['branch_code'];
-			$content['bank_account']=$bank_parm['bank_account'];
-			$content['email']=$this->user_info->email;
-			$content['bankbook_images']=urlencode($bankbook_images);
-			$param['sign_video']=json_encode($content);
+ //            }
 
-			$exist = $this -> judicial_person_model->get_by(array(
-				'user_id'         => $user_id,
-				'tax_id'          => $param['tax_id'],
-				'status'          => 2
-			));
+ //            if($param['cooperation']==2){
+ //                $param = $this->cooperation_post($param,$file_fields_image['passbook_image']);
+ //            }
+ //            else{
+ //                $param['cooperation_content'] = json_encode($file_fields_image['passbook_image']);
+ //            }
 
-			if($exist){
-				$param['status'] = 3;
-				$rs = $this->judicial_person_model -> update($exist->id,$param);
-			}else{
-				$param['status'] = 3;
-				$rs = $this->judicial_person_model -> insert($param);
-			}
+	// 		$content=[];
+	// 		$content['transaction_password']=$this->user_info->transaction_password;
+	// 		$content['bank_code']=$bank_parm['bank_code'];
+	// 		$content['branch_code']=$bank_parm['branch_code'];
+	// 		$content['bank_account']=$bank_parm['bank_account'];
+	// 		$content['email']=$this->user_info->email;
+	// 		$content['bankbook_images']=urlencode($bankbook_images);
+	// 		$param['sign_video']=json_encode($content);
 
-			if($rs){
-				$this->response(array('result' => 'SUCCESS'));
-			}else{
-				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
-			}
+	// 		$judicial_data = [
+	// 		    'meeting_date' => $input['meeting_date']
+ //            ];
+ //            $param['judicial_data'] = json_encode($judicial_data);
 
-		}
+	// 		$exist = $this -> judicial_person_model->get_by(array(
+	// 			'user_id'         => $user_id,
+	// 			'tax_id'          => $param['tax_id'],
+	// 			'status'          => 2
+	// 		));
 
-		$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-    }
-	
+	// 		if($exist){
+	// 			$param['status'] = 3;
+	// 			$rs = $this->judicial_person_model -> update($exist->id,$param);
+	// 		}else{
+	// 			$param['status'] = 3;
+	// 			$rs = $this->judicial_person_model -> insert($param);
+	// 		}
+
+	// 		if($rs){
+	// 			$this->response(array('result' => 'SUCCESS'));
+	// 		}else{
+	// 			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+	// 		}
+
+	// 	}
+
+	// 	$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+ //    }
+
+    // 合併至 User - login_post()
 	/**
      * @api {post} /v2/judicialperson/login 法人會員 用戶登入
 	 * @apiVersion 0.2.0
@@ -396,7 +410,7 @@ class Judicialperson extends REST_Controller {
      *      "data": {
      *      	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE",
      *      	"expiry_time": "1522673418",
-	 * 			"first_time": 1		
+	 * 			"first_time": 1
      *      }
      *    }
 	 * @apiUse InputError
@@ -417,101 +431,102 @@ class Judicialperson extends REST_Controller {
      *     }
      *
      */
-	public function login_post(){
+	// public function login_post()
+ //    {
 
-		$input = $this->input->post(NULL, TRUE);
-        $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
-        $location   = isset($input['location'])?trim($input['location']):'';
-        $fields 	= ['tax_id','phone','password'];
-        foreach ($fields as $field) {
-            if (empty($input[$field])) {
-				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-            }
-        }
-		
-		if(strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password'])> PASSWORD_LENGTH_MAX ){
-			$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
-		}
-		
-		$investor	= isset($input['investor'])?$input['investor']:1;
-		$user_info 	= $this->user_model->get_by('phone', $input['phone']);
-		if($user_info){
-            //判斷鎖定狀態並解除
-            $this->load->library('user_lib');
-            $unblock_status = $this->user_lib->unblock_user($user_info->id);
-            if($unblock_status){
-                $user_info->block_status = 0;
-            }
-            if($user_info->block_status == 3) {
-                $this->response(array('result' => 'ERROR','error' => SYSTEM_BLOCK_USER ));
-            } elseif ($user_info->block_status == 2) {
-                $this->response(array('result' => 'ERROR','error' => TEMP_BLOCK_USER ));
-            }
+	// 	$input = $this->input->post(NULL, TRUE);
+ //        $device_id  = isset($input['device_id']) && $input['device_id'] ?$input['device_id']:null;
+ //        $location   = isset($input['location'])?trim($input['location']):'';
+ //        $fields 	= ['tax_id','phone','password'];
+ //        foreach ($fields as $field) {
+ //            if (empty($input[$field])) {
+	// 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+ //            }
+ //        }
 
-		    if(sha1($input['password'])==$user_info->password){
-				
-				if($user_info->block_status != 0){
-					$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
-				}
+	// 	if(strlen($input['password']) < PASSWORD_LENGTH || strlen($input['password'])> PASSWORD_LENGTH_MAX ){
+	// 		$this->response(array('result' => 'ERROR','error' => PASSWORD_LENGTH_ERROR ));
+	// 	}
 
-				$company_info 	= $this->user_model->get_by('phone', $input['tax_id']);
-				if($company_info){
-					$judicial_agent = $this->judicial_agent_model->get_by(array(
-						'company_user_id'	=> $company_info->id,
-						'user_id'			=> $user_info->id,
-						'status'			=> 1,
-					));
-					if($judicial_agent){
-						$first_time = 0;
-						if($company_info->investor_status==0){
-							$company_info->investor_status = 1;
-							$this->user_model->update($company_info->id,array('investor_status'=>1));
-							$first_time = 1;
-						}
+	// 	$investor	= isset($input['investor'])?$input['investor']:1;
+	// 	$user_info 	= $this->user_model->get_by('phone', $input['phone']);
+	// 	if($user_info){
+ //            //判斷鎖定狀態並解除
+ //            $this->load->library('user_lib');
+ //            $unblock_status = $this->user_lib->unblock_user($user_info->id);
+ //            if($unblock_status){
+ //                $user_info->block_status = 0;
+ //            }
+ //            if($user_info->block_status == 3) {
+ //                $this->response(array('result' => 'ERROR','error' => SYSTEM_BLOCK_USER ));
+ //            } elseif ($user_info->block_status == 2) {
+ //                $this->response(array('result' => 'ERROR','error' => TEMP_BLOCK_USER ));
+ //            }
 
-						$token = (object) [
-							'id'			=> $company_info->id,
-							'phone'			=> $company_info->phone,
-							'auth_otp'		=> get_rand_token(),
-							'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
-							'investor'		=> $investor,
-							'company'		=> 1,
-							'incharge'		=> $judicial_agent->incharge,
-							'agent'			=> $user_info->id,
-						];
-						
-						$request_token 		= AUTHORIZATION::generateUserToken($token);
-						$this->user_model->update($company_info->id,array(
-							'auth_otp'	=> $token->auth_otp
-						));
-						$this->insert_login_log($input['tax_id'],$investor,1,$user_info->id,$device_id,$location);
-						if($first_time){
-							$this->load->library('notification_lib'); 
-							$this->notification_lib->first_login($user_info->id,$investor);
-						}
-						$this->response(array('result' => 'SUCCESS', 'data' => array( 
-							'token' 		=> $request_token,
-							'expiry_time'	=> $token->expiry_time,
-							'first_time'	=> $first_time
-						)));
-					}
-				}
-				$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id,$device_id,$location);
-				$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
-			}
-            $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id,$location);
-            $this->response([
-                'result' => 'ERROR',
-                'error'  => PASSWORD_ERROR,
-                'data'   => [
-                    'remind_count' => $remind_count,
-                ]
-            ]);
-		}
-		$this->insert_login_log($input['phone'],$investor,0,0,$device_id,$location);
-		$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
-	}
-	
+	// 	    if(sha1($input['password'])==$user_info->password){
+
+	// 			if($user_info->block_status != 0){
+	// 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
+	// 			}
+
+	// 			$company_info 	= $this->user_model->get_by('phone', $input['tax_id']);
+	// 			if($company_info){
+	// 				$judicial_agent = $this->judicial_agent_model->get_by(array(
+	// 					'company_user_id'	=> $company_info->id,
+	// 					'user_id'			=> $user_info->id,
+	// 					'status'			=> 1,
+	// 				));
+	// 				if($judicial_agent){
+	// 					$first_time = 0;
+	// 					if($company_info->investor_status==0){
+	// 						$company_info->investor_status = 1;
+	// 						$this->user_model->update($company_info->id,array('investor_status'=>1));
+	// 						$first_time = 1;
+	// 					}
+
+	// 					$token = (object) [
+	// 						'id'			=> $company_info->id,
+	// 						'phone'			=> $company_info->phone,
+	// 						'auth_otp'		=> get_rand_token(),
+	// 						'expiry_time'	=> time() + REQUEST_TOKEN_EXPIRY,
+	// 						'investor'		=> $investor,
+	// 						'company'		=> 1,
+	// 						'incharge'		=> $judicial_agent->incharge,
+	// 						'agent'			=> $user_info->id,
+	// 					];
+
+	// 					$request_token 		= AUTHORIZATION::generateUserToken($token);
+	// 					$this->user_model->update($company_info->id,array(
+	// 						'auth_otp'	=> $token->auth_otp
+	// 					));
+	// 					$this->insert_login_log($input['tax_id'],$investor,1,$user_info->id,$device_id,$location);
+	// 					if($first_time){
+	// 						$this->load->library('notification_lib');
+	// 						$this->notification_lib->first_login($user_info->id,$investor);
+	// 					}
+	// 					$this->response(array('result' => 'SUCCESS', 'data' => array(
+	// 						'token' 		=> $request_token,
+	// 						'expiry_time'	=> $token->expiry_time,
+	// 						'first_time'	=> $first_time
+	// 					)));
+	// 				}
+	// 			}
+	// 			$this->insert_login_log($input['tax_id'],$investor,0,$user_info->id,$device_id,$location);
+	// 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
+	// 		}
+ //            $remind_count = $this->insert_login_log($input['phone'],$investor,0,$user_info->id,$device_id,$location);
+ //            $this->response([
+ //                'result' => 'ERROR',
+ //                'error'  => PASSWORD_ERROR,
+ //                'data'   => [
+ //                    'remind_count' => $remind_count,
+ //                ]
+ //            ]);
+	// 	}
+	// 	$this->insert_login_log($input['phone'],$investor,0,0,$device_id,$location);
+	// 	$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
+	// }
+
 	/**
      * @api {post} /v2/judicialperson/agent 法人代理 新增代理人
 	 * @apiVersion 0.2.0
@@ -521,7 +536,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 *
      * @apiParam {String{10}} id_number 代理人身分證字號
-	 * 
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -575,13 +590,13 @@ class Judicialperson extends REST_Controller {
 		//檢查身分證字號
 		$id_number_user = $this->user_model->get_by(array('id_number'=>$input['id_number']));
 		if($id_number_user && $id_number_user->id != $this->user_info->agent){
-			
+
 			$judicial_agent = $this->judicial_agent_model->get_by(array(
 				'company_user_id'	=> $this->user_info->id,
 				'user_id'			=> $id_number_user->id,
 				'incharge'			=> 0,
 			));
-			
+
 			if($judicial_agent){
 				if($judicial_agent->status==1){
 					$this->response(array('result' => 'ERROR','error' => AGENT_EXIST ));
@@ -596,18 +611,18 @@ class Judicialperson extends REST_Controller {
 				);
 				$rs = $this->judicial_agent_model->insert($param);
 			}
-			
+
 			if($rs){
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
-		
+
 		}else{
 			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
 		}
     }
-	
+
 	/**
      * @api {delete} /v2/judicialperson/agent/:user_id 法人代理 刪除代理人
 	 * @apiVersion 0.2.0
@@ -617,7 +632,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 *
      * @apiParam {String} user_id 代理人UserID
-	 * 
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -642,22 +657,22 @@ class Judicialperson extends REST_Controller {
 	public function agent_delete($user_id=0)
     {
 		$this->not_incharge();
-		
+
 		if (empty($user_id) && intval($user_id)){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
-		
+
 		//檢查身分證字號
 		$user_info = $this->user_model->get(intval($user_id));
 		if($user_info && $user_info->id != $this->user_info->agent){
-			
+
 			$judicial_agent = $this->judicial_agent_model->get_by(array(
 				'company_user_id'	=> $this->user_info->id,
 				'user_id'			=> $user_info->id,
 				'status'			=> 1,
 				'incharge'			=> 0,
 			));
-			
+
 			if($judicial_agent){
 				$rs = $this->judicial_agent_model->update($judicial_agent->id,array('status'=>0));
 				if($rs){
@@ -669,7 +684,7 @@ class Judicialperson extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {get} /v2/judicialperson/agent 法人代理 代理人名單
 	 * @apiVersion 0.2.0
@@ -729,7 +744,7 @@ class Judicialperson extends REST_Controller {
 		$data['list'] = $list;
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
-	
+
 	/**
      * @api {post} /v2/judicialperson/cooperation 法人經銷 申請為經銷商
 	 * @apiVersion 0.2.0
@@ -743,7 +758,7 @@ class Judicialperson extends REST_Controller {
 	 * @apiParam {Number} store_image 店內正面照 ( 圖片ID )
 	 * @apiParam {Number} front_image 銀行流水帳正面 ( 圖片ID )
 	 * @apiParam {String} passbook_image 銀行流水帳內頁 ( 圖片IDs 以逗號隔開，最多三個)
-	 * 
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -780,7 +795,7 @@ class Judicialperson extends REST_Controller {
             if($judicial_person && $judicial_person->cooperation != 0){
                 $this->response(array('result' => 'ERROR','error' => COOPERATION_EXIST ));
             }
-            $content = json_decode($judicial_person->cooperation_content);
+            $content['passbook_image'] = json_decode($judicial_person->cooperation_content);
         }
 
         $fields 	= ['business_model','selling_type'];
@@ -821,13 +836,12 @@ class Judicialperson extends REST_Controller {
             array_push($file_fields,'store_sign_image');
         }
 
-        $content = [];
         isset($input['front_image'])&&$input['front_image']?array_push($file_fields,'front_image'):'';
         if($passbook_image){
-            $content['passbook_dealer_image'] = $content['passbook_image'] = $passbook_image;
-        }else{
-            $content['passbook_image'] = $judicial_person->cooperation_content;
-            isset($input['passbook_image']) ? $content['passbook_dealer_image'] = $input['passbook_image'] : '';
+            $content['passbook_image'] = $passbook_image;
+        }
+        if(isset($input['passbook_image']) && !empty($input['passbook_image'])){
+            $content['passbook_dealer_image'] = $input['passbook_image'];
         }
 
         //上傳檔案欄位
@@ -891,7 +905,7 @@ class Judicialperson extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 		}
     }
-	
+
 	/**
      * @api {get} /v2/judicialperson/cooperation 法人經銷 查詢經銷申請
 	 * @apiVersion 0.2.0
@@ -899,7 +913,7 @@ class Judicialperson extends REST_Controller {
      * @apiGroup Judicialperson
 	 * @apiDescription 只有負責人登入法人帳號情況下可操作。
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * 
+	 *
      * @apiSuccess {Object} result SUCCESS
 	 * ->cancel@apiSuccess {String} server_ip 綁定伺服器IP
 	 * @apiSuccess {String} remark 備註
@@ -935,7 +949,7 @@ class Judicialperson extends REST_Controller {
 		$judicial_person = $this->judicial_person_model->get_by(array(
 			'company_user_id' 	=> $company_user_id,
 		));
-		
+
 		if($judicial_person){
             $data = array(
                 'cooperation_contact'	 => $judicial_person->cooperation_contact,
@@ -955,9 +969,10 @@ class Judicialperson extends REST_Controller {
                 }
 		    }
 		}else{
-			$this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
+//			$this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
+            $this->response(array('result' => 'SUCCESS','data' => [] ));
 		}
-		
+
 		$this->response(array('result' => 'SUCCESS','data' => $data ));
     }
 
@@ -995,7 +1010,7 @@ class Judicialperson extends REST_Controller {
         }
         $this->response(array('result' => 'ERROR','error' => COOPERATION_NOT_EXIST ));
 	}
-	
+
 	/**
      * @api {post} /v2/judicialperson/verifymedia 法人經銷 對保影片
      * @apiVersion 0.2.0
@@ -1061,6 +1076,70 @@ class Judicialperson extends REST_Controller {
 		}
 	}
 
+	/**
+   * @api {post} /v2/judicialperson/verify_governmentauthorities_post 法人經銷 對保影片
+   * @apiVersion 0.2.0
+   * @apiName PostJudicialpersonVerifyGovernmentauthoritiesPost
+   * @apiGroup Judicialperson
+   * @apiHeader {String} request_token 登入後取得的 Request Token
+   *
+   * @apiSuccess {Object} result SUCCESS
+   * @apiSuccessExample {Object} SUCCESS
+   *    {
+   *      "result": "SUCCESS"
+   *    }
+	 *
+   * @apiUse InputError
+   * @apiUse InsertError
+   * @apiUse TokenError
+   * @apiUse BlockUser
+   * @apiUse IsCompany
+   *
+   */
+	public function verify_governmentauthorities_post()
+	{
+		$input 		= $this->input->post(NULL, TRUE);
+		$user_id 	= $this->user_info->id;
+		$image_id = isset($input['image_id']) ? $input['image_id']: '';
+
+		// 檢查輸入
+		if($image_id == '' || !isset($user_id)){
+			$this->response(['result' => 'ERROR','error' => INSERT_ERROR ]);exit;
+		}
+
+		// 檢查是否存在歸戶資料
+		$this->load->model('user/judicial_person_model');
+		$judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
+		if(!$judicial_person_info){
+			$this->response(array('result' => 'ERROR','error' => USER_NOT_EXIST ));exit;
+		}
+
+		// 檢查是否通過變卡驗證
+		$this->load->model('user/user_certification_model');
+		$certification_info = $this->user_certification_model->get_by(['user_id' => $judicial_person_info->company_user_id,'certification_id' => 1007,'investor' => 0]);
+		if($certification_info){
+			if($certification_info->status != 1){
+				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));exit;
+			}
+		}else{
+			$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_EXIST ));exit;
+		}
+
+		// 檢查圖片是否存在
+		$this->load->model('log/log_image_model');
+		$image_info = $this->log_image_model->get_by(['id'=>$image_id]);
+		if(!$image_info || !isset($image_info->url)){
+			$this->response(array('result' => 'ERROR','error' => PICTURE_NOT_EXIST ));exit;
+		}
+
+		// 更新歸戶資料，加入對保自拍圖片
+		$data_content = isset($judicial_person_info->sign_video) && json_decode($judicial_person_info->sign_video,true) ? json_decode($judicial_person_info->sign_video,true) : [];
+		$data_content['image_url'] = $image_info->url;
+		$this->judicial_person_model->update_by(['company_user_id' => $user_id],['sign_video' => json_encode($data_content), 'status' => 0]);
+
+		$this->response(array('result' => 'SUCCESS'));
+	}
+
 	private function insert_login_log($account='',$investor=0,$status=0,$user_id=0,$device_id=null,$location=''){
         $this->load->model('log/log_userlogin_model');
         $this->load->library('user_agent');
@@ -1079,7 +1158,7 @@ class Judicialperson extends REST_Controller {
 
         return $remind_count;
 	}
-	
+
 	private function not_support_company(){
 		if($this->user_info->company != 0 ){
 			$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
@@ -1090,10 +1169,10 @@ class Judicialperson extends REST_Controller {
 		if($this->user_info->company != 1 ){
 			$this->response(array('result' => 'ERROR','error' => NOT_COMPANY ));
 		}
-		
-		if($this->user_info->incharge != 1 ){
+
+		if($this->user_info->incharge != 1 && $this->user_info->name != null){
 			$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
 		}
 	}
-	
+
 }

@@ -1,0 +1,94 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgba(204, 204, 204);
+  font: 12px '微軟正黑體';
+}
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.page {
+  width: 21cm;
+  min-height: 29.7cm;
+  padding: 10px;
+  margin: 1cm auto;
+  border: 1px #d3d3d3 solid;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.subpage {
+  padding: 1px;
+  border: 5px white solid;
+  outline: 1px white solid;
+}
+
+.table {
+  width: 100%;
+  border: 2px solid gray;
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+
+.th {
+  font: 16px '微軟正黑體';
+  font-weight: bold;
+}
+
+.source {
+  width: 13%;
+}
+
+.field_name {
+  width: 30%;
+}
+
+.content {
+  width: 250px;
+}
+
+.verified {
+  width: 5%;
+}
+
+.reason {
+  width: 250px;
+}
+
+.edit {
+  min-width: 70px;
+}
+
+.title {
+  font: 14px '微軟正黑體';
+  font-weight: bold;
+}
+
+.table-input {
+  width: 100%;
+  border: 0px;
+}
+
+.input-width {
+  width: 100%;
+}
+
+.input-center {
+  text-align: center;
+}
+
+.bold-bottom-border {
+  border-bottom: 2px solid gray;
+}
+
+.bold-right-border {
+  border-right: 2px solid gray;
+}
+
+.white-border {
+  border-top-color: white;
+  border-bottom-color: white;
+  border-left-color: white;
+  border-right-color: white;
+}

@@ -38,7 +38,28 @@
 									</div>
 									<div class="form-group">
 										<label>交件方式</label>
-										<p class="form-control-static"><?= isset($content['return_type']) && $content['return_type'] ? '電子郵件' : '紙本' ?></p>
+										<p class="form-control-static"><?php
+                                        if(defined('content') && defined('certification') &&isset($content['return_type'])){
+                                            switch($certification['id']){
+                            					case 0:
+                            						$type = '郵局申請(紙本)';
+                            					    break;
+                                                case 1:
+                            						$type = '自然人憑證';
+                            					    break;
+                                                case 2:
+                            						$type = '投資人行動網';
+                            					    break;
+                                                case 3:
+                            						$type = '臨櫃申請(紙本)';
+                            					    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }else{
+                                            $type = '';
+                                        }
+                                        ! empty($type) ? $type : '' ?></p>
 									</div>
                                         <? if(in_array($content['return_type'],[1,2])){?>
                                             <div class="form-group">

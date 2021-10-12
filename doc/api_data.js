@@ -2246,13 +2246,6 @@ define({
                             "optional": false,
                             "field": "result",
                             "description": "<p>SUCCESS</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "governmentauthorities_image",
-                            "description": "<p>事業變更登記表 ( 圖片IDs 以逗號隔開，最多15個)</p>"
                         }
                     ]
                 },
@@ -2334,6 +2327,1106 @@ define({
                     "url": "/api/v2/certification/governmentauthorities"
                 }
             ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/charter",
+            "title": "認證 公司章程(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationCharter",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"charter\",\n" +
+                            "        \"certification_id\": 1008,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/charter"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/registerofmembers",
+            "title": "認證 股東名冊(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationRegisterofMembers",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"registerofmembers\",\n" +
+                            "        \"certification_id\": 1009,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/registerofmembers"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/mainproductstatus",
+            "title": "認證 主要商品銷售情況表(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationMainProductStatus",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"mainproductstatus\",\n" +
+                            "        \"certification_id\": 1010,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/mainproductstatus"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/startupfunds",
+            "title": "認證 創業啟動金(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationStartupFunds",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"startupfunds\",\n" +
+                            "        \"certification_id\": 1011,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/startupfunds"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/business_plan",
+            "title": "認證 商業企劃書(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationBusinessPlan",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"business_plan\",\n" +
+                            "        \"certification_id\": 1012,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/business_plan"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/verification",
+            "title": "認證 驗資基金證明(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationVerification",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"verification\",\n" +
+                            "        \"certification_id\": 1013,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/verification"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/condensedbalancesheet",
+            "title": "認證 簡明資產負債表認證(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationCondensedBalanceSheet",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"condensedbalancesheet\",\n" +
+                            "        \"certification_id\": 1014,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/condensedbalancesheet"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/condensedincomestatement",
+            "title": "認證 簡明損益表認證(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationCondensedIncomeStatement",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"condensedincomestatement\",\n" +
+                            "        \"certification_id\": 1015,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/condensedincomestatement"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/purchasesalesvendorlist",
+            "title": "認證 進銷貨廠商明細表(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationPurchaseSalesVendorList",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"purchasesalesvendorlist\",\n" +
+                            "        \"certification_id\": 1016,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/purchasesalesvendorlist"
+                }
+            ]
+        },{
+            "type": "get",
+            "url": "/V2/certification/employeeinsurancelist",
+            "title": "認證 員工投保人數資料(法人)",
+            "version": "0.2.0",
+            "name": "GetCertificationEmployeeinsuranceList",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"employeeinsurancelist\",\n" +
+                            "        \"certification_id\": 1017,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/employeeinsurancelist"
+                }
+            ]
         },
         {
             "type": "get",
@@ -2364,13 +3457,6 @@ define({
                             "optional": false,
                             "field": "result",
                             "description": "<p>SUCCESS</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "car_sales_image",
-                            "description": "<p>庫存車銷售檔 ( 圖片IDs 以逗號隔開，最多15個)</p>"
                         }
                     ]
                 },
@@ -2728,7 +3814,133 @@ define({
                             "optional": false,
                             "field": "income_statement_image",
                             "description": "<p>財稅簽資料表(損益表)  ( 圖片IDs 以逗號隔開，最多6個)</p>"
-                        }
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "nearly_a_year_image_id",
+                            "description": "<p>近一年損益表圖片ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "AnnualIncomeYear1",
+                            "description": "<p>近一年損益表結算日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompName1",
+                            "description": "<p>近一年損益表營利事業名稱</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompId1",
+                            "description": "<p>近一年損益表營利事業統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "IndustryCode1",
+                            "description": "<p>近一年損益表營業收入分類標準代號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "AnnualIncome1",
+                            "description": "<p>近一年損益表營收</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "nearly_two_year_image_id",
+                            "description": "<p>近二年損益表圖片ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "AnnualIncomeYear2",
+                            "description": "<p>近二年損益表結算日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompName2",
+                            "description": "<p>近二年損益表營利事業名稱</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompId2",
+                            "description": "<p>近二年損益表營利事業統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "IndustryCode2",
+                            "description": "<p>近二年損益表營業收入分類標準代號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "AnnualIncome2",
+                            "description": "<p>近二年損益表營收</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "nearly_three_year_image_id",
+                            "description": "<p>近三年損益表圖片ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "AnnualIncomeYear3",
+                            "description": "<p>近三年損益表結算日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompName3",
+                            "description": "<p>近三年損益表營利事業名稱</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompId3",
+                            "description": "<p>近三年損益表營利事業統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "IndustryCode3",
+                            "description": "<p>近三年損益表營業收入分類標準代號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "AnnualIncome3",
+                            "description": "<p>近三年損益表營收</p>"
+                        },
                     ]
                 }
             },
@@ -2957,7 +4169,7 @@ define({
             "header": {
                 "fields": {
                     "Header": [
-                        {
+                                                                      {
                             "group": "Header",
                             "type": "String",
                             "optional": false,
@@ -3073,7 +4285,7 @@ define({
         },
         {
             "type": "post",
-            "url": "/post/certification/governmentauthorities",
+            "url": "/V2/post/certification/governmentauthorities",
             "title": "認證 事業變更登記表(法人)",
             "version": "0.2.0",
             "name": "PostCertificationGovernmentAuthorities",
@@ -3100,7 +4312,146 @@ define({
                             "optional": false,
                             "field": "governmentauthorities_image",
                             "description": "<p>事業變更登記表 ( 圖片IDs 以逗號隔開，最多15個)</p>"
-                        }
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompId",
+                            "description": "<p>公司統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompName",
+                            "description": "<p>公司名稱</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompCapital",
+                            "description": "<p>實收資本總額</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompRegAddress",
+                            "description": "<p>公司所在地</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "PrName",
+                            "description": "<p>代表公司負責人</p>"
+                        },
+						{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "PrincipalId",
+                            "description": "<p>負責人統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorAName",
+                            "description": "<p>董監事A姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorAId",
+                            "description": "<p>董監事A統編</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorBName",
+                            "description": "<p>董監事B姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorBId",
+                            "description": "<p>董監事B統編</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorCName",
+                            "description": "<p>董監事C姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorCId",
+                            "description": "<p>董監事C統編</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorDName",
+                            "description": "<p>董監事D姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorDId",
+                            "description": "<p>董監事D統編</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorEName",
+                            "description": "<p>董監事E姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorEId",
+                            "description": "<p>董監事E統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorFName",
+                            "description": "<p>董監事F姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorFId",
+                            "description": "<p>董監事F統編</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorGName",
+                            "description": "<p>董監事G姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorGId",
+                            "description": "<p>董監事G統編</p>"
+                        },
                     ]
                 }
             },
@@ -3184,6 +4535,1459 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/certification/governmentauthorities"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/charter",
+            "title": "認證 公司章程(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationCharter",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "charter_image",
+                            "description": "<p>公司章程 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/charter"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/registerofmembers",
+            "title": "認證 股東名冊(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationRegisterofMembers",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "registerofmembers_image",
+                            "description": "<p>股東名冊 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/registerofmembers"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/mainproductstatus",
+            "title": "認證 主要商品銷售情況表(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationMainProductStatus",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "mainproductstatus_image",
+                            "description": "<p>主要商品銷售情況表 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/mainproductstatus"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/startupfunds",
+            "title": "認證 創業啟動金(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationStartupFunds",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "startupfunds_image",
+                            "description": "<p>創業啟動金 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/startupfunds"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/business_plan",
+            "title": "認證 商業企劃書(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationBusinessPlan",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "business_plan_image",
+                            "description": "<p>商業企劃書 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/business_plan"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/verification",
+            "title": "認證 驗資基金證明(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationVerification",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "Verification_image",
+                            "description": "<p>驗資基金證明 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/Verification"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/condensedbalancesheet",
+            "title": "認證 簡明資產負債表認證(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationCondensedBalanceSheet",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "condensedbalancesheet",
+                            "description": "<p>簡明資產負債表認證 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "other_income",
+                            "description": "<p>其他收入</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "restaurant",
+                            "description": "<p>餐飲支出</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "transportation",
+                            "description": "<p>交通支出</p>"
+                        },
+						{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "telegraph_expense",
+                            "description": "<p>網路電信支出</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "entertainment",
+                            "description": "<p>娛樂支出</p>"
+                        },
+						{
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "rent_expenses",
+			              "description": "<p>房租家庭支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "educational_expenses",
+			              "description": "<p>教育支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "insurance_expenses",
+			              "description": "<p>保險支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "social_expenses",
+			              "description": "<p>社交支出</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "long_assure_monthly_payment",
+			              "description": "<p>房貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "mid_assure_monthly_payment",
+			              "description": "<p>車貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "credit_monthly_payment",
+			              "description": "<p>信貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "student_loans_monthly_payment",
+			              "description": "<p>助學貸月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "credit_card_monthly_payment",
+			              "description": "<p>信用卡月繳</p>"
+			            },
+			  		  {
+			              "group": "Parameter",
+			              "type": "Number",
+			              "optional": false,
+			              "field": "other_private_borrowing",
+			              "description": "<p>民間借貸月付</p>"
+			            },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "other_expense",
+                            "description": "<p>其他支出</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "creditcard_image",
+                            "description": "<p>信用卡帳單照 ( 圖片ID )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "passbook_image",
+                            "description": "<p>存摺內頁照  ( 圖片IDs 以逗號隔開，最多3張)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "bill_phone_image",
+                            "description": "<p>電話帳單  ( 圖片IDs 以逗號隔開，最多3張)</p>"
+                        }
+                    ]
+                }
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/condensedbalancesheet"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/condensedincomestatement",
+            "title": "認證 簡明損益表認證(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationCondensedIncomeStatement",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "condensedincomestatement_image",
+                            "description": "<p>簡明損益表認證 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/condensedincomestatement"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/post/certification/purchasesalesvendorlist",
+            "title": "認證 進銷貨廠商明細表(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationPurchaseSalesVendorList",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "purchasesalesvendorlist_image",
+                            "description": "<p>進銷貨廠商明細表 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/purchasesalesvendorlist"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/V2/post/certification/employeeinsurancelist",
+            "title": "認證 員工投保人數資料(法人)",
+            "version": "0.2.0",
+            "name": "PostCertificationEmployeeinsuranceList",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "employeeinsurancelist_image",
+                            "description": "<p>員工投保人數資料 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "range",
+                            "description": "<p>計費年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompName",
+                            "description": "<p>單位名稱</p>"
+                        },
+						{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "ReportTime",
+                            "description": "<p>印表日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM1",
+                            "description": "<p>公司近 01 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured1",
+                            "description": "<p>公司近 01 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM2",
+                            "description": "<p>公司近 02 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured2",
+                            "description": "<p>公司近 02 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM3",
+                            "description": "<p>公司近 03 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured3",
+                            "description": "<p>公司近 03 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM4",
+                            "description": "<p>公司近 04 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured4",
+                            "description": "<p>公司近 04 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM5",
+                            "description": "<p>公司近 05 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured5",
+                            "description": "<p>公司近 05 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM6",
+                            "description": "<p>公司近 06 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured6",
+                            "description": "<p>公司近 06 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM7",
+                            "description": "<p>公司近 07 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured7",
+                            "description": "<p>公司近 07 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM8",
+                            "description": "<p>公司近 08 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured8",
+                            "description": "<p>公司近 08 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM9",
+                            "description": "<p>公司近 09 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured9",
+                            "description": "<p>公司近 09 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM10",
+                            "description": "<p>公司近 10 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured10",
+                            "description": "<p>公司近 10 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM11",
+                            "description": "<p>公司近 11 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured11",
+                            "description": "<p>公司近 11 個月投保人數-人數</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsuredYM12",
+                            "description": "<p>公司近 12 個月投保人數-年月</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "NumOfInsured12",
+                            "description": "<p>公司近 12 個月投保人數-人數</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\"\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/employeeinsurancelist"
                 }
             ]
         },
@@ -3308,6 +6112,859 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/certification/salesdetail"
+                }
+            ]
+        },{
+            "type": "post",
+            "url": "/V2/certification/profile",
+            "title": "認證 個人資料表",
+            "version": "0.2.0",
+            "name": "PostCertificationProfile",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrCurAddrZip",
+                            "description": "<p>負責人現居地址-郵遞區號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrCurAddrZipName",
+                            "description": "<p>負責人現居地址-名稱</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrCurlAddress",
+                            "description": "<p>負責人現居地址-地址</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrTelAreaCode",
+                            "description": "<p>負責人聯絡電話-區碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrTelNo",
+                            "description": "<p>負責人聯絡電話-電話號碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrTelExt",
+                            "description": "<p>負責人聯絡電話-分機碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrMobileNo",
+                            "description": "<p>負責人連絡行動電話</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "RealPr",
+                            "description": "<p>本公司實際負責人 1:實際負責人 2:配偶 3:甲保證人  4:乙保證人</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "IsPrSpouseGu",
+                            "description": "<p>配偶是否擔任本案保證人 1:是 0:否</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrStartYear",
+                            "description": "<p>負責人從事本行業年度 格式:YYYY</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "PrEduLevel",
+                            "description": "<p>負責人學歷 A:國小 B:國中 C:高中職 D:專科 E: 大學 F:碩士 G:博士 H:無</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "OthRealPrRelWithPr",
+                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 與借戶負責人之關係 A:配偶 B:血親 C:姻親 D:股東 E:朋 友 F:本人 G:其他 H:與經營有關之借 戶職員</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "OthRealPrName",
+                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "OthRealPrId",
+                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 身分證字號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "OthRealPrBirth",
+                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 出生日期 格式:YYYYMMDD</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "OthRealPrStartYear",
+                            "description": "<p>實際負責(經營)人_其他實際負責經營人_ 從事本行業年度 格式:YYYY</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "OthRealPrTitle",
+                            "description": "<p>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "OthRealPrSHRatio",
+                            "description": "<p>實際負責(經營)人_其他實際負責經營人_持股比率%</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneRelWithPr",
+                            "description": "<p>保證人甲_與借戶負責人之關係 A:配偶 B:血親 C:姻親 D:股東 E:朋 友 G:其他 H:與經營有關之借戶職員</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneCompany",
+                            "description": "<p>保證人甲_任職公司 A:公家機關 B:上市櫃公司 C:專業人士  D:借戶 E:其他民營企業 F:無</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoRelWithPr",
+                            "description": "<p>保證人乙_與借戶負責人之關係 A:配偶 B:血親 C:姻親 D:股東 E:朋 友 G:其他 H:與經營有關之借戶職員</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoCompany",
+                            "description": "<p>保證人乙_任職公司 A:公家機關 B:上市櫃公司 C:專業人士 D:借戶 E:其他民營企業 F:無</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "SpouseCurAddrZip",
+                            "description": "<p>配偶現居地址-郵遞區號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "SpouseCurAddrZipName",
+                            "description": "<p>配偶現居地址-郵遞區號名稱</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "SpouseCurlAddress",
+                            "description": "<p>配偶現居地址-地址</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "SpouseMobileNo",
+                            "description": "<p>配偶連絡行動電話</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "SpouseTelAreaCode",
+                            "description": "<p>配偶連絡電話-區碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "SpouseTelNo",
+                            "description": "<p>配偶連絡電話-電話號碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "SpouseTelExt",
+                            "description": "<p>配偶連絡電話-分機碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneCurAddrZip",
+                            "description": "<p>甲保證人現居地址-郵遞區號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneCurAddrZipName",
+                            "description": "<p>甲保證人現居地址-名稱</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneCurlAddress",
+                            "description": "<p>甲保證人現居地址-地址</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneTelAreaCode",
+                            "description": "<p>甲保證人連絡電話-區碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneTelNo",
+                            "description": "<p>甲保證人連絡電話-電話號碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneTelExt",
+                            "description": "<p>甲保證人連絡電話-分機碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuOneMobileNo",
+                            "description": "<p>甲保證人聯絡行動電話</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoCurAddrZip",
+                            "description": "<p>乙保證人現居地址-郵遞區號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoCurAddrZipName",
+                            "description": "<p>乙保證人現居地址-名稱</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoCurlAddress",
+                            "description": "<p>乙保證人現居地址-地址</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoTelAreaCode",
+                            "description": "<p>乙保證人連絡電話-區碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoTelNo",
+                            "description": "<p>乙保證人連絡電話-電話號碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoTelExt",
+                            "description": "<p>乙保證人連絡電話-分機碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "GuTwoMobileNo",
+                            "description": "<p>乙保證人聯絡行動電話</p>"
+                        },
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"salesdetail\",\n" +
+                            "        \"certification_id\": 2000,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/profile"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/V2/certification/profilejudicial",
+            "title": "認證 公司資料表",
+            "version": "0.2.0",
+            "name": "PostCertificationProfileJudicial",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+						{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorAddrZip",
+                            "description": "<p>公司主要營業場所-郵遞區號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorAddrZipName",
+                            "description": "<p>公司主要營業場所-名稱</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorAddress",
+                            "description": "<p>公司主要營業場所-地址</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorCityName",
+                            "description": "<p>主要營業場所建號-縣市名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorAreaName",
+                            "description": "<p>主要營業場所建號-地區</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorSecName",
+                            "description": "<p>主要營業場所建號-段名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorSecNo",
+                            "description": "<p>主要營業場所建號-段號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorOwnership",
+                            "description": "<p>主要營業場所所有權</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompMajorSetting",
+                            "description": "<p>營業場所設定</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompTelAreaCode",
+                            "description": "<p>公司聯絡電話-區碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompTelNo",
+                            "description": "<p>公司連絡電話-電話號碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompTelExt",
+                            "description": "<p>公司聯絡電話-分機碼</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "BusinessType",
+                            "description": "<p>營業種類</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "Comptype",
+                            "description": "<p>公司型態 21:中小企業／41:獨資</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "CompDuType",
+                            "description": "<p>公司產業別</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "IsBizRegAddrSelfOwn",
+                            "description": "<p>營業登記地址 1:自有／0:非自有</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "BizRegAddrOwner",
+                            "description": "<p>營業登記地址_自有 A:企業／B:負責人／C:負責人配偶</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "IsBizAddrEqToBizRegAddr",
+                            "description": "<p>實際營業地址 1:同營業登記地址／0:不同於營業登記地址</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrCityName",
+                            "description": "<p>實際營業地址_選擇縣市</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrAreaName",
+                            "description": "<p>實際營業地址_選擇鄉鎮市區</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrRoadName",
+                            "description": "<p>實際營業地址_路街名稱(不含路、街)</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrRoadType",
+                            "description": "<p>實際營業地址_路 OR 街</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrSec",
+                            "description": "<p>實際營業地址_段</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrLn",
+                            "description": "<p>實際營業地址_巷</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrAly",
+                            "description": "<p>實際營業地址_弄</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrNo",
+                            "description": "<p>實際營業地址_號(不含之號)</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrNoExt",
+                            "description": "<p>實際營業地址_之號</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrFloor",
+                            "description": "<p>實際營業地址_樓(不含之樓、室)</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrFloorExt",
+                            "description": "<p>實際營業地址_之樓</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrRoom",
+                            "description": "<p>實際營業地址_室</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrOtherMemo",
+                            "description": "<p>實際營業地址_其他備註</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "IsRealBizAddrSelfOwn",
+                            "description": "<p>實際營業地址 1:自有／0:非自有</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealBizAddrOwner",
+                            "description": "<p>實際營業地址_自有 A:企業／B:負責人／C:負責人配偶</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "BizTaxFileWay",
+                            "description": "<p>營業稅申報方式 A:使用統一發票／B:免用統一發票核定繳納營業稅／C:未達課稅起徵點／D:免徵營業稅或執行業務</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorAName",
+                            "description": "<p>公司董監事 A 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorAId",
+                            "description": "<p>公司董監事 A 統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorBName",
+                            "description": "<p>公司董監事 B 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorBId",
+                            "description": "<p>公司董監事 B 統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorCName",
+                            "description": "<p>公司董監事 C 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorCId",
+                            "description": "<p>公司董監事 C 統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorDName",
+                            "description": "<p>公司董監事 D 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorDId",
+                            "description": "<p>公司董監事 D 統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorEName",
+                            "description": "<p>公司董監事 E 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorEId",
+                            "description": "<p>公司董監事 E 統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorFName",
+                            "description": "<p>公司董監事 F 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorFId",
+                            "description": "<p>公司董監事 F 統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorGName",
+                            "description": "<p>公司董監事 G 姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "DirectorGId",
+                            "description": "<p>公司董監事 G 統編</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "contectName",
+                            "description": "<p>聯絡人姓名</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "main_business",
+                            "description": "<p>主要業務範疇</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "main_product",
+                            "description": "<p>主要產品</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "history",
+                            "description": "<p>組織沿革</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "BizLandOwnership",
+                            "description": "<p>土地所有權狀</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "BizHouseOwnership",
+                            "description": "<p>建物所有權狀</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealLandOwnership",
+                            "description": "<p>實際土地所有權狀</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "RealHouseOwnership",
+                            "description": "<p>實際建物所有權狀</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "mainBuildSetting",
+                            "description": "<p>登記營業場所設定 A:無設定/B:第一順位新光/C:第一順位非新光</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "EmployeeNum",
+                            "description": "<p>員工人數</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "ShareholderNum",
+                            "description": "<p>股東人數</p>"
+                        },{
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "save",
+                            "description": "<p>儲存不送出</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"alias\": \"salesdetail\",\n" +
+                            "        \"certification_id\": 2000,\n" +
+                            "        \"status\": 1,\n" +
+                            "        \"expire_time\": \"1586861828\",\n" +
+                            "        \"created_at\": 1571050628,\n" +
+                            "        \"updated_at\": 1571050628,\n" +
+                            "        \"return_type\": \"2\"\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未驗證過</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/profilejudicial"
                 }
             ]
         },
@@ -3555,6 +7212,18 @@ define({
                             "optional": false,
                             "field": "213",
                             "description": "<p>非法人負責人</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "220",
+                            "description": "<p>j請先做實名認證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "221",
+                            "description": "<p>請先做變卡認證</p>"
                         }
                     ]
                 },
@@ -4878,28 +8547,28 @@ define({
                             "optional": true,
                             "field": "diploma_date",
                             "description": "<p>畢業日期</p>"
-						},
-						{
-							"group": "Parameter",
-							"type": "String",
-							"optional": true,
-							"field": "sip_account",
-							"description": "<p>SIP帳號</p>"
-						},
-						{
-							"group": "Parameter",
-							"type": "String",
-							"optional": true,
-							"field": "sip_password",
-							"description": "<p>SIP密碼</p>"
-						},
-						{
-							"group": "Parameter",
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "sip_account",
+                            "description": "<p>SIP帳號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "sip_password",
+                            "description": "<p>SIP密碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
                             "type": "Number",
                             "optional": true,
                             "field": "transcript_image",
                             "description": "<p>成績單  ( 圖片IDs 以逗號隔開，最多五張)</p>"
-						}
+                        }
                     ]
                 }
             },
@@ -5735,13 +9404,6 @@ define({
                             "field": "transportation",
                             "description": "<p>交通支出</p>"
                         },
-						{
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "telegraph_expense",
-                            "description": "<p>網路電信支出</p>"
-                        },
                         {
                             "group": "Parameter",
                             "type": "Number",
@@ -5749,76 +9411,6 @@ define({
                             "field": "entertainment",
                             "description": "<p>娛樂支出</p>"
                         },
-						{
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "rent_expenses",
-			              "description": "<p>房租家庭支出</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "educational_expenses",
-			              "description": "<p>教育支出</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "insurance_expenses",
-			              "description": "<p>保險支出</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "social_expenses",
-			              "description": "<p>社交支出</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "long_assure_monthly_payment",
-			              "description": "<p>房貸月繳</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "mid_assure_monthly_payment",
-			              "description": "<p>車貸月繳</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "credit_monthly_payment",
-			              "description": "<p>信貸月繳</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "student_loans_monthly_payment",
-			              "description": "<p>助學貸月繳</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "credit_card_monthly_payment",
-			              "description": "<p>信用卡月繳</p>"
-			            },
-			  		  {
-			              "group": "Parameter",
-			              "type": "Number",
-			              "optional": false,
-			              "field": "other_private_borrowing",
-			              "description": "<p>民間借貸月付</p>"
-			            },
                         {
                             "group": "Parameter",
                             "type": "Number",
@@ -6254,6 +9846,13 @@ define({
                             "optional": false,
                             "field": "healthcard_image",
                             "description": "<p>健保卡照 ( 圖片ID )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "SpouseName",
+                            "description": "<p>配偶姓名</p>"
                         }
                     ]
                 }
@@ -6780,6 +10379,158 @@ define({
                 }
             ]
         },
+		{
+            "type": "post",
+            "url": "/v2/certification/investigationa11",
+            "title": "認證 聯合徵信+A11認證",
+            "version": "0.2.0",
+            "name": "PostCertificationInvestigationA11",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+							"field": "person_mq_image",
+                            "description": "<p>聯徵資料+A11  ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>此驗證已過驗證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "212",
+                            "description": "<p>Email未認證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/investigationa11"
+                }
+            ]
+        },
         {
             "type": "post",
             "url": "/v2/certification/job",
@@ -6957,8 +10708,7 @@ define({
                             "description": "<p>勞保卡 ( 圖片IDs 以逗號隔開，最多15個)</p>"
                         },
                         {
-                            "group": "Parameter",
-                            "type": "String",
+                                                                              "type": "String",
                             "optional": true,
                             "field": "passbook_image_type",
                             "description": "<p>存款證明類型<br />0：薪資證明 1：紙本，2：網銀</p>"
@@ -7025,6 +10775,20 @@ define({
                             "optional": true,
                             "field": "game_work_image",
                             "description": "<p>競賽作品照片 ( 圖片IDs 以逗號隔開，最多5個 )</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "LaborQryDate",
+                            "description": "<p>被保險人勞保異動查詢日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "LaborInsSalary",
+                            "description": "<p>最近期投保薪資</p>"
                         },
                         {
                             "group": "Parameter",
@@ -7146,6 +10910,1042 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/certification/job"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/certification/simplificationfinancial",
+            "title": "認證 財務訊息(簡易)",
+            "version": "0.2.0",
+            "name": "PostCertificationSimplificationFinancial",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "passbook_image",
+                            "description": "<p>存摺內頁照 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>此驗證已通過驗證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/simplificationfinancial"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/certification/simplificationjob",
+            "title": "認證 工作資料(簡易)",
+            "version": "0.2.0",
+            "name": "PostCertificationSimplificationJob",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "labor_type",
+                            "description": "<p>0：紙本，1：自然人憑證(若為1送出系統要寄信) <br />勞保卡上傳類型</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "labor_image",
+                            "description": "<p>勞保卡 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "LaborQryDate",
+                            "description": "<p>被保險人勞保異動查詢日期</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "LaborInsSalary",
+                            "description": "<p>最近期投保薪資</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n" +
+                            "        \"id\": 19469,\n" +
+                            "        \"target_no\": \"STN2020120808878\",\n" +
+                            "        \"product_name\": \"學生貸\",\n" +
+                            "        \"product_id\": 1,\n" +
+                            "        \"user_id\": 44290,\n" +
+                            "        \"order_id\": 0,\n" +
+                            "        \"order_info\": [],\n" +
+                            "        \"targetDatas\": [],\n" +
+                            "        \"amount\": 20000,\n" +
+                            "        \"loan_amount\": 20000,\n" +
+                            "        \"platform_fee\": 600,\n" +
+                            "        \"interest_rate\": 10,\n" +
+                            "        \"instalment\": 24,\n" +
+                            "        \"repayment\": 1,\n" +
+                            "        \"reason\": \"裝修\",\n" +
+                            "        \"remark\": \"\",\n" +
+                            "        \"delay\": 0,\n" +
+                            "        \"delay_days\": 0,\n" +
+                            "        \"status\": 3,\n" +
+                            "        \"sub_status\": 0,\n" +
+                            "        \"created_at\": 1607412653,\n" +
+                            "        \"contract\": \"借貸契約 \\r\\n立契約書人 \\r\\n貸款人使用者編號：（簡稱甲方） \\r\\n借款人使用者編號：44290（簡稱乙方） \\r\\n立契約書人雙方均同意本消費借貸契約係由普匯金融科技股份有限公司下稱「普匯公司」所媒合，雙方並同意以電子方式勾選同意時，即成立本契約之預約，款項交付時並符合本契約其他約定時，本契約即生效。如有本契約未約定之事項，概以立契約書人雙方與普匯公司間之服務條款為準。 \\r\\n茲因乙方向甲方借款新台幣 20000 元整（下稱「借貸本金」）。雙方約定條件如左： \\r\\n第1條 借款及還款方式：\\r\\n1. 雙方同意利息之計算採年金法，貸款期間之全部借貸本金與利息平均分攤於每一期償付，並以固定貸款利率計算每期之平均攤還率。 \\r\\n2. 本契約之利息自撥款日起算，並按當期實際日數按日計算利息。 \\r\\n3. 第一次清償日為每月10日，每一期從當月11日計算到下月10日，第一期不足一個月者則延至次月才為還款日。（例如1/2借則第一期還款日為2/10，1/15 借則第一期還款日為3/10） \\r\\n4. 每期應還本息金額之平均攤還率計算公式： {[(1＋月利率)＾期數]×月利率}÷{[(1＋月利率)＾期數]－1} (公式中：月利率 ＝ 年利率／12) \\r\\n5. 每期應還本金與利息試算： \\r\\n（1）平均每期應還本息金額＝借貸本金×每期應還本息金額之平均攤還率 \\r\\n（2）每期應付利息金額＝本金餘額×X年利率X每期當期天數/365（逢閏年時則為366日） \\r\\n（3）每期應還本金金額＝平均每期應還本息金額－每期應付利息金額 \\r\\n（4）本金餘額將於最後一期全部納入計算完畢。 \\r\\n6. 本契約之約定年利率為 10 ％，每月應還本息金額為新台幣  元。 \\r\\n第2條 契約生效條款 \\r\\n1. 甲方應於以電子方式同意本契約時48小時內匯款至普匯公司提供之代收代付帳戶，本契約始生效力。 \\r\\n2. 如乙方申請之同一債權組合中，其他貸款人未匯款或無法全部結標，則本契約亦不生效力，甲乙雙方間之借貸契約不生效力。 \\r\\n3. 乙方如係於普匯公司申請債權轉換（即展延）而簽訂本契約者，乙方同意甲方得匯款至普匯公司提供之其他第三人代收代付帳戶以清償乙方之既有債務，視為乙方受領借貸本金，本契約即為生效。 \\r\\n第3條 加速條款 \\r\\n1. 乙方如有下列情形之一時，無須由普匯公司或甲方事先通知或催告，普匯公司或甲方得隨時對乙方收回部分借款、縮短借款期限，或視為全部到期: \\r\\n（1）任何一宗債務不依約清償者。 \\r\\n（2）依破產法聲請和解，依消費者債務清理條例聲請更生、清算、前置協商、前置調整、和解、聲請宣告破產、經票據交換所通知拒絕往來、停止營業，清理債務者。 \\r\\n（3）依約定負有提供擔保之義務而不提供者。 \\r\\n（4）因債務人死亡而其繼承人聲明為拋棄繼承者。 \\r\\n（5）因刑事而受沒收主要財產之宣告，或受沒入、徵收其主要財產之行政處分，或因犯罪嫌疑被羈押或經起訴者。 \\r\\n2. 乙方如有下列情形之一時，由普匯公司或甲方事先定合理期間(七日)，發出通知或催告後，始生收回部分借款、縮短借款期限，或視為全部到期之效力: \\r\\n（1）乙方對甲方所負債務，其實際資金用途與普匯公司或甲方核定或約定用途不符者。 \\r\\n（2）受強制執行或假扣押、假處分或其他保全處分，致本公司或甲方有不能完全受償之虞者。 \\r\\n第4條 遲延還款 \\r\\n1. 清償期日之末日如為星期假日、國定假日或其他如天災、地變等不可抗力因素導致政府公告停止上班日，則順延至下一工作天。 \\r\\n2. 雙方同意得訂逾清償期日7天內(含)為寬限期，如乙方於寬限期內繳清所積欠之本息及相關應付費用，即無須繳納遲延利息。 \\r\\n3. 乙方逾越前項寬限期未清償借款者，同意終止原應付利息之計算方式，即應按日以未清償部分本金乘以0.1％計算延滯利息至本金即延滯利息均向甲方清償完畢止。 \\r\\n4. 甲方除本契約約定利息及延滯息，不得對乙方請求違約金。 \\r\\n第5條 債權轉讓 \\r\\n乙方同意甲方或普匯公司得以電子方式通知或其他法定方式，將本契約債權之全部或一部轉讓予第三人，乙方絕無異議。\\r\\n第6條 提前清償 \\r\\n乙方如提前清償借貸本金，仍應給付已發生但未到期之利息予甲方，未到期之利息無庸給付，甲方並無異議且不得再行對乙方請求違約金。 \\r\\n第7條 管轄及其他 \\r\\n有關本契約涉訴時，甲、乙雙方同意以台灣台北地方法院為管轄法院，並以中華民國法律為準據法。\\n 中華民國 109 年 12 月 08 日\",\n" +
+                            "        \"credit\": {\n" +
+                            "            \"id\": 4305,\n" +
+                            "            \"level\": 4,\n" +
+                            "            \"points\": 1868,\n" +
+                            "            \"amount\": 75000,\n" +
+                            "            \"created_at\": 1606976488,\n" +
+                            "            \"expire_time\": 1622701287\n" +
+                            "        },\n" +
+                            "        \"certification\": [\n" +
+                            "            {\n" +
+                            "                \"id\": 1,\n" +
+                            "                \"alias\": \"idcard\",\n" +
+                            "                \"name\": \"實名認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 19760,\n" +
+                            "                \"updated_at\": 1597980086,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 2,\n" +
+                            "                \"alias\": \"student\",\n" +
+                            "                \"name\": \"學生身份認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證學生身份\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 1000453,\n" +
+                            "                \"updated_at\": 1606965241,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 3,\n" +
+                            "                \"alias\": \"debitcard\",\n" +
+                            "                \"name\": \"金融/存款帳戶\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 19763,\n" +
+                            "                \"updated_at\": 1597978149,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 4,\n" +
+                            "                \"alias\": \"social\",\n" +
+                            "                \"name\": \"社交帳號\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"個人社交帳號認證\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 19764,\n" +
+                            "                \"updated_at\": 1597980039,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 5,\n" +
+                            "                \"alias\": \"emergency\",\n" +
+                            "                \"name\": \"緊急聯絡人\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 19784,\n" +
+                            "                \"updated_at\": 1597980106,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 6,\n" +
+                            "                \"alias\": \"email\",\n" +
+                            "                \"name\": \"常用電子信箱\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 19766,\n" +
+                            "                \"updated_at\": 1597980045,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 7,\n" +
+                            "                \"alias\": \"financial\",\n" +
+                            "                \"name\": \"收支資訊提供\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 19785,\n" +
+                            "                \"updated_at\": 1597979499,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            }\n" +
+                            "        ],\n" +
+                            "        \"amortization_schedule\": {\n" +
+                            "            \"amount\": 20000,\n" +
+                            "            \"instalment\": 24,\n" +
+                            "            \"rate\": 10,\n" +
+                            "            \"date\": \"2021-01-19\",\n" +
+                            "            \"total_payment\": 923,\n" +
+                            "            \"leap_year\": false,\n" +
+                            "            \"year_days\": 365,\n" +
+                            "            \"XIRR\": 10.459999999999999,\n" +
+                            "            \"schedule\": {\n" +
+                            "                \"1\": {\n" +
+                            "                    \"instalment\": 1,\n" +
+                            "                    \"repayment_date\": \"2021-03-10\",\n" +
+                            "                    \"days\": 50,\n" +
+                            "                    \"remaining_principal\": 20000,\n" +
+                            "                    \"principal\": 649,\n" +
+                            "                    \"interest\": 274,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"2\": {\n" +
+                            "                    \"instalment\": 2,\n" +
+                            "                    \"repayment_date\": \"2021-04-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 19351,\n" +
+                            "                    \"principal\": 759,\n" +
+                            "                    \"interest\": 164,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"3\": {\n" +
+                            "                    \"instalment\": 3,\n" +
+                            "                    \"repayment_date\": \"2021-05-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 18592,\n" +
+                            "                    \"principal\": 770,\n" +
+                            "                    \"interest\": 153,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"4\": {\n" +
+                            "                    \"instalment\": 4,\n" +
+                            "                    \"repayment_date\": \"2021-06-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 17822,\n" +
+                            "                    \"principal\": 772,\n" +
+                            "                    \"interest\": 151,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"5\": {\n" +
+                            "                    \"instalment\": 5,\n" +
+                            "                    \"repayment_date\": \"2021-07-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 17050,\n" +
+                            "                    \"principal\": 783,\n" +
+                            "                    \"interest\": 140,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"6\": {\n" +
+                            "                    \"instalment\": 6,\n" +
+                            "                    \"repayment_date\": \"2021-08-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 16267,\n" +
+                            "                    \"principal\": 785,\n" +
+                            "                    \"interest\": 138,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"7\": {\n" +
+                            "                    \"instalment\": 7,\n" +
+                            "                    \"repayment_date\": \"2021-09-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 15482,\n" +
+                            "                    \"principal\": 792,\n" +
+                            "                    \"interest\": 131,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"8\": {\n" +
+                            "                    \"instalment\": 8,\n" +
+                            "                    \"repayment_date\": \"2021-10-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 14690,\n" +
+                            "                    \"principal\": 802,\n" +
+                            "                    \"interest\": 121,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"9\": {\n" +
+                            "                    \"instalment\": 9,\n" +
+                            "                    \"repayment_date\": \"2021-11-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 13888,\n" +
+                            "                    \"principal\": 805,\n" +
+                            "                    \"interest\": 118,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"10\": {\n" +
+                            "                    \"instalment\": 10,\n" +
+                            "                    \"repayment_date\": \"2021-12-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 13083,\n" +
+                            "                    \"principal\": 815,\n" +
+                            "                    \"interest\": 108,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"11\": {\n" +
+                            "                    \"instalment\": 11,\n" +
+                            "                    \"repayment_date\": \"2022-01-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 12268,\n" +
+                            "                    \"principal\": 819,\n" +
+                            "                    \"interest\": 104,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"12\": {\n" +
+                            "                    \"instalment\": 12,\n" +
+                            "                    \"repayment_date\": \"2022-02-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 11449,\n" +
+                            "                    \"principal\": 826,\n" +
+                            "                    \"interest\": 97,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"13\": {\n" +
+                            "                    \"instalment\": 13,\n" +
+                            "                    \"repayment_date\": \"2022-03-10\",\n" +
+                            "                    \"days\": 28,\n" +
+                            "                    \"remaining_principal\": 10623,\n" +
+                            "                    \"principal\": 842,\n" +
+                            "                    \"interest\": 81,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"14\": {\n" +
+                            "                    \"instalment\": 14,\n" +
+                            "                    \"repayment_date\": \"2022-04-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 9781,\n" +
+                            "                    \"principal\": 840,\n" +
+                            "                    \"interest\": 83,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"15\": {\n" +
+                            "                    \"instalment\": 15,\n" +
+                            "                    \"repayment_date\": \"2022-05-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 8941,\n" +
+                            "                    \"principal\": 850,\n" +
+                            "                    \"interest\": 73,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"16\": {\n" +
+                            "                    \"instalment\": 16,\n" +
+                            "                    \"repayment_date\": \"2022-06-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 8091,\n" +
+                            "                    \"principal\": 854,\n" +
+                            "                    \"interest\": 69,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"17\": {\n" +
+                            "                    \"instalment\": 17,\n" +
+                            "                    \"repayment_date\": \"2022-07-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 7237,\n" +
+                            "                    \"principal\": 864,\n" +
+                            "                    \"interest\": 59,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"18\": {\n" +
+                            "                    \"instalment\": 18,\n" +
+                            "                    \"repayment_date\": \"2022-08-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 6373,\n" +
+                            "                    \"principal\": 869,\n" +
+                            "                    \"interest\": 54,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"19\": {\n" +
+                            "                    \"instalment\": 19,\n" +
+                            "                    \"repayment_date\": \"2022-09-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 5504,\n" +
+                            "                    \"principal\": 876,\n" +
+                            "                    \"interest\": 47,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"20\": {\n" +
+                            "                    \"instalment\": 20,\n" +
+                            "                    \"repayment_date\": \"2022-10-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 4628,\n" +
+                            "                    \"principal\": 885,\n" +
+                            "                    \"interest\": 38,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"21\": {\n" +
+                            "                    \"instalment\": 21,\n" +
+                            "                    \"repayment_date\": \"2022-11-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 3743,\n" +
+                            "                    \"principal\": 891,\n" +
+                            "                    \"interest\": 32,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"22\": {\n" +
+                            "                    \"instalment\": 22,\n" +
+                            "                    \"repayment_date\": \"2022-12-10\",\n" +
+                            "                    \"days\": 30,\n" +
+                            "                    \"remaining_principal\": 2852,\n" +
+                            "                    \"principal\": 900,\n" +
+                            "                    \"interest\": 23,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"23\": {\n" +
+                            "                    \"instalment\": 23,\n" +
+                            "                    \"repayment_date\": \"2023-01-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 1952,\n" +
+                            "                    \"principal\": 906,\n" +
+                            "                    \"interest\": 17,\n" +
+                            "                    \"total_payment\": 923\n" +
+                            "                },\n" +
+                            "                \"24\": {\n" +
+                            "                    \"instalment\": 24,\n" +
+                            "                    \"repayment_date\": \"2023-02-10\",\n" +
+                            "                    \"days\": 31,\n" +
+                            "                    \"remaining_principal\": 1046,\n" +
+                            "                    \"principal\": 1046,\n" +
+                            "                    \"interest\": 9,\n" +
+                            "                    \"total_payment\": 1055\n" +
+                            "                }\n" +
+                            "            },\n" +
+                            "            \"total\": {\n" +
+                            "                \"principal\": 20000,\n" +
+                            "                \"interest\": 2284,\n" +
+                            "                \"total_payment\": 22284\n" +
+                            "            }\n" +
+                            "        },\n" +
+                            "        \"biddingHistory\": {\n" +
+                            "            \"startBidding\": \"2021/01/10 19:01:43\",\n" +
+                            "            \"endBidding\": \"2021/01/24 19:01:43\",\n" +
+                            "            \"currenIndex\": \"213\",\n" +
+                            "            \"history\": [\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                0,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                10,\n" +
+                            "                40\n" +
+                            "            ],\n" +
+                            "            \"x\": \"336\",\n" +
+                            "            \"x_unit\": \"時\",\n" +
+                            "            \"x_limit\": 1,\n" +
+                            "            \"y\": \"100\",\n" +
+                            "            \"y_unit\": \"%\",\n" +
+                            "            \"y_limit\": 10\n" +
+                            "        },\n" +
+                            "        \"isSupportRateAdjust\": true\n" +
+                            "    }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>此驗證已通過驗證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "216",
+                            "description": "<p>不支援法人帳號使用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/simplificationjob"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/certification/judicialguarantee",
+            "title": "認證 法人對保",
+            "version": "0.2.0",
+            "name": "PostCertificationJudicialGuarantee",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+                "parameter": {
+                    "fields": {
+                        "Parameter": [
+                            {
+                                "group": "Parameter",
+                                "type": "String",
+                                "optional": false,
+                                "field": "image",
+                                "description": "<p>圖片ID</p>"
+                            }
+                        ]
+                    }
+                },
+                "success": {
+                    "fields": {
+                        "Success 200": [
+                            {
+                                "group": "Success 200",
+                                "type": "Object",
+                                "optional": false,
+                                "field": "result",
+                                "description": "<p>SUCCESS</p>"
+                            }
+                        ]
+                    },
+                    "examples": [
+                        {
+                            "title": "SUCCESS",
+                            "content": "{\n  \"result\": \"SUCCESS\" \n}",
+                            "type": "Object"
+                        }
+                    ]
+                },
+                "error": {
+                    "fields": {
+                        "Error 4xx": [
+                            {
+                                "group": "Error 2xx",
+                                "optional": false,
+                                "field": "201",
+                                "description": "<p>參數錯誤</p>"
+                            },
+                            {
+                                "group": "Error 1xx",
+                                "optional": false,
+                                "field": "100",
+                                "description": "<p>Token錯誤</p>"
+                            },
+                            {
+                                "group": "Error 3xx",
+                                "optional": false,
+                                "field": "302",
+                                "description": "<p>歸戶資料不存在</p>"
+                            },
+                            {
+                                "group": "Error 5xx",
+                                "optional": false,
+                                "field": "503",
+                                "description": "<p>尚未通過驗證</p>"
+                            },
+                            {
+                                "group": "Error 5xx",
+                                "optional": false,
+                                "field": "512",
+                                "description": "<p>驗證資料不存在</p>"
+                            },
+                            {
+                                "group": "Error 4xx",
+                                "optional": false,
+                                "field": "423",
+                                "description": "<p>圖片不存在</p>"
+                            },
+                        ]
+                    },
+                    "examples": [
+                        {
+                            "title": "201",
+                            "content": "{\n  \"result\": \"INSERT_ERROR\",\n  \"error\": \"201\"\n}",
+                            "type": "Object"
+                        },
+                        {
+                            "title": "100",
+                            "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                            "type": "Object"
+                        },
+                        {
+                            "title": "302",
+                            "content": "{\n  \"result\": \"USER_NOT_EXIST\",\n  \"error\": \"302\"\n}",
+                            "type": "Object"
+                        },
+                        {
+                            "title": "503",
+                            "content": "{\n  \"result\": \"CERTIFICATION_NEVER_VERIFY\",\n  \"error\": \"503\"\n}",
+                            "type": "Object"
+                        },
+                        {
+                            "title": "512",
+                            "content": "{\n  \"result\": \"CERTIFICATION_NOT_EXIST\",\n  \"error\": \"512\"\n}",
+                            "type": "Object"
+                        },
+                        {
+                            "title": "423",
+                            "content": "{\n  \"result\": \"PICTURE_NOT_EXIST\",\n  \"error\": \"423\"\n}",
+                            "type": "Object"
+                        }
+                    ]
+                },
+                "filename": "application/controllers/api/v2/Judicialperson.php",
+                "groupTitle": "Judicialperson",
+                "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/judicialguarantee"
                 }
             ]
         },
@@ -8980,349 +13780,357 @@ define({
                 }
             ]
         },
+        // 合併至/v2/user/login
+        // {
+        //     "type": "post",
+        //     "url": "/v2/judicialperson/apply",
+        //     "title": "法人會員 申請法人身份",
+        //     "version": "0.2.0",
+        //     "name": "PostJudicialpersonApply",
+        //     "group": "Judicialperson",
+        //     "header": {
+        //         "fields": {
+        //             "Header": [
+        //                 {
+        //                     "group": "Header",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "request_token",
+        //                     "description": "<p>登入後取得的 Request Token</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+        //     "parameter": {
+        //         "fields": {
+        //             "Parameter": [
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "allowedValues": [
+        //                         "1",
+        //                         "2",
+        //                         "3",
+        //                         "4"
+        //                     ],
+        //                     "optional": false,
+        //                     "field": "company_type",
+        //                     "description": "<p>公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "size": "8",
+        //                     "optional": false,
+        //                     "field": "tax_id",
+        //                     "description": "<p>公司統一編號</p>"
+        //                 },
+        //                 {
+        //                     "group": "Success 200",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "bank_code",
+        //                     "description": "<p>銀行代碼三碼</p>"
+        //                 },
+        //                 {
+        //                     "group": "Success 200",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "branch_code",
+        //                     "description": "<p>分支機構代號四碼</p>"
+        //                 },
+        //                 {
+        //                     "group": "Success 200",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "bank_account",
+        //                     "description": "<p>銀行帳號</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "bankbook_image",
+        //                     "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "passbook_image",
+        //                     "description": "<p>銀行流水帳內頁( 圖片IDs 以逗號隔開，最多四個 )</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "optional": false,
+        //                     "field": "enterprise_registration_image",
+        //                     "description": "<p>營利事業變更登記表正本( 圖片IDs 以逗號隔開，最多四個 )</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "meeting_date",
+        //                     "description": "<p>對保時間</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "optional": true,
+        //                     "field": "front_image",
+        //                     "description": "<p>銀行流水帳正面( 圖片ID )</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "allowedValues": [
+        //                         "0",
+        //                         "1"
+        //                     ],
+        //                     "optional": true,
+        //                     "field": "cooperation",
+        //                     "defaultValue": "0",
+        //                     "description": "<p>0:法人帳號 1:法人經銷商帳號</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "size": "2..15",
+        //                     "optional": true,
+        //                     "field": "cooperation_contact",
+        //                     "description": "<p>聯絡人</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": true,
+        //                     "field": "cooperation_phone",
+        //                     "description": "<p>電話</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": true,
+        //                     "field": "cooperation_address",
+        //                     "description": "<p>地址/網址</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "optional": true,
+        //                     "field": "business_model",
+        //                     "description": "<p>營運模式 0:線下 1:線上</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "optional": true,
+        //                     "field": "selling_type",
+        //                     "description": "<p>商品類型 0:手機 1:遊學 2:外匯車 999:其它</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "optional": true,
+        //                     "field": "facade_image",
+        //                     "description": "<p>店門正面照(經銷商必填)( 圖片ID )</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": true,
+        //                     "field": "store_image",
+        //                     "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "optional": true,
+        //                     "field": "store_lease_image",
+        //                     "description": "<p>租約照片(外匯車經銷商必填)( 圖片ID )</p>"
+        //                 },
+        //                 {
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": true,
+        //                     "field": "store_sign_image",
+        //                     "description": "<p>招牌照片(外匯車經銷商必填)( 圖片ID )</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+        //     "success": {
+        //         "fields": {
+        //             "Success 200": [
+        //                 {
+        //                     "group": "Success 200",
+        //                     "type": "Object",
+        //                     "optional": false,
+        //                     "field": "result",
+        //                     "description": "<p>SUCCESS</p>"
+        //                 }
+        //             ]
+        //         },
+        //         "examples": [
+        //             {
+        //                 "title": "SUCCESS",
+        //                 "content": "{\n  \"result\": \"SUCCESS\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+        //     "error": {
+        //         "fields": {
+        //             "Error 4xx": [
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "100",
+        //                     "description": "<p>Token錯誤</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "101",
+        //                     "description": "<p>帳戶已黑名單</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "200",
+        //                     "description": "<p>參數錯誤</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "201",
+        //                     "description": "<p>新增時發生錯誤</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "202",
+        //                     "description": "<p>未通過所需的驗證(實名驗證)</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "208",
+        //                     "description": "<p>未滿20歲</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "212",
+        //                     "description": "<p>未通過所需的驗證(Email)</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "213",
+        //                     "description": "<p>非法人負責人</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "214",
+        //                     "description": "<p>此公司已申請過</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "216",
+        //                     "description": "<p>不支援法人帳號使用</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "506",
+        //                     "description": "<p>銀行代碼長度錯誤</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "507",
+        //                     "description": "<p>分支機構代號長度錯誤</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "508",
+        //                     "description": "<p>銀行帳號長度錯誤</p>"
+        //                 },
+        //                 {
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "509",
+        //                     "description": "<p>銀行帳號已存在</p>"
+        //                 }
+        //             ]
+        //         },
+        //         "examples": [
+        //             {
+        //                 "title": "202",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "208",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "212",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "214",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"214\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "200",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "201",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "100",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "101",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "213",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+        //                 "title": "216",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+        //     "filename": "application/controllers/api/v2/Judicialperson.php",
+        //     "groupTitle": "Judicialperson",
+        //     "sampleRequest": [
+        //         {
+        //             "url": "/api/v2/judicialperson/apply"
+        //         }
+        //     ]
+        // },
         {
-            "type": "post",
-            "url": "/v2/judicialperson/apply",
-            "title": "法人會員 申請法人身份",
-            "version": "0.2.0",
-            "name": "PostJudicialpersonApply",
-            "group": "Judicialperson",
-            "header": {
-                "fields": {
-                    "Header": [
-                        {
-                            "group": "Header",
-                            "type": "String",
-                            "optional": false,
-                            "field": "request_token",
-                            "description": "<p>登入後取得的 Request Token</p>"
-                        }
-                    ]
-                }
-            },
-            "parameter": {
-                "fields": {
-                    "Parameter": [
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "allowedValues": [
-                                "1",
-                                "2",
-                                "3",
-                                "4"
-                            ],
-                            "optional": false,
-                            "field": "company_type",
-                            "description": "<p>公司類型 1:獨資 2:合夥,3:有限公司 4:股份有限公司</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "size": "8",
-                            "optional": false,
-                            "field": "tax_id",
-                            "description": "<p>公司統一編號</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "bank_code",
-                            "description": "<p>銀行代碼三碼</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "branch_code",
-                            "description": "<p>分支機構代號四碼</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "bank_account",
-                            "description": "<p>銀行帳號</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "bankbook_image",
-                            "description": "<p>存摺封面( 圖片IDs 以逗號隔開，最多四個 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "passbook_image",
-                            "description": "<p>銀行流水帳內頁( 圖片IDs 以逗號隔開，最多四個 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "enterprise_registration_image",
-                            "description": "<p>營利事業變更登記表正本( 圖片IDs 以逗號隔開，最多四個 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": true,
-                            "field": "front_image",
-                            "description": "<p>銀行流水帳正面( 圖片ID )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "allowedValues": [
-                                "0",
-                                "1"
-                            ],
-                            "optional": true,
-                            "field": "cooperation",
-                            "defaultValue": "0",
-                            "description": "<p>0:法人帳號 1:法人經銷商帳號</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "size": "2..15",
-                            "optional": true,
-                            "field": "cooperation_contact",
-                            "description": "<p>聯絡人</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "cooperation_phone",
-                            "description": "<p>電話</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "cooperation_address",
-                            "description": "<p>地址/網址</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": true,
-                            "field": "business_model",
-                            "description": "<p>營運模式 0:線下 1:線上</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": true,
-                            "field": "selling_type",
-                            "description": "<p>商品類型 0:手機 1:遊學 2:外匯車 999:其它</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": true,
-                            "field": "facade_image",
-                            "description": "<p>店門正面照(經銷商必填)( 圖片ID )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "store_image",
-                            "description": "<p>店內正面照(經銷商必填)( 圖片IDs 以逗號隔開，最多四個 )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "optional": true,
-                            "field": "store_lease_image",
-                            "description": "<p>租約照片(外匯車經銷商必填)( 圖片ID )</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": true,
-                            "field": "store_sign_image",
-                            "description": "<p>招牌照片(外匯車經銷商必填)( 圖片ID )</p>"
-                        }
-                    ]
-                }
-            },
-            "success": {
-                "fields": {
-                    "Success 200": [
-                        {
-                            "group": "Success 200",
-                            "type": "Object",
-                            "optional": false,
-                            "field": "result",
-                            "description": "<p>SUCCESS</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "error": {
-                "fields": {
-                    "Error 4xx": [
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "200",
-                            "description": "<p>參數錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "201",
-                            "description": "<p>新增時發生錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "202",
-                            "description": "<p>未通過所需的驗證(實名驗證)</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "208",
-                            "description": "<p>未滿20歲</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "212",
-                            "description": "<p>未通過所需的驗證(Email)</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "213",
-                            "description": "<p>非法人負責人</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "214",
-                            "description": "<p>此公司已申請過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "216",
-                            "description": "<p>不支援法人帳號使用</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "506",
-                            "description": "<p>銀行代碼長度錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "507",
-                            "description": "<p>分支機構代號長度錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "508",
-                            "description": "<p>銀行帳號長度錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "509",
-                            "description": "<p>銀行帳號已存在</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "202",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "208",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"208\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "212",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"212\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "214",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"214\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "200",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "201",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "101",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "213",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "216",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "filename": "application/controllers/api/v2/Judicialperson.php",
-            "groupTitle": "Judicialperson",
-            "sampleRequest": [
-                {
-                    "url": "/api/v2/judicialperson/apply"
-                }
-            ]
-		},
-		{
             "type": "post",
             "url": "/v2/judicialperson/verifymedia",
             "title": "法人會員 對保影片",
@@ -9395,8 +14203,8 @@ define({
                             "optional": false,
                             "field": "201",
                             "description": "<p>新增時發生錯誤</p>"
-						},
-						{
+                        },
+                        {
                             "group": "Error 4xx",
                             "optional": false,
                             "field": "202",
@@ -9414,8 +14222,8 @@ define({
                         "title": "201",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
                         "type": "Object"
-					},
-					{
+                    },
+                    {
                         "title": "202",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
                         "type": "Object"
@@ -9770,9 +14578,143 @@ define({
             ]
         },
         {
+            "url": "/v2/judicialperson/verify_governmentauthorities",
+            "title": "法人會員 對保持變卡自拍",
+            "version": "0.2.0",
+            "name": "PostJudicialpersonVerifyGovernmentauthoritiesPost",
+            "group": "Judicialperson",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "image_id",
+                            "description": "<p>圖片ID</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\" \n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 2xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 1xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 3xx",
+                            "optional": false,
+                            "field": "302",
+                            "description": "<p>歸戶資料不存在</p>"
+                        },
+                        {
+                            "group": "Error 5xx",
+                            "optional": false,
+                            "field": "503",
+                            "description": "<p>尚未通過驗證</p>"
+                        },
+                        {
+                            "group": "Error 5xx",
+                            "optional": false,
+                            "field": "512",
+                            "description": "<p>驗證資料不存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "423",
+                            "description": "<p>圖片不存在</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"INSERT_ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "302",
+                        "content": "{\n  \"result\": \"USER_NOT_EXIST\",\n  \"error\": \"302\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "503",
+                        "content": "{\n  \"result\": \"CERTIFICATION_NEVER_VERIFY\",\n  \"error\": \"503\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "512",
+                        "content": "{\n  \"result\": \"CERTIFICATION_NOT_EXIST\",\n  \"error\": \"512\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "423",
+                        "content": "{\n  \"result\": \"PICTURE_NOT_EXIST\",\n  \"error\": \"423\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Judicialperson.php",
+            "groupTitle": "Judicialperson",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/judicialperson/verify_governmentauthorities"
+                }
+            ]
+        },
+        {
             "type": "post",
-            "url": "/v2/judicialperson/login",
-            "title": "法人會員 用戶登入",
+            "url": "/v2/judicialperson/cooperation",
+            "title": "法人經銷 申請為經銷商",
             "version": "0.2.0",
             "name": "PostJudicialpersonLogin",
             "group": "Judicialperson",
@@ -10866,7 +15808,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>還款方式 1:等額本息</p>"
+                            "description": "<p>計息方式 1:等額本息</p>"
                         },
                         {
                             "group": "Success 200",
@@ -11231,6 +16173,216 @@ define({
                             "optional": false,
                             "field": "biddingHistory.y_limit",
                             "description": "<p>Y軸刻度</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate",
+                            "description": "<p>關聯(保證人)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "associate.addspouse",
+                            "description": "<p>常態為false true:提示有配偶，若配偶已完成product/associates會跳回false</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.addrealcharacter",
+                            "description": "<p>常態為false true:提示有實際負責人 若實際負責人已完成product/associates會跳回false</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner",
+                            "description": "<p>負責人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner.name",
+                            "description": "<p>姓名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner.id_number",
+                            "description": "<p>身分證字號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.owner.identity",
+                            "description": "<p>身分 1:學生 2:上班族 3:法人</p>"
+                        },
+                        // {
+                        //     "group": "Success 200",
+                        //     "type": "Number",
+                        //     "optional": false,
+                        //     "field": "associate.owner.status",
+                        //     "description": "<p>狀態 0:尚未回覆 1:同意 2:拒絕</p>"
+                        // },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "associate.owner.certification",
+                            "description": "<p>認證完成資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner.certification.id",
+                            "description": "<p>ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner.certification.name",
+                            "description": "<p>名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner.certification.description",
+                            "description": "<p>簡介</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner.certification.alias",
+                            "description": "<p>認證代號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "associate.owner.certification.optional",
+                            "description": "<p>是否選填</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.owner.certification.user_status",
+                            "description": "<p>用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate",
+                            "description": "<p>保證人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.name",
+                            "description": "<p>姓名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.id_number",
+                            "description": "<p>身分證字號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.agitate.identity",
+                            "description": "<p>身分 1:學生 2:上班族 3:法人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.agitate.guarantor_type",
+                            "description": "<p>A:實際負責人 B:配偶 C:保證人 供前端判斷顯示類型</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Booleansq                              ",
+                            "optional": false,
+                            "field": "associate.agitate.guarantor",
+                            "description": "<p>是否為保證人 0:否 1:是</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.agitate.identity",
+                            "description": "<p>身分 1:學生 2:上班族 3:法人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.agitate.status",
+                            "description": "<p>狀態 0:尚未回覆 1:同意 2:拒絕</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "associate.agitate.certification",
+                            "description": "<p>認證完成資訊</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.certification.id",
+                            "description": "<p>ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.certification.name",
+                            "description": "<p>名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.certification.description",
+                            "description": "<p>簡介</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.agitate.certification.alias",
+                            "description": "<p>認證代號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "associate.agitate.certification.optional",
+                            "description": "<p>是否選填</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.agitate.certification.user_status",
+                            "description": "<p>用戶認證狀態：null:尚未認證 0:認證中 1:已完成 2:認證失敗</p>"
                         }
                     ]
                 },
@@ -11240,37 +16392,419 @@ define({
                         "content": "{\n" +
                             "    \"result\": \"SUCCESS\",\n" +
                             "    \"data\": {\n" +
-                            "        \"id\": 19469,\n" +
-                            "        \"target_no\": \"STN2020120808878\",\n" +
-                            "        \"product_name\": \"學生貸\",\n" +
-                            "        \"product_id\": 1,\n" +
-                            "        \"user_id\": 44290,\n" +
+                            "        \"id\": 18820,\n" +
+                            "        \"target_no\": \"SUL2020042012635\",\n" +
+                            "        \"product_name\": \"孵化基金 / 非學生孵化基金\",\n" +
+                            "        \"product_id\": 8,\n" +
+                            "        \"user_id\": 12820,\n" +
                             "        \"order_id\": 0,\n" +
                             "        \"order_info\": [],\n" +
-                            "        \"targetDatas\": [],\n" +
-                            "        \"amount\": 20000,\n" +
-                            "        \"loan_amount\": 20000,\n" +
-                            "        \"platform_fee\": 600,\n" +
-                            "        \"interest_rate\": 10,\n" +
-                            "        \"instalment\": 24,\n" +
+                            "        \"targetDatas\": {\n" +
+                            "            \"business_plan\": [\n" +
+                            "                \"https://d3imllwf4as09k.cloudfront.net/stmps/tarda/image1282015538200708.jpg\"\n" +
+                            "            ]\n" +
+                            "        },\n" +
+                            "        \"amount\": 1000000,\n" +
+                            "        \"loan_amount\": 0,\n" +
+                            "        \"platform_fee\": 0,\n" +
+                            "        \"interest_rate\": 0,\n" +
+                            "        \"instalment\": 6,\n" +
                             "        \"repayment\": 1,\n" +
-                            "        \"reason\": \"裝修\",\n" +
-                            "        \"remark\": \"\",\n" +
+                            "        \"reason\": \"哈哈 - 唷唷\",\n" +
+                            "        \"remark\": \"信用不足\",\n" +
                             "        \"delay\": 0,\n" +
                             "        \"delay_days\": 0,\n" +
-                            "        \"status\": 3,\n" +
+                            "        \"status\": 0,\n" +
                             "        \"sub_status\": 0,\n" +
-                            "        \"created_at\": 1607412653,\n" +
-                            "        \"contract\": \"借貸契約 \\r\\n立契約書人 \\r\\n貸款人使用者編號：（簡稱甲方） \\r\\n借款人使用者編號：44290（簡稱乙方） \\r\\n立契約書人雙方均同意本消費借貸契約係由普匯金融科技股份有限公司下稱「普匯公司」所媒合，雙方並同意以電子方式勾選同意時，即成立本契約之預約，款項交付時並符合本契約其他約定時，本契約即生效。如有本契約未約定之事項，概以立契約書人雙方與普匯公司間之服務條款為準。 \\r\\n茲因乙方向甲方借款新台幣 20000 元整（下稱「借貸本金」）。雙方約定條件如左： \\r\\n第1條 借款及還款方式：\\r\\n1. 雙方同意利息之計算採年金法，貸款期間之全部借貸本金與利息平均分攤於每一期償付，並以固定貸款利率計算每期之平均攤還率。 \\r\\n2. 本契約之利息自撥款日起算，並按當期實際日數按日計算利息。 \\r\\n3. 第一次清償日為每月10日，每一期從當月11日計算到下月10日，第一期不足一個月者則延至次月才為還款日。（例如1/2借則第一期還款日為2/10，1/15 借則第一期還款日為3/10） \\r\\n4. 每期應還本息金額之平均攤還率計算公式： {[(1＋月利率)＾期數]×月利率}÷{[(1＋月利率)＾期數]－1} (公式中：月利率 ＝ 年利率／12) \\r\\n5. 每期應還本金與利息試算： \\r\\n（1）平均每期應還本息金額＝借貸本金×每期應還本息金額之平均攤還率 \\r\\n（2）每期應付利息金額＝本金餘額×X年利率X每期當期天數/365（逢閏年時則為366日） \\r\\n（3）每期應還本金金額＝平均每期應還本息金額－每期應付利息金額 \\r\\n（4）本金餘額將於最後一期全部納入計算完畢。 \\r\\n6. 本契約之約定年利率為 10 ％，每月應還本息金額為新台幣  元。 \\r\\n第2條 契約生效條款 \\r\\n1. 甲方應於以電子方式同意本契約時48小時內匯款至普匯公司提供之代收代付帳戶，本契約始生效力。 \\r\\n2. 如乙方申請之同一債權組合中，其他貸款人未匯款或無法全部結標，則本契約亦不生效力，甲乙雙方間之借貸契約不生效力。 \\r\\n3. 乙方如係於普匯公司申請債權轉換（即展延）而簽訂本契約者，乙方同意甲方得匯款至普匯公司提供之其他第三人代收代付帳戶以清償乙方之既有債務，視為乙方受領借貸本金，本契約即為生效。 \\r\\n第3條 加速條款 \\r\\n1. 乙方如有下列情形之一時，無須由普匯公司或甲方事先通知或催告，普匯公司或甲方得隨時對乙方收回部分借款、縮短借款期限，或視為全部到期: \\r\\n（1）任何一宗債務不依約清償者。 \\r\\n（2）依破產法聲請和解，依消費者債務清理條例聲請更生、清算、前置協商、前置調整、和解、聲請宣告破產、經票據交換所通知拒絕往來、停止營業，清理債務者。 \\r\\n（3）依約定負有提供擔保之義務而不提供者。 \\r\\n（4）因債務人死亡而其繼承人聲明為拋棄繼承者。 \\r\\n（5）因刑事而受沒收主要財產之宣告，或受沒入、徵收其主要財產之行政處分，或因犯罪嫌疑被羈押或經起訴者。 \\r\\n2. 乙方如有下列情形之一時，由普匯公司或甲方事先定合理期間(七日)，發出通知或催告後，始生收回部分借款、縮短借款期限，或視為全部到期之效力: \\r\\n（1）乙方對甲方所負債務，其實際資金用途與普匯公司或甲方核定或約定用途不符者。 \\r\\n（2）受強制執行或假扣押、假處分或其他保全處分，致本公司或甲方有不能完全受償之虞者。 \\r\\n第4條 遲延還款 \\r\\n1. 清償期日之末日如為星期假日、國定假日或其他如天災、地變等不可抗力因素導致政府公告停止上班日，則順延至下一工作天。 \\r\\n2. 雙方同意得訂逾清償期日7天內(含)為寬限期，如乙方於寬限期內繳清所積欠之本息及相關應付費用，即無須繳納遲延利息。 \\r\\n3. 乙方逾越前項寬限期未清償借款者，同意終止原應付利息之計算方式，即應按日以未清償部分本金乘以0.1％計算延滯利息至本金即延滯利息均向甲方清償完畢止。 \\r\\n4. 甲方除本契約約定利息及延滯息，不得對乙方請求違約金。 \\r\\n第5條 債權轉讓 \\r\\n乙方同意甲方或普匯公司得以電子方式通知或其他法定方式，將本契約債權之全部或一部轉讓予第三人，乙方絕無異議。\\r\\n第6條 提前清償 \\r\\n乙方如提前清償借貸本金，仍應給付已發生但未到期之利息予甲方，未到期之利息無庸給付，甲方並無異議且不得再行對乙方請求違約金。 \\r\\n第7條 管轄及其他 \\r\\n有關本契約涉訴時，甲、乙雙方同意以台灣台北地方法院為管轄法院，並以中華民國法律為準據法。\\n 中華民國 109 年 12 月 08 日\",\n" +
-                            "        \"credit\": {\n" +
-                            "            \"id\": 4305,\n" +
-                            "            \"level\": 4,\n" +
-                            "            \"points\": 1868,\n" +
-                            "            \"amount\": 75000,\n" +
-                            "            \"created_at\": 1606976488,\n" +
-                            "            \"expire_time\": 1622701287\n" +
+                            "        \"associate\": {\n" +
+                            "            \"agitate\": [\n" +
+                            "                {\n" +
+                            "                    \"name\": \"胡哲瑋\",\n" +
+                            "                    \"id_number\": \"A127318502\",\n" +
+                            "                    \"identity\": 1,\n" +
+                            "                    \"certification\": [\n" +
+                            "                        {\n" +
+                            "                            \"id\": 1,\n" +
+                            "                            \"alias\": \"idcard\",\n" +
+                            "                            \"name\": \"實名認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"驗證個人身份資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 916,\n" +
+                            "                            \"updated_at\": 1536193718\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 3,\n" +
+                            "                            \"alias\": \"debitcard\",\n" +
+                            "                            \"name\": \"金融帳號認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"驗證個人金融帳號\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 918,\n" +
+                            "                            \"updated_at\": 1536186492\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 4,\n" +
+                            "                            \"alias\": \"social\",\n" +
+                            "                            \"name\": \"社交認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"個人社交帳號認證\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 920,\n" +
+                            "                            \"updated_at\": 1570758798\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 5,\n" +
+                            "                            \"alias\": \"emergency\",\n" +
+                            "                            \"name\": \"緊急聯絡人\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 921,\n" +
+                            "                            \"updated_at\": 1536193741\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 6,\n" +
+                            "                            \"alias\": \"email\",\n" +
+                            "                            \"name\": \"常用電子信箱\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 923,\n" +
+                            "                            \"updated_at\": 1536186622\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 7,\n" +
+                            "                            \"alias\": \"financial\",\n" +
+                            "                            \"name\": \"財務訊息認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供財務訊息資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 924,\n" +
+                            "                            \"updated_at\": 1570758793\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 8,\n" +
+                            "                            \"alias\": \"diploma\",\n" +
+                            "                            \"name\": \"最高學歷認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": null,\n" +
+                            "                            \"certification_id\": null,\n" +
+                            "                            \"updated_at\": null\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 9,\n" +
+                            "                            \"alias\": \"investigation\",\n" +
+                            "                            \"name\": \"聯合徵信認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                            \"optional\": [\n" +
+                            "                                3,\n" +
+                            "                                4\n" +
+                            "                            ],\n" +
+                            "                            \"user_status\": null,\n" +
+                            "                            \"certification_id\": null,\n" +
+                            "                            \"updated_at\": null\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 10,\n" +
+                            "                            \"alias\": \"job\",\n" +
+                            "                            \"name\": \"工作認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供工作訊息資訊\",\n" +
+                            "                            \"optional\": [\n" +
+                            "                                3,\n" +
+                            "                                4\n" +
+                            "                            ],\n" +
+                            "                            \"user_status\": null,\n" +
+                            "                            \"certification_id\": null,\n" +
+                            "                            \"updated_at\": null\n" +
+                            "                        }\n" +
+                            "                    ],\n" +
+                            "                    \"status\": 1,\n" +
+                            "                    \"self\": false\n" +
+                            "                },\n" +
+                            "                {\n" +
+                            "                    \"name\": \"侯威綸\",\n" +
+                            "                    \"id_number\": \"B123285290\",\n" +
+                            "                    \"identity\": 1,\n" +
+                            "                    \"certification\": [\n" +
+                            "                        {\n" +
+                            "                            \"id\": 1,\n" +
+                            "                            \"alias\": \"idcard\",\n" +
+                            "                            \"name\": \"實名認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"驗證個人身份資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 12040,\n" +
+                            "                            \"updated_at\": 1568800782\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 3,\n" +
+                            "                            \"alias\": \"debitcard\",\n" +
+                            "                            \"name\": \"金融帳號認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"驗證個人金融帳號\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 1983,\n" +
+                            "                            \"updated_at\": 1577342797\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 4,\n" +
+                            "                            \"alias\": \"social\",\n" +
+                            "                            \"name\": \"社交認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"個人社交帳號認證\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 12043,\n" +
+                            "                            \"updated_at\": 1554855967\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 5,\n" +
+                            "                            \"alias\": \"emergency\",\n" +
+                            "                            \"name\": \"緊急聯絡人\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 12044,\n" +
+                            "                            \"updated_at\": 1554855984\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 6,\n" +
+                            "                            \"alias\": \"email\",\n" +
+                            "                            \"name\": \"常用電子信箱\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 12045,\n" +
+                            "                            \"updated_at\": 1554811574\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 7,\n" +
+                            "                            \"alias\": \"financial\",\n" +
+                            "                            \"name\": \"財務訊息認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供財務訊息資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": 1,\n" +
+                            "                            \"certification_id\": 12046,\n" +
+                            "                            \"updated_at\": 1554811640\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 8,\n" +
+                            "                            \"alias\": \"diploma\",\n" +
+                            "                            \"name\": \"最高學歷認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                            \"optional\": [],\n" +
+                            "                            \"user_status\": null,\n" +
+                            "                            \"certification_id\": null,\n" +
+                            "                            \"updated_at\": null\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 9,\n" +
+                            "                            \"alias\": \"investigation\",\n" +
+                            "                            \"name\": \"聯合徵信認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                            \"optional\": [\n" +
+                            "                                3,\n" +
+                            "                                4\n" +
+                            "                            ],\n" +
+                            "                            \"user_status\": null,\n" +
+                            "                            \"certification_id\": null,\n" +
+                            "                            \"updated_at\": null\n" +
+                            "                        },\n" +
+                            "                        {\n" +
+                            "                            \"id\": 10,\n" +
+                            "                            \"alias\": \"job\",\n" +
+                            "                            \"name\": \"工作認證\",\n" +
+                            "                            \"status\": 1,\n" +
+                            "                            \"description\": \"提供工作訊息資訊\",\n" +
+                            "                            \"optional\": [\n" +
+                            "                                3,\n" +
+                            "                                4\n" +
+                            "                            ],\n" +
+                            "                            \"user_status\": null,\n" +
+                            "                            \"certification_id\": null,\n" +
+                            "                            \"updated_at\": null\n" +
+                            "                        }\n" +
+                            "                    ],\n" +
+                            "                    \"status\": 1,\n" +
+                            "                    \"self\": false\n" +
+                            "                }\n" +
+                            "            ],\n" +
+                            "            \"owner\": {\n" +
+                            "                \"name\": \"林郁凱\",\n" +
+                            "                \"id_number\": \"L123924110\",\n" +
+                            "                \"identity\": 2,\n" +
+                            "                \"certification\": [\n" +
+                            "                    {\n" +
+                            "                        \"id\": 1012,\n" +
+                            "                        \"alias\": \"business_plan\",\n" +
+                            "                        \"name\": \"商業企劃書\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供商業企劃書\",\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": null,\n" +
+                            "                        \"updated_at\": null,\n" +
+                            "                        \"type\": \"targetData\",\n" +
+                            "                        \"certification_completeness\": \"targetData\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 1,\n" +
+                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"name\": \"實名認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人身份資訊\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11430,\n" +
+                            "                        \"updated_at\": 1586486498,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 3,\n" +
+                            "                        \"alias\": \"debitcard\",\n" +
+                            "                        \"name\": \"金融帳號認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人金融帳號\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11407,\n" +
+                            "                        \"updated_at\": 1553750450,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 4,\n" +
+                            "                        \"alias\": \"social\",\n" +
+                            "                        \"name\": \"社交認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"個人社交帳號認證\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11451,\n" +
+                            "                        \"updated_at\": 1571026433,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 5,\n" +
+                            "                        \"alias\": \"emergency\",\n" +
+                            "                        \"name\": \"緊急聯絡人\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11454,\n" +
+                            "                        \"updated_at\": 1585141682,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 6,\n" +
+                            "                        \"alias\": \"email\",\n" +
+                            "                        \"name\": \"常用電子信箱\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11392,\n" +
+                            "                        \"updated_at\": 1570615143,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 7,\n" +
+                            "                        \"alias\": \"financial\",\n" +
+                            "                        \"name\": \"財務訊息認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供財務訊息資訊\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 19423,\n" +
+                            "                        \"updated_at\": 1586437675,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 8,\n" +
+                            "                        \"alias\": \"diploma\",\n" +
+                            "                        \"name\": \"最高學歷認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18431,\n" +
+                            "                        \"updated_at\": 1586142901,\n" +
+                            "                        \"diploma_date\": \"\",\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 9,\n" +
+                            "                        \"alias\": \"investigation\",\n" +
+                            "                        \"name\": \"聯合徵信認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": null,\n" +
+                            "                        \"certification_id\": null,\n" +
+                            "                        \"updated_at\": null,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 0\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 10,\n" +
+                            "                        \"alias\": \"job\",\n" +
+                            "                        \"name\": \"工作認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供工作訊息資訊\",\n" +
+                            "                        \"optional\": false,\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18416,\n" +
+                            "                        \"updated_at\": 1583118112,\n" +
+                            "                        \"type\": \"certification\",\n" +
+                            "                        \"completeness\": 10\n" +
+                            "                    }\n" +
+                            "                ],\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"self\": true\n" +
+                            "            }\n" +
                             "        },\n" +
+                            "        \"created_at\": 1587394752,\n" +
+                            "        \"contract\": \"\",\n" +
+                            "        \"credit\": false,\n" +
                             "        \"certification\": [\n" +
+                            "            {\n" +
+                            "                \"id\": 1012,\n" +
+                            "                \"alias\": \"business_plan\",\n" +
+                            "                \"name\": \"商業企劃書\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"提供商業企劃書\",\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": null,\n" +
+                            "                \"updated_at\": null,\n" +
+                            "                \"type\": \"targetData\",\n" +
+                            "                \"certification_completeness\": \"targetData\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
                             "            {\n" +
                             "                \"id\": 1,\n" +
                             "                \"alias\": \"idcard\",\n" +
@@ -11279,47 +16813,34 @@ define({
                             "                \"description\": \"驗證個人身份資訊\",\n" +
                             "                \"optional\": false,\n" +
                             "                \"user_status\": 1,\n" +
-                            "                \"certification_id\": 19760,\n" +
-                            "                \"updated_at\": 1597980086,\n" +
-                            "                \"type\": \"certification\",\n" +
-                            "                \"completeness\": 10\n" +
-                            "            },\n" +
-                            "            {\n" +
-                            "                \"id\": 2,\n" +
-                            "                \"alias\": \"student\",\n" +
-                            "                \"name\": \"學生身份認證\",\n" +
-                            "                \"status\": 1,\n" +
-                            "                \"description\": \"驗證學生身份\",\n" +
-                            "                \"optional\": false,\n" +
-                            "                \"user_status\": 1,\n" +
-                            "                \"certification_id\": 1000453,\n" +
-                            "                \"updated_at\": 1606965241,\n" +
+                            "                \"certification_id\": 11430,\n" +
+                            "                \"updated_at\": 1586486498,\n" +
                             "                \"type\": \"certification\",\n" +
                             "                \"completeness\": 10\n" +
                             "            },\n" +
                             "            {\n" +
                             "                \"id\": 3,\n" +
                             "                \"alias\": \"debitcard\",\n" +
-                            "                \"name\": \"金融/存款帳戶\",\n" +
+                            "                \"name\": \"金融帳號認證\",\n" +
                             "                \"status\": 1,\n" +
                             "                \"description\": \"驗證個人金融帳號\",\n" +
                             "                \"optional\": false,\n" +
                             "                \"user_status\": 1,\n" +
-                            "                \"certification_id\": 19763,\n" +
-                            "                \"updated_at\": 1597978149,\n" +
+                            "                \"certification_id\": 11407,\n" +
+                            "                \"updated_at\": 1553750450,\n" +
                             "                \"type\": \"certification\",\n" +
                             "                \"completeness\": 10\n" +
                             "            },\n" +
                             "            {\n" +
                             "                \"id\": 4,\n" +
                             "                \"alias\": \"social\",\n" +
-                            "                \"name\": \"社交帳號\",\n" +
+                            "                \"name\": \"社交認證\",\n" +
                             "                \"status\": 1,\n" +
                             "                \"description\": \"個人社交帳號認證\",\n" +
                             "                \"optional\": false,\n" +
                             "                \"user_status\": 1,\n" +
-                            "                \"certification_id\": 19764,\n" +
-                            "                \"updated_at\": 1597980039,\n" +
+                            "                \"certification_id\": 11451,\n" +
+                            "                \"updated_at\": 1571026433,\n" +
                             "                \"type\": \"certification\",\n" +
                             "                \"completeness\": 10\n" +
                             "            },\n" +
@@ -11331,8 +16852,8 @@ define({
                             "                \"description\": \"設定緊急連絡人資訊\",\n" +
                             "                \"optional\": false,\n" +
                             "                \"user_status\": 1,\n" +
-                            "                \"certification_id\": 19784,\n" +
-                            "                \"updated_at\": 1597980106,\n" +
+                            "                \"certification_id\": 11454,\n" +
+                            "                \"updated_at\": 1585141682,\n" +
                             "                \"type\": \"certification\",\n" +
                             "                \"completeness\": 10\n" +
                             "            },\n" +
@@ -11344,486 +16865,67 @@ define({
                             "                \"description\": \"驗證常用E-Mail位址\",\n" +
                             "                \"optional\": false,\n" +
                             "                \"user_status\": 1,\n" +
-                            "                \"certification_id\": 19766,\n" +
-                            "                \"updated_at\": 1597980045,\n" +
+                            "                \"certification_id\": 11392,\n" +
+                            "                \"updated_at\": 1570615143,\n" +
                             "                \"type\": \"certification\",\n" +
                             "                \"completeness\": 10\n" +
                             "            },\n" +
                             "            {\n" +
                             "                \"id\": 7,\n" +
                             "                \"alias\": \"financial\",\n" +
-                            "                \"name\": \"收支資訊提供\",\n" +
+                            "                \"name\": \"財務訊息認證\",\n" +
                             "                \"status\": 1,\n" +
                             "                \"description\": \"提供財務訊息資訊\",\n" +
                             "                \"optional\": false,\n" +
                             "                \"user_status\": 1,\n" +
-                            "                \"certification_id\": 19785,\n" +
-                            "                \"updated_at\": 1597979499,\n" +
+                            "                \"certification_id\": 19423,\n" +
+                            "                \"updated_at\": 1586437675,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 8,\n" +
+                            "                \"alias\": \"diploma\",\n" +
+                            "                \"name\": \"最高學歷認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 18431,\n" +
+                            "                \"updated_at\": 1586142901,\n" +
+                            "                \"diploma_date\": \"\",\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 10\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 9,\n" +
+                            "                \"alias\": \"investigation\",\n" +
+                            "                \"name\": \"聯合徵信認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": null,\n" +
+                            "                \"certification_id\": null,\n" +
+                            "                \"updated_at\": null,\n" +
+                            "                \"type\": \"certification\",\n" +
+                            "                \"completeness\": 0\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 10,\n" +
+                            "                \"alias\": \"job\",\n" +
+                            "                \"name\": \"工作認證\",\n" +
+                            "                \"status\": 1,\n" +
+                            "                \"description\": \"提供工作訊息資訊\",\n" +
+                            "                \"optional\": false,\n" +
+                            "                \"user_status\": 1,\n" +
+                            "                \"certification_id\": 18416,\n" +
+                            "                \"updated_at\": 1583118112,\n" +
                             "                \"type\": \"certification\",\n" +
                             "                \"completeness\": 10\n" +
                             "            }\n" +
                             "        ],\n" +
-                            "        \"amortization_schedule\": {\n" +
-                            "            \"amount\": 20000,\n" +
-                            "            \"instalment\": 24,\n" +
-                            "            \"rate\": 10,\n" +
-                            "            \"date\": \"2021-01-19\",\n" +
-                            "            \"total_payment\": 923,\n" +
-                            "            \"leap_year\": false,\n" +
-                            "            \"year_days\": 365,\n" +
-                            "            \"XIRR\": 10.459999999999999,\n" +
-                            "            \"schedule\": {\n" +
-                            "                \"1\": {\n" +
-                            "                    \"instalment\": 1,\n" +
-                            "                    \"repayment_date\": \"2021-03-10\",\n" +
-                            "                    \"days\": 50,\n" +
-                            "                    \"remaining_principal\": 20000,\n" +
-                            "                    \"principal\": 649,\n" +
-                            "                    \"interest\": 274,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"2\": {\n" +
-                            "                    \"instalment\": 2,\n" +
-                            "                    \"repayment_date\": \"2021-04-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 19351,\n" +
-                            "                    \"principal\": 759,\n" +
-                            "                    \"interest\": 164,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"3\": {\n" +
-                            "                    \"instalment\": 3,\n" +
-                            "                    \"repayment_date\": \"2021-05-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 18592,\n" +
-                            "                    \"principal\": 770,\n" +
-                            "                    \"interest\": 153,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"4\": {\n" +
-                            "                    \"instalment\": 4,\n" +
-                            "                    \"repayment_date\": \"2021-06-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 17822,\n" +
-                            "                    \"principal\": 772,\n" +
-                            "                    \"interest\": 151,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"5\": {\n" +
-                            "                    \"instalment\": 5,\n" +
-                            "                    \"repayment_date\": \"2021-07-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 17050,\n" +
-                            "                    \"principal\": 783,\n" +
-                            "                    \"interest\": 140,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"6\": {\n" +
-                            "                    \"instalment\": 6,\n" +
-                            "                    \"repayment_date\": \"2021-08-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 16267,\n" +
-                            "                    \"principal\": 785,\n" +
-                            "                    \"interest\": 138,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"7\": {\n" +
-                            "                    \"instalment\": 7,\n" +
-                            "                    \"repayment_date\": \"2021-09-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 15482,\n" +
-                            "                    \"principal\": 792,\n" +
-                            "                    \"interest\": 131,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"8\": {\n" +
-                            "                    \"instalment\": 8,\n" +
-                            "                    \"repayment_date\": \"2021-10-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 14690,\n" +
-                            "                    \"principal\": 802,\n" +
-                            "                    \"interest\": 121,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"9\": {\n" +
-                            "                    \"instalment\": 9,\n" +
-                            "                    \"repayment_date\": \"2021-11-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 13888,\n" +
-                            "                    \"principal\": 805,\n" +
-                            "                    \"interest\": 118,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"10\": {\n" +
-                            "                    \"instalment\": 10,\n" +
-                            "                    \"repayment_date\": \"2021-12-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 13083,\n" +
-                            "                    \"principal\": 815,\n" +
-                            "                    \"interest\": 108,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"11\": {\n" +
-                            "                    \"instalment\": 11,\n" +
-                            "                    \"repayment_date\": \"2022-01-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 12268,\n" +
-                            "                    \"principal\": 819,\n" +
-                            "                    \"interest\": 104,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"12\": {\n" +
-                            "                    \"instalment\": 12,\n" +
-                            "                    \"repayment_date\": \"2022-02-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 11449,\n" +
-                            "                    \"principal\": 826,\n" +
-                            "                    \"interest\": 97,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"13\": {\n" +
-                            "                    \"instalment\": 13,\n" +
-                            "                    \"repayment_date\": \"2022-03-10\",\n" +
-                            "                    \"days\": 28,\n" +
-                            "                    \"remaining_principal\": 10623,\n" +
-                            "                    \"principal\": 842,\n" +
-                            "                    \"interest\": 81,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"14\": {\n" +
-                            "                    \"instalment\": 14,\n" +
-                            "                    \"repayment_date\": \"2022-04-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 9781,\n" +
-                            "                    \"principal\": 840,\n" +
-                            "                    \"interest\": 83,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"15\": {\n" +
-                            "                    \"instalment\": 15,\n" +
-                            "                    \"repayment_date\": \"2022-05-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 8941,\n" +
-                            "                    \"principal\": 850,\n" +
-                            "                    \"interest\": 73,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"16\": {\n" +
-                            "                    \"instalment\": 16,\n" +
-                            "                    \"repayment_date\": \"2022-06-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 8091,\n" +
-                            "                    \"principal\": 854,\n" +
-                            "                    \"interest\": 69,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"17\": {\n" +
-                            "                    \"instalment\": 17,\n" +
-                            "                    \"repayment_date\": \"2022-07-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 7237,\n" +
-                            "                    \"principal\": 864,\n" +
-                            "                    \"interest\": 59,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"18\": {\n" +
-                            "                    \"instalment\": 18,\n" +
-                            "                    \"repayment_date\": \"2022-08-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 6373,\n" +
-                            "                    \"principal\": 869,\n" +
-                            "                    \"interest\": 54,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"19\": {\n" +
-                            "                    \"instalment\": 19,\n" +
-                            "                    \"repayment_date\": \"2022-09-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 5504,\n" +
-                            "                    \"principal\": 876,\n" +
-                            "                    \"interest\": 47,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"20\": {\n" +
-                            "                    \"instalment\": 20,\n" +
-                            "                    \"repayment_date\": \"2022-10-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 4628,\n" +
-                            "                    \"principal\": 885,\n" +
-                            "                    \"interest\": 38,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"21\": {\n" +
-                            "                    \"instalment\": 21,\n" +
-                            "                    \"repayment_date\": \"2022-11-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 3743,\n" +
-                            "                    \"principal\": 891,\n" +
-                            "                    \"interest\": 32,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"22\": {\n" +
-                            "                    \"instalment\": 22,\n" +
-                            "                    \"repayment_date\": \"2022-12-10\",\n" +
-                            "                    \"days\": 30,\n" +
-                            "                    \"remaining_principal\": 2852,\n" +
-                            "                    \"principal\": 900,\n" +
-                            "                    \"interest\": 23,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"23\": {\n" +
-                            "                    \"instalment\": 23,\n" +
-                            "                    \"repayment_date\": \"2023-01-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 1952,\n" +
-                            "                    \"principal\": 906,\n" +
-                            "                    \"interest\": 17,\n" +
-                            "                    \"total_payment\": 923\n" +
-                            "                },\n" +
-                            "                \"24\": {\n" +
-                            "                    \"instalment\": 24,\n" +
-                            "                    \"repayment_date\": \"2023-02-10\",\n" +
-                            "                    \"days\": 31,\n" +
-                            "                    \"remaining_principal\": 1046,\n" +
-                            "                    \"principal\": 1046,\n" +
-                            "                    \"interest\": 9,\n" +
-                            "                    \"total_payment\": 1055\n" +
-                            "                }\n" +
-                            "            },\n" +
-                            "            \"total\": {\n" +
-                            "                \"principal\": 20000,\n" +
-                            "                \"interest\": 2284,\n" +
-                            "                \"total_payment\": 22284\n" +
-                            "            }\n" +
-                            "        },\n" +
-                            "        \"biddingHistory\": {\n" +
-                            "            \"startBidding\": \"2021/01/10 19:01:43\",\n" +
-                            "            \"endBidding\": \"2021/01/24 19:01:43\",\n" +
-                            "            \"currenIndex\": \"213\",\n" +
-                            "            \"history\": [\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                0,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                10,\n" +
-                            "                40\n" +
-                            "            ],\n" +
-                            "            \"x\": \"336\",\n" +
-                            "            \"x_unit\": \"時\",\n" +
-                            "            \"x_limit\": 1,\n" +
-                            "            \"y\": \"100\",\n" +
-                            "            \"y_unit\": \"%\",\n" +
-                            "            \"y_limit\": 10\n" +
-                            "        },\n" +
-                            "        \"isSupportRateAdjust\": true\n" +
+                            "        \"amortization_schedule\": [],\n" +
+                            "        \"biddingHistory\": []\n" +
                             "    }\n" +
                             "}",
                         "type": "Object"
@@ -12068,7 +17170,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>還款方式</p>"
+                            "description": "<p>計息方式</p>"
                         },
                         {
                             "group": "Success 200",
@@ -12494,7 +17596,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>還款方式 1:等額本息</p>"
+                            "description": "<p>計息方式 1:等額本息</p>"
                         },
                         {
                             "group": "Success 200",
@@ -12529,7 +17631,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "sub_status",
-                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4:完成提還 5:已出貨 6:鑑賞期 7:退貨中 8:轉貸的target 9:待二審</p>"
+                            "description": "<p>狀態 0:無 1: 轉貸中 2:轉貸成功 3:申請提還 4:完成提還 5:已出貨 6:鑑賞期 7:退貨中 8:轉貸的target 9:二審</p>"
                         },
                         {
                             "group": "Success 200",
@@ -12551,6 +17653,34 @@ define({
                             "optional": false,
                             "field": "subloan_target_sub_status",
                             "description": "<p>同上 sub_status</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate",
+                            "description": "<p>關聯(保證人)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner",
+                            "description": "<p>負責人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.identity",
+                            "description": "<p>身分 1:學生 2:上班族 3:法人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.status",
+                            "description": "<p>狀態 0:待歸戶 1:待簽約</p>"
                         }
                     ]
                 },
@@ -12560,46 +17690,56 @@ define({
                         "content": "{\n" +
                             "    \"result\": \"SUCCESS\",\n" +
                             "    \"data\": {\n" +
-                            "        \"list\": [\n"+
+                            "        \"list\": [\n" +
                             "            {\n" +
-                            "                \"id\": 10426,\n" +
-                            "                \"target_no\": \"STI2019062296186\",\n" +
-                            "                \"product_id\": 2,\n" +
-                            "                \"user_id\": 724,\n" +
-                            "                \"amount\": 23700,\n" +
+                            "                \"id\": 18820,\n" +
+                            "                \"target_no\": \"SUL2020042012635\",\n" +
+                            "                \"product_name\": \"孵化基金 / 非學生孵化基金\",\n" +
+                            "                \"product_id\": 8,\n" +
+                            "                \"sub_product_id\": 4,\n" +
+                            "                \"user_id\": 12820,\n" +
+                            "                \"amount\": 1000000,\n" +
                             "                \"loan_amount\": 0,\n" +
-                            "                \"platform_fee\": 733,\n" +
+                            "                \"platform_fee\": 0,\n" +
                             "                \"interest_rate\": 0,\n" +
-                            "                \"instalment\": 24,\n" +
+                            "                \"instalment\": 6,\n" +
                             "                \"repayment\": 1,\n" +
-                            "                \"reason\": \"分期:ASUS ROG Phone (ZS600KL)\",\n" +
-                            "                \"remark\": \"\",\n" +
+                            "                \"reason\": \"哈哈 - 唷唷\",\n" +
+                            "                \"remark\": \"信用不足\",\n" +
                             "                \"delay\": 0,\n" +
-                            "                \"status\": 22,\n" +
+                            "                \"status\": 0,\n" +
                             "                \"sub_status\": 0,\n" +
-                            "                \"subloan_target_status\": 2,\n" +
-                            "                \"subloan_target_sub_status\": 8,\n" +
-                            "                \"created_at\": 1561218582\n" +
+                            "                \"associate\": {\n" +
+                            "                    \"owner\": true,\n" +
+                            "                    \"identity\": 2,\n" +
+                            "                    \"status\": 1\n" +
+                            "                },\n" +
+                            "                \"subloan_target_status\": 0,\n" +
+                            "                \"subloan_target_sub_status\": 0,\n" +
+                            "                \"created_at\": 1587394752\n" +
                             "            },\n" +
                             "            {\n" +
-                            "                \"id\": 10427,\n" +
-                            "                \"target_no\": \"STI2019062373438\",\n" +
-                            "                \"product_id\": 2,\n" +
-                            "                \"user_id\": 724,\n" +
-                            "                \"amount\": 23700,\n" +
-                            "                \"loan_amount\": 0,\n" +
-                            "                \"platform_fee\": 733,\n" +
-                            "                \"interest_rate\": 0,\n" +
-                            "                \"instalment\": 24,\n" +
+                            "                \"id\": 18746,\n" +
+                            "                \"target_no\": \"STN2020040153723\",\n" +
+                            "                \"product_name\": \"學生貸\",\n" +
+                            "                \"product_id\": 1,\n" +
+                            "                \"sub_product_id\": 0,\n" +
+                            "                \"user_id\": 12820,\n" +
+                            "                \"amount\": 10000,\n" +
+                            "                \"loan_amount\": 10000,\n" +
+                            "                \"platform_fee\": 500,\n" +
+                            "                \"interest_rate\": 10,\n" +
+                            "                \"instalment\": 3,\n" +
                             "                \"repayment\": 1,\n" +
-                            "                \"reason\": \"分期:ASUS ROG Phone (ZS600KL)\",\n" +
-                            "                \"remark\": \"\",\n" +
+                            "                \"reason\": \"tre - ertre\",\n" +
+                            "                \"remark\": \"經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。\",\n" +
                             "                \"delay\": 0,\n" +
-                            "                \"status\": 22,\n" +
-                            "                \"sub_status\": 0,\n" +
-                            "                \"subloan_target_status\": 2,\n" +
-                            "                \"subloan_target_sub_status\": 8,\n" +
-                            "                \"created_at\": 1561220972\n" +
+                            "                \"status\": 0,\n" +
+                            "                \"sub_status\": 9,\n" +
+                            "                \"associate\": false,\n" +
+                            "                \"subloan_target_status\": 0,\n" +
+                            "                \"subloan_target_sub_status\": 0,\n" +
+                            "                \"created_at\": 1585712334\n" +
                             "            }\n" +
                             "        ]\n" +
                             "    }\n" +
@@ -12773,7 +17913,7 @@ define({
                             "type": "String",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>還款方式</p>"
+                            "description": "<p>計息方式</p>"
                         },
                         {
                             "group": "Success 200",
@@ -13291,7 +18431,7 @@ define({
                             "type": "Object",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>可選還款方式 1:等額本息</p>"
+                            "description": "<p>可選計息方式 1:等額本息</p>"
                         }
                     ]
                 },
@@ -13420,85 +18560,91 @@ define({
                             "group": "",
                             "type": "Boolean",
                             "field": "purchase_time",
-                            "description": "<p>購車時間</p>"
+                            "description": "<p>(外匯車)購車時間</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "vin",
-                            "description": "<p>車身號碼</p>"
+                            "description": "<p>(外匯車)車身號碼</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "factory_time",
-                            "description": "<p>出廠時間</p>"
+                            "description": "<p>(外匯車)出廠時間</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "product_description",
-                            "description": "<p>產品備註</p>"
+                            "description": "<p>(外匯車)產品備註</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_history_image",
-                            "description": "<p>車輛歷史報告 ( Carfax / Autocheck )</p>"
+                            "description": "<p>(外匯車)車輛歷史報告 ( Carfax / Autocheck )</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_title_image",
-                            "description": "<p>車輛所有權狀(title)</p>"
+                            "description": "<p>(外匯車)車輛所有權狀(title)</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_import_proof_image",
-                            "description": "<p>海關進口證明/進口報單</p>"
+                            "description": "<p>(外匯車)海關進口證明/進口報單</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_artc_image",
-                            "description": "<p>交通部核發安審合格證明、環保驗車證明</p>"
+                            "description": "<p>(外匯車)交通部核發安審合格證明、環保驗車證明</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_others_image",
-                            "description": "<p>協力廠商鑑定報告</p>"
+                            "description": "<p>(外匯車)協力廠商鑑定報告</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_photo_front_image",
-                            "description": "<p>車輛外觀照片-前側</p>"
+                            "description": "<p>(外匯車)車輛外觀照片-前側</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_photo_back_image",
-                            "description": "<p>車輛外觀照片-後側</p>"
+                            "description": "<p>(外匯車)車輛外觀照片-後側</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_photo_all_image",
-                            "description": "<p>車輛外觀照片-全車</p>"
+                            "description": "<p>(外匯車)車輛外觀照片-全車</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_photo_date_image",
-                            "description": "<p>車輛外觀照片-出廠日期</p>"
+                            "description": "<p>(外匯車)車輛外觀照片-出廠日期</p>"
                         },
                         {
                             "group": "",
                             "type": "Boolean",
                             "field": "car_photo_mileage_image",
-                            "description": "<p>車輛外觀照片-里程</p>"
+                            "description": "<p>(外匯車)車輛外觀照片-里程</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "Boolean",
+                            "field": "business_plan_photo_image",
+                            "description": "<p>(創業貸)商業企劃書</p>"
                         }
                     ]
                 },
@@ -13727,6 +18873,20 @@ define({
                             "optional": true,
                             "field": "car_photo_mileage_image",
                             "description": "<p>車輛外觀照片-里程</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "opcomon": true,
+                            "field": "business_plan",
+                            "description": "<p>(創業貸)商業企劃書</p>"
+                        },
+                        {
+                            "group": "",
+                            "type": "String",
+                            "opcomon": true,
+                            "field": "verification",
+                            "description": "<p>(創業貸)驗資基金證明</p>"
                         }
                     ]
                 }
@@ -14039,7 +19199,7 @@ define({
                             "type": "Object",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>還款方式</p>"
+                            "description": "<p>計息方式</p>"
                         }
                     ]
                 },
@@ -14147,7 +19307,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "product_name",
-                            "description": "<p>P產品名稱</p>"
+                            "description": "<p>產品名稱</p>"
                         },
                         {
                             "group": "Success 200",
@@ -14196,7 +19356,7 @@ define({
                             "type": "Object",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>可選還款方式 1:等額本息</p>"
+                            "description": "<p>可選計息方式 1:等額本息</p>"
                         },
                         {
                             "group": "Success 200",
@@ -14260,6 +19420,27 @@ define({
                             "optional": false,
                             "field": "selling_type",
                             "description": "<p>0:手機 1:遊學 2:外匯車 999:其它</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "associate.owner",
+                            "description": "<p>負責人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.identity",
+                            "description": "<p>身分 1:學生 2:上班族 3:法人</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "associate.status",
+                            "description": "<p>狀態 0:待歸戶 1:待簽約</p>"
                         }
                     ]
                 },
@@ -14269,38 +19450,514 @@ define({
                         "content": "{\n" +
                             "    \"result\": \"SUCCESS\",\n" +
                             "    \"data\": {\n" +
+                            "        \"list\": [\n" +
+                            "            {\n" +
+                            "                \"id\": 1,\n" +
+                            "                \"type\": 1,\n" +
+                            "                \"identity\": 1,\n" +
+                            "                \"name\": \"學生貸\",\n" +
+                            "                \"description\": \"須提供有效學生證\n" +
+                            "可申請額度\n" +
+                            "5,000-120,000\",\n" +
+                            "                \"loan_range_s\": 5000,\n" +
+                            "                \"loan_range_e\": 120000,\n" +
+                            "                \"interest_rate_s\": 5,\n" +
+                            "                \"interest_rate_e\": 20,\n" +
+                            "                \"charge_platform\": 3,\n" +
+                            "                \"charge_platform_min\": 500,\n" +
+                            "                \"instalment\": [\n" +
+                            "                    3,\n" +
+                            "                    6,\n" +
+                            "                    12,\n" +
+                            "                    18,\n" +
+                            "                    24\n" +
+                            "                ],\n" +
+                            "                \"repayment\": [\n" +
+                            "                    1\n" +
+                            "                ],\n" +
+                            "                \"target\": [],\n" +
+                            "                \"certification\": [\n" +
+                            "                    {\n" +
+                            "                        \"id\": 1,\n" +
+                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"name\": \"實名認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人身份資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11430,\n" +
+                            "                        \"updated_at\": 1586486498\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 2,\n" +
+                            "                        \"alias\": \"student\",\n" +
+                            "                        \"name\": \"學生身份認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證學生身份\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18454,\n" +
+                            "                        \"updated_at\": 1587721481\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 3,\n" +
+                            "                        \"alias\": \"debitcard\",\n" +
+                            "                        \"name\": \"金融帳號認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人金融帳號\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11407,\n" +
+                            "                        \"updated_at\": 1553750450\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 4,\n" +
+                            "                        \"alias\": \"social\",\n" +
+                            "                        \"name\": \"社交認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"個人社交帳號認證\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11451,\n" +
+                            "                        \"updated_at\": 1571026433\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 5,\n" +
+                            "                        \"alias\": \"emergency\",\n" +
+                            "                        \"name\": \"緊急聯絡人\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11454,\n" +
+                            "                        \"updated_at\": 1585141682\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 6,\n" +
+                            "                        \"alias\": \"email\",\n" +
+                            "                        \"name\": \"常用電子信箱\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11392,\n" +
+                            "                        \"updated_at\": 1570615143\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 7,\n" +
+                            "                        \"alias\": \"financial\",\n" +
+                            "                        \"name\": \"財務訊息認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供財務訊息資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 19423,\n" +
+                            "                        \"updated_at\": 1586437675\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 2,\n" +
+                            "                \"type\": 2,\n" +
+                            "                \"identity\": 1,\n" +
+                            "                \"name\": \"學生手機貸\",\n" +
+                            "                \"description\": \"須提供有效學生證\n" +
+                            "可申請額度\n" +
+                            "5,000-120,000\",\n" +
+                            "                \"loan_range_s\": 5000,\n" +
+                            "                \"loan_range_e\": 120000,\n" +
+                            "                \"interest_rate_s\": 18,\n" +
+                            "                \"interest_rate_e\": 18,\n" +
+                            "                \"charge_platform\": 3,\n" +
+                            "                \"charge_platform_min\": 500,\n" +
+                            "                \"instalment\": [\n" +
+                            "                    3,\n" +
+                            "                    6,\n" +
+                            "                    12,\n" +
+                            "                    18,\n" +
+                            "                    24\n" +
+                            "                ],\n" +
+                            "                \"repayment\": [\n" +
+                            "                    1\n" +
+                            "                ],\n" +
+                            "                \"target\": [],\n" +
+                            "                \"certification\": [\n" +
+                            "                    {\n" +
+                            "                        \"id\": 1,\n" +
+                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"name\": \"實名認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人身份資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11430,\n" +
+                            "                        \"updated_at\": 1586486498\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 2,\n" +
+                            "                        \"alias\": \"student\",\n" +
+                            "                        \"name\": \"學生身份認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證學生身份\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18454,\n" +
+                            "                        \"updated_at\": 1587721481\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 3,\n" +
+                            "                        \"alias\": \"debitcard\",\n" +
+                            "                        \"name\": \"金融帳號認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人金融帳號\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11407,\n" +
+                            "                        \"updated_at\": 1553750450\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 4,\n" +
+                            "                        \"alias\": \"social\",\n" +
+                            "                        \"name\": \"社交認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"個人社交帳號認證\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11451,\n" +
+                            "                        \"updated_at\": 1571026433\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 5,\n" +
+                            "                        \"alias\": \"emergency\",\n" +
+                            "                        \"name\": \"緊急聯絡人\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11454,\n" +
+                            "                        \"updated_at\": 1585141682\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 6,\n" +
+                            "                        \"alias\": \"email\",\n" +
+                            "                        \"name\": \"常用電子信箱\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11392,\n" +
+                            "                        \"updated_at\": 1570615143\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 7,\n" +
+                            "                        \"alias\": \"financial\",\n" +
+                            "                        \"name\": \"財務訊息認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供財務訊息資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 19423,\n" +
+                            "                        \"updated_at\": 1586437675\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 3,\n" +
+                            "                \"type\": 1,\n" +
+                            "                \"identity\": 2,\n" +
+                            "                \"name\": \"上班族貸\",\n" +
+                            "                \"description\": \"須提供工作證明\n" +
+                            "可申請額度\n" +
+                            "10,000-200,000\",\n" +
+                            "                \"loan_range_s\": 10000,\n" +
+                            "                \"loan_range_e\": 200000,\n" +
+                            "                \"interest_rate_s\": 5,\n" +
+                            "                \"interest_rate_e\": 20,\n" +
+                            "                \"charge_platform\": 3,\n" +
+                            "                \"charge_platform_min\": 500,\n" +
+                            "                \"instalment\": [\n" +
+                            "                    3,\n" +
+                            "                    6,\n" +
+                            "                    12,\n" +
+                            "                    18,\n" +
+                            "                    24\n" +
+                            "                ],\n" +
+                            "                \"repayment\": [\n" +
+                            "                    1\n" +
+                            "                ],\n" +
+                            "                \"target\": [],\n" +
+                            "                \"certification\": [\n" +
+                            "                    {\n" +
+                            "                        \"id\": 1,\n" +
+                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"name\": \"實名認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人身份資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11430,\n" +
+                            "                        \"updated_at\": 1586486498\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 3,\n" +
+                            "                        \"alias\": \"debitcard\",\n" +
+                            "                        \"name\": \"金融帳號認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人金融帳號\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11407,\n" +
+                            "                        \"updated_at\": 1553750450\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 4,\n" +
+                            "                        \"alias\": \"social\",\n" +
+                            "                        \"name\": \"社交認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"個人社交帳號認證\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11451,\n" +
+                            "                        \"updated_at\": 1571026433\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 5,\n" +
+                            "                        \"alias\": \"emergency\",\n" +
+                            "                        \"name\": \"緊急聯絡人\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11454,\n" +
+                            "                        \"updated_at\": 1585141682\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 6,\n" +
+                            "                        \"alias\": \"email\",\n" +
+                            "                        \"name\": \"常用電子信箱\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11392,\n" +
+                            "                        \"updated_at\": 1570615143\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 7,\n" +
+                            "                        \"alias\": \"financial\",\n" +
+                            "                        \"name\": \"財務訊息認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供財務訊息資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 19423,\n" +
+                            "                        \"updated_at\": 1586437675\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 8,\n" +
+                            "                        \"alias\": \"diploma\",\n" +
+                            "                        \"name\": \"最高學歷認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18431,\n" +
+                            "                        \"updated_at\": 1586142901,\n" +
+                            "                        \"diploma_date\": \"\"\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 9,\n" +
+                            "                        \"alias\": \"investigation\",\n" +
+                            "                        \"name\": \"聯合徵信認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                        \"optional\": [\n" +
+                            "                            3,\n" +
+                            "                            4\n" +
+                            "                        ],\n" +
+                            "                        \"user_status\": null,\n" +
+                            "                        \"certification_id\": null,\n" +
+                            "                        \"updated_at\": null\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 10,\n" +
+                            "                        \"alias\": \"job\",\n" +
+                            "                        \"name\": \"工作認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供工作訊息資訊\",\n" +
+                            "                        \"optional\": [\n" +
+                            "                            3,\n" +
+                            "                            4\n" +
+                            "                        ],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18416,\n" +
+                            "                        \"updated_at\": 1583118112\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            },\n" +
+                            "            {\n" +
+                            "                \"id\": 4,\n" +
+                            "                \"type\": 2,\n" +
+                            "                \"identity\": 2,\n" +
+                            "                \"name\": \"上班族手機貸\",\n" +
+                            "                \"description\": \"須提供工作證明\n" +
+                            "可申請額度\n" +
+                            "10,000-200,000\",\n" +
+                            "                \"loan_range_s\": 10000,\n" +
+                            "                \"loan_range_e\": 200000,\n" +
+                            "                \"interest_rate_s\": 18,\n" +
+                            "                \"interest_rate_e\": 18,\n" +
+                            "                \"charge_platform\": 3,\n" +
+                            "                \"charge_platform_min\": 500,\n" +
+                            "                \"instalment\": [\n" +
+                            "                    3,\n" +
+                            "                    6,\n" +
+                            "                    12,\n" +
+                            "                    18,\n" +
+                            "                    24\n" +
+                            "                ],\n" +
+                            "                \"repayment\": [\n" +
+                            "                    1\n" +
+                            "                ],\n" +
+                            "                \"target\": [],\n" +
+                            "                \"certification\": [\n" +
+                            "                    {\n" +
+                            "                        \"id\": 1,\n" +
+                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"name\": \"實名認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人身份資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11430,\n" +
+                            "                        \"updated_at\": 1586486498\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 3,\n" +
+                            "                        \"alias\": \"debitcard\",\n" +
+                            "                        \"name\": \"金融帳號認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證個人金融帳號\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11407,\n" +
+                            "                        \"updated_at\": 1553750450\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 4,\n" +
+                            "                        \"alias\": \"social\",\n" +
+                            "                        \"name\": \"社交認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"個人社交帳號認證\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11451,\n" +
+                            "                        \"updated_at\": 1571026433\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 5,\n" +
+                            "                        \"alias\": \"emergency\",\n" +
+                            "                        \"name\": \"緊急聯絡人\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11454,\n" +
+                            "                        \"updated_at\": 1585141682\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 6,\n" +
+                            "                        \"alias\": \"email\",\n" +
+                            "                        \"name\": \"常用電子信箱\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 11392,\n" +
+                            "                        \"updated_at\": 1570615143\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 7,\n" +
+                            "                        \"alias\": \"financial\",\n" +
+                            "                        \"name\": \"財務訊息認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供財務訊息資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 19423,\n" +
+                            "                        \"updated_at\": 1586437675\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 8,\n" +
+                            "                        \"alias\": \"diploma\",\n" +
+                            "                        \"name\": \"最高學歷認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                        \"optional\": [],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18431,\n" +
+                            "                        \"updated_at\": 1586142901,\n" +
+                            "                        \"diploma_date\": \"\"\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 9,\n" +
+                            "                        \"alias\": \"investigation\",\n" +
+                            "                        \"name\": \"聯合徵信認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                        \"optional\": [\n" +
+                            "                            3,\n" +
+                            "                            4\n" +
+                            "                        ],\n" +
+                            "                        \"user_status\": null,\n" +
+                            "                        \"certification_id\": null,\n" +
+                            "                        \"updated_at\": null\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"id\": 10,\n" +
+                            "                        \"alias\": \"job\",\n" +
+                            "                        \"name\": \"工作認證\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"description\": \"提供工作訊息資訊\",\n" +
+                            "                        \"optional\": [\n" +
+                            "                            3,\n" +
+                            "                            4\n" +
+                            "                        ],\n" +
+                            "                        \"user_status\": 1,\n" +
+                            "                        \"certification_id\": 18416,\n" +
+                            "                        \"updated_at\": 1583118112\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            }\n" +
+                            "        ],\n" +
                             "        \"list2\": {\n" +
                             "            \"total_list\": [\n" +
                             "                {\n" +
+                            "                    \"visul\": \"NS1\",\n" +
+                            "                    \"name\": \"資訊工程師專案\",\n" +
+                            "                    \"icon\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/marketing_res/marketing_app_product_programer.jpg\",\n" +
+                            "                    \"description\": \"為您的金錢問題debug\n" +
+                            "資訊相關學生或職場專業人員均可申請\",\n" +
+                            "                    \"url\": \"\",\n" +
+                            "                    \"status\": 1\n" +
+                            "                },\n" +
+                            "                {\n" +
                             "                    \"visul\": \"N1\",\n" +
-                            "                    \"name\": \"信用貸款\",\n" +
-                            "                    \"icon\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\",\n" +
+                            "                    \"name\": \"個人信貸\",\n" +
+                            "                    \"icon\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/marketing_res/marketing_app_loan.jpg\",\n" +
                             "                    \"description\": \"全線上申請，無人打擾\n" +
                             "最高額度12-20萬元\n" +
                             "3-24期，償還期限選擇多元\n" +
                             "最低利率5%\",\n" +
+                            "                    \"url\": \"\",\n" +
                             "                    \"status\": 1\n" +
                             "                },\n" +
                             "                {\n" +
                             "                    \"visul\": \"N2\",\n" +
                             "                    \"name\": \"手機無卡分期專案\",\n" +
-                            "                    \"icon\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\",\n" +
+                            "                    \"icon\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/marketing_res/marketing_app_phoneloan.jpg\",\n" +
                             "                    \"description\": \"最新熱門手機選擇最多元\",\n" +
-                            "                    \"status\": 1\n" +
-                            "                },\n" +
-                            "                {\n" +
-                            "                    \"visul\": \"N3\",\n" +
-                            "                    \"name\": \"外匯車貸\",\n" +
-                            "                    \"icon\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\",\n" +
-                            "                    \"description\": \"買進口車好方便\",\n" +
-                            "                    \"status\": 1\n" +
-                            "                },\n" +
-                            "                {\n" +
-                            "                    \"visul\": \"NS1\",\n" +
-                            "                    \"name\": \"Techi貸\",\n" +
-                            "                    \"icon\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\",\n" +
-                            "                    \"description\": \"為您的金錢問題debug\n" +
-                            "資訊相關學生或職場專業人員均可申請\",\n" +
+                            "                    \"url\": \"\",\n" +
                             "                    \"status\": 1\n" +
                             "                }\n" +
                             "            ],\n" +
@@ -14308,7 +19965,7 @@ define({
                             "                \"type1\": [\n" +
                             "                    {\n" +
                             "                        \"visul_id\": \"N1\",\n" +
-                            "                        \"name\": \"信用貸款\",\n" +
+                            "                        \"name\": \"個人信貸\",\n" +
                             "                        \"identity\": {\n" +
                             "                            \"1\": {\n" +
                             "                                \"id\": 1,\n" +
@@ -14334,21 +19991,15 @@ define({
                             "                                \"repayment\": [\n" +
                             "                                    1\n" +
                             "                                ],\n" +
+                            "                                \"sealler\": 0,\n" +
                             "                                \"sub_product\": [\n" +
-                            "                                    1\n" +
+                            "                                    1,\n" +
+                            "                                    9999,\n" +
+                            "                                    5000\n" +
                             "                                ],\n" +
                             "                                \"hiddenMainProduct\": false,\n" +
-                            "                                \"target\": {\n" +
-                            "                                    \"id\": 18159,\n" +
-                            "                                    \"product_id\": 1,\n" +
-                            "                                    \"sub_product_id\": 0,\n" +
-                            "                                    \"target_no\": \"STN2019112552189\",\n" +
-                            "                                    \"status\": 1,\n" +
-                            "                                    \"amount\": 50000,\n" +
-                            "                                    \"loan_amount\": 25000,\n" +
-                            "                                    \"created_at\": 1574671424,\n" +
-                            "                                    \"instalment\": 3\n" +
-                            "                                },\n" +
+                            "                                \"checkOwner\": false,\n" +
+                            "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
@@ -14359,7 +20010,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11430,\n" +
-                            "                                        \"updated_at\": 1574349958\n" +
+                            "                                        \"updated_at\": 1586486498\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 2,\n" +
@@ -14370,7 +20021,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 18454,\n" +
-                            "                                        \"updated_at\": 1573050667\n" +
+                            "                                        \"updated_at\": 1587721481\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 3,\n" +
@@ -14403,7 +20054,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11454,\n" +
-                            "                                        \"updated_at\": 1570615139\n" +
+                            "                                        \"updated_at\": 1585141682\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 6,\n" +
@@ -14424,8 +20075,8 @@ define({
                             "                                        \"description\": \"提供財務訊息資訊\",\n" +
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11394,\n" +
-                            "                                        \"updated_at\": 1571026449\n" +
+                            "                                        \"certification_id\": 19423,\n" +
+                            "                                        \"updated_at\": 1586437675\n" +
                             "                                    }\n" +
                             "                                ]\n" +
                             "                            },\n" +
@@ -14453,10 +20104,14 @@ define({
                             "                                \"repayment\": [\n" +
                             "                                    1\n" +
                             "                                ],\n" +
+                            "                                \"sealler\": 0,\n" +
                             "                                \"sub_product\": [\n" +
-                            "                                    1\n" +
+                            "                                    1,\n" +
+                            "                                    9999,\n" +
+                            "                                    5001\n" +
                             "                                ],\n" +
                             "                                \"hiddenMainProduct\": false,\n" +
+                            "                                \"checkOwner\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -14468,7 +20123,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11430,\n" +
-                            "                                        \"updated_at\": 1574349958\n" +
+                            "                                        \"updated_at\": 1586486498\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 3,\n" +
@@ -14501,7 +20156,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11454,\n" +
-                            "                                        \"updated_at\": 1570615139\n" +
+                            "                                        \"updated_at\": 1585141682\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 6,\n" +
@@ -14522,8 +20177,8 @@ define({
                             "                                        \"description\": \"提供財務訊息資訊\",\n" +
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11394,\n" +
-                            "                                        \"updated_at\": 1571026449\n" +
+                            "                                        \"certification_id\": 19423,\n" +
+                            "                                        \"updated_at\": 1586437675\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 8,\n" +
@@ -14534,7 +20189,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 18431,\n" +
-                            "                                        \"updated_at\": 1571653931,\n" +
+                            "                                        \"updated_at\": 1586142901,\n" +
                             "                                        \"diploma_date\": \"\"\n" +
                             "                                    },\n" +
                             "                                    {\n" +
@@ -14547,9 +20202,9 @@ define({
                             "                                            3,\n" +
                             "                                            4\n" +
                             "                                        ],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 18412,\n" +
-                            "                                        \"updated_at\": 1571050628\n" +
+                            "                                        \"user_status\": null,\n" +
+                            "                                        \"certification_id\": null,\n" +
+                            "                                        \"updated_at\": null\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 10,\n" +
@@ -14563,7 +20218,7 @@ define({
                             "                                        ],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 18416,\n" +
-                            "                                        \"updated_at\": 1573050951\n" +
+                            "                                        \"updated_at\": 1583118112\n" +
                             "                                    }\n" +
                             "                                ]\n" +
                             "                            }\n" +
@@ -14598,7 +20253,7 @@ define({
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
                             "                                                \"certification_id\": 11430,\n" +
-                            "                                                \"updated_at\": 1574349958\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
                             "                                            },\n" +
                             "                                            {\n" +
                             "                                                \"id\": 2,\n" +
@@ -14609,7 +20264,7 @@ define({
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
                             "                                                \"certification_id\": 18454,\n" +
-                            "                                                \"updated_at\": 1573050667\n" +
+                            "                                                \"updated_at\": 1587721481\n" +
                             "                                            },\n" +
                             "                                            {\n" +
                             "                                                \"id\": 3,\n" +
@@ -14642,7 +20297,7 @@ define({
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
                             "                                                \"certification_id\": 11454,\n" +
-                            "                                                \"updated_at\": 1570615139\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
                             "                                            },\n" +
                             "                                            {\n" +
                             "                                                \"id\": 6,\n" +
@@ -14663,8 +20318,8 @@ define({
                             "                                                \"description\": \"提供財務訊息資訊\",\n" +
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
-                            "                                                \"certification_id\": 11394,\n" +
-                            "                                                \"updated_at\": 1571026449\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
                             "                                            }\n" +
                             "                                        ],\n" +
                             "                                        \"instalment\": [\n" +
@@ -14677,12 +20332,12 @@ define({
                             "                                        \"repayment\": [\n" +
                             "                                            1\n" +
                             "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
                             "                                        \"status\": 1,\n" +
-                            "                                        \"dealer\": 0,\n" +
-                            "                                        \"multi_target\": 0,\n" +
                             "                                        \"description\": \"須提供有效學生證\n" +
                             "可申請額度\n" +
                             "5,000-120,000\",\n" +
+                            "                                        \"checkOwner\": false,\n" +
                             "                                        \"target\": []\n" +
                             "                                    },\n" +
                             "                                    \"2\": {\n" +
@@ -14705,7 +20360,7 @@ define({
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
                             "                                                \"certification_id\": 11430,\n" +
-                            "                                                \"updated_at\": 1574349958\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
                             "                                            },\n" +
                             "                                            {\n" +
                             "                                                \"id\": 3,\n" +
@@ -14738,7 +20393,7 @@ define({
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
                             "                                                \"certification_id\": 11454,\n" +
-                            "                                                \"updated_at\": 1570615139\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
                             "                                            },\n" +
                             "                                            {\n" +
                             "                                                \"id\": 6,\n" +
@@ -14759,8 +20414,8 @@ define({
                             "                                                \"description\": \"提供財務訊息資訊\",\n" +
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
-                            "                                                \"certification_id\": 11394,\n" +
-                            "                                                \"updated_at\": 1571026449\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
                             "                                            },\n" +
                             "                                            {\n" +
                             "                                                \"id\": 8,\n" +
@@ -14771,7 +20426,7 @@ define({
                             "                                                \"optional\": [],\n" +
                             "                                                \"user_status\": 1,\n" +
                             "                                                \"certification_id\": 18431,\n" +
-                            "                                                \"updated_at\": 1571653931,\n" +
+                            "                                                \"updated_at\": 1586142901,\n" +
                             "                                                \"diploma_date\": \"\"\n" +
                             "                                            },\n" +
                             "                                            {\n" +
@@ -14784,9 +20439,9 @@ define({
                             "                                                    3,\n" +
                             "                                                    4\n" +
                             "                                                ],\n" +
-                            "                                                \"user_status\": 1,\n" +
-                            "                                                \"certification_id\": 18412,\n" +
-                            "                                                \"updated_at\": 1571050628\n" +
+                            "                                                \"user_status\": null,\n" +
+                            "                                                \"certification_id\": null,\n" +
+                            "                                                \"updated_at\": null\n" +
                             "                                            },\n" +
                             "                                            {\n" +
                             "                                                \"id\": 10,\n" +
@@ -14800,7 +20455,7 @@ define({
                             "                                                ],\n" +
                             "                                                \"user_status\": 1,\n" +
                             "                                                \"certification_id\": 18416,\n" +
-                            "                                                \"updated_at\": 1573050951\n" +
+                            "                                                \"updated_at\": 1583118112\n" +
                             "                                            }\n" +
                             "                                        ],\n" +
                             "                                        \"instalment\": [\n" +
@@ -14813,35 +20468,113 @@ define({
                             "                                        \"repayment\": [\n" +
                             "                                            1\n" +
                             "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
                             "                                        \"status\": 1,\n" +
-                            "                                        \"dealer\": 0,\n" +
-                            "                                        \"multi_target\": 0,\n" +
                             "                                        \"description\": \"須提供工作證明\n" +
                             "可申請額度\n" +
                             "10,000-200,000\",\n" +
+                            "                                        \"checkOwner\": false,\n" +
                             "                                        \"target\": []\n" +
                             "                                    }\n" +
                             "                                },\n" +
                             "                                \"status\": 1,\n" +
-                            "                                \"name\": \"Techi貸\",\n" +
+                            "                                \"name\": \"資訊工程師專案\",\n" +
                             "                                \"description\": \"為您的金錢問題debug\n" +
                             "資訊相關學生或職場專業人員均可申請\",\n" +
-                            "                                \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\"\n" +
+                            "                                \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/marketing_res/marketing_app_product_programer.jpg\"\n" +
                             "                            },\n" +
                             "                            {\n" +
-                            "                                \"visul_id\": \"NS1\",\n" +
+                            "                                \"visul_id\": \"LS1\",\n" +
                             "                                \"identity\": {\n" +
                             "                                    \"1\": {\n" +
-                            "                                        \"visul_id\": \"NS1P1\",\n" +
-                            "                                        \"name\": \"學生工程師貸\",\n" +
-                            "                                        \"product_id\": \"1:1\",\n" +
+                            "                                        \"visul_id\": \"LS1P1\",\n" +
+                            "                                        \"name\": \"學生貸\",\n" +
+                            "                                        \"product_id\": \"1:0\",\n" +
                             "                                        \"loan_range_s\": 5000,\n" +
                             "                                        \"loan_range_e\": 120000,\n" +
                             "                                        \"interest_rate_s\": 5,\n" +
                             "                                        \"interest_rate_e\": 20,\n" +
                             "                                        \"charge_platform\": 3,\n" +
                             "                                        \"charge_platform_min\": 500,\n" +
-                            "                                        \"certifications\": [],\n" +
+                            "                                        \"certifications\": [\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 1,\n" +
+                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"name\": \"實名認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11430,\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 2,\n" +
+                            "                                                \"alias\": \"student\",\n" +
+                            "                                                \"name\": \"學生身份認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證學生身份\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18454,\n" +
+                            "                                                \"updated_at\": 1587721481\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 3,\n" +
+                            "                                                \"alias\": \"debitcard\",\n" +
+                            "                                                \"name\": \"金融帳號認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11407,\n" +
+                            "                                                \"updated_at\": 1553750450\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 4,\n" +
+                            "                                                \"alias\": \"social\",\n" +
+                            "                                                \"name\": \"社交認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"個人社交帳號認證\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11451,\n" +
+                            "                                                \"updated_at\": 1571026433\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 5,\n" +
+                            "                                                \"alias\": \"emergency\",\n" +
+                            "                                                \"name\": \"緊急聯絡人\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11454,\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 6,\n" +
+                            "                                                \"alias\": \"email\",\n" +
+                            "                                                \"name\": \"常用電子信箱\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11392,\n" +
+                            "                                                \"updated_at\": 1570615143\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 7,\n" +
+                            "                                                \"alias\": \"financial\",\n" +
+                            "                                                \"name\": \"財務訊息認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
+                            "                                            }\n" +
+                            "                                        ],\n" +
                             "                                        \"instalment\": [\n" +
                             "                                            3,\n" +
                             "                                            6,\n" +
@@ -14852,25 +20585,142 @@ define({
                             "                                        \"repayment\": [\n" +
                             "                                            1\n" +
                             "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
                             "                                        \"status\": 1,\n" +
-                            "                                        \"dealer\": 0,\n" +
-                            "                                        \"multi_target\": 0,\n" +
                             "                                        \"description\": \"須提供有效學生證\n" +
                             "可申請額度\n" +
                             "5,000-120,000\",\n" +
+                            "                                        \"checkOwner\": false,\n" +
                             "                                        \"target\": []\n" +
-                            "                                    },\n" +
+                            "                                    }\n" +
+                            "                                },\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"name\": \"學生貸\",\n" +
+                            "                                \"description\": \"資金小幫手生活超easy\n" +
+                            "全台大學生與碩博士均可申請\",\n" +
+                            "                                \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/marketing_res/marketing_app_product_student.jpg\"\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"visul_id\": \"LF1\",\n" +
+                            "                                \"identity\": {\n" +
                             "                                    \"2\": {\n" +
-                            "                                        \"visul_id\": \"NS1P2\",\n" +
-                            "                                        \"name\": \"上班族工程師貸\",\n" +
-                            "                                        \"product_id\": \"3:1\",\n" +
+                            "                                        \"visul_id\": \"LF1P1\",\n" +
+                            "                                        \"name\": \"上班族貸\",\n" +
+                            "                                        \"product_id\": \"3:0\",\n" +
                             "                                        \"loan_range_s\": 10000,\n" +
                             "                                        \"loan_range_e\": 200000,\n" +
                             "                                        \"interest_rate_s\": 5,\n" +
                             "                                        \"interest_rate_e\": 20,\n" +
                             "                                        \"charge_platform\": 3,\n" +
                             "                                        \"charge_platform_min\": 500,\n" +
-                            "                                        \"certifications\": [],\n" +
+                            "                                        \"certifications\": [\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 1,\n" +
+                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"name\": \"實名認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11430,\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 3,\n" +
+                            "                                                \"alias\": \"debitcard\",\n" +
+                            "                                                \"name\": \"金融帳號認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11407,\n" +
+                            "                                                \"updated_at\": 1553750450\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 4,\n" +
+                            "                                                \"alias\": \"social\",\n" +
+                            "                                                \"name\": \"社交認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"個人社交帳號認證\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11451,\n" +
+                            "                                                \"updated_at\": 1571026433\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 5,\n" +
+                            "                                                \"alias\": \"emergency\",\n" +
+                            "                                                \"name\": \"緊急聯絡人\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11454,\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 6,\n" +
+                            "                                                \"alias\": \"email\",\n" +
+                            "                                                \"name\": \"常用電子信箱\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11392,\n" +
+                            "                                                \"updated_at\": 1570615143\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 7,\n" +
+                            "                                                \"alias\": \"financial\",\n" +
+                            "                                                \"name\": \"財務訊息認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 8,\n" +
+                            "                                                \"alias\": \"diploma\",\n" +
+                            "                                                \"name\": \"最高學歷認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18431,\n" +
+                            "                                                \"updated_at\": 1586142901,\n" +
+                            "                                                \"diploma_date\": \"\"\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 9,\n" +
+                            "                                                \"alias\": \"investigation\",\n" +
+                            "                                                \"name\": \"聯合徵信認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                                                \"optional\": [\n" +
+                            "                                                    3,\n" +
+                            "                                                    4\n" +
+                            "                                                ],\n" +
+                            "                                                \"user_status\": null,\n" +
+                            "                                                \"certification_id\": null,\n" +
+                            "                                                \"updated_at\": null\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 10,\n" +
+                            "                                                \"alias\": \"job\",\n" +
+                            "                                                \"name\": \"工作認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供工作訊息資訊\",\n" +
+                            "                                                \"optional\": [\n" +
+                            "                                                    3,\n" +
+                            "                                                    4\n" +
+                            "                                                ],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18416,\n" +
+                            "                                                \"updated_at\": 1583118112\n" +
+                            "                                            }\n" +
+                            "                                        ],\n" +
                             "                                        \"instalment\": [\n" +
                             "                                            3,\n" +
                             "                                            6,\n" +
@@ -14881,19 +20731,546 @@ define({
                             "                                        \"repayment\": [\n" +
                             "                                            1\n" +
                             "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
                             "                                        \"status\": 1,\n" +
-                            "                                        \"dealer\": 0,\n" +
-                            "                                        \"multi_target\": 0,\n" +
                             "                                        \"description\": \"須提供工作證明\n" +
                             "可申請額度\n" +
                             "10,000-200,000\",\n" +
+                            "                                        \"checkOwner\": false,\n" +
                             "                                        \"target\": []\n" +
                             "                                    }\n" +
                             "                                },\n" +
                             "                                \"status\": 1,\n" +
-                            "                                \"name\": \"Techi貸\",\n" +
-                            "                                \"description\": \"為您的金錢問題debug\n" +
-                            "資訊相關學生或職場專業人員均可申請\",\n" +
+                            "                                \"name\": \"上班族貸\",\n" +
+                            "                                \"description\": \"隨時線上照顧您的需求\n" +
+                            "年滿20歲的工作人士均可申請\",\n" +
+                            "                                \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/marketing_res/marketing_app_product_worker.jpg\"\n" +
+                            "                            }\n" +
+                            "                        ]\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"visul_id\": \"N3\",\n" +
+                            "                        \"name\": \"新創企業主貸\",\n" +
+                            "                        \"identity\": [],\n" +
+                            "                        \"description\": \"創業資金免煩惱\",\n" +
+                            "                        \"status\": 1,\n" +
+                            "                        \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\",\n" +
+                            "                        \"sub_products\": [\n" +
+                            "                            {\n" +
+                            "                                \"visul_id\": \"NS2\",\n" +
+                            "                                \"identity\": {\n" +
+                            "                                    \"1\": {\n" +
+                            "                                        \"visul_id\": \"NS2P1\",\n" +
+                            "                                        \"name\": \"學生孵化基金\",\n" +
+                            "                                        \"product_id\": \"7:4\",\n" +
+                            "                                        \"loan_range_s\": 200000,\n" +
+                            "                                        \"loan_range_e\": 1500000,\n" +
+                            "                                        \"interest_rate_s\": 5,\n" +
+                            "                                        \"interest_rate_e\": 20,\n" +
+                            "                                        \"charge_platform\": 3,\n" +
+                            "                                        \"charge_platform_min\": 500,\n" +
+                            "                                        \"certifications\": [\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 1,\n" +
+                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"name\": \"實名認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11430,\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 2,\n" +
+                            "                                                \"alias\": \"student\",\n" +
+                            "                                                \"name\": \"學生身份認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證學生身份\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18454,\n" +
+                            "                                                \"updated_at\": 1587721481\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 3,\n" +
+                            "                                                \"alias\": \"debitcard\",\n" +
+                            "                                                \"name\": \"金融帳號認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11407,\n" +
+                            "                                                \"updated_at\": 1553750450\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 4,\n" +
+                            "                                                \"alias\": \"social\",\n" +
+                            "                                                \"name\": \"社交認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"個人社交帳號認證\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11451,\n" +
+                            "                                                \"updated_at\": 1571026433\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 5,\n" +
+                            "                                                \"alias\": \"emergency\",\n" +
+                            "                                                \"name\": \"緊急聯絡人\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11454,\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 6,\n" +
+                            "                                                \"alias\": \"email\",\n" +
+                            "                                                \"name\": \"常用電子信箱\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11392,\n" +
+                            "                                                \"updated_at\": 1570615143\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 7,\n" +
+                            "                                                \"alias\": \"financial\",\n" +
+                            "                                                \"name\": \"財務訊息認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
+                            "                                            }\n" +
+                            "                                        ],\n" +
+                            "                                        \"instalment\": [\n" +
+                            "                                            3,\n" +
+                            "                                            6,\n" +
+                            "                                            12,\n" +
+                            "                                            18,\n" +
+                            "                                            24\n" +
+                            "                                        ],\n" +
+                            "                                        \"repayment\": [\n" +
+                            "                                            1\n" +
+                            "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
+                            "                                        \"status\": 1,\n" +
+                            "                                        \"description\": \"可申請額度\n" +
+                            "5,000-1,500,000\",\n" +
+                            "                                        \"checkOwner\": true,\n" +
+                            "                                        \"target\": []\n" +
+                            "                                    },\n" +
+                            "                                    \"2\": {\n" +
+                            "                                        \"visul_id\": \"NS2P2\",\n" +
+                            "                                        \"name\": \"非學生孵化基金\",\n" +
+                            "                                        \"product_id\": \"8:4\",\n" +
+                            "                                        \"loan_range_s\": 200000,\n" +
+                            "                                        \"loan_range_e\": 1500000,\n" +
+                            "                                        \"interest_rate_s\": 5,\n" +
+                            "                                        \"interest_rate_e\": 20,\n" +
+                            "                                        \"charge_platform\": 3,\n" +
+                            "                                        \"charge_platform_min\": 500,\n" +
+                            "                                        \"certifications\": [\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 1,\n" +
+                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"name\": \"實名認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11430,\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 3,\n" +
+                            "                                                \"alias\": \"debitcard\",\n" +
+                            "                                                \"name\": \"金融帳號認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11407,\n" +
+                            "                                                \"updated_at\": 1553750450\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 4,\n" +
+                            "                                                \"alias\": \"social\",\n" +
+                            "                                                \"name\": \"社交認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"個人社交帳號認證\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11451,\n" +
+                            "                                                \"updated_at\": 1571026433\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 5,\n" +
+                            "                                                \"alias\": \"emergency\",\n" +
+                            "                                                \"name\": \"緊急聯絡人\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11454,\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 6,\n" +
+                            "                                                \"alias\": \"email\",\n" +
+                            "                                                \"name\": \"常用電子信箱\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11392,\n" +
+                            "                                                \"updated_at\": 1570615143\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 7,\n" +
+                            "                                                \"alias\": \"financial\",\n" +
+                            "                                                \"name\": \"財務訊息認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 8,\n" +
+                            "                                                \"alias\": \"diploma\",\n" +
+                            "                                                \"name\": \"最高學歷認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18431,\n" +
+                            "                                                \"updated_at\": 1586142901,\n" +
+                            "                                                \"diploma_date\": \"\"\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 9,\n" +
+                            "                                                \"alias\": \"investigation\",\n" +
+                            "                                                \"name\": \"聯合徵信認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                                                \"optional\": [\n" +
+                            "                                                    3,\n" +
+                            "                                                    4\n" +
+                            "                                                ],\n" +
+                            "                                                \"user_status\": null,\n" +
+                            "                                                \"certification_id\": null,\n" +
+                            "                                                \"updated_at\": null\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 10,\n" +
+                            "                                                \"alias\": \"job\",\n" +
+                            "                                                \"name\": \"工作認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供工作訊息資訊\",\n" +
+                            "                                                \"optional\": [\n" +
+                            "                                                    3,\n" +
+                            "                                                    4\n" +
+                            "                                                ],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18416,\n" +
+                            "                                                \"updated_at\": 1583118112\n" +
+                            "                                            }\n" +
+                            "                                        ],\n" +
+                            "                                        \"instalment\": [\n" +
+                            "                                            3,\n" +
+                            "                                            6,\n" +
+                            "                                            12,\n" +
+                            "                                            18,\n" +
+                            "                                            24\n" +
+                            "                                        ],\n" +
+                            "                                        \"repayment\": [\n" +
+                            "                                            1\n" +
+                            "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
+                            "                                        \"status\": 1,\n" +
+                            "                                        \"description\": \"可申請額度\n" +
+                            "10,000-1,500,000\",\n" +
+                            "                                        \"checkOwner\": true,\n" +
+                            "                                        \"target\": {\n" +
+                            "                                            \"id\": 18820,\n" +
+                            "                                            \"product_id\": 8,\n" +
+                            "                                            \"sub_product_id\": 4,\n" +
+                            "                                            \"target_no\": \"SUL2020042012635\",\n" +
+                            "                                            \"status\": 0,\n" +
+                            "                                            \"amount\": 1000000,\n" +
+                            "                                            \"loan_amount\": 0,\n" +
+                            "                                            \"created_at\": 1587394752,\n" +
+                            "                                            \"instalment\": 6,\n" +
+                            "                                            \"associate\": {\n" +
+                            "                                                \"owner\": true,\n" +
+                            "                                                \"identity\": 2,\n" +
+                            "                                                \"status\": 1\n" +
+                            "                                            }\n" +
+                            "                                        }\n" +
+                            "                                    }\n" +
+                            "                                },\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"name\": \"孵化基金\",\n" +
+                            "                                \"description\": \"創業資金免煩惱\n" +
+                            "學生或職場專業人員均可申請\",\n" +
+                            "                                \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\"\n" +
+                            "                            },\n" +
+                            "                            {\n" +
+                            "                                \"visul_id\": \"NS3\",\n" +
+                            "                                \"identity\": {\n" +
+                            "                                    \"1\": {\n" +
+                            "                                        \"visul_id\": \"NS3P1\",\n" +
+                            "                                        \"name\": \"學生企業周轉金\",\n" +
+                            "                                        \"product_id\": \"9:5\",\n" +
+                            "                                        \"loan_range_s\": 500000,\n" +
+                            "                                        \"loan_range_e\": 1500000,\n" +
+                            "                                        \"interest_rate_s\": 5,\n" +
+                            "                                        \"interest_rate_e\": 20,\n" +
+                            "                                        \"charge_platform\": 3,\n" +
+                            "                                        \"charge_platform_min\": 500,\n" +
+                            "                                        \"certifications\": [\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 1,\n" +
+                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"name\": \"實名認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11430,\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 2,\n" +
+                            "                                                \"alias\": \"student\",\n" +
+                            "                                                \"name\": \"學生身份認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證學生身份\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18454,\n" +
+                            "                                                \"updated_at\": 1587721481\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 3,\n" +
+                            "                                                \"alias\": \"debitcard\",\n" +
+                            "                                                \"name\": \"金融帳號認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11407,\n" +
+                            "                                                \"updated_at\": 1553750450\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 4,\n" +
+                            "                                                \"alias\": \"social\",\n" +
+                            "                                                \"name\": \"社交認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"個人社交帳號認證\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11451,\n" +
+                            "                                                \"updated_at\": 1571026433\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 5,\n" +
+                            "                                                \"alias\": \"emergency\",\n" +
+                            "                                                \"name\": \"緊急聯絡人\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11454,\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 6,\n" +
+                            "                                                \"alias\": \"email\",\n" +
+                            "                                                \"name\": \"常用電子信箱\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11392,\n" +
+                            "                                                \"updated_at\": 1570615143\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 7,\n" +
+                            "                                                \"alias\": \"financial\",\n" +
+                            "                                                \"name\": \"財務訊息認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
+                            "                                            }\n" +
+                            "                                        ],\n" +
+                            "                                        \"instalment\": [\n" +
+                            "                                            3,\n" +
+                            "                                            6,\n" +
+                            "                                            12,\n" +
+                            "                                            18,\n" +
+                            "                                            24\n" +
+                            "                                        ],\n" +
+                            "                                        \"repayment\": [\n" +
+                            "                                            1\n" +
+                            "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
+                            "                                        \"status\": 1,\n" +
+                            "                                        \"description\": \"可申請額度\n" +
+                            "5,000-1,500,000\",\n" +
+                            "                                        \"checkOwner\": true,\n" +
+                            "                                        \"target\": []\n" +
+                            "                                    },\n" +
+                            "                                    \"2\": {\n" +
+                            "                                        \"visul_id\": \"NS3P2\",\n" +
+                            "                                        \"name\": \"非學生企業周轉金\",\n" +
+                            "                                        \"product_id\": \"10:5\",\n" +
+                            "                                        \"loan_range_s\": 500000,\n" +
+                            "                                        \"loan_range_e\": 1500000,\n" +
+                            "                                        \"interest_rate_s\": 5,\n" +
+                            "                                        \"interest_rate_e\": 20,\n" +
+                            "                                        \"charge_platform\": 3,\n" +
+                            "                                        \"charge_platform_min\": 500,\n" +
+                            "                                        \"certifications\": [\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 1,\n" +
+                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"name\": \"實名認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人身份資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11430,\n" +
+                            "                                                \"updated_at\": 1586486498\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 3,\n" +
+                            "                                                \"alias\": \"debitcard\",\n" +
+                            "                                                \"name\": \"金融帳號認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證個人金融帳號\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11407,\n" +
+                            "                                                \"updated_at\": 1553750450\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 4,\n" +
+                            "                                                \"alias\": \"social\",\n" +
+                            "                                                \"name\": \"社交認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"個人社交帳號認證\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11451,\n" +
+                            "                                                \"updated_at\": 1571026433\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 5,\n" +
+                            "                                                \"alias\": \"emergency\",\n" +
+                            "                                                \"name\": \"緊急聯絡人\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"設定緊急連絡人資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11454,\n" +
+                            "                                                \"updated_at\": 1585141682\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 6,\n" +
+                            "                                                \"alias\": \"email\",\n" +
+                            "                                                \"name\": \"常用電子信箱\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"驗證常用E-Mail位址\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 11392,\n" +
+                            "                                                \"updated_at\": 1570615143\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 7,\n" +
+                            "                                                \"alias\": \"financial\",\n" +
+                            "                                                \"name\": \"財務訊息認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供財務訊息資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 19423,\n" +
+                            "                                                \"updated_at\": 1586437675\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 8,\n" +
+                            "                                                \"alias\": \"diploma\",\n" +
+                            "                                                \"name\": \"最高學歷認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供最高學歷畢業資訊\",\n" +
+                            "                                                \"optional\": [],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18431,\n" +
+                            "                                                \"updated_at\": 1586142901,\n" +
+                            "                                                \"diploma_date\": \"\"\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 9,\n" +
+                            "                                                \"alias\": \"investigation\",\n" +
+                            "                                                \"name\": \"聯合徵信認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供聯合徵信資訊\",\n" +
+                            "                                                \"optional\": [\n" +
+                            "                                                    3,\n" +
+                            "                                                    4\n" +
+                            "                                                ],\n" +
+                            "                                                \"user_status\": null,\n" +
+                            "                                                \"certification_id\": null,\n" +
+                            "                                                \"updated_at\": null\n" +
+                            "                                            },\n" +
+                            "                                            {\n" +
+                            "                                                \"id\": 10,\n" +
+                            "                                                \"alias\": \"job\",\n" +
+                            "                                                \"name\": \"工作認證\",\n" +
+                            "                                                \"status\": 1,\n" +
+                            "                                                \"description\": \"提供工作訊息資訊\",\n" +
+                            "                                                \"optional\": [\n" +
+                            "                                                    3,\n" +
+                            "                                                    4\n" +
+                            "                                                ],\n" +
+                            "                                                \"user_status\": 1,\n" +
+                            "                                                \"certification_id\": 18416,\n" +
+                            "                                                \"updated_at\": 1583118112\n" +
+                            "                                            }\n" +
+                            "                                        ],\n" +
+                            "                                        \"instalment\": [\n" +
+                            "                                            3,\n" +
+                            "                                            6,\n" +
+                            "                                            12,\n" +
+                            "                                            18,\n" +
+                            "                                            24\n" +
+                            "                                        ],\n" +
+                            "                                        \"repayment\": [\n" +
+                            "                                            1\n" +
+                            "                                        ],\n" +
+                            "                                        \"weight\": [],\n" +
+                            "                                        \"status\": 1,\n" +
+                            "                                        \"description\": \"可申請額度\n" +
+                            "10,000-1,500,000\",\n" +
+                            "                                        \"checkOwner\": true,\n" +
+                            "                                        \"target\": []\n" +
+                            "                                    }\n" +
+                            "                                },\n" +
+                            "                                \"status\": 1,\n" +
+                            "                                \"name\": \"企業周轉金\",\n" +
+                            "                                \"description\": \"創業資金免煩惱\n" +
+                            "學生或職場專業人員均可申請\",\n" +
                             "                                \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\"\n" +
                             "                            }\n" +
                             "                        ]\n" +
@@ -14928,8 +21305,10 @@ define({
                             "                                \"repayment\": [\n" +
                             "                                    1\n" +
                             "                                ],\n" +
+                            "                                \"sealler\": 0,\n" +
                             "                                \"sub_product\": [],\n" +
                             "                                \"hiddenMainProduct\": false,\n" +
+                            "                                \"checkOwner\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -14941,7 +21320,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11430,\n" +
-                            "                                        \"updated_at\": 1574349958\n" +
+                            "                                        \"updated_at\": 1586486498\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 2,\n" +
@@ -14952,7 +21331,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 18454,\n" +
-                            "                                        \"updated_at\": 1573050667\n" +
+                            "                                        \"updated_at\": 1587721481\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 3,\n" +
@@ -14985,7 +21364,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11454,\n" +
-                            "                                        \"updated_at\": 1570615139\n" +
+                            "                                        \"updated_at\": 1585141682\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 6,\n" +
@@ -15006,8 +21385,8 @@ define({
                             "                                        \"description\": \"提供財務訊息資訊\",\n" +
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11394,\n" +
-                            "                                        \"updated_at\": 1571026449\n" +
+                            "                                        \"certification_id\": 19423,\n" +
+                            "                                        \"updated_at\": 1586437675\n" +
                             "                                    }\n" +
                             "                                ]\n" +
                             "                            },\n" +
@@ -15035,8 +21414,10 @@ define({
                             "                                \"repayment\": [\n" +
                             "                                    1\n" +
                             "                                ],\n" +
+                            "                                \"sealler\": 0,\n" +
                             "                                \"sub_product\": [],\n" +
                             "                                \"hiddenMainProduct\": false,\n" +
+                            "                                \"checkOwner\": false,\n" +
                             "                                \"target\": [],\n" +
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
@@ -15048,7 +21429,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11430,\n" +
-                            "                                        \"updated_at\": 1574349958\n" +
+                            "                                        \"updated_at\": 1586486498\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 3,\n" +
@@ -15081,7 +21462,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 11454,\n" +
-                            "                                        \"updated_at\": 1570615139\n" +
+                            "                                        \"updated_at\": 1585141682\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 6,\n" +
@@ -15102,8 +21483,8 @@ define({
                             "                                        \"description\": \"提供財務訊息資訊\",\n" +
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11394,\n" +
-                            "                                        \"updated_at\": 1571026449\n" +
+                            "                                        \"certification_id\": 19423,\n" +
+                            "                                        \"updated_at\": 1586437675\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 8,\n" +
@@ -15114,7 +21495,7 @@ define({
                             "                                        \"optional\": [],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 18431,\n" +
-                            "                                        \"updated_at\": 1571653931,\n" +
+                            "                                        \"updated_at\": 1586142901,\n" +
                             "                                        \"diploma_date\": \"\"\n" +
                             "                                    },\n" +
                             "                                    {\n" +
@@ -15127,9 +21508,9 @@ define({
                             "                                            3,\n" +
                             "                                            4\n" +
                             "                                        ],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 18412,\n" +
-                            "                                        \"updated_at\": 1571050628\n" +
+                            "                                        \"user_status\": null,\n" +
+                            "                                        \"certification_id\": null,\n" +
+                            "                                        \"updated_at\": null\n" +
                             "                                    },\n" +
                             "                                    {\n" +
                             "                                        \"id\": 10,\n" +
@@ -15143,261 +21524,12 @@ define({
                             "                                        ],\n" +
                             "                                        \"user_status\": 1,\n" +
                             "                                        \"certification_id\": 18416,\n" +
-                            "                                        \"updated_at\": 1573050951\n" +
+                            "                                        \"updated_at\": 1583118112\n" +
                             "                                    }\n" +
                             "                                ]\n" +
                             "                            }\n" +
                             "                        },\n" +
                             "                        \"description\": \"最新熱門手機選擇最多元\",\n" +
-                            "                        \"status\": 1,\n" +
-                            "                        \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\",\n" +
-                            "                        \"sub_products\": []\n" +
-                            "                    },\n" +
-                            "                    {\n" +
-                            "                        \"visul_id\": \"N3\",\n" +
-                            "                        \"name\": \"外匯車貸\",\n" +
-                            "                        \"identity\": {\n" +
-                            "                            \"1\": {\n" +
-                            "                                \"id\": 5,\n" +
-                            "                                \"type\": 2,\n" +
-                            "                                \"identity\": 1,\n" +
-                            "                                \"name\": \"學生外匯車貸\",\n" +
-                            "                                \"description\": \"\",\n" +
-                            "                                \"loan_range_s\": 10000,\n" +
-                            "                                \"loan_range_e\": 2000000,\n" +
-                            "                                \"interest_rate_s\": 15,\n" +
-                            "                                \"interest_rate_e\": 15,\n" +
-                            "                                \"charge_platform\": 3,\n" +
-                            "                                \"charge_platform_min\": 10000,\n" +
-                            "                                \"instalment\": [\n" +
-                            "                                    180\n" +
-                            "                                ],\n" +
-                            "                                \"repayment\": [\n" +
-                            "                                    3\n" +
-                            "                                ],\n" +
-                            "                                \"sub_product\": [],\n" +
-                            "                                \"hiddenMainProduct\": false,\n" +
-                            "                                \"target\": [],\n" +
-                            "                                \"certification\": [\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
-                            "                                        \"name\": \"實名認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"驗證個人身份資訊\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11430,\n" +
-                            "                                        \"updated_at\": 1574349958\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 2,\n" +
-                            "                                        \"alias\": \"student\",\n" +
-                            "                                        \"name\": \"學生身份認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"驗證學生身份\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 18454,\n" +
-                            "                                        \"updated_at\": 1573050667\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 3,\n" +
-                            "                                        \"alias\": \"debitcard\",\n" +
-                            "                                        \"name\": \"金融帳號認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"驗證個人金融帳號\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11407,\n" +
-                            "                                        \"updated_at\": 1553750450\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 4,\n" +
-                            "                                        \"alias\": \"social\",\n" +
-                            "                                        \"name\": \"社交認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"個人社交帳號認證\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11451,\n" +
-                            "                                        \"updated_at\": 1571026433\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 5,\n" +
-                            "                                        \"alias\": \"emergency\",\n" +
-                            "                                        \"name\": \"緊急聯絡人\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"設定緊急連絡人資訊\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11454,\n" +
-                            "                                        \"updated_at\": 1570615139\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 6,\n" +
-                            "                                        \"alias\": \"email\",\n" +
-                            "                                        \"name\": \"常用電子信箱\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"驗證常用E-Mail位址\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11392,\n" +
-                            "                                        \"updated_at\": 1570615143\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 7,\n" +
-                            "                                        \"alias\": \"financial\",\n" +
-                            "                                        \"name\": \"財務訊息認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"提供財務訊息資訊\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11394,\n" +
-                            "                                        \"updated_at\": 1571026449\n" +
-                            "                                    }\n" +
-                            "                                ],\n" +
-                            "                                \"designate\": [\n" +
-                            "                                    123,\n" +
-                            "                                    456\n" +
-                            "                                ]\n" +
-                            "                            },\n" +
-                            "                            \"2\": {\n" +
-                            "                                \"id\": 6,\n" +
-                            "                                \"type\": 2,\n" +
-                            "                                \"identity\": 2,\n" +
-                            "                                \"name\": \"上班族外匯車貸\",\n" +
-                            "                                \"description\": \"\",\n" +
-                            "                                \"loan_range_s\": 10000,\n" +
-                            "                                \"loan_range_e\": 2000000,\n" +
-                            "                                \"interest_rate_s\": 15,\n" +
-                            "                                \"interest_rate_e\": 15,\n" +
-                            "                                \"charge_platform\": 3,\n" +
-                            "                                \"charge_platform_min\": 10000,\n" +
-                            "                                \"instalment\": [\n" +
-                            "                                    180\n" +
-                            "                                ],\n" +
-                            "                                \"repayment\": [\n" +
-                            "                                    3\n" +
-                            "                                ],\n" +
-                            "                                \"sub_product\": [],\n" +
-                            "                                \"hiddenMainProduct\": false,\n" +
-                            "                                \"target\": [],\n" +
-                            "                                \"certification\": [\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
-                            "                                        \"name\": \"實名認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"驗證個人身份資訊\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11430,\n" +
-                            "                                        \"updated_at\": 1574349958\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 3,\n" +
-                            "                                        \"alias\": \"debitcard\",\n" +
-                            "                                        \"name\": \"金融帳號認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"驗證個人金融帳號\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11407,\n" +
-                            "                                        \"updated_at\": 1553750450\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 4,\n" +
-                            "                                        \"alias\": \"social\",\n" +
-                            "                                        \"name\": \"社交認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"個人社交帳號認證\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11451,\n" +
-                            "                                        \"updated_at\": 1571026433\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 5,\n" +
-                            "                                        \"alias\": \"emergency\",\n" +
-                            "                                        \"name\": \"緊急聯絡人\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"設定緊急連絡人資訊\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11454,\n" +
-                            "                                        \"updated_at\": 1570615139\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 6,\n" +
-                            "                                        \"alias\": \"email\",\n" +
-                            "                                        \"name\": \"常用電子信箱\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"驗證常用E-Mail位址\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11392,\n" +
-                            "                                        \"updated_at\": 1570615143\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 7,\n" +
-                            "                                        \"alias\": \"financial\",\n" +
-                            "                                        \"name\": \"財務訊息認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"提供財務訊息資訊\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 11394,\n" +
-                            "                                        \"updated_at\": 1571026449\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 8,\n" +
-                            "                                        \"alias\": \"diploma\",\n" +
-                            "                                        \"name\": \"最高學歷認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"提供最高學歷畢業資訊\",\n" +
-                            "                                        \"optional\": [],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 18431,\n" +
-                            "                                        \"updated_at\": 1571653931,\n" +
-                            "                                        \"diploma_date\": \"\"\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 9,\n" +
-                            "                                        \"alias\": \"investigation\",\n" +
-                            "                                        \"name\": \"聯合徵信認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"提供聯合徵信資訊\",\n" +
-                            "                                        \"optional\": [\n" +
-                            "                                            3,\n" +
-                            "                                            4\n" +
-                            "                                        ],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 18412,\n" +
-                            "                                        \"updated_at\": 1571050628\n" +
-                            "                                    },\n" +
-                            "                                    {\n" +
-                            "                                        \"id\": 10,\n" +
-                            "                                        \"alias\": \"job\",\n" +
-                            "                                        \"name\": \"工作認證\",\n" +
-                            "                                        \"status\": 1,\n" +
-                            "                                        \"description\": \"提供工作訊息資訊\",\n" +
-                            "                                        \"optional\": [\n" +
-                            "                                            3,\n" +
-                            "                                            4\n" +
-                            "                                        ],\n" +
-                            "                                        \"user_status\": 1,\n" +
-                            "                                        \"certification_id\": 18416,\n" +
-                            "                                        \"updated_at\": 1573050951\n" +
-                            "                                    }\n" +
-                            "                                ],\n" +
-                            "                                \"designate\": [\n" +
-                            "                                    123,\n" +
-                            "                                    456\n" +
-                            "                                ]\n" +
-                            "                            }\n" +
-                            "                        },\n" +
-                            "                        \"description\": \"買進口車好方便\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"banner\": \"https://d3imllwf4as09k.cloudfront.net/app_asset/image_loan_03.jpg\",\n" +
                             "                        \"sub_products\": []\n" +
@@ -15489,7 +21621,7 @@ define({
                             "type": "Object",
                             "optional": false,
                             "field": "repayment",
-                            "description": "<p>可選還款方式</p>"
+                            "description": "<p>可選計息方式</p>"
                         },
                         {
                             "group": "Success 200",
@@ -15601,7 +21733,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "amount",
-                            "description": "<p>(信貸)(外匯車貸I II) 借款金額</p>"
+                            "description": "<p>(信貸)(外匯車貸I II)(創業貸-負責人) 借款金額</p>"
                         },
                         {
                             "group": "Parameter",
@@ -15623,14 +21755,14 @@ define({
                             "size": "0..128",
                             "optional": true,
                             "field": "reason",
-                            "description": "<p>(信貸) 借款原因</p>"
+                            "description": "<p>(信貸)(創業貸)(創業貸-負責人) 借款原因</p>"
                         },
                         {
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
                             "field": "reason_description",
-                            "description": "<p>(信貸)借款原因描述</p>"
+                            "description": "<p>(信貸)(創業貸-負責人)借款原因描述</p>"
                         },
                         {
                             "group": "Parameter",
@@ -15711,6 +21843,18 @@ define({
                             "type": "String",
                             "field": "sell_price",
                             "description": "<p>(外匯車貸I II) 建議/預計售價</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "field": "character",
+                            "description" : "<p>(微企貸、百萬信保微企貸) 角色 1:實際負責人 2:非實際負責人</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "field": "target_id",
+                            "description" : "<p>(微企貸、百萬信保微企貸) 創業貸起案ID (同意當保證人，不同意則依照規格呼叫)</p>"
                         }
                     ]
                 }
@@ -15802,7 +21946,7 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "COOPERATION_TYPE_ERROR",
+                            "field": "316",
                             "description": "<p>經銷商銷售類別錯誤</p>"
                         },
                         {
@@ -15811,6 +21955,7 @@ define({
                             "field": "357",
                             "description": "<p>子系統-法人代碼不存在</p>"
                         },
+
                         {
                             "group": "Error 4xx",
                             "optional": false,
@@ -15924,6 +22069,324 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/product/apply"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/product/associates",
+            "title": "借款方 保證人",
+            "version": "0.2.0",
+            "name": "PostProductAssociates",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "description": "案件編輯負責人、股東資訊</p>",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "size": "2..15",
+                            "optional": false,
+                            "field": "name",
+                            "description": "<p>姓名</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "phone",
+                            "description": "<p>電話號碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "id_number",
+                            "description": "<p>身分證字號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "mail",
+                            "description": "<p>mail</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "character",
+                            "description": "<p>2:實際負責人 3:配偶 4:保證人甲 5:保證人乙</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "relationship",
+                            "description": "<p>與負責人關係 0:配偶 1:血親 2:姻親 3:股東 4:朋友 5:本人 6:其他 7:經營有關之借戶職員</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "guarantor",
+                            "description": "<p>是否為保證人 0:否 1:是(預設)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\"result\":\"SUCCESS\"}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "504",
+                            "description": "<p>身分證字號格式錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "801",
+                            "description": "<p>案件已存在/p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "818",
+                            "description": "<p>負責人已存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "819",
+                            "description": "<p>股東已存在</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "504",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "801",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "818",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"818\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/associates"
+                }
+            ]
+        },
+        {
+            "type": "POST",
+            "url": "/v2/product/delassociates",
+            "title": "借款方 刪除保證人",
+            "version": "0.2.0",
+            "name": "POSTProductDelAssociates",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "index",
+                            "description": "<p>0、1</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\"result\":\"SUCCESS\"}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "504",
+                            "description": "<p>身分證字號格式錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "801",
+                            "description": "<p>案件已存在/p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "818",
+                            "description": "<p>負責人已存在</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "819",
+                            "description": "<p>股東已存在</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "504",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "801",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "818",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"818\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/delassociates"
                 }
             ]
         },
@@ -29946,7 +36409,63 @@ define({
                             "optional": false,
                             "field": "created_at",
                             "description": "<p>申請日期</p>"
-                        }
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_type",
+                            "description": "<p>公司類型</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_du_type",
+                            "description": "<p>行業別</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_du_type",
+                            "description": "<p>行業別</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_name",
+                            "description": "<p>公司名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "comp_set_date",
+                            "description": "<p>公司設立日期</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "comp_capital",
+                            "description": "<p>公司實收資本額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "smeg_guarantee_percent",
+                            "description": "<p>擔保條件</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "pr_name",
+                            "description": "<p>負責人</p>"
+                        },
                     ]
                 },
                 "examples": [
@@ -29962,6 +36481,177 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/target/list"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/api/v2/target/judicial_list",
+            "title": "出借方 取得企金標的列表",
+            "version": "0.2.0",
+            "name": "GetTargetJudicialList",
+            "group": "Target",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "credit_level",
+                                "instalment",
+                                "interest_rate"
+                            ],
+                            "optional": true,
+                            "field": "orderby",
+                            "defaultValue": "credit_level",
+                            "description": "<p>排序值</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "allowedValues": [
+                                "asc",
+                                "desc"
+                            ],
+                            "optional": true,
+                            "field": "sort",
+                            "defaultValue": "asc",
+                            "description": "<p>降序/升序</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "target_no",
+                            "description": "<p>標的號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "product_id",
+                            "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "credit_level",
+                            "description": "<p>信用評等</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "user_id",
+                            "description": "<p>User ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "loan_amount",
+                            "description": "<p>核准金額</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "interest_rate",
+                            "description": "<p>年化利率</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "instalment",
+                            "description": "<p>期數</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "repayment",
+                            "description": "<p>還款方式</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "expire_time",
+                            "description": "<p>流標時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "invested",
+                            "description": "<p>目前投標量</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "reason",
+                            "description": "<p>借款原因</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案 504:銀行待放款</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_status",
+                            "description": "<p>狀態 0:無 1:轉貸中 2:轉貸成功 3:申請提還 4:完成提還 8:轉貸的標的</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "created_at",
+                            "description": "<p>申請日期</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n\"result\":\"SUCCESS\",\n\"data\":{\n\t\"list\":[\n\t\t{\n\t\t\t\"id\":19878,\n\t\t\t\"target_no\":\"SSM2021052526182\",\n\t\t\t\"product_name\":\"\u767e\u842c\u4fe1\u4fdd\u5fae\u4f01\u8cb8\",\n\t\t\t\"product_id\":1002,\n\t\t\t\"sub_product_id\":0,\n\t\t\t\"credit_level\":0,\n\t\t\t\"user_id\":47236,\n\t\t\t\"loan_amount\":0,\n\t\t\t\"interest_rate\":0,\n\t\t\t\"instalment\":36,\n\t\t\t\"repayment\":1,\n\t\t\t\"expire_time\":0,\n\t\t\t\"invested\":0,\n\t\t\t\"reason\":\"\u71df\u904b\u9031\u8f49\u91d1\",\n\t\t\t\"isTargetOpaque\":false,\n\t\t\t\"status\":504,\n\t\t\t\"sub_status\":9,\n\t\t\t\"created_at\":1621922591,\n\t\t\t\"comp_type\":\"21\",\n\t\t\t\"comp_du_type\":\"03\",\n\t\t\t\"comp_name\":\"\u65b0\u5149\u71df\u9020\u6e2c\",\n\t\t\t\"comp_set_date\":\"19980305\",\n\t\t\t\"comp_capital\":3000000,\n\t\t\t\"pr_name\":\"\u65b0\u5149\u71df\u9020\u6e2c\",\n\t\t\t\"smeg_guarantee_percent\":\"\u4fe1\u4fdd\u57fa\u91d19.0\u6210\"\n\t\t},...\n\t]}\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Target.php",
+            "groupTitle": "Target",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/target/judicial_list"
                 }
             ]
         },
@@ -36932,15 +43622,15 @@ define({
                             "optional": false,
                             "field": "my_point",
                             "description": "<p>我的被推薦點數</p>"
-						},
-						{
+                        },
+                        {
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
                             "field": "collect_count",
                             "description": "<p>可領取次數</p>"
-						},
-						{
+                        },
+                        {
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
@@ -37129,320 +43819,437 @@ define({
                 ]
             }
         },
-        {
-            "type": "post",
-            "url": "/v2/user/bind",
-            "title": "會員 綁定第三方帳號",
-            "version": "0.2.0",
-            "name": "PostUserBind",
-            "group": "User",
-            "header": {
-                "fields": {
-                    "Header": [
-                        {
-                            "group": "Header",
-                            "type": "String",
-                            "optional": false,
-                            "field": "request_token",
-                            "description": "<p>登入後取得的 Request Token</p>"
-                        }
-                    ]
-                }
-            },
-            "parameter": {
-                "fields": {
-                    "Parameter": [
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "access_token",
-                            "description": "<p>Facebook AccessToken</p>"
-                        }
-                    ]
-                }
-            },
-            "success": {
-                "fields": {
-                    "Success 200": [
-                        {
-                            "group": "Success 200",
-                            "type": "Object",
-                            "optional": false,
-                            "field": "result",
-                            "description": "<p>SUCCESS</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "error": {
-                "fields": {
-                    "Error 4xx": [
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "305",
-                            "description": "<p>access_token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "306",
-                            "description": "<p>已綁定過第三方帳號</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "308",
-                            "description": "<p>此FB帳號已綁定過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "200",
-                            "description": "<p>參數錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "216",
-                            "description": "<p>不支援法人帳號使用</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "305",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "306",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "308",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "200",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "101",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "216",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "filename": "application/controllers/api/v2/User.php",
-            "groupTitle": "User",
-            "sampleRequest": [
-                {
-                    "url": "/api/v2/user/bind"
-                }
-            ]
-        },
-        {
-            "type": "post",
-            "url": "/user/bind",
-            "title": "會員 綁定第三方帳號",
-            "version": "0.1.0",
-            "name": "PostUserBind",
-            "group": "User",
-            "header": {
-                "fields": {
-                    "Header": [
-                        {
-                            "group": "Header",
-                            "type": "String",
-                            "optional": false,
-                            "field": "request_token",
-                            "description": "<p>登入後取得的 Request Token</p>"
-                        }
-                    ]
-                }
-            },
-            "parameter": {
-                "fields": {
-                    "Parameter": [
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "allowedValues": [
-                                "facebook",
-                                "instagram"
-                            ],
-                            "optional": false,
-                            "field": "type",
-                            "description": "<p>登入類型</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "access_token",
-                            "description": "<p>access_token</p>"
-                        }
-                    ]
-                }
-            },
-            "success": {
-                "fields": {
-                    "Success 200": [
-                        {
-                            "group": "Success 200",
-                            "type": "Object",
-                            "optional": false,
-                            "field": "result",
-                            "description": "<p>SUCCESS</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "SUCCESS",
-                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "error": {
-                "fields": {
-                    "Error 4xx": [
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "305",
-                            "description": "<p>access_token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "306",
-                            "description": "<p>此種類型已綁定過了</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "308",
-                            "description": "<p>此FB帳號已綁定過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "309",
-                            "description": "<p>此IG帳號已綁定過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "310",
-                            "description": "<p>此LINE帳號已綁定過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "200",
-                            "description": "<p>參數錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "100",
-                            "description": "<p>Token錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "305",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "306",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "308",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "309",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"309\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "310",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"310\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "200",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "100",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "101",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "filename": "application/controllers/api/User.php",
-            "groupTitle": "User",
-            "sampleRequest": [
-                {
-                    "url": "/api/user/bind"
-                }
-            ]
-        },
+        // {
+
+        //     "type": "post",
+        //     "url": "/v2/user/bind",
+        //     "title": "會員 綁定第三方帳號",
+        //     "version": "0.2.0",
+        //     "name": "PostUserBind",
+        //     "group": "User",
+        //     "header": {
+        //         "fields": {
+        //             "Header": [
+        //                 {
+
+        //                     "group": "Header",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "request_token",
+        //                     "description": "<p>登入後取得的 Request Token</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+
+
+
+
+        //     "parameter": {
+        //         "fields": {
+        //             "Parameter": [
+        //                 {
+
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "access_token",
+        //                     "description": "<p>Facebook AccessToken</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+
+
+
+
+        //     "success": {
+        //         "fields": {
+        //             "Success 200": [
+        //                 {
+
+        //                     "group": "Success 200",
+        //                     "type": "Object",
+        //                     "optional": false,
+        //                     "field": "result",
+        //                     "description": "<p>SUCCESS</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "SUCCESS",
+        //                 "content": "{\n  \"result\": \"SUCCESS\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "error": {
+        //         "fields": {
+        //             "Error 4xx": [
+        //                 {
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "305",
+        //                     "description": "<p>access_token錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "306",
+        //                     "description": "<p>已綁定過第三方帳號</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "308",
+        //                     "description": "<p>此FB帳號已綁定過</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "200",
+        //                     "description": "<p>參數錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "100",
+        //                     "description": "<p>Token錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "101",
+        //                     "description": "<p>帳戶已黑名單</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "216",
+        //                     "description": "<p>不支援法人帳號使用</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "305",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "306",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "308",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "200",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "100",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "101",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "216",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "filename": "application/controllers/api/v2/User.php",
+        //     "groupTitle": "User",
+        //     "sampleRequest": [
+        //         {
+
+        //             "url": "/api/v2/user/bind"
+        //         }
+        //     ]
+        // },
+        // {
+
+
+
+
+        //     "type": "post",
+        //     "url": "/user/bind",
+        //     "title": "會員 綁定第三方帳號",
+        //     "version": "0.1.0",
+        //     "name": "PostUserBind",
+        //     "group": "User",
+        //     "header": {
+        //         "fields": {
+        //             "Header": [
+        //                 {
+
+        //                     "group": "Header",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "request_token",
+        //                     "description": "<p>登入後取得的 Request Token</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+
+
+
+
+        //     "parameter": {
+        //         "fields": {
+        //             "Parameter": [
+        //                 {
+
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "allowedValues": [
+        //                         "facebook",
+        //                         "instagram"
+        //                     ],
+
+        //                     "optional": false,
+        //                     "field": "type",
+        //                     "description": "<p>登入類型</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "access_token",
+        //                     "description": "<p>access_token</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+
+
+
+
+        //     "success": {
+        //         "fields": {
+        //             "Success 200": [
+        //                 {
+
+        //                     "group": "Success 200",
+        //                     "type": "Object",
+        //                     "optional": false,
+        //                     "field": "result",
+        //                     "description": "<p>SUCCESS</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "SUCCESS",
+        //                 "content": "{\n  \"result\": \"SUCCESS\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "error": {
+        //         "fields": {
+        //             "Error 4xx": [
+        //                 {
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "305",
+        //                     "description": "<p>access_token錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "306",
+        //                     "description": "<p>此種類型已綁定過了</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "308",
+        //                     "description": "<p>此FB帳號已綁定過</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "309",
+        //                     "description": "<p>此IG帳號已綁定過</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "310",
+        //                     "description": "<p>此LINE帳號已綁定過</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "200",
+        //                     "description": "<p>參數錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "100",
+        //                     "description": "<p>Token錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "101",
+        //                     "description": "<p>帳戶已黑名單</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "305",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"305\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "306",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"306\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "308",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"308\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "309",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"309\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "310",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"310\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "200",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "100",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "101",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "filename": "application/controllers/api/User.php",
+        //     "groupTitle": "User",
+        //     "sampleRequest": [
+        //         {
+
+        //             "url": "/api/user/bind"
+        //         }
+        //     ]
+        // },
+
+
+
         {
             "type": "post",
             "url": "/v2/user/contact",
@@ -38491,6 +45298,13 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
+                            "optional": true,
+                            "field": "tax_id",
+                            "description": "<p>統一編號</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
                             "optional": false,
                             "field": "code",
                             "description": "<p>簡訊驗證碼</p>"
@@ -38747,6 +45561,13 @@ define({
                             "optional": false,
                             "field": "password",
                             "description": "<p>密碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "tax_id",
+                            "description": "<p>統一編號</p>"
                         },
                         {
                             "group": "Parameter",
@@ -39095,6 +45916,13 @@ define({
                             "optional": false,
                             "field": "code",
                             "description": "<p>簡訊驗證碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "tax_id",
+                            "description": "<p>統一編號</p>"
                         },
                         {
                             "group": "Parameter",
@@ -39620,6 +46448,13 @@ define({
                             "optional": false,
                             "field": "phone",
                             "description": "<p>手機號碼</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "tax_id",
+                            "description": "<p>統一編號</p>"
                         }
                     ]
                 }
@@ -39782,295 +46617,396 @@ define({
                 }
             ]
         },
-        {
-            "type": "post",
-            "url": "/v2/user/sociallogin",
-            "title": "會員 第三方登入",
-            "version": "0.2.0",
-            "name": "PostUserSociallogin",
-            "group": "User",
-            "parameter": {
-                "fields": {
-                    "Parameter": [
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "access_token",
-                            "description": "<p>AccessToken</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "allowedValues": [
-                                "0",
-                                "1"
-                            ],
-                            "optional": true,
-                            "field": "type",
-                            "defaultValue": "0",
-                            "description": "<p>0:Facebook 1:Line</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "Number",
-                            "allowedValues": [
-                                "0",
-                                "1"
-                            ],
-                            "optional": true,
-                            "field": "investor",
-                            "defaultValue": "0",
-                            "description": "<p>0:借款端 1:投資端</p>"
-                        }
-                    ]
-                }
-            },
-            "success": {
-                "fields": {
-                    "Success 200": [
-                        {
-                            "group": "Success 200",
-                            "type": "Object",
-                            "optional": false,
-                            "field": "result",
-                            "description": "<p>SUCCESS</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "token",
-                            "description": "<p>request_token</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "first_time",
-                            "description": "<p>是否首次本端</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "expiry_time",
-                            "description": "<p>token時效</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "SUCCESS",
-                        "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\": 1\t\t\n     }\n   }",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "error": {
-                "fields": {
-                    "Error 4xx": [
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "302",
-                            "description": "<p>會員不存在</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "304",
-                            "description": "<p>密碼錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "200",
-                            "description": "<p>參數錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "302",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "304",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "200",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "101",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "filename": "application/controllers/api/v2/User.php",
-            "groupTitle": "User",
-            "sampleRequest": [
-                {
-                    "url": "/api/v2/user/sociallogin"
-                }
-            ]
-        },
-        {
-            "type": "post",
-            "url": "/user/sociallogin",
-            "title": "會員 第三方登入",
-            "version": "0.1.0",
-            "name": "PostUserSociallogin",
-            "group": "User",
-            "parameter": {
-                "fields": {
-                    "Parameter": [
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "allowedValues": [
-                                "facebook",
-                                "instagram"
-                            ],
-                            "optional": false,
-                            "field": "type",
-                            "description": "<p>登入類型</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "String",
-                            "optional": false,
-                            "field": "access_token",
-                            "description": "<p>access_token</p>"
-                        },
-                        {
-                            "group": "Parameter",
-                            "type": "number",
-                            "allowedValues": [
-                                "0",
-                                "1"
-                            ],
-                            "optional": true,
-                            "field": "investor",
-                            "defaultValue": "0",
-                            "description": "<p>1:投資端 0:借款端</p>"
-                        }
-                    ]
-                }
-            },
-            "success": {
-                "fields": {
-                    "Success 200": [
-                        {
-                            "group": "Success 200",
-                            "type": "Object",
-                            "optional": false,
-                            "field": "result",
-                            "description": "<p>SUCCESS</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "token",
-                            "description": "<p>request_token</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "first_time",
-                            "description": "<p>是否首次本端</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "String",
-                            "optional": false,
-                            "field": "expiry_time",
-                            "description": "<p>token時效</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "SUCCESS",
-                        "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "error": {
-                "fields": {
-                    "Error 4xx": [
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "302",
-                            "description": "<p>會員不存在</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "304",
-                            "description": "<p>密碼錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "200",
-                            "description": "<p>參數錯誤</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
-                            "field": "101",
-                            "description": "<p>帳戶已黑名單</p>"
-                        }
-                    ]
-                },
-                "examples": [
-                    {
-                        "title": "302",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "304",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "200",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "101",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
-                        "type": "Object"
-                    }
-                ]
-            },
-            "filename": "application/controllers/api/User.php",
-            "groupTitle": "User",
-            "sampleRequest": [
-                {
-                    "url": "/api/user/sociallogin"
-                }
-            ]
-        },
+
+        // 未使用
+        // {
+        //     "type": "post",
+        //     "url": "/v2/user/sociallogin",
+        //     "title": "會員 第三方登入",
+        //     "version": "0.2.0",
+        //     "name": "PostUserSociallogin",
+        //     "group": "User",
+        //     "parameter": {
+        //         "fields": {
+        //             "Parameter": [
+        //                 {
+
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "access_token",
+        //                     "description": "<p>AccessToken</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "allowedValues": [
+        //                         "0",
+        //                         "1"
+        //                     ],
+
+        //                     "optional": true,
+        //                     "field": "type",
+        //                     "defaultValue": "0",
+        //                     "description": "<p>0:Facebook 1:Line</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Parameter",
+        //                     "type": "Number",
+        //                     "allowedValues": [
+        //                         "0",
+        //                         "1"
+        //                     ],
+
+        //                     "optional": true,
+        //                     "field": "investor",
+        //                     "defaultValue": "0",
+        //                     "description": "<p>0:借款端 1:投資端</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+
+
+
+
+        //     "success": {
+        //         "fields": {
+        //             "Success 200": [
+        //                 {
+
+        //                     "group": "Success 200",
+        //                     "type": "Object",
+        //                     "optional": false,
+        //                     "field": "result",
+        //                     "description": "<p>SUCCESS</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Success 200",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "token",
+        //                     "description": "<p>request_token</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Success 200",
+        //                     "type": "Number",
+        //                     "optional": false,
+        //                     "field": "first_time",
+        //                     "description": "<p>是否首次本端</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Success 200",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "expiry_time",
+        //                     "description": "<p>token時效</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "SUCCESS",
+        //                 "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\": 1\t\t\n     }\n   }",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "error": {
+        //         "fields": {
+        //             "Error 4xx": [
+        //                 {
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "302",
+        //                     "description": "<p>會員不存在</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "304",
+        //                     "description": "<p>密碼錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "200",
+        //                     "description": "<p>參數錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "101",
+        //                     "description": "<p>帳戶已黑名單</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "302",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "304",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "200",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "101",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "filename": "application/controllers/api/v2/User.php",
+        //     "groupTitle": "User",
+        //     "sampleRequest": [
+        //         {
+
+        //             "url": "/api/v2/user/sociallogin"
+        //         }
+        //     ]
+        // },
+        // {
+
+
+
+
+        //     "type": "post",
+        //     "url": "/user/sociallogin",
+        //     "title": "會員 第三方登入",
+        //     "version": "0.1.0",
+        //     "name": "PostUserSociallogin",
+        //     "group": "User",
+        //     "parameter": {
+        //         "fields": {
+        //             "Parameter": [
+        //                 {
+
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "allowedValues": [
+        //                         "facebook",
+        //                         "instagram"
+        //                     ],
+
+        //                     "optional": false,
+        //                     "field": "type",
+        //                     "description": "<p>登入類型</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Parameter",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "access_token",
+        //                     "description": "<p>access_token</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Parameter",
+        //                     "type": "number",
+        //                     "allowedValues": [
+        //                         "0",
+        //                         "1"
+        //                     ],
+
+        //                     "optional": true,
+        //                     "field": "investor",
+        //                     "defaultValue": "0",
+        //                     "description": "<p>1:投資端 0:借款端</p>"
+        //                 }
+        //             ]
+        //         }
+        //     },
+
+
+
+
+        //     "success": {
+        //         "fields": {
+        //             "Success 200": [
+        //                 {
+
+        //                     "group": "Success 200",
+        //                     "type": "Object",
+        //                     "optional": false,
+        //                     "field": "result",
+        //                     "description": "<p>SUCCESS</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Success 200",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "token",
+        //                     "description": "<p>request_token</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Success 200",
+        //                     "type": "Number",
+        //                     "optional": false,
+        //                     "field": "first_time",
+        //                     "description": "<p>是否首次本端</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Success 200",
+        //                     "type": "String",
+        //                     "optional": false,
+        //                     "field": "expiry_time",
+        //                     "description": "<p>token時效</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "SUCCESS",
+        //                 "content": "   {\n     \"result\": \"SUCCESS\",\n     \"data\": {\n     \t\"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjMiLCJuYW1lIjoiIiwicGhvbmUiOiIwOTEyMzQ1Njc4Iiwic3RhdHVzIjoiMSIsImJsb2NrX3N0YXR1cyI6IjAifQ.Ced85ewiZiyLJZk3yvzRqO3005LPdMjlE8HZdYZbGAE\",\n     \t\"expiry_time\": \"1522673418\",\n\t\t\t\"first_time\":1\t\t\n     }\n   }",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "error": {
+        //         "fields": {
+        //             "Error 4xx": [
+        //                 {
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "302",
+        //                     "description": "<p>會員不存在</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "304",
+        //                     "description": "<p>密碼錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "200",
+        //                     "description": "<p>參數錯誤</p>"
+        //                 },
+        //                 {
+
+
+        //                     "group": "Error 4xx",
+        //                     "optional": false,
+        //                     "field": "101",
+        //                     "description": "<p>帳戶已黑名單</p>"
+        //                 }
+        //             ]
+        //         },
+
+
+
+        //         "examples": [
+        //             {
+
+        //                 "title": "302",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"302\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "304",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"304\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "200",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+        //                 "type": "Object"
+        //             },
+        //             {
+
+
+        //                 "title": "101",
+        //                 "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+        //                 "type": "Object"
+        //             }
+        //         ]
+        //     },
+
+
+
+        //     "filename": "application/controllers/api/User.php",
+        //     "groupTitle": "User",
+        //     "sampleRequest": [
+        //         {
+
+        //             "url": "/api/user/sociallogin"
+        //         }
+        //     ]
+        // },
+
+
+
         {
             "type": "post",
             "url": "/v2/user/upload",
@@ -40293,6 +47229,218 @@ define({
                     {
                         "title": "101",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
+            "url": "/v2/reports/info",
+            "title": "報表 infomation",
+            "version": "0.2.0",
+            "name": "GetreportsInfo",
+            "group": "reports",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>法人登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "reference_id",
+                            "description": "<p>upload id</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "type",
+                            "description": "<p>登入類型</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/reports.php",
+            "groupTitle": "reports",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/reports/info"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/certification/companyemail",
+            "title": "認證 公司電子信箱",
+            "version": "0.2.0",
+            "name": "PostCertificationCompanyEmail",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "email",
+                            "description": "<p>Email</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "502",
+                            "description": "<p>此驗證已通過驗證</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "204",
+                            "description": "<p>Email格式錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>新增時發生錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "204",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"204\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
                         "type": "Object"
                     }
                 ]

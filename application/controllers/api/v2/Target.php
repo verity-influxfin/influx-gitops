@@ -13,7 +13,7 @@ class Target extends REST_Controller {
 		$this->load->model('user/user_meta_model');
 		$this->load->library('Contract_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = ['list'];
+        $nonAuthMethods = ['list','judicial_list','judicial_info'];
 		if (!in_array($method, $nonAuthMethods)) {
             $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
@@ -75,7 +75,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} loan_amount 核准金額
 	 * @apiSuccess {Number} interest_rate 年化利率
 	 * @apiSuccess {Number} instalment 期數
-	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} repayment 計息方式
 	 * @apiSuccess {Number} expire_time 流標時間
 	 * @apiSuccess {Number} invested 目前投標量
 	 * @apiSuccess {String} reason 借款原因
@@ -123,7 +123,7 @@ class Target extends REST_Controller {
 		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
 		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
         $product_list = $this->config->item('product_list');
-        $user_meta = '';
+        $user_meta = new stdClass();
 
         if(!empty($target_list)){
             foreach($target_list as $key => $value){
@@ -192,8 +192,8 @@ class Target extends REST_Controller {
                                 if(isset($targetData->$key) && !empty($targetData->$key)){
                                     $pic_array = [];
                                     foreach ($targetData->$key as $svalue){
-                                        preg_match('/\/image.+/', $svalue,$matches);
-                                        $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                                        preg_match('/image.+/', $svalue,$matches);
+                                        $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
                                     }
                                     $targetDatas[$key] = $pic_array;
                                 }
@@ -203,9 +203,12 @@ class Target extends REST_Controller {
                             }
                         }
                         $user = array(
+                            'name' 			=> $user_info->name,
+                            'id_number'		=> '',
                             'sex' 			=> '',
                             'age'			=> '',
                             'company_name'	=> '',
+                            'tax_id'	=> $user_info->id_number,
                         );
                     }
 				}
@@ -233,7 +236,7 @@ class Target extends REST_Controller {
                     'invested' 			=> intval($value->invested),
                     'reason' 			=> $reason,
                     'targetDatas' => $targetDatas,
-                    'isTargetOpaque' => $sub_product_id==9999?true:false,
+                    'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
                     'status' 			=> intval($value->status),
                     'sub_status' 		=> intval($value->sub_status),
                     'created_at' 		=> intval($value->created_at),
@@ -246,6 +249,127 @@ class Target extends REST_Controller {
 		}
 
 		$this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
+    }
+
+    // 法人標的列表
+    // {
+    //     "credit_level" : "3",
+    //     "comp_type" : "中小企業",
+    //     "comp_du_type" : "其他金融業",
+    //     "comp_name" : "普惠金融科技股份有限公司",
+    //     "target_no" : "SSM2021081991257",
+    //     "reason" : "短期營運週轉",
+    //     // 設立日期
+    //     "comp_set_date" : "2017.12.31",
+    //     // 實收資本額
+    //     "comp_capital" : 1450,
+    //     // 還款來源
+    //     "payment_source" : "營業收入",
+    //     // 擔保條件
+    //     "smeg_guarantee_percent" : "信保基金9.5成",
+    //     // 保證人
+    //     "pr_name" : "祖法強",
+    //     "loan_amount" : 1000000,
+    //     "instalment" : 36,
+    //     "repayment" : 1,
+    //     "loan_rate" : 5,
+    //     "status" : 504,
+    // }
+    // 暫時只有撈微企貸案件資料ˊ
+    public function judicial_list_get(){
+        $input 			= $this->input->get();
+		$list			= [];
+		$where			= array( 'status' => [504] );
+		$orderby 		= isset($input['orderby'])&&in_array($input['orderby'],array('credit_level','instalment','interest_rate'))?$input['orderby']:'credit_level';
+		$sort			= isset($input['sort'])&&in_array($input['sort'],array('desc','asc'))?$input['sort']:'asc';
+		$target_list 	= $this->target_model->order_by($orderby,$sort)->get_many_by($where);
+        // 資訊不在案件本身內容
+        $out_of_target_info = [];
+
+        $product_list = $this->config->item('product_list');
+        if(!empty($target_list)){
+            foreach($target_list as $key => $value){
+                $product = isset($product_list[$value->product_id]) ? $product_list[$value->product_id] : [];
+                if(!empty($product)){
+                    $param = [];
+                    $sub_product_id = $value->sub_product_id;
+                    $out_of_target_info['product_name'] = $product['name'];
+                    if($this->is_sub_product($product,$sub_product_id)){
+                        $product = $this->trans_sub_product($product,$sub_product_id);
+                        $out_of_target_info['product_name'] = $product['name'];
+                    }
+
+                    $json_reason = json_decode($value->reason);
+                    if(isset($json_reason->reason)){
+                        $value->reason = $json_reason->reason.' - '.$json_reason->reason_description;
+                    }
+
+                    // 撈微企貸資料
+                    if($product['visul_id'] == 'J2'){
+                        $this->load->library('mapping/sk_bank/msgno');
+                		$response = $this->msgno->getSKBankInfoByTargetId($value->id);
+                        if(!empty($response) && isset($response['data']['send_log']['request_content'])){
+                            if(!empty($response['data']['send_log']['request_content'])){
+                                $sk_bank_send_log = json_decode($response['data']['send_log']['request_content'],true);
+                                $out_of_target_info['comp_type'] = isset($sk_bank_send_log['unencrypted']['Data']['CompType']) ? $sk_bank_send_log['unencrypted']['Data']['CompType'] : '';
+                                $out_of_target_info['comp_du_type'] = isset($sk_bank_send_log['unencrypted']['Data']['CompDuType']) ? $sk_bank_send_log['unencrypted']['Data']['CompDuType']: '';
+                                $out_of_target_info['comp_name'] = isset($sk_bank_send_log['unencrypted']['Data']['CompName']) ? $sk_bank_send_log['unencrypted']['Data']['CompName']: '';
+                                $out_of_target_info['comp_set_date'] = isset($sk_bank_send_log['unencrypted']['Data']['CompSetDate']) ? $sk_bank_send_log['unencrypted']['Data']['CompSetDate']: '';
+                                $out_of_target_info['comp_capital'] = isset($sk_bank_send_log['unencrypted']['Data']['CompCapital']) ? $sk_bank_send_log['unencrypted']['Data']['CompCapital']: '';
+                                $out_of_target_info['pr_name'] = isset($sk_bank_send_log['unencrypted']['Data']['PrName']) ? $sk_bank_send_log['unencrypted']['Data']['PrName']: '';
+                            }
+                        }
+
+                        // 撈新光回應資料
+                        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+                        $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->order_by('id','desc')->limit(1)->get_by(['target_id' => $value->id, 'type' => 'text']);
+                        if(!empty($loanTargetMappingInfo) && isset($loanTargetMappingInfo->msg_no)){
+                            $this->load->model('skbank/LoanSendRequestLog_model');
+                            $loanRequestLogInfo = $this->LoanSendRequestLog_model->get_by(['msg_no' => $loanTargetMappingInfo->msg_no]);
+                            if(!empty($loanRequestLogInfo) && isset($loanRequestLogInfo->case_no)){
+                                $this->load->model('skbank/LoanResult_model');
+                                $loanResult = $this->LoanResult_model->get_by(['case_no' => $loanRequestLogInfo->case_no]);
+                                if(!empty($loanResult) && isset($loanResult->smeg_guarantee_percent) && is_numeric($loanResult->smeg_guarantee_percent)){
+                                    $out_of_target_info['smeg_guarantee_percent'] = isset($loanResult->smeg_guarantee_percent) ? '信保基金'.number_format($loanResult->smeg_guarantee_percent/10, 1, '.', '').'成' : '';
+                                }
+                            }
+                        }
+                    }
+
+                    $param = [
+                        'id' 				=> intval($value->id),
+                        'target_no' 		=> $value->target_no,
+                        'product_name' => isset($out_of_target_info['product_name']) ? $out_of_target_info['product_name'] : '',
+                        'product_id' 		=> intval($value->product_id),
+                        'sub_product_id' => intval($value->sub_product_id),
+                        'credit_level' 		=> intval($value->credit_level),
+                        'user_id' 			=> intval($value->user_id),
+                        'loan_amount' 		=> intval($value->loan_amount),
+                        'interest_rate' 	=> floatval($value->interest_rate),
+                        'instalment' 		=> intval($value->instalment),
+                        'repayment' 		=> intval($value->repayment),
+                        'expire_time' 		=> intval($value->expire_time),
+                        'invested' 			=> intval($value->invested),
+                        'reason' 			=> $value->reason,
+                        'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
+                        'status' 			=> intval($value->status),
+                        'sub_status' 		=> intval($value->sub_status),
+                        'created_at' 		=> intval($value->created_at),
+                        'comp_type' => isset($out_of_target_info['comp_type']) ? $out_of_target_info['comp_type']: '',
+                        'comp_du_type' => isset($out_of_target_info['comp_du_type']) ? $out_of_target_info['comp_du_type']: '',
+                        'comp_name' => isset($out_of_target_info['comp_name']) ? $out_of_target_info['comp_name']: '',
+                        'comp_set_date' => isset($out_of_target_info['comp_set_date']) ? $out_of_target_info['comp_set_date']: '',
+                        'comp_capital' => isset($out_of_target_info['comp_capital']) && is_numeric($out_of_target_info['comp_capital']) ? intval($out_of_target_info['comp_capital']): '',
+                        'pr_name' => isset($out_of_target_info['pr_name']) ? $out_of_target_info['pr_name']: '',
+                        'smeg_guarantee_percent' => isset($out_of_target_info['smeg_guarantee_percent']) ? $out_of_target_info['smeg_guarantee_percent']: '',
+                    ];
+
+                    $list[] = $param;
+                }
+			}
+        }
+
+        $this->response(array('result' => 'SUCCESS','data' => [ 'list' => $list ] ));
     }
 
 	/**
@@ -266,7 +390,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} credit_level 信用評等
 	 * @apiSuccess {Number} interest_rate 年化利率
 	 * @apiSuccess {Number} instalment 期數
-	 * @apiSuccess {Number} repayment 還款方式
+	 * @apiSuccess {Number} repayment 計息方式
 	 * @apiSuccess {Number} expire_time 流標時間
 	 * @apiSuccess {Number} invested 目前投標量
 	 * @apiSuccess {String} reason 借款原因
@@ -396,7 +520,7 @@ class Target extends REST_Controller {
 		$data				= [];
         $user_meta = '';
 
-        if(!empty($target) && in_array($target->status,[3,4])){
+        if(!empty($target) && in_array($target->status,[3,4,504])){
 
             $product_list = $this->config->item('product_list');
             $product = $product_list[$target->product_id];
@@ -416,13 +540,13 @@ class Target extends REST_Controller {
 				$name 		= mb_substr($user_info->name,0,1,'UTF-8').'**';
 				$id_number 	= strlen($user_info->id_number)==10?substr($user_info->id_number,0,5).'*****':'';
 				$age  		= get_age($user_info->birthday);
-				if($product['identity']==1){
+                $user_meta = new stdClass();
+                if($product['identity']==1){
 					$user_meta 	            = $this->user_meta_model->get_by(['user_id'=>$target->user_id,'meta_key'=>'school_name']);
                     if(is_object($user_meta)){
                         $user_meta->meta_value =preg_replace('/\(自填\)/', '',$user_meta->meta_value);
                     }
                     else{
-                        $user_meta = new stdClass();
                         $user_meta->meta_value='未提供學校資訊';
                     }
 				} elseif ($product_list[$target->product_id]['identity'] == 2) {
@@ -430,7 +554,6 @@ class Target extends REST_Controller {
                         'user_id' => $target->user_id,
                         'meta_key' => ['job_company', 'diploma_name']
                     ]);
-                    $user_meta = new stdClass();
                     if ($meta_info) {
                         $job_company = ($meta_info[0]->meta_key == 'job_company'
                             ? $meta_info[0]->meta_value
@@ -453,7 +576,7 @@ class Target extends REST_Controller {
 					'id_number'		=> $id_number,
 					'sex' 			=> $user_info->sex,
 					'age'			=> $age,
-					'company_name'	=> $user_meta?$user_meta->meta_value:'',
+					'company_name'	=> isset($user_meta->meta_value)?$user_meta->meta_value:'',
 				);
 			}
 
@@ -473,8 +596,8 @@ class Target extends REST_Controller {
                         if(isset($targetData->$key) && !empty($targetData->$key)){
                             $pic_array = [];
                             foreach ($targetData->$key as $svalue){
-                                preg_match('/\/image.+/', $svalue,$matches);
-                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda'.$matches[0];
+                                preg_match('/image.+/', $svalue,$matches);
+                                $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
                             }
                             $targetDatas[$key] = $pic_array;
                         }
@@ -484,11 +607,12 @@ class Target extends REST_Controller {
                     }
                 }
                 $user = array(
-                    'name' 			=> '',
+                    'name' 			=> $user_info->name,
                     'id_number'		=> '',
                     'sex' 			=> '',
                     'age'			=> '',
                     'company_name'	=> '',
+                    'tax_id'	=> $user_info->id_number,
                 );
             }
 
@@ -613,7 +737,7 @@ class Target extends REST_Controller {
 				'repayment' 		=> intval($target->repayment),
 				'expire_time' 		=> intval($target->expire_time),
 				'invested' 			=> intval($target->invested),
-                'isTargetOpaque' => $sub_product_id==9999?true:false,
+                'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
                 'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target->interest_rate ? true : false),
                 'status' 			=> intval($target->status),
 				'sub_status' 		=> intval($target->sub_status),
@@ -625,7 +749,270 @@ class Target extends REST_Controller {
 
             count($certification_list)>0 ? $data['certification'] = $certification_list : '';
 
-            if($target->sub_product_id == 9999){
+            if($target->sub_product_id == STAGE_CER_TARGET){
+                $target_tips = $this->config->item('target_tips');
+                $data['target_tips'] = $target_tips;
+            }
+
+            $target->order_id!=0?$data['order_image']=$target->person_image:null;
+
+			$this->response(array('result' => 'SUCCESS','data' => $data ));
+		}
+		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
+    }
+
+    public function judicial_info_get($target_id)
+    {
+		$input 				= $this->input->get(NULL, TRUE);
+		$target 			= $this->target_model->get($target_id);
+		$data				= [];
+        $user_meta = '';
+
+        if(!empty($target) && in_array($target->status,[504])){
+
+            $product_list = $this->config->item('product_list');
+            $product = $product_list[$target->product_id];
+            $sub_product_id = $target->sub_product_id;
+            $product_name = $product['name'];
+            if($this->is_sub_product($product,$sub_product_id)){
+                $product = $this->trans_sub_product($product,$sub_product_id);
+                    $product_name = $product['name'];
+            }
+
+            $target->investor = 1;
+			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
+
+			$user_info 	= $this->user_model->get($target->user_id);
+			$user		= [];
+
+			$targetDatas = [];
+            $targetData = json_decode($target->target_data);
+
+            $certification_list = [];
+            $targetData_cer = isset($targetData->certification_id) ? $targetData->certification_id : false;
+            if ($targetData_cer) {
+                $this->load->model('user/user_certification_model');
+                $this->load->library('Certification_lib');
+                $certification = $this->config->item('certifications');
+                $certifications = $this->user_certification_model->get_many_by([
+                    'id' => $targetData_cer,
+                    'user_id' => $target->user_id,
+                ]);
+                foreach ($certifications as $key => $value) {
+                    $cur_cer[$value->certification_id] = $value;
+                }
+                foreach ($product['certifications'] as $key => $value) {
+                    $cer = $certification[$value];
+                    if (!isset($cur_cer[$value])) {
+                        $cer['description'] = '未' . $cer['description'];
+                        $cer['user_status'] = 2;
+                        $cer['certification_id'] = null;
+                        $cer['updated_at'] = null;
+                    } else {
+                        $description = false;
+                        $contents = json_decode($cur_cer[$value]->content);
+                        if( $value == 1){
+                            $description .= '發證地點：' . $contents->id_card_place . '<br>發證時間：' . $contents->id_card_date;
+                        } elseif( $value == 2){
+                            isset($contents->pro_certificate) ? $description .= '有提供專業證書；' . str_replace(',','、', $contents->pro_certificate) : '';
+                            $description .= '學門：' . $contents->major. '<br>系所：' . $contents->department . '<br>學制：' . $this->config->item('school_system')[$contents->system];
+                        } elseif ($value == 3){
+                            $description = '已驗證個人金融帳號';
+                        } elseif ($value == 4){
+                            $ig = isset($contents->instagram) ? $contents->instagram : $contents->info;
+                            if(!empty($ig)){
+                                $description .= 'Instagram' . '<br>貼文：' . $ig->counts->media . '<br>追蹤者：' . $ig->counts->followed_by . '<br>追蹤中：' . $ig->counts->follows;
+                            }
+                        } elseif ($value == 5){
+                            $description = '已輸入父母作為緊急聯絡人';
+                        } elseif ($value == 6){
+                            $description = '已驗證常用電子信箱';
+                        } elseif ($value == 7){
+                            $financial_input = round(($contents->parttime + $contents->allowance + $contents->other_income) + ($contents->scholarship * 2) / 12);
+                            $financial_output = round(($contents->restaurant + $contents->transportation + $contents->entertainment + $contents->other_expense));
+                            $description = '(自填) 平均月收入：'. $financial_input . '<br>(自填) 平均月支出：' . $financial_output;
+                            isset($contents->labor_image) ? $description .= '有提供最近年度報稅扣繳憑證' : '';
+                        } elseif ($value == 8){
+                            $description = '最高學歷：' . preg_replace('/\(自填\)/', '', $contents->school) . '(' . $this->config->item('school_system')[$contents->system] . ')';
+                        } elseif ($value == 9){
+                            if(isset($contents->result->messages)){
+                                foreach ($contents->result->messages as $creditValue){
+                                    $creditValue->stage == 'credit_scores' ? $description .= $creditValue->message : '';
+                                }
+                            }
+                        } elseif ($value == 10){
+                            isset($contents->industry) ? $description .= '公司類型：' . $this->config->item('industry_name')[$contents->industry] : '';
+                            isset($contents->job_seniority) ? $description .= '<br>此公司工作期間：' . $this->config->item('seniority_range')[$contents->job_seniority] : '';
+                        }
+                        $cer['user_status'] = $cur_cer[$value]->status == 2 ? 1 : intval($cur_cer[$value]->status);
+                        $cer['certification_id'] = intval($cur_cer[$value]->id);
+                        $cer['updated_at'] = intval($cur_cer[$value]->updated_at);
+                        $description ? $cer['description'] = $description : '';
+                    }
+                    unset($cer['optional']);
+                    $certification_list[] = $cer;
+                }
+            }
+            $contract_data = $this->contract_lib->get_contract($target->contract_id);
+            $contract = $contract_data ? $contract_data['content'] : '';
+
+            $reason = $target->reason;
+            $json_reason = json_decode($reason);
+            if(isset($json_reason->reason)){
+                $reason = $json_reason->reason.' - '.$json_reason->reason_description;
+            }
+
+            // 資訊不在案件本身內容
+            $out_of_target_info = [
+                'compName' => '',
+                'compIdNum' => '',
+                'bornDate' => '',
+                'income' => '',
+                'owner' => '',
+                'scale' => '',
+                'comeType' => '',
+            ];
+
+            // 新光送出資料
+            $this->load->library('mapping/sk_bank/msgno');
+            $response = $this->msgno->getSKBankInfoByTargetId($target_id);
+            if(!empty($response) && isset($response['data']['send_log']['request_content'])){
+                if(!empty($response['data']['send_log']['request_content'])){
+                    $sk_bank_send_log = json_decode($response['data']['send_log']['request_content'],true);
+                    $out_of_target_info['compName'] = isset($sk_bank_send_log['unencrypted']['Data']['CompName']) ? $sk_bank_send_log['unencrypted']['Data']['CompName']: '';
+                    $out_of_target_info['compIdNum'] = isset($sk_bank_send_log['unencrypted']['CompId']) ? $sk_bank_send_log['unencrypted']['CompId']: '';
+                    $out_of_target_info['bornDate'] = isset($sk_bank_send_log['unencrypted']['Data']['CompSetDate']) ? $sk_bank_send_log['unencrypted']['Data']['CompSetDate'] : '';
+                    $out_of_target_info['income'] = isset($sk_bank_send_log['unencrypted']['Data']['CompCapital']) ? $sk_bank_send_log['unencrypted']['Data']['CompCapital']: '';
+                    $out_of_target_info['owner'] = isset($sk_bank_send_log['unencrypted']['Data']['PrName']) ? $sk_bank_send_log['unencrypted']['Data']['PrName'] : '';
+                    $out_of_target_info['scale'] = isset($sk_bank_send_log['unencrypted']['Data']['BusinessType']) ? $sk_bank_send_log['unencrypted']['Data']['BusinessType'] : '';
+                    $out_of_target_info['comeType'] = isset($sk_bank_send_log['unencrypted']['Data']['CompDuType']) ? $sk_bank_send_log['unencrypted']['Data']['CompDuType'] : '';
+                }
+            }
+
+            // 案件關係人資料
+            $guarantorInfo_list = [];
+
+            $this->load->model('loan/target_associate_model');
+            $guarantorInfo = $this->target_associate_model->get_many_by(['target_id' => $target_id, 'product_id' => $target->product_id, 'status' => 2, 'guarantor' => 1]);
+            if(! empty($guarantorInfo)){
+                $guarantor_info_list = [];
+                // 關係
+                $guarantorInfo = json_decode(json_encode($guarantorInfo),true);
+                $guarantor_list = [];
+                $guarantor_list = array_map(function($key,$values) {
+                    $list = [];
+                    if(isset($values['user_id'])){
+                        $list['user_id'] = $values['user_id'];
+                    }
+                    if(isset($values['character'])){
+                        $list['character'] = $values['character'];
+                    }
+                    return [$key=>$list];
+                }, array_keys($guarantorInfo), $guarantorInfo);
+                $guarantor_info_list = array_reduce($guarantor_list, 'array_merge', array());
+
+                // 關係人基本資訊
+                $user_list = array_column($guarantor_info_list, 'user_id');
+                $user_info_list = [];
+                if(! empty($user_list)){
+                    $user_info_list = $this->user_model->get_many($user_list);
+                    if(! empty($user_info_list)){
+                        $user_info_list = json_decode(json_encode($user_info_list),true);
+                        $user_info_list = array_map(function($key,$values) {
+                            $list = [];
+                            if(isset($values['name'])){
+                                $list['userName'] = mb_substr($values['name'],0,1,'UTF-8').'**';
+                            }
+                            if(isset($values['id_number'])){
+                                $list['txtIdNum'] = strlen($values['id_number'])==10?substr($values['id_number'],0,5).'*****':'';
+                            }
+                            if(isset($values['birthday'])){
+                                $list['userAge'] = get_age($values['birthday']);
+                            }
+                            if(isset($values['id']) && $values['id'] != ''){
+                                $list['user_id'] = $values['id'];
+                                // 任職公司
+                                $meta_info = $this->user_meta_model->get_many_by([
+                                    'user_id' => $values['id'],
+                                    'meta_key' => ['job_company', 'diploma_name']
+                                ]);
+                                if (! empty($meta_info)) {
+                                    $job_company = ($meta_info[0]->meta_key == 'job_company'
+                                        ? $meta_info[0]->meta_value
+                                        : (isset($meta_info[1]) >= 2
+                                            ? $meta_info[1]->meta_value
+                                            : false));
+                                    $diploma_name = $meta_info[0]->meta_key == 'diploma_name'
+                                        ? $meta_info[0]->meta_value
+                                        : (isset($meta_info[1]) >= 2
+                                            ? $meta_info[1]->meta_value
+                                            : false);
+                                    $list['txtCompany'] = $job_company ? $job_company : $diploma_name;
+                                } else {
+                                    $list['txtCompany'] = '未提供相關資訊';
+                                }
+                            }
+
+                            return [$key=>$list];
+                        }, array_keys($user_info_list), $user_info_list);
+
+                        $user_info_list = array_reduce($user_info_list, 'array_merge', array());
+
+                    }
+                }
+
+                if(!empty($user_info_list) && ! empty($guarantor_info_list)){
+                    $new_guarantor = [];
+                    foreach($guarantor_info_list as $key => $values){
+                        if(isset($values['user_id'])){
+                            $new_guarantor[$values['user_id']] = $values;
+                        }
+                    }
+                    $new_user = [];
+                    foreach($user_info_list as $key => $values){
+                        if(isset($values['user_id'])){
+                            $new_user[$values['user_id']] = $values;
+                        }
+                    }
+                    if(!empty($new_user) && !empty($new_guarantor)){
+                        $guarantorInfo_list['guarantorInfo'] = array_map(function ($a1, $b1) { return $a1 + $b1; }, $new_user, $new_guarantor);
+                    }
+                }
+            }
+
+			$data = array(
+				'id' 				=> intval($target->id),
+				'target_no' 		=> $target->target_no,
+                'product_name' => $product_name,
+				'product_id' 		=> intval($target->product_id),
+                'sub_product_id' => intval($target->sub_product_id),
+				'user_id' 			=> intval($target->user_id),
+				'loan_amount' 		=> intval($target->loan_amount),
+				'credit_level' 		=> intval($target->credit_level),
+				'interest_rate' 	=> floatval($target->interest_rate),
+				'original_interest_rate' 	=> (isset($targetData->original_interest_rate) ? $targetData->original_interest_rate : null),
+				'reason'		=> $reason,
+				'remark' 			=> $target->remark,
+				'targetDatas' => $targetDatas,
+				'instalment' 		=> intval($target->instalment),
+				'repayment' 		=> intval($target->repayment),
+				'expire_time' 		=> intval($target->expire_time),
+				'invested' 			=> intval($target->invested),
+                'isTargetOpaque' => $sub_product_id == STAGE_CER_TARGET ? true : false,
+                'is_rate_increase' => (isset($targetData->original_interest_rate) && $targetData->original_interest_rate != $target->interest_rate ? true : false),
+                'status' 			=> intval($target->status),
+				'sub_status' 		=> intval($target->sub_status),
+				'created_at' 		=> intval($target->created_at),
+				'contract' 			=> $contract,
+				'user' 				=> $user,
+				'amortization_schedule' => $amortization_schedule,
+			);
+
+            $data = array_merge($data,$out_of_target_info);
+            $data = array_merge($data,$guarantorInfo_list);
+            count($certification_list)>0 ? $data['certification'] = $certification_list : '';
+
+            if($target->sub_product_id == STAGE_CER_TARGET){
                 $target_tips = $this->config->item('target_tips');
                 $data['target_tips'] = $target_tips;
             }
@@ -1235,7 +1622,7 @@ class Target extends REST_Controller {
 	 * @apiSuccess {Number} target.credit_level 信用評等
 	 * @apiSuccess {Number} target.interest_rate 年化利率
 	 * @apiSuccess {Number} target.instalment 期數
-	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.repayment 計息方式
 	 * @apiSuccess {Number} target.expire_time 流標時間
 	 * @apiSuccess {Number} target.invested 目前投標量
 	 * @apiSuccess {Number} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
@@ -1820,6 +2207,7 @@ class Target extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }

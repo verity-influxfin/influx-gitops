@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script>
     function check_fail() {
         var status = $('#status :selected').val();
         if (status == 2) {
@@ -10,7 +10,7 @@
 
     function requestVerdictStatuses() {
           var data = {
-              'user_id' : '<?=isset($data->company_user_id)?$data->company_user_id:"" ?>',
+              'user_id' : '<?=isset($data->user_id)?$data->user_id:"" ?>',
           }
 
           var url = '/admin/certification/verdict_statuses';
@@ -43,9 +43,6 @@
                       + data_arry.status + '</td></tr><tr><td>最後更新時間</td><td>'+ data_date +'</td></tr>';
                       $("#verdict_list").html(html);
 
-                      if(data_arry.status=='爬蟲正在執行中' || data_arry.status=='爬蟲尚未開始'){
-                        setTimeout(function() { requestVerdictStatuses()}, 5000 );
-                      }
                       if(data_arry.status=='爬蟲執行完成'){
                         requestVerdictCount();
                         if(new Date($.now()-604800000) > data_date){
@@ -53,7 +50,7 @@
                           $('.run-scraper-tr').show();
                         }
                       }
-                      return;
+
                   }
               },
               error: function() {
@@ -101,7 +98,7 @@
                                   list = list_head + list_foot;
                                 }
                                 $("#case_list").prepend(list);
-                            return;
+
 
                         });
                     }
@@ -137,8 +134,12 @@
 
                       if (response.status.code == 200) {
                           alert('爬蟲執行請求成功送出');
-                          setTimeout(requestVerdictStatuses(),5000);
                               return;
+                      }
+
+                      if (response.status.code == 201) {
+                          alert('爬蟲執行請求2小時內重複發送');
+
                       }
                   },
                   error: function() {
@@ -147,10 +148,11 @@
               });
           }
     $(document).ready(function(){
-      requestVerdictStatuses();
       $( '#run-scraper-btn' ).click(function() {
         requestVerdict();
-        $( ".run-scraper-tr" ).hide();
+      });
+      $( '#read-scraper-btn' ).click(function() {
+        requestVerdictStatuses();
       });
     });
 </script>
@@ -232,38 +234,9 @@
 								<label>備註</label>
 								<p class="form-control-static"><?= isset($data->remark) ? $data->remark : "" ?></p>
 							</div>
-							<? if ($data->status == 0) { ?>
-								<h1>上傳對保影片</h1>
-								<div class="form-group">
-									<form action="<?= admin_url('Judicialperson/media_upload') ?>" method="post" enctype="multipart/form-data">
-										檔案名稱:<input type="file" name="media" /><br />
-										<input type="hidden" name="user_id" value="<?= isset($data->user_id) ? $data->user_id : ""; ?>">
-										<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
-										<input type="submit" class="btn btn-primary" value="上傳檔案" />
-									</form>
-								</div>
-							<? } ?>
 							<div class="form-group">
-								<h1>對保人員上傳：</h1>
-								<? if (!empty($media_list['judi_admin_video'])) { ?>
-									<? foreach ($media_list['judi_admin_video'] as $value) { ?>
-										<video width="400" controls>
-											<source src="<?= isset($value) ? $value : "" ?>" type="video/mp4">
-											<source src="<?= isset($value) ? $value : "" ?>" type="video/mov">
-										</video>
-									<? } ?>
-								<? } ?>
-							</div>
-							<div class="form-group">
-								<h1>負責人上傳：</h1>
-								<? if (!empty($media_list['judi_user_video'])) { ?>
-									<? foreach ($media_list['judi_user_video'] as $value) { ?>
-										<video width="400" controls>
-											<source src="<?= isset($value) ? $value : "" ?>" type="video/mp4">
-											<source src="<?= isset($value) ? $value : "" ?>" type="video/mov">
-										</video>
-									<? } ?>
-								<? } ?>
+								<label>人臉比對</label>
+                <?= isset($face_list) ? $face_list : '';?>
 							</div>
 							<h4>審核</h4>
 							<form role="form" method="post">
@@ -271,12 +244,12 @@
 									<div class="form-group">
 										<select id="status" name="status" class="form-control" onchange="check_fail();">
 											<? foreach ($status_list as $key => $value) { ?>
-												<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
+												<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : '' ?>><?= $value ?></option>
 											<? } ?>
 										</select>
 										<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 									</div>
-									<button type="submit" class="btn btn-primary">送出</button>
+									<button type="submit" class="btn btn-primary" <?=$data->status == 0 ? 'disabled' : '' ?>>送出</button>
 								</fieldset>
 							</form>
 						</div>
@@ -582,7 +555,8 @@
                       <tbody id="verdict_list">
                       </tbody>
                       <tbody>
-                        <tr class="run-scraper-tr" style="display:none;" ><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲按鈕</button></td></tr>
+                        <tr class="run-scraper-tr"><td colspan="2" style="text-align: -webkit-center;" ><button id="read-scraper-btn">讀取爬蟲案件</button></td></tr>
+                        <tr class="run-scraper-tr"><td colspan="2" style="text-align: -webkit-center;" ><button id="run-scraper-btn">執行爬蟲</button></td></tr>
                       </tbody>
                     </table>
                   </div>
@@ -616,7 +590,8 @@
 												echo "未上傳";
 											} ?>
 										</div>
-										<div class="form-group">
+                                        <? if (isset($bankaccount_id) || isset($bankbook)) { ?>
+                                        <div class="form-group">
 											<label for="disabledSelect">存摺封面</label>
 											<? if (isset($bankaccount_id)) { ?>
 												<a href="../certification/user_bankaccount_edit?id=<?= isset($bankaccount_id) ? $bankaccount_id : "" ?>" target="_blank">金融帳號認證頁面</a>
@@ -631,6 +606,22 @@
 												}
 											}?>
 										</div>
+                                        <? } ?>
+                                        <?  if($data->cooperation_content != ''){
+                                            $passbookImage = json_decode($data->cooperation_content);
+                                            if (count($passbookImage) > 0) { ?>
+                                        <div class="form-group">
+                                            <label for="disabledSelect">存摺內頁</label>
+                                            <?
+                                            isset($passbookImage->passbook_image) ? $passbookImage = $passbookImage->passbook_image : '';
+                                                foreach ($passbookImage as $key => $value) {
+                                                    ?>
+                                                    <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                        <img src="<?= $value ? $value : "" ?>" style='width:100%;max-width:300px'>
+                                                    </a>
+                                                <? } ?>
+                                        </div>
+                                        <? }} ?>
 									</div>
 								</div>
 						</div>

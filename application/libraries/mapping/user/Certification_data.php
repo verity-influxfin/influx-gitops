@@ -650,7 +650,7 @@ class Certification_data
 				}
 				// 由於總借款餘額已經在解析時將千位數作轉換
 				$res['liabilitiesWithoutAssureTotalAmount'] = intval($res['liabilities_totalAmount']) - ($res['balanceShortAssure']+$res['balanceMidAssure']+$res['balanceLongAssure'])*1000;
-				
+
 				// 借款家數
 				$res['bankCount'] = count($bank_array);
 				// 訂約金額總額度
@@ -679,6 +679,7 @@ class Certification_data
 				$this->CI->load->library('mapping/time');
 				$res['creditLogCount'] = 0;
 				$creditLogCountStatus = 1;
+
 				// 前一個月(當期)
 				$end_date = '';
 				// 前兩個月(前一期)
@@ -723,6 +724,7 @@ class Certification_data
 						if(preg_match('/逾期|催收|呆帳/',$value['claimsStatus'])){
 							$res['creditCardHasBadDebt'] = '有';
 						}
+
 						$creditLogCountStatus = 0;
 					}
 

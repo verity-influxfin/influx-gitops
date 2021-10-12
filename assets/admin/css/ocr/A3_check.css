@@ -1,0 +1,332 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #cccccc;
+  font: 12px "微軟正黑體";
+  counter-reset: PageNumber;
+}
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.page {
+  width: 29.7cm;
+  min-height: 44cm;
+  padding: 40px;
+  margin: 1cm auto;
+  border: 1px #d3d3d3 solid;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+input {
+  background: #ffffff;
+  color: #000000;
+}
+
+.page-header {
+  text-align: end;
+}
+
+.page-title {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.page-title h2 {
+  margin: 0px;
+}
+
+.page-title,
+.seal {
+  display: flex;
+}
+
+.page-content {
+  min-height: calc(44cm - 250px);
+}
+
+.seal-chunk {
+  display: flex;
+  border: 2px solid #000000;
+  width: 235px;
+  height: 310px;
+}
+
+.block:last-child .seal-chunk {
+  border-left: 0px;
+}
+
+.seal-chunk div:first-child {
+  width: 19px;
+  border-right: 1px solid;
+}
+
+.seal-chunk div:last-child {
+  width: 19px;
+}
+
+.company-form {
+  padding: 0px 15px;
+}
+
+.company-form,
+.table {
+  width: 100%;
+  font-size: 16px;
+  border-spacing: 0px;
+  border-collapse: initial;
+  text-align: left;
+}
+
+.height {
+  height: 40px;
+}
+
+.table {
+  margin: 20px 0px;
+}
+
+.table-input {
+  width: 100%;
+  border: 0px;
+}
+
+.table input {
+  border: 0px;
+}
+
+.input-underline {
+  border: none;
+  border-bottom: 1px solid #000000;
+}
+
+.input-border {
+  border: 1px solid #000000;
+}
+
+.tick {
+  width: 30px;
+}
+
+.square {
+  display: inline-flex;
+  border: 1px solid;
+}
+
+.square-fill {
+  display: inline-flex;
+  background-color: #000000;
+}
+
+.input-center {
+  text-align: center;
+}
+
+.input-right {
+  text-align: right;
+}
+
+.pull-left {
+  float: left;
+  font-size: 14px;
+}
+
+.flex {
+  margin: 25px 0px;
+  display: flex;
+  font-size: 13px;
+}
+
+.flex input {
+  border: 1px solid;
+}
+
+.mark-row {
+  margin: 25px 0px;
+  height: 200px;
+  font-size: 20px;
+  border: 2px solid;
+}
+
+.mark-row div {
+  border-top: 2px solid;
+}
+
+.statement-list {
+  text-align: start;
+  list-style: trad-chinese-informal;
+  margin: 0px auto;
+}
+
+.memo {
+  font-size: 12px;
+}
+
+.input-align {
+  text-align: right;
+  width: 120px;
+}
+
+.bottom {
+  width: 100%;
+}
+
+.detail div:not(:last-child) {
+  border-bottom: 1px solid;
+}
+
+.d-f {
+  display: flex;
+}
+
+.quarter {
+  width: 25%;
+}
+
+.one-third {
+  width: 30%;
+}
+
+.dynamic-row {
+  display: flex;
+}
+
+.d-td-check {
+  text-align: center;
+  line-height: 45px;
+  border-right: 2px solid;
+}
+
+.d-td-1 {
+  text-align: center;
+  line-height: 45px;
+  border-right: 2px solid;
+}
+
+.d-td-2 {
+}
+
+.up {
+  border-bottom: 2px solid;
+  display: flex;
+}
+
+.up div {
+  text-align: center;
+}
+
+.up div:not(:last-of-type) {
+  border-right: 2px solid;
+}
+
+/*laborInsurance*/
+
+.bl-pc {
+  min-height: calc(44cm - 157px) !important;
+}
+
+.bl-t {
+  font-size: 25px;
+  margin: 0px auto;
+}
+
+.bl-id {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 16px;
+}
+
+.bl-id input {
+  border: 0px;
+}
+
+.ds {
+  width: fit-content;
+  margin: 0px auto;
+}
+
+.we {
+  width: max-content;
+  padding: 30px 0px;
+  margin: 2px 20px;
+}
+
+.bl-c {
+  font-size: 16px;
+}
+
+.bl-df {
+  width: 33%;
+  text-align: start;
+  float: right;
+}
+
+.bl-mb {
+  margin-bottom: 50px;
+}
+
+.bl-cs {
+  width: 33%;
+  text-align: start;
+}
+
+.bl-c input {
+  border: 0px;
+}
+
+.bl-desc {
+  font-size: 16px;
+  text-align: start;
+  margin-top: 20rem;
+}
+
+.bl-desc ul {
+  padding-left: 25px;
+}
+
+.bl-desc ul li {
+  margin-bottom: 5px;
+  list-style: cjk-ideographic;
+}
+
+.bl-table {
+  width: 100%;
+  text-align: start;
+  font-size: 16px;
+}
+
+.bl-th {
+  display: flex;
+  border-bottom: 2px solid;
+}
+
+.bl-th div {
+  padding: 5px;
+}
+
+.bl-flex{
+  display: flex;
+}
+
+.i-n {
+  width: 15%;
+}
+.i-u {
+  width: 25%;
+}
+.i-s {
+  width: 13%;
+}
+.e-d {
+  width: 13%;
+}
+.s-d {
+  width: 13%;
+}
+.rm {
+  width: 20%;
+}

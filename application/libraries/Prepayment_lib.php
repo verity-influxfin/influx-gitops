@@ -132,7 +132,7 @@ class Prepayment_lib{
 	}
 	
 	public function apply_prepayment($target){
-		if($target && $target->status==5 && $target->delay_days==0){
+		if($target && $target->status==TARGET_REPAYMENTING && $target->delay_days==0){
 			$info  = $this->get_prepayment_info($target);
             $product_list = $this->CI->config->item('product_list');
             $product = $product_list[$target->product_id];
@@ -166,8 +166,8 @@ class Prepayment_lib{
 					]);
 					if($rs){
 						$this->CI->load->library('Target_lib');
-						$this->CI->target_lib->insert_change_log($target->id,['sub_status'=>3],0,0);
-						$this->CI->target_model->update($target->id,['sub_status'=>3]);
+						$this->CI->target_lib->insert_change_log($target->id,['sub_status'=>TARGET_SUBSTATUS_PREPAYMENT],0,0);
+						$this->CI->target_model->update($target->id,['sub_status'=>TARGET_SUBSTATUS_PREPAYMENT]);
 						$this->CI->load->library('Charge_lib');
 						
 						$target 	= $this->CI->target_model->get($target->id);
@@ -210,6 +210,7 @@ class Prepayment_lib{
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }

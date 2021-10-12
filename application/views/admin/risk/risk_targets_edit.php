@@ -90,11 +90,11 @@ body{
 												</td>
 											</tr>
 											<tr>
-												<td><p class="form-control-static">期數</p></td>
+												<td><p class="form-control-static">貸放期間</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($data->instalment)?$instalment_list[$data->instalment]:"";?></p>
 												</td>
-												<td><p class="form-control-static">還款方式</p></td>
+												<td><p class="form-control-static">計息方式</p></td>
 												<td>
 													<p class="form-control-static"><?=isset($data->repayment)?$repayment_type[$data->repayment]:"";?></p>
 												</td>
@@ -228,7 +228,7 @@ body{
 													</td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
-													<td>期數</td>
+													<th>貸放期間</th>
 													<td>期初本金</td>
 													<td>還款日</td>
 													<td>日數</td>
@@ -506,7 +506,7 @@ body{
 													<td colspan="3"><?=$investments_amortization_schedule[$value->id]["date"]?></td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
-													<td>期數</td>
+													<th>貸放期間</th>
 													<td>期初本金</td>
 													<td>還款日</td>
 													<td>日數</td>
@@ -541,7 +541,7 @@ body{
 													<td colspan="3"><?=$investments_amortization_table[$value->id]["date"]?></td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
-													<td>期數</td>
+													<th>貸放期間</th>
 													<td>期初本金</td>
 													<td>還款日</td>
 													<td>日數</td>

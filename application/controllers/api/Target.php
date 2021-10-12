@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class Target extends REST_Controller {
 
 	public $user_info;
-	
+
     public function __construct()
     {
         parent::__construct();
@@ -20,25 +20,25 @@ class Target extends REST_Controller {
             if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
             }
-			
+
 			//只限出借人
 			if($tokenData->investor != 1){
 				$this->response(array('result' => 'ERROR','error' => NOT_INVERTOR ));
 			}
-			
+
 			$this->user_info = $this->user_model->get($tokenData->id);
 			if($tokenData->auth_otp != $this->user_info->auth_otp){
 				$this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
 			}
-			
+
 			if($this->user_info->block_status != 0){
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
-			
+
 			if(isset($tokenData->company) && $tokenData->company != 0 ){
 				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
 			}
-			
+
 			if($this->request->method != 'get'){
 				$this->load->model('log/log_request_model');
 				$this->log_request_model->insert(array(
@@ -49,7 +49,7 @@ class Target extends REST_Controller {
 					'agent'		=> isset($tokenData->agent)?$tokenData->agent:0,
 				));
 			}
-			
+
 			$this->user_info->investor 		= $tokenData->investor;
 			$this->user_info->expiry_time 	= $tokenData->expiry_time;
         }
@@ -110,7 +110,7 @@ class Target extends REST_Controller {
      * 		}
      *    }
      */
-	 	
+
 	public function list_get()
     {
 		$input 	= $this->input->get();
@@ -320,7 +320,7 @@ class Target extends REST_Controller {
      *       "error": "801"
      *     }
      */
-	 
+
 	public function info_get($target_id)
     {
 		$input 				= $this->input->get(NULL, TRUE);
@@ -349,8 +349,8 @@ class Target extends REST_Controller {
 			}
 
 			$amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target,$date="");
-		
-			$user_info 	= $this->user_model->get($target->user_id); 
+
+			$user_info 	= $this->user_model->get($target->user_id);
 			$user		= array();
 			if($user_info){
 				$name 		= mb_substr($user_info->name,0,1,"UTF-8")."**";
@@ -365,8 +365,8 @@ class Target extends REST_Controller {
 					"id_number"		=> $id_number,
 				);
 			}
-			
-			
+
+
 			$contract_data 	= $this->contract_lib->get_contract($target->contract_id);
 			$contract 		= $contract_data?$contract_data["content"]:"";
 			$data = array(
@@ -398,7 +398,7 @@ class Target extends REST_Controller {
 		}
 		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {post} /target/apply 出借方 申請出借
 	 * @apiVersion 0.1.0
@@ -407,8 +407,8 @@ class Target extends REST_Controller {
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
 	 * @apiParam {Number} target_id 產品ID
      * @apiParam {Number} amount 出借金額
-	 * 
-	 * 
+	 *
+	 *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccessExample {Object} SUCCESS
      *    {
@@ -492,7 +492,7 @@ class Target extends REST_Controller {
 		$user_id 	= $this->user_info->id;
 		$investor 	= $this->user_info->investor;
 		$param		= array("user_id"=> $user_id);
-		
+
 		//必填欄位
 		$fields 	= ['target_id','amount'];
 		foreach ($fields as $field) {
@@ -506,7 +506,7 @@ class Target extends REST_Controller {
 
 		$target = $this->target_model->get($input['target_id']);
 		if($target && $target->status == 3 ){
-			
+
 			if( $input['amount'] < TARGET_AMOUNT_MIN || $input['amount'] > $target->loan_amount ){
 				$this->response(array('result' => 'ERROR','error' => TARGET_AMOUNT_RANGE ));
 			}
@@ -519,12 +519,12 @@ class Target extends REST_Controller {
 			if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 			}
-			
+
 			//檢查認證 NOT_VERIFIED_EMAIL
 			if(empty($this->user_info->email) || $this->user_info->email==""){
 				$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 			}
-		
+
 			if(get_age($this->user_info->birthday) < 20){
 				$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 			}
@@ -535,7 +535,7 @@ class Target extends REST_Controller {
 			if(!$bank_account){
 				$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 			}
-			
+
 			if($this->user_info->transaction_password==""){
 				$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 			}
@@ -544,7 +544,7 @@ class Target extends REST_Controller {
 			if($investments){
 				$this->response(array('result' => 'ERROR','error' => TARGET_APPLY_EXIST ));
 			}
-			
+
 			$insert = $this->investment_model->insert($param);
 			if($insert){
 				$this->response(array('result' => 'SUCCESS'));
@@ -552,17 +552,17 @@ class Target extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
 		}
-		
+
 		$this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST ));
     }
-	
+
 	/**
      * @api {get} /target/applylist 出借方 申請紀錄列表
 	 * @apiVersion 0.1.0
 	 * @apiName GetTargetApplylist
      * @apiGroup Target
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * 
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} id Investments ID
 	 * @apiSuccess {String} amount 投標金額
@@ -697,11 +697,11 @@ class Target extends REST_Controller {
 		if(!$user_bankaccount){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
-		
+
 		if($this->user_info->transaction_password==""){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
-		
+
 		$this->load->model('user/virtual_account_model');
 		$virtual		 	= $this->virtual_account_model->get_by(array("user_id"=>$user_id,"investor"=>$investor));
 		$virtual_account	= array(
@@ -716,7 +716,7 @@ class Target extends REST_Controller {
 			"branch_code"	=> $user_bankaccount->branch_code,
 			"bank_account"	=> $user_bankaccount->bank_account,
 		);
-		
+
 		$this->load->library('Transaction_lib');
 		$funds 				= $this->transaction_lib->get_virtual_funds($virtual->virtual_account);
 		$param				= array( "user_id"=> $user_id);
@@ -724,7 +724,7 @@ class Target extends REST_Controller {
 		$list				= array();
 		if(!empty($investments)){
 			foreach($investments as $key => $value){
-				
+
 				$target_info = $this->target_model->get($value->target_id);
 				$target = array(
 					"id"			=> $target_info->id,
@@ -736,20 +736,20 @@ class Target extends REST_Controller {
 					"status"		=> $target_info->status,
 					"sub_status"	=> $target_info->sub_status,
 				);
-				
+
 				$product_list 	= $this->config->item('product_list');
 				$product_info	= $product_list[$target_info->product_id];
 				$product = array(
 					"id"			=> $product_info['id'],
 					"name"			=> $product_info['name'],
 				);
-				
+
 				$contract = "";
 				if($value->contract_id){
 					$contract_data = $this->contract_lib->get_contract($value->contract_id);
 					$contract = $contract_data["content"];
 				}
-			
+
 				$list[] = array(
 					"id" 				=> $value->id,
 					"amount" 			=> $value->amount,
@@ -770,7 +770,7 @@ class Target extends REST_Controller {
 			"funds"				=> $funds
 		)));
     }
- 
+
  	/**
      * @api {get} /target/batch 出借方 智能出借
 	 * @apiVersion 0.1.0
@@ -786,8 +786,8 @@ class Target extends REST_Controller {
      * @apiParam {String=all,0,1} [national=all] 信用評等 全部:all 私立:0 國立:1
      * @apiParam {String=all,0,1,2} [system=all] 學制 全部:all 0:大學 1:碩士 2:博士
      * @apiParam {String=all,F,M} [gender=all] 性別 全部:all 女性:F 男性:M
-	 * 
-	 * 
+	 *
+	 *
 	 * @apiSuccess {Object} result SUCCESS
 	 * @apiSuccess {String} batch_id 智能出借ID
 	 * @apiSuccess {String} total_amount 總金額
@@ -865,7 +865,7 @@ class Target extends REST_Controller {
 			"status"		=> 3,
 			"invested"		=> 0
 		);
-		
+
 		//必填欄位
 		if (empty($input['budget']) || intval($input['budget'])<=0) {
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -877,12 +877,12 @@ class Target extends REST_Controller {
 		if(empty($this->user_info->id_number) || $this->user_info->id_number==""){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
 		}
-		
+
 		//檢查認證 NOT_VERIFIED_EMAIL
 		if(empty($this->user_info->email) || $this->user_info->email==""){
 			$this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
 		}
-		
+
 		if($this->user_info->transaction_password==""){
 			$this->response(array('result' => 'ERROR','error' => NO_TRANSACTION_PASSWORD ));
 		}
@@ -890,18 +890,18 @@ class Target extends REST_Controller {
 		if(get_age($this->user_info->birthday) < 20){
 			$this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
 		}
-		
+
 		//檢查金融卡綁定 NO_BANK_ACCOUNT
 		$this->load->model('user/user_bankaccount_model');
 		$bank_account = $this->user_bankaccount_model->get_by(array("investor"=>$investor,"status"=>1,"user_id"=>$user_id,"verify"=>1));
 		if(!$bank_account){
 			$this->response(array('result' => 'ERROR','error' => NO_BANK_ACCOUNT ));
 		}
-		
+
 		if(isset($input["interest_rate_s"]) && intval($input["interest_rate_s"])>=0){
 			$where["interest_rate >="] = intval($input["interest_rate_s"]);
 		}
-		
+
 		if(isset($input["interest_rate_e"]) && intval($input["interest_rate_e"])>0){
 			$where["interest_rate <="] = intval($input["interest_rate_e"]);
 		}
@@ -909,15 +909,15 @@ class Target extends REST_Controller {
 		if(isset($input["instalment_s"]) && intval($input["instalment_s"])>=0){
 			$where["instalment >="] = intval($input["instalment_s"]);
 		}
-		
+
 		if(isset($input["instalment_e"]) && intval($input["instalment_e"])>0){
 			$where["instalment <="] = intval($input["instalment_e"]);
 		}
-		
+
 		if(isset($input["credit_level"]) && !empty($input["credit_level"]) && $input["credit_level"]!='all' ){
 			$where["credit_level"] = explode(",",$input["credit_level"]);
 		}
-		
+
 		$targets = $this->target_model->get_many_by($where);
 		if($targets){
 			$investments = $this->investment_model->get_many_by(array("user_id"=>$user_id,"status"=>array(0,1,2,3)));
@@ -926,14 +926,14 @@ class Target extends REST_Controller {
 				foreach($investments as $key => $value){
 					$investment_target[] = $value->target_id;
 				}
-				
+
 				foreach($targets as $key => $value){
 					if(in_array($value->id,$investment_target)){
 						unset($targets[$key]);
 					}
 				}
 			}
-			
+
 			if(isset($input["gender"]) && !empty($input["gender"]) && $input["gender"]!='all' ){
 				$where["gender"] = $input["gender"];
 				if($targets){
@@ -945,7 +945,7 @@ class Target extends REST_Controller {
 					}
 				}
 			}
-			
+
 			if(isset($input["system"]) && $input["system"]!='all' && $input["system"]!=''){
 				$where["system"] = $input["system"];
 				if($targets){
@@ -964,7 +964,7 @@ class Target extends REST_Controller {
 					}
 				}
 			}
-			
+
 			if(isset($input["national"]) && $input["national"]!='all' && $input["national"]!=''){
 				$this->config->load('school_points',TRUE);
 				$school_list = $this->config->item('school_points');
@@ -1052,7 +1052,7 @@ class Target extends REST_Controller {
 			'contract' 			=> array(),
 		)));
     }
-	
+
 	/**
      * @api {post} /target/batch/:batch_id 出借方 智能出借確認
 	 * @apiVersion 0.1.0
@@ -1098,12 +1098,12 @@ class Target extends REST_Controller {
      *       "error": "812"
      *     }
      */
-	 
+
 	public function batch_post($batch_id=0)
     {
 		$input 				= $this->input->post(NULL, TRUE);
 		$this->load->model('loan/batch_model');
-		
+
 		if(!$batch_id){
 			$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 		}
@@ -1113,7 +1113,7 @@ class Target extends REST_Controller {
 			if($batch->user_id != $user_id){
 				$this->response(array('result' => 'ERROR','error' => BATCH_NO_PERMISSION ));
 			}
-			
+
 			$target_ids = json_decode($batch->content,true);
 			$targets 	= $this->target_model->get_many($target_ids);
 			if($targets){

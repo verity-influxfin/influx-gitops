@@ -17,7 +17,7 @@ class S3_upload {
 		'video/mov'	 => '.mov' ,
 	);
 	private $client;
-	
+
     public function __construct()
     {
         $this->CI 		= &get_instance();
@@ -37,7 +37,7 @@ class S3_upload {
     public function image ($files,$name='image',$user_id=0,$type='test')
     {
 		if (isset($files[$name]) && $files[$name]) {
-			
+
 			if(isset($this->image_type[$files[$name]['type']])){
 				$exif = @exif_read_data($files[$name]['tmp_name'],0, true);
 				$exif = json_decode(json_encode($exif),true);
@@ -52,7 +52,7 @@ class S3_upload {
 				}
 
 				if (isset($exif['IFD0']['Orientation'])) {
-					switch ($exif['IFD0']['Orientation']) { 
+					switch ($exif['IFD0']['Orientation']) {
 					case 3:
 						$src = imagerotate($src, 180, 0);
 						break;
@@ -64,7 +64,7 @@ class S3_upload {
 						break;
 					}
 				}
-				
+
 				$output_w = $src_w = imagesx($src);
 				$output_h = $src_h = imagesy($src);
 				if($src_w > $src_h && $src_w > IMAGE_MAX_WIDTH){
@@ -77,10 +77,10 @@ class S3_upload {
 				  $output_h = IMAGE_MAX_WIDTH;
 				  $output_w = IMAGE_MAX_WIDTH;
 				}
-				
+
 				$output = imagecreatetruecolor($output_w, $output_h);
 				imagecopyresampled($output, $src, 0, 0, 0, 0, $output_w, $output_h, $src_w, $src_h);
-				
+
 				ob_start();
 				imagejpeg($output, NULL, 90);
 				$image_data = ob_get_contents();
@@ -99,7 +99,7 @@ class S3_upload {
 						'url'		=> $result['ObjectURL'],
 						'exif'		=> json_encode($exif),
 					);
-					
+
 					$this->CI->log_image_model->insert($data);
 					return $result['ObjectURL'];
 				}else{
@@ -111,15 +111,15 @@ class S3_upload {
         }else{
 			$this->error = 'No file.';
 		}
-		
+
 		return false;
     }
-	
+
 	//return id
 	public function image_id ($files,$name='image',$user_id=0,$type='test')
     {
 		if (isset($files[$name]) && $files[$name]) {
-			
+
 			if(isset($this->image_type[$files[$name]['type']])){
 				$exif = @exif_read_data($files[$name]['tmp_name'],0, true);
 				$exif = json_decode(json_encode($exif),true);
@@ -134,7 +134,7 @@ class S3_upload {
 				}
 
 				if (isset($exif['IFD0']['Orientation'])) {
-					switch ($exif['IFD0']['Orientation']) { 
+					switch ($exif['IFD0']['Orientation']) {
 					case 3:
 						$src = imagerotate($src, 180, 0);
 						break;
@@ -146,7 +146,7 @@ class S3_upload {
 						break;
 					}
 				}
-				
+
 				$output_w = $src_w = imagesx($src);
 				$output_h = $src_h = imagesy($src);
 				if($src_w > $src_h && $src_w > IMAGE_MAX_WIDTH){
@@ -159,10 +159,10 @@ class S3_upload {
 				  $output_h = IMAGE_MAX_WIDTH;
 				  $output_w = IMAGE_MAX_WIDTH;
 				}
-				
+
 				$output = imagecreatetruecolor($output_w, $output_h);
 				imagecopyresampled($output, $src, 0, 0, 0, 0, $output_w, $output_h, $src_w, $src_h);
-				
+
 				ob_start();
 				imagejpeg($output, NULL, 90);
 				$image_data = ob_get_contents();
@@ -181,7 +181,7 @@ class S3_upload {
 						'url'		=> $result['ObjectURL'],
 						'exif'		=> json_encode($exif),
 					);
-					
+
 					$image_id = $this->CI->log_image_model->insert($data);
 					return $image_id;
 				}else{
@@ -193,10 +193,10 @@ class S3_upload {
         }else{
 			$this->error = 'No file.';
 		}
-		
+
 		return false;
     }
-	
+
 	//return URL by base64 data
 	public function image_by_data ($image_data='',$name='image.jpg',$user_id=0,$type='test')
     {
@@ -214,14 +214,14 @@ class S3_upload {
 					'url'		=> $result['ObjectURL'],
 					'exif'		=> 'rotate',
 				);
-				
+
 				$this->CI->log_image_model->insert($data);
 				return $result['ObjectURL'];
 			}
         }
 		return false;
     }
-	
+
 	//show all the bucket images
 	public function image_list ()
     {
@@ -231,7 +231,7 @@ class S3_upload {
 			$file_content =  base64_encode(file_get_contents( $url ));
 			echo "<img src='data:image/png;base64,".$file_content."' width=100>".$url . "<br>";
 		}
-		
+
 	}
 
 	public function public_image_by_data ($image_data='',$bucket=S3_SELLER_PUBLIC_BUCKET,$user_id=0,$keep=false)
@@ -282,7 +282,7 @@ class S3_upload {
 						'url'		=> $result['ObjectURL'],
 						'exif'		=> '',
 					);
-					
+
 				$this->CI->log_image_model->insert($data);
 				return $result['ObjectURL'];
 			}else{
@@ -291,7 +291,7 @@ class S3_upload {
         }else{
 			$this->error = 'No file.';
 		}
-		
+
 		return false;
 	}
 
@@ -344,7 +344,7 @@ class S3_upload {
 	public function media_id ($files,$name='media',$user_id=0,$type='test')
     {
 		if (isset($files[$name]) && $files[$name]) {
-			
+
 			if(isset($this->vedio_type[$files[$name]['type']])){
 				$fileType = $this->vedio_type[$files[$name]['type']];
 				$format= strrchr($files['media']['name'],'.');
@@ -361,7 +361,7 @@ class S3_upload {
 						'file_name'	=> $files[$name]['name'],
 						'url'		=> $result['ObjectURL'],
 					);
-					
+
 					$media_id = $this->CI->log_image_model->insert($data);
 					return $media_id;
 				}else{
@@ -373,10 +373,10 @@ class S3_upload {
         }else{
 			$this->error = 'No file.';
 		}
-		
+
 		return false;
     }
-	
+
 
 	//upload to public bucket
 	public function image_public ($files,$name='image')
@@ -396,7 +396,7 @@ class S3_upload {
 				}
 
 				if (isset($exif['IFD0']['Orientation'])) {
-					switch ($exif['IFD0']['Orientation']) { 
+					switch ($exif['IFD0']['Orientation']) {
 					case 3:
 						$src = imagerotate($src, 180, 0);
 						break;
@@ -408,7 +408,7 @@ class S3_upload {
 						break;
 					}
 				}
-				
+
 				$output_w = $src_w = imagesx($src);
 				$output_h = $src_h = imagesy($src);
 				if($src_w > $src_h && $src_w > IMAGE_MAX_WIDTH){
@@ -421,10 +421,10 @@ class S3_upload {
 				  $output_h = IMAGE_MAX_WIDTH;
 				  $output_w = IMAGE_MAX_WIDTH;
 				}
-				
+
 				$output = imagecreatetruecolor($output_w, $output_h);
 				imagecopyresampled($output, $src, 0, 0, 0, 0, $output_w, $output_h, $src_w, $src_h);
-				
+
 				ob_start();
 				imagejpeg($output, NULL, 90);
 				$image_data = ob_get_contents();
@@ -452,6 +452,4 @@ class S3_upload {
 		return false;
     }
 }
-
 ?>
-

@@ -591,4 +591,5 @@ class Data_legalize_lib{
 
 		return $res;
 	}
+
 }

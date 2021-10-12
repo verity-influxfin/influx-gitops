@@ -26,8 +26,8 @@
                                 <th>申請金額</th>
                                 <th>核准金額</th>
                                 <th>年化利率</th>
-                                <th>期數</th>
-                                <th>還款方式</th>
+                                <th>貸放期間</th>
+                                <th>計息方式</th>
                                 <th>邀請碼</th>
                                 <th>狀態</th>
                                 <th>Detail</th>
@@ -62,7 +62,7 @@
                                                 if($value->sub_status==5){
                                                     echo '待廠商上架 (分期)';
                                                 }elseif($value->sub_status==9){
-                                                    echo '待二審 (分期)';
+                                                    echo '二審 (分期)';
                                                 }
 
                                                 else{

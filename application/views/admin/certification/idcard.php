@@ -205,6 +205,30 @@
                             }
                             ?>
                             <div class="form-group">
+                                <label>配偶</label>
+                                <p class="form-control-static"><?=isset($content['SpouseName'])?$content['SpouseName']:""?></p>
+                                <label>有無配偶</label>
+                                <p class="form-control-static"><?=isset($content['hasSpouse']) && $content['hasSpouse'] == true ? "有":"無"?></p>
+                                <?php
+                                    // 沒配偶的話可改動
+                                    if((! isset($content['SpouseName']) || $content['SpouseName'] == '') && $data->status==3){
+                                        echo '
+                                                <form role="form" method="post" action="/admin/certification/hasSpouse">
+                                                <div class="form-group">
+                                                    <select id="hasSpouse" name="hasSpouse" class="form-control">
+                                                        <option value="" disabled selected>選擇回覆內容</option>
+                                                        <option value="1" >有</option>
+                                                        <option value="0" >無</option>
+                                                    </select>
+                                                    <input type="hidden" name="id" value="' .$data->id. '" >
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">確認有無配偶</button>
+                                                </form>
+                                        ';
+                                    }
+                                ?>
+                            </div>
+                            <div class="form-group">
                                 <label>身分證字號</label>
                                 <p class="form-control-static"><?=isset($content['id_number'])?$content['id_number']:""?></p>
                             </div>

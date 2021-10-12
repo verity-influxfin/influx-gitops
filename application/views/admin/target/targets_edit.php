@@ -69,11 +69,11 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><p class="form-control-static">期數</p></td>
+                                        <td><p class="form-control-static">貸放期間</p></td>
                                         <td>
                                             <p class="form-control-static"><?= isset($data->instalment) ? $instalment_list[$data->instalment] : ""; ?></p>
                                         </td>
-                                        <td><p class="form-control-static">還款方式</p></td>
+                                        <td><p class="form-control-static">計息方式</p></td>
                                         <td>
                                             <p class="form-control-static"><?= isset($data->repayment) ? $repayment_type[$data->repayment] : ""; ?></p>
                                         </td>
@@ -83,7 +83,7 @@
                                         <td>
                                             <p class="form-control-static">
 
-                                                <?
+N                                                <?
                                                     foreach($virtual_accounts as $k => $virtual_account){
                                                         echo '<p><a class="fancyframe" href="'.admin_url('Passbook/display?virtual_account=' . $virtual_account->virtual_account).'">'. $virtual_account->virtual_account.'</a></p>';
                                                     }
@@ -180,7 +180,7 @@
                                                 if (isset($fvalue->faceDetect->error) && $fvalue->faceDetect->error) {
                                                     echo '<p style="color:red;" class="form-control-static">辨識錯誤：<br />' . $fvalue->faceDetect->error . '</p>';
                                                 }
-                                                if ($fvalue->faceDetect->face && is_array($fvalue->faceDetect->face)) {
+                                                if (isset($fvalue->faceDetect->face) && $fvalue->faceDetect->face && is_array($fvalue->faceDetect->face)) {
                                                     echo '<p class="form-control-static">辨識結果(Sys1)：';
                                                     foreach ($fvalue->faceDetect->face as $key => $value) {
                                                         echo $value . "% ";
@@ -342,7 +342,7 @@
 													</td>
 												</tr>
 												<tr style="background-color:#f5f5f5;">
-													<td>期數</td>
+													<th>貸放期間</th>
 													<td>期初本金</td>
 													<td>還款日</td>
 													<td>日數</td>
@@ -472,7 +472,7 @@
                                                     <td colspan="3"><?= $investments_amortization_schedule[$value->id]["date"] ?></td>
                                                 </tr>
 												<tr style="background-color:#f5f5f5;">
-													<td>期數</td>
+													<th>貸放期間</th>
 													<td>期初本金</td>
 													<td>還款日</td>
 													<td>日數</td>
@@ -507,7 +507,7 @@
                                                     <td colspan="3"><?= $investments_amortization_table[$value->id]["date"] ?></td>
                                                 </tr>
 												<tr style="background-color:#f5f5f5;">
-													<td>期數</td>
+													<th>貸放期間</th>
 													<td>期初本金</td>
 													<td>還款日</td>
 													<td>日數</td>

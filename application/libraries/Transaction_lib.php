@@ -440,8 +440,8 @@ class Transaction_lib{
 										];
 
 										$total 	= intval($payment['interest'])+intval($payment['principal']);
-										$ar_fee = $this->CI->financial_lib->get_ar_fee($total);
-										$transaction[]	= [
+										$ar_fee = $target->product_id != PRODUCT_FOREX_CAR_VEHICLE ? $this->CI->financial_lib->get_ar_fee($total) : 0;
+                                        $transaction[]	= [
 											'source'			=> SOURCE_AR_FEES,
 											'entering_date'		=> $date,
 											'user_from'			=> $value->user_id,
@@ -454,7 +454,7 @@ class Transaction_lib{
 											'bank_account_to'	=> PLATFORM_VIRTUAL_ACCOUNT,
 											'limit_date'		=> $payment['repayment_date'],
 										];
-									}
+                                    }
 								}
 							}
 
@@ -1182,7 +1182,7 @@ class Transaction_lib{
             $sum      = [3,6];
             $sheetTItle = ['案號','應還日期','逾期天數','本金餘額','應收利息','應收延滯息','違約金'];
             $normal_title = ['日期','應收本金','應收利息','合計','當期本金餘額'];
-            if($delay_days <= 7){
+            if($delay_days <= GRACE_PERIOD){
                 $sheetTItle=$normal_title;
                 foreach ($value as $key => $investment){
                     $get_investment = $this->CI->investment_model->order_by('target_id','ASC')->get_many($investment);
@@ -1236,7 +1236,7 @@ class Transaction_lib{
             if($amortization_table && !empty($amortization_table['list'])){
                 foreach($amortization_table['list'] as $k => $v){
                     if(!isset($list[$v['repayment_date']])){
-                        if($delay_days <= 7){
+                        if($delay_days <= GRACE_PERIOD){
                             $list[$v['repayment_date']] = array(
                                 'principal'	=> 0,
                                 'interest'	=> 0,
@@ -1245,7 +1245,7 @@ class Transaction_lib{
                             );
                         }
                     }
-                    if($delay_days > 7){
+                    if($delay_days > GRACE_PERIOD){
                         if(count($amortization_table['list'])==$i){
                             $target_no = $target_nos[$value->id];
                             $list[$target_no]['repayment_date']      = $v['repayment_date'];

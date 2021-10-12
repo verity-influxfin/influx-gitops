@@ -30,12 +30,26 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="form-group">
                                 <label>會員 ID</label>
                                 <a class="fancyframe" href="<?= admin_url('User/display?id=' . $data->user_id) ?>">
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
+                            </div>
+                            <div class="form-group">
+                                <h1>圖片</h1>
+                                <fieldset disabled>
+                                    <div class="form-group">
+                                        <label>403/401表格照</label><br>
+                                        <? isset($content['business_tax_image']) && !is_array($content['business_tax_image']) ? $content['business_tax_image'] = array($content['business_tax_image']) : '';
+                                        foreach ($content['business_tax_image'] as $key => $value) { ?>
+                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                            </a>
+                                        <? } ?>
+                                    </div>
+                                </fieldset>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
@@ -86,20 +100,6 @@
                                     <button type="submit" class="btn btn-primary">送出</button>
                                 </fieldset>
                             </form>
-                        </div>
-                        <div class="col-lg-6">
-                            <h1>圖片</h1>
-                            <fieldset disabled>
-                                <div class="form-group">
-                                    <label>403/401表格照</label><br>
-                                    <? isset($content['business_tax_image']) && !is_array($content['business_tax_image']) ? $content['business_tax_image'] = array($content['business_tax_image']) : '';
-                                    foreach ($content['business_tax_image'] as $key => $value) { ?>
-                                        <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                            <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                        </a>
-                                    <? } ?>
-                                </div>
-                            </fieldset>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

@@ -157,12 +157,14 @@
 										<div class="form-group">
 											<label for="disabledSelect">存摺內頁照</label><br>
                                             <?
-                                            !is_array($content['passbook_image']) ? $content['passbook_image'] = [$content['passbook_image']] : '';
-                                            foreach ($content['passbook_image'] as $key => $value) { ?>
+                                            if(isset($content['passbook_image'])){
+                                                foreach ($content['passbook_image'] as $key => $value) {
+                                                !is_array($content['passbook_image']) ? $content['passbook_image'] = [$content['passbook_image']] : '';
+                                                ?>
                                                 <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
                                                     <img src="<?=isset($value)?$value:""?>" style='width:30%;max-width:400px'>
                                                 </a>
-                                            <? } ?>
+                                            <? }} ?>
 										</div>
 
                                         <? if(isset($content['bill_phone_image'])){ ?>
