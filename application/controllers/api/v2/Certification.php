@@ -3421,22 +3421,16 @@ class Certification extends REST_Controller {
             }
 
 			// 使用者手填資料
-			if($image_ids[0]){
-                $content['result'][$image_ids[0]] = [
-					'action_user' => 'user',
-					'send_time' => time(),
-					'status' => 0,
-					'report_time' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
-					'company_name' => isset($input['CompName']) ? $input['CompName'] : '',
-					'range' => isset($input['range']) ? $input['range'] : '',
-					'origin_type' => 'user_confirm',
-				];
-				foreach($input as $k=>$v){
-					if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
-						$content['result'][$image_ids[0]][$k] = $v;
-					}
+            $content['skbank_form'] = [
+				'ReportTime' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
+				'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
+				'range' => isset($input['range']) ? $input['range'] : '',
+			];
+			foreach($input as $k=>$v){
+				if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
+					$content['skbank_form'][$k] = $v;
 				}
-            }
+			}
 
             $param		= [
                 'user_id'			=> $user_id,
