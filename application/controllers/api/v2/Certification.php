@@ -2480,46 +2480,8 @@ class Certification extends REST_Controller {
                 }
             }
 
-						// 使用者手填資料
-						if(! empty($input['nearly_a_year_image_id'])){
-							$content['result'][$input['nearly_a_year_image_id']] = [
-								'action_user' => 'user',
-								'send_time' => time(),
-								'status' => 1,
-								'origin_type' => 'user_confirm',
-								'name' => isset($input['CompName1']) ? $input['CompName1'] : '',
-								'report_time' => isset($input['AnnualIncomeYear1']) ? $input['AnnualIncomeYear1'] : '',
-								'tax_id' => isset($input['CompId1']) ? $input['CompId1'] : '',
-								'input_89' => isset($input['IndustryCode1']) ? $input['IndustryCode1'] : '',
-								"input_90" => isset($input['AnnualIncome1']) ? $input['AnnualIncome1'] : '',
-							];
-						}
-						if(! empty($input['nearly_two_year_image_id'])){
-							$content['result'][$input['nearly_two_year_image_id']] = [
-								'action_user' => 'user',
-								'send_time' => time(),
-								'status' => 1,
-								'origin_type' => 'user_confirm',
-								'name' => isset($input['CompName2']) ? $input['CompName2'] : '',
-								'report_time' => isset($input['AnnualIncomeYear2']) ? $input['AnnualIncomeYear2'] : '',
-								'tax_id' => isset($input['CompId2']) ? $input['CompId2'] : '',
-								'input_89' => isset($input['IndustryCode2']) ? $input['IndustryCode2'] : '',
-								"input_90" => isset($input['AnnualIncome2']) ? $input['AnnualIncome2'] : '',
-							];
-						}
-						if(! empty($input['nearly_three_year_image_id'])){
-							$content['result'][$input['nearly_three_year_image_id']] = [
-								'action_user' => 'user',
-								'send_time' => time(),
-								'status' => 1,
-								'origin_type' => 'user_confirm',
-								'name' => isset($input['CompName3']) ? $input['CompName3'] : '',
-								'report_time' => isset($input['AnnualIncomeYear3']) ? $input['AnnualIncomeYear3'] : '',
-								'tax_id' => isset($input['CompId3']) ? $input['CompId3'] : '',
-								'input_89' => isset($input['IndustryCode3']) ? $input['IndustryCode3'] : '',
-								"input_90" => isset($input['AnnualIncome3']) ? $input['AnnualIncome3'] : '',
-							];
-						}
+			// 使用者手填資料
+			$content['skbank_form'] = $input;
 
             $param		= [
                 'user_id'			=> $user_id,
@@ -2785,36 +2747,30 @@ class Certification extends REST_Controller {
                 }
             }
 
-						// 寫入使用者手填資料
-						$content['result'][$content['group_id']] = [
-						  'action_user' => 'user',
-						  'send_time' => time(),
-						  'status' => 0,
-						  'tax_id' => isset($input['CompId']) ? $input['CompId'] : '',
-						  'name' => isset($input['CompName']) ? $input['CompName'] : '',
-						  'capital' => isset($input['CompCapital']) ? $input['CompCapital'] : '',
-						  'address' => isset($input['CompRegAddress']) ? $input['CompRegAddress'] : '',
-						  'owner' => isset($input['PrName']) ? $input['PrName'] : '',
-						  'owner_id' => isset($inout['PrincipalId']) ? $inout['PrincipalId'] : ''
-						];
+			// 寫入使用者手填資料
+			$content['skbank_form'] = [
+			  'CompId' => isset($input['CompId']) ? $input['CompId'] : '',
+			  'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
+			  'CompCapital' => isset($input['CompCapital']) ? $input['CompCapital'] : '',
+			  'CompRegAddress' => isset($input['CompRegAddress']) ? $input['CompRegAddress'] : '',
+			  'PrName' => isset($input['PrName']) ? $input['PrName'] : '',
+			  'PrincipalId' => isset($inout['PrincipalId']) ? $inout['PrincipalId'] : ''
+			];
 
-						// 董監事
-						$count_array =[
-							'1' => 'A',
-							'2' => 'B',
-							'3' => 'C',
-							'4' => 'D',
-							'5' => 'E',
-							'6' => 'F',
-							'7' => 'G',
-						];
-						for($i=1;$i<=7;$i++){
-							$content['result'][$content['group_id']]["Director{$count_array[$i]}Id"] = isset($input["Director{$count_array[$i]}Id"]) ? $input["Director{$count_array[$i]}Id"] : '';
-							$content['result'][$content['group_id']]["Director{$count_array[$i]}Name"] = isset($input["Director{$count_array[$i]}Name"]) ? $input["Director{$count_array[$i]}Name"] : '';
-						}
-						if(isset($content['result'][$content['group_id']]['tax_id'])){
-							$content['result'][$content['group_id']]['origin_type'] = 'user_confirm';
-						}
+			// 董監事
+			$count_array =[
+				'1' => 'A',
+				'2' => 'B',
+				'3' => 'C',
+				'4' => 'D',
+				'5' => 'E',
+				'6' => 'F',
+				'7' => 'G',
+			];
+			for($i=1;$i<=7;$i++){
+				$content['skbank_form']["Director{$count_array[$i]}Id"] = isset($input["Director{$count_array[$i]}Id"]) ? $input["Director{$count_array[$i]}Id"] : '';
+				$content['skbank_form']["Director{$count_array[$i]}Name"] = isset($input["Director{$count_array[$i]}Name"]) ? $input["Director{$count_array[$i]}Name"] : '';
+			}
 
             $param		= [
                 'user_id'			=> $user_id,
@@ -3427,22 +3383,16 @@ class Certification extends REST_Controller {
             }
 
 			// 使用者手填資料
-			if($image_ids[0]){
-                $content['result'][$image_ids[0]] = [
-					'action_user' => 'user',
-					'send_time' => time(),
-					'status' => 0,
-					'report_time' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
-					'company_name' => isset($input['CompName']) ? $input['CompName'] : '',
-					'range' => isset($input['range']) ? $input['range'] : '',
-					'origin_type' => 'user_confirm',
-				];
-				foreach($input as $k=>$v){
-					if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
-						$content['result'][$image_ids[0]][$k] = $v;
-					}
+            $content['skbank_form'] = [
+				'ReportTime' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
+				'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
+				'range' => isset($input['range']) ? $input['range'] : '',
+			];
+			foreach($input as $k=>$v){
+				if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
+					$content['skbank_form'][$k] = $v;
 				}
-            }
+			}
 
             $param		= [
                 'user_id'			=> $user_id,
@@ -3566,7 +3516,7 @@ class Certification extends REST_Controller {
 
             $cer_profilejudicial = $this->config->item('cer_profilejudicial');
             //選填欄位
-            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting'];
+            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03'];
             foreach ($fields as $field) {
                 if (isset($input[$field]) && $input[$field] != '') {
                     $content[$field] = $input[$field];
@@ -3574,7 +3524,7 @@ class Certification extends REST_Controller {
             }
             $content['skbank_form'] = $content;
 
-            $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership'];
+            $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 if(isset($input[$field])){
