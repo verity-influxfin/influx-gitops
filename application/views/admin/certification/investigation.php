@@ -38,8 +38,8 @@
 									</div>
 									<div class="form-group">
 										<label>交件方式</label>
-										<p class="form-control-static"><?=
-                                        if(isset($content['return_type'])){
+										<p class="form-control-static"><?php
+                                        if(defined('content') && defined('certification') &&isset($content['return_type'])){
                                             switch($certification['id']){
                             					case 0:
                             						$type = '郵局申請(紙本)';
