@@ -40,6 +40,14 @@
 						}
 					}
 				}
+                $(document).off("click","#send_bank").on("click","#send_bank" ,  function(){
+                    $("#send_bank").attr("disabled",true);
+                    ajpost(location.origin+"/admin/target/waiting_reinspection",
+                        "target_id="+$("#send_bank").data("id")+
+                        "&send_bank=1",true);
+                    location.reload();
+                });
+
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -59,8 +67,8 @@
                                             <th>申請金額</th>
                                             <th>核准金額</th>
 											<th>核准利率</th>
-                                            <th>期數</th>
-                                            <th>還款方式</th>
+                                            <th>貸放期間</th>
+                                            <th>計息方式</th>
                                             <th>狀態
 											</th>
                                             <th>申請日期</th>
@@ -73,7 +81,8 @@
 										if(isset($list) && !empty($list)){
 											$count = 0;
 											foreach($list as $key => $value){
-												$count++;
+                                                $isExternalCoop = in_array($value->product_id, $externalCooperation);
+                                                $count++;
 									?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
                                             <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
@@ -84,22 +93,40 @@
 												</a>
 											</td>
                                             <td><?=isset($value->amount)?$value->amount:'' ?></td>
-                                            <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
-                                            <td><?=isset($value->interest_rate)&&$value->interest_rate?floatval($value->interest_rate):'' ?>%</td>
+                                            <td><? echo isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'-' ?></td>
+                                            <td><? echo isset($value->interest_rate)&&$value->interest_rate&&!$isExternalCoop?floatval($value->interest_rate).'%':'-' ?></td>
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
                                             <td><?=isset($value->repayment)?$repayment_type[$value->repayment]:'' ?></td>
                                             <td>
-												<? if($value->bankaccount_verify==0){ ?>
-                                                    <button class="btn btn-info"  onclick="window.location.href='<?=admin_url('certification/user_bankaccount_list?verify=2')."?id=".$value->id ?>'">待金融驗證</button>
-                                                <? }else{ ?>
-                                                    <button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?>class="btn  <?=$value->order_id==0?"btn-success":"btn-info" ?>" onclick="success(<?=isset($value->id)?$value->id:"" ?>)">審批上架</button>
-                                                <? } ?>
+												<?
+                                                $unFinish = true;
+                                                if($isExternalCoop){
+												    $target_data = json_decode($value->target_data);
+                                                    if(!isset($target_data->reinspection->reinspection_opinion)){
+                                                        echo '待二審批覆';
+                                                    }elseif(!isset($target_data->reinspection->CRO_opinion)){
+                                                        echo '待風控長批覆';
+                                                    }elseif(!isset($target_data->reinspection->general_manager_opinion)){
+                                                        echo '待總經理批覆';
+                                                    }else{
+                                                        $unFinish = false;
+                                                        ?>
+                                                        <button id="send_bank" data-id="<?=isset($value->id)?$value->id:'' ?>" class="btn btn-warning" onclick="">送件至銀行</button>
+                                                        <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
+                                                    <? }
+                                                }else{
+                                                    if($value->bankaccount_verify==0){ ?>
+                                                        <button class="btn btn-info"  onclick="window.location.href='<?=admin_url('certification/user_bankaccount_list?verify=2')."?id=".$value->id ?>'">待金融驗證</button>
+                                                    <? }else{ ?>
+                                                        <button <?=isset($value->subloan_count) && $value->subloan_count>2?" ":"" ?>class="btn  <?=$value->order_id==0?"btn-success":"btn-info" ?>" onclick="success(<?=isset($value->id)?$value->id:"" ?>)" <?=$value->sub_status==TARGET_SUBSTATUS_SECOND_INSTANCE?'disabled':'' ?>>審批上架</button>
+                                                    <? } ?>
                                                     <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
-                                                <?=isset($sub_list[$value->sub_status])?($value->sub_status==9?'('.$sub_list[$value->sub_status].')':''):'' ?>
+                                                    <?=isset($sub_list[$value->sub_status])?($value->sub_status==9?'('.$sub_list[$value->sub_status].')':''):'' ?>
+                                                <? } ?>
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->remark)?$value->remark:'' ?></td>
-											<td><a href="<?=admin_url('target/edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td> 
+											<td><a target="_blank" href="<? echo !$isExternalCoop ? admin_url('target/edit')."?id=".$value->id : admin_url('target/waiting_reinspection')."?target_id=".$value->id ?>" class="btn btn-<? echo !$unFinish || !$isExternalCoop ? 'default' : 'danger' ?>"><? echo !$isExternalCoop ? '詳情' : '二審' ?></a></td>
                                         </tr>                                        
 									<?php 
 										}}

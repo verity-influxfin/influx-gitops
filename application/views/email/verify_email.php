@@ -102,7 +102,7 @@
 										<td class="img-flex"><img src="<?=FRONT_CDN_URL ?>mail_assets/{mail_event}/{type}.jpg" style="vertical-align:top;" width="600" height="306" alt="" /></td>
 									</tr>
 									<tr>
-										<td data-bgcolor="bg-block" class="holder" style="padding:35px 60px 20px;" bgcolor="#f9f9f9">
+										<td data-bgcolor="bg-block" class="holder" style="padding:35px 60px 20px;" bZgcolor="#f9f9f9">
 											<table width="100%" cellpadding="0" cellspacing="0">
 												<tr>
 													<td align="center">

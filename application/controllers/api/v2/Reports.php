@@ -131,7 +131,8 @@ class Reports extends REST_Controller {
             }
 
           }else{
-            $this->response(['result' => 'FAIL']);exit;
+			$ocr_type = 'ltd';
+            // $this->response(['result' => 'FAIL']);exit;
           }
         }
 
@@ -151,13 +152,14 @@ class Reports extends REST_Controller {
 
         // 比對圖片記錄的擁有者是否與要求存取的人一樣
 		// 不匹配時則返回權限不足
-		if(isset($this->user_info)) {
-			$validLogs = array_filter($imageLogs, function ($log) {
-				return $log->user_id == $this->user_info->id;
+		if(isset($this->user_info)){
+			$validLogs = array_filter($imageLogs, function($log){
+				return $log->user_id==$this->user_info->id;
 			});
-			if (count($validLogs) != count($imageLogs))
-				$this->response(['result' => 'ERROR', 'error' => PERMISSION_DENY]);
+	        if(count($validLogs) != count($imageLogs))
+				$this->response(['result' => 'ERROR','error' => PERMISSION_DENY]);
 		}
+
         $numRequestedIds = [];
 //        $ownerId = $this->user_info->id;
         $ownerId = false;

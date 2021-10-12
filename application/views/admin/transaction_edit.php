@@ -36,7 +36,7 @@
 											<tr style="background-color:#f5f5f5;">
 												<td>流水號</td>
 												<td>交易日</td>
-												<td>期數</td>
+												<th>貸放期間</th>
 												<td>科目</td>
 												<td>金額</td>
 												<td>User From</td>

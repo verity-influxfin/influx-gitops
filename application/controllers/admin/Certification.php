@@ -15,10 +15,12 @@ class Certification extends MY_Admin_Controller {
 		'user_bankaccount_success',
 		'difficult_word_add',
 		'difficult_word_edit',
-		'judicial_yuan_case'
+		'judicial_yuan_case',
+		'media_upload'
 	);
 	public $certification;
 	public $certification_name_list;
+	public $ocr_template_page =[PRODUCT_FOREX_CAR_VEHICLE, PRODUCT_SK_MILLION_SMEG];
 
 	public function __construct() {
 		parent::__construct();
@@ -85,6 +87,7 @@ class Certification extends MY_Admin_Controller {
 			$id 	= isset($get['id'])?intval($get['id']):0;
 			$cid 	= isset($get['cid'])?intval($get['cid']):0;
 			$from 	= isset($get['from'])?$get['from']:'';
+			$product_id = isset($get['product_id'])?$get['product_id']:'';
 			if(!empty($from)){
 				$back_url = admin_url('close');
 			}
@@ -204,6 +207,108 @@ class Certification extends MY_Admin_Controller {
 						$cut  = preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title);
 						$page_data['job_title'] = isset($cut[1]) ? preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0] : '' ;
 					}
+				}elseif(in_array($info->certification_id, [CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT])){
+					$image_key = [
+						CERTIFICATION_BUSINESSTAX => 'business_tax_image',
+						CERTIFICATION_BALANCESHEET => 'balance_sheet_image',
+						CERTIFICATION_INCOMESTATEMENT => 'income_statement_image',
+					];
+					$ocr_id = [];
+					$this->load->model('log/log_image_model');
+					foreach($page_data['content'][$image_key[$info->certification_id]] as $image_list => $image){
+						$ocr_id[$image_list] = $this->log_image_model->get_by(['url' => $image])->id;
+					}
+					$page_data['ocr_id'] = $ocr_id;
+				}
+				// 獲取 ocr 相關資料
+				// to do : ocr table 需優化 index 與 clinet table view
+				$this->load->library('mapping/user/Certification_table');
+				$is_template = $this->certification_table->isInTemplate($info->certification_id);
+
+                $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
+                if(in_array($info->certification_id,['1007','1017','1002','1003','12'])){
+                    $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
+                }
+
+                if($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) {
+                    // 上傳檔案功能
+                    if($info->status == 0 || $info->status == 3){
+                        $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
+						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
+                    }
+                    $return_config = [
+                        '1003' => [
+                            '1' => '郵局申請(紙本)',
+                            '0' => '臨櫃申請(紙本)'
+                        ],
+                        '9' => [
+                            '0' => '郵局申請(紙本)',
+                            '1' => '自然人憑證',
+                            '2' => '投資人行動網',
+                            '3' => '臨櫃申請(紙本)',
+                        ],
+                        '12' => [
+                            '0' => '郵局申請(紙本)',
+                            '1' => '臨櫃申請(紙本)',
+                        ],
+                    ];
+                    $return_type = isset($certification_content['return_type']) ? $certification_content['return_type'] : '';
+                    $page_data['return_type'] = isset($return_config[$info->certification_id][$return_type]) ? $return_config[$info->certification_id][$return_type] : '';
+				}
+			if($is_template){
+				$ocr_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
+				$page_data['ocr'] = [];
+				$page_data['ocr']['url'] = [];
+				// 給人工編輯跳轉網址
+				$page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$ocr_content);
+				// 找使用者上傳圖片
+				$image_key_list = $this->certification_table->getUserPostImagesKey($info->certification_id);
+                $page_data['ocr']['img'] = [];
+                if(!empty($image_key_list)){
+                    foreach($image_key_list as $key_name){
+                        if(isset($ocr_content[$key_name]) && !empty($ocr_content[$key_name])){
+                            if(is_array($ocr_content[$key_name])){
+                                $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$ocr_content[$key_name]);
+                            }else{
+                                $page_data['ocr']['img'][] = $ocr_content[$key_name];
+                            }
+                        }
+                        // 針對圖片連結未直接放在第一層結構資料處理
+                        if(isset($ocr_content['result']) && !empty($ocr_content['result'])){
+                            $image_in_result = array_reduce($ocr_content['result'], 'array_merge', array());
+                            if(isset($image_in_result[$key_name]) && !empty($image_in_result[$key_name])){
+                                if(is_array($image_in_result[$key_name])){
+                                    $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$image_in_result[$key_name]);
+                                }else{
+                                    $page_data['ocr']['img'][] = $image_in_result[$key_name];
+                                }
+                            }
+                        }
+                    }
+                }
+
+				// ocr 總表相關資料生成
+				$data_infos = isset($ocr_content['result']) ? $ocr_content['result'] : [];
+				$error_location = isset($ocr_content['error_location']) ? $ocr_content['error_location'] : [];
+				$total_table = [];
+				if(!empty($data_infos)){
+					if($info->certification_id == 1003 || $info->certification_id == 9){
+						$total_table['data'] = array_reduce($data_infos, 'array_merge', array());
+						$total_table['type'] = $info->certification_id == 9 ? 'person' : 'company';
+					}else{
+						$total_table['data'] = $this->certification_table->getTotalTableDataArray($info->certification_id,$data_infos,$error_location);
+					}
+				}
+
+				if(! empty($total_table)){
+					if($info->certification_id == 1003 || $info->certification_id == 9){
+						$page_data['ocr']['total_table'] = $this->load->view('admin/certification/component/joint_credit_report',$total_table , true);
+					}else{
+						$page_data['ocr']['total_table'] = $this->load->view('admin/certification/ocr/total_table',$total_table , true);
+					}
+				}else{
+					$page_data['ocr']['total_table'] = '';
+				}
 				}
 
 				if(isset($page_data['content']['programming_language'])){
@@ -229,7 +334,12 @@ class Certification extends MY_Admin_Controller {
 				$page_data['sys_check'] 			= $info->sys_check;
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title', $this->menu);
-				$this->load->view('admin/certification/' . $certification['alias'], $page_data);
+				// ocr認證項目指定到統一頁面
+			if(!$is_template ){
+					$this->load->view('admin/certification/' . $certification['alias'], $page_data);
+				}else{
+					$this->load->view('admin/certification/ocr/index', $page_data);
+				}
 				$this->load->view('admin/_footer');
 			} else {
 				alert('ERROR , id is not exist', $back_url);
@@ -566,8 +676,7 @@ class Certification extends MY_Admin_Controller {
 				$info = $this->user_bankaccount_model->get($post['id']);
 				if($info){
 					if($post['status']=='2'){
-                        ;
-                        $this->load->model('log/log_usercertification_model');
+						$this->load->model('log/log_usercertification_model');
                         $this->log_usercertification_model->insert(array(
                             'user_certification_id'	=> $info->user_certification_id,
                             'status'				=> 2,
@@ -1088,7 +1197,7 @@ class Certification extends MY_Admin_Controller {
 				$this->json_output->setStatusCode(400)->send();
 			}
 
-			if($scraper_response['status']=='201'){
+			if(isset($scraper_response['status']) && $scraper_response['status']=='201'){
 				$this->json_output->setStatusCode(201)->send();
 			}
 
@@ -1167,6 +1276,7 @@ class Certification extends MY_Admin_Controller {
 			'targetData' => $sub_product['targetData'],
 			'dealer' => $sub_product['dealer'],
 			'multi_target' => $sub_product['multi_target'],
+			'checkOwner' => $product['checkOwner'],
 			'status' => $sub_product['status'],
 		);
 	}
@@ -1204,5 +1314,166 @@ class Certification extends MY_Admin_Controller {
 		$this->load->view('admin/certification/component/judicial_yuan_case',$page_data);
 		$this->load->view('admin/_footer');
 	}
+
+	public function media_upload()
+	{
+		$post 		= $this->input->post();  //接到user_id
+		// print_r($post);exit;
+		if (!empty($post)) {
+			$this->load->library('S3_upload');
+			$file_array = [];
+			$media_check = true;
+			if(!empty($_FILES['file'])){
+				foreach($_FILES['file'] as $k=>$v){
+					foreach($v as $k1=>$v1){
+						$file_array[$k1][$k] = $v1;
+					}
+				}
+				foreach ($file_array as $field) {
+					// print_r($field);exit;
+					$file['image'] = $field;
+					$image 	= $this->s3_upload->image($file,'image',$post['user_id'],"certification/{$post['user_certification_id']}");
+					if($image){
+						$media[]	= $image;
+					}else{
+						$media_check = false;
+					}
+				}
+				if ($media_check === false) {
+					alert('檔案上傳失敗，請洽工程師', admin_url('certification/user_certification_edit?id='.$post['user_certification_id']));
+				} else {
+					$group_id = time();
+					$this->load->model('log/log_image_model');
+					$image_id = $this->log_image_model->getIDByUrl($media);
+					foreach($image_id as $v){
+						$image_id_array[] = $v->id;
+					}
+					$this->log_image_model->insertGroupById($image_id_array,['group_info'=>$group_id]);
+					// $certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
+					$this->load->library('mapping/user/Certification_table');
+					$certification_mapping = $this->certification_table->certification_mapping;
+					$image_name = isset($this->certification[$post['certification_id']]['alias']) ? $certification_mapping[$post['certification_id']]['file_location'] : 'images' ;
+
+					$certification_content[$image_name] = $media;
+					$certification_content['group_id'] = $group_id;
+
+					$res = $this->user_certification_model->update($post['user_certification_id'], [
+						'content' 			=> json_encode($certification_content),
+						'status' => 0,
+						'remark' => ''
+					]);
+					// 觸發上傳檔案 ocr
+					$this->load->library('ocr/report_scan_lib');
+					// to do : 可能會有聯徵之外的檔案從後台上傳並觸發
+					if($post['user_id']){
+						if($post['certification_id'] == 1003){
+							$ocr_type = 'company';
+						}else{
+							$ocr_type = 'person';
+						}
+						// print_r($media);exit;
+						$this->load->model('log/log_image_model');
+				        $imageLogs = $this->log_image_model->getUrlByGroupID($group_id);
+						$this->report_scan_lib->requestForScan('credit_investigation', $imageLogs, $post['user_id'], $ocr_type);
+					}
+
+					($res)?
+						alert('檔案上傳成功', 'user_certification_edit?id='.$post['user_certification_id'])
+						:alert('檔案上傳失敗，資料更新失敗，請洽工程師', admin_url('certification/user_certification_edit?id='.$post['user_certification_id']));
+				}
+			}
+		} else {
+			alert('檔案上傳失敗，缺少參數，請洽工程師', admin_url('certification/user_certification_edit?id='.$post['user_certification_id']));
+		}
+	}
+
+    // 加入是否有配偶
+    public function hasSpouse(){
+        $post = $this->input->post();
+
+        if(! isset($post['hasSpouse'])){
+            alert('資料更改失敗，缺少參數', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+        $certification_info = $this->user_certification_model->get_by(['id' => $post['id']]);
+
+        if(! $certification_info){
+            alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        if(isset($certification_info->status) && $certification_info->status != 3){
+            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+        $content['hasSpouse'] = $post['hasSpouse'] == 1 ? true : false;
+        $this->user_certification_model->update_by(
+            ['id'  => $post['id']],
+            ['content' => json_encode($content)]
+        );
+        alert('資料更新成功', admin_url('certification/user_certification_edit?id='.$post['id']));
+    }
+
+    // 新光送件檢核表送出資料
+    public function sendSkbank(){
+        $post = $this->input->post();
+
+        if(! isset($post['id']) || empty($post['id'])){
+            alert('資料更改失敗，缺少參數', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $certification_info = $this->user_certification_model->get_by(['id' => $post['id']]);
+
+        if(! $certification_info){
+            alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        if(isset($certification_info->status) && $certification_info->status != 3){
+            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+        unset($post['id']);
+        $content['skbank_form'] = $post;
+        $this->user_certification_model->update_by(
+            ['id'  => $certification_info->id],
+            ['content' => json_encode($content)]
+        );
+        alert('資料更新成功', admin_url('certification/user_certification_edit?id='.$certification_info->id));
+    }
+
+    // 新光送件檢核表回填資料
+    public function getSkbank(){
+        $get = $this->input->get();
+        $this->load->library('output/json_output');
+
+        $response_data = [];
+
+        if(! isset($get['id']) || empty($get['id'])){
+            $this->json_output->setStatusCode(204)->setErrorCode('缺少參數，無法找資料')->send();
+        }
+
+        $certification_info = $this->user_certification_model->get_by(['id' => $get['id']]);
+        if(! $certification_info){
+            $this->json_output->setStatusCode(204)->setErrorCode('找不到資料')->send();
+        }
+
+        $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+
+        // 公司資料表
+        if($certification_info->certification_id == 1018 && !empty($content)){
+            $replace_content = $content;
+            foreach($replace_content as $key => $value){
+                if(is_array($value)){
+                    unset($replace_content[$key]);
+                }
+            }
+            $response_data = $replace_content;
+        }
+
+        if(isset($content['skbank_form']) && !empty($content['skbank_form'])){
+            $response_data = $content['skbank_form'];
+        }
+        $this->json_output->setStatusCode(200)->setResponse($response_data)->send();
+    }
 }
 ?>

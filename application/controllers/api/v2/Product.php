@@ -43,6 +43,11 @@ class Product extends REST_Controller {
                     //$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
                 //}
 
+                if(isset($tokenData->company) && $tokenData->company != 0) {
+                    $this->load->library('Judicialperson_lib');
+                    $this->user_info->naturalPerson = $this->judicialperson_lib->getNaturalPerson($tokenData->id);
+                }
+
                 if($this->request->method != 'get'){
                     $this->load->model('log/log_request_model');
                     $this->log_request_model->insert(array(
@@ -79,7 +84,7 @@ class Product extends REST_Controller {
      * @apiSuccess {String} name 名稱
      * @apiSuccess {String} description 簡介
      * @apiSuccess {Object} instalment 可選期數 0:其他
-     * @apiSuccess {Object} repayment 可選還款方式 1:等額本息
+     * @apiSuccess {Object} repayment 可選計息方式 1:等額本息
      * @apiSuccess {Number} loan_range_s 最低借款額度(元)
      * @apiSuccess {Number} loan_range_e 最高借款額度(元)
      * @apiSuccess {Number} interest_rate_s 年利率下限(%)
@@ -155,10 +160,10 @@ class Product extends REST_Controller {
         $sub_product_list      = $this->config->item('sub_product_list');
         $certification = $this->config->item('certifications');
         $company = isset($this->user_info->company)?$this->user_info->company:false;
-        if($company){
-            $this->load->model('user/judicial_person_model');
-            $selling_type = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id))->selling_type;
-        }
+        // if($company){
+        //     $this->load->model('user/judicial_person_model');
+        //     $selling_type = $this->judicial_person_model->get_by(array('company_user_id'=>$this->user_info->id))->selling_type;
+        // }
         $login = false;
         if(isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor==0){
             $certification_list	= $this->certification_lib->get_status($this->user_info->id,$this->user_info->investor,$this->user_info->company);
@@ -178,12 +183,28 @@ class Product extends REST_Controller {
                 $certification = [];
                 if (isset($this->user_info->id) && $this->user_info->id && $this->user_info->investor == 0) {
                     $targets = $this->target_model->get_many_by(array(
-                        'status' => [0, 1, 20, 21,30],
-                        'sub_status' => [0,9,10],
+                        'status' => [
+                            TARGET_WAITING_APPROVE,
+                            TARGET_WAITING_SIGNING,
+                            TARGET_WAITING_VERIFY,
+                            TARGET_ORDER_WAITING_QUOTE,
+                            TARGET_ORDER_WAITING_SIGNING,
+                            30,
+                            TARGET_BANK_VERIFY,
+                            TARGET_BANK_GUARANTEE,
+                            TARGET_BANK_LOAN
+                        ],
+                        'sub_status' => [
+                            TARGET_SUBSTATUS_NORNAL,
+                            TARGET_SUBSTATUS_SECOND_INSTANCE,
+                            TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET,
+                            TARGET_SUBSTATUS_WAITING_ASSOCIATES
+                        ],
                         'user_id' => $this->user_info->id,
                         'product_id' => $value['id']
                     ));
-
+                    $associatess = $this->target_lib->get_associates_target_list($this->user_info->id);
+                    $associatess ? $targets = array_merge($targets, $associatess) : '';
                     if ($targets) {
                         foreach($targets as $tar_list => $tar) {
                             $add_target = [
@@ -198,14 +219,17 @@ class Product extends REST_Controller {
                                 'created_at' => intval($tar->created_at),
                                 'instalment' => intval($tar->instalment),
                             ];
+                            isset($tar->associate) ? $add_target['associate'] = $tar->associate : '';
                             $target[$tar->product_id][$tar->sub_product_id] = $add_target;
                         }
                     }
                 }
 
+                $certification = [];
                 if (!empty($certification_list)) {
                     foreach ($certification_list as $k => $v) {
                         if (in_array($k, $value['certifications'])) {
+                            !is_bool($v['optional']) ? $v['optional'] = false : '';
                             $certification[] = $v;
                         }
                     }
@@ -213,6 +237,7 @@ class Product extends REST_Controller {
 
                 $parm = array(
                     'id'        			=> $value['id'],
+                    'product_id'        	=> $value['id'],
                     'type' 					=> $value['type'],
                     'identity' 				=> $value['identity'],
                     'name' 					=> $value['name'],
@@ -227,7 +252,9 @@ class Product extends REST_Controller {
                     'repayment'				=> $value['repayment'],
                     'sealler'				=> $value['dealer'],
                     'sub_product'		    => $value['sub_product'],
-                    'hiddenMainProduct'		=> $value['hiddenMainProduct'],
+                    'hiddenMainProduct'		=> isset($value['hiddenMainProduct']) ? $value['hiddenMainProduct'] : false,
+                    'hiddenSubProduct'		=> isset($value['hiddenSubProduct']) ? $value['hiddenSubProduct'] : false,
+                    'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
                     'target'                => isset($target[$value['id']][0])?$target[$value['id']][0]:[],
                     'certification'         => $certification,
                 );
@@ -239,10 +266,12 @@ class Product extends REST_Controller {
                     }
                 }
 
-                $list[] = $parm;
 
                 //reformat Product for layer2
                 $temp[$value['type']][$value['visul_id']][$value['identity']] = $parm;
+
+                unset($parm['sealler'], $parm['sub_product'], $parm['hiddenMainProduct'], $parm['checkOwner']);
+                $list[] = $parm;
             }
 
             //list2
@@ -259,8 +288,14 @@ class Product extends REST_Controller {
                 foreach ($t as $key2 => $t2) {
                     if ($company == 1 && isset($t2[3]) || $company == 0) {
                         $sub_product_info = [];
+                        $identityList = [];
                         foreach ($t2 as $key3 => $t3) {
-                            $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : false;
+                            $t3['hiddenMainProduct'] == true ? $hiddenMainProduct[] = $key2 : '';
+                            $data = $t3;
+                            unset($data['sealler'], $data['sub_product'], $data['hiddenMainProduct'], $data['checkOwner']);
+                            $identityList[$key3] = $data;
+
+                            //sub_products
                             if (count($t3['sub_product']) > 0) {
                                 foreach ($t3['sub_product'] as $key4 => $t4) {
                                     if(isset($sub_product_list[$t4]) && !in_array($t4, $hiddenList) && !in_array($sub_product_list[$t4]['visul_id'], $showed_list)){
@@ -272,6 +307,7 @@ class Product extends REST_Controller {
                                         foreach ($sub_product_list[$t4]['identity'] as $idekey => $ideval) {
                                             unset($sub_product_list[$t4]['identity'][$idekey]['targetData'],
                                                 $sub_product_list[$t4]['identity'][$idekey]['dealer'],
+                                                $sub_product_list[$t4]['identity'][$idekey]['secondInstance'],
                                                 $sub_product_list[$t4]['identity'][$idekey]['multi_target']);
                                             $exp_product = explode(':', $ideval['product_id']);
                                             if (!empty($certification_list)) {
@@ -289,15 +325,19 @@ class Product extends REST_Controller {
                                             $listData[$sub_product_list[$t4]['visul_id']][$idekey]['status'] = count($listData[$sub_product_list[$t4]['visul_id']][$idekey]['target']) > 0 ? $listData[$sub_product_list[$t4]['visul_id']][$idekey]['target']['status'] : -1;
                                             $targetStatus[$sub_product_list[$t4]['visul_id']] = count($targetInfo) > 0 ? $targetInfo['status'] : -1;
                                         }
-                                        isset($sub_product_info[0]['visul_id']) && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id'] ? '' : $sub_product_info[] = $sub_product_list[$t4];
+
+                                        isset($sub_product_info[0]['visul_id'])
+                                        && $sub_product_info[0]['visul_id'] == $sub_product_list[$t4]['visul_id']
+                                            ? '' : !$t3['hiddenSubProduct'] ? $sub_product_info[] = $sub_product_list[$t4] : '';
                                     }
                                 }
                             }
                         }
+
                         $type_list['type' . $key][] = [
                             'visul_id' => $key2,
                             'name' => $visul_id_des[$key2]['name'],
-                            'identity' => !in_array($key2,$hiddenMainProduct)?$t2:[],
+                            'identity' => !in_array($key2,$hiddenMainProduct)?$identityList:[],
                             'description' => $visul_id_des[$key2]['description'],
                             'status' => $visul_id_des[$key2]['status'],
                             'banner' => $visul_id_des[$key2]['banner'],
@@ -329,7 +369,7 @@ class Product extends REST_Controller {
         }
 
         $this->response(array('result' => 'SUCCESS','data' => [
-            'list' => $list,
+            'list'  => $list,
             'list2' => $list2,
         ]));
     }
@@ -354,7 +394,7 @@ class Product extends REST_Controller {
      * @apiSuccess {String} charge_platform 平台服務費(%)
      * @apiSuccess {String} charge_platform_min 平台最低服務費(元)
      * @apiSuccess {Object} instalment 可選期數 0:其他
-     * @apiSuccess {Object} repayment 可選還款方式 1:等額本息
+     * @apiSuccess {Object} repayment 可選計息方式 1:等額本息
      * @apiSuccessExample {Object} SUCCESS
      * {
      * 	'result': 'SUCCESS',
@@ -508,7 +548,7 @@ class Product extends REST_Controller {
     public function apply_post()
     {
         $input 		= $this->input->post(NULL, TRUE);
-        $amount = $input['amount'];
+        $amount = isset($input['amount']) ? $input['amount'] : 0;
         $user_id = $this->user_info->id;
 
         $product_list = $this->config->item('product_list');
@@ -518,18 +558,18 @@ class Product extends REST_Controller {
         $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
         if ($product) {
             //檢核身分
-            if($product['identity'] ==3 && $this->user_info->company !=1){
+            if($product['identity'] == 3 && $this->user_info->company != 1 && (!isset($product['checkOwner']) || !$product['checkOwner'])){
                 $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
-            }elseif($product['identity'] !=3 && $this->user_info->company ==1){
+            }else if($product['identity'] != 3 && $this->user_info->company == 1){
                 $this->response(array('result' => 'ERROR', 'error' => IS_COMPANY));
             }
 
             //檢核經銷商狀態
-            if($this->user_info->company == 1){
-                if($product['dealer']!=0){
+            if($this->user_info->company == 1 && $product['type'] == 2){
+                if (!in_array(0, $product['dealer'])) {
                     $this->load->model('user/judicial_person_model');
                     $judicial_person = $this->judicial_person_model->get_by(array(
-                        'selling_type' => $product['dealer'],
+                        'selling_type' => count($product['dealer']) != 0 ? $product['dealer'] : '',
                         'company_user_id' => $user_id,
                         'cooperation' => 1,
                         'status' => 1,
@@ -556,7 +596,16 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_CLOSE));
             }
 
-            if($product['id'] == '1000'){
+            // 角色判斷
+            // if($product['checkOwner']){
+                // character 法人角色 0:非實際負責人 1:實際負責人
+//                if(isset($input['character']) && $input['character'] == 2){
+//                    $input['instalment'] = 36;
+//                }
+            // }
+
+            // 外匯車判斷
+            if($product['id'] == PRODUCT_FOREX_CAR_VEHICLE){
                 $input['instalment'] = 90;
                 if($sub_product_id == 2){
                     $amount = $input['purchase_cost'] + $input['fee_cost'];
@@ -564,13 +613,18 @@ class Product extends REST_Controller {
                 }
             }
 
-            if (!in_array($input['instalment'], $product['instalment'])) {
-                $this->response(array('result' => 'ERROR', 'error' => PRODUCT_INSTALMENT_ERROR));
+
+            if (!isset($input['target_id'])) {
+                // 分期期數判斷
+                if (!in_array($input['instalment'], $product['instalment'])) {
+                    $this->response(array('result' => 'ERROR', 'error' => PRODUCT_INSTALMENT_ERROR));
+                }
+                // 貸款金額判斷
+                if (($amount < $product['loan_range_s'] || $amount > $product['loan_range_e']) && $product['type'] != 2) {
+                    $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
+                }
             }
 
-            if (($amount < $product['loan_range_s'] || $amount > $product['loan_range_e']) && $product['type'] != 2) {
-                $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
-            }
 
             $param		= [
                 'product_id' => $product['id'],
@@ -738,7 +792,7 @@ class Product extends REST_Controller {
      * @apiSuccess {Number} platform_fee 平台服務費
      * @apiSuccess {Number} interest_rate 年化利率
      * @apiSuccess {Number} instalment 期數 0:其他
-     * @apiSuccess {Number} repayment 還款方式 1:等額本息
+     * @apiSuccess {Number} repayment 計息方式 1:等額本息
      * @apiSuccess {String} reason 借款原因
      * @apiSuccess {String} remark 備註
      * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
@@ -788,6 +842,9 @@ class Product extends REST_Controller {
         $param				       = ['user_id'=> $user_id,'status !='=> 8];
         $targets 			       = $this->target_model->get_many_by($param);
         $list				       = [];
+
+        $associatess = $this->target_lib->get_associates_target_list($this->user_info->id, false, true);
+        $associatess ? $targets = array_merge($associatess, $targets) : '';
         if(!empty($targets)){
             foreach($targets as $key => $value){
                 $product = isset($product_list[$value->product_id]) ? $product_list[$value->product_id] : $product_list[1];
@@ -830,6 +887,7 @@ class Product extends REST_Controller {
                     'delay' 			         => intval($value->delay),
                     'status' 			         => intval($value->status),
                     'sub_status' 		         => intval($value->sub_status),
+                    'associate' 		         => (isset($value->associate) ? $value->associate : false),
                     'subloan_target_status'      => intval($subloan_target_status),
                     'subloan_target_sub_status'  => intval($subloan_target_sub_status),
                     'created_at' 		         => intval($value->created_at),
@@ -860,7 +918,7 @@ class Product extends REST_Controller {
      * @apiSuccess {Number} platform_fee 平台服務費
      * @apiSuccess {Number} interest_rate 核可利率
      * @apiSuccess {Number} instalment 期數 0:其他
-     * @apiSuccess {Number} repayment 還款方式 1:等額本息
+     * @apiSuccess {Number} repayment 計息方式 1:等額本息
      * @apiSuccess {String} reason 借款原因
      * @apiSuccess {String} remark 備註
      * @apiSuccess {Number} delay 是否逾期 0:無 1:逾期中
@@ -1014,13 +1072,6 @@ class Product extends REST_Controller {
         $company_status	= $this->user_info->company;
         $target 			= $this->target_model->get($target_id);
         if(!empty($target)){
-            if($target->user_id != $user_id){
-                $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
-            }
-
-            $certification		= [];
-            $certification_list	= $this->certification_lib->get_status($user_id,$investor,$company_status,false);
-
             $product_list = $this->config->item('product_list');
             $product = isset($product_list[$target->product_id]) ? $product_list[$target->product_id] : $product_list[1];
             $product_name = $product['name'];
@@ -1030,13 +1081,12 @@ class Product extends REST_Controller {
                 $product_name = $product['name'];
             }
 
-            $completeness_level = 100 / count($certification_list);
-
             $targetDatas = [];
+            $cer_group = [];
             if($product['visul_id'] == 'DS2P1'){
                 $targetData = json_decode($target->target_data);
-                $cer_group['car_file'] = [1,'車籍文件'];
-                $cer_group['car_pic'] = [1,'車輛外觀照片'];
+                $cer_group['car_file'] = [1,'車籍文件', 2000 ,'提供車籍文件'];
+                $cer_group['car_pic'] = [1,'車輛外觀照片', 2000 ,'提供車輛外觀照片'];
                 $targetDatas = [
                     'brand' => $targetData->brand,
                     'name' => $targetData->name,
@@ -1068,16 +1118,40 @@ class Product extends REST_Controller {
                         }
                     }
                 }
+            } elseif (in_array($product['visul_id'], ['NS2P1', 'NS2P2'])) {
+                $certification = $this->config->item('certifications')[CERTIFICATION_BUSINESS_PLAN];
+                $targetData = json_decode($target->target_data);
+                $cer_group[$certification['alias']] = [1, $product['targetData']['business_plan'][1], $certification['id'], $certification['description']];
+                $targetDatas = [];
+                foreach ($product['targetData'] as $key => $value) {
+                    if(isset($targetData->$key) && !empty($targetData->$key)){
+                        $pic_array = [];
+                        foreach ($targetData->$key as $skey => $svalue){
+                            preg_match('/image.+/', $svalue, $matches);
+                            $pic_array[] = FRONT_CDN_URL.'stmps/tarda/'.$matches[0];
+                        }
+                        $targetDatas[$key] = $pic_array;
+                    }
+                    else{
+                        $targetDatas[$key] = '';
+                        $cer_group['business_plan'][0] = null;
+                    }
 
+                }
+            }
+
+            $certification		= [];
+            $certification_list = $this->certification_lib->get_status($user_id, $investor, $company_status, false, $target, $product);
+            $completeness_level = 100 / count($certification_list);
+            if(count($cer_group) > 0){
                 $completeness_level = 100 / (count($certification_list) + count($cer_group));
-
                 foreach ($cer_group as $cer_key => $cervalue){
                     $certification[] = [
-                        "id"=> null,
+                        "id"=> $cervalue[2],
                         "alias"=> $cer_key,
                         "name"=> $cervalue[1],
                         "status"=> 1,
-                        "description"=> null,
+                        "description"=>  $cervalue[3],
                         "user_status"=> $cervalue[0],
                         "certification_id"=> null,
                         "updated_at"=> null,
@@ -1087,7 +1161,6 @@ class Product extends REST_Controller {
                     ];
                 }
             }
-
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
 					// 返回認證資料
@@ -1100,22 +1173,32 @@ class Product extends REST_Controller {
 					if(isset($user_certification->content) && $user_certification->content != '' ){
 						$user_certification = json_decode($user_certification->content,true);
 						foreach($content_key as $key_name){
-							if(array_key_exists($key_name,$user_certification)){
-								$content_array_data[$key_name] = $user_certification[$key_name];
-							}
+                            if(is_array($user_certification)){
+                                if(array_key_exists($key_name,$user_certification)){
+    								$content_array_data[$key_name] = isset($user_certification[$key_name]) ? $user_certification[$key_name] : '';
+    							}
+                            }
 						}
 					}
 					if(!$content_array_data){
 						$content_array_data = new StdClass();
 					}
                     $diploma = $key==8?$value:null;
-                    if(in_array($key,$product['certifications'])){
+                    if(in_array($key,$product['certifications']) && $value['id'] != CERTIFICATION_CERCREDITJUDICIAL){
                         $value['optional'] = $this->certification_lib->option_investigation($target->product_id,$value,$diploma);
                         $value['type'] = 'certification';
                         $value['completeness'] = ceil($value['user_status'] == 1?$completeness_level:0);
 						$value['certification_content'] = $content_array_data;
                         $certification[] = $value;
                     }
+            }
+
+            if(isset($product['checkOwner']) && $product['checkOwner'] == true){
+                $associatess = $this->target_lib->get_associates_list($target_id, false, $product, $user_id, $certification);
+                if($target->user_id != $user_id && !$associatess){
+                    $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
+                }
+                $associatess ? $target = $associatess : '';
             }
 
             $amortization_schedule = [];
@@ -1153,7 +1236,7 @@ class Product extends REST_Controller {
                         $item_count[$k] = intval($v);
                      }
 
-                    if(in_array($target->status,array(21,22,23,24))){
+                    if (in_array($target->status, array(TARGET_ORDER_WAITING_SIGNING, TARGET_ORDER_WAITING_VERIFY, TARGET_ORDER_WAITING_SHIP, TARGET_ORDER_WAITING_VERIFY_TRANSFER))) {
                         $amortization_schedule = $this->financial_lib->get_amortization_schedule(intval($orders->total),$target,$date,$product['type']);
                         $contract = $this->contract_lib->pretransfer_contract('order',[
                             $orders->company_user_id,
@@ -1331,6 +1414,7 @@ class Product extends REST_Controller {
                 'delay_days' 		    => intval($target->delay_days),
                 'status' 			    => intval($target->status),
                 'sub_status' 		    => intval($target->sub_status),
+                'associate' 		         => (isset($target->associate) ? $target->associate : false),
                 'created_at' 		    => intval($target->created_at),
                 'contract'			    => $contract,
                 'credit'			    => $credit,
@@ -1395,13 +1479,37 @@ class Product extends REST_Controller {
         $user_id 	= $this->user_info->id;
         $targets 	= $this->target_model->get($target_id);
         if(!empty($targets)){
-
             if($targets->user_id != $user_id){
+                $associates_target = $this->target_lib->get_associates_target_list($this->user_info->id, $target_id);
+                if ($associates_target) {
+                    if($associates_target->associate['status'] == 0 && !$associates_target->associate['owner']){
+                        $this->load->model('loan/target_associate_model');
+                        $this->target_associate_model->update_by([
+                            'target_id' => $target_id,
+                            'user_id' => $user_id,
+                        ], [
+                            'status' => 9,
+                        ]);
+                        $this->response(array('result' => 'SUCCESS'));
+                    }
+                }
                 $this->response(array('result' => 'ERROR','error' => APPLY_NO_PERMISSION ));
             }
 
-            if(in_array($targets->status,array(0,1,2,20,21)) &&in_array($targets->sub_status,array(0,9,10))){
-                $rs = $this->target_lib->cancel_target($targets,$user_id,$this->user_info->phone);
+            if(in_array($targets->status,[
+                TARGET_WAITING_APPROVE,
+                TARGET_WAITING_SIGNING,
+                TARGET_WAITING_VERIFY,
+                TARGET_ORDER_WAITING_QUOTE,
+                TARGET_ORDER_WAITING_SIGNING
+                ])
+                && in_array($targets->sub_status,[
+                    TARGET_SUBSTATUS_NORNAL,
+                    TARGET_SUBSTATUS_SECOND_INSTANCE,
+                    TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET,
+                    11
+                    ])){
+                    $rs = $this->target_lib->cancel_target($targets,$user_id,$this->user_info->phone);
                 if($rs){
                     $this->response(array('result' => 'SUCCESS'));
                 }
@@ -1990,6 +2098,198 @@ class Product extends REST_Controller {
         return $info;
     }
 
+    public function associates_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+
+        $fields = ['target_id', 'name', 'phone', 'id_number', 'character', 'relationship'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field])) {
+                $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+
+        $this->load->library('Judicialperson_lib');
+        $naturalPerson = $this->judicialperson_lib->getNaturalPerson($this->user_info->id);
+        $this->load->library('certification_lib');
+        $cerIDCARD = $this->certification_lib->get_certification_info($naturalPerson->id, CERTIFICATION_IDCARD, 0);
+        if(!$cerIDCARD){
+            $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
+        }
+
+        $character = $content['character'];
+        $characters = $this->config->item('character');
+
+        if($character == 3){
+            if(!isset($input['guarantor'])){
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+        }
+
+        //同登入的電話號碼(不可加入自己)
+        if($content["phone"] == $this->user_info->phone){
+            $this->response(['result' => 'ERROR', 'error' => NO_ALLOW_CHARGE]);
+        }
+
+        if(
+            !preg_match('/^09[0-9]{2}[0-9]{6}$/', $content["phone"])
+            || !preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])
+            || mb_strlen($content['name']) < 2
+            || mb_strlen($content['name']) > 15
+            || !isset($characters[$character])
+        ){
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        if (!check_cardid($content['id_number'])) {
+            $this->response(['result' => 'ERROR', 'error' => CERTIFICATION_IDNUMBER_ERROR]);
+        }
+
+        $targetId = intval($content['target_id']);
+
+        $this->load->model('loan/target_model');
+        $target = $this->target_model->get($targetId);
+
+        if (!$target) {
+            $this->response(['result' => 'ERROR','error' => TARGET_NOT_EXIST]);
+        }
+
+        if ($target->user_id != $this->user_info->id) {
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
+
+        //取得歸戶資料
+        $user = $this->user_model->get_by(['id_number' => strval($content['id_number'])]);
+
+        $userId = isset($user->id) ? $user->id : null;
+        if ($this->user_info->id == $userId ) {
+            $this->response(['result' => 'ERROR','error' => TARGET_SAME_USER]);
+        }
+
+        $associate = [
+            'target_id' => $targetId,
+            'product_id' => $target->product_id,
+            'sub_product_id' => $target->sub_product_id,
+            'user_id' => $userId,
+            'identity' => 2,
+            'id_number' => strval($content['id_number']),
+            'is_applicant' => 0,
+            'character' => intval($content["character"]),
+            'guarantor' => isset($input['guarantor']) ? ($input['guarantor'] == 0 ? 0 : 1) : 1,
+            'relationship' => intval($content["relationship"]),
+            'status' => 0,
+            'content' => json_encode($input),
+        ];
+
+        $this->load->model('loan/target_associate_model');
+
+        $associates = $this->target_lib->get_associates_user_data($targetId, 'all', 0, false);
+        foreach ($associates as $key => $value) {
+            if ($character == 1 && $value->character == 1) {
+                return $this->response(['result' => 'ERROR','error' => TARGET_OWNER_EXIST]);
+            }elseif ($content['id_number'] == $value->id_number){
+                return $this->response(['result' => 'ERROR','error' => TARGET_AGITATE_EXIST]);
+            }
+        }
+
+        $result = $this->target_associate_model->insert($associate);
+
+        if (!$result) {
+            $this->response(['result' => 'EXIT_ERROR']);
+        }
+
+        $productName = '';
+        if ($target->sub_product_id == 4) {
+            $productName = "孵化基金";
+        } elseif ($target->sub_product_id == 5) {
+            $productName = "驗資基金";
+        } elseif ($target->product_id == 1002) {
+            // 百萬信保微企貸
+            $productName = '信保微企貸';
+        }
+
+        $is = $character == 1 ? '借款立約人' : '保證人';
+        $this->load->library('sms_lib');
+        if ($target->product_id == 1002) {
+            // 百萬信保微企貸
+            $this->sms_lib->notify_target_product_1002_associates(
+                $this->user_info->id,
+                $this->user_info->phone,
+                $this->user_info->name,
+                $productName,
+                $is
+            );
+        } else {
+            $this->sms_lib->notify_target_associates(
+                $this->user_info->id,
+                $this->user_info->phone,
+                $this->user_info->name,
+                $productName,
+                $is
+            );
+        }
+
+        if(isset($input['mail'])){
+            $this->load->library('notification_lib');
+            if ($target->product_id == 1002) {
+                // 百萬信保微企貸
+                $this->notification_lib->notify_target_product_1002_associates(
+                    $input['mail'],
+                    $this->user_info->name,
+                    $productName,
+                    $is
+                );
+            }
+            else{
+                $this->notification_lib->notify_target_associates(
+                    $input['mail'],
+                    $this->user_info->name,
+                    $productName,
+                    $is
+                );
+            }
+        }
+
+        $this->response(['result' => 'SUCCESS']);
+    }
+
+    public function delassociates_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+
+        $fields = ['target_id', 'index'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field]) && $input[$field] == '') {
+                $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+            }else{
+                $content[$field] = $input[$field];
+            }
+        }
+
+        $targetInfo = $this->target_model->get($content['target_id']);
+        if($targetInfo){
+            if ($targetInfo->user_id != $user_id) {
+                $this->response(array('result' => 'ERROR', 'error' => TARGET_APPLY_NO_PERMISSION));
+            }
+            $associates = $this->target_lib->get_associates_user_data($content['target_id'], 'all', [0, 1], false);
+            $this->load->model('loan/target_associate_model');
+            if(isset($associates[$content['index']])){
+                $this->target_associate_model->update_by([
+                    'id' => $associates[$content['index'] + 1]->id,
+                    'target_id' => $content['target_id'],
+                ], [
+                    'status' => 9,
+                ]);
+                $this->response(array('result' => 'SUCCESS'));
+            }
+            $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
+        $this->response(array('result' => 'ERROR', 'error' => TARGET_NOT_EXIST));
+    }
+
     public function targetdata_get($id){
         if($id){
             $user_id = $this->user_info->id;
@@ -2035,7 +2335,9 @@ class Product extends REST_Controller {
                 if($this->is_sub_product($product,$sub_product_id)){
                     $product = $this->trans_sub_product($product,$sub_product_id);
                 }
+
                 $targetData = json_decode($target->target_data);
+                !$targetData ? $targetData = new stdClass() : '';
                 foreach ($targetData as $key => $value) {
                     if(array_key_exists($key,$product['targetData'])  && !empty($input[$key])){
                         if($product['targetData'][$key][0] == 'Picture'){
@@ -2080,6 +2382,7 @@ class Product extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
         );
     }
@@ -2104,9 +2407,12 @@ class Product extends REST_Controller {
         return $store_id;
     }
 
+    // 信用貸款申請
     private function type1_apply($param,$product,$input){
 
         $sub_product_rule = false;
+
+        // 多案申請判斷
         if($product['multi_target'] == 0){
             $exist = $this->target_model->get_by([
                 'status <=' => 1,
@@ -2119,6 +2425,7 @@ class Product extends REST_Controller {
             }
         }
 
+        // 司法紀錄檢查
         $this->load->library('scraper/judicial_yuan_lib.php');
         $verdictsStatuses = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($param['user_id']);
         if(isset($verdictsStatuses['status'])){
@@ -2143,6 +2450,7 @@ class Product extends REST_Controller {
             ];
             $param['reason'] = json_encode($build) ;
         }
+
         isset($input['promote_code'])?$param['promote_code'] = $input['promote_code']:'';
 
         //邀請碼保留月
@@ -2166,7 +2474,6 @@ class Product extends REST_Controller {
                     $param[$field] = intval($input[$field]);
                 }
             }
-
             $insert = $this->target_lib->add_target($param);
         }
 
@@ -2183,6 +2490,7 @@ class Product extends REST_Controller {
                     $this->certification_lib->set_failed($certification->id, '申請新產品。', true);
                 }
             }
+            // 認證逾期判斷處理
             $this->certification_lib->expire_certification($param['user_id']);
             $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => $insert]]);
         } else {
@@ -2190,6 +2498,7 @@ class Product extends REST_Controller {
         }
     }
 
+    // 消費貸款申請
     private function type2_apply($param,$product,$input,$designate=false)
     {
         $designate?$input = $designate:'';
@@ -2252,7 +2561,7 @@ class Product extends REST_Controller {
         $interest_rate = $product['interest_rate_s'];
 
         $cooperation = $this->get_cooperation_info($store_id);
-        if($cooperation->selling_type != $product['dealer']){
+        if(!in_array($cooperation->selling_type, $product['dealer'])){
             $this->response(array('result' => 'ERROR','error' => COOPERATION_TYPE_ERROR ));
         }
         $cooperation_id  = $cooperation -> cooperation_id;
@@ -2266,7 +2575,7 @@ class Product extends REST_Controller {
         }
         $result = $this->coop_lib->coop_request('order/screate',[
             'cooperation_id' => $cooperation_id,
-            'selling_type' => $product['dealer'],
+            'selling_type' => 0,
             'item_id'        => $item_id,
             'item_count'     => $item_count,
             'item_price'     => $item_price,
@@ -2541,32 +2850,217 @@ class Product extends REST_Controller {
         }
     }
 
-    private function get_pic_url($user_id, $key, $image_ids, $limit){
+    private function get_pic_url($user_id, $key, $image_ids, $limit)
+    {
         $this->load->library('S3_upload');
-        $image_ids = explode(',',$image_ids);
-        if(count($image_ids) > $limit){
-            $image_ids = array_slice($image_ids,0,$limit);
+        $image_ids = explode(',', $image_ids);
+        if (count($image_ids) > $limit) {
+            $image_ids = array_slice($image_ids, 0, $limit);
         }
         $this->load->model('log/log_image_model');
         $list = $this->log_image_model->get_many_by([
-            'id'		=> $image_ids,
-            'user_id'	=> $user_id,
+            'id' => $image_ids,
+            'user_id' => $user_id,
         ]);
 
-        if($list && count($list) == count($image_ids)){
+        if ($list && count($list) == count($image_ids)) {
             $content = [];
-            foreach($list as $k => $v){
+            foreach ($list as $k => $v) {
                 $content[] = $v->url;
-                preg_match('/image.+/', $v->url,$matches);
-                $this->s3_upload->public_image_by_data(file_get_contents($v->url),FRONT_S3_BUCKET,$user_id,[
+                preg_match('/image.+/', $v->url, $matches);
+                $this->s3_upload->public_image_by_data(file_get_contents($v->url), FRONT_S3_BUCKET, $user_id, [
                     'type' => 'stmps/tarda',
                     'name' => $matches[0],
                 ]);
 
             }
             return $content;
-        }else{
+        } else {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+    }
+
+    private function NS2P1($param, $product, $input)
+    {
+        $characters = $this->config->item('character');
+        $character = isset($input['character']) ? $input['character'] : false;
+        if($character){
+            if($character == 1){
+                $fields = ['amount', 'instalment'];
+                foreach ($fields as $field) {
+                    if (empty($input[$field])) {
+                        $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+                    }else{
+                        $param[$field] = intval($input[$field]);
+                    }
+                }
+            }else{
+                $param['amount'] = 0;
+                $param['instalment'] = 0;
+            }
+        }
+        if (isset($input['target_id']) && $input['target_id'] != '') {
+            $this->associatesapply($param, $product, $input);
+        }elseif ($character && !isset($characters[$character])) {
             $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+        }
+
+        $param['target_data'] = json_encode($this-> build_targetData($product,[]));
+        $param['sub_status'] = 11;
+        $insert = $this->target_lib->add_target($param);
+
+        //$user = $this->user_model->get_by(['user_id' => $param['user_id']]);
+        $associate = [
+            'target_id' => intval($insert),
+            'product_id' => $param['product_id'],
+            'sub_product_id' => $param['sub_product_id'],
+            'user_id' => $param['user_id'],
+            'identity' => $product['identity'],
+            'is_applicant' => 1,
+            'character' => intval($input["character"]),
+            'status' => 0,
+        ];
+
+        $this->load->model('loan/target_associate_model');
+        $this->target_associate_model->insert($associate);
+
+        return $insert;
+    }
+    private function NS2P2($param, $product, $input){
+        return $this->NS2P1($param, $product, $input);
+    }
+
+    private function NS3P1($param, $product, $input){
+        return $this->NS2P1($param, $product, $input);
+    }
+
+    private function NS3P2($param, $product, $input){
+        return $this->NS2P1($param, $product, $input);
+    }
+
+    private function J1($param, $product, $input){
+        return $this->NS2P1($param, $product, $input);
+    }
+
+    private function J2($param, $product, $input){
+        if (isset($input['target_id']) && $input['target_id'] != '') {
+            $this->associatesAgree($param, $product, $input);
+        }
+
+        if($this->user_info->company != 1){
+            $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
+        }
+
+        if (!isset($input['character']) && empty($input['character'])) {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $fields 	= ['amount','instalment'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $param[$field] = intval($input[$field]);
+            }
+        }
+
+//        $targetData = $this-> build_targetData($product,[]);
+
+        $param['damage_rate'] = 0;
+        $param['sub_status'] = 11;
+        $insert = $this->target_lib->add_target($param);
+
+        $associate = [
+            'target_id' => intval($insert),
+            'product_id' => $param['product_id'],
+            'sub_product_id' => $param['sub_product_id'],
+            'user_id' => $this->user_info->naturalPerson->id,
+            'identity' => 2,
+            'is_applicant' => 1,
+            'character' => intval($input["character"] == 2 ? 0 : 1),
+            'status' => 1,
+        ];
+
+        $this->load->model('loan/target_associate_model');
+        $this->target_associate_model->insert($associate);
+
+        return $insert;
+    }
+
+    private function associatesapply($param, $product, $input)
+    {
+        $product_id = $param["product_id"];
+        $sub_product_id = $param['sub_product_id'];
+        $target_id = $input['target_id'];
+        $user_id = $this->user_info->id;
+        $target = $this->target_model->get_by([
+            'id' => $target_id,
+            'status' => 0,
+        ]);
+
+        if ($target) {
+            if ($sub_product_id != $target->sub_product_id) {
+                $this->response(array('result' => 'ERROR', 'error' => PRODUCT_TYPE_ERROR));
+            }
+
+            $associates_target = $this->target_lib->get_associates_target_list($this->user_info->id, $target->id);
+            if ($associates_target) {
+                if($associates_target->associate['status'] == 0){
+                    if ($associates_target->associate['owner']) {
+                        $instalment = isset($input['instalment']) ? $input['instalment'] : 0;
+                        if (!in_array($input['instalment'], $product['instalment'])) {
+                            $this->response(array('result' => 'ERROR', 'error' => PRODUCT_INSTALMENT_ERROR));
+                        }
+                        $param['instalment'] = $instalment;
+                        $amount = isset($input['amount']) ? $input['amount'] : 0;
+                        if (($amount < $product['loan_range_s'] || $amount > $product['loan_range_e']) && $product['type'] != 2) {
+                            $this->response(array('result' => 'ERROR', 'error' => PRODUCT_AMOUNT_RANGE));
+                        }
+                        $param['amount'] = $amount;
+                        $this->target_model->update($target->id, $param);
+                    }
+                    $this->load->model('loan/target_associate_model');
+                    $this->target_associate_model->update_by([
+                        'target_id' => $target_id,
+                        'user_id' => $user_id,
+                    ], [
+                        'product_id' => $product_id,
+                        'sub_product_id' => $sub_product_id,
+                        'identity' => $product['identity'],
+                    ]);
+                    $this->response(array('result' => 'SUCCESS'));
+                }
+                $this->response(array('result' => 'ERROR', 'error' => APPLY_STATUS_ERROR));
+            }
+            $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
+        }
+    }
+
+    private function associatesAgree($param, $product, $input)
+    {
+        $target_id = $input['target_id'];
+        $user_id = $this->user_info->id;
+        $target = $this->target_model->get_by([
+            'id' => $target_id,
+            'status' => 0,
+        ]);
+        if ($target) {
+            $associates_target = $this->target_lib->get_associates_target_list($this->user_info->id, $target->id);
+            if ($associates_target) {
+                if($associates_target->associate['status'] == 0){
+                    $this->load->model('loan/target_associate_model');
+                    $this->target_associate_model->update_by([
+                        'target_id' => $target_id,
+                        'user_id' => $user_id,
+                    ], [
+                        'status' => 1,
+                        'identity' => 2,
+                    ]);
+                    $this->response(array('result' => 'SUCCESS'));
+                }
+                $this->response(array('result' => 'ERROR', 'error' => APPLY_STATUS_ERROR));
+            }
+            $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
         }
     }
 }

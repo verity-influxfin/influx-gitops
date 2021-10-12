@@ -1,0 +1,7 @@
+1. 寄出或接收後的連動處理
+
+2. 資安檢視、權限管控，ex: 限制LoanRequest、LoanResponse特定存取
+
+3. 功能正式上線前，範例格式資料樣本需移除，ex: xxxx_sample.json
+
+4. 確認AWS網路端口設定

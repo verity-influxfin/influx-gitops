@@ -5,7 +5,7 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Target extends MY_Admin_Controller {
 
-	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer','legalAffairs');
+	protected $edit_method = array('edit','verify_success','verify_failed','order_fail','waiting_verify','evaluation_approval','final_validations','waiting_evaluation','waiting_loan','target_loan','subloan_success','re_subloan','loan_return','loan_success','loan_failed','target_export','amortization_export','prepayment','cancel_bidding','approve_order_transfer','legalAffairs','waiting_reinspection');
 
 	public function __construct() {
 		parent::__construct();
@@ -70,7 +70,7 @@ class Target extends MY_Admin_Controller {
             }
         }
 
-        !isset($where['status'])&&count($where)!=0||isset($where['status'])&&$where['status']=='510'?$where['status'] = [5,10]:'';
+        !isset($where['status'])&&count($where)!=0||isset($where['status'])&&$where['status']=='510'?$where['status'] = [TARGET_REPAYMENTING, TARGET_REPAYMENTED]:'';
         if(isset($where['status'])&&$where['status']==99){
             unset($where['status']);
         }
@@ -229,7 +229,7 @@ class Target extends MY_Admin_Controller {
                     $investments_amortization_table = [];
                     $investments_amortization_schedule = [];
                     $order = [];
-                    if ($info->status == 5 || $info->status == 10) {
+                    if ($info->status == TARGET_REPAYMENTING || $info->status == TARGET_REPAYMENTED) {
                         $amortization_table = $this->target_lib->get_amortization_table($info);
                         $investments = $this->investment_model->get_many_by(array('target_id' => $info->id, 'status' => array(3, 10)));
                         if ($investments) {
@@ -244,7 +244,7 @@ class Target extends MY_Admin_Controller {
                                 $investments_amortization_table[$value->id] = $this->target_lib->get_investment_amortization_table($info, $value);
                             }
                         }
-                    } else if ($info->status == 4) {
+                    } else if ($info->status == TARGET_WAITING_LOAN) {
                         $investments = $this->investment_model->get_many_by(array('target_id' => $info->id, 'status' => 2));
                         if ($investments) {
                             foreach ($investments as $key => $value) {
@@ -305,7 +305,7 @@ class Target extends MY_Admin_Controller {
                         'investor'	=> 0,
                     ]);
 
-                    if($info->sub_status == 13){
+                    if($info->sub_status == TARGET_SUBSTATUS_LAW_DEBT_COLLECTION){
                         $lawAccount = CATHAY_VIRTUAL_CODE . LAW_VIRTUAL_CODE . substr($user_info->id_number, 1, 9);
                         $page_data['lawAccount'] = $lawAccount;
                          $targetData = json_decode($info->target_data);
@@ -359,7 +359,7 @@ class Target extends MY_Admin_Controller {
                         if ($list) {
                             ksort($list);
                             foreach ($list as $key => $value) {
-                                $list[$key]->certification = $this->certification_lib->get_last_status($value->user_id, 0);
+                                $list[$key]->certification = $this->certification_lib->get_last_status($value->user_id, BORROWER);
                                 if (isset($list[$key]->certification[3]['certification_id'])) {
                                     $bank_account = $this->user_bankaccount_model->get_by(array(
                                         'user_certification_id' => $list[$key]->certification[3]['certification_id'],
@@ -414,11 +414,11 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(2,23))){
-				if($info->sub_status==8){
+			if($info && in_array($info->status,array(TARGET_WAITING_VERIFY,TARGET_ORDER_WAITING_SHIP))){
+				if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_success($info,$this->login_info->id);
-				}if($info->status == 23 && $info->sub_status == 0){
+				}if($info->status == TARGET_ORDER_WAITING_SHIP && $info->sub_status == TARGET_SUBSTATUS_NORNAL){
                     $this->target_lib->order_verify_success($info,$this->login_info->id);
 				}else{
 					$this->target_lib->target_verify_success($info,$this->login_info->id);
@@ -438,8 +438,15 @@ class Target extends MY_Admin_Controller {
 		$remark = isset($get['remark'])?$get['remark']:'';
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(0,1,2,22,23))){
-				if($info->sub_status==8){
+			if($info && in_array($info->status,array(
+			        TARGET_WAITING_APPROVE,
+                    TARGET_WAITING_SIGNING,
+                    TARGET_WAITING_VERIFY,
+                    TARGET_ORDER_WAITING_VERIFY,
+                    TARGET_ORDER_WAITING_SHIP,
+                    TARGET_BANK_FAIL,
+                ))){
+				if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
 					$this->load->library('subloan_lib');
 					$this->subloan_lib->subloan_verify_failed($info,$this->login_info->id,$remark);
 				}else{
@@ -460,7 +467,7 @@ class Target extends MY_Admin_Controller {
         $remark = isset($get['remark'])?$get['remark']:'';
         if($id){
             $info = $this->target_model->get($id);
-            if($info && $info->status == 21){
+            if($info && $info->status == TARGET_ORDER_WAITING_SIGNING){
                 $this->load->library('subloan_lib');
                 $this->target_lib->order_fail($info,$this->login_info->id,$remark);
                 echo '更新成功';die();
@@ -475,7 +482,7 @@ class Target extends MY_Admin_Controller {
 	public function waiting_verify(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
-		$where						= array('status'=>[2,23]);
+		$where						= array('status'=>[TARGET_WAITING_VERIFY, TARGET_ORDER_WAITING_SHIP]);
 		$fields 					= ['target_no','user_id','delay'];
 		$subloan_keyword			= $this->config->item('action_Keyword')[0];
 
@@ -488,7 +495,10 @@ class Target extends MY_Admin_Controller {
 		$list 						= $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
-				if($value->status==2 || $value->status==23 && ($value->sub_status==0 || $value->sub_status==9) ){
+                if ($value->status == TARGET_WAITING_VERIFY && $value->sub_status != TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
+                    || $value->status == TARGET_WAITING_VERIFY && $value->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE
+                    || $value->status == TARGET_ORDER_WAITING_SHIP &&  ($value->sub_status==TARGET_SUBSTATUS_NORNAL || $value->sub_status==TARGET_SUBSTATUS_SECOND_INSTANCE)
+                ) {
 					$bank_account 	= $this->user_bankaccount_model->get_by(array(
 						'user_id'	=> $value->user_id,
 						'investor'	=> 0,
@@ -500,7 +510,7 @@ class Target extends MY_Admin_Controller {
 					$value -> subloan_count = count($this->target_model->get_many_by(
 						array(
 							'user_id'     => $value->user_id,
-							'status !='   => "9",
+							'status !='   => TARGET_FAIL,
 							'remark like' => '%'.$subloan_keyword.'%'
 						)
 					));
@@ -517,12 +527,13 @@ class Target extends MY_Admin_Controller {
 		$page_data['product_list']		= $this->config->item('product_list');
         $page_data['sub_product_list'] = $this->config->item('sub_product_list');
 		$page_data['status_list'] 		= $this->target_model->status_list;
-		$page_data['sub_list'] 		    = $this->target_model->sub_list;;
-		$page_data['delay_list'] 		= $this->target_model->delay_list;
+		$page_data['sub_list'] 		    = $this->target_model->sub_list;
+        $page_data['delay_list'] 		= $this->target_model->delay_list;
 		$page_data['name_list'] 		= $this->admin_model->get_name_list();
+        $page_data['externalCooperation'] = $this->config->item('externalCooperation');
 
 
-		$this->load->view('admin/_header');
+        $this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/target/waiting_verify_target',$page_data);
 		$this->load->view('admin/_footer');
@@ -756,8 +767,9 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/user/user_output', ["data" => $user]);
 			$this->load->library('output/loan/credit_output', ["data" => $credits]);
 			$this->load->library('certification_lib');
-			$borrowerVerifications = $this->certification_lib->get_last_status($userId, 0, $user->company_status,$target);
-			$investorVerifications = $this->certification_lib->get_last_status($userId, 1, $user->company_status);
+
+			$borrowerVerifications = $this->certification_lib->get_last_status($userId, BORROWER, $user->company_status,$target,$target->productTargetData);
+			$investorVerifications = $this->certification_lib->get_last_status($userId, INVESTOR, $user->company_status);
 			$verificationInput = ["borrower" => $borrowerVerifications, "investor" => $investorVerifications];
 			$this->load->library('output/user/verifications_output', $verificationInput);
 
@@ -824,7 +836,7 @@ class Target extends MY_Admin_Controller {
 		if ($this->input->is_ajax_request()) {
 			$this->load->library('output/json_output');
 
-			$where = ["status" => 0, "sub_status" => 9];
+			$where = ["status" => TARGET_WAITING_APPROVE, "sub_status" => TARGET_SUBSTATUS_SECOND_INSTANCE];
 			$targets = $this->target_model->get_many_by($where);
 			if (!$targets) {
 				$this->json_output->setStatusCode(204)->send();
@@ -871,7 +883,7 @@ class Target extends MY_Admin_Controller {
 	public function waiting_loan(){
 		$page_data 					= array('type'=>'list');
 		$input 						= $this->input->get(NULL, TRUE);
-		$where						= array('status'=>[4]);
+		$where						= array('status'=>[TARGET_WAITING_LOAN]);
 		$fields 					= ['target_no','user_id','delay'];
 
 		foreach ($fields as $field) {
@@ -971,7 +983,7 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==2 && $info->sub_status==8){
+			if($info && $info->status==TARGET_WAITING_LOAN && $info->loan_status==2 && $info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
                 $this->load->library('subloan_lib');
 				$rs = $this->subloan_lib->rollback_success_target($info,$this->login_info->id);
 				if($rs){
@@ -1048,7 +1060,7 @@ class Target extends MY_Admin_Controller {
 		$id 	= isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && $info->status==4 && $info->loan_status==3){
+			if($info && $info->status==TARGET_WAITING_LOAN && $info->loan_status==3){
 				$this->load->library('Transaction_lib');
 				$rs = $this->transaction_lib->lending_failed($id,$this->login_info->id);
 				echo '更新成功';die();
@@ -1066,7 +1078,7 @@ class Target extends MY_Admin_Controller {
 		$id = isset($get['id'])?intval($get['id']):0;
 		if($id){
 			$info = $this->target_model->get($id);
-			if($info && in_array($info->status,array(5,10))){
+			if($info && in_array($info->status,array(TARGET_REPAYMENTING,TARGET_REPAYMENTED))){
 				$list = array();
 				$this->load->model('transaction/transaction_model');
 				$transaction_list = $this->transaction_model->order_by('id','asc')->get_many_by(array('target_id'=>$info->id));
@@ -1097,7 +1109,7 @@ class Target extends MY_Admin_Controller {
 	public function repayment(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);
-		$list 						= $this->target_model->get_many_by(['status'=>5]);
+		$list 						= $this->target_model->get_many_by(['status'=>TARGET_REPAYMENTING]);
 		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];
@@ -1150,7 +1162,7 @@ class Target extends MY_Admin_Controller {
 	public function target_export(){
 		$post 	= $this->input->post(NULL, TRUE);
 		$ids 	= isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
-		$status = isset($post['status'])&&$post['status']?$post['status']:5;
+		$status = isset($post['status'])&&$post['status']?$post['status']:TARGET_REPAYMENTING;
 		if($ids && is_array($ids)){
 			$where = ['id'=>$ids];
 		}else{
@@ -1175,7 +1187,7 @@ class Target extends MY_Admin_Controller {
 					$list[$key]->credit = $credit;
 				}
 
-				if(in_array($value->status,[5,10])){
+				if(in_array($value->status,[TARGET_REPAYMENTING,TARGET_REPAYMENTED])){
 					$amortization_table = $this->target_lib->get_amortization_table($value);
 					$list[$key]->amortization_table = [
 						'total_payment_m'		=> $amortization_table['list'][1]['total_payment'],
@@ -1213,14 +1225,14 @@ class Target extends MY_Admin_Controller {
 		header('Content-type:application/vnd.ms-excel');
 		header('Content-Disposition: attachment; filename=targets_'.date('Ymd').'.xls');
 		$html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員 ID</th><th>信用等級</th><th>學校名稱</th><th>學校科系</th>
-                <th>申請金額</th><th>核准金額</th><th>剩餘本金</th><th>年化利率</th><th>期數</th>
-                <th>還款方式</th><th>每月回款</th><th>回款本息總額</th><th>放款日期</th>
+                <th>申請金額</th><th>核准金額</th><th>剩餘本金</th><th>年化利率</th><th>貸放期間</th>
+                <th>計息方式</th><th>每月回款</th><th>回款本息總額</th><th>放款日期</th>
                 <th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>申請日期</th><th>信評核准日期</th></tr></thead><tbody>';
 
 		if(isset($list) && !empty($list)){
 
 			foreach($list as $key => $value){
-				$sub_status = $value->status==10&&$value->sub_status!= 0 ?'('.$sub_list[$value->sub_status].')':'';
+				$sub_status = $value->status==TARGET_REPAYMENTED&&$value->sub_status!= TARGET_SUBSTATUS_NORNAL ?'('.$sub_list[$value->sub_status].')':'';
 				$credit = isset($value->credit)?date("Y-m-d H:i:s",$value->credit->created_at):'';
 				$html .= '<tr>';
 				$html .= '<td>'.$value->target_no.'</td>';
@@ -1256,11 +1268,11 @@ class Target extends MY_Admin_Controller {
 		if($ids && is_array($ids)){
 			$where = [
 			    'id'     =>$ids,
-                'status' =>5
+                'status' =>TARGET_REPAYMENTING
             ];
 		}else{
 			$where = [
-			    'status' =>5,
+			    'status' =>TARGET_REPAYMENTING,
             ];
 		}
 
@@ -1340,8 +1352,8 @@ class Target extends MY_Admin_Controller {
 		$page_data 	= array('type'=>'list');
 		$input 		= $this->input->get(NULL, TRUE);
 		$where		= array(
-			'status'	=> array(5,10),
-			'sub_status'=> array(3,4),
+			'status'	=> array(TARGET_REPAYMENTING,TARGET_REPAYMENTED),
+			'sub_status'=> array(TARGET_SUBSTATUS_PREPAYMENT,TARGET_SUBSTATUS_PREPAYMENTED),
 		);
 		$list		= array();
 		$fields 	= ['target_no','user_id'];
@@ -1380,33 +1392,39 @@ class Target extends MY_Admin_Controller {
 
 	public function waiting_bidding(){
 		$page_data 					= array('type'=>'list');
-		$input 						= $this->input->get(NULL, TRUE);
-		$list 						= $this->target_model->get_many_by(['status'=>3]);
-		$user_list 					= [];
-		$amortization_table 		= [];
+		$list 						= $this->target_model->get_many_by(['status'=>[TARGET_WAITING_BIDDING, TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE, TARGET_BANK_LOAN]]);
         $tmp  = [];
+        $personal = [];
+        $judicialPerson = [];
+        $judicialPersonFormBank = [];
+        $externalCooperation = $this->config->item('externalCooperation');
 		if($list){
 			$this->load->model('log/Log_targetschange_model');
             $this->load->model('user/user_meta_model');
             foreach($list as $key => $value){
-                $user_list[] 	= $value->user_id;
                 $target_change	= $this->Log_targetschange_model->get_by(array(
 					'target_id'		=> $value->id,
-					'status'		=> 3,
+					'status'		=> [TARGET_WAITING_BIDDING, TARGET_BANK_VERIFY],
 				));
                 if($target_change){
                     $list[$key]->bidding_date = $target_change->created_at;
                 }
-                if(!isset($tmp[$value->user_id]['school'])||!isset($tmp[$value->user_id]['company'])) {
-                    $get_meta = $this->user_meta_model->get_many_by([
-                        'meta_key' => ['school_name', 'school_department','job_company'],
-                        'user_id' => $value->user_id,
-                    ]);
-                    if ($get_meta) {
-                        foreach ($get_meta as $skey => $svalue) {
-                            $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : '';
-                            $svalue->meta_key == 'school_department' ? $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value : '';
-                            $svalue->meta_key == 'job_company' ? $tmp[$svalue->user_id]['company'] = $svalue->meta_value : '';
+                if (!isset($tmp[$value->user_id]['school']) || !isset($tmp[$value->user_id]['company'])) {
+                    if($value->product_id >= PRODUCT_FOR_JUDICIAL){
+                        $this->load->model("user/user_model");
+                        $userData = $this->user_model->get_by(["id" => $value->user_id]);
+                        $tmp[$value->user_id]['company'] = $userData->name;
+                    }else{
+                        $get_meta = $this->user_meta_model->get_many_by([
+                            'meta_key' => ['school_name', 'school_department','job_company'],
+                            'user_id' => $value->user_id,
+                        ]);
+                        if ($get_meta) {
+                            foreach ($get_meta as $skey => $svalue) {
+                                $svalue->meta_key == 'school_name' ? $tmp[$svalue->user_id]['school']['school_name'] = $svalue->meta_value : '';
+                                $svalue->meta_key == 'school_department' ? $tmp[$svalue->user_id]['school']['school_department'] = $svalue->meta_value : '';
+                                $svalue->meta_key == 'job_company' ? $tmp[$svalue->user_id]['company'] = $svalue->meta_value : '';
+                            }
                         }
                     }
                 }
@@ -1416,16 +1434,31 @@ class Target extends MY_Admin_Controller {
                 }
 
                 isset($tmp[$value->user_id]['company'])?$list[$key]->company=$tmp[$value->user_id]['company']:'';
+
+                if($value->product_id >= PRODUCT_FOR_JUDICIAL){
+                    !in_array($value->product_id, $externalCooperation) ? $judicialPerson[] = $list[$key] : $judicialPersonFormBank[] = $list[$key];
+                }
+                else{
+                    $personal[] = $list[$key];
+                }
             }
 		}
+		$list = [
+		    'personal' => $personal,
+		    'judicialPerson' => $judicialPerson,
+		    'judicialPersonFormBank' => $judicialPersonFormBank,
+        ];
+
 		$page_data['instalment_list']	= $this->config->item('instalment');
 		$page_data['repayment_type']	= $this->config->item('repayment_type');
 		$page_data['product_list']		= $this->config->item('product_list');
         $page_data['sub_product_list'] = $this->config->item('sub_product_list');
         $page_data['list'] 				= $list;
 		$page_data['status_list'] 		= $this->target_model->status_list;
+        $page_data['sub_list'] 		    = $this->target_model->sub_list;
+        $page_data['externalCooperation'] = $externalCooperation;
 
-		$this->load->view('admin/_header');
+        $this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/target/waiting_bidding_target',$page_data);
 		$this->load->view('admin/_footer');
@@ -1437,8 +1470,8 @@ class Target extends MY_Admin_Controller {
         $remark = isset($get['remark'])?$get['remark']:'';
         if($id){
             $info = $this->target_model->get($id);
-            if($info && in_array($info->status,array(3))){
-                if($info->sub_status==8){
+            if($info && in_array($info->status,array(TARGET_WAITING_BIDDING))){
+                if($info->sub_status==TARGET_SUBSTATUS_SUBLOAN_TARGET){
                     $this->load->library('subloan_lib');
                     $this->subloan_lib->subloan_cancel_bidding($info,$this->login_info->id,$remark);
                 }else{
@@ -1456,7 +1489,7 @@ class Target extends MY_Admin_Controller {
 	public function finished(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);
-		$list 						= $this->target_model->get_many_by(['status'=>10]);
+		$list 						= $this->target_model->get_many_by(['status'=>TARGET_REPAYMENTED]);
 		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];
@@ -1510,7 +1543,7 @@ class Target extends MY_Admin_Controller {
 	public function waiting_signing(){
         $page_data = ['type' => 'list'];
         $input = $this->input->get(NULL, TRUE);
-        $list = $this->target_model->get_many_by(['status' => [1, 21]]);
+        $list = $this->target_model->get_many_by(['status' => [TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_SIGNING]]);
         $product_list = $this->config->item('product_list');
         $sub_product_list = $this->config->item('sub_product_list');
         $school_list = [];
@@ -1566,17 +1599,15 @@ class Target extends MY_Admin_Controller {
     public function waiting_approve_order_transfer(){
         $page_data 	  = array('type'=>'list');
         $waiting_list = array();
-        $list 		  = $this->target_model->get_many_by(['status'=>[24]]);
+        $list 		  = $this->target_model->get_many_by(['status'=>[TARGET_ORDER_WAITING_VERIFY_TRANSFER]]);
         if($list){
             foreach($list as $key => $value){
-                if($value->status==24){
-                    $bank_account 	= $this->user_bankaccount_model->get_by(array(
-                        'user_id'	=> $value->user_id,
-                        'investor'	=> 0,
-                        'status'	=> 1,
-                        'verify'	=> 1,
-                    ));
-                }
+                $bank_account 	= $this->user_bankaccount_model->get_by(array(
+                    'user_id'	=> $value->user_id,
+                    'investor'	=> 0,
+                    'status'	=> 1,
+                    'verify'	=> 1,
+                ));
                 if($bank_account){
                     $waiting_list[] = $value;
                 }
@@ -1598,7 +1629,7 @@ class Target extends MY_Admin_Controller {
 
     public function order_target(){
         $page_data 	  = array('type'=>'list');
-        $list 		  = $this->target_model->get_many_by(['status'=>[20,21,22,23,24]]);
+        $list 		  = $this->target_model->get_many_by(['status'=>[TARGET_ORDER_WAITING_QUOTE,TARGET_ORDER_WAITING_SIGNING,TARGET_ORDER_WAITING_VERIFY,TARGET_ORDER_WAITING_SHIP,TARGET_ORDER_WAITING_VERIFY_TRANSFER]]);
 
         $page_data['instalment_list']	= $this->config->item('instalment');
         $page_data['repayment_type']	= $this->config->item('repayment_type');
@@ -1619,7 +1650,7 @@ class Target extends MY_Admin_Controller {
         $id 	= isset($get['id'])?intval($get['id']):0;
         if($id){
             $info = $this->target_model->get($id);
-            if($info && in_array($info->status,array(24))){
+            if($info && in_array($info->status,array(TARGET_ORDER_WAITING_VERIFY_TRANSFER))){
                 $this->load->library('Transaction_lib');
                 $rs = $this->transaction_lib->order_success($id);
                 if($rs){
@@ -1667,6 +1698,7 @@ class Target extends MY_Admin_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }
@@ -1681,7 +1713,7 @@ class Target extends MY_Admin_Controller {
         $this->load->model("loan/target_model");
         $targets = $this->target_model->limit($limit, $skip)->order_by('id', $order)->get_many_by([
             "product_id" => $productId,
-            "status" => [4, 5, 10]
+            "status" => [TARGET_WAITING_LOAN, TARGET_REPAYMENTING, TARGET_REPAYMENTED]
         ]);
 
         $users = [];
@@ -1884,7 +1916,7 @@ class Target extends MY_Admin_Controller {
             ]);
             if ($rs) {
                 $param = [
-                    'sub_status' => 13,
+                    'sub_status' => TARGET_SUBSTATUS_LAW_DEBT_COLLECTION,
                 ];
                 $this->target_model->update($id, $param);
                 $this->load->library('Target_lib');
@@ -1965,6 +1997,116 @@ class Target extends MY_Admin_Controller {
             admin_url('target/edit?id=' . $id);
         }
         return false;
+    }
+
+    public function waiting_reinspection()
+    {
+        $get = $this->input->get(NULL, TRUE);
+        $post = $this->input->post(NULL, TRUE);
+        $target_id = isset($get['target_id']) ? $get['target_id'] : (isset($post['target_id']) ? $post['target_id'] : '');
+        $target_info = $this->target_model->get_by(['id'=>$target_id]);
+        if($target_info && in_array($target_info->product_id, $this->config->item('externalCooperation'))){
+            if(count($post) > 0){
+                if(isset($post['send_bank'])){
+                    if($target_info->status == TARGET_WAITING_VERIFY
+                        && $target_info->sub_status ==TARGET_SUBSTATUS_SECOND_INSTANCE){
+                        $param = [
+                            'status' => TARGET_BANK_VERIFY,
+                            'sub_status' => TARGET_SUBSTATUS_NORNAL,
+                        ];
+                        $this->target_model->update($target_info->id,$param);
+                        $this->load->library('Target_lib');
+                        $this->target_lib->insert_change_log($target_info->id, $param);
+                    }
+                }
+                elseif(isset($post['manual_handling'])){
+                    if($target_info->status == TARGET_WAITING_VERIFY
+                        && $target_info->sub_status ==TARGET_SUBSTATUS_SECOND_INSTANCE
+                        || $target_info->status == TARGET_BANK_FAIL
+                    ) {
+                        $param = [
+                            'status' => TARGET_WAITING_VERIFY,
+                            'sub_status' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL,
+                        ];
+                        $this->target_model->update($target_info->id, $param);
+                        $this->load->library('Target_lib');
+                        $this->target_lib->insert_change_log($target_info->id, $param);
+                    }
+                }
+                elseif(isset($post['type']) && isset($post['for']) && isset($post['val'])){
+                    $target_data = json_decode($target_info->target_data);
+                    $typeList = ['reinspection_opinion','CRO_opinion','general_manager_opinion'];
+                    $forList = ['comment','score'];
+                    if (in_array($post['type'],$typeList) && in_array($post['for'],$forList)) {
+                        //if(isset($target_data['$field']['comment'])){}
+                        $type = $post['type'];
+                        $for = $post['for'];
+                        $now = time();
+                        $newVal = new stdClass();
+                        foreach ($target_data->reinspection->$type->$for as $key =>$value) {
+                            $newVal->$key = $value;
+                        }
+                        $newVal->$now = $post['val'];
+                        (object)$target_data->reinspection->$type->$for = $newVal;
+                        $param = [
+                            'target_data' => json_encode($target_data),
+                        ];
+                        $this->target_model->update($target_info->id,$param);
+                    }
+                }
+            }
+            else{
+                $page_data['get'] = $get;
+                $page_data['targetInfo'] = $target_info;
+                $page_data['productList'] = $this->config->item('product_list');
+
+                $this->load->view('admin/_header');
+                $this->load->view('admin/_title',$this->menu);
+                $this->load->view('admin/target/waiting_reinspection.php', $page_data);
+                $this->load->view('admin/_footer');
+            }
+            $return['result'] = 'fail';
+        }
+        else{
+            alert('不支援此產品', admin_url('target/waiting_verify'));
+        }
+        return true;
+    }
+
+    // 新光收件檢核表送件 API
+    public function skbank_text_send(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+
+        if(!$this->input->is_ajax_request() || !isset($get['target_id']) || empty($get) || !is_numeric($get['target_id'])){
+            $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
+        }
+
+        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+        $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
+        $skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'']);
+
+        if(!$skbank_save_info || !isset($skbank_save_info->content) || empty($skbank_save_info->content)){
+            $this->json_output->setStatusCode(400)->setErrorCode(ItemNotFound)->send();
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse(json_decode($skbank_save_info->content,true))->send();
+
+    }
+
+    // 新光取得圖片
+    public function skbank_image_get(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+
+        $target_info 	= $this->target_model->get_by(['id'=>$get['target_id']]);
+        if(!$target_info){
+            $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
+        }
+        $this->load->library('mapping/sk_bank/check_list');
+        $image_url = $this->check_list->get_raw_data($target_info);
+
+        $this->json_output->setStatusCode(200)->setResponse($image_url)->send();
     }
 }
 ?>

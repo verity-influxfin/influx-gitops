@@ -11,7 +11,7 @@
 					check_checked();
 				}
 				function check_checked(){
-                    var ids = "",ctr = $('#amortization_export,#target_export').parent().find('.btn');;
+                    var ids = "",ctr = $('#amortization_export,#target_export').parent().find('.btn');
                     $('.targets:checked').each(function() {
                         if(ids==''){
                             ids += this.value;
@@ -63,8 +63,8 @@
                                             <th>借款金額</th>
 											<th>剩餘本金</th>
 											<th>年化利率</th>
-                                            <th>期數</th>
-                                            <th>還款方式</th>
+                                            <th>貸放期間</th>
+                                            <th>計息方式</th>
                                             <th>每月回款</th>
                                             <th>本息總額</th>
                                             <th>放款日期</th>

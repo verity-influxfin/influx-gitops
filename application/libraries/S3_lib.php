@@ -12,11 +12,11 @@ class S3_lib {
 		'image/png'	 => '.png' ,
 		'image/gif'	 => '.gif' ,
 	);
-	
+
 	private $client;
-	
+
     public function __construct()
-	{   
+	{
         $this->CI 		= &get_instance();
 		$this->CI->load->model('log/log_image_model');
 		$this->client 	= S3Client::factory(
@@ -51,7 +51,7 @@ class S3_lib {
 			)
 		);
 	}
-		
+
     public function public_delete_image($s3_url,$bucket=AZURE_S3_BUCKET,$imageInfo=[])
     {
         $filename = 'azure_image';
@@ -82,7 +82,7 @@ class S3_lib {
     }
 
 	public function get_mailbox_list()
-	{   
+	{
 		$data_list = array();
 		$url_list = array();
 		$bucket = S3_BUCKET_MAILBOX;
@@ -106,24 +106,24 @@ class S3_lib {
 	}
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
-	{  
+	{
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
 		$result= $this->client_us2->deleteObject(array(
 			'Bucket' 		=> $bucket,
 			'Key'    		=> $key
 		));
-		
+
 	}
 
 	public function public_get_filename($s3_url,$bucket=S3_BUCKET_MAILBOX)
-	{  
+	{
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
 		return $key;
-		
+
 	}
 
 	public function unknown_mail($s3_url,$bucket=S3_BUCKET_MAILBOX)
-	{  
+	{
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
 		$filename = $this->public_get_filename($s3_url,$bucket);
 		$content  = file_get_contents('s3://'.$bucket.'/'.$filename);
@@ -188,9 +188,5 @@ class S3_lib {
 		}
 	}
 
-
-
 }
-
 ?>
-
