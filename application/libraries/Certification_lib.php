@@ -884,7 +884,7 @@ class Certification_lib{
 		    }
 		  }
           // 爬蟲資料結果
-          $user_info = $this->CI->user_model->get_by(array( 'id' => $info->id ));
+          $user_info = $this->CI->user_model->get_by(array( 'id' => $info->user_id ));
           if($user_info && !empty($user_info->id_number)){
               $this->load->library('scraper/Findbiz_lib');
               // 確認爬蟲狀態
