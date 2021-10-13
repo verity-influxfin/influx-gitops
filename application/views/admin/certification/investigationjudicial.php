@@ -69,12 +69,12 @@
                                         <tbody>
                                             <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                            <tr><td><span>企業聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="CompJCICQueryDate"></td></tr>
-                                            <tr><td><span>公司中期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="MidTermLnYM"></td></tr>
+                                            <tr><td><span>企業聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="CompJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
+                                            <tr><td><span>公司中期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="MidTermLnYM" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司中期放款餘額</span></td><td><input class="sk-input" type="text" name="MidTermLnBal"></td></tr>
-                                            <tr><td><span>公司短期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="ShortTermLnYM"></td></tr>
+                                            <tr><td><span>公司短期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="ShortTermLnYM" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司短期放款餘額</span></td><td><input class="sk-input" type="text" name="ShortTermLnBal"></td></tr>
-                                            <tr><td><span>企業聯徵J02資料年月</span></td><td><input class="sk-input" type="text" name="CompJCICDataDate"></td></tr>
+                                            <tr><td><span>企業聯徵J02資料年月</span></td><td><input class="sk-input" type="text" name="CompJCICDataDate" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>企業信用評分</span></td><td><input class="sk-input" type="text" name="CompCreditScore"></td></tr>
                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                         </tbody>

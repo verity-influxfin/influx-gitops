@@ -50,29 +50,29 @@
                                         <tbody>
                                             <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                            <tr><td><span>公司近01個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM1"></td></tr>
+                                            <tr><td><span>公司近01個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM1" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近01個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured1"></td></tr>
-                                            <tr><td><span>公司近02個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM2"></td></tr>
+                                            <tr><td><span>公司近02個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM2" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近02個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured2"></td></tr>
-                                            <tr><td><span>公司近03個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM3"></td></tr>
+                                            <tr><td><span>公司近03個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM3" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近03個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured3"></td></tr>
-                                            <tr><td><span>公司近04個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM4"></td></tr>
+                                            <tr><td><span>公司近04個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM4" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近04個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured4"></td></tr>
-                                            <tr><td><span>公司近05個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM5"></td></tr>
+                                            <tr><td><span>公司近05個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM5" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近05個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured5"></td></tr>
-                                            <tr><td><span>公司近06個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM6"></td></tr>
+                                            <tr><td><span>公司近06個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM6" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近06個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured6"></td></tr>
-                                            <tr><td><span>公司近07個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM7"></td></tr>
+                                            <tr><td><span>公司近07個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM7" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近07個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured7"></td></tr>
-                                            <tr><td><span>公司近08個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM8"></td></tr>
+                                            <tr><td><span>公司近08個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM8" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近08個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured8"></td></tr>
-                                            <tr><td><span>公司近09個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM9"></td></tr>
+                                            <tr><td><span>公司近09個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM9" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近09個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured9"></td></tr>
-                                            <tr><td><span>公司近10個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM10"></td></tr>
+                                            <tr><td><span>公司近10個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM10" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近10個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured10"></td></tr>
-                                            <tr><td><span>公司近11個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM11"></td></tr>
+                                            <tr><td><span>公司近11個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM11" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近11個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured11"></td></tr>
-                                            <tr><td><span>公司近12個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM12"></td></tr>
+                                            <tr><td><span>公司近12個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM12" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近12個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured12"></td></tr>
                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                         </tbody>
