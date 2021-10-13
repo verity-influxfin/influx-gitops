@@ -3148,8 +3148,10 @@ class Certification_lib{
                     $data = json_decode($value->content);
                     $user = $this->CI->user_model->get_by([
 //                        'name' => $data->name,
-//                        'phone' => $data->phone,
-                        'id_number' => $data->id_number,
+                        'phone' => $data->phone,
+                        // 'id_number' => $data->id_number,
+                        'company_status' => 0
+
                     ]);
                     if($user){
                         $update_info = [
