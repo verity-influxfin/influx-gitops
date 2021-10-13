@@ -94,7 +94,7 @@
 										</td>
 
 										<td>
-                                            <?=$value->user_id!=null? '<a class="fancyframe" href="'.admin_url('target/edit?display=1&id='.$value->user_id).'">'.$value->user_id.'</a>':'未歸戶' ?>
+                                            <?=$value->user_id!=null? '<a class="fancyframe" href="'.admin_url('User/display?id='.$value->user_id).'">'.$value->user_id.'</a>':'未歸戶' ?>
 										</td>
 
 										<td><?=isset($value->character) && isset($character_list)?$character_list[$value->character]:'' ?></td>
