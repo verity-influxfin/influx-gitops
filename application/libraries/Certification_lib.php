@@ -883,6 +883,43 @@ class Certification_lib{
 		      $info->content['result'][$imageIds[0]]["Director{$count_array[$i]}Name"] = isset($data["Director{$count_array[$i]}Name"]) ? $data["Director{$count_array[$i]}Name"] : '';
 		    }
 		  }
+          // 爬蟲資料結果
+          $user_info = $this->CI->user_model->get_by(array( 'id' => $info->id ));
+          if($user_info && !empty($user_info->id_number)){
+              $this->load->library('scraper/Findbiz_lib');
+              // 商業司截圖(for新光微企貸)
+              $company_image_url = $this->findbiz_lib->getFindBizImage($user_info->id_number);
+              if($company_image_url){
+                  $info->content['governmentauthorities_image'][] = $company_image_url;
+              }
+              $company_scraper_info = $this->findbiz_lib->getResultByBusinessId($user_info->id_number);
+              if($company_scraper_info){
+                  $company_user_info = $this->findbiz_lib->searchEachTermOwner($company_scraper_info);
+                  if($company_user_info){
+                      krsort($company_user_info);
+                      $num = 0;
+                      foreach($company_user_info as $k=>$v){
+                          if($num==0){
+                            $info->content['skbank_form']['PrOnboardDay'] = $k;
+                            $info->content['skbank_form']['PrOnboardName'] = $v;
+                          }
+                          if($num==1){
+                            $info->content['skbank_form']['ExPrOnboardDay'] = $k;
+                        	$info->content['skbank_form']['ExPrOnboardName'] = $v;
+                          }
+                          if($num==2){
+                        	$info->content['skbank_form']['ExPrOnboardDay2'] = $k;
+                        	$info->content['skbank_form']['ExPrOnboardName2'] = $v;
+                          }
+                          if($num==3){
+                        	break;
+                          }
+                        $num++;
+                      }
+                  }
+              }
+          }
+
           $this->CI->user_certification_model->update($info->id, array(
             'status' => 3,
             'sys_check' => 1,

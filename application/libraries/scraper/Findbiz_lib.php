@@ -148,4 +148,34 @@ class Findbiz_lib
 
       return $response;
     }
+
+    /**
+     * [getFindBizImage description]
+     * @param  string $businessid [公司統一編號]
+     * @param  string $user_id [公司使用者編號]
+     * @return string $url   [商業司截圖 S3連結]
+     */
+    public function getFindBizImage($businessid = '',$user_id = ''){
+        if(empty($businessid) || empty($user_id)){
+            return false;
+        }
+
+        $response = '';
+        $url = $this->scraperUrl  . "findbiz/{$businessid}/screenshot";
+    	$result = curl_get($url,'');
+
+        if(!$result){
+            return false;
+        }
+        $result_array =json_decode($result,true);
+
+        if(!is_array($result_array) || ! isset($result_array['response']['result'])){
+            return false;
+        }
+        $image_info = base64_decode($result_array['response']['result']);
+        $this->CI->load->library('S3_upload');
+        $url = $this->CI->s3_upload->image_by_data($image_info,'',$user_id,'BizImage');
+
+        return $url;
+    }
 }
