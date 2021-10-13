@@ -52,7 +52,7 @@
                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                             <tr><td><span>公司統一編號(變卡)</span></td><td><input class="sk-input" type="text" name="CompId"></td></tr>
                                             <tr><td><span>公司戶名(變卡)</span></td><td><input class="sk-input" type="text" name="CompName"></td></tr>
-                                            <tr><td><span>公司核准設立日期(商業司)</span></td><td><input class="sk-input" type="text" name="CompSetDate"></td></tr>
+                                            <tr><td><span>公司核准設立日期(商業司)</span></td><td><input class="sk-input" type="text" name="CompSetDate" placeholder="格式:YYYYMMDD"></td></tr>
                                             <tr><td><span>公司實收資本額(變卡)</span></td><td><input class="sk-input" type="text" name="CompCapital"></td></tr>
                                             <tr><td><span>公司型態(商業司)</span></td><td>
                                                 <select name="CompType" class="table-input sk-input">
@@ -63,11 +63,11 @@
                                             <tr><td><span>公司登記地址-郵遞區號(變卡)</span></td><td><input class="sk-input" type="text" name="CompRegAddrZip"></td></tr>
                                             <tr><td><span>公司登記地址-郵遞區號名稱(變卡)</span></td><td><input class="sk-input" type="text" name="CompRegAddrZipName"></td></tr>
                                             <tr><td><span>公司登記地址-非郵遞地址資料(變卡)</span></td><td><input class="sk-input" type="text" name="CompRegAddress"></td></tr>
-                                            <tr><td><span>現任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="PrOnboardDay"></td></tr>
+                                            <tr><td><span>現任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="PrOnboardDay" placeholder="格式:YYYYMMDD"></td></tr>
                                             <tr><td><span>現任負責人擔任公司起日-姓名(商業司)</span></td><td><input class="sk-input" type="text" name="PrOnboardName"></td></tr>
-                                            <tr><td><span>前任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardDay"></td></tr>
+                                            <tr><td><span>前任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardDay" placeholder="格式:YYYYMMDD"></td></tr>
                                             <tr><td><span>前任負責人擔任公司起日-姓名(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardName"></td></tr>
-                                            <tr><td><span>前二任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardDay2"></td></tr>
+                                            <tr><td><span>前二任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardDay2" placeholder="格式:YYYYMMDD"></td></tr>
                                             <tr><td><span>前二任負責人擔任公司起日-姓名(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardName2"></td></tr>
                                             <tr><td><span>營業登記地址_選擇縣市(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrCityName"></td></tr>
                                             <tr><td><span>營業登記地址_選擇鄉鎮市區(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrAreaName"></td></tr>
@@ -82,7 +82,7 @@
                                             <tr><td><span>營業登記地址_之樓(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrFloorExt"></td></tr>
                                             <tr><td><span>營業登記地址_室(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrRoom"></td></tr>
                                             <tr><td><span>營業登記地址_其他備註(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrOtherMemo"></td></tr>
-                                            <tr><td><span>公司最後核准變更實收資本額日期(商業司)</span></td><td><input class="sk-input" type="text" name="LastPaidInCapitalDate"></td></tr>
+                                            <tr><td><span>公司最後核准變更實收資本額日期(商業司)</span></td><td><input class="sk-input" type="text" name="LastPaidInCapitalDate" placeholder="格式:YYYYMMDD"></td></tr>
                                             <tr><td><span>公司董監事 A 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorAName"></td></tr>
                                             <tr><td><span>公司董監事 A 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorAId"></td></tr>
                                             <tr><td><span>公司董監事 B 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorBName"></td></tr>

@@ -86,8 +86,8 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>負責人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="PrJCICQueryDate"></td></tr>
-                                                <tr><td><span>負責人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="PrCreditScore"></td></tr>
+                                                <tr><td><span>負責人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="PrJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
+                                                <tr><td><span>負責人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="PrCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
                                                 <tr><td><span>負責人聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="PrJCICDataDate"></td></tr>
                                                 <tr><td><span>負責人銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="PrBal_CashCard"></td></tr>
                                                 <tr><td><span>負責人銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="PrBal_CreditCard"></td></tr>
@@ -109,8 +109,8 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>配偶聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="SpouseJCICQueryDate"></td></tr>
-                                                <tr><td><span>配偶聯徵信用評分</span></td><td><input class="sk-input" type="text" name="SpouseCreditScore"></td></tr>
+                                                <tr><td><span>配偶聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="SpouseJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
+                                                <tr><td><span>配偶聯徵信用評分</span></td><td><input class="sk-input" type="text" name="SpouseCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
                                                 <tr><td><span>配偶聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="SpouseJCICDataDate"></td></tr>
                                                 <tr><td><span>配偶銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="SpouseBal_CashCard"></td></tr>
                                                 <tr><td><span>配偶銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="SpouseBal_CreditCard"></td></tr>
@@ -132,8 +132,8 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>甲保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuOneJCICQueryDate"></td></tr>
-                                                <tr><td><span>甲保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuOneCreditScore"></td></tr>
+                                                <tr><td><span>甲保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuOneJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
+                                                <tr><td><span>甲保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuOneCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
                                                 <tr><td><span>甲保證人聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="GuOneJCICDataDate"></td></tr>
                                                 <tr><td><span>甲保證人銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="GuOneBal_CashCard"></td></tr>
                                                 <tr><td><span>甲保證人銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="GuOneBal_CreditCard"></td></tr>
@@ -154,8 +154,8 @@
                                             <tbody>
                                                 <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                <tr><td><span>乙保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuTwoJCICQueryDate"></td></tr>
-                                                <tr><td><span>乙保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuTwoCreditScore"></td></tr>
+                                                <tr><td><span>乙保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuTwoJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
+                                                <tr><td><span>乙保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuTwoCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
                                                 <tr><td><span>乙保證人聯徵J01資料年月</span></td><td><input class="sk-input" type="text" name="GuTwoJCICDataDate"></td></tr>
                                                 <tr><td><span>乙保證人銀行借款餘額(現金卡)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_CashCard"></td></tr>
                                                 <tr><td><span>乙保證人銀行借款餘額(信用卡)</span></td><td><input class="sk-input" type="text" name="GuTwoBal_CreditCard"></td></tr>
