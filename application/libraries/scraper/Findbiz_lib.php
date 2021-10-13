@@ -99,7 +99,7 @@ class Findbiz_lib
      */
     public function getFindBizStatus($businessid)
     {
-      $url = $this->scraperUrl  . "findbiz/{$businessid}/log";
+      $url = $this->scraperUrl  . "findbiz/{$businessid}/status";
   		$result = curl_get($url);
   		$response = json_decode($result);
 
