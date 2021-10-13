@@ -890,6 +890,10 @@ class Certification_lib{
               // 確認爬蟲狀態
               $scraper_status = $this->CI->findbiz_lib->getFindBizStatus($user_info->id_number);
               if(! $scraper_status || ! isset($scraper_status->result->status) || ($scraper_status->result->status != 'failure' && $scraper_status->result->status != 'finished') ){
+                  // 爬蟲沒打過重打一次
+                  if($scraper_status && isset($scraper_status->status) && $scraper_status->status == 204){
+                      $this->CI->findbiz_lib->requestFindBizData($user_info->id_number);
+                  }
                   return false;
               }
               // 商業司截圖(for新光微企貸)
