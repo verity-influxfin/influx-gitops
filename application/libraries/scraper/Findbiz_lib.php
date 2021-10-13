@@ -103,7 +103,7 @@ class Findbiz_lib
   		$result = curl_get($url);
   		$response = json_decode($result);
 
-  		if (!$result || !isset($response->status) || $response->status != 200) {
+  		if (!$result || !isset($response->status)) {
   			return;
   		}
 
