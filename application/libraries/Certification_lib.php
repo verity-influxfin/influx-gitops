@@ -1069,13 +1069,13 @@ class Certification_lib{
 					];
 				}
 
-				$this->CI->user_certification_model->update($info->id, array(
-					'status' => 3,
-					'sys_check' => 1,
-					'content' => json_encode($info->content),
-					'remark' => json_encode($info->remark)
-				));
 			}
+            $this->CI->user_certification_model->update($info->id, array(
+                'status' => 3,
+                'sys_check' => 1,
+                'content' => json_encode($info->content),
+                'remark' => json_encode($info->remark)
+            ));
 			if($status == 1){
 				$this->set_success($info->id ,true);
 			}
