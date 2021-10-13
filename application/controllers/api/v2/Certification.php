@@ -2772,6 +2772,13 @@ class Certification extends REST_Controller {
 				$content['skbank_form']["Director{$count_array[$i]}Name"] = isset($input["Director{$count_array[$i]}Name"]) ? $input["Director{$count_array[$i]}Name"] : '';
 			}
 
+            // 商業司爬蟲
+            $company_user_info = $this->user_model->get_by(array( 'id' => $this->user_info->id; ));
+            if($company_user_info && !empty($company_user_info->id_number)){
+                $this->load->library('Findbiz_lib');
+                $this->Findbiz_lib->requestFindBizData($company_user_info->id_number);
+            }
+
             $param		= [
                 'user_id'			=> $user_id,
                 'certification_id'	=> $certification_id,
