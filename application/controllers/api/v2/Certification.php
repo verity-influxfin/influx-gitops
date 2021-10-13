@@ -2776,7 +2776,7 @@ class Certification extends REST_Controller {
             $company_user_info = $this->user_model->get_by(array( 'id' => $this->user_info->id ));
             if($company_user_info && !empty($company_user_info->id_number)){
                 $this->load->library('scraper/Findbiz_lib');
-                $this->Findbiz_lib->requestFindBizData($company_user_info->id_number);
+                $this->findbiz_lib->requestFindBizData($company_user_info->id_number);
             }
 
             $param		= [
