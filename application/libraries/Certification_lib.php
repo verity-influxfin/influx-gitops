@@ -886,21 +886,21 @@ class Certification_lib{
           // 爬蟲資料結果
           $user_info = $this->CI->user_model->get_by(array( 'id' => $info->user_id ));
           if($user_info && !empty($user_info->id_number)){
-              $this->load->library('scraper/Findbiz_lib');
+              $this->CI->load->library('scraper/Findbiz_lib');
               // 確認爬蟲狀態
-              $scraper_status = $this->findbiz_lib->getFindBizStatus($user_info->id_number);
+              $scraper_status = $this->CI->findbiz_lib->getFindBizStatus($user_info->id_number);
               if(! $scraper_status || ! isset($scraper_status->result->status) || ($scraper_status->result->status != 'failure' && $scraper_status->result->status != 'finished') ){
                   return false;
               }
               // 商業司截圖(for新光微企貸)
-              $company_image_url = $this->findbiz_lib->getFindBizImage($user_info->id_number, $user_info->id);
+              $company_image_url = $this->CI->findbiz_lib->getFindBizImage($user_info->id_number, $user_info->id);
               if($company_image_url){
                   $info->content['governmentauthorities_image'][] = $company_image_url;
               }
               // 商業司歷任負責人
-              $company_scraper_info = $this->findbiz_lib->getResultByBusinessId($user_info->id_number);
+              $company_scraper_info = $this->CI->findbiz_lib->getResultByBusinessId($user_info->id_number);
               if($company_scraper_info){
-                  $company_user_info = $this->findbiz_lib->searchEachTermOwner($company_scraper_info);
+                  $company_user_info = $this->CI->findbiz_lib->searchEachTermOwner($company_scraper_info);
                   if($company_user_info){
                       krsort($company_user_info);
                       $num = 0;
