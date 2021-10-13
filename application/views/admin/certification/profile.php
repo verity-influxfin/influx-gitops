@@ -74,7 +74,7 @@
                                                 <tr><td><span>負責人連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="PrTelNo"></td></tr>
                                                 <tr><td><span>負責人連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="PrTelExt"></td></tr>
                                                 <tr><td><span>負責人連絡行動電話</span></td><td><input class="sk-input" type="text" name="PrMobileNo"></td></tr>
-                                                <tr><td><span>負責人從事本行業年度</span></td><td><input class="sk-input" type="text" name="PrStartYear"></td></tr>
+                                                <tr><td><span>負責人從事本行業年度</span></td><td><input class="sk-input" type="text" name="PrStartYear" placeholder="格式:YYYY"></td></tr>
                                                 <tr><td><span>負責人學歷</span></td><td>
                                                     <select name="PrEduLevel" class="table-input sk-input">
                                                         <option value="A">A:國小</option>

@@ -66,7 +66,7 @@
                                                     <tbody>
                                                         <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                        <tr><td><span>負責人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="PrLaborQryDate"></td></tr>
+                                                        <tr><td><span>負責人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="PrLaborQryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                         <tr><td><span>負責人-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="PrLaborInsSalary"></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                                     </tbody>
@@ -79,7 +79,7 @@
                                                     <tbody>
                                                         <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                        <tr><td><span>配偶-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="SpouseLaborQryDate"></td></tr>
+                                                        <tr><td><span>配偶-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="SpouseLaborQryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                         <tr><td><span>配偶-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="SpouseLaborInsSalary"></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                                     </tbody>
@@ -92,7 +92,7 @@
                                                     <tbody>
                                                         <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                        <tr><td><span>甲保證人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="GuOneLaborQryDate"></td></tr>
+                                                        <tr><td><span>甲保證人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="GuOneLaborQryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                         <tr><td><span>甲保證人-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="GuOneLaborInsSalary"></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                                     </tbody>
@@ -105,7 +105,7 @@
                                                     <tbody>
                                                         <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                        <tr><td><span>乙保證人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="GuTwoLaborQryDate"></td></tr>
+                                                        <tr><td><span>乙保證人-被保險人勞保異動查詢日期</span></td><td><input class="sk-input" type="text" name="GuTwoLaborQryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                         <tr><td><span>乙保證人-被保險人勞保異動查詢-最近期投保薪資</span></td><td><input class="sk-input" type="text" name="GuTwoLaborInsSalary"></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                                     </tbody>
