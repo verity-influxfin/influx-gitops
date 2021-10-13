@@ -893,7 +893,7 @@ class Certification_lib{
                   return false;
               }
               // 商業司截圖(for新光微企貸)
-              $company_image_url = $this->findbiz_lib->getFindBizImage($user_info->id_number);
+              $company_image_url = $this->findbiz_lib->getFindBizImage($user_info->id_number, $user_info->id);
               if($company_image_url){
                   $info->content['governmentauthorities_image'][] = $company_image_url;
               }
