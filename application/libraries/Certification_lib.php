@@ -882,14 +882,13 @@ class Certification_lib{
 		      $info->content['result'][$imageIds[0]]["Director{$count_array[$i]}Id"] = isset($data["Director{$count_array[$i]}Id"]) ? $data["Director{$count_array[$i]}Id"] : '';
 		      $info->content['result'][$imageIds[0]]["Director{$count_array[$i]}Name"] = isset($data["Director{$count_array[$i]}Name"]) ? $data["Director{$count_array[$i]}Name"] : '';
 		    }
-
-		    $this->CI->user_certification_model->update($info->id, array(
-		      'status' => 3,
-		      'sys_check' => 1,
-		      'content' => json_encode($info->content),
-		      'remark' => json_encode($info->remark)
-		    ));
 		  }
+          $this->CI->user_certification_model->update($info->id, array(
+            'status' => 3,
+            'sys_check' => 1,
+            'content' => json_encode($info->content),
+            'remark' => json_encode($info->remark)
+          ));
 		    if($status == 1){
 		      $this->set_success($info->id ,true);
 		    }
@@ -985,10 +984,10 @@ class Certification_lib{
 	}
 
 	public function incomestatement_verify($info = array(), $url=null){
-		$user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
-		if($user_certification==false || $user_certification->status!=1){
-			return false;
-		}
+		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
+		// if($user_certification==false || $user_certification->status!=1){
+		// 	return false;
+		// }
 		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
 		if($info && $info->certification_id == 1002 && $info->status == 0){
 			$status = 3;
@@ -1216,10 +1215,10 @@ class Certification_lib{
 	}
 
 	public function employeeinsurancelist_verify($info = array(), $url=null){
-		$user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
-		if($user_certification==false || $user_certification->status!=1){
-			return false;
-		}
+		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
+		// if($user_certification==false || $user_certification->status!=1){
+		// 	return false;
+		// }
 		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
 		if($info && $info->certification_id == 1017 && $info->status == 0 && !empty($info->content['employeeinsurancelist_image'])){
 			$status = 3;
@@ -1618,10 +1617,10 @@ class Certification_lib{
 
 	// 法人聯徵
 	public function investigationjudicial_verify($info = array(), $url=null){
-		$user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
-		if($user_certification==false || $user_certification->status!=1){
-			return false;
-		}
+		// $user_certification	= $this->get_certification_info($info->user_id,1007,$info->investor);
+		// if($user_certification==false || $user_certification->status!=1){
+		// 	return false;
+		// }
 		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
 		if($info && $info->certification_id == 1003 && $info->status == 0){
 			$status = 3;
