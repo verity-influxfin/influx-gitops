@@ -895,25 +895,27 @@ class Certification_lib{
               $company_scraper_info = $this->findbiz_lib->getResultByBusinessId($user_info->id_number);
               if($company_scraper_info){
                   $company_user_info = $this->findbiz_lib->searchEachTermOwner($company_scraper_info);
-                  krsort($company_user_info);
-                  $num = 0;
-                  foreach($company_user_info as $k=>$v){
-                      if($num==0){
-                        $info->content['skbank_form']['PrOnboardDay'] = $k;
-                        $info->content['skbank_form']['PrOnboardName'] = $v;
+                  if($company_user_info){
+                      krsort($company_user_info);
+                      $num = 0;
+                      foreach($company_user_info as $k=>$v){
+                          if($num==0){
+                            $info->content['skbank_form']['PrOnboardDay'] = $k;
+                            $info->content['skbank_form']['PrOnboardName'] = $v;
+                          }
+                          if($num==1){
+                            $info->content['skbank_form']['ExPrOnboardDay'] = $k;
+                        	$info->content['skbank_form']['ExPrOnboardName'] = $v;
+                          }
+                          if($num==2){
+                        	$info->content['skbank_form']['ExPrOnboardDay2'] = $k;
+                        	$info->content['skbank_form']['ExPrOnboardName2'] = $v;
+                          }
+                          if($num==3){
+                        	break;
+                          }
+                        $num++;
                       }
-                      if($num==1){
-                        $info->content['skbank_form']['ExPrOnboardDay'] = $k;
-                    	$info->content['skbank_form']['ExPrOnboardName'] = $v;
-                      }
-                      if($num==2){
-                    	$info->content['skbank_form']['ExPrOnboardDay2'] = $k;
-                    	$info->content['skbank_form']['ExPrOnboardName2'] = $v;
-                      }
-                      if($num==3){
-                    	break;
-                      }
-                    $num++;
                   }
               }
           }
