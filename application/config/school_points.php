@@ -1786,53 +1786,6 @@ $config['department_points'] = array (
     array (
     ),
   ),
-  '仁德醫護管理專科學校' =>
-  array (
-    'city' => '苗栗縣',
-    'shortName' => 'JENTE',
-    'fullName' => 'Jenteh Junior College of Medicine, Nursing and Management',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '高齡健康促進科',
-        1 => '幼兒保育科',
-        2 => '生命關懷事業科',
-      ),
-      '資訊通訊科技學門' =>
-      array (
-        0 => '行動數位商務科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '健康美容觀光科',
-        1 => '餐旅管理科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '口腔衛生學科',
-        1 => '職業安全衛生科',
-        2 => '復健(技術)科',
-        3 => '復健(技術)科-物理治療組',
-        4 => '復健(技術)科-職能治療組',
-        5 => '調理保健技術科',
-        6 => '視光學科',
-        7 => '醫事檢驗科',
-        8 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://ep.jente.edu.tw/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
   '佛光大學' =>
   array (
     'city' => '宜蘭縣',
@@ -6116,39 +6069,6 @@ $config['department_points'] = array (
     array (
     ),
   ),
-  '國立臺南護理專科學校' =>
-  array (
-    'city' => '臺南市',
-    'shortName' => 'NTJCN',
-    'fullName' => 'National Tainan Junior college of Nursing',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '老人服務事業科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '化妝品應用科(二專部)',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-      '化妝品應用科(二專部)' => 100,
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'https://e-portfolio.ntin.edu.tw/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
   '國立臺東大學' =>
   array (
     'city' => '臺東市',
@@ -6240,66 +6160,6 @@ $config['department_points'] = array (
     'sipURL' =>
     array (
       0 => 'https://infosys.nttu.edu.tw/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '國立臺東專科學校' =>
-  array (
-    'city' => '臺南市',
-    'shortName' => 'NTC',
-    'fullName' => 'Natiomal Taitung College',
-    'discipline' =>
-    array (
-      '工程及工程業學門' =>
-      array (
-        0 => '電機工程科(二專部)',
-        1 => '動力機械科(二專部)',
-      ),
-      '建築及營建工程學門' =>
-      array (
-        0 => '建築科(二專部)',
-      ),
-      '商業及管理學門' =>
-      array (
-        0 => '行銷與流通管理科(二專部)',
-      ),
-      '資訊通訊科技學門' =>
-      array (
-        0 => '資訊管理科(二專部)',
-      ),
-      '農業學門' =>
-      array (
-        0 => '園藝暨景觀科(二專部)',
-      ),
-      '製造及加工學門' =>
-      array (
-        0 => '食品科技科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '餐旅管理科(二專部)',
-      ),
-      '藝術學門(設計學門)' =>
-      array (
-        0 => '文化創意設計科',
-      ),
-    ),
-    'score' =>
-    array (
-        '動力機械科(二專部)' =>  250 ,
-    	'資訊管理科(二專部)' =>  240 ,
-    	'電機工程科(二專部)' =>  240 ,
-    	'行銷與流通管理科(二專部)' =>  130 ,
-    	'建築科(二專部)' =>  110 ,
-    	'餐旅管理科(二專部)' =>  100 ,
-    	'園藝暨景觀科(二專部)' =>  90,
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://sys.ntc.edu.tw:1111/MainLogin.asp',
     ),
     'systems' =>
     array (
@@ -8628,43 +8488,6 @@ $config['department_points'] = array (
     array (
     ),
   ),
-  '崇仁醫護管理專科學校' =>
-  array (
-    'city' => '嘉義縣',
-    'shortName' => 'CJC',
-    'fullName' => 'Chung Jen Junior College of Nursing, Health Science and Managemen',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '老人服務事業管理科',
-      ),
-      '商業及管理學門' =>
-      array (
-        0 => '應用外語科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '美容保健科',
-        1 => '餐飲管理科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://140.130.190.207/LearningProcess/Login.aspx',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
   '崑山科技大學' =>
   array (
     'city' => '臺南市',
@@ -9078,131 +8901,6 @@ $config['department_points'] = array (
     array (
     ),
   ),
-  '慈惠醫護管理專科學校' =>
-  array (
-    'city' => '屏東縣',
-    'shortName' => 'TZUHUI',
-    'fullName' => 'Tzu Hui Institute of Technology',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '幼兒保育科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '美容造型設計科',
-        1 => '觀光事業科',
-        2 => '休閒事業管理科',
-        3 => '餐飲管理科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '物理治療科',
-        1 => '護理科',
-        2 => '護理助產科',
-      ),
-      '藝術學門(設計學門)' =>
-      array (
-        0 => '數位媒體創意設計科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://163.24.235.235/SC2008/Main4ST.asp?ScrX=1366&ScrY=768&RUN=',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '慈濟大學' =>
-  array (
-    'city' => '花蓮縣',
-    'shortName' => 'TCU',
-    'fullName' => 'Tzu Chi University',
-    'discipline' =>
-    array (
-      '人文學門' =>
-      array (
-        0 => '宗教與人文研究所',
-      ),
-      '生命科學學門' =>
-      array (
-        0 => '分子生物暨人類遺傳學系',
-        1 => '生命科學系',
-      ),
-      '社會及行為科學學門' =>
-      array (
-        0 => '人類發展與心理學系',
-      ),
-      '社會福利學門' =>
-      array (
-        0 => '兒童發展與家庭教育學系',
-        1 => '社會工作學系',
-      ),
-      '教育學門' =>
-      array (
-        0 => '教育研究所',
-      ),
-      '新聞學及圖書資訊學門' =>
-      array (
-        0 => '傳播學系',
-      ),
-      '資訊通訊科技學門' =>
-      array (
-        0 => '醫學資訊學系',
-      ),
-      '語文學門' =>
-      array (
-        0 => '英美語文學系',
-        1 => '東方語文學系中文組',
-        2 => '東方語文學系日文組',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '公共衛生學系',
-        1 => '物理治療學系',
-        2 => '醫學系(公費)',
-        3 => '醫學系(自費)',
-        4 => '醫學科學研究所',
-        5 => '轉譯醫學博士學位學程',
-        6 => '學士後中醫學系',
-        7 => '醫學檢驗生物技術學系',
-        8 => '護理學系',
-      ),
-    ),
-    'score' =>
-    array (
-        '醫學系(自費)' =>  350 ,
-    	'醫學系(公費)' =>  340 ,
-    	'物理治療學系' =>  270 ,
-    	'醫學資訊學系' =>  270 ,
-    	'醫學檢驗生物技術學系' =>  250 ,
-    	'護理學系' =>  240 ,
-    	'公共衛生學系' =>  220 ,
-    	'分子生物暨人類遺傳學系' =>  150 ,
-    	'人類發展與心理學系' =>  150 ,
-    	'兒童發展與家庭教育學系' =>  140 ,
-    	'生命科學系' =>  130 ,
-    	'社會工作學系' =>  100 ,
-    	'傳播學系' =>  70 ,
-    	'東方語文學系日文組' =>  30 ,
-    	'東方語文學系中文組' =>  30 ,
-    	'英美語文學系' =>  20,
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://moodle.tcu.edu.tw/login.php',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
   '慈濟科技大學' =>
   array (
     'city' => '花蓮縣',
@@ -9323,51 +9021,6 @@ $config['department_points'] = array (
     'sipURL' =>
     array (
       0 => 'https://sso.wzu.edu.tw/Portal/login.htm',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '新生醫護管理專科學校' =>
-  array (
-    'city' => '桃園市',
-    'shortName' => 'HSC',
-    'fullName' => 'Hsin Sheng Junior College of Medical Care and Management',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '長期照護科',
-        1 => '幼兒保育科',
-      ),
-      '商業及管理學門' =>
-      array (
-        0 => '國際商務科',
-        1 => '醫藥保健商務科',
-      ),
-      '語文學門' =>
-      array (
-        0 => '應用英語科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '美容造型科',
-        1 => '健康休閒管理科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '口腔衛生學科',
-        1 => '視光學科',
-        2 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://portal.hsc.edu.tw/index.do?thetime=1569218755832',
     ),
     'systems' =>
     array (
@@ -10178,53 +9831,6 @@ $config['department_points'] = array (
     array (
       0 => 'https://fsis.thu.edu.tw/mosi/ccsd3/index.php?job=stud&loginn=&r=',
       1 => 'https://fsis.thu.edu.tw/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '樹人醫護管理專科學校' =>
-  array (
-    'city' => '高雄市',
-    'shortName' => 'SZMC',
-    'fullName' => 'Shu Zen College of Medicine and Management',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '幼兒保育科',
-      ),
-      '資訊通訊科技學門' =>
-      array (
-        0 => '資訊管理科',
-      ),
-      '語文學門' =>
-      array (
-        0 => '應用英語科',
-        1 => '應用日語科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '美容保健科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '牙體技術科',
-        1 => '口腔衛生學科',
-        2 => '物理治療科',
-        3 => '職能治療科',
-        4 => '視光學科',
-        5 => '醫學影像暨放射技術科',
-        6 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://sdnews.szmc.edu.tw/szmc_all/Home/Login',
     ),
     'systems' =>
     array (
@@ -11218,84 +10824,6 @@ $config['department_points'] = array (
     array (
     ),
   ),
-  '耕莘健康管理專科學校' =>
-  array (
-    'city' => '宜蘭縣',
-    'shortName' => 'CTCN',
-    'fullName' => 'Cardinal Tien Junior College of Healthcare and Management',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '嬰幼兒保育科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '化妝品應用與管理科',
-        1 => '健康餐旅科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '口腔衛生與健康照護科',
-        1 => '護理科',
-        2 => '護理科',
-      ),
-      '藝術學門(設計學門)' =>
-      array (
-        0 => '數位媒體設計科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'https://163.21.98.150/student_balance_ctcn.jsp',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '聖母醫護管理專科學校' =>
-  array (
-    'city' => '宜蘭縣',
-    'shortName' => 'SMC',
-    'fullName' => 'St. Mary\'s Medicine Nursing and Management College',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '幼兒保育科',
-      ),
-      '資訊通訊科技學門' =>
-      array (
-        0 => '資訊管理科(二專部)',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '化妝品應用與管理科',
-        1 => '健康與休閒管理科',
-        2 => '餐旅管理科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-      '資訊管理科(二專部)' => 191,
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://eas2.smc.edu.tw/smc/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
   '聖約翰科技大學' =>
   array (
     'city' => '新北市',
@@ -11365,39 +10893,6 @@ $config['department_points'] = array (
     'sipURL' =>
     array (
       0 => 'https://sjusip.sju.edu.tw/sjusip/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '育英醫護管理專科學校' =>
-  array (
-    'city' => '高雄市',
-    'shortName' => 'YUHING',
-    'fullName' => 'Yuh-Ing Junior College of Health Care and Management',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '老人服務事業管理科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '化妝品應用與管理科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://163.15.186.55/yuhing/',
-      1 => 'http://163.15.186.56/yuhing/',
     ),
     'systems' =>
     array (
