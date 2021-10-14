@@ -1317,20 +1317,19 @@ class Certification extends MY_Admin_Controller {
 
 	public function media_upload()
 	{
-		$post 		= $this->input->post();  //接到user_id
-		// print_r($post);exit;
+		$post 		= $this->input->post();
 		if (!empty($post)) {
 			$this->load->library('S3_upload');
 			$file_array = [];
 			$media_check = true;
-			if(!empty($_FILES['file'])){
-				foreach($_FILES['file'] as $k=>$v){
+            $media = [];
+			if(!empty($_FILES['file_upload_tmp'])){
+				foreach($_FILES['file_upload_tmp'] as $k=>$v){
 					foreach($v as $k1=>$v1){
 						$file_array[$k1][$k] = $v1;
 					}
 				}
 				foreach ($file_array as $field) {
-					// print_r($field);exit;
 					$file['image'] = $field;
 					$image 	= $this->s3_upload->image($file,'image',$post['user_id'],"certification/{$post['user_certification_id']}");
 					if($image){
@@ -1351,10 +1350,10 @@ class Certification extends MY_Admin_Controller {
 					$this->log_image_model->insertGroupById($image_id_array,['group_info'=>$group_id]);
 					$certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
                     // TODO: 暫時寫死
-                    if($post['user_certification_id'] == 12){
+                    if($post['certification_id'] == 12){
                         $image_name = 'person_mq_image';
                     }
-                    if($post['user_certification_id'] == 1003){
+                    if($post['certification_id'] == 1003){
                         $image_name = 'legal_person_mq_image';
                     }
 
