@@ -283,7 +283,7 @@ class Check_list
             // 公司資料表
 			'1018' => [
 				'location' => 'A03',
-				'raw_data_name' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership', 'RealHouseOwnership']
+				'raw_data_name' => ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03']
 			],
 			// 自然人連徵
 			'12' => [
@@ -298,7 +298,7 @@ class Check_list
 			// 法人連徵
 			'1003' => [
 				'location' => 'A06',
-				'raw_data_name' => ['postal_image']
+				'raw_data_name' => ['legal_person_mq_image','postal_image']
 			],
 			// 月末投保人數
 			'1017' => [
@@ -319,34 +319,42 @@ class Check_list
 			// ]
 		];
 
+        $user_list = [];
         // TODO: 改撈法人關係再撈全徵提資料圖片
-		if($target_info && isset($target_info->target_data)){
-			$this->CI->load->model('user/user_certification_model');
-			$target_data = json_decode($target_info->target_data,true);
+		if(!$target_info){
+            return [];
+        }
+        $user_list[] = $target_info->user_id;
+        // 找案件關係人
+        $this->CI->load->library('Target_lib');
+        $guarantors = $this->CI->target_lib->get_associates_user_data($target_info->id, 'all', [0 ,1], false);
+        if($guarantors && is_array($guarantors)){
+            foreach($guarantors as $k=>$v){
+                $user_list[] = isset($v->user_id) ? $v->user_id : '';
+            }
+        }
 
-			if(isset($target_data['certification_id'])){
-				// 找全部認證
-				$certification_info = $this->CI->user_certification_model->get_many_by(['id'=>$target_data['certification_id']]);
-				if($certification_info){
-					foreach($certification_info as $info){
-						if(isset($mapping_config[$info->certification_id]) && $info->content){
-							$content = json_decode($info->content,true);
-							// 找認證資料內有無相關圖片連結名稱
-							foreach($mapping_config[$info->certification_id]['raw_data_name'] as $name){
-								if(isset($content[$name])){
-									$response_location = $mapping_config[$info->certification_id]['location'];
-									if(is_array($content[$name])){
-										$response[$response_location] = array_merge($response[$response_location],$content[$name]);
-									}else{
-										$response[$response_location][] = $content[$name];
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+        // 找全部認證
+        $this->CI->load->model('user/user_certification_model');
+        $certification_info = $this->CI->user_certification_model->get_skbank_check_list($user_list);
+        if(!empty($certification_info)){
+            foreach($certification_info as $info_value){
+                $content = json_decode($info_value->content,true);
+                if(isset($mapping_config[$info_value->certification_id]) && is_array($content)){
+                    // 找認證資料內有無相關圖片連結名稱
+                    foreach($mapping_config[$info_value->certification_id]['raw_data_name'] as $name){
+                        if(isset($content[$name])){
+                            $response_location = $mapping_config[$info_value->certification_id]['location'];
+                            if(is_array($content[$name])){
+                                $response[$response_location] = array_merge($response[$response_location],$content[$name]);
+                            }else{
+                                $response[$response_location][] = $content[$name];
+                            }
+                        }
+                    }
+                }
+            }
+        }
 		return $response;
 	}
 }
