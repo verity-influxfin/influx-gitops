@@ -9248,40 +9248,6 @@ $config['department_points'] = array (
     array (
     ),
   ),
-  '敏惠醫護管理專科學校' =>
-  array (
-    'city' => '臺南市',
-    'shortName' => 'MHCHCM',
-    'fullName' => 'Min-Hwei College of Health Care Management',
-    'discipline' =>
-    array (
-      '社會福利學門' =>
-      array (
-        0 => '幼兒保育科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '美容保健科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '牙體技術科',
-        1 => '長期照顧與健康促進管理科',
-        2 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://school.mhchcm.edu.tw/minhwei_webmis/student_login.asp',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
   '文藻外語大學' =>
   array (
     'city' => '高雄市',
@@ -13358,88 +13324,6 @@ $config['department_points'] = array (
     'sipURL' =>
     array (
       0 => 'http://alcat.pu.edu.tw/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '馬偕醫學院' =>
-  array (
-    'city' => '新北市',
-    'shortName' => 'MMC',
-    'fullName' => 'Mackay Medical College',
-    'discipline' =>
-    array (
-      '生命科學學門' =>
-      array (
-        0 => '生物醫學研究所',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '聽力暨語言治療學系聽力組',
-        1 => '聽力暨語言治療學系語言組',
-        2 => '醫學系',
-        3 => '護理學系',
-        4 => '長期照護研究所',
-      ),
-    ),
-    'score' =>
-    array (
-      '醫學系' => 370,
-      '聽力暨語言治療學系語言組' => 280,
-      '聽力暨語言治療學系聽力組' => 270,
-      '護理學系' => 240,
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'http://portal.mmc.edu.tw/',
-    ),
-    'systems' =>
-    array (
-    ),
-  ),
-  '馬偕醫護管理專科學校' =>
-  array (
-    'city' => '臺北市',
-    'shortName' => 'MKC',
-    'fullName' => 'Mackay Junior College of Medicine, Nursing and Management',
-    'discipline' =>
-    array (
-      '其他學門' =>
-      array (
-        0 => '生命關懷事業科(二專部)',
-        1 => '生命關懷事業科',
-      ),
-      '社會福利學門' =>
-      array (
-        0 => '高齡服務事業科',
-        1 => '幼兒保育科',
-      ),
-      '語文學門' =>
-      array (
-        0 => '應用外語科',
-      ),
-      '餐旅及民生服務學門' =>
-      array (
-        0 => '化妝品應用與管理科',
-        1 => '餐飲管理科',
-      ),
-      '醫藥衛生學門' =>
-      array (
-        0 => '視光學科',
-        1 => '護理科',
-      ),
-    ),
-    'score' =>
-    array (
-      '生命關懷事業科(二專部)' => 40,
-    ),
-    'sip' => true,
-    'sipURL' =>
-    array (
-      0 => 'https://cas.mkc.edu.tw/cas/login?service=',
-      1 => 'https://tronclass.mkc.edu.tw/login&locale=zh_TW',
     ),
     'systems' =>
     array (
