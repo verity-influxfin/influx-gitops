@@ -311,7 +311,7 @@ class Certification extends REST_Controller {
 						$fields 	= ['incomestatement'];
 						break;
 					case 1003:
-						$fields 	= ['investigationjudicial', 'return_type'];
+						$fields 	= ['return_type'];
 						break;
 					case 1004:
 						$fields 	= ['passbookcashflow'];
@@ -2525,23 +2525,25 @@ class Certification extends REST_Controller {
             $file_fields = ['legal_person_mq_image','postal_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
-                $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>15){
-                    $image_ids = array_slice($image_ids,0,15);
-                }
-                $list = $this->log_image_model->get_many_by([
-                    'id'		=> $image_ids,
-                    'user_id'	=> $user_id,
-                ]);
-
-                if($list && count($list)==count($image_ids)){
-                    $content[$field] = [];
-                    foreach($list as $k => $v){
-                        $content[$field][] = $v->url;
+                if(isset($input[$field])){
+                    $image_ids = explode(',',$input[$field]);
+                    if(count($image_ids)>15){
+                        $image_ids = array_slice($image_ids,0,15);
                     }
-					$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
-                }else{
-                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $user_id,
+                    ]);
+
+                    if($list && count($list)==count($image_ids)){
+                        $content[$field] = [];
+                        foreach($list as $k => $v){
+                            $content[$field][] = $v->url;
+                        }
+    					$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
                 }
             }
 
