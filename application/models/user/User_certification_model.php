@@ -96,7 +96,7 @@ class User_certification_model extends MY_Model
                     ->select(['user_id','certification_id','content'])
         			->from('p2p_user.user_certification')
         			->where_in('user_id', $userIdList)
-                    ->where_in('certification_id',['11','12','500','501','1002','1003','1007','1017','1018'])
+                    ->where_in('certification_id',['1','10','11','12','500','501','1002','1003','1007','1017','1018'])
                     ->where_not_in('status', ['2'])
                     ->where('content !=', '')
                     ->group_by(['user_id','certification_id'])->get();
