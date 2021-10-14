@@ -1560,7 +1560,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_COMPANYEMAIL,
                     CERTIFICATION_JUDICIALGUARANTEE,
                 ],
-                'instalment' => [36],
+                'instalment' => [12,24,36],
                 'repayment' => [1],
                 'targetData' => [],
                 'weight' => [],
