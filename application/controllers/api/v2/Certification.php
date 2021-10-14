@@ -1950,7 +1950,7 @@ class Certification extends REST_Controller {
             $cer_exists = $this->user_certification_model->get_by([
                 'user_id' => $user_id,
                 'certification_id' => $certification_id,
-                'status' => 4,
+                'status' => CERTIFICATION_STATUS_NOT_COMPLETED,
             ]);
             if (isset($input['save']) && $input['save']) {
                 $param = [
@@ -1958,7 +1958,7 @@ class Certification extends REST_Controller {
                     'certification_id' => $certification_id,
                     'investor' => $investor,
                     'content' => json_encode($input),
-                    'status' => 4,
+                    'status' => CERTIFICATION_STATUS_NOT_COMPLETED,
                 ];
 
                 if ($cer_exists) {
@@ -1975,7 +1975,7 @@ class Certification extends REST_Controller {
             }
 
 			//是否驗證過
-            if(!$cer_exists || $cer_exists->status != 4){
+            if(!$cer_exists || $cer_exists->status != CERTIFICATION_STATUS_NOT_COMPLETED){
                 $this->was_verify($certification_id);
             }
 
@@ -2091,7 +2091,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
 			];
 
             if ($cer_exists) {

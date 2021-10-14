@@ -1149,7 +1149,7 @@ $name 您好，
 
             $obankEvent = true;
             if($user_certification->status === 1) {
-                $content = json_decode($user_certification->content, true);
+                $content = $user_certification->content;
                 if(isset($content['employee']) && $content['employee'] == 6) {
                     $obankEvent = false;
                 }

@@ -2346,7 +2346,7 @@ class Certification_lib{
             isset($content['job_title'])?$data['job_title']=$content['job_title']:'';
 
             $rs = $this->user_meta_progress($data,$info);
-			if($rs){
+            if($rs && in_array($info->certification_id, $this->notification_list)) {
 				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
                 return $this->fail_other_cer($info);
 			}
@@ -2368,8 +2368,9 @@ class Certification_lib{
 			];
 
 			$rs = $this->CI->user_certification_model->update($info->id, $param);
-			if($rs && $just_legalize) {
- 				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$msg);
+			if($rs) {
+                if(in_array($info->certification_id, $this->notification_list))
+ 				    $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$msg);
  				return true;
 			}
 		}

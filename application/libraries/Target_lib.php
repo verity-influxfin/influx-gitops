@@ -409,7 +409,8 @@ class Target_lib
                                     $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
                                     $msg = false;
                                 }
-                                $param['target_data'] = json_encode($targetData);
+                                $tempData = json_decode($target->target_data,true);
+                                $param['target_data'] = json_encode(array_replace_recursive($tempData, is_array($targetData)?$targetData:[]));
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if ($rs && $msg) {
                                     $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
