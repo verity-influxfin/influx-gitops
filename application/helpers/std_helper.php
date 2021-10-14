@@ -385,4 +385,9 @@
 
 		return in_array($file_type, $pdf_mimes, TRUE);
 	}
+
+	function isJson($string) {
+		json_decode($string);
+		return json_last_error() === JSON_ERROR_NONE;
+	}
 ?>

@@ -59,7 +59,7 @@
                                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?=isset($value->user_id)?$value->user_id:"" ?>">
                                             <td><?=isset($value->user_id)?$value->user_id:"" ?></td>
                                             <td><?=isset($value->investor)?$investor_list[$value->investor]:"" ?></td>
-                                            <td><?=isset($value->certification_id)?$certification_list[$value->certification_id]:"" ?></td>
+                                            <td><?=isset($value->certification_id)&&isset($certification_list[$value->certification_id])?$certification_list[$value->certification_id]:"" ?></td>
 											<td><?=isset($value->status)?$status_list[$value->status]:"" ?><?= isset($value->sys_check)&&$value->sys_check==1?' <i class="fas fa-robot"></i>':'' ?></td>
 											<td><?=isset($value->created_at)&&!empty($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
 											<td><a target="_blank" href="<?=admin_url('certification/user_certification_edit')."?id=".$value->id ?>" class="btn btn-default">Detail</a></td>

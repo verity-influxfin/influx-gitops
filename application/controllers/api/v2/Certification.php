@@ -523,6 +523,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -731,6 +732,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -945,7 +947,7 @@ class Certification extends REST_Controller {
 				'investor'		=> $investor,
 				'bank_code'		=> $content['bank_code'],
 				'bank_account'	=> $content['bank_account'],
-				'status'		=> 1,
+				'status'		=> CERTIFICATION_STATUS_SUCCEED,
 			];
 
 			$user_bankaccount = $this->user_bankaccount_model->get_by($where);
@@ -1123,6 +1125,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
 			];
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
@@ -1209,6 +1212,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			];
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1427,6 +1431,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1498,7 +1503,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => [0 ,3],
+                        'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE ,CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {
@@ -1540,7 +1545,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => [0 ,3],
+                        'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE ,CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {
@@ -1710,6 +1715,7 @@ class Certification extends REST_Controller {
 				'investor'			=> $investor,
                 'expire_time'		=> strtotime('+20 years'),
                 'content'			=> json_encode($content),
+                'status'            => CERTIFICATION_STATUS_AUTHENTICATED
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1839,6 +1845,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -2084,6 +2091,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
 			];
 
             if ($cer_exists) {
@@ -2102,6 +2110,87 @@ class Certification extends REST_Controller {
 			}
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {post} /v2/certification/verify_certifications 開始審核徵信階段的徵信項目
+     * @apiVersion 0.2.0
+     * @apiName PostVerifyCertifications
+     * @apiGroup Certification
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {Number} target_id 案件流水號
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     *
+     * @apiError 130 權限不足
+     * @apiErrorExample {Object} 130
+     *     {
+     *       "result": "ERROR",
+     *       "error": "130"
+     *     }
+     *
+     * @apiError 200 參數錯誤
+     * @apiErrorExample {Object} 200
+     *     {
+     *       "result": "ERROR",
+     *       "error": "200"
+     *     }
+     *
+     * @apiError 207 參數錯誤
+     * @apiErrorExample {Object} 207
+     *     {
+     *       "result": "ERROR",
+     *       "error": "207"
+     *     }
+     *
+     * @apiError 501 此驗證尚未啟用 (尚未提交所有徵信項)
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 801 標的不存在
+     * @apiErrorExample {Object} 801
+     *     {
+     *       "result": "ERROR",
+     *       "error": "801"
+     *     }
+     *
+     */
+    public function verify_certifications_post()
+    {
+        $input 		= $this->input->post(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+        $investor 	= $this->user_info->investor;
+        $targetId   = $input['target_id'];
+
+        if(!isset($targetId)) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT));
+        }
+
+        $target = $this->target_model->get($targetId);
+        if(!isset($target)) {
+            $this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST));
+        }else if($user_id != $target->user_id) {
+            $this->response(array('result' => 'ERROR','error' => PERMISSION_DENY));
+        }
+
+        if($investor != 0) {
+            $this->response(array('result' => 'ERROR','error' => IS_INVERTOR));
+        }
+
+        $this->load->library('Certification_lib');
+        $result = $this->certification_lib->verify_certifications($target, 1);
+        if($result)
+            $this->response(['result' => 'SUCCESS']);
+        else
+            $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
     public function simplificationfinancial_post()
@@ -3607,6 +3696,7 @@ class Certification extends REST_Controller {
 			'certification_id'	=> 4,
 			'investor'			=> $investor,
 			'content'			=> json_encode($content),
+            'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
         ];
         $insert_id = $this->user_certification_model->insert($param);
         if($insert_id){

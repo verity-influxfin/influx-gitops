@@ -2880,6 +2880,68 @@ class Product extends REST_Controller {
         }
     }
 
+    /**
+     * @api {get} /v2/product/target_verify_status 借款方 取得案件審核狀態
+     * @apiVersion 0.2.0
+     * @apiName GetTargetVerifyStatus
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiGroup Product
+     *
+     * @apiParam {Number} target_id 案件流水號
+     *
+     * @apiSuccess {String} result 響應結果
+     * @apiSuccess {Number} status 案件審核狀態 (1:已送出審核, 0:待送出審核)
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {"status": 1}
+     *    }
+     *
+     */
+    public function target_verify_status_get()
+    {
+        $input 		= $this->input->get(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+        $investor 	= $this->user_info->investor;
+        $targetId   = $input['target_id'];
+
+        if(!isset($targetId)) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT));
+        }
+
+        $target = $this->target_model->get($targetId);
+        if(!isset($target)) {
+            $this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST));
+        }else if($user_id != $target->user_id) {
+            $this->response(array('result' => 'ERROR','error' => PERMISSION_DENY));
+        }
+
+        if($investor != 0) {
+            $this->response(array('result' => 'ERROR','error' => IS_INVERTOR));
+        }
+
+        $this->load->library('Certification_lib');
+
+        $targetVerifying = TRUE;
+        $targetData = json_decode($target->target_data, true);
+        if(isset($targetData['verify_cetification_list'])) {
+            $targetData['verify_cetification_list'] = json_decode($targetData['verify_cetification_list'], true);
+            $this->load->model('user/user_certification_model');
+            $userCertifications 	= $this->user_certification_model->get_many_by([
+                'id'        => $targetData['verify_cetification_list'],
+                'status = ' => CERTIFICATION_STATUS_AUTHENTICATED,
+            ]);
+            if(!empty($userCertifications)) {
+                $targetVerifying = FALSE;
+            }
+        }else{
+            $targetVerifying = FALSE;
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['status' => $targetVerifying ? 1 : 0]]);
+
+    }
+
     private function NS2P1($param, $product, $input)
     {
         $characters = $this->config->item('character');

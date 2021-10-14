@@ -48,8 +48,24 @@ class Target_lib
     public function signing_target($target_id, $data, $user_id = 0)
     {
         if ($target_id) {
+            $this->CI->load->model('log/Log_targetschange_model');
             $rs = $this->CI->target_model->update($target_id, $data);
             $this->insert_change_log($target_id, $data, $user_id);
+
+            $target_change	= $this->CI->Log_targetschange_model->order_by('created_at','desc')->get_by(array(
+                'target_id'		=> $target_id,
+                'status'		=> TARGET_WAITING_SIGNING,
+            ));
+            if(isset($target_change)) {
+                $this->CI->load->library('Notification_lib');
+                $eventDate 	= date("Y-m-d H:i:s", strtotime("+3 day", $target_change->created_at));
+                if($eventDate >= date("Y-m-d H:i:s")) {
+                    $target = $this->CI->target_model->get_by(['id' => $target_id]);
+                    if(isset($target) && in_array($target->product_id, [3,4])) {
+                        $this->CI->notification_lib->obank_event_fast_signing($target);
+                    }
+                }
+            }
             return $rs;
         }
         return false;
@@ -396,7 +412,7 @@ class Target_lib
                                 $param['target_data'] = json_encode($targetData);
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if ($rs && $msg) {
-                                    $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
+                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
                                 }
 
                                 $this->insert_change_log($target->id, $param);
@@ -452,7 +468,8 @@ class Target_lib
 
     private function approve_target_fail($user_id, $target, $maxAmountAlarm = false , $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
     {
-        $remark .= ($maxAmountAlarm ? '.' : '。');
+        if($remark == '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
+            $remark .= ($maxAmountAlarm ? '.' : '。');
         $param = [
             'loan_amount' => 0,
             'status' => '9',
@@ -460,7 +477,10 @@ class Target_lib
         ];
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
-        $this->CI->notification_lib->approve_target($user_id, '9', 0,false,$remark);
+        $this->CI->notification_lib->approve_target($user_id, '9', $target, 0, false, $remark);
+        if(strpos($remark, "經AI系統綜合評估後") !== false && in_array($target->product_id, [3, 4])) {
+            $this->CI->notification_lib->obank_event_approve_failed($target);
+        }
 
         $guarantors = $this->get_associates_user_data($target->id, 'all', 1, false);
         if($guarantors){
@@ -1626,6 +1646,8 @@ class Target_lib
                     foreach ($targets as $target_id => $value) {
                     	if(!array_key_exists($value->product_id, $product_list))
                     		continue;
+                        $failedCertificationList = [];
+                        $pendingCertificationCount = 0;
                         $stage_cer = 0;
                         $product = $product_list[$value->product_id];
                         $sub_product_id = $value->sub_product_id;
@@ -1669,14 +1691,41 @@ class Target_lib
                             $subloan_status = preg_match('/' . $subloan_list . '/', $value->target_no) ? true : false;
                             $company = $value->product_id >= 1000 ? 1 : 0;
 
-                            $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
+                            // 個金認證流程-取得送審的認證列表編號
+                            $certifications = [];
+                            if(in_array($product_id, [1, 2, 3, 4])) {
+                                $targetData = json_decode($value->target_data, true);
+                                if (isset($targetData['verify_cetification_list'])) {
+                                    $targetData['verify_cetification_list'] = json_decode($targetData['verify_cetification_list'], true);
+                                    $userCertifications 	= $this->CI->user_certification_model->get_many_by([
+                                        'id'        => $targetData['verify_cetification_list']
+                                    ]);
+                                    foreach ($userCertifications as $userCertification) {
+                                        $userCertification->user_status = $userCertification->status;
+                                        $userCertification->id = $userCertification->certification_id;
+                                        $certifications[$userCertification->certification_id] = $userCertification;
+                                    }
+                                }
+                                $certifications = json_decode(json_encode($certifications), true);
+                            }
+
+                            if(empty($certifications))
+                                $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
+
                             $finish = true;
                             $finish_stage_cer = [];
                             $cer = [];
                             $matchBrookesia = false;        // 反詐欺狀態
                             $second_instance_check = false; // 進待二審
                             foreach ($certifications as $key => $certification) {
-                                if ($finish && in_array($certification['id'], $product_certification)) {
+                                if (in_array($certification['id'], $product_certification)) {
+
+                                    if($certification['user_status'] == '2') {
+                                        $failedCertificationList[] = $certification;
+                                    }else if(!in_array($certification['user_status'], [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED])) {
+                                        $pendingCertificationCount++;
+                                    }
+
                                     if ($certification['user_status'] != '1') {
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
@@ -1761,22 +1810,50 @@ class Target_lib
 									$this->approve_target($value, false, false, $targetData, $stage_cer, $subloan_status, $matchBrookesia, $second_instance_check);
 								}
                             } else {
-                                //自動取消
-                                $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
-                                $create_date = date('Y-m-d', $value->created_at);
-                                if ($limit_date > $create_date) {
-                                    $count++;
-                                    $param = [
-                                        'status' => TARGET_FAIL,
-                                        'sub_status' => TARGET_SUBSTATUS_NORNAL,
-                                        'remark' => $value->remark . '系統自動取消'
-                                    ];
-                                    $this->CI->target_model->update($value->id, $param);
-                                    $this->insert_change_log($target_id, $param);
-                                    $this->CI->notification_lib->approve_cancel($value->user_id);
-                                    if ($value->order_id != 0) {
-                                        $this->CI->load->model('transaction/order_model');
-                                        $this->CI->order_model->update($value->order_id, ['status' => 0]);
+                                $certificationConfig = $this->CI->config->item('certifications');
+                                $failedMsg = "";
+                                if((!$pendingCertificationCount && !empty($failedCertificationList)) ||
+                                    in_array(CERTIFICATION_IDCARD, array_column($failedCertificationList, 'certification_id'))) {
+                                    foreach ($failedCertificationList as $failedCert) {
+                                        $remark = json_decode($failedCert['remark'], True);
+                                        if(isset($remark)) {
+                                            $failedMsg .= "\n【" . $certificationConfig[$failedCert['certification_id']]['name'] . "】：";
+                                            if(in_array($failedCert['certification_id'], [CERTIFICATION_JOB, CERTIFICATION_INVESTIGATION])) {
+                                                $failedMsg .= implode(",", $remark['client_verify_result']);
+                                            }else {
+                                                $failedMsg .= $remark['fail'] ?? "";
+                                            }
+                                        }
+                                    }
+                                    if(strpos($failedMsg, "經AI系統綜合評估後") !== false) {
+                                        $failedMsg = CertificationResult::$FAILED_MESSAGE;
+                                    }
+                                    $this->approve_target_fail($value->user_id, $value, false, $failedMsg);
+                                }else {
+                                    //自動取消
+                                    $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
+                                    $create_date = date('Y-m-d', $value->created_at);
+
+                                    // 7天尚未提交資料時觸發王道活動通知
+                                    $notification_date = date('Y-m-d H:i:s', strtotime('+7 day', $value->created_at));
+                                    if(in_array($value->product_id, [3, 4]) && $notification_date >= date('Y-m-d H:i:s') && $notification_date <= date('Y-m-d H:i:s',strtotime('+1 hour'))) {
+                                        $this->CI->notification_lib->obank_event_pending_too_long($value);
+                                    }
+
+                                    if ($limit_date > $create_date) {
+                                        $count++;
+                                        $param = [
+                                            'status' => TARGET_FAIL,
+                                            'sub_status' => TARGET_SUBSTATUS_NORNAL,
+                                            'remark' => $value->remark . '系統自動取消'
+                                        ];
+                                        $this->CI->target_model->update($value->id, $param);
+                                        $this->insert_change_log($target_id, $param);
+                                        $this->CI->notification_lib->approve_cancel($value->user_id);
+                                        if ($value->order_id != 0) {
+                                            $this->CI->load->model('transaction/order_model');
+                                            $this->CI->order_model->update($value->order_id, ['status' => 0]);
+                                        }
                                     }
                                 }
 
