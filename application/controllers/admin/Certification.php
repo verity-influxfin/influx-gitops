@@ -1276,7 +1276,7 @@ class Certification extends MY_Admin_Controller {
 			'targetData' => $sub_product['targetData'],
 			'dealer' => $sub_product['dealer'],
 			'multi_target' => $sub_product['multi_target'],
-			'checkOwner' => $product['checkOwner'],
+			'checkOwner' => isset($product['checkOwner']) ? $product['checkOwner'] : false,
 			'status' => $sub_product['status'],
 		);
 	}
