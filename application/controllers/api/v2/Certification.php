@@ -3527,7 +3527,7 @@ class Certification extends REST_Controller {
             //選填欄位
             $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03'];
             foreach ($fields as $field) {
-                if (isset($input[$field]) && $input[$field] != '') {
+                if (isset($input[$field])) {
                     $content[$field] = $input[$field];
                 }
             }
