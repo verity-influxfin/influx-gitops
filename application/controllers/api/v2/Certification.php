@@ -3524,8 +3524,19 @@ class Certification extends REST_Controller {
             }
 
             $cer_profilejudicial = $this->config->item('cer_profilejudicial');
-            //選填欄位
-            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03'];
+
+            // 選填欄位
+            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03',
+
+                // 員工人數
+                'EmployeeNum',
+
+                // 股東人數
+                'ShareholderNum',
+
+                // 公司產業別
+                'CompDuType'
+            ];
             foreach ($fields as $field) {
                 if (isset($input[$field])) {
                     $content[$field] = $input[$field];
