@@ -1276,7 +1276,7 @@ class Certification extends MY_Admin_Controller {
 			'targetData' => $sub_product['targetData'],
 			'dealer' => $sub_product['dealer'],
 			'multi_target' => $sub_product['multi_target'],
-			'checkOwner' => $product['checkOwner'],
+			'checkOwner' => isset($product['checkOwner']) ? $product['checkOwner'] : false,
 			'status' => $sub_product['status'],
 		);
 	}
@@ -1317,20 +1317,19 @@ class Certification extends MY_Admin_Controller {
 
 	public function media_upload()
 	{
-		$post 		= $this->input->post();  //接到user_id
-		// print_r($post);exit;
+		$post 		= $this->input->post();
 		if (!empty($post)) {
 			$this->load->library('S3_upload');
 			$file_array = [];
 			$media_check = true;
-			if(!empty($_FILES['file'])){
-				foreach($_FILES['file'] as $k=>$v){
+            $media = [];
+			if(!empty($_FILES['file_upload_tmp'])){
+				foreach($_FILES['file_upload_tmp'] as $k=>$v){
 					foreach($v as $k1=>$v1){
 						$file_array[$k1][$k] = $v1;
 					}
 				}
 				foreach ($file_array as $field) {
-					// print_r($field);exit;
 					$file['image'] = $field;
 					$image 	= $this->s3_upload->image($file,'image',$post['user_id'],"certification/{$post['user_certification_id']}");
 					if($image){
@@ -1349,33 +1348,43 @@ class Certification extends MY_Admin_Controller {
 						$image_id_array[] = $v->id;
 					}
 					$this->log_image_model->insertGroupById($image_id_array,['group_info'=>$group_id]);
-					// $certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
-					$this->load->library('mapping/user/Certification_table');
-					$certification_mapping = $this->certification_table->certification_mapping;
-					$image_name = isset($this->certification[$post['certification_id']]['alias']) ? $certification_mapping[$post['certification_id']]['file_location'] : 'images' ;
+					$certification_content = json_decode($this->user_certification_model->get($post['user_certification_id'])->content,true);
+                    // TODO: 暫時寫死
+                    if($post['certification_id'] == 12){
+                        $image_name = 'person_mq_image';
+                    }
+                    if($post['certification_id'] == 1003){
+                        $image_name = 'legal_person_mq_image';
+                    }
 
-					$certification_content[$image_name] = $media;
+                    if(isset($certification_content[$image_name])){
+                        if(is_array($certification_content[$image_name])){
+                            $certification_content[$image_name] = array_merge($certification_content[$image_name],$media);
+                        }else{
+                            $certification_content[$image_name] = $media;
+                        }
+                    }else{
+                        $certification_content[$image_name] = array_merge($certification_content[$image_name],$media);
+                    }
 					$certification_content['group_id'] = $group_id;
 
 					$res = $this->user_certification_model->update($post['user_certification_id'], [
-						'content' 			=> json_encode($certification_content),
-						'status' => 0,
-						'remark' => ''
+						'content' => json_encode($certification_content)
 					]);
 					// 觸發上傳檔案 ocr
-					$this->load->library('ocr/report_scan_lib');
+					// $this->load->library('ocr/report_scan_lib');
 					// to do : 可能會有聯徵之外的檔案從後台上傳並觸發
-					if($post['user_id']){
-						if($post['certification_id'] == 1003){
-							$ocr_type = 'company';
-						}else{
-							$ocr_type = 'person';
-						}
-						// print_r($media);exit;
-						$this->load->model('log/log_image_model');
-				        $imageLogs = $this->log_image_model->getUrlByGroupID($group_id);
-						$this->report_scan_lib->requestForScan('credit_investigation', $imageLogs, $post['user_id'], $ocr_type);
-					}
+					// if($post['user_id']){
+					// 	if($post['certification_id'] == 1003){
+					// 		$ocr_type = 'company';
+					// 	}else{
+					// 		$ocr_type = 'person';
+					// 	}
+					// 	// print_r($media);exit;
+					// 	$this->load->model('log/log_image_model');
+				    //     $imageLogs = $this->log_image_model->getUrlByGroupID($group_id);
+					// 	$this->report_scan_lib->requestForScan('credit_investigation', $imageLogs, $post['user_id'], $ocr_type);
+					// }
 
 					($res)?
 						alert('檔案上傳成功', 'user_certification_edit?id='.$post['user_certification_id'])

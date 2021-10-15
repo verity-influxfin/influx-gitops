@@ -256,7 +256,7 @@ class Certification_table
         ],
         '1003' => [
             'type' => 'credit_investigation',
-            'image_name' => ['postal_image'],
+            'image_name' => ['legal_person_mq_image','postal_image'],
         ],
         '12' => [
             'type' => 'credit_investigation',

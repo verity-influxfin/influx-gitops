@@ -1632,6 +1632,7 @@ class Target_lib
         $ids = [];
         $script = 4;
         $count = 0;
+        $wait_associates = false;
         $allow_stage_cer = [1, 3];
         if ($targets && !empty($targets)) {
             foreach ($targets as $key => $value) {
@@ -1660,7 +1661,6 @@ class Target_lib
                         if($value->status != '1' && $value->product_id == 1002){
                             // 微企貸歸戶
 							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
-							$wait_associates = false;
                             if(isset($product['checkOwner']) && $product['checkOwner'] === true){
                                 $this->CI->load->model('loan/target_associate_model');
                                 if($value->sub_status == TARGET_SUBSTATUS_WAITING_ASSOCIATES) {
