@@ -2348,9 +2348,9 @@ class Certification_lib{
             $rs = $this->user_meta_progress($data,$info);
             if($rs && in_array($info->certification_id, $this->notification_list)) {
 				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
-                return $this->fail_other_cer($info);
-			}
-		}
+            }
+            return $this->fail_other_cer($info);
+        }
 		return false;
 	}
 
