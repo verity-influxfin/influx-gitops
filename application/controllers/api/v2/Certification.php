@@ -2091,7 +2091,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                'status'            => CERTIFICATION_STATUS_AUTHENTICATED,
 			];
 
             if ($cer_exists) {
