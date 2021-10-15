@@ -1402,14 +1402,12 @@ class Certification_lib{
 			// }else{
 			// 	$status = 3;
 			// }
-			// $this->CI->user_certification_model->update($info->id, array(
-			//     'status' => $status,
-			//     'sys_check' => 1,
-			//     'content' => json_encode($info->content),
-			//     'remark' => json_encode($info->remark)
-			//   ));
+			$this->CI->user_certification_model->update($info->id, array(
+			    'status' => 3,
+			    'sys_check' => 1,
+			  ));
 
-            $this->set_success($info->id, true);
+            // $this->set_success($info->id, true);
             return true;
         }
         return false;
