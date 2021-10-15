@@ -3536,7 +3536,7 @@ class Certification extends REST_Controller {
             $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
-                if(isset($input[$field])){
+                if(isset($input[$field]) && !empty($input[$field])){
                     $image_ids = explode(',',$input[$field]);
                     if(count($image_ids)>15){
                         $image_ids = array_slice($image_ids,0,15);
