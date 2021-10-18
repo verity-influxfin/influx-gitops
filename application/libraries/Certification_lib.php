@@ -1038,57 +1038,59 @@ class Certification_lib{
 		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
 		if($info && $info->certification_id == 1002 && $info->status == 0){
 			$status = 3;
-	    $data = [];
-			foreach($info->content['result'] as $k=>$v){
-				// 使用者校驗資料
-				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
-					$data[$k]['report_time'] = isset($v['report_time']) ? $v['report_time']: '';
-					$data[$k]['company_name'] = isset($v['company_name']) ? $v['company_name']: '';
-					$data[$k]['company_tax_id'] = isset($v['company_tax_id']) ? $v['company_tax_id']: '';
-					$data[$k]['input_89'] = isset($v['input_89']) ? $v['input_89']: '';
-					$data[$k]['input_90'] = isset($v['input_90']) ? $v['input_90']: '';
-					$data[$k]['id'] = $k;
-				}
-				if(! isset($v['origin_type'])){
-					// 找所有圖片ID
-			    // $this->CI->load->model('log/log_image_model');
-			    // if(is_array($info->content['income_statement_image'])){
-			    //   $imgurl = $info->content['income_statement_image'];
-			    // }else{
-			    //   $imgurl = [$info->content['income_statement_image']];
-			    // }
-			    // $image_info = $this->CI->log_image_model->get_many_by([
-			    //     'url' => $imgurl,
-			    // ]);
-			    // if($image_info){
-			    //   $update_time = $image_info[0]->created_at;
-			    //   foreach($image_info as $v){
-			    //     $imageIds[] = $v->id;
-			    //   }
-			    // }
+	        $data = [];
+            if(isset($info->content['result']) && !empty($info->content['result'])){
+                foreach($info->content['result'] as $k=>$v){
+    				// 使用者校驗資料
+    				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
+    					$data[$k]['report_time'] = isset($v['report_time']) ? $v['report_time']: '';
+    					$data[$k]['company_name'] = isset($v['company_name']) ? $v['company_name']: '';
+    					$data[$k]['company_tax_id'] = isset($v['company_tax_id']) ? $v['company_tax_id']: '';
+    					$data[$k]['input_89'] = isset($v['input_89']) ? $v['input_89']: '';
+    					$data[$k]['input_90'] = isset($v['input_90']) ? $v['input_90']: '';
+    					$data[$k]['id'] = $k;
+    				}
+    				if(! isset($v['origin_type'])){
+    					// 找所有圖片ID
+    			    // $this->CI->load->model('log/log_image_model');
+    			    // if(is_array($info->content['income_statement_image'])){
+    			    //   $imgurl = $info->content['income_statement_image'];
+    			    // }else{
+    			    //   $imgurl = [$info->content['income_statement_image']];
+    			    // }
+    			    // $image_info = $this->CI->log_image_model->get_many_by([
+    			    //     'url' => $imgurl,
+    			    // ]);
+    			    // if($image_info){
+    			    //   $update_time = $image_info[0]->created_at;
+    			    //   foreach($image_info as $v){
+    			    //     $imageIds[] = $v->id;
+    			    //   }
+    			    // }
 
-					// 找所有ocr資料
-			    $this->CI->load->library('ocr/report_scan_lib');
-			    $response = $this->CI->report_scan_lib->requestForResult('income_statements', $k);
-					if ($response && $response->status == 200) {
-						foreach($response as $k1=>$v1){
-		          $data[$k]['report_time'] = isset($v1->income_statement->report_time_range->end_at) ? $v1->income_statement->report_time_range->end_at : '';
-		          $data[$k]['company_name'] = isset($v1->income_statement->company->companyName) ? $v1->income_statement->company->companyName : '';
-		          $data[$k]['company_tax_id'] = isset($v1->income_statement->company->taxId) ? $v1->income_statement->company->taxId : '';
-		          $data[$k]['input_89'] = isset($v1->income_statement->operationIncome->{'89'}) ? $v1->income_statement->operationIncome->{'89'} : '';
-		          $data[$k]['input_90'] = isset($v1->income_statement->operationIncome->{'90'}) ? $v1->income_statement->operationIncome->{'90'} : '';
-		          $data[$k]['id'] = isset($v1->id) ? $v1->id : '';
-		          foreach($v1->income_statement->netIncomeTable as $v2){
-		            if($v2->key =='04'){
-		              $data[$k]['input_4_1'] = $v2->value->left;
-		              $data[$k]['input_4_2'] = $v2->value->right;
-		              break;
-		            }
-		          }
-		        }
-					}
-				}
-			}
+    					// 找所有ocr資料
+    			    $this->CI->load->library('ocr/report_scan_lib');
+    			    $response = $this->CI->report_scan_lib->requestForResult('income_statements', $k);
+    					if ($response && $response->status == 200) {
+    						foreach($response as $k1=>$v1){
+    		          $data[$k]['report_time'] = isset($v1->income_statement->report_time_range->end_at) ? $v1->income_statement->report_time_range->end_at : '';
+    		          $data[$k]['company_name'] = isset($v1->income_statement->company->companyName) ? $v1->income_statement->company->companyName : '';
+    		          $data[$k]['company_tax_id'] = isset($v1->income_statement->company->taxId) ? $v1->income_statement->company->taxId : '';
+    		          $data[$k]['input_89'] = isset($v1->income_statement->operationIncome->{'89'}) ? $v1->income_statement->operationIncome->{'89'} : '';
+    		          $data[$k]['input_90'] = isset($v1->income_statement->operationIncome->{'90'}) ? $v1->income_statement->operationIncome->{'90'} : '';
+    		          $data[$k]['id'] = isset($v1->id) ? $v1->id : '';
+    		          foreach($v1->income_statement->netIncomeTable as $v2){
+    		            if($v2->key =='04'){
+    		              $data[$k]['input_4_1'] = $v2->value->left;
+    		              $data[$k]['input_4_2'] = $v2->value->right;
+    		              break;
+    		            }
+    		          }
+    		        }
+    					}
+    				}
+    			}
+            }
 
 			if($data){
 				$this->CI->load->library('verify/data_legalize_lib');
