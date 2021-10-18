@@ -145,15 +145,15 @@ class Anti_fraud_lib{
         $verdictSet = [];
         if($response['status']=='200'){
             foreach ($response['response']['verdict_count'] as $verdict){
-                $caseList = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCase(urlencode($user_info->name), urlencode($verdict['name']), 1);
-                if($caseList){
-                    foreach ($caseList['response']["verdicts"] as $case){
+                $caseList = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsCase(urlencode($user_info->name), urlencode($verdict['type']), 1);
+                if($caseList && isset($caseList['response']['verdicts']['urls'])){
+                    foreach ($caseList['response']['verdicts']['urls'] as $case){
                         $limit = preg_match('/民事/', $case['title']) ? 20 : 18;
-                        if((date('Y',$case['createdAt']) - $limit) < $birthday && isset($userWithJudicialYuan[$verdict['name']])){
-                            $userWithJudicialYuan[$verdict['name']]['count'] != 1 ? $userWithJudicialYuan[$verdict['name']]['count'] -= 1 : '';
-                        }elseif((date('Y',$case['createdAt']) - $limit) > $birthday && !in_array($verdict['name'] ,$verdictSet)){
-                            $verdictSet[] = $verdict['name'];
-                            $userWithJudicialYuan[$verdict['name']] = $verdict;
+                        if((date('Y',$case['createdAt']) - $limit) < $birthday && isset($userWithJudicialYuan[$verdict['type']])){
+                            $userWithJudicialYuan[$verdict['type']]['count'] != 1 ? $userWithJudicialYuan[$verdict['type']]['count'] -= 1 : '';
+                        }elseif((date('Y',$case['createdAt']) - $limit) > $birthday && !in_array($verdict['type'] ,$verdictSet)){
+                            $verdictSet[] = $verdict['type'];
+                            $userWithJudicialYuan[$verdict['type']] = $verdict;
                         }
                     }
                 }

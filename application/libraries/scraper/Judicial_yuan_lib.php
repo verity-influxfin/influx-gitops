@@ -114,7 +114,7 @@ class Judicial_yuan_lib
         return;
       }
       $response = [];
-      $url = $this->scraperUrl  . "verdicts/{$name}/case?case={$case}&page={$page}";
+      $url = $this->scraperUrl  . "verdicts/{$name}/case?type={$case}&page={$page}";
 
       $result = curl_get($url);
 
