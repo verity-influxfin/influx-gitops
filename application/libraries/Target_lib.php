@@ -1644,6 +1644,7 @@ class Target_lib
                                     $this->CI->certification_lib->check_associates($target_id);
                                     $cer_userList = $this->get_associates_user_data($value->id, 'all', [0, 1], false);
                                     $wait_associates = true;
+                                    $finish = true;
                                     foreach ($cer_userList as $listKey => $listValue) {
                                         if($listValue->status == 0 || $listValue->user_id == null) {
                                             $finish = false;
@@ -1681,7 +1682,10 @@ class Target_lib
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
-                                            $finish = false;
+                                            // 微企貸對保不驗證
+                                            if($value->product_id != 1002 || $certification['id'] != 1020){
+                                                $finish = false;
+                                            }
                                         }
                                     }
 									// 工作認證有專業技能證書進待二審
