@@ -174,7 +174,7 @@ class Findbiz_lib
         }
         $image_info = base64_decode($result_array['response']['result']);
         $this->CI->load->library('S3_upload');
-        $url = $this->CI->s3_upload->image_by_data($image_info,'',$user_id,'BizImage');
+        $url = $this->CI->s3_upload->image_by_data($image_info,$businessid.'_.jpg',$user_id,'BizImage');
 
         return $url;
     }
