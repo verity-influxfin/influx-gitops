@@ -2286,7 +2286,7 @@ class Certification extends REST_Controller {
             //選填欄位
             $fields 	= ['PrCurAddrZip','PrCurAddrZipName','PrCurlAddress','PrTelAreaCode','PrTelNo','PrTelExt','PrMobileNo','RealPr','IsPrSpouseGu','PrStartYear','PrEduLevel','OthRealPrRelWithPr','OthRealPrName','OthRealPrId','OthRealPrBirth','OthRealPrStartYear','OthRealPrTitle','OthRealPrSHRatio','GuOneRelWithPr','GuOneCompany','GuTwoRelWithPr','GuTwoCompany','SpouseCurAddrZip','SpouseCurAddrZipName','SpouseCurlAddress','SpouseMobileNo','SpouseTelAreaCode','SpouseTelNo','SpouseTelExt','GuOneCurAddrZip','GuOneCurAddrZipName','GuOneCurlAddress','GuOneTelAreaCode','GuOneTelNo','GuOneTelExt','GuOneMobileNo','GuTwoCurAddrZip','GuTwoCurAddrZipName','GuTwoCurlAddress','GuTwoTelAreaCode','GuTwoTelNo','GuTwoTelExt','GuTwoMobileNo','CompType','EmployeeNum','ShareholderNum'];
             foreach ($fields as $field) {
-                if (isset($input[$field]) && $input[$field] != '') {
+                if (isset($input[$field])) {
                     $content[$field] = $input[$field];
                 }
             }
@@ -3542,7 +3542,7 @@ class Certification extends REST_Controller {
                     $content[$field] = $input[$field];
                 }
             }
-            $content['skbank_form'] = $content;
+            $content['skbank_form'] = $input;
 
             $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03'];
             //多個檔案欄位
