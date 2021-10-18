@@ -105,6 +105,12 @@
                                                 <tr><td><span>配偶連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="SpouseTelNo"></td></tr>
                                                 <tr><td><span>配偶連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="SpouseTelExt"></td></tr>
                                                 <tr><td><span>配偶連絡行動電話</span></td><td><input class="sk-input" type="text" name="SpouseMobileNo"></td></tr>
+                                                <tr><td><span>配偶是否擔任本案保證人</span></td><td>
+                                                    <select name="IsPrSpouseGu" class="table-input sk-input">
+                                                        <option value="A">1:是</option>
+                                                        <option value="B">2:否</option>
+                                                    </select>
+                                                </td></tr>
                                                 <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                             </tbody>
                                         </table>
