@@ -189,8 +189,8 @@
 		}
 		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}
-	
-	function make_promote_code() {
+
+	function make_promote_code($length=8) {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$rand = $code[rand(0,25)]
 			.strtoupper(dechex(date('m')))
@@ -202,7 +202,7 @@
 			$s = '0123456789ABCDEFGHIJKLMNOPQRSTUV',
 			$d = '',
 			$f = 0;
-			$f < 8;
+			$f < $length;
 			$g = ord( $a[ $f ] ),
 			$d .= $s[ ( $g ^ ord( $a[ $f + 8 ] ) ) - $g & 0x1F ],
 			$f++
@@ -385,4 +385,24 @@
 
 		return in_array($file_type, $pdf_mimes, TRUE);
 	}
+
+	function isAvailableDate($format, $date) {
+		$dt = \DateTime::createFromFormat($format, $date);
+		return $dt !== false && !array_sum($dt::getLastErrors());
+	}
+
+	function addPrefixToArray(array $array, string $prefix)
+	{
+		return array_map(function ($arrayValues) use ($prefix) {
+			return $prefix . $arrayValues;
+		}, $array);
+	}
+
+	function addSuffixToArray(array $array, string $suffix)
+	{
+		return array_map(function ($arrayValues) use ($suffix) {
+			return $arrayValues . $suffix;
+		}, $array);
+	}
+
 ?>

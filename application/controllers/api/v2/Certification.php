@@ -3728,4 +3728,95 @@ class Certification extends REST_Controller {
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
+
+    /**
+     * @api {post} /v2/certification/criminal_record 認證 良民證
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationCriminalRecord
+     * @apiGroup Certification
+     * @apiDescription 上傳良民證。
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {Number} criminal_record_image 良民證照片 ( 圖片ID )
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse NotIncharge
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+     *
+     *
+     *
+     */
+    public function criminal_record_post()
+    {
+        $this->load->model('user/user_bankaccount_model');
+        $certification_id 	= CERTIFICATION_CRIMINALRECORD;
+        $certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //上傳檔案欄位
+            $file_fields 	= ['criminal_record_image'];
+            foreach ($file_fields as $field) {
+                $image_id = intval($input[$field]);
+                if (!$image_id) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $rs = $this->log_image_model->get_by([
+                        'id'		=> $image_id,
+                        'user_id'	=> $this->user_info->originalID,
+                    ]);
+
+                    if($rs){
+                        $content[$field] = $rs->url;
+                    }else{
+                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    }
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'expire_time'		=> strtotime('+20 years'),
+                'content'			=> json_encode($content),
+                'status'            => 3,
+            ];
+
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(array('result' => 'SUCCESS'));
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
 }
