@@ -80,7 +80,7 @@ export default {
     },
     data: () => {
         return {
-            current_risk_month : 8,
+            current_risk_month : 9,
             report_list: {
                 7: '/images/risk07-report.jpg',
                 8: '/images/risk08-report.jpg',
