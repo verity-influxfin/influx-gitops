@@ -19,14 +19,10 @@
             <alesis-section>
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
-                    <img v-if="current_risk_month === '07'" src="/images/risk07-report.jpg" class="圖片">
-                    <img v-if="current_risk_month === '08'" src="/images/risk08-report.jpg" class="圖片">
+                    <img :src="img_path" class="圖片">
                     <div class="連結">
-                        <a @click="current_risk_month = '07'" href="javascript:;" class="項目">
-                            <alesis-button>2021年7月</alesis-button>
-                        </a>
-                        <a @click="current_risk_month = '08'" href="javascript:;" class="項目">
-                            <alesis-button>2021年8月</alesis-button>
+                        <a @click="current_risk_month = report_index" href="javascript:;" class="項目" v-for="report_index in Object.keys(report_list)">
+                            <alesis-button>2021年{{String(report_index).padStart(2, '0')}}月</alesis-button>
                         </a>
                     </div>
                     <a href="/invest" class="行動">
@@ -84,11 +80,21 @@ export default {
     },
     data: () => {
         return {
-            current_risk_month : "08",
+            current_risk_month : 8,
+            report_list: {
+                7: '/images/risk07-report.jpg',
+                8: '/images/risk08-report.jpg',
+                9: '/images/risk09-report.jpg',
+            },
         }
     },
+    computed: {
+        img_path() {
+            return this.report_list[this.current_risk_month];
+        },
+    },
     created() {
-        $("title").text(`首頁 - inFlux普匯金融科技`);
+        $("title").text(`風險報告書 - inFlux普匯金融科技`);
     },
 };
 </script>
