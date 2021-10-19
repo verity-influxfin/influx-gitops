@@ -207,18 +207,6 @@ class Certification extends MY_Admin_Controller {
 						$cut  = preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title);
 						$page_data['job_title'] = isset($cut[1]) ? preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0] : '' ;
 					}
-				}elseif(in_array($info->certification_id, [CERTIFICATION_BUSINESSTAX, CERTIFICATION_BALANCESHEET, CERTIFICATION_INCOMESTATEMENT])){
-					$image_key = [
-						CERTIFICATION_BUSINESSTAX => 'business_tax_image',
-						CERTIFICATION_BALANCESHEET => 'balance_sheet_image',
-						CERTIFICATION_INCOMESTATEMENT => 'income_statement_image',
-					];
-					$ocr_id = [];
-					$this->load->model('log/log_image_model');
-					foreach($page_data['content'][$image_key[$info->certification_id]] as $image_list => $image){
-						$ocr_id[$image_list] = $this->log_image_model->get_by(['url' => $image])->id;
-					}
-					$page_data['ocr_id'] = $ocr_id;
 				}
 				// 獲取 ocr 相關資料
 				// to do : ocr table 需優化 index 與 clinet table view
