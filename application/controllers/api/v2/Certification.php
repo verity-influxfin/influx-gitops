@@ -32,31 +32,54 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 
-			if(isset($tokenData->company) && $tokenData->company != 0 && !in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail','governmentauthorities']) ){
-				$this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
-			}
+            //代理人
+            if($tokenData->company==1 && $tokenData->incharge != 1 && $this->user_info->name != null ){
+                $this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
+            }
 
-			//代理人
-			//if($tokenData->company==1 && $tokenData->incharge != 1 ){
-				//$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
-			//}
-
-			if($this->request->method != 'get'){
-                    $this->load->model('log/log_request_model');
+            if($this->request->method != 'get'){
+                $this->load->model('log/log_request_model');
                 $this->log_request_model->insert(array(
-					'method' 	=> $this->request->method,
-					'url'	 	=> $this->uri->uri_string(),
-					'investor'	=> $tokenData->investor,
-					'user_id'	=> $tokenData->id,
-					'agent'		=> $tokenData->agent,
-				));
-			}
+                    'method' 	=> $this->request->method,
+                    'url'	 	=> $this->uri->uri_string(),
+                    'investor'	=> $tokenData->investor,
+                    'user_id'	=> $tokenData->id,
+                    'agent'		=> $tokenData->agent,
+                ));
+            }
 
-			$this->user_info->investor 		= $tokenData->investor;
-			$this->user_info->company 		= $tokenData->company;
-			$this->user_info->incharge 		= $tokenData->incharge;
-			$this->user_info->agent 		= $tokenData->agent;
-			$this->user_info->expiry_time 	= $tokenData->expiry_time;
+            $this->user_info->originalID = $tokenData->id;
+            $this->user_info->investor 		= $tokenData->investor;
+            $this->user_info->company 		= $tokenData->company;
+            $this->user_info->incharge 		= $tokenData->incharge;
+            $this->user_info->agent 		= $tokenData->agent;
+            $this->user_info->expiry_time 	= $tokenData->expiry_time;
+
+			if(isset($tokenData->company) && $tokenData->company != 0){
+                $this->load->library('Judicialperson_lib');
+                $this->user_info->naturalPerson = $this->judicialperson_lib->getNaturalPerson($tokenData->id);
+                if($this->user_info->naturalPerson && $this->request->method == 'post'){
+                    $this->load->library('certification_lib');
+                    //檢核變卡認證，並排除以下認證
+                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11'])){
+                        $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, 0);
+                        if(!$cerGovernmentauthorities && $method != 'governmentauthorities'){
+                            $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
+                        }
+                    }
+                    //要求先完成實名相關
+                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11'])){
+                        $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
+                        if(!$cerIDCARD){
+                            $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
+                        }
+                    }
+//                elseif(!in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail','governmentauthorities','charter','registerofmembers','mainproductstatus','startupfunds','business_plan','verification','condensedbalancesheet','condensedincomestatement','purchasesalesvendorlist','employeeinsurancelist','companyemail'])){
+//                    $this->response(array('result' => 'ERROR','error' => IS_COMPANY ));
+//                }
+
+                }
+			}
         }
     }
 
@@ -111,11 +134,24 @@ class Certification extends REST_Controller {
         $certification_list = $this->certification_lib->get_status($user_id, $investor, $company);
 		$list				= array();
 		if(!empty($certification_list)){
-			$list = $certification_list;
+		    $sort = $this->config->item('certifications_sort');
+		    $new_list = [];
+		    foreach ($sort as $key => $value){
+                if(isset($certification_list[$value])
+                    && (
+                        $company == 0 && $value < CERTIFICATION_FOR_JUDICIAL
+                        || $company == 1 && $value >= CERTIFICATION_FOR_JUDICIAL
+                    )
+                ){
+                    count($certification_list[$value]['optional']) == 0 ? $certification_list[$value]['optional'] = false : '';
+                    $new_list[$value] = $certification_list[$value];
+                }
+            }
+			$list = $new_list;
 		}
 
 		//讓代理人傳空值
-        if($company==1&&$incharge==0) {
+        if($company==1&&$incharge==0&&$this->user_info->name!=null) {
             $list = array();
         }
 		$this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
@@ -176,13 +212,16 @@ class Certification extends REST_Controller {
 		if($certification && $certification['status']==1){
             $user_id    = $this->user_info->id;
             $investor 	= $this->user_info->investor;
-            if($this->user_info->company && $certification['id'] == 9){
-                $this->load->model('user/judicial_person_model');
-                $judicial_person = $this->judicial_person_model->get_by(array(
-                    'company_user_id' 	=> $user_id,
-                ));
-                $user_id = $judicial_person->user_id;
+            if(isset($this->user_info->naturalPerson)){
+                $certification['id'] < 1000 ? $user_id = $this->user_info->naturalPerson->id :'';
             }
+            // if($this->user_info->company && $certification['id'] == 9){
+            //     $this->load->model('user/judicial_person_model');
+            //     $judicial_person = $this->judicial_person_model->get_by(array(
+            //         'company_user_id' 	=> $user_id,
+            //     ));
+            //     $user_id = $judicial_person->user_id;
+            // }
 
 			$rs	= $this->certification_lib->get_certification_info($user_id,$certification['id'],$investor);
             if($rs){
@@ -250,6 +289,18 @@ class Certification extends REST_Controller {
 					case 10:
 						$fields 	= ['tax_id','company','company_address','company_phone_number','industry','employee','position','type','seniority','job_seniority','salary'];
 						break;
+					case 11:
+                        $fields 	= [];
+						break;
+					case 12:
+                        $fields 	= ['investigationa11', 'return_type'];
+						break;
+					case 500:
+                        $fields 	= [];
+						break;
+					case 501:
+                        $fields 	= [];
+						break;
 					case 1000:
                         $fields 	= ['businesstax'];
 						break;
@@ -260,13 +311,52 @@ class Certification extends REST_Controller {
 						$fields 	= ['incomestatement'];
 						break;
 					case 1003:
-						$fields 	= ['investigationjudicial'];
+						$fields 	= ['return_type'];
 						break;
 					case 1004:
 						$fields 	= ['passbookcashflow'];
 						break;
 					case 1007:
 						$fields 	= ['governmentauthorities'];
+						break;
+					case 1008:
+						$fields 	= ['charter'];
+						break;
+					case 1009:
+						$fields 	= ['registerofmembers'];
+						break;
+					case 1010:
+						$fields 	= ['mainproductstatus'];
+						break;
+					case 1011:
+						$fields 	= ['startupfunds'];
+						break;
+					case 1012:
+						$fields 	= ['business_plan'];
+						break;
+					case 1013:
+						$fields 	= ['verification'];
+						break;
+					case 1014:
+						$fields 	= ['condensedbalancesheet'];
+						break;
+					case 1015:
+						$fields 	= ['condensedincomestatement'];
+						break;
+					case 1016:
+						$fields 	= ['purchasesalesvendorlist'];
+						break;
+					case 1017:
+						$fields 	= ['employeeinsurancelist'];
+						break;
+					case 1018:
+						$fields 	= [];
+						break;
+					case 1019:
+						$fields 	= ['email'];
+						break;
+					case 1020:
+						$fields 	= [];
 						break;
 					case 2000:
 						$fields 	= ['salesdetail'];
@@ -363,16 +453,16 @@ class Certification extends REST_Controller {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
-			$input 		= $this->input->post(NULL, TRUE);
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
 
-			//是否驗證過
-			$this->was_verify($certification_id);
-
 			//必填欄位
-			$fields 	= ['id_number','id_card_date','id_card_place','birthday'];//'name',,'address'
+			$fields 	= ['id_number','id_card_date','id_card_place','birthday','name','address'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -384,13 +474,13 @@ class Certification extends REST_Controller {
             $content['name'] 	= isset($input['name'])?$input['name']:"";
             $content['address'] = isset($input['address'])?$input['address']:"";
 
-			//if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
-			//	$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			//}
+			if(!preg_match('/^[\x{4e00}-\x{9fa5}]{2,15}$/u',$content['name'])){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
 
-			//if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
-			//	$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-			//}
+			if(mb_strlen($content['name']) < 2 || mb_strlen($content['name']) > 15){
+				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+			}
 
 			//檢查身分證字號
 			$id_check = check_cardid($input['id_number']);
@@ -413,7 +503,7 @@ class Certification extends REST_Controller {
 				}else{
 					$rs = $this->log_image_model->get_by([
 						'id'		=> $image_id,
-						'user_id'	=> $user_id,
+						'user_id'	=> $this->user_info->originalID,
 					]);
 
 					if($rs){
@@ -424,6 +514,9 @@ class Certification extends REST_Controller {
 					}
 				}
 			}
+
+			// 使用者手填資料
+			$content['SpouseName'] = isset($input['SpouseName']) ? $input['SpouseName'] : '';
 
 			$param		= array(
 				'user_id'			=> $user_id,
@@ -520,13 +613,13 @@ class Certification extends REST_Controller {
 		$certification_id 	= 2;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
-			$input 		= $this->input->post(NULL, TRUE);
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-
-			//是否驗證過
-			$this->was_verify($certification_id);
 
 			//必填欄位
 			$fields 	= [
@@ -820,17 +913,13 @@ class Certification extends REST_Controller {
 		$certification_id 	= 3;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
+            //是否驗證過
+            $this->was_verify($certification_id);
+
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= [];
-
-			if($this->user_info->company==1 && $this->user_info->incharge != 1){
-				$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
-			}
-
-			//是否驗證過
-			$this->was_verify($certification_id);
 
 			//必填欄位
 			$fields 	= ['bank_code','branch_code','bank_account'];
@@ -873,7 +962,7 @@ class Certification extends REST_Controller {
 				}else{
 					$rs = $this->log_image_model->get_by([
 						'id'		=> $image_id,
-						'user_id'	=> $user_id,
+						'user_id'	=> $this->user_info->originalID,
 					]);
 
 					if($rs){
@@ -908,6 +997,7 @@ class Certification extends REST_Controller {
 				if($investor){
 					$bankaccount_info['verify'] = 2;
 				}else{
+                    isset($this->user_info->naturalPerson) ? $user_id = [$user_id, $this->user_info->originalID] : '';
 					$this->certification_lib->set_success($insert);
 					$target = $this->target_model->get_by([
 						'user_id'	=> $user_id,
@@ -971,15 +1061,16 @@ class Certification extends REST_Controller {
 		$certification_id 	= 5;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
-			$input 		= $this->input->post(NULL, TRUE);
-			$user_id 	= $this->user_info->id;
-			$investor 	= $this->user_info->investor;
-			$content	= [];
+            //是否驗證過
+            $this->was_verify($certification_id);
 
-			//是否驗證過
-			$this->was_verify($certification_id);
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
 
-			//必填欄位
+
+            //必填欄位
 			$fields 	= ['name','phone','relationship'];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
@@ -1091,13 +1182,13 @@ class Certification extends REST_Controller {
 		$certification_id 	= 6;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
-			$input 		= $this->input->post(NULL, TRUE);
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-
-			//是否驗證過
-			$this->was_verify($certification_id);
 
 			//必填欄位
 			$fields 	= ['email'];
@@ -1239,13 +1330,13 @@ class Certification extends REST_Controller {
 		$certification_id 	= 7;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
-			$input 		= $this->input->post(NULL, TRUE);
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-
-			//是否驗證過
-			$this->was_verify($certification_id);
 
 			//必填欄位
 			$fields 	= [
@@ -1298,7 +1389,7 @@ class Certification extends REST_Controller {
                     } else {
                         $rs = $this->log_image_model->get_by([
                             'id' => $image_id,
-                            'user_id' => $user_id,
+                            'user_id' => $this->user_info->originalID,
                         ]);
 
                         if ($rs) {
@@ -1319,7 +1410,7 @@ class Certification extends REST_Controller {
                     }
                     $list = $this->log_image_model->get_many_by([
                         'id' => $image_ids,
-                        'user_id' => $user_id,
+                        'user_id' => $this->user_info->originalID,
                     ]);
 
                     if ($list && count($list) == count($image_ids)) {
@@ -1569,13 +1660,13 @@ class Certification extends REST_Controller {
 		$certification_id 	= 8;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
-			$input 		= $this->input->post(NULL, TRUE);
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
 			$content	= array();
-
-			//是否驗證過
-			$this->was_verify($certification_id);
 
             //必填欄位
 			$fields 	= ['school'];//,'major','department'
@@ -1672,13 +1763,13 @@ class Certification extends REST_Controller {
 		$certification_id 	= 9;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
-			$input 		= $this->input->post(NULL, TRUE);
-			$user_id 	= $this->user_info->id;
-			$investor 	= $this->user_info->investor;
-			$content	= array();
-			//是否驗證過
-			$this->was_verify($certification_id);
+            //是否驗證過
+            $this->was_verify($certification_id);
 
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= array();
 			$content['return_type'] = isset($input['return_type']) && intval($input['return_type'])?$input['return_type']:0;
 
 			$send_mail = false;
@@ -1692,7 +1783,7 @@ class Certification extends REST_Controller {
                     }else{
                         $rs = $this->log_image_model->get_by([
                             'id'		=> $image_id,
-                            'user_id'	=> $user_id,
+                            'user_id'	=> $this->user_info->originalID,
                         ]);
 
                         if($rs){
@@ -1842,6 +1933,7 @@ class Certification extends REST_Controller {
 		$certification_id 	= 10;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
+            isset($this->user_info->naturalPerson) ? $this->user_info->id = $this->user_info->naturalPerson->id : '';
 			$input 		= $this->input->post(NULL, TRUE);
 			$user_id 	= $this->user_info->id;
 			$investor 	= $this->user_info->investor;
@@ -1880,7 +1972,7 @@ class Certification extends REST_Controller {
                 $this->was_verify($certification_id);
             }
 
-			//必填欄位
+            //必填欄位
 			$fields 	= ['tax_id','industry','salary'];//,'company'
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
@@ -1917,6 +2009,11 @@ class Certification extends REST_Controller {
 			$content['type'] 		  = array_key_exists(intval($input['type']),$job_type_name)?intval($input['type']):0;
 			$content['seniority'] 	  = array_key_exists(intval($input['seniority']),$seniority_range)?intval($input['seniority']):0;
 			$content['job_seniority'] = array_key_exists(intval($input['job_seniority']),$seniority_range)?intval($input['job_seniority']):0;
+
+			// 使用者手填資料
+			$content['LaborQryDate'] = isset($input['LaborQryDate']) ? $input['LaborQryDate'] : '';
+			$content['LaborInsSalary'] = isset($input['LaborInsSalary']) ? $input['LaborInsSalary'] : '';
+
 			if(!array_key_exists($input['industry'],$industry_name)){
 				$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 			}
@@ -2007,6 +2104,212 @@ class Certification extends REST_Controller {
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
+    public function simplificationfinancial_post()
+    {
+        $certification_id 	= CERTIFICATION_SIMPLIFICATIONFINANCIAL;
+        $certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= array();
+
+            $file_fields 	= ['passbook_image'];
+            foreach ($file_fields as $field) {
+                $list = false;
+                $image_ids = isset($input[$field]) ? explode(',',$input[$field]) : [];
+                if(count($image_ids) > 0){
+                    if (count($image_ids) > 15) {
+                        $image_ids = array_slice($image_ids,0,15);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $this->user_info->originalID,
+                    ]);
+                }
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= array(
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            );
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->certification_lib->set_success($insert);
+                $this->response(array('result' => 'SUCCESS'));
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+	public function simplificationjob_post()
+    {
+		$certification_id 	= CERTIFICATION_SIMPLIFICATIONJOB;
+		$certification 		= $this->certification[$certification_id];
+		if($certification && $certification['status']==1){
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+			$input 		= $this->input->post(NULL, TRUE);
+			$user_id 	= $this->user_info->id;
+			$investor 	= $this->user_info->investor;
+			$content	= [];
+			$file_fields= [];
+
+            //必填欄位
+            $send_mail = false;
+            if(isset($input['labor_type'])){
+                if($input['labor_type']==0){
+                    $file_fields[] = 'labor_image';
+                }
+                elseif($input['labor_type']==1){
+					$content['labor_type']=$input['labor_type'];
+                    $this->mail_check($user_id,$investor);
+                    $send_mail =true;
+                }
+            }
+
+			foreach ($file_fields as $field) {
+                $list = false;
+				$image_ids = isset($input[$field]) ? explode(',',$input[$field]) : [];
+				if(count($image_ids) > 0){
+                    if(count($image_ids)>15){
+                        $image_ids = array_slice($image_ids,0,15);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $this->user_info->originalID,
+                    ]);
+                }
+
+				if($list && count($list)==count($image_ids)){
+					$content[$field] = [];
+					foreach($list as $k => $v){
+						$content[$field][] = $v->url;
+					}
+				}else{
+					$this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+				}
+			}
+
+            isset($input['LaborQryDate']) ? $content['LaborQryDate'] = $input['LaborQryDate'] : "";
+            isset($input['LaborInsSalary']) ? $content['LaborInsSalary'] = $input['LaborInsSalary'] : "";
+
+			$param		= [
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
+			];
+
+            $rs = $this->user_certification_model->insert($param);
+			if($rs){
+			    if($send_mail){
+                    $this->notification_lib->notice_cer_job($user_id);
+                }
+				$this->response(['result' => 'SUCCESS']);
+			}else{
+				$this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+			}
+		}
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    // 確認使用者與登記負責人關係
+    public function profile_get()
+    {
+        $input = $this->input->get(NULL, TRUE);
+        if(isset($input['target_id']) && is_numeric($input['target_id'])){
+            $user_id = $this->user_info->id;
+
+            // 使用者為法人時
+            if($this->user_info->company_status == 1){
+                $user_id = '';
+                $investor = '';
+                $user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0));
+                if(!empty($user_info)){
+                    $user_id = $user_info->id;
+                }else{
+                    $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+                }
+            }
+
+            $this->load->model('loan/target_associate_model');
+
+            $this->target_associate_model->limit(1)->order_by("id", "desc");
+            $target_associate_info = $this->target_associate_model->get_by(['user_id'=>$user_id,'target_id'=>$input['target_id']]);
+            if($target_associate_info){
+                $response = [
+                    'relaction_type' => isset($target_associate_info->character) && is_numeric($target_associate_info->character) ? (int)$target_associate_info->character : '',
+                ];
+
+                $this->response(array('result' => 'SUCCESS', 'data' => $response));
+            }else{
+                // 找不到資料
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_EXIST));
+            }
+        }
+        $this->response(array('result' => 'SUCCESS', 'data' => []));
+    }
+
+    public function profile_post()
+    {
+        $certification_id 	= CERTIFICATION_PROFILE;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $time = time();
+            $content	= [];
+
+            $cer_profilejudicial = $this->config->item('cer_profile');
+            //選填欄位
+            $fields 	= ['PrCurAddrZip','PrCurAddrZipName','PrCurlAddress','PrTelAreaCode','PrTelNo','PrTelExt','PrMobileNo','RealPr','IsPrSpouseGu','PrStartYear','PrEduLevel','OthRealPrRelWithPr','OthRealPrName','OthRealPrId','OthRealPrBirth','OthRealPrStartYear','OthRealPrTitle','OthRealPrSHRatio','GuOneRelWithPr','GuOneCompany','GuTwoRelWithPr','GuTwoCompany','SpouseCurAddrZip','SpouseCurAddrZipName','SpouseCurlAddress','SpouseMobileNo','SpouseTelAreaCode','SpouseTelNo','SpouseTelExt','GuOneCurAddrZip','GuOneCurAddrZipName','GuOneCurlAddress','GuOneTelAreaCode','GuOneTelNo','GuOneTelExt','GuOneMobileNo','GuTwoCurAddrZip','GuTwoCurAddrZipName','GuTwoCurlAddress','GuTwoTelAreaCode','GuTwoTelNo','GuTwoTelExt','GuTwoMobileNo','CompType','EmployeeNum','ShareholderNum'];
+            foreach ($fields as $field) {
+                if (isset($input[$field])) {
+                    $content[$field] = $input[$field];
+                }
+            }
+            $content['skbank_form'] = $content;
+            $res = $content;
+
+            $param = [
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'investor' => $investor,
+                'content' => json_encode($res),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if ($insert) {
+                // $this->certification_lib->set_success($insert);
+                $this->response(['result' => 'SUCCESS']);
+            } else {
+                $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+    }
+
     public function businesstax_post()
     {
         $certification_id 	= 1000;
@@ -2034,8 +2337,8 @@ class Certification extends REST_Controller {
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>3){
-                    $image_ids = array_slice($image_ids,0,3);
+                if(count($image_ids)>6){
+                    $image_ids = array_slice($image_ids,0,6);
                 }
                 $list = $this->log_image_model->get_many_by([
                     'id'		=> $image_ids,
@@ -2143,36 +2446,42 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['income_statement_image'];
-            foreach ($fields as $field) {
-                if (empty($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
-                    $content[$field] = $input[$field];
-                }
-            }
+            //改圖片欄位可選填，公司成立小於一年沒有損益表
+            // $fields 	= ['income_statement_image'];
+            // foreach ($fields as $field) {
+            //     if (empty($input[$field])) {
+            //         $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            //     }else{
+            //         $content[$field] = $input[$field];
+            //     }
+            // }
 
             $file_fields = ['income_statement_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
-                $image_ids = explode(',',$content[$field]);
-                if(count($image_ids)>6){
-                    $image_ids = array_slice($image_ids,0,6);
-                }
-                $list = $this->log_image_model->get_many_by([
-                    'id'		=> $image_ids,
-                    'user_id'	=> $user_id,
-                ]);
-
-                if($list && count($list)==count($image_ids)){
-                    $content[$field] = [];
-                    foreach($list as $k => $v){
-                        $content[$field][] = $v->url;
+                if(isset($input[$field]) && !empty($input[$field])){
+                    $image_ids = explode(',',$input[$field]);
+                    if(count($image_ids)>6){
+                        $image_ids = array_slice($image_ids,0,6);
                     }
-                }else{
-                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $user_id,
+                    ]);
+
+                    if($list && count($list)==count($image_ids)){
+                        $content[$field] = [];
+                        foreach($list as $k => $v){
+                            $content[$field][] = $v->url;
+                        }
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
                 }
             }
+
+			// 使用者手填資料
+			$content['skbank_form'] = $input;
 
             $param		= [
                 'user_id'			=> $user_id,
@@ -2204,16 +2513,81 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['legal_person_mq_image'];
+            $fields 	= ['return_type'];
             foreach ($fields as $field) {
-                if (empty($input[$field])) {
+                if (! isset($input[$field])) {
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
                 }else{
                     $content[$field] = $input[$field];
                 }
             }
 
-            $file_fields = ['legal_person_mq_image'];
+            $file_fields = ['legal_person_mq_image','postal_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                if(isset($input[$field])){
+                    $image_ids = explode(',',$input[$field]);
+                    if(count($image_ids)>15){
+                        $image_ids = array_slice($image_ids,0,15);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $user_id,
+                    ]);
+
+                    if($list && count($list)==count($image_ids)){
+                        $content[$field] = [];
+                        foreach($list as $k => $v){
+                            $content[$field][] = $v->url;
+                        }
+    					$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+	// 負責人聯徵
+	public function investigationa11_post()
+    {
+        $certification_id 	= 12;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['return_type','person_mq_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field]) && $input[$field] != 0) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['person_mq_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
                 $image_ids = explode(',',$content[$field]);
@@ -2230,15 +2604,31 @@ class Certification extends REST_Controller {
                     foreach($list as $k => $v){
                         $content[$field][] = $v->url;
                     }
+					$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
+					$content['mail_file_status'] = 1;
                 }else{
                     $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                 }
             }
 
+            // 如果從發人端登入上傳則將資料上傳位置更換為自然人ID
+            if($this->user_info->company_status == 1){
+                $user_id = '';
+                $this->user_info = $this->user_model->get_by(array( 'phone' => $this->user_info->phone, 'company_status' => 0, 'status' => 1, 'block_status' => 0));
+
+                if(!empty($this->user_info)){
+                    $user_id = $this->user_info->id;
+                }
+            }
+
+            if(empty($user_id)){
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+
             $param		= [
                 'user_id'			=> $user_id,
                 'certification_id'	=> $certification_id,
-                'investor'			=> $investor,
+                'investor'			=> 0,
                 'content'			=> json_encode($content),
             ];
             $insert = $this->user_certification_model->insert($param);
@@ -2352,10 +2742,666 @@ class Certification extends REST_Controller {
                     foreach($list as $k => $v){
                         $content[$field][] = $v->url;
                     }
+										// 變卡為圖片多對一ID,需額外存取 group id
+										$content['group_id'] = isset($list[0]->group_info) ? $list[0]->group_info : '';
                 }else{
                     $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
                 }
             }
+
+			// 寫入使用者手填資料
+			$content['skbank_form'] = [
+			  'CompId' => isset($input['CompId']) ? $input['CompId'] : '',
+			  'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
+			  'CompCapital' => isset($input['CompCapital']) ? $input['CompCapital'] : '',
+			  'CompRegAddress' => isset($input['CompRegAddress']) ? $input['CompRegAddress'] : '',
+			  'PrName' => isset($input['PrName']) ? $input['PrName'] : '',
+			  'PrincipalId' => isset($inout['PrincipalId']) ? $inout['PrincipalId'] : ''
+			];
+
+			// 董監事
+			$count_array =[
+				'1' => 'A',
+				'2' => 'B',
+				'3' => 'C',
+				'4' => 'D',
+				'5' => 'E',
+				'6' => 'F',
+				'7' => 'G',
+			];
+			for($i=1;$i<=7;$i++){
+				$content['skbank_form']["Director{$count_array[$i]}Id"] = isset($input["Director{$count_array[$i]}Id"]) ? $input["Director{$count_array[$i]}Id"] : '';
+				$content['skbank_form']["Director{$count_array[$i]}Name"] = isset($input["Director{$count_array[$i]}Name"]) ? $input["Director{$count_array[$i]}Name"] : '';
+			}
+
+            // 商業司爬蟲
+            $company_user_info = $this->user_model->get_by(array( 'id' => $this->user_info->id ));
+            if($company_user_info && !empty($company_user_info->id_number)){
+                $this->load->library('scraper/Findbiz_lib');
+                $this->findbiz_lib->requestFindBizData($company_user_info->id_number);
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function charter_post()
+    {
+        $certification_id 	= 1008;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['charter_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['charter_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function registerofmembers_post()
+    {
+        $certification_id 	= 1009;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['registerofmembers_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['registerofmembers_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function mainproductstatus_post()
+    {
+        $certification_id 	= 1010;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['mainproductstatus_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['mainproductstatus_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function startupfunds_post()
+    {
+        $certification_id 	= 1011;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['startupfunds_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['startupfunds_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function business_plan_post()
+    {
+        $certification_id 	= 1012;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['business_plan_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['business_plan_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function verification_post()
+    {
+        $certification_id 	= 1013;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['verification_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['verification_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function condensedbalancesheet_post()
+    {
+        $certification_id 	= 1014;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['condensedbalancesheet_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['condensedbalancesheet_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function condensedincomestatement_post()
+    {
+        $certification_id 	= 1015;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['condensedincomestatement_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['condensedincomestatement_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function purchasesalesvendorlist_post()
+    {
+        $certification_id 	= 1016;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['purchasesalesvendorlist_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['purchasesalesvendorlist_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(['result' => 'SUCCESS']);
+            }else{
+                $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function employeeinsurancelist_post()
+    {
+        $certification_id 	= 1017;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['employeeinsurancelist_image'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            $file_fields = ['employeeinsurancelist_image'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                $image_ids = explode(',',$content[$field]);
+                if(count($image_ids)>15){
+                    $image_ids = array_slice($image_ids,0,15);
+                }
+                $list = $this->log_image_model->get_many_by([
+                    'id'		=> $image_ids,
+                    'user_id'	=> $user_id,
+                ]);
+
+                if($list && count($list)==count($image_ids)){
+                    $content[$field] = [];
+                    foreach($list as $k => $v){
+                        $content[$field][] = $v->url;
+                    }
+                }else{
+                    $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                }
+            }
+
+			// 使用者手填資料
+            $content['skbank_form'] = [
+				'ReportTime' => isset($input['ReportTime']) ? $input['ReportTime'] : '',
+				'CompName' => isset($input['CompName']) ? $input['CompName'] : '',
+				'range' => isset($input['range']) ? $input['range'] : '',
+			];
+			foreach($input as $k=>$v){
+				if(preg_match('/NumOfInsuredYM|NumOfInsured/',$k)){
+					$content['skbank_form'][$k] = $v;
+				}
+			}
 
             $param		= [
                 'user_id'			=> $user_id,
@@ -2434,7 +3480,121 @@ class Certification extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
-    private function was_verify($certification_id=0){
+	public function profilejudicial_post()
+    {
+        $certification_id 	= CERTIFICATION_PROFILEJUDICIAL;
+        $certification 		= $this->certification[$certification_id];
+        if($certification){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $time = time();
+            $content	= [];
+
+            $cer_exists = $this->user_certification_model->get_by([
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'status' => 4,
+            ]);
+            if (isset($input['save']) && $input['save']) {
+                $param = [
+                    'user_id' => $user_id,
+                    'certification_id' => $certification_id,
+                    'investor' => $investor,
+                    'content' => json_encode($input),
+                    'status' => 4,
+                ];
+
+                if ($cer_exists) {
+                    $input = (object)array_merge((array)json_decode($cer_exists->content), (array)$input);
+                    $rs = $this->user_certification_model->update($cer_exists->id, [
+                        'content' => json_encode($input),
+                    ]);
+                } else {
+                    $rs = $this->user_certification_model->insert($param);
+                }
+                if ($rs) {
+                    $this->response(['result' => 'SUCCESS','msg' => 'SAVED']);
+                }
+            }
+
+            //是否驗證過
+            if(!$cer_exists || $cer_exists->status != 4){
+                $this->was_verify($certification_id);
+            }
+
+            $cer_profilejudicial = $this->config->item('cer_profilejudicial');
+
+            // 選填欄位
+            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03',
+
+                // 員工人數
+                'EmployeeNum',
+
+                // 股東人數
+                'ShareholderNum',
+
+                // 公司產業別
+                'CompDuType'
+            ];
+            foreach ($fields as $field) {
+                if (isset($input[$field])) {
+                    $content[$field] = $input[$field];
+                }
+            }
+            $content['skbank_form'] = $input;
+
+            $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03'];
+            //多個檔案欄位
+            foreach ($file_fields as $field) {
+                if(isset($input[$field]) && !empty($input[$field])){
+                    $image_ids = explode(',',$input[$field]);
+                    if(count($image_ids)>15){
+                        $image_ids = array_slice($image_ids,0,15);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id'		=> $image_ids,
+                        'user_id'	=> $user_id,
+                    ]);
+
+                    if($list && count($list)==count($image_ids)){
+                        $content[$field] = [];
+                        foreach($list as $k => $v){
+                            $content[$field][] = $v->url;
+                        }
+                    }else{
+                        $this->response(['result' => 'ERROR','error' => INPUT_NOT_CORRECT]);
+                    }
+                }
+            }
+
+            $res = $content;
+
+            $param = [
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'investor' => $investor,
+                'content' => json_encode($res),
+            ];
+            if ($cer_exists) {
+                $param['status'] = 0;
+                $rs = $this->user_certification_model->update($cer_exists->id, $param);
+            }else{
+                $rs = $this->user_certification_model->insert($param);
+            }
+            if ($rs) {
+                $this->response(['result' => 'SUCCESS']);
+            } else {
+                $this->response(['result' => 'ERROR', 'error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+    }
+
+    private function was_verify($certification_id = 0){
+        if(isset($this->user_info->naturalPerson) && $certification_id < 1000) {
+            $this->user_info->id = $this->user_info->naturalPerson->id;
+        }
         $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id,$certification_id,$this->user_info->investor);
         if($user_certification){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_WAS_VERIFY ));
@@ -2466,4 +3626,106 @@ class Certification extends REST_Controller {
 			$this->response(array('result' => 'ERROR','error' => INSERT_ERROR));
         }
 	}
+
+    public function companyemail_post()
+    {
+        $certification_id 	= CERTIFICATION_COMPANYEMAIL;
+        $certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= array();
+            $time = time();
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            //必填欄位
+            $fields 	= ['email'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = $input[$field];
+                }
+            }
+
+            if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL)) {
+                $this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
+            }
+
+            // $res['result'][$time] = $content;
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'content'			=> json_encode($content),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->load->library('Sendemail');
+                $this->sendemail->send_verify_email($insert,$content['email'],$investor, 'company');
+                $this->response(array('result' => 'SUCCESS'));
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function judicialguarantee_post()
+    {
+        $certification_id 	= CERTIFICATION_JUDICIALGUARANTEE;
+        $certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            $input = $this->input->post(NULL, TRUE);
+            $user_id = $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $image_id = isset($input['image']) ? $input['image'] : '';
+            $time = time();
+            $content = array();
+
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            // 檢查是否存在歸戶資料
+            $this->load->model('user/judicial_person_model');
+            $judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
+            // if(!$judicial_person_info){
+            //     $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
+            // }
+
+            // 檢查圖片是否存在
+            $image_info = $this->log_image_model->get_by([
+                'id'		=> $image_id,
+                'user_id'	=> $user_id,
+            ]);
+            if(!$image_info || !isset($image_info->url)){
+                $this->response(array('result' => 'ERROR','error' => PICTURE_NOT_EXIST ));exit;
+            }
+
+            // 更新歸戶資料，加入對保自拍圖片
+            $data_content = [];
+            $data_content = isset($judicial_person_info->sign_video) && json_decode($judicial_person_info->sign_video,true) ? json_decode($judicial_person_info->sign_video,true) : [];
+            $data_content['image_url'] = $image_info->url;
+            $this->judicial_person_model->update_by(['company_user_id' => $user_id],['sign_video' => json_encode($data_content), 'status' => 0]);
+
+            $res['result'][$time]['image_url'] = $image_info->url;
+
+            $param = [
+                'user_id' => $user_id,
+                'certification_id' => $certification_id,
+                'investor' => $investor,
+                'content' => json_encode($res),
+            ];
+            $insert = $this->user_certification_model->insert($param);
+            if ($insert) {
+                $this->response(array('result' => 'SUCCESS'));
+            } else {
+                $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
 }

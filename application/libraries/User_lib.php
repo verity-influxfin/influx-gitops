@@ -1,10 +1,16 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use EdmEvent\EdmEventFactory;
 
 class User_lib {
 
-	public function __construct()
+    /**
+     * @var int
+     */
+    private $totalCount;
+
+    public function __construct()
     {
         $this->CI = &get_instance();
         $this->CI->load->model('log/log_userlogin_model');
@@ -67,6 +73,23 @@ class User_lib {
             ));
             return true;
         }
+    }
+
+    public function script_trigger_edm_event() {
+        $this->CI->load->model('user/edm_event_model');
+        $this->CI->load->model('user/edm_event_log_model');
+        $events = $this->CI->edm_event_model->getCanTriggerEvent();
+        $this->totalCount = 0;
+
+        foreach ($events as $event) {
+            $edmEvent = EdmEventFactory::getInstance($event);
+            if(isset($edmEvent)) {
+                $this->CI->edm_event_model->update_by(['id' => $event['id']], ['triggered_at' => date('Y-m-d H:i:s')]);
+                $this->totalCount += $edmEvent->send();
+            }
+        }
+
+        return $this->totalCount;
     }
 
 }

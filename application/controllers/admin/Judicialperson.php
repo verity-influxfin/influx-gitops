@@ -4,9 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Judicialperson extends MY_Admin_Controller {
-	
+
 	protected $edit_method = array('edit','apply_success','apply_failed','cooperation_edit','cooperation_success','cooperation_failed','media_upload');
-	
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/judicial_person_model');
@@ -14,7 +14,7 @@ class Judicialperson extends MY_Admin_Controller {
 		$this->load->library('Judicialperson_lib');
 		$this->load->library('S3_upload');
 	}
-	
+
 	public function index(){
 		$page_data 	= array('type'=>'list');
 		$input 		= $this->input->get(NULL, TRUE);
@@ -24,6 +24,7 @@ class Judicialperson extends MY_Admin_Controller {
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 				$where[$field] = $input[$field];
+				$where['status'] == 0 ? $where['status'] = [0,3] : '';
 			}
 		}
 		if(!empty($where)){
@@ -47,9 +48,9 @@ class Judicialperson extends MY_Admin_Controller {
 		$this->load->view('admin/judicial_person/judicial_person_list',$page_data);
 		$this->load->view('admin/_footer');
 	}
-	
+
 	public function media_upload()
-	{   
+	{
 		$post 		= $this->input->post(NULL, TRUE);  //接到user_id
 		if (!empty($post)) {
 			$media	= $this->s3_upload->media($_FILES, 'media', $post['user_id'], 'confirmation_for_judicial_person');
@@ -108,7 +109,7 @@ class Judicialperson extends MY_Admin_Controller {
 						'user_id'	=> $info->company_user_id,
 						'status'	=> 1,
 						'verify'	=> 1,
-						'investor'	=> 1
+						'investor'	=> 0
 					);
 					$this->load->model('user/user_bankaccount_model');
 					$user_bankaccount 	= $this->user_bankaccount_model->get_by($where);
@@ -116,9 +117,75 @@ class Judicialperson extends MY_Admin_Controller {
 						$page_data['bankaccount_id'] = $user_bankaccount->id;
 					}
 
-					$media_data =json_decode($info->sign_video,true);
+					// $face_data =json_decode($info->sign_video,true);
+					$content = isset($info->sign_video) && json_decode($info->sign_video,true) ? json_decode($info->sign_video,true) : [];
+					// 人臉比對
+					$page_data['face_list'] = '';
+					if($content){
+			      $data['main_image'] = isset($content['person_image_url']) ? $content['person_image_url'] : '';
+			      $data['sub_image'] = isset($content['image_url']) ? $content['image_url'] : '';
+
+			      $data['main_title'] = '持證自拍照片';
+			      $data['sub_title'] = '對保照片';
+			      // 微軟
+			      $data['azure']['main_data'] = ! empty($content['azure']['person']) ? $content['azure']['person'] : [];
+			      $data['azure']['sub_data'] = ! empty($content['azure']['governmentauthorities']) ? $content['azure']['governmentauthorities'] : [];
+			      $data['azure']['table'] = '';
+			      // 微軟比較表
+			      if(!empty($content['azure']['compare'])){
+			        $table = [];
+			        $num = count($data['azure']['main_data']);
+			        $sub_num = count($data['azure']['sub_data']);
+
+			        $table_info = array_chunk($content['azure']['compare'],$num);
+			        for($i=0;$i<=$sub_num;$i++){
+			          if($i==0){
+			            $table[$i]['title'] = ' ';
+			          }else{
+			            $table[$i]['title'] = $data['sub_title'].'座標'.$i;
+			          }
+			          for($j=1;$j<=$num;$j++){
+			            if($i==0){
+			              $table[$i]['value'][] = $data['main_title'].'座標'.$j;
+			            }else{
+			              $table[$i]['value'][] = isset($table_info[$i-1][$j-1]['confidence']) ? $table_info[$i-1][$j-1]['confidence'] : '-';
+			            }
+			          }
+			        }
+			        $data['azure']['table'] = $this->load->view('admin/certification/ocr/total_table',['data' => $table],true);
+			      }
+			      // face++
+			      $data['faceplusplus']['compare'] = ! empty($content['faceplusplus']['compare']) ? implode(', ',$content['faceplusplus']['compare']) : '-';
+			      // papago
+			      $data['papago']['main_data'] = ! empty($content['papago']['person']) ? $content['papago']['person'] : [];
+			      $data['papago']['sub_data'] = ! empty($content['papago']['governmentauthorities']) ? $content['papago']['governmentauthorities'] : [];
+			      // papago比較表
+			      if(!empty($content['papago']['compare'])){
+			        $table = [];
+			        $num = count($data['papago']['main_data']['faces']);
+			        $sub_num = count($data['papago']['sub_data']['faces']);
+
+			        $table_info = array_chunk($content['papago']['compare'],$num);
+			        for($i=0;$i<=$sub_num;$i++){
+			          if($i==0){
+			            $table[$i]['title'] = ' ';
+			          }else{
+			            $table[$i]['title'] = $data['sub_title'].'座標'.$i;
+			          }
+			          for($j=1;$j<=$num;$j++){
+			            if($i==0){
+			              $table[$i]['value'][] = $data['main_title'].'座標'.$j;
+			            }else{
+			              $table[$i]['value'][] = isset($table_info[$i-1][$j-1]['confidence']) ? $table_info[$i-1][$j-1]['confidence'] : '-';
+			            }
+			          }
+			        }
+			        $data['papago']['table'] = $this->load->view('admin/certification/ocr/total_table',['data' => $table],true);
+			      }
+
+			      $page_data['face_list'] = $this->load->view('admin/certification/component/face_confidence',$data,true);
+					}
 					$page_data['jid'] = $get['id'];
-					$page_data['media_list'] = $media_data;
                     $page_data['company_type'] = $this->config->item('company_type');
                     $this->load->view('admin/_header');
 					$this->load->view('admin/_title', $this->menu);
@@ -135,7 +202,7 @@ class Judicialperson extends MY_Admin_Controller {
 			if (!empty($post['id'])) {
 				$info = $this->judicial_person_model->get($post['id']);
 				$media_data = json_decode($info->sign_video, true);
-				if ($info && !empty($media_data) && isset($media_data['judi_admin_video'])) {
+				if ($info && !empty($media_data) ) {
 					if ($post['status'] == '1') {
 						$rs = $this->judicialperson_lib->apply_success($post['id']);
 					} else if ($post['status'] == '2') {
@@ -165,7 +232,7 @@ class Judicialperson extends MY_Admin_Controller {
 			$info = $this->judicial_person_model->get($id);
 			if ($info && $info->status == 0) {
 				$res = $this->judicialperson_lib->apply_success($id, $this->login_info->id);
-				if ($res===false) { 
+				if ($res===false) {
 					echo '更新失敗';
 					die();
 				} else {
@@ -180,7 +247,7 @@ class Judicialperson extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function apply_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -197,13 +264,13 @@ class Judicialperson extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	public function cooperation(){
 		$page_data 	= array('type'=>'list');
 		$input 		= $this->input->get(NULL, TRUE);
 		$where		= array();
 		$list		= array();
-		
+
 		$fields 	= ['cooperation','user_id','tax_id'];
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
@@ -307,8 +374,8 @@ class Judicialperson extends MY_Admin_Controller {
                         $rs = $this->judicialperson_lib->cooperation_failed($post['id']);
 						$data['msg'] = $rs?'變更成功':'變更失敗';
 					}
-					$data['redirect'] = admin_url('judicialperson/cooperation_edit?id='.$post['id']);
-					echo json_encode($data);
+					alert($data['msg'],admin_url('judicialperson/cooperation_edit?id='.$post['id']));
+					//echo json_encode($data);
                 } else {
                     alert('查無此ID', admin_url('cooperation?cooperation=2'));
                 }
@@ -343,7 +410,7 @@ class Judicialperson extends MY_Admin_Controller {
 			echo '查無此ID';die();
 		}
 	}
-	
+
 	function cooperation_failed(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?intval($get['id']):0;
@@ -363,7 +430,7 @@ class Judicialperson extends MY_Admin_Controller {
 
 	private function get_cerCreditJudicial($user_id){
 		$this->load->library('certification_lib');
-		return $this->certification_lib->get_certification_info($user_id,1006,0);
+		return $this->certification_lib->get_certification_info($user_id,CERTIFICATION_CERCREDITJUDICIAL,0);
 	}
 
 	private function get_taishinAccount($data){

@@ -1,0 +1,23 @@
+{
+    "case_no": "2020010100000001",
+    "apply_agree": "A",
+    "apply_accept": "A",
+    "loan_amount": "1000000",
+    "loan_begin": "2021-01-01",
+    "loan_expire": "2021-12-31",
+    "loan_rate": "3.33",
+    "interest_bearing_type": "A",
+    "draw_type": "A",
+    "additional_cond": "測試測試",
+    "smeg_guarantee_date": "2021-01-01",
+    "smeg_guarantee_percent": "90.0",
+    "smeg_guarantee_begin": "2021-01-01",
+    "smeg_guarantee_expire": "2021-12-31",
+    "smeg_guarantee_no": "T123456789",
+    "funding_date": "2021-01-01",
+    "funding_amount": "1000000",
+    "funding_rate": "3.33",
+    "funding_begin": "2021-01-01",
+    "funding_expire": "2021-12-31",
+    "repayment_status": "A"
+}

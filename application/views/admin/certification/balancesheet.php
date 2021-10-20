@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-lg-6">
                             <h1>圖片</h1>
-                            <fieldset disabled>
+                            <fieldset>
                                 <div class="form-group">
                                     <label>財稅簽資料表(資產負債表)</label><br>
                                     <? isset($content['balance_sheet_image']) && !is_array($content['balance_sheet_image']) ? $content['balance_sheet_image'] = array($content['balance_sheet_image']) : '';

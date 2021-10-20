@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgba(204, 204, 204);
+  font: 12px '微軟正黑體';
+  counter-reset: PageNumber;
+}
+* {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+.page {
+  width: 29.7cm;
+  min-height: 42cm;
+  padding: 10px;
+  margin: 1cm auto;
+  border: 1px #d3d3d3 solid;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.subpage {
+  padding: 1px;
+  border: 5px white solid;
+  height: 420mm;
+  outline: 1px white solid;
+}
+@page {
+  size: A3;
+  margin: 0;
+}
+@media print {
+  .page {
+    margin: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+  }
+}
+table {
+  width: 28.86cm;
+  font-family: 微軟正黑體;
+  text-align: center;
+  border: 1px solid gray;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-break: break-all;
+  padding-bottom: 14px;
+}
+th {
+  height: 14px;
+  line-height: 13px;
+  text-align: center;
+  border: 1px solid gray;
+  table-layout: fixed;
+  word-break: break-all;
+}
+td {
+  height: 14px;
+  line-height: 13px;
+  text-align: left;
+  border: 1px solid gray;
+  table-layout: fixed;
+  word-break: break-all;
+}
+tr td th:last-child {
+  word-break: break-all;
+  word-wrap: break-word;
+}
+#white {
+  padding-top: 5px;
+  padding-left: 10px;
+  padding-right: 30px;
+  padding-bottom: 5px;
+  border: 1px solid 000000;
+}

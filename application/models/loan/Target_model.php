@@ -24,6 +24,13 @@ class Target_model extends MY_Model
 
         30 => "待核可 (外匯車)",
         31 => "待簽約 (外匯車)",
+
+        500 => "銀行審核中",
+        501 => "銀行對保中",
+        504 => "銀行待放款",
+        505 => "銀行還款中",
+        509 => "銀行退件",
+        510 => "銀行已結案",
     );
     public $sub_list = array(
         0 => "無",
@@ -35,8 +42,11 @@ class Target_model extends MY_Model
         6 => "出貨鑑賞期",
         7 => "退貨中",
         8 => "產轉案件",
-        9 => "待二審",
+        9 => "二審",
         10 => "二審過件",
+        11 => "檢驗保證人",
+        12 => "轉人工(內部審核)",
+        13 => "法催",
 
         20 => "交易成功(系統自動)",
         21 => "需轉人工",
@@ -239,5 +249,58 @@ class Target_model extends MY_Model
         $query = $this->db->get();
 
         return $query->result();
+    }
+
+    public function getUserStatusByTargetId($targetIds) {
+        $this->db->select('*')
+            ->from("`p2p_loan`.`targets`")
+            ->where_in('id', $targetIds);
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.user_id, COUNT(*) as total_count')
+            ->from('`p2p_loan`.`targets` AS `t`')
+            ->join("($subquery) as `r`", "`t`.`user_id` = `r`.`user_id`")
+            ->where('t.created_at < r.created_at')
+            ->where("FROM_UNIXTIME(`t`.`created_at`, '%Y-%m-%d %H:%i:%s') >= DATE_SUB(FROM_UNIXTIME(`r`.`created_at`, '%Y-%m-%d %H:%i:%s'), INTERVAL 6 MONTH)")
+            ->group_by('t.user_id');
+
+        return $this->db->get()->result();
+    }
+    
+    /**
+     * 設定案件的的腳本使用狀態 (成功:回傳案件的物件/不成功:回傳空陣列)
+     * @param $target_ids
+     * @param $old_status
+     * @param $new_status
+     * @return array|stdClass
+     */
+    public function setScriptStatus($target_ids, $old_status, $new_status) {
+        if(!is_array($target_ids) || empty($target_ids))
+            return [];
+
+        $this->db->trans_begin();
+        $targets = $this->db->select_for_update('*')->where_in('id', $target_ids)
+            ->where('script_status', $old_status)
+            ->from('`p2p_loan`.`targets`')
+            ->get()->result();
+
+        if(is_array($targets) && !empty($targets)) {
+            $this->db->where_in('id', $target_ids)
+                ->where('script_status', $old_status)
+                ->set(['script_status' => $new_status])
+                ->update('`p2p_loan`.`targets`');
+
+            // 更新失敗需回傳 empty array
+            if($this->db->affected_rows() != count($target_ids)) {
+                $this->db->trans_rollback();
+                return [];
+            }
+        }
+        $this->db->trans_commit();
+
+        foreach ($targets as $target) {
+            $target->script_status = $new_status;
+        }
+        return $targets;
     }
 }

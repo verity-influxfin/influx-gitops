@@ -12,11 +12,11 @@ class S3_lib {
 		'image/png'	 => '.png' ,
 		'image/gif'	 => '.gif' ,
 	);
-	
+
 	private $client;
-	
+
     public function __construct()
-	{   
+	{
         $this->CI 		= &get_instance();
 		$this->CI->load->model('log/log_image_model');
 		$this->client 	= S3Client::factory(
@@ -51,7 +51,7 @@ class S3_lib {
 			)
 		);
 	}
-		
+
     public function public_delete_image($s3_url,$bucket=AZURE_S3_BUCKET,$imageInfo=[])
     {
         $filename = 'azure_image';
@@ -82,7 +82,7 @@ class S3_lib {
     }
 
 	public function get_mailbox_list()
-	{   
+	{
 		$data_list = array();
 		$url_list = array();
 		$bucket = S3_BUCKET_MAILBOX;
@@ -106,65 +106,90 @@ class S3_lib {
 	}
 
 	public function public_delete_s3object($s3_url,$bucket=AZURE_S3_BUCKET)
-	{  
+	{
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
 		$result= $this->client_us2->deleteObject(array(
 			'Bucket' 		=> $bucket,
 			'Key'    		=> $key
 		));
-		
+
 	}
 
 	public function public_get_filename($s3_url,$bucket=S3_BUCKET_MAILBOX)
-	{  
+	{
 		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
 		return $key;
-		
+
 	}
 
 	public function unknown_mail($s3_url,$bucket=S3_BUCKET_MAILBOX)
-	{  
-		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
-		$result= $this->client_us2->putObject(array(
-			'Bucket' 		=> $bucket,
-			'Key'    		=> 'unknown/'.$key
-		));
-		
-	}
-	public function credit_mail_pdf($content, $user_id = 0, $name = 'credit', $type = 'test')
 	{
-		try {
-			$dir = 'pdf/';
-			$inputFile = $dir . "org{$user_id}.pdf";
-			$outputFile = $dir . "output{$user_id}.pdf";
-			$fp = fopen($inputFile, "w+");
-			fwrite($fp, $content); //寫入資料到 $fp 所開啟的檔案內
-			fclose($fp); //關閉開啟的檔案
-			shell_exec("gs  -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile={$outputFile} -c  3000000 setvmthreshold -f {$inputFile}  2>&1");
-			$content = file_get_contents($outputFile);
-			$result = $this->client->putObject(array(
-				'Bucket' 		=> S3_BUCKET,
-				'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . '.pdf',
-				'Body'   		=> $content
+		$key=str_replace('https://'.$bucket.'.s3.us-west-2.amazonaws.com/','',$s3_url);
+		$filename = $this->public_get_filename($s3_url,$bucket);
+		$content  = file_get_contents('s3://'.$bucket.'/'.$filename);
+		if($content) {
+			$result = $this->client_us2->putObject(array(
+				'Bucket' => $bucket,
+				'Key' => 'unknown/' . $key,
+				'Body' => $content
 			));
-		} catch (S3Exception $e) {
-			unlink($inputFile);
-			unlink($outputFile);
-			echo '洽工程師 檢查連線問題';
-			exit();
+		}else{
+			error_log("unknown_mail: The resource can't be accessed. ($s3_url)");
+			echo "unknown_mail: The resource can't be accessed. ($s3_url)";
 		}
-		unlink($inputFile);
-		unlink($outputFile);
+	}
+	public function credit_mail_pdf($attachments, $user_id = 0, $name = 'credit', $type = 'test')
+	{
+		$images = [];
+		$fileList = [];
+		$pdfPath = '';
+		$result = [];
+		try {
+			if (!$attachments)
+				return '';
+			$dir = 'pdf/';
+
+			foreach ($attachments as $attachment) {
+				$filename = $attachment->save($dir, TRUE, PhpMimeMailParser\Parser::ATTACHMENT_RANDOM_FILENAME);
+				$fileList[] = $filename;
+
+				$fileType = get_mime_by_extension($filename);
+				if(is_image($fileType))
+					$images[] = $filename;
+				else if(is_pdf($fileType))
+					$pdfPath = $filename;
+			}
+
+			// 合併多張圖片至PDF檔案
+			if(!empty($images) && $pdfPath == '') {
+				$pdfPath = $dir . $user_id . round(microtime(true) * 1000) . '_combined.pdf';
+				$pdfImagick = new Imagick($images);
+				$pdfImagick->setImageFormat('pdf');
+				$pdfImagick->writeImages($pdfPath, true);
+			}
+
+			$content = @file_get_contents($pdfPath);
+			if($content !== false) {
+				$result = $this->client->putObject(array(
+					'Bucket' => S3_BUCKET,
+					'Key' => $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . ".pdf",
+					'Body' => $content
+				));
+			}
+		} catch (S3Exception $e) {
+			error_log('Connecting to S3 was failed. Error in '.$e->getFile()." at line ".$e->getLine());
+		} finally {
+			foreach ($fileList as $filename) {
+				unlink($filename);
+			}
+		}
+
 		if (isset($result['ObjectURL'])) {
 			return $result['ObjectURL'];
 		} else {
-			return false;
+			return '';
 		}
 	}
 
-
-
-	}
-
+}
 ?>
-

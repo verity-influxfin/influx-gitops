@@ -149,7 +149,7 @@ class Data_verify_lib{
 				$verifiedResult->addMessage('待人工驗證：負債比計算 >= 70%', 3, MassageDisplay::Backend);
 			}
 
-			if(($data['liabilitiesWithoutAssureTotalAmount']/1000) >= $certification_content['total_repayment']) {
+			if(is_numeric($data['liabilitiesWithoutAssureTotalAmount']) && ($data['liabilitiesWithoutAssureTotalAmount']/1000) >= $certification_content['total_repayment']) {
 				$verifiedResult->addMessage('待人工驗證：借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
 			}
 

@@ -294,29 +294,32 @@
                                 <? } ?>
                                     <div class="form-group">
                                         <label for="disabledSelect">銀行流水帳內頁</label>
-                                        <? if(isset($content['passbook_image'])){
-                                            foreach($content['passbook_image'] as $key => $value){ ?>
+                                        <?  if(isset($content['passbook_image'])){
+                                            $passbookImage = $content['passbook_image'];
+                                            foreach($passbookImage as $key => $value){ ?>
                                             <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
                                                 <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
                                             </a>
                                         <? }} ?>
                                     </div>
-                                <? if(isset($content['front_image'])){ ?>
-                                    <div class="form-group">
-                                        <label for="disabledSelect">銀行流水帳正面(經銷商選填)</label>
-                                        <a href="<?=isset($content['front_image'])?$content['front_image']:""?>" data-fancybox="images">
-                                            <img src="<?=isset($content['front_image'])?$content['front_image']:""?>" style='width:100%;max-width:300px'>
-                                        </a>
-                                    </div>
-                                    <? } ?>
-                                <? if(isset($content['passbook_dealer_image'])){ ?>
-                                        <div class="form-group">
-                                        <label for="disabledSelect">銀行流水帳內頁(經銷商選填)</label>
-                                    <? foreach($content['passbook_dealer_image'] as $key => $value){ ?>
-                                        <a href="<?=isset($value)?$value:""?>" data-fancybox="images">
-                                            <img src="<?=$value?$value:""?>" style='width:100%;max-width:300px'>
-                                        </a>
-                                    <? } ?>
+<!--                                --><?// if(isset($content['front_image'])){ ?>
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="disabledSelect">銀行流水帳正面(經銷商選填)</label>-->
+<!--                                        <a href="--><?//=isset($content['front_image'])?$content['front_image']:""?><!--" data-fancybox="images">-->
+<!--                                            <img src="--><?//=isset($content['front_image'])?$content['front_image']:""?><!--" style='width:100%;max-width:300px'>-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+<!--                                    --><?// } ?>
+<!--                                --><?// if(isset($content['passbook_dealer_image'])){ ?>
+<!--                                        <div class="form-group">-->
+<!--                                            <label for="disabledSelect">銀行流水帳內頁(經銷商選填)</label>-->
+<!--                                            --><?// foreach ($content['passbook_dealer_image'] as $key => $value) { ?>
+<!--                                                <a href="--><?//= isset($value) ? $value : "" ?><!--" data-fancybox="images">-->
+<!--                                                    <img src="--><?//= $value ? $value : "" ?><!--"-->
+<!--                                                         style='width:100%;max-width:300px'>-->
+<!--                                                </a>-->
+<!--                                            --><?// } ?>
+<!--                                            --><?// } ?>
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label for="disabledSelect">存摺封面</label>
@@ -336,7 +339,6 @@
                                                 <? } ?>
                                             </div>
                                         <? } ?>
-                                    <? } ?>
                                     </div>
                                 </div>
 							</div>

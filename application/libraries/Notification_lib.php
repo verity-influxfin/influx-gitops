@@ -4,8 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 use Symfony\Component\HttpClient\HttpClient;
 
 class Notification_lib{
-	
-	
+
+
 	public function __construct()
     {
         $this->CI = &get_instance();
@@ -14,11 +14,11 @@ class Notification_lib{
     }
 
 	public function first_login($user_id,$investor){
-		
+
 		$title = "【登入資訊】 首次登入成功";
 		$content = "您已於 ".date("Y-m-d H:i:s")." 首次登入成功
 普匯金融科技歡迎您";
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
@@ -86,7 +86,7 @@ class Notification_lib{
 
 		return true;
 	}
-	
+
 	public function transaction_password($user_id,$investor){
 		$title = "【會員】 交易密碼設置成功";
 		$content = "您好！您的交易密碼設置成功。";
@@ -100,7 +100,7 @@ class Notification_lib{
 		$rs = $this->CI->user_notification_model->insert($param);
 		return $rs;
 	}
-	
+
 	public function approve_target($user_id,$status,$amount=0,$subloan=false,$remark = false){
 		if($status==1){
             $loan_type = $subloan?'產品轉換':'借款';
@@ -112,7 +112,7 @@ class Notification_lib{
 請登錄普匯APP並在您申請的產品進入簽約頁面。";
             $type = 'b02';
 		}
-		
+
 		if($status==9){
 			$title = "【借款審核】 您的借款審核未通過";
 			$content = "親愛的用戶，您好！
@@ -124,7 +124,7 @@ class Notification_lib{
 			$remark ? $content .= '退件原因：' . $remark : '';
             $type = 'b03';
 		}
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> 0,
@@ -145,7 +145,7 @@ class Notification_lib{
 非常感謝您的申請，
 我們將會對您的申請信息進行嚴格保密，
 感謝您對普匯的信任。";
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> 0,
@@ -155,7 +155,7 @@ class Notification_lib{
 		$rs = $this->CI->user_notification_model->insert($param);
 		return $rs;
 	}
-	
+
 	public function bankaccount_verify_failed($user_id,$investor=0){
 		$title = "【驗證失敗】 您的金融驗證未通過";
 		$content = "您好！
@@ -270,7 +270,7 @@ class Notification_lib{
         $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
         return $rs;
     }
-	
+
 	public function target_verify_success($target){
 		$target_no = $target->target_no;
 		$title = "【借款驗證】 您申請的借款 $target_no 驗證已通過";
@@ -285,12 +285,13 @@ class Notification_lib{
 			"title"		=> $title,
 			"content"	=> $content,
 		);
+        $this->CI->load->model('user/user_meta_model');
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->admin_notification("案件已上架 會員ID：".$target->user_id,"案件已上架 會員ID：".$target->user_id." 案號：".$target->target_no);
 		return $rs;
 	}
-	
+
 	public function subloan_verify_failed($user_id,$date="",$amount=0,$target_no="",$remark=false){
 		$title = "【產品轉換失敗通知】";
 			$content = "親愛的用戶，
@@ -346,7 +347,7 @@ $name 您好，
 您申請的借款 $target_no ，核可金額 $amount 元，
 已成功籌滿，系統將安排進行放款，請即刻注意銀行匯款資訊。";
 		}
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
@@ -356,7 +357,7 @@ $name 您好，
 		$rs = $this->CI->user_notification_model->insert($param);
 		return $rs;
 	}
-	
+
 	public function lending_success($user_id,$investor,$target_no,$product_id,$sub_product_id,$amount=0,$bankaccount=""){
 		if($investor==1){
 			$product_list = $this->CI->config->item('product_list');
@@ -390,7 +391,7 @@ $name 您好，
 敬告用戶，本公司不會以短信或電話等任何形式告知您其他非APP內的還款專屬帳號。";
             $type = 'b04';
         }
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
@@ -400,7 +401,7 @@ $name 您好，
 		$rs = $this->CI->user_notification_model->insert($param);
 		return $rs;
 	}
-	
+
 	public function subloan_success($user_id,$target_no,$amount=0){
 		$title 		= "【轉換產品成功】 您的借款 $target_no 已發放成功";
 		$content 	= "親愛的用戶，您好！
@@ -422,7 +423,7 @@ $name 您好，
 		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b04');
 		return $rs;
 	}
-	
+
 	public function recharge_success($user_id,$investor){
 		if($investor==1){
 			$title 		= "【資金匯入通知】";
@@ -435,7 +436,7 @@ $name 您好，
 普匯專屬您的還款帳號已收到款項入帳，
 平台將代為轉付給出借人，如有任何問題請您與平台聯繫。";
 		}
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
@@ -445,7 +446,7 @@ $name 您好，
 		$rs = $this->CI->user_notification_model->insert($param);
 		return $rs;
 	}
-	
+
 	public function transfer_success($user_id,$investor,$buy=0,$target_no,$amount, $new_user_id,$date="",$attach=false){
 		if($investor==1){
 			if($buy==1){
@@ -469,7 +470,7 @@ $name 您好，
 您於本平台的借款，
 (使用者編號 $user_id ，借款案號 $target_no )，
 債權已轉讓與新債權人(使用者編號 $new_user_id )，
-您的還款方式仍按原有約定辦理，僅此通知。";
+您的計息方式仍按原有約定辦理，僅此通知。";
             $type = 'b03';
 		}
 
@@ -544,7 +545,7 @@ $name 您好，
 		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
-	
+
 	public function repay_success($user_id,$investor=0,$target_no,$amount=0){
 		if($investor==1){
 			$title 		= "【標的還款成功】 您投資的標的 $target_no 已回款";
@@ -558,14 +559,14 @@ $name 您好，
 還款金額 $amount 元已還款成功，
 感謝您每一次的信用積累。";
 		}
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
 			"title"		=> $title,
 			"content"	=> $content,
 		);
-		
+
 		$rs = $this->CI->user_notification_model->insert($param);
 		return $rs;
 	}
@@ -587,40 +588,40 @@ $name 您好，
 在您有資金需求的時候，我們總會及時出現。";
             $type = 'b04';
 		}
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> $investor,
 			"title"		=> $title,
 			"content"	=> $content,
 		);
-		
+
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 		return $rs;
 	}
-	
+
 	public function prepay_failed($user_id,$target_no){
 		$title 		= "【提前還款失敗通知】";
 		$content 	= "親愛的用戶，您好！
 您的提前還款申請失敗，
 若有疑問可洽詢內客服或致電02-2507-9990
 普匯inFlux APP(來電客服時間9:30~18:00，國定例假日為公休)。";
-		
+
 		$param = array(
 			"user_id"	=> $user_id,
 			"investor"	=> 0,
 			"title"		=> $title,
 			"content"	=> $content,
 		);
-		
+
 		$rs = $this->CI->user_notification_model->insert($param);
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
 		return $rs;
 	}
-		
+
 	public function notice_delay_target($user_id,$amount=0,$target_no=""){
 
 		$title 		= "【逾期通知】";
@@ -789,7 +790,34 @@ $name 您好，
         return $rs;
     }
 
-    public function EDM($user_id, $title, $content, $EDM, $EDM_href, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [])
+	public function notify_target_associates($mail, $username, $subProduct, $character){
+
+		$title = "【合作夥伴】專案{$character}";
+		$content = "您好，
+	您的合作夥伴 {$username} 在普匯金融科技
+	邀請您做為企業主貸 {$subProduct} 專案的 {$character}，
+	請至 <a href='https://www.influxfin.com/'> 普匯金融科技官網</a>了解更多，
+	或下載 <a href='https://event.influxfin.com/r/url'> 普匯inFlux</a>更新您的資料，
+	取得授信額度。";
+
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));
+	}
+
+	public function notify_target_product_1002_associates($mail, $username, $subProduct, $character){
+
+		$title = "【百萬信保微企貸】新增 「負責人配偶/保證人」";
+		$content = "「{$username}」公司已申請加入您作為「負責人配偶/保證人」
+請下載「普匯 influx」APP，並完成以下流程：
+1.註冊「一般使用者」並登入帳號，並從「資料中心」完成實名認證
+2.至「產品列表」中「百萬信保微企AI速貸」點選「查看狀態」
+3.完成其餘資料更新（個人資料表、聯徵報告...）";
+
+		$this->CI->load->library('Sendemail');
+		$this->CI->sendemail->email_notification($mail,$title,nl2br($content));
+	}
+
+    public function EDM($user_id, $title, $content, $EDM, $EDM_href, $investor = 0, $school = false, $years, $sex, $app, $mail, $mail_list = [], $disable_output=FALSE)
     {
         $user_list = [];
         $user_ids = false;
@@ -866,8 +894,10 @@ $name 您好，
             }
             $this->CI->load->library('parser');
 		}
-		echo $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => nl2br($content), "EDM" => $EDM), TRUE);
-		echo '已發送 ' . $count . ' 位使用者';
+		if(!$disable_output) {
+            echo $content = $this->CI->parser->parse('email/sales_mail', array("title" => $title, "content" => nl2br($content), "EDM" => $EDM), TRUE);
+            echo '已發送 ' . $count . ' 位使用者';
+        }
         return $count;
 
     }
@@ -915,7 +945,6 @@ $name 您好，
             echo $content = $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> $type , "mail_event"=> $mail_event),TRUE);
         }
         echo '已發送 ' . $count . ' 位使用者';
-        return $count;
     }
 
     function remove_emoji($text)
@@ -950,5 +979,79 @@ $name 您好，
 		}finally {
 			return ['code'=>$statusCode, 'msg'=>$statusDescription];
 	   }
+	}
+
+    public function cancel_subloan_bidding($target) {
+        $title = "【產品轉換下架通知】產品轉換金額不符";
+        $content = "親愛的用戶，
+您好！您的標的 $target->target_no ，
+因您的逾期金額已有部分完成清償，
+導致您申請之產品轉換媒合金額與原先不符，系統已將您的案件先行下架。
+非常感謝您的申請及對我們的信任，
+若有任何問題請不吝連繫客服協助處理，謝謝。";
+
+        $param = array(
+            "user_id"	=> $target->user_id,
+            "investor"	=> 0,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($target->user_id,$title,nl2br($content),'b03');
+        return $rs;
+    }
+
+    public function cancel_transfer_bidding($user_id, $target_no='') {
+        $title = "【債權轉讓下架通知】出讓債權金額不符";
+        $content = "親愛的出讓人，
+您好！您投資的標的 $target_no ，
+因此案債務人已完成部分清償，
+導致您申請出讓之債權媒合金額與原先不符，系統已將您的案件先行下架，
+若還有出讓需求，請重新操作一遍，
+非常感謝您對我們的信任，
+若有任何問題請不吝連繫客服協助處理，謝謝。";
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> 1,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),'b03');
+        return $rs;
+    }
+
+    public function repay_partial_success($user_id,$investor=0,$target_no='',$amount=0,$remaining_amount=0){
+        if($investor==1){
+            $title 		= "【標的還款成功】 您投資的標的 $target_no 已回款";
+            $content 	= "親愛的投資人，您好！
+您投資的標的 $target_no ，已回款，
+回款金額為 $amount 元，感謝您。";
+            $type = 'i04';
+        }else{
+            $title 		= "【借款部分清償成功】您的借款已成功部分清償，清償金額 $amount 元";
+            $content 	= "親愛的用戶，您好！
+您的借款 $target_no 。
+是否已逾期：是。
+部分清償金額 $amount 元已清償成功。
+剩餘需清償金額：$remaining_amount 元
+感謝您每一次的信用積累。";
+            $type = 'b04';
+        }
+
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> $investor,
+            "title"		=> $title,
+            "content"	=> $content,
+        );
+
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('Sendemail');
+        $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
+        return $rs;
 	}
 }

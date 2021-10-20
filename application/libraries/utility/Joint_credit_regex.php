@@ -53,7 +53,7 @@ class Joint_credit_regex extends Regular_expression
 	{
 		return preg_match("/查資料庫中無/", $text, $matches) == 1
 			   || preg_match("/無電子支付
-機構及電子票證發行機構依法令規定向本中心查詢/", $text) == 1;
+機構及電子票證發行機構依法令規定向本中心查詢/", $text) == 1 || preg_match("/無電子支付.*|.*機構及電子票證發行機構向本中心查詢/", $text) == 1;
 
 
 	}

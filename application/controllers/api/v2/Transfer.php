@@ -86,7 +86,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {Number} target.loan_amount 核准金額
 	 * @apiSuccess {Number} target.interest_rate 核可利率
 	 * @apiSuccess {Number} target.instalment 期數
-	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.repayment 計息方式
 	 * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {Number} target.delay_days 逾期天數
 	 * @apiSuccess {String} target.reason 借款原因
@@ -377,7 +377,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {Number} target.loan_amount 核准金額
 	 * @apiSuccess {Number} target.interest_rate 核可利率
 	 * @apiSuccess {Number} target.instalment 期數
-	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.repayment 計息方式
 	 * @apiSuccess {Number} target.delay 是否逾期 0:無 1:逾期中
 	 * @apiSuccess {Number} target.delay_days 逾期天數
 	 * @apiSuccess {String} target.reason 借款原因
@@ -1040,7 +1040,7 @@ class Transfer extends REST_Controller {
 	 * @apiSuccess {String} target.reason 借款原因
 	 * @apiSuccess {String} target.remark 備註
 	 * @apiSuccess {Number} target.instalment 期數
-	 * @apiSuccess {Number} target.repayment 還款方式
+	 * @apiSuccess {Number} target.repayment 計息方式
 	 * @apiSuccess {Number} target.expire_time 流標時間
 	 * @apiSuccess {Number} target.invested 目前投標量
 	 * @apiSuccess {Number} target.status 標的狀態 0:待核可 1:待簽約 2:待驗證 3:待出借 4:待放款（結標）5:還款中 8:已取消 9:申請失敗 10:已結案
@@ -1692,6 +1692,7 @@ class Transfer extends REST_Controller {
             'targetData' => $sub_product['targetData'],
             'dealer' => $sub_product['dealer'],
             'multi_target' => $sub_product['multi_target'],
+            'checkOwner' => $product['checkOwner'],
             'status' => $sub_product['status'],
         );
     }

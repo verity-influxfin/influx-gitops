@@ -143,18 +143,36 @@ class Payment_lib{
 	}
 
 	public function script_handle_payment($num=20){
+        $this->CI->load->model('loan/target_model');
+        $this->CI->load->library('Charge_lib');
 		$count = 0;
 		$this->CI->payment_model->limit($num)->update_by(array("status"=>0),array("status"=>2));
 		$payments = $this->CI->payment_model->get_many_by(array("status"=>2));
+		$receipt_payment_id = [];
+
 		if($payments && !empty($payments)){
 			foreach($payments as $key => $value){
 				if($value->amount>0){
 					$rs = $this->receipt($value);
+					if($rs) {
+                        $receipt_payment_id[] = $value->id;
+                    }
 				}else{
 					$rs = $this->expense($value);
 				}
 				$count++;
 			}
+
+			// 入金時針對借款人的逾期案部分金額沖償
+            $users = $this->CI->payment_model->get_userid_by_payment($receipt_payment_id);
+            $user_ids = array_column($users, 'user_id');
+			if(!empty($user_ids)) {
+                $delayed_target = $this->CI->target_model->get_many_by(['user_id' => $user_ids, 'delay_days >' => GRACE_PERIOD, 'status' => 5]);
+                $delayed_userid_list = array_unique(array_column($delayed_target, 'user_id'));
+                foreach ($delayed_userid_list as $user_id) {
+                    $this->CI->charge_lib->charge_delayed_target($user_id);
+                }
+            }
 			return $count;
 		}
 		return false;
@@ -194,8 +212,8 @@ class Payment_lib{
 					$this->CI->transaction_lib->recharge($value->id);
 					return true;
 				} else {
-                    $isTaishinVirtualCode = substr($value->bank_id, 0, 5) == TAISHIN_VIRTUAL_CODE ? true : false;
-					if (!investor_virtual_account($value->virtual_account) && !$isTaishinVirtualCode) {
+                    $isTaishinVirtualCode = substr($value->virtual_account, 0, 5) == TAISHIN_VIRTUAL_CODE ? true : false;
+					if (!investor_virtual_account($value->virtual_account) || $isTaishinVirtualCode) {
 						$this->CI->transaction_lib->recharge($value->id);
 						return true;
 					}

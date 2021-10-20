@@ -3,19 +3,20 @@
 //後台menu
 $config['admin_menu'] = [
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
-    'AntiFraud' => [
-        'name' => '反詐欺管理指標'
-    ],
+	'AntiFraud' => [
+		'name' => '反詐欺管理指標'
+	],
     'Target' => [
         'parent_name' => '借款管理',
         'index' => '全部列表',
-        'waiting_evaluation' => '待二審',
+        'waiting_evaluation' => '二審',
         'waiting_signing' => '待簽約',
         'waiting_verify' => '待上架',
         'waiting_bidding' => '已上架',
         'waiting_loan' => '待放款',
         'repayment' => '還款中',
         'finished' => '已結案',
+        'index?delay=1&status=5' => '逾期中',
         'prepayment' => '提前還款',
         'order_target' => '消費貸 - 案件列表',
         'waiting_approve_order_transfer' => '消費貸 - 債轉待批覆',
@@ -36,6 +37,7 @@ $config['admin_menu'] = [
         'index?investor=0&company=1' => '法人借款端審核',
         'index?investor=1' => '投資端審核',
         'credit' => '信評管理',
+		'credit_management' => '授信審核表'
         //'loaned_wait_push' => '貸後催收',
         //'loaned_wait_push?slist=1' => '貸後已催收列表',
     ],
@@ -99,6 +101,10 @@ $config['admin_menu'] = [
         'estatement' => '個人對帳單',
         'index' => '收支統計表',
     ],
+    'Ocr' => [
+        'parent_name' => 'OCR 結果',
+        'index' => '報表',
+    ],
 	'PostLoan' => [
 		'parent_name' => '貸後管理',
 		'legal_doc' => '法訴文件管理',
@@ -108,8 +114,106 @@ $config['admin_menu'] = [
         'index' => '最新活動',
         'index?type=2' => '最新消息',
     ],
+    // 'Creditmanagementtable' => [
+    //     'parent_name' => '授信審核表',
+    //     'index' => '報表',
+    // ],
     'Agreement' => ['name' => '協議書'],
     'Contract' => ['name' => '合約書'],
+];
+
+
+$config['role_permission'] = [
+    'RolePostLoan' => [
+        'name' => '角色-貸後權限',
+        'permission' => [
+            'Passbook' => [
+              'display' => [
+                  'validator' => [
+                      'className' =>'RequestValidator\PostLoan\VirtualPassbookValidator',
+                      'parameters' => ['virtual_account' => '*']
+                  ],
+                  'menu_display' => false,
+              ]
+            ],
+            'User' => [
+                'display' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\UserValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                    'menu_display' => false,
+                ]
+            ],
+            'Target' => [
+                'edit' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                ],
+                'index?delay=1&status=5' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['status' => [5], 'delay' => 1]
+                    ],
+                ],
+                'transaction_display' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\TargetValidator',
+                        'parameters' => ['id' => '*']
+                    ],
+                ]
+            ],
+            'Risk' => [
+                'index?investor=0&company=0' =>  [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['investor' => 0, 'company' => 0],
+                    ],
+                    'role_parameters' => [
+                        'group' => [0]    // group: 身份驗證(0) 收件檢核(1) 審核中(2)
+                    ]
+                ]
+            ],
+            'Certification' => [
+                'user_certification_edit' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\PostLoan\CertificationValidator',
+                        'parameters' => ['id' => '*'],
+                    ],
+                ]
+            ]
+        ]
+    ],
+    'Bankdata' => [
+        'name' => '角色-新光微企貸收件檢核表',
+        'permission' =>[
+            'Bankdata' => [
+                'report' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['id' => '*'],
+                    ],
+                    'menu_display' => false,
+                ]
+            ]
+        ]
+    ],
+    'Creditmanagementtable' => [
+        'name' => '角色-授審表',
+        'permission' =>[
+            'Bankdata' => [
+                'report' => [
+                    'validator' => [
+                        'className' =>'RequestValidator\ValidatorBase',
+                        'parameters' => ['id' => '*'],
+                    ],
+                    'menu_display' => false,
+                ]
+            ]
+        ]
+    ]
 ];
 
 //內部通知Email
@@ -127,6 +231,7 @@ $config['instalment'] = [
     12 => '12期',
     18 => '18期',
     24 => '24期',
+    36 => '36期',
     90 => '最高90期',
     180 => '最高180期',
 ];
@@ -138,6 +243,59 @@ $config['company_type'] = [
     3 => '有限公司',
     4 => '股份有限公司',
 ];
+
+
+// 'id' => 1,
+// app端顯示資訊
+// 'visul_id' => 'N1',
+// 類型, 信用貸款=1, 消費貸款=2
+// 'type' => 1,
+// 身份, 學生=1, 上班族=2, 法人=3
+// 'identity' => 1,
+// 'alias' => 'STN',
+// 'name' => '學生貸',
+// 最低借款金額
+// 'loan_range_s' => 5000,
+// 最高借款金額
+// 'loan_range_e' => 120000,
+// 最低利率
+// 'interest_rate_s' => 5,
+// 最高利率
+// 'interest_rate_e' => 20,
+// 平台手續費
+// 'charge_platform' => PLATFORM_FEES,
+// 最低平台手續費
+// 'charge_platform_min' => PLATFORM_FEES_MIN,
+// 'sub_product' => [5000, STAGE_CER_TARGET, 1],
+// 需要認證或徵信之項目列表
+// 'certifications' => [
+//     CERTIFICATION_IDCARD,
+//     CERTIFICATION_STUDENT,
+//     CERTIFICATION_DEBITCARD,
+//     CERTIFICATION_SOCIAL,
+//     CERTIFICATION_EMERGENCY,
+//     CERTIFICATION_EMAIL,
+//     CERTIFICATION_FINANCIAL
+// ],
+// 分期期數
+// 'instalment' => [3, 6, 12, 18, 24],
+// 計息方式, 本息均攤=1, 繳息不還本/按月付息=2, 以日計息=3,
+// 'repayment' => [1],
+// 產品的檢附資料, key: [certification_id=該案認證的資訊, credit_level=信用評級, original_interest_rate=利息
+// 'targetData' => [],
+// 是否強制二審
+// 'secondInstance' => false,
+// 'weight' => [],
+// 該產品狀態, 關閉=0, 開啟=1
+// 'status' => 1,
+// 經銷商類別
+// 'dealer' => [],
+// 是否允許多案, 0=不允許, 1= 允許
+// 'multi_target' => 0,
+// 'hiddenMainProduct' => false,
+// 'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
+// 法人負責人判斷
+// 'checkOwner' => false,
 
 //產品列表
 $config['product_list'] = [
@@ -164,13 +322,26 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_STUDENT,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL
+            ]
+        ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
         'targetData' => [],
         'secondInstance' => false,
         'weight' => [],
         'status' => 1,
-        'dealer' => [0],
+        'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
@@ -198,16 +369,31 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_STUDENT,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL
+            ]
+        ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
         'targetData' => [],
         'secondInstance' => false,
         'weight' => [],
         'status' => 1,
-        'dealer' => [0],
+        'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000'
+        'hiddenSubProduct' => false,
+        'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
+        'checkOwner' => false,
     ],
     3 => [
         'id' => 3,
@@ -238,16 +424,33 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_DIPLOMA,
+                CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_JOB
+            ]
+        ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
         'targetData' => [],
         'secondInstance' => false,
         'weight' => [],
         'status' => 1,
-        'dealer' => [0],
+        'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000'
+        'hiddenSubProduct' => false,
+        'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
+        'checkOwner' => false,
     ],
     4 => [
         'id' => 4,
@@ -274,16 +477,33 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_DIPLOMA,
+                CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_JOB
+            ]
+        ],
         'instalment' => [3, 6, 12, 18, 24],
         'repayment' => [1],
         'targetData' => [],
         'secondInstance' => false,
         'weight' => [],
         'status' => 1,
-        'dealer' => [0],
+        'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000'
+        'hiddenSubProduct' => false,
+        'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
+        'checkOwner' => false,
     ],
     //5 => [
     //    'id' => 5,
@@ -299,17 +519,27 @@ $config['product_list'] = [
     //    'charge_platform' => PLATFORM_FEES,
     //    'charge_platform_min' => 10000,
     //    'sub_product' => [],
-    //    'certifications' => [1, 2, 3, 4, 5, 6, 7],
+    //    'certifications' => [
+    //            CERTIFICATION_IDCARD,
+    //            CERTIFICATION_STUDENT,
+    //            CERTIFICATION_DEBITCARD,
+    //            CERTIFICATION_SOCIAL,
+    //            CERTIFICATION_EMERGENCY,
+    //            CERTIFICATION_EMAIL,
+    //            CERTIFICATION_FINANCIAL
+    //        ],
     //    'instalment' => [180],
     //    'repayment' => [3],
     //    'targetData' => [],
     //    'secondInstance' => false,
     //    'weight' => [],
     //    'status' => 1,
-    //    'dealer' => [2],
+    //    'dealer' => [],
     //    'multi_target' => 0,
     //    'hiddenMainProduct' => false,
+//        'hiddenSubProduct' => false,
     //    'description' => ''
+//    'checkOwner' => false,
     //],
     //6 => [
     //    'id' => 6,
@@ -322,47 +552,217 @@ $config['product_list'] = [
     //    'loan_range_e' => 2000000,
     //    'interest_rate_s' => FEV_INTEREST_RATE,
     //    'interest_rate_e' => FEV_INTEREST_RATE,
-    //    'charge_platform' => PLATFORM_FEES,
+    //    'charge_platform' => 4,
     //    'charge_platform_min' => 10000,
     //    'sub_product' => [],
-    //    'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
+    //    'certifications' => [
+    //            CERTIFICATION_IDCARD,
+    //            CERTIFICATION_DEBITCARD,
+    //            CERTIFICATION_SOCIAL,
+    //            CERTIFICATION_EMERGENCY,
+    //            CERTIFICATION_EMAIL,
+    //            CERTIFICATION_FINANCIAL,
+    //            CERTIFICATION_DIPLOMA,
+    //            CERTIFICATION_INVESTIGATION,
+    //            CERTIFICATION_JOB
+    //        ],
     //    'instalment' => [180],
     //    'repayment' => [3],
     //    'targetData' => [],
     //    'secondInstance' => false,
     //    'weight' => [],
     //    'status' => 1,
-    //    'dealer' => [2],
+    //    'dealer' => [],
     //    'multi_target' => 0,
     //    'hiddenMainProduct' => false,
+//        'hiddenSubProduct' => false,
     //    'description' => ''
+//    'checkOwner' => false,
     //],
-    //7 => [
-    //    'id' => 7,
-    //    'visul_id' => 'N4',
-    //    'type' => 1,
-    //    'identity' => 1,
-    //    'alias' => 'SUL',
-    //    'name' => '創業貸',
-    //    'loan_range_s' => 200000,
-    //    'loan_range_e' => 15000000,
-    //    'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
-    //    'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
-    //    'charge_platform' => PLATFORM_FEES,
-    //    'charge_platform_min' => 500,
-    //    'sub_product' => [4, 5],
-    //    'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
-    //    'instalment' => [3, 6, 12, 18, 24],
-    //    'repayment' => [1],
-    //    'targetData' => [],
-    //    'secondInstance' => false,
-    //    'weight' => [],
-    //    'status' => 1,
-    //    'dealer' => [0],
-    //    'multi_target' => 1,
-    //    'hiddenMainProduct' => true,
-    //    'description' => '可申請額度<br>200,000-1,500,000',
-    //],
+//    7 => [
+//        'id' => 7,
+//        'visul_id' => 'N3',
+//        'type' => 1,
+//        'identity' => 1,
+//        'alias' => 'SUL',
+//        'name' => '新創企業貸',
+//        'loan_range_s' => 200000,
+//        'loan_range_e' => 1500000,
+//        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+//        'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+//        'charge_platform' => PLATFORM_FEES,
+//        'charge_platform_min' => 500,
+//        'sub_product' => [4],
+//        'certifications' => [
+//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_STUDENT,
+//            CERTIFICATION_DEBITCARD,
+//            CERTIFICATION_SOCIAL,
+//            CERTIFICATION_EMERGENCY,
+//            CERTIFICATION_EMAIL,
+//            CERTIFICATION_FINANCIAL
+//        ],
+//        'instalment' => [3, 6, 12, 18, 24],
+//        'repayment' => [1],
+//        'targetData' => [],
+//        'secondInstance' => false,
+//        'weight' => [],
+//        'status' => 1,
+//        'dealer' => [],
+//        'multi_target' => 0,
+//        'hiddenMainProduct' => true,
+//        'hiddenSubProduct' => false,
+//        'description' => '',
+//        'checkOwner' => true,
+//    ],
+//    8 => [
+//        'id' => 8,
+//        'visul_id' => 'N3',
+//        'type' => 1,
+//        'identity' => 2,
+//        'alias' => 'SUL',
+//        'name' => '新創企業貸',
+//        'loan_range_s' => 200000,
+//        'loan_range_e' => 1500000,
+//        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+//        'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+//        'charge_platform' => 4,
+//        'charge_platform_min' => 500,
+//        'sub_product' => [4],
+//        'certifications' => [
+//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_DEBITCARD,
+//            CERTIFICATION_SOCIAL,
+//            CERTIFICATION_EMERGENCY,
+//            CERTIFICATION_EMAIL,
+//            CERTIFICATION_FINANCIAL,
+//            CERTIFICATION_DIPLOMA,
+//            CERTIFICATION_INVESTIGATION,
+//            CERTIFICATION_JOB
+//        ],
+//        'instalment' => [3, 6, 12, 18, 24],
+//        'repayment' => [1],
+//        'targetData' => [],
+//        'secondInstance' => false,
+//    //    'weight' => [],
+//        'status' => 1,
+//        'dealer' => [],
+//        'multi_target' => 0,
+//        'hiddenMainProduct' => true,
+//        'hiddenSubProduct' => false,
+//        'description' => '',
+//        'checkOwner' => true,
+//    ],
+//    9 => [
+//        'id' => 9,
+//        'visul_id' => 'N3',
+//        'type' => 1,
+//        'identity' => 1,
+//        'alias' => 'CCL',
+//        'name' => '新創企業貸',
+//        'loan_range_s' => 500000,
+//        'loan_range_e' => 1500000,
+//        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+//        'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+//        'charge_platform' => PLATFORM_FEES,
+//        'charge_platform_min' => 500,
+//        'sub_product' => [5],
+//        'certifications' => [
+//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_STUDENT,
+//            CERTIFICATION_DEBITCARD,
+//            CERTIFICATION_SOCIAL,
+//            CERTIFICATION_EMERGENCY,
+//            CERTIFICATION_EMAIL,
+//            CERTIFICATION_FINANCIAL
+//        ],
+//        'instalment' => [3, 6, 12, 18, 24],
+//        'repayment' => [1],
+//        'targetData' => [],
+//        'secondInstance' => false,
+//        'weight' => [],
+//        'status' => 1,
+//        'dealer' => [],
+//        'multi_target' => 0,
+//        'hiddenMainProduct' => true,
+//        'hiddenSubProduct' => false,
+//        'description' => '',
+//        'checkOwner' => true,
+//    ],
+//    10 => [
+//        'id' => 10,
+//        'visul_id' => 'N3',
+//        'type' => 1,
+//        'identity' => 2,
+//        'alias' => 'CCL',
+//        'name' => '新創企業貸',
+//        'loan_range_s' => 500000,
+//        'loan_range_e' => 1500000,
+//        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+//        'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+//        'charge_platform' => 4,
+//        'charge_platform_min' => 500,
+//        'sub_product' => [5],
+//        'certifications' => [
+//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_DEBITCARD,
+//            CERTIFICATION_SOCIAL,
+//            CERTIFICATION_EMERGENCY,
+//            CERTIFICATION_EMAIL,
+//            CERTIFICATION_FINANCIAL,
+//            CERTIFICATION_DIPLOMA,
+//            CERTIFICATION_INVESTIGATION,
+//            CERTIFICATION_JOB
+//        ],
+//        'instalment' => [3, 6, 12, 18, 24],
+//        'repayment' => [1],
+//        'targetData' => [],
+//        'weight' => [],
+//        'status' => 1,
+//        'dealer' => [],
+//        'multi_target' => 0,
+//        'hiddenMainProduct' => true,
+//        'hiddenSubProduct' => false,
+//        'description' => '',
+//        'checkOwner' => true,
+//    ],
+//    11 => [
+//        'id' => 11,
+//        'visul_id' => 'J2',
+//        'type' => 1,
+//        'identity' => 2,
+//        'alias' => 'SSM',
+//        'name' => '百萬信保微企貸',
+//        'loan_range_s' => 500000,
+//        'loan_range_e' => 1000000,
+//        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+//        'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+//        'charge_platform' => 4,
+//        'charge_platform_min' => 500,
+//        'sub_product' => [],
+//        'certifications' => [
+//            CERTIFICATION_IDCARD,
+//            CERTIFICATION_DEBITCARD,
+//            CERTIFICATION_SOCIAL,
+//            CERTIFICATION_EMERGENCY,
+//            CERTIFICATION_EMAIL,
+//            CERTIFICATION_FINANCIAL,
+//            CERTIFICATION_DIPLOMA,
+//            CERTIFICATION_INVESTIGATION,
+//            CERTIFICATION_JOB
+//        ],
+//        'instalment' => [36],
+//        'repayment' => [1],
+//        'targetData' => [],
+//        'weight' => [],
+//        'status' => 1,
+//        'dealer' => [],
+//        'multi_target' => 0,
+//        'hiddenMainProduct' => true,
+//        'hiddenSubProduct' => false,
+//        'description' => '',
+//        'checkOwner' => true,
+//    ],
     1000 => [
         'id' => 1000,
         'visul_id' => 'D1',
@@ -388,6 +788,21 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
         ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+                CERTIFICATION_DEBITCARD,
+            ],
+            [
+                CERTIFICATION_SOCIAL,
+                CERTIFICATION_EMERGENCY,
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_DIPLOMA,
+                CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_JOB
+            ]
+        ],
         'instalment' => [180],
         'repayment' => [3],
         'targetData' => [],
@@ -397,8 +812,120 @@ $config['product_list'] = [
         'dealer' => [2],
         'multi_target' => 1,
         'hiddenMainProduct' => true,
+        'hiddenSubProduct' => false,
         'description' => '',
-    ]
+        'checkOwner' => false,
+    ],
+//    1001 => [
+//        'id' => 1001,
+//        'visul_id' => 'J1',
+//        'type' => 1,
+//        'identity' => 3,
+//        'alias' => 'CCL',
+//        'name' => '新創企業貸',
+//        'loan_range_s' => 500000,
+//        'loan_range_e' => 1500000,
+//        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
+//        'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
+//        'charge_platform' => PLATFORM_FEES,
+//        'charge_platform_min' => 500,
+//        'sub_product' => [],
+//        'certifications' => [
+//            CERTIFICATION_BUSINESSTAX,
+//            CERTIFICATION_BALANCESHEET,
+//            CERTIFICATION_INCOMESTATEMENT,
+//            CERTIFICATION_INVESTIGATIONJUDICIAL,
+//            CERTIFICATION_PASSBOOKCASHFLOW,
+//            CERTIFICATION_GOVERNMENTAUTHORITIES,
+//            CERTIFICATION_CHARTER,
+//            CERTIFICATION_REGISTEROFMEMBERS,
+//            CERTIFICATION_MAINPRODUCTSTATUS,
+//            CERTIFICATION_STARTUPFUNDS,
+//            CERTIFICATION_BUSINESS_PLAN,
+//            CERTIFICATION_VERIFICATION,
+//            CERTIFICATION_CONDENSEDBALANCESHEET,
+//            CERTIFICATION_CONDENSEDINCOMESTATEMENT,
+//            CERTIFICATION_PURCHASESALESVENDORLIST,
+//            CERTIFICATION_EMPLOYEEINSURANCELIST
+//        ],
+//        'instalment' => [3, 6, 12, 18, 24],
+//        'repayment' => [1],
+//        'targetData' => [],
+//        'weight' => [],
+//        'status' => 1,
+//        'dealer' => 0,
+//        'multi_target' => 1,
+//        'hiddenMainProduct' => false,
+//        'hiddenSubProduct' => false,
+//        'description' => '',
+//        'checkOwner' => true,
+//    ],
+    1002 => [
+        'id' => 1002,
+        'visul_id' => 'J2',
+        'type' => 1,
+        'identity' => 3,
+        'alias' => 'SSM',
+        'name' => '百萬信保微企貸',
+        'loan_range_s' => 500000,
+        'loan_range_e' => 6000000,
+        'interest_rate_s' => 5,
+        'interest_rate_e' => 20,
+        'charge_platform' => PLATFORM_FEES,
+        'charge_platform_min' => 500,
+        'sub_product' => [5002],
+        'certifications' => [
+            CERTIFICATION_IDCARD,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_PROFILE,
+            CERTIFICATION_SIMPLIFICATIONJOB,
+            // CERTIFICATION_INVESTIGATION,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_GOVERNMENTAUTHORITIES,
+            CERTIFICATION_JUDICIALGUARANTEE,
+            CERTIFICATION_PROFILEJUDICIAL,
+            CERTIFICATION_PASSBOOKCASHFLOW,
+            CERTIFICATION_EMPLOYEEINSURANCELIST,
+            CERTIFICATION_INCOMESTATEMENT,
+            CERTIFICATION_INVESTIGATIONJUDICIAL,
+			CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_COMPANYEMAIL,
+        ],
+        'certifications_stage' => [
+            [
+                CERTIFICATION_IDCARD,
+
+            ],
+            [
+                CERTIFICATION_EMAIL,
+                CERTIFICATION_PROFILE,
+                CERTIFICATION_SIMPLIFICATIONJOB,
+                // CERTIFICATION_INVESTIGATION,
+                CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+                CERTIFICATION_GOVERNMENTAUTHORITIES,
+                CERTIFICATION_JUDICIALGUARANTEE,
+                CERTIFICATION_PROFILEJUDICIAL,
+                CERTIFICATION_PASSBOOKCASHFLOW,
+                CERTIFICATION_EMPLOYEEINSURANCELIST,
+                CERTIFICATION_INCOMESTATEMENT,
+                CERTIFICATION_INVESTIGATIONJUDICIAL,
+    			CERTIFICATION_INVESTIGATIONA11,
+                CERTIFICATION_COMPANYEMAIL,
+            ]
+        ],
+        'instalment' => [36],
+        'repayment' => [1],
+        'targetData' => [],
+        'secondInstance' => false,
+        'weight' => [],
+        'status' => 1,
+        'dealer' => [],
+        'multi_target' => 0,
+        'hiddenMainProduct' => false,
+        'hiddenSubProduct' => true,
+        'description' => '',
+        'checkOwner' => true,
+    ],
 ];
 
 $config['visul_id_des'] = [
@@ -419,16 +946,16 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'N3' => [
-        'name' => '外匯車貸',
-        'description' => '買進口車好方便',
-        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_foreigncar_loan.jpg',
+        'name' => '新創團隊',
+        'description' => '好的idea缺乏啟動資金',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
     'N4' => [
-        'name' => '創業貸',
-        'description' => '創業資金免煩惱',
+        'name' => '百萬信保微企貸',
+        'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
@@ -439,6 +966,38 @@ $config['visul_id_des'] = [
         'description' => '幫您貸車進來',
         'icon' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_banner_.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_banner_.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'J1' => [
+        'name' => '微型企業',
+        'description' => '企業融資 專案啟動',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'J2' => [
+        'name' => '百萬信保微企貸',
+        'description' => '企業融資 專案啟動',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'LJ2' => [
+        'name' => '百萬信保微企貸',
+        'description' => '企業融資 專案啟動',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TOLJ2' => [
+        'name' => '百萬信保微企貸',
+        'description' => '企業融資 專案啟動',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -491,16 +1050,24 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'NS2' => [
-        'name' => '孵化基金',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>創業資金免煩惱</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
+        'name' => '新創團隊',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>好的idea缺乏啟動資金</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
     'NS3' => [
-        'name' => '驗資基金',
-        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>創業資金免煩惱</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
+        'name' => '微型企業',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>企業融資 專案啟動</span><br><span style=\'font-size:14px;color:#4a4a4a\'>學生或職場專業人員均可申請</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'NS4' => [
+        'name' => '百萬微型企業',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>企業融資 專案啟動</span><br><span style=\'font-size:14px;color:#4a4a4a\'>企業可申請</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
@@ -529,6 +1096,18 @@ $config['visul_id_des'] = [
         'banner' => FRONT_CDN_URL . 'app_asset/foreign_vehicle/image_sub_2.jpg',
         'url' => '',
         'status' => 1
+    ],
+    'NS1P1' => [
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    ],
+    'NS1P2' => [
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+    ],
+    'LS1P1' => [
+        'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
     ],
 ];
 $config['sub_product_mapping'] = [
@@ -561,15 +1140,29 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'certification_verify_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
                 'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
+                'dealer' => [],
                 'multi_target' => 0,
-                'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000'
+                'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
+                'checkOwner' => false,
             ],
             2 => [
                 'visul_id' => 'NS1P2',
@@ -592,15 +1185,31 @@ $config['sub_product_list'] = [
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
                 ],
+                'certification_verify_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
                 'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
+                'dealer' => [],
                 'multi_target' => 0,
-                'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000'
+                'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
+                'checkOwner' => false,
             ]
         ],
         'status' => 1
@@ -632,7 +1241,8 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [2],
                 'multi_target' => 1,
-                'description' => '可申請額度<br>10,000-2,000,000'
+                'description' => '可申請額度<br>10,000-2,000,000',
+                'checkOwner' => false,
             ]
         ],
         'status' => 1
@@ -650,7 +1260,15 @@ $config['sub_product_list'] = [
                 'interest_rate_e' => FEV_INTEREST_RATE,
                 'charge_platform' => PLATFORM_FEES,
                 'charge_platform_min' => 10000,
-                'certifications' => [1000, 1001, 1002, 1003, 1004, 1006, 1007, 2000],
+                'certifications' => [
+                    CERTIFICATION_BUSINESSTAX,
+                    CERTIFICATION_BALANCESHEET,
+                    CERTIFICATION_INCOMESTATEMENT,
+                    CERTIFICATION_INVESTIGATIONJUDICIAL,
+                    CERTIFICATION_CERCREDITJUDICIAL,
+                    CERTIFICATION_GOVERNMENTAUTHORITIES,
+                    CERTIFICATION_SALESDETAIL,
+                ],
                 'instalment' => [90],
                 'repayment' => [3],
                 'targetData' => [
@@ -664,17 +1282,18 @@ $config['sub_product_list'] = [
                     'car_artc_image' => ['Picture', '交通部核發合格證明、環保驗車證明(ARTC)', '6'],
                     'car_others_image' => ['Picture', '協力廠商鑑定報告', '6', true],//index3 true = option
                     'car_photo_front_image' => ['Picture', '車輛外觀照片-前側', '6'],
-                    'car_photo_back_image' => ['Picture', '車輛外觀照片-後側', '6'],
-                    'car_photo_all_image' => ['Picture', '車輛外觀照片-全車', '6'],
-                    'car_photo_date_image' => ['Picture', '車輛外觀照片-出廠日期', '6'],
                     'car_photo_mileage_image' => ['Picture', '車輛外觀照片-里程', '6'],
+                    'car_photo_date_image' => ['Picture', '車輛外觀照片-出廠日期', '6'],
+                    'car_photo_all_image' => ['Picture', '車輛外觀照片-全車', '6'],
+                    'car_photo_back_image' => ['Picture', '車輛外觀照片-後側', '6'],
                 ],
                 'secondInstance' => false,
                 'weight' => ['car_others_image'],
                 'status' => 1,
                 'dealer' => [2],
                 'multi_target' => 1,
-                'description' => '可申請額度<br>10,000-2,000,000'
+                'description' => '可申請額度<br>10,000-2,000,000',
+                'checkOwner' => false,
             ]
         ],
         'status' => 1
@@ -683,11 +1302,11 @@ $config['sub_product_list'] = [
         'visul_id' => 'NS2',
         'identity' => [
             1 => [
-                'visul_id' => 'NST1',
-                'name' => '學生孵化基金',
+                'visul_id' => 'NS2P1',
+                'name' => '新創團隊',
                 'product_id' => '7:4',
-                'loan_range_s' => 5000,
-                'loan_range_e' => 200000,
+                'loan_range_s' => 200000,
+                'loan_range_e' => 1500000,
                 'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
                 'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
                 'charge_platform' => PLATFORM_FEES,
@@ -703,34 +1322,42 @@ $config['sub_product_list'] = [
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
-                'targetData' => [],
+                'targetData' => [
+                    'business_plan' => ['Picture', '商業企劃書', '6'],
+                    'verification' => ['Picture', '驗資基金證明', '6', true],
+                ],
                 'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
+                'dealer' => [],
                 'multi_target' => 1,
-                'description' => '可申請額度<br>200,000-1,500,000'
+                'description' => '可申請額度<br>200,000-1,500,000',
+                'checkOwner' => true,
             ],
             2 => [
-                'visul_id' => 'NST1',
-                'name' => '非學生孵化基金',
-                'product_id' => '7:4',
-                'loan_range_s' => 10000,
-                'loan_range_e' => 500000,
+                'visul_id' => 'NS2P2',
+                'name' => '新創團隊',
+                'product_id' => '8:4',
+                'loan_range_s' => 200000,
+                'loan_range_e' => 1500000,
                 'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
                 'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
-                'charge_platform' => PLATFORM_FEES,
+                'charge_platform' => 4,
                 'charge_platform_min' => 500,
                 'certifications' => [1, 3, 4, 5, 6, 7, 8, 9, 10],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
-                'targetData' => [],
+                'targetData' => [
+                    'business_plan' => ['Picture', '商業企劃書', '6'],
+                    'verification' => ['Picture', '驗資基金證明', '6', true],
+                ],
                 'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
-                'multi_target' => 1,
-                'description' => '可申請額度<br>200,000-1,500,000'
+                'dealer' => [],
+                'multi_target' => 0,
+                'description' => '可申請額度<br>10,000-1,500,000',
+                'checkOwner' => true,
             ],
         ],
         'status' => 1
@@ -739,11 +1366,11 @@ $config['sub_product_list'] = [
         'visul_id' => 'NS3',
         'identity' => [
             1 => [
-                'visul_id' => 'NST1',
-                'name' => '學生驗資基金',
-                'product_id' => '7:5',
-                'loan_range_s' => 5000,
-                'loan_range_e' => 200000,
+                'visul_id' => 'NS3P1',
+                'name' => '微型企業',
+                'product_id' => '9:5',
+                'loan_range_s' => 500000,
+                'loan_range_e' => 1500000,
                 'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
                 'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
                 'charge_platform' => PLATFORM_FEES,
@@ -759,23 +1386,26 @@ $config['sub_product_list'] = [
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
-                'targetData' => [],
+                'targetData' => [
+                    'business_plan' => ['Picture', '商業企劃書', '6'],
+                ],
                 'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
-                'multi_target' => 1,
-                'description' => '可申請額度<br>200,000-1,500,000'
+                'dealer' => [],
+                'multi_target' => 0,
+                'description' => '可申請額度<br>5,000-1,500,000',
+                'checkOwner' => true,
             ],
             2 => [
-                'visul_id' => 'NST1',
-                'name' => '非學生驗資基金',
-                'product_id' => '7:5',
-                'loan_range_s' => 10000,
-                'loan_range_e' => 500000,
+                'visul_id' => 'NS3P2',
+                'name' => '微型企業',
+                'product_id' => '10:5',
+                'loan_range_s' => 500000,
+                'loan_range_e' => 1500000,
                 'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
                 'interest_rate_e' => SUL_INTEREST_ENDING_RATE,
-                'charge_platform' => PLATFORM_FEES,
+                'charge_platform' => 4,
                 'charge_platform_min' => PLATFORM_FEES_MIN,
                 'certifications' => [
                     CERTIFICATION_IDCARD,
@@ -785,19 +1415,21 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL,
                     CERTIFICATION_DIPLOMA,
-                    CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB
+                    // CERTIFICATION_INVESTIGATION,
+                    CERTIFICATION_JOB,
+					CERTIFICATION_INVESTIGATIONA11,
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [
-                    'business_plan_photo_image' => ['Picture', '商業企劃書', '1'],
+                    'business_plan' => ['Picture', '商業企劃書', '6'],
                 ],
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
-                'multi_target' => 1,
-                'description' => '可申請額度<br>200,000-1,500,000'
+                'dealer' => [],
+                'multi_target' => 0,
+                'description' => '可申請額度<br>10,000-1,500,000',
+                'checkOwner' => true,
             ],
         ],
         'status' => 1
@@ -824,13 +1456,25 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
-                'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
+                'dealer' => [],
                 'multi_target' => 0,
                 'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
             ]
@@ -861,14 +1505,75 @@ $config['sub_product_list'] = [
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
                 ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
-                'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
+                'dealer' => [],
                 'multi_target' => 0,
+                'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
+                'checkOwner' => false,
+            ]
+        ],
+        'status' => 1
+    ],
+    5002 => [
+        'visul_id' => 'LJ2',
+        'identity' => [
+            3 => [
+                'visul_id' => 'LJ2P1',
+                'name' => '百萬信保微企貸',
+                'product_id' => '1002:0',
+                'loan_range_s' => 500000,
+                'loan_range_e' => 6000000,
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => 500,
+                'certifications' => [
+                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_DEBITCARD,
+                    CERTIFICATION_EMAIL,
+                    // CERTIFICATION_INVESTIGATION,
+                    CERTIFICATION_PROFILE,
+                    CERTIFICATION_SIMPLIFICATIONJOB,
+                    CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+                    CERTIFICATION_INCOMESTATEMENT,
+                    CERTIFICATION_INVESTIGATIONJUDICIAL,
+					CERTIFICATION_INVESTIGATIONA11,
+                    CERTIFICATION_PASSBOOKCASHFLOW,
+                    CERTIFICATION_GOVERNMENTAUTHORITIES,
+                    CERTIFICATION_EMPLOYEEINSURANCELIST,
+                    CERTIFICATION_PROFILEJUDICIAL,
+                    CERTIFICATION_COMPANYEMAIL,
+                    CERTIFICATION_JUDICIALGUARANTEE,
+                ],
+                'instalment' => [12,24,36],
+                'repayment' => [1],
+                'targetData' => [],
+                'weight' => [],
+                'status' => 1,
+                'dealer' => [],
+                'multi_target' => 0,
+                'hiddenMainProduct' => false,
+                'description' => '',
+                'checkOwner' => true,
                 'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000'
             ]
         ],
@@ -896,15 +1601,29 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
                 'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
+                'dealer' => [],
                 'multi_target' => 1,
-                'description' => '可申請額度<br>3000-12,000'
+                'description' => '可申請額度<br>3000-12,000',
+                'checkOwner' => false,
             ],
             2 => [
                 'visul_id' => 'OSP2',
@@ -927,15 +1646,31 @@ $config['sub_product_list'] = [
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
                 ],
+                'certifications_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL,
+                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_DIPLOMA,
+                        CERTIFICATION_INVESTIGATION,
+                        CERTIFICATION_JOB
+                    ]
+                ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
                 'targetData' => [],
                 'secondInstance' => false,
                 'weight' => [],
                 'status' => 1,
-                'dealer' => [0],
+                'dealer' => [],
                 'multi_target' => 1,
-                'description' => '可申請額度<br>30,000-300,000'
+                'description' => '可申請額度<br>30,000-300,000',
+                'checkOwner' => false,
             ],
         ],
         'status' => 1
@@ -944,7 +1679,7 @@ $config['sub_product_list'] = [
 
 $config['app_product_totallist'] = [
     'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
-    'company' => ['DS2'],
+    'company' => ['DS2','LJ2'],
 ];
 
 $config['stage_option_cer'] = [2, 8, 9, 10];
@@ -967,7 +1702,7 @@ $config['product_identity'] = [
     2 => '社會新鮮人',
 ];
 
-//還款方式
+//計息方式
 $config['repayment_type'] = [
     1 => '本息均攤',
     2 => '繳息不還本/按月付息',
@@ -1060,27 +1795,84 @@ $config['transaction_type_name'] = [
 ];
 
 $config['certifications'] = [
-    1 => ['id' => 1, 'alias' => 'idcard', 'name' => '實名認證', 'status' => 1, 'description' => '驗證個人身份資訊', 'optional' => []],
-    2 => ['id' => 2, 'alias' => 'student', 'name' => '學生身份認證', 'status' => 1, 'description' => '驗證學生身份', 'optional' => []],
-    3 => ['id' => 3, 'alias' => 'debitcard', 'name' => '金融/存款帳戶', 'status' => 1, 'description' => '驗證個人金融帳號', 'optional' => []],
-    4 => ['id' => 4, 'alias' => 'social', 'name' => '社交帳號', 'status' => 1, 'description' => '個人社交帳號認證', 'optional' => []],
-    5 => ['id' => 5, 'alias' => 'emergency', 'name' => '緊急聯絡人', 'status' => 1, 'description' => '設定緊急連絡人資訊', 'optional' => []],
-    6 => ['id' => 6, 'alias' => 'email', 'name' => '常用電子信箱', 'status' => 1, 'description' => '驗證常用E-Mail位址', 'optional' => []],
-    7 => ['id' => 7, 'alias' => 'financial', 'name' => '收支資訊提供', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
-    8 => ['id' => 8, 'alias' => 'diploma', 'name' => '最高學歷證明', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
-    9 => ['id' => 9, 'alias' => 'investigation', 'name' => '聯徵資料提供', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
-    10 => ['id' => 10, 'alias' => 'job', 'name' => '工作收入證明', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
+    1 => ['id' => CERTIFICATION_IDCARD, 'alias' => 'idcard', 'name' => '實名認證', 'status' => 1, 'description' => '驗證個人身份資訊', 'optional' => []],
+    2 => ['id' => CERTIFICATION_STUDENT, 'alias' => 'student', 'name' => '學生身份認證', 'status' => 1, 'description' => '驗證學生身份', 'optional' => []],
+    3 => ['id' => CERTIFICATION_DEBITCARD, 'alias' => 'debitcard', 'name' => '金融帳號認證', 'status' => 1, 'description' => '驗證個人金融帳號', 'optional' => []],
+    4 => ['id' => CERTIFICATION_SOCIAL, 'alias' => 'social', 'name' => '社交認證', 'status' => 1, 'description' => '個人社交帳號認證', 'optional' => []],
+    5 => ['id' => CERTIFICATION_EMERGENCY, 'alias' => 'emergency', 'name' => '緊急聯絡人', 'status' => 1, 'description' => '設定緊急連絡人資訊', 'optional' => []],
+    6 => ['id' => CERTIFICATION_EMAIL, 'alias' => 'email', 'name' => '常用電子信箱', 'status' => 1, 'description' => '驗證常用E-Mail位址', 'optional' => []],
+    7 => ['id' => CERTIFICATION_FINANCIAL, 'alias' => 'financial', 'name' => '財務訊息認證', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
+    8 => ['id' => CERTIFICATION_DIPLOMA, 'alias' => 'diploma', 'name' => '最高學歷認證', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
+    9 => ['id' => CERTIFICATION_INVESTIGATION, 'alias' => 'investigation', 'name' => '聯合徵信認證', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
+    10 => ['id' => CERTIFICATION_JOB, 'alias' => 'job', 'name' => '工作認證', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
+    11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人資料表', 'status' => 1, 'description' => '提供個人資料', 'optional' => []],
+	12 => ['id' => CERTIFICATION_INVESTIGATIONA11, 'alias' => 'investigationa11', 'name' => '聯合徵信認證+A11', 'status' => 1, 'description' => '提供負責人聯合徵信資訊', 'optional' => []],
 
-    1000 => ['id' => 1000, 'alias' => 'businesstax', 'name' => '401/403稅務資料認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1001 => ['id' => 1001, 'alias' => 'balancesheet', 'name' => '資產負債表認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1002 => ['id' => 1002, 'alias' => 'incomestatement', 'name' => '損益表認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1003 => ['id' => 1003, 'alias' => 'investigationjudicial', 'name' => '法人聯合徵信認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1004 => ['id' => 1004, 'alias' => 'passbookcashflow', 'name' => '金流證明認證', 'status' => 1, 'description' => '', 'optional' => []],
-    1005 => ['id' => 1005, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '', 'optional' => []],
-    1006 => ['id' => 1006, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '', 'optional' => []],
-    1007 => ['id' => 1007, 'alias' => 'governmentauthorities', 'name' => '事業變更登記表', 'status' => 1, 'description' => '', 'optional' => []],
+    500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務訊息', 'status' => 1, 'description' => '提供個人簡易財務資料', 'optional' => []],
+    501 => ['id' => CERTIFICATION_SIMPLIFICATIONJOB, 'alias' => 'simplificationjob', 'name' => '工作資料', 'status' => 1, 'description' => '提供簡易工作資料', 'optional' => []],
 
-    2000 => ['id' => 2000, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
+    1000 => ['id' => CERTIFICATION_BUSINESSTAX, 'alias' => 'businesstax', 'name' => '銷售額與稅額申報書(401表)', 'status' => 1, 'description' => '提供銷售額與稅額申報書(401表)', 'optional' => []],
+    1001 => ['id' => CERTIFICATION_BALANCESHEET, 'alias' => 'balancesheet', 'name' => '資產負債表', 'status' => 1, 'description' => '提供資產負債表', 'optional' => []],
+    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '損益表', 'status' => 1, 'description' => '提供損益表', 'optional' => []],
+    1003 => ['id' => CERTIFICATION_INVESTIGATIONJUDICIAL, 'alias' => 'investigationjudicial', 'name' => '法人聯合徵信', 'status' => 1, 'description' => '提供法人聯合徵信', 'optional' => []],
+    1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '金流證明', 'status' => 1, 'description' => '提供金流證明', 'optional' => []],
+    1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],
+    1006 => ['id' => CERTIFICATION_CERCREDITJUDICIAL, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '提供信用評估表', 'optional' => []],
+    1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '公司變更事項登記表', 'status' => 1, 'description' => '提供公司變更事項登記表', 'optional' => []],
+    1008 => ['id' => CERTIFICATION_CHARTER, 'alias' => 'charter', 'name' => '公司章程', 'status' => 1, 'description' => '提供公司章程', 'optional' => []],
+    1009 => ['id' => CERTIFICATION_REGISTEROFMEMBERS, 'alias' => 'registerofmembers', 'name' => '股東名簿', 'status' => 1, 'description' => '提供股東名簿', 'optional' => []],
+    1010 => ['id' => CERTIFICATION_MAINPRODUCTSTATUS, 'alias' => 'mainproductstatus', 'name' => '主要商品銷售情況表', 'status' => 1, 'description' => '提供主要商品銷售情況表', 'optional' => []],
+    1011 => ['id' => CERTIFICATION_STARTUPFUNDS, 'alias' => 'startupfunds', 'name' => '創業啟動金', 'status' => 1, 'description' => '提供創業啟動金', 'optional' => []],
+    1012 => ['id' => CERTIFICATION_BUSINESS_PLAN, 'alias' => 'business_plan', 'name' => '商業企劃書', 'status' => 1, 'description' => '提供商業企劃書', 'optional' => []],
+    1013 => ['id' => CERTIFICATION_VERIFICATION, 'alias' => 'verification', 'name' => '驗資基金證明', 'status' => 1, 'description' => '提供驗資基金證明', 'optional' => []],
+    1014 => ['id' => CERTIFICATION_CONDENSEDBALANCESHEET, 'alias' => 'condensedbalancesheet', 'name' => '簡明資產負債表', 'status' => 1, 'description' => '提供簡明資產負債表', 'optional' => []],
+    1015 => ['id' => CERTIFICATION_CONDENSEDINCOMESTATEMENT, 'alias' => 'condensedincomestatement', 'name' => '簡明損益表', 'status' => 1, 'description' => '提供簡明損益表', 'optional' => []],
+    1016 => ['id' => CERTIFICATION_PURCHASESALESVENDORLIST, 'alias' => 'purchasesalesvendorlist', 'name' => '進銷貨廠商明細表', 'status' => 1, 'description' => '提供進銷貨廠商明細表', 'optional' => []],
+    1017 => ['id' => CERTIFICATION_EMPLOYEEINSURANCELIST, 'alias' => 'employeeinsurancelist', 'name' => '員工投保人數資料', 'status' => 1, 'description' => '提供員工投保人數資料', 'optional' => []],
+    1018 => ['id' => CERTIFICATION_PROFILEJUDICIAL, 'alias' => 'profilejudicial', 'name' => '公司資料表', 'status' => 1, 'description' => '提供公司資料表', 'optional' => []],
+    1019 => ['id' => CERTIFICATION_COMPANYEMAIL, 'alias' => 'companyemail', 'name' => '公司電子信箱', 'status' => 1, 'description' => '驗證公司E-Mail位址', 'optional' => []],
+    1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '法人對保', 'status' => 1, 'description' => '法人線上對保', 'optional' => []],
+
+    2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
+];
+$config['certifications_sort'] = [
+    CERTIFICATION_IDCARD,
+    CERTIFICATION_STUDENT,
+    CERTIFICATION_DEBITCARD,
+    CERTIFICATION_SOCIAL,
+    CERTIFICATION_EMERGENCY,
+    CERTIFICATION_EMAIL,
+    CERTIFICATION_FINANCIAL,
+    CERTIFICATION_DIPLOMA,
+    CERTIFICATION_INVESTIGATION,
+    CERTIFICATION_JOB,
+    CERTIFICATION_PROFILE,
+	CERTIFICATION_INVESTIGATIONA11,
+    CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+    CERTIFICATION_SIMPLIFICATIONJOB,
+
+    CERTIFICATION_GOVERNMENTAUTHORITIES,
+    CERTIFICATION_INVESTIGATIONJUDICIAL,
+    CERTIFICATION_BALANCESHEET,
+    CERTIFICATION_INCOMESTATEMENT,
+    CERTIFICATION_CONDENSEDBALANCESHEET,
+    CERTIFICATION_CONDENSEDINCOMESTATEMENT,
+    CERTIFICATION_PURCHASESALESVENDORLIST,
+    CERTIFICATION_MAINPRODUCTSTATUS,
+    CERTIFICATION_EMPLOYEEINSURANCELIST,
+    CERTIFICATION_CHARTER,
+    CERTIFICATION_REGISTEROFMEMBERS,
+    CERTIFICATION_BUSINESS_PLAN,
+    CERTIFICATION_PASSBOOKCASHFLOW,
+    CERTIFICATION_BUSINESSTAX,
+    CERTIFICATION_INTERVIEW,
+//    CERTIFICATION_CERCREDITJUDICIAL,
+    CERTIFICATION_STARTUPFUNDS,
+    CERTIFICATION_VERIFICATION,
+    CERTIFICATION_SALESDETAIL,
+    CERTIFICATION_PROFILEJUDICIAL,
+    CERTIFICATION_COMPANYEMAIL,
+    CERTIFICATION_JUDICIALGUARANTEE
 ];
 
 //支援XML銀行列表
@@ -1107,13 +1899,13 @@ $config['seniority_range'] = [
 ];
 
 $config['employee_range'] = [
-    0 => '1~20（含）',
-    1 => '20~50（含）',
-    2 => '50~100（含）',
-    3 => '100~500（含）',
-    4 => '500~1000（含）',
-    5 => '1000~5000（含）',
-    6 => '5000以上',
+    0 => '1~20（含）人',
+    1 => '20~50（含）人',
+    2 => '50~100（含）人',
+    3 => '100~500（含）人',
+    4 => '500~1000（含）人',
+    5 => '1000~5000（含）人',
+    6 => '5000人以上',
 ];
 
 $config['position_name'] = [
@@ -1159,8 +1951,12 @@ $config['selling_type'] = [
 ];
 
 $config['character'] = [
+	0 => '登記負責人',
     1 => '負責人',
-    2 => '股東'
+    2 => '實際負責人',
+    3 => '配偶',
+    4 => '保證人甲',
+    5 => '保證人乙',
 ];
 
 //登記機關,用於商業統編查詢++
@@ -1188,11 +1984,11 @@ $config['Agency'] = array(
     '371010000A',//'福建省金門縣政府',
     '371030000A' // '福建省連江縣政府',
 );
-//登記機關,用於商業統編查詢--
+//C登記機關,用於商業統編查詢--
 
 
 $config['certifications_msg'] = [
-    1 => [
+    CERTIFICATION_IDCARD => [
         '身份非平台服務範圍，我們無法提供服務給您，造成不便，敬請見諒！',
         '照片顛倒，煩請您重新拍攝',
         '照片不清晰，煩請您重新拍攝',
@@ -1202,33 +1998,33 @@ $config['certifications_msg'] = [
         '持證自拍未持身分證',
         '上傳證件有誤',
     ],
-    2 => [
+    CERTIFICATION_STUDENT => [
         '學制與證件不符',
         '學生證錯誤',
         'SIP資訊有誤',
         '身份非平台服務範圍，我們無法提供服務給您，造成不便，敬請見諒！',
     ],
-    3 => [],
-    4 => [
+    CERTIFICATION_DEBITCARD => [],
+    CERTIFICATION_SOCIAL => [
         '您認證的IG非常用帳號，系統無法驗證',
         '您認證的IG非常用帳號，請洽 LINE@influxfin 客服，提供使用者編號協助進行FB驗證',
     ],
-    5 => [
+    CERTIFICATION_EMERGENCY => [
         '緊急連絡人資訊有誤',
         '請提供監護人之佐證資料，如：戶口名簿等政府單位核發文件',
     ],
-    6 => [],
-    7 => [],
-    8 => [
+    CERTIFICATION_EMAIL => [],
+    CERTIFICATION_FINANCIAL> [],
+    CERTIFICATION_DIPLOMA => [
         '畢業證書錯誤',
         '您的身份非平台服務範圍，我們無法提供服務給您，造成不便，敬請見諒！',
         '填寫的學制與證書不符',
     ],
-    9 => [
+    CERTIFICATION_INVESTIGATION => [
         '請寄送完整版電子聯徵資料至credit@influxfin.com，感謝您的配合！',
         '聯徵資料與平台規範不符',
     ],
-    10 => [
+    CERTIFICATION_JOB => [
         '勞保資料有誤，請您查閱最新的“勞保投保異動明細表”後上傳，感謝您的配合！',
         '勞保非近一個月申請',
         '未上傳勞保資訊',
@@ -1237,7 +2033,7 @@ $config['certifications_msg'] = [
         '您的薪資轉入資料不足三個月',
         '未提供存摺相關資料',
     ],
-    11 => [
+    CERTIFICATION_PROFILE => [
         '系統無法判讀為本人，煩請您重新拍攝',
         '光線不足無法判讀，煩請您重新拍攝',
     ],
@@ -1316,4 +2112,26 @@ $config['notification'] = [
 		NotificationStatus::Sent => '已發送',
 		NotificationStatus::Canceled => '已取消'
 	]
+];
+
+$config['no_prepayment_allowance'] = [PRODUCT_FOREX_CAR_VEHICLE];
+
+$config['externalCooperation'] = [PRODUCT_SK_MILLION_SMEG];
+
+//個人資料表
+$config['cer_profile'] = [
+    'RealPr' => ['登記負責人','配偶','甲保證人','乙保證人'],
+    'IsPrSpouseGu' => ['是','否'],
+    'PrEduLevel' => ['A'=>'國小','B'=>'國中','C'=>'高中職','D'=>'專科','E'=>'大學','F'=>'碩士','G'=>'博士','H'=>'無'],
+    'OthRealPrRelWithPr' => ['A'=>'配偶','B'=>'血親','C'=>'姻親','D'=>'股東','E'=>'朋友','F'=>'本人','G'=>'其他','H'=>'與經營有關之借戶職員'],
+    'GuOneRelWithPr' => ['A'=>'配偶','B'=>'血親','C'=>'姻親','D'=>'股東','E'=>'朋友','F'=>'本人','G'=>'其他','H'=>'與經營有關之借戶職員'],
+    'GuOneCompany' => ['A'=>'公家機關','B'=>'上市櫃公司','C'=>'專業人士','D'=>'借戶','E'=>'其他民營企業','F'=>'無'],
+    'GuTwoRelWithPr' => ['A'=>'配偶','B'=>'血親','C'=>'姻親','D'=>'股東','E'=>'朋友','F'=>'本人','G'=>'其他','H'=>'與經營有關之借戶職員'],
+    'GuTwoCompany' => ['A'=>'公家機關','B'=>'上市櫃公司','C'=>'專業人士','D'=>'借戶','E'=>'其他民營企業','F'=>'無'],
+];
+//公司資料表
+$config['cer_profilejudicial'] = [
+    'IsBizRegAddrSelfOwn' => ['非自有','自有'],
+    'BizRegAddrOwner' => ['A'=>'企業','B'=>'負責人','C'=>'負責人配偶'],
+    'IsBizAddrEqToBizRegAddr' => ['不同於營業登記地址','同營業登記地址'],
 ];
