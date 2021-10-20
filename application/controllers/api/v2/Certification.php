@@ -2299,6 +2299,35 @@ class Certification extends REST_Controller {
                 }
             }
             $content['skbank_form'] = $content;
+
+            // 個人資料表加入歸戶關係
+            $this->CI->load->model('loan/target_associate_model');
+            $associate_info = $this->target_associate_model->get_by(array(
+                'user_id' => $user_id,
+                'status' => 1,
+                'is_applicant' => 0
+            ));
+            if($associate_info){
+                $associate_mapping = [
+                    '0' => 'A',
+                    '1' => 'B',
+                    '2' => 'C',
+                    '3' => 'D',
+                    '4' => 'E',
+                    '5' => 'F',
+                    '6' => 'G',
+                    '7' => 'H',
+                ];
+                $relationship = $associate_info->relationship;
+                if(isset($associate_mapping[$relationship])){
+                    $associate_value = $associate_mapping[$relationship];
+                    $content['skbank_form']['OthRealPrRelWithPr'] = $associate_value;
+                    $content['skbank_form']['GuOneRelWithPr'] = $associate_value;
+                    $content['skbank_form']['GuTwoRelWithPr'] = $associate_value;
+                }
+
+            }
+
             $res = $content;
 
             $param = [
