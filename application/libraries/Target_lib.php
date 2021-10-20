@@ -2238,6 +2238,10 @@ class Target_lib
                             $chargeOfRegistration = true;
                             $temp['addrealcharacter'] = $chargeOfRegistration;
                         }elseif($value->character == 2){
+                            // 實際負責人為配偶時
+                            if($value->relationship == 0){
+                                $temp['addspouse'] = false;
+                            }
                             $temp['addrealcharacter'] = false;
                         }elseif($value->character == 3){
                             $temp['addspouse'] = false;
