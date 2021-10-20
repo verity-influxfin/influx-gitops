@@ -2302,7 +2302,7 @@ class Certification extends REST_Controller {
 
             // 個人資料表加入歸戶關係
             $this->load->model('loan/target_associate_model');
-            $associate_info = $this->target_associate_model->get_by(array(
+            $associate_info = $this->target_associate_model->order_by('id', 'desc')->->get_by(array(
                 'user_id' => $user_id,
                 'status' => 1,
                 'is_applicant' => 0
