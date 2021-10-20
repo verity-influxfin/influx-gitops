@@ -2301,7 +2301,7 @@ class Certification extends REST_Controller {
             $content['skbank_form'] = $content;
 
             // 個人資料表加入歸戶關係
-            $this->CI->load->model('loan/target_associate_model');
+            $this->load->model('loan/target_associate_model');
             $associate_info = $this->target_associate_model->get_by(array(
                 'user_id' => $user_id,
                 'status' => 1,
