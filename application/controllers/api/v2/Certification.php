@@ -2255,8 +2255,16 @@ class Certification extends REST_Controller {
             $this->target_associate_model->limit(1)->order_by("id", "desc");
             $target_associate_info = $this->target_associate_model->get_by(['user_id'=>$user_id,'target_id'=>$input['target_id']]);
             if($target_associate_info){
+                $character = isset($target_associate_info->character) && is_numeric($target_associate_info->character) ? (int)$target_associate_info->character : '';
+
+                // 根據擔任角色與負責人關係給予相對應個人資料表應有狀態
+                // 配偶擔任保證人
+                if($target_associate_info->character == 3 && $target_associate_info->guarantor == 1){
+                    $character = 4;
+                }
+
                 $response = [
-                    'relaction_type' => isset($target_associate_info->character) && is_numeric($target_associate_info->character) ? (int)$target_associate_info->character : '',
+                    'relaction_type' => $character
                 ];
 
                 $this->response(array('result' => 'SUCCESS', 'data' => $response));
@@ -2291,6 +2299,35 @@ class Certification extends REST_Controller {
                 }
             }
             $content['skbank_form'] = $content;
+
+            // 個人資料表加入歸戶關係
+            $this->CI->load->model('loan/target_associate_model');
+            $associate_info = $this->target_associate_model->get_by(array(
+                'user_id' => $user_id,
+                'status' => 1,
+                'is_applicant' => 0
+            ));
+            if($associate_info){
+                $associate_mapping = [
+                    '0' => 'A',
+                    '1' => 'B',
+                    '2' => 'C',
+                    '3' => 'D',
+                    '4' => 'E',
+                    '5' => 'F',
+                    '6' => 'G',
+                    '7' => 'H',
+                ];
+                $relationship = $associate_info->relationship;
+                if(isset($associate_mapping[$relationship])){
+                    $associate_value = $associate_mapping[$relationship];
+                    $content['skbank_form']['OthRealPrRelWithPr'] = $associate_value;
+                    $content['skbank_form']['GuOneRelWithPr'] = $associate_value;
+                    $content['skbank_form']['GuTwoRelWithPr'] = $associate_value;
+                }
+
+            }
+
             $res = $content;
 
             $param = [
