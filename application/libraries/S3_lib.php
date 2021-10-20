@@ -143,6 +143,7 @@ class S3_lib {
 		$images = [];
 		$fileList = [];
 		$pdfPath = '';
+		$result = [];
 		try {
 			if (!$attachments)
 				return '';
@@ -167,12 +168,14 @@ class S3_lib {
 				$pdfImagick->writeImages($pdfPath, true);
 			}
 
-			$content = file_get_contents($pdfPath);
-			$result = $this->client->putObject(array(
-				'Bucket' 		=> S3_BUCKET,
-				'Key'    		=> $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . ".pdf",
-				'Body'   		=> $content
-			));
+			$content = @file_get_contents($pdfPath);
+			if($content !== false) {
+				$result = $this->client->putObject(array(
+					'Bucket' => S3_BUCKET,
+					'Key' => $type . '/' . $name . $user_id . round(microtime(true) * 1000) . rand(1, 99) . ".pdf",
+					'Body' => $content
+				));
+			}
 		} catch (S3Exception $e) {
 			error_log('Connecting to S3 was failed. Error in '.$e->getFile()." at line ".$e->getLine());
 		} finally {

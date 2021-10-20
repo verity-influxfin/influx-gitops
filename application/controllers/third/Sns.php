@@ -82,7 +82,15 @@ class Sns extends REST_Controller {
                         ) {
                             $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
                         }else{
-                            $this->attachment_pdf($attachments, $cert_info, $s3_url,$certification_id);
+                            if(!in_array($info[0]->status, [1,2,4])) {
+                                $remark           = $info[0]->remark!=''?json_decode($info[0]->remark,true):[];
+                                $remark['fail']   = "夾帶附件為不支援的格式";
+                                $this->user_certification_model->update_by(['id' => $info[0]->id], [
+                                    'status' => 3,
+                                    'remark'    => json_encode($remark)
+                                ]);
+                            }
+                            $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                         }
                     } else if (($drive = strpos($file_content, 'https://drive.google.com/')) !== false ||
                         ((count($info) >= 3) && $info[0]->status == 0)) {
