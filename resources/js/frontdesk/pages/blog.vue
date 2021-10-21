@@ -1,80 +1,155 @@
 <template>
-  <div class="blog-wrapper" id="blog-wrapper">
-    <div class="header">
-      <h2>AI金融科技新知</h2>
-      <div class="input-custom">
-        <form autocomplete="off" onsubmit="return false">
-            <i class="fas fa-search"></i>
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Search"
-              autocomplete="new-password"
-              autofill="off"
-              name="blog_articlesearch"
-              v-model="filter"
-            />
-            <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
-        </form>
-      </div>
-    </div>
-    <template v-if="Array.isArray(filterKnowledge) && filterKnowledge.length === 0">
-      <div class="empty">
-        <div class="empty-img">
-          <img src="../asset/images/empty.svg" class="img-fluid" />
+    <div class="blog-wrapper" id="blog-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-9">
+                    <form onsubmit="return false;" class="search-form d-block d-lg-none mb-4" autocomplete="off" v-if="latest_articles">
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                placeholder="搜尋"
+                                autocomplete="off"
+                                v-model="filter"
+                            />
+                            <div class="input-group-append">
+                                <button type="button" class="input-group-text btn-search">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <template v-if="Array.isArray(filterKnowledge) && filterKnowledge.length === 0">
+                    <div class="empty">
+                        <div class="empty-img">
+                            <img src="../asset/images/empty.svg" class="img-fluid" />
+                        </div>
+                        <h3>沒有結果</h3>
+                        <p>根據您的搜索，我們似乎找不到結果</p>
+                    </div>
+                    </template>
+                    <template v-else>
+                        <div class="blog-content">
+                            <div class="panel panel-default article" v-for="item in filterKnowledgePage">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h2 class="title">
+                                                <a :href="item.link">{{item.post_title}}</a>
+                                            </h2>
+                                            <p class="date">{{item.post_date.substr(0,10)}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-7">
+                                            <a :href="item.link">
+                                                <img class="cover" :src="item.media_link ? item.media_link : '/images/default-image.png'">
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-5">
+                                            <p class="summary" v-html="make_summary(item.post_content)"></p>
+                                            <a class="readmore" :href="item.link">繼續閱讀</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pagination" ref="pagination"></div>
+                    </template>
+                </div>
+                <div class="d-none d-lg-flex col-lg-3 ">
+                    <div class="panel panel-default" v-if="latest_articles">
+                        <div class="panel-body">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <a href="/scsbank?move=page" class="ad_aside" target="_blank">
+                                        <img src="/images/blog_ad_aside.jpg" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row mb-4">
+                                <div class="col">
+                                    <form onsubmit="return false;" class="search-form" autocomplete="off">
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="搜尋"
+                                                autocomplete="off"
+                                                v-model="filter"
+                                            />
+                                            <div class="input-group-append">
+                                                <button type="button" class="input-group-text btn-search">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col latest-article">
+                                    <h3 class="section-title">最新文章</h3>
+                                    <div class="list-group list-group-flush">
+                                        <a v-for="article in latest_articles" :href="article.link" class="list-group-item list-group-item-action">
+                                            <h5 class="title">{{article.title}}</h5>
+                                            <small class="date">{{article.date}}</small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <h3>沒有結果</h3>
-        <p>根據您的搜索，我們似乎找不到結果</p>
-      </div>
-    </template>
-    <template v-else>
-      <ul class="blog-content" ref="content"></ul>
-      <div class="pagination" ref="pagination"></div>
-    </template>
-  </div>
+    </div>
 </template>
 
 <script>
-let postRow = Vue.extend({
-  props: ["item"],
-  template: `
-    <li class="article">
-        <a :href="item.link">
-          <div class="top" v-if="item.order === 1"><img src="/images/tag.svg" class="img-fluid"></div>
-          <div class="img"><img :src="item.media_link ? item.media_link : '/images/default-image.png'"></div>
-          <div class="chunk">
-            <p class="title">{{item.post_title}}</p>
-            <p class="date">{{item.post_date.substr(0,10)}}</p>
-            <p class="cnt">{{item.post_content}}</p>
-            <div class="link">閱讀更多<img src="/images/a_arrow.png"></a>
-          </div>
-        </a>
-    </li>
-  `,
-});
-
 export default {
   data: () => ({
     filter: "",
     pageHtml: "",
     filterKnowledge: null,
+    current_page: $cookies.get('page') ? $cookies.get('page') : 1,
+    page_size: 9,
+    latest_articles: null,
   }),
   computed: {
     knowledge() {
-      let $this = this;
-      $.each($this.$store.getters.KnowledgeData, (index, row) => {
-        $this.$store.getters.KnowledgeData[
-          index
-        ].post_content = `${row.post_content
-          .replace(/(<([^>]+)>)/gi, "")
-          .substr(0, 50)}...`;
-      });
-      return $this.$store.getters.KnowledgeData;
+      return this.$store.getters.KnowledgeData;
+    },
+    filterKnowledgePage() {
+        if (Array.isArray(this.filterKnowledge)) {
+            let start = (this.current_page - 1) * this.page_size;
+            let end   = (this.current_page * this.page_size) - 1;
+            return this.filterKnowledge.slice(start, end);
+        }
+        return this.filterKnowledge;
     },
   },
   created() {
-    $("title").text(`AI金融科技新知 - inFlux普匯金融科技`);
-    this.$store.dispatch("getKnowledgeData");
+    $('title').text('小學堂金融科技 - inFlux普匯金融科技');
+    let self = this;
+    this.$store.dispatch('getKnowledgeData').then(() => {
+        self.latest_articles = self.knowledge.map(item => {
+                return {
+                    title: item.post_title,
+                    date: item.post_date.substr(0,10),
+                    link: item.link
+                };
+            }).sort((a, b) => {
+            switch (true) {
+                case a.date < b.date:
+                    return 1;
+                case a.date > b.date:
+                    return -1;
+                default:
+                    return 0;
+            }
+        }).slice(0, 5);
+    });
   },
   mounted() {
     this.$nextTick(() => {
@@ -92,37 +167,31 @@ export default {
       this.filterKnowledge = this.knowledge.filter(item => {
         return item.post_title.toLowerCase().indexOf(newVal) > -1;
       });
-    },
-    filterKnowledge() {
-      window.dispatchEvent(new Event("resize"));
       this.pagination();
     },
   },
   methods: {
+    make_summary(content) {
+        return content.replace(/(<([^>]+)>)/gi, '')
+                    .trim()
+                    .replace(/\&.+\;/gm, '')
+                    .substr(0, 140) + '...';
+    },
     pagination() {
-      let $this = this;
-      $this.$nextTick(() => {
-        $($this.$refs.pagination).pagination({
-          dataSource: $this.filterKnowledge,
-          pageSize: 9,
-          pageNumber: $cookies.get("page") ? $cookies.get("page") : 1,
-          callback(data, pagination) {
-            $($this.$refs.content).html("");
-            data.forEach((item, index) => {
-              let component = new postRow({
-                propsData: {
-                  item,
-                },
-              }).$mount();
-
-              $($this.$refs.content).append(component.$el);
-            });
-          },
-          afterPageOnClick() {
-            $cookies.set("page", $(".paginationjs-page.active").attr("data-num"));
+      let self = this;
+      this.$nextTick(() => {
+        $('.pagination').pagination({
+          dataSource: self.filterKnowledge,
+          pageSize: self.page_size,
+          pageNumber: self.current_page,
+          pageRange: 1,
+          prevText: '上一頁',
+          nextText: '下一頁',
+          callback(data, page) {
+            self.current_page = page.pageNumber;
+            window.scrollTo(0, 0);
           },
         });
-
         window.dispatchEvent(new Event("resize"));
       });
     },
@@ -131,204 +200,164 @@ export default {
 </script>
 
 <style lang="scss">
+@import "../asset/scss/bootstrap/functions";
+@import "../asset/scss/bootstrap/variables";
+@import "../asset/scss/bootstrap/mixins/_breakpoints";
+
 .blog-wrapper {
   padding: 30px;
   overflow: hidden;
   position: relative;
 
   .particles-js-canvas-el {
-    position: absolute;
-    top: 0;
-    z-index: -1;
-  }
-
-  .header {
-    width: 80%;
-    margin: 20px auto;
-    position: relative;
-    padding: 10px 20px;
-    border-radius: 40px;
-    box-shadow: 0 2px 5px 0 #6ab0f2;
-    background-color: #ffffff;
-
-    h2 {
-      font-weight: bolder;
-      color: #061164;
-      margin: 0px;
-    }
-
-    .input-custom {
-      width: 300px;
-      position: absolute;
-      top: 50%;
-      right: 25px;
-      transform: translate(0px, -50%);
-
-      .form-control {
-        padding: 5px 35px;
-        border: 0px;
-        border-bottom: 1px solid #061164;
-        border-radius: 0px;
-      }
-
-      %iStyle {
-        position: absolute;
-        top: 50%;
-        transform: translate(0, -50%);
-        font-size: 20px;
-        color: #083a6e;
-      }
-
-      .fa-search {
-        @extend %iStyle;
-        left: 10px;
-      }
-
-      .fa-times {
-        @extend %iStyle;
-        right: 10px;
-        cursor: pointer;
-      }
-    }
+    display: none;
   }
 
   .blog-content {
-    width: 80%;
-    overflow: auto;
-    margin: 0px auto;
-    padding: 0px;
-
-    .article {
-      margin: 10px;
-      float: left;
-      width: calc(100% / 3 - 20px);
-      list-style: none;
-      background: #ffffff;
-      box-shadow: 0 2px 5px 0 #6ab0f2;
-      position: relative;
-
-      &:hover {
-        .img {
-          img {
-            filter: brightness(0.5);
-            transition-duration: 0.5s;
-          }
-        }
-      }
-
-      .top {
-        width: 15px;
-        position: absolute;
-        top: -10px;
-        left: 10px;
-        z-index: 2;
-        filter: drop-shadow(2px 2px 1px black);
-      }
-
-      .img {
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
-        text-align: center;
-        padding-bottom: 10px;
-
-        img {
-          height: 250px;
-          position: relative;
-        }
-      }
-
-      .chunk {
-        padding: 10px;
-
-        .title {
-          font-size: 17px;
-          color: #061164;
-          font-weight: 900;
-          height: 60px;
-        }
-
-        .date {
-          font-size: 14px;
-          font-weight: initial;
-          color: #9b9b9b;
-        }
-
-        .cnt {
-          font-size: 15px;
-          font-weight: 500;
-          line-height: 1.8;
-          color: #797979;
-          height: 80px;
-        }
-
-        .link {
-          display: block;
-          font-weight: bolder;
-          text-align: center;
-          color: #8629a5;
-        }
-      }
-
-      h6 {
-        padding: 0px 10px;
-        font-size: 15px;
-        height: 35px;
-      }
+    @include media-breakpoint-up(lg) {
+        border-right: 2px solid #eee;
+        padding-right: 2em;
     }
   }
 
   .empty {
     text-align: center;
-    margin: 30px auto;
 
-    .empty-img {
-      width: 200px;
-      margin: 20px auto;
+    .empty-img > img {
+        height: 16em;
     }
 
     h3 {
-      font-weight: bold;
+        color: #153a71;
+    }
+
+    p {
+        color: #5d5555;
     }
   }
 
-  .pagination {
-    margin: 2rem auto 0px auto;
-    width: fit-content;
-  }
+  .paginationjs {
 
-  @media (max-width: 767px) {
-    padding: 10px;
-
-    .header {
-      width: 100%;
-      box-shadow: 0 0 black;
-
-      h2 {
-        text-align: center;
-      }
-
-      .input-custom {
-        position: relative;
-        width: initial;
-        margin: 10px auto;
-        top: 0;
-        right: 0px;
-        transform: initial;
-      }
-    }
-
-    .blog-content {
-      width: 100%;
-
-      .article {
-        width: calc(100% - 2px);
-        margin: 10px 1px;
-
-        .img {
-          height: auto;
+    &-prev, &-next {
+        &.disabled{
+             > a {
+                opacity: 1 !important;
+                color: #b4b4b4 !important;
+             }
         }
-      }
+    }
+    &-ellipsis {
+        &.disabled{
+             > a {
+                opacity: 1 !important;
+             }
+        }
+    }
+    &-page {
+        &.active{
+            border:1px solid #036eb7 !important;
+            border-right:none !important;
+             > a {
+                background: none !important;
+                line-height: 28px !important;
+             }
+        }
+    }
+    &-prev, &-next, &-page, &-ellipsis {
+        border-color: #036eb7 !important;
+        > a {
+            color: #036eb7 !important;
+            height: auto !important;
+            @include media-breakpoint-up(lg) {
+                font-size: 1.4em !important;
+                padding: 3px 12px;
+            }
+        }
+    }
+    &-prev, &-prev > a {
+        border-radius: 10px 0 0 10px !important;
+    }
+    &-next, &-next > a {
+        border-radius: 0 10px 10px 0 !important;
+    }
+  }
+
+  .article {
+    margin-bottom: 6em;
+
+    .row > div {
+        max-height: 14em;
+    }
+
+    .title a{
+        color: #153a71;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    img.cover {
+        width: 100%;
+        height: 14em;
+        object-fit: contain;
+    }
+    .date {
+        color: #5d5555;
+        margin-left: .5em;
+    }
+    .summary {
+        color: #706969;
+        text-align: justify;
+        overflow-wrap: break-word;
+    }
+    .readmore {
+        color: #1a3e74;
+        float: right;
+        margin: 0;
+    }
+  }
+
+  .ad_aside {
+    img {
+        width: 100%;
+    }
+  }
+
+  .search-form {
+    .form-control {
+        border-color: #3489c5;
+        border-right: none;
+    }
+    .btn-search {
+        border-left: none;
+        border-color: #3489c5;
+        background: none;
+        color: #3489c5;
+    }
+  }
+
+  .latest-article {
+    .section-title {
+        color: #153a71;
+        font-size: 1.3em;
+        font-weight: bold;
+    }
+    .list-group-item {
+        padding: .75rem .5rem;
+
+        &:hover .title {
+            text-decoration: underline;
+        }
+        .title {
+            color: #5d5555;
+            white-space: nowrap;
+            font-size: 1em;
+            font-weight: bold;
+            width: 16em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .date {
+            color: #036eb7;
+        }
     }
   }
 }
