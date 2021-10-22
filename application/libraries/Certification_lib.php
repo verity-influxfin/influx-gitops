@@ -3208,6 +3208,10 @@ class Certification_lib{
                         if($value->character == 3){
                             $update_info['status'] = 1;
                         }
+                        // 負責人加入之實際負責人為配偶自動同意
+                        if($value->character == 2 && $value->relationship == 1){
+                            $update_info['status'] = 1;
+                        }
                         $this->CI->target_associate_model->update_by([
                             'id' => $value->id,
                         ], $update_info);
