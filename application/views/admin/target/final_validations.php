@@ -18,6 +18,74 @@
 	.targetDataInputblock div{
 		line-height: 24px;
 	}
+    #creditManagementTable{
+        height: 2500px;
+    }
+    iframe{
+        width: 100%;
+        overflow: hidden;
+        border: 0;
+    }
+    .opinion_item {
+        display: flex;
+        margin: 10px;
+        border-bottom-style: ridge;
+        position: relative;
+    }
+    .opinion_item div {
+        margin: 0 10px;
+    }
+    .opinion_status {
+        display: flex;
+        width: 10%;
+        justify-content: center;
+        align-items: center;
+    }
+    .opinion_description {
+        display: flex;
+        width: 10%;
+        justify-content: center;
+        align-items: center;
+    }
+    .opinion_info {
+        width: 70%;
+    }
+    .opinion_info input{
+        width: 100%;
+    }
+    .opinion_info textarea{
+        width: 100%;
+        height: 70px;
+        resize : none;
+        word-break:keep-all;
+    }
+    .opinion_info div{
+        display: flex;
+    }
+    .opinion_info span{
+        width: 30%;
+    }
+    .opinion_button {
+        display: flex;
+        width: 10%;
+        justify-content: center;
+        align-items: center;
+    }
+    .mask {
+        z-index: 10;
+        background-color: gray;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 50px;
+        font-weight:bold;
+        letter-spacing: 25px;
+    }
 </style>
 <div id="page-wrapper">
 	<div class="row">
@@ -36,6 +104,7 @@
 				<div class="panel-body natual">
 					<div class="row">
 						<div class="col-lg-12">
+                            <iframe id="creditManagementTable" src="../creditmanagement/report?target_id=<?=$_GET['id']?>&type=person" scrolling='no' ></iframe>
 							<div class="table-responsive">
 								<table class="table table-bordered">
 									<tr>
@@ -565,6 +634,77 @@
 				</div>
 			</div>
 		</div>
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">審批</div>
+                <div class="panel-body" id="opinion">
+                    <div class="opinion_item">
+                        <div class="mask" style="margin: unset;">非核貸最高層級</div>
+                        <div class="opinion_status">
+                            <button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>
+                        </div>
+                        <div class="opinion_description">一審結果：</div>
+                        <div class="opinion_info">
+                            <textarea id="1_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea>
+                            <input id="1_score" type="number" value="" min="0" step="1" disabled>
+                            <div><span>姓名：</span><span id="1_name">系統測試</span></div>
+                            <div><span>時間：</span><span>2021/11/22</span></div>
+                        </div>
+                        <div class="opinion_button">
+                            <button id="CRO_opinion" class="btn btn-primary btn-info score" onclick="" disabled>送出</button>
+                        </div>
+                    </div>
+                    <div class="opinion_item">
+                        <div class="mask" style="margin: unset;">非核貸最高層級</div>
+                        <div class="opinion_status">
+                            <button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>
+                        </div>
+                        <div class="opinion_description">二審意見：</div>
+                        <div class="opinion_info">
+                            <textarea id="2_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea>
+                            <input id="2_score" type="number" value="" min="0" step="1" disabled>
+                            <div><span>姓名：</span><span id="2_name">系統測試</span></div>
+                            <div><span>時間：</span><span>2021/11/22</span></div>
+                        </div>
+                        <div class="opinion_button">
+                            <button id="CRO_opinion" class="btn btn-primary btn-info score" onclick="" disabled>送出</button>
+                        </div>
+                    </div>
+                    <div class="opinion_item">
+                        <div class="mask" style="margin: unset;">非核貸最高層級</div>
+                        <div class="opinion_status">
+                            <button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>
+                        </div>
+                        <div class="opinion_description">風控長意見：</div>
+                        <div class="opinion_info">
+                            <textarea id="3_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea>
+                            <input id="3_score" type="number" value="" min="0" step="1" disabled>
+                            <div><span>姓名：</span><span id="3_name">系統測試</span></div>
+                            <div><span>時間：</span><span>2021/11/22</span></div>
+                        </div>
+                        <div class="opinion_button">
+                            <button id="CRO_opinion" class="btn btn-primary btn-info score" onclick="" disabled>送出</button>
+                        </div>
+                    </div>
+                    <div class="opinion_item">
+                        <div class="mask" style="margin: unset;">非核貸最高層級</div>
+                        <div class="opinion_status">
+                            <button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>
+                        </div>
+                        <div class="opinion_description">總經理意見：</div>
+                        <div class="opinion_info">
+                            <textarea id="4_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea>
+                            <input id="4_score" type="number" value="" min="0" step="1" disabled>
+                            <div><span>姓名：</span><span id="4_name">系統測試</span></div>
+                            <div><span>時間：</span><span>2021/11/22</span></div>
+                        </div>
+                        <div class="opinion_button">
+                            <button id="CRO_opinion" class="btn btn-primary btn-info score" onclick="" disabled>送出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</div>
 	<!-- /.row -->
 </div>
@@ -573,6 +713,22 @@
 
 <script>
 
+    // 取得授審表案件核貸資料
+    function get_report_data(target_id){
+        let report_data = {};
+        $.ajax({
+            type: "GET",
+            url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=person`,
+            async: false,
+            success: function (response) {
+                report_data = response.response;
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+        return report_data;
+    }
 	$(document).ready(function() {
 		var urlString = window.location.href;
 		var url = new URL(urlString);
@@ -668,6 +824,24 @@
 				alert('資料載入失敗。請重新整理。');
 			}
 		});
+
+        // 取得案件核貸資料
+        case_aprove_data = get_report_data(caseId);
+        // console.log(case_aprove_data);
+        if(case_aprove_data){
+            Object.keys(case_aprove_data).forEach(function (area_name) {
+              Object.keys(case_aprove_data[area_name]).forEach(function (input_title) {
+                  if(input_title == 'reviewedInfoList'){
+                      Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
+                          console.log(case_aprove_data[area_name][input_title][list_key]);
+                          $(`#${list_key}_name`).text(case_aprove_data[area_name][input_title][list_key]['name']);
+                          $(`#${list_key}_opinion`).val(case_aprove_data[area_name][input_title][list_key]['opinion']);
+                          $(`#${list_key}_score`).val(case_aprove_data[area_name][input_title][list_key]['score']);
+                      })
+                  }
+              })
+          })
+        }
 
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
