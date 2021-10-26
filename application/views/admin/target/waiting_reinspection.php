@@ -316,7 +316,7 @@
                 url: "/admin/target/skbank_text_send" + "?target_id=" + caseId,
                 success: function (response) {
                     if(response.status.code == 200){
-                        $('#skbankCompId').text(response.CompId);
+                        $('#skbankCompId').text(response.response.CompId);
                         $.ajax({
                            type: "POST",
                            data: JSON.stringify(response.response),
@@ -355,7 +355,7 @@
                 url: "/admin/target/skbank_image_get" + "?target_id=" + caseId,
                 success: function (response) {
                   if(response.status.code == 200){
-                      let case_no = $('#skbankMsgNo').text();
+                      let case_no = $('#skbankCaseNo').text();
                       let comp_id = $('#skbankCompId').text();
                       if(case_no && comp_id){
                           let request_data = [];
@@ -691,7 +691,7 @@
                         <? } ?>
                         <? if($targetInfo->product_id == 1002){ ?>
                             <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
-                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="" disabled>圖片送出</button>
+                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">圖片送出</button>
                             <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="" disabled>通過</button>
                         <? } ?>
                     </div>
