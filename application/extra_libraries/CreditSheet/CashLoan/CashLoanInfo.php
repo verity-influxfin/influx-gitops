@@ -39,17 +39,16 @@ class CashLoanInfo implements CashLoanBase {
                 strtotime($this->endDate)));
             $response['approvedCreditList'] = [];
             $totalLoanAmount = 0;
-            $approvedCreditList = $this->getApprovedCreditList();
+            $approvedCreditList = $this->getLoanedCreditList($this->endDate);
             foreach ($approvedCreditList as $creditRecord) {
                 $credit = [];
+                $lastPaymentDate = $this->CI->target_lib->getLastPaymentDate($creditRecord->loan_date, $creditRecord->format_id, $creditRecord->instalment);
                 $credit['bookkeeping'] = $this->getBookkeepingType($creditRecord->instalment);
                 $credit['unusedCreditLine'] = $this->creditSheet->viewConverter->thousandUnit($creditRecord->unused_credit_line);
                 $credit['loanLine'] = $this->creditSheet->viewConverter->thousandUnit($creditRecord->loan_amount);
                 $credit['interestRate'] = $this->creditSheet->viewConverter->percentSymbol($creditRecord->interest_rate);
-                $credit['lineExpiredDate'] = $this->creditSheet->viewConverter->dateFormatToChinese(
-                    $creditRecord->line_expired_at ?? '');
-                $credit['lastPaymentDate'] = $this->creditSheet->viewConverter->dateFormatToChinese(
-                    $this->CI->target_lib->getLastPaymentDate($creditRecord->loan_date, $creditRecord->format_id, $creditRecord->instalment));
+                $credit['lineExpiredDate'] = $this->creditSheet->viewConverter->dateFormatToChinese($lastPaymentDate);
+                $credit['lastPaymentDate'] = $this->creditSheet->viewConverter->dateFormatToChinese($lastPaymentDate);
                 $response['approvedCreditList'][] = $credit;
 
                 if($creditRecord->loan_date >= $lastYear)
@@ -79,15 +78,6 @@ class CashLoanInfo implements CashLoanBase {
     protected function getLastYearDate(): string
     {
         return '';
-    }
-
-    /**
-     * 取得核准紀錄列表
-     * @return array
-     */
-    protected function getApprovedCreditList(): array
-    {
-        return $this->_getApprovedCreditList($this->endDate);
     }
 
     /**

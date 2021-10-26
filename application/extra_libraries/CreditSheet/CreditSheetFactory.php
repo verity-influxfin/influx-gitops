@@ -9,7 +9,8 @@ use CreditSheet\CashLoan\ArchivingCashLoanInfo;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CreditSheetFactory {
-    public static function getInstance($targetId) {
+    public static function getInstance($targetId): ?PersonalCreditSheet
+    {
         $CI = &get_instance();
         $CI->load->model('user/user_model');
         $CI->load->model('loan/credit_sheet_model');
@@ -29,7 +30,16 @@ class CreditSheetFactory {
             $creditLineInfo = new CreditLineInfo();
             $cashLoanInfo = new CashLoanInfo();
         }
-        return new PersonalCreditSheet($target, $user, $basicInfo, $creditLineInfo, $cashLoanInfo);
+
+        $returnObject = NULL;
+        try{
+            $returnObject = new PersonalCreditSheet($target, $user, $basicInfo, $creditLineInfo, $cashLoanInfo);
+        }catch (\InvalidArgumentException $e) {
+            error_log("Invalid Argument Exception: ". $e->getMessage());
+        }catch (\Exception $e) {
+            error_log("Exception: ". $e->getMessage());
+        }
+        return $returnObject;
     }
 
 }

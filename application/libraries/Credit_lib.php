@@ -721,7 +721,6 @@ class Credit_lib{
 			$param = array(
 				'user_id'			=> $user_id,
 				'product_id'		=> $product_id,
-				'sub_product_id'	=> $sub_product_id,
 				'status'			=> 1,
 				'expire_time >='	=> time(),
 			);

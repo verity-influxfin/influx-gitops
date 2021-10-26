@@ -31,28 +31,29 @@ class Credit_sheet_model extends MY_Model
     }
 
     public function getCreditSheetWithTarget($target_where, $creditSheet_where) {
-        $this->db->select('id, user_id, instalment, amount, loan_amount, interest_rate, loan_date, reason, contract_id')
-            ->from("`p2p_loan`.`targets`")
-            ->where($target_where);
-        $subquery = $this->db->get_compiled_select('', TRUE);
-        $this->db
+        $this->_database->select('id, user_id, instalment, amount, loan_amount, interest_rate, loan_date, reason, contract_id')
+            ->from("`p2p_loan`.`targets`");
+        $this->_set_where([0 => $target_where]);
+        $subquery = $this->_database->get_compiled_select('', TRUE);
+
+        $this->_database
             ->select('`t`.*, `ct`.`format_id` AS `format_id`')
             ->from('`p2p_loan`.`contracts` AS `ct`')
             ->join("($subquery) as `t`", "`t`.`contract_id` = `ct`.`id`")
             ->order_by('created_at', 'desc');
-        $subquery2 = $this->db->get_compiled_select('', TRUE);
+        $subquery2 = $this->_database->get_compiled_select('', TRUE);
 
         $creditSheetCondition = [];
         $creditSheet_where = array_walk($creditSheet_where, function ($val, $key) use (&$creditSheetCondition) {
             $creditSheetCondition['`cs`.'.$key] = $val;
         });
-        $this->db
+        $this->_database
             ->select('*')
             ->from('`p2p_loan`.`credit_sheet` AS `cs`')
             ->where($creditSheetCondition)
             ->join("($subquery2) as `t`", "`t`.`id` = `cs`.`target_id`")
             ->order_by('cs.created_at', 'desc');
-        return $this->db->get()->result();
+        return $this->_database->get()->result();
     }
 
     public function insertWhenEmpty($insertData, $condition) {

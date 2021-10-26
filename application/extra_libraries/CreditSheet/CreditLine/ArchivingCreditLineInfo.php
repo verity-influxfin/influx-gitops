@@ -58,28 +58,4 @@ class ArchivingCreditLineInfo extends CreditLineInfo {
         $endDate = $this->creditSheet->creditSheetRecord->created_at;
         return $this->_getTodayTargets($startDate, $endDate);
     }
-
-    /**
-     * 取得已審查的資料列表
-     * @return array
-     */
-    public function getReviewedInfoList(): array
-    {
-        $reviewerInfo = array_fill_keys(array_keys(self::REVIEWER_LIST), [
-            'name' => '',
-            'opinion' => '',
-            'score' => ''
-        ]);
-        $creditSheetReviewList = $this->CI->credit_sheet_review_model->get_many_by(
-            ['credit_sheet_id' => $this->creditSheet->creditSheetRecord->id]);
-        foreach ($creditSheetReviewList as $reviewer) {
-            $reviewerInfo[$reviewer->group] = [
-                'name' => $reviewer->name,
-                'opinion' => $reviewer->opinion,
-                'score' => $reviewer->score
-            ];
-        }
-
-        return $reviewerInfo;
-    }
 }

@@ -11,7 +11,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
     protected $repayableTargets;
     protected $CI;
     protected $certificationProcessList = [
-        CERTIFICATION_IDCARD => ['name', 'id_card_number', 'birthday', 'address'],
+        CERTIFICATION_IDCARD => ['name', 'id_number', 'birthday', 'address'],
         CERTIFICATION_JOB => ['company'],
         CERTIFICATION_STUDENT => ['school'],
         CERTIFICATION_EMAIL => ['email'],
@@ -71,7 +71,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
     {
         $productList 	= $this->CI->config->item('product_list');
         $allowProductList = array_filter($productList, function ($item) {
-            return in_array($item['id'], $this->creditSheet::ALLOW_PRODUCT_LIST);
+            return in_array($item['id'], $this->creditSheet::ALLOW_PRODUCT_LIST) && $item['type'] == PRODUCT_TYPE_NORMAL;
         });
 
         return array_column($allowProductList, 'name', 'id');
@@ -101,7 +101,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
         $info = $this->CI->certification_lib->get_certification_info($this->creditSheet->user->id, $certId, 0);
         if($info && $info->status == 1) {
             foreach ($selectColumnList as $columnName) {
-                $result[$columnName] = isset($info->content[$columnName]) ? $info->content[$columnName] : '';
+                $result[$columnName] = $info->content[$columnName] ?? '';
             }
         }else{
             $result = array_fill_keys($selectColumnList, '');
@@ -130,7 +130,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
      */
     protected function getProductCategories() {
         $this->repayableTargets = $this->CI->target_model->order_by('id','ASC')->get_many_by(
-                ['user_id'=>$this->creditSheet->user->id, 'status' => 5]);
+                ['user_id'=>$this->creditSheet->user->id, 'status' => TARGET_REPAYMENTING]);
         return array_map('intval', array_unique(array_column($this->repayableTargets, 'product_id')));
     }
 
@@ -157,7 +157,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
             get_by(['user_id' => $this->creditSheet->user->id, 'created_at <=' => 'UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(created_at), INTERVAL 6 MONTH))']);
         if(!isset($credit) || $this->creditSheet->target->product_id != $credit->product_id) {
             return self::CREDIT_CATEGORY_NEW_TARGET;
-        }else if($this->creditSheet->target->sub_status == 8) {
+        }else if($this->creditSheet->target->sub_status == TARGET_SUBSTATUS_SUBLOAN_TARGET) {
             return self::CREDIT_CATEGORY_SUBLOAN;
         }else if($credit->instalment != $this->creditSheet->target->instalment) {
             return self::CREDIT_CATEGORY_CHANGE_LOAN;
@@ -198,7 +198,7 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
      * 取得關係戶之 用戶名稱 與 user_id
      * @return array
      */
-    protected function getRelation(): array
+    public function getRelation(): array
     {
         return [];
     }

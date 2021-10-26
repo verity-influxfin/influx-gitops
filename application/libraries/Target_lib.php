@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use CreditSheet\CreditSheetFactory;
 
 class Target_lib
 {
@@ -294,6 +295,7 @@ class Target_lib
                 }
             }
             if ($credit) {
+                $creditSheet = CreditSheetFactory::getInstance($target->id);
                 $interest_rate = $credit['rate'];
                 if ($interest_rate) {
                     $used_amount = 0;
@@ -389,16 +391,22 @@ class Target_lib
                                         }
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract($contract_type, $contract_data);
                                     }
+
+                                    $opinion = '一審通過';
                                 } else {
                                     $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
                                     $msg = false;
+                                    $opinion = '需二審查核';
                                 }
                                 $param['target_data'] = json_encode($targetData);
                                 $rs = $this->CI->target_model->update($target->id, $param);
+                                if(!$renew)
+                                    $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, $opinion);
+
                                 if ($rs && $msg) {
+                                    $creditSheet->archive($credit);
                                     $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
                                 }
-
                                 $this->insert_change_log($target->id, $param);
                                 return true;
                             } else if ($product_info['type'] == 2) {
@@ -417,7 +425,13 @@ class Target_lib
                                         'status' => TARGET_ORDER_WAITING_SHIP,
                                         'sub_status' => $sub_status,
                                     ];
+                                    if($sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE)
+                                        $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
+                                    else
+                                        $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '一審通過');
+
                                     $rs = $this->CI->target_model->update($target->id, $param);
+                                    $creditSheet->archive($credit);
                                     $this->insert_change_log($target->id, $param);
                                     if ($rs) {
                                         $this->CI->load->model('user/user_bankaccount_model');

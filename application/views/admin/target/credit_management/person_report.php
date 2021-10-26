@@ -103,7 +103,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2"><span>身分證字號：</span>
-                                    <input type="text" id="id_card_number">
+                                    <input type="text" id="id_number">
                                 </td>
                             </tr>
                             <tr>

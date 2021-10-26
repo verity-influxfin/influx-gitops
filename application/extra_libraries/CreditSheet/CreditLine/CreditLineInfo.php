@@ -20,6 +20,7 @@ class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
         $this->CI = &get_instance();
         $this->CI->load->model('loan/credit_model');
         $this->CI->load->model('loan/credit_sheet_model');
+        $this->CI->load->model('loan/credit_sheet_review_model');
         $this->CI->load->model('user/user_meta_model');
         $this->CI->load->library('Certification_lib');
 
@@ -188,11 +189,22 @@ class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
      */
     public function getReviewedInfoList(): array
     {
-        return array_fill_keys(array_keys(self::REVIEWER_LIST), [
+        $reviewerInfo = array_fill_keys(array_keys(self::REVIEWER_LIST), [
             'name' => '',
             'opinion' => '',
             'score' => ''
         ]);
+        $creditSheetReviewList = $this->CI->credit_sheet_review_model->get_many_by(
+            ['credit_sheet_id' => $this->creditSheet->creditSheetRecord->id]);
+        foreach ($creditSheetReviewList as $reviewer) {
+            $reviewerInfo[$reviewer->group] = [
+                'name' => $reviewer->name,
+                'opinion' => $reviewer->opinion,
+                'score' => $reviewer->score
+            ];
+        }
+
+        return $reviewerInfo;
     }
 
 }
