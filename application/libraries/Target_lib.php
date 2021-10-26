@@ -398,7 +398,8 @@ class Target_lib
                                     $msg = false;
                                     $opinion = '需二審查核';
                                 }
-                                $param['target_data'] = json_encode($targetData);
+                                $tempData = json_decode($target->target_data,true);
+                                $param['target_data'] = json_encode(array_replace_recursive($tempData, is_array($targetData)?$targetData:[]));
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if(!$renew)
                                     $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, $opinion);
@@ -2252,6 +2253,10 @@ class Target_lib
                             $chargeOfRegistration = true;
                             $temp['addrealcharacter'] = $chargeOfRegistration;
                         }elseif($value->character == 2){
+                            // 實際負責人為配偶時
+                            if($value->relationship == 0){
+                                $temp['addspouse'] = false;
+                            }
                             $temp['addrealcharacter'] = false;
                         }elseif($value->character == 3){
                             $temp['addspouse'] = false;
