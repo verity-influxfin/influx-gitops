@@ -79,7 +79,7 @@
                     </div>
                     <div>
                         <!-- 審核人員 -->
-                        <form id="reviewLevelList" class="is-line-up">
+                        <form id="reviewedLevelList" class="is-line-up">
                             <span>本件核貸層次：</span>
                         </form>
                     </div>
