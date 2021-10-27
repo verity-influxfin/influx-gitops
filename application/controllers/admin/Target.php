@@ -2073,6 +2073,42 @@ class Target extends MY_Admin_Controller {
         return true;
     }
 
+    // 新光收件檢核表送件紀錄 api
+    public function skbank_text_get(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+
+        if(!$this->input->is_ajax_request() || !isset($get['target_id']) || empty($get) || !is_numeric($get['target_id'])){
+            $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
+        }
+        $response = [];
+        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+        $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
+        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'']);
+
+        if(empty($mapping_info)){
+            $this->json_output->setStatusCode(200)->setResponse($response)->send();
+        }
+
+        $this->load->model('skbank/LoanSendRequestLog_model');
+        $msg_no_info = $this->LoanSendRequestLog_model->get_by(['msg_no'=>$mapping_info->msg_no, 'send_success ='=>1, 'case_no !='=>0 ]);
+        if(empty($msg_no_info)){
+            $this->json_output->setStatusCode(200)->setResponse($response)->send();
+        }
+
+        $response['skbankMsgNo'] = isset($msg_no_info->msg_no) ? $msg_no_info->msg_no : '';
+        $response['skbankCaseNo'] = isset($msg_no_info->case_no) ? $msg_no_info->case_no: '';
+
+        if(!empty($msg_no_info->request_content)){
+            $request_content = json_decode($msg_no_info->request_content,true);
+            $return_msg = json_decode($msg_no_info->response_content,true);
+            $response['skbankCompId'] = isset($request_content['unencrypted']['CompId']) ? $request_content['unencrypted']['CompId'] : '';
+            $response['skbankMetaInfo'] = isset($return_msg['ReturnMsg']) ? $return_msg['ReturnMsg'] : '';
+            $response['skbankReturn'] = '成功';
+        }
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
+
     // 新光收件檢核表送件 API
     public function skbank_text_send(){
         $get = $this->input->get(NULL, TRUE);
