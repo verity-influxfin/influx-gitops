@@ -32,19 +32,36 @@
         </div> -->
       </div>
     </div>
-    <div class="main-content">
+    <div class="main-content" v-if="true">
       <div class="left block">
         <div class="qr-up">
           <div class="qr-code">
             <div class="block-title">推薦有賞QRcode</div>
-            <div class="qr-graph"></div>
+            <div class="qr-graph">
+              <img style="width:120px;" src="" />
+            </div>
           </div>
           <div class="qr-summary">
-            <div>•統計至:</div>
-            <div>•成功推薦下載+註冊人數:</div>
-            <div>•成功推薦學生貸人數:</div>
-            <div>•成功推薦上班族人數:</div>
-            <div>•累積獎金:</div>
+            <div>
+              <span class="summary-item">•統計至:</span>
+              <span class="summary-value">2021-11-20</span>
+            </div>
+            <div>
+              <span class="summary-item">•成功推薦下載+註冊人數:</span>
+              <span class="summary-value">12</span>
+            </div>
+            <div>
+              <span class="summary-item">•成功推薦學生貸人數:</span>
+              <span class="summary-value">5</span>
+            </div>
+            <div>
+              <span class="summary-item">•成功推薦上班族人數:</span>
+              <span class="summary-value">7</span>
+            </div>
+            <div>
+              <span class="summary-item">•累積獎金:</span>
+              <span class="summary-value">1234</span>
+            </div>
           </div>
         </div>
         <div class="qr-down">
@@ -55,10 +72,24 @@
             </div>
           </div>
           <div class="qr-profit">
-            <div>•成功推薦下載+註冊獎金:</div>
-            <div>•成功推薦學生貸獎金:</div>
-            <div>•成功推薦上班族獎金:</div>
-            <div class="all-profit">•總獎金:</div>
+            <div>
+              <span class="profit-item">•成功推薦下載+註冊獎金:</span>
+              <span class="profit-value" style="color:#4385f5;">
+                {{ formate(1234) }}
+              </span>
+            </div>
+            <div>
+              <span class="profit-item">•成功推薦學生貸獎金:</span>
+              <span class="profit-value" style="color:#f57c00;">1234</span>
+            </div>
+            <div>
+              <span class="profit-item">•成功推薦上班族獎金:</span>
+              <span class="profit-value" style="color:#f44336;">1234</span>
+            </div>
+            <div class="all-profit">
+              <span class="profit-item">•總獎金:</span>
+              <span class="profit-value" style="color:#003cb4;">1234</span>
+            </div>
           </div>
         </div>
       </div>
@@ -66,7 +97,12 @@
         <div class="qr-thema">
           <div class="thema-title block-title">活動辦法</div>
           <div class="thema-content">
-            some text...
+            <div>
+              1.透過推廣QRcode掃描下載APP註冊會員並完成申貸即可獲得推薦獎金
+            </div>
+            <div>2.首次學生貸媒合成功即獲得獎金NT$200</div>
+            <div>3.首次上班族貸媒合成功即獲得獎金NT$400</div>
+            <div>4.獎金統一於月底結算，次月10日撥付至專屬帳戶</div>
           </div>
         </div>
         <div class="month-detail">
@@ -77,19 +113,58 @@
         </div>
       </div>
     </div>
+    <div class="main-content fail" v-else>
+      <div class="row title-1">每月明細</div>
+      <div class="row title-2">尚未成功推薦，開始分享以累計獎金</div>
+      <div class="row">
+        <img src="../asset/images/qr_start.svg" class="img-start" />
+      </div>
+    </div>
+    <div
+      class="list-modal modal fade"
+      ref="dataListModal"
+      id="dataListModal"
+      role="dialog"
+      aria-labelledby="modalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-data-header">
+            <div class="data-list-date">
+              2020/12 明細
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="summary-row">
+            <span class="summary-item">•成功推薦學生貸人數:</span>
+            <span class="summary-value">5</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-item">•成功推薦上班族人數:</span>
+            <span class="summary-value">7</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-item">•本月獎金統計:</span>
+            <span class="summary-value">7</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import userInfo from "../component/userInfoComponent";
 import detailItem from "../component/promoteCodeDetailItem";
-import axios from "axios"
 import Axios from 'axios';
 
 export default {
   beforeRouteEnter (to, from, next) {
     if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
       next("/index");
+      // next();
     } else {
       next();
     }
@@ -98,12 +173,23 @@ export default {
     userInfo,
     detailItem,
   },
+  async created () {
+    const ans = await this.getPromoteCodeData()
+    this.apiData = ans.data
+    console.log(ans)
+    this.startQr = ans.data.status > 0
+  },
   mounted () {
-    this.createPieChart()
-    this.getPromoteCodeData()
+    // th is.createPieChart()
+    if (this.startQr === false) {
+      this.createPieChart()
+    }
+    this.dataModalOpen()
   },
   data: () => ({
     userData: JSON.parse(sessionStorage.getItem("userData")),
+    apiData: null,
+    startQr: false,
   }),
   methods: {
     createPieChart () {
@@ -163,12 +249,18 @@ export default {
 
       pie_chart.setOption(option);
     },
-    getPromoteCodeData () {
-      Axios.get('/getPromoteCode').then(x => {
-        console.log(x.data)
+    async getPromoteCodeData () {
+      return Axios.get('/getPromoteCode').then(x => {
+        return x.data
       }).catch(err => {
         console.error(err)
       })
+    },
+    dataModalOpen () {
+      $('#dataListModal').modal('show')
+    },
+    formate (n) {
+      return n.toLocaleString()
     },
   }
 }
@@ -208,6 +300,16 @@ export default {
         letter-spacing: normal;
         text-align: left;
         color: #5d5555;
+        .summary-item {
+          display: inline-block;
+          width: 160px;
+          margin-right: 20px;
+        }
+        .summary-value {
+          display: inline-block;
+          width: 70px;
+          text-align: right;
+        }
       }
     }
     .qr-down {
@@ -230,6 +332,19 @@ export default {
         letter-spacing: normal;
         text-align: left;
         color: #5d5555;
+        .profit-item {
+          display: inline-block;
+          width: 160px;
+          margin-right: 20px;
+        }
+        .profit-value {
+          display: inline-block;
+          width: 70px;
+          text-align: right;
+        }
+        .all-profit {
+          margin-top: 28px;
+        }
       }
     }
   }
@@ -262,6 +377,164 @@ export default {
     letter-spacing: normal;
     text-align: left;
     color: #1c395f;
+  }
+}
+.fail {
+  flex-direction: column;
+  align-items: center;
+  .title-1 {
+    font-family: NotoSansTC;
+    font-size: 24px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.44;
+    letter-spacing: normal;
+    text-align: left;
+    color: #1c395f;
+    margin-bottom: 20px;
+  }
+  .title-2 {
+    font-family: NotoSansTC;
+    font-size: 20px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: left;
+    color: #5d5555;
+    margin-bottom: 35px;
+  }
+  .img-start {
+    width: 600px;
+  }
+}
+.modal-content {
+  padding: 0 20px 0 20px;
+  border-radius: 20px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url("../asset/images/modal-bg.svg");
+  .modal-data-header {
+    display: flex;
+    justify-content: end;
+    .data-list-date {
+      color: #fff;
+      margin: 28px 0 25px;
+    }
+  }
+  .divider {
+    width: 100%;
+    margin: 10px 0 10px;
+    border-bottom: #5d5555 1px solid;
+  }
+  .summary-row {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    font-family: NotoSansTC;
+    font-size: 22px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: left;
+    color: #5d5555;
+    .summary-item {
+      margin-right: 24px;
+    }
+    .summary-value {
+      text-align: right;
+      color: #f29600;
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .main-content {
+    margin: 20px 15px;
+    flex-direction: column;
+    .left {
+      padding: 20px 15px;
+      max-width: 100%;
+      margin-right: 0;
+      .qr-up {
+        flex-direction: column;
+        .qr-code {
+          margin: auto;
+          max-width: 100%;
+        }
+        .qr-graph {
+          margin: auto;
+        }
+        .qr-summary {
+          margin: 20px auto 0;
+        }
+      }
+      .qr-down {
+        margin-top: 30px;
+        flex-direction: column;
+        .qr-chart {
+          margin: auto;
+          width: 200px;
+        }
+        .qr-profit {
+          margin: auto;
+        }
+      }
+    }
+    .right {
+      margin-top: 20px;
+      max-width: 100%;
+      .qr-thema {
+        padding: 20px 25px;
+      }
+      .month-detail {
+        margin-top: 25px;
+        padding: 10px 25px;
+        font-size: 16px;
+      }
+      .detail-list {
+        margin-top: 20px;
+      }
+    }
+    .block-title {
+      text-align: left;
+    }
+  }
+  .fail {
+    .title-1 {
+      margin-bottom: 20px;
+    }
+    .title-2 {
+      margin-bottom: 35px;
+    }
+    .img-start {
+      display: block;
+      margin: auto;
+      max-width: 90%;
+    }
+  }
+  .modal-content {
+    padding: 0 20px 0 20px;
+    .modal-data-header {
+      .data-list-date {
+        color: #fff;
+        margin: 28px 0 25px;
+      }
+    }
+    .divider {
+      width: 100%;
+      margin: 10px 0 10px;
+      border-bottom: #5d5555 1px solid;
+    }
+    .summary-row {
+      margin-bottom: 20px;
+      .summary-item {
+        margin-right: 24px;
+      }
+    }
   }
 }
 </style>
@@ -349,6 +622,27 @@ export default {
       p {
         margin-bottom: 0px;
       }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .loan-header {
+    background-size: cover;
+    flex-direction: column;
+    padding: 10px;
+
+    .info-card {
+      width: fit-content;
+      margin: 0px auto;
+
+      .picture {
+        width: 90px;
+        height: 90px;
+      }
+    }
+    .menu-card {
+      max-width: fit-content;
+      margin: 0px auto;
     }
   }
 }
