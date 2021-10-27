@@ -19,6 +19,7 @@ import firmCooperation from '../pages/firmCooperation';
 import companyCooperation from '../pages/companyCooperation';
 import register from '../pages/register';
 import myInvestment from '../pages/myInvestment';
+import promoteCode from '../pages/promoteCode.vue'
 import debt from '../pages/debt';
 import closedcase from '../pages/closedcase';
 import detail from '../pages/detail';
@@ -74,6 +75,9 @@ let routers = [
             { path: '/loannotification', component: notification, name: 'loan-notification' },
             { path: '/myrepayment', component: myrepayment }
         ]
+    },
+    {
+        path:'/promoteCode',component:promoteCode
     },
     {
         path: '/myinvestment', component: myInvestment, children: [
