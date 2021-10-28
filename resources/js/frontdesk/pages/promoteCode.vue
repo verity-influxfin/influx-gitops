@@ -150,6 +150,15 @@
       <div class="modal-dialog" v-if="selectedDetail != null">
         <div class="modal-content">
           <div class="modal-data-header">
+            <div
+              style="
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 0 74px 50px;
+            border-color: transparent transparent #3360a7 transparent;
+            "
+            ></div>
             <div class="data-list-date">{{ selectedDetail.date }} 明細</div>
           </div>
           <div class="divider"></div>
@@ -514,8 +523,13 @@ export default {
     display: flex;
     justify-content: flex-end;
     .data-list-date {
+      text-align: end;
+      width: 257px;
+      border-radius: 0 17px 0 0;
+      background: linear-gradient(90deg, #3360a7, #363e91);
+      padding: 30px 37px 20px 10px;
+      margin: 0 -20px 8px 0;
       color: #fff;
-      margin: 28px 0 25px;
     }
   }
   .divider {
@@ -618,7 +632,7 @@ export default {
     .modal-data-header {
       .data-list-date {
         color: #fff;
-        margin: 28px 0 25px;
+        max-width: 50%;
       }
     }
     .divider {
