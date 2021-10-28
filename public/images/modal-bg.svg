@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="446" height="288" viewBox="0 0 446 288">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="440" height="288" viewBox="0 0 440 288">
   <defs>
-    <filter id="矩形_1429" x="0" y="0" width="446" height="288" filterUnits="userSpaceOnUse">
+    <filter id="矩形_1429" x="0" y="0" width="440" height="288" filterUnits="userSpaceOnUse">
       <feOffset dy="3" input="SourceAlpha"/>
       <feGaussianBlur stdDeviation="3" result="blur"/>
       <feFlood flood-opacity="0.161"/>
@@ -35,10 +35,10 @@
     <linearGradient id="linear-gradient-7" x1="72.166" y1="40.736" x2="73.864" y2="40.873" xlink:href="#linear-gradient-3"/>
   </defs>
   <g id="组_4219" data-name="组 4219" transform="translate(-13226 -432)">
-    <g transform="matrix(1, 0, 0, 1, 13226, 432)" filter="url(#矩形_1429)">
+    <!-- <g transform="matrix(1, 0, 0, 1, 13226, 432)" filter="url(#矩形_1429)">
       <rect id="矩形_1429-2" data-name="矩形 1429" width="428" height="270" rx="20" transform="translate(9 6)" fill="#fff"/>
-    </g>
-    <path id="交叉_3" data-name="交叉 3" d="M151.24,61c-.307,0-.46-.554-.243-.878L191.225,0H390.9a20,20,0,0,1,20,20V61Z" transform="translate(13252.105 438)" fill="url(#linear-gradient)"/>
+    </g> -->
+    <!-- <path id="交叉_3" data-name="交叉 3" d="M151.24,61c-.307,0-.46-.554-.243-.878L191.225,0H390.9a20,20,0,0,1,20,20V61Z" transform="translate(13252.105 438)" fill="url(#linear-gradient)"/> -->
     <g id="组_4217" data-name="组 4217" transform="translate(13190.946 160.893)">
       <g id="组_4212" data-name="组 4212" transform="translate(75.054 290.436)">
         <g id="组_4206" data-name="组 4206" transform="translate(19.019)">

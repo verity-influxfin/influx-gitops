@@ -38,7 +38,7 @@
           <div class="qr-code">
             <div class="block-title">推薦有賞QRcode</div>
             <div class="qr-graph">
-              <img style="width:120px;" :src="apiData.promote_qrcode" />
+              <img style="width:200px;" :src="apiData.promote_qrcode" />
             </div>
           </div>
           <div class="qr-summary">
@@ -104,7 +104,7 @@
                 {{ formate(newestDetailList.salary_man.rewardAmount) }}
               </span>
             </div>
-            <div class="all-profit profit-group">
+            <div class="profit-group">
               <span class="profit-item">•總獎金:</span>
               <span class="profit-value" style="color:#003cb4;">
                 {{ formate(newestDetailListTotal) }}
@@ -118,11 +118,11 @@
           <div class="thema-title block-title">活動辦法</div>
           <div class="thema-content">
             <div>
-              1.透過推廣QRcode掃描下載APP註冊會員並完成申貸即可獲得推薦獎金
+              1.透過推廣QRcode掃描下載APP註冊會員並完成申貸即可獲得推薦獎金。
             </div>
-            <div>2.首次學生貸媒合成功即獲得獎金NT$200</div>
-            <div>3.首次上班族貸媒合成功即獲得獎金NT$400</div>
-            <div>4.獎金統一於月底結算，次月10日撥付至專屬帳戶</div>
+            <div>2.首次學生貸媒合成功即獲得獎金NT$200。</div>
+            <div>3.首次上班族貸媒合成功即獲得獎金NT$400。</div>
+            <div>4.獎金統一於月底結算，次月10日撥付至專屬帳戶。</div>
           </div>
         </div>
         <div class="month-detail">
@@ -362,25 +362,24 @@ export default {
 .main-content {
   margin: 42px 100px 45px 145px;
   display: flex;
+  justify-content: center;
   .block {
     background-color: #fff;
     border-radius: 20px;
     box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
   }
   .left {
-    padding: 20px 40px;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 706px;
     margin-right: 73px;
     .qr-up {
       display: flex;
       .qr-code {
         width: 278px;
-      }
-      .qr-graph {
-        margin-top: 13px;
-        width: 120px;
-        height: 120px;
-        // background-color: black;
       }
       .qr-summary {
         width: 260px;
@@ -437,9 +436,6 @@ export default {
         }
         .profit-value {
           text-align: right;
-        }
-        .all-profit {
-          margin-top: 28px;
         }
       }
     }
@@ -564,7 +560,8 @@ export default {
           max-width: 100%;
         }
         .qr-graph {
-          margin: auto;
+          display: flex;
+          justify-content: center;
         }
         .qr-summary {
           margin: 20px auto 0;
@@ -600,7 +597,7 @@ export default {
       }
     }
     .block-title {
-      text-align: left;
+      text-align: center;
     }
   }
   .fail {
