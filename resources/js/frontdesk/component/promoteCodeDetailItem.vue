@@ -1,7 +1,7 @@
 <template>
-  <div class="detail-item">
-    <div class="date">2021/10</div>
-    <div class="money">$1234</div>
+  <div class="detail-item" @click="$emit('click')">
+    <div class="date">{{ date }}</div>
+    <div class="money">{{ detailTotal }}</div>
     <div class="icon">
       <i class="fas fa-angle-right rotate-icon"></i>
     </div>
@@ -10,7 +10,16 @@
 
 <script>
 export default {
-
+  props: ['detail', 'date'],
+  computed: {
+    detailTotal () {
+      const list = this.detail
+      if (list && list.student && list.salary_man) {
+        return (list.fullMemberRewardAmount + list.student.rewardAmount + list.salary_man.rewardAmount).toLocaleString()
+      }
+      return 0
+    }
+  }
 }
 </script>
 

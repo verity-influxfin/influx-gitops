@@ -1,14 +1,14 @@
 <template>
-  <div class="">
+  <div v-if="!loading">
     <div class="loan-header">
       <userInfo :userData="userData"></userInfo>
       <div class="menu-card">
-        <!-- <div style="width: max-content; overflow: hidden">
+        <div style="width: max-content; overflow: hidden">
           <router-link class="menu-item" to="loannotification">
             <div class="img">
               <img
-                src="../asset/images/icon_notification.svg"
-                class="img-fluid"
+                src="../asset/images/icon-recommendmoney.svg"
+                style="width:45px"
               />
             </div>
             <p>推廣有賞</p>
@@ -29,38 +29,52 @@
             </div>
             <p>帳戶資訊</p>
           </router-link>
-        </div> -->
+        </div>
       </div>
     </div>
-    <div class="main-content" v-if="true">
+    <div class="main-content" v-if="startQr">
       <div class="left block">
         <div class="qr-up">
           <div class="qr-code">
             <div class="block-title">推薦有賞QRcode</div>
             <div class="qr-graph">
-              <img style="width:120px;" src="" />
+              <img style="width:120px;" :src="apiData.promote_qrcode" />
             </div>
           </div>
           <div class="qr-summary">
-            <div>
+            <div class="summary-group">
               <span class="summary-item">•統計至:</span>
-              <span class="summary-value">2021-11-20</span>
+              <span class="summary-value">{{ now() }}</span>
             </div>
-            <div>
+            <div class="summary-group" v-if="apiData.overview">
               <span class="summary-item">•成功推薦下載+註冊人數:</span>
-              <span class="summary-value">12</span>
+              <span class="summary-value">
+                {{ apiData.overview.fullMemberCount }}
+              </span>
             </div>
-            <div>
+            <div
+              class="summary-group"
+              v-if="apiData.overview && apiData.overview.loanedCount"
+            >
               <span class="summary-item">•成功推薦學生貸人數:</span>
-              <span class="summary-value">5</span>
+              <span class="summary-value">
+                {{ apiData.overview.loanedCount.student }}
+              </span>
             </div>
-            <div>
+            <div
+              class="summary-group"
+              v-if="apiData.overview && apiData.overview.loanedCount"
+            >
               <span class="summary-item">•成功推薦上班族人數:</span>
-              <span class="summary-value">7</span>
+              <span class="summary-value">
+                {{ apiData.overview.loanedCount.salary_man }}
+              </span>
             </div>
-            <div>
+            <div class="summary-group">
               <span class="summary-item">•累積獎金:</span>
-              <span class="summary-value">1234</span>
+              <span class="summary-value">
+                {{ apiData.total_reward_amount }}
+              </span>
             </div>
           </div>
         </div>
@@ -72,23 +86,29 @@
             </div>
           </div>
           <div class="qr-profit">
-            <div>
+            <div class="profit-group">
               <span class="profit-item">•成功推薦下載+註冊獎金:</span>
               <span class="profit-value" style="color:#4385f5;">
-                {{ formate(1234) }}
+                {{ formate(newestDetailList.fullMemberRewardAmount) }}
               </span>
             </div>
-            <div>
+            <div class="profit-group">
               <span class="profit-item">•成功推薦學生貸獎金:</span>
-              <span class="profit-value" style="color:#f57c00;">1234</span>
+              <span class="profit-value" style="color:#f57c00;">
+                {{ formate(newestDetailList.student.rewardAmount) }}
+              </span>
             </div>
-            <div>
+            <div class="profit-group">
               <span class="profit-item">•成功推薦上班族獎金:</span>
-              <span class="profit-value" style="color:#f44336;">1234</span>
+              <span class="profit-value" style="color:#f44336;">
+                {{ formate(newestDetailList.salary_man.rewardAmount) }}
+              </span>
             </div>
-            <div class="all-profit">
+            <div class="all-profit profit-group">
               <span class="profit-item">•總獎金:</span>
-              <span class="profit-value" style="color:#003cb4;">1234</span>
+              <span class="profit-value" style="color:#003cb4;">
+                {{ formate(newestDetailListTotal) }}
+              </span>
             </div>
           </div>
         </div>
@@ -107,8 +127,14 @@
         </div>
         <div class="month-detail">
           <div class="month-title block-title">每月明細</div>
-          <div class="detail-list">
-            <detailItem v-for="i in 3" :key="i" />
+          <div class="detail-list" v-if="detailList">
+            <detailItem
+              v-for="i in Object.keys(detailList)"
+              :key="i"
+              :detail="detailList[i]"
+              :date="i"
+              @click="dataModalOpen(detailList[i], i)"
+            />
           </div>
         </div>
       </div>
@@ -120,34 +146,36 @@
         <img src="../asset/images/qr_start.svg" class="img-start" />
       </div>
     </div>
-    <div
-      class="list-modal modal fade"
-      ref="dataListModal"
-      id="dataListModal"
-      role="dialog"
-      aria-labelledby="modalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
+    <div class="modal" id="dataListModal" role="dialog">
+      <div class="modal-dialog" v-if="selectedDetail != null">
         <div class="modal-content">
           <div class="modal-data-header">
-            <div class="data-list-date">
-              2020/12 明細
-            </div>
+            <div class="data-list-date">{{ selectedDetail.date }} 明細</div>
           </div>
-
           <div class="divider"></div>
           <div class="summary-row">
             <span class="summary-item">•成功推薦學生貸人數:</span>
-            <span class="summary-value">5</span>
+            <span class="summary-value">
+              {{ selectedDetail.student.count }}
+            </span>
           </div>
           <div class="summary-row">
             <span class="summary-item">•成功推薦上班族人數:</span>
-            <span class="summary-value">7</span>
+            <span class="summary-value">
+              {{ selectedDetail.salary_man.count }}
+            </span>
           </div>
           <div class="summary-row">
             <span class="summary-item">•本月獎金統計:</span>
-            <span class="summary-value">7</span>
+            <span class="summary-value">
+              {{
+                formate(
+                  selectedDetail.fullMemberRewardAmount +
+                    selectedDetail.student.rewardAmount +
+                    selectedDetail.salary_man.rewardAmount
+                )
+              }}
+            </span>
           </div>
         </div>
       </div>
@@ -173,40 +201,46 @@ export default {
     userInfo,
     detailItem,
   },
-  async created () {
-    const ans = await this.getPromoteCodeData()
-    this.apiData = ans.data
-    console.log(ans)
-    this.startQr = ans.data.status > 0
-  },
   mounted () {
-    // th is.createPieChart()
-    if (this.startQr === false) {
-      this.createPieChart()
-    }
-    this.dataModalOpen()
+    this.loading = true
+    this.getPromoteCodeData()
+      .then(ans => {
+        this.apiData = ans.data
+        this.detailList = ans.data.detail_list
+        this.startQr = ans.data.status > 0
+      })
+      .finally(async () => {
+        this.loading = false
+        await this.$nextTick()
+        if (this.startQr != false) {
+          this.createPieChart(this.newestDetailList)
+        }
+      })
   },
   data: () => ({
     userData: JSON.parse(sessionStorage.getItem("userData")),
     apiData: null,
+    detailList: null,
+    selectedDetail: null,
     startQr: false,
+    loading: false,
   }),
   methods: {
-    createPieChart () {
+    createPieChart (data) {
       let pieData = [];
 
       pieData.push({
-        value: 52220,
+        value: data.fullMemberRewardAmount,
         name: "成功推薦下載+註冊獎金",
         itemStyle: { color: "#4385f5" },
       });
       pieData.push({
-        value: 40000,
+        value: data.student.rewardAmount,
         name: "成功推薦學生貸獎金",
         itemStyle: { color: "#f57c00" },
       });
       pieData.push({
-        value: 30000,
+        value: data.salary_man.rewardAmount,
         name: "成功推薦上班族獎金",
         itemStyle: { color: "#f44336" },
       });
@@ -256,19 +290,55 @@ export default {
         console.error(err)
       })
     },
-    dataModalOpen () {
+    dataModalOpen (data, date) {
       $('#dataListModal').modal('show')
+      this.selectedDetail = { ...data, date }
+      // setTimeout(() => { $('#dataListModal').modal('hide') }, 3000)
     },
     formate (n) {
       return n.toLocaleString()
     },
+    formateDate (s) {
+      // 2021-09-26 15:43:16
+      const ans = s.split(' ')
+      return ans[0].split('-').join('/')
+    },
+    now () {
+      const now = new Date()
+      return `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
+    },
+    getDetailKey () {
+      const now = new Date()
+      return `${now.getFullYear()}-${now.getMonth() + 1}`
+    },
+  },
+  computed: {
+    newestDetailList () {
+      const list = this.detailList
+      if (list) {
+        const now = new Date()
+        const month = now.getMonth() > 8 ? (now.getMonth() + 1).toString() : `0${(now.getMonth() + 1).toString()}`
+        const lastMonth = now.getMonth() > 9 ? now.getMonth().toString() : `0${now.getMonth().toString()}`
+        const key = `${now.getFullYear()}-${month}`
+        const key2 = `${now.getFullYear()}-${lastMonth}`
+        return list[key] ?? list[key2]
+      }
+      return null
+    },
+    newestDetailListTotal () {
+      const list = this.newestDetailList
+      if (list && list.student && list.salary_man) {
+        return list.fullMemberRewardAmount + list.student.rewardAmount + list.salary_man.rewardAmount
+      }
+      return 0
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .main-content {
-  margin: 42px 107px 45px 153px;
+  margin: 42px 100px 45px 145px;
   display: flex;
   .block {
     background-color: #fff;
@@ -276,7 +346,7 @@ export default {
     box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
   }
   .left {
-    padding: 20px 67px 20px 95px;
+    padding: 20px 40px;
     width: 706px;
     margin-right: 73px;
     .qr-up {
@@ -288,9 +358,10 @@ export default {
         margin-top: 13px;
         width: 120px;
         height: 120px;
-        background-color: black;
+        // background-color: black;
       }
       .qr-summary {
+        width: 260px;
         font-family: NotoSansTC;
         font-size: 14px;
         font-weight: 500;
@@ -300,14 +371,16 @@ export default {
         letter-spacing: normal;
         text-align: left;
         color: #5d5555;
+        .summary-group {
+          display: flex;
+          justify-content: space-between;
+        }
         .summary-item {
           display: inline-block;
-          width: 160px;
           margin-right: 20px;
         }
         .summary-value {
           display: inline-block;
-          width: 70px;
           text-align: right;
         }
       }
@@ -323,6 +396,7 @@ export default {
         }
       }
       .qr-profit {
+        width: 260px;
         font-family: NotoSansTC;
         font-size: 14px;
         font-weight: 500;
@@ -332,14 +406,14 @@ export default {
         letter-spacing: normal;
         text-align: left;
         color: #5d5555;
+        .profit-group {
+          display: flex;
+          justify-content: space-between;
+        }
         .profit-item {
-          display: inline-block;
-          width: 160px;
           margin-right: 20px;
         }
         .profit-value {
-          display: inline-block;
-          width: 70px;
           text-align: right;
         }
         .all-profit {
@@ -358,6 +432,8 @@ export default {
       box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
     }
     .month-detail {
+      max-height: 300px;
+      overflow: auto;
       margin-top: 45px;
       padding: 20px 34px 28px 38px;
       border-radius: 20px;
@@ -418,7 +494,7 @@ export default {
   background-image: url("../asset/images/modal-bg.svg");
   .modal-data-header {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     .data-list-date {
       color: #fff;
       margin: 28px 0 25px;
@@ -470,6 +546,7 @@ export default {
         }
         .qr-summary {
           margin: 20px auto 0;
+          font-size: 16px;
         }
       }
       .qr-down {
@@ -481,6 +558,7 @@ export default {
         }
         .qr-profit {
           margin: auto;
+          font-size: 16px;
         }
       }
     }
@@ -580,6 +658,7 @@ export default {
   .menu-card {
     border: none;
     overflow: auto;
+    margin: 0 -20px;
     max-width: 850px;
 
     .menu-item {
