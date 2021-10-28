@@ -4,7 +4,7 @@
       <userInfo :userData="userData"></userInfo>
       <div class="menu-card">
         <div style="width: max-content; overflow: hidden">
-          <router-link class="menu-item" to="loannotification">
+          <router-link class="menu-item" to="promoteCode">
             <div class="img">
               <img
                 src="../asset/images/icon-recommendmoney.svg"
@@ -203,6 +203,7 @@ export default {
   },
   mounted () {
     this.loading = true
+    this.getNotification()
     this.getPromoteCodeData()
       .then(ans => {
         this.apiData = ans.data
@@ -224,6 +225,7 @@ export default {
     selectedDetail: null,
     startQr: false,
     loading: false,
+    unreadCount: 0,
   }),
   methods: {
     createPieChart (data) {
@@ -294,6 +296,26 @@ export default {
       $('#dataListModal').modal('show')
       this.selectedDetail = { ...data, date }
       // setTimeout(() => { $('#dataListModal').modal('hide') }, 3000)
+    },
+    getNotification () {
+      this.unreadCount = 0;
+      axios
+        .post(`${location.origin}/getNotification`)
+        .then((res) => {
+          res.data.data.list.forEach((item, index) => {
+            if (item.status == 1) {
+              this.unreadCount++;
+            }
+          });
+        })
+        .catch((error) => {
+          if (error.response.data.error === 100) {
+            alert("連線逾時，請重新登入");
+            this.$root.logout();
+          } else {
+            console.log("getNotification 發生錯誤，請稍後再試");
+          }
+        });
     },
     formate (n) {
       return n.toLocaleString()
