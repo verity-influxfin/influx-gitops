@@ -163,7 +163,9 @@
                     </div>
                 </div>
                 <a href="/news" class="item">平台公告</a>
-                <a href="/borrowLink" target="_blank" class="item">下載APP</a>
+                <!-- 捐款專區更改 -->
+                <a href="/charitable" class="item">慈善專區</a>
+                <!-- <a href="/borrowLink" target="_blank" class="item">下載APP</a> -->
                 <div class="item">
                     <div v-if="!flag || flag === 'logout'"  @click="openLoginModal" class="login nav-item">SIGN IN</div>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
@@ -232,6 +234,7 @@
                     </div>
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
+                <a href="/charitable" class="item">慈善專區</a>
                 <div class="item">
                     <div v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">

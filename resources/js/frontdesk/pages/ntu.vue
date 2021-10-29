@@ -117,7 +117,7 @@
       <div class="go-donate-text">
         捐款成功，將立即獲得基金會 電子感謝狀及收據，感謝您！
       </div>
-      <router-link to="/loannotification">
+      <router-link to="/borrowLink" target="_blank">
         <div class="go-donate-button">捐款去</div>
       </router-link>
     </div>

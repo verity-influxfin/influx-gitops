@@ -94,7 +94,7 @@ let routers = [
 	{ path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
-    {path:'/ntu-donate',component:ntu}
+    {path:'/charitable',component:ntu}
 ];
 
 export default routers;
