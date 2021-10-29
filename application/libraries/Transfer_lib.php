@@ -55,9 +55,6 @@ class Transfer_lib{
 							$principal += $value->amount;
 						}
 					}
-                    if($value->source==SOURCE_AR_DELAYINTEREST && $value->status==1){
-                        $delay_interest += $value->amount;
-                    }
 				}
 				if($next_pay_date != '' && $last_paid_date != ''){
 					$entering_date		= get_entering_date();
@@ -75,6 +72,8 @@ class Transfer_lib{
 							if($range_days > GRACE_PERIOD && $range_days <= (GRACE_PERIOD + TRANSFER_RANGE_DAYS)){
 								//逾期-跨到逾期日
 								$settlement_date = date('Y-m-d',strtotime($next_pay_date.' +'.GRACE_PERIOD.' days'));
+							}elseif($range_days > GRACE_PERIOD){
+								$delay_interest = $this->CI->financial_lib->get_delay_interest($principal,$range_days);
 							}
 						}
 					}
