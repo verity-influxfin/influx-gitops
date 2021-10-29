@@ -394,7 +394,13 @@ class Target_lib
                                     $msg = false;
                                 }
                                 $tempData = json_decode($target->target_data,true);
-                                $param['target_data'] = json_encode(array_replace_recursive($tempData, is_array($targetData)?$targetData:[]));
+                                if(isset($tempData) && !empty($tempData)) {
+                                    $tempData = array_replace_recursive($tempData, is_array($targetData) ? $targetData : []);
+                                } else {
+                                    $tempData = $targetData;
+                                }
+                                $param['target_data'] = json_encode($tempData);
+
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if ($rs && $msg) {
                                     $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
