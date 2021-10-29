@@ -82,12 +82,14 @@ interface CreditSheetDefinition
     public const RESPONSE_CODE_TRANSACTION_ROLLBACK = 2;
     public const RESPONSE_CODE_REPEATED_APPROVAL = 3;
     public const RESPONSE_CODE_INVALID_ACTION = 4;
+    public const RESPONSE_CODE_INVALID_SCORE = 5;
     public const RESPONSE_CODE_LIST = [
         self::RESPONSE_CODE_OK => "已完成",
         self::RESPONSE_CODE_NO_PERMISSION => "沒有操作權限",
         self::RESPONSE_CODE_TRANSACTION_ROLLBACK => "此次操作失敗，請重新再試",
         self::RESPONSE_CODE_REPEATED_APPROVAL => "無法重複審核",
         self::RESPONSE_CODE_INVALID_ACTION => "無效的操作",
+        self::RESPONSE_CODE_INVALID_SCORE => "加分分數不在可允許的範圍",
     ];
 
 }

@@ -80,6 +80,18 @@ class Creditmanagement extends MY_Admin_Controller
     }
 
     /**
+     * 取得已審查的資料列表
+     * @apiParam {int} target_id
+     * @apiParam {int} type
+     * @apiSuccess {Object} result
+     */
+    public function get_reviewed_list() {
+        $response = $this->creditSheet->getReviewedInfoList();
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+    }
+
+    /**
      * 授審表審核成功
      * @apiParam {int} target_id
      * @apiParam {int} type

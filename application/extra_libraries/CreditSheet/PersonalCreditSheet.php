@@ -25,6 +25,10 @@ class PersonalCreditSheet extends CreditSheetBase {
     // 最終核准層次
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
+    // 可評分範圍
+    protected $scoringMin = -500;
+    protected $scoringMax = 500;
+
     /**
      * PersonalCreditSheet constructor.
      * @param $target
@@ -95,11 +99,14 @@ class PersonalCreditSheet extends CreditSheetBase {
         $response['basicInfo']['reviewedLevelList'] = $this->basicInfo->getReviewLevelList();
         $response['basicInfo']['creditCategoryList'] = $this->basicInfo->getCreditCategoryList();
         $response['basicInfo']['productCategoryList'] = $this->basicInfo->getProductCategoryList();
+        $response['basicInfo']['finalReviewedLevel'] = $this->finalReviewerLevel;
 
         $response['creditLineInfo']['drawdownTypeList'] = $this->creditLineInfo->getDrawdownTypeList();
         $response['creditLineInfo']['interestTypeList'] = $this->creditLineInfo->getInterestTypeList();
         $response['creditLineInfo']['applyLineTypeList'] = $this->creditLineInfo->getApplyLineTypeList();
         $response['creditLineInfo']['reviewerList'] = $this->creditLineInfo->getReviewerList();
+        $response['creditLineInfo']['scoringMin'] = $this->scoringMin;
+        $response['creditLineInfo']['scoringMax'] = $this->scoringMax;
 
         return $response;
     }
@@ -119,6 +126,15 @@ class PersonalCreditSheet extends CreditSheetBase {
     }
 
     /**
+     * 取得已審查的資料列表
+     * @return array
+     */
+    public function getReviewedInfoList(): array
+    {
+        return $this->creditLineInfo->getReviewedInfoList();
+    }
+
+    /**
      * 授審表核准-設定意見及加分項目
      * @param int $groupId: 核可層級
      * @param string $opinion: 核可意見
@@ -130,6 +146,9 @@ class PersonalCreditSheet extends CreditSheetBase {
     {
         $this->CI->load->model('loan/credit_sheet_review_model');
         $responseCode = self::RESPONSE_CODE_OK;
+
+        if($score < $this->scoringMin || $score > $this->scoringMax)
+            return self::RESPONSE_CODE_INVALID_SCORE;
 
         $admin = null;
         if($adminId && (
