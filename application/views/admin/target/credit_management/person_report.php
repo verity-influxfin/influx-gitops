@@ -555,6 +555,20 @@
                               })
                           }else{
                               Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+
+                                  // 更改動撥方式與計息方式
+                                  if(area_name == 'creditLineInfo' && input_title == 'approvedCreditList'){
+                                      // 計息方式
+                                      report_data[area_name][input_title][list_key]['interestType'] =
+                                        report_item['creditLineInfo']['drawdownTypeList'].hasOwnProperty(`${report_data[area_name][input_title][list_key]['interestType']}`)
+                                        ? report_item['creditLineInfo']['drawdownTypeList'][`${report_data[area_name][input_title][list_key]['interestType']}`]
+                                        : report_data[area_name][input_title][list_key]['interestType'];
+                                      // 動撥方式
+                                      report_data[area_name][input_title][list_key]['drawdownType'] =
+                                        report_item['creditLineInfo']['drawdownTypeList'].hasOwnProperty(`${report_data[area_name][input_title][list_key]['drawdownType']}`)
+                                        ? report_item['creditLineInfo']['drawdownTypeList'][`${report_data[area_name][input_title][list_key]['drawdownType']}`]
+                                        : report_data[area_name][input_title][list_key]['drawdownType'];
+                                  }
                                   list_html = create_table_list_html(report_data[area_name][input_title][list_key]);
                                   $(`#${area_name}_${input_title}`).append(list_html);
                               })
