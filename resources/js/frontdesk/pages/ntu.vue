@@ -270,7 +270,10 @@ export default {
     text-align: left;
     color: #036eb7;
     border-radius: 18px;
-    border: 1px solid #036eb7;
+    // border: 1px solid #036eb7;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("../asset/images/button-lines.svg");
   }
 }
 @media screen and (max-width: 767px) {
