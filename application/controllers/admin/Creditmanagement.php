@@ -9,7 +9,7 @@ class Creditmanagement extends MY_Admin_Controller
 {
 
 	protected $edit_method = [];
-	protected $api_method = ['get_structural_data', 'get_data', 'approve'];
+	protected $api_method = ['get_structural_data', 'get_data', 'approve', 'get_reviewed_list'];
 
     private $type;
     private $target_id;

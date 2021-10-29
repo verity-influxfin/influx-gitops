@@ -26,8 +26,8 @@ class PersonalCreditSheet extends CreditSheetBase {
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
     // 可評分範圍
-    protected $scoringMin = -500;
-    protected $scoringMax = 500;
+    protected $scoringMin = 0;
+    protected $scoringMax = 400;
 
     /**
      * PersonalCreditSheet constructor.
@@ -131,7 +131,8 @@ class PersonalCreditSheet extends CreditSheetBase {
      */
     public function getReviewedInfoList(): array
     {
-        return $this->creditLineInfo->getReviewedInfoList();
+        $response['creditLineInfo']['reviewedInfoList'] = $this->creditLineInfo->getReviewedInfoList();
+        return $response;
     }
 
     /**
