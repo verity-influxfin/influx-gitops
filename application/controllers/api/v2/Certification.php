@@ -2022,7 +2022,6 @@ class Certification extends REST_Controller {
 
             isset($input['business_image'])?$file_fields[]='business_image':'';
             isset($input['license_image'])?$file_fields[]='license_image':'';
-            isset($input['financial_image'])?$file_fields[]='financial_image':'';
             isset($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
 
             $send_mail = false;
@@ -2085,11 +2084,10 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => 3,
 			];
 
             if ($cer_exists) {
-                $param['status'] = 3;
+                $param['status'] = 0;
                 $rs = $this->user_certification_model->update($cer_exists->id, $param);
             }else{
                 $rs = $this->user_certification_model->insert($param);
