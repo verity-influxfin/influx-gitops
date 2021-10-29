@@ -63,7 +63,7 @@
         display: flex;
     }
     .opinion_info span{
-        width: 30%;
+        width: 50%;
     }
     .opinion_button {
         display: flex;
@@ -739,12 +739,29 @@
         }
     }
 
+    // 取得授審表設定檔資料
+    function get_default_item(target_id,type){
+        let report_item = {};
+        $.ajax({
+            type: "GET",
+            url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=person`,
+            async: false,
+            success: function (response) {
+                report_item = response.response;
+            },
+            error: function(error) {
+                alert(error);
+            }
+        });
+        return report_item;
+    }
+
     // 取得授審表案件核貸資料
     function get_report_data(target_id){
         let report_data = {};
         $.ajax({
             type: "GET",
-            url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=person`,
+            url: `/admin/creditmanagement/get_reviewed_list?target_id=${target_id}&type=person`,
             async: false,
             success: function (response) {
                 report_data = response.response;
@@ -875,6 +892,21 @@
 		});
 
         // 取得案件核貸資料
+        case_aprove_item = get_default_item(caseId);
+        // 最高核貸層級
+        let last_mask = 4;
+        if(case_aprove_item && case_aprove_item.hasOwnProperty(`basicInfo`) && case_aprove_item.basicInfo.hasOwnProperty(`finalReviewedLevel`)){
+            last_mask = case_aprove_item.basicInfo.finalReviewedLevel;
+            for(i=1;i<=last_mask;i++){
+                $(`#${i}_opinion_mask`).css("display","none");
+                if(case_aprove_item.basicInfo.hasOwnProperty(`reviewedLevelList`) && case_aprove_item.basicInfo.reviewedLevelList.hasOwnProperty(`${i-1}`)){
+                    let reviewer_name = case_aprove_item.basicInfo.reviewedLevelList[i-1];
+                    $(`#${i}_opinion_mask`).text(`${reviewer_name}意見未送出`);
+                }
+            }
+        }
+
+        // 取得案件核貸資料
         case_aprove_data = get_report_data(caseId);
         if(case_aprove_data){
             Object.keys(case_aprove_data).forEach(function (area_name) {
@@ -884,23 +916,30 @@
                       // 資料寫入
                       Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
                           $(`#${list_key}_name`).text(case_aprove_data[area_name][input_title][list_key]['name']);
+                          $(`#${list_key}_apporvedTime`).text(case_aprove_data[area_name][input_title][list_key]['apporvedTime']);
                           $(`#${list_key}_opinion`).val(case_aprove_data[area_name][input_title][list_key]['opinion']);
                           $(`#${list_key}_score`).val(case_aprove_data[area_name][input_title][list_key]['score']);
                       })
                       // 顯示更改,核可層級解鎖
                       Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
-                          if(!stop_flag){
-                              status_html = get_status_icon('success');
-                              $(`#${list_key}_opinion_mask`).css("display","none");
+                          status_html = get_status_icon('success');
+                          $(`#${list_key}_opinion_status`).html(status_html);
+
+                          // 前級審核未通過
+                          if(stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == ''){
+                              status_html = get_status_icon('pending');
                               $(`#${list_key}_opinion_status`).html(status_html);
-                              if(case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == ''){
-                                  status_html = get_status_icon('pending');
-                                  $(`#${list_key}_opinion_status`).html(status_html);
-                                  $(`#${list_key}_opinion`).prop('disabled', false);
-                                  $(`#${list_key}_score`).prop('disabled', false);
-                                  $(`#${list_key}_opinion_button`).prop('disabled', false);
-                                  stop_flag = true;
-                              }
+                              $(`#${list_key}_opinion_mask`).show();
+                          }
+
+                          // 當前審核層級解鎖
+                          if(!stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == ''){
+                              status_html = get_status_icon('pending');
+                              $(`#${list_key}_opinion_status`).html(status_html);
+                              $(`#${list_key}_opinion`).prop('disabled', false);
+                              $(`#${list_key}_score`).prop('disabled', false);
+                              $(`#${list_key}_opinion_button`).prop('disabled', false);
+                              stop_flag = true;
                           }
                       })
                   }
