@@ -26,6 +26,10 @@ abstract class CreditSheetBase implements CreditSheetDefinition
     // 最終核准層次
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
+    // 可評分範圍
+    protected $scoringMin = -500;
+    protected $scoringMax = 500;
+
     /**
      * 取得視圖的檔案路徑
      * @return string

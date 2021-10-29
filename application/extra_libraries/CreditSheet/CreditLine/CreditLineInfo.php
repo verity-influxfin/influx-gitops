@@ -200,7 +200,8 @@ class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
             $reviewerInfo[$reviewer->group] = [
                 'name' => $reviewer->name,
                 'opinion' => $reviewer->opinion,
-                'score' => $reviewer->score
+                'score' => $reviewer->score,
+                'apporvedTime' => $reviewer->created_at
             ];
         }
 
