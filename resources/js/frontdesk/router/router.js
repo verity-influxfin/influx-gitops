@@ -5,6 +5,7 @@ import mobileLoan from "../pages/mobileLoan";
 import qa from "../pages/qa";
 import company from "../pages/company";
 import news from "../pages/news";
+import ntu from "../pages/ntu"
 import blog from "../pages/blog";
 import vlog from "../pages/vlog";
 import videoPage from '../pages/videoPage';
@@ -93,6 +94,7 @@ let routers = [
 	{ path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
+    {path:'/ntu-donate',component:ntu}
 ];
 
 export default routers;
