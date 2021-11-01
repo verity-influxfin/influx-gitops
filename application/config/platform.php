@@ -1799,7 +1799,7 @@ $config['certifications'] = [
     6 => ['id' => CERTIFICATION_EMAIL, 'alias' => 'email', 'name' => '常用電子信箱', 'status' => 1, 'description' => '驗證常用E-Mail位址', 'optional' => []],
     7 => ['id' => CERTIFICATION_FINANCIAL, 'alias' => 'financial', 'name' => '財務訊息認證', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
     8 => ['id' => CERTIFICATION_DIPLOMA, 'alias' => 'diploma', 'name' => '最高學歷認證', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
-    9 => ['id' => CERTIFICATION_INVESTIGATION, 'alias' => 'investigation', 'name' => '聯合徵信認證', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
+    9 => ['id' => CERTIFICATION_INVESTIGATION, 'alias' => 'investigation', 'name' => '聯合徵信報告', 'status' => 1, 'description' => '提供聯合徵信報告資訊', 'optional' => [3, 4]],
     10 => ['id' => CERTIFICATION_JOB, 'alias' => 'job', 'name' => '工作認證', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
     11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人資料表', 'status' => 1, 'description' => '提供個人資料', 'optional' => []],
 	12 => ['id' => CERTIFICATION_INVESTIGATIONA11, 'alias' => 'investigationa11', 'name' => '聯合徵信認證+A11', 'status' => 1, 'description' => '提供負責人聯合徵信資訊', 'optional' => []],

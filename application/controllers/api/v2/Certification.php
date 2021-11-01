@@ -1860,6 +1860,27 @@ class Certification extends REST_Controller {
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
+    // 聯徵信件重新寄送
+    public function resend_email_post(){
+        $certification_id 	= 9;
+		$certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $target = [];
+            $targets = $this->target_model->get_many_by(array(
+                'user_id'       => $user_id,
+                'status'		=> [20,21,22,23],
+            ));
+            foreach ($targets as $value){
+                $target[] = $value->target_no;
+            }
+            $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));
+
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
 	/**
      * @api {post} /v2/certification/job 認證 工作認證
 	 * @apiVersion 0.2.0
