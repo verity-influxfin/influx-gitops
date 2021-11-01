@@ -1876,7 +1876,7 @@ class Certification extends REST_Controller {
                 $target[] = $value->target_no;
             }
             $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));
-
+            $this->response(array('result' => 'SUCCESS'));
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
