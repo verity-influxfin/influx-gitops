@@ -738,12 +738,16 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 
-		$etitle 		= "【認證】聯合徵信申請";
-		$econtent 	= "親愛的用戶( 使用者編號 $user_id )，
-您好！感謝您申請普匯inFlux".$descri."聯合徵信認證，
-請將您申請完之《徵信報告》，以附件形式回覆此封mail，
-系統收到您的來信後會直接更新驗證內容，
-請進入普匯inFlux確認您的認證狀態。";
+		$etitle 		= "【資料提供】聯合徵信申請";
+        $econtent = <<<econtent
+親愛的{$user_id}用戶，感謝您提供信用報告，普匯將儘速協助您完成貸款，謝謝。
+<ul style="list-style-type: decimal; text-align: left;">
+<li>申請「個人聯徵信用報告」請進入「聯徵中心」網站查看說明。\r\n＊網址：<a href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=170&pid=170&docid=412">https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=170&pid=170&docid=412</a></li>
+<li>申請完成後請將「個人信用報告」電子檔(PDF)以附件方式回傳此封驗證信件。</li>
+<li>請至「普匯influx」APP點選「已完成回信」，系統將自動審核。</li>
+</ul>
+<img src="https://d3imllwf4as09k.cloudfront.net/mail_assets/content_images/investigation_apply_sample.png" style="width:100%;height:auto">
+econtent;
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->user_notification($user_id,$etitle,nl2br($econtent),'b08',false,CREDIT_EMAIL,'普匯驗證中心');
 		return $rs;
