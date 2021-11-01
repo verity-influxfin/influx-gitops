@@ -2881,7 +2881,7 @@ class Certification_lib{
                             CERTIFICATION_DEBITCARD,
                             CERTIFICATION_EMERGENCY,
                             CERTIFICATION_EMAIL,
-                            CERTIFICATION_FINANCIAL,
+                            CERTIFICATION_FINANCIALWORKER,
                             CERTIFICATION_INVESTIGATION,
                             CERTIFICATION_JOB,
                             CERTIFICATION_PROFILE
