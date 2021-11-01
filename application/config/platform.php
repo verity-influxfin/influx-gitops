@@ -89,7 +89,8 @@ $config['admin_menu'] = [
         'register_report' => '註冊報表',
         'bonus_report' => '獎金報表',
         'loan_overview' => '申貸總覽',
-        'promote_list'  => '推薦有賞'
+        'promote_list'  => '推薦有賞',
+        'promote_reward_list'  => '推薦有賞放款'
     ],
     'Account' => [
         'parent_name' => '財務作業',
@@ -1734,6 +1735,8 @@ $config['transaction_source'] = [
 
     31 => '應收法催執行費',
     32 => '法催執行費',
+
+    40 => '推薦獎金',
 
     50 => '平台服務費沖正',
     51 => '債權轉讓服務費沖正',

@@ -121,4 +121,72 @@ class user_qrcode_model extends MY_Model
 
         return $this->_database->get()->result_array();
     }
+
+    /**
+     * 取得推薦碼結帳的相關資訊
+     * @param array $qrcode_where
+     * @return mixed
+     */
+    public function getQrcodeRewardInfo(array $qrcode_where=[]) {
+        $this->_database->select('*')
+            ->from("`p2p_user`.`user_qrcode`");
+        if(!empty($qrcode_where))
+            $this->_set_where([$qrcode_where]);
+        $subQuery = $this->_database->get_compiled_select('', TRUE);
+
+        $this->_database
+            ->select('u.id, u.promote_code, u.handle_time, u.settlementing, ur.user_qrcode_id, ur.start_time, ur.end_time, ur.amount, ur.json_data')
+            ->from('`p2p_transaction`.`qrcode_reward` AS `ur`')
+            ->join("($subQuery) as `u`", "`u`.`id` = `ur`.`user_qrcode_id`", 'right')
+            ->order_by("ur.end_time", "DESC");
+        $subQuery2 = $this->_database->get_compiled_select('', TRUE);
+
+        $this->_database
+            ->select('r.*')
+            ->from("($subQuery2) as `r`")
+            ->group_by("r.promote_code");
+
+        return $this->_database->get()->result_array();
+    }
+
+    /**
+     * 設定推薦碼的使用狀態 (成功:回傳推薦碼的物件/不成功:回傳空陣列)
+     * @param $promoteCode
+     * @param $old_status
+     * @param $new_status
+     * @return array|stdClass
+     */
+    public function setUserPromoteLock($promoteCode, $old_status, $new_status) {
+        $conditions = [
+            'promote_code'  => $promoteCode,
+            'settlementing' => $old_status,
+            'status'        => 1,
+        ];
+
+        $this->db->trans_start();
+        $this->db->select_for_update('*')->where($conditions);
+        $userPromoteCode = $this->db->get($this->_table)->result();
+
+        if(is_array($userPromoteCode) && !empty($userPromoteCode)) {
+            $userPromoteCode = $userPromoteCode[0];
+            $result = $this->db->where(['id' => $userPromoteCode->id])
+                ->set(['settlementing' => $new_status])
+                ->update($this->_table);
+
+            // 更新失敗需回傳 empty array
+            if($this->db->affected_rows() > 0) {
+                $userPromoteCode->settlementing = $new_status;
+            }else{
+                $userPromoteCode = [];
+            }
+        }
+        $this->db->trans_complete();
+
+        if($this->db->trans_status() === FALSE) {
+
+            $userPromoteCode = [];
+        }
+
+        return $userPromoteCode;
+    }
 }

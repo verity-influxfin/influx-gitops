@@ -13,6 +13,9 @@ class User_lib {
         'student' => [1, 2],
         'salary_man' => [3, 4]
     ];
+    public $logRewardColumns = [
+        'student', 'salary_man', 'fullMember'
+    ];
 
     public function __construct()
     {
@@ -221,4 +224,78 @@ class User_lib {
         return $list;
     }
 
+    public function scriptHandlePromoteReward()
+    {
+        $this->CI->load->model('user/user_qrcode_model');
+        $startTime = date('Y-m-01 00:00:00', strtotime("-1 month"));
+        $endTime = date('Y-m-01 00:00:00');
+        $userQrcodes = $this->CI->user_qrcode_model->getQrcodeRewardInfo(['status' => [PROMOTE_STATUS_AVAILABLE],
+            'settlementing' => 0]);
+        foreach ($userQrcodes as $qrcode) {
+            if(isset($qrcode['end_time']))
+                $startTime = max($startTime, $qrcode['end_time']);
+            if($startTime < $endTime && (!isset($qrcode['handle_time']) || $qrcode['handle_time'] < $endTime))
+                $this->handlePromoteReward($qrcode, $startTime, $endTime);
+        }
+    }
+
+    public function handlePromoteReward($qrcode, string $startTime='', string $endTime=''): bool
+    {
+        $promoteCode = $this->CI->user_qrcode_model->setUserPromoteLock($qrcode['promote_code'], 0, 1);
+        if (!empty($promoteCode) &&
+            (!isset($promoteCode->handle_time) || $promoteCode->handle_time < $endTime)) {
+            $this->CI->load->model('transaction/qrcode_reward_model');
+
+            $today = date("Y-m-d H:i:s");
+            $rollback = function () {
+                $this->CI->user_qrcode_model->trans_rollback();
+                $this->CI->qrcode_reward_model->trans_rollback();
+            };
+
+            $this->CI->user_qrcode_model->trans_begin();
+            $this->CI->qrcode_reward_model->trans_begin();
+            $info = $this->getPromotedRewardInfo(['id' => $qrcode['id']], $startTime, $endTime);
+
+            try {
+                if(empty($info))
+                    throw New Exception("The promote code ".$qrcode['promote_code'] ." is not found.");
+                $info = reset($info);
+
+                $data = array_intersect_key($info, array_flip($this->logRewardColumns));
+                $selectColumns = array_flip(['id', 'user_id', 'product_id', 'status', 'loan_amount', 'loan_date', 'created_at', 'app_status']);
+                foreach ($data as $key => $list) {
+                    foreach ($list as $idx => $value) {
+                        $data[$key][$idx] = array_intersect_key($value, $selectColumns);
+                    }
+                }
+
+                $this->CI->qrcode_reward_model->insert([
+                    'user_qrcode_id' => $qrcode['id'],
+                    'status' => 1,
+                    'start_time' => $startTime,
+                    'end_time' => $endTime,
+                    'amount' => $info['totalRewardAmount'] ?? 0,
+                    'settlement_time' => $today,
+                    'json_data' => json_encode($data),
+                ]);
+
+                $this->CI->user_qrcode_model->update_by([
+                    'id' => $qrcode['id']], ['handle_time' => $today]);
+
+                if ($this->CI->user_qrcode_model->trans_status() === TRUE && $this->CI->qrcode_reward_model->trans_status() === TRUE) {
+                    $this->CI->user_qrcode_model->trans_commit();
+                    $this->CI->qrcode_reward_model->trans_commit();
+                }else{
+                    throw new Exception("transaction_status is invalid.");
+                }
+
+            } catch (Exception $e) {
+                $rollback();
+                return FALSE;
+            }
+
+            $this->CI->user_qrcode_model->setUserPromoteLock($qrcode['promote_code'], 1, 0);
+        }
+        return TRUE;
+    }
 }
