@@ -893,6 +893,9 @@ $config['product_list'] = [
 			CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
         ],
+        'option_certifications' => [
+            CERTIFICATION_JUDICIALGUARANTEE
+        ],
         'certifications_stage' => [
             [
                 CERTIFICATION_IDCARD,
