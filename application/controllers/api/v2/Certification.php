@@ -68,7 +68,7 @@ class Certification extends REST_Controller {
                         }
                     }
                     //要求先完成實名相關
-                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11'])){
+                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker'])){
                         $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
                         if(!$cerIDCARD){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
@@ -1281,14 +1281,14 @@ class Certification extends REST_Controller {
 
     }
 
-	/**
-     * @api {post} /v2/certification/financial 認證 財務訊息認證
+    /**
+     * @api {post} /v2/certification/financial 認證 收支資訊認證
 	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationFinancial
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} parttime 打工收入
-	 * @apiParam {Number} allowance 零用錢收入
+	 * @apiParam {Number} income 打工收入
+	 * @apiParam {Number} incomeStudent 零用錢收入
 	 * @apiParam {Number} scholarship 獎學金收入
 	 * @apiParam {Number} other_income 其他收入
 	 * @apiParam {Number} restaurant 餐飲支出
@@ -1340,9 +1340,12 @@ class Certification extends REST_Controller {
 
 			//必填欄位
 			$fields 	= [
-				'parttime',
-				'allowance',
-				'scholarship',
+                // 薪資/打工收入
+				'income',
+                // 零用錢收入
+				'incomeStudent',
+                // 獎學金收入
+                'scholarship',
 				'other_income',
 				'restaurant',
 				'transportation',
@@ -1398,6 +1401,8 @@ class Certification extends REST_Controller {
                             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                         }
                     }
+                }else{
+                    $content['creditcard_image'] = '';
                 }
 			}
 
@@ -1419,6 +1424,8 @@ class Certification extends REST_Controller {
                             $content[$fieldS][] = $v->url;
                         }
                     }
+                }else{
+                    $content[$fieldS][] = '';
                 }
             }
 
@@ -1431,6 +1438,182 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->certification_lib->set_success($insert);
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+			}
+		}
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {post} /v2/certification/financialWorker 認證 財務資訊認證
+	 * @apiVersion 0.2.0
+	 * @apiName PostCertificationFinancial
+     * @apiGroup Certification
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {Number} income 薪資/兼職收入
+	 * @apiParam {Number} pocketMoney 投資理財收入
+	 * @apiParam {Number} other_income 其他收入
+	 * @apiParam {Number} restaurant 餐飲支出
+	 * @apiParam {Number} transportation 交通支出
+	 * @apiParam {Number} entertainment 娛樂支出
+	 * @apiParam {Number} other_expense 其他支出
+     * @apiParam {Number} [creditcard_image] 信用卡帳單照 ( 圖片ID )
+     * @apiParam {Number} [passbook_image] 存摺內頁照 ( 圖片ID )
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse IsCompany
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     */
+	public function financialWorker_post()
+    {
+		$certification_id 	= 14;
+		$certification 		= $this->certification[$certification_id];
+		if($certification && $certification['status']==1){
+			$input 		= $this->input->post(NULL, TRUE);
+			$user_id 	= $this->user_info->id;
+			$investor 	= $this->user_info->investor;
+			$content	= array();
+            // 是否需要轉人工(有傳圖片的話要)
+            $should_check = false;
+
+			//是否驗證過
+			$this->was_verify($certification_id);
+
+			//必填欄位
+			$fields 	= [
+                // 薪資/兼職收入
+				'income',
+                // 投資理財收入
+				'pocketMoney',
+				'other_income',
+				'restaurant',
+				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
+				'entertainment',
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
+			];
+			foreach ($fields as $field) {
+				if (empty($input[$field])) {
+					$content[$field] = 0;
+				}else{
+					$content[$field] = intval($input[$field]);
+				}
+			}
+
+			//上傳檔案欄位
+			$file_field 	= ['creditcard_image'];
+			foreach ($file_field as $field) {
+                if(isset($input[$field])) {
+                    $should_check = true;
+                    $image_id = !empty($input[$field]) != null ? intval($input[$field]) : null;
+                    if (!$image_id) {
+                        //$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    } else {
+                        $rs = $this->log_image_model->get_by([
+                            'id' => $image_id,
+                            'user_id' => $user_id,
+                        ]);
+
+                        if ($rs) {
+                            $content[$field] = $rs->url;
+                        } else {
+                            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                        }
+                    }
+                }else{
+                    $content['creditcard_image'] = '';
+                }
+			}
+
+            $file_fields 	= ['passbook_image','bill_phone_image'];
+			foreach ($file_fields as $fieldS) {
+			    if(isset($input[$fieldS])){
+                    $should_check = true;
+                    $image_ids = explode(',', $input[$fieldS]);
+                    if (count($image_ids) > 3) {
+                        $image_ids = array_slice($image_ids, 0, 3);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id' => $image_ids,
+                        'user_id' => $user_id,
+                    ]);
+
+                    if ($list && count($list) == count($image_ids)) {
+                        $content[$fieldS] = [];
+                        foreach ($list as $k => $v) {
+                            $content[$fieldS][] = $v->url;
+                        }
+                    }
+                }else{
+                    $content[$fieldS] = [];
+                }
+            }
+
+			$param		= array(
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
+			);
+
+            $param['sys_check'] = 1;
+            // 有傳圖片的話轉人工，沒有自動過件
+            if($should_check == true){
+                $param['status'] = 3;
+            }
+
+			$insert = $this->user_certification_model->insert($param);
+			if($insert){
+                // 有傳圖片的話轉人工，沒有自動過件
+                if($should_check == false){
+                    $this->certification_lib->set_success($insert);
+                }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
