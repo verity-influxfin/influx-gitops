@@ -134,6 +134,10 @@ class Job_credit_output
             $output["auxiliary_images"] = $this->certification->content->auxiliary_image;
         }
 
+        if (isset($this->certification->content->financial_image)) {
+            $output["financial_image"] = $this->certification->content->financial_image;
+        }
+
         if (isset($this->certification->content->license_image)) {
             $output["license_images"] = $this->certification->content->license_image;
         }

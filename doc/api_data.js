@@ -10824,6 +10824,13 @@ define({
                             "group": "Parameter",
                             "type": "String",
                             "optional": true,
+                            "field": "financial_image",
+                            "description": "<p>財務收入證明 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
                             "field": "license_image",
                             "description": "<p>其它專業認證 ( 圖片IDs 以逗號隔開，最多3個)</p>"
                         },
