@@ -329,7 +329,8 @@ $ci-color: #153a71;
         justify-content: flex-end;
 
         @include rwd {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
             text-align: right;
         }
 
@@ -392,10 +393,15 @@ $ci-color: #153a71;
 
                 @include rwd {
                     display: block;
+                    grid-area: 1/2/2/2;
                 }
 
-                img {
-                    width: 20px;
+                .icon {
+                    height: 20px;
+                    margin: 0 8px;
+                    &.icon-hamburger {
+                        margin-right: 0;
+                    }
                 }
             }
 
@@ -413,6 +419,10 @@ $ci-color: #153a71;
             }
         }
         .search-group {
+            @include rwd {
+                width: 150px;
+                grid-area: 1/1/2/2;
+            }
             position: relative;
             display: none;
             width: 550px;
@@ -435,6 +445,10 @@ $ci-color: #153a71;
                 &::placeholder {
                     color: rgba(255, 255, 255, 0.8);
                 }
+                @include rwd {
+                    padding: 8px;
+                    font-size: 14px;
+                }
             }
             .clear-icon {
                 padding: 13px;
@@ -443,6 +457,12 @@ $ci-color: #153a71;
                 color: #fff;
                 position: absolute;
                 right: 20px;
+                @include rwd {
+                    padding: 4px;
+                    font-size: 18px;
+                    top: 0;
+                    right: 6px;
+                }
             }
         }
     }

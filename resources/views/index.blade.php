@@ -134,7 +134,7 @@
                 </div>
             </div>
             <div class="aside">
-                <div class="search-group" :class="{inputing}" @blur="console.log('blur')">
+                <div class="search-group" :class="{inputing}">
                     <input class="search-input" placeholder="搜尋..." v-model="searchText" />
                     <div class="clear-icon" @click="doClear">x</div>
                 </div>
@@ -189,7 +189,8 @@
                     </div>
                 </div>
                 <div class="item hamburger">
-                    <img src="/images/alesis-hamburger.svg">
+                    <img class="icon icon-search" v-show="!inputing"  @click="inputing=true" src="/images/alesis-search-icon.svg">
+                    <img class="icon icon-hamburger" src="/images/alesis-hamburger.svg">
                 </div>
                 
             </div>
@@ -262,7 +263,7 @@
 
         <script type="text/javascript">
             window.addEventListener('load', function() {
-                document.querySelector(".item.hamburger").addEventListener("click", () => {
+                document.querySelector(".icon-hamburger").addEventListener("click", () => {
                     document.querySelector(".rwd-list").classList.toggle("-active")
                 })
 
