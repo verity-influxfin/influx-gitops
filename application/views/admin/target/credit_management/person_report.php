@@ -227,7 +227,7 @@
                             <td colspan="2">
                                 <div>ㄧ審意見：</div>
                                 <div><textarea type="text" id="1_opinion" style="height: 100px;"></textarea></div>
-                                <div style="display:none; width: 35%;"><span>一審評分：</span><input type="text" id="1_score" style="width: 65%;height: 20px;"></div>
+                                <div style="width: 35%;"><span>一審評分：</span><input type="text" id="1_score" style="width: 65%;height: 20px;"></div>
                                 <div><span>姓名：</span><input type="text" id="1_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
@@ -238,7 +238,7 @@
                             <td colspan="2">
                                 <div>二審意見：</div>
                                 <div><textarea type="text" id="2_opinion" style="height: 100px;"></textarea></div>
-                                <div><span style="width: 35%;">專家分數調整（±400）：</span><input type="text" id="2_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>專家分數調整</span><span class="scoringMin"></span><span>~</span><span class="scoringMax"></span><span>：</span><input type="text" id="2_score" style="width: 65%;height: 20px;"></div>
                                 <div><span>姓名：</span><input type="text" id="2_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
@@ -249,7 +249,7 @@
                             <td colspan="2">
                                 <div>風控長意見：</div>
                                 <div><textarea type="text" id="3_opinion" style="height: 100px;"></textarea></div>
-                                <div><span style="width: 35%;">專家分數調整（±400）：</span><input type="text" id="3_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>專家分數調整</span><span class="scoringMin"></span><span>~</span><span class="scoringMax"></span><span>：</span><input type="text" id="3_score" style="width: 65%;height: 20px;"></div>
                                 <div><span>姓名：</span><input type="text" id="3_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
@@ -260,7 +260,7 @@
                             <td colspan="2">
                                 <div>總經理意見：</div>
                                 <div><textarea type="text" id="4_opinion" style="height: 100px;"></textarea></div>
-								<div><span style="width: 35%;">專家分數調整（±1500）：</span><input type="text" id="4_score" style="width: 65%;height: 20px;"></div>
+								<div><span>專家分數調整</span><span class="scoringMin"></span><span>~</span><span class="scoringMax"></span><span>：</span><input type="text" id="4_score" style="width: 65%;height: 20px;"></div>
                                 <div><span>姓名：</span><input type="text" id="4_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
@@ -515,6 +515,11 @@
                   })
               })
           })
+          // 專家調整分數
+          if(report_item.hasOwnProperty("creditLineInfo") && report_item.creditLineInfo.hasOwnProperty("scoringMin") && report_item.creditLineInfo.hasOwnProperty("scoringMax")){
+              $(`.scoringMin`).text(`${report_item.creditLineInfo.scoringMin}`);
+              $(`.scoringMax`).text(`${report_item.creditLineInfo.scoringMax}`);
+          }
 
           report_data = get_report_data(target_id,type);
 
