@@ -586,6 +586,7 @@
                                     }
                                 }
                                 ?>
+                                <th>授信審核表</th>
                                 <?if(isset($input['investor']) && $input['investor'] != 1){?>
                                     <th>退件</th>
                                 <?}?>
@@ -769,6 +770,7 @@
                                             }
                                         }
                                         ?>
+                                        <td><a class="btn btn-primary btn-info" href="/admin/Creditmanagement/report?target_id=<?=isset($value->id)?$value->id:"" ?>&type=person" target="_blank" >查看<br />授信審核表</a></td>
                                         <? if(isset($input['investor']) && $input['investor'] != 1){?>
                                             <td><button class="btn btn-outline btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>,'<?=isset($value->target_no)?$value->target_no:"" ?>');" >退件</button></td>
                                         <?}?>
