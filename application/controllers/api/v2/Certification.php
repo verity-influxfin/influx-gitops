@@ -295,6 +295,9 @@ class Certification extends REST_Controller {
 					case 12:
                         $fields 	= ['investigationa11', 'return_type'];
 						break;
+                    case 14:
+                        $fields 	= [];
+						break;
 					case 500:
                         $fields 	= [];
 						break;
