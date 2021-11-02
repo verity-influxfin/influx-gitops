@@ -1815,7 +1815,7 @@ $config['certifications'] = [
     4 => ['id' => CERTIFICATION_SOCIAL, 'alias' => 'social', 'name' => '社交認證', 'status' => 1, 'description' => '個人社交帳號認證', 'optional' => []],
     5 => ['id' => CERTIFICATION_EMERGENCY, 'alias' => 'emergency', 'name' => '緊急聯絡人', 'status' => 1, 'description' => '設定緊急連絡人資訊', 'optional' => []],
     6 => ['id' => CERTIFICATION_EMAIL, 'alias' => 'email', 'name' => '常用電子信箱', 'status' => 1, 'description' => '驗證常用E-Mail位址', 'optional' => []],
-    7 => ['id' => CERTIFICATION_FINANCIAL, 'alias' => 'financial', 'name' => '收資資訊', 'status' => 1, 'description' => '提供收資資訊', 'optional' => []],
+    7 => ['id' => CERTIFICATION_FINANCIAL, 'alias' => 'financial', 'name' => '收支資訊', 'status' => 1, 'description' => '提供收支資訊', 'optional' => []],
     8 => ['id' => CERTIFICATION_DIPLOMA, 'alias' => 'diploma', 'name' => '最高學歷認證', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
     9 => ['id' => CERTIFICATION_INVESTIGATION, 'alias' => 'investigation', 'name' => '聯合徵信認證', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
     10 => ['id' => CERTIFICATION_JOB, 'alias' => 'job', 'name' => '工作認證', 'status' => 1, 'description' => '提供工作訊息資訊', 'optional' => [3, 4]],
