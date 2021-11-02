@@ -2,7 +2,7 @@
     <div class="knowledge-wrapper" id="knowledge-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-lg-9">
+                <div class="col-12 col-lg-9 mb-3">
                     <article class="article">
                         <h1 class="title">{{article.title}}</h1>
                         <div class="info">
@@ -45,7 +45,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-none d-lg-flex col-lg-3 ">
+                <div class="col-lg-3 ">
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="row mb-3">
@@ -228,6 +228,9 @@
         }
         p {
             color: #5d5555;
+        }
+        img {
+            max-width: 100%;
         }
     }
   }

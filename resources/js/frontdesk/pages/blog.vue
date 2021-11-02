@@ -2,7 +2,7 @@
     <div class="blog-wrapper" id="blog-wrapper">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-lg-9">
+                <div class="col-12 col-lg-9 mb-3">
                     <form onsubmit="return false;" class="search-form d-block d-lg-none mb-4" autocomplete="off" v-if="latest_articles">
                         <div class="input-group">
                             <input
@@ -57,7 +57,7 @@
                         <div class="pagination" ref="pagination"></div>
                     </template>
                 </div>
-                <div class="d-none d-lg-flex col-lg-3 ">
+                <div class="col-lg-3 ">
                     <div class="panel panel-default" v-if="latest_articles">
                         <div class="panel-body">
                             <div class="row mb-3">
