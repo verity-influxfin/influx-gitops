@@ -127,15 +127,97 @@ class Certification_lib{
                 $this->CI->user_certification_model->update($info->id,$param);
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
+
 					if($rs){
 						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
 					}
+
+                    // 驗證推薦碼
+                    $this->verify_promote_code($info, FALSE);
+
 					return $rs;
 				}
 			}
 		}
 		return false;
 	}
+
+    /**
+     * 驗證推薦碼申請
+     * @param $info: 徵信項目
+     * @param $failed: 徵信項目是否失敗
+     * @return false
+     */
+    public function verify_promote_code($info, $failed): bool
+    {
+        $promote_cert_list = $this->CI->config->item('promote_code_certs');
+        if(in_array($info->certification_id, $promote_cert_list)) {
+            $this->CI->load->model('user/user_qrcode_model');
+            $this->CI->load->model('user/user_certification_model');
+            $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+
+            if(isset($promoteCode)) {
+                $this->CI->load->library('Notification_lib');
+                if($failed) {
+                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                        'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                    ]);
+                    $this->CI->notification_lib->certification($info->user_id, $info->investor,"推薦有賞",2);
+                } else {
+                    $param = array(
+                        'user_id' => $info->user_id,
+                        'certification_id' => $promote_cert_list,
+                        'investor' => $info->investor,
+                        'status' => [1]
+                    );
+                    $certList = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
+                    $certifications = array_reduce($certList, function ($list, $item) {
+                        if (!isset($list[$item->certification_id]))
+                            $list[$item->certification_id] = $item;
+                        return $list;
+                    }, []);
+
+                    if (count($certifications) != count($promote_cert_list)) {
+                        return FALSE;
+                    }
+
+                    $settings = json_decode($promoteCode->settings, true);
+                    $settings['certification_id'] = array_column($certifications, 'id');
+                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                        'settings' => json_encode($settings),
+                        'status' => PROMOTE_STATUS_AVAILABLE,
+                    ]);
+                    $this->CI->load->library('contract_lib');
+                    $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
+                    if(isset($raw_contract)) {
+                        $content = json_decode($certifications[CERTIFICATION_IDCARD]->content, true);
+                        // PROMOTE_GENERAL_CONTRACT_TYPE_NAME
+                        $contract = json_decode($raw_contract->content, true);
+                        $contract[0] = $content['name'];
+                        $contract[6] = $content['name'];
+                        $contract[7] = $content['name'];
+                        $contract[8] = $content['address'];
+                        $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
+                    }
+
+                    // 將銀行帳號改為待驗證
+                    $this->CI->load->model('user/user_bankaccount_model');
+                    $bank_account = $this->CI->user_bankaccount_model->get_by([
+                        'status'	=> 1,
+                        'investor'	=> $info->investor,
+                        'verify'	=> 0,
+                        'user_id'	=> $info->user_id
+                    ]);
+                    if($bank_account)
+                        $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+
+                    $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 1);
+                }
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
 
 	public function verify($info){
 		if($info && $info->status != 1){
@@ -199,6 +281,9 @@ class Certification_lib{
                     }
 
 					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
+
+                    // 驗證推薦碼失敗
+                    $this->verify_promote_code($info, TRUE);
 				}
 				return $rs;
 			}
@@ -2678,6 +2763,10 @@ class Certification_lib{
             }
         }
         return false;
+    }
+
+    private function criminalrecord_success($info) {
+        return $this->fail_other_cer($info);
     }
 
     private function simplificationjob_success($info)
