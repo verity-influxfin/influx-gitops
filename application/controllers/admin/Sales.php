@@ -707,6 +707,106 @@ class Sales extends MY_Admin_Controller {
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
+
+    public function promote_list() {
+        $this->load->library('user_lib');
+        $this->load->model('user/qrcode_setting_model');
+
+        $input 		= $this->input->get(NULL, TRUE);
+        $where		= [];
+        $list   	= [];
+        $fields 	= ['alias'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            }
+        }
+        if(isset($input['tsearch'])&&$input['tsearch']!=''){
+            $tsearch = $input['tsearch'];
+            if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
+            {
+                $name = $this->user_model->get_many_by(array(
+                    'name like '    => '%'.$tsearch.'%',
+                    'status'	    => 1
+                ));
+                if($name){
+                    foreach($name as $k => $v){
+                        $where['user_id'][] = $v->id;
+                    }
+                }
+            }else{
+                if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
+                    $id_number	= $this->user_model->get_many_by(array(
+                        'id_number  like'	=> '%'.$tsearch.'%',
+                        'status'	        => 1
+                    ));
+                    if($id_number){
+                        foreach($id_number as $k => $v){
+                            $where['user_id'][] = $v->id;
+                        }
+                    }
+                }
+                elseif(preg_match_all('/\D/', $tsearch)==0){
+                    $where['user_id'] = $tsearch;
+                }
+                else{
+                    $where['promote_code like'] = '%'.$tsearch.'%';
+                }
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+        if(isset($where['alias'])) {
+            if($where['alias'] == "all")
+                unset($where['alias']);
+
+            $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'], $input['edate']);
+        }
+
+        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $alias_list = ['all' => "全部方案"];
+        $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+
+        $page_data['list'] = $list;
+        $page_data['alias_list'] = $alias_list;
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/promote_list',$page_data);
+        $this->load->view('admin/_footer');
+
+    }
+
+    public function promote_edit() {
+        $this->load->library('user_lib');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->library('contract_lib');
+
+        $input 		= $this->input->get(NULL, TRUE);
+        $where		= [];
+        $page_data  = [];
+
+        $fields 	= ['id'];
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            }
+        }
+
+        $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate']??'', $input['edate']??'');
+
+        $page_data['data'] = reset($list);
+
+        $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0);
+        $page_data['contract'] = $contract ? $contract['content'] : "";
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/promote_edit',$page_data);
+        $this->load->view('admin/_footer');
+
+    }
 }
 
 ?>

@@ -268,7 +268,9 @@
                                     <h1>圖片</h1>
 									<fieldset disabled>
                                         <? if ($data->status!=4) { ?>
-                                            <? if (isset($content['labor_image'])) {
+                                            <? if (!isset($content['financial_image'])) { ?>
+                                            <? if (isset($content['labor_image'])) { ?>
+                                            <?
                                                 echo '<h4>【勞保異動明細】</h4><div class="form-group"><label for="disabledSelect">勞保異動明細</label><br>';
                                                 foreach($content['labor_image'] as $key => $value){
                                                     echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
@@ -361,7 +363,14 @@
                                                 }
                                                 echo '<br /><br /><br />';
                                             }?>
-                                        <? } ?>
+                                        <?}else{
+                                            echo '<div class="form-group"><label for="disabledSelect">財務收入證明</label><br>';
+                                            foreach($content['financial_image'] as $key => $value){
+                                                echo'<a href="'.$value.'" data-fancybox="images"><img src="'.$value.'" style="width:30%;max-width:400px"></a>';
+                                            }
+                                            echo '</div>';
+                                          }
+                                        }?>
 
 									</fieldset>
 								</div>
