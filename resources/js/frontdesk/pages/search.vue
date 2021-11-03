@@ -29,14 +29,26 @@
       </div>
       <!-- rwd  content-->
       <div class="rwd content" :class="{ active: item === 1 }">
-        <div class="content-item" v-for="i in 8" :key="i">
-          <div class="item-title">我是文字我是文字我是文字</div>
-          <div class="item-text">
-            {{ i }} 我是文字我是文字我是文字
-            <span class="text-red">AAA</span>
-            我是文字我是文字我是文字
+        <div class="no-found" v-show="!isFind">
+          <img class="no-found-img" src="../asset/images/no-found.png" alt="" />
+          <div class="no-found-text">
+            找不到符合搜尋字詞「<span class="text-red">AAA</span>」
+          </div>
+          <div class="no-found-text">
+            麻煩您在輸入一次
           </div>
         </div>
+        <div v-show="isFind">
+          <div class="content-item" v-for="i in 8" :key="i">
+            <div class="item-title">我是文字我是文字我是文字</div>
+            <div class="item-text">
+              {{ i }} 我是文字我是文字我是文字
+              <span class="text-red">AAA</span>
+              我是文字我是文字我是文字
+            </div>
+          </div>
+        </div>
+
         <ul class="pagination">
           <li class="page-item"><a class="page-link" href="#">前一頁</a></li>
           <li class="page-item" v-for="i in 5" :key="i">
@@ -55,14 +67,26 @@
       </div>
     </div>
     <div class="content m-0">
-      <div class="content-item" v-for="i in 8" :key="i">
-        <div class="item-title">我是文字我是文字我是文字</div>
-        <div class="item-text">
-          {{ i }} 我是文字我是文字我是文字
-          <span class="text-red">AAA</span>
-          我是文字我是文字我是文字
+      <div class="no-found" v-show="!isFind">
+        <img class="no-found-img" src="../asset/images/no-found.png" alt="" />
+        <div class="no-found-text">
+          找不到符合搜尋字詞「<span class="text-red">AAA</span>」
+        </div>
+        <div class="no-found-text">
+          麻煩您在輸入一次
         </div>
       </div>
+      <div v-show="isFind">
+        <div class="content-item" v-for="i in 8" :key="i">
+          <div class="item-title">我是文字我是文字我是文字</div>
+          <div class="item-text">
+            {{ i }} 我是文字我是文字我是文字
+            <span class="text-red">AAA</span>
+            我是文字我是文字我是文字
+          </div>
+        </div>
+      </div>
+
       <ul class="pagination">
         <li class="page-item"><a class="page-link" href="#">前一頁</a></li>
         <li class="page-item" v-for="i in 5" :key="i">
@@ -79,6 +103,7 @@ export default {
   data () {
     return {
       item: 1,
+      isFind: false,
     }
   },
 }
@@ -255,6 +280,27 @@ export default {
         color: #f00;
       }
     }
+    .no-found {
+      margin: 90px 0;
+      .no-found-img {
+        display: block;
+        margin: auto;
+      }
+      .no-found-text {
+        font-family: NotoSansTC;
+        font-size: 24px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.67;
+        letter-spacing: 1.2px;
+        text-align: center;
+        color: #5d5555;
+        .text-red {
+          color: #f00;
+        }
+      }
+    }
   }
   .pagination {
     justify-content: center;
@@ -327,6 +373,18 @@ export default {
     }
     .content.active {
       display: flex;
+      .no-found {
+        margin: 60px 0;
+        .no-found-img {
+          width: 150px;
+        }
+        .no-found-text {
+          font-size: 16px;
+          .text-red {
+            color: #f00;
+          }
+        }
+      }
       .content-item {
         padding: 0 12px 25px;
         .item-title {
