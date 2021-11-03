@@ -21,9 +21,9 @@ class Sip_lib
         $data = ["account" => $account, "password" => $password];
 
         $result = curl_get($url, $data);
-        $response = json_decode($result);
+        $response = json_decode($result,true);
 
-        if (!$result || !isset($response->status) || $response->status != 200) {
+        if (!$result || !isset($response['status']) || $response['status'] != 200) {
             return false;
         }
 
@@ -42,9 +42,9 @@ class Sip_lib
 		$data = ["account" => $account, "password" => $password];
 
 		$result = curl_get($url, $data);
-		$response = json_decode($result);
+		$response = json_decode($result,true);
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
+		if (!$result || !isset($response['status']) || $response['status'] != 200) {
 			return false;
 		}
 
@@ -57,17 +57,17 @@ class Sip_lib
             return;
         }
 
+        $response = [];
+
         $encodedUni = urlencode($university);
         $url = $this->scraperUrl  . "sips/{$encodedUni}/login-log?account={$account}";
 
         $result = curl_get($url);
-        $response = json_decode($result);
-
-        if (!$result || !isset($response->status) || $response->status != 200) {
-            return;
+        if(!empty($result)){
+            $response = json_decode($result,true);
         }
 
-        return $response->response;
+        return $response;
     }
 
 	public function getDeepLog($university, $account)
@@ -76,17 +76,17 @@ class Sip_lib
 			return;
 		}
 
+        $response = [];
+
 		$encodedUni = urlencode($university);
 		$url = $this->scraperUrl  . "sips/{$encodedUni}/deep-log?account={$account}";
 
 		$result = curl_get($url);
-		$response = json_decode($result);
+        if(!empty($result)){
+            $response = json_decode($result,true);
+        }
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
-
-		return $response->response;
+		return $response;
 	}
 
 	public function getDeepData($university, $account)
@@ -95,17 +95,17 @@ class Sip_lib
 			return;
 		}
 
+        $response = [];
+
 		$encodedUni = urlencode($university);
 		$url = $this->scraperUrl  . "sips/{$encodedUni}/deep-sip-data?account={$account}";
 
 		$result = curl_get($url);
-		$response = json_decode($result);
+        if(!empty($result)){
+            $response = json_decode($result,true);
+        }
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
-
-		return $response->response;
+		return $response;
 	}
 
 	public function check($university, $account)
