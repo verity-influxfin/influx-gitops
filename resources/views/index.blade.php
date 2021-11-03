@@ -135,7 +135,7 @@
             </div>
             <div class="aside">
                 <div class="search-group" :class="{inputing}">
-                    <input class="search-input" placeholder="搜尋..." v-model="searchText" />
+                    <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
                     <div class="clear-icon" @click="doClear">x</div>
                 </div>
                 <div class="item" v-show="!inputing">
@@ -168,7 +168,7 @@
                 </div>
                 <a href="/news" class="item" v-show="!inputing">平台公告</a>
                 <a href="/borrowLink" target="_blank" class="item" v-show="!inputing">下載APP</a>
-                <div class="item" v-show="!inputing" @click="inputing=true">
+                <div class="item" v-show="!inputing" @click="clickSearch">
                     <img class="search-icon" src="/images/alesis-search-icon.svg">
                 </div>
                 <div class="item">

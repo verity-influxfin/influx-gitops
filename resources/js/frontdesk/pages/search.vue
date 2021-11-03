@@ -13,7 +13,12 @@
     <div class="search-block">
       <div class="text">關鍵字</div>
       <span class="loupe">
-        <input class="search-input" placeholder="搜尋..." type="text" />
+        <input
+          class="search-input"
+          placeholder="搜尋..."
+          type="text"
+          v-model="searchInput"
+        />
       </span>
 
       <div class="text">
@@ -103,9 +108,15 @@ export default {
   data () {
     return {
       item: 1,
-      isFind: false,
+      isFind: true,
+      searchInput: '',
     }
   },
+  created () {
+    console.log(this.$route)
+    this.searchInput = this.$route.query.searchText ?? ''
+
+  }
 }
 </script>
 

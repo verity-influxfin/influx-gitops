@@ -341,6 +341,16 @@ $(() => {
                 }else{
                     this.searchText = ''
                 }
+            },
+            doSearch(){
+                this.$router.push({name:'search',query:{searchText:this.searchText}})
+                console.log('s',this.searchText)
+            },
+            clickSearch(){
+                this.inputing = true
+                this.$nextTick(()=>{
+                    this.$refs.search.focus()
+                })
             }
         }
     });
