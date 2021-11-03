@@ -3060,7 +3060,14 @@ class Certification_lib{
 			$certification_list = [];
 			foreach($certification as $key => $value){
                 $ruser_id = $key == CERTIFICATION_INVESTIGATION && $company_source_user_id?$company_source_user_id:$user_id;
-                $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
+                // 歸戶顯示資料不進行是否過期判斷
+                if($target){
+                    // 有過期判斷
+                    $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
+                }else {
+                    // 沒有過期判斷
+                    $user_certification = $this->get_last_certification_info($ruser_id,$key,$investor);
+                }
 				if($user_certification){
 				    $key == CERTIFICATION_JUDICIALGUARANTEE ? $value['judicialPersonId'] = isset($user_certification->content['judicialPersonId']) ? $user_certification->content['judicialPersonId'] : '' : '';
 					$value['user_status'] 		= intval($user_certification->status);
