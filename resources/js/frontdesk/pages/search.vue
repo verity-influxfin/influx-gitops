@@ -28,7 +28,7 @@
         <div class="rwd" :class="{ active: item === 1 }">-</div>
       </div>
       <!-- rwd  content-->
-      <div class="content" :class="{ active: item === 1 }">
+      <div class="rwd content" :class="{ active: item === 1 }">
         <div class="content-item" v-for="i in 8" :key="i">
           <div class="item-title">我是文字我是文字我是文字</div>
           <div class="item-text">
@@ -222,6 +222,9 @@ export default {
     }
   }
   .content {
+    &.rwd {
+      display: none;
+    }
     display: flex;
     flex-direction: column;
     .content-item {
