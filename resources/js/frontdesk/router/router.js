@@ -39,6 +39,7 @@ import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
+import  search  from "../pages/search.vue";
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -93,6 +94,7 @@ let routers = [
 	{ path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
+    { path: '/search',name:'search', component: search },
 ];
 
 export default routers;
