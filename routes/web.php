@@ -301,9 +301,6 @@ Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
 
-// 全站搜尋
-Route::get('/search', 'SearchController@page');
-
 Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
 
     $name = str_replace('-', '_', strtolower($name));
@@ -322,3 +319,11 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path='ind
 });
 
 Route::view('/{path?}', 'index');
+
+
+// API v1
+Route::prefix('api/v1')->group(function() {
+
+    // 全站搜尋
+    Route::get('search', 'SearchController@page');
+});
