@@ -20,17 +20,31 @@ class SearchController extends BaseController
     public function page(Request $request)
     {
         try {
+            // 關鍵字, 需大於 1 個字
             $keyword = $request->input('q');
-            $type = strtolower($request->input('type', 'all'));
-
-            // 取得關鍵字, 需大於 1 個字
             if (empty($keyword) || strlen($keyword) < 1) {
                 throw new Exception('Invalid keyword.');
             }
 
-            // 小學堂, 常見問題, 所有頁面
+            // 搜尋類型：小學堂, 常見問題, 所有頁面
+            $type = strtolower($request->input('type', 'all'));
             if (! in_array($type, ['blog', 'qa', 'all'])) {
                 throw new Exception('Invalid type.');
+            }
+
+            // 每頁數量
+            $page_size = (int) $request->input('perPage', 10);
+            if ($page_size > 10) {
+                throw new Exception('perPage MUST less than 10.');
+            }
+
+            // 目前頁面
+            $current_page = (int) $request->input('currentPage', 1);
+
+            // 總數不能大於 100 筆
+            $start = 1 + ($page_size * ($current_page > 1 ?: 0));
+            if ($start > 100) {
+                throw new Exception('Invalid page value.');
             }
 
             switch ($type) {
@@ -50,7 +64,10 @@ class SearchController extends BaseController
                 case 'all':
                 default:
                     $gcs_engine = new LaravelGoogleCustomSearchEngine();
-                    $result = $gcs_engine->getResults($keyword);
+                    $result = $gcs_engine->getResults($keyword, [
+                        'num'   => $page_size,
+                        'start' => $start,
+                    ]);
                     $retval = [
                         'list' => array_map(function(&$item) {
                             $item = [
@@ -60,7 +77,12 @@ class SearchController extends BaseController
                             ];
                             return $item;
                         }, $result),
-                        'total_amount' => $gcs_engine->getSearchInformation()->totalResults
+                        'pagination' => [
+                            'lastPage'    => (int) $gcs_engine->getTotalNumberOfpages(),
+                            'currentPage' => $current_page,
+                            'total'       => (int) $gcs_engine->getSearchInformation()->totalResults,
+                            'perPage'     => $page_size,
+                        ]
                     ];
                     break;
 
