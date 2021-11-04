@@ -9,4 +9,4 @@ CREATE TABLE `p2p_log`.`promote_reward_log` (
     INDEX `idx1` (`created_at` ASC, `admin_id` ASC));
 
 ALTER TABLE `p2p_transaction`.`qrcode_reward`
-    ADD COLUMN `notification` TINYINT NOT NULL DEFAULT 0 AFTER `json_data`;
+    ADD COLUMN `notified_at` TIMESTAMP NULL AFTER `json_data` COMMENT '勞務報酬單通知時間';

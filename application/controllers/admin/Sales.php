@@ -828,7 +828,7 @@ class Sales extends MY_Admin_Controller {
 
         if(!empty($ids)) {
             $date = get_entering_date();
-            $list = $this->qrcode_reward_model->getSettlementRewardList(['id' => $ids]);
+            $list = $this->qrcode_reward_model->getSettlementRewardList(['id' => $ids, 'status' => PROMOTE_REWARD_STATUS_TO_BE_PAID, 'amount > ' => 0]);
             if(empty($list))
                 $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "放款失敗，找不到對應的獎勵紀錄。"])->send();
 
@@ -929,6 +929,10 @@ class Sales extends MY_Admin_Controller {
         $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "放款成功 ".count($successIdList)." 筆，共 ".$totalAmount." 元。"])->send();
     }
 
+    public function promote_receipt() {
+        $this->load->view('email/promote_receipt');
+    }
+
     public function promote_reward_list() {
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('transaction/qrcode_reward_model');
@@ -982,7 +986,7 @@ class Sales extends MY_Admin_Controller {
             if($where['alias'] == "all")
                 unset($where['alias']);
 
-            $reward_where = ['status' => 1];
+            $reward_where = ['status' => PROMOTE_REWARD_STATUS_TO_BE_PAID, 'amount > ' => 0];
             if($input['sdate'] != "")
                 $reward_where['start_time >= '] = $input['sdate'];
             if($input['edate'] != "")

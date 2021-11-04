@@ -220,7 +220,28 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+	public function handle_promote() {
+        $start_time = time();
+        $data = [
+            'script_name'   => 'handle_promote',
+            'num'           => 0,
+            'start_time'    => $start_time,
+            'end_time'      => 0
+        ];
 
+        $rs = $this->log_script_model->insert($data);
+
+        $this->load->library('user_lib');
+        // 每月 1 - 10 號金流結帳
+        if(date("d") >= 1 && date("d") < 10)
+            $num = $this->user_lib->scriptHandlePromoteReward();
+
+        $this->log_script_model->update_by(['id' => $rs], [
+            'num' => $num,
+            'end_time' => time(),
+        ]);
+        die('1');
+    }
 	/**
 	 * 針對實名驗證已成功的所有用戶進行重新認證
 	 */

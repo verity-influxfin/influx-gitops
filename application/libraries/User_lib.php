@@ -225,8 +225,13 @@ class User_lib {
         return $list;
     }
 
-    public function scriptHandlePromoteReward()
+    /**
+     * 結算所有推薦碼的獎勵
+     * @return int
+     */
+    public function scriptHandlePromoteReward(): int
     {
+        $count = 0;
         $this->CI->load->model('user/user_qrcode_model');
         $startTime = date('Y-m-01 00:00:00', strtotime("-1 month"));
         $endTime = date('Y-m-01 00:00:00');
@@ -234,12 +239,25 @@ class User_lib {
             'settlementing' => 0]);
         foreach ($userQrcodes as $qrcode) {
             if(isset($qrcode['end_time']))
-                $startTime = max($startTime, $qrcode['end_time']);
-            if($startTime < $endTime && (!isset($qrcode['handle_time']) || $qrcode['handle_time'] < $endTime))
-                $this->handlePromoteReward($qrcode, $startTime, $endTime);
+                $_startTime = max($startTime, $qrcode['end_time']);
+            else
+                $_startTime = $startTime;
+
+            if($_startTime < $endTime && (!isset($qrcode['handle_time']) || $qrcode['handle_time'] < $endTime)) {
+                if($this->handlePromoteReward($qrcode, $_startTime, $endTime))
+                    $count++;
+            }
         }
+        return $count;
     }
 
+    /**
+     * 結算推薦碼獎勵
+     * @param $qrcode
+     * @param string $startTime
+     * @param string $endTime
+     * @return bool
+     */
     public function handlePromoteReward($qrcode, string $startTime='', string $endTime=''): bool
     {
         $promoteCode = $this->CI->user_qrcode_model->setUserPromoteLock($qrcode['promote_code'], 0, 1);
@@ -261,7 +279,63 @@ class User_lib {
                 if(empty($info))
                     throw New Exception("The promote code ".$qrcode['promote_code'] ." is not found.");
                 $info = reset($info);
+                $descRewardList = $this->CI->qrcode_reward_model->order_by('end_time', 'DESC')->get_many_by(['user_qrcode_id' => $info['info']['id'], 'status' => [
+                    PROMOTE_REWARD_STATUS_TO_BE_PAID, PROMOTE_REWARD_STATUS_PAID_OFF
+                ]]);
 
+                // 整理所有案件資訊
+                $rewardList = array_intersect_key($info, $this->rewardCategories);
+                $closedDelayedTargetList = [];
+                $currentDelayedTargets = [];
+                $dockAmountList = [];
+                $remainingDockAmount = 0;
+
+                // 最後一期的剩餘扣除金額需加回
+                $tmpReward = reset($descRewardList);
+                if($tmpReward) {
+                    $data = json_decode($tmpReward->json_data, TRUE);
+                    $remainingDockAmount += $data['remainingDockAmount'] ?? 0;
+                }
+
+                // 將之前的獎勵案列表 及 逾期案列表 合併
+                foreach ($descRewardList as $value) {
+                    $data = json_decode($value->json_data, TRUE);
+                    if($data) {
+                        $rewardList = array_merge_recursive($rewardList, array_intersect_key($data, $this->rewardCategories));
+                        $closedDelayedTargetList = array_merge_recursive($closedDelayedTargetList, array_intersect_key($data['delayed_targets'] ?? [], $this->rewardCategories));
+                    }
+                }
+
+                // 處理需扣回獎金之逾期案
+                foreach ($this->rewardCategories as $category => $productIdList) {
+                    $rewardList[$category] = array_column($rewardList[$category], NULL, 'id');
+
+                    // 移除已算過逾期案
+                    if(isset($closedDelayedTargetList[$category])) {
+                        $closedDelayedTargetList[$category] = array_column($closedDelayedTargetList[$category], NULL, 'id');
+                        $rewardList[$category] = array_diff_key($rewardList[$category], $closedDelayedTargetList[$category]);
+                    }
+
+                    $currentDelayedTargets[$category] = array_column($this->CI->target_model->getDelayedTarget(array_keys($rewardList[$category])), NULL, "id");
+
+                    if(isset($info['info']) && isset($info['info']['settings'])) {
+                        $settings = $info['info']['settings'];
+                        if(isset($settings['reward']) && isset($settings['reward']['product'])) {
+                            $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
+                            $dockAmountList[$category] = $rewardAmount * count($currentDelayedTargets[$category]);
+                            $diff = $info['totalRewardAmount'] - $dockAmountList[$category];
+                            if($diff < 0) {
+                                $info['totalRewardAmount'] = 0;
+                                $remainingDockAmount += abs($diff);
+                            }else{
+                                $info['totalRewardAmount'] -= $dockAmountList[$category];
+                            }
+                        }
+                    }
+
+                }
+
+                // 篩選需要儲存的欄位
                 $data = array_intersect_key($info, array_flip($this->logRewardColumns));
                 $selectColumns = array_flip(['id', 'user_id', 'product_id', 'status', 'loan_amount', 'loan_date', 'created_at', 'app_status']);
                 foreach ($data as $key => $list) {
@@ -269,10 +343,23 @@ class User_lib {
                         $data[$key][$idx] = array_intersect_key($value, $selectColumns);
                     }
                 }
+                $data['delayed_targets'] = $currentDelayedTargets;
+                $data['dockList'] = $dockAmountList;
+
+                // 處理需倒扣之金額
+                $diff = $info['totalRewardAmount'] - $remainingDockAmount;
+                if($diff < 0) {
+                    $info['totalRewardAmount'] = 0;
+                    $remainingDockAmount = abs($diff);
+                }else{
+                    $info['totalRewardAmount'] -= $remainingDockAmount;
+                    $remainingDockAmount = 0;
+                }
+                $data['remainingDockAmount'] = $remainingDockAmount;
 
                 $this->CI->qrcode_reward_model->insert([
                     'user_qrcode_id' => $qrcode['id'],
-                    'status' => 1,
+                    'status' => PROMOTE_REWARD_STATUS_TO_BE_PAID,
                     'start_time' => $startTime,
                     'end_time' => $endTime,
                     'amount' => $info['totalRewardAmount'] ?? 0,
