@@ -201,8 +201,8 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?>">
-                                                <input type="text" disabled style="width: 120px" class="form-control percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['percent']??"":"" ?>%" maxlength="4">
+                                                <input type="text" disabled style="width: 120px" class="form-control number" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?>">
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['percent']??"":"" ?>%" maxlength="4">
                                             </td>
                                         </tr>
                                         <tr style="background-color:#f5f5f5;">
@@ -212,8 +212,8 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?>">
-                                                <input type="text" disabled style="width: 120px" class="form-control percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['percent']??"":"" ?>%" maxlength="4">
+                                                <input type="text" disabled style="width: 120px" class="form-control number" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?>">
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['percent']??"":"" ?>%" maxlength="4">
                                             </td>
                                         </tr>
                                         <tr style="background-color:#f5f5f5;">
