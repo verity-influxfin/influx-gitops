@@ -16,6 +16,7 @@
         <input
           class="search-input"
           placeholder="搜尋..."
+          ref="searchInput"
           type="text"
           v-model="searchInput"
         />
@@ -112,10 +113,11 @@ export default {
       searchInput: '',
     }
   },
-  created () {
-    console.log(this.$route)
-    this.searchInput = this.$route.query.searchText ?? ''
-
+  mounted () {
+    this.searchInput = this.$route.query.q ?? ''
+    this.$nextTick(() => {
+      this.$refs.searchInput.focus()
+    })
   }
 }
 </script>
