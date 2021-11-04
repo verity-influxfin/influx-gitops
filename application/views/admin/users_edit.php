@@ -275,6 +275,8 @@
 																if ($value['id'] == 3) {
 																	switch ($value['user_status']) {
 																		case '3':
+                                                                            echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle">驗證</a>';
+                                                                            break;
 																		case '0':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
@@ -292,6 +294,8 @@
 																	$certification_id = $value['certification_id'];
 																	switch ($value['user_status']) {
 																		case '3':
+                                                                            echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle">驗證</a>';
+                                                                            break;
 																		case '0':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
