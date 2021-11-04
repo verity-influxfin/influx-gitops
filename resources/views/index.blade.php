@@ -134,27 +134,31 @@
                 </div>
             </div>
             <div class="aside">
-                <div class="item">
+                <div class="search-group" :class="{inputing}">
+                    <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
+                    <div class="clear-icon" @click="doClear">x</div>
+                </div>
+                <div class="item" v-show="!inputing">
                     分期付款超市
                     <div class="sub">
                         <a href="/mobileLoan" class="item">手機分期</a>
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" v-show="!inputing">
                     關於我們
                     <div class="sub">
                         <a href="/company" class="item">公司介紹</a>
                         <a href="/news" class="item">最新消息</a>
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" v-show="!inputing">
                     小學堂金融科技
                     <div class="sub">
                         <a href="/blog" class="item">小學堂</a>
                         <a href="/vlog?q=share" class="item">小學堂影音</a>
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" v-show="!inputing">
                     了解更多
                     <div class="sub">
                         <a href="/faq" class="item">常見問題</a>
@@ -162,8 +166,11 @@
                         <a href="/projects" class="item">查看案件</a>
                     </div>
                 </div>
-                <a href="/news" class="item">平台公告</a>
-                <a href="/borrowLink" target="_blank" class="item">下載APP</a>
+                <a href="/news" class="item" v-show="!inputing">平台公告</a>
+                <a href="/borrowLink" target="_blank" class="item" v-show="!inputing">下載APP</a>
+                <div class="item" v-show="!inputing" @click="clickSearch">
+                    <img class="search-icon" src="/images/alesis-search-icon.svg">
+                </div>
                 <div class="item">
                     <div v-if="!flag || flag === 'logout'"  @click="openLoginModal" class="login nav-item">SIGN IN</div>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">
@@ -182,8 +189,10 @@
                     </div>
                 </div>
                 <div class="item hamburger">
-                    <img src="/images/alesis-hamburger.svg">
+                    <img class="icon icon-search" v-show="!inputing"  @click="inputing=true" src="/images/alesis-search-icon.svg">
+                    <img class="icon icon-hamburger" src="/images/alesis-hamburger.svg">
                 </div>
+                
             </div>
             <div class="rwd-list">
                 <div class="item -dropdown">
@@ -254,7 +263,7 @@
 
         <script type="text/javascript">
             window.addEventListener('load', function() {
-                document.querySelector(".item.hamburger").addEventListener("click", () => {
+                document.querySelector(".icon-hamburger").addEventListener("click", () => {
                     document.querySelector(".rwd-list").classList.toggle("-active")
                 })
 
