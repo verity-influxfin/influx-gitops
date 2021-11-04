@@ -12,6 +12,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\KnowledgeArticle;
+
 class Backendcontroller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -151,24 +153,57 @@ class Backendcontroller extends BaseController
         return response()->json($knowledge, 200);
     }
 
+    /**
+     * 新增/ 修改小學堂文章
+     *
+     * @param      \Illuminate\Http\Request  $request  請求
+     */
     public function modifyKnowledge(Request $request)
     {
-        $this->inputs = $request->all();
+        $inputs = $request->all();
 
         try {
-            $exception = DB::transaction(function () {
-                $this->inputs['data']['post_author'] = '1';
-                $this->inputs['data']['post_modified'] = date('Y-m-d H:i:s');
-                if ($this->inputs['actionType'] === 'insert') {
-                    $this->inputs['data']['post_date'] = date('Y-m-d H:i:s');
-                    DB::table('knowledge_article')->insert($this->inputs['data']);
-                } else if ($this->inputs['actionType'] === 'update') {
-                    DB::table('knowledge_article')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+            $result = DB::transaction(function () use ($inputs) {
+                $now = date('Y-m-d H:i:s');
+                $data = [
+                    'post_author'   => '1',
+                    'post_modified' => $now,
+                    'post_title'    => $input['post_title'] ?? null,
+                    'post_content'  => $input['post_content'] ?? null,
+                    'status'        => $input['status'] ?? 'publish',
+                    'type'          => $input['type'] ?? 'article',
+                    'order'         => $input['order'] ?? 0,
+                    'media_link'    => $input['media_link'] ?? null,
+                    'video_link'    => $input['video_link'] ?? null,
+                ];
+
+                switch (strtolower($inputs['actionType'])) {
+                    case 'insert':
+                        $data['post_date'] = $now;
+
+                        if ($id = DB::table('knowledge_article')->insertGetId($data)) {
+                            // 建立搜尋索引
+                            $result = \Elasticsearch::index([
+                                'id'    => $id,
+                                'index' => 'influx_web',
+                                'type'  => 'knowledge_article',
+                                'body'  => [
+                                    'title'   => $data['post_title'],
+                                    'content' => $data['post_content'],
+                                ],
+                            ]);
+                        }
+                        break;
+
+                    case 'update':
+                        DB::table('knowledge_article')->where('ID', $inputs['ID'])
+                                                      ->update($data);
+                        break;
                 }
             }, 5);
-            return response()->json($exception, is_null($exception) ? 200 : 400);
+            return response()->json($result, ($result === null) ? 200 : 400);
         } catch (Exception $e) {
-            return response()->json($e, 400);
+            return response()->json($e->getMessage(), 400);
         }
     }
 

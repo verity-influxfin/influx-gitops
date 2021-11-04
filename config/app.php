@@ -175,7 +175,13 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        /*
+         * 全站搜索
+         */
         'JanDrda\LaravelGoogleCustomSearchEngine\LaravelGoogleCustomSearchEngineProvider',
+        Laravel\Scout\ScoutServiceProvider::class,
+        ScoutElastic\ScoutElasticServiceProvider::class,
 
     ],
 

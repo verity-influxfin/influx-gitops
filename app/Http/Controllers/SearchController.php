@@ -34,8 +34,8 @@ class SearchController extends BaseController
 
             // 每頁數量
             $page_size = (int) $request->input('perPage', 10);
-            if ($page_size > 10) {
-                throw new Exception('perPage MUST less than 10.');
+            if ($page_size > 10 || $page_size < 1) {
+                throw new Exception('perPage MUST between 1 to 10.');
             }
 
             // 目前頁面
@@ -49,16 +49,33 @@ class SearchController extends BaseController
 
             switch ($type) {
 
-                // TODO: 小學堂
-                // case 'blog':
-                //     dd(KnowledgeArticle::search($keyword)
-                //         ->minScore(4)
-                //         ->select(['id', 'post_title'])
-                //         ->get()
-                //         ->map(function($row) {
-                //         return sprintf('%s - %s', $row['id'], $row['post_title']);
-                //     }));
-                //     break;
+                // 小學堂
+                case 'blog':
+                    $result = KnowledgeArticle::search($keyword)
+                        ->minScore(2.0)
+                        ->select(['id', 'post_title', 'post_content'])
+                        ->paginate($page_size);
+
+                    $retval = [
+                        'list' => $result->getCollection()->map(function($row) {
+                            $snippet = \Soundasleep\Html2Text::convert($row['post_content'], [
+                                'ignore_errors' => true,
+                                'drop_links'    => true,
+                            ]);
+                            return [
+                                'title'   => $row['post_title'],
+                                'link'    => url('/articlepage?q=knowledge-' . $row['id']),
+                                'snippet' => mb_substr(str_replace('\n', '', $snippet), 0, 100),
+                            ];
+                        }),
+                        'pagination' => [
+                            'total'       => $result->total(),
+                            'lastPage'    => $result->lastPage(),
+                            'currentPage' => $result->currentPage(),
+                            'perPage'     => $result->perPage(),
+                        ],
+                    ];
+                    break;
 
                 // 所有頁面: Google Custom Search
                 case 'all':
@@ -78,9 +95,9 @@ class SearchController extends BaseController
                             return $item;
                         }, $result),
                         'pagination' => [
-                            'lastPage'    => (int) $gcs_engine->getTotalNumberOfpages(),
+                            'total'       => $total = (int) $gcs_engine->getSearchInformation()->totalResults,
+                            'lastPage'    => ceil($total / $page_size),
                             'currentPage' => $current_page,
-                            'total'       => (int) $gcs_engine->getSearchInformation()->totalResults,
                             'perPage'     => $page_size,
                         ]
                     ];
