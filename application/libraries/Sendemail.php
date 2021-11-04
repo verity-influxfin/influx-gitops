@@ -94,9 +94,11 @@ class Sendemail
 				$certification = $this->CI->user_certification_model->get($rs->certification_id);
 				if($certification && $certification->status==0){
 					$this->CI->load->library('Certification_lib');
-                    // to do : 學生認證轉待驗證(未來加入sip後要改掉)
                     if($certification->certification_id == 2){
-                        $this->CI->user_certification_model->update($rs->certification_id,['status'=>3]);
+                        $content = json_decode($certification->content,true);
+                        $content['email_verify_status'] = true;
+                        $content['email_verify_time'] = time();
+                        $this->CI->user_certification_model->update($rs->certification_id,['content'=>json_encode($content)]);
                     }else{
                         $this->CI->certification_lib->set_success($rs->certification_id);
                     }
