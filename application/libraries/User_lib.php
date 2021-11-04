@@ -165,7 +165,7 @@ class User_lib {
 
         // 取得推薦碼下載數
         $this->CI->load->model('behavion/user_behavior_model');
-        $firstOpenRs =$this->CI->user_behavior_model->getFirstOpenCountByPromoteCode(array_keys($promoteCodeList));
+        $firstOpenRs =$this->CI->user_behavior_model->getFirstOpenCountByPromoteCode(array_keys($promoteCodeList), $startDate, $endDate);
         foreach ($firstOpenRs as $rs) {
             $list[$rs['promote_code']]['downloadedCount'] = $rs['count'];
         }
@@ -218,6 +218,7 @@ class User_lib {
 
             if(isset($settings['reward']) && isset($settings['reward']['full_member'])) {
                 $list[$promoteCode]['fullMemberRewardAmount'] = $list[$promoteCode]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
+                $list[$promoteCode]['totalRewardAmount'] += $list[$promoteCode]['fullMemberRewardAmount'];
             }
         }
 
