@@ -2183,6 +2183,11 @@ class Product extends REST_Controller {
             'content' => json_encode($input),
         ];
 
+        // 配偶自動同意
+        if($content["character"] == 3 || ($content["character"] == 2 && $content["relationship"] == 0) ){
+            $associate['status'] = 1;
+        }
+
         $this->load->model('loan/target_associate_model');
 
         $associates = $this->target_lib->get_associates_user_data($targetId, 'all', 0, false);

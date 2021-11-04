@@ -316,7 +316,7 @@
                 url: "/admin/target/skbank_text_send" + "?target_id=" + caseId,
                 success: function (response) {
                     if(response.status.code == 200){
-                        $('#skbankCompId').text(response.CompId);
+                        $('#skbankCompId').text(response.response.CompId);
                         $.ajax({
                            type: "POST",
                            data: JSON.stringify(response.response),
@@ -331,7 +331,8 @@
 
                                if(skbank_response == '成功'){
                                    $("#skbank_img_send_btn").prop("disabled", true);
-
+                               }else{
+                                   $("#skbank_text_send_btn").prop("disabled", false);
                                }
                                alert(`新光送出結果 ： ${skbank_response}\n回應內容 ： ${response.error}\n新光案件編號 ： ${response.case_no}\n新光交易序號 ： ${response.msg_no}\n新光送出資料資訊 ： ${response.meta_info}\n`);
                            },
@@ -339,7 +340,6 @@
                              alert(error);
                            }
                        });
-                       $("#skbank_text_send_btn").prop("disabled", false);
                        $("#skbank_text_send_btn").text("收件檢核表送出");
                     }
                 }
@@ -355,7 +355,7 @@
                 url: "/admin/target/skbank_image_get" + "?target_id=" + caseId,
                 success: function (response) {
                   if(response.status.code == 200){
-                      let case_no = $('#skbankMsgNo').text();
+                      let case_no = $('#skbankCaseNo').text();
                       let comp_id = $('#skbankCompId').text();
                       if(case_no && comp_id){
                           let request_data = [];
@@ -421,7 +421,59 @@
             });
         }
 
+        //新光附件上傳完成 API
+        $(document).off("click","#skbank_approve_send_btn").on("click","#skbank_approve_send_btn" ,  function(){
+            $("#skbank_approve_send_btn").prop("disabled", true);
+            $("#skbank_approve_send_btn").text("資料處理中");
+            let case_no = $('#skbankCaseNo').text();
+            let comp_id = $('#skbankCompId').text();
+            let msg_no = $('#skbankMsgNo').text();
+            if(case_no && comp_id && msg_no){
+                $.ajax({
+                    type: "POST",
+                    url: "/api/skbank/v1/LoanRequest/apply_image_complete",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        'CaseNo':case_no,
+                        'CompId':comp_id,
+                        'MsgNo':msg_no,
+                    }),
+                    success: function (response) {
+                        if(response.success == true){
+                           $("#skbank_approve_send_btn").text("通過");
+                        }
+                        let skbank_response = response.success ? '成功' : '失敗';
+                        alert(`送出結果 ： ${skbank_response}\n回應內容 ： ${response.error}\n新光送出資料資訊 ： ${response.meta_info}\n`);
+                    }
+                });
+                $("#skbank_approve_send_btn").text("通過");
+            }
+        });
+
+        skbank_text_get(caseId);
     });
+
+    // 取得新光手賤檢核表成功紀錄
+    function skbank_text_get(target_id){
+        $.ajax({
+              type: "GET",
+              url: `/admin/target/skbank_text_get?target_id=${target_id}`,
+              success: function (response) {
+                  response = response.response;
+                  if(response){
+                      Object.keys(response).forEach( (key) => {
+                          $(`#${key}`).text(response[key]);
+                          if(key == 'skbankMetaInfo' && response[key] == '成功'){
+                              $("#skbank_text_send_btn").prop("disabled", true);
+                          }
+                      })
+                  }
+              },
+              error: function(error) {
+                  alert(error);
+              }
+          });
+    }
 </script>
 <div id="page-wrapper">
 	<div class="row">
@@ -691,7 +743,7 @@
                         <? } ?>
                         <? if($targetInfo->product_id == 1002){ ?>
                             <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
-                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="" disabled>圖片送出</button>
+                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">圖片送出</button>
                             <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="" disabled>通過</button>
                         <? } ?>
                     </div>

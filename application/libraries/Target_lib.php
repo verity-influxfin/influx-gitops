@@ -410,7 +410,13 @@ class Target_lib
                                     $msg = false;
                                 }
                                 $tempData = json_decode($target->target_data,true);
-                                $param['target_data'] = json_encode(array_replace_recursive($tempData, is_array($targetData)?$targetData:[]));
+                                if(isset($tempData) && !empty($tempData)) {
+                                    $tempData = array_replace_recursive($tempData, is_array($targetData) ? $targetData : []);
+                                } else {
+                                    $tempData = $targetData;
+                                }
+                                $param['target_data'] = json_encode($tempData);
+
                                 $rs = $this->CI->target_model->update($target->id, $param);
                                 if ($rs && $msg) {
                                     $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
@@ -1667,6 +1673,7 @@ class Target_lib
                                     $this->CI->certification_lib->check_associates($target_id);
                                     $cer_userList = $this->get_associates_user_data($value->id, 'all', [0, 1], false);
                                     $wait_associates = true;
+                                    $finish = true;
                                     foreach ($cer_userList as $listKey => $listValue) {
                                         if($listValue->status == 0 || $listValue->user_id == null) {
                                             $finish = false;
@@ -1731,7 +1738,10 @@ class Target_lib
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
-                                            $finish = false;
+                                            // 微企貸對保不驗證
+                                            if($value->product_id != 1002 || $certification['id'] != 1020){
+                                                $finish = false;
+                                            }
                                         }
                                     }
 									// 工作認證有專業技能證書進待二審
@@ -2312,6 +2322,10 @@ class Target_lib
                             $chargeOfRegistration = true;
                             $temp['addrealcharacter'] = $chargeOfRegistration;
                         }elseif($value->character == 2){
+                            // 實際負責人為配偶時
+                            if($value->relationship == 0){
+                                $temp['addspouse'] = false;
+                            }
                             $temp['addrealcharacter'] = false;
                         }elseif($value->character == 3){
                             $temp['addspouse'] = false;

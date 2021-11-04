@@ -140,15 +140,96 @@ class Certification_lib{
                 $this->CI->user_certification_model->update($info->id,$param);
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
-                    if($rs && in_array($info->certification_id, $this->notification_list)){
-                        $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
-                    }
+					if($rs && in_array($info->certification_id, $this->notification_list)){
+						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
+					}
+
+                    // 驗證推薦碼
+                    $this->verify_promote_code($info, FALSE);
+
 					return $rs;
 				}
 			}
 		}
 		return false;
 	}
+
+    /**
+     * 驗證推薦碼申請
+     * @param $info: 徵信項目
+     * @param $failed: 徵信項目是否失敗
+     * @return false
+     */
+    public function verify_promote_code($info, $failed): bool
+    {
+        $promote_cert_list = $this->CI->config->item('promote_code_certs');
+        if(in_array($info->certification_id, $promote_cert_list)) {
+            $this->CI->load->model('user/user_qrcode_model');
+            $this->CI->load->model('user/user_certification_model');
+            $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+
+            if(isset($promoteCode)) {
+                $this->CI->load->library('Notification_lib');
+                if($failed) {
+                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                        'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                    ]);
+                    $this->CI->notification_lib->certification($info->user_id, $info->investor,"推薦有賞",2);
+                } else {
+                    $param = array(
+                        'user_id' => $info->user_id,
+                        'certification_id' => $promote_cert_list,
+                        'investor' => $info->investor,
+                        'status' => [1]
+                    );
+                    $certList = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
+                    $certifications = array_reduce($certList, function ($list, $item) {
+                        if (!isset($list[$item->certification_id]))
+                            $list[$item->certification_id] = $item;
+                        return $list;
+                    }, []);
+
+                    if (count($certifications) != count($promote_cert_list)) {
+                        return FALSE;
+                    }
+
+                    $settings = json_decode($promoteCode->settings, true);
+                    $settings['certification_id'] = array_column($certifications, 'id');
+                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                        'settings' => json_encode($settings),
+                        'status' => PROMOTE_STATUS_AVAILABLE,
+                    ]);
+                    $this->CI->load->library('contract_lib');
+                    $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
+                    if(isset($raw_contract)) {
+                        $content = json_decode($certifications[CERTIFICATION_IDCARD]->content, true);
+                        // PROMOTE_GENERAL_CONTRACT_TYPE_NAME
+                        $contract = json_decode($raw_contract->content, true);
+                        $contract[0] = $content['name'];
+                        $contract[6] = $content['name'];
+                        $contract[7] = $content['name'];
+                        $contract[8] = $content['address'];
+                        $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
+                    }
+
+                    // 將銀行帳號改為待驗證
+                    $this->CI->load->model('user/user_bankaccount_model');
+                    $bank_account = $this->CI->user_bankaccount_model->get_by([
+                        'status'	=> 1,
+                        'investor'	=> $info->investor,
+                        'verify'	=> 0,
+                        'user_id'	=> $info->user_id
+                    ]);
+                    if($bank_account)
+                        $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+
+                    $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 1);
+                }
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
 
 	public function verify($info){
 		if($info && $info->status != 1){
@@ -212,7 +293,10 @@ class Certification_lib{
                     }
 
                     if(in_array($info->certification_id, $this->notification_list))
-                        $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
+					    $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
+
+                    // 驗證推薦碼失敗
+                    $this->verify_promote_code($info, TRUE);
 				}
 				return $rs;
 			}
@@ -1052,57 +1136,59 @@ class Certification_lib{
 		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
 		if($info && $info->certification_id == 1002 && $info->status == 0){
 			$status = 3;
-	    $data = [];
-			foreach($info->content['result'] as $k=>$v){
-				// 使用者校驗資料
-				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
-					$data[$k]['report_time'] = isset($v['report_time']) ? $v['report_time']: '';
-					$data[$k]['company_name'] = isset($v['company_name']) ? $v['company_name']: '';
-					$data[$k]['company_tax_id'] = isset($v['company_tax_id']) ? $v['company_tax_id']: '';
-					$data[$k]['input_89'] = isset($v['input_89']) ? $v['input_89']: '';
-					$data[$k]['input_90'] = isset($v['input_90']) ? $v['input_90']: '';
-					$data[$k]['id'] = $k;
-				}
-				if(! isset($v['origin_type'])){
-					// 找所有圖片ID
-			    // $this->CI->load->model('log/log_image_model');
-			    // if(is_array($info->content['income_statement_image'])){
-			    //   $imgurl = $info->content['income_statement_image'];
-			    // }else{
-			    //   $imgurl = [$info->content['income_statement_image']];
-			    // }
-			    // $image_info = $this->CI->log_image_model->get_many_by([
-			    //     'url' => $imgurl,
-			    // ]);
-			    // if($image_info){
-			    //   $update_time = $image_info[0]->created_at;
-			    //   foreach($image_info as $v){
-			    //     $imageIds[] = $v->id;
-			    //   }
-			    // }
+	        $data = [];
+            if(isset($info->content['result']) && !empty($info->content['result'])){
+                foreach($info->content['result'] as $k=>$v){
+    				// 使用者校驗資料
+    				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
+    					$data[$k]['report_time'] = isset($v['report_time']) ? $v['report_time']: '';
+    					$data[$k]['company_name'] = isset($v['company_name']) ? $v['company_name']: '';
+    					$data[$k]['company_tax_id'] = isset($v['company_tax_id']) ? $v['company_tax_id']: '';
+    					$data[$k]['input_89'] = isset($v['input_89']) ? $v['input_89']: '';
+    					$data[$k]['input_90'] = isset($v['input_90']) ? $v['input_90']: '';
+    					$data[$k]['id'] = $k;
+    				}
+    				if(! isset($v['origin_type'])){
+    					// 找所有圖片ID
+    			    // $this->CI->load->model('log/log_image_model');
+    			    // if(is_array($info->content['income_statement_image'])){
+    			    //   $imgurl = $info->content['income_statement_image'];
+    			    // }else{
+    			    //   $imgurl = [$info->content['income_statement_image']];
+    			    // }
+    			    // $image_info = $this->CI->log_image_model->get_many_by([
+    			    //     'url' => $imgurl,
+    			    // ]);
+    			    // if($image_info){
+    			    //   $update_time = $image_info[0]->created_at;
+    			    //   foreach($image_info as $v){
+    			    //     $imageIds[] = $v->id;
+    			    //   }
+    			    // }
 
-					// 找所有ocr資料
-			    $this->CI->load->library('ocr/report_scan_lib');
-			    $response = $this->CI->report_scan_lib->requestForResult('income_statements', $k);
-					if ($response && $response->status == 200) {
-						foreach($response as $k1=>$v1){
-		          $data[$k]['report_time'] = isset($v1->income_statement->report_time_range->end_at) ? $v1->income_statement->report_time_range->end_at : '';
-		          $data[$k]['company_name'] = isset($v1->income_statement->company->companyName) ? $v1->income_statement->company->companyName : '';
-		          $data[$k]['company_tax_id'] = isset($v1->income_statement->company->taxId) ? $v1->income_statement->company->taxId : '';
-		          $data[$k]['input_89'] = isset($v1->income_statement->operationIncome->{'89'}) ? $v1->income_statement->operationIncome->{'89'} : '';
-		          $data[$k]['input_90'] = isset($v1->income_statement->operationIncome->{'90'}) ? $v1->income_statement->operationIncome->{'90'} : '';
-		          $data[$k]['id'] = isset($v1->id) ? $v1->id : '';
-		          foreach($v1->income_statement->netIncomeTable as $v2){
-		            if($v2->key =='04'){
-		              $data[$k]['input_4_1'] = $v2->value->left;
-		              $data[$k]['input_4_2'] = $v2->value->right;
-		              break;
-		            }
-		          }
-		        }
-					}
-				}
-			}
+    					// 找所有ocr資料
+    			    $this->CI->load->library('ocr/report_scan_lib');
+    			    $response = $this->CI->report_scan_lib->requestForResult('income_statements', $k);
+    					if ($response && $response->status == 200) {
+    						foreach($response as $k1=>$v1){
+    		          $data[$k]['report_time'] = isset($v1->income_statement->report_time_range->end_at) ? $v1->income_statement->report_time_range->end_at : '';
+    		          $data[$k]['company_name'] = isset($v1->income_statement->company->companyName) ? $v1->income_statement->company->companyName : '';
+    		          $data[$k]['company_tax_id'] = isset($v1->income_statement->company->taxId) ? $v1->income_statement->company->taxId : '';
+    		          $data[$k]['input_89'] = isset($v1->income_statement->operationIncome->{'89'}) ? $v1->income_statement->operationIncome->{'89'} : '';
+    		          $data[$k]['input_90'] = isset($v1->income_statement->operationIncome->{'90'}) ? $v1->income_statement->operationIncome->{'90'} : '';
+    		          $data[$k]['id'] = isset($v1->id) ? $v1->id : '';
+    		          foreach($v1->income_statement->netIncomeTable as $v2){
+    		            if($v2->key =='04'){
+    		              $data[$k]['input_4_1'] = $v2->value->left;
+    		              $data[$k]['input_4_2'] = $v2->value->right;
+    		              break;
+    		            }
+    		          }
+    		        }
+    					}
+    				}
+    			}
+            }
 
 			if($data){
 				$this->CI->load->library('verify/data_legalize_lib');
@@ -1416,14 +1502,12 @@ class Certification_lib{
 			// }else{
 			// 	$status = 3;
 			// }
-			// $this->CI->user_certification_model->update($info->id, array(
-			//     'status' => $status,
-			//     'sys_check' => 1,
-			//     'content' => json_encode($info->content),
-			//     'remark' => json_encode($info->remark)
-			//   ));
+			$this->CI->user_certification_model->update($info->id, array(
+			    'status' => 3,
+			    'sys_check' => 1,
+			  ));
 
-            $this->set_success($info->id, true);
+            // $this->set_success($info->id, true);
             return true;
         }
         return false;
@@ -2702,6 +2786,10 @@ class Certification_lib{
         return false;
     }
 
+    private function criminalrecord_success($info) {
+        return $this->fail_other_cer($info);
+    }
+
     private function simplificationjob_success($info)
     {
         if ($info) {
@@ -3285,6 +3373,10 @@ class Certification_lib{
                         ];
                         // 負責人加入配偶的話配偶自動同意
                         if($value->character == 3){
+                            $update_info['status'] = 1;
+                        }
+                        // 負責人加入之實際負責人為配偶自動同意
+                        if($value->character == 2 && $value->relationship == 1){
                             $update_info['status'] = 1;
                         }
                         $this->CI->target_associate_model->update_by([

@@ -2050,6 +2050,7 @@ class Certification extends REST_Controller {
 
             isset($input['business_image'])?$file_fields[]='business_image':'';
             isset($input['license_image'])?$file_fields[]='license_image':'';
+            isset($input['financial_image'])?$file_fields[]='financial_image':'';
             isset($input['auxiliary_image'])?$file_fields[]='auxiliary_image':'';
 
             $send_mail = false;
@@ -2112,11 +2113,11 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => CERTIFICATION_STATUS_AUTHENTICATED,
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
 			];
 
             if ($cer_exists) {
-                $param['status'] = 0;
+                $param['status'] = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
                 $rs = $this->user_certification_model->update($cer_exists->id, $param);
             }else{
                 $rs = $this->user_certification_model->insert($param);
@@ -2365,8 +2366,16 @@ class Certification extends REST_Controller {
             $this->target_associate_model->limit(1)->order_by("id", "desc");
             $target_associate_info = $this->target_associate_model->get_by(['user_id'=>$user_id,'target_id'=>$input['target_id']]);
             if($target_associate_info){
+                $character = isset($target_associate_info->character) && is_numeric($target_associate_info->character) ? (int)$target_associate_info->character : '';
+
+                // 根據擔任角色與負責人關係給予相對應個人資料表應有狀態
+                // 配偶擔任保證人
+                if($target_associate_info->character == 3 && $target_associate_info->guarantor == 1){
+                    $character = 4;
+                }
+
                 $response = [
-                    'relaction_type' => isset($target_associate_info->character) && is_numeric($target_associate_info->character) ? (int)$target_associate_info->character : '',
+                    'relaction_type' => $character
                 ];
 
                 $this->response(array('result' => 'SUCCESS', 'data' => $response));
@@ -2394,13 +2403,46 @@ class Certification extends REST_Controller {
 
             $cer_profilejudicial = $this->config->item('cer_profile');
             //選填欄位
-            $fields 	= ['PrCurAddrZip','PrCurAddrZipName','PrCurlAddress','PrTelAreaCode','PrTelNo','PrTelExt','PrMobileNo','RealPr','IsPrSpouseGu','PrStartYear','PrEduLevel','OthRealPrRelWithPr','OthRealPrName','OthRealPrId','OthRealPrBirth','OthRealPrStartYear','OthRealPrTitle','OthRealPrSHRatio','GuOneRelWithPr','GuOneCompany','GuTwoRelWithPr','GuTwoCompany','SpouseCurAddrZip','SpouseCurAddrZipName','SpouseCurlAddress','SpouseMobileNo','SpouseTelAreaCode','SpouseTelNo','SpouseTelExt','GuOneCurAddrZip','GuOneCurAddrZipName','GuOneCurlAddress','GuOneTelAreaCode','GuOneTelNo','GuOneTelExt','GuOneMobileNo','GuTwoCurAddrZip','GuTwoCurAddrZipName','GuTwoCurlAddress','GuTwoTelAreaCode','GuTwoTelNo','GuTwoTelExt','GuTwoMobileNo','CompType','EmployeeNum','ShareholderNum'];
-            foreach ($fields as $field) {
-                if (isset($input[$field]) && $input[$field] != '') {
-                    $content[$field] = $input[$field];
+            // $fields 	= ['PrCurAddrZip','PrCurAddrZipName','PrCurlAddress','PrTelAreaCode','PrTelNo','PrTelExt','PrMobileNo','RealPr','IsPrSpouseGu','PrStartYear','PrEduLevel','OthRealPrRelWithPr','OthRealPrName','OthRealPrId','OthRealPrBirth','OthRealPrStartYear','OthRealPrTitle','OthRealPrSHRatio','GuOneRelWithPr','GuOneCompany','GuTwoRelWithPr','GuTwoCompany','SpouseCurAddrZip','SpouseCurAddrZipName','SpouseCurlAddress','SpouseMobileNo','SpouseTelAreaCode','SpouseTelNo','SpouseTelExt','GuOneCurAddrZip','GuOneCurAddrZipName','GuOneCurlAddress','GuOneTelAreaCode','GuOneTelNo','GuOneTelExt','GuOneMobileNo','GuTwoCurAddrZip','GuTwoCurAddrZipName','GuTwoCurlAddress','GuTwoTelAreaCode','GuTwoTelNo','GuTwoTelExt','GuTwoMobileNo','CompType','EmployeeNum','ShareholderNum'];
+            // foreach ($fields as $field) {
+            //     if (isset($input[$field])) {
+            //         $content[$field] = $input[$field];
+            //     }
+            // }
+            $content = $input;
+            $content['skbank_form'] = $input;
+
+            // 個人資料表加入歸戶關係
+            if(isset($input['target_id'])){
+                $this->load->model('loan/target_associate_model');
+                $associate_info = $this->target_associate_model->order_by('id', 'desc')->get_by(array(
+                    'user_id' => $user_id,
+                    'status' => 1,
+                    'target_id' => $input['target_id'],
+                    'is_applicant' => 0
+                ));
+                if($associate_info){
+                    // 與負責人關係轉為新光代號
+                    $associate_mapping = [
+                        '0' => 'A',
+                        '1' => 'B',
+                        '2' => 'C',
+                        '3' => 'D',
+                        '4' => 'E',
+                        '5' => 'F',
+                        '6' => 'G',
+                        '7' => 'H',
+                    ];
+                    $relationship = $associate_info->relationship;
+                    if(isset($associate_mapping[$relationship])){
+                        $associate_value = $associate_mapping[$relationship];
+                        $content['skbank_form']['OthRealPrRelWithPr'] = $associate_value;
+                        $content['skbank_form']['GuOneRelWithPr'] = $associate_value;
+                        $content['skbank_form']['GuTwoRelWithPr'] = $associate_value;
+                    }
                 }
             }
-            $content['skbank_form'] = $content;
+
             $res = $content;
 
             $param = [
@@ -3634,14 +3676,25 @@ class Certification extends REST_Controller {
             }
 
             $cer_profilejudicial = $this->config->item('cer_profilejudicial');
-            //選填欄位
-            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03'];
+
+            // 選填欄位
+            $fields 	= ['CompMajorAddrZip','CompMajorAddrZipName','CompMajorAddress','CompMajorCityName','CompMajorAreaName','CompMajorSecName','CompMajorSecNo','CompMajorOwnership','CompMajorSetting','CompTelAreaCode','CompTelNo','CompTelExt','BusinessType','Comptype','IsBizRegAddrSelfOwn','BizRegAddrOwner','IsBizAddrEqToBizRegAddr','RealBizAddrCityName','RealBizAddrAreaName','RealBizAddrRoadName','RealBizAddrRoadType','RealBizAddrSec','RealBizAddrLn','RealBizAddrAly','RealBizAddrNo','RealBizAddrNoExt','RealBizAddrFloor','RealBizAddrFloorExt','RealBizAddrRoom','RealBizAddrOtherMemo','IsRealBizAddrSelfOwn','RealBizAddrOwner','BizTaxFileWay','DirectorAName','DirectorAId','DirectorBName','DirectorBId','DirectorCName','DirectorCId','DirectorDName','DirectorDId','DirectorEName','DirectorEId','DirectorFName','DirectorFId','DirectorGName','DirectorGId','main_business','main_product','history','contectName','mainBuildSetting','DocTypeA03',
+
+                // 員工人數
+                'EmployeeNum',
+
+                // 股東人數
+                'ShareholderNum',
+
+                // 公司產業別
+                'CompDuType'
+            ];
             foreach ($fields as $field) {
                 if (isset($input[$field])) {
                     $content[$field] = $input[$field];
                 }
             }
-            $content['skbank_form'] = $content;
+            $content['skbank_form'] = $input;
 
             $file_fields = ['BizLandOwnership','BizHouseOwnership','RealLandOwnership','RealHouseOwnership','DocTypeA03'];
             //多個檔案欄位
@@ -3824,6 +3877,97 @@ class Certification extends REST_Controller {
                 $this->response(array('result' => 'SUCCESS'));
             } else {
                 $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {post} /v2/certification/criminal_record 認證 良民證
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationCriminalRecord
+     * @apiGroup Certification
+     * @apiDescription 上傳良民證。
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {Number} criminal_record_image 良民證照片 ( 圖片ID )
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse NotIncharge
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+     *
+     *
+     *
+     */
+    public function criminal_record_post()
+    {
+        $this->load->model('user/user_bankaccount_model');
+        $certification_id 	= CERTIFICATION_CRIMINALRECORD;
+        $certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $content	= [];
+
+            //上傳檔案欄位
+            $file_fields 	= ['criminal_record_image'];
+            foreach ($file_fields as $field) {
+                $image_id = intval($input[$field]);
+                if (!$image_id) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $rs = $this->log_image_model->get_by([
+                        'id'		=> $image_id,
+                        'user_id'	=> $this->user_info->originalID,
+                    ]);
+
+                    if($rs){
+                        $content[$field] = $rs->url;
+                    }else{
+                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    }
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'expire_time'		=> strtotime('+20 years'),
+                'content'			=> json_encode($content),
+                'status'            => 3,
+            ];
+
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $this->response(array('result' => 'SUCCESS'));
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
             }
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));

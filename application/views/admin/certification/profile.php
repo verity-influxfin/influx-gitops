@@ -105,6 +105,27 @@
                                                 <tr><td><span>配偶連絡電話-電話號碼</span></td><td><input class="sk-input" type="text" name="SpouseTelNo"></td></tr>
                                                 <tr><td><span>配偶連絡電話-分機碼</span></td><td><input class="sk-input" type="text" name="SpouseTelExt"></td></tr>
                                                 <tr><td><span>配偶連絡行動電話</span></td><td><input class="sk-input" type="text" name="SpouseMobileNo"></td></tr>
+                                                <tr><td><span>配偶是否擔任本案保證人</span></td><td>
+                                                    <select name="IsPrSpouseGu" class="table-input sk-input">
+                                                        <option value="A">1:是</option>
+                                                        <option value="B">2:否</option>
+                                                    </select>
+                                                </td></tr>
+                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td><td>
+                                                    <select name="OthRealPrRelWithPr" class="table-input sk-input">
+                                                        <option value="A">A:配偶</option>
+                                                        <option value="B">B:血親</option>
+                                                        <option value="C">C:姻親</option>
+                                                        <option value="D">D:股東</option>
+                                                        <option value="E">E:朋友</option>
+                                                        <option value="F">F:本人</option>
+                                                        <option value="G">G:其他</option>
+                                                        <option value="H">H:與經營有關之借戶職員</option>
+                                                    </select>
+                                                </td></tr>
+                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_從事本行業年度</span></td><td><input class="sk-input" type="text" name="OthRealPrStartYear" placeholder="格式:YYYY"></td></tr>
+                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_擔任本公司職務</span></td><td><input class="sk-input" type="text" name="OthRealPrTitle"></td></tr>
+                                                <tr><td><span>實際負責(經營)人_其他實際負責經營人_持股比率%</span></td><td><input class="sk-input" type="text" name="OthRealPrSHRatio"></td></tr>
                                                 <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
                                             </tbody>
                                         </table>
@@ -131,6 +152,18 @@
                                                         <option value="D">D:借戶</option>
                                                         <option value="E">E:其他民營企業</option>
                                                         <option value="F">F:無</option>
+                                                    </select>
+                                                </td></tr>
+                                                <tr><td><span>保證人甲_與借戶負責人之關係</span></td><td>
+                                                    <select name="GuOneRelWithPr" class="table-input sk-input">
+                                                        <option value="A">A:配偶</option>
+                                                        <option value="B">B:血親</option>
+                                                        <option value="C">C:姻親</option>
+                                                        <option value="D">D:股東</option>
+                                                        <option value="E">E:朋友</option>
+                                                        <option value="F">F:本人</option>
+                                                        <option value="G">G:其他</option>
+                                                        <option value="H">H:與經營有關之借戶職員</option>
                                                     </select>
                                                 </td></tr>
                                                 <tr><td><span>實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</span></td><td>
@@ -174,6 +207,18 @@
                                                         <option value="D">D:借戶</option>
                                                         <option value="E">E:其他民營企業</option>
                                                         <option value="F">F:無</option>
+                                                    </select>
+                                                </td></tr>
+                                                <tr><td><span>保證人乙_與借戶負責人之關係</span></td><td>
+                                                    <select name="GuTwoRelWithPr" class="table-input sk-input">
+                                                        <option value="A">A:配偶</option>
+                                                        <option value="B">B:血親</option>
+                                                        <option value="C">C:姻親</option>
+                                                        <option value="D">D:股東</option>
+                                                        <option value="E">E:朋友</option>
+                                                        <option value="F">F:本人</option>
+                                                        <option value="G">G:其他</option>
+                                                        <option value="H">H:與經營有關之借戶職員</option>
                                                     </select>
                                                 </td></tr>
                                                 <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
