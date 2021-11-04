@@ -290,7 +290,6 @@ Route::get('/borrowLink', function () {
     return view('borrow');
 });
 
-
 //NewYear card Game
 
 Route::get('/cardgame', function () {
@@ -302,8 +301,8 @@ Route::post('setGamePrize','Cardgamecontroller@setGamePrize');
 
 Route::view('/cardgame/{path?}', 'cardgame');
 
-
-Route::view('/{path?}', 'index');
+// 全站搜尋
+Route::get('/search', 'SearchController@page');
 
 Route::get('/campaign/{name}/{path?}', function (string $name, string $path='index') {
 
@@ -321,3 +320,5 @@ Route::get('/campaign/{name}/{path?}', function (string $name, string $path='ind
     }
     throw new NotFoundHttpException();
 });
+
+Route::view('/{path?}', 'index');
