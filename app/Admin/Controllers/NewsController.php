@@ -96,7 +96,7 @@ class NewsController extends Controller
 		$grid->filter(function($filter){
 			$filter->disableIdFilter();
 				// 在这里添加字段过滤器
-                $filter->ilike('post_title', '標題');
+                $filter->like('post_title', '標題');
                 $filter->equal('isActive','是否上架')->radio([
                     ''   => '全部',
                     'on'    => '是',

@@ -97,8 +97,8 @@ class EventCampusMemberController extends Controller
 		$grid->filter(function($filter){
 			$filter->disableIdFilter();
 				// 在这里添加字段过滤器
-				$filter->ilike('school', '學校名稱');
-                $filter->ilike('name', '隊伍名稱');
+				$filter->like('school', '學校名稱');
+                $filter->like('name', '隊伍名稱');
 		});
 		// 關閉搜尋
 		//$grid->disableFilter();

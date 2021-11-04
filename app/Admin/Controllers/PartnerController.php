@@ -96,8 +96,8 @@ class PartnerController extends Controller
 		$grid->filter(function($filter){
 			$filter->disableIdFilter();
 				// 在这里添加字段过滤器
-                $filter->ilike('name', '名稱');
-                $filter->ilike('title', '標題');
+                $filter->like('name', '名稱');
+                $filter->like('title', '標題');
                 $filter->equal('type','單位類型')->radio([
                     ''   => '全部',
                     'society' => '不知道是啥的分類，看到請告訴我打啥',
