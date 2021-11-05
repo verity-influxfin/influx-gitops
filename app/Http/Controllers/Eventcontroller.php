@@ -85,7 +85,7 @@ class Eventcontroller extends BaseController
             DB::table('event_users')->insert($registerData);
         }
 
-        return response()->json("", $data['result'] === "SUCCESS" ? 200 : 400);
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
     }
 
 	public function bankEvent(Request $request)
