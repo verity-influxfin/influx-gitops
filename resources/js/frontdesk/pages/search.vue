@@ -12,7 +12,7 @@
     </div>
     <div class="search-block">
       <div class="text">關鍵字</div>
-      <span class="loupe">
+      <div class="search-input-group">
         <input
           class="search-input"
           placeholder="搜尋..."
@@ -21,7 +21,12 @@
           v-model="searchInput"
           @keyup.enter="fetchSearchData({})"
         />
-      </span>
+        <img
+          class="loupe"
+          src="../asset/images/loupe.svg"
+          @click="fetchSearchData({})"
+        />
+      </div>
 
       <div class="text" v-if="!isPaginationEmpty">
         共有
@@ -69,41 +74,43 @@
             </div>
           </div>
         </div>
-        <ul
+        <div
           class="pagination"
           v-if="!isPaginationEmpty && isFind && totalPage > 0"
         >
-          <li class="page-item">
+          <div class="page-item">
             <a
-              class="page-link"
+              class="page-link before"
               @click.prevent="
                 toPage({ currentPage: pagination.currentPage - 1 })
               "
             >
               前一頁
             </a>
-          </li>
-          <li
-            class="page-item"
-            v-for="i in totalPage"
-            :key="i"
-            :class="{ active: pagination.currentPage === i }"
-          >
-            <a class="page-link" @click.prevent="toPage({ currentPage: i })">
-              {{ i }}
-            </a>
-          </li>
-          <li class="page-item">
+          </div>
+          <div class="page-nums">
+            <div
+              class="page-item"
+              v-for="i in totalPage"
+              :key="i"
+              :class="{ active: pagination.currentPage === i }"
+            >
+              <a class="page-link" @click.prevent="toPage({ currentPage: i })">
+                {{ i }}
+              </a>
+            </div>
+          </div>
+          <div class="page-item">
             <a
-              class="page-link"
+              class="page-link after"
               @click.prevent="
                 toPage({ currentPage: pagination.currentPage + 1 })
               "
             >
               後一頁
             </a>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
 
       <div
@@ -145,41 +152,43 @@
             </div>
           </div>
         </div>
-        <ul
+        <div
           class="pagination"
           v-if="!isPaginationEmpty && isFind && totalPage > 0"
         >
-          <li class="page-item">
+          <div class="page-item">
             <a
-              class="page-link"
+              class="page-link before"
               @click.prevent="
                 toPage({ currentPage: pagination.currentPage - 1 })
               "
             >
               前一頁
             </a>
-          </li>
-          <li
-            class="page-item"
-            v-for="i in totalPage"
-            :key="i"
-            :class="{ active: pagination.currentPage === i }"
-          >
-            <a class="page-link" @click.prevent="toPage({ currentPage: i })">
-              {{ i }}
-            </a>
-          </li>
-          <li class="page-item">
+          </div>
+          <div class="page-nums">
+            <div
+              class="page-item"
+              v-for="i in totalPage"
+              :key="i"
+              :class="{ active: pagination.currentPage === i }"
+            >
+              <a class="page-link" @click.prevent="toPage({ currentPage: i })">
+                {{ i }}
+              </a>
+            </div>
+          </div>
+          <div class="page-item">
             <a
-              class="page-link"
+              class="page-link after"
               @click.prevent="
                 toPage({ currentPage: pagination.currentPage + 1 })
               "
             >
               後一頁
             </a>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
       <div
         class="item"
@@ -189,55 +198,53 @@
         常見問題
         <div class="rwd" :class="{ active: item === 3 }">-</div>
         <!-- rwd  content-->
-        <div
-          class="rwd content m-0"
-          :class="{ active: searchType === 'qa' }"
-          v-if="!loading"
-        >
-          <div class="no-found" v-show="!isFind">
-            <img
-              class="no-found-img"
-              src="../asset/images/no-found.png"
-              alt=""
-            />
-            <div class="no-found-text">
-              找不到符合搜尋字詞「<span class="text-red">{{ keyword }}</span
-              >」
-            </div>
-            <div class="no-found-text">
-              麻煩您在輸入一次
-            </div>
+      </div>
+      <div
+        class="rwd content m-0"
+        :class="{ active: searchType === 'qa' }"
+        v-if="!loading"
+      >
+        <div class="no-found" v-show="!isFind">
+          <img class="no-found-img" src="../asset/images/no-found.png" alt="" />
+          <div class="no-found-text">
+            找不到符合搜尋字詞「<span class="text-red">{{ keyword }}</span
+            >」
           </div>
-          <div v-show="isFind">
-            <div
-              class="content-item"
-              v-for="(x, i) in list"
-              :key="i"
-              @click="openLink(x.link)"
-            >
-              <div class="item-title">{{ x.title }}</div>
-              <div class="item-text">
-                {{ x.snippet }}
-                <!-- <span class="text-red">AAA</span>
-            我是文字我是文字我是文字 -->
-              </div>
-            </div>
+          <div class="no-found-text">
+            麻煩您在輸入一次
           </div>
-          <ul
-            class="pagination"
-            v-if="!isPaginationEmpty && isFind && totalPage > 0"
+        </div>
+        <div v-show="isFind">
+          <div
+            class="content-item"
+            v-for="(x, i) in list"
+            :key="i"
+            @click="openLink(x.link)"
           >
-            <li class="page-item">
-              <a
-                class="page-link"
-                @click.prevent="
-                  toPage({ currentPage: pagination.currentPage - 1 })
-                "
-              >
-                前一頁
-              </a>
-            </li>
-            <li
+            <div class="item-title">{{ x.title }}</div>
+            <div class="item-text">
+              {{ x.snippet }}
+              <!-- <span class="text-red">AAA</span>
+            我是文字我是文字我是文字 -->
+            </div>
+          </div>
+        </div>
+        <div
+          class="pagination"
+          v-if="!isPaginationEmpty && isFind && totalPage > 0"
+        >
+          <div class="page-item">
+            <a
+              class="page-link before"
+              @click.prevent="
+                toPage({ currentPage: pagination.currentPage - 1 })
+              "
+            >
+              前一頁
+            </a>
+          </div>
+          <div class="page-nums">
+            <div
               class="page-item"
               v-for="i in totalPage"
               :key="i"
@@ -246,18 +253,18 @@
               <a class="page-link" @click.prevent="toPage({ currentPage: i })">
                 {{ i }}
               </a>
-            </li>
-            <li class="page-item">
-              <a
-                class="page-link"
-                @click.prevent="
-                  toPage({ currentPage: pagination.currentPage + 1 })
-                "
-              >
-                後一頁
-              </a>
-            </li>
-          </ul>
+            </div>
+          </div>
+          <div class="page-item">
+            <a
+              class="page-link after"
+              @click.prevent="
+                toPage({ currentPage: pagination.currentPage + 1 })
+              "
+            >
+              後一頁
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -287,37 +294,39 @@
           </div>
         </div>
       </div>
-      <ul
+      <div
         class="pagination"
         v-if="!isPaginationEmpty && isFind && totalPage > 0"
       >
-        <li class="page-item">
+        <div class="page-item">
           <a
-            class="page-link"
+            class="page-link before"
             @click.prevent="toPage({ currentPage: pagination.currentPage - 1 })"
           >
             前一頁
           </a>
-        </li>
-        <li
-          class="page-item"
-          v-for="i in totalPage"
-          :key="i"
-          :class="{ active: pagination.currentPage === i }"
-        >
-          <a class="page-link" @click.prevent="toPage({ currentPage: i })">
-            {{ i }}
-          </a>
-        </li>
-        <li class="page-item">
+        </div>
+        <div class="page-nums">
+          <div
+            class="page-item"
+            v-for="i in totalPage"
+            :key="i"
+            :class="{ active: pagination.currentPage === i }"
+          >
+            <a class="page-link" @click.prevent="toPage({ currentPage: i })">
+              {{ i }}
+            </a>
+          </div>
+        </div>
+        <div class="page-item">
           <a
-            class="page-link"
+            class="page-link after"
             @click.prevent="toPage({ currentPage: pagination.currentPage + 1 })"
           >
             後一頁
           </a>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -332,13 +341,7 @@ export default {
       searchInput: '',
       searchType: 'all',
       keyword: '',
-      list: [
-        {
-          "title": "\u7a0b\u5f0f\u4ea4\u6613\uff1a\u6230\u52dd\u4eba\u6027\u7684\u5f31\u9ede\uff1f - inFlux\u666e\u532f\u91d1\u878d\u79d1\u6280",
-          "link": "https://www.influxfin.com/articlepage?q=knowledge-8280",
-          "snippet": "2021\u5e744\u670822\u65e5 ... \u7a0b\u5f0f\u4ea4\u6613\u53ef\u4ee5\u900f\u904e\u6b77\u53f2\u6578\u64da\u53bb\u56de\u6e2c\uff08back-testing\uff09\u4ea4\u6613\u7b56\u7565\u7684\u904e\u5f80\u5831\u916c\u7387\uff0c\u4f7f\u6295\u8cc7\u4eba\u5728\u6295\u5165\u8cc7\u91d1\u3001\u63a1\u884c\u4ea4\u6613\u7b56\u7565\u524d\uff0c\u5373\u53ef\u9810\u671f\u53ef\u80fd\u7684\u98a8\u96aa\u548c\u6536\u76ca\uff0c\u4e26\u9069\u7576\u5730\u00a0..."
-        }
-      ],
+      list: [],
       pagination: {},
     }
   },
@@ -387,6 +390,7 @@ export default {
       if (type) {
         this.searchType = type
       }
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       return this.fetchSearchData({ currentPage, type: this.searchType })
     }
   },
@@ -479,6 +483,10 @@ export default {
         color: #4873a2;
       }
     }
+    .search-input-group {
+      position: relative;
+      margin: 0 18px;
+    }
     .search-input {
       position: relative;
       width: 450px;
@@ -496,18 +504,9 @@ export default {
       color: #4d4d4d;
     }
     .loupe {
-      position: relative;
-      margin: 0 18px;
-      &::after {
-        position: absolute;
-        top: 11.5px;
-        right: 34px;
-        content: "";
-        width: 22px;
-        height: 22px;
-        display: block;
-        background-image: url("../asset/images/loupe.svg");
-      }
+      position: absolute;
+      right: 10px;
+      top: 11px;
     }
   }
   .sub-pages-header {
@@ -608,10 +607,22 @@ export default {
     }
   }
   .pagination {
-    max-width: 900px;
-    overflow-x: auto;
+    .page-nums {
+      max-width: 900px;
+      display: flex;
+      overflow: auto;
+    }
     justify-content: center;
     padding-bottom: 80px;
+    .page-item.active {
+      .page-link {
+        color: #fff;
+      }
+    }
+    .page-link {
+      color: #326398;
+      border: 1px solid #326398;
+    }
   }
 }
 @media screen and (max-width: 767px) {
@@ -637,24 +648,14 @@ export default {
           font-size: 22px;
         }
       }
+      .search-input-group {
+        position: relative;
+        margin: 0 0 0 14px;
+      }
       .search-input {
         position: relative;
         width: 250px;
         padding: 4px 12px;
-      }
-      .loupe {
-        position: relative;
-        margin-bottom: 8px;
-        &::after {
-          position: absolute;
-          top: 9px;
-          right: 12px;
-          content: "";
-          width: 22px;
-          height: 22px;
-          display: block;
-          background-image: url("../asset/images/loupe.svg");
-        }
       }
     }
     .sub-pages-header {
@@ -706,6 +707,9 @@ export default {
       }
     }
     .pagination {
+      .page-nums {
+        max-width: 55%;
+      }
       justify-content: center;
       padding-bottom: 40px;
       border-radius: 0;
