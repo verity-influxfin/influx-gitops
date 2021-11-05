@@ -19,6 +19,7 @@
           ref="searchInput"
           type="text"
           v-model="searchInput"
+          @keyup.enter="fetchSearchData({})"
         />
       </span>
 
@@ -38,35 +39,73 @@
         <div class="rwd" :class="{ active: searchType === 'all' }">-</div>
       </div>
       <!-- rwd  content-->
-      <div class="rwd content" :class="{ active: item === 1 }">
+      <div
+        class="rwd content m-0"
+        :class="{ active: searchType === 'all' }"
+        v-if="!loading"
+      >
         <div class="no-found" v-show="!isFind">
           <img class="no-found-img" src="../asset/images/no-found.png" alt="" />
           <div class="no-found-text">
-            找不到符合搜尋字詞「<span class="text-red">AAA</span>」
+            找不到符合搜尋字詞「<span class="text-red">{{ keyword }}</span
+            >」
           </div>
           <div class="no-found-text">
             麻煩您在輸入一次
           </div>
         </div>
         <div v-show="isFind">
-          <div class="content-item" v-for="i in 8" :key="i">
-            <div class="item-title">我是文字我是文字我是文字</div>
+          <div
+            class="content-item"
+            v-for="(x, i) in list"
+            :key="i"
+            @click="openLink(x.link)"
+          >
+            <div class="item-title">{{ x.title }}</div>
             <div class="item-text">
-              {{ i }} 我是文字我是文字我是文字
-              <span class="text-red">AAA</span>
-              我是文字我是文字我是文字
+              {{ x.snippet }}
+              <!-- <span class="text-red">AAA</span>
+            我是文字我是文字我是文字 -->
             </div>
           </div>
         </div>
-
-        <ul class="pagination">
-          <li class="page-item"><a class="page-link" href="#">前一頁</a></li>
-          <li class="page-item" v-for="i in 5" :key="i">
-            <a class="page-link" href="#">{{ i }}</a>
+        <ul
+          class="pagination"
+          v-if="!isPaginationEmpty && isFind && totalPage > 0"
+        >
+          <li class="page-item">
+            <a
+              class="page-link"
+              @click.prevent="
+                toPage({ currentPage: pagination.currentPage - 1 })
+              "
+            >
+              前一頁
+            </a>
           </li>
-          <li class="page-item"><a class="page-link" href="#">後一頁</a></li>
+          <li
+            class="page-item"
+            v-for="i in totalPage"
+            :key="i"
+            :class="{ active: pagination.currentPage === i }"
+          >
+            <a class="page-link" @click.prevent="toPage({ currentPage: i })">
+              {{ i }}
+            </a>
+          </li>
+          <li class="page-item">
+            <a
+              class="page-link"
+              @click.prevent="
+                toPage({ currentPage: pagination.currentPage + 1 })
+              "
+            >
+              後一頁
+            </a>
+          </li>
         </ul>
       </div>
+
       <div
         class="item"
         :class="{ active: searchType === 'blog' }"
@@ -75,6 +114,73 @@
         小學堂
         <div class="rwd" :class="{ active: item === 2 }">-</div>
       </div>
+      <!-- rwd  content-->
+      <div
+        class="rwd content m-0"
+        :class="{ active: searchType === 'blog' }"
+        v-if="!loading"
+      >
+        <div class="no-found" v-show="!isFind">
+          <img class="no-found-img" src="../asset/images/no-found.png" alt="" />
+          <div class="no-found-text">
+            找不到符合搜尋字詞「<span class="text-red">{{ keyword }}</span
+            >」
+          </div>
+          <div class="no-found-text">
+            麻煩您在輸入一次
+          </div>
+        </div>
+        <div v-show="isFind">
+          <div
+            class="content-item"
+            v-for="(x, i) in list"
+            :key="i"
+            @click="openLink(x.link)"
+          >
+            <div class="item-title">{{ x.title }}</div>
+            <div class="item-text">
+              {{ x.snippet }}
+              <!-- <span class="text-red">AAA</span>
+            我是文字我是文字我是文字 -->
+            </div>
+          </div>
+        </div>
+        <ul
+          class="pagination"
+          v-if="!isPaginationEmpty && isFind && totalPage > 0"
+        >
+          <li class="page-item">
+            <a
+              class="page-link"
+              @click.prevent="
+                toPage({ currentPage: pagination.currentPage - 1 })
+              "
+            >
+              前一頁
+            </a>
+          </li>
+          <li
+            class="page-item"
+            v-for="i in totalPage"
+            :key="i"
+            :class="{ active: pagination.currentPage === i }"
+          >
+            <a class="page-link" @click.prevent="toPage({ currentPage: i })">
+              {{ i }}
+            </a>
+          </li>
+          <li class="page-item">
+            <a
+              class="page-link"
+              @click.prevent="
+                toPage({ currentPage: pagination.currentPage + 1 })
+              "
+            >
+              後一頁
+            </a>
+          </li>
+        </ul>
+      </div>
       <div
         class="item"
         :class="{ active: searchType === 'qa' }"
@@ -82,13 +188,84 @@
       >
         常見問題
         <div class="rwd" :class="{ active: item === 3 }">-</div>
+        <!-- rwd  content-->
+        <div
+          class="rwd content m-0"
+          :class="{ active: searchType === 'qa' }"
+          v-if="!loading"
+        >
+          <div class="no-found" v-show="!isFind">
+            <img
+              class="no-found-img"
+              src="../asset/images/no-found.png"
+              alt=""
+            />
+            <div class="no-found-text">
+              找不到符合搜尋字詞「<span class="text-red">{{ keyword }}</span
+              >」
+            </div>
+            <div class="no-found-text">
+              麻煩您在輸入一次
+            </div>
+          </div>
+          <div v-show="isFind">
+            <div
+              class="content-item"
+              v-for="(x, i) in list"
+              :key="i"
+              @click="openLink(x.link)"
+            >
+              <div class="item-title">{{ x.title }}</div>
+              <div class="item-text">
+                {{ x.snippet }}
+                <!-- <span class="text-red">AAA</span>
+            我是文字我是文字我是文字 -->
+              </div>
+            </div>
+          </div>
+          <ul
+            class="pagination"
+            v-if="!isPaginationEmpty && isFind && totalPage > 0"
+          >
+            <li class="page-item">
+              <a
+                class="page-link"
+                @click.prevent="
+                  toPage({ currentPage: pagination.currentPage - 1 })
+                "
+              >
+                前一頁
+              </a>
+            </li>
+            <li
+              class="page-item"
+              v-for="i in totalPage"
+              :key="i"
+              :class="{ active: pagination.currentPage === i }"
+            >
+              <a class="page-link" @click.prevent="toPage({ currentPage: i })">
+                {{ i }}
+              </a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                @click.prevent="
+                  toPage({ currentPage: pagination.currentPage + 1 })
+                "
+              >
+                後一頁
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="content m-0" v-if="!loading">
       <div class="no-found" v-show="!isFind">
         <img class="no-found-img" src="../asset/images/no-found.png" alt="" />
         <div class="no-found-text">
-          找不到符合搜尋字詞「<span class="text-red">{{ searchInput }}</span
+          找不到符合搜尋字詞「<span class="text-red">{{ keyword }}</span
           >」
         </div>
         <div class="no-found-text">
@@ -151,10 +328,17 @@ export default {
   data () {
     // type all blog qa
     return {
-      loading: true,
+      loading: false,
       searchInput: '',
       searchType: 'all',
-      list: [],
+      keyword: '',
+      list: [
+        {
+          "title": "\u7a0b\u5f0f\u4ea4\u6613\uff1a\u6230\u52dd\u4eba\u6027\u7684\u5f31\u9ede\uff1f - inFlux\u666e\u532f\u91d1\u878d\u79d1\u6280",
+          "link": "https://www.influxfin.com/articlepage?q=knowledge-8280",
+          "snippet": "2021\u5e744\u670822\u65e5 ... \u7a0b\u5f0f\u4ea4\u6613\u53ef\u4ee5\u900f\u904e\u6b77\u53f2\u6578\u64da\u53bb\u56de\u6e2c\uff08back-testing\uff09\u4ea4\u6613\u7b56\u7565\u7684\u904e\u5f80\u5831\u916c\u7387\uff0c\u4f7f\u6295\u8cc7\u4eba\u5728\u6295\u5165\u8cc7\u91d1\u3001\u63a1\u884c\u4ea4\u6613\u7b56\u7565\u524d\uff0c\u5373\u53ef\u9810\u671f\u53ef\u80fd\u7684\u98a8\u96aa\u548c\u6536\u76ca\uff0c\u4e26\u9069\u7576\u5730\u00a0..."
+        }
+      ],
       pagination: {},
     }
   },
@@ -168,16 +352,19 @@ export default {
       })
   },
   methods: {
-    fetchSearchData ({ currentPage, type }) {
+    fetchSearchData ({ currentPage }) {
       let uri = `/api/v1/search?q=${this.searchInput}`
+      this.keyword = this.searchInput
       if (currentPage) {
         uri += `&currentPage=${currentPage}`
       }
-      if (type) {
-        uri += `&type=${type}`
+      if (this.searchType) {
+        uri += `&type=${this.searchType}`
       }
       if (this.searchInput) {
         this.loading = true
+        this.list = []
+        this.pagination = {}
         return axios.get(uri).then((x) => {
           const obj = x.data.data
           // console.log(obj)
