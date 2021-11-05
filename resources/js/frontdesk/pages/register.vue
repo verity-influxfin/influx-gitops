@@ -272,6 +272,7 @@ export default {
       const name = this.recommenderName
       if (nick_name.length > 0 || name.length > 0) {
         if (nick_name.length < 1 || name.length < 1) {
+          alert('暱稱及推薦人如需填寫必須一起填寫')
           return
         }
       }
