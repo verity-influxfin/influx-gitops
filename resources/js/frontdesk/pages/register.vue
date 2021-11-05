@@ -530,8 +530,6 @@ export default {
 
 @media screen and (max-width: 767px) {
   .register-wrapper {
-    height: 95vh;
-
     .register-dialog {
       width: fit-content;
       margin: 0px;
