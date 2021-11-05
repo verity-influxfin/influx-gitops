@@ -22,16 +22,20 @@
         />
       </span>
 
-      <div class="text">
+      <div class="text" v-if="!isPaginationEmpty">
         共有
-        <span class="num">36</span>
+        <span class="num">{{ pagination.total }}</span>
         筆搜尋結果
       </div>
     </div>
     <div class="sub-pages-header">
-      <div class="item" :class="{ active: item === 1 }" @click="item = 1">
+      <div
+        class="item"
+        :class="{ active: searchType === 'all' }"
+        @click="toPage({ type: 'all' })"
+      >
         頁面內容
-        <div class="rwd" :class="{ active: item === 1 }">-</div>
+        <div class="rwd" :class="{ active: searchType === 'all' }">-</div>
       </div>
       <!-- rwd  content-->
       <div class="rwd content" :class="{ active: item === 1 }">
@@ -63,62 +67,159 @@
           <li class="page-item"><a class="page-link" href="#">後一頁</a></li>
         </ul>
       </div>
-      <div class="item" :class="{ active: item === 2 }" @click="item = 2">
+      <div
+        class="item"
+        :class="{ active: searchType === 'blog' }"
+        @click="toPage({ type: 'blog' })"
+      >
         小學堂
         <div class="rwd" :class="{ active: item === 2 }">-</div>
       </div>
-      <div class="item" :class="{ active: item === 3 }" @click="item = 3">
+      <div
+        class="item"
+        :class="{ active: searchType === 'qa' }"
+        @click="toPage({ type: 'qa' })"
+      >
         常見問題
         <div class="rwd" :class="{ active: item === 3 }">-</div>
       </div>
     </div>
-    <div class="content m-0">
+    <div class="content m-0" v-if="!loading">
       <div class="no-found" v-show="!isFind">
         <img class="no-found-img" src="../asset/images/no-found.png" alt="" />
         <div class="no-found-text">
-          找不到符合搜尋字詞「<span class="text-red">AAA</span>」
+          找不到符合搜尋字詞「<span class="text-red">{{ searchInput }}</span
+          >」
         </div>
         <div class="no-found-text">
           麻煩您在輸入一次
         </div>
       </div>
       <div v-show="isFind">
-        <div class="content-item" v-for="i in 8" :key="i">
-          <div class="item-title">我是文字我是文字我是文字</div>
+        <div
+          class="content-item"
+          v-for="(x, i) in list"
+          :key="i"
+          @click="openLink(x.link)"
+        >
+          <div class="item-title">{{ x.title }}</div>
           <div class="item-text">
-            {{ i }} 我是文字我是文字我是文字
-            <span class="text-red">AAA</span>
-            我是文字我是文字我是文字
+            {{ x.snippet }}
+            <!-- <span class="text-red">AAA</span>
+            我是文字我是文字我是文字 -->
           </div>
         </div>
       </div>
-
-      <ul class="pagination">
-        <li class="page-item"><a class="page-link" href="#">前一頁</a></li>
-        <li class="page-item" v-for="i in 5" :key="i">
-          <a class="page-link" href="#">{{ i }}</a>
+      <ul
+        class="pagination"
+        v-if="!isPaginationEmpty && isFind && totalPage > 0"
+      >
+        <li class="page-item">
+          <a
+            class="page-link"
+            @click.prevent="toPage({ currentPage: pagination.currentPage - 1 })"
+          >
+            前一頁
+          </a>
         </li>
-        <li class="page-item"><a class="page-link" href="#">後一頁</a></li>
+        <li
+          class="page-item"
+          v-for="i in totalPage"
+          :key="i"
+          :class="{ active: pagination.currentPage === i }"
+        >
+          <a class="page-link" @click.prevent="toPage({ currentPage: i })">
+            {{ i }}
+          </a>
+        </li>
+        <li class="page-item">
+          <a
+            class="page-link"
+            @click.prevent="toPage({ currentPage: pagination.currentPage + 1 })"
+          >
+            後一頁
+          </a>
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data () {
+    // type all blog qa
     return {
-      item: 1,
-      isFind: true,
+      loading: true,
       searchInput: '',
+      searchType: 'all',
+      list: [],
+      pagination: {},
     }
   },
   mounted () {
     this.searchInput = this.$route.query.q ?? ''
-    this.$nextTick(() => {
-      this.$refs.searchInput.focus()
-    })
-  }
+    this.fetchSearchData({})
+      .then(() => {
+        this.$nextTick(() => {
+          this.$refs.searchInput.focus()
+        })
+      })
+  },
+  methods: {
+    fetchSearchData ({ currentPage, type }) {
+      let uri = `/api/v1/search?q=${this.searchInput}`
+      if (currentPage) {
+        uri += `&currentPage=${currentPage}`
+      }
+      if (type) {
+        uri += `&type=${type}`
+      }
+      if (this.searchInput) {
+        this.loading = true
+        return axios.get(uri).then((x) => {
+          const obj = x.data.data
+          // console.log(obj)
+          this.list = obj.list
+          this.pagination = obj.pagination
+        })
+          .catch(err => console.error(err))
+          .finally(() => {
+            this.loading = false
+          })
+      }
+    },
+    openLink (link) {
+      window.open(link)
+    },
+    toPage ({ currentPage, type }) {
+      if (currentPage > this.totalPage || currentPage < 1) {
+        return
+      }
+      if (type) {
+        this.searchType = type
+      }
+      return this.fetchSearchData({ currentPage, type: this.searchType })
+    }
+  },
+  computed: {
+    isPaginationEmpty () {
+      const { pagination } = this
+      return Object.keys(pagination).length < 1
+    },
+    isFind () {
+      const { list } = this
+      return list.length > 0
+    },
+    totalPage () {
+      const { pagination } = this
+      if (pagination.total && pagination.perPage) {
+        return Math.floor(pagination.total / pagination.perPage) + 1
+      }
+      return 0
+    }
+  },
 }
 </script>
 
@@ -166,7 +267,6 @@ export default {
   .search-block {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 12px 34px;
     border-radius: 6px;
     background-color: #efefef;
@@ -210,6 +310,7 @@ export default {
     }
     .loupe {
       position: relative;
+      margin: 0 18px;
       &::after {
         position: absolute;
         top: 11.5px;
@@ -266,6 +367,10 @@ export default {
     display: flex;
     flex-direction: column;
     .content-item {
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
       padding-bottom: 40px;
       .item-title {
         font-family: NotoSansTC;
@@ -316,6 +421,8 @@ export default {
     }
   }
   .pagination {
+    max-width: 900px;
+    overflow-x: auto;
     justify-content: center;
     padding-bottom: 80px;
   }
