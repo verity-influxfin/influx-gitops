@@ -25,6 +25,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="swiper-slide" v-for="item in swiperItems" :key="item.desktop">
+                    <a :href="item.link">
+                        <img :src="item.desktop" class="旗幟圖片">
+                        <img :src="item.mobile" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
                 <div class="swiper-slide">
                     <img src="/images/skBankIndex.jpg" class="旗幟圖片">
                     <img src="/images/skBankIndexM.jpg" class="旗幟圖片 旗幟圖片_手機的">
