@@ -25,25 +25,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="swiper-slide" v-for="item in swiperItems" :key="item.desktop">
-                    <a :href="item.link">
-                        <img :src="item.desktop" class="旗幟圖片">
-                        <img :src="item.mobile" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
-                <div class="swiper-slide">
-                    <img src="/images/oBankIndexBanner.jpg" class="旗幟圖片">
-                    <img src="/images/oBankIndexBannerM.jpg" class="旗幟圖片 旗幟圖片_手機的">
-
-                    <div class="王道銀行功能">
-                        <a href="/obank" class="連結" target="_blank">
-                            <img src="/images/oBankIndexButtonLeft.svg">
-                        </a>
-                        <a href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" class="連結" target="_blank">
-                            <img src="/images/oBankIndexButtonRight.svg">
-                        </a>
-                    </div>
-                </div>
                 <div class="swiper-slide">
                     <img src="/images/skBankIndex.jpg" class="旗幟圖片">
                     <img src="/images/skBankIndexM.jpg" class="旗幟圖片 旗幟圖片_手機的">
