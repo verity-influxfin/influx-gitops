@@ -851,8 +851,8 @@ class Sales extends MY_Admin_Controller {
 
             foreach ($list as $value) {
                 // 找不到虛擬帳號
-                $settings = json_decode($value['settings'], true) ?? [];
-                if(!isset($bankAccountList[$value['user_id']]) ||
+                $settings = json_decode($value['settings'], TRUE);
+                if($settings === FALSE || !isset($bankAccountList[$value['user_id']]) ||
                     !isset($settings['investor']) || !isset($bankAccountList[$value['user_id']][$settings['investor']])
                 ) {
                     continue;
@@ -927,10 +927,6 @@ class Sales extends MY_Admin_Controller {
         }
 
         $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "放款成功 ".count($successIdList)." 筆，共 ".$totalAmount." 元。"])->send();
-    }
-
-    public function promote_receipt() {
-        $this->load->view('email/promote_receipt');
     }
 
     public function promote_reward_list() {

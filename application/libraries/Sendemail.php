@@ -284,11 +284,30 @@ class Sendemail
         return false;
     }
 
-    public function send_promote_receipt($title="",$content=""){
-        $admin_email 	= $this->CI->config->item('admin_email');
-        $mail_event = $this->CI->config->item('mail_event');
-        $content 		= $this->CI->parser->parse('email/admin_notification', array("title" => $title , "content"=> $content , "url"=> base_url(), "type"=> 'b02', "mail_event"=> $mail_event),TRUE);
-        return $this->send($admin_email,$title,$content);
+    /**
+     * 寄送推薦碼獎勵的勞務報酬單
+     * @param $mail
+     * @param $name
+     * @param $id_number
+     * @param $phone
+     * @param $address
+     * @param $time
+     * @param $bank_account
+     * @param $amount
+     * @param $income_tax
+     * @param $health_premium
+     * @param $net_amount
+     * @return bool
+     */
+    public function send_promote_receipt($mail, $name, $id_number, $phone, $address, $time, $bank_account, $amount, $income_tax, $health_premium, $net_amount): bool
+    {
+	    $title = "勞務報酬單";
+        $content 		= $this->CI->parser->parse('email/promote_receipt', [
+            "name" => $name, "id_number" => $id_number, "phone" => $phone, "address" => $address, "time" => $time,
+            "bank_account" => $bank_account, "amount" => $amount, "income_tax" => $income_tax, "health_premium" => $health_premium,
+            "net_amount" => $net_amount
+            ],TRUE);
+        return $this->send($mail,$title,$content);
     }
 
 }

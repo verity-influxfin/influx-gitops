@@ -1792,6 +1792,7 @@ $config['transaction_type_name'] = [
     'charge_normal' => '還款',
     'unknown_refund' => '退款-不明原因',
     'platform_law_fee' => '法催執行費',
+    'promote' => '推薦獎金',
 ];
 
 $config['certifications'] = [
@@ -2143,4 +2144,4 @@ $config['cer_profilejudicial'] = [
 ];
 
 // 推薦碼需要的徵信項目
-$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD];
+$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];

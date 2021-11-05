@@ -189,4 +189,15 @@ class user_qrcode_model extends MY_Model
 
         return $userPromoteCode;
     }
+
+    public function autoRenewTime($alias) {
+        $this->_database
+            ->from('`p2p_user`.`user_qrcode`')
+            ->where('status', PROMOTE_STATUS_AVAILABLE)
+            ->where('DATE_SUB(end_time, INTERVAL 1 DAY) <=', "'".date('Y-m-d H:i:s')."'", FALSE)
+            ->where('alias', $alias)
+            ->set('end_time', 'DATE_ADD(end_time, INTERVAL 1 YEAR)', FALSE)
+            ->update();
+
+    }
 }

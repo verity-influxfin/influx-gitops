@@ -53,4 +53,23 @@ class Qrcode_reward_model extends MY_Model
 
         return $this->_database->get()->result_array();
     }
+
+    public function getUninformedRewardList() {
+        $this->_database->select('id, user_qrcode_id, amount, updated_at, json_data AS reward_data')
+            ->from('`p2p_transaction`.`qrcode_reward`')
+            ->where('notified_at IS NULL')
+            ->where('status', PROMOTE_REWARD_STATUS_PAID_OFF);
+        $subQuery = $this->_database->get_compiled_select('', TRUE);
+        $this->_database
+            ->select('uq.user_id, uq.settings, qr.*')
+            ->from('`p2p_user`.`user_qrcode` AS `uq`')
+            ->join("($subQuery) as `qr`", "`qr`.`user_qrcode_id` = `uq`.`id`");
+        $subQuery2 = $this->_database->get_compiled_select('', TRUE);
+        $this->_database
+            ->select('u.name, u.id_number, u.phone, u.address, u.email, r.*')
+            ->from('`p2p_user`.`users` AS `u`')
+            ->join("($subQuery2) as `r`", "`r`.`user_id` = `u`.`id`");
+
+        return $this->_database->get()->result_array();
+    }
 }

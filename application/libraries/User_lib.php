@@ -308,6 +308,9 @@ class User_lib {
 
                 // 處理需扣回獎金之逾期案
                 foreach ($this->rewardCategories as $category => $productIdList) {
+                    if(empty($rewardList[$category]))
+                        continue;
+
                     $rewardList[$category] = array_column($rewardList[$category], NULL, 'id');
 
                     // 移除已算過逾期案
@@ -357,6 +360,14 @@ class User_lib {
                 }
                 $data['remainingDockAmount'] = $remainingDockAmount;
 
+                $income_tax = $info['totalRewardAmount'] > 20000 ? intval(round($info['totalRewardAmount'] * 0.1,0)) : 0;
+                $health_premium = $info['totalRewardAmount'] >= 20000 ? intval(round($info['totalRewardAmount'] * 0.0211,0)) : 0;
+                $data['incomeTax'] = $income_tax;
+                $data['healthPremium'] = $health_premium;
+                $data['originRewardAmount'] = $info['totalRewardAmount'];
+
+                $info['totalRewardAmount'] -= ($income_tax + $health_premium);
+
                 $this->CI->qrcode_reward_model->insert([
                     'user_qrcode_id' => $qrcode['id'],
                     'status' => PROMOTE_REWARD_STATUS_TO_BE_PAID,
@@ -385,5 +396,51 @@ class User_lib {
             $this->CI->user_qrcode_model->setUserPromoteLock($qrcode['promote_code'], 1, 0);
         }
         return TRUE;
+    }
+
+    /**
+     * 寄送推薦碼勞務報酬單
+     * @return int
+     */
+    public function send_promote_receipt(): int
+    {
+        $this->CI->load->model('transaction/qrcode_reward_model');
+        $this->CI->load->model('user/virtual_account_model');
+        $this->CI->load->library('sendemail');
+        $count = 0;
+
+        $list = $this->CI->qrcode_reward_model->getUninformedRewardList();
+        if(empty($list))
+            return $count;
+
+        $bankAccountList = [];
+        $bankAccountRs 	= $this->CI->virtual_account_model->get_many_by([
+            'user_id'	=> array_column($list, 'user_id'),
+            'status'	=> 1,
+            'virtual_account like ' => TAISHIN_VIRTUAL_CODE . "%",
+        ]);
+        foreach ($bankAccountRs as $bankAccount) {
+            $bankAccountList[$bankAccount->user_id][$bankAccount->investor] = $bankAccount;
+        }
+
+        foreach ($list as $value) {
+            $settings = json_decode($value['settings'], TRUE);
+            if($settings === FALSE || !isset($bankAccountList[$value['user_id']]) ||
+                !isset($settings['investor']) || !isset($bankAccountList[$value['user_id']][$settings['investor']])
+            ) {
+                continue;
+            }
+            $bankAccount = $bankAccountList[$value['user_id']][$settings['investor']];
+            $rewardData = json_decode($value['reward_data'], TRUE);
+
+            $rs = $this->CI->sendemail->send_promote_receipt($value['email'], $value['name'], $value['id_number'], $value['phone'],
+                $value['address'], $value['updated_at'], $bankAccount->virtual_account, $rewardData['originRewardAmount'],
+                $rewardData['incomeTax'], $rewardData['healthPremium'], $value['amount']);
+            if($rs) {
+                $this->CI->qrcode_reward_model->update_by(['id' => $value['id']], ['notified_at' => date('Y-m-d H:i:s')]);
+                $count++;
+            }
+        }
+        return $count;
     }
 }
