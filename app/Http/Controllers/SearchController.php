@@ -54,7 +54,11 @@ class SearchController extends BaseController
                     $result = KnowledgeArticle::search($keyword)
                         ->minScore(2.0)
                         ->select(['id', 'post_title', 'post_content'])
-                        ->paginate($page_size);
+                        ->paginate(
+                            $page_size,
+                            'page',
+                            $current_page
+                        );
 
                     $retval = [
                         'list' => $result->getCollection()->map(function($row) {
@@ -65,7 +69,7 @@ class SearchController extends BaseController
                             return [
                                 'title'   => $row['post_title'],
                                 'link'    => url('/articlepage?q=knowledge-' . $row['id']),
-                                'snippet' => mb_substr(str_replace('\n', '', $snippet), 0, 100),
+                                'snippet' => mb_substr(str_replace("\n", '', $snippet), 0, 100),
                             ];
                         }),
                         'pagination' => [

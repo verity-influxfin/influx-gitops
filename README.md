@@ -28,6 +28,9 @@ client
 
 `production:npm run production`
 
+## 設定更新 elasticsearch 索引
+`php artisan elastic:update-mapping "App\Models\KnowledgeArticle"`
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
