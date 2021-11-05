@@ -84,7 +84,7 @@ class EventUsersController extends Controller
     {
         $grid = new Grid(new EventUsers);
 
-        $grid->model()->orderBy('updated_at', 'desc');
+        $grid->model()->orderBy('created_at', 'desc');
 
 		// 關閉選擇器
 		$grid->disableRowSelector();
@@ -108,6 +108,16 @@ class EventUsersController extends Controller
 				});
 			*/
             $filter->like('promo', '推薦碼');
+            $filter->where(function ($query) {
+
+                $query->whereRaw(" JSON_EXTRACT(`promo_info`,'$.nick_name') = '{$this->input}'");
+
+            }, '推薦人暱稱');
+            $filter->where(function ($query) {
+
+                $query->whereRaw(" JSON_EXTRACT(`promo_info`,'$.name') = '{$this->input}'");
+
+            }, '推薦人姓名');
 		});
 		// 關閉搜尋
 		//$grid->disableFilter();
