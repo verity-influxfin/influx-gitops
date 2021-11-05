@@ -56,6 +56,19 @@
               />
             </div>
             <div class="input-group">
+              <span class="input-group-addon label-text">推薦人：</span>
+              <input
+                class="form-control label-input mr-2 mr-0-sm mb-2 mb-0-sm"
+                placeholder="請輸入暱稱"
+                v-model="recommenderNickName"
+              />
+              <input
+                class="form-control label-input"
+                placeholder="請輸入推薦人姓名"
+                v-model="recommenderName"
+              />
+            </div>
+            <div class="input-group">
               <span class="input-group-addon label-text">驗證碼：</span>
               <div class="captcha-row" style="display: flex">
                 <input
@@ -72,7 +85,9 @@
                 >
                   取得驗證碼
                 </button>
-                <div class="btn btn-disable" v-if="isSended">{{ counter }}S有效</div>
+                <div class="btn btn-disable" v-if="isSended">
+                  {{ counter }}S有效
+                </div>
                 <span class="tip" v-if="isSended">驗證碼已寄出</span>
               </div>
             </div>
@@ -89,7 +104,9 @@
                   <span></span>
                   <div class="row">
                     我同意
-                    <div class="terms" @click="getTerms('user')">借款人服務條款</div>
+                    <div class="terms" @click="getTerms('user')">
+                      借款人服務條款
+                    </div>
                     、
                     <div class="terms" @click="getTerms('privacy_policy')">
                       隱私權條款
@@ -111,7 +128,9 @@
                   <span></span>
                   <div class="row">
                     我同意
-                    <div class="terms" @click="getTerms('investor')">貸款人服務條款</div>
+                    <div class="terms" @click="getTerms('investor')">
+                      貸款人服務條款
+                    </div>
                     、
                     <div class="terms" @click="getTerms('privacy_policy')">
                       隱私權條款
@@ -125,14 +144,21 @@
           <div class="dialog-footer">
             <div
               v-if="
-                phone && password && confirmPassword && code && isAgree ? false : true
+                phone && password && confirmPassword && code && isAgree
+                  ? false
+                  : true
               "
               class="btn btn-disable"
               disable
             >
               送出
             </div>
-            <button type="button" v-else class="btn btn-submit" @click="doRegister">
+            <button
+              type="button"
+              v-else
+              class="btn btn-submit"
+              @click="doRegister"
+            >
               送出
             </button>
           </div>
@@ -178,24 +204,26 @@ export default {
     message: "",
     timer: null,
     counter: 180,
+    recommenderNickName: '',
+    recommenderName: '',
   }),
-  created() {
+  created () {
     this.isRegisterSuccess = false;
     $("title").text(`註冊帳號 - inFlux普匯金融科技`);
   },
-  mounted() {
-    this.$nextTick(() => {});
+  mounted () {
+    this.$nextTick(() => { });
   },
   watch: {
-    phone(newdata) {
+    phone (newdata) {
       this.phone = newdata.replace(/[^\d]/g, "");
     },
-    code(newdata) {
+    code (newdata) {
       this.code = newdata.replace(/[^\d]/g, "");
     },
   },
   methods: {
-    getCaptcha(type) {
+    getCaptcha (type) {
       let phone = this.phone;
 
       if (!phone) {
@@ -219,7 +247,7 @@ export default {
           this.message = `${this.$store.state.smsErrorCode[errorsData.error]}`;
         });
     },
-    getTerms(termsType) {
+    getTerms (termsType) {
       let $this = this;
 
       axios
@@ -235,18 +263,27 @@ export default {
           console.log("getTerms 發生錯誤，請稍後再試");
         });
     },
-    doRegister() {
+    doRegister () {
       let phone = this.phone;
       let password = this.password;
       let password_confirmation = this.confirmPassword;
       let code = this.code;
-
+      const nick_name = this.recommenderNickName
+      const name = this.recommenderName
+      if (nick_name.length > 0 || name.length > 0) {
+        if (nick_name.length < 1 || name.length < 1) {
+          return
+        }
+      }
+      const promote_info = { nick_name, name }
       axios
-        .post(`${location.origin}/doRegister`, {
+        // do Register => eventRegister
+        .post(`${location.origin}/eventRegister`, {
           phone,
           password,
           password_confirmation,
           code,
+          promote_info,
         })
         .then((res) => {
           this.isRegisterSuccess = true;
@@ -266,7 +303,7 @@ export default {
           }
         });
     },
-    reciprocal() {
+    reciprocal () {
       this.counter--;
       if (this.counter === 0) {
         clearInterval(this.timer);
