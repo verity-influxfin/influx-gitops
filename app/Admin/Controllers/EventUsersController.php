@@ -137,8 +137,8 @@ class EventUsersController extends Controller
         $grid->column('name', '推薦人姓名')->display(function () {
             return isset(json_decode($this->promo_info)->name) ? json_decode($this->promo_info)->name : '';
         });
-        $grid->column('created_at', '創建時間');
-        $grid->column('updated_at', '更新時間');
+        $grid->column('created_at', '創建時間')->sortable();
+        $grid->column('updated_at', '更新時間')->sortable();
 
         return $grid;
     }
