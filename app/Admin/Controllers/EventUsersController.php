@@ -125,7 +125,7 @@ class EventUsersController extends Controller
 			$tools->append(new \App\Admin\Extensions\Tools\UserGender(admin_base_path('notice/check_switch'),$switch));
 		});*/
         $grid->export(function ($export) {
-            $export->only(['phone', 'promo', 'email', 'promo_info_nick_name', 'promo_info_name', 'created_at']);
+            $export->only(['phone', 'promo', 'email', 'nick_name', 'name', 'created_at']);
         });
 		$grid->column('phone', '註冊電話');
         $grid->column('promo', '推薦碼');
