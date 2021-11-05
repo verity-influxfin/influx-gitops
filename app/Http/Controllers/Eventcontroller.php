@@ -72,7 +72,6 @@ class Eventcontroller extends BaseController
         $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
-        // $data['result'] = 'SUCCESS';
         if ($data['result'] === "SUCCESS") {
             $registerData = [
                 'phone' => $input['phone'],
