@@ -804,18 +804,18 @@ class Certification_lib{
                $sip_log = $this->CI->sip_lib->getLoginLog($content['school'],$content['sip_account']);
                if($sip_log && isset($sip_log['status'])){
                    if($sip_log['status'] == 200){
-                       if($sip_log['status'] == 'finished'){
-                           if(isset($sip_log['isRight']) && $sip_log['isRight'] == 'True'){
+                       if($sip_log['response']['status'] == 'finished'){
+                           if(isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == 'True' || 1){
                                $sip_data = $this->CI->sip_lib->getDeepData($content['school'],$content['sip_account']);
-                               $content['sip_data'] = $sip_data;
-                               $user_info = !empty($user_certification->content) ? json_decode($user_certification->content,true): [];
-                               if($sip_data && isset($sip_data['result'])){
+                               $content['sip_data'] = isset($sip_data['response']) ? $sip_data['response'] : [];
+                               $user_info = !empty($user_certification->content) ? $user_certification->content : [];
+                               if($sip_data && isset($sip_data['response']['result'])){
                                    if(isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['result']['name']) && isset($sip_data['result']['idNumber'])){
-                                       if($user_info['name'] != $sip_data['result']['name']){
+                                       if($user_info['name'] != $sip_data['response']['result']['name']){
                                            $verifiedResult->setStatus(3);
                                            $verifiedResult->addMessage('SIP姓名與實名認證資訊不同', 3, MassageDisplay::Backend);
                                        }
-                                       if($user_info['id_number'] != $sip_data['result']['idNumber']){
+                                       if($user_info['id_number'] != $sip_data['response']['result']['idNumber']){
                                            $verifiedResult->setStatus(3);
                                            $verifiedResult->addMessage('SIP身分證與實名認證資訊不同', 3, MassageDisplay::Backend);
                                        }
@@ -850,7 +850,7 @@ class Certification_lib{
 
            // 預計畢業時間
            if(isset($content['graduate_date']) && !empty($content['graduate_date'])){
-               if(preg_match('/^民國[0-9]{3}(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u',$content['graduate_date'])){
+               if(preg_match('/^民國[0-9]{2,3}(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u',$content['graduate_date'])){
                    $graduate_date = preg_replace('/民國/', '', $content['graduate_date']);
                    $this->CI->load->library('mapping/time');
                    $graduate_date = $this->CI->time->ROCDateToUnixTimestamp($graduate_date);
@@ -871,7 +871,8 @@ class Certification_lib{
            }
 
            $status = $verifiedResult->getStatus();
-           $remark = json_decode($info->remark,true);
+           $remark = is_array(json_decode($info->remark,true)) ? json_decode($info->remark,true) : [];
+           $remark['verify_result'] = isset($remark['verify_result']) ? $remark['verify_result'] : [];
            $remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 
            $this->CI->user_certification_model->update($info->id, array(
@@ -880,8 +881,6 @@ class Certification_lib{
                'content' => json_encode($content, JSON_INVALID_UTF8_IGNORE),
                'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
            ));
-
-           $this->CI->user_certification_model->update($info->id,$param);
            if($status == 1){
                $this->set_success($info->id, true);
            }elseif ($status == 2) {
@@ -2275,16 +2274,16 @@ class Certification_lib{
 				'school_system'			 => $content['system'],
 				'school_department'		 => $content['department'],
 				'school_major'			 => $content['major'],
-				'school_email'			 => $content['email'],
+				'school_email'			 => isset($content['email']) ? $content['email'] : '',
 				'school_grade'			 => $content['grade'],
 				'student_id'			 => $content['student_id'],
 				'student_card_front'	 => $content['front_image'],
 				'student_card_back'		 => $content['back_image'],
 				'student_sip_account'	 => $content['sip_account'],
                 'student_sip_password'	 => $content['sip_password'],
-                'student_license_level'	 => $content['license_level'],
-                'student_game_work_level'=> $content['game_work_level'],
-                'student_pro_level'      => $content['pro_level'],
+                'student_license_level'	 => isset($content['license_level']) ? $content['license_level'] : '',
+                'student_game_work_level'=> isset($content['game_work_level']) ? $content['game_work_level'] : '',
+                'student_pro_level'      => isset($content['pro_level']) ? $content['pro_level'] : '',
             );
 			isset($content['graduate_date']) ? $data['graduate_date'] = $content['graduate_date'] : '';
             isset($content['programming_language']) ? $data['student_programming_language'] = count($content['programming_language']) : '';

@@ -12,126 +12,6 @@
 				$('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
 				$('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
 			});
-
-            $(document).ready(function() {
-                var university = $("#university").text();
-                var account = $("#account").text();
-
-                fetchSipLogin(university, account)
-
-                setInterval(regularCheckSipResult, 5000);
-
-                function regularCheckSipResult() {
-                    var sipResult = $("#sip-login-info").text();
-
-                    if (sipResult != '爬蟲尚未開始' && sipResult != '爬蟲正在執行中') {
-                        return;
-                    }
-
-                    fetchSipLogin(university, account)
-                }
-
-                function fetchSipLogin(university, account) {
-                    var data = {'university' : university, 'account' : account}
-                    var queryParam = jQuery.param(data);
-
-                    var url = '/admin/certification/sip?' + queryParam
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        success: function(response) {
-                            if (!response) {
-                                fillSipLogin('response_not_json');
-                                return;
-                            }
-                            if (response.status.code == 204) {
-                                fillSipLogin('request_not_found');
-                                return;
-                            }
-
-                            if (response.response.sip.university == "university_not_found") {
-                                fillSipLogin(response.response.sip.university);
-                            } else if (response.response.sip.status == "finished") {
-                                fillSipLogin(response.response.sip.loginStatus);
-                            } else {
-                                fillSipLogin(response.response.sip.status);
-                            }
-                        },
-                        error: function() {
-                            fillSipLogin();
-                        }
-                    });
-                }
-
-                function fillSipLogin(status = null) {
-                    if (!status) {
-                        $("#sip-login-info").html("出現錯誤");
-                        return;
-                    }
-
-                    var mapping = getLoginStatusMapping()
-                    status = status.toLowerCase()
-                    $("#sip-login-info").html(mapping[status]);
-                }
-
-                function getLoginStatusMapping() {
-                    return {
-                        'false' : '登入失敗',
-                        'true' : '登入成功',
-                        'started' : '爬蟲正在執行中',
-                        'requested' : '爬蟲尚未開始',
-                        'university_not_found' : '不支援此學校',
-                        'request_not_found' : '請求未被收到',
-                        'response_not_json' : 'Server回傳資料非json格式'
-                    }
-                }
-
-                $("#request-sip-login").click(function(e) {
-                    var university = $("#university").text();
-                    var account = $("#account").text();
-                    var password = $("#password").text();
-
-                    var sipResult = $("#sip-login-info").text();
-                    if (sipResult == '登入成功') {
-                        alert('已成功登入');
-                    }
-
-                    requestSipLogin(university, account, password);
-                });
-
-                function requestSipLogin(university, account, password) {
-                    var data = {
-                        'university' : university,
-                        'account' : account,
-                        'password' : password
-                    }
-
-                    var url = '/admin/certification/sip_login'
-
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: data,
-                        success: function(response) {
-                            if (!response) {
-                                alert('登入請求未成功送出');
-                                return;
-                            }
-                            if (response.status.code == 400) {
-                                alert('參數錯誤，登入請求未成功送出');
-                                return;
-                            }
-
-                            alert('登入請求已經送出');
-                            fillSipLogin('requested');
-                        },
-                        error: function() {
-                            alert('登入請求未成功送出');
-                        }
-                    });
-                }
-            });
-
 		</script>
 		<div id="page-wrapper">
 			<div class="row">
@@ -193,17 +73,12 @@
 										<p id="password" class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
 									</div>
 									<div class="form-group">
-										<label>SIP 網址</label><br>
-										<? if (!empty($content['sipURL'])) { ?>
-											<? foreach ($content['sipURL'] as $key => $value) { ?>
-												<a href="<?= isset($value) ? $value : "" ?>" target="_blank">SIP連結</a>
-											<? } ?>
-										<? }else{echo "無";} ?>
-									</div>
-									<div class="form-group">
-										<label>SIP登入結果</label><br>
-										<p id="sip-login-info" class="form-control-static">等待中...</p>
-										<a id="request-sip-login" class="btn btn-default">再登入一次</a>
+										<label>SIP結果</label><br>
+										<p class="form-control-static">學校：<?= isset($content['sip_data']['university']) ? $content['sip_data']['university'] : "" ?></p>
+                                        <p class="form-control-static">姓名：<?= isset($content['sip_data']['result']['name']) ? $content['sip_data']['result']['name'] : "" ?></p>
+                                        <p class="form-control-static">手機：<?= isset($content['sip_data']['result']['studentPhone']) ? $content['sip_data']['result']['studentPhone'] : "" ?></p>
+                                        <p class="form-control-static">在學狀態：<?= isset($content['sip_data']['result']['schoolStatus']) ? $content['sip_data']['result']['schoolStatus'] : "" ?></p>
+                                        <p class="form-control-static">近一學期成績：<?= isset($content['sip_data']['result']['latestGrades']) ? $content['sip_data']['result']['latestGrades'] : "" ?></p>
 									</div>
 									<div class="form-group">
 										<label>預計畢業時間</label>
@@ -251,9 +126,19 @@
                                                 </select>
                                             <?}?>
                                         </div><br />
+                                    <div class="form-group">
+                                        <label>驗證結果</label>
+										<?
+											if($remark && isset($remark['verify_result']) && is_array($remark['verify_result'])){
+												foreach($remark['verify_result'] as $verify_result){
+													echo'<p style="color:red;">'.$verify_result.'</p>';
+												}
+											}
+										?>
+									</div>
 									<div class="form-group">
 										<label>備註</label>
-										<?
+                                        <?
 										if ($remark) {
 											if (isset($remark["fail"]) && $remark["fail"]) {
 												echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
