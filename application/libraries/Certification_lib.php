@@ -830,7 +830,7 @@ class Certification_lib{
                         if($log_status['response']['result']['status'] == 'requested' || $log_status['response']['result']['status'] == 'started'){
                             return false;
                         }
-                        $verifiedResult = new SocialCertificationResult(1);
+                        $verifiedResult = new SocialCertificationResult(3);
                         // IG帳號不存在
                         if($log_status['response']['result']['status'] == 'not_found'){
                             $verifiedResult->setStatus(2);
