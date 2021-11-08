@@ -804,53 +804,121 @@ class Certification_lib{
     public function social_verify($info = array())
     {
         if ($info && $info->status == 0 && $info->certification_id == 4) {
-			$param['status'] = 3;
-            $content = json_decode($info->content);
+            $param['sys_check'] = 1;
+            $content = json_decode($info->content, true);
 
-            if (isset($content->instagram->username) && isset($info->user_id)) {
-                $this->CI->load->library('scraper/instagram_lib');
-                $user_followed_info = $this->CI->instagram_lib->getUserFollow($info->user_id, $content->instagram->username);
+            if (isset($content['instagram']['username']) && isset($info->user_id)) {
 
-                if ($user_followed_info && $user_followed_info->status == 204) {
-                    $this->CI->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
-                    $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
-                    return false;
-                }
-                $param['sys_check'] = 1;
-                if ($user_followed_info && $user_followed_info->status == 200 && !empty($user_followed_info->response->result)) {
-                    $content->instagram->status = $user_followed_info->response->result->info->followStatus;
-                    $content->instagram->link = 'https://www.instagram.com/' . $content->instagram->username;
-                    $content->instagram->counts->media = $user_followed_info->response->result->info->allPostCount;
-                    $content->instagram->counts->follows = $user_followed_info->response->result->info->allFollowingCount;
-                    $content->instagram->counts->followed_by = $user_followed_info->response->result->info->allFollowerCount;
-                    $update_time = $user_followed_info->response->result->updatedAt;
-                    if ($content->instagram->status == 'unfollowed' && $update_time && time() >= ($update_time + rand(5,30)*137)) {
-                        $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
-                    }else {
-                        if($content->instagram->counts->media != ''){
-                            if ($update_time && time() >= ($update_time + 86400)) {
-                                $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
+                $ig_info = [];
+                $usernameExist = '';
+                $allFollowerCount = '';
+                $allFollowingCount = '';
+                $param['remark'] = [];
+                $param['remark']['verify_result'] = [];
+
+                $this->CI->load->library('scraper/Instagram_lib');
+                $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $content['instagram']['username']);
+                if ($log_status || isset($log_status['status'])) {
+                    // 沒有IG爬蟲紀錄
+                    if($log_status['status'] == 204){
+                        $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $content['instagram']['username']);
+                        return false;
+                    }
+
+                    if($log_status['status'] == 200 && isset($log_status['response']['result']['status'])){
+                        // IG爬蟲沒爬完
+                        if($log_status['response']['result']['status'] == 'requested' || $log_status['response']['result']['status'] == 'started'){
+                            return false;
+                        }
+                        $verifiedResult = new SocialCertificationResult(1);
+                        // IG帳號不存在
+                        if($log_status['response']['result']['status'] == 'not_found'){
+                            $verifiedResult->setStatus(2);
+                            $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('IG錯誤', 2, MassageDisplay::Client);
+                        }
+                        // IG爬蟲結束
+                        if($log_status['response']['result']['status'] == 'finished'){
+                            $user_followed_info = $this->CI->instagram_lib->getUserFollow($info->user_id, $content['instagram']['username']);
+                            if($user_followed_info && isset($user_followed_info['status']) && $user_followed_info['status'] == 200){
+                                $ig_info = ! empty($user_followed_info['response']['result']['info']) ? $user_followed_info['response']['result']['info'] : [];
+                                $usernameExist = isset($user_followed_info['response']['result']['usernameExist']) ? $user_followed_info['response']['result']['usernameExist'] : '';
+                                $allFollowerCount = isset($user_followed_info['response']['result']['info']['allFollowerCount']) ? $user_followed_info['response']['result']['info']['allFollowerCount'] : '';
+                                $allFollowingCount = isset($user_followed_info['response']['result']['info']['allFollowingCount']) ? $user_followed_info['response']['result']['info']['allFollowingCount'] : '';
+                                if($usernameExist === false){
+                                    $verifiedResult->setStatus(2);
+                                    $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('IG錯誤', 2, MassageDisplay::Client);
+                                    $usernameExist = '否';
+                                }
+                                if($usernameExist === true){
+                                    $usernameExist = '是';
+                                }
+                                $content['instagram'] = [
+                                    'username' => $content['instagram']['username'],
+                                    'link' => 'https://www.instagram.com/' . $content['instagram']['username'],
+                                    'usernameExist' => $usernameExist,
+                                    'info' => $ig_info,
+                                ];
+                            }else{
+                                $verifiedResult->setStatus(3);
+                                $verifiedResult->addMessage('IG爬蟲執行失敗', 2, MassageDisplay::Backend);
                             }
                         }
+                        if($log_status['response']['result']['status'] == 'failure'){
+                            $verifiedResult->setStatus(3);
+                            $verifiedResult->addMessage('IG爬蟲執行失敗', 2, MassageDisplay::Backend);
+                        }
+                    }else{
+                        $verifiedResult->setStatus(3);
+                        $verifiedResult->addMessage('IG爬蟲沒有回應', 2, MassageDisplay::Backend);
+                    }
+                }else{
+                    $verifiedResult->setStatus(3);
+                    $verifiedResult->addMessage('IG爬蟲沒有回應', 2, MassageDisplay::Backend);
+                }
+
+                $is_fb_email = isset($content['facebook']['email']);
+                $is_fb_name = isset($content['facebook']['name']);
+
+                // fb未綁定
+                if(!$is_fb_email || !$is_fb_name){
+                    $verifiedResult->setStatus(3);
+                    $verifiedResult->addMessage('FB帳號未綁定', 3, MassageDisplay::Client);
+                }
+
+                if(is_numeric($allFollowerCount) && is_numeric($allFollowingCount)) {
+                    // 是否為活躍社交帳號判斷
+                    if ($allFollowerCount >= 10 && $allFollowingCount >= 10 && $is_fb_email && $is_fb_name) {
+                        $verifiedResult->setStatus(1);
+                    }else{
+                        $verifiedResult->setStatus(3);
+                        $verifiedResult->addMessage('IG非活躍帳號', 3, MassageDisplay::Client);
                     }
                 }
-                $media = $content->instagram->counts->media;
-                $followed_by = $content->instagram->counts->followed_by;
-                $is_fb_email = isset($content->facebook->email);
-                $is_fb_name = isset($content->facebook->name);
-                $this->CI->load->model('user/user_meta_model');
-                $line = $this->CI->user_meta_model->get_by(array(
-                    'user_id' => $info->user_id,
-                    'meta_key' => 'line_access_token'
-                ));
-                if ((is_numeric($media) && is_numeric($followed_by) || $is_fb_email && $is_fb_name) && isset($line)) {
-                    if ($media >= 10 && $followed_by >= 10 || is_numeric($media) && is_numeric($followed_by) ) {
-                        $param['status'] = 1;
-                        $this->set_success($info->id, true);
-                    }
-                }
+
                 $param['content'] = json_encode($content);
-                $this->CI->user_certification_model->update($info->id, $param);
+                $param['remark']['verify_result'] = array_merge($param['remark']['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
+                $param['remark'] = json_encode($param['remark']);
+
+                $status = $verifiedResult->getStatus();
+
+                $this->CI->user_certification_model->update($info->id, array(
+                    'status' => $status != 3 ? 0 : $status,
+                    'sys_check' => 1,
+                    'content' => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
+                    'remark' => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
+                ));
+
+                $this->CI->user_certification_model->update($info->id,$param);
+
+                if($status == 0){
+                    $this->set_success($info->id, true);
+                }elseif ($status == 2) {
+                    $notificationContent = $verifiedResult->getAPPMessage(2);
+                    $this->set_failed($info->id,$notificationContent);
+                }
+
             }
             return true;
         }
