@@ -50,18 +50,17 @@ class Eventcontroller extends BaseController
             'phone' => 'required|digits:10',
             'password' => 'required|string|min:6|max:50|confirmed',
             'password_confirmation' => 'required|string|min:6|max:50',
-            'code' => 'required|digits:6',
-            'email' => 'required|email',
-            'promo' => 'required'
+            'code' => 'required|digits:6'
         ]);
 
         $input = $request->all();
 
-        $promo = $input['promo'];
-        $email = $input['email'];
+        $promo = isset($input['promo']) ? $input['promo'] : '';
+        $email = isset($input['email']) ? $input['email'] : '';
+        $promote_info = isset($input['promote_info']) ? json_encode($input['promote_info']) : '';
 
         $postData = [
-            'promote_code'    => $input['promo'],
+            'promote_code'    => $promo,
             'phone'           => $input['phone'],
             'password'        => $input['password'],
             'code'            => $input['code'],
@@ -73,7 +72,6 @@ class Eventcontroller extends BaseController
         $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'user/register" -d "' . $params . '"');
 
         $data = json_decode($curlScrapedPage, true);
-
         if ($data['result'] === "SUCCESS") {
             $registerData = [
                 'phone' => $input['phone'],
@@ -81,12 +79,13 @@ class Eventcontroller extends BaseController
                 'email' => $email,
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_ip' => $_SERVER['REMOTE_ADDR'],
+                'promo_info' => $promote_info
             ];
 
             DB::table('event_users')->insert($registerData);
         }
 
-        return response()->json("", $data['result'] === "SUCCESS" ? 200 : 400);
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
     }
 
 	public function bankEvent(Request $request)
