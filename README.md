@@ -29,7 +29,11 @@ client
 `production:npm run production`
 
 ## 設定更新 elasticsearch 索引
-`php artisan elastic:update-mapping "App\Models\KnowledgeArticle"`
+```PHP
+php artisan elastic:create-index "App\Es\KnowledgeArticleIndexConfigurator"
+php artisan elastic:update-mapping "App\Models\KnowledgeArticle"
+```
+
 
 ## License
 
