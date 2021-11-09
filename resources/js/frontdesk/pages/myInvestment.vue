@@ -6,7 +6,10 @@
         <div style="width: max-content; overflow: hidden">
           <router-link class="menu-item" to="/investnotification">
             <div class="img">
-              <img src="../asset/images/icon_notification.svg" class="img-fluid" />
+              <img
+                src="../asset/images/icon_notification.svg"
+                class="img-fluid"
+              />
               <span v-if="unreadCount !== 0">{{ unreadCount }}</span>
             </div>
             <p>通知</p>
@@ -28,6 +31,12 @@
               <img src="../asset/images/icon_getmoney.svg" class="img-fluid" />
             </div>
             <p>明細</p>
+          </router-link>
+          <router-link class="menu-item" to="/invest-report">
+            <div class="img">
+              <img src="../asset/images/report-icon.svg" class="img-fluid" />
+            </div>
+            <p>投資人報告書</p>
           </router-link>
         </div>
       </div>
@@ -89,7 +98,7 @@
 import userInfo from "../component/userInfoComponent";
 
 export default {
-  beforeRouteEnter(to, from, next) {
+  beforeRouteEnter (to, from, next) {
     if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
       next("/index");
     } else {
@@ -118,16 +127,16 @@ export default {
     unreadCount: 0,
   }),
   computed: {
-    myInvsetment() {
+    myInvsetment () {
       return this.$store.getters.InvestAccountData;
     },
   },
-  created() {
+  created () {
     this.$store.dispatch("getRecoveriesList");
     this.$store.dispatch("getRecoveriesFinished");
     this.$store.dispatch("getMyInvestment");
 
-    this.$router.push("/investnotification");
+    // this.$router.push("/investnotification");
 
     $("title").text(`投資專區 - inFlux普匯金融科技`);
 
@@ -154,31 +163,31 @@ export default {
     );
   },
   watch: {
-    myInvsetment() {
+    myInvsetment () {
       this.getInvestmentData();
     },
-    principal(newValue) {
+    principal (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedPrincipal: newValue });
     },
-    receivable(newValue) {
+    receivable (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedReceivable: newValue });
     },
-    available(newValue) {
+    available (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedAvailable: newValue });
     },
-    frozen(newValue) {
+    frozen (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedFrozen: newValue });
     },
-    insufficient(newValue) {
+    insufficient (newValue) {
       gsap.to(this.$data, { duration: 1, tweenedInsufficient: newValue });
     },
   },
   methods: {
-    format(data) {
+    format (data) {
       let l10nEN = new Intl.NumberFormat("en-US");
       return l10nEN.format(data.toFixed(0));
     },
-    getInvestmentData() {
+    getInvestmentData () {
       let totalFrozen = 0;
       for (let key in this.myInvsetment.funds.frozenes) {
         totalFrozen += this.myInvsetment.funds.frozenes[key];
@@ -209,7 +218,7 @@ export default {
     background-image: url("../asset/images/header_bg.png");
     background-repeat: no-repeat;
     background-size: contain;
-    padding: 25px 10%;
+    padding: 25px 5%;
     display: flex;
     justify-content: space-between;
 
@@ -254,7 +263,6 @@ export default {
         text-align: center;
         margin: 10px 5px;
         color: #157efb;
-        width: 70px;
 
         &:hover {
           text-decoration: none;
@@ -267,6 +275,7 @@ export default {
           margin: 5px auto;
 
           img {
+            width: 100%;
             position: absolute;
             top: 50%;
             left: 50%;

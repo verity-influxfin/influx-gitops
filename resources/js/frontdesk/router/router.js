@@ -39,6 +39,7 @@ import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
+import investReport from "../pages/investReport"
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -80,7 +81,8 @@ let routers = [
             { path: '/investnotification', component: notification, name: 'invest-notification' },
             { path: '/debt', component: debt },
             { path: '/closedcase', component: closedcase },
-            { path: '/detail', component: detail }
+            { path: '/detail', component: detail },
+            { path: '/invest-report', component: investReport }
         ]
     },
     { path: '/recruiting', component: recruiting },
