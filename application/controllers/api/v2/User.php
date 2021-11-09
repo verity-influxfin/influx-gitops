@@ -2002,7 +2002,9 @@ END:
                 try {
                     $d1 = new DateTime($userQrcodeInfo['start_time']);
                     $d2 = new DateTime($userQrcodeInfo['end_time'] >= date("Y-m-d H:i:s") ? date("Y-m-d H:i:s") : $userQrcodeInfo['end_time']);
-                    $diffMonths = $d1->diff($d2)->m + ($d1->diff($d2)->y*12);
+                    $start = date_create($d1->format('Y-m-01'));
+                    $end = date_create($d2->format('Y-m-01'));
+                    $diffMonths = $start->diff($end)->m + ($start->diff($end)->y*12);
                 } catch (Exception $e) {
                     $diffMonths = 0;
                     error_log($e->getMessage());

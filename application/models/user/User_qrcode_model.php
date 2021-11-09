@@ -46,8 +46,8 @@ class user_qrcode_model extends MY_Model
         $this->_database
             ->select("u.id AS user_id, u.app_status, u.app_investor_status, uq.promote_code, uq.settings, uq.start_time, uq.end_time, DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at),'%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) as created_at")
             ->from('`p2p_user`.`users` AS `u`')
-            ->where("DATE_FORMAT(FROM_UNIXTIME(u.created_at),'%Y-%m-%d %H:%i:%s') >= uq.start_time")
-            ->where("DATE_FORMAT(FROM_UNIXTIME(u.created_at),'%Y-%m-%d %H:%i:%s') <= uq.end_time")
+            ->where("DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) >= uq.start_time")
+            ->where("DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) <= uq.end_time")
             ->join("($subQuery) as `uq`", "`u`.`promote_code` = `uq`.`promote_code`");
 
         $fullQuery = $this->_database->get_compiled_select('', TRUE);
@@ -81,8 +81,8 @@ class user_qrcode_model extends MY_Model
             ->join("($subQuery) as `r`", "`t`.`user_id` = `r`.`user_id`")
             ->where_in("t.status", [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
             ->where_in("t.product_id", $productIdList)
-            ->where('t.loan_date >= r.start_time')
-            ->where('t.loan_date <= r.end_time')
+            ->where("t.loan_date >= DATE_FORMAT(`r`.`start_time`, '%Y-%m-%d')")
+            ->where("t.loan_date <= DATE_FORMAT(`r`.`end_time`, '%Y-%m-%d')")
             ->group_by('t.user_id');
         $fullQuery = $this->_database->get_compiled_select('', TRUE);
 
