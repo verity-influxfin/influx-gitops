@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-content">
     <div class="banner">
       <img src="../asset/images/ntu_banner.jpg" class="banner-img" />
     </div>
@@ -10,8 +10,9 @@
         <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
         <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
       </div>
-      <div class="title-text">
-        孩子健康 看見希望
+      <div class="d-flex justify-content-center">
+        <img src="../asset/images/太陽.svg" class="img-icon" alt="" />
+        <img src="../asset/images/孩子健康 看見希望.svg" class="img-text-1" />
       </div>
       <div class="title-dot-down">
         <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
@@ -59,8 +60,9 @@
         <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
         <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
       </div>
-      <div class="title-text">
-        活動單位
+      <div class="d-flex justify-content-center">
+        <img src="../asset/images/彩虹.svg" class="img-moon" alt="" />
+        <img src="../asset/images/活動單位.svg" class="img-text-2" />
       </div>
       <div class="title-dot-down">
         <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
@@ -73,6 +75,7 @@
       <img src="../asset/images/fund.png" alt="" />
     </div>
     <div class="fund-text">
+      <img src="../asset/images/上小孩.svg" class="img-dec-1" />
       <p>
         財團法人台大兒童基金會以提昇兒童健康福祉為宗旨，
         希望經由您的支持，提升兒童醫院之最佳醫療服務。
@@ -91,8 +94,9 @@
         <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
         <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
       </div>
-      <div class="title-text">
-        如何捐款
+      <div class="d-flex justify-content-center">
+        <img src="../asset/images/月亮.svg" class="img-icon" alt="" />
+        <img src="../asset/images/如何捐款.svg" class="img-text-3" />
       </div>
       <div class="title-dot-down">
         <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
@@ -102,6 +106,8 @@
       </div>
     </div>
     <div class="donate-text">
+      <img src="../asset/images/中小孩.svg" class="img-dec-2" />
+      <img src="../asset/images/飛機.svg" class="img-dec-3" />
       <p>普匯收到您的善款</p>
       <p>
         立即轉付「財團法人台大兒童健康基金會」，捐款成功後
@@ -109,17 +115,18 @@
         若捐贈不成功，亦即退款，非常感謝您的善心善行！
       </p>
     </div>
-    <div class="go-donate">
-      <div class="go-donate-title">
-        具名捐款
+    <div class="go-donate-out">
+      <img src="../asset/images/下小孩.svg" class="img-dec-4" />
+      <img src="../asset/images/塗鴉1.svg" class="img-dec-5" />
+      <img src="../asset/images/塗鴉2.svg" class="img-dec-6" />
+      <div class="go-donate">
+        <img class="go-donate-title" src="../asset/images/具名捐款.svg" />
+        <img class="go-donate-text" src="../asset/images/愛心.svg" />
+        <div class="go-donate-text"></div>
+        <router-link to="/borrowLink" target="_blank">
+          <div class="go-donate-button"></div>
+        </router-link>
       </div>
-      <div class="divider-blue"></div>
-      <div class="go-donate-text">
-        捐款成功，將立即獲得基金會 電子感謝狀及收據，感謝您！
-      </div>
-      <router-link to="/borrowLink" target="_blank">
-        <div class="go-donate-button">捐款去</div>
-      </router-link>
     </div>
   </div>
 </template>
@@ -131,6 +138,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main-content {
+  background-image: url("../asset/images/ntu-bg.jpg");
+  padding-bottom: 50px;
+}
 .banner {
   margin-bottom: 60px;
   .banner-img {
@@ -195,6 +206,7 @@ export default {
   justify-content: center;
 }
 .fund-text {
+  position: relative;
   margin: 0 auto 63px;
   padding: 0 15px;
   max-width: 510px;
@@ -207,8 +219,14 @@ export default {
   letter-spacing: 1px;
   text-align: left;
   color: #000;
+  .img-dec-1 {
+    position: absolute;
+    top: -150px;
+    right: -235px;
+  }
 }
 .donate-text {
+  position: relative;
   margin: 0 auto 100px;
   padding: 0 15px;
   max-width: 555px;
@@ -221,62 +239,92 @@ export default {
   letter-spacing: 1px;
   text-align: left;
   color: #000;
+  .img-dec-2 {
+    position: absolute;
+    top: -15px;
+    left: -215px;
+  }
+  .img-dec-3 {
+    position: absolute;
+    right: -250px;
+    bottom: 0;
+  }
+}
+.go-donate-out {
+  position: relative;
+  margin: 0 auto;
+  max-width: 1100px;
+  .img-dec-4 {
+    position: absolute;
+    right: 140px;
+  }
+  .img-dec-5 {
+    position: absolute;
+    left: 240px;
+    bottom: 0px;
+  }
+  .img-dec-6 {
+    position: absolute;
+    left: 140px;
+    bottom: 40px;
+  }
 }
 .go-donate {
+  background-image: url("../asset/images/紙條.png");
+  background-size: cover;
+  background-repeat: no-repeat;
   margin: 0 auto 50px;
-  width: 280px;
-  border-radius: 18px;
+  width: 520px;
+  height: 330px;
   padding: 20px 15px;
-  border: solid 1px #2664a5;
   display: flex;
   flex-direction: column;
   align-items: center;
   .go-donate-title {
-    font-family: NotoSansTC;
-    font-size: 26px;
-    font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.2;
-    letter-spacing: 1.3px;
-    text-align: left;
-    color: #036eb7;
-  }
-  .divider-blue {
-    width: 100%;
-    margin: 15px 0;
-    border-bottom: 1px solid #036eb7;
+    margin: 10px 0;
+    transform: rotate(-1deg);
+    width: 225px;
   }
   .go-donate-text {
-    font-family: NotoSansTC;
-    font-size: 14px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 2.14;
-    letter-spacing: 0.7px;
-    text-align: left;
-    color: #000;
+    transform: rotate(-3deg);
   }
   .go-donate-button {
-    margin-top: 15px;
-    padding: 10px 30px;
-    font-size: 18px;
-    font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.73;
-    letter-spacing: 0.9px;
-    text-align: left;
-    color: #036eb7;
-    border-radius: 18px;
-    // border: 1px solid #036eb7;
+    margin: 15px 0 0 15px;
+    transform: rotate(-1deg);
+    height: 60px;
+    width: 180px;
     background-repeat: no-repeat;
     background-position: center;
-    background-image: url("../asset/images/button-lines.svg");
+    background-image: url("../asset/images/捐款去.svg");
   }
 }
+.img-text-1 {
+  width: 400px;
+}
+.img-text-2 {
+  width: 200px;
+}
+.img-text-3 {
+  width: 200px;
+}
+.img-icon {
+  margin-right: 16px;
+  width: 90px;
+}
 @media screen and (max-width: 767px) {
+  .img-icon {
+    margin-right: 8px;
+    width: 60px;
+  }
+  .img-text-1 {
+    width: 245px;
+  }
+  .img-text-2 {
+    width: 125px;
+  }
+  .img-text-3 {
+    width: 125px;
+  }
   .banner {
     margin-bottom: 30px;
   }
@@ -285,16 +333,63 @@ export default {
     font-size: 16px;
   }
   .fund-text {
+    width: 300px;
     margin: 0 auto 40px;
     font-size: 14px;
+    .img-dec-1 {
+      width: 150px;
+      top: 50px;
+      right: -50px;
+    }
   }
   .donate-text {
     margin: 0 auto;
-    max-width: 555px;
+    width: 300px;
     font-size: 14px;
+    .img-dec-2 {
+      width: 80px;
+      top: -70px;
+      left: 200px;
+    }
+    .img-dec-3 {
+      height: 177px;
+      right: -55px;
+      bottom: 7px;
+    }
+  }
+  .go-donate-out {
+    .img-dec-4 {
+      width: 95px;
+      right: 0;
+      bottom: 0;
+    }
+    .img-dec-5 {
+      width: 55px;
+      left: 20px;
+      bottom: 0;
+    }
+    .img-dec-6 {
+      width: 55px;
+      left: 0;
+      bottom: 40px;
+    }
   }
   .go-donate {
     margin: 60px auto;
+    height: 210px;
+    width: 300px;
+    .go-donate-title {
+      margin: 0;
+      width: 145px;
+    }
+    .go-donate-text {
+      height: 60px;
+    }
+    .go-donate-button {
+      margin: 5px 0 0 5px;
+      height: 50px;
+      width: 130px;
+    }
   }
 }
 </style>
