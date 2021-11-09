@@ -52,9 +52,9 @@ class SearchController extends BaseController
                 // 小學堂
                 case 'blog':
                     $result = KnowledgeArticle::search($keyword)
-                        ->where('isActive', 'on')
                         ->minScore(2.0)
-                        ->select(['id', 'post_title', 'post_content'])
+                        ->select(['id', 'post_title', 'post_content', 'isActive'])
+                        ->where('isActive', 'on')
                         ->paginate(
                             $page_size,
                             'page',
