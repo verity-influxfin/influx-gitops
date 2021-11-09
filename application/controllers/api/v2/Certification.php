@@ -3862,4 +3862,33 @@ class Certification extends REST_Controller {
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
+
+    public function livingBody_post(){
+        $input 		= $this->input->post(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+        $investor 	= $this->user_info->investor;
+
+        //必填欄位
+        $fields 	= ['imageId'];
+        foreach ($fields as $field) {
+            if(isset($input[$field])){
+                $content[$field] = $input[$field];
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+        }
+
+        // 檢查圖片是否存在
+        $image_info = $this->log_image_model->get_by([
+            'id'		=> $content['imageId'],
+            'user_id'	=> $user_id,
+        ]);
+        if(!$image_info || !isset($image_info->url)){
+            $this->response(array('result' => 'ERROR','error' => PICTURE_NOT_EXIST ));
+        }
+
+        $this->load->library('Papago_lib');
+		$face8_person_face = $this->papago_lib->detect($image_info->url, $user_id);
+        $this->response(array('result' => 'SUCCESS','data' => $face8_person_face ));
+    }
 }
