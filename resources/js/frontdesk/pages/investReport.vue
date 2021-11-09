@@ -23,7 +23,7 @@
           <div class="item-value">$20,000,000</div>
         </div>
       </div>
-      <div class="row no-gutters justify-content-between">
+      <div class="row no-gutters justify-content-between mt-4">
         <div class="invest-overview">
           <div class="overview-title">
             <div class="text-center">(一)資產概況</div>
@@ -89,67 +89,62 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="realized-rate">
+      <div class="realized-rate">
         <div class="realized-title">
           <div class="text-center">(三)已實現收益率</div>
           <div class="underline"></div>
         </div>
         <div class="realized-table">
-          <div class="table-header">
-            <div class="item dur item-ful">期間</div>
-            <div class="item item-ful avg">本金均額(※3)</div>
-            <div class="double-item d-flex flex-column justify-content-end">
-              <div class="row no-gutters">
-                <div class="item-up item col">收入</div>
-                <div class="item-up item">支出</div>
-              </div>
-              <div class="row no-gutters">
-                <div class="item-down item">利息收入</div>
-                <div class="item-down item">提還利息</div>
-                <div class="item-down item overdue-rate">逾期償還利息</div>
-                <div class="item-down item">延滯息</div>
-                <div class="item-down item">補貼息</div>
-                <div class="item-down item">回款手收</div>
-              </div>
-            </div>
-            <div class="item item-ful full-income">總收益(※1)</div>
-            <div class="double-item">
-              <div class="row no-gutters">
-                <div class="item-up item item-rate">收益率</div>
-              </div>
-              <div class="row no-gutters">
-                <div class="item-down item item-rate">報酬率(※2)</div>
-              </div>
-            </div>
+          <div class="header-item dur">期間</div>
+          <div class="header-item avg">本金均額(※3)</div>
+          <div class="header-item full-income">總收益(※1)</div>
+          <div class="header-item item-rate">報酬率(※2)</div>
+          <div class="test1">
+            <div class="test2 header-item">收入</div>
+            <div class="test3 header-item">支出</div>
+            <div class="header-sub-item">利息收入</div>
+            <div class="header-sub-item">提還利息</div>
+            <div class="header-sub-item">逾期償還利息</div>
+            <div class="header-sub-item">延滯息</div>
+            <div class="header-sub-item">補貼息</div>
+            <div class="header-sub-item">回款手收</div>
           </div>
-          <div class="table-row" v-for="i in 4" :key="i">
-            <div class="table-title item dur">2021 07~12</div>
-            <div class="item avg">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item">1,239</div>
-            <div class="item overdue-rate">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item full-income">123,456</div>
-            <div class="item">12%</div>
-          </div>
-          <div class="table-row">
-            <div class="table-title item dur">累積收益率</div>
-            <div class="item avg">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item">1,239</div>
-            <div class="item overdue-rate">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-            <div class="item full-income">123,456</div>
-            <div class="item">12%</div>
+          <div class="rows">
+            <div class="one-row" v-for="i in 4" :key="i">
+              <div class="table-title item">2021 07~12</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">1,239</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">12%</div>
+            </div>
+            <div class="one-row">
+              <div class="table-title item">累積收益率</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">1,239</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">123,456</div>
+              <div class="item">12%</div>
+            </div>
           </div>
         </div>
-      </div> -->
-      <div class="row no-gutters justify-content-between">
+      </div>
+      <div class="row flex-column no-gutters hint mt-2">
+        <div>
+          ※1.總收益=(利息收入+提還利息+逾期償還利息+延滯息+補貼息)-回款手收
+        </div>
+        <div class="">※2.報酬率=當期(總收益/本金均額)</div>
+        <div class="">※3.本金均額=年度每月底本金餘額加總/期數</div>
+      </div>
+      <div class="row no-gutters justify-content-between mt-2">
         <div class="wait-for-realized">
           <div class="wait-title">
             <div class="text-center">(四)待實現應收利息</div>
@@ -252,13 +247,11 @@ export default {
     }
   }
   .invest-overview {
-    margin-top: 30px;
     .overview-title {
       margin-bottom: 15px;
     }
   }
   .invest-performance {
-    margin-top: 30px;
     .performance-title {
       margin-bottom: 15px;
     }
@@ -270,9 +263,89 @@ export default {
     }
   }
   .realized-rate {
-    margin-top: 30px;
     .realized-title {
       margin-bottom: 15px;
+    }
+    .realized-table {
+      display: grid;
+      grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-rows: 42px auto;
+      gap: 0px 0px;
+      grid-auto-flow: row;
+      grid-template-areas:
+        "dur avg test1 test1 test1 test1 test1 test1 full-income item-rate"
+        "rows rows rows rows rows rows rows rows rows rows"
+        "rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2 rows2";
+      .header-item {
+        background-color: #3b6188;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .header-sub-item {
+        background-color: #fff;
+        color: #3b6188;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .dur {
+      grid-area: dur;
+    }
+
+    .avg {
+      grid-area: avg;
+    }
+
+    .full-income {
+      grid-area: full-income;
+    }
+
+    .item-rate {
+      grid-area: item-rate;
+    }
+
+    .test1 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 0px 0px;
+      grid-auto-flow: row;
+      grid-template-areas:
+        "test2 test2 test2 test2 test2 test3"
+        ". . . . . .";
+      grid-area: test1;
+    }
+
+    .test2 {
+      grid-area: test2;
+    }
+
+    .test3 {
+      grid-area: test3;
+    }
+
+    .rows {
+      grid-area: rows;
+      .one-row {
+        display: grid;
+        grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        grid-template-areas: ". . . . . . . . . .";
+        .item {
+          padding: 5px 0;
+          text-align: center;
+        }
+      }
+    }
+    .one-row:nth-child(even) {
+      background: #dbdcdc;
+    }
+
+    .rows2 {
+      grid-area: rows2;
     }
 
     .table-header .item {
@@ -326,7 +399,6 @@ export default {
     }
   }
   .wait-for-realized {
-    margin-top: 30px;
     .wait-title {
       margin-bottom: 15px;
     }
@@ -341,7 +413,6 @@ export default {
     }
   }
   .overdue {
-    margin-top: 30px;
     .overdue-title {
       margin-bottom: 15px;
     }
@@ -380,6 +451,11 @@ export default {
   }
   .table-title {
     color: #3b6188;
+  }
+  .hint {
+    color: red;
+    padding-left: 15px;
+    font-size: 12px;
   }
 }
 </style>
