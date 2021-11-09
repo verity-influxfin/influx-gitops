@@ -183,7 +183,7 @@ class Backendcontroller extends BaseController
                     $model->post_modified = $now;
                     $model->post_title    = $input['post_title'] ?? null;
                     $model->post_content  = $input['post_content'] ?? null;
-                    $model->status        = $input['status'] ?? 'publish';
+                    $model->isActive      = $input['isActive'] ?? 'on';
                     $model->type          = $input['type'] ?? 'article';
                     $model->order         = $input['order'] ?? 0;
                     $model->media_link    = $input['media_link'] ?? null;

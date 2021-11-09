@@ -35,7 +35,7 @@ class KnowledgeArticle extends Model
         'post_modified',
         'post_title',
         'post_content',
-        'status',
+        'isActive',
         'type',
         'order',
         'media_link',
