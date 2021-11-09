@@ -12,6 +12,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\KnowledgeArticle;
+
 class Backendcontroller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -151,34 +153,59 @@ class Backendcontroller extends BaseController
         return response()->json($knowledge, 200);
     }
 
+    /**
+     * 新增/ 修改小學堂文章
+     *
+     * @param      \Illuminate\Http\Request  $request  請求
+     */
     public function modifyKnowledge(Request $request)
     {
-        $this->inputs = $request->all();
+        $inputs = $request->all();
 
         try {
-            $exception = DB::transaction(function () {
-                $this->inputs['data']['post_author'] = '1';
-                $this->inputs['data']['post_modified'] = date('Y-m-d H:i:s');
-                if ($this->inputs['actionType'] === 'insert') {
-                    $this->inputs['data']['post_date'] = date('Y-m-d H:i:s');
-                    DB::table('knowledge_article')->insert($this->inputs['data']);
-                } else if ($this->inputs['actionType'] === 'update') {
-                    DB::table('knowledge_article')->where('ID', $this->inputs['ID'])->update($this->inputs['data']);
+            $result = DB::transaction(function () use ($inputs) {
+                $now = date('Y-m-d H:i:s');
+
+                switch (strtolower($inputs['actionType'])) {
+
+                    case 'insert':
+                        $model = new KnowledgeArticle();
+                        $model->post_date = $now;
+                        break;
+
+                    case 'update':
+                        $model = KnowledgeArticle::find($inputs['ID']);
+                        break;
+                }
+
+                if (! empty($model)) {
+                    $model->post_author   = '1';
+                    $model->post_modified = $now;
+                    $model->post_title    = $input['post_title'] ?? null;
+                    $model->post_content  = $input['post_content'] ?? null;
+                    $model->isActive      = $input['isActive'] ?? 'on';
+                    $model->type          = $input['type'] ?? 'article';
+                    $model->order         = $input['order'] ?? 0;
+                    $model->media_link    = $input['media_link'] ?? null;
+                    $model->video_link    = $input['video_link'] ?? null;
+                    $model->save();
                 }
             }, 5);
-            return response()->json($exception, is_null($exception) ? 200 : 400);
+            return response()->json($result, ($result === null) ? 200 : 400);
         } catch (Exception $e) {
-            return response()->json($e, 400);
+            return response()->json($e->getMessage(), 400);
         }
     }
 
     public function deleteKonwledge(Request $request)
     {
-        $this->inputs = $request->all();
+        $id = $request->input('ID');
 
         try {
-            $exception = DB::transaction(function () {
-                DB::table('knowledge_article')->where('ID', '=', $this->inputs['ID'])->delete();
+            $exception = DB::transaction(function () use ($id) {
+                if (! empty($model = KnowledgeArticle::find($id))) {
+                    $model->delete();
+                }
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {
