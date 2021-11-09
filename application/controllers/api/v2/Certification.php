@@ -660,11 +660,11 @@ class Certification extends REST_Controller {
     				'meta_key'	=> 'school_email',
     				'meta_value'=> $content['email'],
     			));
-            }
 
-			if($user_meta && $user_meta->user_id != $user_id){
-				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
-			}
+                if($user_meta && $user_meta->user_id != $user_id){
+    				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
+    			}
+            }
 
 			//學號是否使用過
 			$user_meta = $this->user_meta_model->get_by(array(
