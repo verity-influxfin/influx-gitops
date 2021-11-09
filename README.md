@@ -32,6 +32,12 @@ client
 ```PHP
 php artisan elastic:create-index "App\Es\KnowledgeArticleIndexConfigurator"
 php artisan elastic:update-mapping "App\Models\KnowledgeArticle"
+
+// 匯入 model 資料
+php artisan scout:import "App\Models\KnowledgeArticle"
+
+php artisan elastic:update-index "App\Es\KnowledgeArticleIndexConfigurator"
+php artisan elastic:migrate "App\Models\KnowledgeArticle" knowledge_article
 ```
 
 

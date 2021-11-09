@@ -165,40 +165,30 @@ class Backendcontroller extends BaseController
         try {
             $result = DB::transaction(function () use ($inputs) {
                 $now = date('Y-m-d H:i:s');
-                $data = [
-                    'post_author'   => '1',
-                    'post_modified' => $now,
-                    'post_title'    => $input['post_title'] ?? null,
-                    'post_content'  => $input['post_content'] ?? null,
-                    'status'        => $input['status'] ?? 'publish',
-                    'type'          => $input['type'] ?? 'article',
-                    'order'         => $input['order'] ?? 0,
-                    'media_link'    => $input['media_link'] ?? null,
-                    'video_link'    => $input['video_link'] ?? null,
-                ];
 
                 switch (strtolower($inputs['actionType'])) {
-                    case 'insert':
-                        $data['post_date'] = $now;
 
-                        if ($id = DB::table('knowledge_article')->insertGetId($data)) {
-                            // 建立搜尋索引
-                            $result = \Elasticsearch::index([
-                                'id'    => $id,
-                                'index' => 'influx_web',
-                                'type'  => 'knowledge_article',
-                                'body'  => [
-                                    'title'   => $data['post_title'],
-                                    'content' => $data['post_content'],
-                                ],
-                            ]);
-                        }
+                    case 'insert':
+                        $model = new KnowledgeArticle();
+                        $model->post_date = $now;
                         break;
 
                     case 'update':
-                        DB::table('knowledge_article')->where('ID', $inputs['ID'])
-                                                      ->update($data);
+                        $model = KnowledgeArticle::find($inputs['ID']);
                         break;
+                }
+
+                if (! empty($model)) {
+                    $model->post_author   = '1';
+                    $model->post_modified = $now;
+                    $model->post_title    = $input['post_title'] ?? null;
+                    $model->post_content  = $input['post_content'] ?? null;
+                    $model->status        = $input['status'] ?? 'publish';
+                    $model->type          = $input['type'] ?? 'article';
+                    $model->order         = $input['order'] ?? 0;
+                    $model->media_link    = $input['media_link'] ?? null;
+                    $model->video_link    = $input['video_link'] ?? null;
+                    $model->save();
                 }
             }, 5);
             return response()->json($result, ($result === null) ? 200 : 400);
@@ -209,11 +199,13 @@ class Backendcontroller extends BaseController
 
     public function deleteKonwledge(Request $request)
     {
-        $this->inputs = $request->all();
+        $id = $request->input('ID');
 
         try {
-            $exception = DB::transaction(function () {
-                DB::table('knowledge_article')->where('ID', '=', $this->inputs['ID'])->delete();
+            $exception = DB::transaction(function () use ($id) {
+                if (! empty($model = KnowledgeArticle::find($id))) {
+                    $model->delete();
+                }
             }, 5);
             return response()->json($exception, is_null($exception) ? 200 : 400);
         } catch (Exception $e) {

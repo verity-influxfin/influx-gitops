@@ -30,6 +30,19 @@ class KnowledgeArticle extends Model
         ]
     ];
 
+    protected $fillable = [
+        'post_author',
+        'post_modified',
+        'post_title',
+        'post_content',
+        'status',
+        'type',
+        'order',
+        'media_link',
+        'video_link',
+        'post_date'
+    ];
+
     /**
      * Get the value used to index the model.
      *
