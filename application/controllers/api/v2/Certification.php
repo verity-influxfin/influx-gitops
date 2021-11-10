@@ -627,7 +627,6 @@ class Certification extends REST_Controller {
 				'department',
 				'grade',
 				'student_id',
-				'email',
 				'major',
 				'sip_account',
 				'sip_password'
@@ -640,6 +639,7 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+            $content['email'] = isset($input['email']) ? isset($input['email']) : '';
 
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
