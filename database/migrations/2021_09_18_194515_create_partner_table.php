@@ -21,7 +21,7 @@ class CreatePartnerTable extends Migration
                 $table->longText('text')->nullable()->comment('內容');
                 $table->string('imageSrc', 255)->nullable()->comment('圖片');
                 $table->string('type', 255)->nullable()->comment('單位類型');
-                $table->integer('order', 11)->nullable()->comment('顯示排序');
+                $table->integer('order')->nullable()->comment('顯示排序');
                 $table->string('link', 255)->nullable()->comment('跳轉連結');
                 $table->timestamps();
             });
