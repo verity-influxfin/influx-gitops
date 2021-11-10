@@ -632,14 +632,14 @@ class Certification extends REST_Controller {
 				'sip_password'
 			];
 			foreach ($fields as $field) {
-                // 學生 email 選填
-				if (empty($input[$field]) && $field != 'email') {
+				if (empty($input[$field])) {
 					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
 				}else{
 					$content[$field] = $input[$field];
 				}
 			}
-            $content['email'] = isset($input['email']) ? isset($input['email']) : '';
+            // 學生 email 選填
+            $content['email'] = isset($input['email']) && !empty($input['email']) ? $input['email'] : '';
 
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
