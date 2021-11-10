@@ -28,6 +28,19 @@ client
 
 `production:npm run production`
 
+## 設定更新 elasticsearch 索引
+```PHP
+php artisan elastic:create-index "App\Es\KnowledgeArticleIndexConfigurator"
+php artisan elastic:update-mapping "App\Models\KnowledgeArticle"
+
+// 匯入 model 資料
+php artisan scout:import "App\Models\KnowledgeArticle"
+
+php artisan elastic:update-index "App\Es\KnowledgeArticleIndexConfigurator"
+php artisan elastic:migrate "App\Models\KnowledgeArticle" knowledge_article
+```
+
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
