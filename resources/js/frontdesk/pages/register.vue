@@ -104,13 +104,17 @@
                   <span></span>
                   <div class="row">
                     我同意
-                    <div class="terms" @click="getTerms('user')">
-                      借款人服務條款
-                    </div>
+                    <router-link to="/userTerms" target="_blank">
+                      <div class="terms">
+                        借款人服務條款
+                      </div>
+                    </router-link>
                     、
-                    <div class="terms" @click="getTerms('privacy_policy')">
-                      隱私權條款
-                    </div>
+                    <router-link to="/privacyTerms" target="_blank">
+                      <div class="terms">
+                        隱私權條款
+                      </div>
+                    </router-link>
                   </div>
                 </div>
               </div>
@@ -180,7 +184,9 @@
             <button type="button" class="close" data-dismiss="modal">✕</button>
           </div>
           <div class="modal-body terms-content">
-            <div v-html="termsContent"></div>
+            <div>
+              {{ termsContent }}
+            </div>
           </div>
           <div class="modal-footer"></div>
         </div>
