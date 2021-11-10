@@ -1904,6 +1904,7 @@ END:
         $settings = json_decode($qrcode_settings->settings, true);
         $settings['certification_id'] = array_column($certifications, 'id');
         $settings['description'] = $qrcode_settings->description;
+        $settings['investor'] = $investor;
 
         $this->load->library('contract_lib');
         $start_time = date('Y-m-d H:i:s');
