@@ -805,7 +805,7 @@ class Certification_lib{
                if($sip_log && isset($sip_log['status'])){
                    if($sip_log['status'] == 200){
                        if($sip_log['response']['status'] == 'finished'){
-                           if(isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == 'True' || 1){
+                           if(isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == 'True' && $sip_log['response']['isLogin'] == 'True'){
                                $sip_data = $this->CI->sip_lib->getDeepData($content['school'],$content['sip_account']);
                                $content['sip_data'] = isset($sip_data['response']) ? $sip_data['response'] : [];
                                $user_info = !empty($user_certification->content) ? $user_certification->content : [];
@@ -835,7 +835,6 @@ class Certification_lib{
                        }
                    }
                    if($sip_log['status'] == 204){
-                       $this->sip_lib->requestLogin($content['school'],$content['sip_account'],$content['sip_password']);
                        $this->sip_lib->requestDeep($content['school'],$content['sip_account'],$content['sip_password']);
                        return false;
                    }

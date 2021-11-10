@@ -740,11 +740,6 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('scraper/sip_lib.php');
-				$this->sip_lib->requestLogin(
-				    $content['school'],
-				    $content['sip_account'],
-				    $content['sip_password']
-				);
                 $this->sip_lib->requestDeep(
                     $content['school'],
                     $content['sip_account'],
