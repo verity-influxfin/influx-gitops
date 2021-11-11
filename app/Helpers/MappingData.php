@@ -18,4 +18,15 @@ class MappingData
         }
         return $data;
     }
+    public function getEventSchools(){
+        $data = [];
+        $plucked = EventCampusTeam::all()->pluck(
+          'school',
+          'id'
+        );
+        if(!empty($plucked)){
+            $data =  $plucked->all();
+        }
+        return $data;
+    }
 }
