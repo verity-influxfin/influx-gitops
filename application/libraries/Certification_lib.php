@@ -795,6 +795,8 @@ class Certification_lib{
                if(!isset($content['email_verify_status']) || !isset($content['email_verify_time']) || $content['email_verify_status'] != true || ($content['email_verify_time'] < strtotime(date('Y-m-d',$info->created_at) . "+1 hours")) ){
                    $verifiedResult->setStatus(2);
                    $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
+               }else{
+
                }
            }
 
@@ -853,7 +855,8 @@ class Certification_lib{
                    $graduate_date = preg_replace('/民國/', '', $content['graduate_date']);
                    $this->CI->load->library('mapping/time');
                    $graduate_date = $this->CI->time->ROCDateToUnixTimestamp($graduate_date);
-                   if(is_numeric($graduate_date)){
+                   // 是否畢業
+                   if(is_numeric($graduate_date) && $graduate_date <= strtotime(date('Y-m-d',$info->created_at)) ){
                        // 是否超過六年
                        if($graduate_date <= strtotime(date('Y-m-d',$info->created_at) . "-6 years")){
                            $verifiedResult->setStatus(2);
