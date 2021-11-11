@@ -154,7 +154,7 @@ class EventCampusMemberController extends Controller
 
         $show->field('team_id', '團隊名稱')->using($team_list);
         $show->field('name', '姓名');
-        $show->field('school', '學校')->display(function () {
+        $show->field('school', '學校')->as(function () {
             $MappingData = new MappingData();
             $school_list = $MappingData->getEventSchools();
 
