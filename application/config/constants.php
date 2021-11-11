@@ -137,6 +137,7 @@ defined('COOPERATION_EXIST')  			OR define('COOPERATION_EXIST'			, 314); //已�
 defined('COOPERATION_NOT_EXIST')  		OR define('COOPERATION_NOT_EXIST'		, 315); //沒申請過經銷商
 defined('COOPERATION_TYPE_ERROR')  		OR define('COOPERATION_TYPE_ERROR'		, 316); //經銷商類別錯誤
 defined('SMS_SEND_FAIL')                OR define('SMS_SEND_FAIL'               , 317); //簡訊驗證碼SMS發送失敗
+defined('CHARITY_INVALID_AMOUNT')       OR define('CHARITY_INVALID_AMOUNT'      , 318); //無效的慈善捐款金額
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
@@ -377,6 +378,8 @@ defined('SOURCE_INTEREST')       	OR define('SOURCE_INTEREST'			, '14');//還款
 defined('SOURCE_AR_LAW_FEE')        OR define('SOURCE_AR_LAW_FEE'       , '31');//應收法催執行費
 defined('SOURCE_LAW_FEE')           OR define('SOURCE_LAW_FEE'          , '32');//法催執行費
 
+defined('SOURCE_CHARITY')           OR define('SOURCE_CHARITY'          , '41');//慈善捐款
+
 defined('SOURCE_FEES_B')        	OR define('SOURCE_FEES_B'			, '50');//平台服務費沖正
 defined('SOURCE_TRANSFER_FEES_B')   OR define('SOURCE_TRANSFER_FEES_B'	, '51');//債權轉讓服務費沖正
 defined('SOURCE_TRANSFER_B')       	OR define('SOURCE_TRANSFER_B'		, '52');//債權轉讓費沖正
@@ -572,3 +575,5 @@ defined('PROMOTE_STATUS_AVAILABLE') OR define('PROMOTE_STATUS_AVAILABLE', 1);
 defined('PROMOTE_STATUS_PENDING_TO_VERIFY') OR define('PROMOTE_STATUS_PENDING_TO_SENT', 2);
 defined('PROMOTE_STATUS_PENDING_TO_VERIFY') OR define('PROMOTE_STATUS_PENDING_TO_VERIFY', 3);
 defined('PROMOTE_GENERAL_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_CONTRACT_TYPE_NAME', "qrcode_general");
+
+defined('CHARITY_RECEIPT_TYPE_SINGLE_PAPER') OR define('CHARITY_RECEIPT_TYPE_SINGLE_PAPER', 0);

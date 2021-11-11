@@ -2069,4 +2069,188 @@ END:
 
         $this->response(array('result' => 'SUCCESS','data' => $data));
     }
+
+    public function charity_institutions_get()
+    {
+        $this->load->model('user/charity_institution_model');
+        $this->load->model('admin/agreement_model');
+
+        $list = [];
+        $rs = $this->charity_institution_model->get_many_by(['status' => 1]);
+        foreach ($rs as $value) {
+            $agreement = $this->agreement_model->get($value->agreement_id);
+            $agreementContent = $agreement['content'] ?? '';
+
+            $list[] = [
+                'alias' => $value->alias,
+                'name' => $value->name,
+                'min_amount' => intval($value->min_amount),
+                'max_amount' => intval($value->max_amount),
+                'agreement' => $agreementContent,
+            ];
+        }
+        $this->response(array('result' => 'SUCCESS','data' => array('list' => $list)));
+    }
+
+    public function donated_list_get()
+    {
+        $userId = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $input = $this->input->get(NULL, TRUE);
+        $alias = '';
+        $where = [
+            'user_id' => $userId,
+            'investor' => $investor,
+        ];
+
+        $this->load->model('transaction/charity_model');
+        if(!empty($input['alias'])) {
+            $alias = $input['alias'];
+        }
+
+        $list = $this->charity_model->getDonatedList($alias, $where);
+        $list = array_map(function ($value) {
+            $donatorData = json_decode($value['data'], TRUE);
+
+            return [
+                'tx_datetime' => date('Y-m-d H:i:s', strtotime($value['tx_datetime'])),
+                'amount' => intval($value['amount']),
+                'donator_name' => $donatorData['name'],
+                'donator_sex' => $this->user_info->sex == "M" ? "先生" : "小姐",
+                'institution_name' => $value['name'],
+            ];
+
+        }, $list);
+        $this->response(array('result' => 'SUCCESS','data' => array('list' => $list) ));
+    }
+
+    public function donate_charity_post() {
+        $userId    = $this->user_info->id;
+        $investor   = $this->user_info->investor;
+        $input = $this->input->post(NULL, TRUE);
+        $data = [];
+        $errorCode = 0;
+
+        $fields 	= ['alias','amount','receipt_id_number','receipt_address'];
+        foreach ($fields as $field) {
+            if (!isset($input[$field]) && !$input[$field]) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $data[$field] = $input[$field];
+            }
+        }
+
+        $this->load->model('user/charity_institution_model');
+        $institution = $this->charity_institution_model->get_by(['alias' => $data['alias'], 'status' => 1]);
+        if(!isset($institution)) {
+            $this->response(array('result' => 'ERROR','error' => KEY_FAIL ));
+        }
+
+        $this->load->model('user/judicial_person_model');
+        $judical_person_info = $this->judicial_person_model->get_by(['id' => $institution->judicial_person_id]);
+        if(!isset($judical_person_info)) {
+            $this->response(array('result' => 'ERROR','error' => EXIT_DATABASE ));
+        }
+
+        $donateAmount = intval($data['amount']);
+        if($donateAmount < $institution->min_amount || $donateAmount > $institution->max_amount) {
+            $this->response(array('result' => 'ERROR','error' => CHARITY_INVALID_AMOUNT ));
+        }
+
+        $this->load->library('user_lib');
+        $this->load->model('user/virtual_account_model');
+        $virtual = $this->user_lib->getVirtualAccountPrefix($investor);
+        $virtual_account = $this->virtual_account_model->setVirtualAccount($userId, $investor,
+            VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $virtual);
+        if (empty($virtual_account)) {
+            $this->response(array('result' => 'ERROR','error' => EXIT_ERROR ));
+        }
+
+        // 取得借款人虛擬帳戶餘額
+        $this->load->library('transaction_lib');
+        $funds = $this->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
+        $balance = $funds['total'] - $funds['frozen'];
+
+        try{
+            if($balance < $donateAmount) {
+                $errorCode = NOT_ENOUGH_FUNDS;
+                throw new ValueError('The balance is not enough.');
+            }
+
+            $this->load->model('transaction/charity_model');
+            $this->load->model('transaction/transaction_model');
+            $this->load->model('transaction/virtual_passbook_model');
+            $this->load->library('passbook_lib');
+
+            $this->transaction_model->trans_begin();
+            $this->virtual_passbook_model->trans_begin();
+            $this->charity_model->trans_begin();
+
+            $transactions = [
+                'source' => SOURCE_CHARITY,
+                'entering_date' => get_entering_date(),
+                'user_from' => $userId,
+                'bank_account_from' => $virtual_account->virtual_account,
+                'amount' => $donateAmount,
+                'target_id' => 0,
+                'investment_id' => 0,
+                'instalment_no' => 0,
+                'user_to' => $judical_person_info->company_user_id,
+                'bank_account_to' => $institution->virtual_account,
+                'status' => TRANSACTION_STATUS_PAID_OFF
+            ];
+
+            $tranRsId = $this->transaction_model->insert($transactions);
+            if(!$tranRsId) {
+                $errorCode = EXIT_DATABASE;
+                throw new Exception('insert failed');
+            }
+
+            $data = array_intersect_key($data, array_flip(['receipt_id_number','receipt_address']));
+            $data['name'] = $this->user_info->name;
+            $data['email'] = $this->user_info->email;
+            $data['phone'] = $this->user_info->phone;
+
+            $this->passbook_lib->enter_account($tranRsId);
+            if(!$this->charity_model->insert([
+                'institution_id' => $institution->id,
+                'user_id' => $userId,
+                'investor' => $investor,
+                'amount' => $donateAmount,
+                'transaction_id' => $tranRsId,
+                'tx_datetime' => date("Y-m-d H:i:s"),
+                'receipt_type' => CHARITY_RECEIPT_TYPE_SINGLE_PAPER,
+                'data' => json_encode($data),
+            ])) {
+                $errorCode = EXIT_DATABASE;
+                throw new Exception('insert failed');
+            }
+
+            if($this->transaction_model->trans_status() === TRUE && $this->virtual_passbook_model->trans_status() === TRUE
+                && $this->charity_model->trans_status() === TRUE) {
+                $this->transaction_model->trans_commit();
+                $this->virtual_passbook_model->trans_commit();
+                $this->charity_model->trans_commit();
+
+            }else{
+                $errorCode = EXIT_DATABASE;
+                throw new Exception("transaction_status is invalid.");
+            }
+
+        } catch (Throwable $t) {
+            $this->transaction_model->trans_rollback();
+            $this->virtual_passbook_model->trans_rollback();
+            $this->charity_model->trans_rollback();
+        } finally {
+            $this->virtual_account_model->setVirtualAccount($userId, $investor,
+                VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $virtual);
+        }
+
+        if(!$errorCode) {
+            $this->response(array('result' => 'SUCCESS'));
+        }else {
+            $this->response(array('result' => 'ERROR', 'error' => $errorCode));
+        }
+
+    }
 }

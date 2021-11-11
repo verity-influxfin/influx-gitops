@@ -222,4 +222,22 @@ class User_lib {
         return $list;
     }
 
+    /**
+     * 取得虛擬帳號前綴帳號
+     * @param int $investor
+     * @param int $product_id
+     * @return string
+     */
+    public function getVirtualAccountPrefix(int $investor, int $product_id=0): string
+    {
+        switch ($investor) {
+            case USER_BORROWER:
+                return CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE;
+                break;
+            case USER_INVESTOR:
+                return CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE;
+                break;
+        }
+    }
+
 }
