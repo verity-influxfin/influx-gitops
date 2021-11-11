@@ -2281,22 +2281,156 @@ class Certification_lib{
 		return false;
 	}
 
-	private function financial_success($info){
+    private function financial_success($info){
 		if($info){
 			$content 	= $info->content;
+
+            $financial_income = 0;
+            $financial_expense = 0;
+            $income 	= [
+                // 薪資/打工收入
+				'income',
+                // 零用錢收入
+				'incomeStudent',
+                // 獎學金收入
+                'scholarship',
+				'other_income',
+			];
+            $expense = [
+                'restaurant',
+				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
+				'entertainment',
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
+            ];
+
+            // 收入計算
+            foreach($income as $income_fields){
+                if(isset($content[$income_fields]) && is_numeric($content[$income_fields])){
+                    $financial_income += $content[$income_fields];
+                }
+            }
+
+            // 支出計算
+            foreach($expense as $expense_fields){
+                if(isset($content[$expense_fields]) && is_numeric($content[$expense_fields])){
+                    $financial_expense += $content[$income_fields];
+                }
+            }
+
 			$data 		= array(
 				'financial_status'		=> 1,
-				'financial_income'		=> $content['parttime']+$content['allowance']+$content['scholarship']+$content['other_income'],
-				'financial_expense'		=> $content['restaurant']+$content['transportation']+$content['entertainment']+$content['other_expense'],
+				'financial_income'		=> $financial_income,
+				'financial_expense'		=> $financial_expense,
 			);
-            if(isset($content['creditcard_image'])){
+
+            if(isset($content['creditcard_image']) && !empty($content['creditcard_image'])){
                 $data['financial_creditcard'] = $content['creditcard_image'];
             }
-            if(isset($content['passbook_image'])){
+            if(isset($content['passbook_image'][0]) && !empty($content['passbook_image'][0])){
                 $data['financial_passbook'] = $content['passbook_image'][0];
             }
 
-            if(isset($content['bill_phone_image'])){
+            if(isset($content['bill_phone_image'][0]) && !empty($content['bill_phone_image'][0])){
+                $data['financial_bill_phone'] = $content['bill_phone_image'][0];
+            }
+            $rs = $this->user_meta_progress($data,$info);
+			if($rs){
+                return $this->fail_other_cer($info);
+			}
+		}
+		return false;
+	}
+
+    private function financialWorker_success($info){
+		if($info){
+			$content 	= $info->content;
+            $financial_income = 0;
+            $financial_expense = 0;
+            $income 	= [
+                // 薪資/兼職收入
+				'income',
+                // 投資理財收入
+				'pocketMoney',
+				'other_income',
+			];
+            $expense = [
+                'restaurant',
+				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
+				'entertainment',
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
+            ];
+
+            // 收入計算
+            foreach($income as $income_fields){
+                if(isset($content[$income_fields]) && is_numeric($content[$income_fields])){
+                    $financial_income += $content[$income_fields];
+                }
+            }
+
+            // 支出計算
+            foreach($expense as $expense_fields){
+                if(isset($content[$expense_fields]) && is_numeric($content[$expense_fields])){
+                    $financial_expense += $content[$income_fields];
+                }
+            }
+
+			$data 		= array(
+				'financial_status'		=> 1,
+				'financial_income'		=> $financial_income,
+				'financial_expense'		=> $financial_expense,
+			);
+            if(isset($content['creditcard_image']) && !empty($content['creditcard_image'])){
+                $data['financial_creditcard'] = $content['creditcard_image'];
+            }
+            if(isset($content['passbook_image'][0]) && !empty($content['passbook_image'][0])){
+                $data['financial_passbook'] = $content['passbook_image'][0];
+            }
+
+            if(isset($content['bill_phone_image'][0]) && !empty($content['bill_phone_image'][0])){
                 $data['financial_bill_phone'] = $content['bill_phone_image'][0];
             }
             $rs = $this->user_meta_progress($data,$info);
@@ -2836,7 +2970,7 @@ class Certification_lib{
                             CERTIFICATION_DEBITCARD,
                             CERTIFICATION_EMERGENCY,
                             CERTIFICATION_EMAIL,
-                            CERTIFICATION_FINANCIAL,
+                            CERTIFICATION_FINANCIALWORKER,
                             CERTIFICATION_INVESTIGATION,
                             CERTIFICATION_JOB,
                             CERTIFICATION_PROFILE
@@ -3015,7 +3149,14 @@ class Certification_lib{
 			$certification_list = [];
 			foreach($certification as $key => $value){
                 $ruser_id = $key == CERTIFICATION_INVESTIGATION && $company_source_user_id?$company_source_user_id:$user_id;
-                $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
+                // 歸戶顯示資料不進行是否過期判斷
+                if($target){
+                    // 有過期判斷
+                    $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
+                }else {
+                    // 沒有過期判斷
+                    $user_certification = $this->get_last_certification_info($ruser_id,$key,$investor);
+                }
 				if($user_certification){
 				    $key == CERTIFICATION_JUDICIALGUARANTEE ? $value['judicialPersonId'] = isset($user_certification->content['judicialPersonId']) ? $user_certification->content['judicialPersonId'] : '' : '';
 					$value['user_status'] 		= intval($user_certification->status);
