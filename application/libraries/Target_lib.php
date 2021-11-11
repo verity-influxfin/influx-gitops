@@ -1739,7 +1739,8 @@ class Target_lib
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
                                             // 微企貸對保不驗證
-                                            if($value->product_id != 1002 || $certification['id'] != 1020){
+                                            // 加入產品非必要項目不驗證結構
+                                            if(!isset($product_list['option_certifications']) || !in_array($certification['id'],$product_list['option_certifications'])){
                                                 $finish = false;
                                             }
                                         }
