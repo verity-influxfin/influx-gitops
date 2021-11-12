@@ -331,8 +331,7 @@ $config['product_list'] = [
             [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
-                CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL
+                CERTIFICATION_EMAIL
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -381,8 +380,7 @@ $config['product_list'] = [
             [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
-                CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL
+                CERTIFICATION_EMAIL
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -1158,8 +1156,7 @@ $config['sub_product_list'] = [
                     [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
-                        CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL
+                        CERTIFICATION_EMAIL
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],

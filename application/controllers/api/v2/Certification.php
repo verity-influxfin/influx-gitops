@@ -1613,7 +1613,7 @@ class Certification extends REST_Controller {
             $param['sys_check'] = 1;
             // 有傳圖片的話轉人工，沒有自動過件
             if($should_check == true){
-                $param['status'] = 3;
+                $param['status'] = 6;
             }
 
 			$insert = $this->user_certification_model->insert($param);
