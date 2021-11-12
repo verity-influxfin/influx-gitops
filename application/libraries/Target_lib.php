@@ -283,12 +283,12 @@ class Target_lib
                 if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
                     foreach ($mix_credit as $value) {
-                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true);
+                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment);
                     }
                     $total_point = array_sum($credit_score);
                     $rs = $this->CI->credit_lib->approve_associates_credit($target, $total_point);
                 }else{
-                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit);
+                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit, false, $target->instalment);
                 }
                 if ($rs) {
                     $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
@@ -365,6 +365,7 @@ class Target_lib
                                     || $subloan_status
                                     || $renew
                                     || $evaluation_status
+                                    || $creditSheet->hasCreditLine()
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
@@ -401,8 +402,11 @@ class Target_lib
                                 $tempData = json_decode($target->target_data,true);
                                 $param['target_data'] = json_encode(array_replace_recursive($tempData, is_array($targetData)?$targetData:[]));
                                 $rs = $this->CI->target_model->update($target->id, $param);
-                                if(!$renew)
+
+                                if(!$renew) {
                                     $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, $opinion);
+                                    $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
+                                }
 
                                 if ($rs && $msg) {
                                     $creditSheet->archive($credit);

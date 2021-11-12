@@ -19,7 +19,7 @@ class Credit_lib{
     }
 
 	//信用評比
-	public function approve_credit($user_id,$product_id,$sub_product_id=0, $approvalExtra = null, $stage_cer = false, $credit = false, $mix_credit = false){
+	public function approve_credit($user_id,$product_id,$sub_product_id=0, $approvalExtra = null, $stage_cer = false, $credit = false, $mix_credit = false, $instalment = 0){
 		if($user_id && $product_id){
 
             //信用低落
@@ -28,7 +28,7 @@ class Credit_lib{
                 'status'		=> 1,
                 'points <'		=> 0,
             ]);
-            $expire_time     = $max_expire_time = strtotime("+6 months", time());
+            $expire_time     = $max_expire_time = strtotime("+2 months", time());
 
             if($low){
                 if($mix_credit){
@@ -41,6 +41,7 @@ class Credit_lib{
 					'points'		=> $low->points,
 					'level'			=> $low->level,
 					'amount'		=> $low->amount,
+                    'instalment'    => $instalment,
 					'expire_time'   => $expire_time,
 				];
 				if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
@@ -63,7 +64,7 @@ class Credit_lib{
 
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
-				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit);
+				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
 				return $rs;
 			}
 		}
@@ -125,14 +126,15 @@ class Credit_lib{
         return $this->CI->credit_model->insert($param);
     }
 
-	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit){
+	private function approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
 
         $total = 0;
         $param = [
             'product_id' => $product_id,
             'sub_product_id' => $sub_product_id,
             'user_id' => $user_id,
-            'amount' => 0
+            'amount' => 0,
+            'instalment' => $instalment
         ];
 	    if($stage_cer == 0) {
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
@@ -306,11 +308,11 @@ class Credit_lib{
 		return $rs;
 	}
 
-	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit){
-		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit);
+	private function approve_2($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+		return $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
 	}
 
-	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit){
+	private function approve_3($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
         $total = 0;
         $time = time();
         $param = [
@@ -318,6 +320,7 @@ class Credit_lib{
             'product_id' => $product_id,
             'sub_product_id' => $sub_product_id,
             'amount' => 0,
+            'instalment' => $instalment
         ];
 
         $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
@@ -440,31 +443,31 @@ class Credit_lib{
 		return $rs;
 	}
 
-	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit){
-		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit);
+	private function approve_4($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+		return $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
 	}
 
-    private function approve_7($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit){
-        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit);
+    private function approve_7($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
         return $rs;
     }
 
-    private function approve_8($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit){
-        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit);
+    private function approve_8($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
 	    return $rs;
     }
 
-    private function approve_9($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit){
-        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit);
+    private function approve_9($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+        $rs = $this->approve_1($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
         return $rs;
     }
 
-    private function approve_10($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit){
-        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit);
+    private function approve_10($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
+        $rs = $this->approve_3($user_id,$product_id,$sub_product_id,$expire_time,$approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
         return $rs;
     }
 
-    private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit){
+    private function approve_1000($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment){
 
         $info 		= $this->CI->user_meta_model->get_many_by(['user_id'=>$user_id]);
         $user_info 	= $this->CI->user_model->get($user_id);
@@ -474,7 +477,8 @@ class Credit_lib{
             'product_id'    => $product_id,
             'sub_product_id'=> $sub_product_id,
             'user_id'       => $user_id,
-            'amount'        => 0
+            'amount'        => 0,
+            '$instalment'   => $instalment,
         ];
         foreach($info as $key => $value){
             $data[$value->meta_key] = $value->meta_value;
@@ -731,6 +735,7 @@ class Credit_lib{
 					'level'		 => intval($rs->level),
 					'points'	 => intval($rs->points),
 					'amount'	 => intval($rs->amount),
+					'instalment' => intval($rs->instalment),
 					'created_at' => intval($rs->created_at),
 					'expire_time'=> intval($rs->expire_time),
 				];

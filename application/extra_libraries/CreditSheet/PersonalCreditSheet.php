@@ -29,6 +29,9 @@ class PersonalCreditSheet extends CreditSheetBase {
     protected $scoringMin = 0;
     protected $scoringMax = 400;
 
+    // 還款中案件
+    public $repayableTargets;
+
     /**
      * PersonalCreditSheet constructor.
      * @param $target
@@ -51,6 +54,8 @@ class PersonalCreditSheet extends CreditSheetBase {
 
         $this->target = $target;
         $this->user = $user;
+        $this->repayableTargets = $this->CI->target_model->order_by('id','ASC')->get_many_by(
+            ['user_id'=>$this->user->id, 'status' => TARGET_REPAYMENTING, 'product_id' => $this::ALLOW_PRODUCT_LIST]);
 
         $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
         if(isset($this->creditSheetRecord)) {
@@ -221,7 +226,7 @@ class PersonalCreditSheet extends CreditSheetBase {
 
             $estimatedCredit = $this->CI->credit_lib->approve_credit($this->user->id,
                 $this->target->product_id, $this->target->sub_product_id,
-                $this->CI->approvalextra, $level);
+                $this->CI->approvalextra, $level, false, false, $this->target->instalment);
         }
 
         $separator = ', ';
@@ -300,5 +305,12 @@ class PersonalCreditSheet extends CreditSheetBase {
         return TRUE;
     }
 
-
+    /**
+     * 判斷是否已擁有核可額度
+     * @return bool
+     */
+    public function hasCreditLine() : bool {
+        return in_array($this->basicInfo->getCreditCategory(), [$this::CREDIT_CATEGORY_INCREMENTAL_LOAN,
+            $this::CREDIT_CATEGORY_CHANGE_LOAN]);
+    }
 }

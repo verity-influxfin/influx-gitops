@@ -49,6 +49,12 @@ abstract class CreditSheetBase implements CreditSheetDefinition
     abstract public function getData() : array;
 
     /**
+     * 判斷是否已擁有核可額度
+     * @return bool
+     */
+    abstract public function hasCreditLine() : bool;
+
+    /**
      * 授審表核准-設定意見及加分項目
      * @param int $groupId: 核可層級
      * @param string $opinion: 核可意見

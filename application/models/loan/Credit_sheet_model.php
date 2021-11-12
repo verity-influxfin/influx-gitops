@@ -71,4 +71,22 @@ class Credit_sheet_model extends MY_Model
 
         return $this->db->query($sql, $values);
     }
+
+    public function getCreditSheetsByUserId($userId, $statusList=[], $productIdList=[], $creditFilterTime='') {
+	    $this->db->select('*')
+            ->from('`p2p_loan`.`targets`')
+            ->where('user_id', $userId);
+	    if(!empty($productIdList))
+            $this->db->where_in('product_id', $productIdList);
+        $subQuery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('cs.*')
+            ->from('`p2p_loan`.`credit_sheet` AS `cs`')
+            ->where_in('cs.status', $statusList)
+            ->join("($subQuery) as `t`", "`t`.`id` = `cs`.`target_id`")
+            ->order_by('cs.created_at', 'desc');
+        if(!empty($creditFilterTime))
+            $this->db->where('cs.updated_at >= ', $creditFilterTime);
+        return $this->db->get()->result();
+    }
 }

@@ -128,7 +128,7 @@ class Subloan_lib{
 		isset($subloan['product_id'])?$product_id=$subloan['product_id']:'';
 		$credit 		= $this->CI->credit_lib->get_credit($user_id,$product_id);
 		if(!$credit){
-			$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id);
+			$rs 		= $this->CI->credit_lib->approve_credit($user_id,$product_id,0,null,false,false,false,$target->instalment);
 			if($rs){
 				$credit = $this->CI->credit_lib->get_credit($user_id,$product_id);
 			}

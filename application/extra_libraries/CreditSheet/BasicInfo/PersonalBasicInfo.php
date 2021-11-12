@@ -8,7 +8,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
     use CreditSheetTrait;
 
-    protected $repayableTargets;
     protected $CI;
     protected $certificationProcessList = [
         CERTIFICATION_IDCARD => ['name', 'id_number', 'birthday', 'address'],
@@ -126,12 +125,10 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
 
     /**
      * 獲得用戶還款中的案件產品類型列表
-     * @return array|false
+     * @return array
      */
     protected function getProductCategories() {
-        $this->repayableTargets = $this->CI->target_model->order_by('id','ASC')->get_many_by(
-                ['user_id'=>$this->creditSheet->user->id, 'status' => TARGET_REPAYMENTING]);
-        return array_map('intval', array_unique(array_column($this->repayableTargets, 'product_id')));
+        return array_map('intval', array_unique(array_column($this->creditSheet->repayableTargets, 'product_id')));
     }
 
     /**
@@ -150,18 +147,25 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
      * 增貸     : 有本金餘額且有核准紀錄
      * @return int
      */
-    protected function getCreditCategory(): int
+    public function getCreditCategory(): int
     {
         $this->CI->load->model('loan/credit_model');
-        $credit = $this->CI->credit_model->order_by('created_at', 'DESC')->
-            get_by(['user_id' => $this->creditSheet->user->id, 'created_at <=' => 'UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(created_at), INTERVAL 6 MONTH))']);
-        if(!isset($credit) || $this->creditSheet->target->product_id != $credit->product_id) {
+        $credit = $this->CI->credit_model->order_by('created_at', 'DESC')->get_by(
+                ['user_id' => $this->creditSheet->user->id, 'status' => 1,
+                'UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(created_at), INTERVAL 2 MONTH)) > ' => time(),
+                'created_at <' => $this->creditSheet->target->created_at
+                ]);
+        // TODO: 新案的半年內核准紀錄是否既往不咎 (待確認)
+        $creditSheetRecord = $this->CI->credit_sheet_model->getCreditSheetsByUserId($this->creditSheet->user->id, [1],
+            $this->creditSheet::ALLOW_PRODUCT_LIST, date('Y-m-d H:i:s', strtotime('-6 month')));
+
+        if(!isset($credit) || empty($creditSheetRecord) || $this->creditSheet->target->product_id != $credit->product_id ) {
             return self::CREDIT_CATEGORY_NEW_TARGET;
         }else if($this->creditSheet->target->sub_status == TARGET_SUBSTATUS_SUBLOAN_TARGET) {
             return self::CREDIT_CATEGORY_SUBLOAN;
         }else if($credit->instalment != $this->creditSheet->target->instalment) {
             return self::CREDIT_CATEGORY_CHANGE_LOAN;
-        }else if(count($this->repayableTargets)) {
+        }else if(count($this->creditSheet->repayableTargets) || !empty($credit)) {
             return self::CREDIT_CATEGORY_INCREMENTAL_LOAN;
         }
     }

@@ -639,7 +639,7 @@
                                 <span style="width:70%;"><input id="1_score" type="number" value="0" min="0" step="1" disabled></span>
                             </div>
                             <div><span style="width:30%;">姓名：</span><span id="1_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="1_apporvedTime"></span></div>
+                            <div><span style="width:30%;">時間：</span><span id="1_approvedTime"></span></div>
                         </div>
                         <div class="opinion_button">
                             <button id="1_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,1)" disabled>送出</button>
@@ -664,7 +664,7 @@
                                 <span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1" disabled></span>
                             </div>
                             <div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="2_apporvedTime"></span></div>
+                            <div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
                         </div>
                         <div class="opinion_button">
                             <button id="2_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,2)" disabled>送出</button>
@@ -689,7 +689,7 @@
                                 <span style="width:70%;"><input id="3_score" type="number" value="0" min="0" step="1" disabled></span>
                             </div>
                             <div><span style="width:30%;">姓名：</span><span id="3_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="3_apporvedTime"></span></div>
+                            <div><span style="width:30%;">時間：</span><span id="3_approvedTime"></span></div>
                         </div>
                         <div class="opinion_button">
                             <button id="3_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,3)" disabled>送出</button>
@@ -714,7 +714,7 @@
                                 <span style="width:70%;"><input id="4_score" type="number" value="0" min="0" step="1" disabled></span>
                             </div>
                             <div><span style="width:30%;">姓名：</span><span id="4_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="4_apporvedTime"></span></div>
+                            <div><span style="width:30%;">時間：</span><span id="4_approvedTime"></span></div>
                         </div>
                         <div class="opinion_button">
                             <button id="4_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,4)" disabled>送出</button>
@@ -959,7 +959,7 @@
                       // 資料寫入
                       Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
                           $(`#${list_key}_name`).text(case_aprove_data[area_name][input_title][list_key]['name']);
-                          $(`#${list_key}_apporvedTime`).text(case_aprove_data[area_name][input_title][list_key]['apporvedTime']);
+                          $(`#${list_key}_apporvedTime`).text(case_aprove_data[area_name][input_title][list_key]['approvedTime']);
                           $(`#${list_key}_opinion`).val(case_aprove_data[area_name][input_title][list_key]['opinion']);
                           let score = case_aprove_data[area_name][input_title][list_key]['score'] && case_aprove_data[area_name][input_title][list_key]['score'] != '' ? parseInt(case_aprove_data[area_name][input_title][list_key]['score']) : 0;
                           total_score += score;
