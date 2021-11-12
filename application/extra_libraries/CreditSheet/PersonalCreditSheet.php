@@ -54,14 +54,15 @@ class PersonalCreditSheet extends CreditSheetBase {
 
         $this->target = $target;
         $this->user = $user;
-        $this->repayableTargets = $this->CI->target_model->order_by('id','ASC')->get_many_by(
-            ['user_id'=>$this->user->id, 'status' => TARGET_REPAYMENTING, 'product_id' => $this::ALLOW_PRODUCT_LIST]);
+        $filteredTime = time();
 
         $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
         if(isset($this->creditSheetRecord)) {
             $this->finalReviewerLevel = $this->creditSheetRecord->review_level;
-            if ($this->creditSheetRecord->status == 1)
+            if ($this->creditSheetRecord->status == 1) {
+                $filteredTime = strtotime($this->creditSheetRecord->updated_at);
                 $this->creditRecord = $this->CI->credit_model->get_by(['id' => $this->creditSheetRecord->credit_id]);
+            }
         } else {
             $this->CI->credit_sheet_model->insertWhenEmpty(
                 ['target_id' => $this->target->id ?? 0, 'status' => 0,
@@ -75,6 +76,9 @@ class PersonalCreditSheet extends CreditSheetBase {
             );
             $this->creditSheetRecord = $this->CI->credit_sheet_model->get_by(['target_id' => $this->target->id ?? 0]);
         }
+
+        $this->repayableTargets = $this->CI->target_model->getRepaymentingTargets(
+            $this->user->id, $this::ALLOW_PRODUCT_LIST, $filteredTime);
 
         $this->basicInfo = $personalBasicInfo;
         $this->basicInfo->setCreditSheet($this);
