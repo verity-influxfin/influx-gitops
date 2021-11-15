@@ -154,9 +154,14 @@
 										<label>備註</label>
                                         <?
 										if ($remark) {
-											if (isset($remark["fail"]) && $remark["fail"]) {
+											if (isset($remark["fail"]) && $remark["fail"] && ! is_array($remark['fail']) ) {
 												echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
 											}
+                                            if(isset($remark["fail"]) && $remark["fail"] && is_array($remark['fail']) ){
+                                                foreach($remark['fail'] as $fail_result){
+													echo'<p style="color:red;">'.$fail_result.'</p>';
+												}
+                                            }
 										}
 										?>
 									</div>
