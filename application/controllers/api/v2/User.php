@@ -1919,10 +1919,11 @@ END:
         $rs = FALSE;
         if(isset($user_qrcode)) {
             if($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT) {
-                $rs = $this->user_qrcode_model->update_by(array('id' => $user_qrcode), PROMOTE_STATUS_PENDING_TO_VERIFY);
+                $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
+                    ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
             }
         } else {
-            $rs = $this->user_qrcode_model->insert(array(
+            $rs = $this->user_qrcode_model->insert([
                 'user_id' => $user_id,
                 'alias' => $alias_name,
                 'promote_code' => $promote_code,
@@ -1931,7 +1932,7 @@ END:
                 'end_time' => $end_time,
                 'settings' => json_encode($settings),
                 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY,
-            ));
+            ]);
         }
 
         if(count($doneCertifications) === count($promote_cert_list)){
