@@ -815,11 +815,11 @@ class Certification_lib{
                                    if(isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['response']['result']['name']) && isset($sip_data['response']['result']['idNumber'])){
                                        if($user_info['name'] != $sip_data['response']['result']['name']){
                                            $verifiedResult->setStatus(3);
-                                           $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$user_info['name']}\"2.SIP姓名=\"{$sip_data['result']['name']}\"", 3, MassageDisplay::Backend);
+                                           $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$user_info['name']}\"2.SIP姓名=\"{$sip_data['response']['result']['name']}\"", 3, MassageDisplay::Backend);
                                        }
                                        if($user_info['id_number'] != $sip_data['response']['result']['idNumber']){
                                            $verifiedResult->setStatus(3);
-                                           $verifiedResult->addMessage("SIP身分證與實名認證資訊不同2.實名認證身分證=\"{$user_info['id_number']}\"2.SIP身分證=\"{$sip_data['result']['idNumber']}\"", 3, MassageDisplay::Backend);
+                                           $verifiedResult->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$user_info['id_number']}\"2.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", 3, MassageDisplay::Backend);
                                        }
                                    }else{
                                        isset($user_info['name']) ? $user_info['name'] : $user_info['name'] = '';
@@ -827,7 +827,7 @@ class Certification_lib{
                                        isset($sip_data['response']['result']['name']) ? $sip_data['response']['result']['name'] : $sip_data['response']['result']['name'] = '';
                                        isset($sip_data['response']['result']['idNumber']) ? $sip_data['response']['result']['idNumber'] : $sip_data['response']['result']['idNumber'] = '';
                                        $verifiedResult->setStatus(3);
-                                       $verifiedResult->addMessage("缺少比對參數:1.實名認證姓名=\"{$user_info['name']}\"2.實名認證身分證=\"{$user_info['id_number']}\"3.SIP姓名=\"{$sip_data['result']['name']}\"4.SIP身分證=\"{$sip_data['result']['idNumber']}\"", 3, MassageDisplay::Backend);
+                                       $verifiedResult->addMessage("缺少比對參數:1.實名認證姓名=\"{$user_info['name']}\"2.實名認證身分證=\"{$user_info['id_number']}\"3.SIP姓名=\"{$sip_data['response']['result']['name']}\"4.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", 3, MassageDisplay::Backend);
                                    }
                                }else{
                                    $verifiedResult->setStatus(3);
@@ -881,7 +881,7 @@ class Certification_lib{
 
            $status = $verifiedResult->getStatus();
            $remark = is_array(json_decode($info->remark,true)) ? json_decode($info->remark,true) : [];
-           $remark['verify_result'] = [];
+           $remark['verify_result'] = isset($remark['verify_result']) ? $remark['verify_result'] : [];
            $remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 
            $this->CI->user_certification_model->update($info->id, array(
