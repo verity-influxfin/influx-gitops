@@ -791,8 +791,8 @@ class Certification_lib{
            $verifiedResult = new StudentCertificationResult(1);
 
            // 學校信箱驗證
-           if(isset($content['email']) && !empty($content['email'])){
-               if(!isset($content['email_verify_status']) || !isset($content['email_verify_time']) || $content['email_verify_status'] != true || ($content['email_verify_time'] < strtotime(date('Y-m-d',$info->created_at) . "+1 hours")) ){
+           if(isset($content['email']) && !empty($content['email']) && isset($content['email_verify_status']) && isset($content['email_verify_time']) ){
+               if( !empty($content['email_verify_time']) && $content['email_verify_status'] == false && ($content['email_verify_time'] < strtotime(date('Y-m-d',$info->created_at) . "+1 hours")) ){
                    $verifiedResult->setStatus(2);
                    $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
                }else{

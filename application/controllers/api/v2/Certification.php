@@ -664,6 +664,8 @@ class Certification extends REST_Controller {
                 if($user_meta && $user_meta->user_id != $user_id){
     				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
     			}
+                $content['email_verify_time'] = '';
+                $content['email_verify_status'] = false;
             }
 
 			//學號是否使用過
