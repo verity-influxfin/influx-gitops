@@ -810,7 +810,7 @@ class Certification_lib{
                            if(isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == 'True' && $sip_log['response']['isLogin'] == 'True'){
                                $sip_data = $this->CI->sip_lib->getDeepData($content['school'],$content['sip_account']);
                                $content['sip_data'] = isset($sip_data['response']) ? $sip_data['response'] : [];
-                               $user_info = !empty($user_certification->content) ? json_decode($user_certification->content,true) : [];
+                               $user_info = !empty($user_certification->content) ? $user_certification->content : [];
                                if($sip_data && isset($sip_data['response']['result'])){
                                    if(isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['result']['name']) && isset($sip_data['result']['idNumber'])){
                                        if($user_info['name'] != $sip_data['response']['result']['name']){
