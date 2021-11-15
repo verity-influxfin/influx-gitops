@@ -2044,6 +2044,7 @@ $config['certifications_msg'] = [
     ],
     CERTIFICATION_CRIMINALRECORD => [
         '良民證資料有誤，請您重新確認後上傳，感謝您的配合！',
+        '請提供半年內之良民證，謝謝您！',
         '未上傳良民證資料',
     ],
 
