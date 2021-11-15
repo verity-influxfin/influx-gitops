@@ -65,8 +65,8 @@
                                         <p class="form-control-static"><?= isset($content['email']) ? $content['email'] : "" ?></p>
                                         <p class="form-control-static">驗證狀態:
                                         <?php
-                                         if(isset($content['email_verify_status'])){
-                                             if($content['email_verify_status'] == true){
+                                         if(isset($content['email']) && !empty($content['email'])){
+                                             if(isset($content['email_verify_status']) && $content['email_verify_status'] == true){
                                                  echo '已驗證信箱';
                                              }else{
                                                  echo '尚未驗證信箱';
@@ -76,7 +76,7 @@
                                          }
                                         ?>
                                         </p>
-										<p class="form-control-static">驗證時間:<?= isset($content['email_verify_time']) ? date('Y-m-d H:i:s',$content['email_verify_time']) : '不進行驗證' ?></p>
+										<p class="form-control-static">驗證時間:<?= isset($content['email_verify_time']) && isset($content['email']) && !empty($content['email']) ? date('Y-m-d H:i:s',$content['email_verify_time']) : '不進行驗證' ?></p>
 									</div>
 									<div class="form-group">
 										<label>SIP帳號</label>
