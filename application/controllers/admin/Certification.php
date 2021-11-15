@@ -494,9 +494,8 @@ class Certification extends MY_Admin_Controller {
 								'remark' => json_encode($remark),
 								'expire_time'=>$expiretime,
 							]);
-							if($post['status'] == 2) {
-								// 退工作認證時，需把聯徵也一起退掉 issue #1202
-								$this->load->library('Certification_lib');
+							$this->load->library('Certification_lib');
+							if($post['status'] == 2 && $this->certification_lib->isRejectedResult($fail)) {
 								$this->certification_lib->withdraw_investigation($info->user_id, $info->investor);
 							}
 						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
