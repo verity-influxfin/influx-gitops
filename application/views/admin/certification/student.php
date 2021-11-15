@@ -194,7 +194,7 @@
 													<? } ?>
 													<option value="other">其它</option>
 												</select>
-												<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
+												<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) && ! is_array($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
 											</div>
 											<button type="submit" class="btn btn-primary">送出</button>
 										</fieldset>
