@@ -1638,6 +1638,10 @@ class Certification_lib{
 
 			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 			$status = $verifiedResult->getStatus();
+			// 先暫時把失敗改為轉人工
+			if($status == 2) {
+				$status = 3;
+			}
 
 			$this->CI->user_certification_model->update($info->id, array(
 				'status' => $status != 3 ? 0 : $status,
@@ -2041,7 +2045,8 @@ class Certification_lib{
 				$this->certi_failed($info->id, $notificationContent, $canResubmitDate, true);
 
 				// 退工作認證時，需把聯徵也一起退掉 issue #1202
-                $this->withdraw_investigation($info->user_id, $info->investor);
+                if($this->certification_lib->isRejectedResult($notificationContent))
+                    $this->withdraw_investigation($info->user_id, $info->investor);
 			}
 			return true;
 		}
@@ -3371,5 +3376,9 @@ class Certification_lib{
             }
         }
         return $list;
+    }
+
+    public function isRejectedResult($msg) {
+        return strpos($msg, "經AI系統綜合評估後") !== FALSE;
     }
 }
