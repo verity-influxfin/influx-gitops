@@ -62,7 +62,21 @@
 									</div>
 									<div class="form-group">
 										<label>校內電子信箱</label>
-										<p class="form-control-static"><?= isset($content['email']) ? $content['email'] : "" ?></p>
+                                        <p class="form-control-static"><?= isset($content['email']) ? $content['email'] : "" ?></p>
+                                        <p class="form-control-static">
+                                        <?php
+                                         if(isset($content['email_verify_status'])){
+                                             if($content['email_verify_status'] == true){
+                                                 echo '已驗證信箱';
+                                             }else{
+                                                 echo '尚未驗證信箱';
+                                             }
+                                         }else{
+                                             echo '不進行驗證';
+                                         }
+                                        ?>
+                                        </p>
+										<p class="form-control-static"><?= isset($content['email_verify_time']) ? date('Y-m-d H:i:s',$content['email_verify_time']) : '不進行驗證' ?></p>
 									</div>
 									<div class="form-group">
 										<label>SIP帳號</label>

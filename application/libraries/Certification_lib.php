@@ -796,7 +796,7 @@ class Certification_lib{
                    $verifiedResult->setStatus(2);
                    $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
                }else{
-
+                   return false;
                }
            }
 
@@ -810,7 +810,7 @@ class Certification_lib{
                            if(isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == 'True' && $sip_log['response']['isLogin'] == 'True'){
                                $sip_data = $this->CI->sip_lib->getDeepData($content['school'],$content['sip_account']);
                                $content['sip_data'] = isset($sip_data['response']) ? $sip_data['response'] : [];
-                               $user_info = !empty($user_certification->content) ? $user_certification->content : [];
+                               $user_info = !empty($user_certification->content) ? json_decode($user_certification->content,true) : [];
                                if($sip_data && isset($sip_data['response']['result'])){
                                    if(isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['result']['name']) && isset($sip_data['result']['idNumber'])){
                                        if($user_info['name'] != $sip_data['response']['result']['name']){
@@ -821,6 +821,13 @@ class Certification_lib{
                                            $verifiedResult->setStatus(3);
                                            $verifiedResult->addMessage('SIP身分證與實名認證資訊不同', 3, MassageDisplay::Backend);
                                        }
+                                   }else{
+                                       isset($user_info['name']) ? $user_info['name'] : $user_info['name'] = '';
+                                       isset($user_info['id_number']) ? $user_info['id_number'] : $user_info['id_number'] = '';
+                                       isset($sip_data['result']['name']) ? $sip_data['result']['name'] : $sip_data['result']['name'] = '';
+                                       isset($sip_data['result']['idNumber']) ? $sip_data['result']['idNumber'] : $sip_data['result']['idNumber'] = '';
+                                       $verifiedResult->setStatus(3);
+                                       $verifiedResult->addMessage("缺少比對參數:1.實名認證姓名=\"{$user_info['name']}\"2.實名認證身分證=\"{$user_info['id_number']}\"3.SIP姓名=\"{$sip_data['result']['name']}\"4.SIP身分證=\"{$sip_data['result']['idNumber']}\"", 3, MassageDisplay::Backend);
                                    }
                                }else{
                                    $verifiedResult->setStatus(3);
