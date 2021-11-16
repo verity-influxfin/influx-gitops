@@ -329,9 +329,8 @@ $ci-color: #153a71;
         justify-content: flex-end;
 
         @include rwd {
-            grid-template-columns: 1fr auto;
-            gap: 0.5rem;
-            text-align: right;
+            gap: 1.2rem;
+            display: flex;
         }
 
         .item {
@@ -420,7 +419,8 @@ $ci-color: #153a71;
         }
         .search-group {
             @include rwd {
-                width: 150px;
+                width: 0;
+                flex:1;
                 grid-area: 1/1/2/2;
             }
             position: relative;
