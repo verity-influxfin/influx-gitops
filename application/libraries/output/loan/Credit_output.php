@@ -50,17 +50,19 @@ class Credit_output
 	public function mapToObject($creditInput)
 	{
 		$credit = new stdClass();
-		$credit->id = $creditInput["id"];
-		$credit->product_id = $creditInput["product_id"];
-		if(isset($creditInput["sub_product_id"])){
-            $credit->sub_product_id = $creditInput["sub_product_id"];
-            $credit->sub_product_name = $creditInput["sub_product_name"];
+        if(is_array($creditInput) && !empty($creditInput)){
+            $credit->id = isset($creditInput["id"]) ? $creditInput["id"] : '';
+    		$credit->product_id = isset($creditInput["product_id"]) ? $creditInput["product_id"] : '';
+    		if(isset($creditInput["sub_product_id"])){
+                $credit->sub_product_id = isset($creditInput["sub_product_id"]) ? $creditInput["sub_product_id"] : '';
+                $credit->sub_product_name = isset($creditInput["sub_product_name"]) ? $creditInput["sub_product_name"] : '';
+            }
+            $credit->level = isset($creditInput["level"]) ? $creditInput["level"] : '';
+            $credit->points = isset($creditInput["points"]) ? $creditInput["points"] : '';
+            $credit->amount = isset($creditInput["amount"]) ? $creditInput["amount"] : '';
+            $credit->expire_time = isset($creditInput["expire_time"]) ? $creditInput["expire_time"] : '';
+            $credit->created_at = isset($creditInput["created_at"]) ? $creditInput["created_at"] : '';
         }
-        $credit->level = $creditInput["level"];
-        $credit->points = $creditInput["points"];
-        $credit->amount = $creditInput["amount"];
-        $credit->expire_time = $creditInput["expire_time"];
-        $credit->created_at = isset($creditInput["created_at"]) ? $creditInput["created_at"] : '';
 		return $credit;
 	}
 
