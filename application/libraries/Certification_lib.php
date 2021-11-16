@@ -761,7 +761,9 @@ class Certification_lib{
                     $param['status'] = 0;
 				} else if ($result['risVerificationFailed']) {
                     $status = 2;
+                    $result['remark']['failed_type_list'] = [REALNAME_IMAGE_TYPE_FRONT, REALNAME_IMAGE_TYPE_BACK, REALNAME_IMAGE_TYPE_PERSON];
                     $param['status'] = 0;
+                    $param['remark'] = json_encode($result['remark']);
 				}
 			}
 

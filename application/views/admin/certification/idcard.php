@@ -372,6 +372,26 @@
                                         <input type="hidden" name="from" value="<?=isset($from)?$from:"";?>" >
                                     </div>
                                     <div class="form-group" id="fail_div" style="display:none">
+
+                                        <div class="withdraw_image">
+                                            <label>退掉照片</label>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="failed_type_list[]" id="inlineCheckbox1" type="checkbox" value="<?= REALNAME_IMAGE_TYPE_FRONT ?>">
+                                                <label class="form-check-label" for="inlineCheckbox1">身分證正面</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="failed_type_list[]" id="inlineCheckbox2" type="checkbox" value="<?= REALNAME_IMAGE_TYPE_BACK ?>">
+                                                <label class="form-check-label" for="inlineCheckbox2">身分證反面</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="failed_type_list[]" id="inlineCheckbox3" type="checkbox" value="<?= REALNAME_IMAGE_TYPE_PERSON ?>">
+                                                <label class="form-check-label" for="inlineCheckbox3">持證自拍</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="failed_type_list[]" id="inlineCheckbox4" type="checkbox" value="<?= REALNAME_IMAGE_TYPE_HEALTH ?>">
+                                                <label class="form-check-label" for="inlineCheckbox4">健保卡</label>
+                                            </div>
+                                        </div>
                                         <label>失敗原因</label>
                                         <select id="fail" name="fail" class="form-control">
                                             <option value="" disabled selected>選擇回覆內容</option>
