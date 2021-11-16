@@ -844,8 +844,12 @@ class Certification_lib{
                            $verifiedResult->setStatus(3);
                            $verifiedResult->addMessage('sip爬蟲執行失敗', 3, MassageDisplay::Backend);
                        }
+                       if(isset($sip_log['status']) && ($sip_log['response']['status'] == 'university_not_found' || $sip_log['response']['status'] == 'university_not_enabled')){
+                           $verifiedResult->setStatus(3);
+                           $verifiedResult->addMessage("sip爬蟲執行失敗:爬蟲子系統回應訊息=\"{$sip_log['response']['status']}\"", 3, MassageDisplay::Backend);
+                       }
                        // 爬蟲未跑完
-                       if(isset($sip_log['status']) && ($sip_log['response']['status'] != 'finished' && $sip_log['response']['status'] != 'failure') ){
+                       if(isset($sip_log['status']) && ($sip_log['response']['status'] == 'started' || $sip_log['response']['status'] == 'retry' || $sip_log['response']['status'] == 'requested') ){
                            return false;
                        }
                    }
