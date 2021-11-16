@@ -838,12 +838,12 @@ class Certification_lib{
                                $verifiedResult->addMessage('SIP資訊錯誤', 2, MassageDisplay::Client);
                            }
                        }
-                       if(isset($sip_log['status']) && $sip_log['status'] == 'failure'){
+                       if(isset($sip_log['status']) && $sip_log['response']['status'] == 'failure'){
                            $verifiedResult->setStatus(3);
                            $verifiedResult->addMessage('sip爬蟲執行失敗', 3, MassageDisplay::Backend);
                        }
                        // 爬蟲未跑完
-                       if(isset($sip_log['status']) && ($sip_log['status'] != 'finished' && $sip_log['status'] != 'failure') ){
+                       if(isset($sip_log['status']) && ($sip_log['response']['status'] != 'finished' && $sip_log['response']['status'] != 'failure') ){
                            return false;
                        }
                    }
