@@ -274,15 +274,31 @@
 
 																if ($value['id'] == 3) {
 																	switch ($value['user_status']) {
+<<<<<<< HEAD
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_VALIDATE:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
+                                                                        case CERTIFICATION_STATUS_AUTHENTICATED:
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			break;
+																		case CERTIFICATION_STATUS_SUCCEED:
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';
+																			break;
+																		case CERTIFICATION_STATUS_FAILED:
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+=======
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+>>>>>>> fix/financial
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -291,15 +307,31 @@
 																} else {
 																	$certification_id = $value['certification_id'];
 																	switch ($value['user_status']) {
+<<<<<<< HEAD
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_VALIDATE:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
+                                                                        case CERTIFICATION_STATUS_AUTHENTICATED:
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			break;
+																		case CERTIFICATION_STATUS_SUCCEED:
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';;
+																			break;
+																		case CERTIFICATION_STATUS_FAILED:
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+=======
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';;
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
+>>>>>>> fix/financial
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -331,14 +363,23 @@
 														<?
 																if ($value['id'] == 3) {
 																	switch ($value['user_status']) {
+<<<<<<< HEAD
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_VALIDATE:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
+                                                                        case CERTIFICATION_STATUS_AUTHENTICATED:
+=======
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
+>>>>>>> fix/financial
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
-																		case '1':
+																		case CERTIFICATION_STATUS_SUCCEED:
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
-																		case '2':
+																		case CERTIFICATION_STATUS_FAILED:
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
@@ -348,14 +389,23 @@
 																} else {
 																	$certification_id = $value['certification_id'];
 																	switch ($value['user_status']) {
+<<<<<<< HEAD
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_VALIDATE:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
+                                                                        case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
+                                                                        case CERTIFICATION_STATUS_AUTHENTICATED:
+=======
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
+>>>>>>> fix/financial
 																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
-																		case '1':
+																		case CERTIFICATION_STATUS_SUCCEED:
 																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
-																		case '2':
+																		case CERTIFICATION_STATUS_FAILED:
 																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:

@@ -320,6 +320,9 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
+        'option_certifications' => [
+            CERTIFICATION_FINANCIAL
+        ],
         'certifications_stage' => [
             [
                 CERTIFICATION_IDCARD,
@@ -329,8 +332,7 @@ $config['product_list'] = [
             [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
-                CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL
+                CERTIFICATION_EMAIL
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -367,6 +369,9 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
+        'option_certifications' => [
+            CERTIFICATION_FINANCIAL
+        ],
         'certifications_stage' => [
             [
                 CERTIFICATION_IDCARD,
@@ -376,8 +381,7 @@ $config['product_list'] = [
             [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
-                CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL
+                CERTIFICATION_EMAIL
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -417,7 +421,7 @@ $config['product_list'] = [
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
             CERTIFICATION_EMAIL,
-            CERTIFICATION_FINANCIAL,
+            CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
@@ -431,7 +435,7 @@ $config['product_list'] = [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
                 CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
                 CERTIFICATION_JOB
@@ -470,7 +474,7 @@ $config['product_list'] = [
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
             CERTIFICATION_EMAIL,
-            CERTIFICATION_FINANCIAL,
+            CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
@@ -484,7 +488,7 @@ $config['product_list'] = [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
                 CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
                 CERTIFICATION_JOB
@@ -781,7 +785,7 @@ $config['product_list'] = [
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
             CERTIFICATION_EMAIL,
-            CERTIFICATION_FINANCIAL,
+            CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
@@ -795,7 +799,7 @@ $config['product_list'] = [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
                 CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
                 CERTIFICATION_JOB
@@ -888,6 +892,9 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATIONJUDICIAL,
 			CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
+        ],
+        'option_certifications' => [
+            CERTIFICATION_JUDICIALGUARANTEE
         ],
         'certifications_stage' => [
             [
@@ -1138,6 +1145,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'option_certifications' => [
+                    CERTIFICATION_FINANCIAL
+                ],
                 'certification_verify_stage' => [
                     [
                         CERTIFICATION_IDCARD,
@@ -1147,8 +1157,7 @@ $config['sub_product_list'] = [
                     [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
-                        CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL
+                        CERTIFICATION_EMAIL
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1178,7 +1187,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
@@ -1192,7 +1201,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
                         CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
                         CERTIFICATION_JOB
@@ -1316,7 +1325,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL
+                    CERTIFICATION_FINANCIALWORKER
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1380,7 +1389,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL
+                    CERTIFICATION_FINANCIALWORKER
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1411,7 +1420,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     // CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB,
@@ -1452,6 +1461,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
+                    CERTIFICATION_FINANCIAL
+                ],
+                'option_certifications' => [
                     CERTIFICATION_FINANCIAL
                 ],
                 'certifications_stage' => [
@@ -1498,7 +1510,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
@@ -1512,7 +1524,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
                         CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
                         CERTIFICATION_JOB
@@ -1599,6 +1611,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'option_certifications' => [
+                    CERTIFICATION_FINANCIAL
+                ],
                 'certifications_stage' => [
                     [
                         CERTIFICATION_IDCARD,
@@ -1639,7 +1654,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
@@ -1653,7 +1668,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
                         CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
                         CERTIFICATION_JOB
@@ -1807,8 +1822,8 @@ $config['certifications'] = [
     9 => ['id' => CERTIFICATION_INVESTIGATION, 'alias' => 'investigation', 'name' => '聯合徵信報告', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
     10 => ['id' => CERTIFICATION_JOB, 'alias' => 'job', 'name' => '工作收入證明', 'status' => 1, 'description' => '提供工作收入證明', 'optional' => [3, 4]],
     11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人資料表', 'status' => 1, 'description' => '提供個人資料', 'optional' => []],
-
     12 => ['id' => CERTIFICATION_INVESTIGATIONA11, 'alias' => 'investigationa11', 'name' => '聯合徵信報告+A11', 'status' => 1, 'description' => '提供負責人聯合徵信資訊', 'optional' => []],
+    14 => ['id' => CERTIFICATION_FINANCIALWORKER, 'alias' => 'financialWorker', 'name' => '財務訊息資訊', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
 
 
