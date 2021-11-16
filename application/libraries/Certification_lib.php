@@ -843,7 +843,7 @@ class Certification_lib{
                            $verifiedResult->addMessage('sip爬蟲執行失敗', 3, MassageDisplay::Backend);
                        }
                        // 爬蟲未跑完
-                       if(isset($sip_log['status']) && ($sip_log['status'] == 'finished' || $sip_log['status'] == 'failure') ){
+                       if(isset($sip_log['status']) && ($sip_log['status'] != 'finished' && $sip_log['status'] != 'failure') ){
                            return false;
                        }
                    }
