@@ -1935,6 +1935,13 @@ END:
             ]);
         }
 
+        $this->user_certification_model->update_by([
+            'id' => $settings['certification_id'],
+            'user_id' => $user_id,
+            'investor' => $investor,
+            'status' => CERTIFICATION_STATUS_AUTHENTICATED
+        ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
+
         if(count($doneCertifications) === count($promote_cert_list)){
             $this->load->library('Certification_lib');
             $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDCARD], FALSE);
@@ -1997,9 +2004,11 @@ END:
             $promote_code       = $userQrcodeInfo['promote_code'];
             $url                = 'https://event.influxfin.com/R/url?p='.$promote_code;
             $qrcode             = get_qrcode($url);
-            $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
+            $contract           = "";
 
             if($userQrcodeInfo['status'] == PROMOTE_STATUS_AVAILABLE) {
+                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
+
                 // 初始化結構
                 try {
                     $d1 = new DateTime($userQrcodeInfo['start_time']);
@@ -2065,7 +2074,7 @@ END:
             $data['promote_name']   = $settings['description'] ?? '';
             $data['promote_alias']  = $userQrcodeInfo['alias'];
             $data['status'] = intval($userQrcodeInfo['status']);
-            $data['contract'] = $contract ? $contract['content'] : "";
+            $data['contract'] = !empty($contract) ? $contract['content'] : $data['contract'];
 
         }
 
