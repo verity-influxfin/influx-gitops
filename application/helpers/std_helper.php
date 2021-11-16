@@ -407,4 +407,8 @@
 		}
 		return $birthday;
     }
+
+    function isValidDateTime(string $datetime) {
+		return $datetime > "1911-01-01 00:00:00";
+	}
 ?>

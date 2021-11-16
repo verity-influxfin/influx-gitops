@@ -26,7 +26,8 @@ Trait CreditSheetTrait
                 'user_id' => $this->creditSheet->user->id,
             ],
             [
-                'created_at <=' => $endDate
+                'created_at <=' => $endDate,
+                'status' => 1
             ]
         );
     }
@@ -73,7 +74,9 @@ Trait CreditSheetTrait
     {
         if($instalment <= 12)
             return "短放";
-        else if($instalment <= 24)
+        else if($instalment <= 84)
+            return "中放";
+        else
             return "長放";
     }
 }
