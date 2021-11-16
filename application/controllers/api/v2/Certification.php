@@ -68,7 +68,7 @@ class Certification extends REST_Controller {
                         }
                     }
                     //要求先完成實名相關
-                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11'])){
+                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker'])){
                         $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
                         if(!$cerIDCARD){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
@@ -294,6 +294,9 @@ class Certification extends REST_Controller {
 						break;
 					case 12:
                         $fields 	= ['investigationa11', 'return_type'];
+						break;
+                    case 14:
+                        $fields 	= [];
 						break;
 					case 500:
                         $fields 	= [];
@@ -523,6 +526,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -731,6 +735,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -945,7 +950,7 @@ class Certification extends REST_Controller {
 				'investor'		=> $investor,
 				'bank_code'		=> $content['bank_code'],
 				'bank_account'	=> $content['bank_account'],
-				'status'		=> 1,
+				'status'		=> CERTIFICATION_STATUS_SUCCEED,
 			];
 
 			$user_bankaccount = $this->user_bankaccount_model->get_by($where);
@@ -1123,6 +1128,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
 			];
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
@@ -1209,6 +1215,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			];
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1281,14 +1288,14 @@ class Certification extends REST_Controller {
 
     }
 
-	/**
-     * @api {post} /v2/certification/financial 認證 財務訊息認證
+    /**
+     * @api {post} /v2/certification/financial 認證 收支資訊認證
 	 * @apiVersion 0.2.0
 	 * @apiName PostCertificationFinancial
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
-	 * @apiParam {Number} parttime 打工收入
-	 * @apiParam {Number} allowance 零用錢收入
+	 * @apiParam {Number} income 打工收入
+	 * @apiParam {Number} incomeStudent 零用錢收入
 	 * @apiParam {Number} scholarship 獎學金收入
 	 * @apiParam {Number} other_income 其他收入
 	 * @apiParam {Number} restaurant 餐飲支出
@@ -1340,9 +1347,12 @@ class Certification extends REST_Controller {
 
 			//必填欄位
 			$fields 	= [
-				'parttime',
-				'allowance',
-				'scholarship',
+                // 薪資/打工收入
+				'income',
+                // 零用錢收入
+				'incomeStudent',
+                // 獎學金收入
+                'scholarship',
 				'other_income',
 				'restaurant',
 				'transportation',
@@ -1398,6 +1408,8 @@ class Certification extends REST_Controller {
                             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
                         }
                     }
+                }else{
+                    $content['creditcard_image'] = '';
                 }
 			}
 
@@ -1419,6 +1431,175 @@ class Certification extends REST_Controller {
                             $content[$fieldS][] = $v->url;
                         }
                     }
+                }else{
+                    $content[$fieldS][] = '';
+                }
+            }
+
+			$param		= array(
+				'user_id'			=> $user_id,
+				'certification_id'	=> $certification_id,
+				'investor'			=> $investor,
+				'content'			=> json_encode($content),
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+			);
+			$insert = $this->user_certification_model->insert($param);
+			if($insert){
+				$this->certification_lib->set_success($insert);
+				$this->response(array('result' => 'SUCCESS'));
+			}else{
+				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+			}
+		}
+		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {post} /v2/certification/financialWorker 認證 財務資訊認證
+	 * @apiVersion 0.2.0
+	 * @apiName PostCertificationFinancial
+     * @apiGroup Certification
+	 * @apiHeader {String} request_token 登入後取得的 Request Token
+	 * @apiParam {Number} income 薪資/兼職收入
+	 * @apiParam {Number} pocketMoney 投資理財收入
+	 * @apiParam {Number} other_income 其他收入
+	 * @apiParam {Number} restaurant 餐飲支出
+	 * @apiParam {Number} transportation 交通支出
+	 * @apiParam {Number} entertainment 娛樂支出
+	 * @apiParam {Number} other_expense 其他支出
+     * @apiParam {Number} [creditcard_image] 信用卡帳單照 ( 圖片ID )
+     * @apiParam {Number} [passbook_image] 存摺內頁照 ( 圖片ID )
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+	 *
+	 * @apiUse InputError
+	 * @apiUse InsertError
+	 * @apiUse TokenError
+	 * @apiUse BlockUser
+	 * @apiUse IsCompany
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+	 *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+	 *
+     */
+	public function financialWorker_post()
+    {
+		$certification_id 	= 14;
+		$certification 		= $this->certification[$certification_id];
+		if($certification && $certification['status']==1){
+			$input 		= $this->input->post(NULL, TRUE);
+			$user_id 	= $this->user_info->id;
+			$investor 	= $this->user_info->investor;
+			$content	= array();
+            // 是否需要轉人工(有傳圖片的話要)
+            $should_check = false;
+
+			//是否驗證過
+			$this->was_verify($certification_id);
+
+			//必填欄位
+			$fields 	= [
+                // 薪資/兼職收入
+				'income',
+                // 投資理財收入
+				'pocketMoney',
+				'other_income',
+				'restaurant',
+				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
+				'entertainment',
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
+			];
+			foreach ($fields as $field) {
+				if (empty($input[$field])) {
+					$content[$field] = 0;
+				}else{
+					$content[$field] = intval($input[$field]);
+				}
+			}
+
+			//上傳檔案欄位
+			$file_field 	= ['creditcard_image'];
+			foreach ($file_field as $field) {
+                if(isset($input[$field])) {
+                    $should_check = true;
+                    $image_id = !empty($input[$field]) != null ? intval($input[$field]) : null;
+                    if (!$image_id) {
+                        //$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    } else {
+                        $rs = $this->log_image_model->get_by([
+                            'id' => $image_id,
+                            'user_id' => $user_id,
+                        ]);
+
+                        if ($rs) {
+                            $content[$field] = $rs->url;
+                        } else {
+                            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
+                        }
+                    }
+                }else{
+                    $content['creditcard_image'] = '';
+                }
+			}
+
+            $file_fields 	= ['passbook_image','bill_phone_image'];
+			foreach ($file_fields as $fieldS) {
+			    if(isset($input[$fieldS])){
+                    $should_check = true;
+                    $image_ids = explode(',', $input[$fieldS]);
+                    if (count($image_ids) > 3) {
+                        $image_ids = array_slice($image_ids, 0, 3);
+                    }
+                    $list = $this->log_image_model->get_many_by([
+                        'id' => $image_ids,
+                        'user_id' => $user_id,
+                    ]);
+
+                    if ($list && count($list) == count($image_ids)) {
+                        $content[$fieldS] = [];
+                        foreach ($list as $k => $v) {
+                            $content[$fieldS][] = $v->url;
+                        }
+                    }
+                }else{
+                    $content[$fieldS] = [];
                 }
             }
 
@@ -1428,9 +1609,19 @@ class Certification extends REST_Controller {
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
 			);
+
+            $param['sys_check'] = 1;
+            // 有傳圖片的話轉人工，沒有自動過件
+            if($should_check == true){
+                $param['status'] = 6;
+            }
+
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
-				$this->certification_lib->set_success($insert);
+                // 有傳圖片的話轉人工，沒有自動過件
+                if($should_check == false){
+                    $this->certification_lib->set_success($insert);
+                }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
@@ -1498,7 +1689,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => [0 ,3],
+                        'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE ,CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {
@@ -1540,7 +1731,7 @@ class Certification extends REST_Controller {
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id'    => $user_id,
                         'certification_id' => 4,
-                        'status' => [0 ,3],
+                        'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE ,CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
                         'investor' => $investor,
                     ]);
                     if (empty($get_data)) {
@@ -1710,6 +1901,7 @@ class Certification extends REST_Controller {
 				'investor'			=> $investor,
                 'expire_time'		=> strtotime('+20 years'),
                 'content'			=> json_encode($content),
+                'status'            => CERTIFICATION_STATUS_AUTHENTICATED
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1839,6 +2031,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
+                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1851,6 +2044,27 @@ class Certification extends REST_Controller {
 			}
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    // 聯徵信件重新寄送
+    public function resend_email_post(){
+        $certification_id 	= 9;
+		$certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $target = [];
+            $targets = $this->target_model->get_many_by(array(
+                'user_id'       => $user_id,
+                'status'		=> [20,21,22,23],
+            ));
+            foreach ($targets as $value){
+                $target[] = $value->target_no;
+            }
+            $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));
+            $this->response(array('result' => 'SUCCESS'));
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
 	/**
@@ -1943,7 +2157,7 @@ class Certification extends REST_Controller {
             $cer_exists = $this->user_certification_model->get_by([
                 'user_id' => $user_id,
                 'certification_id' => $certification_id,
-                'status' => 4,
+                'status' => CERTIFICATION_STATUS_NOT_COMPLETED,
             ]);
             if (isset($input['save']) && $input['save']) {
                 $param = [
@@ -1951,7 +2165,7 @@ class Certification extends REST_Controller {
                     'certification_id' => $certification_id,
                     'investor' => $investor,
                     'content' => json_encode($input),
-                    'status' => 4,
+                    'status' => CERTIFICATION_STATUS_NOT_COMPLETED,
                 ];
 
                 if ($cer_exists) {
@@ -1968,7 +2182,7 @@ class Certification extends REST_Controller {
             }
 
 			//是否驗證過
-            if(!$cer_exists || $cer_exists->status != 4){
+            if(!$cer_exists || $cer_exists->status != CERTIFICATION_STATUS_NOT_COMPLETED){
                 $this->was_verify($certification_id);
             }
 
@@ -2085,11 +2299,11 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => 3,
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
 			];
 
             if ($cer_exists) {
-                $param['status'] = 3;
+                $param['status'] = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
                 $rs = $this->user_certification_model->update($cer_exists->id, $param);
             }else{
                 $rs = $this->user_certification_model->insert($param);
@@ -2104,6 +2318,87 @@ class Certification extends REST_Controller {
 			}
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {post} /v2/certification/verify_certifications 開始審核徵信階段的徵信項目
+     * @apiVersion 0.2.0
+     * @apiName PostVerifyCertifications
+     * @apiGroup Certification
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {Number} target_id 案件流水號
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     *
+     * @apiError 130 權限不足
+     * @apiErrorExample {Object} 130
+     *     {
+     *       "result": "ERROR",
+     *       "error": "130"
+     *     }
+     *
+     * @apiError 200 參數錯誤
+     * @apiErrorExample {Object} 200
+     *     {
+     *       "result": "ERROR",
+     *       "error": "200"
+     *     }
+     *
+     * @apiError 207 參數錯誤
+     * @apiErrorExample {Object} 207
+     *     {
+     *       "result": "ERROR",
+     *       "error": "207"
+     *     }
+     *
+     * @apiError 501 此驗證尚未啟用 (尚未提交所有徵信項)
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 801 標的不存在
+     * @apiErrorExample {Object} 801
+     *     {
+     *       "result": "ERROR",
+     *       "error": "801"
+     *     }
+     *
+     */
+    public function verify_certifications_post()
+    {
+        $input 		= $this->input->post(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+        $investor 	= $this->user_info->investor;
+        $targetId   = $input['target_id'];
+
+        if(!isset($targetId)) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT));
+        }
+
+        $target = $this->target_model->get($targetId);
+        if(!isset($target)) {
+            $this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST));
+        }else if($user_id != $target->user_id) {
+            $this->response(array('result' => 'ERROR','error' => PERMISSION_DENY));
+        }
+
+        if($investor != 0) {
+            $this->response(array('result' => 'ERROR','error' => IS_INVERTOR));
+        }
+
+        $this->load->library('Certification_lib');
+        $result = $this->certification_lib->verify_certifications($target, 1);
+        if($result)
+            $this->response(['result' => 'SUCCESS']);
+        else
+            $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
     public function simplificationfinancial_post()
@@ -3661,6 +3956,7 @@ class Certification extends REST_Controller {
 			'certification_id'	=> 4,
 			'investor'			=> $investor,
 			'content'			=> json_encode($content),
+            'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
         ];
         $insert_id = $this->user_certification_model->insert($param);
         if($insert_id){

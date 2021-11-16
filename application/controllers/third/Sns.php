@@ -62,13 +62,13 @@ class Sns extends REST_Controller {
                 $re_job_mail=strpos($mail_title, '工作認證申請');
                 $attachments = $parser->getAttachments();
                 $certification_id=($re_job_mail===false)? 9:10;
-                $cert_info = $this->user_certification_model->order_by('created_at', 'desc')->get_by(['investor' => 0, 'certification_id' => 6, 'status' => 1, "TRIM(BOTH '\"' FROM LOWER(JSON_EXTRACT(`content`, '$.email'))) = " => strtolower($mailfrom)]);
+                $cert_info = $this->user_certification_model->order_by('created_at', 'desc')->get_by(['investor' => USER_BORROWER, 'certification_id' => CERTIFICATION_EMAIL, 'status' => CERTIFICATION_STATUS_SUCCEED, "TRIM(BOTH '\"' FROM LOWER(JSON_EXTRACT(`content`, '$.email'))) = " => strtolower($mailfrom)]);
 
                 if (!isset($cert_info) || ($re_investigation_mail === false && $re_job_mail === false)) {
                     // 沒有找到對應使用者和勞保聯徵標題關鍵字
                     $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                 }else{
-                    $info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $cert_info->user_id, 'investor' => 0, 'certification_id' => $certification_id]);
+                    $info = $this->user_certification_model->order_by('created_at', 'desc')->limit(3)->get_many_by(['user_id' => $cert_info->user_id, 'investor' => USER_BORROWER, 'certification_id' => $certification_id]);
                     if(empty($info)) {
                         $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                         continue;
@@ -78,7 +78,7 @@ class Sns extends REST_Controller {
                         // 非圖片或PDF格式的檔案 或 認證項目是成功/失敗狀態者 轉為不明檔案
                         $mime = get_mime_by_extension($attachments[0]->getFileName());
                         if ((is_image($mime) || is_pdf($mime))
-                            && !in_array($info[0]->status, [1,2])
+                            && !in_array($info[0]->status, [CERTIFICATION_STATUS_SUCCEED,CERTIFICATION_STATUS_FAILED])
                         ) {
                             $this->process_mail($info, $attachments, $cert_info, $s3_url, $certification_id);
                         }else{
@@ -93,12 +93,12 @@ class Sns extends REST_Controller {
                             $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                         }
                     } else if (($drive = strpos($file_content, 'https://drive.google.com/')) !== false ||
-                        ((count($info) >= 3) && $info[0]->status == 0)) {
+                        ((count($info) >= 3) && $info[0]->status == CERTIFICATION_STATUS_AUTHENTICATED)) {
                         // 沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工
                         $remark           = $info[0]->remark!=''?json_decode($info[0]->remark,true):[];
                         $remark['fail']   = $drive !== false ? "該附件由Google雲端夾帶，需人工檢驗" : "收信無附件次數達三次，請人工檢驗";
                         $this->user_certification_model->update_by(['id' => $info[0]->id], [
-                            'status' => 3,
+                            'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
                             'remark'    => json_encode($remark)
                         ]);
                         $this->process_mail($info, null, $cert_info, $s3_url, $certification_id);
