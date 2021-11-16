@@ -60,7 +60,7 @@ class Credit_output
         $credit->points = $creditInput["points"];
         $credit->amount = $creditInput["amount"];
         $credit->expire_time = $creditInput["expire_time"];
-        $credit->created_at = $creditInput["created_at"];
+        $credit->created_at = isset($creditInput["created_at"]) ? $creditInput["created_at"] : '';
 		return $credit;
 	}
 
