@@ -92,7 +92,7 @@
                                 </td>
                                 <td colspan="2" rowspan="2">
 									<form name="user_type">
-										<div><input type="radio" value="1" name="user_type_radio"><span>個人</span></div>
+										<div><input type="radio" value="1" name="user_type_radio" checked="checked"><span>個人</span></div>
 	                                    <div><input type="radio" value="2" name="user_type_radio"><span>法人</span></div>
 									</form>
                                 </td>
@@ -208,9 +208,9 @@
                     <table class="table">
                         <tr>
                             <td style="width: 30px;">審核<br>主管</td>
-                            <td><input type="text"></td>
+                            <td><input type="text" value="風控長"></td>
                             <td style="width: 30px;">審核<br>人員</td>
-                            <td><input type="text"></td>
+                            <td><input type="text" id="creditAnalystName"></td>
                         </tr>
                     </table>
                     <div id="white"></div>

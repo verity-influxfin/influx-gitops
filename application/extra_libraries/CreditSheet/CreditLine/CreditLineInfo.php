@@ -69,6 +69,7 @@ class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
             $response['otherCondition'] = $this->getOtherCondition();
             $response['unusedCreditLine2'] = $this->creditSheet->viewConverter->thousandUnit($this->getUnusedCreditLine());
             $response['reviewedInfoList'] = $this->getReviewedInfoList();
+            $response['creditAnalystName'] = $this->getCreditAnalystName();
         }
         return $response;
     }
@@ -192,7 +193,9 @@ class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
         $reviewerInfo = array_fill_keys(array_keys(self::REVIEWER_LIST), [
             'name' => '',
             'opinion' => '',
-            'score' => ''
+            'score' => '',
+            'approvedTime' => '',
+            'status' => 0
         ]);
         $creditSheetReviewList = $this->CI->credit_sheet_review_model->get_many_by(
             ['credit_sheet_id' => $this->creditSheet->creditSheetRecord->id]);
@@ -201,11 +204,23 @@ class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
                 'name' => $reviewer->name,
                 'opinion' => $reviewer->opinion,
                 'score' => $reviewer->score,
-                'apporvedTime' => $reviewer->created_at
+                'approvedTime' => $reviewer->created_at,
+                'status' => 1
             ];
         }
 
         return $reviewerInfo;
+    }
+
+    public function getCreditAnalystName() : string {
+        $name = "";
+        $list = $this->getReviewedInfoList();
+        foreach ($list as $value) {
+            if(empty($value['name']))
+                break;
+            $name = $value['name'] ?? '';
+        }
+        return $name;
     }
 
 }

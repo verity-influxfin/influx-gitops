@@ -303,4 +303,30 @@ class Target_model extends MY_Model
         }
         return $targets;
     }
+
+    /**
+     * 依照放款時間篩選還款案件
+     * @param int $userId
+     * @param array $productIdList
+     * @param int $filterTime
+     * @return mixed
+     */
+    public function getRepaymentingTargets(int $userId, array $productIdList, int $filterTime=0) {
+        $this->db->select('*')
+            ->from("`p2p_loan`.`targets`")
+            ->where('status', TARGET_REPAYMENTING)
+            ->where('user_id', $userId)
+            ->where_in('product_id', $productIdList);
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.*, tra.created_at as loan_time')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->where('tra.source', SOURCE_LENDING)
+            ->where('tra.user_to', 't.user_id', FALSE)
+            ->join("($subquery) as `t`", "`t`.`id` = `tra`.`target_id`")
+            ->group_by('t.id');
+        if($filterTime)
+            $this->db->where('tra.created_at < ', $filterTime);
+        return $this->db->get()->result();
+    }
 }
