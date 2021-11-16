@@ -794,11 +794,15 @@ class Certification_lib{
 
            // 學校信箱驗證
            if(isset($content['email']) && !empty($content['email']) && isset($content['email_verify_status']) && isset($content['email_verify_time']) ){
-               if( !empty($content['email_verify_time']) && $content['email_verify_status'] == false && ($content['email_verify_time'] < strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours") || time() > strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours")) ){
-                   $verifiedResult->setStatus(2);
-                   $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
-               }else{
+               // 尚未驗證信箱
+               if(empty($content['email_verify_time']) && $content['email_verify_status'] == false && (time() < strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours")) ){
                    $just_update_sip_flag = true;
+               }else{
+                   $email_verify_time = !empty($content['email_verify_time']) && is_numeric($content['email_verify_time']) ? $content['email_verify_time'] : time();
+                   if($content['email_verify_status'] != true && ($email_verify_time > strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours")) ){
+                       $verifiedResult->setStatus(2);
+                       $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
+                   }
                }
            }
 
