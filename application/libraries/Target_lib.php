@@ -405,7 +405,8 @@ class Target_lib
 
                                 if(!$renew) {
                                     $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, $opinion);
-                                    $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
+                                    if($msg)
+                                        $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
                                 }
 
                                 if ($rs && $msg) {
