@@ -76,7 +76,18 @@
                                          }
                                         ?>
                                         </p>
-										<p class="form-control-static">驗證時間:<?= isset($content['email_verify_time']) && isset($content['email']) && !empty($content['email']) ? date('Y-m-d H:i:s',$content['email_verify_time']) : '不進行驗證' ?></p>
+										<p class="form-control-static">驗證時間:
+                                        <?php
+                                            if(isset($content['email']) && !empty($content['email'])){
+                                                if(isset($content['email_verify_time']) && is_numeric($content['email_verify_time'])){
+                                                    echo date('Y-m-d H:i:s',$content['email_verify_time']);
+                                                }else{
+                                                    echo '';
+                                                }
+                                            }else{
+                                                echo '不進行驗證';
+                                            }
+                                        ?></p>
 									</div>
 									<div class="form-group">
 										<label>SIP帳號</label>

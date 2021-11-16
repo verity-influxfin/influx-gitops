@@ -789,6 +789,8 @@ class Certification_lib{
        if($info && $info->status ==0 && $info->certification_id==2) {
            $content = json_decode($info->content,true);
            $verifiedResult = new StudentCertificationResult(1);
+           $just_update_sip_flag = false;
+           $sys_check = 1;
 
            // 學校信箱驗證
            if(isset($content['email']) && !empty($content['email']) && isset($content['email_verify_status']) && isset($content['email_verify_time']) ){
@@ -796,7 +798,7 @@ class Certification_lib{
                    $verifiedResult->setStatus(2);
                    $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
                }else{
-                   return false;
+                   $just_update_sip_flag = true;
                }
            }
 
@@ -888,9 +890,16 @@ class Certification_lib{
            $remark['verify_result'] = isset($remark['verify_result']) ? $remark['verify_result'] : [];
            $remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 
+           // 只更新SIP資訊不驗證(信箱還沒驗證)
+           if($just_update_sip_flag){
+               $status = 0;
+               $sys_check = 0;
+               $remark = [];
+           }
+
            $this->CI->user_certification_model->update($info->id, array(
                'status' => $status != 3 ? 0 : $status,
-               'sys_check' => 1,
+               'sys_check' => $sys_check,
                'content' => json_encode($content, JSON_INVALID_UTF8_IGNORE),
                'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
            ));
