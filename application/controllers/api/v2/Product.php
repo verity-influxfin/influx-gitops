@@ -1278,7 +1278,6 @@ class Product extends REST_Controller {
 
             $biddingHistory = [];
             if ($target->status == 3
-                && $target->sub_product_id != STAGE_CER_TARGET
                 && $target->sub_status != TARGET_SUBSTATUS_SUBLOAN_TARGET
             ){
             $this->load->model('loan/investment_model');

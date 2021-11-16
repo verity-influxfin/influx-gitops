@@ -303,4 +303,19 @@ class Target_model extends MY_Model
         }
         return $targets;
     }
+
+    public function getDelayedTarget($targetIds) {
+        $this->db->select('target_id, entering_date, user_from, user_to')
+            ->from("`p2p_transaction`.`transactions`")
+            ->where_in('target_id', $targetIds)
+            ->where('source', SOURCE_AR_DELAYINTEREST)
+            ->group_by('target_id');
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.id, t.entering_date as delay_date')
+            ->from('`p2p_loan`.`targets` AS `ta`')
+            ->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
+
+        return $this->db->get()->result_array();
+    }
 }

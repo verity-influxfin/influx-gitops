@@ -1789,7 +1789,7 @@ class Target_lib
                             }
 
                             if ($finish) {
-                                !isset($targetData) ? $targetData = new stdClass() : '';
+                                !is_object($targetData) ? $targetData = (object)($targetData) : $targetData;
                                 $targetData->certification_id = $cer;
                                 $count++;
 								// 判斷是否為微企貸

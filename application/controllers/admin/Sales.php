@@ -5,8 +5,8 @@ require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
 class Sales extends MY_Admin_Controller {
 	
-	protected $edit_method = array();
-	
+	protected $edit_method = array('promote_reward_loan');
+
 	public function __construct() {
 		parent::__construct();
 		$this->load->model('user/user_meta_model');
@@ -804,6 +804,203 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
         $this->load->view('admin/promote_edit',$page_data);
+        $this->load->view('admin/_footer');
+
+    }
+
+    public function promote_reward_loan() {
+        if (!$this->input->is_ajax_request()) {
+            alert('ERROR, 只接受Ajax', admin_url('sales/promote_reward_list'));
+        }
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/virtual_account_model');
+        $this->load->model('transaction/qrcode_reward_model');
+        $this->load->model('transaction/transaction_model');
+        $this->load->model('transaction/virtual_passbook_model');
+        $this->load->model('log/log_promote_reward_model');
+        $this->load->library('passbook_lib');
+        $this->load->library('output/json_output');
+
+        $input 		= $this->input->post(NULL, TRUE);
+        $ids 		= $input['ids'] ?? [];
+        $totalAmount = 0;
+        $successIdList = [];
+
+        if(!empty($ids)) {
+            $date = get_entering_date();
+            $list = $this->qrcode_reward_model->getSettlementRewardList(['id' => $ids, 'status' => PROMOTE_REWARD_STATUS_TO_BE_PAID, 'amount > ' => 0]);
+            if(empty($list))
+                $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "放款失敗，找不到對應的獎勵紀錄。"])->send();
+
+            $rollback = function () {
+                $this->user_qrcode_model->trans_rollback();
+                $this->qrcode_reward_model->trans_rollback();
+                $this->transaction_model->trans_rollback();
+                $this->virtual_passbook_model->trans_rollback();
+            };
+
+            $bankAccountList = [];
+            $bankAccountRs 	= $this->virtual_account_model->get_many_by([
+                'user_id'	=> array_column($list, 'user_id'),
+                'status'	=> 1,
+                'virtual_account like ' => TAISHIN_VIRTUAL_CODE . "%",
+            ]);
+            foreach ($bankAccountRs as $bankAccount) {
+                $bankAccountList[$bankAccount->user_id][$bankAccount->investor] = $bankAccount;
+            }
+
+            foreach ($list as $value) {
+                // 找不到虛擬帳號
+                $settings = json_decode($value['settings'], TRUE);
+                if($settings === FALSE || !isset($bankAccountList[$value['user_id']]) ||
+                    !isset($settings['investor']) || !isset($bankAccountList[$value['user_id']][$settings['investor']])
+                ) {
+                    continue;
+                }
+                $bankAccount = $bankAccountList[$value['user_id']][$settings['investor']];
+
+                // 虛擬帳號使用中，直接跳過
+                $virtual_account = $this->virtual_account_model->setVirtualAccount($value['user_id'], $settings['investor'],
+                    VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $bankAccount->virtual_account);
+                if (empty($virtual_account))
+                    continue;
+
+                // 推薦碼結算中，直接跳過
+                $promoteCode = $this->user_qrcode_model->setUserPromoteLock($value['promote_code'], PROMOTE_IS_NOT_SETTLEMENT, PROMOTE_IS_SETTLEMENT);
+                if (empty($promoteCode))
+                    continue;
+
+                $this->user_qrcode_model->trans_begin();
+                $this->qrcode_reward_model->trans_begin();
+                $this->transaction_model->trans_begin();
+                $this->virtual_passbook_model->trans_begin();
+                try {
+                    $amount = intval(round($value['amount'], 0));
+                    $transaction_param[] = [
+                        'source' => SOURCE_PROMOTE_REWARD,
+                        'entering_date' => $date,
+                        'user_from' => 0,
+                        'bank_account_from' => PLATFORM_VIRTUAL_ACCOUNT,
+                        'amount' => $amount,
+                        'target_id' => 0,
+                        'investment_id' => 0,
+                        'instalment_no' => 0,
+                        'user_to' => $value['user_id'],
+                        'bank_account_to' => $bankAccount->virtual_account,
+                        'status' => TRANSACTION_STATUS_PAID_OFF
+                    ];
+
+                    $transRsList = $this->transaction_model->insert_many($transaction_param);
+                    if ($transRsList) {
+                        foreach ($transRsList as $transRs) {
+                            $this->passbook_lib->enter_account($transRs);
+                        }
+                        $data = json_decode($value['json_data'], true);
+                        $data['transaction_id'] = $transRsList;
+                        $this->qrcode_reward_model->update_by(['id' => $value['id']], ['status' => PROMOTE_REWARD_STATUS_PAID_OFF,
+                            'json_data' => json_encode($data), 'settlement_time' => date('Y-m-d H:i:s')]);
+                    }else{
+                        throw new Exception("The list of insertions is empty.");
+                    }
+
+                    if ($this->user_qrcode_model->trans_status() === TRUE && $this->qrcode_reward_model->trans_status() === TRUE &&
+                        $this->transaction_model->trans_status() === TRUE && $this->virtual_passbook_model->trans_status() === TRUE) {
+                        $this->user_qrcode_model->trans_commit();
+                        $this->qrcode_reward_model->trans_commit();
+                        $this->transaction_model->trans_commit();
+                        $this->virtual_passbook_model->trans_commit();
+                        $totalAmount += $amount;
+                        $successIdList[] = $value['id'];
+                    }else{
+                        throw new Exception("transaction_status is invalid.");
+                    }
+                } catch (Exception $e) {
+                    $rollback();
+                }
+                $this->user_qrcode_model->setUserPromoteLock($value['promote_code'], PROMOTE_IS_SETTLEMENT, PROMOTE_IS_NOT_SETTLEMENT);
+                $this->virtual_account_model->setVirtualAccount($value['user_id'], $settings['investor'],
+                    VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $bankAccount->virtual_account);
+            }
+
+            $this->log_promote_reward_model->insert(['amount' => $totalAmount, 'ids' => json_encode($successIdList),
+                'admin_id' => $this->login_info->id]);
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "放款成功 ".count($successIdList)." 筆，共 ".$totalAmount." 元。"])->send();
+    }
+
+    public function promote_reward_list() {
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('transaction/qrcode_reward_model');
+
+        $input 		= $this->input->get(NULL, TRUE);
+        $where		= [];
+        $list   	= [];
+        $fields 	= ['alias'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            }
+        }
+        if(isset($input['tsearch'])&&$input['tsearch']!=''){
+            $tsearch = $input['tsearch'];
+            if(preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $tsearch))
+            {
+                $name = $this->user_model->get_many_by(array(
+                    'name like '    => '%'.$tsearch.'%',
+                    'status'	    => 1
+                ));
+                if($name){
+                    foreach($name as $k => $v){
+                        $where['user_id'][] = $v->id;
+                    }
+                }
+            }else{
+                if(preg_match_all('/[A-Za-z]/', $tsearch)==1){
+                    $id_number	= $this->user_model->get_many_by(array(
+                        'id_number  like'	=> '%'.$tsearch.'%',
+                        'status'	        => 1
+                    ));
+                    if($id_number){
+                        foreach($id_number as $k => $v){
+                            $where['user_id'][] = $v->id;
+                        }
+                    }
+                }
+                elseif(preg_match_all('/\D/', $tsearch)==0){
+                    $where['user_id'] = $tsearch;
+                }
+                else{
+                    $where['promote_code like'] = '%'.$tsearch.'%';
+                }
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+        if(isset($where['alias'])) {
+            if($where['alias'] == "all")
+                unset($where['alias']);
+
+            $reward_where = ['status' => PROMOTE_REWARD_STATUS_TO_BE_PAID, 'amount > ' => 0];
+            if($input['sdate'] != "")
+                $reward_where['start_time >= '] = $input['sdate'];
+            if($input['edate'] != "")
+                $reward_where['end_time <= '] = $input['edate'];
+
+            $list = $this->qrcode_reward_model->getSettlementRewardList($reward_where, $where);
+        }
+
+        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $alias_list = ['all' => "全部方案"];
+        $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+
+        $page_data['list'] = $list;
+        $page_data['alias_list'] = $alias_list;
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/promote_reward_list',$page_data);
         $this->load->view('admin/_footer');
 
     }

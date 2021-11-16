@@ -89,7 +89,8 @@ $config['admin_menu'] = [
         'register_report' => '註冊報表',
         'bonus_report' => '獎金報表',
         'loan_overview' => '申貸總覽',
-        'promote_list'  => '推薦有賞'
+        'promote_list'  => '推薦有賞',
+        'promote_reward_list'  => '推薦有賞放款'
     ],
     'Account' => [
         'parent_name' => '財務作業',
@@ -1750,6 +1751,8 @@ $config['transaction_source'] = [
     31 => '應收法催執行費',
     32 => '法催執行費',
 
+    40 => '推薦獎金',
+
     50 => '平台服務費沖正',
     51 => '債權轉讓服務費沖正',
     52 => '債權轉讓金沖正',
@@ -1804,6 +1807,7 @@ $config['transaction_type_name'] = [
     'charge_normal' => '還款',
     'unknown_refund' => '退款-不明原因',
     'platform_law_fee' => '法催執行費',
+    'promote' => '推薦獎金',
 ];
 
 $config['certifications'] = [
@@ -2055,6 +2059,7 @@ $config['certifications_msg'] = [
     ],
     CERTIFICATION_CRIMINALRECORD => [
         '良民證資料有誤，請您重新確認後上傳，感謝您的配合！',
+        '請提供半年內之良民證，謝謝您！',
         '未上傳良民證資料',
     ],
 
@@ -2157,4 +2162,4 @@ $config['cer_profilejudicial'] = [
 ];
 
 // 推薦碼需要的徵信項目
-$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD];
+$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];

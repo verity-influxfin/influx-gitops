@@ -494,9 +494,8 @@ class Certification extends MY_Admin_Controller {
 								'remark' => json_encode($remark),
 								'expire_time'=>$expiretime,
 							]);
-							if($post['status'] == 2) {
-								// 退工作認證時，需把聯徵也一起退掉 issue #1202
-								$this->load->library('Certification_lib');
+							$this->load->library('Certification_lib');
+							if($post['status'] == 2 && $this->certification_lib->isRejectedResult($fail)) {
 								$this->certification_lib->withdraw_investigation($info->user_id, $info->investor);
 							}
 						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
@@ -1469,6 +1468,58 @@ class Certification extends MY_Admin_Controller {
 
         if(isset($content['skbank_form']) && !empty($content['skbank_form'])){
             $response_data = $content['skbank_form'];
+        }
+        $this->json_output->setStatusCode(200)->setResponse($response_data)->send();
+    }
+
+    // 人工填寫風控因子
+    public function save_meta(){
+        $post = $this->input->post();
+
+        if(! isset($post['id']) || empty($post['id'])){
+            alert('資料更改失敗，缺少參數', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $certification_info = $this->user_certification_model->get_by(['id' => $post['id']]);
+
+        if(! $certification_info){
+            alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        if(isset($certification_info->status) && $certification_info->status != 3){
+            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+        }
+
+        $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+        unset($post['id']);
+        $content['meta'] = $post;
+        $this->user_certification_model->update_by(
+            ['id'  => $certification_info->id],
+            ['content' => json_encode($content)]
+        );
+        alert('資料更新成功', admin_url('certification/user_certification_edit?id='.$certification_info->id));
+    }
+
+    // 帶入風控因子
+    public function getMeta(){
+        $get = $this->input->get();
+        $this->load->library('output/json_output');
+
+        $response_data = [];
+
+        if(! isset($get['id']) || empty($get['id'])){
+            $this->json_output->setStatusCode(204)->setErrorCode('缺少參數，無法找資料')->send();
+        }
+
+        $certification_info = $this->user_certification_model->get_by(['id' => $get['id']]);
+        if(! $certification_info){
+            $this->json_output->setStatusCode(204)->setErrorCode('找不到資料')->send();
+        }
+
+        $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
+
+        if(isset($content['meta']) && !empty($content['meta'])){
+            $response_data = $content['meta'];
         }
         $this->json_output->setStatusCode(200)->setResponse($response_data)->send();
     }

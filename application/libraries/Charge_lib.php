@@ -673,10 +673,17 @@ class Charge_lib
                 }
                 if ($amount > 0) {
                     $virtual = $target->product_id != PRODUCT_FOREX_CAR_VEHICLE ? CATHAY_VIRTUAL_CODE : TAISHIN_VIRTUAL_CODE;
-                    $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($target->user_id, USER_BORROWER,
-                        VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $virtual);
+//                    $virtual_account = $this->CI->virtual_account_model->setVirtualAccount($target->user_id, USER_BORROWER,
+//                        VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING, $virtual);
+                    $virtual_account = $this->CI->virtual_account_model->get_by([
+                        'status' => VIRTUAL_ACCOUNT_STATUS_AVAILABLE,
+                        'investor' => USER_BORROWER,
+                        'user_id' => $target->user_id,
+                        'virtual_account like ' => $virtual . "%",
+                    ]);
 
                     if (!empty($virtual_account)) {
+                        $this->CI->virtual_account_model->update($virtual_account->id, ['status' => VIRTUAL_ACCOUNT_STATUS_USING]);
                         $funds = $this->CI->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
                         $total = $funds['total'] - $funds['frozen'];
                         if ($total >= $amount) {
