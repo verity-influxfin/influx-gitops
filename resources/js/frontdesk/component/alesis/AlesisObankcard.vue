@@ -30,12 +30,6 @@ export default {
     components: {
         AlesisButton,
     },
-    data() {
-    },
-    mounted() {
-    },
-    methods: {
-    }
 };
 </script>
 
