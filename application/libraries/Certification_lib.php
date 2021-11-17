@@ -799,7 +799,7 @@ class Certification_lib{
                    $just_update_sip_flag = true;
                }else{
                    $email_verify_time = !empty($content['email_verify_time']) && is_numeric($content['email_verify_time']) ? $content['email_verify_time'] : time();
-                   if($content['email_verify_status'] != true && ($email_verify_time > strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours")) ){
+                   if( $email_verify_time > strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours") ){
                        $verifiedResult->setStatus(2);
                        $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
                    }
