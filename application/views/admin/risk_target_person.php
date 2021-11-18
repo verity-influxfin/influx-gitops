@@ -135,7 +135,7 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && $key > 10
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 &&  !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
                                         ){
                                             unset($certification[$key]);
                                             continue;
@@ -362,7 +362,7 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && $key > 10
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
                                         ){
                                             unset($certification[$key]);
                                             continue;
@@ -591,7 +591,7 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && $key > 10
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
                                         ){
                                             unset($certification[$key]);
                                             continue;
