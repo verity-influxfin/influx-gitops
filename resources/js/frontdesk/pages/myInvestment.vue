@@ -413,6 +413,9 @@ export default {
       }
     }
   }
+  .main-content{
+      overflow-x: auto;
+  }
 
   @media screen and (max-width: 767px) {
     .invest-header {

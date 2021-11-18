@@ -217,7 +217,7 @@ export default {
 .report-main {
   width: 940px;
   height: 1200px;
-  margin: auto;
+  margin: 30px auto;
   padding: 0 20px;
   background-size: cover;
   background-image: url("../asset/images/invest-report-cover.jpg");
@@ -456,6 +456,12 @@ export default {
     color: red;
     padding-left: 15px;
     font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 940px) {
+  .report-main {
+    margin: 15px 10px;
   }
 }
 </style>
