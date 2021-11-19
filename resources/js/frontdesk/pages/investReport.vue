@@ -4,23 +4,29 @@
       <div class="row no-gutters report-intro mx-auto">
         <p>親愛的會員您好：</p>
         <p>
-          感謝您長期以來對普匯的信賴與支持，在此為您結算至2021/05/31的投資績效報告，
-          如有任何問題，歡迎聯繫普匯客服Line@inFluxFin，我們將竭誠為您提供貼心的服務，
+          感謝您長期以來對普匯的信賴與支持，在此為您結算至{{ today }}
+          投資績效報告，如有任何問題，
+          歡迎聯繫普匯客服Line@inFluxFin，我們將竭誠為您提供貼心的服務，
           再次感謝您的愛護與支持！
         </p>
       </div>
-      <div class="info-details">
+      <div class="info-details" v-if="investReport.basicInfo">
         <div class="item">
           <div class="item-title">投資人</div>
-          <div class="item-value">1234</div>
+          <div class="item-value">{{ investReport.basicInfo.id }}</div>
         </div>
         <div class="item">
           <div class="item-title">首筆投資</div>
-          <div class="item-value">2018/09/19</div>
+          <div class="item-value">
+            {{ investReport.basicInfo.firstInvestDate }}
+          </div>
         </div>
         <div class="item">
           <div class="item-title">投資金額</div>
-          <div class="item-value">$20,000,000</div>
+          <div class="item-value">
+            $
+            {{ formate(investReport.basicInfo.investAmount) }}
+          </div>
         </div>
       </div>
       <div class="row no-gutters justify-content-between mt-4">
@@ -38,21 +44,33 @@
             </div>
             <div class="table-row">
               <div class="table-title item">正常還款中</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">1,123,456</div>
+              <div
+                class="item"
+                v-for="x in localInvestDescription.amountNotDelay"
+                :key="x"
+              >
+                {{ formate(x) }}
+              </div>
             </div>
             <div class="table-row gray">
               <div class="table-title item">逾期中</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">1,123,456</div>
+              <div
+                class="item"
+                v-for="x in localInvestDescription.amountDelay"
+                :key="x"
+              >
+                {{ formate(x) }}
+              </div>
             </div>
             <div class="table-row">
               <div class="table-title item">本金餘額</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">1,123,456</div>
+              <div
+                class="item"
+                v-for="x in localInvestDescription.totalAmount"
+                :key="x"
+              >
+                {{ formate(x) }}
+              </div>
             </div>
           </div>
         </div>
@@ -66,25 +84,16 @@
               <div class="item">科目</div>
               <div class="item">績效</div>
             </div>
-            <div class="table-row">
-              <div class="table-title item">投資年資</div>
-              <div class="item">1.5</div>
-            </div>
-            <div class="table-row gray">
-              <div class="table-title item">上半年</div>
-              <div class="item">22.22%</div>
-            </div>
-            <div class="table-row">
-              <div class="table-title item">平均本金餘額</div>
-              <div class="item">1,234,567</div>
-            </div>
-            <div class="table-row gray">
-              <div class="table-title item">扣除逾期之折現收益</div>
-              <div class="item">1,234,567</div>
-            </div>
-            <div class="table-row">
-              <div class="table-title item">折現年化報酬率</div>
-              <div class="item">12.34%</div>
+            <div
+              class="table-row"
+              v-for="(x, i) in investReport.investPerformance"
+              :key="x.name"
+            >
+              <div class="table-title item">{{ x.name }}</div>
+              <div class="item">
+                {{ formate(x.description) }}
+                {{ i == 1 || i == 4 ? "%" : "" }}
+              </div>
             </div>
           </div>
         </div>
@@ -110,19 +119,23 @@
             <div class="header-sub-item">回款手收</div>
           </div>
           <div class="rows">
-            <div class="one-row" v-for="i in 4" :key="i">
-              <div class="table-title item">2021 07~12</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">1,239</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">123,456</div>
-              <div class="item">12%</div>
+            <div
+              class="one-row"
+              v-for="x in investReport.realizedRateOfReturn"
+              :key="x.rangeOfYear"
+            >
+              <div class="table-title item">{{ x.rangeOfYear }}</div>
+              <div class="item">{{ formate(x.principalBalance) }}</div>
+              <div class="item">{{ formate(x.interest) }}</div>
+              <div class="item">{{ formate(x.withdrawInterest) }}</div>
+              <div class="item">{{ formate(x.repayDelayInterest) }}</div>
+              <div class="item">{{ formate(x.delayInterest) }}</div>
+              <div class="item">{{ formate(x.subsidyInterest) }}</div>
+              <div class="item">{{ formate(x.handlingFee) }}</div>
+              <div class="item">{{ formate(x.totalIncome) }}</div>
+              <div class="item">{{ x.rateOfReturn }}%</div>
             </div>
-            <div class="one-row">
+            <!-- <div class="one-row">
               <div class="table-title item">累積收益率</div>
               <div class="item">123,456</div>
               <div class="item">123,456</div>
@@ -133,7 +146,7 @@
               <div class="item">123,456</div>
               <div class="item">123,456</div>
               <div class="item">12%</div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -155,29 +168,27 @@
             <div class="item">金額</div>
             <div class="item">折現</div>
           </div>
-          <div class="table-row">
-            <div class="table-title item">2021 07~12</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-          </div>
-          <div class="table-row">
-            <div class="table-title item">2021 01~06</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-          </div>
-          <div class="table-row">
-            <div class="table-title item">2022 07~12</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-          </div>
-          <div class="table-row">
-            <div class="table-title item">合計</div>
-            <div class="item">123,456</div>
-            <div class="item">123,456</div>
-          </div>
-          <div class="table-row">
-            <div class="table-title item">內部報酬率評估</div>
-            <div class="item col">12.34%</div>
+          <div
+            v-if="
+              investReport.waitedRateOfReturn &&
+              investReport.waitedRateOfReturn.statisticsData
+            "
+          >
+            <div
+              class="table-row"
+              v-for="x in investReport.waitedRateOfReturn.statisticsData"
+              :key="x.rangeOfMonth"
+            >
+              <div class="table-title item">{{ x.rangeOfMonth }}</div>
+              <div class="item">{{ formate(x.amount) }}</div>
+              <div class="item">{{ formate(x.discount) }}</div>
+            </div>
+            <div class="table-row">
+              <div class="table-title item">內部報酬率預估</div>
+              <div class="item col">
+                {{ investReport.waitedRateOfReturn.predictRateOfReturn }}%
+              </div>
+            </div>
           </div>
         </div>
         <div class="overdue">
@@ -189,17 +200,13 @@
             <div class="item">科目</div>
             <div class="item">金額</div>
           </div>
-          <div class="table-row">
-            <div class="table-title item">逾期-尚欠本息</div>
-            <div class="item">123,456</div>
-          </div>
-          <div class="table-row gray">
-            <div class="table-title item">逾期-尚欠延滯息</div>
-            <div class="item">123,456</div>
-          </div>
-          <div class="table-row">
-            <div class="table-title item">合計</div>
-            <div class="item">1,123,456</div>
+          <div
+            class="table-row"
+            v-for="x in investReport.delayNotReturn"
+            :key="x.name"
+          >
+            <div class="table-title item">{{ x.name }}</div>
+            <div class="item">{{ formate(x.amount) }}</div>
           </div>
         </div>
       </div>
@@ -209,7 +216,162 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      investReport: {
+        "basicInfo": {
+          "id": "82",
+          "firstInvestDate": "2018/11/09",
+          "investAmount": "270000"
+        },
+        "assetsDescription": [
+          {
+            "name": "上班族貸",
+            "amountNotDelay": "126436",
+            "amountDelay": "943",
+            "totalAmount": "137379"
+          },
+          {
+            "name": "學生貸",
+            "amountNotDelay": "126436",
+            "amountDelay": "943",
+            "totalAmount": "137379"
+          },
+          {
+            "name": "本金餘額",
+            "amountNotDelay": "126436",
+            "amountDelay": "943",
+            "totalAmount": "137379"
+          }
+        ],
+        "investPerformance": [
+          {
+            "name": "投資年資",
+            "description": "2.9",
+          },
+          {
+            "name": "2021上半年",
+            "description": "7.1",
+          },
+          {
+            "name": "平均本金餘額",
+            "description": "167893934",
+          },
+          {
+            "name": "扣除逾期之折現收益",
+            "description": "5694463",
+          },
+          {
+            "name": "折現年化報酬率",
+            "description": "12.00",
+          },
+        ],
+        "realizedRateOfReturn": [
+          {
+            "rangeOfYear": "2018 01-12",
+            "principalBalance": "266734",
+            "interest": "3271",
+            "withdrawInterest": "15",
+            "repayDelayInterest": "546",
+            "delayInterest": "13424",
+            "subsidyInterest": "90",
+            "handlingFee": "141241",
+            "totalIncome": "99573552",
+            "rateOfReturn": "1"
+          },
+          {
+            "rangeOfYear": "2019 01-12",
+            "principalBalance": "266734",
+            "interest": "3271",
+            "withdrawInterest": "15",
+            "repayDelayInterest": "546",
+            "delayInterest": "13424",
+            "subsidyInterest": "90",
+            "handlingFee": "141241",
+            "totalIncome": "99573552",
+            "rateOfReturn": "1"
+          },
+          {
+            "rangeOfYear": "累績收益率",
+            "principalBalance": "266734",
+            "interest": "3271",
+            "withdrawInterest": "15",
+            "repayDelayInterest": "546",
+            "delayInterest": "13424",
+            "subsidyInterest": "90",
+            "handlingFee": "141241",
+            "totalIncome": "99577552",
+            "rateOfReturn": "1",
+          }
+        ],
+        "waitedRateOfReturn": {
+          "statisticsData": [
+            {
+              "rangeOfMonth": "2021 06-12",
+              "amount": "62041",
+              "discount": "41243"
+            },
+            {
+              "rangeOfMonth": "2021 06-12",
+              "amount": "62041",
+              "discount": "41243"
+            },
+            {
+              "rangeOfMonth": "合計",
+              "amount": "62041",
+              "discount": "41243"
+            }
+          ],
+          "predictRateOfReturn": "16.14"
+        },
+        "delayNotReturn": [
+          {
+            "name": "逾期-尚欠本息",
+            "amount": "58296"
+          },
+          {
+            "name": "逾期-尚欠延滯息",
+            "amount": "58296"
+          },
+          {
+            "name": "合計",
+            "amount": "58296"
+          }
+        ]
+      },
+      test: ''
+    }
+  },
+  computed: {
+    today() {
+      // 2020/01/01
+      const today = new Date()
+      return `${today.getFullYear()}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getDate().toString().padStart(2, '0')}`
+    },
+    localInvestDescription() {
+      const { assetsDescription } = this.investReport
+      if (assetsDescription && assetsDescription.length > 0) {
+        return {
+          amountNotDelay: assetsDescription.map(x => x.amountNotDelay),
+          amountDelay: assetsDescription.map(x => x.amountDelay),
+          totalAmount: assetsDescription.map(x => x.totalAmount)
+        }
+      }
+      return {
+        amountNotDelay: [],
+        amountDelay: [],
+        totalAmount: []
+      }
+    },
+  },
+  methods: {
+    formate(x) {
+      if (isNaN(x)) {
+        return x
+      }
+      return parseInt(x, 10).toLocaleString()
+    }
+  },
 }
 </script>
 
@@ -252,6 +414,9 @@ export default {
     }
   }
   .invest-performance {
+    .table-row:nth-child(odd) {
+      background: #dbdcdc;
+    }
     .performance-title {
       margin-bottom: 15px;
     }
@@ -421,6 +586,9 @@ export default {
     }
     .table-row .item {
       width: 140px;
+    }
+    .table-row:nth-child(even) {
+      background: #dbdcdc;
     }
   }
   .underline {
