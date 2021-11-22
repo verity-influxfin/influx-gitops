@@ -140,7 +140,7 @@ class Certification_lib{
                 $this->CI->user_certification_model->update($info->id,$param);
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
-					if($rs && in_array($info->certification_id, $this->notification_list)){
+					if($rs){
 						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
 					}
 
@@ -292,8 +292,7 @@ class Certification_lib{
                         }
                     }
 
-                    if(in_array($info->certification_id, $this->notification_list))
-					    $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
+                    $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
 
                     // 驗證推薦碼失敗
                     $this->verify_promote_code($info, TRUE);
@@ -1640,11 +1639,8 @@ class Certification_lib{
 						$this->CI->load->library('verify/data_legalize_lib');
 						$verifiedResult = $this->CI->data_legalize_lib->legalize_investigation($verifiedResult, $info->user_id, $result, $info->created_at);
 
-                        if(!$this->justLegalizeCertification($info->status)) {
-                            // 過件邏輯
-                            $this->CI->load->library('verify/data_verify_lib');
-                            $verifiedResult = $this->CI->data_verify_lib->check_investigation($verifiedResult, $result, $certification_content);
-                        }
+                        $this->CI->load->library('verify/data_verify_lib');
+                        $verifiedResult = $this->CI->data_verify_lib->check_investigation($verifiedResult, $result, $certification_content);
 
 						$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
 					}
@@ -1654,8 +1650,8 @@ class Certification_lib{
 			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 			$status = $verifiedResult->getStatus();
 			// 先暫時把失敗改為轉人工
-			if($status == 2) {
-				$status = 3;
+			if($status == CERTIFICATION_STATUS_FAILED) {
+				$status = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
 			}
 
             $this->CI->user_certification_model->update($info->id, array(
@@ -2022,10 +2018,9 @@ class Certification_lib{
 						$this->CI->load->library('verify/data_legalize_lib');
 						$verifiedResult = $this->CI->data_legalize_lib->legalize_job($verifiedResult, $info->user_id, $result, $certification_content, $info->created_at);
 
-                        if(!$this->justLegalizeCertification($info->status)) {
-                            $this->CI->load->library('verify/data_verify_lib');
-                            $verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult, $info->user_id, $result, $certification_content);
-                        }
+                        $this->CI->load->library('verify/data_verify_lib');
+                        $verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult, $info->user_id, $result, $certification_content);
+
 
 						// to do : 是否千大企業員工
 						// $this->CI->config->load('top_enterprise');
@@ -2577,17 +2572,15 @@ class Certification_lib{
 		return false;
 	}
 
-	private function certi_failed($id,$msg='',$resubmitDate='',$sys_check=true,$just_legalize=false){
+	private function certi_failed($id,$msg='',$resubmitDate='',$sys_check=true){
 		$info = $this->CI->user_certification_model->get($id);
 		if($info && $info->status != CERTIFICATION_STATUS_FAILED){
-            $info->remark           = $info->remark!=''?json_decode($info->remark,true):[];
-            $info->remark['fail'] 	= is_array($msg)?join("、", $msg):$msg;
             $certification 	= $this->certification[$info->certification_id];
+
 			$param = [
 				'status'    => CERTIFICATION_STATUS_FAILED,
 				'sys_check' => ($sys_check==true?1:0),
 				'can_resubmit_at'=>$resubmitDate,
-                'remark'    => json_encode($info->remark, JSON_INVALID_UTF8_IGNORE)
 			];
 
 			$rs = $this->CI->user_certification_model->update($info->id, $param);
@@ -3243,6 +3236,15 @@ class Certification_lib{
             $targetData = json_decode($target->target_data, true);
             $targetData['verify_cetification_list'] = json_encode(array_column($pendingCertifications, 'id'));
 
+            // 工作收入證明直接改為人工
+            if (array_search(CERTIFICATION_JOB, $validateCertificationList) !== false) {
+                $this->CI->user_certification_model->update_by([
+                    'certification_id' => CERTIFICATION_JOB,
+                    'user_id' => $target->user_id,
+                    'investor' => USER_BORROWER,
+                    'status' => CERTIFICATION_STATUS_AUTHENTICATED
+                ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
+            }
             // 將 已驗證資料真實性待使用者送出審核(6) 更改為 待驗證(0)
             $this->CI->user_certification_model->update_by([
                 'certification_id' => $validateCertificationList,

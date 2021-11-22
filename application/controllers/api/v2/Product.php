@@ -2933,7 +2933,7 @@ class Product extends REST_Controller {
             $this->load->model('user/user_certification_model');
             $userCertifications 	= $this->user_certification_model->get_many_by([
                 'id'        => $targetData['verify_cetification_list'],
-                'status = ' => CERTIFICATION_STATUS_AUTHENTICATED,
+                'status '   => [CERTIFICATION_STATUS_AUTHENTICATED, CERTIFICATION_STATUS_FAILED],
             ]);
             if(!empty($userCertifications)) {
                 $targetVerifying = FALSE;
