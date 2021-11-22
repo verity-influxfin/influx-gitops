@@ -115,6 +115,7 @@ Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
 Route::get('/downloadStatement', 'Membercentrecontroller@downloadStatement');
 
+Route::post('/getInvestReport', 'Membercentrecontroller@getInvestReport');
 
 // backstage
 

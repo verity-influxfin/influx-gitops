@@ -152,4 +152,11 @@ class Membercentrecontroller extends BaseController
         }
         return Excel::download(new StatementExport($data), '對帳單.xlsx');
     }
+
+    public function getInvestReport(Request $request){
+        $curlScrapedPage = shell_exec('curl -k -X POST "' . $this->apiGetway . 'website/invest_report" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
 }
