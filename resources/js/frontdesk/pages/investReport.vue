@@ -215,7 +215,16 @@
 </template>
 
 <script>
+import Axios from "axios";
 export default {
+  beforeRouteEnter(to, from, next) {
+    if (sessionStorage.length === 0 || sessionStorage.flag === "logout") {
+      next('/index')
+      // next();
+    } else {
+      next();
+    }
+  },
   data() {
     return {
       investReport: {
@@ -342,6 +351,9 @@ export default {
       test: ''
     }
   },
+  created() {
+    this.getData()
+  },
   computed: {
     today() {
       // 2020/01/01
@@ -370,6 +382,14 @@ export default {
         return x
       }
       return parseInt(x, 10).toLocaleString()
+    },
+    getData() {
+      return Axios.get('/getInvestReport').then(({ data }) => {
+        // this.investReport = data.data
+        console.log(data)
+      }).catch(err => {
+        console.error(err)
+      })
     }
   },
 }
