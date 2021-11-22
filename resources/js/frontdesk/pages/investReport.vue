@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <div class="report-main">
+    <div class="report-main" v-if="!loading">
       <div class="row no-gutters report-intro mx-auto">
         <p>親愛的會員您好：</p>
         <p>
@@ -228,131 +228,134 @@ export default {
   data() {
     return {
       investReport: {
-        "basicInfo": {
-          "id": "82",
-          "firstInvestDate": "2018/11/09",
-          "investAmount": "270000"
-        },
-        "assetsDescription": [
-          {
-            "name": "上班族貸",
-            "amountNotDelay": "126436",
-            "amountDelay": "943",
-            "totalAmount": "137379"
-          },
-          {
-            "name": "學生貸",
-            "amountNotDelay": "126436",
-            "amountDelay": "943",
-            "totalAmount": "137379"
-          },
-          {
-            "name": "本金餘額",
-            "amountNotDelay": "126436",
-            "amountDelay": "943",
-            "totalAmount": "137379"
-          }
-        ],
-        "investPerformance": [
-          {
-            "name": "投資年資",
-            "description": "2.9",
-          },
-          {
-            "name": "2021上半年",
-            "description": "7.1",
-          },
-          {
-            "name": "平均本金餘額",
-            "description": "167893934",
-          },
-          {
-            "name": "扣除逾期之折現收益",
-            "description": "5694463",
-          },
-          {
-            "name": "折現年化報酬率",
-            "description": "12.00",
-          },
-        ],
-        "realizedRateOfReturn": [
-          {
-            "rangeOfYear": "2018 01-12",
-            "principalBalance": "266734",
-            "interest": "3271",
-            "withdrawInterest": "15",
-            "repayDelayInterest": "546",
-            "delayInterest": "13424",
-            "subsidyInterest": "90",
-            "handlingFee": "141241",
-            "totalIncome": "99573552",
-            "rateOfReturn": "1"
-          },
-          {
-            "rangeOfYear": "2019 01-12",
-            "principalBalance": "266734",
-            "interest": "3271",
-            "withdrawInterest": "15",
-            "repayDelayInterest": "546",
-            "delayInterest": "13424",
-            "subsidyInterest": "90",
-            "handlingFee": "141241",
-            "totalIncome": "99573552",
-            "rateOfReturn": "1"
-          },
-          {
-            "rangeOfYear": "累績收益率",
-            "principalBalance": "266734",
-            "interest": "3271",
-            "withdrawInterest": "15",
-            "repayDelayInterest": "546",
-            "delayInterest": "13424",
-            "subsidyInterest": "90",
-            "handlingFee": "141241",
-            "totalIncome": "99577552",
-            "rateOfReturn": "1",
-          }
-        ],
-        "waitedRateOfReturn": {
-          "statisticsData": [
-            {
-              "rangeOfMonth": "2021 06-12",
-              "amount": "62041",
-              "discount": "41243"
-            },
-            {
-              "rangeOfMonth": "2021 06-12",
-              "amount": "62041",
-              "discount": "41243"
-            },
-            {
-              "rangeOfMonth": "合計",
-              "amount": "62041",
-              "discount": "41243"
-            }
-          ],
-          "predictRateOfReturn": "16.14"
-        },
-        "delayNotReturn": [
-          {
-            "name": "逾期-尚欠本息",
-            "amount": "58296"
-          },
-          {
-            "name": "逾期-尚欠延滯息",
-            "amount": "58296"
-          },
-          {
-            "name": "合計",
-            "amount": "58296"
-          }
-        ]
+        // "basicInfo": {
+        //   "id": "82",
+        //   "firstInvestDate": "2018/11/09",
+        //   "investAmount": "270000"
+        // },
+        // "assetsDescription": [
+        //   {
+        //     "name": "上班族貸",
+        //     "amountNotDelay": "126436",
+        //     "amountDelay": "943",
+        //     "totalAmount": "137379"
+        //   },
+        //   {
+        //     "name": "學生貸",
+        //     "amountNotDelay": "126436",
+        //     "amountDelay": "943",
+        //     "totalAmount": "137379"
+        //   },
+        //   {
+        //     "name": "本金餘額",
+        //     "amountNotDelay": "126436",
+        //     "amountDelay": "943",
+        //     "totalAmount": "137379"
+        //   }
+        // ],
+        // "investPerformance": [
+        //   {
+        //     "name": "投資年資",
+        //     "description": "2.9",
+        //   },
+        //   {
+        //     "name": "2021上半年",
+        //     "description": "7.1",
+        //   },
+        //   {
+        //     "name": "平均本金餘額",
+        //     "description": "167893934",
+        //   },
+        //   {
+        //     "name": "扣除逾期之折現收益",
+        //     "description": "5694463",
+        //   },
+        //   {
+        //     "name": "折現年化報酬率",
+        //     "description": "12.00",
+        //   },
+        // ],
+        // "realizedRateOfReturn": [
+        //   {
+        //     "rangeOfYear": "2018 01-12",
+        //     "principalBalance": "266734",
+        //     "interest": "3271",
+        //     "withdrawInterest": "15",
+        //     "repayDelayInterest": "546",
+        //     "delayInterest": "13424",
+        //     "subsidyInterest": "90",
+        //     "handlingFee": "141241",
+        //     "totalIncome": "99573552",
+        //     "rateOfReturn": "1"
+        //   },
+        //   {
+        //     "rangeOfYear": "2019 01-12",
+        //     "principalBalance": "266734",
+        //     "interest": "3271",
+        //     "withdrawInterest": "15",
+        //     "repayDelayInterest": "546",
+        //     "delayInterest": "13424",
+        //     "subsidyInterest": "90",
+        //     "handlingFee": "141241",
+        //     "totalIncome": "99573552",
+        //     "rateOfReturn": "1"
+        //   },
+        //   {
+        //     "rangeOfYear": "累績收益率",
+        //     "principalBalance": "266734",
+        //     "interest": "3271",
+        //     "withdrawInterest": "15",
+        //     "repayDelayInterest": "546",
+        //     "delayInterest": "13424",
+        //     "subsidyInterest": "90",
+        //     "handlingFee": "141241",
+        //     "totalIncome": "99577552",
+        //     "rateOfReturn": "1",
+        //   }
+        // ],
+        // "waitedRateOfReturn": {
+        //   "statisticsData": [
+        //     {
+        //       "rangeOfMonth": "2021 06-12",
+        //       "amount": "62041",
+        //       "discount": "41243"
+        //     },
+        //     {
+        //       "rangeOfMonth": "2021 06-12",
+        //       "amount": "62041",
+        //       "discount": "41243"
+        //     },
+        //     {
+        //       "rangeOfMonth": "合計",
+        //       "amount": "62041",
+        //       "discount": "41243"
+        //     }
+        //   ],
+        //   "predictRateOfReturn": "16.14"
+        // },
+        // "delayNotReturn": [
+        //   {
+        //     "name": "逾期-尚欠本息",
+        //     "amount": "58296"
+        //   },
+        //   {
+        //     "name": "逾期-尚欠延滯息",
+        //     "amount": "58296"
+        //   },
+        //   {
+        //     "name": "合計",
+        //     "amount": "58296"
+        //   }
+        // ]
       },
-      test: ''
+      loading: true,
     }
   },
   created() {
-    this.getData()
+    this.loading = true
+    this.getData().finally(() => {
+      this.loading = false
+    })
   },
   computed: {
     today() {
@@ -384,9 +387,9 @@ export default {
       return parseInt(x, 10).toLocaleString()
     },
     getData() {
-      return Axios.get('/getInvestReport').then(({ data }) => {
-        // this.investReport = data.data
-        console.log(data)
+      return Axios.post('/getInvestReport').then(({ data }) => {
+        this.investReport = data.data
+        // console.log(data)
       }).catch(err => {
         console.error(err)
       })
@@ -621,7 +624,7 @@ export default {
     color: #fff;
     display: flex;
     .item {
-      width: 100px;
+      width: 115px;
       padding: 5px 10px;
       text-align: center;
     }
@@ -632,7 +635,7 @@ export default {
       background-color: #dbdcdc;
     }
     .item {
-      width: 100px;
+      width: 115px;
       padding: 5px 10px;
       text-align: center;
     }
