@@ -526,7 +526,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -735,7 +735,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -1128,7 +1128,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
 			];
 			$insert 			= $this->user_certification_model->insert($param);
 			if($insert){
@@ -1901,7 +1901,7 @@ class Certification extends REST_Controller {
 				'investor'			=> $investor,
                 'expire_time'		=> strtotime('+20 years'),
                 'content'			=> json_encode($content),
-                'status'            => CERTIFICATION_STATUS_AUTHENTICATED
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -2031,7 +2031,7 @@ class Certification extends REST_Controller {
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 				'content'			=> json_encode($content),
-                'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
@@ -3956,7 +3956,7 @@ class Certification extends REST_Controller {
 			'certification_id'	=> 4,
 			'investor'			=> $investor,
 			'content'			=> json_encode($content),
-            'status'            => $investor==0?CERTIFICATION_STATUS_AUTHENTICATED:CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+            'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
         ];
         $insert_id = $this->user_certification_model->insert($param);
         if($insert_id){

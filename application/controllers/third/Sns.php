@@ -93,7 +93,7 @@ class Sns extends REST_Controller {
                             $process_unknown_mail($s3_url, S3_BUCKET_MAILBOX);
                         }
                     } else if (($drive = strpos($file_content, 'https://drive.google.com/')) !== false ||
-                        ((count($info) >= 3) && $info[0]->status == CERTIFICATION_STATUS_AUTHENTICATED)) {
+                        ((count($info) >= 3) && $info[0]->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)) {
                         // 沒附件且最近三次都失敗時，直接轉人工 / 用 google drive 傳檔案轉人工
                         $remark           = $info[0]->remark!=''?json_decode($info[0]->remark,true):[];
                         $remark['fail']   = $drive !== false ? "該附件由Google雲端夾帶，需人工檢驗" : "收信無附件次數達三次，請人工檢驗";
