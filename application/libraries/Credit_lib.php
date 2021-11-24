@@ -740,7 +740,7 @@ class Credit_lib{
                 }
 
 				$info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-				if(isset($info->meta_value)) {
+				if(isset($info->meta_value) && in_array($product_id, [1, 2])) {
                     $school_points_data = $this->get_school_point($info->meta_value);
                     $school_config = $this->CI->config->item('school_points');
                     // 黑名單的學校額度是0
