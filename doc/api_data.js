@@ -43239,6 +43239,13 @@ define({
                             "group": "Success 200",
                             "type": "String",
                             "optional": false,
+                            "field": "list.agreement_title",
+                            "description": "<p>協議書標題</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
                             "field": "list.agreement",
                             "description": "<p>協議書內容</p>"
                         }
@@ -43247,7 +43254,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        \"list\": [\n            {\n                \"alias\": \"NTUH\",\n                \"name\": \"財團法人台大兒童健康基金會\",\n                \"min_amount\": 100,\n                \"max_amount\": 100000,\n                \"agreement\": \"\"\n            }\n        ]\n    }\n}",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        \"list\": [\n            {\n                \"alias\": \"NTUH\",\n                \"name\": \"財團法人台大兒童健康基金會\",\n                \"min_amount\": 100,\n                \"max_amount\": 100000,\n                \"agreement_title\": \"\"\n                \"agreement\": \"\"\n            }\n        ]\n    }\n}",
                         "type": "Object"
                     }
                 ]

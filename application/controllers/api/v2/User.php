@@ -2079,13 +2079,14 @@ END:
         $rs = $this->charity_institution_model->get_many_by(['status' => 1]);
         foreach ($rs as $value) {
             $agreement = $this->agreement_model->get($value->agreement_id);
-            $agreementContent = $agreement['content'] ?? '';
+            $agreementContent = $agreement->content ?? '';
 
             $list[] = [
                 'alias' => $value->alias,
                 'name' => $value->name,
                 'min_amount' => intval($value->min_amount),
                 'max_amount' => intval($value->max_amount),
+                'agreement_title' => $agreement->name ?? '',
                 'agreement' => $agreementContent,
             ];
         }
