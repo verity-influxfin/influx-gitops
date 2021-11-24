@@ -81,9 +81,10 @@
 		flex: 1 0 0;
 	}
 
-	.result-item {
-		flex: 0 0 22%;
-		margin-right: 22px;
+	#result-data-row {
+		display: grid;
+		gap: 0 10px;
+		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 	}
 
 	.result-date {
@@ -125,7 +126,9 @@
 						<option value="工程師貸">微企貸</option>
 					</select>
 				</div>
-				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">搜尋</button>
+				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
+					搜尋
+				</button>
 			</div>
 		</div>
 		<div class="panel-body">
@@ -166,20 +169,24 @@
 		<div class="d-flex">
 			<div class="data-item item-full">
 				<div class="header-item">反詐欺規則</div>
-				<div class="data-item" id="rule">【設備ID】同一個設備號，有3人以上註冊帳戶，且非內部認證設備</div>
+				<div class="data-item" id="rule">
+					【設備ID】同一個設備號，有3人以上註冊帳戶，且非內部認證設備
+				</div>
 			</div>
 			<div class="data-item result-date">
 				<div class="header-item">日期</div>
 				<div class="data-item" id="date">20210101~20210102</div>
 			</div>
 		</div>
-		<button class="btn" onclick="insertResultDataItem({key:'test',value:'test2'})">test</button>
-		<div class="d-flex mt-4 flex-wrap" id="result-data-row">
-			<div class="data-item result-item">
+		<button class="btn" onclick="insertResultDataItem({key:'test',value:'test2'})">
+			test
+		</button>
+		<div id="result-data-row">
+			<div class="data-item">
 				<div class="header-item">會員ID</div>
 				<div class="data-item" id="user-id">12334</div>
 			</div>
-			<div class="data-item result-item">
+			<div class="data-item">
 				<div class="header-item">日期</div>
 				<div class="data-item">20210101~20210102</div>
 			</div>
@@ -187,7 +194,7 @@
 	</div>
 </template>
 <template id="result-data-item">
-	<div class="data-item result-item">
+	<div class="data-item">
 		<div class="header-item" id="key"></div>
 		<div class="data-item" id="value"></div>
 	</div>
@@ -230,9 +237,9 @@
 	}
 	function insertDefaultPanel() {
 		const parent = document.querySelector("#panel");
-		const child = parent.querySelector('div')
+		const child = parent.querySelector("div");
 		if (child) {
-			parent.removeChild(child)
+			parent.removeChild(child);
 		}
 		const template = document.querySelector("template#default-panel");
 		const clone = document.importNode(template.content, true);
