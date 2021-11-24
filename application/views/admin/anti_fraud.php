@@ -4,6 +4,10 @@
 		flex-direction: column;
 	}
 
+	.d-none {
+		display: none !important;
+	}
+
 	.d-flex {
 		display: flex !important;
 	}
@@ -45,6 +49,14 @@
 		padding: 6px 0;
 		background: rgba(196, 196, 196, 0.5);
 		flex: 0 0 16%;
+	}
+
+	.sortable {
+		cursor: pointer;
+	}
+
+	.sortable:hover {
+		background: #d3d3d3;
 	}
 
 	.data-row {
@@ -122,7 +134,12 @@
 					<div class="header-item">時間</div>
 					<div class="header-item">產品別</div>
 					<div class="header-item item-full">反詐欺規則</div>
-					<div class="header-item">有效性</div>
+					<div class="header-item sortable" onclick="onSort()">
+						<span class="mr-2">有效性</span>
+						<i class="fa fa-sort" aria-hidden="true" id="default-order"></i>
+						<i class="fa fa-sort-desc d-none" aria-hidden="true" id="desc"></i>
+						<i class="fa fa-sort-asc d-none" aria-hidden="true" id="asc"></i>
+					</div>
 					<div class="header-item btn-item"></div>
 				</div>
 			</div>
@@ -177,20 +194,29 @@
 </template>
 
 <script>
+	let antiFraudData = [1, 3, 2, 4];
+	let orderBy = null;
+	const faIcons = [];
 	function onLoad() {
 		//on load
-		insertDefaultPanel()
+		insertDefaultPanel();
 		insertData([
 			"20210101~20210102",
 			"學生貸",
 			"【設備ID】同一個設備號，有3人以上註冊帳戶，且非內部認證設備",
 			"12%",
 		]);
+		// init faIcons
+		faIcons.push(
+			document.querySelector("#asc"),
+			document.querySelector("#desc"),
+			document.querySelector("#default-order")
+		);
 	}
-	window.addEventListener("load", onLoad())
+	window.addEventListener("load", onLoad());
 	function doSearch() {
 		//do search
-		console.log('do search')
+		console.log("do search");
 	}
 	function insertData(data) {
 		const template = document.querySelector("template#data-row");
@@ -214,21 +240,54 @@
 	}
 	function insertResultPanel() {
 		const parent = document.querySelector("#panel");
-		const child = parent.querySelector('.panel.panel-default')
-		parent.removeChild(child)
+		const child = parent.querySelector(".panel.panel-default");
+		parent.removeChild(child);
 		const template = document.querySelector("template#result-panel");
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
 	}
 	function insertResultDataItem({ key, value }) {
-		const template = document.querySelector('template#result-data-item')
-		const k = template.content.querySelector('#key')
-		const v = template.content.querySelector('#value')
-		k.textContent = key
-		v.textContent = value
+		const template = document.querySelector("template#result-data-item");
+		const k = template.content.querySelector("#key");
+		const v = template.content.querySelector("#value");
+		k.textContent = key;
+		v.textContent = value;
 
 		const parent = document.querySelector("#result-data-row");
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
+	}
+	function onSort() {
+		//type = 'desc','asc',null
+		let locData = [...antiFraudData];
+		// display:none faIcons
+		faIcons.forEach((x) => {
+			x.classList.remove("d-none");
+			x.classList.add("d-none");
+		});
+		if (orderBy === null) {
+			//null
+			orderBy = "desc";
+			faIcons[0].classList.toggle("d-none");
+		} else if (orderBy === "desc") {
+			orderBy = "asc";
+			faIcons[1].classList.toggle("d-none");
+		} else {
+			orderBy = null;
+			faIcons[2].classList.toggle("d-none");
+		}
+		//do sort
+		if (orderBy === "desc") {
+			locData.sort();
+		}
+		if (orderBy === "asc") {
+			locData.sort((a, b) => b - a);
+		}
+		//insert
+		// insertDefaultPanel()
+		// locData.forEach(x => {
+		// 	insertData(x)
+		// })
+		console.log(locData);
 	}
 </script>
