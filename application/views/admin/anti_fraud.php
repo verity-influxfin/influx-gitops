@@ -108,12 +108,21 @@
 			<div class="d-flex align-items-center">
 				<div class="mr-2 head-item-title">時間：</div>
 				<div class="input-group input">
-					<input type="text" data-toggle="datepicker" class="form-control input" />
+					<input
+						type="text"
+						data-toggle="datepicker"
+						class="form-control input"
+					/>
 				</div>
 				<span class="mx-2">~</span>
 				<div class="input-group input">
-					<input type="text" data-toggle="datepicker" class="form-control" aria-label="Default"
-						aria-describedby="inputGroup-sizing-default" />
+					<input
+						type="text"
+						data-toggle="datepicker"
+						class="form-control"
+						aria-label="Default"
+						aria-describedby="inputGroup-sizing-default"
+					/>
 				</div>
 			</div>
 			<div class="d-flex align-items-center mt-4">
@@ -126,7 +135,11 @@
 						<option value="工程師貸">微企貸</option>
 					</select>
 				</div>
-				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
+				<button
+					class="btn ml-5 search-btn"
+					id="search-btn"
+					onclick="doSearch()"
+				>
 					搜尋
 				</button>
 			</div>
@@ -178,7 +191,10 @@
 				<div class="data-item" id="date">20210101~20210102</div>
 			</div>
 		</div>
-		<button class="btn" onclick="insertResultDataItem({key:'test',value:'test2'})">
+		<button
+			class="btn"
+			onclick="insertResultDataItem({key:'test',value:'test2'})"
+		>
 			test
 		</button>
 		<div id="result-data-row">
@@ -204,33 +220,59 @@
 	let antiFraudData = [1, 3, 2, 4];
 	let orderBy = null;
 	const faIcons = [];
-	function onLoad() {
+	const apiUrl = "http://52.68.199.159:9453/";
+	async function onLoad() {
 		//on load
 		insertDefaultPanel();
-		insertData([
-			"20210101~20210102",
-			"學生貸",
-			"【設備ID】同一個設備號，有3人以上註冊帳戶，且非內部認證設備",
-			"12%",
-		]);
+		// insertData([
+		// 	"20210101~20210102",
+		// 	"學生貸",
+		// 	"【設備ID】同一個設備號，有3人以上註冊帳戶，且非內部認證設備",
+		// 	"12%",
+		// ]);
 		// init faIcons
 		faIcons.push(
 			document.querySelector("#asc"),
 			document.querySelector("#desc"),
 			document.querySelector("#default-order")
 		);
+
+		//query
+		const typeIds = await getRuleAll();
+		const ans = await getRuleStatistics({
+			typeIds: typeIds.slice(1, 3),
+			filter: {},
+		});
+		console.log(ans);
+		const resultData = ans.flatMap((x) => {
+			return x.productIdInfo.map((p) => {
+				return {
+					id: `${x.ruleId}-${p.productId}`,
+					rule: `${x.mainDescription},${x.description}`,
+					duration: "All",
+					productId: p.productId,
+					efficiency: p.efficiency,
+				};
+			});
+		});
+		console.log(resultData);
+		resultData.forEach((x) => insertData(x));
+		antiFraudData = [...resultData];
 	}
 	window.addEventListener("load", onLoad());
 	function doSearch() {
 		//do search
 		console.log("do search");
 	}
-	function insertData(data) {
+	function insertData({ id, rule, duration, productId, efficiency }) {
 		const template = document.querySelector("template#data-row");
 		const dataArray = template.content.querySelectorAll(".data-item");
-		data.forEach((x, i) => {
-			dataArray[i].textContent = x;
-		});
+		//insert
+		dataArray[0].textContent = duration;
+		dataArray[1].textContent = productId;
+		dataArray[2].textContent = rule;
+		dataArray[3].textContent = convertEfficiency({ efficiency });
+		// dataArray[4].textContent = x;
 		const rows = document.querySelector("#rows");
 		const clone = document.importNode(template.content, true);
 		rows.appendChild(clone);
@@ -285,10 +327,10 @@
 		}
 		//do sort
 		if (orderBy === "desc") {
-			locData.sort();
+			locData.sort((a, b) => a.efficiency - b.efficiency);
 		}
 		if (orderBy === "asc") {
-			locData.sort((a, b) => b - a);
+			locData.sort((a, b) => b.efficiency - a.efficiency);
 		}
 		//insert
 		// insertDefaultPanel()
@@ -296,5 +338,72 @@
 		// 	insertData(x)
 		// })
 		console.log(locData);
+	}
+	// convertData
+	function converProductId({ productId }) {
+		switch (key) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+
+			default:
+				break;
+		}
+	}
+	function convertEfficiency({ efficiency }) {
+		return efficiency.toFixed(2) + "%";
+	}
+
+	//apis
+	function getRuleAll() {
+		return fetch(apiUrl + "/brookesia/api/v1.0/rule/all")
+			.then((x) => x.json())
+			.then(({ response }) => {
+				return response.results.map((x) => x.typeId);
+			});
+	}
+	function getRuleStatistics({ typeIds, filter: { startTime, endTime } }) {
+		const fetchRule = ({ typeId, filter: { startTime, endTime } }) => {
+			return fetch(
+				`${apiUrl}/brookesia/api/v1.0/result/ruleStatistics?typeId=${typeId}&startTime=${startTime}&endTime=${endTime}`
+			)
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					} else {
+						throw new Error(res.statusText);
+					}
+				})
+				.then(({ response }) => {
+					return response.results;
+				})
+				.catch((err) => {
+					return Promise.reject(err);
+				});
+		};
+		const locStartTime = startTime ?? 0;
+		const locEndTime = endTime ?? 999999999999;
+		const fetchRules = [];
+		typeIds.forEach((typeId) => {
+			fetchRules.push(
+				fetchRule({
+					typeId,
+					filter: { startTime: locStartTime, endTime: locEndTime },
+				})
+			);
+		});
+		return Promise.allSettled(fetchRules)
+			.then((x) => {
+				const ans = x.filter((res) => {
+					return res.status == "fulfilled";
+				});
+				return ans.flatMap((x) => x.value);
+			})
+			.catch((err) => console.error(err));
 	}
 </script>
