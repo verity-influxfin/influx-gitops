@@ -81,7 +81,7 @@
 		flex: 1 0 0;
 	}
 
-	#result-data-row {
+	.result-data-row {
 		display: grid;
 		gap: 0 10px;
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -191,28 +191,35 @@
 				<div class="data-item" id="date">20210101~20210102</div>
 			</div>
 		</div>
-		<button
-			class="btn"
-			onclick="insertResultDataItem({key:'test',value:'test2'})"
-		>
+		<button class="btn" onclick="insertResultDataRow({userId:'11111'})">
 			test
 		</button>
-		<div id="result-data-row">
-			<div class="data-item">
-				<div class="header-item">會員ID</div>
-				<div class="data-item" id="user-id">12334</div>
-			</div>
-			<div class="data-item">
-				<div class="header-item">日期</div>
-				<div class="data-item">20210101~20210102</div>
+		<div id="result-rows">
+			<div class="result-data-row">
+				<div class="data-item">
+					<div class="header-item">會員ID</div>
+					<div class="data-item" id="user-id">12334</div>
+				</div>
+				<div class="data-item">
+					<div class="header-item">日期</div>
+					<div class="data-item">20210101~20210102</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </template>
 <template id="result-data-item">
 	<div class="data-item">
-		<div class="header-item" id="key"></div>
-		<div class="data-item" id="value"></div>
+		<div class="header-item key"></div>
+		<div class="data-item value"></div>
+	</div>
+</template>
+<template id="result-data-row">
+	<div class="result-data-row">
+		<div class="data-item">
+			<div class="header-item">會員ID</div>
+			<div class="data-item user-id">12334</div>
+		</div>
 	</div>
 </template>
 
@@ -295,15 +302,29 @@
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
 	}
+
+	function insertResultDataRow({ userId }) {
+		const template = document.querySelector("template#result-data-row");
+		const k = template.content.querySelector(".user-id");
+		k.textContent = userId;
+
+		const parent = document.querySelector("#result-rows");
+		const clone = document.importNode(template.content, true);
+		parent.appendChild(clone);
+		insertResultDataItem({ key: "test", value: "test2" });
+		insertResultDataItem({ key: "test", value: "test2" });
+	}
 	function insertResultDataItem({ key, value }) {
-		const template = document.querySelector("template#result-data-item");
-		const k = template.content.querySelector("#key");
-		const v = template.content.querySelector("#value");
+		// insert to last result-data-row
+		const t = document.querySelector("template#result-data-item");
+		const k = t.content.querySelector(".key");
+		const v = t.content.querySelector(".value");
 		k.textContent = key;
 		v.textContent = value;
 
-		const parent = document.querySelector("#result-data-row");
-		const clone = document.importNode(template.content, true);
+		const parent = document.querySelector(".result-data-row:last-child");
+		const clone = document.importNode(t.content, true);
+		console.log(parent);
 		parent.appendChild(clone);
 	}
 	function onSort() {
