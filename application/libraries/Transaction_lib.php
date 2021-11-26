@@ -266,66 +266,98 @@ class Transaction_lib{
 		$transaction 	= array();
 		if($withdraw_id){
 			$this->CI->load->model('transaction/withdraw_model');
-			$withdraw = $this->CI->withdraw_model->get($withdraw_id);
-			if( $withdraw && $withdraw->status == 2 ){
-				if($withdraw->user_id==0 && $withdraw->virtual_account==PLATFORM_VIRTUAL_ACCOUNT){
-					//放款
-					$transaction		= array(
-						'source'			=> SOURCE_WITHDRAW,
-						'entering_date'		=> $date,
-						'user_from'			=> $withdraw->user_id,
-						'bank_account_from'	=> PLATFORM_VIRTUAL_ACCOUNT,
-						'amount'			=> intval($withdraw->amount),
-						'user_to'			=> $withdraw->user_id,
-						'bank_account_to'	=> CATHAY_COMPANY_ACCOUNT,
-						'status'			=> 2
-					);
+            $this->CI->load->model('transaction/virtual_passbook_model');
+            $this->CI->withdraw_model->trans_begin();
+            $this->CI->frozen_amount_model->trans_begin();
+            $this->CI->virtual_passbook_model->trans_begin();
+            $transaction_commit = function () {
+                if($this->CI->withdraw_model->trans_status() === FALSE ||
+                    $this->CI->frozen_amount_model->trans_status() === FALSE ||
+                    $this->CI->virtual_passbook_model->trans_status() === FALSE)
+                    throw new Exception('insert error.');
+                $this->CI->withdraw_model->trans_commit();
+                $this->CI->frozen_amount_model->trans_commit();
+                $this->CI->virtual_passbook_model->trans_commit();
+            };
 
-					$rs  = $this->CI->transaction_model->insert($transaction);
-					if($rs){
-						$this->CI->withdraw_model->update($withdraw_id,array('status'=>1,'transaction_id'=>$rs));
-						$this->CI->frozen_amount_model->update($withdraw->frozen_id,array('status'=>0));
-						$this->CI->passbook_lib->enter_account($rs);
-						return true;
-					}
-				}else{
-					$virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$withdraw->user_id,'virtual_account'=>$withdraw->virtual_account,'status'=>1));
-					if($virtual_account){
-						$where = array(
-							'user_id'	=> $withdraw->user_id,
-							'status'	=> 1,
-							'verify'	=> 1,
-							'investor'	=> $withdraw->investor
-						);
+			$withdraw = $this->CI->withdraw_model->db->select_for_update('*')
+                ->where('id', $withdraw_id)
+                ->from('`p2p_transaction`.`withdraw`')
+                ->get()->result();
+			if(!empty($withdraw))
+                $withdraw = reset($withdraw);
 
-						$this->CI->load->model('user/user_bankaccount_model');
-						$user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
-						if($user_bankaccount){
-							$this->CI->notification_lib->withdraw_success($withdraw->user_id,$withdraw->investor,$withdraw->amount,$user_bankaccount->bank_account);
+			try{
+                if( $withdraw && $withdraw->status == 2 ){
+                    if($withdraw->user_id==0 && $withdraw->virtual_account==PLATFORM_VIRTUAL_ACCOUNT){
+                        //放款
+                        $transaction		= array(
+                            'source'			=> SOURCE_WITHDRAW,
+                            'entering_date'		=> $date,
+                            'user_from'			=> $withdraw->user_id,
+                            'bank_account_from'	=> PLATFORM_VIRTUAL_ACCOUNT,
+                            'amount'			=> intval($withdraw->amount),
+                            'user_to'			=> $withdraw->user_id,
+                            'bank_account_to'	=> CATHAY_COMPANY_ACCOUNT,
+                            'status'			=> 2
+                        );
 
-							//放款
-							$transaction		= array(
-								'source'			=> SOURCE_WITHDRAW,
-								'entering_date'		=> $date,
-								'user_from'			=> $withdraw->user_id,
-								'bank_account_from'	=> $virtual_account->virtual_account,
-								'amount'			=> intval($withdraw->amount),
-								'user_to'			=> $withdraw->user_id,
-								'bank_account_to'	=> $user_bankaccount->bank_account,
-								'status'			=> 2
-							);
+                        $rs  = $this->CI->transaction_model->insert($transaction);
+                        if($rs){
+                            $this->CI->withdraw_model->update($withdraw_id,array('status'=>1,'transaction_id'=>$rs));
+                            $this->CI->frozen_amount_model->update($withdraw->frozen_id,array('status'=>0));
+                            $this->CI->passbook_lib->enter_account($rs);
+                            $transaction_commit();
+                            return true;
+                        }else{
+                            throw new Exception('insert error.');
+                        }
+                    }else{
+                        $virtual_account 	= $this->CI->virtual_account_model->get_by(array('user_id'=>$withdraw->user_id,'virtual_account'=>$withdraw->virtual_account,'status'=>1));
+                        if($virtual_account){
+                            $where = array(
+                                'user_id'	=> $withdraw->user_id,
+                                'status'	=> 1,
+                                'verify'	=> 1,
+                                'investor'	=> $withdraw->investor
+                            );
 
-							$rs  = $this->CI->transaction_model->insert($transaction);
-							if($rs){
-								$this->CI->withdraw_model->update($withdraw_id,array('status'=>1,'transaction_id'=>$rs));
-								$this->CI->frozen_amount_model->update($withdraw->frozen_id,array('status'=>0));
-								$this->CI->passbook_lib->enter_account($rs);
-								return true;
-							}
-						}
-					}
-				}
-			}
+                            $this->CI->load->model('user/user_bankaccount_model');
+                            $user_bankaccount 	= $this->CI->user_bankaccount_model->get_by($where);
+                            if($user_bankaccount){
+
+                                //放款
+                                $transaction		= array(
+                                    'source'			=> SOURCE_WITHDRAW,
+                                    'entering_date'		=> $date,
+                                    'user_from'			=> $withdraw->user_id,
+                                    'bank_account_from'	=> $virtual_account->virtual_account,
+                                    'amount'			=> intval($withdraw->amount),
+                                    'user_to'			=> $withdraw->user_id,
+                                    'bank_account_to'	=> $user_bankaccount->bank_account,
+                                    'status'			=> 2
+                                );
+
+                                $rs  = $this->CI->transaction_model->insert($transaction);
+                                if($rs){
+                                    $this->CI->withdraw_model->update($withdraw_id,array('status'=>1,'transaction_id'=>$rs));
+                                    $this->CI->frozen_amount_model->update($withdraw->frozen_id,array('status'=>0));
+                                    $this->CI->passbook_lib->enter_account($rs);
+                                    $transaction_commit();
+                                    $this->CI->notification_lib->withdraw_success($withdraw->user_id,$withdraw->investor,$withdraw->amount,$user_bankaccount->bank_account);
+                                    return true;
+                                }else{
+                                    throw new Exception('insert error.');
+                                }
+                            }
+                        }
+                    }
+                }
+            }catch(Exception $e) {
+                $this->CI->withdraw_model->trans_rollback();
+                $this->CI->frozen_amount_model->trans_rollback();
+                $this->CI->virtual_passbook_model->trans_rollback();
+            }
 		}
 		return false;
 	}
