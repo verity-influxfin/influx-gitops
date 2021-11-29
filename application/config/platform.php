@@ -1821,20 +1821,20 @@ $config['certifications'] = [
     8 => ['id' => CERTIFICATION_DIPLOMA, 'alias' => 'diploma', 'name' => '最高學歷證明', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
     9 => ['id' => CERTIFICATION_INVESTIGATION, 'alias' => 'investigation', 'name' => '聯合徵信報告', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
     10 => ['id' => CERTIFICATION_JOB, 'alias' => 'job', 'name' => '工作收入證明', 'status' => 1, 'description' => '提供工作收入證明', 'optional' => [3, 4]],
-    11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人資料表', 'status' => 1, 'description' => '提供個人資料', 'optional' => []],
+    11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人基本資料', 'status' => 1, 'description' => '提供個人基本資料', 'optional' => []],
     12 => ['id' => CERTIFICATION_INVESTIGATIONA11, 'alias' => 'investigationa11', 'name' => '聯合徵信報告+A11', 'status' => 1, 'description' => '提供負責人聯合徵信資訊', 'optional' => []],
     14 => ['id' => CERTIFICATION_FINANCIALWORKER, 'alias' => 'financialWorker', 'name' => '財務訊息資訊', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
 
 
-    500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務訊息', 'status' => 1, 'description' => '提供個人簡易財務資料', 'optional' => []],
+    500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],
     501 => ['id' => CERTIFICATION_SIMPLIFICATIONJOB, 'alias' => 'simplificationjob', 'name' => '工作資料', 'status' => 1, 'description' => '提供簡易工作資料', 'optional' => []],
 
     1000 => ['id' => CERTIFICATION_BUSINESSTAX, 'alias' => 'businesstax', 'name' => '銷售額與稅額申報書(401表)', 'status' => 1, 'description' => '提供銷售額與稅額申報書(401表)', 'optional' => []],
     1001 => ['id' => CERTIFICATION_BALANCESHEET, 'alias' => 'balancesheet', 'name' => '資產負債表', 'status' => 1, 'description' => '提供資產負債表', 'optional' => []],
-    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '損益表', 'status' => 1, 'description' => '提供損益表', 'optional' => []],
-    1003 => ['id' => CERTIFICATION_INVESTIGATIONJUDICIAL, 'alias' => 'investigationjudicial', 'name' => '法人聯合徵信', 'status' => 1, 'description' => '提供法人聯合徵信', 'optional' => []],
-    1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '金流證明', 'status' => 1, 'description' => '提供金流證明', 'optional' => []],
+    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '近三年損益表', 'status' => 1, 'description' => '提供近三年損益表', 'optional' => []],
+    1003 => ['id' => CERTIFICATION_INVESTIGATIONJUDICIAL, 'alias' => 'investigationjudicial', 'name' => '公司聯合徵信', 'status' => 1, 'description' => '提供公司聯合徵信', 'optional' => []],
+    1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '近6個月封面及內頁公司存摺', 'status' => 1, 'description' => '提供近6個月封面及內頁公司存摺', 'optional' => []],
     1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],
     1006 => ['id' => CERTIFICATION_CERCREDITJUDICIAL, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '提供信用評估表', 'optional' => []],
     1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '公司變更事項登記表', 'status' => 1, 'description' => '提供公司變更事項登記表', 'optional' => []],
@@ -1850,7 +1850,7 @@ $config['certifications'] = [
     1017 => ['id' => CERTIFICATION_EMPLOYEEINSURANCELIST, 'alias' => 'employeeinsurancelist', 'name' => '員工投保人數資料', 'status' => 1, 'description' => '提供員工投保人數資料', 'optional' => []],
     1018 => ['id' => CERTIFICATION_PROFILEJUDICIAL, 'alias' => 'profilejudicial', 'name' => '公司資料表', 'status' => 1, 'description' => '提供公司資料表', 'optional' => []],
     1019 => ['id' => CERTIFICATION_COMPANYEMAIL, 'alias' => 'companyemail', 'name' => '公司電子信箱', 'status' => 1, 'description' => '驗證公司E-Mail位址', 'optional' => []],
-    1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '法人對保', 'status' => 1, 'description' => '法人線上對保', 'optional' => []],
+    1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '公司授權核實', 'status' => 1, 'description' => '公司授權核實', 'optional' => []],
 
     2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
