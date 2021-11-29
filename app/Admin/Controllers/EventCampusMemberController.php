@@ -88,7 +88,7 @@ class EventCampusMemberController extends Controller
 
 		// 關閉選擇器
 		$grid->disableRowSelector();
-		$grid->disableExport();
+		// $grid->disableExport();
 		$grid->disableColumnSelector();
 		// $grid->disableFilter();
 		$grid->disableCreateButton();
@@ -117,10 +117,14 @@ class EventCampusMemberController extends Controller
 		});*/
         $MappingData = new MappingData();
         $team_list = $MappingData->getEventTeams();
-        // print_r($team_list);exit;
         $grid->column('team_id', '團隊名稱')->using($team_list);
         $grid->column('name', '姓名');
-        $grid->column('school', '學校');
+        $grid->column('school', '學校')->display(function () {
+            $MappingData = new MappingData();
+            $school_list = $MappingData->getEventSchools();
+
+            return isset($school_list[$this->team_id]) ? $school_list[$this->team_id] : '';
+        });
         $grid->column('dept', '科系');
 		$grid->column('grade', '學位年級');
         $grid->column('created_at', '創建時間');
@@ -150,7 +154,12 @@ class EventCampusMemberController extends Controller
 
         $show->field('team_id', '團隊名稱')->using($team_list);
         $show->field('name', '姓名');
-        $show->field('school', '學校');
+        $show->field('school', '學校')->as(function () {
+            $MappingData = new MappingData();
+            $school_list = $MappingData->getEventSchools();
+
+            return isset($school_list[$this->team_id]) ? $school_list[$this->team_id] : '';
+        });
         $show->field('dept', '科系');
 		$show->field('grade', '學位年級');
         $show->field('mobile', '手機');
