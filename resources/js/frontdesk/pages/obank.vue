@@ -28,7 +28,7 @@
                                 <div><span>貸款金額</span></div>
                             </td>
                             <td class="obank-content">
-                                <div><span>最高NT350萬元</span></div>
+                                <div><span>最高NT500萬元</span></div>
                             </td>
                         </tr>
                         <tr class="color-light-grey">
@@ -45,7 +45,7 @@
                                 <div><span>貸款利率</span></div>
                             </td>
                             <td class="obank-content">
-                                <div><span>二段式利率</span><span>第一段利率固定</span><span style="color:#ff8300;">0.07%</span></div>
+                                <div><span>二段式利率</span><span>第一段利率固定</span><span style="color:#ff8300;">0.08%</span></div>
                                 <div><span>第二段利率最低2.98%起(機動計息)</span></div>
                             </td>
                         </tr>
@@ -62,7 +62,14 @@
                                 <div><span>開辦費</span></div>
                             </td>
                             <td class="obank-content">
-                                <div><span style="text-decoration:line-through;">NT7,800元 </span><span>(</span><span style="color:#ff8300;">特價NT1,999元</span><span>)</span></div>
+                                <div>
+                                    <span style="text-decoration:line-through;">NT7,800元 </span>
+                                    <span>(</span>
+                                    <span style="color:#ff8300;">特價NT
+                                        <span style="color:red; font-size:34px;">88</span>
+                                    元</span>
+                                    <span>)</span>
+                                </div>
                             </td>
                         </tr>
                         <tr class="color-light-grey">
@@ -90,12 +97,12 @@
                 </svg>
                 </a>
                 <div id="obank_notice_list" class="obank-notice-list" style="display:none">
-                    <div><span>1.專案期間至110年11月30日(含)截止，以王道銀行(以下簡稱為本行)系統進件日為準。</span></div>
-                    <div><span>2.信用貸款二段式(本息攤還型)總費用年百分率計算範例(計算基準日：民國110年8月23日：貸款金額NT30萬元，貸款期間5年(限制清償期最長為24期)，貸款年利率首期固定0.07%，第二期起2.98%~16%(機動計息)，各項相關費用總金額：NT1,999元/筆，</span><span style="color:red;">總費用年百分率：3.15%~15.71%。</span></div>
+                    <div><span>1.專案期間至110年12月31日(含)截止，以王道銀行(以下簡稱為本行)系統進件日為準。</span></div>
+                    <div><span>2.信用貸款二段式(本息攤還型)總費用年百分率計算範例(計算基準日：民國110年8月23日：貸款金額NT30萬元，貸款期間5年(限制清償期最長為24期)，貸款年利率首期固定0.07%，第二期起2.98%~16%(機動計息)，各項相關費用總金額：NT88元/筆，</span><span style="color:red;">總費用年百分率：2.89%~15.42%。</span></div>
                     <div><span>3.上述第二期起機動計息係按本行一個月期定儲利率指數依計算基準日(i目前為0.80%)加碼2.18%~15.2%，調整時間為每月21日(調整日期倘遇假日，將順延至次一營業日，且適用期間之首日將隨調整日期變動而順延)。</span></div>
                     <div>
                         <span>
-                        4.本專案總費用年百分率之計算基準日為110年8月23日，年百分率計算基準日及日後年百分率會依實際借款期間、利率調整等因素而變動。本廣告揭露之年百分率係按主管機關備查之標準計算範例予以計算，實際貸款條件，仍以本行提供之產品為準。且每一客戶實際之年百分率仍視其個別貸款產品及授信條件而有所不同。本總費用年百分率不等於貸款利率。
+                        4.本專案總費用年百分率之計算基準日為110年6月21日，年百分率計算基準日及日後年百分率會依實際借款期間、利率調整等因素而變動。本廣告揭露之年百分率係按主管機關備查之標準計算範例予以計算，實際貸款條件，仍以本行提供之產品為準。且每一客戶實際之年百分率仍視其個別貸款產品及授信條件而有所不同。本總費用年百分率不等於貸款利率。
                         </span>
                     </div>
                     <div><span style="color:red;">5.違約金計收方式說明：</span></div>
