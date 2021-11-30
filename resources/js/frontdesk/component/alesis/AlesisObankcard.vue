@@ -4,17 +4,17 @@
         <div class="分隔線"></div>
         <template>
             <div class="特色清單">
-                <div class="項目">額度最高350萬</div>
-                <div class="項目">利率0.07%起</div>
-                <div class="項目">開辦費只要1999元</div>
+                <div class="項目">額度最高500萬</div>
+                <div class="項目">利率0.08%起</div>
+                <div class="項目">開辦費只要88元</div>
             </div>
             <div class="動作群組">
                 <a class="動作" href="/obank" target="_blank">
                     <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">了解更多</alesis-button>
                 </a>
 
-                <a class="動作" href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" target="_blank">
-                    <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">取得資格</alesis-button>
+                <a class="動作" href="https://www.o-bank.com/web/Event/personalloan/index.html" target="_blank">
+                    <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">立即申請</alesis-button>
                 </a>
             </div>
         </template>

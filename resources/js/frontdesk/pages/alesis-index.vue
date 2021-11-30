@@ -39,7 +39,7 @@
                         <a href="/obank" class="連結" target="_blank">
                             <img src="/images/oBankIndexButtonLeft.svg">
                         </a>
-                        <a href="https://www.o-bank.com/web/Event/loan/index.html?SourceCode=InFlux-Loan&CampaignCode=PL2021071601" class="連結" target="_blank">
+                        <a href="https://www.o-bank.com/web/Event/personalloan/index.html" class="連結" target="_blank">
                             <img src="/images/oBankIndexButtonRight.svg">
                         </a>
                     </div>
@@ -990,7 +990,7 @@ export default {
         z-index        : 100;
         gap            : 5rem;
         top            : initial;
-        bottom         : 3rem;
+        bottom         : 7rem;
         left           : 96%;
         right          : initial;
         width          : 34vw;
