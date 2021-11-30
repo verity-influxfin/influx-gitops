@@ -1,7 +1,7 @@
 <template>
   <div class="obank-bank-wrapper" id="obank-bank-wrapper">
       <div class="content-top obank-top">
-        <a class="btn send-btn obank-send-btn obank-banner-btn" href="https://www.o-bank.com/ebank/apps/services/www/ibmb/desktopbrowser/default/indexs.html?product=LN.PL.TERM.LOAN.BP&productGroup=PERSONAL.LOANS&project=112111S&campaign=UPL&txn=FLN03003&requestType=400&SourceCode=InFlux-Loan&CampaignCode=R-PL2021071601" target="_blank"></a>
+        <a class="btn send-btn obank-send-btn obank-banner-btn" href="https://www.o-bank.com/web/Event/personalloan/index.html?SourceCode=InFlux-Loan&CampaignCode=R-PL2021111501" target="_blank"></a>
       </div>
     <div class="obank-form">
         <div class="event-form">
@@ -85,7 +85,7 @@
                 </table>
             </div>
             <div class="input-group obank-down-btn" style="margin: 3vw auto 3vw auto;">
-              <a class="btn send-btn obank-send-btn" href="https://www.o-bank.com/ebank/apps/services/www/ibmb/desktopbrowser/default/indexs.html?product=LN.PL.TERM.LOAN.BP&productGroup=PERSONAL.LOANS&project=112112S&campaign=UPL&txn=FLN03003&requestType=400&SourceCode=InFlux-Loan&CampaignCode=R-PL2021111501" target="_blank" style="display: flex;justify-content: center; margin: 0px auto;"></a>
+              <a class="btn send-btn obank-send-btn" href="https://www.o-bank.com/web/Event/personalloan/index.html?SourceCode=InFlux-Loan&CampaignCode=R-PL2021111501" target="_blank" style="display: flex;justify-content: center; margin: 0px auto;"></a>
             </div>
             <div class="input-group" style="margin: 3vw auto;border-radius: unset;">
                 <a type="button" @click="click_notice()" class="obank-notice">
