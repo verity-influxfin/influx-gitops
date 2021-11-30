@@ -13,7 +13,7 @@
                     <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">了解更多</alesis-button>
                 </a>
 
-                <a class="動作" href="https://www.o-bank.com/web/Event/personalloan/index.html" target="_blank">
+                <a class="動作" href="https://www.o-bank.com/web/Event/personalloan/index.html?SourceCode=InFlux-Loan&CampaignCode=R-PL2021111501" target="_blank">
                     <alesis-button :fluid="true" yPadding=".4rem" xPadding="1rem" size="1.1rem">立即申請</alesis-button>
                 </a>
             </div>

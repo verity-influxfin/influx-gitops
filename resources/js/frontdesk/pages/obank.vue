@@ -45,7 +45,8 @@
                                 <div><span>貸款利率</span></div>
                             </td>
                             <td class="obank-content">
-                                <div><span>二段式利率</span><span>第一段利率固定</span><span style="color:#ff8300;">0.08%</span></div>
+                                <div><span>二段式利率</span></div>
+                                <div><span>第一段利率固定</span><span style="color:#ff8300;">0.08%</span></div>
                                 <div><span>第二段利率最低2.98%起(機動計息)</span></div>
                             </td>
                         </tr>
