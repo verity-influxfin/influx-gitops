@@ -989,7 +989,7 @@ export default {
         position       : absolute;
         z-index        : 100;
         gap            : 5rem;
-        bottom         : 18%;
+        bottom         : 5%;
         right          : 5%;
         width          : 34vw;
         align-items    : flex-end;
