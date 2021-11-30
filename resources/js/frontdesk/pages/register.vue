@@ -56,19 +56,6 @@
               />
             </div>
             <div class="input-group">
-              <span class="input-group-addon label-text">推薦人：</span>
-              <input
-                class="form-control label-input mr-2 mr-0-sm mb-2 mb-0-sm"
-                placeholder="請輸入暱稱"
-                v-model="recommenderNickName"
-              />
-              <input
-                class="form-control label-input"
-                placeholder="請輸入推薦人姓名"
-                v-model="recommenderName"
-              />
-            </div>
-            <div class="input-group">
               <span class="input-group-addon label-text">驗證碼：</span>
               <div class="captcha-row" style="display: flex">
                 <input
@@ -210,8 +197,6 @@ export default {
     message: "",
     timer: null,
     counter: 180,
-    recommenderNickName: '',
-    recommenderName: '',
   }),
   created () {
     this.isRegisterSuccess = false;
@@ -274,15 +259,6 @@ export default {
       let password = this.password;
       let password_confirmation = this.confirmPassword;
       let code = this.code;
-      const nick_name = this.recommenderNickName
-      const name = this.recommenderName
-      if (nick_name.length > 0 || name.length > 0) {
-        if (nick_name.length < 1 || name.length < 1) {
-          alert('暱稱及推薦人如需填寫必須一起填寫')
-          return
-        }
-      }
-      const promote_info = { nick_name, name }
       axios
         // do Register => eventRegister
         .post(`${location.origin}/eventRegister`, {
@@ -290,7 +266,6 @@ export default {
           password,
           password_confirmation,
           code,
-          promote_info,
         })
         .then((res) => {
           this.isRegisterSuccess = true;
