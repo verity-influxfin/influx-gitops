@@ -90,6 +90,28 @@
 	.result-date {
 		flex: 0 0 25%;
 	}
+
+	.loader {
+		margin: 20px auto;
+		border: 16px solid #f3f3f3;
+		/* Light grey */
+		border-top: 16px solid #3498db;
+		/* Blue */
+		border-radius: 50%;
+		width: 120px;
+		height: 120px;
+		animation: spin 2s linear infinite;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+
+		100% {
+			transform: rotate(360deg);
+		}
+	}
 </style>
 
 <div id="page-wrapper">
@@ -108,38 +130,21 @@
 			<div class="d-flex align-items-center">
 				<div class="mr-2 head-item-title">時間：</div>
 				<div class="input-group input">
-					<input
-						type="text"
-						data-toggle="datepicker"
-						class="form-control input"
-					/>
+					<input type="text" data-toggle="datepicker" class="form-control input" id="start-time" />
 				</div>
 				<span class="mx-2">~</span>
 				<div class="input-group input">
-					<input
-						type="text"
-						data-toggle="datepicker"
-						class="form-control"
-						aria-label="Default"
-						aria-describedby="inputGroup-sizing-default"
-					/>
+					<input type="text" data-toggle="datepicker" class="form-control" id="end-time" aria-label="Default"
+						aria-describedby="inputGroup-sizing-default" />
 				</div>
 			</div>
 			<div class="d-flex align-items-center mt-4">
 				<div class="mr-2 head-item-title">產品別：</div>
 				<div class="input-group input">
-					<select class="form-select">
-						<option value="學生貸">學生貸</option>
-						<option value="上班族貸">上班族貸</option>
-						<option value="工程師貸">工程師貸</option>
-						<option value="工程師貸">微企貸</option>
+					<select class="form-select" id="search-option">
 					</select>
 				</div>
-				<button
-					class="btn ml-5 search-btn"
-					id="search-btn"
-					onclick="doSearch()"
-				>
+				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
 					搜尋
 				</button>
 			</div>
@@ -222,22 +227,19 @@
 		</div>
 	</div>
 </template>
+<template id="loader">
+	<div class="loader"></div>
+</template>
 
 <script>
 	let antiFraudData = [1, 3, 2, 4];
 	let orderBy = null;
 	const faIcons = [];
 	const apiUrl = "http://52.68.199.159:9453/";
+	let typeIds = [];
+	let configs = []
 	async function onLoad() {
-		//on load
-		insertDefaultPanel();
-		// insertData([
-		// 	"20210101~20210102",
-		// 	"學生貸",
-		// 	"【設備ID】同一個設備號，有3人以上註冊帳戶，且非內部認證設備",
-		// 	"12%",
-		// ]);
-		// init faIcons
+		insertDefaultPanel()
 		faIcons.push(
 			document.querySelector("#asc"),
 			document.querySelector("#desc"),
@@ -245,44 +247,101 @@
 		);
 
 		//query
-		const typeIds = await getRuleAll();
-		const ans = await getRuleStatistics({
-			typeIds: typeIds.slice(1, 3),
-			filter: {},
-		});
-		console.log(ans);
-		const resultData = ans.flatMap((x) => {
-			return x.productIdInfo.map((p) => {
-				return {
-					id: `${x.ruleId}-${p.productId}`,
-					rule: `${x.mainDescription},${x.description}`,
-					duration: "All",
-					productId: p.productId,
-					efficiency: p.efficiency,
-				};
-			});
-		});
-		console.log(resultData);
-		resultData.forEach((x) => insertData(x));
-		antiFraudData = [...resultData];
+		const res = await getProductConfig()
+		configs = Object.keys(res).map(x => {
+			return {
+				name: res[x].name,
+				value: x
+			}
+		})
+		// insert options
+		insertSearchOption()
+
+		const ids = await getRuleAll();
+		typeIds = ids
 	}
 	window.addEventListener("load", onLoad());
-	function doSearch() {
+	async function doSearch() {
+		// remove last result
+		removeDatas()
+		toggleLoading()
 		//do search
-		console.log("do search");
+		const productId = document.querySelector('#search-option').value
+		const startTimeObj = document.querySelector('#start-time').value
+		const endTimeObj = document.querySelector('#end-time').value
+		let startTime = 0
+		let endTime = 999999999999
+		if (startTimeObj) {
+			startTime = new Date(startTime).valueOf()
+		}
+		if (endTimeObj) {
+			endTime = new Date(startTime).valueOf()
+		}
+		const ans = await getRuleStatistics({
+			typeIds,
+			productId,
+			filter: {
+				startTime,
+				endTime
+			},
+		})
+		const resultData = ans.map(x => {
+			let duration = 'All'
+			if (startTimeObj) {
+				duration = duration.replace('All', `${startTimeObj} ~ Now`)
+			}
+			if (endTimeObj) {
+				duration = duration.replace('Now', endTimeObj)
+			}
+			return {
+				id: `${x.typeId}-${x.productId}`,
+				rule: `${x.mainDescription},${x.description}`,
+				duration,
+				productId: x.productId,
+				efficiency: x.efficiency,
+			}
+		})
+		toggleLoading()
+		//inset result
+		resultData.forEach((x) => insertData(x))
+		antiFraudData = [...resultData]
 	}
 	function insertData({ id, rule, duration, productId, efficiency }) {
 		const template = document.querySelector("template#data-row");
 		const dataArray = template.content.querySelectorAll(".data-item");
 		//insert
 		dataArray[0].textContent = duration;
-		dataArray[1].textContent = productId;
+		dataArray[1].textContent = converProductId({ productId });
 		dataArray[2].textContent = rule;
 		dataArray[3].textContent = convertEfficiency({ efficiency });
 		// dataArray[4].textContent = x;
 		const rows = document.querySelector("#rows");
 		const clone = document.importNode(template.content, true);
 		rows.appendChild(clone);
+	}
+	function removeDatas() {
+		const parent = document.querySelector('#rows')
+		while (parent.firstChild) {
+			parent.removeChild(parent.firstChild)
+		}
+	}
+	function toggleLoading(params) {
+		const parent = document.querySelector('#rows')
+		if (parent.querySelector('.loader')) {
+			parent.removeChild(parent.querySelector('.loader'))
+		} else {
+			const template = document.querySelector("template#loader");
+			const clone = document.importNode(template.content, true);
+			parent.appendChild(clone);
+		}
+	}
+	function insertSearchOption() {
+		const parent = document.querySelector('#search-option')
+		configs.forEach(({ name, value }) => {
+			parent.insertAdjacentHTML('beforeend',
+				`<option value="${value}">${name}</option>`
+			)
+		})
 	}
 	function insertDefaultPanel() {
 		const parent = document.querySelector("#panel");
@@ -353,34 +412,35 @@
 		if (orderBy === "asc") {
 			locData.sort((a, b) => b.efficiency - a.efficiency);
 		}
+		removeDatas()
+		locData.forEach((x) => insertData(x))
 		//insert
 		// insertDefaultPanel()
 		// locData.forEach(x => {
 		// 	insertData(x)
 		// })
-		console.log(locData);
 	}
 	// convertData
 	function converProductId({ productId }) {
-		switch (key) {
-			case 1:
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-
-			default:
-				break;
-		}
+		const configMap = new Map()
+		configs.forEach(({ name, value }) => {
+			configMap.set(value.toString(), name)
+		})
+		return configMap.get(productId.toString()) ? configMap.get(productId.toString()) : 'unknown'
 	}
 	function convertEfficiency({ efficiency }) {
 		return efficiency.toFixed(2) + "%";
 	}
 
 	//apis
+	function getProductConfig() {
+		return fetch('/api/v2/AntiFraud/product_config')
+			.then(x => x.json())
+			.then(({ data }) => {
+				return data
+			})
+	}
+
 	function getRuleAll() {
 		return fetch(apiUrl + "/brookesia/api/v1.0/rule/all")
 			.then((x) => x.json())
@@ -388,10 +448,11 @@
 				return response.results.map((x) => x.typeId);
 			});
 	}
-	function getRuleStatistics({ typeIds, filter: { startTime, endTime } }) {
-		const fetchRule = ({ typeId, filter: { startTime, endTime } }) => {
+
+	function getRuleStatistics({ typeIds, productId, filter: { startTime, endTime } }) {
+		const fetchRule = ({ typeId, productId, filter: { startTime, endTime } }) => {
 			return fetch(
-				`${apiUrl}/brookesia/api/v1.0/result/ruleStatistics?typeId=${typeId}&startTime=${startTime}&endTime=${endTime}`
+				`${apiUrl}/brookesia/api/v1.0/result/ruleStatistics?typeId=${typeId}&productId=${productId}&startTime=${startTime}&endTime=${endTime}`
 			)
 				.then((res) => {
 					if (res.ok) {
@@ -407,14 +468,13 @@
 					return Promise.reject(err);
 				});
 		};
-		const locStartTime = startTime ?? 0;
-		const locEndTime = endTime ?? 999999999999;
 		const fetchRules = [];
 		typeIds.forEach((typeId) => {
 			fetchRules.push(
 				fetchRule({
 					typeId,
-					filter: { startTime: locStartTime, endTime: locEndTime },
+					productId,
+					filter: { startTime, endTime },
 				})
 			);
 		});
