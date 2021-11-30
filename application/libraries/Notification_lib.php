@@ -1095,7 +1095,7 @@ econtent;
         if(!$sent) {
             $title = "【限時方案】專屬您的優惠貸款方案！";
             $content = "僅需填寫資料、工作證明
- 享有最高350萬、首期利率0.07%
+ 享有最高500萬、首期利率0.08%
  立即前往：普匯X王道銀行合作專案";
             $data = ['target_id' => $target->id, 'openURL' => 'https://www.influxfin.com/obank', 'eventType' => $eventType, 'urlBtnMsg' => "立即申請"];
             $rs = $this->send_app_with_data($target->user_id,USER_BORROWER,NOTIFICATION_TYPE_OPENURL,$title,$content,$data);
@@ -1162,7 +1162,7 @@ econtent;
             $title = "【專屬限定】您獲得普匯加碼資格！";
             $data = ['target_id' => $target->id, 'eventType' => $eventType, 'urlBtnMsg' => "立即申請"];
             if($obankEvent) {
-                $content = "您符合擴大額度最高350萬、利率首期0.07%
+                $content = "您符合擴大額度最高500萬、利率首期0.08%
  立即前往申請：普匯X王道銀行合作專案";
                 $data['openURL'] = 'https://www.influxfin.com/obank';
             }else{
