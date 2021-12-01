@@ -2172,16 +2172,16 @@ END:
         $funds = $this->transaction_lib->get_virtual_funds($virtual_account->virtual_account);
         $balance = $funds['total'] - $funds['frozen'];
 
+        $this->load->model('transaction/charity_model');
+        $this->load->model('transaction/transaction_model');
+        $this->load->model('transaction/virtual_passbook_model');
+        $this->load->library('passbook_lib');
+
         try{
             if($balance < $donateAmount) {
                 $errorCode = NOT_ENOUGH_FUNDS;
                 throw new ValueError('The balance is not enough.');
             }
-
-            $this->load->model('transaction/charity_model');
-            $this->load->model('transaction/transaction_model');
-            $this->load->model('transaction/virtual_passbook_model');
-            $this->load->library('passbook_lib');
 
             $this->transaction_model->trans_begin();
             $this->virtual_passbook_model->trans_begin();
