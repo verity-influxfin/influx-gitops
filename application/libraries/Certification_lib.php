@@ -791,6 +791,7 @@ class Certification_lib{
            $verifiedResult = new StudentCertificationResult(1);
            $just_update_sip_flag = false;
            $sys_check = 1;
+           $content['meta'] = isset($content['meta']) ? $content['meta'] : [];
 
            // 學校信箱驗證
            if(isset($content['email']) && !empty($content['email']) && isset($content['email_verify_status']) && isset($content['email_verify_time']) ){
@@ -816,6 +817,7 @@ class Certification_lib{
                            if(isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == 'True' && $sip_log['response']['isLogin'] == 'True'){
                                $sip_data = $this->CI->sip_lib->getDeepData($content['school'],$content['sip_account']);
                                $content['sip_data'] = isset($sip_data['response']) ? $sip_data['response'] : [];
+                               $content['meta']['last_grade'] = isset($sip_data['response']['result']['latestGrades']) ? $sip_data['response']['result']['latestGrades'] : '';
                                $user_info = !empty($user_certification->content) ? $user_certification->content : [];
                                if($sip_data && isset($sip_data['response']['result'])){
                                    if(isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['response']['result']['name']) && isset($sip_data['response']['result']['idNumber'])){
@@ -2318,6 +2320,14 @@ class Certification_lib{
 			isset($content['graduate_date']) ? $data['graduate_date'] = $content['graduate_date'] : '';
             isset($content['programming_language']) ? $data['student_programming_language'] = count($content['programming_language']) : '';
             isset($content['transcript_image']) ? $data['transcript_front'] = $content['transcript_image'][0] : '';
+
+            if(isset($content['sip_data']['ersult']['latestGrades']) && !empty($content['sip_data']['ersult']['latestGrades'])){
+                $data['school_lastest_grade'] = $content['sip_data']['ersult']['latestGrades'];
+            }
+
+            if(isset($content['meta']['last_grade']) && !empty($content['meta']['last_grade'])){
+                $data['school_lastest_grade'] = $content['meta']['last_grade'];
+            }
 
             $rs = $this->user_meta_progress($data,$info);
             if($rs){
