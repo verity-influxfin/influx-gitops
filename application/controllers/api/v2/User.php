@@ -2132,11 +2132,18 @@ END:
         $data = [];
         $errorCode = 0;
 
-        $fields 	= ['alias','amount','receipt_id_number','receipt_address'];
+        $fields 	= ['alias','amount'];
         foreach ($fields as $field) {
-            if (!isset($input[$field]) && !$input[$field]) {
+            if (!isset($input[$field]) || !$input[$field]) {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }else{
+                $data[$field] = $input[$field];
+            }
+        }
+
+        $fields 	= ['receipt_id_number','receipt_address'];
+        foreach ($fields as $field) {
+            if (isset($input[$field])) {
                 $data[$field] = $input[$field];
             }
         }
