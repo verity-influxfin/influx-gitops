@@ -1,8 +1,8 @@
 <?php
 
-class Log_qrcode_reward_model extends MY_Model
+class Log_qrcode_modify_model extends MY_Model
 {
-	public $_table = 'qrcode_reward_log';
+	public $_table = 'qrcode_modify_log';
 	public $before_create = array( 'before_data_c' );
 
 	public function __construct()

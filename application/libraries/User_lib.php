@@ -11,10 +11,16 @@ class User_lib {
     private $totalCount;
     public $rewardCategories = [
         'student' => [1, 2],
-        'salary_man' => [3, 4]
+        'salary_man' => [3, 4],
+        'small_enterprise' => [PRODUCT_SK_MILLION_SMEG],
+    ];
+    public $rewardedTargetStatus = [
+        'student' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED],
+        'salary_man' => [TARGET_REPAYMENTING, TARGET_REPAYMENTED],
+        'small_enterprise' => [TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED],
     ];
     public $logRewardColumns = [
-        'student', 'salary_man', 'fullMember'
+        'student', 'salary_man', 'small_enterprise', 'fullMember'
     ];
 
     public function __construct()
@@ -139,7 +145,7 @@ class User_lib {
      * @param string $endDate
      * @return array
      */
-    public function getPromotedRewardInfo(array $where, string $startDate='', string $endDate=''): array
+    public function getPromotedRewardInfo(array $where, string $startDate='', string $endDate='', int $limit=0, int $offset=0): array
     {
         $this->CI->load->model('user/user_qrcode_model');
         $categoryInitList = array_combine(array_keys($this->rewardCategories), array_fill(0,count($this->rewardCategories),[]));
@@ -150,7 +156,7 @@ class User_lib {
             $where['status'] = [PROMOTE_STATUS_AVAILABLE];
 
         // 取得推薦碼資料
-        $promoteCodesRs = $this->CI->user_qrcode_model->getUserQrcodeInfo([], $where);
+        $promoteCodesRs = $this->CI->user_qrcode_model->getUserQrcodeInfo([], $where, $limit, $offset);
         foreach ($promoteCodesRs as $promoteCodeRs) {
             if(!isset($list[$promoteCodeRs['promote_code']])) {
                 $code = $promoteCodeRs['promote_code'];
@@ -171,6 +177,8 @@ class User_lib {
         }
 
         // 取得推薦之註冊會員數
+        if(!empty($promoteCodeList))
+            $where['id'] = array_keys($promoteCodeList);
         $registeredRs = $this->CI->user_qrcode_model->getRegisteredUserByPromoteCode($where, $startDate, $endDate);
         foreach ($registeredRs as $rs) {
             if($rs['app_status'] == 1) {
@@ -183,7 +191,8 @@ class User_lib {
 
         // 取得成功推薦申貸的數量
         foreach ($this->rewardCategories as $category => $productIdList) {
-            $rs = $this->CI->user_qrcode_model->getLoanedCount($where, $productIdList, $startDate, $endDate);
+
+            $rs = $this->CI->user_qrcode_model->getLoanedCount($where, $productIdList, $this->rewardedTargetStatus[$category], $startDate, $endDate);
             foreach ($rs as $promotedTarget) {
                 $list[$promotedTarget['promote_code']][$category][] = $promotedTarget;
             }

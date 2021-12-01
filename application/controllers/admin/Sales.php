@@ -2,6 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class Sales extends MY_Admin_Controller {
 	
@@ -710,6 +713,7 @@ class Sales extends MY_Admin_Controller {
 
     public function promote_list() {
         $this->load->library('user_lib');
+        $this->load->library("pagination");
         $this->load->model('user/qrcode_setting_model');
 
         $input 		= $this->input->get(NULL, TRUE);
@@ -757,12 +761,25 @@ class Sales extends MY_Admin_Controller {
         }
         $input['sdate'] = $input['sdate'] ?? '';
         $input['edate'] = $input['edate'] ?? '';
-        if(isset($where['alias'])) {
-            if($where['alias'] == "all")
-                unset($where['alias']);
 
-            $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'], $input['edate']);
+        if(($where['alias']??"") == "all") {
+            unset($where['alias']);
         }
+
+        $fullPromoteList = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'], $input['edate']);
+
+        $config = pagination_config();
+        $config['per_page']      = 40; //每頁顯示的資料數
+        $config['base_url']      = admin_url('sales/promote_list');
+        $config["total_rows"]    = count($fullPromoteList);
+
+        $this->pagination->initialize($config);
+        $page_data["links"] = $this->pagination->create_links();
+
+        $current_page    = max(1, intval($input['per_page'] ?? '1'));
+        $offset = ($current_page - 1 ) * $config['per_page'];
+
+        $list = array_slice($fullPromoteList, $offset, $config['per_page']);
 
         $qrcodeSettingList = $this->qrcode_setting_model->get_all();
         $alias_list = ['all' => "全部方案"];
@@ -775,7 +792,6 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_title',$this->menu);
         $this->load->view('admin/promote_list',$page_data);
         $this->load->view('admin/_footer');
-
     }
 
     public function promote_edit() {
@@ -817,7 +833,7 @@ class Sales extends MY_Admin_Controller {
         $this->load->model('transaction/qrcode_reward_model');
         $this->load->model('transaction/transaction_model');
         $this->load->model('transaction/virtual_passbook_model');
-        $this->load->model('log/log_promote_reward_model');
+        $this->load->model('log/log_qrcode_reward_model');
         $this->load->library('passbook_lib');
         $this->load->library('output/json_output');
 
@@ -922,7 +938,7 @@ class Sales extends MY_Admin_Controller {
                     VIRTUAL_ACCOUNT_STATUS_USING, VIRTUAL_ACCOUNT_STATUS_AVAILABLE, $bankAccount->virtual_account);
             }
 
-            $this->log_promote_reward_model->insert(['amount' => $totalAmount, 'ids' => json_encode($successIdList),
+            $this->log_qrcode_reward_model->insert(['amount' => $totalAmount, 'ids' => json_encode($successIdList),
                 'admin_id' => $this->login_info->id]);
         }
 
@@ -1001,6 +1017,182 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
         $this->load->view('admin/promote_reward_list',$page_data);
+        $this->load->view('admin/_footer');
+
+    }
+
+    public function qrcode_modify_settings() {
+        if (!$this->input->is_ajax_request()) {
+            alert('ERROR, 只接受Ajax', admin_url('sales/promote_reward_list'));
+        }
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('log/log_qrcode_modify_model');
+        $this->load->library('user_lib');
+        $this->load->library('output/json_output');
+
+        $input 		= $this->input->post(NULL, TRUE);
+        $qrcode_id 		= isset($input['id']) ? (int)$input['id'] : 0;
+        $formula_list 		= $input['data'] ?? [];
+        if($qrcode_id) {
+            $qrcode = $this->user_qrcode_model->get($qrcode_id);
+            if(!$qrcode) {
+                $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "找不到對應的 qrcode, ID: ".$qrcode_id])->send();
+            }
+            $settings = json_decode($qrcode->settings, TRUE);
+            if($settings === FALSE) {
+                $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "qrcode 的設定有誤, 無法解析, ID: ".$qrcode_id])->send();
+            }
+
+            foreach ($formula_list as $category => $info) {
+                foreach ($info as $type => $value) {
+                    switch ($type) {
+                        case 'amount':
+                            $value = (int)$value;
+                            break;
+                        case 'percent':
+                            $value = (float)$value;
+                            break;
+                    }
+
+                    if (array_key_exists($category, $this->user_lib->rewardCategories)) {
+                        $settings['reward']['product'][$category] = [];
+                        $settings['reward']['product'][$category][$type] = $value;
+                    }else{
+                        $settings['reward'][$category][$type] = $value;
+                    }
+                }
+            }
+
+            $this->log_qrcode_modify_model->insert([
+                'qrcode_id' => $qrcode_id,
+                'settings' => json_encode($formula_list),
+                'admin_id' => $this->login_info->id,
+            ]);
+            $this->user_qrcode_model->update_by(['id' => $qrcode_id], [
+                'settings' => json_encode($settings)
+            ]);
+            $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "修改成功。"])->send();
+        }
+
+        $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "沒有輸入對應的 qrcode ID: "])->send();
+    }
+
+    public function promote_import_report() {
+        if (!$this->input->is_ajax_request()) {
+            alert('ERROR, 只接受Ajax', admin_url('sales/promote_reward_list'));
+        }
+        $this->load->library('output/json_output');
+
+        $keyword_list = ['promote_code' => '推薦碼', 'collaborator' => '合作對象', 'datetime' => '時間'];
+        $col_num_list = array_combine(array_keys($keyword_list), array_fill(0, count($keyword_list), -1));
+        $col_str_list = array_combine(array_keys($keyword_list), array_fill(0, count($keyword_list), ''));
+
+        if(isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
+            $tmpName = $_FILES['file']['tmp_name'];
+
+            try {
+                $input_file_type = IOFactory::identify($tmpName);
+                $reader = IOFactory::createReader($input_file_type);
+                $spreadsheet = $reader->load($tmpName);
+                $sheet = $spreadsheet->getActiveSheet();
+            }catch(\PhpOffice\PhpSpreadsheet\Exception $e) {
+                $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "無法匯入檔案，請檢查檔案格式是否有誤。"])->send();
+            }
+
+            // 獲取內容的最大列 如:D
+            $max_column_index = Coordinate::columnIndexFromString($sheet->getHighestColumn());
+
+            // 獲取內容的最大行 如:4
+            $row = $sheet->getHighestRow();
+
+            for ($i = 1; $i <= $max_column_index; $i++) {
+                $key = $sheet->getCellByColumnAndRow($i, 1)->getValue();
+                foreach ($keyword_list as $idx => $keyword) {
+                    if($key == $keyword) {
+                        $col_num_list[$idx] = $i;
+                        $col_str_list[$idx] = Coordinate::stringFromColumnIndex($i);
+                    }
+                }
+            }
+
+            $nof_found_list = [];
+            foreach ($col_num_list as $idx => $col_num) {
+                if($col_num < 0) {
+                    $nof_found_list[] = $keyword_list[$idx];
+                }
+            }
+            if(!empty($nof_found_list)) {
+                $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "第一列找不到關鍵欄位，匯入失敗。(需有欄位：".implode('/', $nof_found_list).")"])->send();
+            }
+
+            // 轉成 JSON 格式並去除標題列
+            $sheet_data = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+            $sheet_data = array_slice($sheet_data, 1);
+
+            $data = array_combine(array_column($sheet_data, $col_str_list['promote_code']), array_columns($sheet_data, array_values($col_str_list)));
+            foreach ($data as $qrcode => $info) {
+                $data[$qrcode] = array_combine(array_keys($keyword_list), array_values($info));
+                $data[$qrcode]['datetime'] = date('Y-m-d H:i:s', strtotime($data[$qrcode]['datetime']));
+            }
+            // TODO: 匯入 Excel 後的推薦碼需更新至第三方的統計資料表 (待創建資料表)
+            $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "匯入成功。"])->send();
+        }else{
+            $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "上傳檔案出現錯誤，請洽工程師。"])->send();
+        }
+    }
+
+    public function promote_import_list() {
+        $this->load->library('user_lib');
+        $this->load->library("pagination");
+        $this->load->model('log/log_qrcode_import_collaboration_model');
+        $this->load->model('user/qrcode_collaboration_model');
+
+        $input 		= $this->input->get(NULL, TRUE);
+        $where		= [];
+        $list   	= [];
+        $fields 	= ['collaboration_id'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+        if(!empty($input['sdate']))
+            $where['created_at >= '] = $input['sdate'];
+        if(empty($input['edate']))
+            $where['created_at <= '] = $input['edate'];
+
+        if(($where['collaboration_id']??"") == "all") {
+            unset($where['collaboration_id']);
+        }
+
+        $imported_list = $this->log_qrcode_import_collaboration_model->get_many_by($where);
+
+        $config = pagination_config();
+        $config['per_page']      = 40; //每頁顯示的資料數
+        $config['base_url']      = admin_url('sales/promote_import_list');
+        $config["total_rows"]    = count($imported_list);
+
+        $this->pagination->initialize($config);
+        $page_data["links"] = $this->pagination->create_links();
+
+        $current_page    = max(1, intval($input['per_page'] ?? '1'));
+        $offset = ($current_page - 1 ) * $config['per_page'];
+
+        $list = array_slice($imported_list, $offset, $config['per_page']);
+
+        $collaboration_list = $this->qrcode_collaboration_model->get_many_by(['status' => 1]);
+        $alias_list = ['all' => "全部對象"];
+        $alias_list = array_merge($alias_list, array_combine(array_column($collaboration_list, 'id'), array_column($collaboration_list, 'collaborator')));
+
+        $page_data['list'] = $list;
+        $page_data['alias_list'] = $alias_list;
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title',$this->menu);
+        $this->load->view('admin/promote_import_list',$page_data);
         $this->load->view('admin/_footer');
 
     }

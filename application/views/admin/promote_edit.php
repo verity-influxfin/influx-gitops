@@ -1,4 +1,6 @@
 <script>
+    let modifiedFlag = false;
+
     $(document).ready(function () {
         $(document).on("click",".contract",function() {
             $(window.open().document.body).html('<div style="margin: 0px;padding: 15px;height: 978px;line-height: 24px;letter-spacing: 1px;font-size: 12px;border: 0;width: 650px;white-space: pre-wrap;">'+$(this).data('value')+'</div>');
@@ -12,19 +14,22 @@
 
         $(".percent").bind( "change", function(e) {
             $(e.target).prev('input').val('');
-            let int = e.target.value.slice(0, e.target.value.length - 1);
-            if (int.includes('%')) {
+            let number = e.target.value.slice(0, e.target.value.length - 1);
+            if (number.includes('%')) {
                 e.target.value = '%';
             } else {
-                int = Math.min(Math.max(parseInt(e.target.value), 0), 100);
-                if(Number.isNaN(int))
-                    int = 0;
-                console.log(int);
+                number = Math.min(Math.max(parseFloat(e.target.value), 0), 100);
+                if(Number.isNaN(number))
+                    number = 0;
 
-                e.target.value = parseInt(int) + '%';
+                e.target.value = parseFloat(number) + '%';
                 e.target.setSelectionRange(e.target.value.length - 1, e.target.value.length - 1);
             }
-            console.log('For robots: ' + getInt(e.target.value));
+        });
+
+        $(document).on("click",".modified",function() {
+            $('#formula-table').find('input').prop("disabled", false);
+            modifiedFlag = true;
         });
     });
 
@@ -36,6 +41,50 @@
             let n = v.toString().split('.').join('');
             return parseInt(n);
         }
+    }
+
+    function change_submit() {
+        if(!modifiedFlag)
+            return false;
+        let formula_list = {};
+        $('#formula-table').find('input').each(function () {
+            let category = $(this).data('category');
+            let type = $(this).data('type');
+            let value = $(this).val();
+            if(type === 'percent') {
+                value = value.substring(0, value.lastIndexOf("%"));
+            }
+            if(value) {
+                formula_list[category] = {};
+                formula_list[category][type] = value;
+            }
+        });
+        let qrcode_id = $('#qrcode_id').val();
+        if(!qrcode_id)
+            return false;
+        Pace.track(() => {
+            $.ajax({
+                type: "POST",
+                url: "<?=admin_url('sales/qrcode_modify_settings')?>",
+                data: {
+                    'id' : qrcode_id,
+                    'data' : formula_list,
+                },
+                beforeSend: function () {
+                },
+                complete: function () {
+                },
+                success: function (response) {
+                    alert(response.response.msg);
+                    if(response.status.code=='200'){
+                        location.reload();
+                    }
+                },
+                error: function (response) {
+                    alert(response.msg);
+                }
+            });
+        });
     }
 
 	function form_onsubmit() {
@@ -64,6 +113,7 @@
                     </div>
 				</div>
 				<div class="panel-body">
+                    <input hidden id="qrcode_id" value="<?= isset($data['info'])?$data['info']['id']??'':'' ?>">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="table-responsive">
@@ -108,59 +158,17 @@
 												<p class="form-control-static"><?= $data['registeredCount']??"" ?></p>
 											</td>
                                             <td>
-                                                <p class="form-control-static">學生貸核准數量</p>
-                                            </td>
-                                            <td >
-                                                <p class="form-control-static"><?= isset($data['loanedCount'])?$data['loanedCount']['student']??"":"" ?></p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static">上班族貸核准數量</p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static"><?= isset($data['loanedCount'])?$data['loanedCount']['salary_man']??"":"" ?></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
                                                 <p class="form-control-static">下載數量</p>
                                             </td>
                                             <td>
                                                 <p class="form-control-static"><?= $data['downloadedCount']??"" ?></p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static">學生貸核准總金額</p>
-                                            </td>
-                                            <td >
-                                                <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['student']??"":"" ?></p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static">上班族貸核准總金額</p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['salary_man']??"":"" ?></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
                                                 <p class="form-control-static">註冊+下載數量</p>
                                             </td>
                                             <td>
                                                 <p class="form-control-static"><?= $data['fullMemberCount']??"" ?></p>
                                             </td>
-                                            <td>
-                                                <p class="form-control-static">學生貸核獎金</p>
-                                            </td>
-                                            <td >
-                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['student']??"":"" ?></p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static">上班族貸核獎金</p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['salary_man']??"":"" ?></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td>
                                                 <p class="form-control-static">註冊+下載獎金</p>
                                             </td>
@@ -169,14 +177,114 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td colspan="2">
+                                            <td>
+                                                <p class="form-control-static">學生貸核准數量</p>
+                                            </td>
+                                            <td >
+                                                <p class="form-control-static"><?= isset($data['loanedCount'])?$data['loanedCount']['student']??"":"" ?></p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static">學生貸核准總金額</p>
+                                            </td>
+                                            <td >
+                                                <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['student']??"":"" ?></p>
+                                            </td>
+                                            <td colspan="2"></td>
+                                            <td>
+                                                <p class="form-control-static">學生貸獎金</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['student']??"":"" ?></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="form-control-static">上班族貸核准數量</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= isset($data['loanedCount'])?$data['loanedCount']['salary_man']??"":"" ?></p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static">上班族貸核准總金額</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['salary_man']??"":"" ?></p>
+                                            </td>
+                                            <td colspan="2"></td>
+                                            <td>
+                                                <p class="form-control-static">上班族貸獎金</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['salary_man']??"":"" ?></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="form-control-static">微企貸核准數量</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= isset($data['loanedCount'])?$data['loanedCount']['small_enterprise']??"":"" ?></p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static">微企貸核准總金額</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= isset($data['loanedBalance'])?$data['loanedBalance']['small_enterprise']??"":"" ?></p>
+                                            </td>
+                                            <td colspan="2"></td>
+                                            <td>
+                                                <p class="form-control-static">微企貸獎金</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['small_enterprise']??"":"" ?></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="form-control-static">上海商銀核准數量</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= "0" ?></p>
+                                            </td>
+                                            <td colspan="4">
                                                 <p class="form-control-static"></p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static">累積核貸總金額</p>
+                                                <p class="form-control-static">上海商銀核准數量</p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static"><?= $data['totalLoanedAmount']??"" ?></p>
+                                                <p class="form-control-static"><?= "0" ?></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <p class="form-control-static">王道銀行核准數量</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= "0" ?></p>
+                                            </td>
+                                            <td colspan="4">
+                                                <p class="form-control-static"></p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static">王道銀行獎金</p>
+                                            </td>
+                                            <td>
+                                                <p class="form-control-static"><?= "0" ?></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+<!--                                            <td colspan="2">-->
+<!--                                                <p class="form-control-static"></p>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <p class="form-control-static">累積核貸總金額</p>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <p class="form-control-static">--><?//= $data['totalLoanedAmount']??"" ?><!--</p>-->
+<!--                                            </td>-->
+                                            <td colspan="6">
+                                                <p class="form-control-static"></p>
                                             </td>
                                             <td>
                                                 <p class="form-control-static">累積總獎金</p>
@@ -192,7 +300,7 @@
 						<div class="col-lg-4">
 							<h2>獎金公式</h2>
 							<div class="table-responsive">
-								<table class="table table-bordered table-hover" style="text-align:center;">
+								<table class="table table-bordered table-hover" id="formula-table" style="text-align:center;">
 									<tbody>
                                         <tr style="background-color:#f5f5f5;">
                                             <td style="vertical-align: middle; text-align: center;">
@@ -201,8 +309,8 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?>">
-                                                <input type="text" disabled style="width: 120px" class="form-control percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['percent']??"":"" ?>%" maxlength="4">
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="salary_man" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?>">
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="salary_man" data-type="percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['percent']??"":"" ?>%" maxlength="5">
                                             </td>
                                         </tr>
                                         <tr style="background-color:#f5f5f5;">
@@ -212,8 +320,38 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?>">
-                                                <input type="text" disabled style="width: 120px" class="form-control percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['percent']??"":"" ?>%" maxlength="4">
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="student" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?>">
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="student" data-type="percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['percent']??"":"" ?>%" maxlength="5">
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color:#f5f5f5;">
+                                            <td style="vertical-align: middle; text-align: center;">
+                                                <p class="form-control-static">
+                                                    微企貸獎金公式<br>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="small_enterprise" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['small_enterprise'])?$data['info']['settings']['reward']['product']['small_enterprise']['amount']??"0":"0" ?>">
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color:#f5f5f5;">
+                                            <td style="vertical-align: middle; text-align: center;">
+                                                <p class="form-control-static">
+                                                    合作個人金融產品獎金公式<br>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="collaboration_person" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['collaboration_person'])?$data['info']['settings']['reward']['product']['collaboration_person']['amount']??"0":"0" ?>">
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color:#f5f5f5;">
+                                            <td style="vertical-align: middle; text-align: center;">
+                                                <p class="form-control-static">
+                                                    合作企業金融產品獎金公式<br>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="collaboration_enterprise" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['collaboration_enterprise'])?$data['info']['settings']['reward']['product']['collaboration_enterprise']['amount']??"0":"0" ?>">
                                             </td>
                                         </tr>
                                         <tr style="background-color:#f5f5f5;">
@@ -223,8 +361,7 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['full_member'])?$data['info']['settings']['reward']['full_member']['amount']??"":"" ?>">
-                                                <input type="text" disabled style="width: 120px" class="form-control percent" value="%" maxlength="4">
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="full_member" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['full_member'])?$data['info']['settings']['reward']['full_member']['amount']??"":"" ?>">
                                             </td>
                                         </tr>
 									</tbody>
@@ -232,10 +369,10 @@
 							</div>
 						</div>
 					</div>
-                    <div style="display: none;" class="form-group">
+                    <div class="form-group">
                         <div class="align-items-end col-md-6">
-                            <button class="btn btn-success mr-5" onclick="success('.$value->id.')">修改</button>
-                            <button class="btn btn-primary" onclick="failed('.$value->id.')">確定</button>
+                            <button class="btn btn-success mr-5 modified">修改</button>
+                            <button class="btn btn-primary" onclick="change_submit()">確定</button>
                         </div>
                     </div>
 					<!-- /.row (nested) -->

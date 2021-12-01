@@ -77,6 +77,7 @@
                                             <th>註冊+下載核貸數量</th>
                                             <th>學生貸核貸數量</th>
                                             <th>上班族貸核貸數量</th>
+                                            <th>合作產品核貸數量</th>
 											<th>累計獎金</th>
 											<th>狀態</th>
                                             <th>詳細資訊</th>
@@ -98,6 +99,7 @@
                                             <td><?= $value['fullMemberCount']??'' ?></td>
                                             <td><?= $value['loanedCount']['student']??'' ?></td>
                                             <td><?= $value['loanedCount']['salary_man']??'' ?></td>
+                                            <td><?= $value['loanedCount']['small_enterprise']??'' ?></td>
                                             <td><?= $value['totalRewardAmount']??'' ?></td>
                                             <td><?= ($value['info']['status']??'')==1?"啟用":"停用" ?></td>
 											<td><a href="<?=admin_url('sales/promote_edit')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>
@@ -112,6 +114,13 @@
                         <!-- /.panel-body -->
                     </div>
                     <!-- /.panel -->
+                </div>
+                <div class="col-lg-12" style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: end;
+                ">
+                <?= $links ?>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

@@ -72,14 +72,14 @@ class user_qrcode_model extends MY_Model
      * @param string $endTime 篩選結束時間
      * @return mixed
      */
-    public function getLoanedCount(array $qrcode_where, array $productIdList, string $startTime='', string $endTime='') {
+    public function getLoanedCount(array $qrcode_where, array $productIdList, array $statusList, string $startTime='', string $endTime='') {
         $subQuery = $this->getRegisteredUserByPromoteCode($qrcode_where, '','', TRUE);
 
         $this->_database
             ->select('r.promote_code, r.settings, t.id, t.user_id, t.product_id, t.status, t.loan_amount, t.loan_date')
             ->from('`p2p_loan`.`targets` AS `t`')
             ->join("($subQuery) as `r`", "`t`.`user_id` = `r`.`user_id`")
-            ->where_in("t.status", [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
+            ->where_in("t.status", $statusList)
             ->where_in("t.product_id", $productIdList)
             ->where("t.loan_date >= DATE_FORMAT(`r`.`start_time`, '%Y-%m-%d')")
             ->where("t.loan_date <= DATE_FORMAT(`r`.`end_time`, '%Y-%m-%d')")
@@ -103,7 +103,7 @@ class user_qrcode_model extends MY_Model
      * @param array $qrcode_where
      * @return mixed
      */
-    public function getUserQrcodeInfo(array $user_where=[], array $qrcode_where=[]) {
+    public function getUserQrcodeInfo(array $user_where=[], array $qrcode_where=[], int $limit=0, int $offset=0) {
         $this->_database->select('*')
             ->from("`p2p_user`.`users`");
         if(!empty($user_where))
@@ -114,6 +114,11 @@ class user_qrcode_model extends MY_Model
             ->select('u.name, uq.*')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
             ->join("($subQuery) as `u`", "`u`.`id` = `uq`.`user_id`");
+        if($limit) {
+            $offset = max(0, $offset);
+            $limit = max(0, $limit);
+            $this->_database->limit($limit, $offset);
+        }
         if(!empty($qrcode_where)) {
             $qrcode_where = array_combine(addPrefixToArray(array_keys($qrcode_where), "uq."), array_values($qrcode_where));
             $this->_set_where([$qrcode_where]);
