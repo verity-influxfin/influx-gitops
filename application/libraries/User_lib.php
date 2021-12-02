@@ -443,4 +443,45 @@ class User_lib {
         }
         return $count;
     }
+
+    /**
+     * 解析 JWT token 並取得使用者
+     * @param $token          : JWT token
+     * @param $request_method : HTTP 請求方法
+     * @return mixed
+     * @throws Exception
+     */
+    public function parse_token($token, $request_method) {
+        $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
+        if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
+            throw new Exception('TOKEN_NOT_CORRECT', TOKEN_NOT_CORRECT);
+        }
+
+        $user_info = $this->user_model->get($tokenData->id);
+        if($tokenData->auth_otp != $this->user_info->auth_otp){
+            throw new Exception('TOKEN_NOT_CORRECT', TOKEN_NOT_CORRECT);
+        }
+
+        if($user_info->block_status != 0){
+            throw new Exception('BLOCK_USER', BLOCK_USER);
+        }
+
+        if($request_method != 'get'){
+            $this->load->model('log/log_request_model');
+            $this->log_request_model->insert([
+                'method' 	=> $this->request->method,
+                'url'	 	=> $this->uri->uri_string(),
+                'investor'	=> $tokenData->investor,
+                'user_id'	=> $tokenData->id,
+                'agent'		=> $tokenData->agent,
+            ]);
+        }
+
+        $user_info->investor 		= $tokenData->investor;
+        $user_info->company 		= $tokenData->company;
+        $user_info->incharge 		= $tokenData->incharge;
+        $user_info->agent 		    = $tokenData->agent;
+        $user_info->expiry_time 	= $tokenData->expiry_time;
+        return $user_info;
+    }
 }

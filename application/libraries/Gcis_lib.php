@@ -95,4 +95,143 @@ class Gcis_lib
         }
         return false;
     }
+
+    /**
+     * 取得商業司的 API 資訊
+     * @param $url : 商業司 API 網址
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function get_business_info($url) {
+        $rs  	= curl_get($url);
+        $result = json_decode($rs,TRUE);
+        if($rs === FALSE)
+            throw new Exception("商業司連線失敗",CONNECTION_ERROR);
+        if(empty($rs))
+            throw new Exception("此公司或商行不存在",COMPANY_NOT_EXIST);
+        if(empty($result) || !is_array($result))
+            throw new Exception("商業司API回應異常",RESPONSE_ERROR);
+
+        return $result;
+    }
+
+    /**
+     * 取得商業司的公司基本資訊
+     * @param $account_no : 商業統一編號
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function get_company_info($account_no) {
+        $url 	= $this->url.'5F64D864-61CB-4D0D-8AD9-492047CC1EA6?$format=json&$filter=Business_Accounting_NO%20eq%20'.$account_no.'&$skip=0&$top=50';
+        return $this->get_business_info($url);
+    }
+
+    /**
+     * 取得商業司的商行基本資訊
+     * @param $account_no : 商業統一編號
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function get_president_info($account_no) {
+        $url 	= $this->url.'426D5542-5F05-43EB-83F9-F1300F14E1F1?$format=json&$filter=President_No%20eq%20'.$account_no.'&$skip=0&$top=50';
+        return $this->get_business_info($url);
+    }
+
+    /**
+     * 取得商業司的商行基本資訊
+     * @param $account_no : 商業統一編號
+     * @param $agency_no : 商業申登機關代碼
+     * @return array|mixed
+     * @throws Exception
+     */
+    public function get_president_with_agency_info($account_no, $agency_no) {
+        $url 	= $this->url.'7E6AFA72-AD6A-46D3-8681-ED77951D912D?$format=json&$filter=President_No%20eq%20'.$account_no.'%20and%20Agency%20eq%20'.$agency_no.'&$skip=0&$top=50';
+        return $this->get_business_info($url);
+    }
+
+    /**
+     * 確認公司負責人是否符合
+     * @param $account_no : 商業統一編號
+     * @param $name : 負責人姓名
+     * @return bool
+     * @throws Exception
+     */
+    public function is_company_responsible($account_no, $name): bool
+    {
+        $rs = $this->get_company_info($account_no);
+        $rs = reset($rs);
+        if(!isset($rs['Business_Accounting_NO']) || !isset($rs['Responsible_Name']) || !isset($rs['Company_Status_Desc']))
+            throw new Exception("商業司API回應異常",RESPONSE_ERROR);
+        if(!$this->business_is_incorporation($rs['Company_Status_Desc']))
+            throw new Exception("公司不是正常設立狀態",NOT_INCORPORATION);
+        return $name === $rs['Responsible_Name'];
+    }
+
+    /**
+     * 確認商行負責人是否符合
+     * @param $account_no : 商業統一編號
+     * @param $name : 負責人姓名
+     * @return bool
+     * @throws Exception
+     */
+    public function is_president_responsible($account_no, $name): bool
+    {
+        $president_info = $this->get_president_info($account_no);
+        $president_info = reset($president_info);
+        if(!isset($president_info['President_No']) || !isset($president_info['Agency']))
+            throw new Exception("商業司API回應異常",RESPONSE_ERROR);
+
+        $president_info = $this->get_president_with_agency_info($account_no, $president_info['Agency']);
+        $president_info = reset($president_info);
+        if(!isset($president_info['President_No']) || !isset($president_info['Responsible_Name']) ||
+            !isset($president_info['Business_Current_Status_Desc']) || !isset($president_info['Agency']))
+            throw new Exception("商業司API回應異常",RESPONSE_ERROR);
+
+        if(!$this->business_is_incorporation($president_info['Business_Current_Status_Desc']))
+            throw new Exception("公司不是正常設立狀態",NOT_INCORPORATION);
+        return $name === $president_info['Responsible_Name'];
+    }
+
+    /**
+     * 確認統一編號的負責人姓名
+     * @throws Exception
+     */
+    public function is_business_responsible($account_no, $name) : bool {
+        $is_responsible = FALSE;
+
+        if(strlen($account_no)==8) {
+            $is_company = TRUE;
+
+            try{
+                $is_responsible = $this->is_company_responsible($account_no, $name);
+            }catch (Exception $e){
+                // 由於統一編號可能不是公司而是商行，故查無公司資料時不回傳 Exception
+                if(!in_array($e->getCode(), [RESPONSE_ERROR, COMPANY_NOT_EXIST]))
+                    throw $e;
+                $is_company = FALSE;
+            }
+
+            if(!$is_company) {
+                try{
+                    $is_responsible = $this->is_president_responsible($account_no, $name);
+                }catch (Exception $e){
+                    throw $e;
+                }
+            }
+        }else{
+            throw new Exception("統一編號長度非8碼",TAX_ID_LENGTH_ERROR);
+        }
+        return $is_responsible;
+    }
+
+    public function business_is_incorporation($status_name): bool
+    {
+        switch ($status_name) {
+            case '核准設立':
+                return TRUE;
+            default:
+                return FALSE;
+        }
+    }
+
 }

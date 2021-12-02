@@ -290,6 +290,43 @@ class User extends REST_Controller {
                 goto END;
             }
 
+            // 取得 JWT token
+            try {
+                $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
+                $request_method = $this->request->method ?? "";
+
+                if(empty($token)) {
+                    $result['error'] = TOKEN_NOT_CORRECT;
+                    goto END;
+                }
+                $this->user_info = $this->user_lib->parse_token($token, $request_method);
+            }catch (Exception $e) {
+                $result['error'] = $e->getCode();
+                goto END;
+            }
+
+            // 確認自然人需通過實名認證
+            $this->load->library('Certification_lib');
+            $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id, CERTIFICATION_IDCARD,
+                $this->user_info->investor);
+            if(!$user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED) {
+                $result['error'] = NOT_VERIFIED;
+                goto END;
+            }
+
+            // 確認自然人姓名與登記公司負責人一樣
+            try {
+                $this->load->library('gcis_lib');
+                $can_register = $this->gcis_lib->is_business_responsible($input['tax_id'], $this->user_info->name);
+                if(!$can_register) {
+                    $result['error'] = NOT_IN_CHARGE;
+                    goto END;
+                }
+            }catch (Exception $e) {
+                $result['error'] = $e->getCode();
+                goto END;
+            }
+
             // 檢查'法人關聯表-judicial_person'是否已存在此公司對應自然人之歸戶
             $this->load->model('user/judicial_person_model');
             $company_already_exist = $this->judicial_person_model->get_by([
