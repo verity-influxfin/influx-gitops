@@ -462,6 +462,40 @@ export default {
     color: yellow;
   }
 }
+@media screen and (max-width: 1420px) {
+  .promote-code-intro {
+      .banner-out{
+          padding-top: 64px;
+      }
+    .banner-row {
+      height: 650px;
+    }
+  }
+}
+@media screen and (max-width: 1280px) {
+  .promote-code-intro {
+      .banner-out{
+          padding-top: 44px;
+      }
+    .banner-row {
+      height: 550px;
+    }
+  }
+}
+@media screen and (max-width: 1023px) {
+  .promote-code-intro {
+      .banner-out{
+          padding-top: 64px;
+      }
+    .banner-row {
+      height: 350px;
+      .apply-btn{
+          bottom: 14%;
+          left: 65%;
+      }
+    }
+  }
+}
 @media screen and (max-width: 767px) {
   .promote-code-intro {
     line-height: 1.25;
@@ -595,4 +629,6 @@ export default {
     }
   }
 }
+
+
 </style>
