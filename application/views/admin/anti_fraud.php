@@ -220,7 +220,7 @@
 	let antiFraudData = [1, 3, 2, 4];
 	let orderBy = null;
 	const faIcons = [];
-	const apiUrl = "http://52.68.199.159:9453/";
+	const apiUrl = "http://52.68.199.159:9453/brookesia/api/v1.0/";
 	let typeIds = [];
 	let configs = []
 	let prevStartTime = 0
@@ -479,7 +479,7 @@
 	}
 
 	function getRuleAll() {
-		return fetch(apiUrl + "/brookesia/api/v1.0/rule/all")
+		return fetch(apiUrl + "/rule/all")
 			.then((x) => x.json())
 			.then(({ response }) => {
 				return response.results.map((x) => x.typeId);
@@ -489,7 +489,7 @@
 	function getRuleStatistics({ typeIds, productId, filter: { startTime, endTime } }) {
 		const fetchRule = ({ typeId, productId, filter: { startTime, endTime } }) => {
 			return fetch(
-				`${apiUrl}/brookesia/api/v1.0/result/ruleStatistics?typeId=${typeId}&productId=${productId}&startTime=${startTime}&endTime=${endTime}`
+				`${apiUrl}/result/ruleStatistics?typeId=${typeId}&productId=${productId}&startTime=${startTime}&endTime=${endTime}`
 			)
 				.then((res) => {
 					if (res.ok) {
@@ -527,7 +527,7 @@
 
 	function getResult({ ruleId }) {
 		const fetchResult = () => {
-			return fetch(`${apiUrl}/brookesia/api/v1.0/result/ruleResults?ruleId=${ruleId}&startTime=${prevStartTime}&endTime=${prevEndTime}`)
+			return fetch(`${apiUrl}/result/ruleResults?ruleId=${ruleId}&startTime=${prevStartTime}&endTime=${prevEndTime}`)
 				.then(x => x.json())
 				.then(({ response }) => {
 					return response.results
