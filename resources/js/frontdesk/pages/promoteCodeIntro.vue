@@ -1,11 +1,13 @@
 <template>
   <div class="promote-code-intro">
-    <div class="row no-gutters banner-row">
-      <img src="../asset/images/promoteCode/banner.jpg" class="banner" />
-      <router-link to="/borrowLink" target="_blank">
-        <button class="btn apply-btn">立即加入</button>
-      </router-link>
+    <div class="banner-out">
+      <div class="row no-gutters banner-row">
+        <router-link to="/borrowLink" target="_blank">
+          <button class="btn apply-btn">立即加入</button>
+        </router-link>
+      </div>
     </div>
+
     <div class="row-1">
       <div class="row-title">獎金輕鬆賺，越分享越划算</div>
       <div class="cards">
@@ -27,7 +29,7 @@
       </div>
       <div class="coop">
         <div class="col-auto title">
-          誰能成為<br />
+          誰能成為
           合作夥伴？
         </div>
         <div class="col coop-item">
@@ -36,7 +38,7 @@
               <img
                 src="../asset/images/promoteCode/personal.svg"
                 alt=""
-                class="mx-auto"
+                class="mx-auto d-block"
                 style="width: 55px"
               />
             </div>
@@ -50,12 +52,12 @@
           </div>
         </div>
         <div class="col coop-item">
-          <div class="left" style="width: 70px">
+          <div class="left">
             <div class="coop-icon">
               <img
                 src="../asset/images/promoteCode/company.svg"
                 alt=""
-                class="mx-auto"
+                class="mx-auto d-block"
                 style="width: 55px"
               />
             </div>
@@ -70,7 +72,9 @@
       </div>
     </div>
     <div class="step-row">
-      <div class="step-title">三步驟・智「<span class="em">匯</span>」賺錢</div>
+      <div class="step-title">
+        三步驟・智「<span class="em yellow">匯</span>」賺錢
+      </div>
       <div class="step-item-row">
         <div class="col-auto step-item">
           <div class="step-item-title">簡單下載註冊</div>
@@ -117,21 +121,23 @@
         </div>
       </div>
     </div>
-    <div class="benfit-row no-gutters">
-      <div class="content">
-        <div class="benfit-title">
-          <span class="line">用FinTech創造被動收入</span><br />
-          <span class="line2">普匯•金融科技</span>的好夥伴
+    <div class="benfit-row-out">
+      <div class="benfit-row no-gutters">
+        <div class="content">
+          <div class="benfit-title">
+            <span class="line">用FinTech創造被動收入</span><br />
+            <span class="line2">普匯•金融科技</span>的好夥伴
+          </div>
+          <div class="benfits">
+            <div class="benfit">全年無休 24⼩時隨時隨地皆可賺錢</div>
+            <div class="benfit">AI認證審核，立即產生專屬 QR code</div>
+            <div class="benfit">月底結算獎金，隔月10號自動入帳</div>
+          </div>
         </div>
-        <div class="benfits">
-          <div class="benfit">全年無休 24⼩時隨時隨地皆可賺錢</div>
-          <div class="benfit">AI認證審核，立即產生專屬 QR code</div>
-          <div class="benfit">月底結算獎金，隔月10號自動入帳</div>
-        </div>
+        <router-link to="/borrowLink" target="_blank">
+          <button class="btn apply-btn apply-now">立即加入成為夥伴</button>
+        </router-link>
       </div>
-      <router-link to="/borrowLink" target="_blank">
-        <button class="btn apply-btn apply-now">立即加入成為夥伴</button>
-      </router-link>
     </div>
 
     <div class="slogon no-gutters">
@@ -148,8 +154,18 @@ export default {
 <style lang="scss" scoped>
 .promote-code-intro {
   line-height: 1.25;
+  .banner-out {
+    background-color: #edeff3;
+  }
   .banner-row {
     position: relative;
+    background-image: url("../asset/images/promoteCode/banner.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    max-width: 1920px;
+    margin: auto;
+    height: 760px;
     .banner {
       width: 100%;
     }
@@ -211,9 +227,13 @@ export default {
       color: #153a71;
       font-size: 24px;
       line-height: 1.5;
+        width: 150px;
     }
     .coop-item {
       display: flex;
+      .left{
+          width: 70px;
+      }
       .coop-icon {
         margin-bottom: 5px;
       }
@@ -274,11 +294,16 @@ export default {
       }
     }
   }
+  .benfit-row-out {
+    background-color: #edeff3;
+  }
   .benfit-row {
     background-image: url("../asset/images/promoteCode/banner2.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center bottom;
+    max-width: 1920px;
+    margin: auto;
     height: 666px;
     position: relative;
     padding: 30px;
@@ -327,7 +352,7 @@ export default {
     width: 900px;
     text-align: center;
     padding: 60px 0;
-    font-size: 42px;
+    font-size: 38px;
     letter-spacing: 5px;
   }
   .apply-btn {
@@ -346,6 +371,145 @@ export default {
   }
   .blue {
     color: #153a71;
+  }
+  .yellow {
+    color: yellow;
+  }
+}
+@media screen and (max-width: 767px) {
+  .promote-code-intro {
+    line-height: 1.25;
+    .banner-row {
+      background-image: url("../asset/images/promoteCode/banner-phone.jpg");
+      height: 555px;
+      .apply-btn {
+        bottom: 50%;
+        right: 33%;
+      }
+    }
+    .row-1 {
+      .row-title {
+        font-size: 24px;
+        margin: 20px 0;
+      }
+      .cards {
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+        .card {
+          max-width: 240px;
+          line-height: 1.2;
+          .card-title {
+            color: #404040;
+          }
+          .card-info {
+            font-size: 16px;
+          }
+          .em {
+            font-size: 28px;
+            margin: 0 6px;
+          }
+        }
+      }
+    }
+    .row-title-2 {
+      font-size: 20px;
+    }
+    .coop {
+      flex-direction: column;
+      width: 300px;
+      margin: 19px auto;
+      padding: 20px 15px;
+      .title {
+        font-size: 20px;
+        margin-bottom: 15px;
+        width: auto;
+      }
+      .coop-item {
+        margin-bottom: 30px;
+        .coop-icon {
+          margin-bottom: 5px;
+        }
+        .right {
+          margin-left: 20px;
+          .coop-title {
+            font-size: 16px;
+          }
+          .coop-info {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    .step-row {
+      background-color: #153a71;
+      padding: 30px 0;
+      color: #fff;
+      .step-title {
+        font-size: 32px;
+        text-align: center;
+      }
+      .step-item-row {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        max-width: 900px;
+        margin: 20px auto;
+        .step-item {
+          padding: 20px 5px 0 20px;
+          position: relative;
+          text-align: center;
+          .step-item-title {
+            font-size: 20px;
+            position: absolute;
+            right: 0;
+          }
+          .step-item-cover {
+            padding: 40px 0;
+          }
+          .step-item-info {
+            font-size: 14px;
+            position: absolute;
+            width: max-content;
+            right: 0;
+            bottom: -15px;
+          }
+        }
+      }
+    }
+    .benfit-row {
+      background-image: url("../asset/images/promoteCode/banner2-phone.jpg");
+      padding: 15px;
+      .benfit-title {
+        font-size: 28px;
+      }
+      .benfit {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        margin: 30px 0;
+        color: #868686;
+        &::before {
+          content: "";
+          height: 24px;
+          width: 24px;
+        }
+      }
+      .apply-now {
+        position: absolute;
+        left: 19%;
+        bottom: -20px;
+      }
+    }
+    .slogon {
+      margin: auto;
+      font-size: 28px;
+      max-width: 300px;
+    }
+    .apply-btn {
+      font-size: 24px;
+      padding: 5px 16px;
+    }
   }
 }
 </style>
