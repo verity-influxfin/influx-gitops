@@ -263,13 +263,13 @@ export default {
       text-align: center;
       color: #153a71;
       font-size: 32px;
-      margin: 20px 0;
+      margin: 65px 0;
     }
     .cards {
       display: flex;
       justify-content: center;
       gap: 30px;
-      margin: 20px 0;
+      margin: 65px 0;
       .card {
         border-radius: 12px;
         border: 1px solid #e7e7e7;
@@ -296,14 +296,14 @@ export default {
     color: #153a71;
     font-size: 24px;
     line-height: 1.2;
-    margin: 20px 0;
+    margin: 65px 0;
   }
   .coop {
     display: flex;
     background-color: #f9f9f9;
     border-radius: 12px;
     padding: 30px 15px;
-    margin: 20px 0;
+    margin: 65px 0;
     .title {
       color: #153a71;
       font-size: 24px;
@@ -443,7 +443,6 @@ export default {
     letter-spacing: 5px;
   }
   .apply-btn {
-    font-family: Noto Sans TC;
     font-style: normal;
     font-weight: 500;
     font-size: 36px;
@@ -477,7 +476,7 @@ export default {
     .row-1 {
       .row-title {
         font-size: 24px;
-        margin: 20px 0;
+        margin: 65px 0;
       }
       .cards {
         flex-direction: column;
