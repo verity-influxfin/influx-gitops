@@ -2321,7 +2321,7 @@ class Certification_lib{
             isset($content['programming_language']) ? $data['student_programming_language'] = count($content['programming_language']) : '';
             isset($content['transcript_image']) ? $data['transcript_front'] = $content['transcript_image'][0] : '';
 
-            if(isset($content['sip_data']['ersult']['latestGrades']) && !empty($content['sip_data']['ersult']['latestGrades'])){
+            if(isset($content['sip_data']['result']['latestGrades']) && !empty($content['sip_data']['result']['latestGrades'])){
                 $data['school_lastest_grade'] = $content['sip_data']['ersult']['latestGrades'];
             }
 
