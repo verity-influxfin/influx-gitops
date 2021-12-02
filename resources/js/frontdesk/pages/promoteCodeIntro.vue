@@ -28,10 +28,7 @@
         只需分享 成功推薦 <span class="em">首貸獎金無上限！</span>
       </div>
       <div class="coop">
-        <div class="col-auto title">
-          誰能成為
-          合作夥伴？
-        </div>
+        <div class="col-auto title">誰能成為 合作夥伴？</div>
         <div class="col coop-item">
           <div class="left">
             <div class="coop-icon">
@@ -75,7 +72,8 @@
       <div class="step-title">
         三步驟・智「<span class="em yellow">匯</span>」賺錢
       </div>
-      <div class="step-item-row">
+      <!-- desktop -->
+      <div class="step-item-row d-sm-flex d-none">
         <div class="col-auto step-item">
           <div class="step-item-title">簡單下載註冊</div>
           <div class="step-item-cover">
@@ -120,6 +118,59 @@
           </div>
         </div>
       </div>
+      <!-- phone -->
+      <div class="swiper d-sm-none d-block">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide step-item">
+            <div class="step-item-title">簡單下載註冊</div>
+            <div class="step-item-cover">
+              <img
+                src="../asset/images/promoteCode/1.png"
+                style="width: 250px"
+                alt=""
+              />
+            </div>
+            <div class="step-item-info info-1">
+              下載登入普匯APP<br />
+              點擊「我的」進入「推薦有賞」
+            </div>
+          </div>
+          <div class="swiper-slide step-item">
+            <div class="step-item-title">完成線上認證</div>
+            <div class="step-item-cover">
+              <img
+                src="../asset/images/promoteCode/2.png"
+                style="width: 250px"
+                alt=""
+              />
+            </div>
+            <div class="step-item-info info-2">
+              良民證、金融及實名認證<br />
+              全線上智能簽約
+            </div>
+          </div>
+          <div class="swiper-slide step-item">
+            <div class="step-item-title">開始賺取獎金</div>
+            <div class="step-item-cover">
+              <img
+                src="../asset/images/promoteCode/3.png"
+                style="width: 250px"
+                alt=""
+              />
+            </div>
+
+            <div class="step-item-info info-3">
+              個性化專屬 QR code<br />
+              輕鬆分享、大賺獎金
+            </div>
+          </div>
+        </div>
+        <!-- If we need pagination -->
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+      </div>
     </div>
     <div class="benfit-row-out">
       <div class="benfit-row no-gutters">
@@ -134,24 +185,54 @@
             <div class="benfit">月底結算獎金，隔月10號自動入帳</div>
           </div>
         </div>
-        <router-link to="/borrowLink" target="_blank">
-          <button class="btn apply-btn apply-now">立即加入成為夥伴</button>
-        </router-link>
       </div>
     </div>
 
     <div class="slogon no-gutters">
+      <router-link to="/borrowLink" target="_blank">
+        <button class="btn apply-btn apply-now">立即加入成為夥伴</button>
+      </router-link>
       賺錢也要跟上時代 <span class="blue">普匯•你的手機ATM</span>
     </div>
   </div>
 </template>
 
 <script>
+import 'swiper/swiper.scss'
+import 'swiper/components/navigation/navigation.min.css'
+import SwiperCore, { Navigation } from 'swiper/core'
+
 export default {
+  mounted() {
+    this.useSwiper()
+  },
+  methods: {
+    useSwiper() {
+      SwiperCore.use([Navigation])
+      new Swiper('.swiper', {
+        loop: true,
+        pagination: {
+          el: '.swiper-pagination'
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+        },
+      })
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
+.swiper {
+  width: 350px;
+  height: 450px;
+  margin-top: 15px;
+  .swiper-button-next {
+    color: #fff !important;
+  }
+}
+
 .promote-code-intro {
   line-height: 1.25;
   .banner-out {
@@ -163,7 +244,7 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center bottom;
-    max-width: 1920px;
+    max-width: 1620px;
     margin: auto;
     height: 760px;
     .banner {
@@ -171,8 +252,8 @@ export default {
     }
     .apply-btn {
       position: absolute;
-      bottom: 18%;
-      right: 18%;
+      bottom: 24%;
+      left: 70%;
     }
   }
   .row-1 {
@@ -227,12 +308,12 @@ export default {
       color: #153a71;
       font-size: 24px;
       line-height: 1.5;
-        width: 150px;
+      width: 150px;
     }
     .coop-item {
       display: flex;
-      .left{
-          width: 70px;
+      .left {
+        width: 70px;
       }
       .coop-icon {
         margin-bottom: 5px;
@@ -302,7 +383,7 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center bottom;
-    max-width: 1920px;
+    max-width: 1620px;
     margin: auto;
     height: 666px;
     position: relative;
@@ -348,6 +429,12 @@ export default {
     }
   }
   .slogon {
+    .apply-btn {
+      position: absolute;
+      top: -40px;
+      left: 33%;
+    }
+    position: relative;
     margin: auto;
     width: 900px;
     text-align: center;
@@ -383,8 +470,8 @@ export default {
       background-image: url("../asset/images/promoteCode/banner-phone.jpg");
       height: 555px;
       .apply-btn {
-        bottom: 50%;
-        right: 33%;
+        left: 33%;
+        bottom: 51%;
       }
     }
     .row-1 {
@@ -441,40 +528,33 @@ export default {
         }
       }
     }
-    .step-row {
-      background-color: #153a71;
-      padding: 30px 0;
-      color: #fff;
-      .step-title {
-        font-size: 32px;
-        text-align: center;
+    .step-title {
+      font-size: 24px;
+      text-align: center;
+    }
+    .step-item-title {
+      font-size: 20px;
+      position: absolute;
+      right: 96px;
+    }
+    .step-item-cover {
+      margin-left: 20px;
+      padding: 50px 0;
+      position: absolute;
+    }
+    .step-item-info {
+      text-align: center;
+      font-size: 14px;
+      position: absolute;
+      bottom: 35px;
+      &.info-1 {
+        right: 60px;
       }
-      .step-item-row {
-        display: flex;
-        justify-content: center;
-        gap: 50px;
-        max-width: 900px;
-        margin: 20px auto;
-        .step-item {
-          padding: 20px 5px 0 20px;
-          position: relative;
-          text-align: center;
-          .step-item-title {
-            font-size: 20px;
-            position: absolute;
-            right: 0;
-          }
-          .step-item-cover {
-            padding: 40px 0;
-          }
-          .step-item-info {
-            font-size: 14px;
-            position: absolute;
-            width: max-content;
-            right: 0;
-            bottom: -15px;
-          }
-        }
+      &.info-2 {
+        right: 82px;
+      }
+      &.info-3 {
+        right: 95px;
       }
     }
     .benfit-row {
@@ -502,6 +582,10 @@ export default {
       }
     }
     .slogon {
+      .apply-btn {
+        top: -20px;
+        left: 45px;
+      }
       margin: auto;
       font-size: 28px;
       max-width: 300px;
