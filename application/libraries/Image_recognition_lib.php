@@ -8,7 +8,10 @@ class Image_recognition_lib
         $this->CI = &get_instance();
         $this->CI->load->library('S3_upload');
         $this->CI->load->library('S3_lib');
-        $this->ml_url = "http://" . getenv('GRACULA_IP') . ":" . getenv('GRACULA_PORT') . "/ml/api/v1.0/";
+        if (empty(getenv('STUDENT_CARD_IP')) || empty(getenv('STUDENT_CARD_PORT'))) {
+            throw new Exception('can not get student card machine learning ip or port');
+        }
+        $this->ml_url = "http://" . getenv('STUDENT_CARD_IP') . ":" . getenv('STUDENT_CARD_PORT') . "/ml/api/v1.0/";
     }
 
     public function requestStudentCardIdentification($image, $ownerId)

@@ -12,126 +12,6 @@
 				$('input#fail').css('display', sel.attr('value') == 'other' ? 'block' : 'none');
 				$('input#fail').attr('disabled', sel.attr('value') == 'other' ? false : true);
 			});
-
-            $(document).ready(function() {
-                var university = $("#university").text();
-                var account = $("#account").text();
-
-                fetchSipLogin(university, account)
-
-                setInterval(regularCheckSipResult, 5000);
-
-                function regularCheckSipResult() {
-                    var sipResult = $("#sip-login-info").text();
-
-                    if (sipResult != '爬蟲尚未開始' && sipResult != '爬蟲正在執行中') {
-                        return;
-                    }
-
-                    fetchSipLogin(university, account)
-                }
-
-                function fetchSipLogin(university, account) {
-                    var data = {'university' : university, 'account' : account}
-                    var queryParam = jQuery.param(data);
-
-                    var url = '/admin/certification/sip?' + queryParam
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        success: function(response) {
-                            if (!response) {
-                                fillSipLogin('response_not_json');
-                                return;
-                            }
-                            if (response.status.code == 204) {
-                                fillSipLogin('request_not_found');
-                                return;
-                            }
-
-                            if (response.response.sip.university == "university_not_found") {
-                                fillSipLogin(response.response.sip.university);
-                            } else if (response.response.sip.status == "finished") {
-                                fillSipLogin(response.response.sip.loginStatus);
-                            } else {
-                                fillSipLogin(response.response.sip.status);
-                            }
-                        },
-                        error: function() {
-                            fillSipLogin();
-                        }
-                    });
-                }
-
-                function fillSipLogin(status = null) {
-                    if (!status) {
-                        $("#sip-login-info").html("出現錯誤");
-                        return;
-                    }
-
-                    var mapping = getLoginStatusMapping()
-                    status = status.toLowerCase()
-                    $("#sip-login-info").html(mapping[status]);
-                }
-
-                function getLoginStatusMapping() {
-                    return {
-                        'false' : '登入失敗',
-                        'true' : '登入成功',
-                        'started' : '爬蟲正在執行中',
-                        'requested' : '爬蟲尚未開始',
-                        'university_not_found' : '不支援此學校',
-                        'request_not_found' : '請求未被收到',
-                        'response_not_json' : 'Server回傳資料非json格式'
-                    }
-                }
-
-                $("#request-sip-login").click(function(e) {
-                    var university = $("#university").text();
-                    var account = $("#account").text();
-                    var password = $("#password").text();
-
-                    var sipResult = $("#sip-login-info").text();
-                    if (sipResult == '登入成功') {
-                        alert('已成功登入');
-                    }
-
-                    requestSipLogin(university, account, password);
-                });
-
-                function requestSipLogin(university, account, password) {
-                    var data = {
-                        'university' : university,
-                        'account' : account,
-                        'password' : password
-                    }
-
-                    var url = '/admin/certification/sip_login'
-
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        data: data,
-                        success: function(response) {
-                            if (!response) {
-                                alert('登入請求未成功送出');
-                                return;
-                            }
-                            if (response.status.code == 400) {
-                                alert('參數錯誤，登入請求未成功送出');
-                                return;
-                            }
-
-                            alert('登入請求已經送出');
-                            fillSipLogin('requested');
-                        },
-                        error: function() {
-                            alert('登入請求未成功送出');
-                        }
-                    });
-                }
-            });
-
 		</script>
 		<div id="page-wrapper">
 			<div class="row">
@@ -182,7 +62,32 @@
 									</div>
 									<div class="form-group">
 										<label>校內電子信箱</label>
-										<p class="form-control-static"><?= isset($content['email']) ? $content['email'] : "" ?></p>
+                                        <p class="form-control-static"><?= isset($content['email']) ? $content['email'] : "" ?></p>
+                                        <p class="form-control-static">驗證狀態:
+                                        <?php
+                                         if(isset($content['email']) && !empty($content['email'])){
+                                             if(isset($content['email_verify_status']) && $content['email_verify_status'] == true){
+                                                 echo '已驗證信箱';
+                                             }else{
+                                                 echo '尚未驗證信箱';
+                                             }
+                                         }else{
+                                             echo '不進行驗證';
+                                         }
+                                        ?>
+                                        </p>
+										<p class="form-control-static">驗證時間:
+                                        <?php
+                                            if(isset($content['email']) && !empty($content['email'])){
+                                                if(isset($content['email_verify_time']) && is_numeric($content['email_verify_time'])){
+                                                    echo date('Y-m-d H:i:s',$content['email_verify_time']);
+                                                }else{
+                                                    echo '';
+                                                }
+                                            }else{
+                                                echo '不進行驗證';
+                                            }
+                                        ?></p>
 									</div>
 									<div class="form-group">
 										<label>SIP帳號</label>
@@ -193,26 +98,33 @@
 										<p id="password" class="form-control-static"><?= isset($content['sip_password']) ? $content['sip_password'] : "" ?></p>
 									</div>
 									<div class="form-group">
-										<label>SIP 網址</label><br>
-										<? if (!empty($content['sipURL'])) { ?>
-											<? foreach ($content['sipURL'] as $key => $value) { ?>
-												<a href="<?= isset($value) ? $value : "" ?>" target="_blank">SIP連結</a>
-											<? } ?>
-										<? }else{echo "無";} ?>
-									</div>
-									<div class="form-group">
-										<label>SIP登入結果</label><br>
-										<p id="sip-login-info" class="form-control-static">等待中...</p>
-										<a id="request-sip-login" class="btn btn-default">再登入一次</a>
+										<label>SIP結果</label><br>
+										<p class="form-control-static">學校：<?= isset($content['sip_data']['university']) ? $content['sip_data']['university'] : "" ?></p>
+                                        <p class="form-control-static">姓名：<?= isset($content['sip_data']['result']['name']) ? $content['sip_data']['result']['name'] : "" ?></p>
+                                        <p class="form-control-static">手機：<?= isset($content['sip_data']['result']['studentPhone']) ? $content['sip_data']['result']['studentPhone'] : "" ?></p>
+                                        <p class="form-control-static">在學狀態：<?= isset($content['sip_data']['result']['schoolStatus']) ? $content['sip_data']['result']['schoolStatus'] : "" ?></p>
+                                        <p class="form-control-static">近一學期成績：<?= isset($content['sip_data']['result']['latestGrades']) ? $content['sip_data']['result']['latestGrades'] : "" ?></p>
 									</div>
 									<div class="form-group">
 										<label>預計畢業時間</label>
 										<p class="form-control-static"><?= isset($content['graduate_date']) ? $content['graduate_date'] : "未填寫" ?></p>
 									</div>
+                                    <div class="form-group">
+                                        <form role="form" action="/admin/certification/save_meta" method="post">
+                                            <table class="table table-striped table-bordered table-hover dataTable">
+                                                <tbody>
+                                                    <tr style="text-align: center;"><td colspan="2"><span>風控因子確認</span></td></tr>
+                                                    <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
+                                                    <tr><td><span>近一學期成績</span></td><td><input class="meta-input" type="text" name="last_grade" placeholder=""></td></tr>
+                                                    <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                                </tbody>
+                                            </table>
+                                        </form>
+                                    </div>
                                     <form role="form" method="post">
                                         <div class="form-group">
                                             <label>專業證書加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
+                                            <?php if($data->status==1){?>
                                                 <p><?=isset($content['license_level'])&&$content['license_level']>0?$content['license_level']."級":"專業證書不加分"?></p>
                                             <?}else{?>
                                                 <select name="license_level" class="form-control">
@@ -226,7 +138,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>競賽作品加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
+                                            <?php if($data->status==1){?>
                                                 <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
                                             <?}else{?>
                                                 <select name="game_work_level" class="form-control">
@@ -240,7 +152,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>專家調整 (最高3級)</label>
-                                            <? if($data->status==1){?>
+                                            <?php if($data->status==1){?>
                                                 <p><?=isset($content['pro_level'])&&$content['pro_level']>0?$content['pro_level']."級":"專家調整不加分"?></p>
                                             <?}else{?>
                                                 <select name="pro_level" class="form-control">
@@ -251,19 +163,34 @@
                                                 </select>
                                             <?}?>
                                         </div><br />
+                                    <div class="form-group">
+                                        <label>驗證結果</label>
+										<?php
+											if($remark && isset($remark['verify_result']) && is_array($remark['verify_result'])){
+												foreach($remark['verify_result'] as $verify_result){
+													echo'<p style="color:red;">'.$verify_result.'</p>';
+												}
+											}
+										?>
+									</div>
 									<div class="form-group">
 										<label>備註</label>
-										<?
+                                        <?php
 										if ($remark) {
-											if (isset($remark["fail"]) && $remark["fail"]) {
+											if (isset($remark["fail"]) && $remark["fail"] && ! is_array($remark['fail']) ) {
 												echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
 											}
+                                            if(isset($remark["fail"]) && $remark["fail"] && is_array($remark['fail']) ){
+                                                foreach($remark['fail'] as $fail_result){
+													echo'<p style="color:red;">'.$fail_result.'</p>';
+												}
+                                            }
 										}
 										?>
 									</div>
                                     <div class="form-group">
                                         <label>系統審核</label>
-                                        <?
+                                        <?php
                                         if (isset($sys_check)) {
                                             echo '<p class="form-control-static">' . ($sys_check==1?'是':'否') . '</p>';
                                         }
@@ -274,9 +201,9 @@
 										<fieldset>
 											<div class="form-group">
 												<select id="status" name="status" class="form-control" onchange="check_fail();">
-													<? foreach ($status_list as $key => $value) { ?>
+													<?php foreach ($status_list as $key => $value) { ?>
 														<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
-													<? } ?>
+													<?php } ?>
 												</select>
 												<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 												<input type="hidden" name="from" value="<?= isset($from) ? $from : ""; ?>">
@@ -285,12 +212,12 @@
 												<label>失敗原因</label>
 												<select id="fail" name="fail" class="form-control">
 													<option value="" disabled selected>選擇回覆內容</option>
-													<? foreach ($certifications_msg[2] as $key => $value) { ?>
+													<?php foreach ($certifications_msg[2] as $key => $value) { ?>
 														<option <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
-													<? } ?>
+													<?php } ?>
 													<option value="other">其它</option>
 												</select>
-												<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
+												<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) && ! is_array($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
 											</div>
 											<button type="submit" class="btn btn-primary">送出</button>
 										</fieldset>
@@ -322,7 +249,7 @@
                                                 echo '</div>';
                                             }
                                         ?>
-                                        <? if (isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
+                                        <?php if (isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
                                             echo '<br /><br /><br /><h4>【其他輔助證明】</h4>';
                                             if (isset($content['programming_language'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
@@ -370,3 +297,32 @@
 			<!-- /.row -->
 		</div>
 		<!-- /#page-wrapper -->
+<script>
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: `/admin/certification/getMeta?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
+        dataType: "json",
+        success: function (response) {
+            if(response.status.code == 200 && response.response != ''){
+                Object.keys(response.response).forEach(function(key) {
+                    if($(`[name='${key}']`).length){
+                        if($(`[name='${key}']`).is("input")){
+                            $(`[name='${key}']`).val(response.response[key]);
+                        }else{
+                            let $select = $(`[name='${key}']`).selectize();
+                            let selectize = $select[0].selectize;
+                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
+                        }
+                    }
+                })
+            }else{
+                console.log(response);
+            }
+        },
+        error: function(error) {
+          alert(error);
+        }
+    });
+});
+</script>

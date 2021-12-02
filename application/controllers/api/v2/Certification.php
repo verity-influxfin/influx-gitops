@@ -631,7 +631,6 @@ class Certification extends REST_Controller {
 				'department',
 				'grade',
 				'student_id',
-				'email',
 				'major',
 				'sip_account',
 				'sip_password'
@@ -643,27 +642,35 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
+            // 學生 email 選填
+            $content['email'] = isset($input['email']) && !empty($input['email']) ? $input['email'] : '';
 
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
             isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
 
-			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
-				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
-			}
+            if(!empty($content['email'])){
+                if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
+    				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
+    			}
+            }
 
 			$this->load->model('user/user_meta_model');
 
-			//Email是否使用過
-			$user_meta = $this->user_meta_model->get_by(array(
-				'meta_key'	=> 'school_email',
-				'meta_value'=> $content['email'],
-			));
+            if(!empty($content['email'])){
+                //Email是否使用過
+    			$user_meta = $this->user_meta_model->get_by(array(
+    				'meta_key'	=> 'school_email',
+    				'meta_value'=> $content['email'],
+    			));
 
-			if($user_meta && $user_meta->user_id != $user_id){
-				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
-			}
+                if($user_meta && $user_meta->user_id != $user_id){
+    				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
+    			}
+                $content['email_verify_time'] = '';
+                $content['email_verify_status'] = false;
+            }
 
 			//學號是否使用過
 			$user_meta = $this->user_meta_model->get_by(array(
@@ -740,14 +747,16 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('scraper/sip_lib.php');
-				$this->sip_lib->requestSipLogin(
-				    $content['school'],
-				    $content['sip_account'],
-				    $content['sip_password']
-				);
+                $this->sip_lib->requestDeep(
+                    $content['school'],
+                    $content['sip_account'],
+                    $content['sip_password']
+                );
 
-				$this->load->library('Sendemail');
-				$this->sendemail->send_verify_school($insert,$content['email']);
+                if(!empty($content['email'])){
+                    $this->load->library('Sendemail');
+    				$this->sendemail->send_verify_school($insert,$content['email']);
+                }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
