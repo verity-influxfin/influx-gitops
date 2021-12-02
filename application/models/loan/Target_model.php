@@ -318,4 +318,154 @@ class Target_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+	public function getDelayedReport($input)
+	{
+		//投資人ID/債權總額
+		$subquery_investment = $this->db
+			->select('target_id,user_id,amount')
+			->where('status', 3)
+			->get_compiled_select('p2p_loan.investments', TRUE);
+
+		//首逾日期
+		$subquery_transaction = $this->db
+			->select('target_id,entering_date')
+			->where(['status' => 1, 'source' => 93])
+			->group_by('target_id')
+			->get_compiled_select('p2p_transaction.transactions', TRUE);
+
+		//學校/公司
+		$subquery_user_meta_1 = $this->db
+			->select("
+				user_id,
+				GROUP_CONCAT(meta_value SEPARATOR '/') AS user_meta_1
+			")
+			->where_in('meta_key', ['school_name', 'job_company'])
+			->group_by('user_id')
+			->get_compiled_select('p2p_user.user_meta');
+
+		//科系
+		$subquery_user_meta_2 = $this->db
+			->select('user_id,meta_value')
+			->where('meta_key', 'school_department')
+			->group_by('user_id')
+			->get_compiled_select('p2p_user.user_meta');
+
+		//職位
+		$subquery_user_meta_3 = $this->db
+			->select('user_id,meta_value')
+			->where('meta_key', 'job_position')
+			->group_by('user_id')
+			->get_compiled_select('p2p_user.user_meta');
+
+		//逾期本金
+		$subquery_unpaid_principal = $this->db
+			->select('target_id')
+			->select_sum('amount')
+			->where(['status' => 1, 'source' => 11])
+			->group_by('target_id')
+			->get_compiled_select('p2p_transaction.transactions', TRUE);
+
+		//逾期利息
+		$subquery_unpaid_interest = $this->db
+			->select('target_id')
+			->select_sum('amount')
+			->where(['status' => 1, 'source' => 13])
+			->group_by('target_id')
+			->get_compiled_select('p2p_transaction.transactions', TRUE);
+
+		//延滯息
+		$subquery_delay_interest = $this->db
+			->select('target_id')
+			->select_sum('amount')
+			->where(['status' => 1, 'source' => 93])
+			->group_by('target_id')
+			->get_compiled_select('p2p_transaction.transactions', TRUE);
+
+		$this->db
+			->select('
+				t.id,
+				t.user_id,
+				t.product_id,
+				p.name AS product_name,
+				t.target_no,
+				t.credit_level,
+				t.loan_date,
+				a1.amount AS invest_amount,
+				a1.user_id AS lender,
+				a2.entering_date,
+				DATEDIFF(NOW(), a2.entering_date) AS delayed_days,
+				a6.user_meta_1,
+				a7.meta_value AS school_department,
+				a8.meta_value AS job_position
+			')
+			->from('p2p_loan.targets t')
+			->join('p2p_loan.products p', 'p.id=t.product_id')
+			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
+			->join("($subquery_transaction) a2", 'a2.target_id=t.id', 'left')
+			->join("($subquery_user_meta_1) a6", 'a6.user_id=t.user_id', 'left')
+			->join("($subquery_user_meta_2) a7", 'a7.user_id=t.user_id', 'left')
+			->join("($subquery_user_meta_3) a8", 'a8.user_id=t.user_id', 'left')
+			->where(['t.delay' => 1, 't.status' => 5])
+			->order_by('t.target_no');
+
+		foreach ($input as $key => $value) {
+			switch ($key) {
+				case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
+					if (!empty($input['tsearch'])) {
+						$this->db
+							->join('p2p_user.users u', 'u.id=t.user_id')
+							->group_start()
+							->like('u.id', $input['tsearch'])
+							->or_like('u.name', $input['tsearch'])
+							->or_like('u.id_number', $input['tsearch'])
+							->or_like('t.target_no', $input['tsearch'])
+							->group_end();
+					}
+					break;
+				case 'sdate': //從
+					if (!empty($input['sdate'])) {
+						$this->db->where('t.created_at >=', strtotime($input['sdate']));
+					}
+					break;
+				case 'edate': //到
+					if (!empty($input['edate'])) {
+						$this->db->where('t.created_at <=', strtotime($input['edate']));
+					}
+					break;
+			}
+		}
+
+		$target_rows = array_column($this->db->get()->result_array(), NULL, 'id');
+		$target_ids = array_column($target_rows, 'id');
+
+		$this->db
+			->select('
+				t.id,
+				a3.amount AS unpaid_principal,
+				a4.amount AS unpaid_interest,
+				a5.amount AS delay_interest
+			')
+			->from('p2p_loan.targets t')
+			->join("($subquery_unpaid_principal) a3", 'a3.target_id=t.id', 'left')
+			->join("($subquery_unpaid_interest) a4", 'a4.target_id=t.id', 'left')
+			->join("($subquery_delay_interest) a5", 'a5.target_id=t.id', 'left')
+			->where_in('t.id', $target_ids);
+		$transaction_rows = array_column($this->db->get()->result_array(), NULL, 'id');
+
+		$target_rows = array_map(function ($value) {
+			if (isset($value['school_department']) && !empty($value['school_department'])) {
+				$value['user_meta_2'][] = $value['school_department'];
+			}
+			if (isset($value['job_position']) && empty($value['job_position']) && $value['job_position'] !== 0) {
+				$position_name = $this->config->item('position_name');
+				$value['user_meta_2'][] = $position_name[$value['job_position']] ?? '';
+			}
+
+			$value['user_meta_2'] = implode('/', $value['user_meta_2']);
+			return $value;
+		}, $target_rows);
+
+		return array_replace_recursive($target_rows, $transaction_rows);
+	}
 }

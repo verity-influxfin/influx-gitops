@@ -28,7 +28,17 @@
                         }
                     }
                     else{
-                        top.location = './index?delay='+delay+'&status='+status+'&tsearch='+tsearch+(exports==1?'&export=1':'')+dateRange;
+                        //top.location = './index?delay='+delay+'&status='+status+'&tsearch='+tsearch+(exports==1?'&export=1':'')+dateRange;
+						let exports_query_str = '';
+						switch (exports) {
+							case '1':
+								exports_query_str = '&export=1';
+								break;
+							case '2':
+								exports_query_str = '&export=2';
+								break;
+						}
+						top.location = './index?delay=' + delay + '&status=' + status + '&tsearch=' + tsearch + exports_query_str + dateRange;
                     }
 				}
                 $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
@@ -79,6 +89,7 @@
                                         <select id="export">
                                             <option value='0' >頁面顯示</option>
                                             <option value='1' >Excel輸出</option>
+                                            <option value='2' >Excel輸出2</option>
                                         </select>
                                     </td>
                                     <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
