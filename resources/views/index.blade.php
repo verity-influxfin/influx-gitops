@@ -385,7 +385,7 @@
                     <a href="/clubcooperation" class="item">社團合作</a> |
                     <a href="/firmcooperation" class="item">商行合作</a> |
                     <a href="/companycooperation" class="item">企業合作</a> |
-                    <a href="/promote-code-intro" class="item">智匯分享</a>
+                    <a href="/promote-code-intro" class="item">推薦有賞</a>
                 </div>
                 <div class="externals">
                     <a class="item" href="/borrowLink">我想申貸</a>
