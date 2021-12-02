@@ -70,6 +70,12 @@
 		text-align: center;
 		padding: 6px 0;
 		flex: 0 0 16%;
+		overflow-wrap: anywhere;
+	}
+
+	.data-item.value {
+		max-height: 80px;
+		overflow: auto;
 	}
 
 	.btn-item {
@@ -84,7 +90,7 @@
 	.result-data-row {
 		display: grid;
 		gap: 0 10px;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 	}
 
 	.result-date {
@@ -175,7 +181,7 @@
 		<div class="data-item item-full"></div>
 		<div class="data-item"></div>
 		<div class="data-item btn-item">
-			<button class="btn" onclick="insertResultPanel()">命中結果</button>
+			<button class="btn" onclick="insertResultPanel(event)">命中結果</button>
 		</div>
 	</div>
 </template>
@@ -187,30 +193,14 @@
 		<div class="d-flex">
 			<div class="data-item item-full">
 				<div class="header-item">反詐欺規則</div>
-				<div class="data-item" id="rule">
-					【設備ID】同一個設備號，有3人以上註冊帳戶，且非內部認證設備
-				</div>
+				<div class="data-item" id="rule"></div>
 			</div>
 			<div class="data-item result-date">
 				<div class="header-item">日期</div>
-				<div class="data-item" id="date">20210101~20210102</div>
+				<div class="data-item" id="date"></div>
 			</div>
 		</div>
-		<button class="btn" onclick="insertResultDataRow({userId:'11111'})">
-			test
-		</button>
-		<div id="result-rows">
-			<div class="result-data-row">
-				<div class="data-item">
-					<div class="header-item">會員ID</div>
-					<div class="data-item" id="user-id">12334</div>
-				</div>
-				<div class="data-item">
-					<div class="header-item">日期</div>
-					<div class="data-item">20210101~20210102</div>
-				</div>
-			</div>
-		</div>
+		<div id="result-rows"></div>
 	</div>
 </template>
 <template id="result-data-item">
@@ -220,12 +210,7 @@
 	</div>
 </template>
 <template id="result-data-row">
-	<div class="result-data-row">
-		<div class="data-item">
-			<div class="header-item">會員ID</div>
-			<div class="data-item user-id">12334</div>
-		</div>
-	</div>
+	<div class="result-data-row"></div>
 </template>
 <template id="loader">
 	<div class="loader"></div>
@@ -238,6 +223,8 @@
 	const apiUrl = "http://52.68.199.159:9453/";
 	let typeIds = [];
 	let configs = []
+	let prevStartTime = 0
+	let prevEndTime = 999999999999
 	async function onLoad() {
 		insertDefaultPanel()
 		faIcons.push(
@@ -273,9 +260,11 @@
 		let endTime = 999999999999
 		if (startTimeObj) {
 			startTime = new Date(startTime).valueOf()
+			prevStartTime = startTime
 		}
 		if (endTimeObj) {
 			endTime = new Date(startTime).valueOf()
+			prevEndTime = endTime
 		}
 		const ans = await getRuleStatistics({
 			typeIds,
@@ -297,6 +286,7 @@
 				id: `${x.typeId}-${x.productId}`,
 				rule: `${x.mainDescription},${x.description}`,
 				duration,
+				ruleId: x.ruleId,
 				productId: x.productId,
 				efficiency: x.efficiency,
 			}
@@ -306,14 +296,19 @@
 		resultData.forEach((x) => insertData(x))
 		antiFraudData = [...resultData]
 	}
-	function insertData({ id, rule, duration, productId, efficiency }) {
+
+	function insertData({ id, rule, duration, ruleId, productId, efficiency }) {
 		const template = document.querySelector("template#data-row");
 		const dataArray = template.content.querySelectorAll(".data-item");
+		const button = template.content.querySelector(".btn");
 		//insert
 		dataArray[0].textContent = duration;
 		dataArray[1].textContent = converProductId({ productId });
 		dataArray[2].textContent = rule;
 		dataArray[3].textContent = convertEfficiency({ efficiency });
+		button.setAttribute('rule-id', ruleId)
+		button.setAttribute('rule', rule)
+		button.setAttribute('duration', duration)
 		// dataArray[4].textContent = x;
 		const rows = document.querySelector("#rows");
 		const clone = document.importNode(template.content, true);
@@ -353,37 +348,79 @@
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
 	}
-	function insertResultPanel() {
+	async function insertResultPanel(e) {
 		const parent = document.querySelector("#panel");
 		const child = parent.querySelector(".panel.panel-default");
-		parent.removeChild(child);
 		const template = document.querySelector("template#result-panel");
+		ruleId = e.target.getAttribute('rule-id')
+		duration = e.target.getAttribute('duration')
+		rule = e.target.getAttribute('rule')
+		const ans = await getResult({ ruleId })
+		// insert header 
+		const tRule = template.content.querySelector('#rule')
+		const tDate = template.content.querySelector('#date')
+		tRule.textContent = rule
+		tDate.textContent = duration
+		// inset template to page
+		parent.removeChild(child);
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
+
+		// insert data to template
+		ans.forEach(x => {
+			insertResultDataRow(x)
+		})
+
 	}
 
-	function insertResultDataRow({ userId }) {
+	function insertResultDataRow(datas) {
 		const template = document.querySelector("template#result-data-row");
-		const k = template.content.querySelector(".user-id");
-		k.textContent = userId;
 
 		const parent = document.querySelector("#result-rows");
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
-		insertResultDataItem({ key: "test", value: "test2" });
-		insertResultDataItem({ key: "test", value: "test2" });
+		// console.log(datas)
+		datas.forEach(({ key, label, value }) => {
+			if (label) {
+				insertResultDataItem({ label, value });
+			}
+		})
 	}
-	function insertResultDataItem({ key, value }) {
+	function insertResultDataItem({ label, value }) {
 		// insert to last result-data-row
-		const t = document.querySelector("template#result-data-item");
-		const k = t.content.querySelector(".key");
-		const v = t.content.querySelector(".value");
-		k.textContent = key;
-		v.textContent = value;
+		const t = document.querySelector("template#result-data-item")
+		const k = t.content.querySelector(".key")
+		const v = t.content.querySelector(".value")
+		k.textContent = label
+		v.textContent = ''
+		if (Array.isArray(value)) {
+			value.forEach(x => {
+				if (typeof x === "object") {
+					let s = ''
+					Object.keys(x).forEach(item => {
+						s += (x[item] + ' ')
+					})
+					v.insertAdjacentHTML('beforeend', `
+						<div>${s}</div>
+					`)
+				} else {
+					v.insertAdjacentHTML('beforeend', `
+						<span>${x}</span>
+					`)
+				}
+			})
+
+		} else {
+			if (label.includes('時間')) {
+				const d = new Date(value * 1000)
+				v.textContent = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+			} else {
+				v.textContent = value.toString()
+			}
+		}
 
 		const parent = document.querySelector(".result-data-row:last-child");
 		const clone = document.importNode(t.content, true);
-		console.log(parent);
 		parent.appendChild(clone);
 	}
 	function onSort() {
@@ -486,5 +523,16 @@
 				return ans.flatMap((x) => x.value);
 			})
 			.catch((err) => console.error(err));
+	}
+
+	function getResult({ ruleId }) {
+		const fetchResult = () => {
+			return fetch(`${apiUrl}/brookesia/api/v1.0/result/ruleResults?ruleId=${ruleId}&startTime=${prevStartTime}&endTime=${prevEndTime}`)
+				.then(x => x.json())
+				.then(({ response }) => {
+					return response.results
+				})
+		}
+		return fetchResult()
 	}
 </script>
