@@ -1512,6 +1512,113 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/certification/idcard",
+            "title": "取得 實名認證",
+            "version": "0.2.0",
+            "name": "GetCertificationIdcard2",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "504",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "505",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"505\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/idcard"
+                }
+            ]
+        },
+        {
+            "type": "get",
             "url": "/V2/certification/investigation",
             "title": "認證 聯徵狀態",
             "version": "0.2.0",
@@ -9896,10 +10003,163 @@ define({
         },
         {
             "type": "get",
-            "url": "/v2/certification/idcard",
-            "title": "取得 實名認證",
+            "url": "/v2/product/target_verify_status",
+            "title": "借款方 取得案件審核狀態",
             "version": "0.2.0",
-            "name": "GetCertificationIdcard2",
+            "name": "GetTargetVerifyStatus",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>案件流水號</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>響應結果</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>案件審核狀態 (1:已送出審核, 0:待送出審核)</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n  \"data\": {\n\t\"status\": 1\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "130",
+                            "description": "<p>權限不足</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "207",
+                            "description": "<p>非借款端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用 (尚未提交所有徵信項)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "801",
+                            "description": "<p>標的不存在</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "130",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"130\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "207",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "801",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
+                        "type": "Object"
+                    },
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/target_verify_status"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/certification/verify_certifications",
+            "title": "認證 啟動徵信階段的審核",
+            "version": "0.2.0",
+            "name": "PostVerifyCertifications",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -9910,6 +10170,19 @@ define({
                             "optional": false,
                             "field": "request_token",
                             "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>案件流水號</p>"
                         }
                     ]
                 }
@@ -9940,42 +10213,48 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "130",
+                            "description": "<p>權限不足</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "207",
+                            "description": "<p>非借款端登入</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "501",
-                            "description": "<p>此驗證尚未啟用</p>"
+                            "description": "<p>此驗證尚未啟用 (尚未提交所有徵信項)</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "801",
+                            "description": "<p>標的不存在</p>"
                         }
                     ]
                 },
                 "examples": [
-                    {
-                        "title": "501",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "502",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "504",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "505",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"505\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "200",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
-                        "type": "Object"
-                    },
-                    {
-                        "title": "201",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
-                        "type": "Object"
-                    },
                     {
                         "title": "100",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
@@ -9987,17 +10266,37 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "216",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "title": "130",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"130\"\n}",
                         "type": "Object"
-                    }
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "207",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"207\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "801",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"801\"\n}",
+                        "type": "Object"
+                    },
                 ]
             },
             "filename": "application/controllers/api/v2/Certification.php",
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/certification/idcard"
+                    "url": "/api/v2/certification/verify_certifications"
                 }
             ]
         },
@@ -15216,15 +15515,61 @@ define({
                             "group": "Success 200",
                             "type": "Number",
                             "optional": false,
+                            "field": "type",
+                            "description": "<p>0:無行為\n" +
+                                "1:開啟強制彈窗\n" +
+                                "2.開啟URL(需帶openURL,urlBtnMsg參數)\n" +
+                                "3.開啟target id(需帶target_id,product_id參數)\n" +
+                                "4.開啟認證徵信(需帶alias,target_id)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
                             "field": "created_at",
                             "description": "<p>創建日期</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "target_id",
+                            "description": "<p>案件編號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "product_id",
+                            "description": "<p>案件產品編號</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "openURL",
+                            "description": "<p>跳轉網址</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "alias",
+                            "description": "<p>認證徵信項的別名</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "urlBtnMsg",
+                            "description": "<p>跳轉網址的按鈕名稱</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"id\": 224,\n\t\t\t\"title\":\"用戶資料認證未通過\",\n\t\t\t\"content\":\"您好！ 您的資料認證未通過，請重新認證。\",\n\t\t\t\"status\": 1,\n\t\t\t\"created_at\": 1548133390\n\t\t}\n}",
+                        "content": "{\n\t\t\"result\":\"SUCCESS\",\n\t\t\"data\":{\n\t\t\t\"list\":[\n\t\t\t{\n\t\t\t\t\"id\": 1,\n\t\t\t\t\"title\":\"用戶資料認證未通過\",\n\t\t\t\t\"content\":\"您好！ 您的資料認證未通過，請重新認證。\",\n\t\t\t\t\"status\": 1,\n\t\t\t\t\"type\": 0,\n\t\t\t\t\"created_at\":\"1519635711\"\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"id\": 241,\n\t\t\t\t\"title\": \"【會員】 交易密碼設置成功\",\n\t\t\t\t\"content\": \"您好！您的交易密碼設置成功。\",\n\t\t\t\t\"status\": 1,\n\t\t\t\t\"type\": 0,\n\t\t\t\t\"created_at\": 1548303563\n\t\t\t},\n\t\t\t]\n\t\t}\n}",
                         "type": "Object"
                     }
                 ]
