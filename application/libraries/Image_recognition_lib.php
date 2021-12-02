@@ -8,7 +8,7 @@ class Image_recognition_lib
         $this->CI = &get_instance();
         $this->CI->load->library('S3_upload');
         $this->CI->load->library('S3_lib');
-        $this->ml_url = "http://127.0.0.1:9997/ml/api/v1.0/";
+        $this->ml_url = "http://" . getenv('STUDENT_CARD_IP') . ":" . getenv('STUDENT_CARD_PORT') . "/ml/api/v1.0/";
     }
 
     public function requestStudentCardIdentification($image, $ownerId)
