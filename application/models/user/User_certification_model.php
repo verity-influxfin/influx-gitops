@@ -133,4 +133,15 @@ class User_certification_model extends MY_Model
         }
         return $list;
     }
+
+	public function get_certifications_return()
+	{
+		$this->db
+			->select('uc.id')
+			->from('p2p_user.user_certification uc')
+			->join('p2p_user.user_meta um', 'um.user_id=uc.user_id AND um.meta_key="school_name" AND um.meta_value LIKE "(自填%"')
+			->where(['uc.investor' => 0, 'uc.status' => 1, 'uc.certification_id' => 2]);
+
+		return $this->db->get()->result_array();
+	}
 }
