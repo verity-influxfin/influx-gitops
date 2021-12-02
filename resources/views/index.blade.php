@@ -192,7 +192,7 @@
                     <img class="icon icon-search" v-show="!inputing"  @click="inputing=true" src="/images/alesis-search-icon.svg">
                     <img class="icon icon-hamburger" src="/images/alesis-hamburger.svg">
                 </div>
-                
+
             </div>
             <div class="rwd-list">
                 <div class="item -dropdown">
@@ -384,7 +384,8 @@
                     <a href="/campaign/2021-campus-ambassador" class="item">校園大使</a> |
                     <a href="/clubcooperation" class="item">社團合作</a> |
                     <a href="/firmcooperation" class="item">商行合作</a> |
-                    <a href="/companycooperation" class="item">企業合作</a>
+                    <a href="/companycooperation" class="item">企業合作</a> |
+                    <a href="/promote-code-intro" class="item">推薦有賞</a>
                 </div>
                 <div class="externals">
                     <a class="item" href="/borrowLink">我想申貸</a>
