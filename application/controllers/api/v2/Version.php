@@ -25,7 +25,7 @@ class Version extends REST_Controller {
             $data = array(
                 'version'     => $version -> version,
                 'description' => $version -> description,
-                'events'      => "linePointBox,stepProduct,oppo,skipFB,jv2"
+                'events'      => "linePointBox,stepProduct,oppo,skipFB,jv2,livingvoicecheck"
             );
         }
         $this->response(array('result' => 'SUCCESS','data' => $data ));
