@@ -393,6 +393,7 @@ class Target_model extends MY_Model
 				t.loan_date,
 				a1.amount AS invest_amount,
 				a1.user_id AS lender,
+				CONCAT(a1.target_id,"-",a1.user_id) AS ary_key,
 				a2.entering_date,
 				DATEDIFF(NOW(), a2.entering_date) AS delayed_days,
 				a6.user_meta_1,
@@ -436,22 +437,22 @@ class Target_model extends MY_Model
 			}
 		}
 
-		$target_rows = array_column($this->db->get()->result_array(), NULL, 'id');
+		$target_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
 		$target_ids = array_column($target_rows, 'id');
 
 		$this->db
 			->select('
-				t.id,
+				CONCAT(i.target_id,"-",i.user_id) AS ary_key,
 				a3.amount AS unpaid_principal,
 				a4.amount AS unpaid_interest,
 				a5.amount AS delay_interest
 			')
-			->from('p2p_loan.targets t')
-			->join("($subquery_unpaid_principal) a3", 'a3.target_id=t.id', 'left')
-			->join("($subquery_unpaid_interest) a4", 'a4.target_id=t.id', 'left')
-			->join("($subquery_delay_interest) a5", 'a5.target_id=t.id', 'left')
-			->where_in('t.id', $target_ids);
-		$transaction_rows = array_column($this->db->get()->result_array(), NULL, 'id');
+			->from('p2p_loan.investments i')
+			->join("($subquery_unpaid_principal) a3", 'a3.target_id=i.target_id', 'left')
+			->join("($subquery_unpaid_interest) a4", 'a4.target_id=i.target_id', 'left')
+			->join("($subquery_delay_interest) a5", 'a5.target_id=i.target_id', 'left')
+			->where_in('i.target_id', $target_ids);
+		$transaction_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
 
 		$target_rows = array_map(function ($value) {
 			if (isset($value['school_department']) && !empty($value['school_department'])) {

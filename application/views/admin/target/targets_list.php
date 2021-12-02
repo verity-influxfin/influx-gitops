@@ -89,7 +89,9 @@
                                         <select id="export">
                                             <option value='0' >頁面顯示</option>
                                             <option value='1' >Excel輸出</option>
-                                            <option value='2' >Excel輸出2</option>
+											<?php if (isset($_GET['delay']) && $_GET['delay'] === '1' && isset($_GET['status']) && $_GET['status'] == '5') {
+												echo "<option value='2' >Excel輸出-逾期債權</option>";
+											} ?>
                                         </select>
                                     </td>
                                     <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
