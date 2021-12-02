@@ -6,6 +6,9 @@ class Sip_lib
     function __construct()
     {
         $this->CI = &get_instance();
+        if (empty(getenv('GRACULA_IP')) || empty(getenv('GRACULA_PORT'))) {
+            throw new Exception('can not get SIP ip or port');
+        }
         $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":".getenv('GRACULA_PORT')."/scraper/api/v1.0/";
     }
 

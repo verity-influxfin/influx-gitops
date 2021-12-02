@@ -124,7 +124,7 @@
                                     <form role="form" method="post">
                                         <div class="form-group">
                                             <label>專業證書加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
+                                            <?php if($data->status==1){?>
                                                 <p><?=isset($content['license_level'])&&$content['license_level']>0?$content['license_level']."級":"專業證書不加分"?></p>
                                             <?}else{?>
                                                 <select name="license_level" class="form-control">
@@ -138,7 +138,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>競賽作品加分 (最高4級)</label>
-                                            <? if($data->status==1){?>
+                                            <?php if($data->status==1){?>
                                                 <p><?=isset($content['game_work_level'])&&$content['game_work_level']>0?$content['game_work_level']."級":"競賽作品不加分"?></p>
                                             <?}else{?>
                                                 <select name="game_work_level" class="form-control">
@@ -152,7 +152,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>專家調整 (最高3級)</label>
-                                            <? if($data->status==1){?>
+                                            <?php if($data->status==1){?>
                                                 <p><?=isset($content['pro_level'])&&$content['pro_level']>0?$content['pro_level']."級":"專家調整不加分"?></p>
                                             <?}else{?>
                                                 <select name="pro_level" class="form-control">
@@ -165,7 +165,7 @@
                                         </div><br />
                                     <div class="form-group">
                                         <label>驗證結果</label>
-										<?
+										<?php
 											if($remark && isset($remark['verify_result']) && is_array($remark['verify_result'])){
 												foreach($remark['verify_result'] as $verify_result){
 													echo'<p style="color:red;">'.$verify_result.'</p>';
@@ -175,7 +175,7 @@
 									</div>
 									<div class="form-group">
 										<label>備註</label>
-                                        <?
+                                        <?php
 										if ($remark) {
 											if (isset($remark["fail"]) && $remark["fail"] && ! is_array($remark['fail']) ) {
 												echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
@@ -190,7 +190,7 @@
 									</div>
                                     <div class="form-group">
                                         <label>系統審核</label>
-                                        <?
+                                        <?php
                                         if (isset($sys_check)) {
                                             echo '<p class="form-control-static">' . ($sys_check==1?'是':'否') . '</p>';
                                         }
@@ -201,9 +201,9 @@
 										<fieldset>
 											<div class="form-group">
 												<select id="status" name="status" class="form-control" onchange="check_fail();">
-													<? foreach ($status_list as $key => $value) { ?>
+													<?php foreach ($status_list as $key => $value) { ?>
 														<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
-													<? } ?>
+													<?php } ?>
 												</select>
 												<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 												<input type="hidden" name="from" value="<?= isset($from) ? $from : ""; ?>">
@@ -212,9 +212,9 @@
 												<label>失敗原因</label>
 												<select id="fail" name="fail" class="form-control">
 													<option value="" disabled selected>選擇回覆內容</option>
-													<? foreach ($certifications_msg[2] as $key => $value) { ?>
+													<?php foreach ($certifications_msg[2] as $key => $value) { ?>
 														<option <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
-													<? } ?>
+													<?php } ?>
 													<option value="other">其它</option>
 												</select>
 												<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) && ! is_array($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
@@ -249,7 +249,7 @@
                                                 echo '</div>';
                                             }
                                         ?>
-                                        <? if (isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
+                                        <?php if (isset($content['programming_language'])||isset($content['pro_certificate'])||isset($content['game_work'])) {
                                             echo '<br /><br /><br /><h4>【其他輔助證明】</h4>';
                                             if (isset($content['programming_language'])) {
                                                 echo '<div class="form-group"><label for="disabledSelect">專業語言</label><br>';
