@@ -1,7 +1,47 @@
 <template>
   <div class="promote-code-intro">
     <div class="banner-out">
-      <div class="desktop-banner d-none d-sm-flex"></div>
+      <div class="desktop-banner">
+        <div class="col-6 d-flex justify-content-end">
+          <img
+            src="../asset/images/promoteCode/banner-1.png"
+            class="banner"
+            alt=""
+          />
+        </div>
+        <div class="col-6">
+          <div class="banner-content">
+            <div class="texts">
+              <img
+                src="../asset/images/promoteCode/banner-text-1.svg"
+                alt=""
+                class="text text-1"
+              />
+              <img
+                src="../asset/images/promoteCode/banner-text-2.svg"
+                alt=""
+                class="text text-2"
+              />
+              <img
+                src="../asset/images/promoteCode/banner-text-3.svg"
+                alt=""
+                class="text text-3"
+              />
+            </div>
+            <div class="d-flex">
+              <router-link to="/borrowLink" target="_blank" class="mx-auto">
+                <button class="btn apply-btn apply-banner-btn">
+                  <img
+                    src="../asset/images/promoteCode/banner-btn.svg"
+                    class="btn-img"
+                    alt=""
+                  />
+                </button>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="banner-row">
         <img
           src="../asset/images/promoteCode/phone-text-1.png"
@@ -22,7 +62,7 @@
           <router-link to="/borrowLink" target="_blank" class="mx-auto">
             <button class="btn apply-btn apply-banner-btn">
               <img
-                src="../asset/images/promoteCode/banner-btn-phone.svg"
+                src="../asset/images/promoteCode/banner-btn.svg"
                 class="btn-img"
                 alt=""
               />
@@ -267,25 +307,48 @@ export default {
   line-height: 1.25;
   .banner-out {
     background-color: #edeff3;
+    .desktop-banner {
+      display: flex;
+      .banner {
+        width: 100%;
+        max-width: 760px;
+      }
+      .banner-content{
+          width: fit-content;
+          margin:0 20px;
+      }
+      .texts {
+        display: flex;
+        flex-direction: column;
+        .text {
+          margin: auto;
+          width: 100%;
+          max-width: 700px;
+          &.text-1 {
+            padding: 30px 12px;
+            border-bottom: 3px solid #fff;
+          }
+          &.text-2 {
+            padding: 30px 12px;
+            border-bottom: 3px solid #fff;
+          }
+          &.text-3 {
+            padding: 30px 12px 0;
+          }
+        }
+      }
+      .apply-banner-btn {
+        margin: 20px 0;
+        .btn-img {
+          height: 54px;
+        }
+      }
+    }
   }
   .banner-row {
-    position: relative;
-    background-image: url("../asset/images/promoteCode/banner-1.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    max-width: 1620px;
-    margin: auto;
-    height: 760px;
-    .banner {
-      width: 100%;
-    }
-    .apply-btn {
-      position: absolute;
-      bottom: 24%;
-      left: 70%;
-    }
+    display: none;
   }
+
   .row-1 {
     margin: 36px auto;
     max-width: 900px;
@@ -492,13 +555,21 @@ export default {
     color: yellow;
   }
 }
+@media screen and (max-width: 998px) {
+  .promote-code-intro .banner-out {
+    padding-top: 55px;
+  }
+}
 @media screen and (max-width: 767px) {
   .promote-code-intro {
     line-height: 1.25;
+
+    .banner-out .desktop-banner {
+      display: none;
+    }
     .banner-row {
-      background-image: none;
+      display: block;
       background-color: #edeff3;
-      height: auto;
       .banner-text {
         display: block;
         margin: auto;
@@ -520,13 +591,8 @@ export default {
           max-width: 400px;
         }
       }
-      .apply-btn {
-        position: relative;
-        left: 0;
-        bottom: 0;
-        .btn-img {
-          max-height: 46px;
-        }
+      .apply-btn .btn-img {
+        max-height: 46px;
       }
       .banner {
         margin-top: -10px;
