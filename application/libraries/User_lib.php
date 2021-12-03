@@ -451,14 +451,15 @@ class User_lib {
      * @return mixed
      * @throws Exception
      */
-    public function parse_token($token, $request_method) {
+    public function parse_token($token, $request_method, $url) {
         $tokenData 	= AUTHORIZATION::getUserInfoByToken($token);
         if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time<time()) {
             throw new Exception('TOKEN_NOT_CORRECT', TOKEN_NOT_CORRECT);
         }
 
-        $user_info = $this->user_model->get($tokenData->id);
-        if($tokenData->auth_otp != $this->user_info->auth_otp){
+        $this->CI->load->model('user/user_model');
+        $user_info = $this->CI->user_model->get($tokenData->id);
+        if($tokenData->auth_otp != $user_info->auth_otp){
             throw new Exception('TOKEN_NOT_CORRECT', TOKEN_NOT_CORRECT);
         }
 
@@ -467,10 +468,10 @@ class User_lib {
         }
 
         if($request_method != 'get'){
-            $this->load->model('log/log_request_model');
-            $this->log_request_model->insert([
-                'method' 	=> $this->request->method,
-                'url'	 	=> $this->uri->uri_string(),
+            $this->CI->load->model('log/log_request_model');
+            $this->CI->log_request_model->insert([
+                'method' 	=> $request_method,
+                'url'	 	=> $url,
                 'investor'	=> $tokenData->investor,
                 'user_id'	=> $tokenData->id,
                 'agent'		=> $tokenData->agent,

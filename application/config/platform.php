@@ -1852,6 +1852,8 @@ $config['certifications'] = [
     1019 => ['id' => CERTIFICATION_COMPANYEMAIL, 'alias' => 'companyemail', 'name' => '公司電子信箱', 'status' => 1, 'description' => '驗證公司E-Mail位址', 'optional' => []],
     1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '法人對保', 'status' => 1, 'description' => '法人線上對保', 'optional' => []],
 
+    1021 => ['id' => CERTIFICATION_PASSBOOK, 'alias' => 'passbook', 'name' => '銀行存摺', 'status' => 1, 'description' => '提供銀行存摺', 'optional' => []],
+
     2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
 $config['certifications_sort'] = [
@@ -1892,7 +1894,8 @@ $config['certifications_sort'] = [
     CERTIFICATION_SALESDETAIL,
     CERTIFICATION_PROFILEJUDICIAL,
     CERTIFICATION_COMPANYEMAIL,
-    CERTIFICATION_JUDICIALGUARANTEE
+    CERTIFICATION_JUDICIALGUARANTEE,
+    CERTIFICATION_PASSBOOK
 ];
 
 //支援XML銀行列表

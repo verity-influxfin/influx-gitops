@@ -299,7 +299,8 @@ class User extends REST_Controller {
                     $result['error'] = TOKEN_NOT_CORRECT;
                     goto END;
                 }
-                $this->user_info = $this->user_lib->parse_token($token, $request_method);
+                $this->load->library('user_lib');
+                $personal_user_info = $this->user_lib->parse_token($token, $request_method, $this->uri->uri_string());
             }catch (Exception $e) {
                 $result['error'] = $e->getCode();
                 goto END;
@@ -307,8 +308,8 @@ class User extends REST_Controller {
 
             // 確認自然人需通過實名認證
             $this->load->library('Certification_lib');
-            $user_certification	= $this->certification_lib->get_certification_info($this->user_info->id, CERTIFICATION_IDCARD,
-                $this->user_info->investor);
+            $user_certification	= $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
+                $personal_user_info->investor);
             if(!$user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED) {
                 $result['error'] = NOT_VERIFIED;
                 goto END;
@@ -317,8 +318,8 @@ class User extends REST_Controller {
             // 確認自然人姓名與登記公司負責人一樣
             try {
                 $this->load->library('gcis_lib');
-                $can_register = $this->gcis_lib->is_business_responsible($input['tax_id'], $this->user_info->name);
-                if(!$can_register) {
+                $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $personal_user_info->name);
+                if(!$is_business_responsible) {
                     $result['error'] = NOT_IN_CHARGE;
                     goto END;
                 }
@@ -419,6 +420,20 @@ class User extends REST_Controller {
                     $this->user_model->insert($new_account_data);
                 }
 
+                $company_meta = [
+                    [
+                        'user_id' => $new_id,
+                        'meta_key' => 'company_responsible_user_id',
+                        'meta_value' => $personal_user_info->id,
+                    ],
+                    [
+                        'user_id' => $new_id,
+                        'meta_key' => 'company_responsible_check',
+                        'meta_value' => 1,
+                    ],
+                    ];
+                $this->load->model('user/user_meta_model');
+                $this->user_meta_model->insert_many($company_meta);
             // 新增自然人帳號
             } else {
 
@@ -581,6 +596,80 @@ END:
 				if($user_info->block_status != 0){
 				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
+
+                // 法人需判斷是否已綁定自然人帳號
+                if (isset($input['tax_id'])) {
+                    // 解析 JWT Token
+                    $personal_user_info = NULL;
+                    if(isset($this->input->request_headers()['request_token'])) {
+                        $this->load->library('user_lib');
+                        try {
+                            $token = $this->input->request_headers()['request_token'];
+                            $request_method = $this->request->method ?? "";
+
+                            if(!empty($token)) {
+                                $personal_user_info = $this->user_lib->parse_token($token, $request_method, $this->uri->uri_string());
+                            }
+
+                        }catch (Exception $e) {
+                            $this->response(array('result' => 'ERROR', 'error' => $e->getCode()));
+                        }
+                    }
+
+                    // 檢查法人是否有自然人帳號綁定
+                    $this->load->model('user/user_meta_model');
+                    $company_responsible_user = $this->user_meta_model->get_by([
+                        'user_id' => $user_info->id,
+                        'meta_key' => 'company_responsible_user_id'
+                    ]);
+                    if(!isset($company_responsible_user)) {
+                        if(!isset($personal_user_info)) {
+                            $this->response(array('result' => 'ERROR', 'error' => NO_RESPONSIBLE_USER_BIND));
+                        }else {
+                            $this->user_meta_model->insert([
+                                'user_id' => $user_info->id,
+                                'meta_key' => 'company_responsible_user_id',
+                                'meta_value' => $personal_user_info->id,
+                            ]);
+                        }
+                    }else{
+                        $personal_user_info = $this->user_model->get($company_responsible_user->meta_value);
+                        if(!isset($personal_user_info)) {
+                            $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
+                        }
+                    }
+
+                    // 確認自然人需通過實名認證
+                    $this->load->library('Certification_lib');
+                    $user_certification	= $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
+                        $investor);
+                    if(!$user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED) {
+                        $this->response(array('result' => 'ERROR', 'error' => NOT_VERIFIED));
+                    }
+
+                    // 確認自然人是否跟公司負責人姓名一致
+                    $company_responsible_check = $this->user_meta_model->get_by([
+                        'user_id' => $user_info->id,
+                        'meta_key' => 'company_responsible_check'
+                    ]);
+                    if(!isset($company_responsible_check)) {
+                        try {
+                            $this->load->library('gcis_lib');
+                            $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $personal_user_info->name);
+                            if(!$is_business_responsible) {
+                                $this->response(array('result' => 'ERROR', 'error' => NOT_IN_CHARGE));
+                            }else{
+                                $this->user_meta_model->insert([
+                                    'user_id' => $user_info->id,
+                                    'meta_key' => 'company_responsible_check',
+                                    'meta_value' => 1,
+                                ]);
+                            }
+                        }catch (Exception $e) {
+                            $this->response(array('result' => 'ERROR', 'error' => $e->getCode()));
+                        }
+                    }
+                }
 
                 $appIdentity = $this->input->request_headers()['User-Agent']??"";
 				if(strpos($appIdentity,"PuHey") !== FALSE) {
