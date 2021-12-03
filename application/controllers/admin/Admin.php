@@ -316,5 +316,39 @@ class Admin extends MY_Admin_Controller {
 			return $code;
 		}
 	}
+
+	//後台權限設置
+	public function role_list_setting()
+	{
+		$page_data = array();
+		$list = $this->role_model->get_all();
+		if (!empty($list)) {
+			$page_data['list'] = $list;
+			$page_data['status_list'] = $this->role_model->status_list;
+			$page_data['name_list'] = $this->admin_model->get_name_list();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/roles_list_setting', $page_data);
+		$this->load->view('admin/_footer');
+	}
+
+	//後台權限審查
+	public function role_list_review()
+	{
+		$page_data = array();
+		$list = $this->role_model->get_all();
+		if (!empty($list)) {
+			$page_data['list'] = $list;
+			$page_data['status_list'] = $this->role_model->status_list;
+			$page_data['name_list'] = $this->admin_model->get_name_list();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/roles_list_review', $page_data);
+		$this->load->view('admin/_footer');
+	}
 }
 ?>

@@ -85,6 +85,8 @@ $config['admin_menu'] = [
     'Admin' => [
         'parent_name' => '後台人員管理',
         'role_list' => '權限管理',
+        'role_list_setting' => '權限設置',
+        'role_list_review' => '權限審查',
         'index' => '人員列表',
     ],
     'Sales' => [
