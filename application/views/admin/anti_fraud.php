@@ -124,7 +124,7 @@
 	<div id="anti-fraud-app">
 		<div class="row">
 			<div class="col-12">
-				<h1 class="page-header">反詐欺管理</h1>
+				<h1 class="page-header">反詐欺管理指標</h1>
 			</div>
 		</div>
 		<div class="row" id="panel"></div>
@@ -136,12 +136,12 @@
 			<div class="d-flex align-items-center">
 				<div class="mr-2 head-item-title">時間：</div>
 				<div class="input-group input">
-					<input type="text" data-toggle="datepicker" class="form-control input" id="start-time" />
+					<input type="text" data-toggle="datepicker" class="datepicker form-control input" id="start-time" />
 				</div>
 				<span class="mx-2">~</span>
 				<div class="input-group input">
-					<input type="text" data-toggle="datepicker" class="form-control" id="end-time" aria-label="Default"
-						aria-describedby="inputGroup-sizing-default" />
+					<input type="text" data-toggle="datepicker" class="datepicker form-control" id="end-time"
+						aria-label="Default" aria-describedby="inputGroup-sizing-default" />
 				</div>
 			</div>
 			<div class="d-flex align-items-center mt-4">
@@ -365,6 +365,16 @@
 		parent.removeChild(child);
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
+		console.log(ans)
+		if (ans.length === 0) {
+			// no data
+			const data = document.querySelector("#result-rows");
+			console.log(data)
+			data.insertAdjacentHTML('beforeend', `
+				<div class="text-center">查無資料</div>
+			`
+			)
+		}
 
 		// insert data to template
 		ans.forEach(x => {
@@ -479,6 +489,8 @@
 	}
 
 	function getRuleAll() {
+		// trigger datepicker
+		$('.datepicker').datepicker()
 		return fetch(apiUrl + "/rule_all")
 			.then((x) => x.json())
 			.then(({ response }) => {
