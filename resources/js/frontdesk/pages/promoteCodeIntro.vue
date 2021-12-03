@@ -1,10 +1,40 @@
 <template>
   <div class="promote-code-intro">
     <div class="banner-out">
-      <div class="row no-gutters banner-row">
-        <router-link to="/borrowLink" target="_blank">
-          <button class="btn apply-btn">立即加入</button>
-        </router-link>
+      <div class="desktop-banner d-none d-sm-flex"></div>
+      <div class="banner-row">
+        <img
+          src="../asset/images/promoteCode/phone-text-1.png"
+          class="banner-text text-1"
+          alt=""
+        />
+        <img
+          src="../asset/images/promoteCode/phone-text-2.png"
+          class="banner-text text-2"
+          alt=""
+        />
+        <img
+          src="../asset/images/promoteCode/phone-text-3.png"
+          class="banner-text text-3"
+          alt=""
+        />
+        <div class="d-flex">
+          <router-link to="/borrowLink" target="_blank" class="mx-auto">
+            <button class="btn apply-btn apply-banner-btn">
+              <img
+                src="../asset/images/promoteCode/banner-btn-phone.svg"
+                class="btn-img"
+                alt=""
+              />
+            </button>
+          </router-link>
+        </div>
+
+        <img
+          src="../asset/images/promoteCode/banner-1.png"
+          class="banner"
+          alt=""
+        />
       </div>
     </div>
 
@@ -240,7 +270,7 @@ export default {
   }
   .banner-row {
     position: relative;
-    background-image: url("../asset/images/promoteCode/banner.jpg");
+    background-image: url("../asset/images/promoteCode/banner-1.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center bottom;
@@ -462,49 +492,45 @@ export default {
     color: yellow;
   }
 }
-@media screen and (max-width: 1420px) {
-  .promote-code-intro {
-      .banner-out{
-          padding-top: 64px;
-      }
-    .banner-row {
-      height: 650px;
-    }
-  }
-}
-@media screen and (max-width: 1280px) {
-  .promote-code-intro {
-      .banner-out{
-          padding-top: 44px;
-      }
-    .banner-row {
-      height: 550px;
-    }
-  }
-}
-@media screen and (max-width: 1023px) {
-  .promote-code-intro {
-      .banner-out{
-          padding-top: 64px;
-      }
-    .banner-row {
-      height: 350px;
-      .apply-btn{
-          bottom: 14%;
-          left: 65%;
-      }
-    }
-  }
-}
 @media screen and (max-width: 767px) {
   .promote-code-intro {
     line-height: 1.25;
     .banner-row {
-      background-image: url("../asset/images/promoteCode/banner-phone.jpg");
-      height: 555px;
+      background-image: none;
+      background-color: #edeff3;
+      height: auto;
+      .banner-text {
+        display: block;
+        margin: auto;
+        &.text-1 {
+          padding: 35px 12px 30px;
+          border-bottom: 3px solid #fff;
+          width: 95%;
+          max-width: 400px;
+        }
+        &.text-2 {
+          padding: 30px 12px;
+          border-bottom: 3px solid #fff;
+          width: 95%;
+          max-width: 400px;
+        }
+        &.text-3 {
+          padding: 30px 12px;
+          width: 95%;
+          max-width: 400px;
+        }
+      }
       .apply-btn {
-        left: 33%;
-        bottom: 51%;
+        position: relative;
+        left: 0;
+        bottom: 0;
+        .btn-img {
+          max-height: 46px;
+        }
+      }
+      .banner {
+        margin-top: -10px;
+        max-width: 100%;
       }
     }
     .row-1 {
@@ -629,6 +655,4 @@ export default {
     }
   }
 }
-
-
 </style>
