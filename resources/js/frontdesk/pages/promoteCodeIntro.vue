@@ -1,10 +1,73 @@
 <template>
   <div class="promote-code-intro">
     <div class="banner-out">
-      <div class="row no-gutters banner-row">
-        <router-link to="/borrowLink" target="_blank">
-          <button class="btn apply-btn">立即加入</button>
-        </router-link>
+      <div class="desktop-banner">
+        <div class="col-6 d-flex justify-content-end">
+          <img src="../asset/images/promoteCode/banner-1.png" class="banner" />
+        </div>
+        <div class="col-6">
+          <div class="banner-content">
+            <div class="texts">
+              <img
+                src="../asset/images/promoteCode/banner-text-1.svg"
+                class="text text-1"
+              />
+              <img
+                src="../asset/images/promoteCode/banner-text-2.svg"
+                alt="不花錢、不進貨、不風吹雨打 滑滑手機，分享賺獎金 手持QR code 賺錢不是夢 普匯手機就像你的行動提款機"
+                class="text text-2"
+              />
+              <img
+                src="../asset/images/promoteCode/banner-text-3.svg"
+                alt="普匯•你的手機ATM"
+                class="text text-3"
+              />
+            </div>
+            <div class="d-flex">
+              <router-link to="/borrowLink" target="_blank" class="mx-auto">
+                <button class="btn apply-btn apply-banner-btn">
+                  <img
+                    src="../asset/images/promoteCode/banner-btn.svg"
+                    class="btn-img"
+                    alt="普匯•你的手機ATM"
+                  />
+                </button>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="banner-row">
+        <img
+          src="../asset/images/promoteCode/phone-text-1.png"
+          class="banner-text text-1"
+          alt="智匯分享 人人有獎"
+        />
+        <img
+          src="../asset/images/promoteCode/phone-text-2.png"
+          class="banner-text text-2"
+          alt="不花錢、不進貨、不風吹雨打 滑滑手機，分享賺獎金 手持QR code 賺錢不是夢 普匯手機就像你的行動提款機"
+        />
+        <img
+          src="../asset/images/promoteCode/phone-text-3.png"
+          class="banner-text text-3"
+          alt="普匯•你的手機ATM"
+        />
+        <div class="d-flex">
+          <router-link to="/borrowLink" target="_blank" class="mx-auto">
+            <button class="btn apply-btn apply-banner-btn">
+              <img
+                src="../asset/images/promoteCode/banner-btn.svg"
+                class="btn-img"
+              />
+            </button>
+          </router-link>
+        </div>
+
+        <img
+          src="../asset/images/promoteCode/banner-1.png"
+          class="banner"
+        />
       </div>
     </div>
 
@@ -34,7 +97,6 @@
             <div class="coop-icon">
               <img
                 src="../asset/images/promoteCode/personal.svg"
-                alt=""
                 class="mx-auto d-block"
                 style="width: 55px"
               />
@@ -53,7 +115,6 @@
             <div class="coop-icon">
               <img
                 src="../asset/images/promoteCode/company.svg"
-                alt=""
                 class="mx-auto d-block"
                 style="width: 55px"
               />
@@ -80,7 +141,7 @@
             <img
               src="../asset/images/promoteCode/1.png"
               style="width: 250px"
-              alt=""
+              alt="簡單下載註冊"
             />
           </div>
           <div class="step-item-info">
@@ -94,7 +155,7 @@
             <img
               src="../asset/images/promoteCode/2.png"
               style="width: 250px"
-              alt=""
+              alt="完成線上認證"
             />
           </div>
           <div class="step-item-info">
@@ -108,7 +169,7 @@
             <img
               src="../asset/images/promoteCode/3.png"
               style="width: 250px"
-              alt=""
+              alt="開始賺取獎金"
             />
           </div>
 
@@ -129,7 +190,7 @@
               <img
                 src="../asset/images/promoteCode/1.png"
                 style="width: 250px"
-                alt=""
+                alt="簡單下載註冊"
               />
             </div>
             <div class="step-item-info info-1">
@@ -143,7 +204,7 @@
               <img
                 src="../asset/images/promoteCode/2.png"
                 style="width: 250px"
-                alt=""
+                alt="完成線上認證"
               />
             </div>
             <div class="step-item-info info-2">
@@ -157,7 +218,7 @@
               <img
                 src="../asset/images/promoteCode/3.png"
                 style="width: 250px"
-                alt=""
+                alt="開始賺取獎金"
               />
             </div>
 
@@ -237,25 +298,48 @@ export default {
   line-height: 1.25;
   .banner-out {
     background-color: #edeff3;
+    .desktop-banner {
+      display: flex;
+      .banner {
+        width: 100%;
+        max-width: 760px;
+      }
+      .banner-content {
+        width: fit-content;
+        margin: 0 20px;
+      }
+      .texts {
+        display: flex;
+        flex-direction: column;
+        .text {
+          margin: auto;
+          width: 100%;
+          max-width: 700px;
+          &.text-1 {
+            padding: 30px 12px;
+            border-bottom: 3px solid #fff;
+          }
+          &.text-2 {
+            padding: 30px 12px;
+            border-bottom: 3px solid #fff;
+          }
+          &.text-3 {
+            padding: 30px 12px 0;
+          }
+        }
+      }
+      .apply-banner-btn {
+        margin: 20px 0;
+        .btn-img {
+          height: 54px;
+        }
+      }
+    }
   }
   .banner-row {
-    position: relative;
-    background-image: url("../asset/images/promoteCode/banner.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center bottom;
-    max-width: 1620px;
-    margin: auto;
-    height: 760px;
-    .banner {
-      width: 100%;
-    }
-    .apply-btn {
-      position: absolute;
-      bottom: 24%;
-      left: 70%;
-    }
+    display: none;
   }
+
   .row-1 {
     margin: 36px auto;
     max-width: 900px;
@@ -462,49 +546,48 @@ export default {
     color: yellow;
   }
 }
-@media screen and (max-width: 1420px) {
-  .promote-code-intro {
-      .banner-out{
-          padding-top: 64px;
-      }
-    .banner-row {
-      height: 650px;
-    }
-  }
-}
-@media screen and (max-width: 1280px) {
-  .promote-code-intro {
-      .banner-out{
-          padding-top: 44px;
-      }
-    .banner-row {
-      height: 550px;
-    }
-  }
-}
-@media screen and (max-width: 1023px) {
-  .promote-code-intro {
-      .banner-out{
-          padding-top: 64px;
-      }
-    .banner-row {
-      height: 350px;
-      .apply-btn{
-          bottom: 14%;
-          left: 65%;
-      }
-    }
+@media screen and (max-width: 998px) {
+  .promote-code-intro .banner-out {
+    padding-top: 55px;
   }
 }
 @media screen and (max-width: 767px) {
   .promote-code-intro {
     line-height: 1.25;
+
+    .banner-out .desktop-banner {
+      display: none;
+    }
     .banner-row {
-      background-image: url("../asset/images/promoteCode/banner-phone.jpg");
-      height: 555px;
-      .apply-btn {
-        left: 33%;
-        bottom: 51%;
+      display: block;
+      background-color: #edeff3;
+      .banner-text {
+        display: block;
+        margin: auto;
+        &.text-1 {
+          padding: 35px 12px 30px;
+          border-bottom: 3px solid #fff;
+          width: 95%;
+          max-width: 400px;
+        }
+        &.text-2 {
+          padding: 30px 12px;
+          border-bottom: 3px solid #fff;
+          width: 95%;
+          max-width: 400px;
+        }
+        &.text-3 {
+          padding: 30px 12px;
+          width: 95%;
+          max-width: 400px;
+        }
+      }
+      .apply-btn .btn-img {
+        max-height: 46px;
+      }
+      .banner {
+        margin-top: -10px;
+        max-width: 100%;
       }
     }
     .row-1 {
@@ -629,6 +712,4 @@ export default {
     }
   }
 }
-
-
 </style>
