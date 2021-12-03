@@ -217,8 +217,10 @@
 </template>
 
 <script>
-	let antiFraudData = [1, 3, 2, 4];
+	let antiFraudData = [];
 	let orderBy = null;
+	let searching = false
+	let loading = false
 	const faIcons = [];
 	const apiUrl = "/api/v2/AntiFraud/";
 	let typeIds = [];
@@ -250,6 +252,10 @@
 	window.addEventListener("load", onLoad());
 	async function doSearch() {
 		// remove last result
+		if(loading){
+			return
+		}
+		loading = true
 		removeDatas()
 		toggleLoading()
 		//do search
@@ -295,6 +301,7 @@
 		//inset result
 		resultData.forEach((x) => insertData(x))
 		antiFraudData = [...resultData]
+		loading = false
 	}
 
 	function insertData({ id, rule, duration, ruleId, productId, efficiency }) {
@@ -347,8 +354,17 @@
 		const template = document.querySelector("template#default-panel");
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
+		// trigger datepicker
+		if ($('.datepicker').datepicker) {
+			$('.datepicker').datepicker()
+		}
 	}
 	async function insertResultPanel(e) {
+		if (searching) {
+			return
+		}
+		searching = true
+		antiFraudData = []
 		const parent = document.querySelector("#panel");
 		const child = parent.querySelector(".panel.panel-default");
 		const template = document.querySelector("template#result-panel");
@@ -380,7 +396,7 @@
 		ans.forEach(x => {
 			insertResultDataRow(x)
 		})
-
+		searching = false
 	}
 
 	function insertResultDataRow(datas) {
@@ -436,6 +452,9 @@
 	function onSort() {
 		//type = 'desc','asc',null
 		let locData = [...antiFraudData];
+		if (locData.length < 1) {
+			return
+		}
 		// display:none faIcons
 		faIcons.forEach((x) => {
 			x.classList.remove("d-none");
@@ -489,8 +508,6 @@
 	}
 
 	function getRuleAll() {
-		// trigger datepicker
-		$('.datepicker').datepicker()
 		return fetch(apiUrl + "/rule_all")
 			.then((x) => x.json())
 			.then(({ response }) => {
