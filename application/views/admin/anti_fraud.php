@@ -381,11 +381,9 @@
 		parent.removeChild(child);
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
-		console.log(ans)
 		if (ans.length === 0) {
 			// no data
 			const data = document.querySelector("#result-rows");
-			console.log(data)
 			data.insertAdjacentHTML('beforeend', `
 				<div class="text-center">查無資料</div>
 			`
@@ -405,7 +403,6 @@
 		const parent = document.querySelector("#result-rows");
 		const clone = document.importNode(template.content, true);
 		parent.appendChild(clone);
-		// console.log(datas)
 		datas.forEach(({ key, label, value }) => {
 			if (label) {
 				insertResultDataItem({ label, value });
