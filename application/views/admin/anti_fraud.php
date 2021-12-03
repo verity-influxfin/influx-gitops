@@ -74,6 +74,7 @@
 	}
 
 	.data-item.value {
+		padding: 0 15px;
 		max-height: 80px;
 		overflow: auto;
 	}
@@ -88,10 +89,31 @@
 	}
 
 	.result-data-row {
-		display: grid;
-		gap: 0 10px;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		margin-top: 18px;
+		display: flex;
 	}
+
+	.result-data-item {
+		flex: 1 0 auto;
+		max-width: 30%;
+	}
+
+	.result-header-item {
+		text-align: center;
+		padding: 6px 0;
+		background: rgba(196, 196, 196, 0.5);
+		flex: 0 0 16%;
+		padding: 5px 12px;
+	}
+
+	.result-value-item {
+		padding: 5px 12px;
+		text-align: center;
+		max-height: 80px;
+		overflow: auto;
+		overflow-wrap: anywhere;
+	}
+
 
 	.result-date {
 		flex: 0 0 25%;
@@ -204,9 +226,9 @@
 	</div>
 </template>
 <template id="result-data-item">
-	<div class="data-item">
-		<div class="header-item key"></div>
-		<div class="data-item value"></div>
+	<div class="result-data-item">
+		<div class="result-header-item key"></div>
+		<div class="result-value-item value"></div>
 	</div>
 </template>
 <template id="result-data-row">
@@ -252,7 +274,7 @@
 	window.addEventListener("load", onLoad());
 	async function doSearch() {
 		// remove last result
-		if(loading){
+		if (loading) {
 			return
 		}
 		loading = true
@@ -435,8 +457,7 @@
 
 		} else {
 			if (label.includes('時間')) {
-				const d = new Date(value * 1000)
-				v.textContent = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+				return
 			} else {
 				v.textContent = value.toString()
 			}
