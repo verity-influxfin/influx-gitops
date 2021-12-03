@@ -3,28 +3,23 @@
     <div class="banner-out">
       <div class="desktop-banner">
         <div class="col-6 d-flex justify-content-end">
-          <img
-            src="../asset/images/promoteCode/banner-1.png"
-            class="banner"
-            alt=""
-          />
+          <img src="../asset/images/promoteCode/banner-1.png" class="banner" />
         </div>
         <div class="col-6">
           <div class="banner-content">
             <div class="texts">
               <img
                 src="../asset/images/promoteCode/banner-text-1.svg"
-                alt=""
                 class="text text-1"
               />
               <img
                 src="../asset/images/promoteCode/banner-text-2.svg"
-                alt=""
+                alt="不花錢、不進貨、不風吹雨打 滑滑手機，分享賺獎金 手持QR code 賺錢不是夢 普匯手機就像你的行動提款機"
                 class="text text-2"
               />
               <img
                 src="../asset/images/promoteCode/banner-text-3.svg"
-                alt=""
+                alt="普匯•你的手機ATM"
                 class="text text-3"
               />
             </div>
@@ -34,7 +29,7 @@
                   <img
                     src="../asset/images/promoteCode/banner-btn.svg"
                     class="btn-img"
-                    alt=""
+                    alt="普匯•你的手機ATM"
                   />
                 </button>
               </router-link>
@@ -46,17 +41,17 @@
         <img
           src="../asset/images/promoteCode/phone-text-1.png"
           class="banner-text text-1"
-          alt=""
+          alt="智匯分享 人人有獎"
         />
         <img
           src="../asset/images/promoteCode/phone-text-2.png"
           class="banner-text text-2"
-          alt=""
+          alt="不花錢、不進貨、不風吹雨打 滑滑手機，分享賺獎金 手持QR code 賺錢不是夢 普匯手機就像你的行動提款機"
         />
         <img
           src="../asset/images/promoteCode/phone-text-3.png"
           class="banner-text text-3"
-          alt=""
+          alt="普匯•你的手機ATM"
         />
         <div class="d-flex">
           <router-link to="/borrowLink" target="_blank" class="mx-auto">
@@ -64,7 +59,6 @@
               <img
                 src="../asset/images/promoteCode/banner-btn.svg"
                 class="btn-img"
-                alt=""
               />
             </button>
           </router-link>
@@ -73,7 +67,6 @@
         <img
           src="../asset/images/promoteCode/banner-1.png"
           class="banner"
-          alt=""
         />
       </div>
     </div>
@@ -104,7 +97,6 @@
             <div class="coop-icon">
               <img
                 src="../asset/images/promoteCode/personal.svg"
-                alt=""
                 class="mx-auto d-block"
                 style="width: 55px"
               />
@@ -123,7 +115,6 @@
             <div class="coop-icon">
               <img
                 src="../asset/images/promoteCode/company.svg"
-                alt=""
                 class="mx-auto d-block"
                 style="width: 55px"
               />
@@ -150,7 +141,7 @@
             <img
               src="../asset/images/promoteCode/1.png"
               style="width: 250px"
-              alt=""
+              alt="簡單下載註冊"
             />
           </div>
           <div class="step-item-info">
@@ -164,7 +155,7 @@
             <img
               src="../asset/images/promoteCode/2.png"
               style="width: 250px"
-              alt=""
+              alt="完成線上認證"
             />
           </div>
           <div class="step-item-info">
@@ -178,7 +169,7 @@
             <img
               src="../asset/images/promoteCode/3.png"
               style="width: 250px"
-              alt=""
+              alt="開始賺取獎金"
             />
           </div>
 
@@ -199,7 +190,7 @@
               <img
                 src="../asset/images/promoteCode/1.png"
                 style="width: 250px"
-                alt=""
+                alt="簡單下載註冊"
               />
             </div>
             <div class="step-item-info info-1">
@@ -213,7 +204,7 @@
               <img
                 src="../asset/images/promoteCode/2.png"
                 style="width: 250px"
-                alt=""
+                alt="完成線上認證"
               />
             </div>
             <div class="step-item-info info-2">
@@ -227,7 +218,7 @@
               <img
                 src="../asset/images/promoteCode/3.png"
                 style="width: 250px"
-                alt=""
+                alt="開始賺取獎金"
               />
             </div>
 
@@ -313,9 +304,9 @@ export default {
         width: 100%;
         max-width: 760px;
       }
-      .banner-content{
-          width: fit-content;
-          margin:0 20px;
+      .banner-content {
+        width: fit-content;
+        margin: 0 20px;
       }
       .texts {
         display: flex;
