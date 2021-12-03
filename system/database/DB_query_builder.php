@@ -290,6 +290,7 @@ abstract class CI_DB_query_builder extends CI_DB_driver {
 	 */
 	public function select($select = '*', $escape = NULL)
 	{
+        $this->qb_for_update = FALSE;
 		if (is_string($select))
 		{
 			$select = explode(',', $select);
@@ -330,8 +331,9 @@ abstract class CI_DB_query_builder extends CI_DB_driver {
      */
     public function select_for_update($select = '*', $escape = NULL)
     {
+        $r = $this->select($select, $escape);
         $this->qb_for_update = TRUE;
-        return $this->select($select, $escape);
+        return $r;
     }
 	// --------------------------------------------------------------------
 

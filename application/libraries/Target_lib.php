@@ -49,8 +49,24 @@ class Target_lib
     public function signing_target($target_id, $data, $user_id = 0)
     {
         if ($target_id) {
+            $this->CI->load->model('log/Log_targetschange_model');
             $rs = $this->CI->target_model->update($target_id, $data);
             $this->insert_change_log($target_id, $data, $user_id);
+
+            $target_change	= $this->CI->Log_targetschange_model->order_by('created_at','desc')->get_by(array(
+                'target_id'		=> $target_id,
+                'status'		=> TARGET_WAITING_SIGNING,
+            ));
+            if(isset($target_change)) {
+                $this->CI->load->library('Notification_lib');
+                $eventDate 	= date("Y-m-d H:i:s", strtotime("+3 day", $target_change->created_at));
+                if($eventDate >= date("Y-m-d H:i:s")) {
+                    $target = $this->CI->target_model->get_by(['id' => $target_id]);
+                    if(isset($target) && in_array($target->product_id, [3,4])) {
+                        $this->CI->notification_lib->obank_event_fast_signing($target);
+                    }
+                }
+            }
             return $rs;
         }
         return false;
@@ -400,7 +416,14 @@ class Target_lib
                                     $opinion = '需二審查核';
                                 }
                                 $tempData = json_decode($target->target_data,true);
-                                $param['target_data'] = json_encode(array_replace_recursive($tempData, is_array($targetData)?$targetData:[]));
+                                if(isset($tempData) && !empty($tempData)) {
+                                    $targetData = json_decode(json_encode($targetData), true);
+                                    $tempData = array_replace_recursive($tempData, is_array($targetData) ? $targetData : []);
+                                } else {
+                                    $tempData = $targetData;
+                                }
+                                $param['target_data'] = json_encode($tempData);
+
                                 $rs = $this->CI->target_model->update($target->id, $param);
 
                                 if(!$renew) {
@@ -411,7 +434,7 @@ class Target_lib
 
                                 if ($rs && $msg) {
                                     $creditSheet->archive($credit);
-                                    $this->CI->notification_lib->approve_target($user_id, '1', $loan_amount, $subloan_status);
+                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
                                 }
                                 $this->insert_change_log($target->id, $param);
                                 return true;
@@ -472,7 +495,8 @@ class Target_lib
 
     private function approve_target_fail($user_id, $target, $maxAmountAlarm = false , $remark = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
     {
-        $remark .= ($maxAmountAlarm ? '.' : '。');
+        if($remark == '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務')
+            $remark .= ($maxAmountAlarm ? '.' : '。');
         $param = [
             'loan_amount' => 0,
             'status' => '9',
@@ -480,7 +504,10 @@ class Target_lib
         ];
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
-        $this->CI->notification_lib->approve_target($user_id, '9', 0,false,$remark);
+        $this->CI->notification_lib->approve_target($user_id, '9', $target, 0, false, $remark);
+        if(strpos($remark, "經AI系統綜合評估後") !== false && in_array($target->product_id, [3, 4])) {
+            $this->CI->notification_lib->obank_event_approve_failed($target);
+        }
 
         $guarantors = $this->get_associates_user_data($target->id, 'all', 1, false);
         if($guarantors){
@@ -1647,6 +1674,8 @@ class Target_lib
                     foreach ($targets as $target_id => $value) {
                     	if(!array_key_exists($value->product_id, $product_list))
                     		continue;
+                        $failedCertificationList = [];
+                        $pendingCertificationCount = 0;
                         $stage_cer = 0;
                         $product = $product_list[$value->product_id];
                         $sub_product_id = $value->sub_product_id;
@@ -1691,6 +1720,7 @@ class Target_lib
                             $company = $value->product_id >= 1000 ? 1 : 0;
 
                             $certifications = $this->CI->certification_lib->get_status($value->user_id, 0, $company, false, $value);
+
                             $finish = true;
                             $finish_stage_cer = [];
                             $cer = [];
@@ -1698,12 +1728,14 @@ class Target_lib
                             $second_instance_check = false; // 進待二審
                             foreach ($certifications as $key => $certification) {
                                 if ($finish && in_array($certification['id'], $product_certification)) {
+
                                     if ($certification['user_status'] != '1') {
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
                                             // 微企貸對保不驗證
-                                            if($value->product_id != 1002 || $certification['id'] != 1020){
+                                            // 加入產品非必要項目不驗證結構
+                                            if(!isset($product_list[$value->product_id]['option_certifications']) || !in_array($certification['id'],$product_list[$value->product_id]['option_certifications'])){
                                                 $finish = false;
                                             }
                                         }
@@ -1752,7 +1784,7 @@ class Target_lib
                             }
 
                             if ($finish) {
-                                !isset($targetData) ? $targetData = new stdClass() : '';
+                                !is_object($targetData) ? $targetData = (object)($targetData) : $targetData;
                                 $targetData->certification_id = $cer;
                                 $count++;
 								// 判斷是否為微企貸
@@ -1788,6 +1820,13 @@ class Target_lib
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
                                 $create_date = date('Y-m-d', $value->created_at);
+
+                                // 7天尚未提交資料時觸發王道活動通知
+                                $notification_date = date('Y-m-d H:i:s', strtotime('+7 day', $value->created_at));
+                                if(in_array($value->product_id, [3, 4]) && $notification_date >= date('Y-m-d H:i:s') && $notification_date <= date('Y-m-d H:i:s',strtotime('+1 hour'))) {
+                                    $this->CI->notification_lib->obank_event_pending_too_long($value);
+                                }
+
                                 if ($limit_date > $create_date) {
                                     $count++;
                                     $param = [
@@ -1803,7 +1842,6 @@ class Target_lib
                                         $this->CI->order_model->update($value->order_id, ['status' => 0]);
                                     }
                                 }
-
                             }
                         }
                         $this->CI->target_model->update($value->id, ['script_status' => 0]);

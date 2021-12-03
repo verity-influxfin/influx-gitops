@@ -6,11 +6,13 @@ class User_certification_model extends MY_Model
 	public $before_create 	= array( 'before_data_c' );
 	public $before_update 	= array( 'before_data_u' );
 	public $status_list   	= array(
-		0 => "待驗證" ,
-		1 => "驗證成功" ,
-		2 => "驗證失敗" ,
-		3 => "待人工審核" ,
-		4 => "未完成填寫" ,
+        CERTIFICATION_STATUS_PENDING_TO_VALIDATE => "待驗證" ,
+        CERTIFICATION_STATUS_SUCCEED => "驗證成功" ,
+        CERTIFICATION_STATUS_FAILED => "驗證失敗" ,
+        CERTIFICATION_STATUS_PENDING_TO_REVIEW => "待人工審核" ,
+        CERTIFICATION_STATUS_NOT_COMPLETED => "未完成填寫" ,
+        CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION => "待資料檢核" ,
+        CERTIFICATION_STATUS_AUTHENTICATED => "待送出審核" ,
 	);
 	public $investor_list  	= array(
 		0 =>	"借款端",

@@ -94,9 +94,11 @@ class Sendemail
 				$certification = $this->CI->user_certification_model->get($rs->certification_id);
 				if($certification && $certification->status==0){
 					$this->CI->load->library('Certification_lib');
-                    // to do : 學生認證轉待驗證(未來加入sip後要改掉)
                     if($certification->certification_id == 2){
-                        $this->CI->user_certification_model->update($rs->certification_id,['status'=>3]);
+                        $content = json_decode($certification->content,true);
+                        $content['email_verify_status'] = true;
+                        $content['email_verify_time'] = time();
+                        $this->CI->user_certification_model->update($rs->certification_id,['content'=>json_encode($content)]);
                     }else{
                         $this->CI->certification_lib->set_success($rs->certification_id);
                     }
@@ -282,6 +284,32 @@ class Sendemail
             return $this->send($mail, $title, $content);
         }
         return false;
+    }
+
+    /**
+     * 寄送推薦碼獎勵的勞務報酬單
+     * @param $mail
+     * @param $name
+     * @param $id_number
+     * @param $phone
+     * @param $address
+     * @param $time
+     * @param $bank_account
+     * @param $amount
+     * @param $income_tax
+     * @param $health_premium
+     * @param $net_amount
+     * @return bool
+     */
+    public function send_promote_receipt($mail, $name, $id_number, $phone, $address, $time, $bank_account, $amount, $income_tax, $health_premium, $net_amount): bool
+    {
+	    $title = "勞務報酬單";
+        $content 		= $this->CI->parser->parse('email/promote_receipt', [
+            "name" => $name, "id_number" => $id_number, "phone" => $phone, "address" => $address, "time" => $time,
+            "bank_account" => $bank_account, "amount" => $amount, "income_tax" => $income_tax, "health_premium" => $health_premium,
+            "net_amount" => $net_amount
+            ],TRUE);
+        return $this->send($mail,$title,$content);
     }
 
 }

@@ -7,6 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Certification_lib{
 
 	public $certification;
+    private $notification_list;
 
 	public function __construct()
     {
@@ -17,6 +18,15 @@ class Certification_lib{
 		$this->CI->load->model('log/log_image_model');
 		$this->CI->load->library('Notification_lib');
 		$this->certification = $this->CI->config->item('certifications');
+        $this->notification_list = [];
+    }
+
+    public function justLegalizeCertification($status) {
+        return $status == CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION;
+    }
+
+    public function canVerify($status) {
+        return in_array($status, [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_AUTHENTICATED]);
     }
 
     /**
@@ -25,7 +35,7 @@ class Certification_lib{
      * @param int[] $findStatusList
      * @return int[]|string[]
      */
-    public function filterCertIdsInStatusList($userCertifications, $findStatusList=[1]) {
+    public function filterCertIdsInStatusList($userCertifications, array $findStatusList=[CERTIFICATION_STATUS_SUCCEED]) {
         return array_unique(array_keys(array_filter($userCertifications,
             function ($x) use ($findStatusList) { return (is_array($x) && in_array($x['status'], $findStatusList))
                 || (is_object($x) && in_array($x->status, $findStatusList)); })));
@@ -65,7 +75,9 @@ class Certification_lib{
 				'certification_id'	=> $certification_id,
 				'investor'			=> $investor,
 			);
-            !$get_fail ? $param['status'] = [0,1,3,4] : '';
+            !$get_fail ? $param['status'] = [CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+                CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                CERTIFICATION_STATUS_NOT_COMPLETED, CERTIFICATION_STATUS_AUTHENTICATED] : '';
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
 			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDCARD,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
@@ -80,6 +92,7 @@ class Certification_lib{
                     $certification->created_at 			= intval($certification->created_at);
                     $certification->updated_at 			= intval($certification->updated_at);
                     $certification->content = json_decode($certification->content,true);
+                    $certification->remark              = isJson($certification->remark) ? json_decode($certification->remark,true) : $certification->remark;
                     return $certification;
                 }
 			}
@@ -130,12 +143,93 @@ class Certification_lib{
 					if($rs){
 						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
 					}
+
+                    // 驗證推薦碼
+                    $this->verify_promote_code($info, FALSE);
+
 					return $rs;
 				}
 			}
 		}
 		return false;
 	}
+
+    /**
+     * 驗證推薦碼申請
+     * @param $info: 徵信項目
+     * @param $failed: 徵信項目是否失敗
+     * @return false
+     */
+    public function verify_promote_code($info, $failed): bool
+    {
+        $promote_cert_list = $this->CI->config->item('promote_code_certs');
+        if(in_array($info->certification_id, $promote_cert_list)) {
+            $this->CI->load->model('user/user_qrcode_model');
+            $this->CI->load->model('user/user_certification_model');
+            $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+
+            if(isset($promoteCode)) {
+                $this->CI->load->library('Notification_lib');
+                if($failed) {
+                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                        'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                    ]);
+                    $this->CI->notification_lib->certification($info->user_id, $info->investor,"推薦有賞",2);
+                } else {
+                    $param = array(
+                        'user_id' => $info->user_id,
+                        'certification_id' => $promote_cert_list,
+                        'investor' => $info->investor,
+                        'status' => [1]
+                    );
+                    $certList = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
+                    $certifications = array_reduce($certList, function ($list, $item) {
+                        if (!isset($list[$item->certification_id]))
+                            $list[$item->certification_id] = $item;
+                        return $list;
+                    }, []);
+
+                    if (count($certifications) != count($promote_cert_list)) {
+                        return FALSE;
+                    }
+
+                    $settings = json_decode($promoteCode->settings, true);
+                    $settings['certification_id'] = array_column($certifications, 'id');
+                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                        'settings' => json_encode($settings),
+                        'status' => PROMOTE_STATUS_AVAILABLE,
+                    ]);
+                    $this->CI->load->library('contract_lib');
+                    $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
+                    if(isset($raw_contract)) {
+                        $content = json_decode($certifications[CERTIFICATION_IDCARD]->content, true);
+                        // PROMOTE_GENERAL_CONTRACT_TYPE_NAME
+                        $contract = json_decode($raw_contract->content, true);
+                        $contract[0] = $content['name'];
+                        $contract[6] = $content['name'];
+                        $contract[7] = $content['name'];
+                        $contract[8] = $content['address'];
+                        $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
+                    }
+
+                    // 將銀行帳號改為待驗證
+                    $this->CI->load->model('user/user_bankaccount_model');
+                    $bank_account = $this->CI->user_bankaccount_model->get_by([
+                        'status'	=> 1,
+                        'investor'	=> $info->investor,
+                        'verify'	=> 0,
+                        'user_id'	=> $info->user_id
+                    ]);
+                    if($bank_account)
+                        $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+
+                    $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 1);
+                }
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
 
 	public function verify($info){
 		if($info && $info->status != 1){
@@ -198,7 +292,10 @@ class Certification_lib{
                         }
                     }
 
-					$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
+                    $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$fail);
+
+                    // 驗證推薦碼失敗
+                    $this->verify_promote_code($info, TRUE);
 				}
 				return $rs;
 			}
@@ -676,7 +773,9 @@ class Certification_lib{
                     $param['status'] = 0;
 				} else if ($result['risVerificationFailed']) {
                     $status = 2;
+                    $result['remark']['failed_type_list'] = [REALNAME_IMAGE_TYPE_FRONT, REALNAME_IMAGE_TYPE_BACK, REALNAME_IMAGE_TYPE_PERSON];
                     $param['status'] = 0;
+                    $param['remark'] = json_encode($result['remark']);
 				}
 			}
 
@@ -695,26 +794,149 @@ class Certification_lib{
         return false;
     }
 
-    // public function student_verify($info = array()){
-    //    if($info && $info->status ==0 && $info->certification_id==2) {
-    //        $status 	 = 3;
-    //        $content     = json_decode($info->content);
-    //        $user_id        = $info->user_id;
-    //        $cer_id         = $info->id;
-    //        $school       = $content->info->counts->school;
-    //        $student_id   = $content->info->counts->student_id;
-	//
-    //        $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id,$cer_id);
-    //        $rawData['back_image']       = $this->CI->scan_lib->detectText($content['back_image'],$user_id,$cer_id,'[a-zA-Z]');
-	//
-    //        $this->CI->user_certification_model->update($info->id,array(
-    //            'status'	=> $status,
-    //            'sys_check'	=> 1,
-    //        ));
-    //        return true;
-    //    }
-    //    return false;
-    // }
+    public function student_verify($info = array())
+    {
+        $user_certification = $this->get_certification_info($info->user_id,1,$info->investor);
+ 		if($user_certification==false || $user_certification->status!=1){
+ 			return false;
+ 		}
+       if($info && $info->status ==0 && $info->certification_id==2) {
+           $content = json_decode($info->content,true);
+           $verifiedResult = new StudentCertificationResult(1);
+           $just_update_sip_flag = false;
+           $sys_check = 1;
+           $content['meta'] = isset($content['meta']) ? $content['meta'] : [];
+
+           // 學校信箱驗證
+           if(isset($content['email']) && !empty($content['email']) && isset($content['email_verify_status']) && isset($content['email_verify_time']) ){
+               // 尚未驗證信箱
+               if(empty($content['email_verify_time']) && $content['email_verify_status'] == false && (time() < strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours")) ){
+                   $just_update_sip_flag = true;
+               }else{
+                   $email_verify_time = !empty($content['email_verify_time']) && is_numeric($content['email_verify_time']) ? $content['email_verify_time'] : time();
+                   if( $email_verify_time > strtotime(date('Y-m-d H:i:s',$info->created_at) . "+1 hours") ){
+                       $verifiedResult->setStatus(2);
+                       $verifiedResult->addMessage('學生信箱未在時限內通過驗證', 2, MassageDisplay::Client);
+                   }
+               }
+           }
+
+           $this->CI->load->library('scraper/Sip_lib');
+           if(!empty($content['school']) && !empty($content['sip_account']) && !empty($content['sip_password'])){
+               // 爬蟲執行結果
+               $sip_log = $this->CI->sip_lib->getLoginLog($content['school'],$content['sip_account']);
+               if($sip_log && isset($sip_log['status'])){
+                   if($sip_log['status'] == 200){
+                       if($sip_log['response']['status'] == 'finished'){
+                           if(isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == 'True' && $sip_log['response']['isLogin'] == 'True'){
+                               $sip_data = $this->CI->sip_lib->getDeepData($content['school'],$content['sip_account']);
+                               $content['sip_data'] = isset($sip_data['response']) ? $sip_data['response'] : [];
+                               $content['meta']['last_grade'] = isset($sip_data['response']['result']['latestGrades']) ? $sip_data['response']['result']['latestGrades'] : '';
+                               $user_info = !empty($user_certification->content) ? $user_certification->content : [];
+                               if($sip_data && isset($sip_data['response']['result'])){
+                                   if(isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['response']['result']['name']) && isset($sip_data['response']['result']['idNumber'])){
+                                       if($user_info['name'] != $sip_data['response']['result']['name']){
+                                           $verifiedResult->setStatus(3);
+                                           $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$user_info['name']}\"2.SIP姓名=\"{$sip_data['response']['result']['name']}\"", 3, MassageDisplay::Backend);
+                                       }
+                                       if($user_info['id_number'] != $sip_data['response']['result']['idNumber']){
+                                           $verifiedResult->setStatus(3);
+                                           $verifiedResult->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$user_info['id_number']}\"2.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", 3, MassageDisplay::Backend);
+                                       }
+                                   }else{
+                                       isset($user_info['name']) ? $user_info['name'] : $user_info['name'] = '';
+                                       isset($user_info['id_number']) ? $user_info['id_number'] : $user_info['id_number'] = '';
+                                       isset($sip_data['response']['result']['name']) ? $sip_data['response']['result']['name'] : $sip_data['response']['result']['name'] = '';
+                                       isset($sip_data['response']['result']['idNumber']) ? $sip_data['response']['result']['idNumber'] : $sip_data['response']['result']['idNumber'] = '';
+                                       $verifiedResult->setStatus(3);
+                                       $verifiedResult->addMessage("缺少比對參數:1.實名認證姓名=\"{$user_info['name']}\"2.實名認證身分證=\"{$user_info['id_number']}\"3.SIP姓名=\"{$sip_data['response']['result']['name']}\"4.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", 3, MassageDisplay::Backend);
+                                   }
+                               }else{
+                                   $verifiedResult->setStatus(3);
+                                   $verifiedResult->addMessage('sip爬蟲執行失敗', 3, MassageDisplay::Backend);
+                               }
+                           }else{
+                               $verifiedResult->setStatus(2);
+                               $verifiedResult->addMessage('SIP資訊錯誤', 2, MassageDisplay::Client);
+                           }
+                       }
+                       if(isset($sip_log['status']) && $sip_log['response']['status'] == 'failure'){
+                           $verifiedResult->setStatus(3);
+                           $verifiedResult->addMessage('sip爬蟲執行失敗', 3, MassageDisplay::Backend);
+                       }
+                       if(isset($sip_log['status']) && ($sip_log['response']['status'] == 'university_not_found' || $sip_log['response']['status'] == 'university_not_enabled')){
+                           $verifiedResult->setStatus(3);
+                           $verifiedResult->addMessage("sip爬蟲執行失敗:爬蟲子系統回應訊息=\"{$sip_log['response']['status']}\"", 3, MassageDisplay::Backend);
+                       }
+                       // 爬蟲未跑完
+                       if(isset($sip_log['status']) && ($sip_log['response']['status'] == 'started' || $sip_log['response']['status'] == 'retry' || $sip_log['response']['status'] == 'requested') ){
+                           return false;
+                       }
+                   }
+                   if($sip_log['status'] == 204){
+                       $this->sip_lib->requestDeep($content['school'],$content['sip_account'],$content['sip_password']);
+                       return false;
+                   }
+               }else{
+                   $verifiedResult->setStatus(3);
+                   $verifiedResult->addMessage('SIP爬蟲沒有回應', 3, MassageDisplay::Backend);
+               }
+           }else{
+               $verifiedResult->setStatus(3);
+               $verifiedResult->addMessage('SIP填入資訊為空', 3, MassageDisplay::Backend);
+           }
+
+           // 預計畢業時間
+           if(isset($content['graduate_date']) && !empty($content['graduate_date'])){
+               if(preg_match('/^民國[0-9]{2,3}(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u',$content['graduate_date'])){
+                   $graduate_date = preg_replace('/民國/', '', $content['graduate_date']);
+                   $this->CI->load->library('mapping/time');
+                   $graduate_date = $this->CI->time->ROCDateToUnixTimestamp($graduate_date);
+                   // 是否畢業
+                   if(is_numeric($graduate_date) && $graduate_date <= strtotime(date('Y-m-d',$info->created_at)) ){
+                       // 是否超過六年
+                       if($graduate_date <= strtotime(date('Y-m-d',$info->created_at) . "-6 years")){
+                           $verifiedResult->setStatus(2);
+                           $verifiedResult->addMessage('已畢業，請申請上班族貸', 2, MassageDisplay::Client);
+                       }
+                   }
+               }else{
+                   $verifiedResult->setStatus(3);
+                   $verifiedResult->addMessage('預計畢業時間格式錯誤', 3, MassageDisplay::Backend);
+               }
+           }else{
+               $verifiedResult->setStatus(3);
+               $verifiedResult->addMessage('預計畢業時間格式錯誤', 3, MassageDisplay::Backend);
+           }
+
+           $status = $verifiedResult->getStatus();
+           $remark = is_array(json_decode($info->remark,true)) ? json_decode($info->remark,true) : [];
+           $remark['verify_result'] = isset($remark['verify_result']) ? $remark['verify_result'] : [];
+           $remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
+
+           // 只更新SIP資訊不驗證(信箱還沒驗證)
+           if($just_update_sip_flag){
+               $status = 0;
+               $sys_check = 0;
+               $remark = [];
+           }
+
+           $this->CI->user_certification_model->update($info->id, array(
+               'status' => $status != 3 ? 0 : $status,
+               'sys_check' => $sys_check,
+               'content' => json_encode($content, JSON_INVALID_UTF8_IGNORE),
+               'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
+           ));
+           if($status == 1){
+               $this->set_success($info->id, true);
+           }elseif ($status == 2) {
+               $notificationContent = $verifiedResult->getAPPMessage(2);
+               $this->set_failed($info->id,$notificationContent);
+           }
+           return true;
+       }
+       return false;
+    }
 
     public function social_verify($info = array())
     {
@@ -773,13 +995,13 @@ class Certification_lib{
     }
 
     public function emergency_verify($info = array()){
-		if($info && $info->status ==0 && $info->certification_id==CERTIFICATION_EMERGENCY){
+		if($info && $this->canVerify($info->status) && $info->certification_id==CERTIFICATION_EMERGENCY){
 			$content	= json_decode($info->content,true);
 			$name 		= $content['name'];
 
 			$idcard		= $this->get_certification_info($info->user_id,CERTIFICATION_IDCARD,$info->investor);
-			if($idcard && $idcard->status==1){
-				$status 		= 3;
+			if($idcard && $idcard->status==CERTIFICATION_STATUS_SUCCEED){
+				$status 		= CERTIFICATION_STATUS_PENDING_TO_REVIEW;
 
 				$phone_used = $this->CI->user_model->get_by(array(
 					'id'    => $info->user_id,
@@ -790,7 +1012,7 @@ class Certification_lib{
 				}
 				else{
 					$this->set_success($info->id, true);
-					$status = 1;
+					$status = CERTIFICATION_STATUS_SUCCEED;
 				}
 
                 $this->CI->user_certification_model->update($info->id,array(
@@ -1429,13 +1651,13 @@ class Certification_lib{
 		$certification_content = isset($info->content) ? json_decode($info->content,true): [];
 		$remark = isset($info->remark) ? json_decode($info->remark, true) : NULL;
 		$remark['verify_result'] = [];
-		$verifiedResult = new InvestigationCertificationResult(1);
+		$verifiedResult = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
 
-		if ($info && $info->certification_id == 9 && $info->status == 0) {
+		if ($info && $info->certification_id == CERTIFICATION_INVESTIGATION && $this->canVerify($info->status)) {
 			if(isset($certification_content['return_type']) && $certification_content['return_type'] == 0) {
 				// 紙本
 				$remark['fail'] = "需人工驗證";
-				$verifiedResult->setStatus(3);
+				$verifiedResult->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
 			} else {
 				// 尚未回信上傳檔案
 				if (!isset($certification_content['mail_file_status']) || !$certification_content['mail_file_status'])
@@ -1447,7 +1669,7 @@ class Certification_lib{
 				$mime = get_mime_by_extension($url);
 				if (strpos($mime, 'jpg') !== false || strpos($mime, 'jpeg') !== false || strpos($mime, 'jpe') !== false
 					|| strpos($mime, 'png') !== false || strpos($mime, 'heic') !== false) {
-					$verifiedResult->setStatus(3);
+					$verifiedResult->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
 					$remark['fail'] = "需人工驗證";
 				}else {
 					$parser = new \Smalot\PdfParser\Parser();
@@ -1463,7 +1685,7 @@ class Certification_lib{
                     }
 
 					if (!$response || strpos($text, '綜合信用報告') === FALSE) {
-						$verifiedResult->addMessage('聯徵PDF解析失敗', 3, MassageDisplay::Backend);
+						$verifiedResult->addMessage('聯徵PDF解析失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
 						$remark['fail'] = "需人工驗證";
 					} else {
 						// 資料轉 result
@@ -1542,35 +1764,38 @@ class Certification_lib{
 						$this->CI->load->library('verify/data_legalize_lib');
 						$verifiedResult = $this->CI->data_legalize_lib->legalize_investigation($verifiedResult, $info->user_id, $result, $info->created_at);
 
-						// 過件邏輯
-						$this->CI->load->library('verify/data_verify_lib');
-						$verifiedResult = $this->CI->data_verify_lib->check_investigation($verifiedResult, $result, $certification_content);
+                        $this->CI->load->library('verify/data_verify_lib');
+                        $verifiedResult = $this->CI->data_verify_lib->check_investigation($verifiedResult, $result, $certification_content);
 
-						$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
+						$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
 					}
 				}
 			}
 
 			$remark['verify_result'] = array_merge($remark['verify_result'],$verifiedResult->getAllMessage(MassageDisplay::Backend));
 			$status = $verifiedResult->getStatus();
+			// 先暫時把失敗改為轉人工
+			if($status == CERTIFICATION_STATUS_FAILED) {
+				$status = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
+			}
 
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status != 3 ? 0 : $status,
-				'sys_check' => 1,
-				'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE),
-				'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
-        	));
+            $this->CI->user_certification_model->update($info->id, array(
+                'status' => in_array($status, [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED]) ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
+                'sys_check' => 1,
+                'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE),
+                'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
+            ));
 
-			if($status == 1) {
+			if($status == CERTIFICATION_STATUS_SUCCEED) {
 				$expire_time = new DateTime;
 				$expire_time->setTimestamp($printTimestamp);
 				$expire_time->modify('+ 1 month');
 				$expire_timestamp = $expire_time->getTimestamp();
 				$this->set_success($info->id, true, $expire_timestamp);
-			}else if($status == 2) {
+			}else if($status == CERTIFICATION_STATUS_FAILED) {
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
-				$notificationContent = $verifiedResult->getAPPMessage(2);
-				$this->certi_failed($info->id,$notificationContent,$canResubmitDate,true);
+				$notificationContent = $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED);
+				$this->certi_failed($info->id,$notificationContent,$canResubmitDate);
 			}
 
 			return true;
@@ -1850,24 +2075,24 @@ class Certification_lib{
 	// to do : 待加入並合併微企貸
 	public function job_verify($info = array(),$url=null) {
 
-		$realname_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
+		$realname_certification	= $this->get_certification_info($info->user_id,CERTIFICATION_IDCARD,$info->investor);
 
-		if($realname_certification==false || $realname_certification->status != 1){
+		if($realname_certification==false || $realname_certification->status != CERTIFICATION_STATUS_SUCCEED){
 			return false;
 		}
 
 		$certification_content = isset($info->content) ? json_decode($info->content,true) : [];
-		$verifiedResult = new JobCertificationResult(1);
+		$verifiedResult = new JobCertificationResult(CERTIFICATION_STATUS_SUCCEED);
 		$res = [];
 		$gcis_res = [];
 		$remark = isset($info->remark) ? json_decode($info->remark,true) : NULL;
 		$remark['verify_result'] = [];
 
-		if($info && $info->certification_id == 10 && $info->status == 0 ) {
+		if($info && $info->certification_id == CERTIFICATION_JOB && $this->canVerify($info->status) ) {
 			if(isset($certification_content['labor_type']) && $certification_content['labor_type'] == 0) {
 				// 紙本
 				$remark['fail'] = "需人工驗證";
-				$verifiedResult->setStatus(3);
+				$verifiedResult->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
 			} else {
 				// 尚未回信上傳檔案
 				if(!isset($certification_content['mail_file_status']) || !$certification_content['mail_file_status'])
@@ -1879,7 +2104,7 @@ class Certification_lib{
 				$mime = get_mime_by_extension($pdf_url);
 				if (strpos($mime, 'jpg') !== false || strpos($mime, 'jpeg') !== false || strpos($mime, 'jpe') !== false
 					|| strpos($mime, 'png') !== false || strpos($mime, 'heic') !== false) {
-					$verifiedResult->setStatus(3);
+					$verifiedResult->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
 					$remark['fail'] = "需人工驗證";
 				}else {
 
@@ -1903,7 +2128,7 @@ class Certification_lib{
 					}
 
 					if (!$res || strpos($text, '勞動部勞工保險局ｅ化服務系統') === FALSE) {
-						$verifiedResult->addMessage('勞保PDF解析失敗', 3, MassageDisplay::Backend);
+						$verifiedResult->addMessage('勞保PDF解析失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
 						$remark['fail'] = "需人工驗證";
 					}else if ($res) {
 						$this->CI->load->library('mapping/user/Certification_data');
@@ -1918,28 +2143,29 @@ class Certification_lib{
 						$this->CI->load->library('verify/data_legalize_lib');
 						$verifiedResult = $this->CI->data_legalize_lib->legalize_job($verifiedResult, $info->user_id, $result, $certification_content, $info->created_at);
 
-						$this->CI->load->library('verify/data_verify_lib');
-						$verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult, $info->user_id, $result, $certification_content);
+                        $this->CI->load->library('verify/data_verify_lib');
+                        $verifiedResult = $this->CI->data_verify_lib->check_job($verifiedResult, $info->user_id, $result, $certification_content);
+
 
 						// to do : 是否千大企業員工
 						// $this->CI->config->load('top_enterprise');
 						// $top_enterprise = $this->CI->config->item("top_enterprise");
 
-						$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(2));
+						$remark['fail'] = implode("、", $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
 					}
 
 					$remark['verify_result'] = array_merge($remark['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
 				}
 			}
 			$status = $verifiedResult->getStatus();
-			$this->CI->user_certification_model->update($info->id, array(
-				'status' => $status != 3 ? 0 : $status,
-				'sys_check' => 1,
-				'remark' => json_encode($remark),
-				'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE)
-			));
+            $this->CI->user_certification_model->update($info->id, array(
+                'status' => in_array($status, [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED]) ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
+                'sys_check' => 1,
+                'remark' => json_encode($remark),
+                'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE)
+            ));
 
-			if ($status == 1) {
+			if ($status == CERTIFICATION_STATUS_SUCCEED) {
 				$expire_timestamp = 0;
 				preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $result['report_date'], $regexResult);
 				if (!empty($regexResult)) {
@@ -1950,13 +2176,14 @@ class Certification_lib{
 					$expire_timestamp = $expire_time->getTimestamp();
 				}
 				$this->set_success($info->id, true, $expire_timestamp);
-			} else if ($status == 2) {
+			} else if ($status == CERTIFICATION_STATUS_FAILED) {
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
-				$notificationContent = $verifiedResult->getAPPMessage(2);
-				$this->certi_failed($info->id, $notificationContent, $canResubmitDate, true);
+				$notificationContent = $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED);
+				$this->certi_failed($info->id, $notificationContent, $canResubmitDate);
 
 				// 退工作認證時，需把聯徵也一起退掉 issue #1202
-                $this->withdraw_investigation($info->user_id, $info->investor);
+                if($this->certification_lib->isRejectedResult($notificationContent))
+                    $this->withdraw_investigation($info->user_id, $info->investor);
 			}
 			return true;
 		}
@@ -2098,20 +2325,28 @@ class Certification_lib{
 				'school_system'			 => $content['system'],
 				'school_department'		 => $content['department'],
 				'school_major'			 => $content['major'],
-				'school_email'			 => $content['email'],
+				'school_email'			 => isset($content['email']) ? $content['email'] : '',
 				'school_grade'			 => $content['grade'],
 				'student_id'			 => $content['student_id'],
 				'student_card_front'	 => $content['front_image'],
 				'student_card_back'		 => $content['back_image'],
 				'student_sip_account'	 => $content['sip_account'],
                 'student_sip_password'	 => $content['sip_password'],
-                'student_license_level'	 => $content['license_level'],
-                'student_game_work_level'=> $content['game_work_level'],
-                'student_pro_level'      => $content['pro_level'],
+                'student_license_level'	 => isset($content['license_level']) ? $content['license_level'] : '',
+                'student_game_work_level'=> isset($content['game_work_level']) ? $content['game_work_level'] : '',
+                'student_pro_level'      => isset($content['pro_level']) ? $content['pro_level'] : '',
             );
 			isset($content['graduate_date']) ? $data['graduate_date'] = $content['graduate_date'] : '';
             isset($content['programming_language']) ? $data['student_programming_language'] = count($content['programming_language']) : '';
             isset($content['transcript_image']) ? $data['transcript_front'] = $content['transcript_image'][0] : '';
+
+            if(isset($content['sip_data']['result']['latestGrades']) && !empty($content['sip_data']['result']['latestGrades'])){
+                $data['school_lastest_grade'] = $content['sip_data']['ersult']['latestGrades'];
+            }
+
+            if(isset($content['meta']['last_grade']) && !empty($content['meta']['last_grade'])){
+                $data['school_lastest_grade'] = $content['meta']['last_grade'];
+            }
 
             $rs = $this->user_meta_progress($data,$info);
             if($rs){
@@ -2196,22 +2431,156 @@ class Certification_lib{
 		return false;
 	}
 
-	private function financial_success($info){
+    private function financial_success($info){
 		if($info){
 			$content 	= $info->content;
+
+            $financial_income = 0;
+            $financial_expense = 0;
+            $income 	= [
+                // 薪資/打工收入
+				'income',
+                // 零用錢收入
+				'incomeStudent',
+                // 獎學金收入
+                'scholarship',
+				'other_income',
+			];
+            $expense = [
+                'restaurant',
+				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
+				'entertainment',
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
+            ];
+
+            // 收入計算
+            foreach($income as $income_fields){
+                if(isset($content[$income_fields]) && is_numeric($content[$income_fields])){
+                    $financial_income += $content[$income_fields];
+                }
+            }
+
+            // 支出計算
+            foreach($expense as $expense_fields){
+                if(isset($content[$expense_fields]) && is_numeric($content[$expense_fields])){
+                    $financial_expense += $content[$income_fields];
+                }
+            }
+
 			$data 		= array(
 				'financial_status'		=> 1,
-				'financial_income'		=> $content['parttime']+$content['allowance']+$content['scholarship']+$content['other_income'],
-				'financial_expense'		=> $content['restaurant']+$content['transportation']+$content['entertainment']+$content['other_expense'],
+				'financial_income'		=> $financial_income,
+				'financial_expense'		=> $financial_expense,
 			);
-            if(isset($content['creditcard_image'])){
+
+            if(isset($content['creditcard_image']) && !empty($content['creditcard_image'])){
                 $data['financial_creditcard'] = $content['creditcard_image'];
             }
-            if(isset($content['passbook_image'])){
+            if(isset($content['passbook_image'][0]) && !empty($content['passbook_image'][0])){
                 $data['financial_passbook'] = $content['passbook_image'][0];
             }
 
-            if(isset($content['bill_phone_image'])){
+            if(isset($content['bill_phone_image'][0]) && !empty($content['bill_phone_image'][0])){
+                $data['financial_bill_phone'] = $content['bill_phone_image'][0];
+            }
+            $rs = $this->user_meta_progress($data,$info);
+			if($rs){
+                return $this->fail_other_cer($info);
+			}
+		}
+		return false;
+	}
+
+    private function financialWorker_success($info){
+		if($info){
+			$content 	= $info->content;
+            $financial_income = 0;
+            $financial_expense = 0;
+            $income 	= [
+                // 薪資/兼職收入
+				'income',
+                // 投資理財收入
+				'pocketMoney',
+				'other_income',
+			];
+            $expense = [
+                'restaurant',
+				'transportation',
+				// 網路電信支出
+				'telegraph_expense',
+				'entertainment',
+				'other_expense',
+				// 租金
+				'rent_expenses',
+				// 教育
+				'educational_expenses',
+				// 保險
+				'insurance_expenses',
+				// 社交
+				'social_expenses',
+				// 房貸
+				'long_assure_monthly_payment',
+				// 車貸
+				'mid_assure_monthly_payment',
+				// 信貸
+				'credit_monthly_payment',
+				// 學貸
+				'student_loans_monthly_payment',
+				// 信用卡
+				'credit_card_monthly_payment',
+				// 其他民間借款
+				'other_private_borrowing'
+            ];
+
+            // 收入計算
+            foreach($income as $income_fields){
+                if(isset($content[$income_fields]) && is_numeric($content[$income_fields])){
+                    $financial_income += $content[$income_fields];
+                }
+            }
+
+            // 支出計算
+            foreach($expense as $expense_fields){
+                if(isset($content[$expense_fields]) && is_numeric($content[$expense_fields])){
+                    $financial_expense += $content[$income_fields];
+                }
+            }
+
+			$data 		= array(
+				'financial_status'		=> 1,
+				'financial_income'		=> $financial_income,
+				'financial_expense'		=> $financial_expense,
+			);
+            if(isset($content['creditcard_image']) && !empty($content['creditcard_image'])){
+                $data['financial_creditcard'] = $content['creditcard_image'];
+            }
+            if(isset($content['passbook_image'][0]) && !empty($content['passbook_image'][0])){
+                $data['financial_passbook'] = $content['passbook_image'][0];
+            }
+
+            if(isset($content['bill_phone_image'][0]) && !empty($content['bill_phone_image'][0])){
                 $data['financial_bill_phone'] = $content['bill_phone_image'][0];
             }
             $rs = $this->user_meta_progress($data,$info);
@@ -2328,27 +2697,29 @@ class Certification_lib{
             isset($content['job_title'])?$data['job_title']=$content['job_title']:'';
 
             $rs = $this->user_meta_progress($data,$info);
-			if($rs){
+            if($rs && in_array($info->certification_id, $this->notification_list)) {
 				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
-                return $this->fail_other_cer($info);
-			}
-		}
+            }
+            return $this->fail_other_cer($info);
+        }
 		return false;
 	}
 
 	private function certi_failed($id,$msg='',$resubmitDate='',$sys_check=true){
 		$info = $this->CI->user_certification_model->get($id);
-		if($info && $info->status != 2){
-			$certification 	= $this->certification[$info->certification_id];
+		if($info && $info->status != CERTIFICATION_STATUS_FAILED){
+            $certification 	= $this->certification[$info->certification_id];
+
 			$param = [
-				'status'    => 2,
+				'status'    => CERTIFICATION_STATUS_FAILED,
 				'sys_check' => ($sys_check==true?1:0),
-				'can_resubmit_at'=>$resubmitDate
+				'can_resubmit_at'=>$resubmitDate,
 			];
 
 			$rs = $this->CI->user_certification_model->update($info->id, $param);
-			if($rs){
- 				$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$msg);
+			if($rs) {
+                if(in_array($info->certification_id, $this->notification_list))
+ 				    $this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],2,$msg);
  				return true;
 			}
 		}
@@ -2680,6 +3051,10 @@ class Certification_lib{
         return false;
     }
 
+    private function criminalrecord_success($info) {
+        return $this->fail_other_cer($info);
+    }
+
     private function simplificationjob_success($info)
     {
         if ($info) {
@@ -2747,7 +3122,7 @@ class Certification_lib{
                             CERTIFICATION_DEBITCARD,
                             CERTIFICATION_EMERGENCY,
                             CERTIFICATION_EMAIL,
-                            CERTIFICATION_FINANCIAL,
+                            CERTIFICATION_FINANCIALWORKER,
                             CERTIFICATION_INVESTIGATION,
                             CERTIFICATION_JOB,
                             CERTIFICATION_PROFILE
@@ -2857,7 +3232,8 @@ class Certification_lib{
 					$value['certification_id'] 	   = intval($user_certification->id);
                     $value['updated_at'] 		   = intval($user_certification->updated_at);
 					// 回傳認證資料
-					$value['content']		   = $user_certification->content;
+					$value['content'] 		       = $user_certification->content;
+                    $value['remark']		       = $user_certification->remark;
                     $dipoma                        = isset($user_certification->content['diploma_date'])?$user_certification->content['diploma_date']:null;
                     $key==8?$value['diploma_date']=$dipoma:null;
 				}else{
@@ -2926,7 +3302,14 @@ class Certification_lib{
 			$certification_list = [];
 			foreach($certification as $key => $value){
                 $ruser_id = $key == CERTIFICATION_INVESTIGATION && $company_source_user_id?$company_source_user_id:$user_id;
-                $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
+                // 歸戶顯示資料不進行是否過期判斷
+                if($target){
+                    // 有過期判斷
+                    $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
+                }else {
+                    // 沒有過期判斷
+                    $user_certification = $this->get_last_certification_info($ruser_id,$key,$investor);
+                }
 				if($user_certification){
 				    $key == CERTIFICATION_JUDICIALGUARANTEE ? $value['judicialPersonId'] = isset($user_certification->content['judicialPersonId']) ? $user_certification->content['judicialPersonId'] : '' : '';
 					$value['user_status'] 		= intval($user_certification->status);
@@ -2949,6 +3332,71 @@ class Certification_lib{
 		return false;
 	}
 
+    public function verify_certifications($target, $stage): bool
+    {
+        $date		            = get_entering_date();
+        $productList = $this->CI->config->item('product_list');
+
+        $certificationsStageList = isset($target->product_id) &&
+        isset($productList[$target->product_id]['certifications_stage']) ?
+            $productList[$target->product_id]['certifications_stage'] : null;
+        if(!isset($target) || !isset($certificationsStageList[$stage]))
+            return FALSE;
+
+        $userCertifications 	= $this->CI->user_certification_model->order_by('certification_id','ASC')
+            ->order_by('created_at','DESC')->get_many_by([
+                'status'				=> [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
+                'user_id'               => $target->user_id,
+            ]);
+        if(!empty($userCertifications)) {
+            $validateCertificationList = call_user_func_array('array_merge', $certificationsStageList);
+            $doneCertifications = array_reduce($userCertifications, function ($list, $item) {
+                if(!isset($list[$item->certification_id]))
+                    $list[$item->certification_id] = $item;
+                return $list;
+            }, []);
+
+            // 待驗證或是已通過的認證徵信項目數量需一致
+            $pendingCertifications = array_filter($doneCertifications,
+                function ($x) use ($validateCertificationList) { return in_array($x->certification_id, $validateCertificationList) &&
+                    ($this->canVerify($x->status) || $x->status == CERTIFICATION_STATUS_SUCCEED || $x->status == CERTIFICATION_STATUS_PENDING_TO_REVIEW); });
+
+            if (count(array_intersect_key(array_flip($validateCertificationList), $pendingCertifications))
+                != count($validateCertificationList)) {
+                return FALSE;
+            }
+
+            $targetData = json_decode($target->target_data, true);
+            $targetData['verify_cetification_list'] = json_encode(array_column($pendingCertifications, 'id'));
+
+            // 工作收入證明直接改為人工
+            if (array_search(CERTIFICATION_JOB, $validateCertificationList) !== false) {
+                $this->CI->user_certification_model->update_by([
+                    'certification_id' => CERTIFICATION_JOB,
+                    'user_id' => $target->user_id,
+                    'investor' => USER_BORROWER,
+                    'status' => CERTIFICATION_STATUS_AUTHENTICATED
+                ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
+            }
+            // 將 已驗證資料真實性待使用者送出審核(6) 更改為 待驗證(0)
+            $this->CI->user_certification_model->update_by([
+                'certification_id' => $validateCertificationList,
+                'user_id' => $target->user_id,
+                'investor' => USER_BORROWER,
+                'status' => CERTIFICATION_STATUS_AUTHENTICATED
+            ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
+
+            $this->CI->target_model->update_by([
+                'id' => $target->id
+            ], ['target_data' => json_encode($targetData, JSON_INVALID_UTF8_IGNORE)]);
+
+        }else {
+            // 空的認證徵信列表
+            return FALSE;
+        }
+        return TRUE;
+    }
+
 	public function script_check_certification(){
 		$script  		= 8;
 		$count 			= 0;
@@ -2961,11 +3409,6 @@ class Certification_lib{
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
-					case 2:
-						if(time() > ($value->created_at + 3600)){
-							$this->set_failed($value->id,'未在有效時間內完成認證');
-						}
-						break;
 					case 6:
 						if(time() > ($value->created_at + 3600)){
 							$this->set_failed($value->id,'未在有效時間內完成認證');
@@ -3234,11 +3677,12 @@ class Certification_lib{
             if(!is_array($temp_remark))
                 $temp_remark = [isset($temp_remark) ? strval($temp_remark) : ''];
 
-            $temp_remark['verify_result'] 	= ['經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。'];
+            $temp_remark['verify_result'] 	= [InvestigationCertificationResult::$FAILED_MESSAGE];
+            $temp_remark['client_verify_result'] = [InvestigationCertificationResult::$FAILED_MESSAGE];
             $this->CI->user_certification_model->update($investigation_cert->id,[
                 'remark' => json_encode($temp_remark),
             ]);
-            $this->set_failed($investigation_cert->id, '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。', false);
+            $this->set_failed($investigation_cert->id, InvestigationCertificationResult::$FAILED_MESSAGE);
         }
     }
     public function get_social_report($limit = 10){
@@ -3282,5 +3726,9 @@ class Certification_lib{
             }
         }
         return $list;
+    }
+
+    public function isRejectedResult($msg) {
+        return strpos($msg, "經AI系統綜合評估後") !== FALSE;
     }
 }

@@ -17,6 +17,7 @@ class Target extends MY_Admin_Controller {
 		$this->load->model('loan/credit_model');
 		$this->load->library('target_lib');
 		$this->load->library('financial_lib');
+		$this->load->library('Spreadsheet_lib');
  	}
 
     public function isJson($inputString) {
@@ -31,6 +32,33 @@ class Target extends MY_Admin_Controller {
 		$where		= [];
 		$list		= [];
 		$fields 	= ['status','delay'];
+
+		if (isset($input['export'])) {
+			switch ($input['export']) {
+				case 2:
+					$title_rows = [
+						'user_id' => ['name' => '借款人ID'],
+						'product_name' => ['name' => '產品名稱'],
+						'target_no' => ['name' => '案號', 'width' => 20],
+						'credit_level' => ['name' => '核准信評'],
+						'user_meta_1' => ['name' => '學校/公司', 'width' => 25],
+						'user_meta_2' => ['name' => '科系/職位', 'width' => 25],
+						'invest_amount' => ['name' => '債權總額'],
+						'lender' => ['name' => '投資人ID'],
+						'unpaid_principal' => ['name' => '逾期本金'],
+						'loan_date' => ['name' => '放款日期', 'width' => 12],
+						'entering_date' => ['name' => '首逾日期', 'width' => 12],
+						'delayed_days' => ['name' => '逾期天數'],
+						'unpaid_interest' => ['name' => '尚欠利息'],
+						'delay_interest' => ['name' => '延滯息'],
+						'damage' => ['name' => '違約金']
+					];
+					$data_rows = $this->target_model->getDelayedReport($input);
+					$this->spreadsheet_lib->save($title_rows, $data_rows);
+					return;
+			}
+		}
+
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 			    $where[$field] = $input[$field];
@@ -2069,6 +2097,42 @@ class Target extends MY_Admin_Controller {
             alert('不支援此產品', admin_url('target/waiting_verify'));
         }
         return true;
+    }
+
+    // 新光收件檢核表送件紀錄 api
+    public function skbank_text_get(){
+        $get = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+
+        if(!$this->input->is_ajax_request() || !isset($get['target_id']) || empty($get) || !is_numeric($get['target_id'])){
+            $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
+        }
+        $response = [];
+        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+        $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
+        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'']);
+
+        if(empty($mapping_info)){
+            $this->json_output->setStatusCode(200)->setResponse($response)->send();
+        }
+
+        $this->load->model('skbank/LoanSendRequestLog_model');
+        $msg_no_info = $this->LoanSendRequestLog_model->get_by(['msg_no'=>$mapping_info->msg_no, 'send_success ='=>1, 'case_no !='=>0 ]);
+        if(empty($msg_no_info)){
+            $this->json_output->setStatusCode(200)->setResponse($response)->send();
+        }
+
+        $response['skbankMsgNo'] = isset($msg_no_info->msg_no) ? $msg_no_info->msg_no : '';
+        $response['skbankCaseNo'] = isset($msg_no_info->case_no) ? $msg_no_info->case_no: '';
+
+        if(!empty($msg_no_info->request_content)){
+            $request_content = json_decode($msg_no_info->request_content,true);
+            $return_msg = json_decode($msg_no_info->response_content,true);
+            $response['skbankCompId'] = isset($request_content['unencrypted']['CompId']) ? $request_content['unencrypted']['CompId'] : '';
+            $response['skbankMetaInfo'] = isset($return_msg['ReturnMsg']) ? $return_msg['ReturnMsg'] : '';
+            $response['skbankReturn'] = '成功';
+        }
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
     // 新光收件檢核表送件 API
