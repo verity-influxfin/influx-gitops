@@ -5,6 +5,7 @@ require(APPPATH.'/libraries/REST_Controller.php');
 class AntiFraud extends REST_Controller {
 
 	public $user_info;
+	public $brookesia_url;
 
     public function __construct()
     {
@@ -13,6 +14,8 @@ class AntiFraud extends REST_Controller {
         if(!app_access()){
             $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
         }
+
+        $this->brookesia_url = 'http://52.68.199.159:9453/brookesia/api/v1.0/';
     }
 
     /**
@@ -65,4 +68,40 @@ class AntiFraud extends REST_Controller {
         }
         $this->response(array('result' => 'SUCCESS','data' => $response));
     }
+
+	public function rule_all_get()
+	{
+		$url = $this->brookesia_url . 'rule/all';
+		$result = curl_get($url);;
+		$response = json_decode($result, TRUE);
+
+		$this->response($response);
+	}
+
+	public function rule_statistics_get()
+	{
+		$input = $this->input->get();
+		$url = $this->brookesia_url . 'result/ruleStatistics' .
+			'?typeId=' . ($input['typeId'] ?? '') .
+			'&productId=' . ($input['productId'] ?? '') .
+			'&startTime=' . ($input['startTime'] ?? '') .
+			'&endTime=' . ($input['endTime'] ?? '');
+		$result = curl_get($url);
+		$response = json_decode($result, TRUE);
+
+		$this->response($response);
+	}
+
+	public function rule_results_get()
+	{
+		$input = $this->input->get();
+		$url = $this->brookesia_url . 'result/ruleResults' .
+			'?ruleId=' . ($input['ruleId'] ?? '') .
+			'&startTime=' . ($input['startTime'] ?? '') .
+			'&endTime=' . ($input['endTime'] ?? '');
+		$result = curl_get($url);
+		$response = json_decode($result, TRUE);
+
+		$this->response($response);
+	}
 }
