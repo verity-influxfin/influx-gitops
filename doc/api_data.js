@@ -46525,6 +46525,12 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
+                            "field": "224",
+                            "description": "<p>法人帳號沒有綁定自然人帳號</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
                             "field": "302",
                             "description": "<p>會員不存在</p>"
                         },
@@ -46609,6 +46615,11 @@ define({
                     {
                         "title": "223",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"223\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "224",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"224\"\n}",
                         "type": "Object"
                     },
                     {
