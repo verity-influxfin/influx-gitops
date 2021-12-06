@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div class="new-role m-4">
-			<button class="btn btn-primary">新增角色</button>
+			<a class="btn btn-primary" href="<?=admin_url('Admin/role_list_edit') ?>" target="_blank">新增角色</a>
 		</div>
 		<div class="table-row">
 			<table class="display responsive nowrap" width="100%" id="table-roles-setting">
@@ -47,19 +47,18 @@
 </div>
 <script>
 	$(document).ready(() => {
-		const table = $('#table-roles-setting').DataTable()
-		$('#table-roles-setting').DataTable({
-			retrieve: true,
+		const table = $('#table-roles-setting').DataTable({
 			language: {
 				search: '搜尋欄位',
 			},
-		});
+		})
 		for (let index = 0; index < 30; index++) {
 			insertDataRow({ table, part: index, group: 0, role: 0, id: index })
 		}
 	});
 	function insertDataRow({ table, part, group, role, id }) {
-		const button = `<button class="btn btn-default" data-id="${id}">Edit</button>`
+		const origin = window.location.origin
+		const button = `<button class="btn btn-default" onClick="window.open('http://localhost:8080/admin/Admin/role_list_edit?id=${id}')">Edit</button>`
 		table.row.add([part, group, role, button]).draw()
 	}
 </script>
