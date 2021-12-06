@@ -218,7 +218,7 @@ class Certification extends MY_Admin_Controller {
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
-                if($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) {
+                if(in_array($info->certification_id,['1003','9','12','501','1018'])) {
                     // 上傳檔案功能
                     if($info->status == 0 || $info->status == 3){
                         $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
@@ -1343,6 +1343,15 @@ class Certification extends MY_Admin_Controller {
                     if($post['certification_id'] == 1003){
                         $image_name = 'legal_person_mq_image';
                     }
+                    if($post['certification_id'] == 9){
+                        $image_name = 'postal_image';
+                    }
+                    if($post['certification_id'] == 1018){
+                        $image_name = 'RealLandOwnership';
+                    }
+                    if($post['certification_id'] == 501){
+                        $image_name = 'labor_image';
+                    }
 
                     if(isset($certification_content[$image_name])){
                         if(is_array($certification_content[$image_name])){
@@ -1351,6 +1360,7 @@ class Certification extends MY_Admin_Controller {
                             $certification_content[$image_name] = $media;
                         }
                     }else{
+                        $certification_content[$image_name] = [];
                         $certification_content[$image_name] = array_merge($certification_content[$image_name],$media);
                     }
 					$certification_content['group_id'] = $group_id;

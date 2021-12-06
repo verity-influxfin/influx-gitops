@@ -274,7 +274,7 @@
                                             foreach ($content['BizLandOwnership'] as $key => $value) { ?>
                                                 <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                     <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                                </a>
+                                                </a><br>
                                             <? }
                                         }?>
                                     <label>建物所有權狀</label><br>
@@ -283,7 +283,7 @@
                                         foreach ($content['BizHouseOwnership'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
+                                            </a><br>
                                         <?}
                                     }?>
                                     <label>實際土地所有權狀</label><br>
@@ -292,7 +292,7 @@
                                         foreach ($content['RealLandOwnership'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
+                                            </a><br>
                                         <? }
                                     }?>
                                     <label>實際建物所有權狀</label><br>
@@ -301,11 +301,16 @@
                                         foreach ($content['RealHouseOwnership'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
+                                            </a><br>
                                         <? }
                                     }?>
                                 </div>
                             </fieldset>
+                            <? if( $data->certification_id == 1018 && isset($ocr['upload_page']) ){ ?>
+                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                              <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
+                            </div>
+                            <? } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

@@ -114,6 +114,27 @@ class LoanRequest extends REST_Controller {
 
                 if ($sendImageCompleteResult["success"]) {
                     $result["send_image_complete_success"] = true;
+
+                    $this->load->model('skbank/LoanSendRequestLog_model');
+                    $loanRequestLogInfo = $this->LoanSendRequestLog_model->get_by(['case_no' => $sendImageCompleteResult['case_no']]);
+                    if ($loanRequestLogInfo) {
+                        // search mapping info by loan request msg_no
+                        $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+                        $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $loanRequestLogInfo->msg_no]);
+                        if ($loanTargetMappingInfo) {
+                            // check target exist and update info
+                            $this->load->model('loan/target_model');
+                            $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target,'product_id' => 1002]);
+                            if($targetInfo){
+                                // update target status
+                                if(!empty($repayment)){
+                                    $updateTarget = $this->target_model->update($targetInfo->id,[
+                                        'status' => 500,
+                                    ]);
+                                }
+                            }
+                        }
+                    }
                 } else {
                     $result["send_image_complete_error"] = $sendImageCompleteResult["error"];
                 }
