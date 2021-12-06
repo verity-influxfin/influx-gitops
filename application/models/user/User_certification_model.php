@@ -133,4 +133,17 @@ class User_certification_model extends MY_Model
         }
         return $list;
     }
+
+	//將黑名單學校的學生認證退回重審
+	public function get_certifications_return()
+	{
+		$this->db
+			->select('uc.id')
+			->from('p2p_user.user_certification uc')
+			->join('p2p_user.user_meta um', 'um.user_id=uc.user_id AND um.meta_key="school_name" AND um.meta_value LIKE "(自填%"')
+			->where(['uc.investor' => 0, 'uc.status' => 1, 'uc.certification_id' => 2])
+			->where('NOT EXISTS (SELECT 1 FROM p2p_transaction.transactions t WHERE t.user_from = uc.user_id AND t.source = 93)', '', FALSE);
+
+		return $this->db->get()->result_array();
+	}
 }
