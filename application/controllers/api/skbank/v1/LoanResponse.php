@@ -111,7 +111,7 @@ class LoanResponse extends REST_Controller {
                                 if ($loanTargetMappingInfo) {
                                     // check target exist and update info
                                     $this->load->model('loan/target_model');
-                                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target,'product_id' => 1002]);
+                                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => 1002]);
                                     if($targetInfo){
                                         // transfer repayment type
                                         $repayment = '';
