@@ -311,7 +311,7 @@ class User extends REST_Controller {
             $user_certification	= $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
                 $personal_user_info->investor);
             if(!$user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED) {
-                $result['error'] = NOT_VERIFIED;
+                $result['error'] = NO_CER_IDCARD;
                 goto END;
             }
 
@@ -644,7 +644,7 @@ END:
                     $user_certification	= $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
                         $investor);
                     if(!$user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED) {
-                        $this->response(array('result' => 'ERROR', 'error' => NOT_VERIFIED));
+                        $this->response(array('result' => 'ERROR', 'error' => NO_CER_IDCARD));
                     }
 
                     // 確認自然人是否跟公司負責人姓名一致

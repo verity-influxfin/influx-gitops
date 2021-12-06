@@ -46495,12 +46495,6 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "202",
-                            "description": "<p>綁定的自然人實名認證未通過</p>"
-                        },
-                        {
-                            "group": "Error 4xx",
-                            "optional": false,
                             "field": "213",
                             "description": "<p>自然人非該公司登記負責人</p>"
                         },
@@ -46515,6 +46509,12 @@ define({
                             "optional": false,
                             "field": "219",
                             "description": "<p>統一編號長度非8碼</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "220",
+                            "description": "<p>綁定的自然人實名認證未通過</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -46555,14 +46555,14 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "318",
-                            "description": "<p>商業司連線失敗，請稍後再試</p>"
+                            "field": "319",
+                            "description": "<p>商業司回應格式有誤 (API改版?)</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "319",
-                            "description": "<p>商業司回應格式有誤 (API改版?)</p>"
+                            "field": "320",
+                            "description": "<p>商業司連線失敗，請稍後再試</p>"
                         }
                     ]
                 },
@@ -46593,11 +46593,6 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "202",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-                        "type": "Object"
-                    },
-                    {
                         "title": "213",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
                         "type": "Object"
@@ -46610,6 +46605,11 @@ define({
                     {
                         "title": "219",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"219\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "220",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"220\"\n}",
                         "type": "Object"
                     },
                     {
@@ -46644,15 +46644,15 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "318",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"318\"\n}",
-                        "type": "Object"
-                    },
-                    {
                         "title": "319",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"319\"\n}",
                         "type": "Object"
                     },
+                    {
+                        "title": "320",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"320\"\n}",
+                        "type": "Object"
+                    }
                 ]
             },
             "filename": "application/controllers/api/v2/User.php",
@@ -46951,7 +46951,7 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "202",
+                            "field": "220",
                             "description": "<p>自然人實名認證未通過(只有法人註冊會有)</p>"
                         },
                         {
@@ -47011,14 +47011,14 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "318",
-                            "description": "<p>商業司連線失敗，請稍後再試</p>"
+                            "field": "319",
+                            "description": "<p>商業司回應格式有誤 (API改版?)</p>"
                         },
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "319",
-                            "description": "<p>商業司回應格式有誤 (API改版?)</p>"
+                            "field": "320",
+                            "description": "<p>商業司連線失敗，請稍後再試</p>"
                         }
                     ]
                 },
@@ -47039,11 +47039,6 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "202",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"202\"\n}",
-                        "type": "Object"
-                    },
-                    {
                         "title": "213",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"213\"\n}",
                         "type": "Object"
@@ -47056,6 +47051,11 @@ define({
                     {
                         "title": "219",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"219\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "220",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"220\"\n}",
                         "type": "Object"
                     },
                     {
@@ -47089,13 +47089,13 @@ define({
                         "type": "Object"
                     },
                     {
-                        "title": "318",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"318\"\n}",
+                        "title": "319",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"319\"\n}",
                         "type": "Object"
                     },
                     {
-                        "title": "319",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"319\"\n}",
+                        "title": "320",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"320\"\n}",
                         "type": "Object"
                     }
                 ]

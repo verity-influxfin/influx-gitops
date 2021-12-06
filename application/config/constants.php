@@ -139,8 +139,8 @@ defined('COOPERATION_EXIST')  			OR define('COOPERATION_EXIST'			, 314); //已�
 defined('COOPERATION_NOT_EXIST')  		OR define('COOPERATION_NOT_EXIST'		, 315); //沒申請過經銷商
 defined('COOPERATION_TYPE_ERROR')  		OR define('COOPERATION_TYPE_ERROR'		, 316); //經銷商類別錯誤
 defined('SMS_SEND_FAIL')                OR define('SMS_SEND_FAIL'               , 317); //簡訊驗證碼SMS發送失敗
-defined('CONNECTION_ERROR')                OR define('CONNECTION_ERROR'               , 318); //第三方連線錯誤
 defined('RESPONSE_ERROR')                OR define('RESPONSE_ERROR'               , 319);   //第三方回應內容有誤
+defined('CONNECTION_ERROR')                OR define('CONNECTION_ERROR'               , 320); //第三方連線錯誤
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
