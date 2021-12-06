@@ -792,10 +792,11 @@ class Cron extends CI_Controller
 		echo json_encode($result);
 	}
 
+	//將黑名單學校的學生認證退回重審
 	public function send_certification_return_msg()
 	{
 		$this->load->model('user/user_certification_model');
-		$this->load->library('Certification_lib');
+		$this->load->library('certification_lib');
 
 		$data_rows = $this->user_certification_model->get_certifications_return();
 

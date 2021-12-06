@@ -134,6 +134,7 @@ class User_certification_model extends MY_Model
         return $list;
     }
 
+	//將黑名單學校的學生認證退回重審
 	public function get_certifications_return()
 	{
 		$this->db
