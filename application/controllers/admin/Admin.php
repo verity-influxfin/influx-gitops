@@ -351,11 +351,35 @@ class Admin extends MY_Admin_Controller {
 		$this->load->view('admin/_footer');
 	}
 
+	public function role_management()
+	{
+		$page_data = array();
+		$list = $this->role_model->get_all();
+		if (!empty($list)) {
+			$page_data['list'] = $list;
+			$page_data['status_list'] = $this->role_model->status_list;
+			$page_data['name_list'] = $this->admin_model->get_name_list();
+		}
+
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title', $this->menu);
+		$this->load->view('admin/role_management', $page_data);
+		$this->load->view('admin/_footer');
+	}
+
 	public function role_list_edit()
 	{	
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
 		$this->load->view('admin/role_list_edit');
+		$this->load->view('admin/_footer');
+	}
+
+	public function role_management_edit()
+	{	
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/role_management_edit');
 		$this->load->view('admin/_footer');
 	}
 }

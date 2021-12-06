@@ -11,13 +11,13 @@
 </style>
 <div id="page-wrapper">
 	<div class="row">
-		<h1 class="page-header">後台權限設置</h1>
+		<h1 class="page-header">人員管理</h1>
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="search-heading row">
 				<div>
-					<span class="name">部門名稱</span>
+					<span class="name">名稱</span>
 					<input type="text" id="search" />
 				</div>
 				<div class="search-btn">
@@ -26,15 +26,17 @@
 			</div>
 		</div>
 		<div class="new-role m-4">
-			<a class="btn btn-primary" href="<?=admin_url('Admin/role_list_edit') ?>" target="_blank">新增角色</a>
+			<a class="btn btn-primary" href="<?=admin_url('Admin/role_management_edit') ?>" target="_blank">新增管理員</a>
 		</div>
 		<div class="table-row">
 			<table class="display responsive nowrap" width="100%" id="table-roles-setting">
 				<thead>
 					<tr>
+						<th>帳號</th>
+						<th>姓名</th>
 						<th>部門</th>
 						<th>組別</th>
-						<th>角色名稱</th>
+						<th>角色</th>
 						<th>修改</th>
 					</tr>
 				</thead>
@@ -65,12 +67,12 @@
 			},
 		})
 		for (let index = 0; index < 30; index++) {
-			insertDataRow({ table, part: index, group: 0, role: 0, id: index })
+			insertDataRow({ table, account: 'aaa', name: 'aaa' + index, part: index, group: 0, role: 0, id: index })
 		}
 	});
-	function insertDataRow({ table, part, group, role, id }) {
+	function insertDataRow({ table, account, name, part, group, role, id }) {
 		const origin = window.location.origin
-		const button = `<button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_list_edit?id=${id}')">Edit</button>`
-		table.row.add([part, group, role, button]).draw()
+		const button = `<button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_management_edit?id=${id}')">Edit</button>`
+		table.row.add([account, name, part, group, role, button]).draw()
 	}
 </script>
