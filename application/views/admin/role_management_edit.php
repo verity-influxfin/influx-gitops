@@ -62,6 +62,10 @@
 		padding: 4px;
 		margin-bottom: 10px;
 	}
+	.button-row{
+		display: flex;
+		justify-content: center;
+	}
 </style>
 
 <div id="page-wrapper">
@@ -177,5 +181,8 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="button-row">
+			<button class="btn btn-primary">儲存</button>
 		</div>
 	</div>
