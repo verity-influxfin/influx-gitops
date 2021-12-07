@@ -348,7 +348,7 @@ class Admin extends MY_Admin_Controller {
 	{
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title', $this->menu);
-		$this->load->view('admin/role_management', $page_data);
+		$this->load->view('admin/role_management');
 		$this->load->view('admin/_footer');
 	}
 
