@@ -439,7 +439,7 @@ class Data_legalize_lib{
 					$verifiedResult->addMessage('聯徵報告身分證字號與實名認證不符', 2, MassageDisplay::Client);
 				}
 
-				// TODO: 微企貸的聯徵a11 return 及 $res 要改
+				// TODO: 普匯微企e秒貸的聯徵a11 return 及 $res 要改
 //				$res['result']['id'] = $data['id'];
 //				if($hsa_a11){
 //					if($data['id'] != $user_info->id_number){
