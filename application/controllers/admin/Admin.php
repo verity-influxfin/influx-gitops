@@ -367,5 +367,13 @@ class Admin extends MY_Admin_Controller {
 		$this->load->view('admin/role_management_edit');
 		$this->load->view('admin/_footer');
 	}
+
+	public function role_review_edit()
+	{	
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/role_review_edit');
+		$this->load->view('admin/_footer');
+	}
 }
 ?>
