@@ -88,6 +88,7 @@ $config['admin_menu'] = [
         'role_list_setting' => '權限設置',
 		'role_management'=>'人員管理',
         'role_list_review' => '權限審查',
+        'role_permission_list' => '權限查詢',
         'index' => '人員列表',
     ],
     'Sales' => [
