@@ -187,7 +187,11 @@
     </div>
     <div class="footer">
       <div>
-        <img src="../asset/images/charitable-footer.png" alt="" />
+        <img
+          src="../asset/images/charitable-footer.png"
+          class="footer-img"
+          alt=""
+        />
       </div>
     </div>
   </div>
@@ -279,7 +283,7 @@ export default {};
   }
 }
 .yt-iframe {
-  width: 670px;
+  max-width: 670px;
   padding: 0 15px;
   margin-bottom: 62.5px;
   .video-container {
@@ -426,6 +430,9 @@ export default {};
   margin: auto;
   max-width: 1300px;
 }
+.footer-img {
+  max-width: 100%;
+}
 @media screen and (max-width: 767px) {
   .img-icon {
     margin-right: 8px;
@@ -443,9 +450,45 @@ export default {};
   .banner {
     margin-bottom: 30px;
   }
+  .yt-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    .yt-top-icon {
+      width: 46px;
+      height: 46px;
+      background-image: url("../asset/images/NTUCH02F.png");
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-position: center center;
+    }
+    .yt-top-text {
+      margin: 0 6px;
+      font-family: NotoSansTC;
+      font-size: 18px;
+    }
+    .yt-top-donate {
+      font-size: 20px;
+      padding: 2px 12px;
+    }
+  }
+  .dinosaurs-img{
+      max-width: 85%;
+      margin-bottom: 20px;
+      display: block;
+      margin-left: auto;
+  }
+  .dinosaurs-text{
+      padding: 0 35px;
+  }
   .content-text {
     margin: 30px auto;
     font-size: 16px;
+  }
+  .organizer{
+      margin: 30px 0;
+      padding: 0 10px;
   }
   .fund-text {
     width: 300px;
@@ -489,9 +532,14 @@ export default {};
       bottom: 40px;
     }
   }
+  .img-whale{
+      width: 130px;
+      right: 10px;
+      top: -40px;
+  }
   .go-donate {
     position: relative;
-    margin: 60px auto;
+    margin: 30px auto;
     height: 210px;
     width: 300px;
     .go-donate-title {
@@ -500,6 +548,11 @@ export default {};
     }
     .go-donate-text {
       height: 60px;
+    }
+    .go-donate-bird{
+        height: 90px;
+        left: -45px;
+        top: 100px;
     }
 
     .go-donate-button {
