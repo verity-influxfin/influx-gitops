@@ -23,14 +23,13 @@
             </style>
 			<script type="text/javascript">
                 function showChang(){
-                    var tsearch 			= $('#tsearch').val();
-                    var alias 				= $('#alias :selected').val();
+                    var collaborator 				= $('#collaborator :selected').val();
                     var dateRange           = '&sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
-                    if(tsearch===''&&alias===''){
-                        top.location = './promote_list?'+dateRange;
+                    if(collaborator===''){
+                        top.location = './promote_import_list?'+dateRange;
                     }
                     else{
-                        top.location = './promote_list?tsearch='+tsearch+(alias!==''?'&alias='+alias:'')+dateRange;
+                        top.location = './promote_import_list'+(collaborator!==''?'?collaboration_id='+collaborator:'')+dateRange;
                     }
 				}
                 $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
@@ -98,9 +97,9 @@
                                     <tr>
                                         <td>合作對象：</td>
                                         <td colspan="5">
-                                            <select id="alias">
-                                                <? foreach($alias_list as $key => $value){ ?>
-                                                    <option value="<?=$key?>" <?=isset($_GET['alias'])&&$_GET['alias']!=''&&$_GET['alias']==$key?"selected":''?>><?=$value?></option>
+                                            <select id="collaborator">
+                                                <? foreach($collaborator_list as $key => $value){ ?>
+                                                    <option value="<?=$key?>" <?=isset($_GET['collaboration_id'])&&$_GET['collaboration_id']!=''&&$_GET['collaboration_id']==$key?"selected":''?>><?=$value?></option>
                                                 <? } ?>
                                             </select>
                                         </td>
@@ -122,10 +121,11 @@
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" width="100%" id="dataTables-tables">
+                                <table class="table table-striped table-bordered table-hover" width="100%" id="dataTables-tables"
+                                       data-sort-name="date" data-sort-order="desc">
                                     <thead>
                                         <tr>
-                                            <th>匯入日期</th>
+                                            <th data-field="date">匯入日期</th>
                                             <th>合作對象</th>
                                             <th>成功推薦案件數</th>
                                         </tr>
@@ -137,19 +137,10 @@
                                             foreach($list as $key => $value) {
                                                 $count++;
 									?>
-                                        <tr class="<?= $count%2==0?"odd":"even"; ?> list <?= $value['info']['id'] ?? '' ?>">
-                                            <td><?= $value['info']['end_time']??'' ?></td>
-                                            <td><?= $value['info']['user_id']??'' ?></td>
-                                            <td><?= $value['info']['settings']['description']??'' ?></td>
-                                            <td><?= $value['info']['name']??'' ?></td>
-                                            <td><?= $value['info']['promote_code']??'' ?></td>
-                                            <td><?= $value['fullMemberCount']??'' ?></td>
-                                            <td><?= $value['loanedCount']['student']??'' ?></td>
-                                            <td><?= $value['loanedCount']['salary_man']??'' ?></td>
-                                            <td><?= $value['loanedCount']['small_enterprise']??'' ?></td>
-                                            <td><?= $value['totalRewardAmount']??'' ?></td>
-                                            <td><?= ($value['info']['status']??'')==1?"啟用":"停用" ?></td>
-											<td><a href="<?=admin_url('sales/promote_edit')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>
+                                        <tr class="<?= $count%2==0?"odd":"even"; ?> list <?= $value['id'] ?? '' ?>">
+                                            <td><?= $value['created_at']??'' ?></td>
+                                            <td><?= $value['collaborator']??'' ?></td>
+                                            <td><?= $value['count']??'' ?></td>
                                         </tr>
 									<?php
 									}}

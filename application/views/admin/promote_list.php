@@ -38,30 +38,41 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-							<table>
-								<tr>
-									<td>搜尋：</td>
-									<td class="tsearch" colspan="7"><input type="text" value="<?=isset($_GET['tsearch'])&&$_GET['tsearch']!=''?$_GET['tsearch']:''?>" id="tsearch" placeholder="使用者代號(UserID) / 姓名 / 身份證字號 / 推薦碼" /></td>
-								</tr>
-								<tr>
-                                    <td>狀態：</td>
-                                    <td colspan="5">
-                                        <select id="alias">
-                                            <? foreach($alias_list as $key => $value){ ?>
-                                            <option value="<?=$key?>" <?=isset($_GET['alias'])&&$_GET['alias']!=''&&$_GET['alias']==$key?"selected":''?>><?=$value?></option>
-                                            <? } ?>
-                                        </select>
-                                    </td>
-								</tr>
-                                <tr style="vertical-align: baseline;">
-                                    <td>從：</td>
-                                    <td><input type="text" value="<?=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?>" id="sdate" data-toggle="datepicker" placeholder="不指定區間" /></td>
-                                    <td style="">到：</td>
-                                    <td><input type="text" value="<?=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?>" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>
-                                    <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
-                                </tr>
-                            </table>
+                        <div class="panel-heading" style=" display: flex;">
+                            <div class="col-lg-9">
+                                <table>
+                                    <tr>
+                                        <td>搜尋：</td>
+                                        <td class="tsearch" colspan="7"><input type="text" value="<?=isset($_GET['tsearch'])&&$_GET['tsearch']!=''?$_GET['tsearch']:''?>" id="tsearch" placeholder="使用者代號(UserID) / 姓名 / 身份證字號 / 推薦碼" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>狀態：</td>
+                                        <td colspan="5">
+                                            <select id="alias">
+                                                <? foreach($alias_list as $key => $value){ ?>
+                                                <option value="<?=$key?>" <?=isset($_GET['alias'])&&$_GET['alias']!=''&&$_GET['alias']==$key?"selected":''?>><?=$value?></option>
+                                                <? } ?>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr style="vertical-align: baseline;">
+                                        <td>從：</td>
+                                        <td><input type="text" value="<?=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?>" id="sdate" data-toggle="datepicker" placeholder="不指定區間" /></td>
+                                        <td style="">到：</td>
+                                        <td><input type="text" value="<?=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:''?>" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>
+                                        <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-lg-3">
+                                <div style="
+                                    display: flex;
+                                    justify-content: flex-end;
+                                    align-self: flex-start;
+                                     ">
+                                    <a type="button" href="<?=admin_url('sales/promote_import_list') ?>" class="btn btn-primary">前往報表匯入</a>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -99,7 +110,7 @@
                                             <td><?= $value['fullMemberCount']??'' ?></td>
                                             <td><?= $value['loanedCount']['student']??'' ?></td>
                                             <td><?= $value['loanedCount']['salary_man']??'' ?></td>
-                                            <td><?= $value['loanedCount']['small_enterprise']??'' ?></td>
+                                            <td><?= (($value['loanedCount']['small_enterprise']??0)+($value['totalCollaborationRewardAmount']??0)) ?></td>
                                             <td><?= $value['totalRewardAmount']??'' ?></td>
                                             <td><?= ($value['info']['status']??'')==1?"啟用":"停用" ?></td>
 											<td><a href="<?=admin_url('sales/promote_edit')."?id=".$value['info']['id'] ?><?=isset($_GET['sdate'])&&$_GET['sdate']!=''?"&sdate=".$_GET['sdate']:''?><?=isset($_GET['edate'])&&$_GET['edate']!=''?"&edate=".$_GET['edate']:''?>" target="_blank" class="btn btn-default">詳細資訊</a></td>

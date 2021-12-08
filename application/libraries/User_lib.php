@@ -138,6 +138,20 @@ class User_lib {
         return 0;
     }
 
+    public function getCollaborationRewardAmount($settings, $collaboration_type) {
+        switch ($collaboration_type) {
+            case 1:
+                $type = 'collaboration_person';
+                break;
+            case 2:
+                $type = 'collaboration_enterprise';
+                break;
+            default:
+                return 0;
+        }
+        return $settings[$type]['amount'] ?? 0;
+    }
+
     /**
      * 取得推薦碼獎勵及相關資訊
      * @param array $where
@@ -161,6 +175,9 @@ class User_lib {
             if(!isset($list[$promoteCodeRs['promote_code']])) {
                 $code = $promoteCodeRs['promote_code'];
                 $list[$code] = $categoryInitList;
+                $list[$code]['collaborationCount'] = [];
+                $list[$code]['collaborationRewardAmount'] = [];
+                $list[$code]['totalCollaborationRewardAmount'] = 0;
                 $list[$code]['fullMemberCount'] = 0;
                 $list[$code]['fullMember'] = [];
                 $list[$code]['registeredCount'] = 0;
@@ -198,14 +215,15 @@ class User_lib {
             }
         }
 
+        // 計算推薦碼各產品初貸數量/下載數/註冊數的相關獎金
         foreach ($promoteCodeList as $value) {
             $promoteCode = $value['promote_code'];
 
-            $list[$promoteCode]['info'] = json_decode(json_encode($value), true);
+            $list[$promoteCode]['info'] = json_decode(json_encode($value), true) ?? [];
             $list[$promoteCode]['totalRewardAmount'] = 0;
             $list[$promoteCode]['totalLoanedAmount'] = 0;
 
-            $list[$promoteCode]['info']['settings'] = json_decode($list[$promoteCode]['info']['settings'], true);
+            $list[$promoteCode]['info']['settings'] = json_decode($list[$promoteCode]['info']['settings'], true) ?? [];
             $settings = $list[$promoteCode]['info']['settings'];
             foreach ($this->rewardCategories as $category => $productIdList) {
                 $rewardAmount = 0;
@@ -224,11 +242,35 @@ class User_lib {
             if(!isset($list[$promoteCode]['downloadedCount']))
                 $list[$promoteCode]['downloadedCount'] = 0;
 
-
             if(isset($settings['reward']) && isset($settings['reward']['full_member'])) {
                 $list[$promoteCode]['fullMemberRewardAmount'] = $list[$promoteCode]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
                 $list[$promoteCode]['totalRewardAmount'] += $list[$promoteCode]['fullMemberRewardAmount'];
             }
+        }
+
+        // 計算合作對象推薦獎金
+        $this->CI->load->model('user/user_qrcode_collaboration_model');
+        $collaborationRs =$this->CI->user_qrcode_collaboration_model->getCollaborationList(array_keys($promoteCodeList), $startDate, $endDate);
+        foreach ($collaborationRs as $rs) {
+            $promoteCode = $rs['promote_code'];
+            $collaboratorId = $rs['qrcode_collaborator_id'];
+
+            $settings = $list[$promoteCode]['info']['settings'];
+            $collaborationRewardAmount = 0;
+            if(isset($settings['reward']) && isset($rs['type'])) {
+                $collaborationRewardAmount = $this->getCollaborationRewardAmount($settings['reward'], $rs['type']);
+            }
+            if(!isset($list[$promoteCode]['collaborationCount'][$collaboratorId]) &&
+                !isset($list[$promoteCode]['collaborationRewardAmount'][$collaboratorId])) {
+                $list[$promoteCode]['collaborationCount'][$collaboratorId] = 0;
+                $list[$promoteCode]['collaborationRewardAmount'][$collaboratorId] = 0;
+            }
+            $list[$promoteCode]['collaborationCount'][$collaboratorId] += 1;
+            $list[$promoteCode]['collaborationRewardAmount'][$collaboratorId] += $collaborationRewardAmount;
+            $list[$promoteCode]['totalCollaborationRewardAmount'] += $collaborationRewardAmount;
+
+            // 累加合作對象獎金至總獎金
+            $list[$promoteCode]['totalRewardAmount'] += $collaborationRewardAmount;
         }
 
         return $list;
@@ -434,7 +476,7 @@ class User_lib {
 
         foreach ($list as $value) {
             $settings = json_decode($value['settings'], TRUE);
-            if($settings === FALSE || !isset($bankAccountList[$value['user_id']]) ||
+            if($settings === NULL || !isset($bankAccountList[$value['user_id']]) ||
                 !isset($settings['investor']) || !isset($bankAccountList[$value['user_id']][$settings['investor']])
             ) {
                 continue;

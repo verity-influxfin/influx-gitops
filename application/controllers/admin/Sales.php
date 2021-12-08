@@ -797,6 +797,7 @@ class Sales extends MY_Admin_Controller {
     public function promote_edit() {
         $this->load->library('user_lib');
         $this->load->model('user/qrcode_setting_model');
+        $this->load->model('user/qrcode_collaborator_model');
         $this->load->library('contract_lib');
 
         $input 		= $this->input->get(NULL, TRUE);
@@ -811,7 +812,7 @@ class Sales extends MY_Admin_Controller {
         }
 
         $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate']??'', $input['edate']??'');
-
+        $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all()), TRUE) ?? [];
         $page_data['data'] = reset($list);
 
         $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0);
@@ -1082,12 +1083,20 @@ class Sales extends MY_Admin_Controller {
             alert('ERROR, 只接受Ajax', admin_url('sales/promote_reward_list'));
         }
         $this->load->library('output/json_output');
+        $this->load->model('user/qrcode_collaborator_model');
+        $this->load->model('user/user_qrcode_collaboration_model');
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('log/log_qrcode_import_collaboration_model');
 
         $keyword_list = ['promote_code' => '推薦碼', 'collaborator' => '合作對象', 'datetime' => '時間'];
         $col_num_list = array_combine(array_keys($keyword_list), array_fill(0, count($keyword_list), -1));
         $col_str_list = array_combine(array_keys($keyword_list), array_fill(0, count($keyword_list), ''));
 
-        if(isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
+        if(!isset($_FILES['file'])) {
+            $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "沒有選擇的檔案，無法上傳。"])->send();
+        }
+
+        if($_FILES['file']['error'] == 0) {
             $tmpName = $_FILES['file']['tmp_name'];
 
             try {
@@ -1105,6 +1114,7 @@ class Sales extends MY_Admin_Controller {
             // 獲取內容的最大行 如:4
             $row = $sheet->getHighestRow();
 
+            // 建立欄位名稱與 Excel 欄位索引的對應
             for ($i = 1; $i <= $max_column_index; $i++) {
                 $key = $sheet->getCellByColumnAndRow($i, 1)->getValue();
                 foreach ($keyword_list as $idx => $keyword) {
@@ -1129,15 +1139,49 @@ class Sales extends MY_Admin_Controller {
             $sheet_data = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
             $sheet_data = array_slice($sheet_data, 1);
 
-            $data = array_combine(array_column($sheet_data, $col_str_list['promote_code']), array_columns($sheet_data, array_values($col_str_list)));
-            foreach ($data as $qrcode => $info) {
-                $data[$qrcode] = array_combine(array_keys($keyword_list), array_values($info));
-                $data[$qrcode]['datetime'] = date('Y-m-d H:i:s', strtotime($data[$qrcode]['datetime']));
+            $insert_list = [];
+            $log_list = [];
+            $user_qrcode_list = $this->user_qrcode_model->db->where(['status' => 1])->get('user_qrcode')->result_array();
+            $user_qrcode_list = array_column($user_qrcode_list, NULL, 'promote_code');
+            $collaborator_list = $this->qrcode_collaborator_model->db->where(['status' => 1])->get('qrcode_collaborator')->result_array();
+            $collaborator_list = array_combine(array_column($collaborator_list, 'id'), array_column($collaborator_list, 'collaborator'));
+
+            $data = array_columns($sheet_data, array_values($col_str_list));
+            foreach ($data as $i => $info) {
+                // 整理資料 (將 Excel 欄位轉成對應欄位名稱)
+                $data[$i] = array_combine(array_keys($keyword_list), array_values($info));
+                $data[$i]['datetime'] = date('Y-m-d H:i:s', strtotime($data[$i]['datetime']));
+
+                $collaborator_idx = array_search($data[$i]['collaborator'], $collaborator_list);
+                if($collaborator_idx === false) {
+                    $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "上傳的檔案內有不合作之對象，請刪除後再試。(錯誤對象:".$data[$i]['collaborator'].")"])->send();
+                } else if (!array_key_exists($data[$i]['promote_code'], $user_qrcode_list)) {
+                    $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "上傳的檔案內有不存在之推薦碼，請刪除後再試。(錯誤推薦碼:".$data[$i]['promote_code'].")"])->send();
+                } else {
+                    $imported_info = [
+                        'user_qrcode_id' => $user_qrcode_list[$data[$i]['promote_code']]['id'],
+                        'qrcode_collaborator_id' => $collaborator_idx,
+                        'loan_time' => $data[$i]['datetime']
+                    ];
+                    $insert_list[] = $imported_info;
+                    $log_list[$collaborator_idx][] = $imported_info;
+                }
             }
-            // TODO: 匯入 Excel 後的推薦碼需更新至第三方的統計資料表 (待創建資料表)
-            $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "匯入成功。"])->send();
+
+            $rs = $this->user_qrcode_collaboration_model->insert_many($insert_list);
+
+            // 新增匯入紀錄
+            foreach ($log_list as $collaborator_idx => $info) {
+                $this->log_qrcode_import_collaboration_model->insert([
+                    'qrcode_collaboration_id' => $collaborator_idx,
+                    'count' => count($info),
+                    'content' => json_encode($info),
+                    'admin_id' => $this->login_info->id,
+                ]);
+            }
+            $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "匯入成功，共匯入 ".count($rs)." 筆。"])->send();
         }else{
-            $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "上傳檔案出現錯誤，請洽工程師。"])->send();
+            $this->json_output->setStatusCode(400)->setResponse(['success' => false, 'msg' => "上傳檔案出現錯誤，請洽工程師。(錯誤編號:".$_FILES['file']['error'].")"])->send();
         }
     }
 
@@ -1145,11 +1189,10 @@ class Sales extends MY_Admin_Controller {
         $this->load->library('user_lib');
         $this->load->library("pagination");
         $this->load->model('log/log_qrcode_import_collaboration_model');
-        $this->load->model('user/qrcode_collaboration_model');
+        $this->load->model('user/qrcode_collaborator_model');
 
         $input 		= $this->input->get(NULL, TRUE);
         $where		= [];
-        $list   	= [];
         $fields 	= ['collaboration_id'];
 
         foreach ($fields as $field) {
@@ -1161,14 +1204,17 @@ class Sales extends MY_Admin_Controller {
         $input['edate'] = $input['edate'] ?? '';
         if(!empty($input['sdate']))
             $where['created_at >= '] = $input['sdate'];
-        if(empty($input['edate']))
+        if(!empty($input['edate']))
             $where['created_at <= '] = $input['edate'];
 
-        if(($where['collaboration_id']??"") == "all") {
+        if(isset($where['collaboration_id'])) {
+            if($where['collaboration_id'] != "all") {
+                $where['qrcode_collaboration_id'] = $where['collaboration_id'];
+            }
             unset($where['collaboration_id']);
         }
 
-        $imported_list = $this->log_qrcode_import_collaboration_model->get_many_by($where);
+        $imported_list = $this->log_qrcode_import_collaboration_model->get_imported_log_list($where);
 
         $config = pagination_config();
         $config['per_page']      = 40; //每頁顯示的資料數
@@ -1183,18 +1229,17 @@ class Sales extends MY_Admin_Controller {
 
         $list = array_slice($imported_list, $offset, $config['per_page']);
 
-        $collaboration_list = $this->qrcode_collaboration_model->get_many_by(['status' => 1]);
-        $alias_list = ['all' => "全部對象"];
-        $alias_list = array_merge($alias_list, array_combine(array_column($collaboration_list, 'id'), array_column($collaboration_list, 'collaborator')));
+        $collaborator_rs = $this->qrcode_collaborator_model->get_many_by(['status' => 1]);
+        $collaborator_list = ['all' => "全部對象"];
+        $collaborator_list = array_replace_recursive($collaborator_list, array_combine(array_column($collaborator_rs, 'id'), array_column($collaborator_rs, 'collaborator')));
 
         $page_data['list'] = $list;
-        $page_data['alias_list'] = $alias_list;
+        $page_data['collaborator_list'] = $collaborator_list;
 
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
         $this->load->view('admin/promote_import_list',$page_data);
         $this->load->view('admin/_footer');
-
     }
 }
 

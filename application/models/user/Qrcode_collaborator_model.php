@@ -1,8 +1,8 @@
 <?php
 
-class Qrcode_collaboration_model extends MY_Model
+class Qrcode_collaborator_model extends MY_Model
 {
-	public $_table = 'qrcode_collaboration';
+	public $_table = 'qrcode_collaborator';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(

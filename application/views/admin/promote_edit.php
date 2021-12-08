@@ -239,40 +239,27 @@
                                                 <p class="form-control-static"><?= isset($data['rewardAmount'])?$data['rewardAmount']['small_enterprise']??"":"" ?></p>
                                             </td>
                                         </tr>
+                                        <?php
+                                            foreach ($collaborator_list as $collaborator) {
+                                        ?>
                                         <tr>
                                             <td>
-                                                <p class="form-control-static">上海商銀核准數量</p>
+                                                <p class="form-control-static"><?= $collaborator['collaborator']??'' ?>核准數量</p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static"><?= "0" ?></p>
+                                                <p class="form-control-static"><?= $data['collaborationCount'][$collaborator['id']]??0 ?></p>
                                             </td>
                                             <td colspan="4">
                                                 <p class="form-control-static"></p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static">上海商銀核准數量</p>
+                                                <p class="form-control-static"><?= $collaborator['collaborator'] ?>核准獎金</p>
                                             </td>
                                             <td>
-                                                <p class="form-control-static"><?= "0" ?></p>
+                                                <p class="form-control-static"><?= $data['collaborationRewardAmount'][$collaborator['id']]??0 ?></p>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <p class="form-control-static">王道銀行核准數量</p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static"><?= "0" ?></p>
-                                            </td>
-                                            <td colspan="4">
-                                                <p class="form-control-static"></p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static">王道銀行獎金</p>
-                                            </td>
-                                            <td>
-                                                <p class="form-control-static"><?= "0" ?></p>
-                                            </td>
-                                        </tr>
+                                        <?php } ?>
                                         <tr>
 <!--                                            <td colspan="2">-->
 <!--                                                <p class="form-control-static"></p>-->
@@ -341,7 +328,7 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="collaboration_person" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['collaboration_person'])?$data['info']['settings']['reward']['product']['collaboration_person']['amount']??"0":"0" ?>">
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="collaboration_person" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['collaboration_person'])?$data['info']['settings']['reward']['collaboration_person']['amount']??"0":"0" ?>">
                                             </td>
                                         </tr>
                                         <tr style="background-color:#f5f5f5;">
@@ -351,7 +338,7 @@
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="collaboration_enterprise" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['collaboration_enterprise'])?$data['info']['settings']['reward']['product']['collaboration_enterprise']['amount']??"0":"0" ?>">
+                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="collaboration_enterprise" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['collaboration_enterprise'])?$data['info']['settings']['reward']['collaboration_enterprise']['amount']??"0":"0" ?>">
                                             </td>
                                         </tr>
                                         <tr style="background-color:#f5f5f5;">
