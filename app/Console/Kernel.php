@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //取得顯示在首頁的三數據
+        // 取得顯示在首頁的三數據
         $schedule->command('accumulatedData:get')->everyMinute();
     }
 

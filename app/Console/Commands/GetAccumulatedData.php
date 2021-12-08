@@ -39,19 +39,19 @@ class GetAccumulatedData extends Command
      */
     public function handle()
     {
-        //累積註冊用戶
+        // 累積註冊用戶
         $user_register_count = Http::get(env('API_URL') . 'user/member_count')->json();
-        //累積媒合金額
+        // 累積媒合金額
         $target_loan_sum = Http::get(env('API_URL') . 'target/total_loan_amount')->json();
-        //累積成交筆數
+        // 累積成交筆數
         $target_transaction_count = Http::get(env('API_URL') . 'target/transaction_count')->json();
 
         DB::table('count')->insert([
             'transactionCount' => $target_transaction_count['data']['count'] ?? 0,
             'memberCount' => $user_register_count['data']['count'] ?? 0,
             'totalLoanAmount' => $target_loan_sum['data']['amount'] ?? 0,
-            'created_at' => date("Y-m-d H:i:s", strtotime("now")),
-            'updated_at' => date("Y-m-d H:i:s", strtotime("now")),
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s"),
         ]);
 
         return Command::SUCCESS;
