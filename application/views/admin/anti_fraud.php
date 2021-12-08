@@ -287,11 +287,11 @@
 		let startTime = 0
 		let endTime = 999999999999
 		if (startTimeObj) {
-			startTime = new Date(startTime).valueOf()
+			startTime = new Date(startTimeObj).valueOf()/1000
 			prevStartTime = startTime
 		}
 		if (endTimeObj) {
-			endTime = new Date(startTime).valueOf()
+			endTime = new Date(endTimeObj).valueOf()/1000
 			prevEndTime = endTime
 		}
 		const ans = await getRuleStatistics({
@@ -310,9 +310,12 @@
 			if (endTimeObj) {
 				duration = duration.replace('Now', endTimeObj)
 			}
+			const rule = x.mainDescription === x.description 
+				? x.mainDescription 
+				: `${x.mainDescription} , ${x.description}`
 			return {
 				id: `${x.typeId}-${x.productId}`,
-				rule: `${x.mainDescription},${x.description}`,
+				rule,
 				duration,
 				ruleId: x.ruleId,
 				productId: x.productId,
@@ -456,7 +459,7 @@
 			})
 
 		} else {
-			if (label.includes('時間')) {
+			if (label.includes('時間')|| label.includes('是否有關聯規則')) {
 				return
 			} else {
 				v.textContent = value.toString()
