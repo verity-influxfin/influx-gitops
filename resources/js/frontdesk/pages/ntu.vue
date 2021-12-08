@@ -5,136 +5,196 @@
     </div>
     <div>
       <div class="title-dot-up">
-        <div class="dots" style="opacity: 0.2;width:2px;height:2px;"></div>
-        <div class="dots" style="opacity: 0.4;width:4px;height:4px;"></div>
-        <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
+        <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+        <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+        <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+        <div class="dots" style="opacity: 0.75; width: 6px; height: 6px"></div>
       </div>
       <div class="d-flex justify-content-center">
         <img src="../asset/images/太陽.svg" class="img-icon" alt="" />
         <img src="../asset/images/孩子健康 看見希望.svg" class="img-text-1" />
       </div>
       <div class="title-dot-down">
-        <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.4;width:4px;height:4px;"></div>
-        <div class="dots" style="opacity: 0.2;width:2px;height:2px;"></div>
+        <div class="dots" style="opacity: 0.75; width: 6px; height: 6px"></div>
+        <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+        <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+        <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
       </div>
     </div>
-    <div class="content-text">
-      <p>
-        兒童神經疾病的病徵表現很複雜，症狀常是漸進式的變化，很難發現；在早期，罹患這些疾病的孩子們
-        常常被迫休學在家，與社會隔絕。雖然目前許多神經疾病仍無法根治，但透過早期的診斷與完善的醫療
-        照護，不僅可以延緩病程的進展，並可大大減少病童的併發症，進而明顯改善生活品質，使他們能夠勇
-        於走向社會。
-      </p>
-      <p>
-        在歐美先進國家，都有著龐大且完整的組織團隊與資源在支持這群病人，然而在台灣，這樣的資源卻是
-        少之又少，病童不僅常常無法獲得正確診斷，又或者是確診之後也缺乏適當的醫療照護可以提供給這群
-        罕見的病童們，因此讓這群孩子與家屬處於徬徨與無助之中，不知道應該要看什麼醫生、不知道還有什
-        麼可以幫助他們的方法。
-      </p>
-      <p>
-        臺大兒童醫院擁有完整的兒童神經醫療團隊與最新科技及藥物，透過全方位診斷及整合式的醫療照顧，
-        可幫助病童找到正確的治療方式，不僅是提供醫療上的協助，更能提供預防性照護，透過定期檢查、衛
-        教與訓練，減少及延緩各種併發症的產生，大大提升病童的生活品質，減少家庭與健保的負擔。
-      </p>
-    </div>
-    <div class="yt-iframe">
-      <div class="video-container">
-        <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/5Bxx0sY9Ns0"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
+    <div class="row justify-content-center">
+      <div class="content-text col-auto">
+        <p>
+          孩子愈來愈少了，<br />
+          我們未來主人翁的健康好重要 <br />
+          一個都不能少，<br />
+          兒童健康不能等！<br />
+        </p>
+        <p>
+          孩子生病了，<br />
+          看著孩子辛苦面對病魔的眼神<br />
+          我們好心疼、好焦急、好擔心，<br />
+          我們知道不能再等了！
+        </p>
+        <p>
+          我們比好多生病的孩子幸福好多，<br />
+          我們擁有健康，擁有福氣
+        </p>
+      </div>
+      <div class="col-auto">
+        <div class="yt-top">
+          <div class="yt-top-icon"></div>
+          <div class="yt-top-text">台大兒童健康基金會</div>
+          <router-link to="/borrowLink" target="_blank">
+            <button class="btn btn-outlined yt-top-donate">捐款去</button>
+          </router-link>
+        </div>
+        <div class="yt-iframe">
+          <div class="video-container">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/5Bxx0sY9Ns0"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
       </div>
     </div>
-    <div>
-      <div class="title-dot-up">
-        <div class="dots" style="opacity: 0.2;width:2px;height:2px;"></div>
-        <div class="dots" style="opacity: 0.4;width:4px;height:4px;"></div>
-        <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
+    <div class="row justify-content-center align-items-end">
+      <div class="col-auto">
+        <img
+          src="../asset/images/dinosaurs.png"
+          class="dinosaurs-img"
+          alt="dinosaurs"
+        />
       </div>
-      <div class="d-flex justify-content-center">
-        <img src="../asset/images/彩虹.svg" class="img-moon" alt="" />
-        <img src="../asset/images/活動單位.svg" class="img-text-2" />
-      </div>
-      <div class="title-dot-down">
-        <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.4;width:4px;height:4px;"></div>
-        <div class="dots" style="opacity: 0.2;width:2px;height:2px;"></div>
-      </div>
-    </div>
-    <div class="fund-img">
-      <img src="../asset/images/fund.png" alt="" />
-    </div>
-    <div class="fund-text">
-      <img src="../asset/images/上小孩.svg" class="img-dec-1" />
-      <p>
-        財團法人台大兒童基金會以提昇兒童健康福祉為宗旨，
-        希望經由您的支持，提升兒童醫院之最佳醫療服務。
-      </p>
-      <div>致力推動下列事項：</div>
-      <div>一、協助兒童醫院提昇最佳醫療。</div>
-      <div>二、發展兒童醫療研究、使醫療得以創新與精進。</div>
-      <div>三、協助培育兒童醫療人才。</div>
-      <div>四、促進社會人士對兒童醫療及兒童健康之關懷。</div>
-      <div>五、辦理其他提昇兒童健康事項。</div>
-    </div>
-    <div>
-      <div class="title-dot-up">
-        <div class="dots" style="opacity: 0.2;width:2px;height:2px;"></div>
-        <div class="dots" style="opacity: 0.4;width:4px;height:4px;"></div>
-        <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
-      </div>
-      <div class="d-flex justify-content-center">
-        <img src="../asset/images/月亮.svg" class="img-icon" alt="" />
-        <img src="../asset/images/如何捐款.svg" class="img-text-3" />
-      </div>
-      <div class="title-dot-down">
-        <div class="dots" style="opacity: 0.75;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.6;width:6px;height:6px;"></div>
-        <div class="dots" style="opacity: 0.4;width:4px;height:4px;"></div>
-        <div class="dots" style="opacity: 0.2;width:2px;height:2px;"></div>
+      <div class="col-auto content-text dinosaurs-text">
+        <p>
+          只有靠著您<br />
+          與大家一起透過分享一點小小的幫忙<br />
+          支持更好的兒童醫療與健康照顧<br />
+        </p>
+        <p>
+          可以--<br />
+          讓孩子的健康，在面對疾病受苦時，有翻盤的機會<br />
+          讓孩子有機會得到最好的醫療照顧<br />
+          讓孩子有機會發揮最佳潛力，健康快樂成長<br />
+        </p>
+        <p>
+          這一切需要我們更多關注與支持，<br />
+          因為隨時都有孩子生重病，<br />
+          孩子的生命沒有時間再等了！<br />
+        </p>
+
+        <p>
+          現在就需要您的愛心參與<br />
+          讓生病的孩子，能有更好的健康未來<br />
+          孩子健康，才能看見希望<br />
+        </p>
       </div>
     </div>
-    <div class="donate-text">
-      <img src="../asset/images/中小孩.svg" class="img-dec-2" />
-      <img src="../asset/images/飛機.svg" class="img-dec-3" />
-      <p>普匯收到您的善款</p>
-      <p>
-        立即轉付「財團法人台大兒童健康基金會」，捐款成功後
-        您將收到該基金會致贈的「電子感謝狀」及「電子收據」，
-        若捐贈不成功，亦即退款，非常感謝您的善心善行！
-      </p>
+    <div class="row justify-content-center organizer">
+      <div class="col-auto">
+        <div class="title-dot-up">
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <img src="../asset/images/彩虹.svg" class="img-moon" alt="" />
+          <img src="../asset/images/活動單位.svg" class="img-text-2" />
+        </div>
+        <div class="title-dot-down">
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+        </div>
+        <div class="fund-img">
+          <img src="../asset/images/fund.png" alt="" />
+        </div>
+        <div class="fund-text">
+          <p>
+            財團法人台大兒童基金會以提昇兒童健康福祉為宗旨，
+            希望經由您的支持，提升兒童醫院之最佳醫療服務。
+          </p>
+          <div>致力推動下列事項：</div>
+          <div>一、協助兒童醫院提昇最佳醫療。</div>
+          <div>二、發展兒童醫療研究、使醫療得以創新與精進。</div>
+          <div>三、協助培育兒童醫療人才。</div>
+          <div>四、促進社會人士對兒童醫療及兒童健康之關懷。</div>
+          <div>五、辦理其他提昇兒童健康事項。</div>
+        </div>
+      </div>
+      <div class="col-auto">
+        <div class="title-dot-up">
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <img src="../asset/images/月亮.svg" class="img-icon" />
+          <img
+            src="../asset/images/如何捐款.svg"
+            class="img-text-3"
+            alt="如何捐款"
+          />
+          <img src="../asset/images/NTUCHwhale.png" class="img-whale" />
+        </div>
+        <div class="title-dot-down">
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+        </div>
+        <div class="donate-text">
+          <p>普匯收到您的善款</p>
+          <p>
+            立即轉付「財團法人台大兒童健康基金會」，捐款成功後
+            您將收到該基金會致贈的「電子感謝狀」及「紙本收據」，
+            非常感謝您的善心善行！
+          </p>
+        </div>
+        <div class="go-donate-out">
+          <div class="go-donate">
+            <img class="go-donate-title" src="../asset/images/具名捐款.svg" />
+            <img class="go-donate-text" src="../asset/images/愛心.svg" />
+            <img class="go-donate-bird" src="../asset/images/NTUCHbird.png" />
+            <div class="go-donate-text"></div>
+            <router-link to="/borrowLink" target="_blank">
+              <div class="go-donate-button"></div>
+            </router-link>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="go-donate-out">
-      <img src="../asset/images/下小孩.svg" class="img-dec-4" />
-      <img src="../asset/images/塗鴉1.svg" class="img-dec-5" />
-      <img src="../asset/images/塗鴉2.svg" class="img-dec-6" />
-      <div class="go-donate">
-        <img class="go-donate-title" src="../asset/images/具名捐款.svg" />
-        <img class="go-donate-text" src="../asset/images/愛心.svg" />
-        <div class="go-donate-text"></div>
-        <router-link to="/borrowLink" target="_blank">
-          <div class="go-donate-button"></div>
-        </router-link>
+    <div class="footer">
+      <div>
+        <img src="../asset/images/charitable-footer.png" alt="" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
 
 <style lang="scss" scoped>
@@ -166,22 +226,60 @@ export default {
   margin: 2px auto 14px;
 }
 .content-text {
-  max-width: 1163px;
   padding: 0 15px;
-  margin: 62.5px auto 65px;
+  margin: 62.5px 90px 65px 0;
   font-family: NotoSansTC;
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 500;
   font-stretch: normal;
   font-style: normal;
   line-height: 1.5;
   letter-spacing: 1.2px;
   text-align: left;
-  color: #112e53;
+  color: #7d7d7d;
+}
+.yt-top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  .yt-top-icon {
+    width: 76px;
+    height: 76px;
+    background-image: url("../asset/images/NTUCH02F.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+  }
+  .yt-top-text {
+    margin: 0 24px;
+    font-family: NotoSansTC;
+    font-size: 30px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.33;
+    letter-spacing: 1.5px;
+    text-align: left;
+    color: #0085c4;
+  }
+  .yt-top-donate {
+    font-family: NotoSansTC;
+    font-size: 34px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.18;
+    letter-spacing: 1.7px;
+    text-align: left;
+    color: #0085c4;
+    border-radius: 33px;
+    padding: 8px 34px;
+    border: solid 2px #0085c4;
+  }
 }
 .yt-iframe {
-  max-width: 1163px;
-  margin: auto;
+  width: 670px;
   padding: 0 15px;
   margin-bottom: 62.5px;
   .video-container {
@@ -201,6 +299,12 @@ export default {
     height: 100%;
   }
 }
+.dinosaurs-img {
+  margin-bottom: 65px;
+}
+.dinosaurs-text {
+  margin: 0 0 0 40px;
+}
 .fund-img {
   display: flex;
   justify-content: center;
@@ -209,7 +313,7 @@ export default {
   position: relative;
   margin: 0 auto 63px;
   padding: 0 15px;
-  max-width: 510px;
+  max-width: 535px;
   font-family: NotoSansTC;
   font-size: 20px;
   font-weight: normal;
@@ -225,30 +329,24 @@ export default {
     right: -235px;
   }
 }
+.organizer {
+  margin: 80px 0;
+  grid-column-gap: 120px;
+}
 .donate-text {
   position: relative;
-  margin: 0 auto 100px;
+  margin: 0 auto 52px;
   padding: 0 15px;
-  max-width: 555px;
+  max-width: 578px;
   font-family: NotoSansTC;
   font-size: 20px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
-  line-height: 1.8;
+  line-height: 1.4;
   letter-spacing: 1px;
   text-align: left;
   color: #000;
-  .img-dec-2 {
-    position: absolute;
-    top: -15px;
-    left: -215px;
-  }
-  .img-dec-3 {
-    position: absolute;
-    right: -250px;
-    bottom: 0;
-  }
 }
 .go-donate-out {
   position: relative;
@@ -270,6 +368,7 @@ export default {
   }
 }
 .go-donate {
+  position: relative;
   background-image: url("../asset/images/紙條.png");
   background-size: cover;
   background-repeat: no-repeat;
@@ -287,6 +386,12 @@ export default {
   }
   .go-donate-text {
     transform: rotate(-3deg);
+  }
+  .go-donate-bird {
+    position: absolute;
+    height: 150px;
+    left: -20px;
+    top: 140px;
   }
   .go-donate-button {
     margin: 15px 0 0 15px;
@@ -307,9 +412,19 @@ export default {
 .img-text-3 {
   width: 200px;
 }
+.img-whale {
+  width: 230px;
+  position: absolute;
+  right: -10px;
+  top: -100px;
+}
 .img-icon {
   margin-right: 16px;
   width: 90px;
+}
+.footer {
+  margin: auto;
+  max-width: 1300px;
 }
 @media screen and (max-width: 767px) {
   .img-icon {
@@ -375,6 +490,7 @@ export default {
     }
   }
   .go-donate {
+    position: relative;
     margin: 60px auto;
     height: 210px;
     width: 300px;
@@ -385,6 +501,7 @@ export default {
     .go-donate-text {
       height: 60px;
     }
+
     .go-donate-button {
       margin: 5px 0 0 5px;
       height: 50px;
