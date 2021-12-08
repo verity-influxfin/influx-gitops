@@ -146,7 +146,7 @@
 	<div id="anti-fraud-app">
 		<div class="row">
 			<div class="col-12">
-				<h1 class="page-header">反詐欺管理指標</h1>
+				<h1 class="page-header">反詐欺與授信政策管理指標</h1>
 			</div>
 		</div>
 		<div class="row" id="panel"></div>
