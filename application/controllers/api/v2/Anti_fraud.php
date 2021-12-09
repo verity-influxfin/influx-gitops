@@ -1,25 +1,20 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-require(APPPATH.'/libraries/REST_Controller.php');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class AntiFraud extends REST_Controller {
+class Anti_fraud extends Admin_rest_api_controller
+{
 
-	public $user_info;
-	public $brookesia_url;
+    public $user_info;
+    public $brookesia_url;
 
     public function __construct()
     {
         parent::__construct();
 
-        if(!app_access()){
-            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
-        }
-
         $this->brookesia_url = 'http://52.68.199.159:9453/brookesia/api/v1.0/';
     }
 
     /**
-     * product_config_get 產品名稱列表
+     * product_config_get 取得產品名稱列表
      * @return array
      * (
      *  [result] => SUCCESS
