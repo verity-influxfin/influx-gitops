@@ -359,7 +359,10 @@
                       let comp_id = $('#skbankCompId').text();
                       if(case_no && comp_id){
                           let request_data = [];
-                          let data_count = Object.keys(response.response).length;
+                          let data_count = 0;
+                          Object.keys(response.response).forEach( (image_type_key) => {
+                              data_count += Object.keys(response.response[image_type_key]).length;
+                          });
                           Object.keys(response.response).forEach( (image_type_key) => {
                               Object.keys(response.response[image_type_key]).forEach( (key) => {
                                   console.log(response.response[image_type_key][key]);
