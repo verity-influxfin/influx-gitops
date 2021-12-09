@@ -473,7 +473,10 @@ class Certification extends REST_Controller {
 					$content[$field] = $input[$field];
 				}
 			}
-
+            preg_match('/民?國?([0-9]{2,3})(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u',$content['id_card_date'], $regex_result);
+            if(!empty($regex_result)) {
+                $content['id_card_date'] = $regex_result[1].$regex_result[3].$regex_result[5];
+            }
             $content['name'] 	= isset($input['name'])?$input['name']:"";
             $content['address'] = isset($input['address'])?$input['address']:"";
 
