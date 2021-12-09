@@ -186,6 +186,8 @@ class Admin_api_controller extends MY_Controller
 
 class Admin_rest_api_controller extends REST_Controller
 {
+    protected $payload;
+
     public function __construct()
     {
         parent::__construct();
@@ -196,6 +198,132 @@ class Admin_rest_api_controller extends REST_Controller
                 'result' => 'ERROR',
                 'data'   => []
             ], 401);
+        }
+
+        $this->_parse_payload();
+    }
+
+    /**
+     * 解析輸入資料 (payload)
+     * 
+     * @created_at          2021-12-09
+     * @created_by          Jack
+     */
+    private function _parse_payload()
+    {
+        $this->payload = $this->input->get() ?: $this->input->post();
+    }
+
+    /**
+     * 驗證輸入資料
+     *
+     * @param      array  $rules  驗證規則陣列
+     * 
+     * @created_at                2021-12-09
+     * @created_by                Jack
+     */
+    public function payload_validation(array $rules)
+    {
+        foreach ($rules as $key => $rule)
+        {
+
+            // 未設定規則則預設判斷必填
+            if (is_int($key))
+            {
+                $key = $rule;
+                if ( ! isset($this->payload[$key]))
+                {
+                    $this->response([
+                        'result' => 'ERROR',
+                        'message'=> sprintf('`%s` is NOT provided.', $key),
+                        'data'   => INPUT_NOT_CORRECT
+                    ]);
+                }
+            }
+            else
+            {
+
+                // 呼叫檢查規則
+                $this->_check_payload_rules(
+                    $key,
+                    explode('|', strtolower($rule))
+                );
+            }
+        }
+    }
+
+    /**
+     * API 正常回應
+     *
+     * @param      mixed  $data   回傳資料
+     * 
+     * @created_at                2021-12-09
+     * @created_by                Jack
+     */
+    public function success($data=null)
+    {
+        $this->response([
+            'result' => 'SUCCESS',
+            'data'   => $data
+        ]);
+    }
+
+    /**
+     * 檢查輸入資料規則
+     *
+     * @param      string     $key    輸入資料索引
+     * @param      array      $rules  資料規則
+     *
+     * @created_at                    2021-12-09
+     * @created_by                    Jack
+     */
+    private function _check_payload_rules(string $key, array $rules=null)
+    {
+        if ( ! empty($rules))
+        {
+            try
+            {
+                switch (array_shift($rules))
+                {
+
+                    // 檢查數值型態
+                    case 'number':
+                        if (! is_numeric($this->payload[$key]))
+                        {
+                            throw new Exception(sprintf('`%s` MUST Be Number Type.', $key));
+                        }
+                        break;
+
+                    // 檢查字串型態
+                    case 'string':
+                        if (! is_string($this->payload[$key]))
+                        {
+                            throw new Exception(sprintf('`%s` MUST Be String Type.', $key));
+                        }
+                        break;
+
+                    // 檢查必填
+                    case 'required':
+                        if ( ! isset($this->payload[$key]))
+                        {
+                            throw new Exception(sprintf('`%s` is Required.', $key));
+                        }
+                        break;
+                }
+
+                // 遞迴呼叫
+                $this->_check_payload_rules($key, $rules);
+            }
+            catch (Throwable $e)
+            {
+
+                // 失敗回傳
+                $this->response([
+                    'result' => 'ERROR',
+                    'message'=> $e->getMessage(),
+                    'data'   => INPUT_NOT_CORRECT
+                ]);
+            }
         }
     }
 }
