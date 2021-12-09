@@ -1,7 +1,14 @@
 <template>
   <div class="main-content">
     <div class="banner">
-      <img src="../asset/images/ntu_banner.jpg" class="banner-img" />
+      <img
+        src="../asset/images/ntu_banner.jpg"
+        class="banner-img d-sm-block d-none"
+      />
+      <img
+        src="../asset/images/ntu_banner_phone.jpg"
+        class="banner-img d-block d-sm-none"
+      />
     </div>
     <div>
       <div class="title-dot-up">
@@ -120,8 +127,12 @@
           <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
           <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
         </div>
-        <div class="fund-img">
-          <img src="../asset/images/fund.png" alt="" />
+        <div class="fund">
+          <img
+            src="../asset/images/fund.png"
+            class="fund-img"
+            alt="財團法人台大兒童基金會"
+          />
         </div>
         <div class="fund-text">
           <p>
@@ -309,7 +320,7 @@ export default {};
 .dinosaurs-text {
   margin: 0 0 0 40px;
 }
-.fund-img {
+.fund {
   display: flex;
   justify-content: center;
 }
@@ -433,6 +444,11 @@ export default {};
 .footer-img {
   max-width: 100%;
 }
+@media screen and (max-width: 944px) {
+  .banner {
+    margin-top: 40px;
+  }
+}
 @media screen and (max-width: 767px) {
   .img-icon {
     margin-right: 8px;
@@ -448,8 +464,10 @@ export default {};
     width: 125px;
   }
   .banner {
+    margin-top: 0;
     margin-bottom: 30px;
   }
+
   .yt-top {
     display: flex;
     justify-content: center;
@@ -473,22 +491,25 @@ export default {};
       padding: 2px 12px;
     }
   }
-  .dinosaurs-img{
-      max-width: 85%;
-      margin-bottom: 20px;
-      display: block;
-      margin-left: auto;
+  .dinosaurs-img {
+    max-width: 85%;
+    margin-bottom: 20px;
+    display: block;
+    margin-left: auto;
   }
-  .dinosaurs-text{
-      padding: 0 35px;
+  .dinosaurs-text {
+    padding: 0 35px;
   }
   .content-text {
     margin: 30px auto;
     font-size: 16px;
   }
-  .organizer{
-      margin: 30px 0;
-      padding: 0 10px;
+  .organizer {
+    margin: 30px 0;
+    padding: 0 10px;
+  }
+  .fund-img {
+    width: 210px;
   }
   .fund-text {
     width: 300px;
@@ -532,10 +553,10 @@ export default {};
       bottom: 40px;
     }
   }
-  .img-whale{
-      width: 130px;
-      right: 10px;
-      top: -40px;
+  .img-whale {
+    width: 130px;
+    right: 10px;
+    top: -40px;
   }
   .go-donate {
     position: relative;
@@ -549,10 +570,10 @@ export default {};
     .go-donate-text {
       height: 60px;
     }
-    .go-donate-bird{
-        height: 90px;
-        left: -45px;
-        top: 100px;
+    .go-donate-bird {
+      height: 80px;
+      left: -28px;
+      top: 100px;
     }
 
     .go-donate-button {
