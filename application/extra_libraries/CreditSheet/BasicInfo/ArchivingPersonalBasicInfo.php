@@ -106,4 +106,31 @@ class ArchivingPersonalBasicInfo extends PersonalBasicInfo {
     {
         return $this->creditSheet->creditRecord->level ?? '';
     }
+
+    /**
+     * 獲取該案授信類型
+     * 新案     : 無額度或申請產品類別不同 (需重跑額度)
+     * 產轉案件  : 該案件是逾期案產轉
+     * 改貸     : 申貸案件與核准期數不同
+     * 增貸     : 有本金餘額且有核准紀錄
+     * @return int
+     */
+    public function getCreditCategory(): int {
+        return $this->creditSheet->creditSheetRecord->credit_category ?? 0;
+    }
+
+    /**
+     * 獲得已封存的案件產品類型列表
+     * @return array
+     */
+    public function _getProductCategories(): array
+    {
+        $productCategories = json_decode($this->creditSheet->creditSheetRecord->product_category, TRUE);
+        if(isset($productCategories)) {
+            $productCategories = array_map('intval', $productCategories);
+        } else {
+            $productCategories = [];
+        }
+        return $productCategories;
+    }
 }

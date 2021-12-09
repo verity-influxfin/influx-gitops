@@ -12,4 +12,6 @@ interface BasicInfoBase
     public function getReviewLevelList() : array;
     // 取得可承作產品類別列表
     public function getProductCategoryList() : array;
+    // 取得案件產品類型列表
+    public function getProductCategories(): array;
 }

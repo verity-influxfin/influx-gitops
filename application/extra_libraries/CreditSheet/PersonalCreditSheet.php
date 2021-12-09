@@ -243,7 +243,7 @@ class PersonalCreditSheet extends CreditSheetBase {
                 || $estimatedCredit["level"] != $credit['level'])
         ) {
             $this->CI->credit_model->update_by(
-                ['user_id' => $this->user->id, 'status' => 1],
+                ['user_id' => $this->user->id, 'status' => 1, 'product_id' => self::ALLOW_PRODUCT_LIST],
                 ['status'=> 0]
             );
             $newCredit = $this->CI->credit_model->insert($estimatedCredit);
@@ -277,19 +277,9 @@ class PersonalCreditSheet extends CreditSheetBase {
             $userCertList = $this->CI->user_certification_model->getCertificationsByTargetId([$this->target->id], $where);
             $userCertList = $userCertList[$this->user->id] ?? [];
 
-            $lastRepaymentDate = '';
-            $target = $this->CI->target_model->order_by('loan_date', 'desc')->get_by([
-                'user_id' => $this->user->id,
-                'product_id' => $this::ALLOW_PRODUCT_LIST
-            ]);
-            if(isset($target)) {
-                $lastTransaction = $this->CI->transaction_model->order_by('limit_date', 'desc')->get_by([
-                    'target_id' => $target->id,
-                    'source' => SOURCE_AR_PRINCIPAL
-                ]);
-                if(isset($lastTransaction))
-                    $lastRepaymentDate = $lastTransaction->limit_date;
-            }
+            $productCategories = $this->basicInfo->getProductCategories();
+            array_push($productCategories, (int)$this->target->product_id);
+            $productCategories = array_unique($productCategories);
 
             $this->CI->credit_sheet_model->update_by(['id' => $this->creditSheetRecord->id],
             [
@@ -297,24 +287,32 @@ class PersonalCreditSheet extends CreditSheetBase {
                 'certification_list' => json_encode(array_column($userCertList, 'id')),
                 'unused_credit_line' => $this->getUnusedCreditLine(),
                 'total_line' => $this->target->amount,
-                'line_expired_at' => $lastRepaymentDate,
+                'line_expired_at' => $this->creditLineInfo->getCreditLineExpiredDate(),
                 'review_level' => $this->finalReviewerLevel,
                 'relation' => json_encode($this->basicInfo->getRelation()),
+                'credit_category' => $this->basicInfo->getCreditCategory(),
+                'product_category' => json_encode($productCategories),
                 'note' => '',
                 'status' => 1,
             ]);
-        }else
+        } else {
             return FALSE;
-
+        }
         return TRUE;
     }
 
     /**
-     * 判斷是否已擁有核可額度
+     * 判斷是否已擁有核可額度（可無需再審核）
      * @return bool
      */
     public function hasCreditLine() : bool {
-        return in_array($this->basicInfo->getCreditCategory(), [$this::CREDIT_CATEGORY_INCREMENTAL_LOAN,
-            $this::CREDIT_CATEGORY_CHANGE_LOAN]);
+        $credit = $this->CI->credit_sheet_model->getLastAvailableCredit($this->user->id, $this::ALLOW_PRODUCT_LIST);
+        if(!empty($credit)) {
+            $credit = reset($credit);
+            // 授信類行為增貸且申貸期數相同時
+            return in_array($this->basicInfo->getCreditCategory(), [$this::CREDIT_CATEGORY_INCREMENTAL_LOAN]) &&
+                $credit->instalment == $this->target->instalment;
+        }
+        return FALSE;
     }
 }

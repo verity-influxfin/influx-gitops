@@ -124,10 +124,23 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
     }
 
     /**
+     * 獲得目前擁有的案件產品類型列表
+     * 需合併目前還款中案件+申請案件的類型
+     * @return array
+     */
+    public function getProductCategories(): array
+    {
+        $productCategories = $this->_getProductCategories();
+        array_push($productCategories, (int)$this->creditSheet->target->product_id);
+        return array_unique($productCategories);
+    }
+
+    /**
      * 獲得用戶還款中的案件產品類型列表
      * @return array
      */
-    protected function getProductCategories() {
+    protected function _getProductCategories(): array
+    {
         return array_map('intval', array_unique(array_column($this->creditSheet->repayableTargets, 'product_id')));
     }
 
@@ -135,7 +148,8 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
      * 取得授信核貸層次，未審核過不能選取任何項目
      * @return int
      */
-    protected function getReviewedLevel() {
+    protected function getReviewedLevel(): int
+    {
         return 0;
     }
 
@@ -151,11 +165,8 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
     {
         $this->CI->load->model('loan/credit_model');
         $credit = $this->CI->credit_model->order_by('created_at', 'DESC')->get_by(
-                ['user_id' => $this->creditSheet->user->id, 'status' => 1,
-                'UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(created_at), INTERVAL 2 MONTH)) > ' => time(),
-                'created_at <' => $this->creditSheet->target->created_at
-                ]);
-        // TODO: 新案的半年內核准紀錄是否既往不咎 (待確認)
+                ['user_id' => $this->creditSheet->user->id, 'status' => 1, 'expire_time > ' => time()]);
+
         $creditSheetRecord = $this->CI->credit_sheet_model->getCreditSheetsByUserId($this->creditSheet->user->id, [1],
             $this->creditSheet::ALLOW_PRODUCT_LIST, date('Y-m-d H:i:s', strtotime('-6 month')));
 
@@ -163,8 +174,6 @@ class PersonalBasicInfo implements BasicInfoBase, CreditSheetDefinition {
             return self::CREDIT_CATEGORY_NEW_TARGET;
         }else if($this->creditSheet->target->sub_status == TARGET_SUBSTATUS_SUBLOAN_TARGET) {
             return self::CREDIT_CATEGORY_SUBLOAN;
-        }else if($credit->instalment != $this->creditSheet->target->instalment) {
-            return self::CREDIT_CATEGORY_CHANGE_LOAN;
         }else if(count($this->creditSheet->repayableTargets) || !empty($credit)) {
             return self::CREDIT_CATEGORY_INCREMENTAL_LOAN;
         }

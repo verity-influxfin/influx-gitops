@@ -303,7 +303,15 @@ class Credit_lib{
 		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
             return $param;
         }
-
+        $this->CI->credit_model->update_by(
+            [
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'user_id' => $user_id,
+                'status' => 1,
+            ],
+            ['status'=> 0]
+        );
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
@@ -435,6 +443,15 @@ class Credit_lib{
 			return $param;
 		}
 
+        $this->CI->credit_model->update_by(
+            [
+                'product_id' => $product_id,
+                'sub_product_id' => $sub_product_id,
+                'user_id' => $user_id,
+                'status' => 1,
+            ],
+            ['status'=> 0]
+        );
         if($sub_product_id == STAGE_CER_TARGET && $time < $credit['expire_time']){
             $rs 		= $this->CI->credit_model->update($credit['id'],$param);
             return $rs;
@@ -741,6 +758,9 @@ class Credit_lib{
 				];
                 if($target){
                     $data['rate'] = $this->get_rate($rs->level,$target->instalment,$product_id,$sub_product_id,$target);
+                    // 期數不同的評分要重新跑
+                    if($target->instalment != $rs->instalment)
+                        return FALSE;
                 }
 
 				$info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);

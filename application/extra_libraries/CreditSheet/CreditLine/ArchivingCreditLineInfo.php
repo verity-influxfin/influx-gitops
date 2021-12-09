@@ -37,7 +37,7 @@ class ArchivingCreditLineInfo extends CreditLineInfo {
     public function getCreditLineExpiredDate(): string
     {
         if(isValidDateTime($this->creditSheet->creditSheetRecord->line_expired_at))
-            return $this->creditSheet->creditSheetRecord->line_expired_at;
+            return date('Y-m-d', strtotime($this->creditSheet->creditSheetRecord->line_expired_at));
         return '';
     }
 

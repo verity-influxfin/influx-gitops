@@ -89,4 +89,25 @@ class Credit_sheet_model extends MY_Model
             $this->db->where('cs.updated_at >= ', $creditFilterTime);
         return $this->db->get()->result();
     }
+
+    /**
+     * 取得最近的可用核可額度
+     * @param $userId
+     * @param array $productIdList
+     * @return mixed
+     */
+    public function getLastAvailableCredit($userId, array $productIdList=[]) {
+        // 注意：這邊不能直接取用 amount，如需額度和利率需透過 credit_lib 的 get_credit 取得
+        $this->db->select('`c`.`product_id`, `c`.`sub_product_id`, `c`.`level`, `c`.`points`,
+                `c`.`created_at`, `c`.`expire_time`, `t`.`id` AS `target_id`, `t`.`instalment`')
+            ->from('`p2p_loan`.`credits` AS `c`')
+            ->join("`p2p_loan`.`credit_sheet` AS `cs`", "`c`.`id` = `cs`.`credit_id`")
+            ->join("`p2p_loan`.`targets` AS `t`", "`t`.`id` = `cs`.`target_id`")
+            ->where('`c`.`user_id`', $userId)
+            ->where('`c`.`status`', 1)
+            ->order_by('`c`.`expire_time`', 'DESC');
+        if(!empty($productIdList))
+            $this->db->where_in('`c`.`product_id`', $productIdList);
+        return $this->db->get()->result();
+    }
 }

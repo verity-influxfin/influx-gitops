@@ -138,12 +138,30 @@ class CreditLineInfo implements CreditLineBase, CreditSheetDefinition {
     }
 
     /**
-     * 取得額度到期日
+     * 取得目前歸戶之額度到期日
+     * 有還款中餘額時，顯示最後一期之還款日，否則顯示最近核可之額度到期日
      * @return string
      */
     public function getCreditLineExpiredDate(): string
     {
-        return '';
+        $lineExpiredDate = '';
+        $lastTransaction = $this->CI->transaction_model->order_by('limit_date', 'desc')->get_by([
+            'user_from' => $this->creditSheet->user->id,
+            'source' => SOURCE_AR_PRINCIPAL,
+            'status' => TRANSACTION_STATUS_TO_BE_PAID
+        ]);
+        if(isset($lastTransaction)) {
+            $lineExpiredDate = $lastTransaction->limit_date;
+        }else{
+            $credit = $this->CI->credit_sheet_model->getLastAvailableCredit($this->creditSheet->user->id,
+                $this->creditSheet::ALLOW_PRODUCT_LIST);
+            if(!empty($credit)) {
+                $credit = reset($credit);
+                $lineExpiredDate = date('Y-m-d', $credit->expire_time);
+            }
+        }
+
+        return $lineExpiredDate;
     }
 
     /**
