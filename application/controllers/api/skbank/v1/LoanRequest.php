@@ -546,6 +546,15 @@ END:
                             case 3:
                                 $fileExtension = "jpeg";
                                 break;
+                            case 4:
+                                $fileExtension = "png";
+                                break;
+                            case 6:
+                                $fileExtension = "heic";
+                                break;
+                            case 7:
+                                $fileExtension = "heif";
+                                break;
                             default:
                                 break;
                         }
