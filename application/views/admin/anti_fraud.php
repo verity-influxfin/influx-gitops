@@ -4,6 +4,10 @@
 		flex-direction: column;
 	}
 
+	.w-100 {
+		width: 100% !important;
+	}
+
 	.d-none {
 		display: none !important;
 	}
@@ -20,6 +24,10 @@
 		align-items: center !important;
 	}
 
+	.justify-end {
+		justify-content: flex-end;
+	}
+
 	.head-item-title {
 		flex: 0 0 60px;
 	}
@@ -29,7 +37,7 @@
 	}
 
 	.form-select {
-		width: 100%;
+		width: 140px;
 		height: 33px;
 		padding: 0 8px;
 	}
@@ -149,7 +157,136 @@
 				<h1 class="page-header">反詐欺與授信政策管理指標</h1>
 			</div>
 		</div>
-		<div class="row" id="panel"></div>
+		<div class="row" id="panel">
+			<div class="d-flex align-items-center">
+				<div class="mr-2 head-item-title">會員ID:</div>
+				<div class="input-group input">
+					<input type="text" id="user-id" />
+				</div>
+				<div class="mx-2 head-item-title">指標項目:</div>
+				<select class="form-select" id="target-option">
+					<option value="">請選擇</option>
+				</select>
+				<div class="mx-2 head-item-title">風險：</div>
+				<select class="form-select" id="risk-option">
+					<option value="">請選擇</option>
+					<option value="高">高</option>
+					<option value="中">中</option>
+					<option value="低">低</option>
+					<option value="低">拒絕</option>
+				</select>
+				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
+					搜尋
+				</button>
+			</div>
+			<div class="panel panel-default mt-4">
+				<div class="panel-heading p-4">
+					反詐欺指標
+				</div>
+				<div class="panel-body">
+					<table id="andtfraud">
+						<thead>
+							<tr>
+								<th>風險等級</th>
+								<th>事件時間</th>
+								<th>指標項目</th>
+								<th>指標內容</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="panel panel-default mt-4">
+				<div class="panel-heading p-4">
+					狀態
+				</div>
+				<div class="panel-body">
+					<div class="d-flex align-items-center">
+						<div class="head-item-title mx-2">現在狀態: </div>
+						<div class="input-group input">
+							<input type="text" class="form-control input" id="status-now" value="封鎖六個月" disabled />
+						</div>
+						<div class="mx-2 head-item-title">調整:</div>
+						<select class="form-select" id="status-change">
+							<option value="-1">請選擇</option>
+						</select>
+						<div class="mx-2 head-item-title">註記:</div>
+						<div class="input-group input">
+							<input type="text" class="form-control input" id="status-mark" />
+						</div>
+					</div>
+					<div class="d-flex justify-end mt-4">
+						<button class="btn btn-primary" onclick="">
+							送出
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default mt-4">
+				<div class="panel-heading p-4">
+					新增風險等級
+				</div>
+				<div class="panel-body">
+					<div class="result-data-row">
+						<div class="result-data-item">
+							<div class="result-header-item key">項目</div>
+							<div class="result-value-item value">
+								<select class="form-select w-100" id="new-risk-1">
+									<option value="-1">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="result-data-item">
+							<div class="result-header-item key">資料來源</div>
+							<div class="result-value-item value">
+								<select class="form-select w-100" id="new-risk-2">
+									<option value="-1">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="result-data-item">
+							<div class="result-header-item key">歸類</div>
+							<div class="result-value-item value">
+								<select class="form-select w-100" id="new-risk-3">
+									<option value="-1">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="result-data-item">
+							<div class="result-header-item key">內容</div>
+							<div class="result-value-item value">
+								<select class="form-select w-100" id="new-risk-4">
+									<option value="-1">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="result-data-item">
+							<div class="result-header-item key">風險</div>
+							<div class="result-value-item value">
+								<select class="form-select w-100" id="new-risk-5">
+									<option value="-1">請選擇</option>
+								</select>
+							</div>
+						</div>
+						<div class="result-data-item">
+							<div class="result-header-item key">解決方式</div>
+							<div class="result-value-item value">
+								<select class="form-select w-100" id="new-risk-6">
+									<option value="-1">請選擇</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="d-flex justify-end mt-4">
+						<button class="btn btn-primary" onclick="">
+							送出
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 <template id="default-panel">
@@ -239,7 +376,10 @@
 </template>
 
 <script>
+	let searchWay = ''
 	let antiFraudData = [];
+	let colMap = []
+	let ruleAll = []
 	let orderBy = null;
 	let searching = false
 	let loading = false
@@ -249,8 +389,42 @@
 	let configs = []
 	let prevStartTime = 0
 	let prevEndTime = 999999999999
+
+	$(document).ready(function () {
+		const t = $('#andtfraud').DataTable({
+			'ordering': false,
+			'language': {
+				'processing': '處理中...',
+				'lengthMenu': '顯示 _MENU_ 項結果',
+				'zeroRecords': '目前無資料',
+				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+				'infoFiltered': '(從 _MAX_ 項結果過濾)',
+				'search': '搜尋結果',
+				'paginate': {
+					'first': '首頁',
+					'previous': '上頁',
+					'next': '下頁',
+					'last': '尾頁'
+				}
+			},
+			"info": false
+		});
+		$('#risk-option').on('change', function () {
+			if (searchWay === 'userId') {
+				t.column(0).search(this.value).draw()
+			}
+
+		})
+		$('#target-option').on('change', function () {
+			if (searchWay === 'userId') {
+				t.column(2).search(this.value).draw()
+			}
+		})
+	});
 	async function onLoad() {
-		insertDefaultPanel()
+		// insertDefaultPanel()
+		document.querySelector('#search-btn').toggleAttribute('disabled')
 		faIcons.push(
 			document.querySelector("#asc"),
 			document.querySelector("#desc"),
@@ -266,69 +440,84 @@
 			}
 		})
 		// insert options
-		insertSearchOption()
-
-		const ids = await getRuleAll();
-		typeIds = ids
+		// insertSearchOption()
+		colMap = await getColumnMap()
+		ruleAll = await getRuleAll()
+		document.querySelector('#search-btn').toggleAttribute('disabled')
+		insertTargetOption()
+		console.log(colMap, ruleAll)
 	}
 	window.addEventListener("load", onLoad());
 	async function doSearch() {
-		// remove last result
-		if (loading) {
+		searchWay = ''
+		const userId = document.querySelector('#user-id').value
+		const target = document.querySelector('#target-option').value
+		const risk = document.querySelector('#risk-option').value
+		const table = $('#andtfraud').DataTable()
+		table.clear()
+		if (userId) {
+			searchWay = 'userId'
+			// userid 1st
+			const ans = await getResultByuserId(userId)
+			console.log(ans)
+			const aa2 = ans.map(x => {
+				const update = x.find(x => x.key === 'updatedAt').value
+				const rule = x.filter(item1 => {
+					return item1.key === 'typeId' || item1.key === 'ruleId'
+				})
+				// console.log(rule)
+				const typeid = rule[0].key === 'typeId' ? rule[0] : rule[1]
+				const ruleid = rule[1].key === 'ruleId' ? rule[1] : rule[0]
+				const find = ruleAll.find(a => {
+					return a.typeId === typeid.value
+				})
+				const find2 = find.rules.find(a => {
+					return a.id === ruleid.value
+				})
+				const da = find.description === find2.description ? find2.description : find.description + ' ' + find2.description
+				const [first, ...sec] = [...da.split('】')]
+				return [find2.risk, converDate(update), first + '】', sec.join('】')]
+			})
+			aa2.forEach(x => {
+				table.row.add(x)
+			})
+			// table.row.add([1, 1, 1, 1])
+			table.draw()
 			return
 		}
-		loading = true
-		removeDatas()
-		toggleLoading()
-		//do search
-		const productId = document.querySelector('#search-option').value
-		const startTimeObj = document.querySelector('#start-time').value
-		const endTimeObj = document.querySelector('#end-time').value
-		let startTime = 0
-		let endTime = 999999999999
-		if (startTimeObj) {
-			startTime = new Date(startTimeObj).valueOf()/1000
-			prevStartTime = startTime
+		if (target) {
+			//only target 2nd
+			return
 		}
-		if (endTimeObj) {
-			endTime = new Date(endTimeObj).valueOf()/1000
-			prevEndTime = endTime
-		}
-		const ans = await getRuleStatistics({
-			typeIds,
-			productId,
-			filter: {
-				startTime,
-				endTime
-			},
-		})
-		const resultData = ans.map(x => {
-			let duration = 'All'
-			if (startTimeObj) {
-				duration = duration.replace('All', `${startTimeObj} ~ Now`)
-			}
-			if (endTimeObj) {
-				duration = duration.replace('Now', endTimeObj)
-			}
-			const rule = x.mainDescription === x.description 
-				? x.mainDescription 
-				: `${x.mainDescription} , ${x.description}`
-			return {
-				id: `${x.typeId}-${x.productId}`,
-				rule,
-				duration,
-				ruleId: x.ruleId,
-				productId: x.productId,
-				efficiency: x.efficiency,
-			}
-		})
-		toggleLoading()
-		//inset result
-		resultData.forEach((x) => insertData(x))
-		antiFraudData = [...resultData]
-		loading = false
+		const typeIds = await getRiskMap(risk)
+		const res = await getRuleStatistics({ typeIds })
+		console.log(res)
+		// no userid and target
 	}
 
+	function insertTargetOption() {
+		const parent = document.querySelector('#target-option')
+		while (parent.firstChild) {
+			parent.removeChild(parent.firstChild)
+		}
+		const map = new Map()
+		colMap.forEach(x => {
+			const key = Object.keys(x)[0]
+			x[key].forEach(item => {
+				map.set(item.key, item.value)
+			})
+
+		})
+		keys = Array.from(map.keys())
+		parent.insertAdjacentHTML('beforeend',
+			`<option value="" key="">請選擇</option>`
+		)
+		keys.forEach((x) => {
+			parent.insertAdjacentHTML('beforeend',
+				`<option value="${map.get(x)}" key="${x}">${map.get(x)}</option>`
+			)
+		})
+	}
 	function insertData({ id, rule, duration, ruleId, productId, efficiency }) {
 		const template = document.querySelector("template#data-row");
 		const dataArray = template.content.querySelectorAll(".data-item");
@@ -459,7 +648,7 @@
 			})
 
 		} else {
-			if (label.includes('時間')|| label.includes('是否有關聯規則')) {
+			if (label.includes('時間') || label.includes('是否有關聯規則')) {
 				return
 			} else {
 				v.textContent = value.toString()
@@ -518,8 +707,17 @@
 	function convertEfficiency({ efficiency }) {
 		return efficiency.toFixed(2) + "%";
 	}
-
+	function converDate(date) {
+		const d = new Date(date * 1000)
+		return d.getFullYear() + '-' + Number(d.getMonth() + 1) + '-' + d.getDate()
+	}
 	//apis
+	function getColumnMap() {
+		return fetch(`${apiUrl}/column_map`).then(x => x.json()).then(({ response }) => {
+			return response.results
+		})
+	}
+
 	function getProductConfig() {
 		return fetch('/api/v2/AntiFraud/product_config')
 			.then(x => x.json())
@@ -528,18 +726,34 @@
 			})
 	}
 
+	function getResultByuserId(userId) {
+		return fetch(apiUrl + "/user_id?userId=" + userId)
+			.then(x => x.json())
+			.then(({ response }) => {
+				return response.results
+			})
+	}
+	function getRiskMap(risk) {
+		return fetch(apiUrl + "/risk_map?risk=" + risk)
+			.then(x => x.json())
+			.then(({ response }) => {
+				return response.results
+			})
+	}
+
 	function getRuleAll() {
 		return fetch(apiUrl + "/rule_all")
 			.then((x) => x.json())
 			.then(({ response }) => {
-				return response.results.map((x) => x.typeId);
+				return response.results
+				// return response.results.map((x) => x.typeId);
 			});
 	}
 
-	function getRuleStatistics({ typeIds, productId, filter: { startTime, endTime } }) {
-		const fetchRule = ({ typeId, productId, filter: { startTime, endTime } }) => {
+	function getRuleStatistics({ typeIds }) {
+		const fetchRule = ({ typeId }) => {
 			return fetch(
-				`${apiUrl}/rule_statistics?typeId=${typeId}&productId=${productId}&startTime=${startTime}&endTime=${endTime}`
+				`${apiUrl}/rule_statistics?typeId=${typeId}`
 			)
 				.then((res) => {
 					if (res.ok) {
@@ -558,11 +772,7 @@
 		const fetchRules = [];
 		typeIds.forEach((typeId) => {
 			fetchRules.push(
-				fetchRule({
-					typeId,
-					productId,
-					filter: { startTime, endTime },
-				})
+				fetchRule({ typeId })
 			);
 		});
 		return Promise.allSettled(fetchRules)

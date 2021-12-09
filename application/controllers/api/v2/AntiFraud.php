@@ -82,10 +82,7 @@ class AntiFraud extends REST_Controller {
 	{
 		$input = $this->input->get();
 		$url = $this->brookesia_url . 'result/ruleStatistics' .
-			'?typeId=' . ($input['typeId'] ?? '') .
-			'&productId=' . ($input['productId'] ?? '') .
-			'&startTime=' . ($input['startTime'] ?? '') .
-			'&endTime=' . ($input['endTime'] ?? '');
+			'?typeId=' . ($input['typeId'] ?? '') ;
 		$result = curl_get($url);
 		$response = json_decode($result, TRUE);
 
@@ -99,6 +96,34 @@ class AntiFraud extends REST_Controller {
 			'?ruleId=' . ($input['ruleId'] ?? '') .
 			'&startTime=' . ($input['startTime'] ?? '') .
 			'&endTime=' . ($input['endTime'] ?? '');
+		$result = curl_get($url);
+		$response = json_decode($result, TRUE);
+
+		$this->response($response);
+	}
+
+	public function column_map_get()
+	{
+		$url = $this->brookesia_url . 'result/columnMap';
+		$result = curl_get($url);
+		$response = json_decode($result, TRUE);
+
+		$this->response($response);
+	}
+
+	public function user_id_get(){
+		$input = $this->input->get();
+		$url = $this->brookesia_url . 'result/userId' .
+			'?userId=' . ($input['userId'] ?? '');
+		$result = curl_get($url);
+		$response = json_decode($result, TRUE);
+
+		$this->response($response);
+	}
+	public function risk_map_get(){
+		$input = $this->input->get();
+		$url = $this->brookesia_url . 'result/riskMap' .
+			'?risk=' . ($input['risk'] ?? '');
 		$result = curl_get($url);
 		$response = json_decode($result, TRUE);
 
