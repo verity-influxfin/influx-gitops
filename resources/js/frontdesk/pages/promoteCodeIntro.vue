@@ -245,6 +245,9 @@
             <div class="benfit">AI認證審核，立即產生專屬 QR code</div>
             <div class="benfit">月底結算獎金，隔月10號自動入帳</div>
           </div>
+          <div class="benfit-title">
+              推薦有賞
+          </div>
         </div>
       </div>
     </div>
@@ -264,6 +267,9 @@ import 'swiper/components/navigation/navigation.min.css'
 import SwiperCore, { Navigation } from 'swiper/core'
 
 export default {
+  created(){
+    $('title').text('推薦有賞 - inFlux普匯金融科技')
+  },
   mounted() {
     this.useSwiper()
   },
