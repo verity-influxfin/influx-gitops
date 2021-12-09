@@ -7,10 +7,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?=admin_url("AdminDashboard") ?>">
-					<img src="<?=FRONT_CDN_URL ?>public/logo.png" alt="" width="150px" />
-				</a>
-                <h5 class="navbar-brand"><?=isset($login_info->name)?$login_info->name:""?> [ <?=isset($role_name)?$role_name:""?> ]</h5>
+                <a class="navbar-brand" href="<?=admin_url('AdminDashboard') ?>">
+                    <img src="<?=FRONT_CDN_URL ?>public/logo.png" alt="" width="150px" />
+                </a>
+                <h5 class="navbar-brand"><?=isset($login_info->name)?$login_info->name:''?> [ <?=isset($role_name)?$role_name:''?> ]</h5>
             </div>
             <!-- /.navbar-header -->
 
@@ -22,11 +22,11 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li>
-							<a href="<?=admin_url('AdminDashboard/personal') ?>"><i class="fa fa-user fa-fw"></i> 個人資料</a>
+                            <a href="<?=admin_url('AdminDashboard/personal') ?>"><i class="fa fa-user fa-fw"></i> 個人資料</a>
                         </li>
                         <li class="divider"></li>
                         <li>
-							<a href="<?=admin_url('Admin/logout') ?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            <a href="<?=admin_url('Admin/logout') ?>"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->
@@ -34,39 +34,31 @@
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
-	
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-					<? if(!empty($menu)){
-							foreach($menu as $key => $value){
-								if(isset($value["name"])){
-					?>
-							<li class="<?=$active==$key?"active":""; ?>">
-								<a href="<?=admin_url($key.'/') ?>"><?=$value["name"] ?></a>
-							</li>
-					
-								<?}else{?>
-                        
-							<li data-id="<?=$key?>" class="<?=$active==$key?"active":""; ?>">
-								<a href="#"><?=$value["parent_name"] ?><span class="fa arrow"></span></a>
-								<ul class="nav nav-second-level">
-									<? 
-										unset($value["parent_icon"],$value["parent_name"]);
-										foreach($value as $k => $v){
-									?>
-									<li>
-										<a href="<?=admin_url($key.'/'.$k) ?>"><?=$v ?></a>
-									</li>
-									<? } ?>
-								</ul>
-							</li>
-					<?}}}?>
-					<? if(is_development()){ ?>
-						<li class="">
-							<a href="<?=admin_url('TestScript/') ?>">測試工具</a>
-						</li>
-					<?}?>
+                    <?php if (! empty($menu)):?>
+                    <?php foreach ($menu as $key => $value):?>
+                        <?php if (isset($value['name'])):?>
+                            <li class="<?=($active == $key)?'active':''?>">
+                                <a href="<?=admin_url($key)?>/"><?=$value['name']?></a>
+                            </li>
+                        <?php else:?>
+                            <li data-id="<?=$key?>" class="<?=($active == $key)?'active':''?>">
+                                <a href="#"><?=$value['parent_name']?><span class="fa arrow"></span></a>
+                                <ul class="nav nav-second-level">
+                                    <?php unset($value["parent_icon"],$value["parent_name"]); ?>
+                                    <?php foreach($value as $k => $v):?>
+                                    <li><a href="<?=admin_url($key . '/' . $k)?>"><?=$v?></a></li>
+                                    <?php endforeach;?>
+                                </ul>
+                            </li>
+                        <?php endif;?>
+                    <?php endforeach;?>
+                    <?php endif;?>
+                    <?php if (is_development()): ?>
+                        <li><a href="<?=admin_url('TestScript/')?>">測試工具</a></li>
+                    <?php endif; ?>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
