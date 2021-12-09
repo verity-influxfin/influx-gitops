@@ -2163,3 +2163,5 @@ $config['cer_profilejudicial'] = [
 
 // 推薦碼需要的徵信項目
 $config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
+//$config['promote_code_certs_company'] = [CERTIFICATION_GOVERNMENTAUTHORITIES];
+$config['promote_code_certs_company'] = [];

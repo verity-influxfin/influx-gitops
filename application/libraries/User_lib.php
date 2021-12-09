@@ -127,12 +127,27 @@ class User_lib {
      * 取得產品對應之推薦金額
      * @param $productSettings
      * @param $productIdList
-     * @return int|mixed
+     * @return int
      */
-    public function getRewardAmountByProduct($productSettings, $productIdList) {
+    public function getRewardAmountByProduct($productSettings, $productIdList) : int {
         foreach ($productSettings as $setting) {
             if(isset($setting['product_id']) && $setting['product_id'] == $productIdList) {
-                return $setting['amount'];
+                return (int)($setting['amount'] ?? 0);
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 取得產品對應之推薦獎勵百分比
+     * @param $productSettings
+     * @param $productIdList
+     * @return float
+     */
+    public function getRewardPercentByProduct($productSettings, $productIdList) : float {
+        foreach ($productSettings as $setting) {
+            if(isset($setting['product_id']) && $setting['product_id'] == $productIdList) {
+                return max(0, min(100, (float)($setting['percent'] ?? 0)));
             }
         }
         return 0;
@@ -195,7 +210,7 @@ class User_lib {
 
         // 取得推薦之註冊會員數
         if(!empty($promoteCodeList))
-            $where['id'] = array_keys($promoteCodeList);
+            $where['promote_code'] = array_keys($promoteCodeList);
         $registeredRs = $this->CI->user_qrcode_model->getRegisteredUserByPromoteCode($where, $startDate, $endDate);
         foreach ($registeredRs as $rs) {
             if($rs['app_status'] == 1) {
@@ -208,8 +223,7 @@ class User_lib {
 
         // 取得成功推薦申貸的數量
         foreach ($this->rewardCategories as $category => $productIdList) {
-
-            $rs = $this->CI->user_qrcode_model->getLoanedCount($where, $productIdList, $this->rewardedTargetStatus[$category], $startDate, $endDate);
+            $rs = $this->CI->user_qrcode_model->getProductRewardList($where, $productIdList, $this->rewardedTargetStatus[$category], $startDate, $endDate);
             foreach ($rs as $promotedTarget) {
                 $list[$promotedTarget['promote_code']][$category][] = $promotedTarget;
             }
@@ -226,12 +240,19 @@ class User_lib {
             $list[$promoteCode]['info']['settings'] = json_decode($list[$promoteCode]['info']['settings'], true) ?? [];
             $settings = $list[$promoteCode]['info']['settings'];
             foreach ($this->rewardCategories as $category => $productIdList) {
-                $rewardAmount = 0;
-                if(isset($settings['reward']) && isset($settings['reward']['product']))
-                    $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
                 $list[$promoteCode]['loanedCount'][$category] = count($list[$promoteCode][$category]);
                 $list[$promoteCode]['loanedBalance'][$category] = array_sum(array_column($list[$promoteCode][$category], 'loan_amount'));
-                $list[$promoteCode]['rewardAmount'][$category] = $list[$promoteCode]['loanedCount'][$category] * intval($rewardAmount);
+                $list[$promoteCode]['platformFee'][$category] = array_sum(array_column($list[$promoteCode][$category], 'platform_fee'));
+
+                if(isset($settings['reward']) && isset($settings['reward']['product'])) {
+                    $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
+                    if($rewardAmount != 0) {
+                        $list[$promoteCode]['rewardAmount'][$category] = $list[$promoteCode]['loanedCount'][$category] * $rewardAmount;
+                    } else {
+                        $rewardPercent = $this->getRewardPercentByProduct($settings['reward']['product'], $productIdList);
+                        $list[$promoteCode]['rewardAmount'][$category] = (int)round($list[$promoteCode]['platformFee'][$category] * $rewardPercent / 100.0,0);
+                    }
+                }
                 $list[$promoteCode]['totalRewardAmount'] += $list[$promoteCode]['rewardAmount'][$category];
                 $list[$promoteCode]['totalLoanedAmount'] += $list[$promoteCode]['loanedBalance'][$category];
             }
@@ -376,7 +397,13 @@ class User_lib {
                         $settings = $info['info']['settings'];
                         if(isset($settings['reward']) && isset($settings['reward']['product'])) {
                             $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
-                            $dockAmountList[$category] = $rewardAmount * count($currentDelayedTargets[$category]);
+                            if($rewardAmount != 0) {
+                                $dockAmountList[$category] = $rewardAmount * count($currentDelayedTargets[$category]);
+                            } else {
+                                $rewardPercent = $this->getRewardPercentByProduct($settings['reward']['product'], $productIdList);
+                                $dockAmountList[$category] = array_sum(array_column($currentDelayedTargets[$category], 'platform_fee')) * $rewardPercent / 100.0;
+                            }
+
                             $diff = $info['totalRewardAmount'] - $dockAmountList[$category];
                             if($diff < 0) {
                                 $info['totalRewardAmount'] = 0;

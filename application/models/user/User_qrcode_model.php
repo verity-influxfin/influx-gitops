@@ -66,14 +66,14 @@ class user_qrcode_model extends MY_Model
 
     /**
      * 取得使用推薦碼初貸成功的數量
-     * @param array $qrcode_where 推薦碼篩選條件
+     * @param array $qrcodeWhere 推薦碼篩選條件
      * @param array $productIdList 產品編號列表
      * @param string $startTime 篩選起始時間
      * @param string $endTime 篩選結束時間
      * @return mixed
      */
-    public function getLoanedCount(array $qrcode_where, array $productIdList, array $statusList, string $startTime='', string $endTime='') {
-        $subQuery = $this->getRegisteredUserByPromoteCode($qrcode_where, '','', TRUE);
+    public function getLoanedCount(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime='', string $endTime='', bool $returnSQL=FALSE) {
+        $subQuery = $this->getRegisteredUserByPromoteCode($qrcodeWhere, '','', TRUE);
 
         $this->_database
             ->select('r.promote_code, r.settings, t.id, t.user_id, t.product_id, t.status, t.loan_amount, t.loan_date')
@@ -94,7 +94,35 @@ class user_qrcode_model extends MY_Model
         if($endTime!='')
             $this->_database->where("r.loan_date <=",  $endTime);
 
+        if($returnSQL)
+            return $this->_database->get_compiled_select('', TRUE);
         return $this->_database->get()->result_array();
+    }
+
+    /**
+     * 取得平台回款手續費
+     * @param array $qrcodeWhere 推薦碼篩選條件
+     * @param array $productIdList 產品編號列表
+     * @param string $startTime 篩選起始時間
+     * @param string $endTime 篩選結束時間
+     * @return mixed
+     */
+    public function getProductRewardList(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime='', string $endTime='') {
+        $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '','', TRUE);
+
+        $this->db
+            ->select('r.*, SUM(tra.amount) as platform_fee')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id`")
+            ->where('tra.source', SOURCE_FEES)
+            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
+            ->group_by('tra.target_id');
+        if($startTime!='')
+            $this->db->where("entering_date >=",  $startTime);
+        if($endTime!='')
+            $this->db->where("entering_date <=",  $endTime);
+
+        return $this->db->get()->result_array();
     }
 
     /**

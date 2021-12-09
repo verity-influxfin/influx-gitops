@@ -1056,7 +1056,7 @@ class Sales extends MY_Admin_Controller {
                     }
 
                     if (array_key_exists($category, $this->user_lib->rewardCategories)) {
-                        $settings['reward']['product'][$category] = [];
+                        $settings['reward']['product'][$category] = ['product_id' => $this->user_lib->rewardCategories[$category]];
                         $settings['reward']['product'][$category][$type] = $value;
                     }else{
                         $settings['reward'][$category][$type] = $value;
@@ -1240,6 +1240,285 @@ class Sales extends MY_Admin_Controller {
         $this->load->view('admin/_title',$this->menu);
         $this->load->view('admin/promote_import_list',$page_data);
         $this->load->view('admin/_footer');
+    }
+
+    public function promote_review_contract() {
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('admin/contract_format_model');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->library('qrcode_lib');
+        $this->load->library('output/json_output');
+
+        $list       = [];
+        $where      = [];
+        if (isset($input['qrcode_apply_id'])) {
+            $where['id'] = $input['qrcode_apply_id'];
+        } else {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數 qrcode_apply_id'))->send();
+        }
+
+        $review_list = $this->user_qrcode_apply_model->get_review_list([], $where);
+        $keys = array_flip(['qrcode_apply_id', 'user_id']);
+        if(!empty($review_list)) {
+            $review_list = reset($review_list);
+            $list = array_intersect_key($review_list, $keys);
+            $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['id' => $review_list['contract_format_id']]);
+            $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($review_list['alias']);
+            $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', []);
+            $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [] , 4, 4);
+            $content[4] = $content[5] = $content[6] = $content[7] = '%s';
+            $list['contract'] = htmlentities(vsprintf($contract_format->content, $content));
+        } else {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT))->send();
+        }
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => $list))->send();
+    }
+
+    public function promote_apply_list() {
+        $this->load->library('output/json_output');
+        $this->load->library('user_lib');
+        $this->load->library("pagination");
+        $this->load->library('contract_lib');
+        $this->load->model('admin/contract_format_model');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('log/log_qrcode_import_collaboration_model');
+        $this->load->model('user/qrcode_collaborator_model');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input      = $this->input->get(NULL, TRUE);
+        $list       = [];
+        $where      = [];
+        $user_where = [];
+        $fields     = ['alias'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $user_where[$field] = $input[$field];
+            } else {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數'.$field))->send();
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+
+        if(($user_where['alias']??"") == "all") {
+            unset($user_where['alias']);
+        }
+
+        if(!empty($input['sdate']))
+            $where['created_at >= '] = $input['sdate'];
+        if(!empty($input['edate']))
+            $where['created_at <= '] = $input['edate'];
+        if(!empty($input['user_id']))
+            $user_where['user_id'] = $input['user_id'];
+
+        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $alias_list = ['all' => "全部方案"];
+        $alias_list = array_replace_recursive($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+
+        $keys = array_flip(['qrcode_apply_id', 'user_id', 'alias', 'status', 'created_at']);
+        $review_list = $this->user_qrcode_apply_model->get_review_list($user_where, $where);
+        foreach ($review_list as $key => $info) {
+            $list[$key] = array_intersect_key($info, $keys);
+            $list[$key]['status_name'] = $this->user_qrcode_apply_model->status_list[$info['status']];
+            $list[$key]['alias_chinese_name'] = $alias_list[$info['alias']];
+        }
+
+        $config                     = [];
+        $config['per_page']         = 40; //每頁顯示的資料數
+        $config["total_rows"]       = count($review_list);
+
+        $current_page    = max(1, intval($input['current_page'] ?? '1'));
+        $offset = ($current_page - 1 ) * $config['per_page'];
+
+        $list = array_slice($list, $offset, $config['per_page']);
+
+        $data['total_rows'] = $config["total_rows"];
+        $data['per_page']  = $config['per_page'];
+        $data['last_page'] = (int)($config["total_rows"] / $config['per_page']) + 1;
+        $data['current_page'] = $current_page;
+
+        $data['list'] = $list;
+        $data['alias_list'] = $alias_list;
+
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => $data))->send();
+    }
+
+    public function promote_review_list() {
+        $this->load->library('output/json_output');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input      = $this->input->get(NULL, TRUE);
+        $list       = [];
+        $where      = [];
+        $user_where = [];
+        $fields     = ['status'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            } else {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數'.$field))->send();
+            }
+        }
+        $input['sdate'] = $input['sdate'] ?? '';
+        $input['edate'] = $input['edate'] ?? '';
+
+        if(!empty($input['sdate']))
+            $where['draw_up_at >= '] = $input['sdate'];
+        if(!empty($input['edate']))
+            $where['draw_up_at <= '] = $input['edate'];
+        if(!empty($input['user_id']))
+            $user_where['user_id'] = $input['user_id'];
+
+        $status_list = ['3' => "待審核", '1' => '審核完成'];
+        if(!in_array($where['status'], array_keys($status_list))) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '不合法的狀態'))->send();
+        }
+        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $alias_list = array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description'));
+
+        $keys = array_flip(['qrcode_apply_id', 'user_id', 'alias', 'status', 'draw_up_at']);
+        $review_list = $this->user_qrcode_apply_model->get_review_list($user_where, $where);
+        foreach ($review_list as $key => $info) {
+            $list[$key] = array_intersect_key($info, $keys);
+            $list[$key]['alias_chinese_name'] = $alias_list[$info['alias']];
+            $list[$key]['content'] = array_slice(json_decode($info['contract_content'], TRUE) ?? [] , 4, 4);
+        }
+
+        $config                     = [];
+        $config['per_page']         = 40; //每頁顯示的資料數
+        $config["total_rows"]       =
+
+        $current_page    = max(1, intval($input['current_page'] ?? '1'));
+        $offset = ($current_page - 1 ) * $config['per_page'];
+
+        $list = array_slice($list, $offset, $config['per_page']);
+
+        $data['total_rows'] = count($review_list);
+        $data['per_page']  = 40;
+        $data['last_page'] = (int)($config["total_rows"] / $config['per_page']) + 1;
+        $data['current_page'] = $current_page;
+
+        $data['list'] = $list;
+        $data['alias_list'] = $status_list;
+
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => $data))->send();
+    }
+
+    public function modify_promote_contract() {
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input      = $this->input->post(NULL, TRUE);
+        $data      = [];
+        $fields     = ['qrcode_apply_id', 'platform_fee', 'interest', 'collaboration_person', 'collaboration_enterprise'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $data[$field] = $input[$field];
+            }
+        }
+
+        if(!isset($data['qrcode_apply_id'])) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數 qrcode_apply_id'))->send();
+        }
+
+        $apply_info = $this->user_qrcode_apply_model->get($data['qrcode_apply_id']);
+        if(!isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
+        }
+        $contract_content = json_decode($apply_info->contract_content, TRUE);
+        $fields = ['platform_fee' => 4, 'interest' => 5, 'collaboration_person' => 6, 'collaboration_enterprise' => 7];
+        foreach ($fields as $field => $idx) {
+            if(isset($data[$field])) {
+                $contract_content[$idx] = $data[$field];
+            }
+        }
+        $rs = $this->user_qrcode_apply_model->update_by(['id' => $data['qrcode_apply_id']],
+            ['contract_content' => json_encode($contract_content)]);
+        if(!$rs) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
+        }
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => ['qrcode_apply_id' => $rs]))->send();
+    }
+
+    public function promote_contract_submit() {
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input      = $this->input->post(NULL, TRUE);
+        $where      = [];
+        $fields     = ['qrcode_apply_id'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            } else {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數'.$field))->send();
+            }
+        }
+
+        $apply_info = $this->user_qrcode_apply_model->get($where['qrcode_apply_id']);
+        if(!isset($apply_info) || !in_array($apply_info->status, [PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP, PROMOTE_REVIEW_STATUS_WITHDRAW])) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
+        }
+
+        $rs = $this->user_qrcode_apply_model->update_by(['id' => $where['qrcode_apply_id']],
+            ['status' => PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW]);
+        if(!$rs) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
+        }
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => ['qrcode_apply_id' => $rs]))->send();
+    }
+
+
+    public function promote_contract_approve() {
+	    $rs = $this->promote_contract_set(1);
+
+        $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+    }
+
+    public function promote_contract_withdraw() {
+        $rs = $this->promote_contract_set(0);
+        $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+    }
+
+    public function promote_contract_reject() {
+        $rs = $this->promote_contract_set(2);
+        $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+    }
+
+    private function promote_contract_set($status): array
+    {
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_qrcode_apply_model');
+
+        $input      = $this->input->post(NULL, TRUE);
+        $where      = [];
+        $fields     = ['qrcode_apply_id'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            } else {
+                return array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數'.$field);
+            }
+        }
+
+        $apply_info = $this->user_qrcode_apply_model->get($where['qrcode_apply_id']);
+        if(!isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW) {
+            return array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態');
+        }
+
+        $rs = $this->user_qrcode_apply_model->update_by(['id' => $where['qrcode_apply_id']],
+            ['status' => $status]);
+        if(!$rs) {
+            return array('result' => 'ERROR','error' => EXIT_DATABASE);
+        }
+        return array('result' => 'SUCCESS','data' => ['qrcode_apply_id' => $rs]);
     }
 }
 

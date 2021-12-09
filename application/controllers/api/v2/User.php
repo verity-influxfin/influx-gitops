@@ -1853,34 +1853,45 @@ END:
 
     public function apply_promote_code_post()
     {
-        $this->not_support_company();
         $this->load->model('user/user_model');
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/user_certification_model');
         $user_id    = $this->user_info->id;
         $investor   = $this->user_info->investor;
+        $company   = $this->user_info->company;
         $promote_code = $this->user_info->my_promote_code;
-        $promote_cert_list = $this->config->item('promote_code_certs');
 
-        $alias_name = $this->qrcode_setting_model->generalCaseAliasName;
+        $alias_name = '';
+        if($company == 0) {
+            // 一般方案 qrcode_setting 的 alias
+            $promote_cert_list = $this->config->item('promote_code_certs');
+            $alias_name = $this->qrcode_setting_model->generalCaseAliasName;
+        } else {
+            // 特約方案 qrcode_setting 的 alias
+            $promote_cert_list = $this->config->item('promote_code_certs_company');
+            $alias_name = $this->qrcode_setting_model->appointedCaseAliasName;
+        }
 
-        $param = array(
-            'user_id'			=> $user_id,
-            'certification_id'	=> $promote_cert_list,
-            'investor'			=> $investor,
-            'status'            => [0,1,3,6],
-        );
-        $certList = $this->user_certification_model->order_by('created_at','desc')->get_many_by($param);
+        $certifications = [];
         $doneCertifications = [];
-        $certifications = array_reduce($certList, function ($list, $item) use (&$doneCertifications){
-            if(!isset($list[$item->certification_id])) {
-                $list[$item->certification_id] = $item;
-                if($item->status == 1)
-                    $doneCertifications[$item->certification_id] = $item;
-            }
-            return $list;
-        }, []);
+        if(!empty($promote_cert_list)) {
+            $param = array(
+                'user_id'			=> $user_id,
+                'certification_id'	=> $promote_cert_list,
+                'investor'			=> $investor,
+                'status'            => [0,1,3,6],
+            );
+            $certList = $this->user_certification_model->order_by('created_at','desc')->get_many_by($param);
+            $certifications = array_reduce($certList, function ($list, $item) use (&$doneCertifications){
+                if(!isset($list[$item->certification_id])) {
+                    $list[$item->certification_id] = $item;
+                    if($item->status == 1)
+                        $doneCertifications[$item->certification_id] = $item;
+                }
+                return $list;
+            }, []);
+        }
 
         if(count($certifications) != count($promote_cert_list)){
             $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
@@ -1907,14 +1918,17 @@ END:
         $settings['investor'] = $investor;
 
         $this->load->library('contract_lib');
+        $this->load->library('qrcode_lib');
         $start_time = date('Y-m-d H:i:s');
         $end_time = date("Y-m-d H:i:s", strtotime("+ 1 year"));
-        $contract_year = date('Y') - 1911;
-        $contract_month = date('m');
-        $contract_day = date('d');
-        $contract_id = $this->contract_lib->sign_contract(PROMOTE_GENERAL_CONTRACT_TYPE_NAME, ['', $contract_year, $contract_month, $contract_day,
-            $settings['reward']['product']['student']['amount'], $settings['reward']['product']['salary_man']['amount'], '', '', '',
-            $contract_year, $contract_month, $contract_day]);
+
+        if($company == 0) {
+            $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
+        } else {
+            $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+        }
+        $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', $settings);
+        $contract_id = $this->contract_lib->sign_contract($contract_type_name, $contract);
 
         $rs = FALSE;
         if(isset($user_qrcode)) {
@@ -1935,16 +1949,38 @@ END:
             ]);
         }
 
-        $this->user_certification_model->update_by([
-            'id' => $settings['certification_id'],
-            'user_id' => $user_id,
-            'investor' => $investor,
-            'status' => CERTIFICATION_STATUS_AUTHENTICATED
-        ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
+        if(!empty($settings['certification_id'])) {
+            $this->user_certification_model->update_by([
+                'id' => $settings['certification_id'],
+                'user_id' => $user_id,
+                'investor' => $investor,
+                'status' => CERTIFICATION_STATUS_AUTHENTICATED
+            ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
+        }
 
-        if(count($doneCertifications) === count($promote_cert_list)){
+        // 如果是公司帳號，需審核合約才可繼續申請
+        $user_qrcode = $this->user_qrcode_model->get($rs);
+        if($user_qrcode && $company == 1) {
+            $this->load->model('user/user_qrcode_apply_model');
+            $this->load->model('admin/contract_format_model');
+            $this->load->library('qrcode_lib');
+            $contract_format = $this->contract_format_model->get_by(['type' => PROMOTE_APPOINTED_CONTRACT_TYPE_NAME]);
+
+            $this->user_qrcode_apply_model->insert([
+                'user_qrcode_id' => $user_qrcode->id,
+                'status' => PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP,
+                'contract_format_id' => $contract_format->id ?? 0,
+                'contract_content' => json_encode($this->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME)),
+            ]);
+        }
+
+        if(count($doneCertifications) === count($promote_cert_list)) {
             $this->load->library('Certification_lib');
-            $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDCARD], FALSE);
+            if($company == 0) {
+                $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDCARD], FALSE);
+            } else if($company == 1) {
+                $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_GOVERNMENTAUTHORITIES], FALSE);
+            }
         }
 
         if($rs) {
@@ -1956,13 +1992,13 @@ END:
 
     public function promote_code_get()
     {
-        $this->not_support_company();
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('admin/contract_format_model');
         $this->load->library('contract_lib');
         $this->load->library('user_lib');
-        $user_id            = $this->user_info->id;
+        $user_id = $this->user_info->id;
+        $company = $this->user_info->company;
         $list = [];
 
         $data = array(
@@ -1981,18 +2017,22 @@ END:
         );
         $categoryInitList = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0,count($this->user_lib->rewardCategories), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
         $initList = array_merge_recursive(['registered' => [], 'registeredCount' => 0, 'fullMember' => [], 'fullMemberCount' => 0, 'fullMemberRewardAmount' => 0], $categoryInitList);
-        $contract_format             = $this->contract_format_model->order_by('created_at','desc')->get_by(['type' => PROMOTE_GENERAL_CONTRACT_TYPE_NAME]);
+
+        if(!$company) {
+            $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
+            $alias = $this->qrcode_setting_model->generalCaseAliasName;
+        } else {
+            $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+            $alias = $this->qrcode_setting_model->appointedCaseAliasName;
+        }
+
+        $contract_format             = $this->contract_format_model->order_by('created_at','desc')->get_by(['type' => $contract_type_name]);
         if(isset($contract_format)) {
-            $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $this->qrcode_setting_model->generalCaseAliasName]);
+            $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias]);
             if($qrcode_settings) {
                 $settings = json_decode($qrcode_settings->settings, true);
-                $contract_year = date('Y') - 1911;
-                $contract_month = date('m');
-                $contract_day = date('d');
-                // PROMOTE_GENERAL_CONTRACT_TYPE_NAME
-                $data['contract'] = vsprintf($contract_format->content, ['', $contract_year, $contract_month, $contract_day,
-                    $settings['reward']['product']['student']['amount'], $settings['reward']['product']['salary_man']['amount'], '', '', '',
-                    $contract_year, $contract_month, $contract_day]);
+                $data['contract'] = vsprintf($contract_format->content,
+                    $this->CI->qrcode_lib->get_contract_format_content($contract_type_name, '', '', $settings));
             }
         }
 
@@ -2073,9 +2113,23 @@ END:
             }
             $data['promote_name']   = $settings['description'] ?? '';
             $data['promote_alias']  = $userQrcodeInfo['alias'];
-            $data['status'] = intval($userQrcodeInfo['status']);
+            if(!$company) {
+                $data['status'] = intval($userQrcodeInfo['status']);
+            } else {
+                $this->load->model('user/user_qrcode_apply_model');
+                $apply_info = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $userQrcodeInfo['id']]);
+                if(isset($apply_info)) {
+                    switch ($apply_info->status) {
+                        case PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP:
+                            $data['status'] = PROMOTE_STATUS_PENDING_TO_SENT;
+                            break;
+                        case PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW:
+                            $data['status'] = PROMOTE_STATUS_PENDING_TO_VERIFY;
+                            break;
+                    }
+                }
+            }
             $data['contract'] = !empty($contract) ? $contract['content'] : $data['contract'];
-
         }
 
         $this->response(array('result' => 'SUCCESS','data' => $data));

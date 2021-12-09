@@ -160,10 +160,15 @@ class Certification_lib{
      * @param $failed: 徵信項目是否失敗
      * @return false
      */
-    public function verify_promote_code($info, $failed): bool
+    public function verify_promote_code($info, $failed, $company=FALSE): bool
     {
-        $promote_cert_list = $this->CI->config->item('promote_code_certs');
-        if(in_array($info->certification_id, $promote_cert_list)) {
+        if($company) {
+            $promote_cert_list = $this->CI->config->item('promote_code_certs_company');
+        } else {
+            $promote_cert_list = $this->CI->config->item('promote_code_certs');
+        }
+
+        if(in_array($info->certification_id, $promote_cert_list) || empty($promote_cert_list)) {
             $this->CI->load->model('user/user_qrcode_model');
             $this->CI->load->model('user/user_certification_model');
             $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
@@ -193,6 +198,15 @@ class Certification_lib{
                         return FALSE;
                     }
 
+                    if ($company) {
+                        // 公司需等合約審核過才可以通過
+                        $this->CI->load->model('user/user_qrcode_apply_model');
+                        $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id]);
+                        if(!isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_SUCCESS) {
+                            return FALSE;
+                        }
+                    }
+
                     $settings = json_decode($promoteCode->settings, true);
                     $settings['certification_id'] = array_column($certifications, 'id');
                     $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
@@ -202,14 +216,33 @@ class Certification_lib{
                     $this->CI->load->library('contract_lib');
                     $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
                     if(isset($raw_contract)) {
-                        $content = json_decode($certifications[CERTIFICATION_IDCARD]->content, true);
-                        // PROMOTE_GENERAL_CONTRACT_TYPE_NAME
-                        $contract = json_decode($raw_contract->content, true);
-                        $contract[0] = $content['name'];
-                        $contract[6] = $content['name'];
-                        $contract[7] = $content['name'];
-                        $contract[8] = $content['address'];
-                        $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
+                        $this->CI->load->library('qrcode_lib');
+
+                        // 取得原合約的簽約時間
+                        $raw_contract_content = json_decode($raw_contract->content, true);
+                        $origin_contract_date = '';
+                        if(isset($raw_contract_content[1]) && isset($raw_contract_content[2]) && isset($raw_contract_content[3])) {
+                            $origin_contract_date = $raw_contract_content[1] . '-' . $raw_contract_content[2] . '-' . $raw_contract_content[3];
+                        }
+
+                        if(!$company) {
+                            $content = json_decode($certifications[CERTIFICATION_IDCARD]->content, true);
+
+                            $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_GENERAL_CONTRACT_TYPE_NAME,
+                                $content['name'] ?? '', $content['address'] ?? '', $settings, $origin_contract_date);
+                        } else {
+                            // TODO: 應該要撈取當初變卡的公司名稱，因為法人名字有可能更改
+                            $this->CI->load->model('user/judicial_person_model');
+                            $judicial_person_info = $this->CI->judicial_person_model->get_by(['company_user_id' => $info->user_id]);
+                            $name = $judicial_person_info->company ?? '';
+                            $address = $judicial_person_info->cooperation_address ?? '';
+
+                            $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME,
+                                $name, $address, $settings, $origin_contract_date);
+                        }
+                        if(!empty($contract)) {
+                            $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
+                        }
                     }
 
                     // 將銀行帳號改為待驗證
