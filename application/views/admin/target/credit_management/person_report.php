@@ -565,8 +565,8 @@
                                   if(area_name == 'creditLineInfo' && input_title == 'approvedCreditList'){
                                       // 計息方式
                                       report_data[area_name][input_title][list_key]['interestType'] =
-                                        report_item['creditLineInfo']['drawdownTypeList'].hasOwnProperty(`${report_data[area_name][input_title][list_key]['interestType']}`)
-                                        ? report_item['creditLineInfo']['drawdownTypeList'][`${report_data[area_name][input_title][list_key]['interestType']}`]
+                                        report_item['creditLineInfo']['interestTypeList'].hasOwnProperty(`${report_data[area_name][input_title][list_key]['interestType']}`)
+                                        ? report_item['creditLineInfo']['interestTypeList'][`${report_data[area_name][input_title][list_key]['interestType']}`]
                                         : report_data[area_name][input_title][list_key]['interestType'];
                                       // 動撥方式
                                       report_data[area_name][input_title][list_key]['drawdownType'] =
