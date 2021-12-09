@@ -173,7 +173,7 @@
 					<option value="高">高</option>
 					<option value="中">中</option>
 					<option value="低">低</option>
-					<option value="低">拒絕</option>
+					<option value="拒絕">拒絕</option>
 				</select>
 				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
 					搜尋
@@ -384,7 +384,7 @@
 	let searching = false
 	let loading = false
 	const faIcons = [];
-	const apiUrl = "/api/v2/AntiFraud/";
+	const apiUrl = "/api/v2/anti_fraud/";
 	let typeIds = [];
 	let configs = []
 	let prevStartTime = 0
@@ -489,9 +489,36 @@
 			//only target 2nd
 			return
 		}
-		const typeIds = await getRiskMap(risk)
-		const res = await getRuleStatistics({ typeIds })
-		console.log(res)
+		return
+		// disabled only risk
+		const item = await getRiskMap(risk)
+
+		const res = await getRuleTypeId(item)
+		res.forEach(x=>{
+			const update = x.find(item=>{
+				return item.key === 'updatedAt' 
+			}).value
+			const typeId = x.find(item => {
+				return item.key === 'typeId'
+			}).value
+			const ruleId = x.find(item => {
+				return item.key === 'ruleId'
+			}).value
+
+			const find = ruleAll.find(a => {
+				return a.typeId === typeId
+			})
+			const find2 = find.rules.find(a => {
+				return a.id === ruleId
+			})
+			console.log(x,typeId, ruleId)
+			console.log(find)
+			console.log(find2)
+			const da = find.description === find2.description ? find2.description : find.description + ' ' + find2.description
+			const [first, ...sec] = [...da.split('】')]
+			table.row.add([risk,converDate(x), first + '】', sec.join('】')])
+		})
+		table.draw()
 		// no userid and target
 	}
 
@@ -719,7 +746,7 @@
 	}
 
 	function getProductConfig() {
-		return fetch('/api/v2/AntiFraud/product_config')
+		return fetch('/api/v2/anti_fraud/product_config')
 			.then(x => x.json())
 			.then(({ data }) => {
 				return data
@@ -784,6 +811,40 @@
 			})
 			.catch((err) => console.error(err));
 	}
+	function getRuleTypeId(data) {
+			const fetchRule = ({ typeId,ruleId }) => {
+				return fetch(
+					`${apiUrl}/typeId?typeId=${typeId}&ruleId=${ruleId}`
+				)
+					.then((res) => {
+						if (res.ok) {
+							return res.json();
+						} else {
+							throw new Error(res.statusText);
+						}
+					})
+					.then(({ response }) => {
+						return response.results;
+					})
+					.catch((err) => {
+						return Promise.reject(err);
+					});
+			};
+			const fetchRules = [];
+			data.forEach(({typeId,ruleId}) => {
+				fetchRules.push(
+					fetchRule({ typeId , ruleId})
+				);
+			});
+			return Promise.allSettled(fetchRules)
+				.then((x) => {
+					const ans = x.filter((res) => {
+						return res.status == "fulfilled";
+					});
+					return ans.flatMap((x) => x.value);
+				})
+				.catch((err) => console.error(err));
+		}
 
 	function getResult({ ruleId }) {
 		const fetchResult = () => {

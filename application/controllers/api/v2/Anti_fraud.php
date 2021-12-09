@@ -111,7 +111,6 @@ class Anti_fraud extends Admin_rest_api_controller
             'data'   => $response
         ]);
     }
-
     public function rule_all_get()
     {
         $url = $this->brookesia_url . 'rule/all';
@@ -154,7 +153,8 @@ class Anti_fraud extends Admin_rest_api_controller
         $this->response($response);
     }
 
-    public function user_id_get(){
+    public function user_id_get()
+    {
         $input = $this->input->get();
         $url = $this->brookesia_url . 'result/userId' .
             '?userId=' . ($input['userId'] ?? '');
@@ -163,10 +163,24 @@ class Anti_fraud extends Admin_rest_api_controller
 
         $this->response($response);
     }
-    public function risk_map_get(){
+
+    public function risk_map_get()
+    {
         $input = $this->input->get();
         $url = $this->brookesia_url . 'result/riskMap' .
             '?risk=' . ($input['risk'] ?? '');
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
+
+        $this->response($response);
+    }
+
+    public function typeid_get()
+    {
+        $input = $this->input->get();
+        $url = $this->brookesia_url . 'result/typeId' .
+            '?typeId=' . ($input['typeId'] ?? '') . 
+            '&ruleId='.($input['ruleId'] ?? '');
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
 
