@@ -256,7 +256,7 @@ class User extends REST_Controller {
 		}
 		
 		$data['promote_code']		= isset($input['promote_code'])?$input['promote_code']:"";
-		$data['my_promote_code'] 	= $this->get_promote_code();
+
 		$data['auth_otp'] 			= get_rand_token();
 		$result = $this->user_model->get_by('phone',$data['phone']);
 		if ($result) {

@@ -52,6 +52,9 @@ class Subloan_lib{
 						case SOURCE_AR_DAMAGE: 
 							$data['liquidated_damages'] 			+= $value->amount;
 							break;
+                        case SOURCE_AR_DELAYINTEREST:
+                            $data['delay_interest_payable'] 		+= $value->amount;
+                            break;
 						default:
 							break;
 					}
@@ -65,11 +68,6 @@ class Subloan_lib{
                     $contract = $this->CI->contract_model->get($target->contract_id);
 					foreach($remaining_principal as $k => $v){
 						$data['remaining_principal'] 	+= $v;
-                        if ($contract->format_id == 3) {
-                            $data['delay_interest_payable'] += $this->CI->financial_lib->get_interest_by_days($target->delay_days, $v, $instalment, 20, $limit_date);
-                        } else {
-                            $data['delay_interest_payable'] += $this->CI->financial_lib->get_delay_interest( $v , $target->delay_days);
-                        }
 					}
 					
 					foreach($interest_payable as $k => $v){
@@ -262,7 +260,7 @@ class Subloan_lib{
 
     //更新借款金額
 	public function renew_subloan($target,$msg=true){
-		if(in_array($target->status,[2,3])&& $target->expire_time < time()){
+		if(in_array($target->status,[2,3]) && $target->expire_time < time()){
 			$subloan	= $this->CI->subloan_model->get_by(array(
 				'status'		=> [1,2],
 				'new_target_id'	=> $target->id
@@ -286,6 +284,12 @@ class Subloan_lib{
 						'expire_time'		=> strtotime($info['settlement_date']),
 						'invested'			=> 0,
 					);
+
+					// 案件處理時間 <= 過期時間，代表延滯息尚未計算，不更新 expire_time，以利下次跑批可觸發判斷
+					if(isset($old_target->handle_date) && $old_target->handle_date <= date("Y-m-d", $target->expire_time)) {
+                        return FALSE;
+                    }
+
                     $this->CI->load->library('contract_lib');
 					$contract = $this->CI->contract_lib->update_contract($target->contract_id,['',$target->user_id,$info['total'],$target->interest_rate,'']);
 					if($contract){
@@ -295,7 +299,7 @@ class Subloan_lib{
                             if($msg){
                                 $this->CI->load->model('user/user_model');
                                 $user_info = $this->CI->user_model->get($target->user_id);
-                                $this->CI->notification_lib->subloan_auction_failed($target->user_id,date('Y-m-d',$target->created_at),$target->amount,$target->target_no,$user_info->name);
+                                $this->CI->notification_lib->subloan_auction_failed($target->user_id,$old_target->handle_date,$info['total'],$target->target_no,$user_info->name);
                             }
                             return $rs;
                         }

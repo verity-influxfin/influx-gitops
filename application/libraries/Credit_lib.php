@@ -744,7 +744,7 @@ class Credit_lib{
                 }
 
 				$info = $this->CI->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'school_name']);
-				if(isset($info->meta_value)) {
+				if(isset($info->meta_value) && in_array($product_id, [1, 2])) {
                     $school_points_data = $this->get_school_point($info->meta_value);
                     $school_config = $this->CI->config->item('school_points');
                     // 黑名單的學校額度是0
@@ -787,7 +787,9 @@ class Credit_lib{
                     $sub_product = $this->get_sub_product_data($sub_product_id);
                     //techie
                     if ($sub_product && $sub_product_id == 1){
-                        $rate -= in_array($data['school_department'],$sub_product->majorList)?1:0;
+                        if(isset($data['school_department'])){
+                            $rate -= in_array($data['school_department'],$sub_product->majorList)?1:0;
+                        }
                         if ($product_id == 1){
                             $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
                             $rate -= isset($data['student_game_work_level'])?$data['student_game_work_level']*0.5:0;
