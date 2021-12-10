@@ -1733,8 +1733,12 @@ class Recoveries extends REST_Controller
             $data['delay_interest'] = array_sum($data_arr['delay_interest']);
             $data['transfer_fee'] = array_sum($data_arr['fee']);
             $data['amount'] = $amount != 0 ? ($count == 1 || $combination == 1 ? $amount : $data['principal']) : $data['principal'];
-            $minAmount = intval(round($data['accounts_receivable'] * (100 - 20) / 100, 0));
+
+            $minAmount = 1;
             $maxAmount = $data['accounts_receivable'];
+            if ($amount < $data['transfer_fee']) {
+                $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR));
+            }
             if ($amount < $minAmount || $amount > $maxAmount) {
                 $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR));
             }
