@@ -531,6 +531,16 @@ class Certification extends MY_Admin_Controller {
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						} elseif ($info->certification_id == CERTIFICATION_CERCREDITJUDICIAL) {
 							$fail = '評估表已失效';
+						} elseif ($info->certification_id == CERTIFICATION_IDCARD) {
+							if(isset($post['failed_type_list'])) {
+								$remark = json_decode($info->remark, TRUE);
+								if ($remark === FALSE)
+									$remark = [];
+								$remark['failed_type_list'] = $post['failed_type_list'];
+								$this->user_certification_model->update($post['id'], [
+									'remark' => json_encode($remark)
+								]);
+							}
 						}
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
