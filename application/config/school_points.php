@@ -184,7 +184,7 @@ $config['school_points'] = array(
     ['name' =>'臺北城市科技大學', 'points' =>100, 'national' => 0 ],
     ['name' =>'醒吾科技大學', 'points' =>100, 'national' => 0 ],
     ['name' =>'慈濟科技大學', 'points' =>100, 'national' => 0 ],
-    ['name' =>'亞東技術學院', 'points' =>100, 'national' => 0 ],
+    ['name' =>'亞東科技大學', 'points' =>100, 'national' => 0 ],
     ['name' =>'經國管理暨健康學院', 'points' =>100, 'national' => 0 ],
     ['name' =>'中華大學', 'points' =>100, 'national' => 0 ],
     ['name' =>'大葉大學', 'points' =>100, 'national' => 0 ],
@@ -1577,7 +1577,7 @@ $config['department_points'] = array (
     array (
     ),
   ),
-  '亞東技術學院' =>
+  '亞東科技大學' =>
   array (
     'city' => '新北市',
     'shortName' => 'OIT',
