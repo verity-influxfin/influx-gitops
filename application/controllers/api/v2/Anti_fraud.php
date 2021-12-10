@@ -23,6 +23,9 @@ class Anti_fraud extends Admin_rest_api_controller
     {
         $this->payload_validation([
 
+            // 用戶 ID
+            'userId'      => 'required|int',
+
             // 項目
             'item'        => 'required|string',
 
@@ -42,7 +45,70 @@ class Anti_fraud extends Admin_rest_api_controller
             'resolution'  => 'required|string',
         ]);
 
+        $this->load->model('user/blockesia_model');
+
+        $result = $this->blockesia_model->create_data([
+            'user_id'     => $this->payload['userId'],
+            'item'        => $this->payload['item'],
+            'data_source' => $this->payload['dataSource'],
+            'category'    => $this->payload['category'],
+            'content'     => $this->payload['content'],
+            'risk'        => $this->payload['risk'],
+            'resolution'  => $this->payload['resolution'],
+        ]);
+
+        if ($result === FALSE)
+        {
+            $this->response([
+                'result' => 'ERROR',
+                'data'   => 'ERROR While Data Insert.'
+            ]);
+        }
+
         $this->success();
+    }
+
+    /**
+     * 取得風險等級資料
+     * 
+     * @created_at          2021-12-10
+     * @created_by          Jack
+     */
+    public function risk_level_list_get()
+    {
+        $this->payload_validation([
+
+            // 目前頁數
+            'currentPage' => 'int',
+
+            // 每頁筆數
+            'perPage'     => 'int',
+        ]);
+
+        $this->load->model('user/blockesia_model');
+
+        $result = $this->blockesia_model->get_data(
+            $this->payload['currentPage'] ?? 1,
+            $this->payload['perPage'] ?? 20
+        );
+
+        if (($data = $result->data_result) !== FALSE)
+        {
+            $this->success([
+                'list' => $data,
+                'pagination' => [
+                    'currentPage' => $result->current_page,
+                    'perPage'     => $result->per_page,
+                    'lastPage'    => $result->last_page,
+                    'totalRows'   => $result->total_rows,
+                ]
+            ]);
+            return;
+        }
+        $this->response([
+            'result' => 'ERROR',
+            'data'   => 'DB ERROR.'
+        ]);
     }
 
     /**
@@ -111,6 +177,13 @@ class Anti_fraud extends Admin_rest_api_controller
             'data'   => $response
         ]);
     }
+
+    /**
+     * 取得所有規則
+     * 
+     * @created_at      2021-12-03
+     * @created_by      Joanne
+     */
     public function rule_all_get()
     {
         $url = $this->brookesia_url . 'rule/all';

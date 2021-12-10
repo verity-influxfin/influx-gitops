@@ -286,19 +286,31 @@ class Admin_rest_api_controller extends REST_Controller
                 switch (array_shift($rules))
                 {
 
+                    // 檢查整數型態
+                    case 'int':
+                        if (! is_numeric($this->payload[$key] ?? 0))
+                        {
+                            throw new Exception(sprintf('`%s` MUST Be Type of Integer.', $key));
+                        }
+                        if (isset($this->payload[$key]))
+                        {
+                            $this->payload[$key] = (int) $this->payload[$key];
+                        }
+                        break;
+
                     // 檢查數值型態
                     case 'number':
-                        if (! is_numeric($this->payload[$key]))
+                        if (! is_numeric($this->payload[$key] ?? 0))
                         {
-                            throw new Exception(sprintf('`%s` MUST Be Number Type.', $key));
+                            throw new Exception(sprintf('`%s` MUST Be Type of Number.', $key));
                         }
                         break;
 
                     // 檢查字串型態
                     case 'string':
-                        if (! is_string($this->payload[$key]))
+                        if (! is_string($this->payload[$key] ?? ''))
                         {
-                            throw new Exception(sprintf('`%s` MUST Be String Type.', $key));
+                            throw new Exception(sprintf('`%s` MUST Be Type of String.', $key));
                         }
                         break;
 

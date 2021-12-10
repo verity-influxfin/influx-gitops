@@ -606,3 +606,6 @@ defined('PROMOTE_REWARD_STATUS_PAID_OFF') OR define('PROMOTE_REWARD_STATUS_PAID_
 
 defined('PROMOTE_GENERAL_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_CONTRACT_TYPE_NAME', "qrcode_general");
 
+// 預設狀態代碼 (0: 停用 1: 啟用)
+defined('STATUS_INACTIVE') OR define('STATUS_INACTIVE', 0);
+defined('STATUS_ACTIVE')   OR define('STATUS_ACTIVE', 1);
