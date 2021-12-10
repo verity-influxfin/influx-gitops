@@ -139,15 +139,30 @@ class User_lib {
     }
 
     /**
-     * 取得產品對應之推薦獎勵百分比
+     * 取得產品對應之借款人服務費獎勵百分比
      * @param $productSettings
      * @param $productIdList
      * @return float
      */
-    public function getRewardPercentByProduct($productSettings, $productIdList) : float {
+    public function getRewardBorrowerPercentByProduct($productSettings, $productIdList) : float {
         foreach ($productSettings as $setting) {
             if(isset($setting['product_id']) && $setting['product_id'] == $productIdList) {
-                return max(0, min(100, (float)($setting['percent'] ?? 0)));
+                return max(0, min(100, (float)($setting['borrower_percent'] ?? 0)));
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 取得產品對應之投資人回款服務費獎勵百分比
+     * @param $productSettings
+     * @param $productIdList
+     * @return float
+     */
+    public function getRewardInvestorPercentByProduct($productSettings, $productIdList) : float {
+        foreach ($productSettings as $setting) {
+            if(isset($setting['product_id']) && $setting['product_id'] == $productIdList) {
+                return max(0, min(100, (float)($setting['investor_percent'] ?? 0)));
             }
         }
         return 0;
@@ -201,9 +216,15 @@ class User_lib {
             }
         }
 
+        // TODO: 需處理禁用 qrcode 後仍須正常顯示的問題，end_time 可考慮再加開一個 available time 欄位，end_time 一樣是合約時間
+        $promoteCodes = array_keys($promoteCodeList);
+        if(empty($promoteCodes)) {
+            return $list;
+        }
+
         // 取得推薦碼下載數
         $this->CI->load->model('behavion/user_behavior_model');
-        $firstOpenRs =$this->CI->user_behavior_model->getFirstOpenCountByPromoteCode(array_keys($promoteCodeList), $startDate, $endDate);
+        $firstOpenRs =$this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate);
         foreach ($firstOpenRs as $rs) {
             $list[$rs['promote_code']]['downloadedCount'] = $rs['count'];
         }
@@ -220,6 +241,8 @@ class User_lib {
             $list[$rs['promote_code']]['registeredCount'] += 1;
             $list[$rs['promote_code']]['registered'][] = $rs;
         }
+
+
 
         // 取得成功推薦申貸的數量
         foreach ($this->rewardCategories as $category => $productIdList) {
@@ -242,16 +265,16 @@ class User_lib {
             foreach ($this->rewardCategories as $category => $productIdList) {
                 $list[$promoteCode]['loanedCount'][$category] = count($list[$promoteCode][$category]);
                 $list[$promoteCode]['loanedBalance'][$category] = array_sum(array_column($list[$promoteCode][$category], 'loan_amount'));
-                $list[$promoteCode]['platformFee'][$category] = array_sum(array_column($list[$promoteCode][$category], 'platform_fee'));
+                $list[$promoteCode]['borrowerPlatformFee'][$category] = array_sum(array_column($list[$promoteCode][$category], 'borrower_platform_fee'));
+                $list[$promoteCode]['investorPlatformFee'][$category] = array_sum(array_column($list[$promoteCode][$category], 'investor_platform_fee'));
 
                 if(isset($settings['reward']) && isset($settings['reward']['product'])) {
                     $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
-                    if($rewardAmount != 0) {
-                        $list[$promoteCode]['rewardAmount'][$category] = $list[$promoteCode]['loanedCount'][$category] * $rewardAmount;
-                    } else {
-                        $rewardPercent = $this->getRewardPercentByProduct($settings['reward']['product'], $productIdList);
-                        $list[$promoteCode]['rewardAmount'][$category] = (int)round($list[$promoteCode]['platformFee'][$category] * $rewardPercent / 100.0,0);
-                    }
+                    $rewardBorrowerPercent = $this->getRewardBorrowerPercentByProduct($settings['reward']['product'], $productIdList);
+                    $rewardInvestorPercent = $this->getRewardInvestorPercentByProduct($settings['reward']['product'], $productIdList);
+                    $list[$promoteCode]['rewardAmount'][$category] = $list[$promoteCode]['loanedCount'][$category] * $rewardAmount;
+                    $list[$promoteCode]['rewardAmount'][$category] += (int)round($list[$promoteCode]['borrowerPlatformFee'][$category] * $rewardBorrowerPercent / 100.0,0);
+                    $list[$promoteCode]['rewardAmount'][$category] += (int)round($list[$promoteCode]['investorPlatformFee'][$category] * $rewardInvestorPercent / 100.0,0);
                 }
                 $list[$promoteCode]['totalRewardAmount'] += $list[$promoteCode]['rewardAmount'][$category];
                 $list[$promoteCode]['totalLoanedAmount'] += $list[$promoteCode]['loanedBalance'][$category];
@@ -271,7 +294,7 @@ class User_lib {
 
         // 計算合作對象推薦獎金
         $this->CI->load->model('user/user_qrcode_collaboration_model');
-        $collaborationRs =$this->CI->user_qrcode_collaboration_model->getCollaborationList(array_keys($promoteCodeList), $startDate, $endDate);
+        $collaborationRs =$this->CI->user_qrcode_collaboration_model->getCollaborationList($promoteCodes, $startDate, $endDate);
         foreach ($collaborationRs as $rs) {
             $promoteCode = $rs['promote_code'];
             $collaboratorId = $rs['qrcode_collaborator_id'];
@@ -391,18 +414,19 @@ class User_lib {
                         $rewardList[$category] = array_diff_key($rewardList[$category], $closedDelayedTargetList[$category]);
                     }
 
+                    // TODO: 特約方案可能在該次還沒結帳前就逾期且清償，會導致多扣了手續費，必須算 handle_date 以前的手續費才是對的
                     $currentDelayedTargets[$category] = array_column($this->CI->target_model->getDelayedTarget(array_keys($rewardList[$category])), NULL, "id");
 
                     if(isset($info['info']) && isset($info['info']['settings'])) {
                         $settings = $info['info']['settings'];
                         if(isset($settings['reward']) && isset($settings['reward']['product'])) {
                             $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
-                            if($rewardAmount != 0) {
-                                $dockAmountList[$category] = $rewardAmount * count($currentDelayedTargets[$category]);
-                            } else {
-                                $rewardPercent = $this->getRewardPercentByProduct($settings['reward']['product'], $productIdList);
-                                $dockAmountList[$category] = array_sum(array_column($currentDelayedTargets[$category], 'platform_fee')) * $rewardPercent / 100.0;
-                            }
+                            $rewardBorrowerPercent = $this->getRewardBorrowerPercentByProduct($settings['reward']['product'], $productIdList);
+                            $rewardInvestorPercent = $this->getRewardInvestorPercentByProduct($settings['reward']['product'], $productIdList);
+
+                            $dockAmountList[$category] = $rewardAmount * count($currentDelayedTargets[$category]);
+                            $dockAmountList[$category] += (int)round(array_sum(array_column($currentDelayedTargets[$category], 'borrower_platform_fee')) * $rewardBorrowerPercent / 100.0, 0);
+                            $dockAmountList[$category] += (int)round(array_sum(array_column($currentDelayedTargets[$category], 'investor_platform_fee')) * $rewardInvestorPercent / 100.0, 0);
 
                             $diff = $info['totalRewardAmount'] - $dockAmountList[$category];
                             if($diff < 0) {

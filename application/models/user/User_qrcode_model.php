@@ -7,7 +7,7 @@ class user_qrcode_model extends MY_Model
 	public $before_update = array( 'before_data_u' );
 	public $status_list   = array(
 		0 =>	'停用',
-		1 =>	'有效'
+		1 =>	'啟用'
 	);
 	
 	public function __construct()
@@ -100,7 +100,7 @@ class user_qrcode_model extends MY_Model
     }
 
     /**
-     * 取得平台回款手續費
+     * 取得申貸案件數量/借款人服務費/投資人回款手續費
      * @param array $qrcodeWhere 推薦碼篩選條件
      * @param array $productIdList 產品編號列表
      * @param string $startTime 篩選起始時間
@@ -111,9 +111,9 @@ class user_qrcode_model extends MY_Model
         $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '','', TRUE);
 
         $this->db
-            ->select('r.*, SUM(tra.amount) as platform_fee')
+            ->select('r.*, SUM(tra.amount) as borrower_platform_fee')
             ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id`")
+            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` = `tra`.`user_from`")
             ->where('tra.source', SOURCE_FEES)
             ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
             ->group_by('tra.target_id');
@@ -121,6 +121,27 @@ class user_qrcode_model extends MY_Model
             $this->db->where("entering_date >=",  $startTime);
         if($endTime!='')
             $this->db->where("entering_date <=",  $endTime);
+
+        $borrowerQuery = $this->db->get_compiled_select('', TRUE);
+
+        $this->db
+            ->select('r.*, SUM(tra.amount) as investor_platform_fee')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` != `tra`.`user_from`")
+            ->where('tra.source', SOURCE_FEES)
+            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
+            ->group_by('tra.target_id');
+        if($startTime!='')
+            $this->db->where("entering_date >=",  $startTime);
+        if($endTime!='')
+            $this->db->where("entering_date <=",  $endTime);
+
+        $investorQuery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('r.*, br.borrower_platform_fee, ir.investor_platform_fee')
+            ->from("($subQuery) as `r`")
+            ->join("($borrowerQuery) as `br`", "`r`.`id` = `br`.`id`", 'left')
+            ->join("($investorQuery) as `ir`", "`r`.`id` = `ir`.`id`", 'left');
 
         return $this->db->get()->result_array();
     }

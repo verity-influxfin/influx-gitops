@@ -1252,6 +1252,8 @@ class Sales extends MY_Admin_Controller {
 
         $list       = [];
         $where      = [];
+        $input      = $this->input->get(NULL, TRUE);
+
         if (isset($input['qrcode_apply_id'])) {
             $where['id'] = $input['qrcode_apply_id'];
         } else {
@@ -1323,6 +1325,7 @@ class Sales extends MY_Admin_Controller {
             $list[$key] = array_intersect_key($info, $keys);
             $list[$key]['status_name'] = $this->user_qrcode_apply_model->status_list[$info['status']];
             $list[$key]['alias_chinese_name'] = $alias_list[$info['alias']];
+            $list[$key]['created_at'] = date('Y-m-d', strtotime($info['created_at']));
         }
 
         $config                     = [];
@@ -1386,6 +1389,7 @@ class Sales extends MY_Admin_Controller {
             $list[$key] = array_intersect_key($info, $keys);
             $list[$key]['alias_chinese_name'] = $alias_list[$info['alias']];
             $list[$key]['content'] = array_slice(json_decode($info['contract_content'], TRUE) ?? [] , 4, 4);
+            $list[$key]['draw_up_at'] = date('Y-m-d', strtotime($info['draw_up_at']));
         }
 
         $config                     = [];
@@ -1408,7 +1412,7 @@ class Sales extends MY_Admin_Controller {
         $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => $data))->send();
     }
 
-    public function modify_promote_contract() {
+    public function promote_modify_contract() {
         $this->load->library('output/json_output');
         $this->load->model('user/user_qrcode_apply_model');
 
@@ -1442,7 +1446,7 @@ class Sales extends MY_Admin_Controller {
         if(!$rs) {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
         }
-        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => ['qrcode_apply_id' => $rs]))->send();
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => []))->send();
     }
 
     public function promote_contract_submit() {
@@ -1471,13 +1475,48 @@ class Sales extends MY_Admin_Controller {
         if(!$rs) {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
         }
-        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => ['qrcode_apply_id' => $rs]))->send();
+        $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => []))->send();
     }
 
 
     public function promote_contract_approve() {
-	    $rs = $this->promote_contract_set(1);
+        $rs = $this->promote_contract_set(1);
+        if ($rs['result'] == "ERROR") {
+            $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+        }
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('user/user_qrcode_model');
+        $this->load->library('contract_lib');
+        $input      = $this->input->post(NULL, TRUE);
+        $apply_info = $this->user_qrcode_apply_model->get_by(['id' => $input['qrcode_apply_id'], 'status' => PROMOTE_REVIEW_STATUS_SUCCESS]);
+        if(isset($apply_info)) {
+            $qrcode_code = $this->user_qrcode_model->get($apply_info->user_qrcode_id);
+            if(!isset($qrcode_code)) {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
+            }
+            $settings = json_decode($qrcode_code->settings, TRUE);
 
+            $contract_content = json_decode($apply_info->contract_content, TRUE);
+            $this->contract_lib->update_contract($qrcode_code->contract_id, $contract_content);
+            $content = array_slice($contract_content, 4, 4);
+            // TODO: 待更新 setting reward 欄位
+
+            $this->load->model('user/user_certification_model');
+            $this->load->library('certification_lib');
+
+            // 觸發驗證機制
+            if(isset($settings) && !empty($settings['certification_id'])) {
+                $info = $this->user_certification_model->get_by([
+                    'id' => $settings['certification_id'],
+                    'user_id' => $qrcode_code->user_id,
+                    'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES,
+                    'status' => CERTIFICATION_STATUS_SUCCEED
+                ]);
+                if (isset($info)) {
+                    $this->certification_lib->verify_promote_code($info, FALSE);
+                }
+            }
+        }
         $this->json_output->setStatusCode(200)->setResponse($rs)->send();
     }
 
@@ -1495,6 +1534,7 @@ class Sales extends MY_Admin_Controller {
     {
         $this->load->library('output/json_output');
         $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('log/log_qrcode_apply_review_model');
 
         $input      = $this->input->post(NULL, TRUE);
         $where      = [];
@@ -1509,7 +1549,7 @@ class Sales extends MY_Admin_Controller {
         }
 
         $apply_info = $this->user_qrcode_apply_model->get($where['qrcode_apply_id']);
-        if(!isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_PENDING_TO_REVIEW) {
+        if(!isset($apply_info) || $apply_info->status != 3) {
             return array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態');
         }
 
@@ -1518,7 +1558,58 @@ class Sales extends MY_Admin_Controller {
         if(!$rs) {
             return array('result' => 'ERROR','error' => EXIT_DATABASE);
         }
-        return array('result' => 'SUCCESS','data' => ['qrcode_apply_id' => $rs]);
+        $this->log_qrcode_apply_review_model->insert([
+            'admin_id' => $this->login_info->id,
+            'qrcode_apply_id' => $where['qrcode_apply_id'],
+            'status' => $status,
+        ]);
+        return array('result' => 'SUCCESS','data' => []);
+    }
+
+    public function promote_set_status(): array
+    {
+        if (!$this->input->is_ajax_request()) {
+            alert('ERROR, 只接受Ajax', admin_url('sales/promote_edit'));
+        }
+        $this->load->model('user/user_qrcode_model');
+        $this->load->library('output/json_output');
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->model('log/log_qrcode_modify_model');
+
+        $input      = $this->input->post(NULL, TRUE);
+        $where      = [];
+        $fields     = ['user_qrcode_id', 'status'];
+
+        foreach ($fields as $field) {
+            if (isset($input[$field])&&$input[$field]!='') {
+                $where[$field] = $input[$field];
+            } else {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '缺少參數'.$field))->send();
+            }
+        }
+
+        $target_status = $where['status'];
+        if(!in_array($target_status, [PROMOTE_STATUS_DISABLED, PROMOTE_STATUS_AVAILABLE])) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '不合法的目標狀態'))->send();
+        }
+        $user_qrcode = $this->user_qrcode_model->get($where['user_qrcode_id']);
+        if(!isset($user_qrcode) ||
+            ($target_status == PROMOTE_STATUS_DISABLED && $user_qrcode->status != PROMOTE_STATUS_AVAILABLE) ||
+            ($target_status == PROMOTE_STATUS_AVAILABLE && $user_qrcode->status != PROMOTE_STATUS_DISABLED)) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
+        }
+
+        $rs = $this->user_qrcode_model->update_by(['id' => $where['user_qrcode_id']],
+            ['status' => $target_status]);
+        if(!$rs) {
+            $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => EXIT_DATABASE))->send();
+        }
+        $this->log_qrcode_modify_model->insert([
+            'admin_id' => $this->login_info->id,
+            'qrcode_id' => $where['user_qrcode_id'],
+            'status' => $target_status,
+        ]);
+        $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "修改成功。"])->send();
     }
 }
 

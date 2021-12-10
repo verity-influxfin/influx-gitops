@@ -43,19 +43,17 @@ class Qrcode_lib {
                     $contract_year, $contract_month, $contract_day];
                 break;
         }
+        return [];
     }
 
     public function get_contract_type_by_alias($alias): string
     {
         $this->CI->load->model('user/qrcode_setting_model');
         $contract_type_name = '';
-        switch ($alias) {
-            case $this->CI->qrcode_setting_model->generalCaseAliasName:
-                $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
-                break;
-            case $this->CI->qrcode_setting_model->appointedCaseAliasName:
-                $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
-                break;
+        if($alias == $this->CI->qrcode_setting_model->generalCaseAliasName) {
+            $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
+        }else if($alias == $this->CI->qrcode_setting_model->appointedCaseAliasName) {
+            $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
         }
         return $contract_type_name;
     }

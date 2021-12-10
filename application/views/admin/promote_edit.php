@@ -28,7 +28,7 @@
         });
 
         $(document).on("click",".modified",function() {
-            $('#formula-table').find('input').prop("disabled", false);
+            $('#status_selector').prop("disabled", false);
             modifiedFlag = true;
         });
     });
@@ -46,29 +46,18 @@
     function change_submit() {
         if(!modifiedFlag)
             return false;
-        let formula_list = {};
-        $('#formula-table').find('input').each(function () {
-            let category = $(this).data('category');
-            let type = $(this).data('type');
-            let value = $(this).val();
-            if(type === 'percent') {
-                value = value.substring(0, value.lastIndexOf("%"));
-            }
-            if(value) {
-                formula_list[category] = {};
-                formula_list[category][type] = value;
-            }
-        });
+
         let qrcode_id = $('#qrcode_id').val();
+        let status = $('#status_selector').val();
         if(!qrcode_id)
             return false;
         Pace.track(() => {
             $.ajax({
                 type: "POST",
-                url: "<?=admin_url('sales/qrcode_modify_settings')?>",
+                url: "<?=admin_url('sales/promote_set_status')?>",
                 data: {
-                    'id' : qrcode_id,
-                    'data' : formula_list,
+                    'user_qrcode_id' : qrcode_id,
+                    'status' : status,
                 },
                 beforeSend: function () {
                 },
@@ -136,7 +125,13 @@
                                                  <p class="form-control-static">日期：<?=isset($_GET['sdate'])&&$_GET['sdate']!=''?$_GET['sdate']:''?> ~ <?=isset($_GET['edate'])&&$_GET['edate']!=''?$_GET['edate']:date("Y-m-d")?></p>
                                              </td>
                                              <td>
-                                                 <p class="form-control-static">狀態：<?= ($data['info']['status']??'')==1?"啟用":"停用" ?></p>
+                                                 <p class="form-control-static">狀態：
+                                                     <select id="status_selector" class="form-select" aria-label="Default select example" disabled>
+                                                         <? foreach ($this->user_qrcode_model->status_list as $status => $name) { ?>
+                                                         <option value="<?= $status ?>" <?= ($data['info']['status']??'')==$status?"selected":"" ?>><?=$name?></option>
+                                                         <? } ?>
+                                                     </select>
+                                                 </p>
                                              </td>
                                         </tr>
                                     </tbody>
@@ -289,28 +284,69 @@
 							<div class="table-responsive">
 								<table class="table table-bordered table-hover" id="formula-table" style="text-align:center;">
 									<tbody>
+                                        <? if(isset($data['info']) && $data['info']['alias'] == $this->qrcode_setting_model->appointedCaseAliasName) { ?>
                                         <tr style="background-color:#f5f5f5;">
                                             <td style="vertical-align: middle; text-align: center;">
                                                 <p class="form-control-static">
-                                                    上班族貸獎金公式<br>
+                                                    上班族貸服務費獎金公式<br>
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="salary_man" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?>">
-                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="salary_man" data-type="percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['percent']??"":"" ?>%" maxlength="5">
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="salary_man" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['borrower_percent']??"0":"0" ?>%" maxlength="5">
                                             </td>
                                         </tr>
                                         <tr style="background-color:#f5f5f5;">
                                             <td style="vertical-align: middle; text-align: center;">
                                                 <p class="form-control-static">
-                                                    學生貸獎金公式<br>
+                                                    上班族貸利息獎金公式<br>
                                                 </p>
                                             </td>
                                             <td>
-                                                <input type="text" disabled style="width: 120px" class="form-control number" data-category="student" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?>">
-                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="student" data-type="percent" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['percent']??"":"" ?>%" maxlength="5">
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="salary_man" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['investor_percent']??"0":"0" ?>%" maxlength="5">
                                             </td>
                                         </tr>
+                                        <tr style="background-color:#f5f5f5;">
+                                            <td style="vertical-align: middle; text-align: center;">
+                                                <p class="form-control-static">
+                                                    學生貸服務費獎金公式<br>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="student" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['borrower_percent']??"0":"0" ?>%" maxlength="5">
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color:#f5f5f5;">
+                                            <td style="vertical-align: middle; text-align: center;">
+                                                <p class="form-control-static">
+                                                    學生貸利息獎金公式<br>
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <input type="text" disabled style="width: 120px" class="form-control percent" data-category="student" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['investor_percent']??"0":"0" ?>%" maxlength="5">
+                                            </td>
+                                        </tr>
+                                        <? } else { ?>
+                                            <tr style="background-color:#f5f5f5;">
+                                                <td style="vertical-align: middle; text-align: center;">
+                                                    <p class="form-control-static">
+                                                        上班族貸獎金公式<br>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="salary_man" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['salary_man'])?$data['info']['settings']['reward']['product']['salary_man']['amount']??"":"" ?>">
+                                                </td>
+                                            </tr>
+                                            <tr style="background-color:#f5f5f5;">
+                                                <td style="vertical-align: middle; text-align: center;">
+                                                    <p class="form-control-static">
+                                                        學生貸獎金公式<br>
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <input type="text" disabled style="width: 120px" class="form-control number" data-category="student" data-type="amount" value="<?= isset($data['info'])&&isset($data['info']['settings']['reward']['product']['student'])?$data['info']['settings']['reward']['product']['student']['amount']??"":"" ?>">
+                                                </td>
+                                            </tr>
+                                        <? } ?>
                                         <tr style="background-color:#f5f5f5;">
                                             <td style="vertical-align: middle; text-align: center;">
                                                 <p class="form-control-static">
