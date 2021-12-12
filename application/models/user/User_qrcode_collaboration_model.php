@@ -35,23 +35,23 @@ class user_qrcode_collaboration_model extends MY_Model
      * @param string $endTime
      * @return array
      */
-    public function getCollaborationList($promoteCode, string $startTime='', string $endTime=''): array {
-        $this->db->select('user_qrcode_id, qrcode_collaborator_id')
+    public function getCollaborationList($userQrcodeId, string $startTime='', string $endTime=''): array {
+        $this->db->select('user_qrcode_id, qrcode_collaborator_id, loan_time')
             ->from('p2p_user.user_qrcode_collaboration');
         if($startTime!='')
             $this->db->where("`loan_time` >=",  $startTime);
         if($endTime!='')
-            $this->db->where("`loan_time` <=",  $endTime);
+            $this->db->where("`loan_time` <",  $endTime);
 
         $subQuery = $this->db->get_compiled_select('', TRUE);
         $this->db
-            ->select('uq.id, uq.promote_code, uqc.qrcode_collaborator_id')
+            ->select('uq.id, uq.promote_code, uqc.qrcode_collaborator_id, uqc.loan_time')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
             ->join("($subQuery) as `uqc`", "`uqc`.`user_qrcode_id` = `uq`.`id`");
-        if(is_array($promoteCode))
-            $this->db->where_in('uq.promote_code', $promoteCode);
+        if(is_array($userQrcodeId))
+            $this->db->where_in('uq.id', $userQrcodeId);
         else
-            $this->db->where('uq.promote_code', $promoteCode);
+            $this->db->where('uq.id', $userQrcodeId);
 
         $subQuery2 = $this->db->get_compiled_select('', TRUE);
         $this->db

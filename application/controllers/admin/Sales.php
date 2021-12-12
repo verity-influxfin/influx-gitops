@@ -1599,8 +1599,23 @@ class Sales extends MY_Admin_Controller {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
         }
 
-        $rs = $this->user_qrcode_model->update_by(['id' => $where['user_qrcode_id']],
-            ['status' => $target_status]);
+        // For update
+        $param = ['status' => $target_status];
+        switch ($target_status) {
+            case PROMOTE_STATUS_DISABLED:
+                $param['end_time'] = date('Y-m-d H:i:s');
+                break;
+            case PROMOTE_STATUS_AVAILABLE:
+                $user_qrcode_rs = $this->user_qrcode_model->get_many_by([
+                    'user_id' => $user_qrcode->user_id, 'status' => PROMOTE_STATUS_AVAILABLE]);
+                if(!empty($user_qrcode_rs)) {
+                    $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT, 'msg' => '該使用者已有啟用中的推薦碼，不能同時啟用兩個以上的推薦碼。'))->send();
+                }
+                $param['end_time'] = $user_qrcode->contract_end_time;
+                break;
+        }
+
+        $rs = $this->user_qrcode_model->update_by(['id' => $where['user_qrcode_id']], $param);
         if(!$rs) {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => EXIT_DATABASE))->send();
         }

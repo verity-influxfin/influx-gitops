@@ -46,7 +46,7 @@
                                         <td class="tsearch" colspan="7"><input type="text" value="<?=isset($_GET['tsearch'])&&$_GET['tsearch']!=''?$_GET['tsearch']:''?>" id="tsearch" placeholder="使用者代號(UserID) / 姓名 / 身份證字號 / 推薦碼" /></td>
                                     </tr>
                                     <tr>
-                                        <td>狀態：</td>
+                                        <td>類型：</td>
                                         <td colspan="5">
                                             <select id="alias">
                                                 <? foreach($alias_list as $key => $value){ ?>
@@ -102,7 +102,7 @@
                                                 $count++;
 									?>
                                         <tr class="<?= $count%2==0?"odd":"even"; ?> list <?= $value['info']['id'] ?? '' ?>">
-                                            <td><?= $value['info']['end_time']??'' ?></td>
+                                            <td><?= $value['info']['contract_end_time']??'' ?></td>
                                             <td><?= $value['info']['user_id']??'' ?></td>
                                             <td><?= $value['info']['settings']['description']??'' ?></td>
                                             <td><?= $value['info']['name']??'' ?></td>

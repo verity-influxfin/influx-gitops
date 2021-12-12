@@ -187,37 +187,46 @@ class User_lib {
      * @param array $where
      * @param string $startDate
      * @param string $endDate
+     * @param int $limit
+     * @param int $offset
+     * @param bool $filterDelayed 是否要過濾逾期案
      * @return array
      */
-    public function getPromotedRewardInfo(array $where, string $startDate='', string $endDate='', int $limit=0, int $offset=0): array
+    public function getPromotedRewardInfo(array $where, string $startDate='', string $endDate='', int $limit=0, int $offset=0, bool $filterDelayed=FALSE): array
     {
         $this->CI->load->model('user/user_qrcode_model');
-        $categoryInitList = array_combine(array_keys($this->rewardCategories), array_fill(0,count($this->rewardCategories),[]));
+        $this->CI->load->library('qrcode_lib');
+        $categoryInitList = array_combine(array_keys($this->rewardCategories), array_fill(0, count($this->rewardCategories), []));
+        $categoryInitNum = array_combine(array_keys($this->rewardCategories), array_fill(0, count($this->rewardCategories), 0));
         $list = [];
         $promoteCodeList = [];
 
         if(!isset($where['status']))
-            $where['status'] = [PROMOTE_STATUS_AVAILABLE];
+            $where['status'] = [PROMOTE_STATUS_DISABLED, PROMOTE_STATUS_AVAILABLE];
 
         // 取得推薦碼資料
         $promoteCodesRs = $this->CI->user_qrcode_model->getUserQrcodeInfo([], $where, $limit, $offset);
         foreach ($promoteCodesRs as $promoteCodeRs) {
-            if(!isset($list[$promoteCodeRs['promote_code']])) {
-                $code = $promoteCodeRs['promote_code'];
-                $list[$code] = $categoryInitList;
-                $list[$code]['collaborationCount'] = [];
-                $list[$code]['collaborationRewardAmount'] = [];
-                $list[$code]['totalCollaborationRewardAmount'] = 0;
-                $list[$code]['fullMemberCount'] = 0;
-                $list[$code]['fullMember'] = [];
-                $list[$code]['registeredCount'] = 0;
-                $list[$code]['registered'] = [];
-                $promoteCodeList[$code] = $promoteCodeRs;
+            if(!isset($list[$promoteCodeRs['id']])) {
+                $userQrcodeId = $promoteCodeRs['id'];
+                $list[$userQrcodeId] = $categoryInitList;
+                $list[$userQrcodeId]['monthly'] = [];
+                $list[$userQrcodeId]['borrowerPlatformFee'] = $categoryInitNum;
+                $list[$userQrcodeId]['investorPlatformFee'] = $categoryInitNum;
+                $list[$userQrcodeId]['collaboration'] = [];
+                $list[$userQrcodeId]['collaborationCount'] = [];
+                $list[$userQrcodeId]['collaborationRewardAmount'] = [];
+                $list[$userQrcodeId]['totalCollaborationRewardAmount'] = 0;
+                $list[$userQrcodeId]['fullMemberCount'] = 0;
+                $list[$userQrcodeId]['fullMember'] = [];
+                $list[$userQrcodeId]['registeredCount'] = 0;
+                $list[$userQrcodeId]['registered'] = [];
+                $promoteCodeList[$userQrcodeId] = $promoteCodeRs;
             }
         }
 
-        // TODO: 需處理禁用 qrcode 後仍須正常顯示的問題，end_time 可考慮再加開一個 available time 欄位，end_time 一樣是合約時間
-        $promoteCodes = array_keys($promoteCodeList);
+        $promoteCodes = array_column($promoteCodeList, 'promote_code');
+        $userQrcodeIds = array_column($promoteCodeList, 'id');
         if(empty($promoteCodes)) {
             return $list;
         }
@@ -226,95 +235,159 @@ class User_lib {
         $this->CI->load->model('behavion/user_behavior_model');
         $firstOpenRs =$this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate);
         foreach ($firstOpenRs as $rs) {
-            $list[$rs['promote_code']]['downloadedCount'] = $rs['count'];
+            $list[$rs['user_qrcode_id']]['downloadedCount'] = $rs['count'];
         }
 
         // 取得推薦之註冊會員數
         if(!empty($promoteCodeList))
-            $where['promote_code'] = array_keys($promoteCodeList);
+            $where['id'] = $userQrcodeIds;
         $registeredRs = $this->CI->user_qrcode_model->getRegisteredUserByPromoteCode($where, $startDate, $endDate);
         foreach ($registeredRs as $rs) {
             if($rs['app_status'] == 1) {
-                $list[$rs['promote_code']]['fullMemberCount'] += 1;
-                $list[$rs['promote_code']]['fullMember'][] = $rs;
+                $list[$rs['user_qrcode_id']]['fullMemberCount'] += 1;
+                $list[$rs['user_qrcode_id']]['fullMember'][] = $rs;
             }
-            $list[$rs['promote_code']]['registeredCount'] += 1;
-            $list[$rs['promote_code']]['registered'][] = $rs;
+            $list[$rs['user_qrcode_id']]['registeredCount'] += 1;
+            $list[$rs['user_qrcode_id']]['registered'][] = $rs;
         }
-
-
 
         // 取得成功推薦申貸的數量
         foreach ($this->rewardCategories as $category => $productIdList) {
-            $rs = $this->CI->user_qrcode_model->getProductRewardList($where, $productIdList, $this->rewardedTargetStatus[$category], $startDate, $endDate);
+            $rs = $this->CI->qrcode_lib->get_product_reward_list($where, $productIdList, $this->rewardedTargetStatus[$category], $startDate, $endDate, $filterDelayed);
             foreach ($rs as $promotedTarget) {
-                $list[$promotedTarget['promote_code']][$category][] = $promotedTarget;
+                $list[$promotedTarget['user_qrcode_id']][$category][] = $promotedTarget;
             }
         }
 
         // 計算推薦碼各產品初貸數量/下載數/註冊數的相關獎金
         foreach ($promoteCodeList as $value) {
-            $promoteCode = $value['promote_code'];
+            $userQrcodeId = $value['id'];
 
-            $list[$promoteCode]['info'] = json_decode(json_encode($value), true) ?? [];
-            $list[$promoteCode]['totalRewardAmount'] = 0;
-            $list[$promoteCode]['totalLoanedAmount'] = 0;
+            $list[$userQrcodeId]['info'] = json_decode(json_encode($value), true) ?? [];
+            $list[$userQrcodeId]['totalRewardAmount'] = 0;
+            $list[$userQrcodeId]['totalLoanedAmount'] = 0;
 
-            $list[$promoteCode]['info']['settings'] = json_decode($list[$promoteCode]['info']['settings'], true) ?? [];
-            $settings = $list[$promoteCode]['info']['settings'];
+            $list[$userQrcodeId]['info']['settings'] = json_decode($list[$userQrcodeId]['info']['settings'], true) ?? [];
+            $settings = $list[$userQrcodeId]['info']['settings'];
             foreach ($this->rewardCategories as $category => $productIdList) {
-                $list[$promoteCode]['loanedCount'][$category] = count($list[$promoteCode][$category]);
-                $list[$promoteCode]['loanedBalance'][$category] = array_sum(array_column($list[$promoteCode][$category], 'loan_amount'));
-                $list[$promoteCode]['borrowerPlatformFee'][$category] = array_sum(array_column($list[$promoteCode][$category], 'borrower_platform_fee'));
-                $list[$promoteCode]['investorPlatformFee'][$category] = array_sum(array_column($list[$promoteCode][$category], 'investor_platform_fee'));
+                $list[$userQrcodeId]['loanedCount'][$category] = count($list[$userQrcodeId][$category]);
+                $list[$userQrcodeId]['loanedBalance'][$category] = array_sum(array_column($list[$userQrcodeId][$category], 'loan_amount'));
 
                 if(isset($settings['reward']) && isset($settings['reward']['product'])) {
                     $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
-                    $rewardBorrowerPercent = $this->getRewardBorrowerPercentByProduct($settings['reward']['product'], $productIdList);
-                    $rewardInvestorPercent = $this->getRewardInvestorPercentByProduct($settings['reward']['product'], $productIdList);
-                    $list[$promoteCode]['rewardAmount'][$category] = $list[$promoteCode]['loanedCount'][$category] * $rewardAmount;
-                    $list[$promoteCode]['rewardAmount'][$category] += (int)round($list[$promoteCode]['borrowerPlatformFee'][$category] * $rewardBorrowerPercent / 100.0,0);
-                    $list[$promoteCode]['rewardAmount'][$category] += (int)round($list[$promoteCode]['investorPlatformFee'][$category] * $rewardInvestorPercent / 100.0,0);
+                    $list[$userQrcodeId]['rewardAmount'][$category] = $list[$userQrcodeId]['loanedCount'][$category] * $rewardAmount;
+
+                    if($rewardAmount > 0) {
+                        foreach ($list[$userQrcodeId][$category] as $value) {
+                            $formattedMonth = date("Y-m", strtotime($value['loan_date']));
+                            if (!isset($list[$userQrcodeId]['monthly'][$formattedMonth])) {
+                                $list[$userQrcodeId]['monthly'][$formattedMonth] = $categoryInitList;
+                            }
+                            if (!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'])) {
+                                $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'] = [];
+                            }
+                            $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['rewardAmount'] =
+                                ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['rewardAmount'] ?? 0) + $rewardAmount;
+                        }
+                    }
                 }
-                $list[$promoteCode]['totalRewardAmount'] += $list[$promoteCode]['rewardAmount'][$category];
-                $list[$promoteCode]['totalLoanedAmount'] += $list[$promoteCode]['loanedBalance'][$category];
+                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['rewardAmount'][$category];
+                $list[$userQrcodeId]['totalLoanedAmount'] += $list[$userQrcodeId]['loanedBalance'][$category];
+
+                // 處理申貸借款的服務費
+                $rs = $this->CI->qrcode_lib->get_borrower_platform_fee_list(['id' => $userQrcodeId], $productIdList, $this->rewardedTargetStatus[$category],
+                    $startDate, $endDate, $filterDelayed);
+                foreach ($rs as $value) {
+                    $formattedMonth = date("Y-m", strtotime($value['entering_date']));
+                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth])) {
+                        $list[$userQrcodeId]['monthly'][$formattedMonth] = $categoryInitList;
+                    }
+                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'])) {
+                        $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'] = [];
+                    }
+                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['borrowerPlatformFee'] =
+                        ($list[$userQrcodeId][$formattedMonth][$category]['borrowerPlatformFee'] ?? 0) + $value['platform_fee'];
+                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['borrowerPlatformFee'] =
+                        ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['borrowerPlatformFee'] ?? 0) + $value['platform_fee'];
+                    $list[$userQrcodeId]['borrowerPlatformFee'][$category] += $value['platform_fee'];
+                }
+
+                // 處理投資人回款手續費
+                $rs =  $this->CI->qrcode_lib->get_investor_platform_fee_list(['id' => $userQrcodeId], $productIdList, $this->rewardedTargetStatus[$category],
+                    $startDate, $endDate, $filterDelayed);
+                foreach ($rs as $value) {
+                    $formattedMonth = date("Y-m", strtotime($value['entering_date']));
+                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth])) {
+                        $list[$userQrcodeId]['monthly'][$formattedMonth] = $categoryInitList;
+                    }
+                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'])) {
+                        $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'] = [];
+                    }
+                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['investorPlatformFee'] =
+                        ($list[$userQrcodeId][$formattedMonth][$category]['investorPlatformFee'] ?? 0) + $value['platform_fee'];
+                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['investorPlatformFee'] =
+                        ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['investorPlatformFee'] ?? 0) + $value['platform_fee'];
+                    $list[$userQrcodeId]['investorPlatformFee'][$category] += $value['platform_fee'];
+                }
             }
 
-            if(!isset($list[$promoteCode]['fullMemberCount']))
-                $list[$promoteCode]['fullMemberCount'] = 0;
+            // 每個月結算會有精度問題，服務費需以月加完後再重新計算
+            foreach ($this->rewardCategories as $category => $productIdList) {
+                if (isset($settings['reward']) && isset($settings['reward']['product'])) {
+                    $rewardBorrowerPercent = $this->getRewardBorrowerPercentByProduct($settings['reward']['product'], $productIdList);
+                    $rewardInvestorPercent = $this->getRewardInvestorPercentByProduct($settings['reward']['product'], $productIdList);
+                    foreach ($list[$userQrcodeId]['monthly'] as $key => $value) {
+                        $rewardAmount = 0;
+                        if(isset($value[$category]['borrowerPlatformFee'])) {
+                            $rewardAmount += (int)round($value[$category]['borrowerPlatformFee'] * $rewardBorrowerPercent / 100.0, 0);
+                        }
+                        if(isset($value[$category]['investorPlatformFee'])) {
+                            $rewardAmount += (int)round($value[$category]['investorPlatformFee'] * $rewardInvestorPercent / 100.0, 0);
+                        }
+                        $list[$userQrcodeId]['monthly'][$key][$category]['rewardAmount'] = ($list[$userQrcodeId]['monthly'][$key][$category]['rewardAmount'] ?? 0) + $rewardAmount;
+                        $list[$userQrcodeId]['rewardAmount'][$category] = ($list[$userQrcodeId]['rewardAmount'][$category] ?? 0) + $rewardAmount;
+                        $list[$userQrcodeId]['totalRewardAmount'] += $rewardAmount;
+                    }
+                }
+            }
 
-            if(!isset($list[$promoteCode]['downloadedCount']))
-                $list[$promoteCode]['downloadedCount'] = 0;
+            if(!isset($list[$userQrcodeId]['fullMemberCount']))
+                $list[$userQrcodeId]['fullMemberCount'] = 0;
+
+            if(!isset($list[$userQrcodeId]['downloadedCount']))
+                $list[$userQrcodeId]['downloadedCount'] = 0;
 
             if(isset($settings['reward']) && isset($settings['reward']['full_member'])) {
-                $list[$promoteCode]['fullMemberRewardAmount'] = $list[$promoteCode]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
-                $list[$promoteCode]['totalRewardAmount'] += $list[$promoteCode]['fullMemberRewardAmount'];
+                $list[$userQrcodeId]['fullMemberRewardAmount'] = $list[$userQrcodeId]['fullMemberCount'] * intval($settings['reward']['full_member']['amount']);
+                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['fullMemberRewardAmount'];
             }
         }
 
         // 計算合作對象推薦獎金
         $this->CI->load->model('user/user_qrcode_collaboration_model');
-        $collaborationRs =$this->CI->user_qrcode_collaboration_model->getCollaborationList($promoteCodes, $startDate, $endDate);
+        $collaborationRs =$this->CI->user_qrcode_collaboration_model->getCollaborationList($userQrcodeIds, $startDate, $endDate);
         foreach ($collaborationRs as $rs) {
-            $promoteCode = $rs['promote_code'];
+            $userQrcodeId = $rs['id'];
             $collaboratorId = $rs['qrcode_collaborator_id'];
 
-            $settings = $list[$promoteCode]['info']['settings'];
+            $list[$userQrcodeId]['collaboration'][$collaboratorId][] = $rs;
+
+            $settings = $list[$userQrcodeId]['info']['settings'];
             $collaborationRewardAmount = 0;
             if(isset($settings['reward']) && isset($rs['type'])) {
                 $collaborationRewardAmount = $this->getCollaborationRewardAmount($settings['reward'], $rs['type']);
             }
-            if(!isset($list[$promoteCode]['collaborationCount'][$collaboratorId]) &&
-                !isset($list[$promoteCode]['collaborationRewardAmount'][$collaboratorId])) {
-                $list[$promoteCode]['collaborationCount'][$collaboratorId] = 0;
-                $list[$promoteCode]['collaborationRewardAmount'][$collaboratorId] = 0;
+            if(!isset($list[$userQrcodeId]['collaborationCount'][$collaboratorId]) &&
+                !isset($list[$userQrcodeId]['collaborationRewardAmount'][$collaboratorId])) {
+                $list[$userQrcodeId]['collaborationCount'][$collaboratorId] = 0;
+                $list[$userQrcodeId]['collaborationRewardAmount'][$collaboratorId] = 0;
             }
-            $list[$promoteCode]['collaborationCount'][$collaboratorId] += 1;
-            $list[$promoteCode]['collaborationRewardAmount'][$collaboratorId] += $collaborationRewardAmount;
-            $list[$promoteCode]['totalCollaborationRewardAmount'] += $collaborationRewardAmount;
+            $list[$userQrcodeId]['collaborationCount'][$collaboratorId] += 1;
+            $list[$userQrcodeId]['collaborationRewardAmount'][$collaboratorId] += $collaborationRewardAmount;
+            $list[$userQrcodeId]['totalCollaborationRewardAmount'] += $collaborationRewardAmount;
 
             // 累加合作對象獎金至總獎金
-            $list[$promoteCode]['totalRewardAmount'] += $collaborationRewardAmount;
+            $list[$userQrcodeId]['totalRewardAmount'] += $collaborationRewardAmount;
         }
 
         return $list;
@@ -368,7 +441,7 @@ class User_lib {
 
             $this->CI->user_qrcode_model->trans_begin();
             $this->CI->qrcode_reward_model->trans_begin();
-            $info = $this->getPromotedRewardInfo(['id' => $qrcode['id']], $startTime, $endTime);
+            $info = $this->getPromotedRewardInfo(['id' => $qrcode['id']], $startTime, $endTime, 0, 0, TRUE);
 
             try {
                 if(empty($info))
@@ -379,10 +452,11 @@ class User_lib {
                 ]]);
 
                 // 整理所有案件資訊
+                $monthlyRewardList = $info['monthly'] ?? [];
                 $rewardList = array_intersect_key($info, $this->rewardCategories);
                 $closedDelayedTargetList = [];
                 $currentDelayedTargets = [];
-                $dockAmountList = [];
+                $dockAmountList = array_combine(array_keys($this->rewardCategories), array_fill(0, count($this->rewardCategories), 0));
                 $remainingDockAmount = 0;
 
                 // 最後一期的剩餘扣除金額需加回
@@ -399,6 +473,21 @@ class User_lib {
                         $rewardList = array_merge_recursive($rewardList, array_intersect_key($data, $this->rewardCategories));
                         $closedDelayedTargetList = array_merge_recursive($closedDelayedTargetList, array_intersect_key($data['delayed_targets'] ?? [], $this->rewardCategories));
                     }
+
+                    // 合併之前的每月獎勵紀錄
+                    foreach ($data['monthly_rewards'] as $date => $categoryRewardList) {
+                        foreach ($categoryRewardList as $category => $infoList) {
+                            if(!isset($infoList['target']))
+                                continue;
+                            foreach ($infoList['target'] as $target_id => $targetInfo) {
+                                if(!isset($targetInfo['rewardAmount']))
+                                    continue;
+                                $monthlyRewardList[$date][$category]['target'][$target_id]['rewardAmount'] =
+                                    ($monthlyRewardList[$date][$category]['target'][$target_id]['rewardAmount'] ?? 0) + $targetInfo['rewardAmount'];
+                            }
+                        }
+                    }
+
                 }
 
                 // 處理需扣回獎金之逾期案
@@ -414,30 +503,29 @@ class User_lib {
                         $rewardList[$category] = array_diff_key($rewardList[$category], $closedDelayedTargetList[$category]);
                     }
 
-                    // TODO: 特約方案可能在該次還沒結帳前就逾期且清償，會導致多扣了手續費，必須算 handle_date 以前的手續費才是對的
-                    $currentDelayedTargets[$category] = array_column($this->CI->target_model->getDelayedTarget(array_keys($rewardList[$category])), NULL, "id");
+                    // TODO: 特約方案要改寫成服務費需先依照每月結算累計，再重算獎勵金額去回扣，否則會有精度誤差
+                    $currentDelayedTargets[$category] = array_column($this->CI->target_model->getDelayedTarget(array_keys($rewardList[$category]), $endTime), NULL, "id");
 
-                    if(isset($info['info']) && isset($info['info']['settings'])) {
-                        $settings = $info['info']['settings'];
-                        if(isset($settings['reward']) && isset($settings['reward']['product'])) {
-                            $rewardAmount = $this->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
-                            $rewardBorrowerPercent = $this->getRewardBorrowerPercentByProduct($settings['reward']['product'], $productIdList);
-                            $rewardInvestorPercent = $this->getRewardInvestorPercentByProduct($settings['reward']['product'], $productIdList);
+                    // 針對逾期案件的獎金做追回
+                    foreach ($info['monthly'] as $date => $categoryRewardList) {
+                        if(!isset($categoryRewardList[$category]['target']) || $date > $startTime)
+                            continue;
 
-                            $dockAmountList[$category] = $rewardAmount * count($currentDelayedTargets[$category]);
-                            $dockAmountList[$category] += (int)round(array_sum(array_column($currentDelayedTargets[$category], 'borrower_platform_fee')) * $rewardBorrowerPercent / 100.0, 0);
-                            $dockAmountList[$category] += (int)round(array_sum(array_column($currentDelayedTargets[$category], 'investor_platform_fee')) * $rewardInvestorPercent / 100.0, 0);
-
-                            $diff = $info['totalRewardAmount'] - $dockAmountList[$category];
-                            if($diff < 0) {
-                                $info['totalRewardAmount'] = 0;
-                                $remainingDockAmount += abs($diff);
-                            }else{
-                                $info['totalRewardAmount'] -= $dockAmountList[$category];
-                            }
+                        foreach ($currentDelayedTargets[$category] as $targetId => $delayedTarget) {
+                            $dockAmountList[$category] += $categoryRewardList[$category]['target'][$targetId]['rewardAmount'] ?? 0;
+                            $dockAmountList[$category] += $categoryRewardList[$category]['target'][$targetId]['borrowerPlatformFee'] ?? 0;
+                            $dockAmountList[$category] += $categoryRewardList[$category]['target'][$targetId]['investorPlatformFee'] ?? 0;
+                            unset($info['monthly'][$date][$category]['target'][$targetId]);
                         }
                     }
 
+                    $diff = $info['totalRewardAmount'] - $dockAmountList[$category];
+                    if($diff < 0) {
+                        $info['totalRewardAmount'] = 0;
+                        $remainingDockAmount += abs($diff);
+                    }else{
+                        $info['totalRewardAmount'] -= $dockAmountList[$category];
+                    }
                 }
 
                 // 篩選需要儲存的欄位
@@ -450,6 +538,7 @@ class User_lib {
                 }
                 $data['delayed_targets'] = $currentDelayedTargets;
                 $data['dockList'] = $dockAmountList;
+                $data['monthly_rewards'] = $info['monthly'];
 
                 // 處理需倒扣之金額
                 $diff = $info['totalRewardAmount'] - $remainingDockAmount;

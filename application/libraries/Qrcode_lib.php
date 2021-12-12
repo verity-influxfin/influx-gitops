@@ -57,4 +57,46 @@ class Qrcode_lib {
         }
         return $contract_type_name;
     }
+
+    private function filter_delayed_target($data, array $targetIds, $needle) {
+        if(!empty($targetIds)) {
+            $delayedTargets = $this->CI->target_model->getDelayedTarget($targetIds);
+            $delayedTargets = array_column($delayedTargets, NULL, $needle);
+            foreach ($data as $key => $info) {
+                if(array_key_exists($info[$needle], $delayedTargets))
+                    unset($data[$key]);
+            }
+            $data = array_values($data);
+        }
+        return $data;
+    }
+
+    public function get_product_reward_list(array $qrcode_where, array $product_id_list, array $status_list, string $start_time='', string $end_time='', bool $filter_delayed=FALSE): array
+    {
+        $this->CI->load->model('user/user_qrcode_model');
+        $rewardList = $this->CI->user_qrcode_model->getLoanedCount($qrcode_where, $product_id_list, $status_list, $start_time, $end_time);
+        if($filter_delayed) {
+            $rewardList = $this->filter_delayed_target($rewardList, array_column($rewardList, 'id'), 'id');
+        }
+        return $rewardList;
+    }
+
+    public function get_borrower_platform_fee_list(array $qrcode_where, array $product_id_list, array $status_list, string $start_time='', string $end_time='', bool $filter_delayed=FALSE) {
+        $this->CI->load->model('user/user_qrcode_model');
+        $rewardList = $this->CI->user_qrcode_model->getBorrowerPlatformFeeList($qrcode_where, $product_id_list, $status_list, $start_time, $end_time);
+        if($filter_delayed) {
+            $rewardList = $this->filter_delayed_target($rewardList, array_column($rewardList, 'id'), 'id');
+        }
+        return $rewardList;
+    }
+
+    public function get_investor_platform_fee_list(array $qrcode_where, array $product_id_list, array $status_list, string $start_time='', string $end_time='', bool $filter_delayed=FALSE) {
+        $this->CI->load->model('user/user_qrcode_model');
+        $rewardList = $this->CI->user_qrcode_model->getInvestorPlatformFeeList($qrcode_where, $product_id_list, $status_list, $start_time, $end_time);
+        if($filter_delayed) {
+            $rewardList = $this->filter_delayed_target($rewardList, array_column($rewardList, 'id'), 'id');
+        }
+        return $rewardList;
+    }
+
 }

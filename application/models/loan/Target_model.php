@@ -321,31 +321,6 @@ class Target_model extends MY_Model
             ->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.id, t.entering_date as delay_date')
             ->from('`p2p_loan`.`targets` AS `ta`')
             ->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
-        $subQuery2 = $this->db->get_compiled_select('', TRUE);
-
-        $this->db
-            ->select('r.*, SUM(tra.amount) as borrower_platform_fee')
-            ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subQuery2) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` = `tra`.`user_from`")
-            ->where('tra.source', SOURCE_FEES)
-            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
-            ->group_by('tra.target_id');
-        $borrowerQuery = $this->db->get_compiled_select('', TRUE);
-
-        $this->db
-            ->select('r.*, SUM(tra.amount) as investor_platform_fee')
-            ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subQuery2) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` != `tra`.`user_from`")
-            ->where('tra.source', SOURCE_FEES)
-            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
-            ->group_by('tra.target_id');
-        $investorQuery = $this->db->get_compiled_select('', TRUE);
-
-        $this->db
-            ->select('r.*, br.borrower_platform_fee, ir.investor_platform_fee')
-            ->from("($subQuery2) as `r`")
-            ->join("($borrowerQuery) as `br`", "`r`.`id` = `br`.`id`", 'left')
-            ->join("($investorQuery) as `ir`", "`r`.`id` = `ir`.`id`", 'left');
 
         return $this->db->get()->result_array();
     }
