@@ -229,7 +229,6 @@ class Cron extends CI_Controller
         // 自動延長一般方案/特約方案的結束時間
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->generalCaseAliasName);
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->appointedCaseAliasName);
-        $num = $this->user_lib->scriptHandlePromoteReward();
         if(date("d") >= 1 && date("d") <= 4) {
             $data = [
                 'script_name'   => 'handle_promote_reward',

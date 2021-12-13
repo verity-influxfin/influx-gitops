@@ -9,6 +9,10 @@ class User_lib {
      * @var int
      */
     private $totalCount;
+
+    // 特約方案可以改申貸服務費/利息百分比的產品類別
+    public $appointedRewardCategories = ['student', 'salary_man'];
+
     public $rewardCategories = [
         'student' => [1, 2],
         'salary_man' => [3, 4],
@@ -283,11 +287,11 @@ class User_lib {
                             if (!isset($list[$userQrcodeId]['monthly'][$formattedMonth])) {
                                 $list[$userQrcodeId]['monthly'][$formattedMonth] = $categoryInitList;
                             }
-                            if (!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'])) {
-                                $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'] = [];
+                            if (!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'])) {
+                                $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'] = [];
                             }
-                            $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['rewardAmount'] =
-                                ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['rewardAmount'] ?? 0) + $rewardAmount;
+                            $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'][$value['id']]['rewardAmount'] =
+                                ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'][$value['id']]['rewardAmount'] ?? 0) + $rewardAmount;
                         }
                     }
                 }
@@ -302,13 +306,13 @@ class User_lib {
                     if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth])) {
                         $list[$userQrcodeId]['monthly'][$formattedMonth] = $categoryInitList;
                     }
-                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'])) {
-                        $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'] = [];
+                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'])) {
+                        $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'] = [];
                     }
                     $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['borrowerPlatformFee'] =
                         ($list[$userQrcodeId][$formattedMonth][$category]['borrowerPlatformFee'] ?? 0) + $value['platform_fee'];
-                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['borrowerPlatformFee'] =
-                        ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['borrowerPlatformFee'] ?? 0) + $value['platform_fee'];
+                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'][$value['id']]['borrowerPlatformFee'] =
+                        ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'][$value['id']]['borrowerPlatformFee'] ?? 0) + $value['platform_fee'];
                     $list[$userQrcodeId]['borrowerPlatformFee'][$category] += $value['platform_fee'];
                 }
 
@@ -320,13 +324,13 @@ class User_lib {
                     if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth])) {
                         $list[$userQrcodeId]['monthly'][$formattedMonth] = $categoryInitList;
                     }
-                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'])) {
-                        $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'] = [];
+                    if(!isset($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'])) {
+                        $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'] = [];
                     }
                     $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['investorPlatformFee'] =
                         ($list[$userQrcodeId][$formattedMonth][$category]['investorPlatformFee'] ?? 0) + $value['platform_fee'];
-                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['investorPlatformFee'] =
-                        ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['target'][$value['id']]['investorPlatformFee'] ?? 0) + $value['platform_fee'];
+                    $list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'][$value['id']]['investorPlatformFee'] =
+                        ($list[$userQrcodeId]['monthly'][$formattedMonth][$category]['targets'][$value['id']]['investorPlatformFee'] ?? 0) + $value['platform_fee'];
                     $list[$userQrcodeId]['investorPlatformFee'][$category] += $value['platform_fee'];
                 }
             }
@@ -344,9 +348,11 @@ class User_lib {
                         if(isset($value[$category]['investorPlatformFee'])) {
                             $rewardAmount += (int)round($value[$category]['investorPlatformFee'] * $rewardInvestorPercent / 100.0, 0);
                         }
-                        $list[$userQrcodeId]['monthly'][$key][$category]['rewardAmount'] = ($list[$userQrcodeId]['monthly'][$key][$category]['rewardAmount'] ?? 0) + $rewardAmount;
-                        $list[$userQrcodeId]['rewardAmount'][$category] = ($list[$userQrcodeId]['rewardAmount'][$category] ?? 0) + $rewardAmount;
-                        $list[$userQrcodeId]['totalRewardAmount'] += $rewardAmount;
+                        if($rewardAmount) {
+                            $list[$userQrcodeId]['monthly'][$key][$category]['rewardAmount'] = ($list[$userQrcodeId]['monthly'][$key][$category]['rewardAmount'] ?? 0) + $rewardAmount;
+                            $list[$userQrcodeId]['rewardAmount'][$category] = ($list[$userQrcodeId]['rewardAmount'][$category] ?? 0) + $rewardAmount;
+                            $list[$userQrcodeId]['totalRewardAmount'] += $rewardAmount;
+                        }
                     }
                 }
             }
@@ -401,7 +407,8 @@ class User_lib {
     {
         $count = 0;
         $this->CI->load->model('user/user_qrcode_model');
-        $startTime = date('Y-m-01 00:00:00', strtotime("-1 month"));
+        //$startTime = date('Y-m-01 00:00:00', strtotime("-1 month"));
+        $startTime = date('Y-m-01 00:00:00', strtotime("-5 month"));
         $endTime = date('Y-m-01 00:00:00');
         $userQrcodes = $this->CI->user_qrcode_model->getQrcodeRewardInfo(['status' => [PROMOTE_STATUS_AVAILABLE],
             'settlementing' => 0]);
@@ -451,8 +458,9 @@ class User_lib {
                     PROMOTE_REWARD_STATUS_TO_BE_PAID, PROMOTE_REWARD_STATUS_PAID_OFF
                 ]]);
 
-                // 整理所有案件資訊
+                // 之前的每月獎勵資訊 (For 逾期追回用)
                 $monthlyRewardList = $info['monthly'] ?? [];
+                // 整理所有案件資訊
                 $rewardList = array_intersect_key($info, $this->rewardCategories);
                 $closedDelayedTargetList = [];
                 $currentDelayedTargets = [];
@@ -466,24 +474,32 @@ class User_lib {
                     $remainingDockAmount += $data['remainingDockAmount'] ?? 0;
                 }
 
-                // 將之前的獎勵案列表 及 逾期案列表 合併
                 foreach ($descRewardList as $value) {
+                    // 將之前的獎勵案列表 及 逾期案列表 合併
                     $data = json_decode($value->json_data, TRUE);
                     if($data) {
                         $rewardList = array_merge_recursive($rewardList, array_intersect_key($data, $this->rewardCategories));
                         $closedDelayedTargetList = array_merge_recursive($closedDelayedTargetList, array_intersect_key($data['delayed_targets'] ?? [], $this->rewardCategories));
                     }
 
-                    // 合併之前的每月獎勵紀錄
+                    // 依照月份和案號 去合併之前的每月獎勵金額
                     foreach ($data['monthly_rewards'] as $date => $categoryRewardList) {
                         foreach ($categoryRewardList as $category => $infoList) {
-                            if(!isset($infoList['target']))
+                            if(!isset($infoList['targets']))
                                 continue;
-                            foreach ($infoList['target'] as $target_id => $targetInfo) {
-                                if(!isset($targetInfo['rewardAmount']))
-                                    continue;
-                                $monthlyRewardList[$date][$category]['target'][$target_id]['rewardAmount'] =
-                                    ($monthlyRewardList[$date][$category]['target'][$target_id]['rewardAmount'] ?? 0) + $targetInfo['rewardAmount'];
+                            foreach ($infoList['targets'] as $target_id => $targetInfo) {
+                                if(isset($targetInfo['rewardAmount'])) {
+                                    $monthlyRewardList[$date][$category]['targets'][$target_id]['rewardAmount'] =
+                                        ($monthlyRewardList[$date][$category]['targets'][$target_id]['rewardAmount'] ?? 0) + $targetInfo['rewardAmount'];
+                                }
+                                if(isset($targetInfo['borrowerPlatformFee'])) {
+                                    $monthlyRewardList[$date][$category]['targets'][$target_id]['borrowerPlatformFee'] =
+                                        ($monthlyRewardList[$date][$category]['targets'][$target_id]['borrowerPlatformFee'] ?? 0) + $targetInfo['borrowerPlatformFee'];
+                                }
+                                if(isset($targetInfo['investorPlatformFee'])) {
+                                    $monthlyRewardList[$date][$category]['targets'][$target_id]['investorPlatformFee'] =
+                                        ($monthlyRewardList[$date][$category]['targets'][$target_id]['investorPlatformFee'] ?? 0) + $targetInfo['investorPlatformFee'];
+                                }
                             }
                         }
                     }
@@ -503,19 +519,17 @@ class User_lib {
                         $rewardList[$category] = array_diff_key($rewardList[$category], $closedDelayedTargetList[$category]);
                     }
 
-                    // TODO: 特約方案要改寫成服務費需先依照每月結算累計，再重算獎勵金額去回扣，否則會有精度誤差
                     $currentDelayedTargets[$category] = array_column($this->CI->target_model->getDelayedTarget(array_keys($rewardList[$category]), $endTime), NULL, "id");
 
                     // 針對逾期案件的獎金做追回
-                    foreach ($info['monthly'] as $date => $categoryRewardList) {
-                        if(!isset($categoryRewardList[$category]['target']) || $date > $startTime)
+                    foreach ($monthlyRewardList as $date => $categoryRewardList) {
+                        if(!isset($categoryRewardList[$category]['targets']) || $date > $startTime)
                             continue;
 
                         foreach ($currentDelayedTargets[$category] as $targetId => $delayedTarget) {
-                            $dockAmountList[$category] += $categoryRewardList[$category]['target'][$targetId]['rewardAmount'] ?? 0;
-                            $dockAmountList[$category] += $categoryRewardList[$category]['target'][$targetId]['borrowerPlatformFee'] ?? 0;
-                            $dockAmountList[$category] += $categoryRewardList[$category]['target'][$targetId]['investorPlatformFee'] ?? 0;
-                            unset($info['monthly'][$date][$category]['target'][$targetId]);
+                            $dockAmountList[$category] += $categoryRewardList[$category]['targets'][$targetId]['rewardAmount'] ?? 0;
+                            $dockAmountList[$category] += $categoryRewardList[$category]['targets'][$targetId]['borrowerPlatformFee'] ?? 0;
+                            $dockAmountList[$category] += $categoryRewardList[$category]['targets'][$targetId]['investorPlatformFee'] ?? 0;
                         }
                     }
 

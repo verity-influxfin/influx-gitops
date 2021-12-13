@@ -1269,7 +1269,10 @@ class Sales extends MY_Admin_Controller {
             $contract_type_name = $this->qrcode_lib->get_contract_type_by_alias($review_list['alias']);
             $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', []);
             $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [] , 4, 4);
-            $content[4] = $content[5] = $content[6] = $content[7] = '%s';
+            $content[4] = '%platform_fee%';
+            $content[5] = '%interest%';
+            $content[6] = '%collaboration_person%';
+            $content[7] = '%collaboration_enterprise%';
             $list['contract'] = '';
             if (isset($contract_format->content) )
             {
@@ -1341,10 +1344,11 @@ class Sales extends MY_Admin_Controller {
 
         $list = array_slice($list, $offset, $config['per_page']);
 
-        $data['total_rows'] = $config["total_rows"];
-        $data['per_page']  = $config['per_page'];
-        $data['last_page'] = (int)($config["total_rows"] / $config['per_page']) + 1;
-        $data['current_page'] = $current_page;
+        $data['pagination'] = [];
+        $data['pagination']['total_rows'] = $config["total_rows"];
+        $data['pagination']['per_page']  = $config['per_page'];
+        $data['pagination']['last_page'] = (int)($config["total_rows"] / $config['per_page']) + 1;
+        $data['pagination']['current_page'] = $current_page;
 
         $data['list'] = $list;
         $data['alias_list'] = $alias_list;
@@ -1405,10 +1409,11 @@ class Sales extends MY_Admin_Controller {
 
         $list = array_slice($list, $offset, $config['per_page']);
 
-        $data['total_rows'] = count($review_list);
-        $data['per_page']  = 40;
-        $data['last_page'] = (int)($config["total_rows"] / $config['per_page']) + 1;
-        $data['current_page'] = $current_page;
+        $data['pagination'] = [];
+        $data['pagination']['total_rows'] = count($review_list);
+        $data['pagination']['per_page']  = 40;
+        $data['pagination']['last_page'] = (int)($config["total_rows"] / $config['per_page']) + 1;
+        $data['pagination']['current_page'] = $current_page;
 
         $data['list'] = $list;
         $data['alias_list'] = $status_list;
@@ -1490,6 +1495,7 @@ class Sales extends MY_Admin_Controller {
         }
         $this->load->model('user/user_qrcode_apply_model');
         $this->load->model('user/user_qrcode_model');
+        $this->load->library('user_lib');
         $this->load->library('contract_lib');
         $input      = $this->input->post(NULL, TRUE);
         $apply_info = $this->user_qrcode_apply_model->get_by(['id' => $input['qrcode_apply_id'], 'status' => PROMOTE_REVIEW_STATUS_SUCCESS]);
@@ -1503,7 +1509,14 @@ class Sales extends MY_Admin_Controller {
             $contract_content = json_decode($apply_info->contract_content, TRUE);
             $this->contract_lib->update_contract($qrcode_code->contract_id, $contract_content);
             $content = array_slice($contract_content, 4, 4);
-            // TODO: 待更新 setting reward 欄位
+
+            foreach ($this->user_lib->appointedRewardCategories as $category) {
+                $settings['reward']['product'][$category]['borrower_percent'] = (float)$content[0] ?? 0;
+                $settings['reward']['product'][$category]['investor_percent'] = (float)$content[1] ?? 0;
+            }
+            $settings['reward']['collaboration_person'] = (int)$content[2] ?? 0;
+            $settings['reward']['collaboration_enterprise'] = (int)$content[3] ?? 0;
+            $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings)]);
 
             $this->load->model('user/user_certification_model');
             $this->load->library('certification_lib');
