@@ -127,6 +127,18 @@
 		flex: 0 0 25%;
 	}
 
+	.panel {
+		position: relative;
+	}
+
+	.mask {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-color: #c3c3c388;
+		z-index: 5;
+	}
+
 	.loader {
 		position: relative;
 		left: 24vw;
@@ -163,21 +175,19 @@
 			<div class="d-flex align-items-center">
 				<div class="mr-2 head-item-title">會員ID:</div>
 				<div class="input-group input">
-					<input type="text" id="user-id" />
+					<input type="text" v-model="searchParam.userId" />
 				</div>
 				<div class="mx-2 head-item-title">指標項目:</div>
-				<select class="form-select" id="target-option">
+				<select class="form-select" id="target-option" v-model="searchParam.blockRule">
 					<option value="">請選擇</option>
+					<option :value="item" v-for="item in options.block_rule" :key="item">{{item}}</option>
 				</select>
 				<div class="mx-2 head-item-title">風險：</div>
-				<select class="form-select" id="risk-option">
+				<select class="form-select" id="risk-option" v-model="searchParam.risk">
 					<option value="">請選擇</option>
-					<option value="拒絕">拒絕</option>
-					<option value="高">高</option>
-					<option value="中">中</option>
-					<option value="低">低</option>
+					<option :value="item" v-for="item in options.risk" :key="item">{{item}}</option>
 				</select>
-				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
+				<button class="btn ml-5 search-btn" @click="doSearch">
 					搜尋
 				</button>
 			</div>
@@ -186,6 +196,16 @@
 					反詐欺指標
 				</div>
 				<div class="panel-body">
+					<div class="d-flex">
+						<div>每頁顯示：</div>
+						<select v-model="pagination.per_page" @change="doSearch">
+							<option :value="5">5</option>
+							<option :value="10">10</option>
+							<option :value="20">20</option>
+							<option :value="50">50</option>
+						</select>
+					</div>
+					
 					<table id="andtfraud">
 						<thead>
 							<tr>
@@ -198,9 +218,13 @@
 						<tbody>
 						</tbody>
 					</table>
+					<div class="d-flex justify-end">
+						<v-page :data="pagination" @change_page="onChangePage"></v-page>
+					</div>
 				</div>
 			</div>
 			<div class="panel panel-default mt-4">
+				<div class="mask"></div>
 				<div class="panel-heading p-4">
 					狀態
 				</div>
@@ -227,6 +251,7 @@
 				</div>
 			</div>
 			<div class="panel panel-default mt-4">
+				<div class="mask"></div>
 				<div class="panel-heading p-4">
 					新增風險等級
 				</div>
@@ -291,8 +316,124 @@
 		</div>
 	</div>
 </div>
-
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/assets/admin/js/vue-components.js"></script>
 <script>
+	const apiUrl = "/api/v2/black_list"
+	$(document).ready(function () {
+		const t = $('#andtfraud').DataTable({
+			'ordering': false,
+			"paging": false,
+			"info": false,
+			'language': {
+				'processing': '處理中...',
+				'lengthMenu': '顯示 _MENU_ 項結果',
+				'zeroRecords': '目前無資料',
+				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+				'infoFiltered': '(從 _MAX_ 項結果過濾)',
+				'search': '使用本次搜尋結果快速搜尋',
+				'paginate': {
+					'first': '首頁',
+					'previous': '上頁',
+					'next': '下頁',
+					'last': '尾頁'
+				}
+			},
+			"info": false
+		})
+		v.onReady()
+	})
+
+	const v = new Vue({
+		el: '#page-wrapper',
+		data() {
+			return {
+				searchParam: {
+					userId: null,
+					blockRule: null,
+					risk: null
+				},
+				options: {
+					block_rule: [],
+					block_text: [],
+					index: [],
+					risk: [],
+				},
+				pagination: {
+					current_page: 1,
+					last_page: 1,
+					per_page: 10
+				},
+				antiTable:[]
+			}
+		},
+		methods: {
+			convertDate(n){
+				return new Date(n*1000).toLocaleString()
+			},
+			onReady() {
+				this.getOption()
+			},
+			onChangePage(page) {
+				this.doSearch({page})
+			},
+			getOption() {
+				axios.get(`${apiUrl}/get_option`)
+					.then(({ data }) => {
+						if (!data.results) {
+							alert(data.message)
+							return
+						}
+						this.options = { ...data.results }
+					})
+			},
+			doSearch({page}) {
+				const { searchParam, pagination } = this
+				const pageParam = page ?? this.pagination.current_page
+				axios.get(`${apiUrl}/get_anti_list`, {
+					params: {
+						...searchParam,
+						page: pageParam,
+						count: pagination.per_page
+					}
+				}).then(({ data }) => {
+					if (!data.results) {
+						alert(data.message)
+						return
+					}
+					this.antiTable = data.results
+					this.pagination = {
+						current_page: data.pagination.page,
+						last_page: data.pagination.last_page,
+						per_page: data.pagination.count
+					}
+				})
+			},
+		},
+		watch: {
+			antiTable(data) {
+				// draw table
+				const table = $('#andtfraud').DataTable()
+				table.clear()
+				data.forEach(e => {
+					const t = [
+						`${e.risk} - ${e.userId}`,
+						this.convertDate(e.updatedAt),
+						e.mainDescription,
+						e.description
+					]
+					table.row.add(t)
+				})
+				table.draw()
+			},
+		},
+	})
+
+</script>
+<!-- <script>
 	let searchWay = ''
 	let antiFraudData = []
 	let colMap = []
@@ -590,4 +731,4 @@
 			})
 			.catch((err) => console.error(err))
 	}
-</script>
+</script> -->
