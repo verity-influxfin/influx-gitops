@@ -41,6 +41,7 @@ import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
 import  search  from "../pages/search.vue";
 import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
+import bussinessLoan from '../pages/bussinessLoan'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -80,6 +81,10 @@ let routers = [
         ]
     },
     {
+        path:'/bussiness-loan',
+        component:bussinessLoan
+    },
+    {
         path: '/myinvestment', component: myInvestment, children: [
             { path: '/investnotification', component: notification, name: 'invest-notification' },
             { path: '/debt', component: debt },
@@ -94,7 +99,7 @@ let routers = [
     { path: '/companycooperation', component: companyCooperation },
     { path: '/feedback', component: feedback },
     { path: '/event', component: event },
-	{ path: '/scsbank', component: scsbank },
+    { path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
     { path: '/search',name:'search', component: search },
