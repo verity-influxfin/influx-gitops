@@ -21,18 +21,14 @@ Vue.component('v-page', {
                     return [1, 2, 3];
             }
         } else {
-            switch (last_page - current_page) {
-                case 0:
-                    return [last_page - 2, last_page - 1, last_page];
-                case 1:
-                    if (current_page > 1) {
-                        return [current_page - 1, current_page, last_page];
-                    } else {
-                        return [current_page, last_page];
-                    }
-                default:
-                    return [current_page - 1, current_page, current_page + 1];
+            let start = last_page - 2;
+            start = start < 1 ? 1 : start;
+
+            let retval = [];
+            for (let i = start;i <= last_page;i++) {
+                retval.push(i);
             }
+            return retval;
         }
     }
   },
