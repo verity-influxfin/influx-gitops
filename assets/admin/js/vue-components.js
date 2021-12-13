@@ -54,7 +54,7 @@ Vue.component('v-page', {
   methods: {
     change_page: function (page) {
         if (this.$props['data']['current_page'] != page) {
-            this.$emit('chagen_page', page);
+            this.$emit('change_page', page);
         }
     },
     next_page: function () {

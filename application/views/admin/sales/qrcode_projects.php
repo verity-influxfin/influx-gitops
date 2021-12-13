@@ -173,7 +173,7 @@
                     </div>
                 </div>
                 <div class="panel-footer text-right">
-                    <v-page v-bind:data="pagination"></v-page>
+                    <v-page v-bind:data="pagination" @change_page="change_page"></v-page>
                 </div>
             </div>
         </div>
