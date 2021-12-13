@@ -41,6 +41,8 @@ import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
+import  search  from "../pages/search.vue";
+import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -52,6 +54,8 @@ let routers = [
     { path: '/faq', component: faq },
     { path: '/risk', component: risk },
     { path: '/projects', component: projects },
+    { path: '/promote-code-intro', component: promoteCodeIntro },
+
 
 
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
@@ -98,7 +102,8 @@ let routers = [
 	{ path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
-    {path:'/charitable',component:ntu}
+    {path:'/charitable',component:ntu},
+    { path: '/search',name:'search', component: search }
 ];
 
 export default routers;

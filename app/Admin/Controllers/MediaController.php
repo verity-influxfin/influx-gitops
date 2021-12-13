@@ -96,8 +96,8 @@ class MediaController extends Controller
 		$grid->filter(function($filter){
 			$filter->disableIdFilter();
 				// 在这里添加字段过滤器
-                $filter->ilike('media', '媒體名稱');
-                $filter->ilike('title', '報導標題');
+                $filter->like('media', '媒體名稱');
+                $filter->like('title', '報導標題');
 		});
 		$grid->actions(function ($actions) {
 

@@ -18,7 +18,7 @@ class CreateInterviewTable extends Migration
                 $table->id();
                 $table->string('type', 20)->nullable();
                 $table->string('post_title', 255)->nullable()->comment('用戶名稱');
-                $table->longText('post_title')->nullable()->comment('使用心得');
+                $table->longText('feedback')->nullable()->comment('使用心得');
                 $table->string('video_link', 255)->nullable()->comment('影片連結');
                 $table->string('category', 20)->nullable()->comment('用戶在平台身份 invest:投資,loan:借款');
                 $table->string('rank', 20)->nullable()->comment('用戶身份 officeWorker:上班族,student:學生');

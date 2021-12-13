@@ -72,7 +72,9 @@
                 >
                   取得驗證碼
                 </button>
-                <div class="btn btn-disable" v-if="isSended">{{ counter }}S有效</div>
+                <div class="btn btn-disable" v-if="isSended">
+                  {{ counter }}S有效
+                </div>
                 <span class="tip" v-if="isSended">驗證碼已寄出</span>
               </div>
             </div>
@@ -89,11 +91,17 @@
                   <span></span>
                   <div class="row">
                     我同意
-                    <div class="terms" @click="getTerms('user')">借款人服務條款</div>
+                    <router-link to="/userTerms" target="_blank">
+                      <div class="terms">
+                        借款人服務條款
+                      </div>
+                    </router-link>
                     、
-                    <div class="terms" @click="getTerms('privacy_policy')">
-                      隱私權條款
-                    </div>
+                    <router-link to="/privacyTerms" target="_blank">
+                      <div class="terms">
+                        隱私權條款
+                      </div>
+                    </router-link>
                   </div>
                 </div>
               </div>
@@ -111,7 +119,9 @@
                   <span></span>
                   <div class="row">
                     我同意
-                    <div class="terms" @click="getTerms('investor')">貸款人服務條款</div>
+                    <div class="terms" @click="getTerms('investor')">
+                      貸款人服務條款
+                    </div>
                     、
                     <div class="terms" @click="getTerms('privacy_policy')">
                       隱私權條款
@@ -125,14 +135,21 @@
           <div class="dialog-footer">
             <div
               v-if="
-                phone && password && confirmPassword && code && isAgree ? false : true
+                phone && password && confirmPassword && code && isAgree
+                  ? false
+                  : true
               "
               class="btn btn-disable"
               disable
             >
               送出
             </div>
-            <button type="button" v-else class="btn btn-submit" @click="doRegister">
+            <button
+              type="button"
+              v-else
+              class="btn btn-submit"
+              @click="doRegister"
+            >
               送出
             </button>
           </div>
@@ -154,7 +171,9 @@
             <button type="button" class="close" data-dismiss="modal">✕</button>
           </div>
           <div class="modal-body terms-content">
-            <div v-html="termsContent"></div>
+            <div>
+              {{ termsContent }}
+            </div>
           </div>
           <div class="modal-footer"></div>
         </div>
@@ -179,23 +198,23 @@ export default {
     timer: null,
     counter: 180,
   }),
-  created() {
+  created () {
     this.isRegisterSuccess = false;
     $("title").text(`註冊帳號 - inFlux普匯金融科技`);
   },
-  mounted() {
-    this.$nextTick(() => {});
+  mounted () {
+    this.$nextTick(() => { });
   },
   watch: {
-    phone(newdata) {
+    phone (newdata) {
       this.phone = newdata.replace(/[^\d]/g, "");
     },
-    code(newdata) {
+    code (newdata) {
       this.code = newdata.replace(/[^\d]/g, "");
     },
   },
   methods: {
-    getCaptcha(type) {
+    getCaptcha (type) {
       let phone = this.phone;
 
       if (!phone) {
@@ -219,7 +238,7 @@ export default {
           this.message = `${this.$store.state.smsErrorCode[errorsData.error]}`;
         });
     },
-    getTerms(termsType) {
+    getTerms (termsType) {
       let $this = this;
 
       axios
@@ -235,14 +254,14 @@ export default {
           console.log("getTerms 發生錯誤，請稍後再試");
         });
     },
-    doRegister() {
+    doRegister () {
       let phone = this.phone;
       let password = this.password;
       let password_confirmation = this.confirmPassword;
       let code = this.code;
-
       axios
-        .post(`${location.origin}/doRegister`, {
+        // do Register => eventRegister
+        .post(`${location.origin}/eventRegister`, {
           phone,
           password,
           password_confirmation,
@@ -266,7 +285,7 @@ export default {
           }
         });
     },
-    reciprocal() {
+    reciprocal () {
       this.counter--;
       if (this.counter === 0) {
         clearInterval(this.timer);
@@ -492,8 +511,6 @@ export default {
 
 @media screen and (max-width: 767px) {
   .register-wrapper {
-    height: 95vh;
-
     .register-dialog {
       width: fit-content;
       margin: 0px;
