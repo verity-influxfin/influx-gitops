@@ -173,25 +173,7 @@
                     </div>
                 </div>
                 <div class="panel-footer text-right">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination">
-                            <li>
-                                <a href="#">
-                                    <span>&laquo;</span>
-                                </a>
-                            </li>
-                            <li><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li>
-                                <a href="#">
-                                    <span>&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <v-page v-bind:data="pagination"></v-page>
                 </div>
             </div>
         </div>

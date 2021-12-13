@@ -68,6 +68,12 @@ var default_context = `立書人        普匯金融科技股份有限公司 (�
 var app = new Vue({
   el: '#page-wrapper',
   data: {
+    pagination: {
+        current_page: 1,
+        last_page: 1,
+        per_page: 40,
+        total_rows: 1
+    },
     searchform: {
         user_id: '',
         sdate: '',
@@ -173,6 +179,10 @@ var app = new Vue({
         };
         this.mode = 'list';
     },
+    change_page: function(page) {
+        this.searchform.current_page = page;
+        this.search();
+    },
     refresh_data: function () {
 
         var self = this;
@@ -186,6 +196,7 @@ var app = new Vue({
         }).then(resp => {
             let data = resp.data.response.data;
             self.data = data.list;
+            self.pagination = data.pagination;
         })
     },
     search: function () {
