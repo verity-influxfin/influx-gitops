@@ -59,6 +59,46 @@
             <img src="../asset/images/coin.png" class="apply-icon" /> 信保保證
           </div>
         </div>
+        <div class="apply-features">
+          <div class="feature-order order-1">1</div>
+          <div class="feature-order order-2">2</div>
+          <div class="feature-order order-3">3</div>
+          <div class="feature-order order-4">4</div>
+          <img
+            class="feature-order item-2-img"
+            src="../asset/images/boss.png"
+            alt=""
+          />
+          <div class="feature-item item-1">
+            <div class="feature-title">獲得主管機關支持同意</div>
+            <div class="feature-text">
+              <div>台灣唯一：全線上、無人化</div>
+              <div>⌜中小微企業全線上信保融資平台⌟</div>
+            </div>
+          </div>
+          <div class="feature-item item-2">
+            <div class="feature-title">普匯金融AI科技</div>
+            <div class="feature-text">
+              <div>中小微企業APP全線上申貸</div>
+              <div>AI智能風控系統 自動徵審核貸</div>
+            </div>
+          </div>
+          <div class="feature-item item-3">
+            <div class="feature-title">銀行提供資金</div>
+            <div class="feature-text">
+              <div>普匯平台API資料線上直串銀行</div>
+              <div>銀行即時同步系統審核</div>
+              <div>快速核決授信額度條件</div>
+            </div>
+          </div>
+          <div class="feature-item item-4">
+            <div class="feature-title">信保基金擔保保證</div>
+            <div class="feature-text">
+              <div>政府信保提供保證</div>
+              <div>快速媒合加速取得資金</div>
+            </div>
+          </div>
+        </div>
         <div class="">
           <div class="apply-qualify">
             <div class="qualify-title">申請資格</div>
@@ -277,6 +317,80 @@ export default {
         font-style: normal;
         text-align: left;
         color: #8f8f8f;
+      }
+    }
+    .apply-features {
+      position: relative;
+      width: fit-content;
+      margin: 100px auto 50px;
+      display: grid;
+      grid-template-columns: 444px 444px;
+      grid-template-rows: 1fr 1fr;
+      gap: 0 130px;
+      .feature-order {
+        position: absolute;
+        display: block;
+        z-index: 1;
+        font-family: Arial;
+        font-size: 200px;
+        font-weight: 900;
+        color: #dcdcdc;
+        left: -73px;
+        top: -15px;
+        &.order-2 {
+          left: 485px;
+          top: 20px;
+          color: #1e69aa;
+        }
+        &.order-3 {
+          top: 250px;
+          left: -77px;
+        }
+        &.order-4 {
+          left: 485px;
+          top: 305px;
+          color: #1e69aa;
+        }
+        &.item-2-img {
+          left: 678px;
+          top: -240px;
+        }
+      }
+      .feature-item {
+        &.item-1,
+        &.item-3 {
+          margin-bottom: 50px;
+        }
+        &.item-2,
+        &.item-4 {
+          margin-top: 50px;
+          border: solid 2px #1e69aa;
+        }
+        position: relative;
+        z-index: 2;
+        padding: 30px 30px 20px 30px;
+        border-radius: 20px;
+        border: solid 2px #8f8f8f;
+        background-color: #fff;
+        .feature-title {
+          font-family: NotoSansTC;
+          font-size: 36px;
+          font-weight: 500;
+          font-stretch: normal;
+          font-style: normal;
+          text-align: left;
+          color: #1e69aa;
+        }
+        .feature-text {
+          font-family: NotoSansTC;
+          font-size: 24px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.5;
+          text-align: left;
+          color: #8f8f8f;
+        }
       }
     }
 
