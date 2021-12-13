@@ -25,7 +25,11 @@ Vue.component('v-page', {
                 case 0:
                     return [last_page - 2, last_page - 1, last_page];
                 case 1:
-                    return [current_page - 1, current_page, last_page];
+                    if (current_page > 1) {
+                        return [current_page - 1, current_page, last_page];
+                    } else {
+                        return [current_page, last_page];
+                    }
                 default:
                     return [current_page - 1, current_page, current_page + 1];
             }
