@@ -67,7 +67,7 @@
                                 <form role="form" action="/admin/certification/sendSkbank" method="post">
                                     <table class="table table-striped table-bordered table-hover dataTable">
                                         <tbody>
-                                            <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                            <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                             <tr><td><span>企業聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="CompJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                             <tr><td><span>公司中期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="MidTermLnYM" placeholder="格式:YYYYMM"></td></tr>

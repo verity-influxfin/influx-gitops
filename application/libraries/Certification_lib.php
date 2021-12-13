@@ -995,7 +995,7 @@ class Certification_lib{
                   }
                   return false;
               }
-              // 商業司截圖(for新光微企貸)
+              // 商業司截圖(for新光普匯微企e秒貸)
               $company_image_url = $this->CI->findbiz_lib->getFindBizImage($user_info->id_number, $user_info->id);
               if($company_image_url){
                   $info->content['governmentauthorities_image'][] = $company_image_url;
@@ -1514,7 +1514,7 @@ class Certification_lib{
         return false;
     }
 
-	// to do : 待加入並合併微企貸
+	// to do : 待加入並合併普匯微企e秒貸
 	public function investigation_verify($info = array(), $url=null)
 	{
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
@@ -1949,7 +1949,7 @@ class Certification_lib{
 		return true;
 	}
 
-	// to do : 待加入並合併微企貸
+	// to do : 待加入並合併普匯微企e秒貸
 	public function job_verify($info = array(),$url=null) {
 
 		$realname_certification	= $this->get_certification_info($info->user_id,CERTIFICATION_IDCARD,$info->investor);
