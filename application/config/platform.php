@@ -3,9 +3,9 @@
 //後台menu
 $config['admin_menu'] = [
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
-	'AntiFraud' => [
-		'name' => '反詐欺管理指標'
-	],
+    'AntiFraud' => [
+        'name' => '反詐欺管理指標'
+    ],
     'Target' => [
         'parent_name' => '借款管理',
         'index' => '全部列表',
@@ -28,7 +28,7 @@ $config['admin_menu'] = [
         'obligations' => '全部列表(New)',
         'waiting_transfer' => '債轉待收購',
         'waiting_transfer_success' => '債轉待放款',
-		'bidding' => '已投標'
+        'bidding' => '已投標'
     ],
     'Risk' => [
         'parent_name' => '風控專區',
@@ -37,7 +37,7 @@ $config['admin_menu'] = [
         'index?investor=0&company=1' => '法人借款端審核',
         'index?investor=1' => '投資端審核',
         'credit' => '信評管理',
-		'credit_management' => '授信審核表'
+        'credit_management' => '授信審核表'
         //'loaned_wait_push' => '貸後催收',
         //'loaned_wait_push?slist=1' => '貸後已催收列表',
     ],
@@ -84,13 +84,15 @@ $config['admin_menu'] = [
         'index' => '人員列表',
     ],
     'Sales' => [
-        'parent_name' => '業務報表',
-        'index' => '借款報表',
-        'register_report' => '註冊報表',
-        'bonus_report' => '獎金報表',
-        'loan_overview' => '申貸總覽',
-        'promote_list'  => '推薦有賞',
-        'promote_reward_list'  => '推薦有賞放款'
+        'parent_name'         => '業務報表',
+        'index'               => '借款報表',
+        'register_report'     => '註冊報表',
+        'bonus_report'        => '獎金報表',
+        'loan_overview'       => '申貸總覽',
+        'promote_list'        => '推薦有賞',
+        'promote_reward_list' => '推薦有賞放款',
+        'qrcode_projects'     => 'QRcode方案設定',
+        'qrcode_contracts'    => 'QRcode合約審核'
     ],
     'Account' => [
         'parent_name' => '財務作業',
@@ -103,10 +105,10 @@ $config['admin_menu'] = [
         'parent_name' => 'OCR 結果',
         'index' => '報表',
     ],
-	'PostLoan' => [
-		'parent_name' => '貸後管理',
-		'legal_doc' => '法訴文件管理',
-	],
+    'PostLoan' => [
+        'parent_name' => '貸後管理',
+        'legal_doc' => '法訴文件管理',
+    ],
     'Article' => [
         'parent_name' => '活動及最新消息',
         'index' => '最新活動',
@@ -408,10 +410,10 @@ $config['product_list'] = [
         'loan_range_e' => 300000,
         'interest_rate_s' => 5.5,
         'interest_rate_e' => 16,
-		'condition_rate' => [
-			'salary_below' => 35000,
-			'rate' => 4.5
-		],
+        'condition_rate' => [
+            'salary_below' => 35000,
+            'rate' => 4.5
+        ],
         'charge_platform' => 4,
         'charge_platform_min' => PLATFORM_FEES_MIN,
         'sub_product' => [5001, STAGE_CER_TARGET, 1],
@@ -890,7 +892,7 @@ $config['product_list'] = [
             CERTIFICATION_EMPLOYEEINSURANCELIST,
             CERTIFICATION_INCOMESTATEMENT,
             CERTIFICATION_INVESTIGATIONJUDICIAL,
-			CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
         ],
         'option_certifications' => [
@@ -914,7 +916,7 @@ $config['product_list'] = [
                 CERTIFICATION_EMPLOYEEINSURANCELIST,
                 CERTIFICATION_INCOMESTATEMENT,
                 CERTIFICATION_INVESTIGATIONJUDICIAL,
-    			CERTIFICATION_INVESTIGATIONA11,
+                CERTIFICATION_INVESTIGATIONA11,
                 CERTIFICATION_COMPANYEMAIL,
             ]
         ],
@@ -1424,7 +1426,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DIPLOMA,
                     // CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB,
-					CERTIFICATION_INVESTIGATIONA11,
+                    CERTIFICATION_INVESTIGATIONA11,
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1566,7 +1568,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SIMPLIFICATIONFINANCIAL,
                     CERTIFICATION_INCOMESTATEMENT,
                     CERTIFICATION_INVESTIGATIONJUDICIAL,
-					CERTIFICATION_INVESTIGATIONA11,
+                    CERTIFICATION_INVESTIGATIONA11,
                     CERTIFICATION_PASSBOOKCASHFLOW,
                     CERTIFICATION_GOVERNMENTAUTHORITIES,
                     CERTIFICATION_EMPLOYEEINSURANCELIST,
@@ -1706,7 +1708,7 @@ $config['subloan_list'] = 'STS|STNS|STIS|FGNS|FGIS';
 $config['product_type'] = [
     1 => '信用貸款',
     2 => '分期付款',
-//	3=> '抵押貸款',
+//    3=> '抵押貸款',
 ];
 
 //產品型態
@@ -1866,7 +1868,7 @@ $config['certifications_sort'] = [
     CERTIFICATION_INVESTIGATION,
     CERTIFICATION_JOB,
     CERTIFICATION_PROFILE,
-	CERTIFICATION_INVESTIGATIONA11,
+    CERTIFICATION_INVESTIGATIONA11,
     CERTIFICATION_CRIMINALRECORD,
     CERTIFICATION_SIMPLIFICATIONFINANCIAL,
     CERTIFICATION_SIMPLIFICATIONJOB,
@@ -1971,7 +1973,7 @@ $config['selling_type'] = [
 ];
 
 $config['character'] = [
-	0 => '登記負責人',
+    0 => '登記負責人',
     1 => '負責人',
     2 => '實際負責人',
     3 => '配偶',
@@ -2107,36 +2109,36 @@ $config['allow_aiBidding_product'] = [1, 2, 3, 4];
 # 推播的相關設定
 abstract class NotificationTargetCategory
 {
-	const Investment = 1;
-	const Loan = 2;
-	const All = 3;
+    const Investment = 1;
+    const Loan = 2;
+    const All = 3;
 }
 abstract class NotificationType
 {
-	const Manual = 1;
-	const RoutineReminder = 2;
+    const Manual = 1;
+    const RoutineReminder = 2;
 }
 abstract class NotificationStatus
 {
-	const Pending = 0;
-	const Accepted = 1;
-	const Rejected = 2;
-	const Sent = 3;
-	const Canceled = 4;
+    const Pending = 0;
+    const Accepted = 1;
+    const Rejected = 2;
+    const Sent = 3;
+    const Canceled = 4;
 }
 
 $config['notification'] = [
-	'target_category_name' => [
-		NotificationTargetCategory::Investment => '投資',
-		NotificationTargetCategory::Loan => '借款',
-		NotificationTargetCategory::All => '投資&借款'],
-	'status' => [
-		NotificationStatus::Pending => '待核可',
-		NotificationStatus::Accepted => '待發送',
-		NotificationStatus::Rejected => '已拒絕',
-		NotificationStatus::Sent => '已發送',
-		NotificationStatus::Canceled => '已取消'
-	]
+    'target_category_name' => [
+        NotificationTargetCategory::Investment => '投資',
+        NotificationTargetCategory::Loan => '借款',
+        NotificationTargetCategory::All => '投資&借款'],
+    'status' => [
+        NotificationStatus::Pending => '待核可',
+        NotificationStatus::Accepted => '待發送',
+        NotificationStatus::Rejected => '已拒絕',
+        NotificationStatus::Sent => '已發送',
+        NotificationStatus::Canceled => '已取消'
+    ]
 ];
 
 $config['no_prepayment_allowance'] = [PRODUCT_FOREX_CAR_VEHICLE];

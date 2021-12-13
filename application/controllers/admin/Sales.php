@@ -1,7 +1,7 @@
-<?php
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
@@ -1270,7 +1270,11 @@ class Sales extends MY_Admin_Controller {
             $content = $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', []);
             $list['content'] = array_slice(json_decode($review_list['contract_content'], TRUE) ?? [] , 4, 4);
             $content[4] = $content[5] = $content[6] = $content[7] = '%s';
-            $list['contract'] = htmlentities(vsprintf($contract_format->content, $content));
+            $list['contract'] = '';
+            if (isset($contract_format->content) )
+            {
+                $list['contract'] = htmlentities(vsprintf($contract_format->content, $content));
+            }
         } else {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT))->send();
         }
@@ -1626,6 +1630,44 @@ class Sales extends MY_Admin_Controller {
         ]);
         $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "修改成功。"])->send();
     }
-}
 
-?>
+    /**
+     * QR Code 方案設定頁面
+     *
+     * @created_at        2021-12-13
+     * @created_by        Jack
+     */
+    public function qrcode_projects()
+    {
+        $this->load->view(
+            'admin/sales/qrcode_projects',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/sales/qrcode_projects.js'
+                ]
+            ]
+        );
+    }
+
+    /**
+     * QR Code 合約審核頁面
+     *
+     * @created_at        2021-12-13
+     * @created_by        Jack
+     */
+    public function qrcode_contracts()
+    {
+        $this->load->view(
+            'admin/sales/qrcode_contracts',
+            $data = [
+                'menu'      => $this->menu,
+                'use_vuejs' => TRUE,
+                'scripts'   => [
+                    '/assets/admin/js/sales/qrcode_contracts.js'
+                ]
+            ]
+        );
+    }
+}
