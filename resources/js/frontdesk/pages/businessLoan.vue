@@ -1,5 +1,5 @@
 <template>
-  <div class="bussiness-loan">
+  <div class="business-loan">
     <div class="header row">
       <div class="header-col col">
         <div class="header-title">普匯金融 • 普惠金融</div>
@@ -304,10 +304,7 @@
             <div class="data-item">法人對保</div>
           </div>
           <div class="col-auto apply-img-cover">
-            <img
-              src="../asset/images/bussiness-loan-apply.png"
-              alt="申請明細"
-            />
+            <img src="../asset/images/business-loan-apply.png" alt="申請明細" />
           </div>
           <div class="col-auto">
             <div class="apply-title">
@@ -500,18 +497,18 @@ export default {
       ],
       steps: [
         {
-          img: require('../asset/images/bussiness-step1.png'),
+          img: require('../asset/images/business-step1.png'),
           stepTitle: 'Step 1. 簡單下載註冊',
           stepText: '下載APP完成法人註冊\n申請⌜微型企業線上融資⌟'
 
         },
         {
-          img: require('../asset/images/bussiness-step2.png'),
+          img: require('../asset/images/business-step2.png'),
           stepTitle: 'Step 2. 完成線上認證',
           stepText: '完成負責人/配偶/保證人\n公司企業資料驗證'
         },
         {
-          img: require('../asset/images/bussiness-step3.png'),
+          img: require('../asset/images/business-step3.png'),
           stepTitle: 'Step 3. 新光對保撥款',
           stepText: '銀行專人審核\n立即對保撥款'
         },
@@ -522,12 +519,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bussiness-loan {
+.business-loan {
   line-height: 1.25;
   .header {
     position: relative;
     height: 550px;
-    background-image: url("../asset/images/bussiness-loan-header-all.jpg");
+    background-image: url("../asset/images/business-loan-header-all.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
