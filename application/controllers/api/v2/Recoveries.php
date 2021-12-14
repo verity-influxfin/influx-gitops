@@ -1737,7 +1737,7 @@ class Recoveries extends REST_Controller
             $minAmount = 1;
             $maxAmount = $data['accounts_receivable'];
             if ($amount < $data['transfer_fee']) {
-                $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR));
+                $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR, 'description' => '您的價金應高於'.$data['transfer_fee'].'元的債轉手續費，請重新輸入。'));
             }
             if ($amount < $minAmount || $amount > $maxAmount) {
                 $this->response(array('result' => 'ERROR', 'error' => TRANSFER_AMOUNT_ERROR));
