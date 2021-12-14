@@ -208,24 +208,24 @@
         <div class="">
           <div class="apply-qualify">
             <div class="qualify-title">申請資格</div>
-            <div class="qualify-text">
-              <div>•具有公司登記或商業登記執照。</div>
-              <div>•不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。</div>
-              <div>•實收資本額不得超過1億。</div>
-              <div>•近一年平均投保員工人數不得大於200人。</div>
-              <div>•企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。</div>
-            </div>
+            <ul class="qualify-text">
+              <li>具有公司登記或商業登記執照。</li>
+              <li>不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。</li>
+              <li>實收資本額不得超過1億。</li>
+              <li>近一年平均投保員工人數不得大於200人。</li>
+              <li>企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。</li>
+            </ul>
             <div class="qualify-line"></div>
           </div>
           <div class="apply-require">
             <div class="require-title">申請條件</div>
-            <div class="require-text">
-              <div>•申請額度：不限。</div>
-              <div>•借款期間：1~3年。</div>
-              <div>•還款方式：每月平均攤還本息。</div>
-              <div>•利 費 率：依各產品及資金方最終核准條件為準。</div>
-              <div>•費率：普匯平台不收取任何費用，免費服務︒</div>
-            </div>
+            <ul class="require-text">
+              <li>申請額度：不限。</li>
+              <li>借款期間：1~3年。</li>
+              <li>還款方式：每月平均攤還本息。</li>
+              <li>利 費 率：依各產品及資金方最終核准條件為準。</li>
+              <li>費率：普匯平台不收取任何費用，免費服務︒</li>
+            </ul>
             <div class="require-line"></div>
           </div>
           <div class="apply-process">
@@ -377,8 +377,8 @@
             />
           </div>
           <div class="answer" v-show="item.active">
-            <div class="">A{{ index + 1 }}：</div>
-            <div class="">{{ item.answer }}</div>
+            <div>A{{ index + 1 }}：</div>
+            <div v-html="item.answer"></div>
           </div>
         </div>
       </div>
@@ -437,7 +437,7 @@ export default {
         {
           question: '聯徵如何申請',
           answer: `您好！以下有兩種不同身份聯徵的申請方式
-            請至：https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364
+            請至：<a href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364">https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364</a>
             「個人聯徵申請」需攜帶雙證件親自至聯徵中心、或至郵局申請正本資料，
             並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）
             「企業聯徵申請」需由負責人親自至聯徵中心辦理或負責人委託他人至聯合徵信中心服務櫃檯辦理
