@@ -324,10 +324,46 @@
         </div>
       </div>
     </div>
-    <div>
+    <div class="step-row">
       <title-dots :reverse="true">
         <div class="title">三步驟•普匯微企e秒貸</div>
       </title-dots>
+      <div class="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide" v-for="(item, index) in steps" :key="index">
+            <div class="step-content">
+              <div class="col-auto">
+                <router-link to="/borrowLink" target="_blank">
+                  <img
+                    class="get-apple-img"
+                    src="../asset/images/get-on-apple.png"
+                    alt=""
+                  />
+                </router-link>
+                <router-link to="/borrowLink" target="_blank">
+                  <img src="../asset/images/get-on-google.png" alt="" />
+                </router-link>
+              </div>
+              <div class="col-auto">
+                <img :src="item.img" class="step-img" alt="" />
+              </div>
+              <div class="col-auto">
+                <div class="step-title">
+                  {{ item.stepTitle }}
+                </div>
+                <div class="step-text">
+                  {{ item.stepText }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+      </div>
     </div>
     <div class="question-row">
       <title-dots class="title-dots">
@@ -355,9 +391,25 @@
 
 <script>
 import titleDots from '../component/titleDots.vue'
+import 'swiper/swiper.scss';
+import "swiper/components/navigation/navigation.min.css"
+import SwiperCore, {
+  Navigation
+} from 'swiper/core';
 export default {
   components: {
     titleDots,
+  },
+  mounted() {
+    SwiperCore.use([Navigation])
+    const swiper = new Swiper('.swiper', {
+      // Navigation arrows
+
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    })
   },
   data() {
     return {
@@ -384,9 +436,16 @@ export default {
           answer: `我不知道`,
           active: false,
         }
+      ],
+      steps: [
+        {
+          img: require('../asset/images/business-step1.png'),
+          stepTitle: 'Step 1. 簡單下載註冊',
+          stepText: '下載APP完成法人註冊\n申請⌜微型企業線上融資⌟'
+        }
       ]
     }
-  },
+  }
 }
 </script>
 
@@ -873,6 +932,29 @@ export default {
         font-style: normal;
         text-align: center;
         color: #5d5555;
+      }
+    }
+  }
+  .step-row {
+    .swiper {
+      width: 1220px;
+      height: 710px;
+    }
+    .step-content {
+      display: flex;
+      align-items: center;
+      padding: 60px;
+      font-family: NotoSansTC;
+      font-size: 24.9px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      text-align: left;
+      color: #5d5555;
+      white-space: pre-line;
+      .step-title {
+        font-size: 26px;
+        color: #112e53;
       }
     }
   }
