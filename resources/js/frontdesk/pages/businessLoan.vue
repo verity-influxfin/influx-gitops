@@ -3,21 +3,21 @@
     <div class="header row">
       <div class="header-col col">
         <div class="header-title">普匯金融 • 普惠金融</div>
-        <div class="header-text">
-          <div>• 企業主/創業夢想</div>
-          <div>• 手機全線上無人化方便簡單快速安全</div>
-          <div>• 全台第一政府支持信保保證銀行放款</div>
-          <div>• 溫馨扶持背後金援</div>
-        </div>
+        <ul class="header-text">
+          <li>企業主/創業夢想</li>
+          <li>手機全線上無人化方便簡單快速安全</li>
+          <li>全台第一政府支持信保保證銀行放款</li>
+          <li>溫馨扶持背後金援</li>
+        </ul>
         <div class="header-slogan">
           <div class="yellow">FREE</div>
           <div class="cyan">免費資金媒合</div>
         </div>
         <div class="header-underline"></div>
         <div class="slogan-text">
-          金融科技
+          <img src="../asset/images/coin.png" class="apply-icon" /> 金融科技
           <img src="../asset/images/coin.png" class="apply-icon" /> 銀行資金
-          <img src="../asset/images/coin.png" class="apply-icon" /> 信保保證
+          <img src="../asset/images/coin.png" class="apply-icon" /> 媒合借貸
         </div>
         <div class="get-app">
           <router-link to="/borrowLink" target="_blank">
@@ -407,6 +407,7 @@ export default {
         prevEl: '.swiper-button-prev',
       },
     })
+    // $('title').text('')
   },
   data() {
     return {
@@ -590,12 +591,16 @@ export default {
       border-bottom: solid 2px #fff;
     }
     .slogan-text {
+      .apply-icon {
+        width: 30px;
+        height: 30px;
+      }
       font-family: NotoSansTC;
-      font-size: 28px;
+      font-size: 24px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
-      line-height: 37px;
+      line-height: 30px;
       letter-spacing: 1.4px;
       text-align: left;
       color: #fff;
