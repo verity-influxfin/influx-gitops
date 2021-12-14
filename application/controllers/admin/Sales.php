@@ -790,7 +790,7 @@ class Sales extends MY_Admin_Controller {
 
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/promote_list',$page_data);
+        $this->load->view('admin/promote_code/promote_list',$page_data);
         $this->load->view('admin/_footer');
     }
 
@@ -820,7 +820,7 @@ class Sales extends MY_Admin_Controller {
 
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/promote_edit',$page_data);
+        $this->load->view('admin/promote_code/promote_edit',$page_data);
         $this->load->view('admin/_footer');
 
     }
@@ -1017,7 +1017,7 @@ class Sales extends MY_Admin_Controller {
 
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/promote_reward_list',$page_data);
+        $this->load->view('admin/promote_code/promote_reward_list',$page_data);
         $this->load->view('admin/_footer');
 
     }
@@ -1037,11 +1037,11 @@ class Sales extends MY_Admin_Controller {
         if($qrcode_id) {
             $qrcode = $this->user_qrcode_model->get($qrcode_id);
             if(!$qrcode) {
-                $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "找不到對應的 qrcode, ID: ".$qrcode_id])->send();
+                $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "找不到對應的 promote_code, ID: ".$qrcode_id])->send();
             }
             $settings = json_decode($qrcode->settings, TRUE);
             if($settings === FALSE) {
-                $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "qrcode 的設定有誤, 無法解析, ID: ".$qrcode_id])->send();
+                $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "promote_code 的設定有誤, 無法解析, ID: ".$qrcode_id])->send();
             }
 
             foreach ($formula_list as $category => $info) {
@@ -1075,7 +1075,7 @@ class Sales extends MY_Admin_Controller {
             $this->json_output->setStatusCode(200)->setResponse(['success'=> true, 'msg' => "修改成功。"])->send();
         }
 
-        $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "沒有輸入對應的 qrcode ID: "])->send();
+        $this->json_output->setStatusCode(400)->setResponse(['success'=> false, 'msg' => "沒有輸入對應的 promote_code ID: "])->send();
     }
 
     public function promote_import_report() {
@@ -1238,7 +1238,7 @@ class Sales extends MY_Admin_Controller {
 
         $this->load->view('admin/_header');
         $this->load->view('admin/_title',$this->menu);
-        $this->load->view('admin/promote_import_list',$page_data);
+        $this->load->view('admin/promote_code/promote_import_list',$page_data);
         $this->load->view('admin/_footer');
     }
 
@@ -1335,19 +1335,19 @@ class Sales extends MY_Admin_Controller {
             $list[$key]['created_at'] = date('Y-m-d', strtotime($info['created_at']));
         }
 
-        $config                     = [];
-        $config['per_page']         = 40; //每頁顯示的資料數
-        $config["total_rows"]       = count($review_list);
+        $config = [];
+        $config['per_page'] = 40; //每頁顯示的資料數
+        $config["total_rows"] = count($review_list);
 
-        $current_page    = max(1, intval($input['current_page'] ?? '1'));
-        $offset = ($current_page - 1 ) * $config['per_page'];
+        $current_page = max(1, intval($input['current_page'] ?? '1'));
+        $offset = ($current_page - 1) * $config['per_page'];
 
         $list = array_slice($list, $offset, $config['per_page']);
 
         $data['pagination'] = [];
         $data['pagination']['total_rows'] = $config["total_rows"];
-        $data['pagination']['per_page']  = $config['per_page'];
-        $data['pagination']['last_page'] = max((int)($config["total_rows"] / $config['per_page']), 1);
+        $data['pagination']['per_page'] = $config['per_page'];
+        $data['pagination']['last_page'] = max((int) ($config["total_rows"] / $config['per_page']), 1);
         $data['pagination']['current_page'] = $current_page;
 
         $data['list'] = $list;
@@ -1460,6 +1460,8 @@ class Sales extends MY_Admin_Controller {
 
     public function promote_contract_submit() {
         $this->load->library('output/json_output');
+        $this->load->library('notification_lib');
+        $this->load->model('user/user_qrcode_model');
         $this->load->model('user/user_qrcode_apply_model');
 
         $input      = $this->input->post(NULL, TRUE);
@@ -1484,6 +1486,18 @@ class Sales extends MY_Admin_Controller {
         if(!$rs) {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => EXIT_DATABASE))->send();
         }
+
+        // 通知管理員審核
+        $admin = $this->admin_model->get(1);
+        if (isset($admin))
+        {
+            $user_qrcode = $this->user_qrcode_model->get($apply_info->user_qrcode_id);
+            if (isset($user_qrcode))
+            {
+                $this->notification_lib->promote_contract_review($admin->email, $user_qrcode->user_id);
+            }
+        }
+
         $this->json_output->setStatusCode(200)->setResponse(array('result' => 'SUCCESS','data' => []))->send();
     }
 
@@ -1495,6 +1509,7 @@ class Sales extends MY_Admin_Controller {
         }
         $this->load->model('user/user_qrcode_apply_model');
         $this->load->model('user/user_qrcode_model');
+        $this->load->library('notification_lib');
         $this->load->library('user_lib');
         $this->load->library('contract_lib');
         $input      = $this->input->post(NULL, TRUE);
@@ -1521,17 +1536,9 @@ class Sales extends MY_Admin_Controller {
             $this->load->model('user/user_certification_model');
             $this->load->library('certification_lib');
 
-            // 觸發驗證機制
-            if(isset($settings) && !empty($settings['certification_id'])) {
-                $info = $this->user_certification_model->get_by([
-                    'id' => $settings['certification_id'],
-                    'user_id' => $qrcode_code->user_id,
-                    'certification_id' => CERTIFICATION_GOVERNMENTAUTHORITIES,
-                    'status' => CERTIFICATION_STATUS_SUCCEED
-                ]);
-                if (isset($info)) {
-                    $this->certification_lib->verify_promote_code($info, FALSE);
-                }
+            // 通知審核合約成功
+            if(isset($settings) && isset($settings['investor'])) {
+                $this->notification_lib->promote_contract_done($qrcode_code->user_id, $settings['investor'], 1);
             }
         }
         $this->json_output->setStatusCode(200)->setResponse($rs)->send();
@@ -1544,6 +1551,26 @@ class Sales extends MY_Admin_Controller {
 
     public function promote_contract_reject() {
         $rs = $this->promote_contract_set(2);
+        if ($rs['result'] == "ERROR") {
+            $this->json_output->setStatusCode(200)->setResponse($rs)->send();
+        }
+
+        // 通知合約失敗
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/user_qrcode_apply_model');
+        $this->load->library('notification_lib');
+        $input      = $this->input->post(NULL, TRUE);
+        $apply_info = $this->user_qrcode_apply_model->get_by(['id' => $input['qrcode_apply_id'], 'status' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+        if(isset($apply_info)) {
+            $qrcode_code = $this->user_qrcode_model->get($apply_info->user_qrcode_id);
+            if(!isset($qrcode_code)) {
+                $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
+            }
+            $settings = json_decode($qrcode_code->settings, TRUE);
+            if(isset($settings) && isset($settings['investor'])) {
+                $this->notification_lib->promote_contract_done($qrcode_code->user_id, $settings['investor'], 2);
+            }
+        }
         $this->json_output->setStatusCode(200)->setResponse($rs)->send();
     }
 

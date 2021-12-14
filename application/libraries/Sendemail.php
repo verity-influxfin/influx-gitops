@@ -139,10 +139,10 @@ class Sendemail
 		return false;
 	}
 
-	public function email_notification($email="",$title="",$content=""){
+	public function email_notification($email="",$title="",$content="",$type='b08'){
 		if($email){
 		    $mail_event = $this->CI->config->item('mail_event');
-			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> 'b08', "mail_event"=> $mail_event),TRUE);
+			$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> $type, "mail_event"=> $mail_event),TRUE);
 			return $this->send($email,$title,$content);
 		}
 		return false;

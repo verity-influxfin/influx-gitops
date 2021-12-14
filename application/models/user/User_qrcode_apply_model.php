@@ -34,7 +34,7 @@ class user_qrcode_apply_model extends MY_Model
 
 
     /**
-     * 取得 qrcode 申請的審核列表
+     * 取得 promote_code 申請的審核列表
      * @param array $user_where
      * @param array $qrcode_where
      * @param int $limit

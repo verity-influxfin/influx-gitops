@@ -2171,7 +2171,7 @@ END:
             if(!$company) {
                 $data['status'] = intval($userQrcodeInfo['status']);
             } else {
-                // 配合法人的註冊辨識狀態
+                // TODO: 需配合法人的註冊辨識狀態
                 $this->load->model('user/user_qrcode_apply_model');
                 $apply_info = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $userQrcodeInfo['id']]);
                 if(isset($apply_info)) {

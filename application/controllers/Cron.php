@@ -229,25 +229,30 @@ class Cron extends CI_Controller
         // 自動延長一般方案/特約方案的結束時間
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->generalCaseAliasName);
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->appointedCaseAliasName);
-        if(date("d") >= 1 && date("d") <= 4) {
-            $data = [
-                'script_name'   => 'handle_promote_reward',
-                'num'           => 0,
-                'start_time'    => $start_time,
-                'end_time'      => 0
-            ];
-            $rs = $this->log_script_model->insert($data);
-            $num = $this->user_lib->scriptHandlePromoteReward();
-        } else {
-            $data = [
-                'script_name'   => 'handle_promote_receipt',
-                'num'           => 0,
-                'start_time'    => $start_time,
-                'end_time'      => 0
-            ];
-            $rs = $this->log_script_model->insert($data);
-            $num = $this->user_lib->send_promote_receipt();
-        }
+
+        // 結算獎勵
+        $data = [
+            'script_name'   => 'handle_promote_reward',
+            'num'           => 0,
+            'start_time'    => $start_time,
+            'end_time'      => 0
+        ];
+        $rs = $this->log_script_model->insert($data);
+        $num = $this->user_lib->scriptHandlePromoteReward();
+        $this->log_script_model->update_by(['id' => $rs], [
+            'num' => $num,
+            'end_time' => time(),
+        ]);
+
+        // 計算勞務報酬單或對帳明細
+        $data = [
+            'script_name'   => 'handle_promote_receipt',
+            'num'           => 0,
+            'start_time'    => $start_time,
+            'end_time'      => 0
+        ];
+        $rs = $this->log_script_model->insert($data);
+        $num = $this->user_lib->send_promote_receipt();
         $this->log_script_model->update_by(['id' => $rs], [
             'num' => $num,
             'end_time' => time(),
