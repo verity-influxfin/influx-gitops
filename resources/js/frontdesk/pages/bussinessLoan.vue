@@ -76,7 +76,81 @@
       <title-dots>
         <div class="title">適用對象</div>
       </title-dots>
-      <div class="row no-gutters"></div>
+      <div class="content-row row">
+        <div class="col-auto">
+          <div class="suit-item">
+            <div class="suit-title">普惠金融擴大服務</div>
+            <div class="suit-sub-title"></div>
+            <div class="suit-text">
+              <div>百萬微企融資</div>
+              <div>為新創快速注入資金</div>
+              <div>創新金融科技服務模式</div>
+              <div>簡單快速便利•普惠金融</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto line-col">
+          <div class="line-group">
+            <div class="circle"></div>
+            <div class="line"></div>
+          </div>
+          <div class="line-group">
+            <div class="circle"></div>
+            <div class="line"></div>
+          </div>
+          <div class="line-group">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="col-auto">
+          <div class="suit-item line">
+            <div class="feature-content">
+              <div class="suit-title">新創微型企業</div>
+              <div class="suit-sub-title">New Ventures</div>
+              <div class="suit-text">
+                <div>Start up</div>
+                <div>育成中心團隊</div>
+                <div>新創微型企業</div>
+              </div>
+            </div>
+          </div>
+          <div class="suit-item line">
+            <div class="feature-content">
+              <div class="suit-title">電子商務</div>
+              <div class="suit-sub-title">E-commerce</div>
+              <div class="suit-text">
+                <div>新型態商業模式</div>
+                <div>KOL網紅經濟</div>
+                <div>直播業者</div>
+              </div>
+            </div>
+          </div>
+          <div class="suit-item line">
+            <div class="feature-content">
+              <div class="suit-title">中小企業(主)</div>
+              <div class="suit-sub-title">Small and medium enterprise</div>
+              <div class="suit-text">
+                <div>文創業者</div>
+                <div>商店小老闆</div>
+                <div>一般公司行號</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto suit-col">
+          <div class="suit-cover item-1">
+            <img src="../asset/images/suit-1.png" class="suit-img" />
+          </div>
+
+          <div class="suit-cover item-2">
+            <img src="../asset/images/suit-2.png" class="suit-img" />
+          </div>
+
+          <div class="suit-cover item-3">
+            <img src="../asset/images/suit-3.png" class="suit-img" />
+          </div>
+        </div>
+      </div>
     </div>
     <div>
       <div class="apply-row">
@@ -436,6 +510,87 @@ export default {
         text-align: center;
         color: #8f8f8f;
       }
+    }
+  }
+  .suitable-row {
+    margin: -20px auto;
+    background-color: #f5f6f8;
+    .content-row {
+      width: fit-content;
+      margin: 62px auto 0;
+      padding-bottom: 80px;
+    }
+    .suit-item {
+      margin-right: 76px;
+      &.line {
+        display: flex;
+        margin-right: 30px;
+        height: 209px;
+      }
+
+      .suit-title {
+        font-family: NotoSansTC;
+        font-size: 36px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.28;
+        letter-spacing: 1.8px;
+        text-align: left;
+        color: #1e69aa;
+      }
+      .suit-sub-title {
+        height: 24px;
+        margin-bottom: 8px;
+        font-family: NotoSansTC;
+        font-size: 20px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.8;
+        letter-spacing: 1px;
+        text-align: left;
+        color: #1e69aa;
+      }
+      .suit-text {
+        font-family: NotoSansTC;
+        font-size: 24px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.5;
+        letter-spacing: 1.2px;
+        text-align: left;
+        color: #8f8f8f;
+      }
+    }
+    .suit-col {
+      .suit-cover.item-2 {
+        margin: 22px 0;
+      }
+    }
+    .line-col {
+      padding-top: 20px;
+      .line-group {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        margin-right: 20px;
+        .circle {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background-color: #1e69aa;
+        }
+        .line {
+          margin: 8px 0;
+          height: 185px;
+          border-left: 2px solid #1ea7e7;
+        }
+      }
+    }
+    .suit-img {
+      width: 300px;
     }
   }
   .apply-row {
