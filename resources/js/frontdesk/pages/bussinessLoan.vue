@@ -527,13 +527,12 @@ export default {
   .header {
     position: relative;
     height: 550px;
-    background-image: url("../asset/images/bussiness-loan-header-2.png");
-    background-position: 100%;
-    background-size: calc(100% - 500px);
+    background-image: url("../asset/images/bussiness-loan-header-all.jpg");
     background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
     .header-col {
       padding-left: 36px;
-      background-image: url("../asset/images/bussiness-loan-header-1.png");
       background-repeat: no-repeat;
     }
     .header-title {
