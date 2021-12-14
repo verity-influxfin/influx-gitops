@@ -1,6 +1,38 @@
 <template>
   <div class="bussiness-loan">
-    <div class="header"></div>
+    <div class="header row">
+      <div class="col-auto">
+        <div class="header-title">普匯金融 • 普惠金融</div>
+        <div class="header-text">
+          <div>• 企業主/創業夢想</div>
+          <div>• 手機全線上無人化方便簡單快速安全</div>
+          <div>• 全台第一政府支持信保保證銀行放款</div>
+          <div>• 溫馨扶持背後金援</div>
+        </div>
+        <div class="header-slogan">
+          <div class="yellow">FREE</div>
+          <div class="cyan">免費資金媒合</div>
+        </div>
+        <div class="header-underline"></div>
+        <div class="slogan-text">
+          金融科技
+          <img src="../asset/images/coin.png" class="apply-icon" /> 銀行資金
+          <img src="../asset/images/coin.png" class="apply-icon" /> 信保保證
+        </div>
+        <div class="get-app">
+          <router-link to="/borrowLink" target="_blank">
+            <img
+              class="get-apple-img"
+              src="../asset/images/get-on-apple.png"
+              alt=""
+            />
+          </router-link>
+          <router-link to="/borrowLink" target="_blank">
+            <img src="../asset/images/get-on-google.png" alt="" />
+          </router-link>
+        </div>
+      </div>
+    </div>
     <div class="features-row">
       <div class="feature">
         <div class="icon">
@@ -178,10 +210,44 @@
       </div>
     </div>
     <div>
-      <div>
+      <div class="apply-data-row">
         <title-dots>
           <div class="title">申貸資料明細一覽</div>
         </title-dots>
+        <div class="apply-data-item-row no-gutters">
+          <div class="col-auto">
+            <div class="apply-title">
+              <div>公司行號</div>
+              <div>應備資料</div>
+            </div>
+            <div class="data-item">公司變更事項登記表</div>
+            <div class="data-item">公司電子信箱</div>
+            <div class="data-item">法人聯合徵信</div>
+            <div class="data-item">損益表</div>
+            <div class="data-item">員工投保人數資料</div>
+            <div class="data-item">金流證明</div>
+            <div class="data-item">公司資料表</div>
+            <div class="data-item">法人對保</div>
+          </div>
+          <div class="col-auto apply-img-cover">
+            <img
+              src="../asset/images/bussiness-loan-apply.png"
+              alt="申請明細"
+            />
+          </div>
+          <div class="col-auto">
+            <div class="apply-title">
+              <div>申請人、保證人</div>
+              <div>應備資料</div>
+            </div>
+            <div class="data-item">實名認證</div>
+            <div class="data-item">聯合徵信報告+A11</div>
+            <div class="data-item">財務訊息</div>
+            <div class="data-item">工作資料</div>
+            <div class="data-item">個人資料表</div>
+            <div class="data-item">常用電子信箱</div>
+          </div>
+        </div>
       </div>
     </div>
     <div>
@@ -253,6 +319,84 @@ export default {
 <style lang="scss" scoped>
 .bussiness-loan {
   line-height: 1.25;
+  .header {
+    position: relative;
+    height: 550px;
+    padding-left: 36px;
+    background-color: #036eb7;
+    .header-title {
+      margin-top: 52px;
+      text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+      font-family: NotoSansTC;
+      font-size: 40px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: 2px;
+      text-align: left;
+      color: #fff;
+    }
+    .header-text {
+      margin: 8px 0 20px;
+      text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+      font-family: NotoSansTC;
+      font-size: 18px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 2;
+      letter-spacing: 0.9px;
+      text-align: left;
+      color: #fff;
+    }
+    .header-slogan {
+      display: flex;
+      align-items: flex-end;
+      .yellow {
+        font-family: ArialNarrow;
+        font-size: 63px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: italic;
+        line-height: 63px;
+        letter-spacing: 3.15px;
+        text-align: left;
+        color: #f2e627;
+      }
+      .cyan {
+        font-family: ArialNarrow;
+        font-size: 49px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: italic;
+        line-height: 63px;
+        letter-spacing: 2.45px;
+        text-align: left;
+        color: #80dde8;
+      }
+    }
+    .header-underline {
+      max-width: 435px;
+      width: 100%;
+      margin: 11px 5px;
+      border-bottom: solid 2px #fff;
+    }
+    .slogan-text {
+      font-family: NotoSansTC;
+      font-size: 28px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 37px;
+      letter-spacing: 1.4px;
+      text-align: left;
+      color: #fff;
+      margin-bottom: 28px;
+    }
+    .get-apple-img {
+      margin-right: 26px;
+    }
+  }
   .features-row {
     padding: 80px 0;
     display: flex;
@@ -535,6 +679,45 @@ export default {
         position: absolute;
         transform: rotate(180deg);
         right: -64px;
+      }
+    }
+  }
+  .apply-data-row {
+    background-color: #f5f6f8;
+    .apply-data-item-row {
+      display: flex;
+      justify-content: center;
+      gap: 55px;
+      padding: 60px 0 90px;
+      margin: -20px 0;
+      .apply-img-cover {
+        padding-top: 150px;
+      }
+      .apply-title {
+        margin-bottom: 22px;
+        font-family: NotoSansTC;
+        font-size: 36px;
+        font-weight: 500;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.28;
+        letter-spacing: 1.8px;
+        text-align: center;
+        color: #1e69aa;
+      }
+      .data-item {
+        padding: 14px 0;
+        border-radius: 16px;
+        border: solid 2px #dcdcdc;
+        margin-bottom: 20px;
+        width: 264px;
+        font-family: NotoSansTC;
+        font-size: 24px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        text-align: center;
+        color: #5d5555;
       }
     }
   }
