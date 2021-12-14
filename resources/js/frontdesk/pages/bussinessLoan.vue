@@ -500,10 +500,21 @@ export default {
       ],
       steps: [
         {
-          img: require('../asset/images/business-step1.png'),
+          img: require('../asset/images/bussiness-step1.png'),
           stepTitle: 'Step 1. 簡單下載註冊',
           stepText: '下載APP完成法人註冊\n申請⌜微型企業線上融資⌟'
-        }
+
+        },
+        {
+          img: require('../asset/images/bussiness-step2.png'),
+          stepTitle: 'Step 2. 完成線上認證',
+          stepText: '完成負責人/配偶/保證人\n公司企業資料驗證'
+        },
+        {
+          img: require('../asset/images/bussiness-step3.png'),
+          stepTitle: 'Step 3. 新光對保撥款',
+          stepText: '銀行專人審核\n立即對保撥款'
+        },
       ]
     }
   }
@@ -1023,6 +1034,9 @@ export default {
       .step-title {
         font-size: 26px;
         color: #112e53;
+      }
+      .step-img {
+        max-height: 578px;
       }
     }
   }
