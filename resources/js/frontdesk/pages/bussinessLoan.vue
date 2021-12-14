@@ -1,7 +1,7 @@
 <template>
   <div class="bussiness-loan">
     <div class="header row">
-      <div class="col-auto">
+      <div class="header-col col">
         <div class="header-title">普匯金融 • 普惠金融</div>
         <div class="header-text">
           <div>• 企業主/創業夢想</div>
@@ -455,8 +455,15 @@ export default {
   .header {
     position: relative;
     height: 550px;
-    padding-left: 36px;
-    background-color: #036eb7;
+    background-image: url("../asset/images/bussiness-loan-header-2.png");
+    background-position: 100%;
+    background-size: calc(100% - 500px);
+    background-repeat: no-repeat;
+    .header-col {
+      padding-left: 36px;
+      background-image: url("../asset/images/bussiness-loan-header-1.png");
+      background-repeat: no-repeat;
+    }
     .header-title {
       margin-top: 52px;
       text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
