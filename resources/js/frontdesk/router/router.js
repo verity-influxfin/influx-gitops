@@ -41,7 +41,7 @@ import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
 import  search  from "../pages/search.vue";
 import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
-import bussinessLoan from '../pages/bussinessLoan'
+import businessLoan from '../pages/businessLoan'
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -81,8 +81,8 @@ let routers = [
         ]
     },
     {
-        path:'/bussiness-loan',
-        component:bussinessLoan
+        path:'/business-loan',
+        component:businessLoan
     },
     {
         path: '/myinvestment', component: myInvestment, children: [
