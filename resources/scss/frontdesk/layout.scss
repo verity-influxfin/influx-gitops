@@ -265,9 +265,9 @@ $ci-color: #153a71;
         }
 
         .item {
+            position: relative;
             color: #fff;
             text-decoration: none;
-            // cursor: pointer;
             padding: 7px 0;
             &:focus-within,
             &:hover,
@@ -282,9 +282,9 @@ $ci-color: #153a71;
                 .item-content {
                     display: flex;
                     position: absolute;
-                    top: 55px;
+                    top: 40px;
                     gap: 25px;
-                    left: 137px;
+                    left: -245px;
                     .sub {
                         position: relative;
                         padding: 0;
@@ -329,7 +329,7 @@ $ci-color: #153a71;
             .sub {
                 background: #fff;
                 color: #153a71;
-                min-width: 160px;
+                min-width: 180px;
                 text-align: left;
                 font-weight: 900;
                 font-size: 16px;
