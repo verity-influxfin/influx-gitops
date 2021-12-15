@@ -106,65 +106,72 @@
             </div>
           </div>
         </div>
-        <div class="col-auto line-col">
-          <div class="line-group">
-            <div class="circle"></div>
-            <div class="line"></div>
-          </div>
-          <div class="line-group">
-            <div class="circle"></div>
-            <div class="line"></div>
-          </div>
-          <div class="line-group">
-            <div class="circle"></div>
-          </div>
-        </div>
-        <div class="col-auto">
-          <div class="suit-item line">
-            <div class="feature-content">
-              <div class="suit-title">新創微型企業</div>
-              <div class="suit-sub-title">New Ventures</div>
-              <div class="suit-text">
-                <div>Start up</div>
-                <div>育成中心團隊</div>
-                <div>新創微型企業</div>
+        <div class="col mt-4 mt-sm-0">
+          <div class="row no-gutters flex-nowrap">
+            <div class="suit-item line col-sm-auto">
+              <div class="line-col">
+                <div class="line-group">
+                  <div class="circle"></div>
+                  <div class="line"></div>
+                </div>
+              </div>
+              <div class="feature-content">
+                <div class="suit-title">新創微型企業</div>
+                <div class="suit-sub-title">New Ventures</div>
+                <div class="suit-text">
+                  <div>Start up</div>
+                  <div>育成中心團隊</div>
+                  <div>新創微型企業</div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="suit-item line">
-            <div class="feature-content">
-              <div class="suit-title">電子商務</div>
-              <div class="suit-sub-title">E-commerce</div>
-              <div class="suit-text">
-                <div>新型態商業模式</div>
-                <div>KOL網紅經濟</div>
-                <div>直播業者</div>
-              </div>
+            <div class="suit-cover item-1 suit-col col-sm col-auto">
+              <img src="../asset/images/suit-1.png" class="suit-img" />
             </div>
           </div>
-          <div class="suit-item line">
-            <div class="feature-content">
-              <div class="suit-title">中小企業(主)</div>
-              <div class="suit-sub-title">Small and medium enterprise</div>
-              <div class="suit-text">
-                <div>文創業者</div>
-                <div>商店小老闆</div>
-                <div>一般公司行號</div>
+          <div class="row no-gutters flex-nowrap">
+            <div class="suit-item line">
+              <div class="line-col">
+                <div class="line-group">
+                  <div class="circle"></div>
+                  <div class="line"></div>
+                </div>
+              </div>
+              <div class="feature-content">
+                <div class="suit-title">電子商務</div>
+                <div class="suit-sub-title">E-commerce</div>
+                <div class="suit-text">
+                  <div>新型態商業模式</div>
+                  <div>KOL網紅經濟</div>
+                  <div>直播業者</div>
+                </div>
               </div>
             </div>
+            <div class="suit-cover item-2 suit-col col-auto">
+              <img src="../asset/images/suit-2.png" class="suit-img" />
+            </div>
           </div>
-        </div>
-        <div class="col-auto suit-col">
-          <div class="suit-cover item-1">
-            <img src="../asset/images/suit-1.png" class="suit-img" />
-          </div>
-
-          <div class="suit-cover item-2">
-            <img src="../asset/images/suit-2.png" class="suit-img" />
-          </div>
-
-          <div class="suit-cover item-3">
-            <img src="../asset/images/suit-3.png" class="suit-img" />
+          <div class="row no-gutters flex-nowrap">
+            <div class="suit-item line">
+              <div class="line-col">
+                <div class="line-group">
+                  <div class="circle"></div>
+                  <div class="line"></div>
+                </div>
+              </div>
+              <div class="feature-content">
+                <div class="suit-title">中小企業(主)</div>
+                <div class="suit-sub-title">Small and medium enterprise</div>
+                <div class="suit-text">
+                  <div>文創業者</div>
+                  <div>商店小老闆</div>
+                  <div>一般公司行號</div>
+                </div>
+              </div>
+            </div>
+            <div class="suit-cover item-3 suit-col col-sm col-auto">
+              <img src="../asset/images/suit-3.png" class="suit-img" />
+            </div>
           </div>
         </div>
       </div>
@@ -692,6 +699,7 @@ export default {
         display: flex;
         margin-right: 30px;
         height: 209px;
+        width: 300px;
       }
 
       .suit-title {
@@ -728,11 +736,6 @@ export default {
         letter-spacing: 1.2px;
         text-align: left;
         color: #8f8f8f;
-      }
-    }
-    .suit-col {
-      .suit-cover.item-2 {
-        margin: 22px 0;
       }
     }
     .line-col {
@@ -1218,29 +1221,19 @@ export default {
         &.line {
           margin-right: 0px;
           height: 180px;
+          width: 200px;
         }
         .suit-title {
           font-family: NotoSansTC;
           font-size: 26px;
-          font-weight: 500;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: 1.28;
-          letter-spacing: 1.8px;
-          text-align: left;
-          color: #1e69aa;
         }
         .suit-sub-title {
+          height: initial;
           margin-bottom: 8px;
           font-size: 18px;
         }
         .suit-text {
           font-size: 18px;
-        }
-      }
-      .suit-col {
-        .suit-cover.item-2 {
-          margin: 22px 0;
         }
       }
       .line-col {
@@ -1260,8 +1253,11 @@ export default {
           }
         }
       }
+      .suit-cover {
+        padding-top: 35px;
+      }
       .suit-img {
-        width: 300px;
+        width: 150px;
       }
     }
     .apply-row {
