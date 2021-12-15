@@ -9,7 +9,7 @@ var default_context = `立書人        普匯金融科技股份有限公司 (�
 自民國        年      月       日起算一年，於契約效力存續期間內，若雙方皆無以書面提供不續約之意思表示，則本契約自動續約一年。
 
 三、  合作內容
-1.  甲方提供乙方實名會員可辨認乙方身份之二維條碼（下稱“QR code”），以供乙方分享其他使用者掃描註冊成為甲方之借款人會員。經掃描甲方提供乙方之QR code成為甲方借款人會員之第三人，首次於甲方之借貸平台網頁「inFlux普匯金融科技(https://www.influxfin.com/)」或普匯inFlux APP完成首貸即取得貸款，發放業務獎金規則如下：
+1.  甲方提供乙方實名會員可辨認乙方身份之二維條碼（下稱 \"QR code\"），以供乙方分享其他使用者掃描註冊成為甲方之借款人會員。經掃描甲方提供乙方之QR code成為甲方借款人會員之第三人，首次於甲方之借貸平台網頁「inFlux普匯金融科技(https://www.influxfin.com/)」或普匯inFlux APP完成首貸即取得貸款，發放業務獎金規則如下：
 (1) 依該筆放款收取之服務手續費提撥發放 %platform_fee% %以資獎勵。
 (2) 依該筆放款收取之利息費用提撥 %interest% %以資獎勵，但須排出發生逾期之案件。
 (3) 以上須扣除其他已發放之業務合作獎金。
@@ -68,6 +68,7 @@ var default_context = `立書人        普匯金融科技股份有限公司 (�
 var app = new Vue({
   el: '#page-wrapper',
   data: {
+	qrcode_apply_id: 0,
     pagination: {
         current_page: 1,
         last_page: 1,
@@ -98,7 +99,8 @@ var app = new Vue({
         if (value == null) {
             return '-';
         }
-        return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+        // return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+		return Number(value).toLocaleString()
       }
   },
   created: function() {
@@ -183,9 +185,67 @@ var app = new Vue({
         this.searchform.current_page = page;
         this.search();
     },
-    update_contract: function () {
-        console.log(this.contract);
+	update_contract: async function () {
+		this.is_waiting_response = true
+		const platform_fee = Number(this.contract.platform_fee)
+		const interest = Number(this.contract.interest)
+		const collaboration_person = Number(this.contract.collaboration_person)
+		const collaboration_enterprise = Number(this.contract.collaboration_enterprise)
+		const  qrcode_apply_id  = this.qrcode_apply_id
+		if (platform_fee === NaN) {
+			alert('服務⼿續費 必須是數字')
+			return
+		}
+		if (interest === NaN) {
+			alert('利息⼿續費 必須是數字')
+			return
+		}
+		if (collaboration_person === NaN) {
+			alert('第三⽅合作個⼈產品 必須是數字')
+			return
+		}
+		if (collaboration_enterprise === NaN) {
+			alert('第三⽅合作企業產品 必須是數字')
+			return
+		}
+		const data = new FormData()
+		data.append('qrcode_apply_id',qrcode_apply_id)
+		data.append('platform_fee',platform_fee)
+		data.append('interest',interest)
+		data.append('collaboration_person',collaboration_person)
+		data.append('collaboration_enterprise',collaboration_enterprise)
+		const res = await axios({
+			method:'post',
+			url: '/admin/Sales/promote_modify_contract',
+			data,
+			headers: { 'Content-Type': 'multipart/form-data' },
+		})
+		this.is_waiting_response = false
+		if (res.data.response.result === 'ERROR') {
+			alert(res.data.response.msg)
+		}
     },
+	contract_submit: async function () {
+		if (!confirm('確定送出審核？')) {
+			return
+		}
+		this.is_waiting_response = true
+		const qrcode_apply_id = this.qrcode_apply_id
+		const data = new FormData()
+		data.append('qrcode_apply_id',qrcode_apply_id)
+		const res = await axios({
+			method:'post',
+			url: '/admin/Sales/promote_contract_submit',
+			data,
+			headers: { 'Content-Type': 'multipart/form-data' },
+		})
+		if (res.data.response.result === 'ERROR') {
+			alert(res.data.response.msg)
+		} else {
+			location.reload()
+		}
+		this.is_waiting_response = false
+	},
     refresh_data: function () {
 
         var self = this;
@@ -212,7 +272,7 @@ var app = new Vue({
         let data = new URLSearchParams({
             qrcode_apply_id: apply_id
         }).toString();
-
+		this.qrcode_apply_id = apply_id
         axios({
             method: 'get',
             url: `/admin/Sales/promote_review_contract?${data}`,

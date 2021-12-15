@@ -1,5 +1,10 @@
 .DS_Store
 
+data/
+.env
+docker*
+Docker*
+
 application/cache/*
 !application/cache/index.html
 

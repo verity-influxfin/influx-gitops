@@ -19,30 +19,30 @@
                         <div class="form-group">
                             <label for="platform_fee" class="col-sm-6 control-label">服務手續費 (%)</label>
                             <div class="col-sm-6">
-                                <input type="number" class="form-control" v-model="contract.platform_fee" id="platform_fee" placeholder="服務手續費 (%)">
+                                <input type="" class="form-control" v-model="contract.platform_fee" id="platform_fee" placeholder="服務手續費 (%)">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="interest" class="col-sm-6 control-label">利息手續費 (%)</label>
                             <div class="col-sm-6">
-                                <input type="number" class="form-control" v-model="contract.interest" id="interest" placeholder="利息手續費 (%)">
+                                <input type="" class="form-control" v-model="contract.interest" id="interest" placeholder="利息手續費 (%)">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="collaboration_person" class="col-sm-6 control-label">第三方合作個人產品 (元)</label>
                             <div class="col-sm-6">
-                                <input type="number" class="form-control" v-model="contract.collaboration_person" id="collaboration_person" placeholder="第三方合作個人產品 (元)">
+                                <input type="" class="form-control" v-model="contract.collaboration_person" id="collaboration_person" placeholder="第三方合作個人產品 (元)">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="collaboration_enterprise" class="col-sm-6 control-label">第三方合作企業產品 (元)</label>
                             <div class="col-sm-6">
-                                <input type="number" class="form-control" v-model="contract.collaboration_enterprise" id="collaboration_enterprise" placeholder="第三方合作企業產品 (元)">
+                                <input type="" class="form-control" v-model="contract.collaboration_enterprise" id="collaboration_enterprise" placeholder="第三方合作企業產品 (元)">
                             </div>
                         </div>
                     </div>
                     <div class="panel-footer text-right">
-                        <button type="submit" class="btn btn-primary">確認修改</button>
+                        <button type="submit" class="btn btn-primary" v-bind:disabled="is_waiting_response">確認修改</button>
                     </div>
                 </div>
                 <div class="panel panel-default" v-if="false">
@@ -146,15 +146,15 @@
                                         </td>
 
                                         <td>
-                                            <button type="button" class="btn btn-default btn-sm" @click="print_contract(item.qrcode_apply_id)">
+                                            <button type="button" class="btn btn-default btn-sm" @click="print_contract(item.qrcode_apply_id)" v-bind:disabled="is_waiting_response">
                                                 <i class="fa fa-print"></i> 列印
                                             </button>
 
-                                            <button type="button" class="btn btn-default btn-sm" @click="edit_contract(item.qrcode_apply_id)">
+                                            <button type="button" class="btn btn-default btn-sm" @click="edit_contract(item.qrcode_apply_id)" v-bind:disabled="is_waiting_response">
                                                 <i class="fa fa-pencil"></i> 修改合約
                                             </button>
 
-                                            <button type="button" class="btn btn-primary btn-sm">
+                                            <button type="button" class="btn btn-primary btn-sm" @click="contract_submit" v-bind:disabled="is_waiting_response">
                                                 <i class="fa fa-paper-plane-o"></i> 送出審核
                                             </button>
                                         </td>
