@@ -183,6 +183,9 @@ var app = new Vue({
         this.searchform.current_page = page;
         this.search();
     },
+    update_contract: function () {
+        console.log(this.contract);
+    },
     refresh_data: function () {
 
         var self = this;

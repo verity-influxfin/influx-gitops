@@ -8,8 +8,11 @@
             <h1 class="page-header">QR Code 方案設定</h1>
         </div>
     </div>
+    <button type="button" class="btn btn-link" @click="cancel()" v-if="is_edit_mode">
+        <i class="fa fa-angle-double-left"></i> 返回列表
+    </button>
     <div class="row" v-if="is_edit_mode">
-        <form ref="contract_form" @submit.prevent="edit_contract">
+        <form ref="contract_form" @submit.prevent="update_contract">
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-body form-horizontal">
@@ -38,15 +41,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <button type="button" class="btn btn-default" @click="cancel()">取消</button>
-                            </div>
-                            <div class="col-xs-6 text-right">
-                                <button type="submit" class="btn btn-primary">確認修改</button>
-                            </div>
-                        </div>
+                    <div class="panel-footer text-right">
+                        <button type="submit" class="btn btn-primary">確認修改</button>
                     </div>
                 </div>
                 <div class="panel panel-default" v-if="false">
@@ -145,7 +141,8 @@
                                         <!-- 狀態 -->
                                         <td>
                                             <span class="label label-success" v-if="item.status==1">{{item.status_name}}</span>
-                                            <span class="label label-info" v-if="item.status==3">{{item.status_name}}</span>
+                                            <span class="label label-info" v-if-else="item.status==3">{{item.status_name}}</span>
+                                            <span class="label label-default" v-else>{{item.status_name}}</span>
                                         </td>
 
                                         <td>
