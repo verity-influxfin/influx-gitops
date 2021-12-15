@@ -201,7 +201,7 @@ class Certification_lib{
                     if ($company) {
                         // 公司需等合約審核過才可以通過
                         $this->CI->load->model('user/user_qrcode_apply_model');
-                        $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id]);
+                        $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id, 'status != ' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
                         if(!isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_SUCCESS) {
                             return FALSE;
                         }

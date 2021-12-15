@@ -1477,7 +1477,7 @@ class Sales extends MY_Admin_Controller {
         }
 
         $apply_info = $this->user_qrcode_apply_model->get($where['qrcode_apply_id']);
-        if(!isset($apply_info) || !in_array($apply_info->status, [PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP, PROMOTE_REVIEW_STATUS_WITHDRAW])) {
+        if(!isset($apply_info) || !in_array($apply_info->status, [PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP])) {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '目標id不是合法的可更改狀態'))->send();
         }
 
@@ -1566,6 +1566,7 @@ class Sales extends MY_Admin_Controller {
             if(!isset($qrcode_code)) {
                 $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => EXIT_DATABASE, 'msg' => '找不到對應的推薦碼'))->send();
             }
+            $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], ['status' => PROMOTE_STATUS_PENDING_TO_SENT]);
             $settings = json_decode($qrcode_code->settings, TRUE);
             if(isset($settings) && isset($settings['investor'])) {
                 $this->notification_lib->promote_contract_done($qrcode_code->user_id, $settings['investor'], 2);

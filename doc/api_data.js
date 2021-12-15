@@ -44197,7 +44197,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "status",
-                            "description": "<p>狀態(0:失效,1:啟用,2:待送出審核,3:審核中)</p>"
+                            "description": "<p>狀態(0:失效,1:啟用,2:待送出審核,3:審核中,4:可進行簽約(特約方案用))</p>"
                         },
                         {
                             "group": "Success 200",

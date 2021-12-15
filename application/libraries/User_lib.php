@@ -664,10 +664,17 @@ class User_lib {
         }
 
         foreach ($list as $value) {
+            // 沒有獎金的不需寄送明細表
+            if(!$value['amount'])
+            {
+                continue;
+            }
+
             $rs = FALSE;
             if($value['alias'] == $this->CI->qrcode_setting_model->appointedCaseAliasName)
             {
                 // 特約方案
+                $this->CI->load->library('qrcode_lib');
                 $rs = $this->CI->qrcode_lib->insert_statement_pdf($value['id']);
             }
             else if($value['status'] == PROMOTE_REWARD_STATUS_PAID_OFF)

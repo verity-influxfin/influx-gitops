@@ -797,4 +797,60 @@ class Cron extends CI_Controller
 		echo json_encode($result);
 	}
 
+    /**
+     * 由於推薦碼的設定可能會更新
+     * 執行該方法可以補上新的設定至每個使用者的推薦碼
+     */
+    public function update_user_qrcode()
+    {
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/qrcode_setting_model');
+
+        $user_qrcode = $this->user_qrcode_model->get_all();
+        $qrcode_setting_list = $this->qrcode_setting_model->get_all();
+        $qrcode_setting_list = json_decode(json_encode($qrcode_setting_list), TRUE);
+        $qrcode_setting_list = array_column($qrcode_setting_list, NULL, 'alias');
+        foreach ($qrcode_setting_list as $alias => $qrcode_setting)
+        {
+            $qrcode_setting_list[$alias]['settings'] = json_decode($qrcode_setting['settings'], TRUE) ?? [];
+        }
+
+        $count = 0;
+        $start_time = time();
+
+        $data = [
+            'script_name' => 'update_user_qrcode',
+            'num' => 0,
+            'start_time' => $start_time,
+            'end_time' => 0
+        ];
+        $inserted_id = $this->log_script_model->insert($data);
+
+        foreach ($user_qrcode as $i => $qrcode)
+        {
+            $settings = json_decode($qrcode->settings, TRUE);
+            if (isset($settings) && array_key_exists($qrcode->alias, $qrcode_setting_list))
+            {
+                $settings['reward'] = array_replace_recursive($qrcode_setting_list[$qrcode->alias]['settings']['reward'], $settings['reward']);
+                $qrcode->settings = json_encode($settings) ?? [];
+                $rs = $this->user_qrcode_model->update_by(['id' => $qrcode->id], ['settings' => $qrcode->settings]);
+                if ($rs)
+                {
+                    $count++;
+                }
+            }
+        }
+
+        $end_time = time();
+        $updateData = [
+            'num' => $count,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->update_by(
+            ['id' => $inserted_id],
+            $updateData
+        );
+        die('1');
+    }
+
 }
