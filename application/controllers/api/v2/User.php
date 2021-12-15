@@ -2226,6 +2226,7 @@ END:
                                 break;
                             case PROMOTE_REVIEW_STATUS_SUCCESS:
                                 $data['status'] = PROMOTE_STATUS_CAN_SIGN_CONTRACT;
+                                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
                                 break;
                         }
                     }
