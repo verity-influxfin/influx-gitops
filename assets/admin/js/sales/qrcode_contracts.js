@@ -85,6 +85,7 @@ var app = new Vue({
     contract_printing: '',
     data: [],
     is_waiting_response: false,
+	qrcode_apply_id:0,
     mode: 'list'
   },
   filters: {
@@ -92,7 +93,8 @@ var app = new Vue({
         if (value == null) {
             return '-';
         }
-        return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+        // return value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+		return Number(value).toLocaleString()
       }
   },
   created: function() {
@@ -206,7 +208,7 @@ var app = new Vue({
         let data = new URLSearchParams({
             qrcode_apply_id: apply_id
         }).toString();
-
+		this.qrcode_apply_id = apply_id
         axios({
             method: 'get',
             url: `/admin/Sales/promote_review_contract?${data}`,
@@ -235,6 +237,49 @@ var app = new Vue({
             }
             return contract;
         })
-    }
+	},
+	contract_action: function (type) {
+
+		const doAxios = async (url) => {
+			const qrcode_apply_id = this.qrcode_apply_id
+			const data = new FormData()
+			data.append('qrcode_apply_id',qrcode_apply_id)
+			this.is_waiting_response = true
+			const res = await axios({
+				method:'post',
+				url,
+				data,
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
+			if (res.data.response.result === 'ERROR') {
+				alert(res.data.response.msg)
+			} else {
+				location.reload()
+			}
+			this.is_waiting_response = false
+		}
+
+		if (type === 'approve') {
+			if (!confirm('即將核可此合約，是否繼續進行操作')) {
+				return
+			}
+			doAxios('/admin/Sales/promote_contract_approve')
+			return
+		}
+		if (type === 'withdraw') {
+			if (!confirm('即將退回此合約，是否繼續進行操作')) {
+				return
+			}
+			doAxios('/admin/Sales/promote_contract_withdraw')
+			return
+		}
+		if (type === 'reject') {
+			if (!confirm('即將否決此合約，是否繼續進行操作')) {
+				return
+			}
+			doAxios('/admin/Sales/promote_contract_reject')
+			return
+		}
+	}
   }
 })

@@ -223,6 +223,8 @@ var app = new Vue({
 		this.is_waiting_response = false
 		if (res.data.response.result === 'ERROR') {
 			alert(res.data.response.msg)
+		} else {
+			alert('修改成功')
 		}
     },
 	contract_submit: async function () {
