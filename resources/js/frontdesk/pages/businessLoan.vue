@@ -20,16 +20,34 @@
           <img src="../asset/images/coin.png" class="apply-icon" /> 媒合借貸
         </div>
         <div class="get-app">
-          <router-link to="/borrowLink" target="_blank">
-            <img
-              class="get-apple-img"
-              src="../asset/images/get-on-apple.png"
-              alt=""
-            />
-          </router-link>
-          <router-link to="/borrowLink" target="_blank">
-            <img src="../asset/images/get-on-google.png" alt="" />
-          </router-link>
+          <div class="phone-none">
+            <router-link to="/borrowLink" target="_blank">
+              <img
+                class="get-apple-img"
+                src="../asset/images/get-on-apple.png"
+                alt=""
+              />
+            </router-link>
+            <router-link to="/borrowLink" target="_blank">
+              <img src="../asset/images/get-on-google.png" alt="" />
+            </router-link>
+          </div>
+          <div class="phone-show">
+            <router-link to="/borrowLink" target="_blank">
+              <img
+                class="get-apple-img"
+                src="/images/ios_download_link_mobile.svg"
+                alt="download app"
+              />
+            </router-link>
+            <router-link to="/borrowLink" target="_blank">
+              <img
+                src="/images/android_download_link_mobile.svg"
+                class="get-android-img"
+                alt="download app"
+              />
+            </router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -70,14 +88,13 @@
           <div>多方資金媒合</div>
         </div>
       </div>
-      <div class=""></div>
     </div>
     <div class="suitable-row">
       <title-dots>
         <div class="title">適用對象</div>
       </title-dots>
       <div class="content-row row">
-        <div class="col-auto">
+        <div class="col-sm-auto col-12">
           <div class="suit-item">
             <div class="suit-title">普惠金融擴大服務</div>
             <div class="suit-sub-title"></div>
@@ -231,7 +248,7 @@
           <div class="apply-process">
             <div class="process-title">申請流程</div>
             <div class="apply-processes">
-              <div class="process-item">
+              <div class="process-item item-1">
                 <div>下載</div>
                 <div>⌜普匯inFlux⌟APP</div>
                 <div class="item-1-line">
@@ -239,7 +256,7 @@
                   <div class="circle"></div>
                 </div>
               </div>
-              <div class="process-item">
+              <div class="process-item item-2">
                 <div>申請</div>
                 <div>⌜公司行號/微企e秒貸⌟</div>
                 <div class="item-2-line">
@@ -247,7 +264,7 @@
                   <div class="circle"></div>
                 </div>
               </div>
-              <div class="process-item">
+              <div class="process-item item-3">
                 <div>公司行號註冊</div>
                 <div>公司行號登入</div>
                 <div class="item-3-line">
@@ -266,7 +283,7 @@
                   <div class="circle"></div>
                 </div>
               </div>
-              <div class="process-item">
+              <div class="process-item item-5">
                 <div>等待系統審核</div>
                 <div>媒合資金方</div>
                 <div class="item-5-line">
@@ -274,7 +291,7 @@
                   <div class="circle"></div>
                 </div>
               </div>
-              <div class="process-item">
+              <div class="process-item item-6">
                 <div>對保簽約後</div>
                 <div>立即撥款</div>
               </div>
@@ -289,7 +306,7 @@
           <div class="title">申貸資料明細一覽</div>
         </title-dots>
         <div class="apply-data-item-row no-gutters">
-          <div class="col-auto">
+          <div class="col-auto col-text">
             <div class="apply-title">
               <div>公司行號</div>
               <div>應備資料</div>
@@ -306,7 +323,7 @@
           <div class="col-auto apply-img-cover">
             <img src="../asset/images/business-loan-apply.png" alt="申請明細" />
           </div>
-          <div class="col-auto">
+          <div class="col-auto col-text">
             <div class="apply-title">
               <div>申請人、保證人</div>
               <div>應備資料</div>
@@ -331,16 +348,20 @@
           <!-- Slides -->
           <div class="swiper-slide" v-for="(item, index) in steps" :key="index">
             <div class="step-content">
-              <div class="col-auto">
+              <div class="col-auto get-app">
                 <router-link to="/borrowLink" target="_blank">
                   <img
-                    class="get-apple-img"
+                    class="get-app-img"
                     src="../asset/images/get-on-apple.png"
-                    alt=""
+                    alt="download app"
                   />
                 </router-link>
                 <router-link to="/borrowLink" target="_blank">
-                  <img src="../asset/images/get-on-google.png" alt="" />
+                  <img
+                    src="../asset/images/get-on-google.png"
+                    class="get-app-img"
+                    alt="download app"
+                  />
                 </router-link>
               </div>
               <div class="col-auto">
@@ -522,6 +543,12 @@ export default {
 <style lang="scss" scoped>
 .business-loan {
   line-height: 1.25;
+  .phone-show {
+    display: none;
+  }
+  .phone-none {
+    display: block;
+  }
   .header {
     position: relative;
     height: 550px;
@@ -1086,6 +1113,425 @@ export default {
           font-stretch: normal;
           font-style: normal;
           text-align: left;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .business-loan {
+    .phone-show {
+      display: block;
+    }
+    .phone-none {
+      display: none;
+    }
+    .header {
+      height: 675px;
+      background-image: url("../asset/images/business-header-phone.png");
+      .header-col {
+        margin: 12px 15px;
+        padding-left: 12px;
+      }
+      .header-title {
+        font-size: 22px;
+        margin: 0;
+      }
+      .header-text {
+        margin: 5px 0 5px;
+        font-size: 12px;
+        padding-inline: 25px;
+      }
+      .header-slogan {
+        display: flex;
+        align-items: flex-end;
+        .yellow {
+          font-size: 22px;
+          line-height: 26px;
+          color: #f2e627;
+        }
+        .cyan {
+          font-size: 26px;
+          line-height: 26px;
+        }
+      }
+      .header-underline {
+        max-width: 230px;
+        width: 100%;
+        margin: 8px 0;
+        border-bottom: solid 2px #fff;
+      }
+      .slogan-text {
+        .apply-icon {
+          width: 16px;
+          height: 16px;
+        }
+        font-size: 14px;
+        line-height: 16px;
+        margin-bottom: 20px;
+      }
+      .get-app {
+        position: absolute;
+        right: 12px;
+        top: 130px;
+      }
+      .get-apple-img {
+        margin-right: 15px;
+        height: 44px;
+      }
+      .get-android-img {
+        height: 44px;
+      }
+    }
+    .features-row {
+      padding: 40px 0;
+      .feature {
+        max-width: 100%;
+        width: 320px;
+        padding: 20px 5px;
+        .icon {
+          margin: 0 auto 10px;
+          width: 70px;
+          height: 70px;
+          padding: 17px;
+          background-image: linear-gradient(to right, #0d367a, #1e549e);
+        }
+        .icon-img {
+          height: 40px;
+        }
+        .feature-title {
+          font-size: 28px;
+        }
+        .feature-text {
+          font-size: 18px;
+        }
+      }
+    }
+    .suitable-row {
+      margin: -15px auto;
+      .content-row {
+        margin: 40px auto 0;
+        padding-bottom: 40px;
+      }
+      .suit-item {
+        margin-right: 0;
+        &.line {
+          margin-right: 0px;
+          height: 180px;
+        }
+        .suit-title {
+          font-family: NotoSansTC;
+          font-size: 26px;
+          font-weight: 500;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: 1.28;
+          letter-spacing: 1.8px;
+          text-align: left;
+          color: #1e69aa;
+        }
+        .suit-sub-title {
+          margin-bottom: 8px;
+          font-size: 18px;
+        }
+        .suit-text {
+          font-size: 18px;
+        }
+      }
+      .suit-col {
+        .suit-cover.item-2 {
+          margin: 22px 0;
+        }
+      }
+      .line-col {
+        padding-top: 20px;
+        .line-group {
+          margin-right: 15px;
+          .circle {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #1e69aa;
+          }
+          .line {
+            margin: 8px 0;
+            height: 150px;
+            border-left: 2px solid #1ea7e7;
+          }
+        }
+      }
+      .suit-img {
+        width: 300px;
+      }
+    }
+    .apply-row {
+      .apply-intro {
+        margin: 40px auto;
+        .apply-title {
+          margin: 0 auto;
+          font-family: NotoSansTC;
+          font-size: 32px;
+          text-align: center;
+        }
+        .apply-text {
+          .apply-icon {
+            height: 22px;
+            width: 22px;
+          }
+          padding-left: 0;
+          font-size: 22px;
+          text-align: center;
+        }
+      }
+      .apply-features {
+        margin: 200px auto 40px;
+        padding-left: 55px;
+        display: grid;
+        grid-template-columns: 300px;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        .feature-order {
+          font-size: 145px;
+          left: -3px;
+          top: -15px;
+          &.order-2 {
+            left: -5px;
+            top: 155px;
+          }
+          &.order-3 {
+            top: 320px;
+            left: -5px;
+          }
+          &.order-4 {
+            left: -5px;
+            top: 499px;
+          }
+          &.item-2-img {
+            left: 125px;
+            top: -200px;
+            height: 225px;
+          }
+        }
+        .feature-item {
+          &.item-1,
+          &.item-2,
+          &.item-3 {
+            margin-bottom: 20px;
+          }
+          &.item-2,
+          &.item-4 {
+            margin-top: 0;
+            border: solid 2px #1e69aa;
+          }
+          position: relative;
+          z-index: 2;
+          padding: 20px 15px;
+          .feature-title {
+            font-family: NotoSansTC;
+            font-size: 26px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            text-align: left;
+            color: #1e69aa;
+          }
+          .feature-text {
+            font-family: NotoSansTC;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            text-align: left;
+            color: #8f8f8f;
+          }
+        }
+      }
+
+      .apply-qualify {
+        max-width: 900px;
+        padding: 0 15px;
+        margin: 50px auto 20px;
+        .qualify-title {
+          font-family: NotoSansTC;
+          font-size: 26px;
+        }
+        .qualify-text {
+          margin: 9px 0 20px 0;
+          font-size: 16px;
+          padding-inline: 25px;
+        }
+        .qualify-line {
+          width: 125px;
+        }
+      }
+      .apply-require {
+        max-width: 900px;
+        padding: 0 15px;
+        margin: 20px auto 20px;
+        .require-title {
+          font-size: 26px;
+        }
+        .require-text {
+          margin: 9px 0 20px 0;
+          font-size: 16px;
+          padding-inline: 25px;
+        }
+        .require-line {
+          width: 125px;
+        }
+      }
+      .apply-process {
+        margin: 20px 15px 60px 15px;
+        padding-bottom: 0;
+        .process-title {
+          margin-left: 0;
+          margin-bottom: 10px;
+          font-size: 26px;
+        }
+        .apply-processes {
+          display: grid;
+          grid-template-columns: 160px 160px;
+          grid-template-rows: 1fr 1fr 1fr;
+          grid-template-areas:
+            "p1 p2"
+            "p4 p3"
+            "p5 p6";
+          gap: 20px 20px;
+          .process-item {
+            position: relative;
+            width: 160px;
+            height: 100px;
+            font-size: 14px;
+            &.item-1 {
+              grid-area: p1;
+            }
+            &.item-2 {
+              grid-area: p2;
+            }
+            &.item-3 {
+              grid-area: p3;
+            }
+            &.item-4 {
+              grid-area: p4;
+            }
+            &.item-5 {
+              grid-area: p5;
+            }
+            &.item-6 {
+              grid-area: p6;
+            }
+            .item-highlight {
+              color: #1e69aa;
+            }
+          }
+        }
+        .circle {
+          width: 6px;
+          height: 6px;
+        }
+        .line {
+          width: 10px;
+          border-bottom: 2px solid #1ea7e7;
+        }
+        .item-1-line {
+          right: -17px;
+        }
+        .item-2-line {
+          right: 70px;
+          bottom: -13px;
+          transform: rotate(90deg);
+        }
+        .item-3-line {
+          transform: rotate(180deg);
+          bottom: 45px;
+          left: -17px;
+        }
+        .item-4-line {
+          transform: rotate(90deg);
+          right: 70px;
+          bottom: -12px;
+        }
+        .item-5-line {
+          transform: none;
+          right: -17px;
+        }
+      }
+    }
+    .apply-data-row {
+      background-color: #f5f6f8;
+      .col-text {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "title title";
+        gap: 12px;
+      }
+      .apply-data-item-row {
+        flex-wrap: wrap;
+        padding: 40px 0 40px;
+        margin: -20px 0;
+        .apply-img-cover {
+          padding-top: 0px;
+        }
+        .apply-title {
+          grid-area: title;
+          margin-bottom: 22px;
+          font-size: 26px;
+        }
+        .data-item {
+          padding: 14px 0;
+          margin-bottom: 0;
+          width: 150px;
+          font-size: 14px;
+        }
+      }
+    }
+    .step-row {
+      .swiper {
+        padding: 15px 0;
+        width: 100%;
+        height: 620px;
+      }
+      .step-content {
+        flex-direction: column-reverse;
+        padding: 0px;
+        font-size: 16px;
+        .step-title {
+          font-size: 24px;
+          color: #112e53;
+        }
+        .step-img {
+          margin: 20px 0;
+          max-height: 378px;
+        }
+        .get-app {
+          display: flex;
+          gap: 20px;
+          .get-app-img {
+            width: 140px;
+          }
+        }
+      }
+    }
+    .question-row {
+      .questions {
+        padding-bottom: 15px;
+        .item {
+          margin: 20px;
+          .question {
+            font-size: 16px;
+            .chevron {
+              width: 20px;
+              transform: rotate(180deg);
+              &.active {
+                transform: none;
+              }
+            }
+          }
+          .answer {
+            display: flex;
+            margin-top: 20px;
+            font-size: 14px;
+          }
         }
       }
     }
