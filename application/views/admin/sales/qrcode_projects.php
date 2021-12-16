@@ -141,7 +141,7 @@
                                         <!-- 狀態 -->
                                         <td>
                                             <span class="label label-success" v-if="item.status==1">{{item.status_name}}</span>
-                                            <span class="label label-info" v-if-else="item.status==3">{{item.status_name}}</span>
+                                            <span class="label label-info" v-else-if="item.status==3">{{item.status_name}}</span>
                                             <span class="label label-default" v-else>{{item.status_name}}</span>
                                         </td>
 
