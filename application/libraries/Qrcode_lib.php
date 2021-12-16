@@ -248,7 +248,7 @@ class Qrcode_lib
                                 $data['reward_list'][$formattedMonth] = $categoryInitNum;
                             }
                             $data['reward_list'][$formattedMonth][$category] +=
-                                ($value['rewardAmount'] ?? 0) + ($value['borrowerPlatformFee'] ?? 0) + ($value['investorPlatformFee'] ?? 0);
+                                ($value['rewardAmount'] ?? 0);
                         }
                     }
                 }
@@ -265,6 +265,9 @@ class Qrcode_lib
             {
                 foreach ($collaboration_list as $value)
                 {
+                    if(empty($value['rewardAmount']))
+                        continue;
+
                     $formattedMonth = date("Y-m-d", strtotime($value['loan_time']));
                     if ( ! isset($data['reward_list'][$formattedMonth]))
                     {
