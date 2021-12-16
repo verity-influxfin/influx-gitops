@@ -864,7 +864,7 @@ class Certification_lib{
                                     }
                                     else
                                     {
-                                        $verifiedResult->addMessage('IG爬蟲偵測帳號是否存在問題出錯', 3, MassageDisplay::Backend);
+                                        $verifiedResult->addMessage('IG爬蟲帳號是否存在功能出現錯誤', 3, MassageDisplay::Backend);
                                     }
                                     $content['instagram'] = [
                                         'username' => $content['instagram']['username'],
