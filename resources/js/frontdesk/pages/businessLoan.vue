@@ -396,17 +396,18 @@
       </title-dots>
       <div class="questions">
         <div class="item" v-for="(item, index) in questions" :key="index">
-          <div class="question" @click="item.active = !item.active">
-            <div>Q{{ index + 1 }}：{{ item.question }}</div>
+          <div class="question no-gutters" @click="item.active = !item.active">
+            <div class="col-auto">Q{{ index + 1 }}：</div>
+            <div class="col">{{ item.question }}</div>
             <img
-              class="chevron"
+              class="chevron col-auto"
               :class="{ active: item.active }"
               src="/images/alesis-chevron-down.svg"
             />
           </div>
-          <div class="answer" v-show="item.active">
-            <div>A{{ index + 1 }}：</div>
-            <div v-html="item.answer"></div>
+          <div class="answer no-gutters" v-show="item.active">
+            <div class="col-auto">A{{ index + 1 }}：</div>
+            <div class="col" v-html="item.answer"></div>
           </div>
         </div>
       </div>
@@ -699,7 +700,7 @@ export default {
         display: flex;
         margin-right: 30px;
         height: 209px;
-        width: 300px;
+        width: 335px;
       }
 
       .suit-title {
@@ -937,6 +938,9 @@ export default {
         display: grid;
         grid-template-columns: 300px 300px 300px;
         grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+          "p1 p2 p3"
+          "p6 p5 p4";
         gap: 62px 62px;
         .process-item {
           position: relative;
@@ -956,6 +960,24 @@ export default {
           font-style: normal;
           line-height: 1.5;
           color: #5d5555;
+          &.item-1 {
+            grid-area: p1;
+          }
+          &.item-2 {
+            grid-area: p2;
+          }
+          &.item-3 {
+            grid-area: p3;
+          }
+          &.item-4 {
+            grid-area: p4;
+          }
+          &.item-5 {
+            grid-area: p5;
+          }
+          &.item-6 {
+            grid-area: p6;
+          }
           .item-highlight {
             color: #1e69aa;
           }
@@ -995,14 +1017,14 @@ export default {
         align-items: center;
         position: absolute;
         transform: rotate(180deg);
-        right: -64px;
+        left: -42px;
       }
       .item-5-line {
         display: flex;
         align-items: center;
         position: absolute;
         transform: rotate(180deg);
-        right: -64px;
+        left: -40px;
       }
     }
   }
@@ -1082,7 +1104,6 @@ export default {
         margin: 30px;
         .question {
           display: flex;
-          justify-content: space-between;
           border: 1px solid #036eb7;
           border-radius: 12px;
           padding: 0.5rem 1.5rem;
@@ -1104,6 +1125,7 @@ export default {
         .answer {
           display: flex;
           margin-top: 32px;
+          overflow-wrap: anywhere;
           white-space: pre-line;
           border: 1px solid #5d5555;
           padding: 0.5rem 1.5rem 1rem;
@@ -1398,24 +1420,7 @@ export default {
             width: 160px;
             height: 100px;
             font-size: 14px;
-            &.item-1 {
-              grid-area: p1;
-            }
-            &.item-2 {
-              grid-area: p2;
-            }
-            &.item-3 {
-              grid-area: p3;
-            }
-            &.item-4 {
-              grid-area: p4;
-            }
-            &.item-5 {
-              grid-area: p5;
-            }
-            &.item-6 {
-              grid-area: p6;
-            }
+
             .item-highlight {
               color: #1e69aa;
             }
@@ -1445,10 +1450,12 @@ export default {
         .item-4-line {
           transform: rotate(90deg);
           right: 70px;
+          left: initial;
           bottom: -12px;
         }
         .item-5-line {
           transform: none;
+          left: initial;
           right: -17px;
         }
       }
@@ -1515,6 +1522,7 @@ export default {
           margin: 20px;
           .question {
             font-size: 16px;
+            padding: 0.5rem 1rem;
             .chevron {
               width: 20px;
               transform: rotate(180deg);
