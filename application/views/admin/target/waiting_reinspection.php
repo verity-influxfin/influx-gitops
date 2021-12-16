@@ -509,7 +509,8 @@
                               $("#skbank_img_send_btn").prop("disabled", false);
                               $("#skbank_approve_send_btn").prop("disabled", false);
                           }else {
-
+                              $("#skbank_img_send_btn").prop("disabled", true);
+                              $("#skbank_approve_send_btn").prop("disabled", true);
                           }
                       })
                   }
