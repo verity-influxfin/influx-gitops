@@ -1555,7 +1555,6 @@ class Product extends REST_Controller {
             $allow_changeRate_product = $this->config->item('allow_changeRate_product');
             if (in_array($target->product_id, $allow_changeRate_product)
                 && $target->status == 3
-                && $target->sub_product_id != STAGE_CER_TARGET
                 && in_array($target->sub_status, [TARGET_SUBSTATUS_NORNAL, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])
                 && $target->script_status == 0
                 && $target->expire_time >= time()
