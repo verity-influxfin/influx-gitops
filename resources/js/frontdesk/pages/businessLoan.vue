@@ -1125,7 +1125,7 @@ export default {
         .answer {
           display: flex;
           margin-top: 32px;
-          overflow-wrap: anywhere;
+          word-break: break-all;
           white-space: pre-line;
           border: 1px solid #5d5555;
           padding: 0.5rem 1.5rem 1rem;
