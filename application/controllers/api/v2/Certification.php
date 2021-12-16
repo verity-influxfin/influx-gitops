@@ -474,6 +474,9 @@ class Certification extends REST_Controller {
 				}
 			}
 
+            $content['id_card_date'] = strip_ROC_date_word($content['id_card_date']);
+            $content['birthday'] = strip_ROC_date_word($content['birthday']);
+
             $content['name'] 	= isset($input['name'])?$input['name']:"";
             $content['address'] = isset($input['address'])?$input['address']:"";
 

@@ -1685,7 +1685,7 @@ class Target_lib
                         $product_certification = $product['certifications'];
 
                         if($value->status != '1' && $value->product_id == 1002){
-                            // 微企貸歸戶
+                            // 普匯微企e秒貸歸戶
 							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
                             if(isset($product['checkOwner']) && $product['checkOwner'] === true){
                                 $this->CI->load->model('loan/target_associate_model');
@@ -1733,7 +1733,7 @@ class Target_lib
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
-                                            // 微企貸對保不驗證
+                                            // 普匯微企e秒貸對保不驗證
                                             // 加入產品非必要項目不驗證結構
                                             if(!isset($product_list[$value->product_id]['option_certifications']) || !in_array($certification['id'],$product_list[$value->product_id]['option_certifications'])){
                                                 $finish = false;
@@ -1787,7 +1787,7 @@ class Target_lib
                                 !is_object($targetData) ? $targetData = (object)($targetData) : $targetData;
                                 $targetData->certification_id = $cer;
                                 $count++;
-								// 判斷是否為微企貸
+								// 判斷是否為普匯微企e秒貸
 								if(in_array($value->product_id, $this->CI->config->item('externalCooperation'))){
                                         $param = [
                                             'target_data' => json_encode($targetData),

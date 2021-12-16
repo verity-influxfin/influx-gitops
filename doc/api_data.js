@@ -10039,6 +10039,7 @@ define({
                     "Success 200": [
                         {
                             "group": "Success 200",
+
                             "type": "String",
                             "optional": false,
                             "field": "result",
@@ -10256,6 +10257,7 @@ define({
                 },
                 "examples": [
                     {
+
                         "title": "100",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
                         "type": "Object"
@@ -22448,13 +22450,13 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "field": "character",
-                            "description" : "<p>(微企貸、百萬信保微企貸) 角色 1:實際負責人 2:非實際負責人</p>"
+                            "description" : "<p>(普匯微企e秒貸) 角色 1:實際負責人 2:非實際負責人</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
                             "field": "target_id",
-                            "description" : "<p>(微企貸、百萬信保微企貸) 創業貸起案ID (同意當保證人，不同意則依照規格呼叫)</p>"
+                            "description" : "<p>(普匯微企e秒貸) 創業貸起案ID (同意當保證人，不同意則依照規格呼叫)</p>"
                         }
                     ]
                 }

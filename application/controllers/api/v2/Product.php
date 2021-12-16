@@ -2210,14 +2210,14 @@ class Product extends REST_Controller {
         } elseif ($target->sub_product_id == 5) {
             $productName = "驗資基金";
         } elseif ($target->product_id == 1002) {
-            // 百萬信保微企貸
-            $productName = '信保微企貸';
+            // 普匯微企e秒貸
+            $productName = '普匯微企e秒貸';
         }
 
         $is = $character == 1 ? '借款立約人' : '保證人';
         $this->load->library('sms_lib');
         if ($target->product_id == 1002) {
-            // 百萬信保微企貸
+            // 普匯微企e秒貸
             $this->sms_lib->notify_target_product_1002_associates(
                 $this->user_info->id,
                 $this->user_info->phone,
@@ -2238,7 +2238,7 @@ class Product extends REST_Controller {
         if(isset($input['mail'])){
             $this->load->library('notification_lib');
             if ($target->product_id == 1002) {
-                // 百萬信保微企貸
+                // 普匯微企e秒貸
                 $this->notification_lib->notify_target_product_1002_associates(
                     $input['mail'],
                     $this->user_info->name,
