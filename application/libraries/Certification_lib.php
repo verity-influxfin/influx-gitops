@@ -809,8 +809,6 @@ class Certification_lib{
             $content = json_decode($info->content, TRUE);
             if (isset($content['instagram']['username']) && isset($info->user_id))
             {
-                $ig_info = [];
-                $usernameExist = '';
                 $allFollowerCount = '';
                 $allFollowingCount = '';
                 $param['remark'] = [];
@@ -847,8 +845,8 @@ class Certification_lib{
                                 $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $content['instagram']['username']);
                                 if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == 200)
                                 {
-                                    $posts = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['info']['basicInfoData'] : [];
                                     $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['usernameExist'] : '';
+                                    $posts = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
                                     $allFollowerCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
                                     $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['following'] : '';
                                     $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['following'] : '';
@@ -859,10 +857,14 @@ class Certification_lib{
                                         $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
                                         $verifiedResult->addMessage('IG錯誤', 2, MassageDisplay::Client);
                                     }
-                                    if ($usernameExist === TRUE)
+                                    elseif ($usernameExist === TRUE)
                                     {
                                         $usernameExist = '是';
                                         $verifiedResult->setStatus(1);
+                                    }
+                                    else
+                                    {
+                                        $verifiedResult->addMessage('IG爬蟲偵測帳號是否存在問題出錯', 3, MassageDisplay::Backend);
                                     }
                                     $content['instagram'] = [
                                         'username' => $content['instagram']['username'],
@@ -883,7 +885,7 @@ class Certification_lib{
                             }
                             else
                             {
-                                $verifiedResult->addMessage('IG爬蟲執行失敗', 3, MassageDisplay::Backend);
+                                $verifiedResult->addMessage('IG爬蟲結果更新時間不存在', 3, MassageDisplay::Backend);
                             }
                         }
                         if ($log_status['response']['result']['status'] == 'failure')
@@ -893,7 +895,7 @@ class Certification_lib{
                     }
                     else
                     {
-                        $verifiedResult->addMessage('IG爬蟲沒有回應', 3, MassageDisplay::Backend);
+                        $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', 3, MassageDisplay::Backend);
                     }
                 }
                 else
@@ -945,7 +947,7 @@ class Certification_lib{
                 elseif ($status == 2)
                 {
                     $notificationContent = $verifiedResult->getAPPMessage(2);
-                    $this->set_failed($info->id, $notificationContent);
+                    $this->set_failed($info->id, $notificationContent, 1);
                 }
 
             }
