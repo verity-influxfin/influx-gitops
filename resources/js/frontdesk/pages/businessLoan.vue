@@ -764,6 +764,7 @@ export default {
         position: absolute;
         display: block;
         z-index: 1;
+        font-family: Arial;
         font-size: 180px;
         font-weight: 900;
         color: #dcdcdc;
