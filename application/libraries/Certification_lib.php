@@ -843,7 +843,10 @@ class Certification_lib{
                             if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == 200)
                             {
                                 $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
+                                $isPrivate = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
                                 $allPostCount = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
+                                $followStatus = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
+                                $isfollower = isset($risk_control_info['response']['result']['isfollower']) ? $risk_control_info['response']['result']['isfollower'] : '';
                                 $allFollowerCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
                                 $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
                                 $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
@@ -863,11 +866,26 @@ class Certification_lib{
                                 {
                                     $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', 3, MassageDisplay::Backend);
                                 }
+                                if ($isPrivate === TRUE)
+                                {
+                                    if ($followStatus == 'unfollowed')
+                                    {
+                                        $this->CI->instagram_lib->autoFollow($info->user_id, $content['instagram']['username']);
+                                        return FALSE;
+                                    }
+                                    else if ($followStatus == 'waitingFollowAccept')
+                                    {
+                                        $verifiedResult->addMessage('IG爬蟲未同意追蹤', 3, MassageDisplay::Backend);
+                                    }
+                                }
                                 $content['instagram'] = [
                                     'username' => $content['instagram']['username'],
                                     'link' => 'https://www.instagram.com/' . $content['instagram']['username'],
                                     'usernameExist' => $usernameExist,
                                     'info' => [
+                                        'isPrivate' => $isPrivate,
+                                        'followStatus' => $followStatus,
+                                        'isfollower' => $isfollower,
                                         'allPostCount' => $allPostCount,
                                         'allFollowerCount' => $allFollowerCount,
                                         'allFollowingCount' => $allFollowingCount
