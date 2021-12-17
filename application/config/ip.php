@@ -15,6 +15,6 @@ if(ENVIRONMENT=="development"){
 	);
     // TODO: 待確認是否為私網IP, ex: 172.xx.xx.xx
     // octopoda ip
-    $config['bank_adapter_ip'] = '13.112.225.36';
+    $config['bank_adapter_ip'] = '210.242.177.250';
 
 }
