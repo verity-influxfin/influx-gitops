@@ -461,7 +461,7 @@ export default {
         },
         {
           question: '聯徵如何申請？',
-          answer: '您好！以下有兩種不同身份聯徵的申請方式，請至：<a href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364">https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364</a>「個人聯徵申請」需攜帶雙證件親自至聯徵中心、或至郵局申請正本資料，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）「企業聯徵申請」需由負責人親自至聯徵中心辦理或負責人委託他人至聯合徵信中心服務櫃檯辦理。郵局也有指定格式可以申請，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）。',
+          answer: '您好！以下有兩種不同身份聯徵的申請方式，請至：<a href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364" target="_blank">https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364</a>「個人聯徵申請」需攜帶雙證件親自至聯徵中心、或至郵局申請正本資料，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）「企業聯徵申請」需由負責人親自至聯徵中心辦理或負責人委託他人至聯合徵信中心服務櫃檯辦理。郵局也有指定格式可以申請，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）。',
           active: false,
         },
         {
