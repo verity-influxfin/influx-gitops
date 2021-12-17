@@ -55,6 +55,9 @@ export default {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: top center;
+    &:hover{
+        color: #fff;
+    }
 }
 .blog-quiklink {
   z-index: 100;
