@@ -854,7 +854,7 @@ class Certification_lib{
                                     $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
                                     $verifiedResult->addMessage('IG錯誤', 2, MassageDisplay::Client);
                                 }
-                                elseif ($usernameExist === TRUE)
+                                else if ($usernameExist === TRUE)
                                 {
                                     $usernameExist = '是';
                                     $verifiedResult->setStatus(1);
@@ -920,7 +920,7 @@ class Certification_lib{
                     }
                 }
 
-                $param['$content'] = $content;
+                $param['content'] = $content;
                 $param['remark']['verify_result'] = array_merge($param['remark']['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
 
                 $status = $verifiedResult->getStatus();
@@ -928,7 +928,7 @@ class Certification_lib{
                 $this->CI->user_certification_model->update($info->id, array(
                     'status' => $status,
                     'sys_check' => 1,
-                    'content' => json_encode($param['$content'], JSON_INVALID_UTF8_IGNORE),
+                    'content' => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
                     'remark' => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
                 ));
 
