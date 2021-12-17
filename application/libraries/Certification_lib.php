@@ -852,7 +852,7 @@ class Certification_lib{
                                 {
                                     $usernameExist = '否';
                                     $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
-                                    $verifiedResult->addMessage('IG錯誤', 2, MassageDisplay::Client);
+                                    $verifiedResult->addMessage('IG提供帳號無效請確認', 2, MassageDisplay::Client);
                                 }
                                 else if ($usernameExist === TRUE)
                                 {
@@ -861,7 +861,7 @@ class Certification_lib{
                                 }
                                 else
                                 {
-                                    $verifiedResult->addMessage('IG爬蟲帳號是否存在功能出現錯誤', 3, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', 3, MassageDisplay::Backend);
                                 }
                                 $content['instagram'] = [
                                     'username' => $content['instagram']['username'],
@@ -880,12 +880,12 @@ class Certification_lib{
                             }
                             else
                             {
-                               $verifiedResult->addMessage('IG爬蟲結果無回應', 3, MassageDisplay::Backend);
+                               $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', 3, MassageDisplay::Backend);
                             }
                         }
                         if ($log_status['response']['result']['status'] == 'failure')
                         {
-                            $verifiedResult->addMessage('IG爬蟲執行失敗', 2, MassageDisplay::Client);
+                            $verifiedResult->addMessage('IG爬蟲執行失敗', 3, MassageDisplay::Backend);
                         }
                     }
                     else
@@ -916,7 +916,7 @@ class Certification_lib{
                     }
                     else
                     {
-                        $verifiedResult->addMessage('IG非活躍帳號', 3, MassageDisplay::Client);
+                        $verifiedResult->addMessage('IG非活躍帳號', 3, MassageDisplay::Backend);
                     }
                 }
 
