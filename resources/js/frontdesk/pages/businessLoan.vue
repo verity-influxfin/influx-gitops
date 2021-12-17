@@ -412,11 +412,13 @@
         </div>
       </div>
     </div>
+    <float floatType="line" />
   </div>
 </template>
 
 <script>
 import titleDots from '../component/titleDots.vue'
+import float from "../component/floatComponent";
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
@@ -425,6 +427,7 @@ import SwiperCore, {
 export default {
   components: {
     titleDots,
+    float,
   },
   mounted() {
     SwiperCore.use([Navigation])
@@ -457,42 +460,42 @@ export default {
           active: false,
         },
         {
-          question: '聯徵如何申請',
+          question: '聯徵如何申請？',
           answer: '您好！以下有兩種不同身份聯徵的申請方式，請至：https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364「個人聯徵申請」需攜帶雙證件親自至聯徵中心、或至郵局申請正本資料，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）「企業聯徵申請」需由負責人親自至聯徵中心辦理或負責人委託他人至聯合徵信中心服務櫃檯辦理。郵局也有指定格式可以申請，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）。',
           active: false,
         },
         {
-          question: '系統會通知我的保證人進行驗證嗎',
+          question: '系統會通知我的保證人進行驗證嗎？',
           answer: '您好！我們會根據您填寫的保證人資料，以<span style="color:red">簡訊及Email</span>方式寄送通知，因此在填寫保證人相關資料時，請幫我確認資料是否完整正確，謝謝您！',
           active: false,
         },
         {
-          question: '保證人如果反悔不願擔任，該怎麼處理',
+          question: '保證人如果反悔不願擔任，該怎麼處理？',
           answer: `您好！請先聯絡普匯客服人員提出更改，系統會先將您的案子退件，以便您重新修改，再進行申請。`,
           active: false,
         },
         {
-          question: '申請人，保證人資料都驗證完成，接下來該如何處理',
+          question: '申請人，保證人資料都驗證完成，接下來該如何處理？',
           answer: '您好！接下來會將您的案件資訊轉由銀行做最後核決，只需等待審核通過即可！',
           active: false,
         },
         {
-          question: '銀行員打電話來，後續條件如何洽談',
+          question: '銀行員打電話來，後續條件如何洽談？',
           answer: '您透過普匯APP申請的【微企e秒貸】案件進入銀行端後，銀行會派專員與您聯繫進行對保動作，利率與實際核准額度將由銀行端與您接洽，在普匯APP上也會同步顯示出來。',
           active: false,
         },
         {
-          question: '利率與核貸金額核定後，還能調整嗎',
+          question: '利率與核貸金額核定後，還能調整嗎？',
           answer: '由銀行端核定的額度與利率即為本次申請的合約內容 您可選擇是否需要動用本次條件的申貸，至於內容能否調整，可與銀行端與您接洽的窗口洽詢。',
           active: false,
         },
         {
-          question: '一般企業融資沒還款會怎樣',
+          question: '一般企業融資沒還款會怎樣？',
           answer: '因貸款方為銀行，若您忘記還款，請立即與放款銀行聯繫，處理後續逾期事宜，要逾期即會造成企業、負責人的信用瑕疵,為避免上述情況發生，請務必依約定準時還款。',
           active: false,
         },
         {
-          question: '這次申請過金額不夠用，還能再申請一筆這種普匯企業貸款嗎',
+          question: '這次申請過金額不夠用，還能再申請一筆這種普匯企業貸款嗎？',
           answer: '可以的，除了固定申請一百萬額度的【微企e秒貸】，也可以在普匯申請信保專案、一般企業融資專案，解決您運營上的資金問題。',
           active: false,
         }
@@ -521,6 +524,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../component/alesis/alesis";
 .business-loan {
   line-height: 1.25;
   .phone-show {
@@ -543,7 +547,6 @@ export default {
     .header-title {
       margin-top: 52px;
       text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-      font-family: NotoSansTC;
       font-size: 40px;
       font-weight: normal;
       font-stretch: normal;
@@ -555,7 +558,6 @@ export default {
     .header-text {
       margin: 8px 0 20px;
       text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-      font-family: NotoSansTC;
       font-size: 18px;
       font-weight: normal;
       font-stretch: normal;
@@ -569,23 +571,21 @@ export default {
       display: flex;
       align-items: flex-end;
       .yellow {
-        font-family: ArialNarrow;
-        font-size: 63px;
+        font-size: 55px;
         font-weight: bold;
         font-stretch: normal;
         font-style: italic;
-        line-height: 63px;
+        line-height: 55px;
         letter-spacing: 3.15px;
         text-align: left;
         color: #f2e627;
       }
       .cyan {
-        font-family: ArialNarrow;
-        font-size: 49px;
+        font-size: 44px;
         font-weight: bold;
         font-stretch: normal;
         font-style: italic;
-        line-height: 63px;
+        line-height: 55px;
         letter-spacing: 2.45px;
         text-align: left;
         color: #80dde8;
@@ -602,7 +602,6 @@ export default {
         width: 30px;
         height: 30px;
       }
-      font-family: NotoSansTC;
       font-size: 24px;
       font-weight: normal;
       font-stretch: normal;
@@ -624,7 +623,7 @@ export default {
     justify-content: center;
     gap: 34px;
     .feature {
-      width: 350px;
+      width: 320px;
       padding: 20px 5px;
       border-radius: 20px;
       border: solid 1px #8f8f8f;
@@ -638,8 +637,7 @@ export default {
       }
       .feature-title {
         margin-bottom: 10px;
-        font-family: NotoSansTC;
-        font-size: 36px;
+        font-size: 30px;
         font-weight: 500;
         font-stretch: normal;
         font-style: normal;
@@ -648,8 +646,7 @@ export default {
         color: #1e69aa;
       }
       .feature-text {
-        font-family: NotoSansTC;
-        font-size: 24px;
+        font-size: 20px;
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
@@ -676,8 +673,7 @@ export default {
       }
 
       .suit-title {
-        font-family: NotoSansTC;
-        font-size: 36px;
+        font-size: 32px;
         font-weight: 500;
         font-stretch: normal;
         font-style: normal;
@@ -689,7 +685,6 @@ export default {
       .suit-sub-title {
         height: 24px;
         margin-bottom: 8px;
-        font-family: NotoSansTC;
         font-size: 20px;
         font-weight: normal;
         font-stretch: normal;
@@ -700,7 +695,6 @@ export default {
         color: #1e69aa;
       }
       .suit-text {
-        font-family: NotoSansTC;
         font-size: 24px;
         font-weight: normal;
         font-stretch: normal;
@@ -740,7 +734,6 @@ export default {
       max-width: 900px;
       margin: 62px auto;
       .apply-title {
-        font-family: NotoSansTC;
         font-size: 52px;
         font-weight: 500;
         font-stretch: normal;
@@ -751,7 +744,6 @@ export default {
       }
       .apply-text {
         padding-left: 17px;
-        font-family: NotoSansTC;
         font-size: 32px;
         font-weight: normal;
         font-stretch: normal;
@@ -763,33 +755,32 @@ export default {
     .apply-features {
       position: relative;
       width: fit-content;
-      margin: 100px auto 50px;
+      margin: 100px auto 0;
       display: grid;
-      grid-template-columns: 444px 444px;
+      grid-template-columns: 420px 420px;
       grid-template-rows: 1fr 1fr;
       gap: 0 130px;
       .feature-order {
         position: absolute;
         display: block;
         z-index: 1;
-        font-family: Arial;
-        font-size: 200px;
+        font-size: 180px;
         font-weight: 900;
         color: #dcdcdc;
-        left: -73px;
+        left: -70px;
         top: -15px;
         &.order-2 {
-          left: 485px;
+          left: 470px;
           top: 20px;
           color: #1e69aa;
         }
         &.order-3 {
-          top: 250px;
-          left: -77px;
+          top: 215px;
+          left: -70px;
         }
         &.order-4 {
-          left: 485px;
-          top: 305px;
+          left: 470px;
+          top: 260px;
           color: #1e69aa;
         }
         &.item-2-img {
@@ -814,8 +805,7 @@ export default {
         border: solid 2px #8f8f8f;
         background-color: #fff;
         .feature-title {
-          font-family: NotoSansTC;
-          font-size: 36px;
+          font-size: 32px;
           font-weight: 500;
           font-stretch: normal;
           font-style: normal;
@@ -823,8 +813,7 @@ export default {
           color: #1e69aa;
         }
         .feature-text {
-          font-family: NotoSansTC;
-          font-size: 24px;
+          font-size: 20px;
           font-weight: normal;
           font-stretch: normal;
           font-style: normal;
@@ -839,8 +828,7 @@ export default {
       max-width: 900px;
       margin: 50px auto 20px;
       .qualify-title {
-        font-family: NotoSansTC;
-        font-size: 36px;
+        font-size: 30px;
         font-weight: 500;
         font-stretch: normal;
         font-style: normal;
@@ -849,8 +837,7 @@ export default {
       }
       .qualify-text {
         margin: 9px 0 25px 0;
-        font-family: NotoSansTC;
-        font-size: 24px;
+        font-size: 20px;
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
@@ -867,8 +854,7 @@ export default {
       max-width: 900px;
       margin: 20px auto 20px;
       .require-title {
-        font-family: NotoSansTC;
-        font-size: 36px;
+        font-size: 30px;
         font-weight: 500;
         font-stretch: normal;
         font-style: normal;
@@ -878,8 +864,7 @@ export default {
       }
       .require-text {
         margin: 9px 0 25px 0;
-        font-family: NotoSansTC;
-        font-size: 24px;
+        font-size: 20px;
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
@@ -898,8 +883,7 @@ export default {
       .process-title {
         margin-left: 62px;
         margin-bottom: 25px;
-        font-family: NotoSansTC;
-        font-size: 36px;
+        font-size: 30px;
         font-weight: 500;
         font-stretch: normal;
         font-style: normal;
@@ -925,7 +909,6 @@ export default {
           border-radius: 20px;
           border: solid 2px #1e69aa;
           background-color: #fff;
-          font-family: NotoSansTC;
           font-size: 24px;
           font-weight: normal;
           font-stretch: normal;
@@ -1013,8 +996,7 @@ export default {
       }
       .apply-title {
         margin-bottom: 22px;
-        font-family: NotoSansTC;
-        font-size: 36px;
+        font-size: 30px;
         font-weight: 500;
         font-stretch: normal;
         font-style: normal;
@@ -1029,8 +1011,7 @@ export default {
         border: solid 2px #dcdcdc;
         margin-bottom: 20px;
         width: 264px;
-        font-family: NotoSansTC;
-        font-size: 24px;
+        font-size: 20px;
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
@@ -1048,7 +1029,6 @@ export default {
       display: flex;
       align-items: center;
       padding: 60px;
-      font-family: NotoSansTC;
       font-size: 24.9px;
       font-weight: 500;
       font-stretch: normal;
@@ -1079,7 +1059,6 @@ export default {
           border: 1px solid #036eb7;
           border-radius: 12px;
           padding: 0.5rem 1.5rem;
-          font-family: NotoSansTC;
           font-size: 24px;
           font-weight: normal;
           font-stretch: normal;
@@ -1103,7 +1082,6 @@ export default {
           font-size: 1.2rem;
           color: #5d5555;
           border-radius: 12px;
-          font-family: NotoSansTC;
           font-size: 24px;
           font-weight: normal;
           font-stretch: normal;
@@ -1217,7 +1195,6 @@ export default {
           width: 200px;
         }
         .suit-title {
-          font-family: NotoSansTC;
           font-size: 26px;
         }
         .suit-sub-title {
@@ -1258,7 +1235,6 @@ export default {
         margin: 40px auto;
         .apply-title {
           margin: 0 auto;
-          font-family: NotoSansTC;
           font-size: 32px;
           text-align: center;
         }
@@ -1315,7 +1291,6 @@ export default {
           z-index: 2;
           padding: 20px 15px;
           .feature-title {
-            font-family: NotoSansTC;
             font-size: 26px;
             font-weight: 500;
             font-stretch: normal;
@@ -1324,7 +1299,6 @@ export default {
             color: #1e69aa;
           }
           .feature-text {
-            font-family: NotoSansTC;
             font-size: 16px;
             font-weight: normal;
             font-stretch: normal;
@@ -1341,7 +1315,6 @@ export default {
         padding: 0 15px;
         margin: 50px auto 20px;
         .qualify-title {
-          font-family: NotoSansTC;
           font-size: 26px;
         }
         .qualify-text {

@@ -1,6 +1,9 @@
 <template>
   <div class="blog-quiklink" ref="quiklink">
-    <a class="icon" href="https://line.me/R/ti/p/%40kvd1654s" target="_blank"
+      <a v-if="floatType === 'line'" href="https://line.me/R/ti/p/%40kvd1654s" target="_blank" class="link-line">
+        洽專人服務
+      </a>
+    <a v-else class="icon" href="https://line.me/R/ti/p/%40kvd1654s" target="_blank"
       ><img src="/images/alesis-chat-symbol.svg" class="img-fluid"
     /></a>
   </div>
@@ -8,6 +11,12 @@
 
 <script>
 export default {
+    props: {
+        floatType: {
+            type: String,
+            default: ''
+        },
+    },
   data: () => ({
     offset: {},
   }),
@@ -36,6 +45,17 @@ export default {
 </script>
 
 <style lang="scss">
+.link-line{
+    font-size: 20px;
+    width: 200px;
+    height: 85px;
+    color: #fff;
+    padding: 23px 12px;
+    background-image: url('../asset/images/line_service.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
 .blog-quiklink {
   z-index: 100;
   float: right;
