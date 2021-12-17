@@ -885,7 +885,7 @@ class Certification_lib{
                         }
                         if ($log_status['response']['result']['status'] == 'failure')
                         {
-                            $verifiedResult->addMessage('IG爬蟲執行失敗', 3, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('IG爬蟲執行失敗', 2, MassageDisplay::Client);
                         }
                     }
                     else
@@ -910,7 +910,7 @@ class Certification_lib{
                 if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
                 {
                     // 是否為活躍社交帳號判斷
-                    if ($allFollowerCount >= 30 && $allFollowingCount >= 30 && $is_fb_email && $is_fb_name)
+                    if ($allFollowerCount >= 30 && $allFollowingCount >= 50 && $is_fb_email && $is_fb_name)
                     {
                         $verifiedResult->setStatus(1);
                     }
