@@ -814,7 +814,6 @@ class Certification_lib{
                 $param['remark'] = [];
                 $param['remark']['verify_result'] = [];
                 $verifiedResult = new SocialCertificationResult(0);
-
                 $this->CI->load->library('scraper/Instagram_lib');
                 $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $content['instagram']['username']);
                 if ($log_status || isset($log_status['status']))
@@ -825,67 +824,63 @@ class Certification_lib{
                         $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $content['instagram']['username']);
                         return FALSE;
                     }
-                    if ($log_status['status'] == 200 && isset($log_status['response']['result']['status']))
+                    else if ($log_status['status'] == 200 && isset($log_status['response']['result']['status']))
                     {
                         // IG爬蟲沒爬完
                         if ($log_status['response']['result']['status'] == 'requested' || $log_status['response']['result']['status'] == 'runnig')
                         {
                             return FALSE;
                         }
-                        // IG帳號不存在
+                        // IG爬蟲狀態錯誤
                         if ($log_status['response']['result']['status'] == 'failure')
                         {
-                            $verifiedResult->addMessage('IG爬蟲執行失敗', 3, MassageDisplay::Client);
+                            $verifiedResult->addMessage('IG爬蟲執行失敗', 3, MassageDisplay::Backend);
                         }
                         // IG爬蟲結束
                         if ($log_status['response']['result']['status'] == 'finished')
                         {
-                            if ($log_status['response']['result']['updatedAt'] && isset($log_status['response']['result']['updatedAt']))
+                            $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $content['instagram']['username']);
+                            if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == 200)
                             {
-                                $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $content['instagram']['username']);
-                                if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == 200)
+                                $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
+                                $allPostCount = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
+                                $allFollowerCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
+                                $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
+                                $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
+                                $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
+                                if ($usernameExist === FALSE)
                                 {
-                                    $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['usernameExist'] : '';
-                                    $posts = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
-                                    $allFollowerCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
-                                    $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['following'] : '';
-                                    $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['following'] : '';
-                                    $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['following'] : '';
-                                    if ($usernameExist === FALSE)
-                                    {
-                                        $usernameExist = '否';
-                                        $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
-                                        $verifiedResult->addMessage('IG錯誤', 2, MassageDisplay::Client);
-                                    }
-                                    elseif ($usernameExist === TRUE)
-                                    {
-                                        $usernameExist = '是';
-                                        $verifiedResult->setStatus(1);
-                                    }
-                                    else
-                                    {
-                                        $verifiedResult->addMessage('IG爬蟲帳號是否存在功能出現錯誤', 3, MassageDisplay::Backend);
-                                    }
-                                    $content['instagram'] = [
-                                        'username' => $content['instagram']['username'],
-                                        'link' => 'https://www.instagram.com/' . $content['instagram']['username'],
-                                        'usernameExist' => $usernameExist,
-                                        'posts' => $posts,
-                                        'allFollowerCount' => $allFollowerCount,
-                                        'allFollowingCount' => $allFollowingCount,
-                                        'postsIn3Months' => $postsIn3Months,
-                                        'postsWithKeyWords' => $postsWithKeyWords
-                                    ];
+                                    $usernameExist = '否';
+                                    $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('IG錯誤', 2, MassageDisplay::Client);
+                                }
+                                elseif ($usernameExist === TRUE)
+                                {
+                                    $usernameExist = '是';
+                                    $verifiedResult->setStatus(1);
                                 }
                                 else
                                 {
-                                    $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $content['instagram']['username']);
-                                    return FALSE;
+                                    $verifiedResult->addMessage('IG爬蟲帳號是否存在功能出現錯誤', 3, MassageDisplay::Backend);
                                 }
+                                $content['instagram'] = [
+                                    'username' => $content['instagram']['username'],
+                                    'link' => 'https://www.instagram.com/' . $content['instagram']['username'],
+                                    'usernameExist' => $usernameExist,
+                                    'info' => [
+                                        'allPostCount' => $allPostCount,
+                                        'allFollowerCount' => $allFollowerCount,
+                                        'allFollowingCount' => $allFollowingCount
+                                    ]
+                                ];
+                                $content['meta'] = [
+                                    'posts_in_3months' => $postsIn3Months,
+                                    'key_word' => $postsWithKeyWords
+                                ];
                             }
                             else
                             {
-                                $verifiedResult->addMessage('IG爬蟲結果更新時間不存在', 3, MassageDisplay::Backend);
+                               $verifiedResult->addMessage('IG爬蟲結果無回應', 3, MassageDisplay::Backend);
                             }
                         }
                         if ($log_status['response']['result']['status'] == 'failure')
@@ -925,20 +920,17 @@ class Certification_lib{
                     }
                 }
 
-                $param['content'] = json_encode($content);
+                $param['$content'] = $content;
                 $param['remark']['verify_result'] = array_merge($param['remark']['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
-                $param['remark'] = json_encode($param['remark']);
 
                 $status = $verifiedResult->getStatus();
 
                 $this->CI->user_certification_model->update($info->id, array(
-                    'status' => $status != 3 ? 0 : $status,
+                    'status' => $status,
                     'sys_check' => 1,
-                    'content' => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
+                    'content' => json_encode($param['$content'], JSON_INVALID_UTF8_IGNORE),
                     'remark' => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
                 ));
-
-                $this->CI->user_certification_model->update($info->id, $param);
 
                 if ($status == 0)
                 {

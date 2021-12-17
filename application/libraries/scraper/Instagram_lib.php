@@ -74,6 +74,7 @@ class Instagram_lib
         $url = $this->scraperUrl  . "{$reference}/{$followed_account}/status?action={$action}";
         $result = curl_get($url);
         $response = json_decode($result, true);
+
         if (!$result || !isset($response['status'])) {
             return false;
         }
@@ -90,6 +91,7 @@ class Instagram_lib
         $url = $this->scraperUrl  . "{$reference}/{$followed_account}/taskLog";
         $result = curl_get($url);
         $response = json_decode($result, true);
+
         if (!$result || !isset($response['status'])) {
             return false;
         }
@@ -97,7 +99,8 @@ class Instagram_lib
         return $response;
     }
 
-    public function getRiskControlInfo($reference, $followed_account){
+    public function getRiskControlInfo($reference, $followed_account)
+    {
         if(!$followed_account || !$reference) {
             return false;
         }
@@ -105,15 +108,15 @@ class Instagram_lib
         $url = $this->scraperUrl  . "{$reference}/{$followed_account}/riskControlInfo";
         $result = curl_get($url);
         $response = json_decode($result,true);
-
-        if (!$result || !isset($response->status)) {
+        if (!$result || !isset($response['status'])) {
             return false;
         }
 
         return $response;
     }
 
-    public function updateRiskControlInfo($reference, $followed_account){
+    public function updateRiskControlInfo($reference, $followed_account)
+    {
         if(!$followed_account || !$reference) {
             return false;
         }
