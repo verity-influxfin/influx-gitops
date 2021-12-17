@@ -247,7 +247,7 @@
               <li>申請額度：不限。</li>
               <li>借款期間：1~3年。</li>
               <li>還款方式：每月平均攤還本息。</li>
-              <li>利 費 率：依各產品及資金方最終核准條件為準。</li>
+              <li>利 費 率：3.8%起。</li>
               <li>費率：普匯平台不收取任何費用，免費服務︒</li>
             </ul>
             <div class="require-line"></div>
@@ -412,7 +412,7 @@
         </div>
       </div>
     </div>
-    <float floatType="line" />
+    <float />
   </div>
 </template>
 
@@ -445,7 +445,7 @@ export default {
     return {
       questions: [
         {
-          question: '實名認證拍攝照片無法轉正',
+          question: '實名認證拍攝照片無法轉正？',
           answer: '您好！非常抱歉造成您的困擾！因系統採取全自動化辨識，而有角度上微微的調整 發現辨識上錯誤的話，須再麻煩您重新拍照上傳～謝謝您！如還有多次未能成功再麻煩聯絡我們客服，我們會儘速與您聯繫。',
           active: false,
         },
