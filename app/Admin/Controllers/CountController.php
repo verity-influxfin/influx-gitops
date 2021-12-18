@@ -90,7 +90,7 @@ class CountController extends Controller
 		$grid->disableExport();
 		$grid->disableColumnSelector();
 		$grid->disableFilter();
-		// $grid->disableCreateButton();
+		$grid->disableCreateButton(); //新增
 		$grid->disableActions();
 		//自訂
 		$grid->filter(function($filter){
@@ -153,6 +153,9 @@ class CountController extends Controller
      */
     protected function form()
     {
+        //不讓進新增編輯
+        return redirect()->back();
+
         $form = new Form(new Count);
 
 		$form->tools(function (Form\Tools $tools) {

@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // 取得顯示在首頁的三數據
+        $schedule->command('accumulatedData:get')->everyMinute();
     }
 
     /**
