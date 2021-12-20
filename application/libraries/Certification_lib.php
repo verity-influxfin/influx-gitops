@@ -875,7 +875,29 @@ class Certification_lib{
                                     }
                                     else if ($followStatus == 'waitingFollowAccept')
                                     {
-                                        $verifiedResult->addMessage('IG爬蟲未同意追蹤', 3, MassageDisplay::Backend);
+                                        $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $content['instagram']['username'], 'follow');
+                                        if ($follow_status && isset($follow_status['status']))
+                                        {
+                                            if ($follow_status['status'] == 200 && isset($follow_status['response']['result']['status']) && isset($follow_status['response']['result']['updatedAt']))
+                                            {
+                                                if ($follow_status['response']['result']['updatedAt'] > strtotime(date('Y-m-d H:i:s') . "-1 month"))
+                                                {
+                                                    return FALSE;
+                                                }
+                                                else
+                                                {
+                                                    $verifiedResult->addMessage('IG爬蟲未同意追蹤(超過1個月)', 3, MassageDisplay::Client);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', 3, MassageDisplay::Backend);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', 3, MassageDisplay::Backend);
+                                        }
                                     }
                                 }
                                 $content['instagram'] = [
