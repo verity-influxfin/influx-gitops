@@ -221,6 +221,7 @@ defined('CERTIFICATION_SALESDETAIL') or define('CERTIFICATION_SALESDETAIL', 2000
 defined('CERTIFICATION_FOR_JUDICIAL') or define('CERTIFICATION_FOR_JUDICIAL', 1000); //法人認證/徵信ID範圍
 
 // Certification Status
+
 // 待驗證
 defined('CERTIFICATION_STATUS_PENDING_TO_VALIDATE') OR define('CERTIFICATION_STATUS_PENDING_TO_VALIDATE', 0);
 // 驗證成功
@@ -332,6 +333,12 @@ defined('FOREX_CAR_DEALER') or define('FOREX_CAR_DEALER', 2); //外匯車商
 defined('BORROWER') or define('BORROWER', '0');
 defined('INVESTOR') or define('INVESTOR', '1');
 
+defined('PRODUCT_TYPE_NORMAL') or define('PRODUCT_TYPE_NORMAL', 1);                 // 一般貸類型
+defined('PRODUCT_TYPE_ORDER') or define('PRODUCT_TYPE_ORDER', 2);                   // 消費貸類型
+defined('PRODUCT_ID_STUDENT') or define('PRODUCT_ID_STUDENT', 1);                   // 學生貸
+defined('PRODUCT_ID_STUDENT_ORDER') or define('PRODUCT_ID_STUDENT_ORDER', 2);       // 學生手機貸款
+defined('PRODUCT_ID_SALARY_MAN') or define('PRODUCT_ID_SALARY_MAN', 3);             // 上班族貸
+defined('PRODUCT_ID_SALARY_MAN_ORDER') or define('PRODUCT_ID_SALARY_MAN_ORDER', 4); // 上班族消費貸
 defined('PRODUCT_FOREX_CAR_VEHICLE') or define('PRODUCT_FOREX_CAR_VEHICLE', 1000); //外匯車商
 defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002); //普匯微企e秒貸(新光)
 
@@ -610,3 +617,4 @@ defined('REALNAME_IMAGE_TYPE_FRONT') OR define('REALNAME_IMAGE_TYPE_FRONT', 1);
 defined('REALNAME_IMAGE_TYPE_BACK') OR define('REALNAME_IMAGE_TYPE_BACK', 2);
 defined('REALNAME_IMAGE_TYPE_PERSON') OR define('REALNAME_IMAGE_TYPE_PERSON', 3);
 defined('REALNAME_IMAGE_TYPE_HEALTH') OR define('REALNAME_IMAGE_TYPE_HEALTH', 4);
+

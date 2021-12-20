@@ -576,8 +576,6 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
-		if($points>400){$points=400;}
-		if($points<-400){$points=-400;}
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -605,7 +603,7 @@ class Target extends MY_Admin_Controller {
                 : false;
             $level = $certificationStatus ? 3 : 4 ;
         }
-        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
@@ -671,7 +669,7 @@ class Target extends MY_Admin_Controller {
                 $level = $certificationStatus ? 3 : 4 ;
             }
             $this->load->library('credit_lib');
-            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
         }
 
         $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
@@ -686,7 +684,7 @@ class Target extends MY_Admin_Controller {
                     'user_id' => $userId,
                     'product_id' => $target->product_id,
                     'sub_product_id'=> $target->sub_product_id,
-                    'status' => 1
+                    'status' => 1,
                 ],
                 ['status'=> 0]
             );

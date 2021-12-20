@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use CreditSheet\CreditSheetFactory;
 
 class Target_lib
 {
@@ -298,18 +299,19 @@ class Target_lib
                 if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
                     foreach ($mix_credit as $value) {
-                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true);
+                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment);
                     }
                     $total_point = array_sum($credit_score);
                     $rs = $this->CI->credit_lib->approve_associates_credit($target, $total_point);
                 }else{
-                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit);
+                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit, false, $target->instalment);
                 }
                 if ($rs) {
                     $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
                 }
             }
             if ($credit) {
+                $creditSheet = CreditSheetFactory::getInstance($target->id);
                 $interest_rate = $credit['rate'];
                 if ($interest_rate) {
                     $used_amount = 0;
@@ -379,6 +381,7 @@ class Target_lib
                                     || $subloan_status
                                     || $renew
                                     || $evaluation_status
+                                    || $creditSheet->hasCreditLine()
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
@@ -405,9 +408,12 @@ class Target_lib
                                         }
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract($contract_type, $contract_data);
                                     }
+
+                                    $opinion = '一審通過';
                                 } else {
                                     $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
                                     $msg = false;
+                                    $opinion = '需二審查核';
                                 }
                                 $tempData = json_decode($target->target_data,true);
                                 if(isset($tempData) && !empty($tempData)) {
@@ -419,10 +425,17 @@ class Target_lib
                                 $param['target_data'] = json_encode($tempData);
 
                                 $rs = $this->CI->target_model->update($target->id, $param);
-                                if ($rs && $msg) {
-                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+
+                                if(!$renew) {
+                                    $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, $opinion);
+                                    if($msg)
+                                        $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
                                 }
 
+                                if ($rs && $msg) {
+                                    $creditSheet->archive($credit);
+                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+                                }
                                 $this->insert_change_log($target->id, $param);
                                 return true;
                             } else if ($product_info['type'] == 2) {
@@ -441,7 +454,13 @@ class Target_lib
                                         'status' => TARGET_ORDER_WAITING_SHIP,
                                         'sub_status' => $sub_status,
                                     ];
+                                    if($sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE)
+                                        $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
+                                    else
+                                        $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '一審通過');
+
                                     $rs = $this->CI->target_model->update($target->id, $param);
+                                    $creditSheet->archive($credit);
                                     $this->insert_change_log($target->id, $param);
                                     if ($rs) {
                                         $this->CI->load->model('user/user_bankaccount_model');
@@ -2351,5 +2370,52 @@ class Target_lib
             error_log($e->getMessage());
         }
         return $legal_collection;
+    }
+
+    /**
+     * 取得第一期還款日
+     * @param $loanDate: 借貸日期
+     * @param $formatId: 合約格式編號
+     * @return string
+     */
+    public function getFirstPaymentDate($loanDate, $formatId): string {
+        $increasedMonth = 0;
+        $day = date('d', strtotime($loanDate));
+        if($day === false)
+            return $loanDate;
+
+        switch ($formatId) {
+            // 借貸契約
+            case 1:
+                if (intval($day) <= 10)
+                    $increasedMonth = 1;
+                else
+                    $increasedMonth = 2;
+
+                break;
+        }
+        return date('Y-m-10', strtotime("+".$increasedMonth." months",
+            strtotime($loanDate)));
+    }
+
+    /**
+     * 取得最後一期還款日
+     * @param $loanDate: 借貸日期
+     * @param $formatId: 合約格式編號
+     * @param $instalment: 借款期數
+     * @return string
+     */
+    public function getLastPaymentDate($loanDate, $formatId, $instalment): string {
+        $date = "";
+        $firstPaymentDate = $this->getFirstPaymentDate($loanDate, $formatId);
+
+        switch ($formatId) {
+            // 借貸契約
+            case 1:
+                $date = date('Y-m-d', strtotime("+".($instalment-1)." months",
+                    strtotime($firstPaymentDate)));
+                break;
+        }
+        return $date;
     }
 }

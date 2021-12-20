@@ -190,6 +190,7 @@
 		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}
 
+
 	function make_promote_code($length=8) {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$rand = $code[rand(0,25)]
@@ -385,6 +386,32 @@
 
 		return in_array($file_type, $pdf_mimes, TRUE);
 	}
+
+    /**
+	 * 依照前綴詞取得目前已定義的常數項
+	 * @param array $constants: 變數列表
+	 * @param string $prefix: 前綴詞
+	 * @return array
+	 */
+	function returnConstants (array $constants, string $prefix): array
+	{
+		foreach ($constants as $key=>$value)
+			if (substr($key,0,strlen($prefix))==$prefix)  $dump[$key] = $value;
+		if(empty($dump)) { return []; }
+		else { return $dump; }
+	}
+
+	function birthdayDateFormat($birthday) {
+		if(preg_match("/^([0-9]{1,3})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/u",
+			$birthday, $matches)){
+			$birthday = "$matches[1]/$matches[2]/$matches[3]";
+		}
+		return $birthday;
+    }
+
+    function isValidDateTime(string $datetime) {
+		return $datetime > "1911-01-01 00:00:00";
+    }
 
 	function isAvailableDate($format, $date) {
 		$dt = \DateTime::createFromFormat($format, $date);
