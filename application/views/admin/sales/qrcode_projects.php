@@ -70,7 +70,7 @@
             <div class="col-lg-8">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <pre class="preview_zone" v-if="Array.isArray(context)">{{context[0]}}<input type="number" v-model="contract.platform_fee" />{{context[1]}}<input type="number" v-model="contract.interest" />{{context[2]}}<input type="number" v-model="contract.collaboration_person" />{{context[3]}}<input type="number" v-model="contract.collaboration_enterprise" />{{context[4]}}</pre>
+                        <pre class="preview_zone" v-if="Array.isArray(context)">{{context[0]}}<input v-model="contract.platform_fee" />{{context[1]}}<input v-model="contract.interest" />{{context[2]}}<input v-model="contract.collaboration_person" />{{context[3]}}<input v-model="contract.collaboration_enterprise" />{{context[4]}}</pre>
                         <pre class="preview_zone" v-else>{{context}}</pre>
                     </div>
                 </div>
