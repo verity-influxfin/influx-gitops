@@ -248,12 +248,23 @@ class Anti_fraud extends Admin_rest_api_controller
         $this->response($response);
     }
 
-    public function typeid_get()
+    public function ruleId_get()
+    {
+        $input = $this->input->get();
+        $url = $this->brookesia_url . 'result/ruleId' .
+            '?typeId=' . ($input['typeId'] ?? '') . 
+            '&ruleId='.($input['ruleId'] ?? '');
+        $result = curl_get($url);
+        $response = json_decode($result, TRUE);
+
+        $this->response($response);
+    }
+
+	public function typeId_get()
     {
         $input = $this->input->get();
         $url = $this->brookesia_url . 'result/typeId' .
-            '?typeId=' . ($input['typeId'] ?? '') . 
-            '&ruleId='.($input['ruleId'] ?? '');
+            '?typeId=' . ($input['typeId'] ?? '');
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
 

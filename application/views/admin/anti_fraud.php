@@ -170,10 +170,10 @@
 				<div class="mx-2 head-item-title">風險：</div>
 				<select class="form-select" id="risk-option">
 					<option value="">請選擇</option>
+					<option value="拒絕">拒絕</option>
 					<option value="高">高</option>
 					<option value="中">中</option>
 					<option value="低">低</option>
-					<option value="拒絕">拒絕</option>
 				</select>
 				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
 					搜尋
@@ -400,7 +400,7 @@
 				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
 				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
 				'infoFiltered': '(從 _MAX_ 項結果過濾)',
-				'search': '搜尋結果',
+				'search': '使用本次搜尋結果快速搜尋',
 				'paginate': {
 					'first': '首頁',
 					'previous': '上頁',
@@ -411,15 +411,15 @@
 			"info": false
 		});
 		$('#risk-option').on('change', function () {
-			if (searchWay === 'userId') {
-				t.column(0).search(this.value).draw()
-			}
-
+			t.column(0).search(this.value).draw()
 		})
 		$('#target-option').on('change', function () {
-			if (searchWay === 'userId') {
+			if (searchWay !== 'target') {
 				t.column(2).search(this.value).draw()
+			} else {
+				t.column(2).search('').draw()
 			}
+
 		})
 	});
 	async function onLoad() {
@@ -445,7 +445,6 @@
 		ruleAll = await getRuleAll()
 		document.querySelector('#search-btn').toggleAttribute('disabled')
 		insertTargetOption()
-		console.log(colMap, ruleAll)
 	}
 	window.addEventListener("load", onLoad());
 	async function doSearch() {
@@ -454,71 +453,87 @@
 		const target = document.querySelector('#target-option').value
 		const risk = document.querySelector('#risk-option').value
 		const table = $('#andtfraud').DataTable()
-		table.clear()
+		table.clear().draw()
 		if (userId) {
 			searchWay = 'userId'
 			// userid 1st
 			const ans = await getResultByuserId(userId)
-			console.log(ans)
-			const aa2 = ans.map(x => {
-				const update = x.find(x => x.key === 'updatedAt').value
-				const rule = x.filter(item1 => {
-					return item1.key === 'typeId' || item1.key === 'ruleId'
+			const tablsRows = ans.map(x => {
+				const mydata = {}
+				x.forEach(e => {
+					mydata[e.key] = { ...e }
 				})
-				// console.log(rule)
-				const typeid = rule[0].key === 'typeId' ? rule[0] : rule[1]
-				const ruleid = rule[1].key === 'ruleId' ? rule[1] : rule[0]
-				const find = ruleAll.find(a => {
-					return a.typeId === typeid.value
-				})
-				const find2 = find.rules.find(a => {
-					return a.id === ruleid.value
-				})
-				const da = find.description === find2.description ? find2.description : find.description + ' ' + find2.description
-				const [first, ...sec] = [...da.split('】')]
-				return [find2.risk, converDate(update), first + '】', sec.join('】')]
-			})
-			aa2.forEach(x => {
-				table.row.add(x)
-			})
-			// table.row.add([1, 1, 1, 1])
+				const risk = mydata?.risk.value
+				const updatedAt = mydata?.updatedAt.value
+				const description = mydata?.description.value === mydata?.mainDescription.value ? mydata?.mainDescription.value : mydata?.mainDescription.value + ' ' + mydata?.description.value
+				const [first, ...sec] = [...description.split('】')]
+				return [risk, converDate(updatedAt), first + '】', sec.join('】')]
+			}).filter(x => {
+				// filter by target and risk in search
+				if (target) {
+					if (risk) {
+						// 有target and risk
+						return x[0].includes(risk) && (x[2] + x[3]).includes(target)
+					}
+					return (x[2] + x[3]).includes(target)
+				}
+				if (risk) {
+					return x[0].includes(risk)
+				}
+				return true
+			}).forEach(x => table.row.add(x))
 			table.draw()
 			return
 		}
 		if (target) {
 			//only target 2nd
+			searchWay = 'target'
+			const myMap = new Map()
+			colMap.forEach(x => {
+				myMap.set(x.label, x.result)
+			})
+			const ans = myMap.get(target)
+			if (ans) {
+				const res = await getRuleTypeId(ans)
+				res.map(x => {
+					const mydata = {}
+					x.forEach(e => {
+						mydata[e.key] = { ...e }
+					})
+					const risk = mydata?.risk.value + `  會員ID：${mydata?.userId.value}`
+					const updatedAt = mydata?.updatedAt.value
+					const description = mydata?.description.value === mydata?.mainDescription.value ? mydata?.mainDescription.value : mydata?.mainDescription.value + ' ' + mydata?.description.value
+					const [first, ...sec] = [...description.split('】')]
+					return [risk, converDate(updatedAt), first + '】', sec.join('】')]
+				}).filter(item => {
+					if (risk) {
+						return item[0].includes(risk)
+					}
+					return true
+				}).forEach(item => table.row.add(item))
+			}
+			table.column(2).search('').draw()
 			return
 		}
-		return
+		searchWay = 'risk'
 		// disabled only risk
 		const item = await getRiskMap(risk)
-
-		const res = await getRuleTypeId(item)
-		res.forEach(x=>{
-			const update = x.find(item=>{
-				return item.key === 'updatedAt' 
-			}).value
-			const typeId = x.find(item => {
-				return item.key === 'typeId'
-			}).value
-			const ruleId = x.find(item => {
-				return item.key === 'ruleId'
-			}).value
-
-			const find = ruleAll.find(a => {
-				return a.typeId === typeId
+		const res = await getRuleRuleId(item)
+		console.log(res)
+		res.forEach(x => {
+			const mydata = {}
+			x.forEach(e => {
+				mydata[e.key] = { ...e }
 			})
-			const find2 = find.rules.find(a => {
-				return a.id === ruleId
-			})
-			console.log(x,typeId, ruleId)
-			console.log(find)
-			console.log(find2)
-			const da = find.description === find2.description ? find2.description : find.description + ' ' + find2.description
-			const [first, ...sec] = [...da.split('】')]
-			table.row.add([risk,converDate(x), first + '】', sec.join('】')])
+			const risk = mydata?.risk.value + `  會員ID：${mydata?.userId.value}`
+			const updatedAt = mydata?.updatedAt.value
+			const description = mydata?.description.value === mydata?.mainDescription.value ? mydata?.mainDescription.value : mydata?.mainDescription.value + ' ' + mydata?.description.value
+			const [first, ...sec] = [...description.split('】')]
+			table.row.add([risk, converDate(updatedAt), first + '】', sec.join('】')])
 		})
+
 		table.draw()
+		return
 		// no userid and target
 	}
 
@@ -528,12 +543,8 @@
 			parent.removeChild(parent.firstChild)
 		}
 		const map = new Map()
-		colMap.forEach(x => {
-			const key = Object.keys(x)[0]
-			x[key].forEach(item => {
-				map.set(item.key, item.value)
-			})
-
+		colMap.forEach(({ key, ...o }) => {
+			map.set(key, o)
 		})
 		keys = Array.from(map.keys())
 		parent.insertAdjacentHTML('beforeend',
@@ -541,7 +552,7 @@
 		)
 		keys.forEach((x) => {
 			parent.insertAdjacentHTML('beforeend',
-				`<option value="${map.get(x)}" key="${x}">${map.get(x)}</option>`
+				`<option result="${map.get(x).result}" value="${map.get(x).label}" key="${x}">${map.get(x).label}</option>`
 			)
 		})
 	}
@@ -811,40 +822,75 @@
 			})
 			.catch((err) => console.error(err));
 	}
-	function getRuleTypeId(data) {
-			const fetchRule = ({ typeId,ruleId }) => {
-				return fetch(
-					`${apiUrl}/typeId?typeId=${typeId}&ruleId=${ruleId}`
-				)
-					.then((res) => {
-						if (res.ok) {
-							return res.json();
-						} else {
-							throw new Error(res.statusText);
-						}
-					})
-					.then(({ response }) => {
-						return response.results;
-					})
-					.catch((err) => {
-						return Promise.reject(err);
-					});
-			};
-			const fetchRules = [];
-			data.forEach(({typeId,ruleId}) => {
-				fetchRules.push(
-					fetchRule({ typeId , ruleId})
-				);
-			});
-			return Promise.allSettled(fetchRules)
-				.then((x) => {
-					const ans = x.filter((res) => {
-						return res.status == "fulfilled";
-					});
-					return ans.flatMap((x) => x.value);
+	function getRuleRuleId(data) {
+		const fetchRule = ({ typeId, ruleId }) => {
+			return fetch(
+				`${apiUrl}/ruleId?typeId=${typeId}&ruleId=${ruleId}`
+			)
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					} else {
+						throw new Error(res.statusText);
+					}
 				})
-				.catch((err) => console.error(err));
-		}
+				.then(({ response }) => {
+					return response.results;
+				})
+				.catch((err) => {
+					return Promise.reject(err);
+				});
+		};
+		const fetchRules = [];
+		data.forEach(({ typeId, ruleId }) => {
+			fetchRules.push(
+				fetchRule({ typeId, ruleId })
+			);
+		});
+		return Promise.allSettled(fetchRules)
+			.then((x) => {
+				const ans = x.filter((res) => {
+					return res.status == "fulfilled";
+				});
+				return ans.flatMap((x) => x.value);
+			})
+			.catch((err) => console.error(err));
+	}
+
+	function getRuleTypeId(data) {
+		const fetchRule = (typeId) => {
+			return fetch(
+				`${apiUrl}/typeId?typeId=${typeId}`
+			)
+				.then((res) => {
+					if (res.ok) {
+						return res.json();
+					} else {
+						throw new Error(res.statusText);
+					}
+				})
+				.then(({ response }) => {
+					return response.results;
+				})
+				.catch((err) => {
+					return Promise.reject(err);
+				});
+		};
+		const fetchRules = [];
+		data.forEach(typeId => {
+			fetchRules.push(
+				fetchRule(typeId)
+			);
+		});
+		return Promise.allSettled(fetchRules)
+			.then((x) => {
+				const ans = x.filter((res) => {
+					return res.status == "fulfilled";
+				});
+				return ans.flatMap((x) => x.value);
+			})
+			.catch((err) => console.error(err));
+	}
 
 	function getResult({ ruleId }) {
 		const fetchResult = () => {
