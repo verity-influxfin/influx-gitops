@@ -807,13 +807,13 @@ class Certification_lib{
         {
             $param['sys_check'] = 1;
             $content = json_decode($info->content, TRUE);
-            $ig_username = trim($content['instagram']['username']);
-            if (isset($ig_username) && isset($info->user_id))
+            if (isset($content['instagram']['username']) && isset($info->user_id))
             {
                 $allFollowerCount = '';
                 $allFollowingCount = '';
                 $param['remark'] = [];
                 $param['remark']['verify_result'] = [];
+                $ig_username = trim($content['instagram']['username']);
                 $verifiedResult = new SocialCertificationResult(0);
                 $this->CI->load->library('scraper/Instagram_lib');
                 $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
