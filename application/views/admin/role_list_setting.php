@@ -71,6 +71,15 @@
             let division = $('#search').val();
             top.location = `./role_list_setting?division=${division}`;
         });
+		document.addEventListener('keyup', (e) => {
+			if (e.key == 'PrintScreen') {
+				navigator.clipboard.writeText('');
+				alert('Screenshots disabled!');
+			}
+		});
+		document.addEventListener("contextmenu", function (e) {
+			e.preventDefault();
+		}, false);
     });
 
     function insertDataRow({table, part, group, role, id}) {

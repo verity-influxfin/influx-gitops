@@ -142,3 +142,16 @@
         </div>
     </div>
 </form>
+<script>
+	$(document).ready(() => {
+		document.addEventListener('keyup', (e) => {
+			if (e.key == 'PrintScreen') {
+				navigator.clipboard.writeText('');
+				alert('Screenshots disabled!');
+			}
+		});
+		document.addEventListener("contextmenu", function(e){
+			e.preventDefault();
+		}, false);
+	})
+</script>

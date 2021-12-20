@@ -246,6 +246,15 @@
         group_division.val(group_division.find('option[data-name="' + group_id.data('division') + '"]').val()).trigger('change');
         group_department.val(group_department.find('option[data-name="' + group_id.data('department') + '"]').val()).trigger('change');
         group_position.val(group_id_value).trigger('change');
+		document.addEventListener('keyup', (e) => {
+			if (e.key == 'PrintScreen') {
+				navigator.clipboard.writeText('');
+				alert('Screenshots disabled!');
+			}
+		});
+		document.addEventListener("contextmenu", function(e){
+			e.preventDefault();
+		}, false);
     });
 
     function get_group_list() {

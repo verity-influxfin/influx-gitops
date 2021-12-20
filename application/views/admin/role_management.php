@@ -75,6 +75,15 @@
             let name = $('#search').val();
             top.location = `./role_management?name=${name}`;
         });
+		document.addEventListener('keyup', (e) => {
+			if (e.key == 'PrintScreen') {
+				navigator.clipboard.writeText('');
+				alert('Screenshots disabled!');
+			}
+		});
+		document.addEventListener("contextmenu", function(e){
+			e.preventDefault();
+		}, false);
     });
 
     function insertDataRow({table, account, name, part, group, role, id}) {

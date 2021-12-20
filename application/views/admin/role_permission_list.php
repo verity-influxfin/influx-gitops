@@ -9,7 +9,7 @@
         padding: 15px;
     }
 </style>
-<div id="page-wrapper">
+<div id="page-wrapper" oncontextmenu="return false;">
     <div class="row">
         <h1 class="page-header">權限查詢</h1>
     </div>
@@ -70,6 +70,15 @@
             let name = $('#search').val();
             top.location = `./role_permission_list?name=${name}`;
         });
+		document.addEventListener('keyup', (e) => {
+			if (e.key == 'PrintScreen') {
+				navigator.clipboard.writeText('');
+				alert('Screenshots disabled!');
+			}
+		});
+		document.addEventListener("contextmenu", function(e){
+			e.preventDefault();
+		}, false);
     });
 
     function insertDataRow({table, account, name, part, group, role, id}) {
