@@ -805,19 +805,19 @@ export default {
         font-weight: 900;
         color: #dcdcdc;
         left: -70px;
-        top: -15px;
+        top: 0;
         &.order-2 {
           left: 475px;
-          top: 35px;
+          top: 55px;
           color: #1e69aa;
         }
         &.order-3 {
-          top: 255px;
+          top: 305px;
           left: -70px;
         }
         &.order-4 {
           left: 475px;
-          top: 305px;
+          top: 355px;
           color: #1e69aa;
         }
         &.item-2-img {
@@ -1307,15 +1307,15 @@ export default {
           top: 0;
           &.order-2 {
             left: -5px;
-            top: 190px;
+            top: 225px;
           }
           &.order-3 {
-            top: 370px;
+            top: 445px;
             left: -5px;
           }
           &.order-4 {
             left: -5px;
-            top: 585px;
+            top: 675px;
           }
           &.item-2-img {
             left: 125px;
