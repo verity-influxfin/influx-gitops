@@ -495,7 +495,7 @@ class Credit_lib{
             'sub_product_id'=> $sub_product_id,
             'user_id'       => $user_id,
             'amount'        => 0,
-            '$instalment'   => $instalment,
+            'instalment'    => $instalment,
         ];
         foreach($info as $key => $value){
             $data[$value->meta_key] = $value->meta_value;

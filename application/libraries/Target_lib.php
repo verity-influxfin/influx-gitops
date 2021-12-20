@@ -2387,7 +2387,7 @@ class Target_lib
         switch ($formatId) {
             // 借貸契約
             case 1:
-                if (intval($day <= 10))
+                if (intval($day) <= 10)
                     $increasedMonth = 1;
                 else
                     $increasedMonth = 2;
