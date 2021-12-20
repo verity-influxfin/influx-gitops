@@ -118,6 +118,8 @@ defined('TAX_ID_LENGTH_ERROR')          OR define('TAX_ID_LENGTH_ERROR'         
 defined('NO_CER_IDCARD') or define('NO_CER_IDCARD', 220); //未通過實名認證
 defined('NO_CER_GOVERNMENTAUTHORITIES') or define('NO_CER_GOVERNMENTAUTHORITIES', 221); //未通過法人實名認證
 defined('NO_ALLOW_CHARGE') or define('NO_ALLOW_CHARGE', 222); //不可加入負責人
+defined('NOT_INCORPORATION') or define('NOT_INCORPORATION', 223); //公司不是正常設立狀態
+defined('NO_RESPONSIBLE_USER_BIND') or define('NO_RESPONSIBLE_USER_BIND', 224); //法人帳號沒有綁定自然人帳號
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);
@@ -137,6 +139,8 @@ defined('COOPERATION_EXIST')  			OR define('COOPERATION_EXIST'			, 314); //已�
 defined('COOPERATION_NOT_EXIST')  		OR define('COOPERATION_NOT_EXIST'		, 315); //沒申請過經銷商
 defined('COOPERATION_TYPE_ERROR')  		OR define('COOPERATION_TYPE_ERROR'		, 316); //經銷商類別錯誤
 defined('SMS_SEND_FAIL')                OR define('SMS_SEND_FAIL'               , 317); //簡訊驗證碼SMS發送失敗
+defined('RESPONSE_ERROR')                OR define('RESPONSE_ERROR'               , 319);   //第三方回應內容有誤
+defined('CONNECTION_ERROR')                OR define('CONNECTION_ERROR'               , 320); //第三方連線錯誤
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
@@ -215,6 +219,7 @@ defined('CERTIFICATION_EMPLOYEEINSURANCELIST') or define('CERTIFICATION_EMPLOYEE
 defined('CERTIFICATION_PROFILEJUDICIAL') or define('CERTIFICATION_PROFILEJUDICIAL', 1018);
 defined('CERTIFICATION_COMPANYEMAIL') or define('CERTIFICATION_COMPANYEMAIL', 1019);
 defined('CERTIFICATION_JUDICIALGUARANTEE') or define('CERTIFICATION_JUDICIALGUARANTEE', 1020);
+defined('CERTIFICATION_PASSBOOK') or define('CERTIFICATION_PASSBOOK', 1021);
 
 defined('CERTIFICATION_SALESDETAIL') or define('CERTIFICATION_SALESDETAIL', 2000);
 

@@ -411,6 +411,7 @@ class Target_lib
                                 }
                                 $tempData = json_decode($target->target_data,true);
                                 if(isset($tempData) && !empty($tempData)) {
+                                    $targetData = json_decode(json_encode($targetData), true);
                                     $tempData = array_replace_recursive($tempData, is_array($targetData) ? $targetData : []);
                                 } else {
                                     $tempData = $targetData;

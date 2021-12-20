@@ -1613,7 +1613,7 @@ class Certification extends REST_Controller {
             $param['sys_check'] = 1;
             // 有傳圖片的話轉人工，沒有自動過件
             if($should_check == true){
-                $param['status'] = 6;
+                $param['status'] = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
             }
 
 			$insert = $this->user_certification_model->insert($param);
@@ -3035,6 +3035,188 @@ class Certification extends REST_Controller {
                 $this->response(['result' => 'SUCCESS']);
             }else{
                 $this->response(['result' => 'ERROR','error' => INSERT_ERROR]);
+            }
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {post} /v2/certification/debitcard 認證 金融帳號認證
+     * @apiVersion 0.2.0
+     * @apiName PostCertificationDebitcard
+     * @apiGroup Certification
+     * @apiDescription 法人登入時，只有負責人情況下可操作。
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String{3}} bank_code 銀行代碼三碼
+     * @apiParam {String{4}} branch_code 分支機構代號四碼
+     * @apiParam {String{10..14}} bank_account 銀行帳號
+     * @apiParam {Number} front_image 金融卡正面照 ( 圖片ID )
+     * @apiParam {Number} back_image 金融卡背面照 ( 圖片ID )
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse NotIncharge
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     * @apiError 502 此驗證已通過驗證
+     * @apiErrorExample {Object} 502
+     *     {
+     *       "result": "ERROR",
+     *       "error": "502"
+     *     }
+     *
+     * @apiError 506 銀行代碼長度錯誤
+     * @apiErrorExample {Object} 506
+     *     {
+     *       "result": "ERROR",
+     *       "error": "506"
+     *     }
+     *
+     * @apiError 507 分支機構代號長度錯誤
+     * @apiErrorExample {Object} 507
+     *     {
+     *       "result": "ERROR",
+     *       "error": "507"
+     *     }
+     *
+     * @apiError 508 銀行帳號長度錯誤
+     * @apiErrorExample {Object} 508
+     *     {
+     *       "result": "ERROR",
+     *       "error": "508"
+     *     }
+     *
+     * @apiError 509 銀行帳號已存在
+     * @apiErrorExample {Object} 509
+     *     {
+     *       "result": "ERROR",
+     *       "error": "509"
+     *     }
+     *
+     */
+    public function passbook_post()
+    {
+        $this->load->model('user/user_bankaccount_model');
+        $certification_id 	= CERTIFICATION_PASSBOOK;
+        $certification 		= $this->certification[$certification_id];
+        if($certification && $certification['status']==1){
+            //是否驗證過
+            $this->was_verify($certification_id);
+
+            $input 		= $this->input->post(NULL, TRUE);
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+            $company 	= $this->user_info->company;
+            $content	= [];
+
+            //必填欄位
+            $fields 	= ['bank_code','branch_code','bank_account'];
+            foreach ($fields as $field) {
+                if (empty($input[$field])) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $content[$field] = trim($input[$field]);
+                }
+            }
+
+            if(strlen($content['bank_code']) != 3) {
+                $this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_CODE_ERROR ));
+            }
+            if(strlen($content['branch_code'])!=4){
+                $this->response(array('result' => 'ERROR','error' => CERTIFICATION_BRANCH_CODE_ERROR ));
+            }
+            if(strlen(intval($content['bank_account']))<8 || strlen($content['bank_account'])<10 || strlen($content['bank_account'])>14 || is_virtual_account($content['bank_account'])){
+                $this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_ERROR ));
+            }
+
+            // TODO: 存摺如果是公司，需要驗證哪些徵信項
+
+            $where = [
+                'investor'		=> $investor,
+                'bank_code'		=> $content['bank_code'],
+                'bank_account'	=> $content['bank_account'],
+                'status'		=> CERTIFICATION_STATUS_SUCCEED,
+            ];
+
+            $user_bankaccount = $this->user_bankaccount_model->get_by($where);
+            if($user_bankaccount){
+                $this->response(array('result' => 'ERROR','error' => CERTIFICATION_BANK_ACCOUNT_EXIST ));
+            }
+
+            //上傳檔案欄位
+            $file_fields 	= ['front_image','back_image'];
+            foreach ($file_fields as $field) {
+                $image_id = intval($input[$field]);
+                if (!$image_id) {
+                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                }else{
+                    $rs = $this->log_image_model->get_by([
+                        'id'		=> $image_id,
+                        'user_id'	=> $this->user_info->originalID,
+                    ]);
+
+                    if($rs){
+                        $content[$field] = $rs->url;
+                    }else{
+                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    }
+                }
+            }
+
+            $param		= [
+                'user_id'			=> $user_id,
+                'certification_id'	=> $certification_id,
+                'investor'			=> $investor,
+                'expire_time'		=> strtotime('+20 years'),
+                'content'			=> json_encode($content),
+            ];
+
+            $insert = $this->user_certification_model->insert($param);
+            if($insert){
+                $bankaccount_info = [
+                    'user_id'		=> $user_id,
+                    'investor'		=> $investor,
+                    'user_certification_id'	=> $insert,
+                    'bank_code'		=> $content['bank_code'],
+                    'branch_code'	=> $content['branch_code'],
+                    'bank_account'	=> $content['bank_account'],
+                    'front_image'	=> $content['front_image'],
+                    'back_image'	=> $content['back_image'],
+                ];
+
+                if($investor){
+                    $bankaccount_info['verify'] = 2;
+                }else{
+                    isset($this->user_info->naturalPerson) ? $user_id = [$user_id, $this->user_info->originalID] : '';
+                    $this->certification_lib->set_success($insert);
+                    $target = $this->target_model->get_by([
+                        'user_id'	=> $user_id,
+                        'status'	=> 2,
+                    ]);
+                    if($target){
+                        $bankaccount_info['verify'] = 2;
+                    }
+                }
+
+                $this->user_bankaccount_model->insert($bankaccount_info);
+
+                $this->response(array('result' => 'SUCCESS'));
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
             }
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
