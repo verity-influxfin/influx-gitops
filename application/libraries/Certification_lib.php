@@ -975,7 +975,7 @@ class Certification_lib{
                 }
                 elseif ($status == 2)
                 {
-                    $notificationContent = $verifiedResult->getAPPMessage(2);
+                    $notificationContent = implode("、", $verifiedResult->getAPPMessage(2));
                     $this->set_failed($info->id, $notificationContent, 1);
                 }
 
