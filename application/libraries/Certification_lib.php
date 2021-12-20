@@ -160,106 +160,129 @@ class Certification_lib{
      * @param $failed: 徵信項目是否失敗
      * @return false
      */
-    public function verify_promote_code($info, $failed, $company=FALSE): bool
+    public function verify_promote_code($info, $failed): bool
     {
-        if($company) {
+        $this->CI->load->model('user/user_qrcode_model');
+        $this->CI->load->model('user/qrcode_setting_model');
+        $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+        if ( ! isset($promoteCode))
+        {
+            return FALSE;
+        }
+
+        $company = $this->CI->qrcode_lib->is_company($promoteCode->alias);
+        if ($company)
+        {
             $promote_cert_list = $this->CI->config->item('promote_code_certs_company');
-        } else {
+        }
+        else
+        {
             $promote_cert_list = $this->CI->config->item('promote_code_certs');
         }
 
-        if(in_array($info->certification_id, $promote_cert_list) || empty($promote_cert_list)) {
-            $this->CI->load->model('user/user_qrcode_model');
+        if (in_array($info->certification_id, $promote_cert_list) || empty($promote_cert_list))
+        {
             $this->CI->load->model('user/user_certification_model');
-            $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
+            $this->CI->load->library('Notification_lib');
+            if ($failed)
+            {
+                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                    'status' => PROMOTE_STATUS_PENDING_TO_SENT,
+                ]);
+                $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 2);
+            }
+            else
+            {
+                $param = array(
+                    'user_id' => $info->user_id,
+                    'certification_id' => $promote_cert_list,
+                    'investor' => $info->investor,
+                    'status' => [CERTIFICATION_STATUS_SUCCEED]
+                );
+                $certList = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
+                $certifications = array_reduce($certList, function ($list, $item) {
+                    if ( ! isset($list[$item->certification_id]))
+                        $list[$item->certification_id] = $item;
+                    return $list;
+                }, []);
 
-            if(isset($promoteCode)) {
-                $this->CI->load->library('Notification_lib');
-                if($failed) {
-                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
-                        'status' => PROMOTE_STATUS_PENDING_TO_SENT,
-                    ]);
-                    $this->CI->notification_lib->certification($info->user_id, $info->investor,"推薦有賞",2);
-                } else {
-                    $param = array(
-                        'user_id' => $info->user_id,
-                        'certification_id' => $promote_cert_list,
-                        'investor' => $info->investor,
-                        'status' => [1]
-                    );
-                    $certList = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
-                    $certifications = array_reduce($certList, function ($list, $item) {
-                        if (!isset($list[$item->certification_id]))
-                            $list[$item->certification_id] = $item;
-                        return $list;
-                    }, []);
+                if (count($certifications) != count($promote_cert_list))
+                {
+                    return FALSE;
+                }
 
-                    if (count($certifications) != count($promote_cert_list)) {
+                if ($company)
+                {
+                    // 公司需等合約審核過才可以通過
+                    $this->CI->load->model('user/user_qrcode_apply_model');
+                    $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id, 'status != ' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
+                    if ( ! isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_SUCCESS)
+                    {
                         return FALSE;
                     }
-
-                    if ($company) {
-                        // 公司需等合約審核過才可以通過
-                        $this->CI->load->model('user/user_qrcode_apply_model');
-                        $apply_info = $this->CI->user_qrcode_apply_model->get_by(['user_qrcode_id' => $promoteCode->id, 'status != ' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
-                        if(!isset($apply_info) || $apply_info->status != PROMOTE_REVIEW_STATUS_SUCCESS) {
-                            return FALSE;
-                        }
-                    }
-
-                    $settings = json_decode($promoteCode->settings, true);
-                    $settings['certification_id'] = array_column($certifications, 'id');
-                    $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
-                        'settings' => json_encode($settings),
-                        'status' => PROMOTE_STATUS_AVAILABLE,
-                    ]);
-                    $this->CI->load->library('contract_lib');
-                    $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
-                    if(isset($raw_contract)) {
-                        $this->CI->load->library('qrcode_lib');
-
-                        // 取得原合約的簽約時間
-                        $raw_contract_content = json_decode($raw_contract->content, true);
-                        $origin_contract_date = '';
-                        if(isset($raw_contract_content[1]) && isset($raw_contract_content[2]) && isset($raw_contract_content[3])) {
-                            $origin_contract_date = $raw_contract_content[1] . '-' . $raw_contract_content[2] . '-' . $raw_contract_content[3];
-                        }
-
-                        if(!$company) {
-                            $content = json_decode($certifications[CERTIFICATION_IDCARD]->content, true);
-
-                            $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_GENERAL_CONTRACT_TYPE_NAME,
-                                $content['name'] ?? '', $content['address'] ?? '', $settings, $origin_contract_date);
-                        } else {
-                            // TODO: 應該要撈取當初變卡的公司名稱，因為法人名字有可能更改
-                            $this->CI->load->model('user/judicial_person_model');
-                            $judicial_person_info = $this->CI->judicial_person_model->get_by(['company_user_id' => $info->user_id]);
-                            $name = $judicial_person_info->company ?? '';
-                            $address = $judicial_person_info->cooperation_address ?? '';
-
-                            $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME,
-                                $name, $address, $settings, $origin_contract_date);
-                        }
-                        if(!empty($contract)) {
-                            $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
-                        }
-                    }
-
-                    // 將銀行帳號改為待驗證
-                    $this->CI->load->model('user/user_bankaccount_model');
-                    $bank_account = $this->CI->user_bankaccount_model->get_by([
-                        'status'	=> 1,
-                        'investor'	=> $info->investor,
-                        'verify'	=> 0,
-                        'user_id'	=> $info->user_id
-                    ]);
-                    if($bank_account)
-                        $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
-
-                    $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 1);
                 }
-                return TRUE;
+
+                $settings = json_decode($promoteCode->settings, TRUE);
+                $settings['certification_id'] = array_column($certifications, 'id');
+                $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
+                    'settings' => json_encode($settings),
+                    'status' => PROMOTE_STATUS_AVAILABLE,
+                ]);
+                $this->CI->load->library('contract_lib');
+                $raw_contract = $this->CI->contract_lib->raw_contract($promoteCode->contract_id);
+                if (isset($raw_contract))
+                {
+                    $this->CI->load->library('qrcode_lib');
+
+                    // 取得原合約的簽約時間
+                    $raw_contract_content = json_decode($raw_contract->content, TRUE);
+                    $origin_contract_date = '';
+                    if (isset($raw_contract_content[1]) && isset($raw_contract_content[2]) && isset($raw_contract_content[3]))
+                    {
+                        $origin_contract_date = $raw_contract_content[1] . '-' . $raw_contract_content[2] . '-' . $raw_contract_content[3];
+                    }
+
+                    if ( ! $company)
+                    {
+                        $content = json_decode($certifications[CERTIFICATION_IDCARD]->content, TRUE);
+
+                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_GENERAL_CONTRACT_TYPE_NAME,
+                            $content['name'] ?? '', $content['address'] ?? '', $settings, $origin_contract_date);
+                    }
+                    else
+                    {
+                        // TODO: 應該要撈取當初變卡的公司名稱，因為法人名字有可能更改
+                        $this->CI->load->model('user/judicial_person_model');
+                        $judicial_person_info = $this->CI->judicial_person_model->get_by(['company_user_id' => $info->user_id]);
+                        $name = $judicial_person_info->company ?? '';
+                        $address = $judicial_person_info->cooperation_address ?? '';
+
+                        $contract = $this->CI->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME,
+                            $name, $address, $settings, $origin_contract_date);
+                    }
+                    if ( ! empty($contract))
+                    {
+                        $this->CI->contract_lib->update_contract($promoteCode->contract_id, $contract);
+                    }
+                }
+
+                // 將銀行帳號改為待驗證
+                $this->CI->load->model('user/user_bankaccount_model');
+                $bank_account = $this->CI->user_bankaccount_model->get_by([
+                    'status' => 1,
+                    'investor' => $info->investor,
+                    'verify' => 0,
+                    'user_id' => $info->user_id
+                ]);
+                if ($bank_account)
+                {
+                    $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
+                }
+
+                $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 1);
             }
+            return TRUE;
+
         }
         return FALSE;
     }
@@ -2256,6 +2279,46 @@ class Certification_lib{
 		return false;
 	}
 
+    private function passbook_success($info){
+        if (!empty($info))
+        {
+            $data = array(
+                'passbook_status' => 1,
+            );
+
+            $rs = $this->user_meta_progress($data, $info);
+            if ($rs)
+            {
+                $this->fail_other_cer($info);
+                $user = $this->CI->user_model->get_by(['id' => $info->user_id]);
+                if(!isset($user))
+                {
+                    return FALSE;
+                }
+                $virtual_data[] = [
+                    'investor' => USER_INVESTOR,
+                    'user_id' => $info->user_id,
+                    'virtual_account' => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . '0'. substr($user->id_number, 0, 8),
+                ];
+
+                $virtual_data[] = [
+                    'investor' => USER_BORROWER,
+                    'user_id' => $info->user_id,
+                    'virtual_account' => CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE . '0'. substr($user->id_number, 0, 8),
+                ];
+                $this->CI->load->model('user/virtual_account_model');
+
+                array_map(function ($vir_acc) {
+                    $data = $this->CI->virtual_account_model->get_by($vir_acc);
+                    if ( ! isset($data))
+                        $this->CI->virtual_account_model->insert($vir_acc);
+                }, $virtual_data);
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+
 	private function debitcard_success($info){
 		if($info){
             $data 		= array(
@@ -2314,22 +2377,24 @@ class Certification_lib{
 		return false;
 	}
 
-	private function companyemail_success($info){
-		if($info){
-			$content 	= $info->content;
-            $this->CI->load->library('mapping/user/Certification_data');
-            // $result = ! empty($content['result']) ? $content['result'] : [];
-            $meta = $this->CI->certification_data->transformCompanyEmailMeta($result);
+	private function companyemail_success($info)
+    {
+        if ( ! empty($info))
+        {
+            $content = $info->content;
+            $email = $content['email'] ?? '';
             $data = [
-                'company_email' => json_encode($meta)
+                'company_email' => $email
             ];
-            $rs = $this->user_meta_progress($data,$info);
-            if($rs){
+            $rs = $this->user_meta_progress($data, $info);
+            if ($rs)
+            {
+                $this->CI->user_model->update($info->user_id, ['email' => $content['email']]);
                 return $this->fail_other_cer($info);
             }
-		}
-		return false;
-	}
+        }
+        return FALSE;
+    }
 
     private function financial_success($info){
 		if($info){

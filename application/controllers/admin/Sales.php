@@ -1538,7 +1538,12 @@ class Sales extends MY_Admin_Controller {
 
             // 通知審核合約成功
             if(isset($settings) && isset($settings['investor'])) {
-                $this->notification_lib->promote_contract_done($qrcode_code->user_id, $settings['investor'], 1);
+                $this->load->library('judicialperson_lib');
+                $emails = $this->judicialperson_lib->get_company_email_list($qrcode_code->user_id);
+                $emails = array_flip($emails);
+                foreach ($emails as $email => $user_id) {
+                    $this->notification_lib->promote_contract_done($qrcode_code->user_id, $settings['investor'], 1);
+                }
             }
         }
         $this->json_output->setStatusCode(200)->setResponse($rs)->send();
@@ -1569,7 +1574,12 @@ class Sales extends MY_Admin_Controller {
             $this->user_qrcode_model->update_by(['id' => $apply_info->user_qrcode_id], ['status' => PROMOTE_STATUS_PENDING_TO_SENT]);
             $settings = json_decode($qrcode_code->settings, TRUE);
             if(isset($settings) && isset($settings['investor'])) {
-                $this->notification_lib->promote_contract_done($qrcode_code->user_id, $settings['investor'], 2);
+                $this->load->library('judicialperson_lib');
+                $emails = $this->judicialperson_lib->get_company_email_list($qrcode_code->user_id);
+                $emails = array_flip($emails);
+                foreach ($emails as $email => $user_id) {
+                    $this->notification_lib->promote_contract_done($user_id, $settings['investor'], 2);
+                }
             }
         }
         $this->json_output->setStatusCode(200)->setResponse($rs)->send();

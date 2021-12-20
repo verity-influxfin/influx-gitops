@@ -252,4 +252,25 @@ class Judicialperson_lib{
             "company_status" => 0,
         ]);
     }
+
+    public function get_company_email_list($company_user_id) : array {
+        $this->CI->load->model('user/judicial_person_model');
+        $judical_person_info = $this->CI->judicial_person_model->get_by(['company_user_id' => $company_user_id]);
+        $email_list = [];
+
+        if (isset($judical_person_info))
+        {
+            $company_user = $this->CI->user_model->get($judical_person_info->company_user_id);
+            if(isset($company_user) && isset($company_user->email))
+            {
+                $email_list[$company_user->id] = $company_user->email;
+            }
+            $user = $this->CI->user_model->get($judical_person_info->user_id);
+            if(isset($user) && isset($user->email))
+            {
+                $email_list[$user->id] = $user->email;
+            }
+        }
+        return $email_list;
+    }
 }

@@ -48464,7 +48464,14 @@ define({
                         "type": "Object"
                     }
                 ]
-            }
+            },
+            "filename": "application/controllers/api/v2/certification.php",
+            "groupTitle": "reports",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/companyemail"
+                }
+            ]
         },
         {
             "type": "get",

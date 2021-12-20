@@ -1339,7 +1339,6 @@ END:
      */
 	public function edittpw_post()
     {
-		$this->not_support_company();
 		$input 		= $this->input->post(NULL, TRUE);
 		$data		= array();
 		$user_info 	= $this->user_info;

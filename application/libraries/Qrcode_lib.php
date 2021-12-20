@@ -324,16 +324,29 @@ class Qrcode_lib
 
         $this->CI->load->library('parser');
         $html = $this->CI->parser->parse('admin/promote_code/appointed_statement', $data, TRUE);
-        $param = array(
-            "user_id" => $data['company_user_id'],
-            "type" => "promote_code",
-            "investor" => $data['investor'],
-            "sdate" => $start_time,
-            "edate" => $end_time,
-            "content" => $html,
-            "url" => "",
-        );
-        return $this->CI->user_estatement_model->insert($param);
+
+        $param = [];
+
+        $this->CI->load->library('judicialperson_lib');
+        $emails = $this->CI->judicialperson_lib->get_company_email_list($data['company_user_id']);
+        foreach ($emails as $user_id => $email) {
+            $param[] = [
+                "user_id" => $user_id,
+                "type" => "promote_code",
+                "investor" => $data['investor'],
+                "sdate" => $start_time,
+                "edate" => $end_time,
+                "content" => $html,
+                "url" => "",
+            ];
+        }
+
+        return $this->CI->user_estatement_model->insert_many($param);
+    }
+
+    public function is_company(string $alias) : bool {
+        $this->CI->load->model('user/qrcode_setting_model');
+        return $alias == $this->CI->qrcode_setting_model->appointedCaseAliasName;
     }
 
 }
