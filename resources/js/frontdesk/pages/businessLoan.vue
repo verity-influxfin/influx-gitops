@@ -219,7 +219,7 @@
             </div>
           </div>
           <div class="feature-item item-2">
-            <div class="feature-title">AI全線上無人審核</div>
+            <div class="feature-title">AI全線上無人化審核</div>
             <div class="feature-text">
               <div>全程無人化手機APP申請</div>
               <div>AI人工智慧風控審核</div>
@@ -228,6 +228,7 @@
           <div class="feature-item item-3">
             <div class="feature-title">銀行資金</div>
             <div class="feature-text">
+              <div>全程手機申貸</div>
               <div>資料API直串銀行系統</div>
               <div>銀行即時同步系統審核</div>
               <div>核准條件同步普匯APP</div>
@@ -344,6 +345,7 @@
             <div class="data-item">近三年損益表</div>
             <div class="data-item">公司聯合徵信</div>
             <div class="data-item">公司電子信箱</div>
+            <div class="data-item">公司資料表</div>
           </div>
           <div class="col-auto apply-img-cover">
             <img src="../asset/images/business-loan-apply.png" alt="申請明細" />

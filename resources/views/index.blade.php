@@ -151,16 +151,6 @@
                             <a href="/business-loan" class="item">信保專案融資</a>
                             <a href="/business-loan" class="item">一般企業融資</a>
                         </div>
-                        <div class="sub">
-                            <div class="sub-title">
-                                <div class="sub-title-icon">
-                                    <img src="/images/car-header-icon.svg" alt="">
-                                </div>
-                                <div>汽車金融</div>
-                            </div>
-                            <div class="item -disabled">購車融資</div>
-                            <div class="item -disabled">車商融資</div>
-                        </div>
                     </div>
                 </div>
                 <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
@@ -255,14 +245,6 @@
                         <a href="/business-loan" class="item">微企e秒貸</a>
                         <a href="/business-loan" class="item">信保專案融資</a>
                         <a href="/business-loan" class="item">一般企業融資</a>
-                        <div class="sub-title">
-                            <div class="sub-title-icon">
-                                <img src="/images/car-header-icon.svg" alt="">
-                            </div>
-                            <div>汽車金融</div>
-                        </div>
-                        <div class="item -disabled">購車融資</div>
-                        <div class="item -disabled">車商融資</div>
                     </div>
                 </div>
                 <div class="item -dropdown">
@@ -387,7 +369,6 @@
                             <a href="/collegeLoan">學生貸款</a>
                             <a href="/workLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
-                            <a>車輛融資</a>
                             <a>企業融資</a>
                             <a href="/mobileLoan">手機分期</a>
                         </div>
