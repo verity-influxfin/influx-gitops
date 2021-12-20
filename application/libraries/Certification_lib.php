@@ -807,7 +807,8 @@ class Certification_lib{
         {
             $param['sys_check'] = 1;
             $content = json_decode($info->content, TRUE);
-            if (isset($content['instagram']['username']) && isset($info->user_id))
+            $ig_username = trim($content['instagram']['username']);
+            if (isset($ig_username) && isset($info->user_id))
             {
                 $allFollowerCount = '';
                 $allFollowingCount = '';
@@ -815,13 +816,13 @@ class Certification_lib{
                 $param['remark']['verify_result'] = [];
                 $verifiedResult = new SocialCertificationResult(0);
                 $this->CI->load->library('scraper/Instagram_lib');
-                $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $content['instagram']['username']);
+                $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
                 if ($log_status || isset($log_status['status']))
                 {
                     // 沒有IG爬蟲紀錄查詢log紀錄
                     if ($log_status['status'] == 204)
                     {
-                        $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $content['instagram']['username']);
+                        $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
                         return FALSE;
                     }
                     else if ($log_status['status'] == 200 && isset($log_status['response']['result']['status']))
@@ -839,7 +840,7 @@ class Certification_lib{
                         // IG爬蟲結束
                         if ($log_status['response']['result']['status'] == 'finished')
                         {
-                            $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $content['instagram']['username']);
+                            $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $ig_username);
                             if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == 200)
                             {
                                 $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
@@ -870,12 +871,12 @@ class Certification_lib{
                                 {
                                     if ($followStatus == 'unfollowed')
                                     {
-                                        $this->CI->instagram_lib->autoFollow($info->user_id, $content['instagram']['username']);
+                                        $this->CI->instagram_lib->autoFollow($info->user_id, $ig_username);
                                         return FALSE;
                                     }
                                     else if ($followStatus == 'waitingFollowAccept')
                                     {
-                                        $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $content['instagram']['username'], 'follow');
+                                        $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username, 'follow');
                                         if ($follow_status && isset($follow_status['status']))
                                         {
                                             if ($follow_status['status'] == 200 && isset($follow_status['response']['result']['status']))
@@ -897,8 +898,8 @@ class Certification_lib{
                                     }
                                 }
                                 $content['instagram'] = [
-                                    'username' => $content['instagram']['username'],
-                                    'link' => 'https://www.instagram.com/' . $content['instagram']['username'],
+                                    'username' => $ig_username,
+                                    'link' => 'https://www.instagram.com/' . $ig_username,
                                     'usernameExist' => $usernameExist,
                                     'info' => [
                                         'isPrivate' => $isPrivate,
