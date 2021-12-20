@@ -878,15 +878,11 @@ class Certification_lib{
                                         $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $content['instagram']['username'], 'follow');
                                         if ($follow_status && isset($follow_status['status']))
                                         {
-                                            if ($follow_status['status'] == 200 && isset($follow_status['response']['result']['status']) && isset($follow_status['response']['result']['updatedAt']))
+                                            if ($follow_status['status'] == 200 && isset($follow_status['response']['result']['status']))
                                             {
-                                                if ($follow_status['response']['result']['updatedAt'] > strtotime(date('Y-m-d H:i:s') . "-1 month"))
+                                                if ($follow_status['response']['result']['status'] !== 'finished')
                                                 {
                                                     return FALSE;
-                                                }
-                                                else
-                                                {
-                                                    $verifiedResult->addMessage('IG爬蟲未同意追蹤(超過1個月)', 3, MassageDisplay::Client);
                                                 }
                                             }
                                             else
