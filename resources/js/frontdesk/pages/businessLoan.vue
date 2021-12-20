@@ -290,6 +290,10 @@
                   <li>負責人</li>
                   <li>公司行號</li>
                 </ul>
+                <div class="item-3-line">
+                  <div class="line"></div>
+                  <div class="circle"></div>
+                </div>
               </div>
               <div class="process-item item-4">
                 <div>資料提供</div>
@@ -300,6 +304,10 @@
                   <li>財務及收入證明</li>
                   <li>其他佐證資料</li>
                 </ul>
+                <div class="item-4-line">
+                  <div class="line"></div>
+                  <div class="circle"></div>
+                </div>
               </div>
               <div class="process-item item-5">
                 <div>等待系統審核</div>
@@ -537,12 +545,13 @@ export default {
 @import "../component/alesis/alesis";
 @keyframes bouncing {
   from {
-    transform:scale(.8);
+    transform: scale(0.8);
   }
   to {
-    transform:scale(1.15);
- }
+    transform: scale(1.15);
+  }
 }
+
 .business-loan {
   line-height: 1.25;
   .phone-show {
@@ -553,7 +562,8 @@ export default {
   }
   .header {
     position: relative;
-    height: 550px;
+    height: 650px;
+    min-width: 1450px;
     background-image: url("../asset/images/business-loan-header-all.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -644,7 +654,7 @@ export default {
       &.e-loan {
         transform: scale(1.05);
         .icon {
-          animation: bouncing .5s infinite alternate;
+          animation: bouncing 0.5s infinite alternate;
         }
       }
       width: 320px;
@@ -795,17 +805,17 @@ export default {
         left: -70px;
         top: -15px;
         &.order-2 {
-          left: 470px;
-          top: 20px;
+          left: 475px;
+          top: 35px;
           color: #1e69aa;
         }
         &.order-3 {
-          top: 215px;
+          top: 255px;
           left: -70px;
         }
         &.order-4 {
-          left: 470px;
-          top: 260px;
+          left: 475px;
+          top: 305px;
           color: #1e69aa;
         }
         &.item-2-img {
@@ -963,7 +973,7 @@ export default {
             color: #1e69aa;
             padding-left: 1.5em;
             list-style: decimal;
-            font-size: .75em;
+            font-size: 0.75em;
           }
         }
       }
@@ -1039,7 +1049,7 @@ export default {
         border-radius: 16px;
         border: solid 2px #dcdcdc;
         margin-bottom: 20px;
-        width: 264px;
+        width: 284px;
         font-size: 20px;
         font-weight: normal;
         font-stretch: normal;
@@ -1058,7 +1068,7 @@ export default {
       display: flex;
       align-items: center;
       padding: 60px;
-      font-size: 24.9px;
+      font-size: 20px;
       font-weight: 500;
       font-stretch: normal;
       font-style: normal;
@@ -1121,6 +1131,11 @@ export default {
     }
   }
 }
+@media screen and (max-width: 1900px) {
+  .business-loan .header {
+    height: 550px;
+  }
+}
 @media screen and (max-width: 767px) {
   .business-loan {
     .phone-show {
@@ -1130,6 +1145,7 @@ export default {
       display: none;
     }
     .header {
+      min-width: 0;
       height: 675px;
       background-image: url("../asset/images/business-header-phone.png");
       .header-col {
@@ -1286,18 +1302,18 @@ export default {
         .feature-order {
           font-size: 145px;
           left: -3px;
-          top: -15px;
+          top: 0;
           &.order-2 {
             left: -5px;
-            top: 155px;
+            top: 190px;
           }
           &.order-3 {
-            top: 320px;
+            top: 370px;
             left: -5px;
           }
           &.order-4 {
             left: -5px;
-            top: 499px;
+            top: 585px;
           }
           &.item-2-img {
             left: 125px;
@@ -1412,7 +1428,7 @@ export default {
         }
         .item-3-line {
           transform: rotate(180deg);
-          bottom: 45px;
+          bottom: 80px;
           left: -17px;
         }
         .item-4-line {
