@@ -72,9 +72,7 @@ class Instagram_lib
         }
 
         $url = $this->scraperUrl  . "{$reference}/{$followed_account}/status?action={$action}";
-        print_r($url);
         $result = curl_get($url);
-        print_r($result);
         $response = json_decode($result, true);
 
         if (!$result || !isset($response['status'])) {
