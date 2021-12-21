@@ -2,12 +2,12 @@
   <div class="business-loan">
     <div class="header row">
       <div class="header-col col">
-        <div class="header-title">企業金融•普匯微企e秒貸</div>
+        <div class="header-title">普匯微企e秒貸•中小企業融資</div>
         <ul class="header-text">
           <li>企業主/創業夢想</li>
-          <li>手機全線上無人化方便簡單快速安全</li>
-          <li>全台第一政府支持信保保證銀行放款</li>
-          <li>溫馨扶持背後金援</li>
+          <li>手機全線上申貸/無人化審核</li>
+          <li>全台第一/線上直送銀行放款/信保保證</li>
+          <li>配合政策/普惠金融/扶持新創</li>
         </ul>
         <div class="header-slogan">
           <div class="yellow">FREE</div>
@@ -577,7 +577,7 @@ export default {
     .header-title {
       margin-top: 52px;
       text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-      font-size: 40px;
+      font-size: 34px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
