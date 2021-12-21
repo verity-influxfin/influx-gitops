@@ -61,14 +61,14 @@ class Certification extends REST_Controller {
                 if($this->user_info->naturalPerson && $this->request->method == 'post'){
                     $this->load->library('certification_lib');
                     //檢核變卡認證，並排除以下認證
-                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11'])){
+                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
                         $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, 0);
                         if(!$cerGovernmentauthorities && $method != 'governmentauthorities'){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
                         }
                     }
                     //要求先完成實名相關
-                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker'])){
+                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
                         $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
                         if(!$cerIDCARD){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
