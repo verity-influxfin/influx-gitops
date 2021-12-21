@@ -128,6 +128,8 @@
 	}
 
 	.loader {
+		position: relative;
+		left: 24vw;
 		margin: 20px auto;
 		border: 16px solid #f3f3f3;
 		/* Light grey */
@@ -289,104 +291,18 @@
 		</div>
 	</div>
 </div>
-<template id="default-panel">
-	<div class="panel panel-default">
-		<div class="panel-heading p-4">
-			<div class="d-flex align-items-center">
-				<div class="mr-2 head-item-title">時間：</div>
-				<div class="input-group input">
-					<input type="text" data-toggle="datepicker" class="datepicker form-control input" id="start-time" />
-				</div>
-				<span class="mx-2">~</span>
-				<div class="input-group input">
-					<input type="text" data-toggle="datepicker" class="datepicker form-control" id="end-time"
-						aria-label="Default" aria-describedby="inputGroup-sizing-default" />
-				</div>
-			</div>
-			<div class="d-flex align-items-center mt-4">
-				<div class="mr-2 head-item-title">產品別：</div>
-				<div class="input-group input">
-					<select class="form-select" id="search-option">
-					</select>
-				</div>
-				<button class="btn ml-5 search-btn" id="search-btn" onclick="doSearch()">
-					搜尋
-				</button>
-			</div>
-		</div>
-		<div class="panel-body">
-			<div>
-				<div class="header">
-					<div class="header-item">時間</div>
-					<div class="header-item">產品別</div>
-					<div class="header-item item-full">反詐欺規則</div>
-					<div class="header-item sortable" onclick="onSort()">
-						<span class="mr-2">有效性</span>
-						<i class="fa fa-sort" aria-hidden="true" id="default-order"></i>
-						<i class="fa fa-sort-desc d-none" aria-hidden="true" id="desc"></i>
-						<i class="fa fa-sort-asc d-none" aria-hidden="true" id="asc"></i>
-					</div>
-					<div class="header-item btn-item"></div>
-				</div>
-			</div>
-			<div id="rows"></div>
-		</div>
-	</div>
-</template>
-<template id="data-row">
-	<div class="data-row">
-		<div class="data-item"></div>
-		<div class="data-item"></div>
-		<div class="data-item item-full"></div>
-		<div class="data-item"></div>
-		<div class="data-item btn-item">
-			<button class="btn" onclick="insertResultPanel(event)">命中結果</button>
-		</div>
-	</div>
-</template>
-<template id="result-panel">
-	<div class="result">
-		<div>
-			<button class="btn m-2" onclick="onLoad()">回上頁</button>
-		</div>
-		<div class="d-flex">
-			<div class="data-item item-full">
-				<div class="header-item">反詐欺規則</div>
-				<div class="data-item" id="rule"></div>
-			</div>
-			<div class="data-item result-date">
-				<div class="header-item">日期</div>
-				<div class="data-item" id="date"></div>
-			</div>
-		</div>
-		<div id="result-rows"></div>
-	</div>
-</template>
-<template id="result-data-item">
-	<div class="result-data-item">
-		<div class="result-header-item key"></div>
-		<div class="result-value-item value"></div>
-	</div>
-</template>
-<template id="result-data-row">
-	<div class="result-data-row"></div>
-</template>
-<template id="loader">
-	<div class="loader"></div>
-</template>
 
 <script>
 	let searchWay = ''
-	let antiFraudData = [];
+	let antiFraudData = []
 	let colMap = []
 	let ruleAll = []
-	let orderBy = null;
+	let orderBy = null
 	let searching = false
 	let loading = false
-	const faIcons = [];
-	const apiUrl = "/api/v2/anti_fraud/";
-	let typeIds = [];
-	let configs = []
+	const faIcons = []
+	const apiUrl = "/api/v2/anti_fraud/"
+	let typeIds = []
 	let prevStartTime = 0
 	let prevEndTime = 999999999999
 
@@ -409,7 +325,7 @@
 				}
 			},
 			"info": false
-		});
+		})
 		$('#risk-option').on('change', function () {
 			t.column(0).search(this.value).draw()
 		})
@@ -421,7 +337,7 @@
 			}
 
 		})
-	});
+	})
 	async function onLoad() {
 		// insertDefaultPanel()
 		document.querySelector('#search-btn').toggleAttribute('disabled')
@@ -429,35 +345,35 @@
 			document.querySelector("#asc"),
 			document.querySelector("#desc"),
 			document.querySelector("#default-order")
-		);
-
-		//query
-		const res = await getProductConfig()
-		configs = Object.keys(res).map(x => {
-			return {
-				name: res[x].name,
-				value: x
-			}
-		})
+		)
 		// insert options
-		// insertSearchOption()
 		colMap = await getColumnMap()
 		ruleAll = await getRuleAll()
 		document.querySelector('#search-btn').toggleAttribute('disabled')
 		insertTargetOption()
 	}
-	window.addEventListener("load", onLoad());
+	window.addEventListener("load", onLoad())
 	async function doSearch() {
+		if (searching) {
+			return
+		}
 		searchWay = ''
 		const userId = document.querySelector('#user-id').value
 		const target = document.querySelector('#target-option').value
 		const risk = document.querySelector('#risk-option').value
 		const table = $('#andtfraud').DataTable()
-		table.clear().draw()
+		// clear table and set searching status
+		table.clear()
+		table.column(0).search('')
+		table.column(2).search('')
+		table.row.add(['<div class="loader"></div>', '', '', '']).draw()
+		document.querySelector('#search-btn').toggleAttribute('disabled')
+		searching = true
 		if (userId) {
 			searchWay = 'userId'
 			// userid 1st
 			const ans = await getResultByuserId(userId)
+			table.clear()
 			const tablsRows = ans.map(x => {
 				const mydata = {}
 				x.forEach(e => {
@@ -467,7 +383,7 @@
 				const updatedAt = mydata?.updatedAt.value
 				const description = mydata?.description.value === mydata?.mainDescription.value ? mydata?.mainDescription.value : mydata?.mainDescription.value + ' ' + mydata?.description.value
 				const [first, ...sec] = [...description.split('】')]
-				return [risk, converDate(updatedAt), first + '】', sec.join('】')]
+				return [risk, convertDate(updatedAt), first + '】', sec.join('】')]
 			}).filter(x => {
 				// filter by target and risk in search
 				if (target) {
@@ -483,6 +399,8 @@
 				return true
 			}).forEach(x => table.row.add(x))
 			table.draw()
+			document.querySelector('#search-btn').toggleAttribute('disabled')
+			searching = false
 			return
 		}
 		if (target) {
@@ -495,6 +413,7 @@
 			const ans = myMap.get(target)
 			if (ans) {
 				const res = await getRuleTypeId(ans)
+				table.clear()
 				res.map(x => {
 					const mydata = {}
 					x.forEach(e => {
@@ -504,7 +423,7 @@
 					const updatedAt = mydata?.updatedAt.value
 					const description = mydata?.description.value === mydata?.mainDescription.value ? mydata?.mainDescription.value : mydata?.mainDescription.value + ' ' + mydata?.description.value
 					const [first, ...sec] = [...description.split('】')]
-					return [risk, converDate(updatedAt), first + '】', sec.join('】')]
+					return [risk, convertDate(updatedAt), first + '】', sec.join('】')]
 				}).filter(item => {
 					if (risk) {
 						return item[0].includes(risk)
@@ -513,13 +432,15 @@
 				}).forEach(item => table.row.add(item))
 			}
 			table.column(2).search('').draw()
+			document.querySelector('#search-btn').toggleAttribute('disabled')
+			searching = false
 			return
 		}
+		// no userid and target
 		searchWay = 'risk'
-		// disabled only risk
 		const item = await getRiskMap(risk)
 		const res = await getRuleRuleId(item)
-		console.log(res)
+		table.clear()
 		res.forEach(x => {
 			const mydata = {}
 			x.forEach(e => {
@@ -529,12 +450,13 @@
 			const updatedAt = mydata?.updatedAt.value
 			const description = mydata?.description.value === mydata?.mainDescription.value ? mydata?.mainDescription.value : mydata?.mainDescription.value + ' ' + mydata?.description.value
 			const [first, ...sec] = [...description.split('】')]
-			table.row.add([risk, converDate(updatedAt), first + '】', sec.join('】')])
+			table.row.add([risk, convertDate(updatedAt), first + '】', sec.join('】')])
 		})
-
 		table.draw()
+		document.querySelector('#search-btn').toggleAttribute('disabled')
+		searching = false
 		return
-		// no userid and target
+
 	}
 
 	function insertTargetOption() {
@@ -556,196 +478,8 @@
 			)
 		})
 	}
-	function insertData({ id, rule, duration, ruleId, productId, efficiency }) {
-		const template = document.querySelector("template#data-row");
-		const dataArray = template.content.querySelectorAll(".data-item");
-		const button = template.content.querySelector(".btn");
-		//insert
-		dataArray[0].textContent = duration;
-		dataArray[1].textContent = converProductId({ productId });
-		dataArray[2].textContent = rule;
-		dataArray[3].textContent = convertEfficiency({ efficiency });
-		button.setAttribute('rule-id', ruleId)
-		button.setAttribute('rule', rule)
-		button.setAttribute('duration', duration)
-		// dataArray[4].textContent = x;
-		const rows = document.querySelector("#rows");
-		const clone = document.importNode(template.content, true);
-		rows.appendChild(clone);
-	}
-	function removeDatas() {
-		const parent = document.querySelector('#rows')
-		while (parent.firstChild) {
-			parent.removeChild(parent.firstChild)
-		}
-	}
-	function toggleLoading(params) {
-		const parent = document.querySelector('#rows')
-		if (parent.querySelector('.loader')) {
-			parent.removeChild(parent.querySelector('.loader'))
-		} else {
-			const template = document.querySelector("template#loader");
-			const clone = document.importNode(template.content, true);
-			parent.appendChild(clone);
-		}
-	}
-	function insertSearchOption() {
-		const parent = document.querySelector('#search-option')
-		configs.forEach(({ name, value }) => {
-			parent.insertAdjacentHTML('beforeend',
-				`<option value="${value}">${name}</option>`
-			)
-		})
-	}
-	function insertDefaultPanel() {
-		const parent = document.querySelector("#panel");
-		const child = parent.querySelector("div");
-		if (child) {
-			parent.removeChild(child);
-		}
-		const template = document.querySelector("template#default-panel");
-		const clone = document.importNode(template.content, true);
-		parent.appendChild(clone);
-		// trigger datepicker
-		if ($('.datepicker').datepicker) {
-			$('.datepicker').datepicker()
-		}
-	}
-	async function insertResultPanel(e) {
-		if (searching) {
-			return
-		}
-		searching = true
-		antiFraudData = []
-		const parent = document.querySelector("#panel");
-		const child = parent.querySelector(".panel.panel-default");
-		const template = document.querySelector("template#result-panel");
-		ruleId = e.target.getAttribute('rule-id')
-		duration = e.target.getAttribute('duration')
-		rule = e.target.getAttribute('rule')
-		const ans = await getResult({ ruleId })
-		// insert header 
-		const tRule = template.content.querySelector('#rule')
-		const tDate = template.content.querySelector('#date')
-		tRule.textContent = rule
-		tDate.textContent = duration
-		// inset template to page
-		parent.removeChild(child);
-		const clone = document.importNode(template.content, true);
-		parent.appendChild(clone);
-		if (ans.length === 0) {
-			// no data
-			const data = document.querySelector("#result-rows");
-			data.insertAdjacentHTML('beforeend', `
-				<div class="text-center">查無資料</div>
-			`
-			)
-		}
-
-		// insert data to template
-		ans.forEach(x => {
-			insertResultDataRow(x)
-		})
-		searching = false
-	}
-
-	function insertResultDataRow(datas) {
-		const template = document.querySelector("template#result-data-row");
-
-		const parent = document.querySelector("#result-rows");
-		const clone = document.importNode(template.content, true);
-		parent.appendChild(clone);
-		datas.forEach(({ key, label, value }) => {
-			if (label) {
-				insertResultDataItem({ label, value });
-			}
-		})
-	}
-	function insertResultDataItem({ label, value }) {
-		// insert to last result-data-row
-		const t = document.querySelector("template#result-data-item")
-		const k = t.content.querySelector(".key")
-		const v = t.content.querySelector(".value")
-		k.textContent = label
-		v.textContent = ''
-		if (Array.isArray(value)) {
-			value.forEach(x => {
-				if (typeof x === "object") {
-					let s = ''
-					Object.keys(x).forEach(item => {
-						s += (x[item] + ' ')
-					})
-					v.insertAdjacentHTML('beforeend', `
-						<div>${s}</div>
-					`)
-				} else {
-					v.insertAdjacentHTML('beforeend', `
-						<span>${x}</span>
-					`)
-				}
-			})
-
-		} else {
-			if (label.includes('時間') || label.includes('是否有關聯規則')) {
-				return
-			} else {
-				v.textContent = value.toString()
-			}
-		}
-
-		const parent = document.querySelector(".result-data-row:last-child");
-		const clone = document.importNode(t.content, true);
-		parent.appendChild(clone);
-	}
-	function onSort() {
-		//type = 'desc','asc',null
-		let locData = [...antiFraudData];
-		if (locData.length < 1) {
-			return
-		}
-		// display:none faIcons
-		faIcons.forEach((x) => {
-			x.classList.remove("d-none");
-			x.classList.add("d-none");
-		});
-		if (orderBy === null) {
-			//null
-			orderBy = "desc";
-			faIcons[0].classList.toggle("d-none");
-		} else if (orderBy === "desc") {
-			orderBy = "asc";
-			faIcons[1].classList.toggle("d-none");
-		} else {
-			orderBy = null;
-			faIcons[2].classList.toggle("d-none");
-		}
-		//do sort
-		if (orderBy === "desc") {
-			locData.sort((a, b) => a.efficiency - b.efficiency);
-		}
-		if (orderBy === "asc") {
-			locData.sort((a, b) => b.efficiency - a.efficiency);
-		}
-		removeDatas()
-		locData.forEach((x) => insertData(x))
-		//insert
-		// insertDefaultPanel()
-		// locData.forEach(x => {
-		// 	insertData(x)
-		// })
-	}
-	// convertData
-	function converProductId({ productId }) {
-		const configMap = new Map()
-		configs.forEach(({ name, value }) => {
-			configMap.set(value.toString(), name)
-		})
-		return configMap.get(productId.toString()) ? configMap.get(productId.toString()) : 'unknown'
-	}
-	function convertEfficiency({ efficiency }) {
-		return efficiency.toFixed(2) + "%";
-	}
-	function converDate(date) {
+	// converts
+	function convertDate(date) {
 		const d = new Date(date * 1000)
 		return d.getFullYear() + '-' + Number(d.getMonth() + 1) + '-' + d.getDate()
 	}
@@ -784,43 +518,8 @@
 			.then((x) => x.json())
 			.then(({ response }) => {
 				return response.results
-				// return response.results.map((x) => x.typeId);
-			});
-	}
-
-	function getRuleStatistics({ typeIds }) {
-		const fetchRule = ({ typeId }) => {
-			return fetch(
-				`${apiUrl}/rule_statistics?typeId=${typeId}`
-			)
-				.then((res) => {
-					if (res.ok) {
-						return res.json();
-					} else {
-						throw new Error(res.statusText);
-					}
-				})
-				.then(({ response }) => {
-					return response.results;
-				})
-				.catch((err) => {
-					return Promise.reject(err);
-				});
-		};
-		const fetchRules = [];
-		typeIds.forEach((typeId) => {
-			fetchRules.push(
-				fetchRule({ typeId })
-			);
-		});
-		return Promise.allSettled(fetchRules)
-			.then((x) => {
-				const ans = x.filter((res) => {
-					return res.status == "fulfilled";
-				});
-				return ans.flatMap((x) => x.value);
+				// return response.results.map((x) => x.typeId)
 			})
-			.catch((err) => console.error(err));
 	}
 	function getRuleRuleId(data) {
 		const fetchRule = ({ typeId, ruleId }) => {
@@ -829,32 +528,32 @@
 			)
 				.then((res) => {
 					if (res.ok) {
-						return res.json();
+						return res.json()
 					} else {
-						throw new Error(res.statusText);
+						throw new Error(res.statusText)
 					}
 				})
 				.then(({ response }) => {
-					return response.results;
+					return response.results
 				})
 				.catch((err) => {
-					return Promise.reject(err);
-				});
-		};
-		const fetchRules = [];
+					return Promise.reject(err)
+				})
+		}
+		const fetchRules = []
 		data.forEach(({ typeId, ruleId }) => {
 			fetchRules.push(
 				fetchRule({ typeId, ruleId })
-			);
-		});
+			)
+		})
 		return Promise.allSettled(fetchRules)
 			.then((x) => {
 				const ans = x.filter((res) => {
-					return res.status == "fulfilled";
-				});
-				return ans.flatMap((x) => x.value);
+					return res.status == "fulfilled"
+				})
+				return ans.flatMap((x) => x.value)
 			})
-			.catch((err) => console.error(err));
+			.catch((err) => console.error(err))
 	}
 
 	function getRuleTypeId(data) {
@@ -864,42 +563,31 @@
 			)
 				.then((res) => {
 					if (res.ok) {
-						return res.json();
+						return res.json()
 					} else {
-						throw new Error(res.statusText);
+						throw new Error(res.statusText)
 					}
 				})
 				.then(({ response }) => {
-					return response.results;
+					return response.results
 				})
 				.catch((err) => {
-					return Promise.reject(err);
-				});
-		};
-		const fetchRules = [];
+					return Promise.reject(err)
+				})
+		}
+		const fetchRules = []
 		data.forEach(typeId => {
 			fetchRules.push(
 				fetchRule(typeId)
-			);
-		});
+			)
+		})
 		return Promise.allSettled(fetchRules)
 			.then((x) => {
 				const ans = x.filter((res) => {
-					return res.status == "fulfilled";
-				});
-				return ans.flatMap((x) => x.value);
-			})
-			.catch((err) => console.error(err));
-	}
-
-	function getResult({ ruleId }) {
-		const fetchResult = () => {
-			return fetch(`${apiUrl}/rule_results?ruleId=${ruleId}&startTime=${prevStartTime}&endTime=${prevEndTime}`)
-				.then(x => x.json())
-				.then(({ response }) => {
-					return response.results
+					return res.status == "fulfilled"
 				})
-		}
-		return fetchResult()
+				return ans.flatMap((x) => x.value)
+			})
+			.catch((err) => console.error(err))
 	}
 </script>
