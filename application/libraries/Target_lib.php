@@ -273,6 +273,7 @@ class Target_lib
         $this->CI->load->library('contract_lib');
         $this->CI->load->library('Anti_fraud_lib');
         $msg = false;
+        $target = $this->CI->target_model->get($target->id ?? 0);
         if (!empty($target) && ($target->status == TARGET_WAITING_APPROVE
                 || $renew
                 || $target->status == TARGET_ORDER_WAITING_VERIFY && $target->sub_status == TARGET_SUBSTATUS_NORNAL
