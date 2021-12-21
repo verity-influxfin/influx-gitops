@@ -1207,7 +1207,6 @@ END:
 
 	public function editpwphone_get()
     {
-		$this->not_support_company();
         $input 		= $this->input->get(NULL, TRUE);
 		$user_id 	= $this->user_info->id;
 		$phone 		= $this->user_info->phone;
