@@ -2,12 +2,12 @@
   <div class="business-loan">
     <div class="header row">
       <div class="header-col col">
-        <div class="header-title">普匯金融 • 普惠金融</div>
+        <div class="header-title">普匯微企e秒貸•中小企業融資</div>
         <ul class="header-text">
           <li>企業主/創業夢想</li>
-          <li>手機全線上無人化方便簡單快速安全</li>
-          <li>全台第一政府支持信保保證銀行放款</li>
-          <li>溫馨扶持背後金援</li>
+          <li>手機全線上申貸/無人化審核</li>
+          <li>全台第一/線上直送銀行放款/信保保證</li>
+          <li>配合政策/普惠金融/扶持新創</li>
         </ul>
         <div class="header-slogan">
           <div class="yellow">FREE</div>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="features-row">
-      <div class="feature">
+      <div class="feature d-none d-sm-block">
         <div class="icon">
           <img src="../asset/images/loan-f1.png" class="icon-img" />
         </div>
@@ -64,7 +64,7 @@
           <div>銀行快速額貸</div>
         </div>
       </div>
-      <div class="feature">
+      <div class="feature e-loan">
         <div class="icon">
           <img src="../asset/images/loan-f2.png" class="icon-img" />
         </div>
@@ -74,6 +74,18 @@
           <div>100萬信保融資，超低利率</div>
           <div>普匯無人化APP申請、免費媒合</div>
           <div>銀行撥款、信保擔保</div>
+        </div>
+      </div>
+      <div class="feature d-block d-sm-none">
+        <div class="icon">
+          <img src="../asset/images/loan-f1.png" class="icon-img" />
+        </div>
+        <div class="feature-title">信保融資專案</div>
+        <div class="feature-text">
+          <div>符合信保資格</div>
+          <div>滿足不同資金額度需求</div>
+          <div>普匯微企APP申請</div>
+          <div>銀行快速額貸</div>
         </div>
       </div>
       <div class="feature">
@@ -200,32 +212,34 @@
             alt=""
           />
           <div class="feature-item item-1">
-            <div class="feature-title">獲得主管機關支持同意</div>
+            <div class="feature-title">獲得銀行肯定、政策支持</div>
             <div class="feature-text">
-              <div>台灣唯一：全線上、無人化</div>
-              <div>⌜中小微企業全線上信保融資平台⌟</div>
+              <div>台灣第一，全線上無人化</div>
+              <div>中小微企業線上審核融資平台</div>
             </div>
           </div>
           <div class="feature-item item-2">
-            <div class="feature-title">普匯金融AI科技</div>
+            <div class="feature-title">AI全線上無人化審核</div>
             <div class="feature-text">
-              <div>中小微企業APP全線上申貸</div>
-              <div>AI智能風控系統 自動徵審核貸</div>
+              <div>全程無人化手機APP申請</div>
+              <div>AI人工智慧風控審核</div>
             </div>
           </div>
           <div class="feature-item item-3">
-            <div class="feature-title">銀行提供資金</div>
+            <div class="feature-title">銀行資金</div>
             <div class="feature-text">
-              <div>普匯平台API資料線上直串銀行</div>
+              <div>全程手機申貸</div>
+              <div>資料API直串銀行系統</div>
               <div>銀行即時同步系統審核</div>
-              <div>快速核決授信額度條件</div>
+              <div>核准條件同步普匯APP</div>
+              <div>銀行簽約對保放款</div>
             </div>
           </div>
           <div class="feature-item item-4">
-            <div class="feature-title">信保基金擔保保證</div>
+            <div class="feature-title">信保基金保證</div>
             <div class="feature-text">
-              <div>政府信保提供保證</div>
-              <div>快速媒合加速取得資金</div>
+              <div>移送政府信保基金保證</div>
+              <div>協助中小企業加強擔保力</div>
             </div>
           </div>
         </div>
@@ -272,19 +286,25 @@
                 </div>
               </div>
               <div class="process-item item-3">
-                <div>公司行號註冊</div>
-                <div>公司行號登入</div>
+                <div>註冊登入</div>
+                <ul class="item-highlight">
+                  <li>負責人</li>
+                  <li>公司行號</li>
+                </ul>
                 <div class="item-3-line">
                   <div class="line"></div>
                   <div class="circle"></div>
                 </div>
               </div>
               <div class="process-item item-4">
-                <div>完成資料提供</div>
-                <div>
-                  <div class="item-highlight">1.負責人/配偶/保證人</div>
-                  <div class="item-highlight">2.公司企業</div>
-                </div>
+                <div>資料提供</div>
+                <ul class="item-highlight">
+                  <li>負責人、配偶、公司基本資料</li>
+                  <li>聯合徵信中心報告</li>
+                  <li>勞動保險變動明細</li>
+                  <li>財務及收入證明</li>
+                  <li>其他佐證資料</li>
+                </ul>
                 <div class="item-4-line">
                   <div class="line"></div>
                   <div class="circle"></div>
@@ -319,13 +339,13 @@
               <div>應備資料</div>
             </div>
             <div class="data-item">公司變更事項登記表</div>
-            <div class="data-item">公司電子信箱</div>
-            <div class="data-item">法人聯合徵信</div>
-            <div class="data-item">損益表</div>
+            <div class="data-item">公司授權核實</div>
+            <div class="data-item">近6個月封面及內頁公司存摺</div>
             <div class="data-item">員工投保人數資料</div>
-            <div class="data-item">金流證明</div>
+            <div class="data-item">近三年損益表</div>
+            <div class="data-item">公司聯合徵信</div>
+            <div class="data-item">公司電子信箱</div>
             <div class="data-item">公司資料表</div>
-            <div class="data-item">法人對保</div>
           </div>
           <div class="col-auto apply-img-cover">
             <img src="../asset/images/business-loan-apply.png" alt="申請明細" />
@@ -337,9 +357,9 @@
             </div>
             <div class="data-item">實名認證</div>
             <div class="data-item">聯合徵信報告+A11</div>
-            <div class="data-item">財務訊息</div>
+            <div class="data-item">財務收支</div>
             <div class="data-item">工作資料</div>
-            <div class="data-item">個人資料表</div>
+            <div class="data-item">個人基本資料</div>
             <div class="data-item">常用電子信箱</div>
           </div>
         </div>
@@ -439,7 +459,7 @@ export default {
         prevEl: '.swiper-button-prev',
       },
     })
-    // $('title').text('')
+    $('title').text('普匯中小微企業線上審核融資平台 台灣第一全線上無人化');
   },
   data() {
     return {
@@ -525,6 +545,15 @@ export default {
 
 <style lang="scss" scoped>
 @import "../component/alesis/alesis";
+@keyframes bouncing {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1.15);
+  }
+}
+
 .business-loan {
   line-height: 1.25;
   .phone-show {
@@ -535,7 +564,8 @@ export default {
   }
   .header {
     position: relative;
-    height: 550px;
+    height: 650px;
+    min-width: 1450px;
     background-image: url("../asset/images/business-loan-header-all.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -547,7 +577,7 @@ export default {
     .header-title {
       margin-top: 52px;
       text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-      font-size: 40px;
+      font-size: 34px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
@@ -623,6 +653,12 @@ export default {
     justify-content: center;
     gap: 34px;
     .feature {
+      &.e-loan {
+        transform: scale(1.05);
+        .icon {
+          animation: bouncing 0.5s infinite alternate;
+        }
+      }
       width: 320px;
       padding: 20px 5px;
       border-radius: 20px;
@@ -769,19 +805,19 @@ export default {
         font-weight: 900;
         color: #dcdcdc;
         left: -70px;
-        top: -15px;
+        top: 0;
         &.order-2 {
-          left: 470px;
-          top: 20px;
+          left: 475px;
+          top: 55px;
           color: #1e69aa;
         }
         &.order-3 {
-          top: 215px;
+          top: 305px;
           left: -70px;
         }
         &.order-4 {
-          left: 470px;
-          top: 260px;
+          left: 475px;
+          top: 355px;
           color: #1e69aa;
         }
         &.item-2-img {
@@ -902,7 +938,8 @@ export default {
         .process-item {
           position: relative;
           width: 300px;
-          height: 140px;
+          height: auto;
+          padding: 15px 10px;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -934,8 +971,11 @@ export default {
           &.item-6 {
             grid-area: p6;
           }
-          .item-highlight {
+          ul.item-highlight {
             color: #1e69aa;
+            padding-left: 1.5em;
+            list-style: decimal;
+            font-size: 0.75em;
           }
         }
       }
@@ -1011,7 +1051,7 @@ export default {
         border-radius: 16px;
         border: solid 2px #dcdcdc;
         margin-bottom: 20px;
-        width: 264px;
+        width: 284px;
         font-size: 20px;
         font-weight: normal;
         font-stretch: normal;
@@ -1030,7 +1070,7 @@ export default {
       display: flex;
       align-items: center;
       padding: 60px;
-      font-size: 24.9px;
+      font-size: 20px;
       font-weight: 500;
       font-stretch: normal;
       font-style: normal;
@@ -1093,6 +1133,11 @@ export default {
     }
   }
 }
+@media screen and (max-width: 1900px) {
+  .business-loan .header {
+    height: 550px;
+  }
+}
 @media screen and (max-width: 767px) {
   .business-loan {
     .phone-show {
@@ -1102,8 +1147,9 @@ export default {
       display: none;
     }
     .header {
+      min-width: 0;
       height: 675px;
-      background-image: url("../asset/images/business-header-phone.png");
+      background-image: url("../asset/images/business-header-phone.jpg");
       .header-col {
         margin: 12px 15px;
         padding-left: 12px;
@@ -1258,18 +1304,18 @@ export default {
         .feature-order {
           font-size: 145px;
           left: -3px;
-          top: -15px;
+          top: 0;
           &.order-2 {
             left: -5px;
-            top: 155px;
+            top: 225px;
           }
           &.order-3 {
-            top: 320px;
+            top: 445px;
             left: -5px;
           }
           &.order-4 {
             left: -5px;
-            top: 499px;
+            top: 675px;
           }
           &.item-2-img {
             left: 125px;
@@ -1363,12 +1409,7 @@ export default {
           .process-item {
             position: relative;
             width: 160px;
-            height: 100px;
             font-size: 14px;
-
-            .item-highlight {
-              color: #1e69aa;
-            }
           }
         }
         .circle {
@@ -1389,7 +1430,7 @@ export default {
         }
         .item-3-line {
           transform: rotate(180deg);
-          bottom: 45px;
+          bottom: 80px;
           left: -17px;
         }
         .item-4-line {

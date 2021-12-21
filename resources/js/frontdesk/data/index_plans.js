@@ -47,13 +47,4 @@ export default [
             "申請速度最快，核准機率最高",
         ]
     },
-    {
-        header  : "車輛融資",
-        unready : true,
-        image   : "/images/alesis-car-rotate.svg",
-        link    : null,
-        targets : [],
-        action  : "敬請期待",
-        features: []
-    }
 ]

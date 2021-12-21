@@ -1350,8 +1350,8 @@ export default {
 
 .產品方案 .包裹容器 {
     display              : grid;
-    grid-template-columns: repeat(4, 1fr);
-    max-width            : 1100px;
+    grid-template-columns: repeat(3, 1fr);
+    max-width            : 900px;
     margin               : 3rem auto 0;
     gap                  : 1.5rem;
 
