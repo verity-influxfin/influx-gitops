@@ -1149,7 +1149,7 @@ export default {
     .header {
       min-width: 0;
       height: 675px;
-      background-image: url("../asset/images/business-header-phone.png");
+      background-image: url("../asset/images/business-header-phone.jpg");
       .header-col {
         margin: 12px 15px;
         padding-left: 12px;
