@@ -191,5 +191,58 @@ class S3_lib {
 		}
 	}
 
+    // 新光附件圖片壓 pdf
+    public function imagesToPdf($fileUrlList = [], $user_id = 0, $name = 'credit', $type = 'skbank_raw_data')
+    {
+        $images = [];
+        $fileList = [];
+        $dir = 'pdf/';
+        $pdfPath = $dir . round(microtime(true) * 1000) . '_combined.pdf';
+        $content = false;
+        $result = [];
+        try {
+            if (empty($fileUrlList) || !is_array($fileUrlList))
+                return '';
+
+            foreach($fileUrlList as $list_name => $url){
+                if (is_readable($url) )
+                {
+                    $path = sprintf('%s%s_%s.jpg', $dir, $list_name, $type);
+                    if (is_writable($path))
+                    {
+                        file_put_contents($path, file_get_contents($url));
+                        if (file_exists($path)) {
+                            $images[] = realpath($path);
+                        }
+                    }
+                }
+            }
+            // 合併多張圖片至PDF檔案
+            $pdfImagick = new Imagick($images);
+            $pdfImagick->setImageFormat('pdf');
+            $pdfImagick->writeImages($pdfPath, true);
+            if (is_readable($pdfPath))
+            {
+                $content = file_get_contents($pdfPath);
+            }
+            if($content !== false) {
+                $result = $this->client->putObject(array(
+                    'Bucket' => S3_BUCKET,
+                    'Key' =>   'user_upload/' .$user_id .'/'. round(microtime(true) * 1000) . rand(1, 99) . '.pdf',
+                    'Body' => $content
+                ));
+            }
+        } catch (S3Exception $e) {
+                error_log('Connecting to S3 was failed. Error in '.$e->getFile().' at line '.$e->getLine());
+        } finally {
+			foreach ($images as $filename) {
+				unlink($filename);
+			}
+            unlink($pdfPath);
+		}
+
+        return $result['ObjectURL'] ?? '';
+    }
+
 }
 ?>

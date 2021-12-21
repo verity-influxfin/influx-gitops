@@ -2163,6 +2163,7 @@ class Target extends MY_Admin_Controller {
     public function skbank_image_get(){
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
+        $response = [];
 
         $target_info 	= $this->target_model->get_by(['id'=>$get['target_id']]);
         if(!$target_info){
@@ -2171,7 +2172,15 @@ class Target extends MY_Admin_Controller {
         $this->load->library('mapping/sk_bank/check_list');
         $image_url = $this->check_list->get_raw_data($target_info);
 
-        $this->json_output->setStatusCode(200)->setResponse($image_url)->send();
+        $this->load->library('S3_lib');
+        foreach($image_url as $image_type => $images){
+            $response[$image_type] = [];
+            if (!empty($image_url[$image_type])) {
+                $response[$image_type][] = $this->s3_lib->imagesToPdf($images,$target_info->user_id,$image_type,'skbank_raw_data');
+            }
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 }
 ?>
