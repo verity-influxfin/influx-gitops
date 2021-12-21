@@ -963,7 +963,7 @@ class Certification_lib{
                 $status = $verifiedResult->getStatus();
 
                 $this->CI->user_certification_model->update($info->id, array(
-                    'status' => $status,
+                    'status' => $status != 3 ? 0 : $status,
                     'sys_check' => 1,
                     'content' => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
                     'remark' => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
