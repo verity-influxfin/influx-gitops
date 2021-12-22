@@ -2,10 +2,10 @@
     <div class="index-wrapper">
         <div class="swiper-container 標頭幻燈片">
             <div class="swiper-wrapper">
-                <div class="swiper-slide">
+                <a class="swiper-slide" href="/business-loan/sme">
                     <img src="../asset/images/新匯.jpg" class="img-fluid hidden-desktop" style="width:100%">
                     <img src="../asset/images/新匯-phone.jpg" class="img-fluid hidden-phone">
-                </div>
+                </a>
                 <div class="swiper-slide">
                     <div class="banner">
                         <div class="puhey-banner">

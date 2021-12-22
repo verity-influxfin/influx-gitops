@@ -132,4 +132,9 @@ export default {
 .單張容器 .動作 > div {
     width: 100%;
 }
+@media screen and (max-width: 767px) {
+   .單張容器 .特色 .清單 {
+        max-width: 130px;
+    }
+}
 </style>
