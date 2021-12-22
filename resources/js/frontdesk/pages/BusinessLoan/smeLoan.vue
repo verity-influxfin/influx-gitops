@@ -304,7 +304,7 @@ export default {
         prevEl: '.swiper-button-prev',
       },
     })
-    $('title').text('普匯中小微企業線上審核融資平台 台灣第一全線上無人化');
+    $('title').text('普匯 微企e秒貸');
   },
   data() {
     return {

@@ -226,7 +226,7 @@
               <li>申請額度：不限。</li>
               <li>借款期間：不限。</li>
               <li>還款方式：每月平均攤還本息/按月繳息，本金屆期清償。</li>
-              <li>利費率：最低1.6%</li>
+              <li>利費率：最低1.6%起</li>
               <li>費率：普匯平台不收取任何費用，免費服務︒</li>
             </ul>
             <div class="require-line"></div>
@@ -244,7 +244,7 @@
               </div>
               <div class="process-item item-2">
                 <div>申請「企業融資」</div>
-                <div>申請「企業融資」</div>
+                <div>選擇適合您的產品</div>
                 <div class="item-2-line">
                   <div class="line"></div>
                   <div class="circle"></div>
@@ -304,12 +304,13 @@
               <div>應備資料</div>
             </div>
             <div class="data-item">公司變更事項登記表</div>
+            <div class="data-item">公司資料表</div>
+            <div class="data-item">公司電子信箱</div>
             <div class="data-item">公司授權核實</div>
             <div class="data-item">近六個月公司存摺封面與內頁</div>
-            <div class="data-item">公司基本資料</div>
-            <div class="data-item">所得稅結算申報書</div>
+            <div class="data-item">近三年所得稅結算申報書（稅簽）</div>
+            <div class="data-item">員工投保人數資料</div>
             <div class="data-item">公司聯合徵信</div>
-            <div class="data-item">公司電子信箱</div>
           </div>
           <div class="col-auto apply-img-cover">
             <img
@@ -323,11 +324,11 @@
               <div>應備資料</div>
             </div>
             <div class="data-item">實名認證</div>
-            <div class="data-item">聯合徵信報告+A11</div>
-            <div class="data-item">近六個月公司存摺封面與內頁</div>
-            <div class="data-item">工作財力收入證明</div>
-            <div class="data-item">個人基本資料</div>
             <div class="data-item">常用電子信箱</div>
+            <div class="data-item">個人基本資料</div>
+            <div class="data-item">財務收支</div>
+            <div class="data-item">工作資料</div>
+            <div class="data-item">聯合徵信報告+A11</div>
           </div>
         </div>
       </div>
@@ -1017,7 +1018,7 @@ export default {
         border-radius: 16px;
         border: solid 2px #dcdcdc;
         margin-bottom: 20px;
-        width: 284px;
+        width: 320px;
         font-size: 20px;
         font-weight: normal;
         font-stretch: normal;

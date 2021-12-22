@@ -92,6 +92,7 @@ export default {
 .單張容器 .特色 .清單 {
     font-size : .9rem;
     min-height: 43px;
+    max-width: 185px;
 }
 
 .單張容器 .特色 .清單 .項目 {

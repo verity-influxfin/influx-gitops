@@ -148,8 +148,8 @@
                                 <div>企業融資</div>
                             </a>
                             <a href="/business-loan/sme" class="item">微企e秒貸</a>
-                            <div class="item -disabled ">信保專案融資 (comming soon)</div>
-                            <div class="item -disabled ">一般企業融資 (comming soon)</div>
+                            <div class="item -disabled ">信保專案融資 (coming soon)</div>
+                            <div class="item -disabled ">一般企業融資 (coming soon)</div>
                         </div>
                     </div>
                 </div>
