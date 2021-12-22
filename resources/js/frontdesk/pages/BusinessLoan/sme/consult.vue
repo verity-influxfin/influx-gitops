@@ -192,7 +192,7 @@ export default {
       width: 85vw;
     }
     .btn-block {
-      margin-right: 0;
+      margin-left: 0;
       width: 100%;
     }
   }
