@@ -9,19 +9,24 @@
     ></button>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">統一編號</label>
+        <label class="input-group-text">1.統一編號</label>
       </div>
-      <input type="text" class="form-control" v-model="tax_id" />
+      <input
+        type="text"
+        class="form-control"
+        v-model="tax_id"
+        @input="getCompanyName"
+      />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">公司名稱</label>
+        <label class="input-group-text">2.公司名稱</label>
       </div>
       <input type="text" class="form-control" v-model="company_name" />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">目前營運上遇到的困難</label>
+        <label class="input-group-text">3.目前營運上遇到的困難</label>
       </div>
       <select class="custom-select" v-model="operating_difficulty">
         <option selected value="0"></option>
@@ -36,7 +41,7 @@
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">公司資金用途</label>
+        <label class="input-group-text">4.公司資金用途</label>
       </div>
       <select class="custom-select" v-model="funds_purpose">
         <option selected value="0"></option>
@@ -51,7 +56,7 @@
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">融資時最常遇到的困難</label>
+        <label class="input-group-text">5.融資時最常遇到的困難</label>
       </div>
       <select class="custom-select" v-model="financing_difficulty">
         <option selected value="0"></option>
@@ -66,19 +71,19 @@
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">聯絡人</label>
+        <label class="input-group-text">6.聯絡人</label>
       </div>
       <input type="text" class="form-control" v-model="contact_person" />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">聯絡電話</label>
+        <label class="input-group-text">7.聯絡電話</label>
       </div>
       <input type="tel" class="form-control" v-model="contact_phone" />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-        <label class="input-group-text">電子信箱</label>
+        <label class="input-group-text">8.電子信箱</label>
       </div>
       <input type="email" class="form-control" v-model="email" />
     </div>
@@ -138,15 +143,26 @@ export default {
           email
         }
       }).then(({ data }) => {
-        console.log(data)
         if (data.result === 'ERROR') {
           alert(data.message)
           return
         }
         this.$router.push({ name: 'end', params: { type: 'consult' } })
       })
-
     },
+    getCompanyName() {
+      const { tax_id } = this
+      if (tax_id.length > 7) {
+        axios({
+          method: 'get',
+          url: '/api/v1/getCompanyName?tax_id' + tax_id,
+        }).then(({ data }) => {
+          if (data?.data) {
+            this.company_name = data?.data
+          }
+        })
+      }
+    }
   },
 }
 </script>
@@ -158,6 +174,14 @@ export default {
   max-width: 900px;
   .input-group-text {
     width: 200px;
+    background-color: #fff;
+    border: none;
+  }
+  .btn-block {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+    background-color: #326398;
+    color: #fff;
   }
 }
 @media screen and (max-width: 767px) {
@@ -166,6 +190,10 @@ export default {
     max-width: min-content;
     .input-group-text {
       width: 85vw;
+    }
+    .btn-block {
+      margin-right: 0;
+      width: 100%;
     }
   }
 }

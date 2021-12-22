@@ -226,7 +226,7 @@
               <li>申請額度：不限。</li>
               <li>借款期間：不限。</li>
               <li>還款方式：每月平均攤還本息/按月繳息，本金屆期清償。</li>
-              <li>利費率：最低1.6%起</li>
+              <li>利費率：最低1.6%起。</li>
               <li>費率：普匯平台不收取任何費用，免費服務︒</li>
             </ul>
             <div class="require-line"></div>
@@ -307,7 +307,7 @@
             <div class="data-item">公司資料表</div>
             <div class="data-item">公司電子信箱</div>
             <div class="data-item">公司授權核實</div>
-            <div class="data-item">近六個月公司存摺封面與內頁</div>
+            <div class="data-item">近六個月封面及內頁公司存摺</div>
             <div class="data-item">近三年所得稅結算申報書（稅簽）</div>
             <div class="data-item">員工投保人數資料</div>
             <div class="data-item">公司聯合徵信</div>

@@ -428,9 +428,13 @@
                     <a href="/companycooperation" class="item">企業合作</a> |
                     <a href="/promote-code-intro" class="item">推薦有賞</a>
                 </div>
-                <div class="externals">
-                    <a class="item" href="/borrowLink">我想申貸</a>
+                <div class="externals" v-if="!location.pathname.includes('/business-loan/sme')">
+                    <a class="item" href="/borrowLink" >我想申貸</a>
                     <a class="item -invest" href="/investLink">我想投資</a>
+                </div>
+                 <div class="externals" v-else>
+                    <a class="item" href="/business-loan/sme/apply" >立即申辦</a>
+                    <a class="item -invest" href="/business-loan/sme/consult">我要諮詢</a>
                 </div>
             </div>
         </div>

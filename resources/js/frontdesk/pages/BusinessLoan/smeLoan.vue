@@ -480,8 +480,6 @@ export default {
       }
       width: 320px;
       padding: 20px 5px;
-      border-radius: 20px;
-      border: solid 1px #8f8f8f;
       .icon {
         margin: 0 auto 10px;
         text-align: center;
