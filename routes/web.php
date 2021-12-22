@@ -336,4 +336,7 @@ Route::prefix('api/v1')->group(function() {
 
     // 我要諮詢表單
     Route::post('saveConsultForm', 'SmeFormController@saveConsultForm');
+
+    // 統一編號取公司名稱
+    Route::get('getCompanyName', 'SmeFormController@getCompanyName');
 });
