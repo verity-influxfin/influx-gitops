@@ -1,24 +1,27 @@
 <template>
   <div class="end-page">
-    <div v-if="type === 'apply'">
+    <div>
       <div class="row">
         <div class="col">
-          <div class="go-download">前往APP下載區 立即啟動服務</div>
+          <img src="../../asset/images/end-apply.png" class="end-apply-img" alt="" />
           <div>
-            <router-link to="/borrowLink" target="_blank" class="mr-3">
-              <img
-                class="get-app"
-                src="../../asset/images/get-on-apple.png"
-                alt="download app"
-              />
-            </router-link>
-            <router-link to="/borrowLink" target="_blank">
-              <img
-                src="../../asset/images/get-on-google.png"
-                class="get-app"
-                alt="download app"
-              />
-            </router-link>
+            <div class="go-download">前往APP下載區 立即啟動服務</div>
+            <div>
+              <router-link to="/borrowLink" target="_blank" class="mr-3">
+                <img
+                  class="get-app"
+                  src="../../asset/images/get-on-apple.png"
+                  alt="download app"
+                />
+              </router-link>
+              <router-link to="/borrowLink" target="_blank">
+                <img
+                  src="../../asset/images/get-on-google.png"
+                  class="get-app"
+                  alt="download app"
+                />
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -50,6 +53,7 @@ export default {
 .end-page {
   min-height: 50vh;
   padding: 150px 30px;
+  background-color: #f5f5f5;
   .consult {
     font-size: 32px;
     text-align: center;

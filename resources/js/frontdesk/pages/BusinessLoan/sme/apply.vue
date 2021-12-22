@@ -77,6 +77,7 @@ export default {
           email
         }
       }).then(({data}) => {
+        this.$router.push({ name: 'end', params: { type: 'apply' } })
         if (data.result === 'ERROR') {
           alert(data.message)
           return
