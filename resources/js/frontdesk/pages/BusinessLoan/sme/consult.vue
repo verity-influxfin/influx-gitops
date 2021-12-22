@@ -141,7 +141,7 @@ export default {
         this.$router.push({ name: 'end', params: { type: 'consult' } })
       })
 
-    }
+    },
   },
 }
 </script>

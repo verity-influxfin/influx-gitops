@@ -77,7 +77,6 @@ export default {
           email
         }
       }).then(x => {
-        console.log(x)
         this.$router.push({ name: 'end', params: { type: 'apply' } })
       })
 
@@ -91,6 +90,9 @@ export default {
   padding: 50px 80px;
   margin: 0 auto;
   max-width: 900px;
+  .input-group-text {
+    width: 100px;
+  }
 }
 @media screen and (max-width: 767px) {
   .sme-apply {

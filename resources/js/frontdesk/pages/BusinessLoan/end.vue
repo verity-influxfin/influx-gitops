@@ -48,7 +48,7 @@ export default {
 
 <style lang="scss" scoped>
 .end-page {
-  min-height: 100vh;
+  min-height: 50vh;
   padding: 150px 30px;
   .consult {
     font-size: 32px;
@@ -66,6 +66,7 @@ export default {
     .consult {
       font-size: 24px;
       margin-top: 120px;
+      color: #326398;
       text-align: center;
     }
     .go-download {

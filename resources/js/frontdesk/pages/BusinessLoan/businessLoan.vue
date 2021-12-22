@@ -309,7 +309,6 @@
             <div class="data-item">公司基本資料</div>
             <div class="data-item">所得稅結算申報書</div>
             <div class="data-item">公司聯合徵信</div>
-            <div class="data-item">公司電子信箱</div>
           </div>
           <div class="col-auto apply-img-cover">
             <img
