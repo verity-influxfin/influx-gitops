@@ -1276,7 +1276,7 @@ class Sales extends MY_Admin_Controller {
             $list['contract'] = '';
             if (isset($contract_format->content) )
             {
-                $list['contract'] = htmlentities(vsprintf($contract_format->content, $content));
+                $list['contract'] = vsprintf($contract_format->content, $content);
             }
         } else {
             $this->json_output->setStatusCode(200)->setResponse(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT))->send();
@@ -1488,7 +1488,7 @@ class Sales extends MY_Admin_Controller {
         }
 
         // 通知管理員審核
-        $admin = $this->admin_model->get(1);
+        $admin = $this->admin_model->get(54);
         if (isset($admin))
         {
             $user_qrcode = $this->user_qrcode_model->get($apply_info->user_qrcode_id);
