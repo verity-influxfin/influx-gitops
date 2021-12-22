@@ -6,9 +6,7 @@ use App\Models\SmeApply;
 use App\Models\SmeConsult;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
 
 class SmeFormController extends BaseController
 {
@@ -158,17 +156,21 @@ class SmeFormController extends BaseController
      */
     public function getCompanyName(Request $request)
     {
-        $tax_id = (int) $request->input('tax_id');
-        if (empty($tax_id) || strlen($tax_id)) {
+        try {
+            $tax_id = (int) $request->input('tax_id');
+            if (empty($tax_id) || strlen($tax_id) != 8) {
+                return response()->json(['data' => '']);
+            }
+
+            $response = Http::get(env('API_URL').'website/company_name?tax_id='.$tax_id);
+
+            if (isset($response['result']) && $response['result'] == 'SUCCESS') {
+                return response()->json(['data' => ($response['data']['Company_Name'] ?? '')]);
+            }
+
+            return response()->json(['data' => '']);
+        } catch (\Throwable $e) {
             return response()->json(['data' => '']);
         }
-
-        //        $response = Http::asForm()
-        //            ->post(env('API_URL').'target/apply', [
-        //                'tax_id' => $tax_id
-        //            ]);
-        $response = [];
-
-        return response()->json(['data' => $response]);
     }
 }
