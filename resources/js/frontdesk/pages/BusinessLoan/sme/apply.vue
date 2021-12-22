@@ -37,17 +37,6 @@
       </div>
       <input type="email" class="form-control" />
     </div>
-    <div class="input-group mb-3">
-      <div class="input-group-prepend">
-        <label class="input-group-text">需求額度</label>
-      </div>
-      <select class="custom-select">
-        <option selected></option>
-        <option value="1">100萬內</option>
-        <option value="2">100萬</option>
-        <option value="3">100萬以上</option>
-      </select>
-    </div>
     <div>
       <button type="submit" class="btn btn-secondary btn-block">確認</button>
     </div>

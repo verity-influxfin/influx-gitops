@@ -166,7 +166,7 @@
             <img src="../../asset/images/coin.png" class="apply-icon" />
             銀行資金
             <img src="../../asset/images/coin.png" class="apply-icon" />
-            信保保證
+            全線上申請
           </div>
         </div>
         <div class="apply-features">
@@ -204,10 +204,10 @@
             </div>
           </div>
           <div class="feature-item item-4">
-            <div class="feature-title">信保基金保證</div>
+            <div class="feature-title">不到2天快速核准</div>
             <div class="feature-text">
-              <div>移送政府信保基金保證</div>
-              <div>協助中小企業加強擔保力</div>
+              <div>一支手機完成申請、資料上傳</div>
+              <div>全線上無人化系統不到2天核准</div>
             </div>
           </div>
         </div>
@@ -215,11 +215,8 @@
           <div class="apply-qualify">
             <div class="qualify-title">申請資格</div>
             <ul class="qualify-text">
-              <li>具有公司登記或商業登記執照。</li>
-              <li>不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。</li>
-              <li>實收資本額不得超過1億。</li>
-              <li>近一年平均投保員工人數不得大於200人。</li>
-              <li>企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。</li>
+              <li>本國依法設立登記之公司及行號(含獨資合夥)組織。</li>
+              <li>企業、負責人不得有信用瑕疵紀錄(退票、拒往等)。</li>
             </ul>
             <div class="qualify-line"></div>
           </div>
@@ -227,9 +224,9 @@
             <div class="require-title">申請條件</div>
             <ul class="require-text">
               <li>申請額度：不限。</li>
-              <li>借款期間：1~3年。</li>
-              <li>還款方式：每月平均攤還本息。</li>
-              <li>利 費 率：3.8%起。</li>
+              <li>借款期間：不限。</li>
+              <li>還款方式：每月平均攤還本息/按月繳息，本金屆期清償。</li>
+              <li>利費率：最低1.6%</li>
               <li>費率：普匯平台不收取任何費用，免費服務︒</li>
             </ul>
             <div class="require-line"></div>
@@ -246,8 +243,8 @@
                 </div>
               </div>
               <div class="process-item item-2">
-                <div>申請</div>
-                <div>⌜公司行號/微企e秒貸⌟</div>
+                <div>申請「企業融資」</div>
+                <div>申請「企業融資」</div>
                 <div class="item-2-line">
                   <div class="line"></div>
                   <div class="circle"></div>
@@ -267,9 +264,9 @@
               <div class="process-item item-4">
                 <div>資料提供</div>
                 <ul class="item-highlight">
-                  <li>負責人、配偶、公司基本資料</li>
-                  <li>聯合徵信中心報告</li>
-                  <li>勞動保險變動明細</li>
+                  <li>負責人雙證件</li>
+                  <li>公司登記事項表/執照</li>
+                  <li>聯合徵信報告</li>
                   <li>財務及收入證明</li>
                   <li>其他佐證資料</li>
                 </ul>
@@ -308,12 +305,11 @@
             </div>
             <div class="data-item">公司變更事項登記表</div>
             <div class="data-item">公司授權核實</div>
-            <div class="data-item">近6個月封面及內頁公司存摺</div>
-            <div class="data-item">員工投保人數資料</div>
-            <div class="data-item">近三年損益表</div>
+            <div class="data-item">近六個月公司存摺封面與內頁</div>
+            <div class="data-item">公司基本資料</div>
+            <div class="data-item">所得稅結算申報書</div>
             <div class="data-item">公司聯合徵信</div>
             <div class="data-item">公司電子信箱</div>
-            <div class="data-item">公司資料表</div>
           </div>
           <div class="col-auto apply-img-cover">
             <img
@@ -328,8 +324,8 @@
             </div>
             <div class="data-item">實名認證</div>
             <div class="data-item">聯合徵信報告+A11</div>
-            <div class="data-item">財務收支</div>
-            <div class="data-item">工作資料</div>
+            <div class="data-item">近六個月公司存摺封面與內頁</div>
+            <div class="data-item">工作財力收入證明</div>
             <div class="data-item">個人基本資料</div>
             <div class="data-item">常用電子信箱</div>
           </div>
@@ -495,18 +491,18 @@ export default {
         {
           img: require('../../asset/images/business-step1.png'),
           stepTitle: 'Step 1. 簡單下載註冊',
-          stepText: '下載APP完成法人註冊\n申請⌜微型企業線上融資⌟'
+          stepText: '下載APP完成法人註冊\n由「企業融資」列表選擇適合您的產品'
 
         },
         {
           img: require('../../asset/images/business-step2.png'),
           stepTitle: 'Step 2. 完成線上認證',
-          stepText: '完成負責人/配偶/保證人\n公司企業資料驗證'
+          stepText: '完成負責人/企業資料驗證\n上傳所需徵信資料'
         },
         {
           img: require('../../asset/images/business-step3.png'),
-          stepTitle: 'Step 3. 新光對保撥款',
-          stepText: '銀行專人審核\n立即對保撥款'
+          stepTitle: 'Step 3. 核准後對保撥款',
+          stepText: '全線上審核，快速核准\n立即專人聯繫對保撥款'
         },
       ]
     }
