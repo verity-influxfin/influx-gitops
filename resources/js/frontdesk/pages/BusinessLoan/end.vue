@@ -1,10 +1,10 @@
 <template>
   <div class="end-page">
-    <div>
-      <div class="row">
-        <div class="col">
+    <div v-if="type==='apply'">
+      <div class="row justify-content-center">
+        <div class="col-auto">
           <img src="../../asset/images/end-apply.png" class="end-apply-img" alt="" />
-          <div>
+          <div class="download">
             <div class="go-download">前往APP下載區 立即啟動服務</div>
             <div>
               <router-link to="/borrowLink" target="_blank" class="mr-3">
@@ -55,12 +55,23 @@ export default {
   padding: 150px 30px;
   background-color: #f5f5f5;
   .consult {
+    color: #326398;
     font-size: 32px;
     text-align: center;
+  }
+  .download{
+      margin-top: 10px;
+      padding: 20px;
+      align-items: center;
+      border-radius: 20px;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-between;
   }
   .go-download {
     font-size: 24px;
     line-height: 1.2;
+    color: #1c395f;
     margin-bottom: 8px;
   }
 }
@@ -72,6 +83,12 @@ export default {
       margin-top: 120px;
       color: #326398;
       text-align: center;
+    }
+    .download{
+        display: block;
+    }
+    .end-apply-img{
+        max-width: 100%;
     }
     .go-download {
       font-size: 20px;

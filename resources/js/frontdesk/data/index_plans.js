@@ -39,7 +39,7 @@ export default [
         header  : "中小企業融資",
         unready : false,
         image   : "/images/alesis-companies-rotate.svg",
-        link    : '/bussiness-loan',
+        link    : '/business-loan',
         targets: [
             '新創微型企業、電子商務、中小企業(主)',
             '有統編皆可申請'
