@@ -137,7 +137,12 @@ export default {
           contact_phone,
           email
         }
-      }).then(x => {
+      }).then(({ data }) => {
+        console.log(data)
+        if (data.result === 'ERROR') {
+          alert(data.message)
+          return
+        }
         this.$router.push({ name: 'end', params: { type: 'consult' } })
       })
 
