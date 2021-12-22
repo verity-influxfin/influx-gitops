@@ -7,6 +7,8 @@ use App\Models\SmeConsult;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 
 class SmeFormController extends BaseController
 {
@@ -53,7 +55,7 @@ class SmeFormController extends BaseController
             if (!isset($input['tax_id']) || empty($input['tax_id'])) {
                 throw new \Exception('統一編號必填');
             }
-            if (strlen($input['tax_id']) != 10) {
+            if (strlen($input['tax_id']) != 8) {
                 throw new \Exception('統一編號格式錯誤');
             }
 
@@ -97,7 +99,7 @@ class SmeFormController extends BaseController
             if (!isset($input['tax_id']) || empty($input['tax_id'])) {
                 throw new \Exception('統一編號必填');
             }
-            if (strlen($input['tax_id']) != 10) {
+            if (strlen($input['tax_id']) != 8) {
                 throw new \Exception('統一編號格式錯誤');
             }
 
@@ -147,5 +149,26 @@ class SmeFormController extends BaseController
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * 用統一編號取得公司名稱
+     * @param  Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCompanyName(Request $request)
+    {
+        $tax_id = (int) $request->input('tax_id');
+        if (empty($tax_id) || strlen($tax_id)) {
+            return response()->json(['data' => '']);
+        }
+
+        //        $response = Http::asForm()
+        //            ->post(env('API_URL').'target/apply', [
+        //                'tax_id' => $tax_id
+        //            ]);
+        $response = [];
+
+        return response()->json(['data' => $response]);
     }
 }
