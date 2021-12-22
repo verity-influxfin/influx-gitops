@@ -47,8 +47,8 @@ export default [
         action  : "立即申請",
         features: [
             "微企e秒貸 額度100萬2天內核准 銀行撥款、信保基金保證",
-            "信保融資專案 coming Soon...",
-            "一般中小企業融資 coming Soon...",
+            "信保融資專案 coming soon...",
+            "一般中小企業融資 coming soon...",
             "一支手機全線上申請",
             "申請媒合服務完全免費"
         ]
