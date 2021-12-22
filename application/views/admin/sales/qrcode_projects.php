@@ -154,7 +154,7 @@
                                                 <i class="fa fa-pencil"></i> 修改合約
                                             </button>
 
-                                            <button type="button" class="btn btn-primary btn-sm" @click="contract_submit" v-bind:disabled="is_waiting_response">
+                                            <button type="button" class="btn btn-primary btn-sm" @click="contract_submit(item)" v-bind:disabled="is_waiting_response">
                                                 <i class="fa fa-paper-plane-o"></i> 送出審核
                                             </button>
                                         </td>

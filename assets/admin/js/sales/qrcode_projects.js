@@ -227,12 +227,13 @@ var app = new Vue({
 			alert('修改成功')
 		}
     },
-	contract_submit: async function () {
+	contract_submit: async function (item) {
 		if (!confirm('確定送出審核？')) {
 			return
 		}
 		this.is_waiting_response = true
-		const qrcode_apply_id = this.qrcode_apply_id
+
+		const qrcode_apply_id = item.qrcode_apply_id
 		const data = new FormData()
 		data.append('qrcode_apply_id',qrcode_apply_id)
 		const res = await axios({
