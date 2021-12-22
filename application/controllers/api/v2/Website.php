@@ -694,4 +694,65 @@ class Website extends REST_Controller {
         $product = $this->sub_product_profile($product,$sub_product_data);
         return $product;
     }
+
+    /**
+     * @api {get} /v2/website/company_name 官網 利用統一編號取得公司(或商行)名稱
+     * @apiVersion 0.2.0
+     * @apiGroup Website
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     * "result": "SUCCESS",
+     * "data": [{
+     *         "Business_Accounting_NO": "68566881",
+     *         "Company_Status_Desc": "核准設立",
+     *         "Company_Name": "普匯金融科技股份有限公司",
+     *         "Capital_Stock_Amount": 18250000,
+     *         "Paid_In_Capital_Amount": 18250000,
+     *         "Responsible_Name": "姚木川",
+     *         "Company_Location": "臺北市中山區松江路111號11樓之1",
+     *         "Register_Organization_Desc": "臺北市政府",
+     *         "Company_Setup_Date": "1061208",
+     *         "Change_Of_Approval_Data": "1101015",
+     *         "Revoke_App_Date": "",
+     *         "Case_Status": "",
+     *         "Case_Status_Desc": "",
+     *         "Sus_App_Date": "",
+     *         "Sus_Beg_Date": "",
+     *         "Sus_End_Date": ""
+     *     }]
+     * }
+     */
+    public function company_name_get()
+    {
+        try
+        {
+            while (TRUE)
+            {
+                $input = $this->input->get();
+                if ( ! isset($input['tax_id']) || empty($input['tax_id']))
+                {
+                    throw new Exception('統一編號必填');
+                }
+
+                $this->load->library('Gcis_lib');
+                $data = $this->gcis_lib->get_company_info($input['tax_id']);
+
+                if ( ! empty($data))
+                {
+                    break;
+                }
+                $data = $this->gcis_lib->get_president_info($input['tax_id']);
+
+                break;
+            }
+
+            $this->response(array('result' => 'SUCCESS', 'data' => $data));
+        }
+        catch (Exception $e)
+        {
+            $this->response(array('result' => 'ERROR', 'data' => [], 'msg' => $e->getMessage()));
+        }
+    }
 }
