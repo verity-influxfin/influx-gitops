@@ -1,14 +1,12 @@
 <?php
+use CreditSheet\CreditSheetBase;
 
 class Credit_sheet_model extends MY_Model
 {
 	public $_table = 'credit_sheet';
 	public $before_create = array( 'before_data_c' );
 	public $before_update = array( 'before_data_u' );
-	public $status_list   = array(
-		0 =>	"已失效",
-		1 =>	"有效"
-	);
+    public $status_list = CreditSheetBase::STATUS_LIST;
 
 	public function __construct()
 	{
@@ -108,6 +106,28 @@ class Credit_sheet_model extends MY_Model
             ->order_by('`c`.`expire_time`', 'DESC');
         if(!empty($productIdList))
             $this->db->where_in('`c`.`product_id`', $productIdList);
+        return $this->db->get()->result();
+    }
+
+    public function get_credit_list($user_id)
+    {
+        $this->db->select('*')
+            ->from('`p2p_loan`.`credits`')
+            ->where('user_id', $user_id);
+        $sub_query = $this->db->get_compiled_select('', TRUE);
+
+        $this->db->distinct()
+            ->select('`c`.`user_id`, `c`.`product_id`, `c`.`sub_product_id`, `c`.`instalment`, `c`.`level`,
+                `c`.`points`, `c`.`amount`, `c`.`status`, `c`.`expire_time`, `c`.`created_at`')
+            ->from('`p2p_loan`.`credit_sheet` AS `cs`')
+            ->join("({$sub_query}) AS `c`", '`c`.`id` = `cs`.`credit_id`', 'right')
+            ->join('`p2p_loan`.`targets` AS `t`', '`t`.`user_id` = `c`.`user_id`', 'right')
+            ->where('`t`.`user_id`', $user_id)
+            ->group_start()
+            ->where('`cs`.`status`', CreditSheetBase::STATUS_APPROVED)
+            ->or_where('`c`.`level` > ', 10)
+            ->group_end();
+
         return $this->db->get()->result();
     }
 }
