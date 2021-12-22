@@ -11,7 +11,12 @@
       <div class="input-group-prepend">
         <label class="input-group-text">統一編號</label>
       </div>
-      <input type="text" class="form-control" v-model="tax_id" />
+      <input
+        type="text"
+        class="form-control"
+        v-model="tax_id"
+        @input="getCompanyName"
+      />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -76,14 +81,26 @@ export default {
           contact_phone,
           email
         }
-      }).then(({data}) => {
+      }).then(({ data }) => {
         if (data.result === 'ERROR') {
           alert(data.message)
           return
         }
         this.$router.push({ name: 'end', params: { type: 'apply' } })
       })
-
+    },
+    getCompanyName() {
+      const { tax_id } = this
+      if (tax_id.length > 7) {
+        axios({
+          method: 'get',
+          url: '/api/v1/getCompanyName?tax_id='+tax_id,
+        }).then(({ data }) => {
+          if (data?.data) {
+            this.company_name = data?.data
+          }
+        })
+      }
     }
   },
 }

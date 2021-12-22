@@ -307,7 +307,7 @@
             <div class="data-item">公司資料表</div>
             <div class="data-item">公司電子信箱</div>
             <div class="data-item">公司授權核實</div>
-            <div class="data-item">近六個月公司存摺封面與內頁</div>
+            <div class="data-item">近六個月封面及內頁公司存摺</div>
             <div class="data-item">近三年所得稅結算申報書（稅簽）</div>
             <div class="data-item">員工投保人數資料</div>
             <div class="data-item">公司聯合徵信</div>
