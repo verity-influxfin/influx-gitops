@@ -165,7 +165,7 @@ class SmeFormController extends BaseController
             $response = Http::get(env('API_URL').'website/company_name?tax_id='.$tax_id);
 
             if (isset($response['result']) && $response['result'] == 'SUCCESS') {
-                return response()->json(['data' => ($response['data']['Company_Name'] ?? '')]);
+                return response()->json(['data' => $response['data'][0]['Company_Name'] ?? '']);
             }
 
             return response()->json(['data' => '']);
