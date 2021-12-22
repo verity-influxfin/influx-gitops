@@ -988,7 +988,9 @@ $config['visul_id_des'] = [
     ],
     'J2' => [
         'name' => '普匯微企e秒貸',
-        'description' => '企業融資 專案啟動',
+        'description' => '<span style=\'font-size:14px;color:white\'>1.額度最高 100 萬、3 年期、利率 3.8%。<br>
+2.由銀行簽約對保放款。<br>
+3.信保基金保證 95 成，加強中小微企業加強擔保力。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
@@ -1836,7 +1838,7 @@ $config['certifications'] = [
 
     1000 => ['id' => CERTIFICATION_BUSINESSTAX, 'alias' => 'businesstax', 'name' => '銷售額與稅額申報書(401表)', 'status' => 1, 'description' => '提供銷售額與稅額申報書(401表)', 'optional' => []],
     1001 => ['id' => CERTIFICATION_BALANCESHEET, 'alias' => 'balancesheet', 'name' => '資產負債表', 'status' => 1, 'description' => '提供資產負債表', 'optional' => []],
-    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '近三年損益表', 'status' => 1, 'description' => '提供近三年損益表', 'optional' => []],
+    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '近三年所得稅結算申報書(稅簽)', 'status' => 1, 'description' => '提供近三年所得稅結算申報書(稅簽)', 'optional' => []],
     1003 => ['id' => CERTIFICATION_INVESTIGATIONJUDICIAL, 'alias' => 'investigationjudicial', 'name' => '公司聯合徵信', 'status' => 1, 'description' => '提供公司聯合徵信', 'optional' => []],
     1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '近6個月封面及內頁公司存摺', 'status' => 1, 'description' => '提供近6個月封面及內頁公司存摺', 'optional' => []],
     1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],
