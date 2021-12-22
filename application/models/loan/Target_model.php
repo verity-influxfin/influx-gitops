@@ -406,7 +406,7 @@ class Target_model extends MY_Model
                 'a2.target_id=t.id AND a2.id=(
                     SELECT `id`
                       FROM `p2p_transaction`.`transactions` 
-                     WHERE `status`='.TRANSACTION_STATUS_TO_BE_PAID.'
+                     WHERE `status` IN ('.TRANSACTION_STATUS_DELETED.','.TRANSACTION_STATUS_TO_BE_PAID.','.TRANSACTION_STATUS_PAID_OFF.')
                        AND `source`='.SOURCE_AR_DELAYINTEREST.'
                        AND `target_id`=`a2`.`target_id`
                      ORDER BY `id` LIMIT 1)',
