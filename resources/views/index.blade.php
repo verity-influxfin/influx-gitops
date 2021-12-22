@@ -141,13 +141,13 @@
                             <a href="/engineerLoan" class="item">資訊工程師專案</a>
                         </div>
                         <div class="sub">
-                            <div class="sub-title">
+                            <router-link class="sub-title" to="/business-loan">
                                 <div class="sub-title-icon">
                                     <img src="/images/business-header-icon.svg" alt="">
                                 </div>
                                 <div>企業融資</div>
-                            </div>
-                            <a href="/business-loan" class="item">微企e秒貸</a>
+                            </router-link>
+                            <router-link to="/business-loan/sme" class="item">微企e秒貸</router-link>
                             <a href="/business-loan" class="item">信保專案融資</a>
                             <a href="/business-loan" class="item">一般企業融資</a>
                         </div>
