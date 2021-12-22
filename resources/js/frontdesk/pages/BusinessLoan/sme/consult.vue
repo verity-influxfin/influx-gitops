@@ -11,21 +11,25 @@
       <div class="input-group-prepend">
         <label class="input-group-text">統一編號</label>
       </div>
-      <input type="text" class="form-control" />
+      <input type="text" class="form-control" v-model="tax_id" />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <label class="input-group-text">公司名稱</label>
       </div>
-      <input type="text" class="form-control" />
+      <input type="text" class="form-control" v-model="company_name" />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <label class="input-group-text">目前營運上遇到的困難</label>
       </div>
-      <select class="custom-select">
-        <option selected></option>
-        <option value="text" v-for="text in option1" :key="text">
+      <select class="custom-select" v-model="operating_difficulty">
+        <option selected value="0"></option>
+        <option
+          :value="index + 1"
+          v-for="(text, index) in option1"
+          :key="index"
+        >
           {{ text }}
         </option>
       </select>
@@ -34,9 +38,13 @@
       <div class="input-group-prepend">
         <label class="input-group-text">公司資金用途</label>
       </div>
-      <select class="custom-select">
-        <option selected></option>
-        <option value="text" v-for="text in option2" :key="text">
+      <select class="custom-select" v-model="funds_purpose">
+        <option selected value="0"></option>
+        <option
+          :value="index + 1"
+          v-for="(text, index) in option2"
+          :key="index"
+        >
           {{ text }}
         </option>
       </select>
@@ -45,9 +53,13 @@
       <div class="input-group-prepend">
         <label class="input-group-text">融資時最常遇到的困難</label>
       </div>
-      <select class="custom-select">
-        <option selected></option>
-        <option value="text" v-for="text in option3" :key="text">
+      <select class="custom-select" v-model="financing_difficulty">
+        <option selected value="0"></option>
+        <option
+          :value="index + 1"
+          v-for="(text, index) in option3"
+          :key="index"
+        >
           {{ text }}
         </option>
       </select>
@@ -56,19 +68,19 @@
       <div class="input-group-prepend">
         <label class="input-group-text">聯絡人</label>
       </div>
-      <input type="text" class="form-control" />
+      <input type="text" class="form-control" v-model="contact_person" />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <label class="input-group-text">聯絡電話</label>
       </div>
-      <input type="tel" class="form-control" />
+      <input type="tel" class="form-control" v-model="contact_phone" />
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <label class="input-group-text">電子信箱</label>
       </div>
-      <input type="email" class="form-control" />
+      <input type="email" class="form-control" v-model="email" />
     </div>
     <div>
       <button type="submit" class="btn btn-secondary btn-block">確認</button>
@@ -77,9 +89,18 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
+      tax_id: '',
+      company_name: '',
+      operating_difficulty: 0,
+      funds_purpose: 0,
+      financing_difficulty: 0,
+      contact_person: '',
+      contact_phone: '',
+      email: '',
       option1: [
         '資金周轉問題', '經營管理問題', '開發難度高',
         '成本費用入不敷出', '產品競爭力不足', '其他'
@@ -102,7 +123,24 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$router.push({ name: 'end', params: { type: 'consult' } })
+      const { tax_id, company_name, contact_phone, contact_person, funds_purpose, financing_difficulty, email, operating_difficulty } = this
+      axios({
+        method: 'post',
+        url: '/api/v1/saveConsultForm',
+        data: {
+          tax_id,
+          funds_purpose,
+          financing_difficulty,
+          operating_difficulty,
+          company_name,
+          contact_person,
+          contact_phone,
+          email
+        }
+      }).then(x => {
+        this.$router.push({ name: 'end', params: { type: 'consult' } })
+      })
+
     }
   },
 }
