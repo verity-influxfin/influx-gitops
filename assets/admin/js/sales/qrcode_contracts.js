@@ -71,7 +71,8 @@ var app = new Vue({
     searchform: {
         user_id: '',
         sdate: '',
-        edate: '',
+		edate: '',
+		status:'3',
         alias: 'all',
         current_page: 1
     },
@@ -191,7 +192,7 @@ var app = new Vue({
 
         axios({
             method: 'get',
-            url: '/admin/Sales/promote_apply_list?' + data,
+            url: '/admin/Sales/promote_review_list?' + data,
             headers: { 'Accept': 'application/json' }
         }).then(resp => {
             let data = resp.data.response.data;
@@ -199,8 +200,7 @@ var app = new Vue({
         })
     },
     search: function () {
-        let data = new URLSearchParams(this.searchform).toString();
-        location.replace('/admin/Sales/qrcode_projects?' + data);
+		this.refresh_data()
     },
     get_context: function (apply_id, callback) {
         let self = this;
