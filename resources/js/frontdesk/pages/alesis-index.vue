@@ -12,8 +12,10 @@
                         <h4>中小企業都適合</h4>
                         <h4>100萬信保融資，超低利率</h4>
                     </div>
-                    <img src="/images/sme-header.jpg" class="旗幟圖片">
-                    <img src="/images/sme-header-phone.jpg" class="旗幟圖片 旗幟圖片_手機的">
+                    <a href="/business-loan/sme">
+                        <img src="/images/sme-header.jpg" class="旗幟圖片">
+                        <img src="/images/sme-header-phone.jpg" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
                     <div class="sme-link">
                         <a href="/business-loan/sme/apply" class="連結" target="_blank">
                             <img src="/images/sme-apply-btn.png">
