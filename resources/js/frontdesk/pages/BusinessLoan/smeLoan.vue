@@ -3,8 +3,8 @@
     <div class="header row">
       <div class="header-col col">
         <div class="header-title">微企e秒貸</div>
-        <ul class="header-text" v-for="text in headerText" :key="text">
-          <li>{{ text }}</li>
+        <ul class="header-text" >
+          <li v-for="text in headerText" :key="text">{{ text }}</li>
         </ul>
         <div class="get-start">
           <router-link to="/borrowLink" target="_blank">
@@ -124,22 +124,14 @@
           <div class="apply-qualify">
             <div class="qualify-title">申請資格</div>
             <ul class="qualify-text">
-              <li>具有公司登記或商業登記執照。</li>
-              <li>不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。</li>
-              <li>實收資本額不得超過1億。</li>
-              <li>近一年平均投保員工人數不得大於200人。</li>
-              <li>企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。</li>
+              <li v-for="text in applyQualify" :key="text">{{text}}</li>
             </ul>
             <div class="qualify-line"></div>
           </div>
           <div class="apply-require">
             <div class="require-title">申請條件</div>
             <ul class="require-text">
-              <li>申請額度：不限。</li>
-              <li>借款期間：1~3年。</li>
-              <li>還款方式：每月平均攤還本息。</li>
-              <li>利 費 率：3.8%起。</li>
-              <li>費率：普匯平台不收取任何費用，免費服務︒</li>
+              <li v-for="text in applyRequire" :key="text">{{text}}</li>
             </ul>
             <div class="require-line"></div>
           </div>
@@ -312,6 +304,20 @@ export default {
           text: ['123', '456'],
           img: require('../../asset/images/loan-f1.png')
         }
+      ],
+      applyQualify:[
+          '具有公司登記或商業登記執照。',
+          '不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。',
+          '實收資本額不得超過1億。',
+          '近一年平均投保員工人數不得大於200人。',
+          '企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。'
+      ],
+      applyRequire:[
+          '申請額度：不限。',
+          '借款期間：1~3年。',
+          '還款方式：每月平均攤還本息。',
+          '利 費 率：3.8%起。',
+          '費率：普匯平台不收取任何費用，免費服務︒'
       ],
       questions: [
         {
