@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::fallback(function () {
+    return view('index');
+});
+
 Route::post('/getListData', 'Controller@getListData');
 
 Route::post('/getIndexBanner', 'Controller@getIndexBanner');
