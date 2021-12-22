@@ -330,4 +330,10 @@ Route::prefix('api/v1')->group(function() {
 
     // 全站搜尋
     Route::get('search', 'SearchController@page');
+
+    // 立即申辦表單
+    Route::post('saveApplyForm', 'SmeFormController@saveApplyForm');
+
+    // 我要諮詢表單
+    Route::post('saveConsultForm', 'SmeFormController@saveConsultForm');
 });
