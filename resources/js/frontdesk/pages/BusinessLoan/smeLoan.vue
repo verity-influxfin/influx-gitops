@@ -2,7 +2,7 @@
   <div class="business-loan">
     <div class="header row">
       <div class="header-col col">
-        <div class="header-title">普匯微企e秒貸•中小企業融資</div>
+        <div class="header-title">sme</div>
         <ul class="header-text">
           <li>企業主/創業夢想</li>
           <li>手機全線上申貸/無人化審核</li>
@@ -15,21 +15,21 @@
         </div>
         <div class="header-underline"></div>
         <div class="slogan-text">
-          <img src="../asset/images/coin.png" class="apply-icon" /> 金融科技
-          <img src="../asset/images/coin.png" class="apply-icon" /> 銀行資金
-          <img src="../asset/images/coin.png" class="apply-icon" /> 媒合借貸
+          <img src="../../asset/images/coin.png" class="apply-icon" /> 金融科技
+          <img src="../../asset/images/coin.png" class="apply-icon" /> 銀行資金
+          <img src="../../asset/images/coin.png" class="apply-icon" /> 媒合借貸
         </div>
         <div class="get-app">
           <div class="phone-none">
             <router-link to="/borrowLink" target="_blank">
               <img
                 class="get-apple-img"
-                src="../asset/images/get-on-apple.png"
+                src="../../asset/images/get-on-apple.png"
                 alt=""
               />
             </router-link>
             <router-link to="/borrowLink" target="_blank">
-              <img src="../asset/images/get-on-google.png" alt="" />
+              <img src="../../asset/images/get-on-google.png" alt="" />
             </router-link>
           </div>
           <div class="phone-show">
@@ -54,7 +54,7 @@
     <div class="features-row">
       <div class="feature d-none d-sm-block">
         <div class="icon">
-          <img src="../asset/images/loan-f1.png" class="icon-img" />
+          <img src="../../asset/images/loan-f1.png" class="icon-img" />
         </div>
         <div class="feature-title">信保融資專案</div>
         <div class="feature-text">
@@ -66,7 +66,7 @@
       </div>
       <div class="feature e-loan">
         <div class="icon">
-          <img src="../asset/images/loan-f2.png" class="icon-img" />
+          <img src="../../asset/images/loan-f2.png" class="icon-img" />
         </div>
         <div class="feature-title">微企e秒貸</div>
         <div class="feature-text">
@@ -78,7 +78,7 @@
       </div>
       <div class="feature d-block d-sm-none">
         <div class="icon">
-          <img src="../asset/images/loan-f1.png" class="icon-img" />
+          <img src="../../asset/images/loan-f1.png" class="icon-img" />
         </div>
         <div class="feature-title">信保融資專案</div>
         <div class="feature-text">
@@ -90,7 +90,7 @@
       </div>
       <div class="feature">
         <div class="icon">
-          <img src="../asset/images/loan-f3.png" class="icon-img" />
+          <img src="../../asset/images/loan-f3.png" class="icon-img" />
         </div>
         <div class="feature-title">一般企業融資</div>
         <div class="feature-text">
@@ -138,7 +138,7 @@
               </div>
             </div>
             <div class="suit-cover item-1 suit-col col-sm col-auto">
-              <img src="../asset/images/suit-1.png" class="suit-img" />
+              <img src="../../asset/images/suit-1.png" class="suit-img" />
             </div>
           </div>
           <div class="row no-gutters flex-nowrap">
@@ -160,7 +160,7 @@
               </div>
             </div>
             <div class="suit-cover item-2 suit-col col-auto">
-              <img src="../asset/images/suit-2.png" class="suit-img" />
+              <img src="../../asset/images/suit-2.png" class="suit-img" />
             </div>
           </div>
           <div class="row no-gutters flex-nowrap">
@@ -182,7 +182,7 @@
               </div>
             </div>
             <div class="suit-cover item-3 suit-col col-sm col-auto">
-              <img src="../asset/images/suit-3.png" class="suit-img" />
+              <img src="../../asset/images/suit-3.png" class="suit-img" />
             </div>
           </div>
         </div>
@@ -197,8 +197,8 @@
           <div class="apply-title">全台唯一 免費資金媒合</div>
           <div class="apply-text">
             金融科技
-            <img src="../asset/images/coin.png" class="apply-icon" /> 銀行資金
-            <img src="../asset/images/coin.png" class="apply-icon" /> 信保保證
+            <img src="../../asset/images/coin.png" class="apply-icon" /> 銀行資金
+            <img src="../../asset/images/coin.png" class="apply-icon" /> 信保保證
           </div>
         </div>
         <div class="apply-features">
@@ -208,7 +208,7 @@
           <div class="feature-order order-4">4</div>
           <img
             class="feature-order item-2-img"
-            src="../asset/images/boss.png"
+            src="../../asset/images/boss.png"
             alt=""
           />
           <div class="feature-item item-1">
@@ -348,7 +348,7 @@
             <div class="data-item">公司資料表</div>
           </div>
           <div class="col-auto apply-img-cover">
-            <img src="../asset/images/business-loan-apply.png" alt="申請明細" />
+            <img src="../../asset/images/business-loan-apply.png" alt="申請明細" />
           </div>
           <div class="col-auto col-text">
             <div class="apply-title">
@@ -379,13 +379,13 @@
                 <router-link to="/borrowLink" target="_blank">
                   <img
                     class="get-app-img"
-                    src="../asset/images/get-on-apple.png"
+                    src="../../asset/images/get-on-apple.png"
                     alt="download app"
                   />
                 </router-link>
                 <router-link to="/borrowLink" target="_blank">
                   <img
-                    src="../asset/images/get-on-google.png"
+                    src="../../asset/images/get-on-google.png"
                     class="get-app-img"
                     alt="download app"
                   />
@@ -437,8 +437,8 @@
 </template>
 
 <script>
-import titleDots from '../component/titleDots.vue'
-import float from "../component/floatComponent";
+import titleDots from '../../component/titleDots.vue'
+import float from "../../component/floatComponent";
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
@@ -522,18 +522,18 @@ export default {
       ],
       steps: [
         {
-          img: require('../asset/images/business-step1.png'),
+          img: require('../../asset/images/business-step1.png'),
           stepTitle: 'Step 1. 簡單下載註冊',
           stepText: '下載APP完成法人註冊\n申請⌜微型企業線上融資⌟'
 
         },
         {
-          img: require('../asset/images/business-step2.png'),
+          img: require('../../asset/images/business-step2.png'),
           stepTitle: 'Step 2. 完成線上認證',
           stepText: '完成負責人/配偶/保證人\n公司企業資料驗證'
         },
         {
-          img: require('../asset/images/business-step3.png'),
+          img: require('../../asset/images/business-step3.png'),
           stepTitle: 'Step 3. 新光對保撥款',
           stepText: '銀行專人審核\n立即對保撥款'
         },
@@ -544,7 +544,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../component/alesis/alesis";
+@import "../../component/alesis/alesis";
 @keyframes bouncing {
   from {
     transform: scale(0.8);
@@ -566,7 +566,7 @@ export default {
     position: relative;
     height: 650px;
     min-width: 1450px;
-    background-image: url("../asset/images/business-loan-header-all.jpg");
+    background-image: url("../../asset/images/business-loan-header-all.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
@@ -1149,7 +1149,7 @@ export default {
     .header {
       min-width: 0;
       height: 675px;
-      background-image: url("../asset/images/business-header-phone.jpg");
+      background-image: url("../../asset/images/business-header-phone.jpg");
       .header-col {
         margin: 12px 15px;
         padding-left: 12px;
