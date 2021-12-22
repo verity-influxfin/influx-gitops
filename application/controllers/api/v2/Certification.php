@@ -614,6 +614,7 @@ class Certification extends REST_Controller {
                 $data = array_replace_recursive($data,
                     array_intersect_key($content, array_flip($return_column_list)));
 
+                $empty_check_list = ['id_card_date', 'birthday'];
                 if(isset($remark['failed_type_list'])) {
                     $remove_column_list = [];
                     foreach ($remark['failed_type_list'] as $failed_type) {
@@ -636,6 +637,14 @@ class Certification extends REST_Controller {
                         array_combine(array_values($remove_column_list), array_fill(0, count($remove_column_list), '')));
                 }
                 $this->load->library('S3_upload');
+                foreach ($empty_check_list as $field)
+                {
+                    if (isset($data[$field]) && empty($data[$field]))
+                    {
+                        unset($data[$field]);
+                    }
+                }
+
                 $url_key_list = ['front_image', 'back_image', 'person_image', 'healthcard_image'];
                 foreach ($url_key_list as $key) {
                     if(empty($data[$key]))
