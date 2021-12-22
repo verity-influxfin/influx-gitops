@@ -39,7 +39,7 @@ export default [
         header  : "中小企業融資",
         unready : false,
         image   : "/images/alesis-companies-rotate.svg",
-        link    : null,
+        link    : '/bussiness-loan',
         targets : [],
         action  : "敬請期待",
         features: [

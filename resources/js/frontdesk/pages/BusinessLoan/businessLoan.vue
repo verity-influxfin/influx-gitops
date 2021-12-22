@@ -52,18 +52,6 @@
       </div>
     </div>
     <div class="features-row">
-      <div class="feature d-none d-sm-block">
-        <div class="icon">
-          <img src="../../asset/images/loan-f1.png" class="icon-img" />
-        </div>
-        <div class="feature-title">信保融資專案</div>
-        <div class="feature-text">
-          <div>符合信保資格</div>
-          <div>滿足不同資金額度需求</div>
-          <div>普匯微企APP申請</div>
-          <div>銀行快速額貸</div>
-        </div>
-      </div>
       <router-link to="business-loan/sme">
         <div class="feature e-loan">
           <div class="icon">
@@ -78,31 +66,6 @@
           </div>
         </div>
       </router-link>
-
-      <div class="feature d-block d-sm-none">
-        <div class="icon">
-          <img src="../../asset/images/loan-f1.png" class="icon-img" />
-        </div>
-        <div class="feature-title">信保融資專案</div>
-        <div class="feature-text">
-          <div>符合信保資格</div>
-          <div>滿足不同資金額度需求</div>
-          <div>普匯微企APP申請</div>
-          <div>銀行快速額貸</div>
-        </div>
-      </div>
-      <div class="feature">
-        <div class="icon">
-          <img src="../../asset/images/loan-f3.png" class="icon-img" />
-        </div>
-        <div class="feature-title">一般企業融資</div>
-        <div class="feature-text">
-          <div>中小企業融資好幫手</div>
-          <div>只要有統編，資格就符合</div>
-          <div>VIP專人服務</div>
-          <div>多方資金媒合</div>
-        </div>
-      </div>
     </div>
     <div class="suitable-row">
       <title-dots>

@@ -40,9 +40,9 @@
         <div class="feature-title" v-if="feature.title">
           {{ feature.title }}
         </div>
-        <div class="feature-text">
-          <div v-for="text in feature.text" :key="text">{{ text }}</div>
-        </div>
+        <ol class="feature-text">
+          <li v-for="text in feature.text" :key="text">{{ text }}</li>
+        </ol>
       </div>
     </div>
     <div class="suitable-row">
@@ -332,13 +332,13 @@ export default {
       applyQualify: [
         '具有公司登記或商業登記。',
         '不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。',
-        '實收資本額不得超過3,000萬。',
+        '實收資本額不得超過一億。',
         '近一年平均投保員工人數不得大於200人。',
         '企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。'
       ],
       applyRequire: [
         '申請額度：100萬。',
-        '借款期間：3年。',
+        '借款期間：1~3年。',
         '還款方式：每月平均攤還本息。',
         '利 費 率：3.8%。',
         '費率：普匯平台不收取任何費用，免費服務︒'
@@ -506,7 +506,6 @@ export default {
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
-        text-align: center;
         color: #8f8f8f;
       }
     }
@@ -971,7 +970,7 @@ export default {
     .header {
       min-width: 0;
       height: 675px;
-      background-image: url("../../asset/images/business-header-phone.jpg");
+      background-image: url("../../asset/images/sme-header-phone.jpg");
       .header-col {
         margin: 12px 15px;
         padding-left: 12px;
