@@ -42,7 +42,7 @@
       </select>
     </div>
     <div>
-      <button type="button" class="btn btn-secondary btn-block">確認</button>
+      <button type="submit" class="btn btn-secondary btn-block">確認</button>
     </div>
   </form>
 </template>
@@ -51,6 +51,8 @@
 export default {
   methods: {
     onSubmit() {
+
+      this.$router.push({ name: 'end', params: { type: 'apply' } })
     }
   },
 }

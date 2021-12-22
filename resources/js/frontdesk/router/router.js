@@ -43,6 +43,7 @@ import search from "../pages/search.vue";
 import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
 import businessIndex from '../pages/BusinessLoan/index'
 import businessLoan from '../pages/BusinessLoan/businessLoan'
+import businessEnd from '../pages/BusinessLoan/end'
 import smeIndex from '../pages/BusinessLoan/smeLoan'
 import smeApply from '../pages/BusinessLoan/sme/apply'
 import smeConsult from '../pages/BusinessLoan/sme/consult'
@@ -102,17 +103,23 @@ let routers = [
                         component: smeIndex
                     },
                     {
-                        name:'sme-apply',
+                        name: 'sme-apply',
                         path: 'apply',
                         component: smeApply
                     },
                     {
-                        name:'sme-consult',
+                        name: 'sme-consult',
                         path: 'consult',
                         component: smeConsult
                     }
                 ],
 
+            },
+            {
+                name: 'end',
+                path: 'end',
+                props: true,
+                component: businessEnd
             }
         ]
     },

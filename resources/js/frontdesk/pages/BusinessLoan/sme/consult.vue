@@ -87,6 +87,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.$router.push({ name: 'end', params: { type: 'consult' } })
     }
   },
 }
