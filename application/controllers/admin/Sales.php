@@ -1391,13 +1391,15 @@ class Sales extends MY_Admin_Controller {
         $qrcodeSettingList = $this->qrcode_setting_model->get_all();
         $alias_list = array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description'));
 
-        $keys = array_flip(['qrcode_apply_id', 'user_id', 'alias', 'status', 'draw_up_at']);
+        $keys = array_flip(['qrcode_apply_id', 'user_id', 'alias', 'status', 'created_at', 'draw_up_at']);
         $review_list = $this->user_qrcode_apply_model->get_review_list($user_where, $where);
         foreach ($review_list as $key => $info) {
             $list[$key] = array_intersect_key($info, $keys);
             $list[$key]['alias_chinese_name'] = $alias_list[$info['alias']];
+            $list[$key]['status_name'] = $this->user_qrcode_apply_model->status_list[$info['status']];
             $list[$key]['content'] = array_slice(json_decode($info['contract_content'], TRUE) ?? [] , 4, 4);
             $list[$key]['draw_up_at'] = date('Y-m-d', strtotime($info['draw_up_at']));
+            $list[$key]['created_at'] = date('Y-m-d', strtotime($info['created_at']));
         }
 
         $config                     = [];
