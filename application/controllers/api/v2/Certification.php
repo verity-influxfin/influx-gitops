@@ -593,6 +593,7 @@ class Certification extends REST_Controller {
                 'father', 'mother', 'spouse', 'military_service', 'born', 'address','back_image_id','back_image',
                 'person_image_id','person_image',
                 'healthcard_name', 'healthcard_birthday', 'healthcard_id_number', 'healthcard_image_id', 'healthcard_image'];
+        $empty_check_list = ['id_card_date', 'birthday'];
         $data = array_combine(array_values($return_column_list), array_fill(0, count($return_column_list), ''));
         if($certification && $certification['status']==1){
             $user_id 	= $this->user_info->id;
@@ -614,7 +615,6 @@ class Certification extends REST_Controller {
                 $data = array_replace_recursive($data,
                     array_intersect_key($content, array_flip($return_column_list)));
 
-                $empty_check_list = ['id_card_date', 'birthday'];
                 if(isset($remark['failed_type_list'])) {
                     $remove_column_list = [];
                     foreach ($remark['failed_type_list'] as $failed_type) {
@@ -637,13 +637,6 @@ class Certification extends REST_Controller {
                         array_combine(array_values($remove_column_list), array_fill(0, count($remove_column_list), '')));
                 }
                 $this->load->library('S3_upload');
-                foreach ($empty_check_list as $field)
-                {
-                    if (isset($data[$field]) && empty($data[$field]))
-                    {
-                        unset($data[$field]);
-                    }
-                }
 
                 $url_key_list = ['front_image', 'back_image', 'person_image', 'healthcard_image'];
                 foreach ($url_key_list as $key) {
@@ -666,6 +659,13 @@ class Certification extends REST_Controller {
                 }
             }
 
+            foreach ($empty_check_list as $field)
+            {
+                if (isset($data[$field]) && empty($data[$field]))
+                {
+                    unset($data[$field]);
+                }
+            }
             $this->response(array('result' => 'SUCCESS','data' => $data));
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
