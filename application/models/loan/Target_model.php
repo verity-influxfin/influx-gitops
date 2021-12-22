@@ -327,12 +327,10 @@ class Target_model extends MY_Model
 			->where('status', 3)
 			->get_compiled_select('p2p_loan.investments', TRUE);
 
-		//首逾日期
-		$subquery_transaction = $this->db
-			->select('target_id,entering_date')
-			->where(['status' => 1, 'source' => 93])
-			->group_by('target_id')
-			->get_compiled_select('p2p_transaction.transactions', TRUE);
+        //首逾日期
+        $subquery_transaction = $this->db
+            ->select('target_id,entering_date,id')
+            ->get_compiled_select('p2p_transaction.transactions', TRUE);
 
 		//學校/公司
 		$subquery_user_meta_1 = $this->db
@@ -403,7 +401,17 @@ class Target_model extends MY_Model
 			->from('p2p_loan.targets t')
 			->join('p2p_loan.products p', 'p.id=t.product_id')
 			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
-			->join("($subquery_transaction) a2", 'a2.target_id=t.id', 'left')
+            ->join(
+                "($subquery_transaction) a2",
+                'a2.target_id=t.id AND a2.id=(
+                    SELECT `id`
+                      FROM `p2p_transaction`.`transactions` 
+                     WHERE `status`='.TRANSACTION_STATUS_TO_BE_PAID.'
+                       AND `source`='.SOURCE_AR_DELAYINTEREST.'
+                       AND `target_id`=`a2`.`target_id`
+                     ORDER BY `id` LIMIT 1)',
+                'left',
+                FALSE)
 			->join("($subquery_user_meta_1) a6", 'a6.user_id=t.user_id', 'left')
 			->join("($subquery_user_meta_2) a7", 'a7.user_id=t.user_id', 'left')
 			->join("($subquery_user_meta_3) a8", 'a8.user_id=t.user_id', 'left')
