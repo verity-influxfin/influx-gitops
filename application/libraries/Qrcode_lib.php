@@ -25,10 +25,23 @@ class Qrcode_lib
      */
     public function get_contract_format_content(string $type_name, string $name = '', string $address = '', array $settings = [], string $contract_date = ''): array
     {
-        $time = empty($contract_date) ? time() : strtotime($contract_date);
-        $contract_year = date('Y', $time) - 1911;
-        $contract_month = date('m', $time);
-        $contract_day = date('d', $time);
+        if(!empty($contract_date)) {
+            preg_match('/(\d+)\-(\d+)\-(\d+)/', $contract_date, $regexResult);
+            if (!empty($regexResult)) {
+                $contract_year = $regexResult[1];
+                $contract_month = $regexResult[2];
+                $contract_day = $regexResult[3];
+            }
+        }
+
+        if(empty($contract_date))
+        {
+            $time = time();
+            $contract_year = date('Y', $time) - 1911;
+            $contract_month = date('m', $time);
+            $contract_day = date('d', $time);
+        }
+
         switch ($type_name)
         {
             case PROMOTE_GENERAL_CONTRACT_TYPE_NAME:
@@ -40,7 +53,7 @@ class Qrcode_lib
                 break;
             case PROMOTE_APPOINTED_CONTRACT_TYPE_NAME:
                 return [$name, $contract_year, $contract_month, $contract_day,
-                    $settings['reward']['product']['student']['percent'] ?? 0, $settings['reward']['product']['salary_man']['percent'] ?? 0,
+                    $settings['reward']['product']['student']['borrower_percent'] ?? 0, $settings['reward']['product']['salary_man']['investor_percent'] ?? 0,
                     $settings['reward']['collaboration_person']['amount'] ?? 0, $settings['reward']['collaboration_enterprise']['amount'] ?? 0,
                     $name, $name, $address,
                     $contract_year, $contract_month, $contract_day];

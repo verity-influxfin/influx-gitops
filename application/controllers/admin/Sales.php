@@ -1531,8 +1531,8 @@ class Sales extends MY_Admin_Controller {
                 $settings['reward']['product'][$category]['borrower_percent'] = (float)$content[0] ?? 0;
                 $settings['reward']['product'][$category]['investor_percent'] = (float)$content[1] ?? 0;
             }
-            $settings['reward']['collaboration_person'] = (int)$content[2] ?? 0;
-            $settings['reward']['collaboration_enterprise'] = (int)$content[3] ?? 0;
+            $settings['reward']['collaboration_person'] = ['amount' => (int)$content[2] ?? 0];
+            $settings['reward']['collaboration_enterprise'] = ['amount' => (int)$content[3] ?? 0];
             $this->user_qrcode_model->update_by(['id' => $qrcode_code->id], ['settings' => json_encode($settings)]);
 
             $this->load->model('user/user_certification_model');
