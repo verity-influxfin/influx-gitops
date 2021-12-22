@@ -16,13 +16,16 @@
         </div>
       </div>
     </div>
+    <div class="feature-title">不一樣的企業貸款</div>
     <div class="features-row">
       <div class="feature" v-for="(feature, i) in features" :key="i">
         <div class="icon">
           <!-- <img src="" class="icon-img" /> -->
           <img :src="feature.img" class="icon-img" />
         </div>
-        <div class="feature-title">{{ feature.title }}</div>
+        <div class="feature-title" v-if="feature.title">
+          {{ feature.title }}
+        </div>
         <div class="feature-text">
           <div v-for="text in feature.text" :key="text">{{ text }}</div>
         </div>
@@ -117,9 +120,6 @@
     </div>
     <div>
       <div class="apply-row">
-        <title-dots :reverse="true">
-          <div class="title">不一樣的企業貸款</div>
-        </title-dots>
         <div class="">
           <div class="apply-qualify">
             <div class="qualify-title">申請資格</div>
@@ -295,28 +295,38 @@ export default {
   data() {
     return {
       headerText: [
-        '1',
-        '2'
+        '中小企業都適合',
+        '100萬信保融資，超低利率'
       ],
       features: [
         {
-          title: 'AAA',
-          text: ['123', '456'],
+          title: '',
+          text: ['普匯無人化APP申請', 'AI全線上化提供資料', '一支手機即可完成'],
           img: require('../../asset/images/loan-f1.png')
-        }
+        },
+        {
+          title: '',
+          text: ['免費快速媒合銀行資金', '審核流程快速', '兩天即免費幫您取得額度'],
+          img: require('../../asset/images/loan-f1.png')
+        },
+        {
+          title: '',
+          text: ['銀行撥款、信保擔保', '移送政府信保基金保證', '協助中小企業加強擔保力'],
+          img: require('../../asset/images/loan-f1.png')
+        },
       ],
       applyQualify: [
-        '具有公司登記或商業登記執照。',
+        '具有公司登記或商業登記。',
         '不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。',
-        '實收資本額不得超過1億。',
+        '實收資本額不得超過3,000萬。',
         '近一年平均投保員工人數不得大於200人。',
         '企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。'
       ],
       applyRequire: [
-        '申請額度：不限。',
-        '借款期間：1~3年。',
+        '申請額度：100萬。',
+        '借款期間：3年。',
         '還款方式：每月平均攤還本息。',
-        '利 費 率：3.8%起。',
+        '利 費 率：3.8%。',
         '費率：普匯平台不收取任何費用，免費服務︒'
       ],
       questions: [
@@ -471,8 +481,17 @@ export default {
       }
     }
   }
+  .feature-title {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip: text;
+    color: rgba(255, 255, 255, 0);
+    font-size: 36px;
+    line-height: 1.2;
+  }
   .features-row {
-    padding: 80px 0;
+    padding: 30px 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -990,45 +1009,12 @@ export default {
         font-size: 12px;
         padding-inline: 25px;
       }
-      .header-slogan {
-        display: flex;
-        align-items: flex-end;
-        .yellow {
-          font-size: 22px;
-          line-height: 26px;
-          color: #f2e627;
+      .get-start {
+        grid-template-columns: max-content max-content;
+        .btn-start {
+          padding: 5px 16px;
+          font-size: 18px;
         }
-        .cyan {
-          font-size: 26px;
-          line-height: 26px;
-        }
-      }
-      .header-underline {
-        max-width: 230px;
-        width: 100%;
-        margin: 8px 0;
-        border-bottom: solid 2px #fff;
-      }
-      .slogan-text {
-        .apply-icon {
-          width: 16px;
-          height: 16px;
-        }
-        font-size: 14px;
-        line-height: 16px;
-        margin-bottom: 20px;
-      }
-      .get-app {
-        position: absolute;
-        right: 12px;
-        top: 130px;
-      }
-      .get-apple-img {
-        margin-right: 15px;
-        height: 44px;
-      }
-      .get-android-img {
-        height: 44px;
       }
     }
     .features-row {
