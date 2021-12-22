@@ -1,5 +1,12 @@
 <template>
   <form class="sme-apply" @submit.prevent="onSubmit">
+    <!-- prevent enter submit  -->
+    <button
+      type="submit"
+      disabled
+      style="display: none"
+      aria-hidden="true"
+    ></button>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <label class="input-group-text">統一編號</label>
@@ -49,6 +56,14 @@
 
 <script>
 export default {
+  mounted() {
+    $(document).on('keyup keypress', 'form input[type="text"]', function (e) {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  },
   methods: {
     onSubmit() {
 

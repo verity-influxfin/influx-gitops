@@ -1,5 +1,12 @@
 <template>
   <form class="sme-consult" @submit.prevent="onSubmit">
+    <!-- prevent enter submit  -->
+    <button
+      type="submit"
+      disabled
+      style="display: none"
+      aria-hidden="true"
+    ></button>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <label class="input-group-text">統一編號</label>
@@ -84,6 +91,14 @@ export default {
         '資料提供複雜且不便利', '核准率低', '申請、審核時間過長', '核准條件較差，資金成本高', '其他'
       ]
     }
+  },
+  mounted() {
+    $(document).on('keyup keypress', 'form input[type="text"]', function (e) {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        return false;
+      }
+    });
   },
   methods: {
     onSubmit() {
