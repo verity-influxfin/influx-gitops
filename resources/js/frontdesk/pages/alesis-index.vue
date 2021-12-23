@@ -2,6 +2,16 @@
     <div class="index-wrapper">
         <div class="swiper-container 標頭幻燈片">
             <div class="swiper-wrapper">
+                <a class="swiper-slide" href="https://www.skbank.com.tw/df0df61416.html?ref=home&type=KV" target="_blank">
+                    <img src="../asset/images/新匯.jpg" class="img-fluid hidden-desktop" style="width:100%">
+                    <img src="../asset/images/新匯-phone.jpg" class="img-fluid hidden-phone">
+                </a>
+                <div class="swiper-slide">
+                    <a href="/business-loan/sme">
+                        <img src="../asset/images/sme-index-banner.gif" class="旗幟圖片">
+                        <img src="../asset/images/sme-index-banner-phone.gif" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
                 <div class="swiper-slide">
                     <div class="banner">
                         <div class="puhey-banner">
@@ -982,6 +992,59 @@ export default {
         .連結 {
             display: block;
             width  : 28vw;
+        }
+    }
+
+    .sme-desc {
+        position: absolute;
+        left: 4vw;
+        top: 18%;
+
+        h1 {
+            text-shadow: 4px 4px 4px rgb(0 0 0 / 50%);
+            font-size: 4em;
+            letter-spacing: 2px;
+            color: #f2e627;
+            margin-bottom: 20px;
+        }
+        h4 {
+            text-shadow: 4px 4px 4px rgb(0 0 0 / 50%);
+            font-size: 2em;
+            line-height: 1.5em;
+            letter-spacing: 0.9px;
+            color: white;
+        }
+        @include rwd {
+            top: 2%;
+            h1 {
+                font-size: 2em;
+                margin-bottom: 10px;
+            }
+            h4 {
+                font-size: 1em;
+                line-height: 1em;
+            }
+        }
+    }
+    .sme-link {
+        position: absolute;
+        left: 6vw;
+        top: 59%;
+        a.連結 {
+            margin-right: 3em;
+            transform: scale(1.1);
+            display: inline-block;
+        }
+        @include rwd {
+            left: 0;
+            top: 20%;
+            a.連結 {
+                margin-right: 0;
+                transform: scale(0.9);
+                display: block;
+                width: 49%;
+                float: left;
+            }
         }
     }
 

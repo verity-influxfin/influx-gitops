@@ -141,15 +141,15 @@
                             <a href="/engineerLoan" class="item">資訊工程師專案</a>
                         </div>
                         <div class="sub">
-                            <div class="sub-title">
+                            <a class="sub-title" href="/business-loan">
                                 <div class="sub-title-icon">
                                     <img src="/images/business-header-icon.svg" alt="">
                                 </div>
                                 <div>企業融資</div>
-                            </div>
-                            <a href="/business-loan" class="item">微企e秒貸</a>
-                            <a href="/business-loan" class="item">信保專案融資</a>
-                            <a href="/business-loan" class="item">一般企業融資</a>
+                            </a>
+                            <a href="/business-loan/sme" class="item">微企e秒貸</a>
+                            <div class="item -disabled ">信保專案融資 (coming soon)</div>
+                            <div class="item -disabled ">一般企業融資 (coming soon)</div>
                         </div>
                     </div>
                 </div>
@@ -240,11 +240,11 @@
                             <div class="sub-title-icon">
                                 <img src="/images/business-header-icon.svg" alt="">
                             </div>
-                            <div>企業融資</div>
+                            <a href="/business-loan">企業融資</a>
                         </div>
-                        <a href="/business-loan" class="item">微企e秒貸</a>
-                        <a href="/business-loan" class="item">信保專案融資</a>
-                        <a href="/business-loan" class="item">一般企業融資</a>
+                        <a href="/business-loan/sme" class="item">微企e秒貸</a>
+                        <div class="item -disabled">信保專案融資  (coming soon)</div>
+                        <div class="item -disabled">一般企業融資  (coming soon)</div>
                     </div>
                 </div>
                 <div class="item -dropdown">
@@ -369,7 +369,7 @@
                             <a href="/collegeLoan">學生貸款</a>
                             <a href="/workLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
-                            <a>企業融資</a>
+                            <a href="/business-loan">企業融資</a>
                             <a href="/mobileLoan">手機分期</a>
                         </div>
                     </div>
@@ -428,9 +428,13 @@
                     <a href="/companycooperation" class="item">企業合作</a> |
                     <a href="/promote-code-intro" class="item">推薦有賞</a>
                 </div>
-                <div class="externals">
-                    <a class="item" href="/borrowLink">我想申貸</a>
+                <div class="externals" v-if="!location.pathname.includes('/business-loan/sme')">
+                    <a class="item" href="/borrowLink" >我想申貸</a>
                     <a class="item -invest" href="/investLink">我想投資</a>
+                </div>
+                 <div class="externals" v-else>
+                    <a class="item" href="/business-loan/sme/apply" >立即申辦</a>
+                    <a class="item -invest" href="/business-loan/sme/consult">我要諮詢</a>
                 </div>
             </div>
         </div>

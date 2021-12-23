@@ -39,9 +39,15 @@ import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
-import  search  from "../pages/search.vue";
+import search from "../pages/search.vue";
 import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
-import businessLoan from '../pages/businessLoan'
+import businessIndex from '../pages/BusinessLoan/index'
+import businessLoan from '../pages/BusinessLoan/businessLoan'
+import businessEnd from '../pages/BusinessLoan/end'
+import smeIndex from '../pages/BusinessLoan/smeLoan'
+import smeApply from '../pages/BusinessLoan/sme/apply'
+import smeConsult from '../pages/BusinessLoan/sme/consult'
+
 
 let routers = [
     { path: '*', redirect: '/index' },
@@ -81,8 +87,41 @@ let routers = [
         ]
     },
     {
-        path:'/business-loan',
-        component:businessLoan
+        path: '/business-loan',
+        component: businessIndex,
+        children: [
+            {
+                path: '',
+                component: businessLoan
+            },
+            {
+                path: 'sme',
+                component: businessIndex,
+                children: [
+                    {
+                        path: '',
+                        component: smeIndex
+                    },
+                    {
+                        name: 'sme-apply',
+                        path: 'apply',
+                        component: smeApply
+                    },
+                    {
+                        name: 'sme-consult',
+                        path: 'consult',
+                        component: smeConsult
+                    }
+                ],
+
+            },
+            {
+                name: 'end',
+                path: 'end',
+                props: true,
+                component: businessEnd
+            }
+        ]
     },
     {
         path: '/myinvestment', component: myInvestment, children: [
@@ -102,7 +141,7 @@ let routers = [
     { path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
-    { path: '/search',name:'search', component: search },
+    { path: '/search', name: 'search', component: search },
 ];
 
 export default routers;
