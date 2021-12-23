@@ -157,7 +157,7 @@ class SmeFormController extends BaseController
     public function getCompanyName(Request $request)
     {
         try {
-            $tax_id = (int) $request->input('tax_id');
+            $tax_id = $request->input('tax_id');
             if (empty($tax_id) || strlen($tax_id) != 8) {
                 return response()->json(['data' => '']);
             }
