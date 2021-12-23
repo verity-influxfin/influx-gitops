@@ -7,23 +7,10 @@
                     <img src="../asset/images/新匯-phone.jpg" class="img-fluid hidden-phone">
                 </a>
                 <div class="swiper-slide">
-                    <div class="sme-desc">
-                        <h1>微企e秒貸</h1>
-                        <h4>中小企業都適合</h4>
-                        <h4>100萬信保融資，超低利率</h4>
-                    </div>
                     <a href="/business-loan/sme">
-                        <img src="/images/sme-header.jpg" class="旗幟圖片">
-                        <img src="/images/sme-header-phone.jpg" class="旗幟圖片 旗幟圖片_手機的">
+                        <img src="../asset/images/sme-index-banner.gif" class="旗幟圖片">
+                        <img src="../asset/images/sme-index-banner-phone.gif" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
-                    <div class="sme-link">
-                        <a href="/business-loan/sme/apply" class="連結" target="_blank">
-                            <img src="/images/sme-apply-btn.png">
-                        </a>
-                        <a href="/business-loan/sme/consult" class="連結" target="_blank">
-                            <img src="/images/sme-consult-btn.png">
-                        </a>
-                    </div>
                 </div>
                 <div class="swiper-slide">
                     <div class="banner">
