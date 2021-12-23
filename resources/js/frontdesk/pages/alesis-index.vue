@@ -9,18 +9,18 @@
                         <img src="../asset/images/sme-index-banner-phone.gif" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
                 </div>
-                <!-- 上班族 -->
-                <div class="swiper-slide">
-                    <a href="/workLoan">
-                        <img src="/images/普匯-你的手機ATM-(上班族)-Banner.gif" class="旗幟圖片">
-                        <img src="/images/普匯-你的手機ATM-(上班族)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
                 <!-- 學生貸 -->
                 <div class="swiper-slide">
                     <a href="/collegeLoan">
                         <img src="/images/普匯 你的手機ATM (學生貸) Banner.gif" class="旗幟圖片">
                         <img src="/images/普匯-你的手機ATM-(學生貸)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
+                <!-- 上班族 -->
+                <div class="swiper-slide">
+                    <a href="/workLoan">
+                        <img src="/images/普匯-你的手機ATM-(上班族)-Banner.gif" class="旗幟圖片">
+                        <img src="/images/普匯-你的手機ATM-(上班族)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
                 </div>
                 <!-- 普匯‧你的手機ATM -->
