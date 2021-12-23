@@ -694,4 +694,72 @@ class Website extends REST_Controller {
         $product = $this->sub_product_profile($product,$sub_product_data);
         return $product;
     }
+
+    /**
+     * @api {get} /v2/website/company_name 官網 利用統一編號取得公司(或商行)名稱
+     * @apiVersion 0.2.0
+     * @apiGroup Website
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     * "result": "SUCCESS",
+     * "data": "普匯金融科技股份有限公司"
+     * }
+     */
+    public function company_name_get()
+    {
+        $tax_id = $this->input->get('tax_id');
+        if (empty($tax_id))
+        {
+            $this->response([
+                'result' => 'ERROR',
+                'data' => ''
+            ]);
+        }
+
+        $data = $this->company_info($tax_id);
+        if (isset($data['result']) && $data['result'] === TRUE && isset($data['data'][0]['Company_Name']))
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => $data['data'][0]['Company_Name']]);
+        }
+
+        $data = $this->president_info($tax_id);
+        if (isset($data['result']) && $data['result'] === TRUE && isset($data['data'][0]['Business_Name']))
+        {
+            $this->response(array('result' => 'SUCCESS', 'data' => $data['data'][0]['Business_Name']));
+        }
+
+        $this->response(array('result' => 'SUCCESS', 'data' => ''));
+    }
+
+    private function company_info(string $tax_id)
+    {
+        try
+        {
+            $this->load->library('Gcis_lib');
+            $data = $this->gcis_lib->get_company_info($tax_id);
+
+            return ['result' => TRUE, 'data' => $data];
+        }
+        catch (Exception $e)
+        {
+            return ['result' => FALSE, 'msg' => $e->getMessage()];
+        }
+    }
+
+    private function president_info(string $tax_id)
+    {
+        try
+        {
+            $this->load->library('Gcis_lib');
+            $data = $this->gcis_lib->get_president_info($tax_id);
+
+            return ['result' => TRUE, 'data' => $data];
+        }
+        catch (Exception $e)
+        {
+            return ['result' => FALSE, 'msg' => $e->getMessage()];
+        }
+    }
 }
