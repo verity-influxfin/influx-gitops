@@ -327,11 +327,6 @@ class Target_model extends MY_Model
 			->where('status', 3)
 			->get_compiled_select('p2p_loan.investments', TRUE);
 
-        //首逾日期
-        $subquery_transaction = $this->db
-            ->select('target_id,entering_date,id')
-            ->get_compiled_select('p2p_transaction.transactions', TRUE);
-
 		//學校/公司
 		$subquery_user_meta_1 = $this->db
 			->select("
@@ -392,8 +387,8 @@ class Target_model extends MY_Model
 				a1.amount AS invest_amount,
 				a1.user_id AS lender,
 				CONCAT(a1.target_id,"-",a1.user_id) AS ary_key,
-				a2.entering_date,
-				DATEDIFF(NOW(), a2.entering_date) AS delayed_days,
+				tr.entering_date,
+				DATEDIFF(NOW(), tr.entering_date) AS delayed_days,
 				a6.user_meta_1,
 				a7.meta_value AS school_department,
 				a8.meta_value AS job_position
@@ -402,13 +397,13 @@ class Target_model extends MY_Model
 			->join('p2p_loan.products p', 'p.id=t.product_id')
 			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
             ->join(
-                "($subquery_transaction) a2",
-                'a2.target_id=t.id AND a2.id=(
+                'p2p_transaction.transactions tr',
+                'tr.target_id=t.id AND tr.id=(
                     SELECT `id`
                       FROM `p2p_transaction`.`transactions` 
                      WHERE `status` IN ('.TRANSACTION_STATUS_DELETED.','.TRANSACTION_STATUS_TO_BE_PAID.','.TRANSACTION_STATUS_PAID_OFF.')
                        AND `source`='.SOURCE_AR_DELAYINTEREST.'
-                       AND `target_id`=`a2`.`target_id`
+                       AND `target_id`=`tr`.`target_id`
                      ORDER BY `id` LIMIT 1)',
                 'left',
                 FALSE)
