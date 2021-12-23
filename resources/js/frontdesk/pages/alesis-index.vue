@@ -2,7 +2,7 @@
     <div class="index-wrapper">
         <div class="swiper-container 標頭幻燈片">
             <div class="swiper-wrapper">
-                <a class="swiper-slide" href="/business-loan/sme">
+                <a class="swiper-slide" href="https://www.skbank.com.tw/df0df61416.html?ref=home&type=KV" target="_blank">
                     <img src="../asset/images/新匯.jpg" class="img-fluid hidden-desktop" style="width:100%">
                     <img src="../asset/images/新匯-phone.jpg" class="img-fluid hidden-phone">
                 </a>
