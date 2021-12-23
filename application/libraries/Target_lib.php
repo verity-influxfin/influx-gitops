@@ -535,7 +535,7 @@ class Target_lib
                     $param['expire_time'] = strtotime('+2 days', time());
                 } else {
                     // 一般
-                    $param['expire_time'] = strtotime('+14 days', time());
+                    $param['expire_time'] = strtotime('+2 month', time());
                 }
             }
 
@@ -691,13 +691,9 @@ class Target_lib
                             $this->insert_change_log($target->id, $param);
                             $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
                         } else {
-                            $target_update_param = [
-                                'launch_times' => $target->launch_times + 1,
-                                'expire_time' => strtotime('+14 days', $target->expire_time),
-                                'invested' => 0,
-                            ];
-                            $this->CI->target_model->update($target->id, $target_update_param);
-                            $this->insert_change_log($target->id, ['status' => 3]);
+                            // 直接整案退回，故不需要再執行到下面退債權的邏輯，直接返回
+                            $this->cancel_success_target($target);
+                            return TRUE;
                         }
                         foreach ($investments as $key => $value) {
                             $this->insert_investment_change_log($value->id, ['status' => 9]);
@@ -770,12 +766,7 @@ class Target_lib
                         $this->insert_change_log($target->id, $param, 0, 0);
                         $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
                     } else {
-                        $this->CI->target_model->update($target->id, [
-                            'launch_times' => $target->launch_times + 1,
-                            'expire_time' => strtotime('+14 days', $target->expire_time),
-                            'invested' => 0,
-                        ]);
-                        $this->insert_change_log($target->id, ['status' => 3]);
+                        $this->cancel_success_target($target);
                     }
                 }
                 return true;
