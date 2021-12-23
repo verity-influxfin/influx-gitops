@@ -155,7 +155,7 @@ export default {
       if (tax_id.length > 7) {
         axios({
           method: 'get',
-          url: '/api/v1/getCompanyName?tax_id' + tax_id,
+          url: '/api/v1/getCompanyName?tax_id=' + tax_id,
         }).then(({ data }) => {
           if (data?.data) {
             this.company_name = data?.data

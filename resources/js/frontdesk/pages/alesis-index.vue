@@ -2,10 +2,29 @@
     <div class="index-wrapper">
         <div class="swiper-container 標頭幻燈片">
             <div class="swiper-wrapper">
-                <a class="swiper-slide" href="/business-loan/sme">
+                <a class="swiper-slide" href="https://www.skbank.com.tw/df0df61416.html?ref=home&type=KV" target="_blank">
                     <img src="../asset/images/新匯.jpg" class="img-fluid hidden-desktop" style="width:100%">
                     <img src="../asset/images/新匯-phone.jpg" class="img-fluid hidden-phone">
                 </a>
+                <div class="swiper-slide">
+                    <div class="sme-desc">
+                        <h1>微企e秒貸</h1>
+                        <h4>中小企業都適合</h4>
+                        <h4>100萬信保融資，超低利率</h4>
+                    </div>
+                    <a href="/business-loan/sme">
+                        <img src="/images/sme-header.jpg" class="旗幟圖片">
+                        <img src="/images/sme-header-phone.jpg" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                    <div class="sme-link">
+                        <a href="/business-loan/sme/apply" class="連結" target="_blank">
+                            <img src="/images/sme-apply-btn.png">
+                        </a>
+                        <a href="/business-loan/sme/consult" class="連結" target="_blank">
+                            <img src="/images/sme-consult-btn.png">
+                        </a>
+                    </div>
+                </div>
                 <div class="swiper-slide">
                     <div class="banner">
                         <div class="puhey-banner">
@@ -986,6 +1005,59 @@ export default {
         .連結 {
             display: block;
             width  : 28vw;
+        }
+    }
+
+    .sme-desc {
+        position: absolute;
+        left: 4vw;
+        top: 18%;
+
+        h1 {
+            text-shadow: 4px 4px 4px rgb(0 0 0 / 50%);
+            font-size: 4em;
+            letter-spacing: 2px;
+            color: #f2e627;
+            margin-bottom: 20px;
+        }
+        h4 {
+            text-shadow: 4px 4px 4px rgb(0 0 0 / 50%);
+            font-size: 2em;
+            line-height: 1.5em;
+            letter-spacing: 0.9px;
+            color: white;
+        }
+        @include rwd {
+            top: 2%;
+            h1 {
+                font-size: 2em;
+                margin-bottom: 10px;
+            }
+            h4 {
+                font-size: 1em;
+                line-height: 1em;
+            }
+        }
+    }
+    .sme-link {
+        position: absolute;
+        left: 6vw;
+        top: 59%;
+        a.連結 {
+            margin-right: 3em;
+            transform: scale(1.1);
+            display: inline-block;
+        }
+        @include rwd {
+            left: 0;
+            top: 20%;
+            a.連結 {
+                margin-right: 0;
+                transform: scale(0.9);
+                display: block;
+                width: 49%;
+                float: left;
+            }
         }
     }
 

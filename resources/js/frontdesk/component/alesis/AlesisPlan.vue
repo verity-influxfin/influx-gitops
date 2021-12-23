@@ -116,6 +116,7 @@ export default {
 .單張容器 > .清單 .項目 {
     display    : list-item;
     margin-left: 1rem;
+    white-space: pre-line;
 }
 
 .單張容器 > .清單 .尚未就緒 {
