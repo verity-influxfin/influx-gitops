@@ -704,55 +704,62 @@ class Website extends REST_Controller {
      * @apiSuccessExample {Object} SUCCESS
      * {
      * "result": "SUCCESS",
-     * "data": [{
-     *         "Business_Accounting_NO": "68566881",
-     *         "Company_Status_Desc": "核准設立",
-     *         "Company_Name": "普匯金融科技股份有限公司",
-     *         "Capital_Stock_Amount": 18250000,
-     *         "Paid_In_Capital_Amount": 18250000,
-     *         "Responsible_Name": "姚木川",
-     *         "Company_Location": "臺北市中山區松江路111號11樓之1",
-     *         "Register_Organization_Desc": "臺北市政府",
-     *         "Company_Setup_Date": "1061208",
-     *         "Change_Of_Approval_Data": "1101015",
-     *         "Revoke_App_Date": "",
-     *         "Case_Status": "",
-     *         "Case_Status_Desc": "",
-     *         "Sus_App_Date": "",
-     *         "Sus_Beg_Date": "",
-     *         "Sus_End_Date": ""
-     *     }]
+     * "data": "普匯金融科技股份有限公司"
      * }
      */
     public function company_name_get()
     {
+        $tax_id = $this->input->get('tax_id');
+        if (empty($tax_id))
+        {
+            $this->response([
+                'result' => 'ERROR',
+                'data' => ''
+            ]);
+        }
+
+        $data = $this->company_info($tax_id);
+        if (isset($data['result']) && $data['result'] === TRUE && isset($data['data'][0]['Company_Name']))
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => $data['data'][0]['Company_Name']]);
+        }
+
+        $data = $this->president_info($tax_id);
+        if (isset($data['result']) && $data['result'] === TRUE && isset($data['data'][0]['Business_Name']))
+        {
+            $this->response(array('result' => 'SUCCESS', 'data' => $data['data'][0]['Business_Name']));
+        }
+
+        $this->response(array('result' => 'SUCCESS', 'data' => ''));
+    }
+
+    private function company_info(string $tax_id)
+    {
         try
         {
-            while (TRUE)
-            {
-                $input = $this->input->get();
-                if ( ! isset($input['tax_id']) || empty($input['tax_id']))
-                {
-                    throw new Exception('統一編號必填');
-                }
+            $this->load->library('Gcis_lib');
+            $data = $this->gcis_lib->get_company_info($tax_id);
 
-                $this->load->library('Gcis_lib');
-                $data = $this->gcis_lib->get_company_info($input['tax_id']);
-
-                if ( ! empty($data))
-                {
-                    break;
-                }
-                $data = $this->gcis_lib->get_president_info($input['tax_id']);
-
-                break;
-            }
-
-            $this->response(array('result' => 'SUCCESS', 'data' => $data));
+            return ['result' => TRUE, 'data' => $data];
         }
         catch (Exception $e)
         {
-            $this->response(array('result' => 'ERROR', 'data' => [], 'msg' => $e->getMessage()));
+            return ['result' => FALSE, 'msg' => $e->getMessage()];
+        }
+    }
+
+    private function president_info(string $tax_id)
+    {
+        try
+        {
+            $this->load->library('Gcis_lib');
+            $data = $this->gcis_lib->get_president_info($tax_id);
+
+            return ['result' => TRUE, 'data' => $data];
+        }
+        catch (Exception $e)
+        {
+            return ['result' => FALSE, 'msg' => $e->getMessage()];
         }
     }
 }
