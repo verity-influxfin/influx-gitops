@@ -2,16 +2,28 @@
     <div class="index-wrapper">
         <div class="swiper-container 標頭幻燈片">
             <div class="swiper-wrapper">
-                <a class="swiper-slide" href="https://www.skbank.com.tw/df0df61416.html?ref=home&type=KV" target="_blank">
-                    <img src="../asset/images/新匯.jpg" class="img-fluid hidden-desktop" style="width:100%">
-                    <img src="../asset/images/新匯-phone.jpg" class="img-fluid hidden-phone">
-                </a>
+                <!-- 微企e秒貸 -->
                 <div class="swiper-slide">
                     <a href="/business-loan/sme">
                         <img src="../asset/images/sme-index-banner.gif" class="旗幟圖片">
                         <img src="../asset/images/sme-index-banner-phone.gif" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
                 </div>
+                <!-- 上班族 -->
+                <div class="swiper-slide">
+                    <a href="/workLoan">
+                        <img src="/images/普匯-你的手機ATM-(上班族)-Banner.gif" class="旗幟圖片">
+                        <img src="/images/普匯-你的手機ATM-(上班族)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
+                <!-- 學生貸 -->
+                <div class="swiper-slide">
+                    <a href="/collegeLoan">
+                        <img src="/images/普匯 你的手機ATM (學生貸) Banner.gif" class="旗幟圖片">
+                        <img src="/images/普匯-你的手機ATM-(學生貸)手機版.gif" class="旗幟圖片 旗幟圖片_手機的">
+                    </a>
+                </div>
+                <!-- 普匯‧你的手機ATM -->
                 <div class="swiper-slide">
                     <div class="banner">
                         <div class="puhey-banner">
@@ -35,6 +47,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- 後台設定 -->
                 <div class="swiper-slide" v-for="item in swiperItems" :key="item.desktop">
                     <a :href="item.link">
                         <img :src="item.desktop" class="旗幟圖片">
