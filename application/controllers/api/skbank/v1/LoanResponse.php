@@ -183,7 +183,7 @@ class LoanResponse extends REST_Controller {
                 $result['result'] = true;
             }
         } else {
-            if (isset($inputElement[$inputKey]) && !preg_match($regexPattern, $inputElement[$inputKey])) {
+            if (isset($inputElement[$inputKey]) && !empty($inputElement[$inputKey]) && !preg_match($regexPattern, $inputElement[$inputKey])) {
                 $result['errorMsg'] = sprintf("parameter '%s' value='%s' is illegal", $inputKey, $inputElement[$inputKey]);
             } else {
                 $result['result'] = true;
