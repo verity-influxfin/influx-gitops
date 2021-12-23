@@ -1,5 +1,5 @@
 <template>
-  <div class="title-dots" :class="{ reverse: reverse }">
+  <div class="title-dots" :class="[{ reverse: reverse },{'no-color':no_color}]">
     <div class="title-dot-up">
       <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
       <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
@@ -25,6 +25,10 @@ export default {
       type: Boolean,
       default: false
     },
+    no_color: {
+      type: Boolean,
+      default: false
+    },
   },
 }
 </script>
@@ -34,6 +38,9 @@ export default {
   background: linear-gradient(#fff 50%, #f5f6f8 50%);
   &.reverse {
     background: linear-gradient(#f5f6f8 50%, #fff 50%);
+  }
+  &.no-color{
+      background: #fff;
   }
 }
 .dots {

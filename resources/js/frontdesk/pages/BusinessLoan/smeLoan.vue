@@ -2,103 +2,47 @@
   <div class="business-loan">
     <div class="header row">
       <div class="header-col col">
-        <div class="header-title">普匯微企e秒貸•中小企業融資</div>
-        <ul class="header-text">
-          <li>企業主/創業夢想</li>
-          <li>手機全線上申貸/無人化審核</li>
-          <li>全台第一/線上直送銀行放款/信保保證</li>
-          <li>配合政策/普惠金融/扶持新創</li>
-        </ul>
-        <div class="header-slogan">
-          <div class="yellow">FREE</div>
-          <div class="cyan">免費資金媒合</div>
+        <div class="header-title">微企e秒貸</div>
+        <div class="header-text">
+          <div v-for="text in headerText" :key="text">{{ text }}</div>
         </div>
-        <div class="header-underline"></div>
-        <div class="slogan-text">
-          <img src="../asset/images/coin.png" class="apply-icon" /> 金融科技
-          <img src="../asset/images/coin.png" class="apply-icon" /> 銀行資金
-          <img src="../asset/images/coin.png" class="apply-icon" /> 媒合借貸
-        </div>
-        <div class="get-app">
-          <div class="phone-none">
-            <router-link to="/borrowLink" target="_blank">
+        <div class="get-start">
+          <router-link :to="{ name: 'sme-apply' }" target="_blank">
+            <button class="btn">
               <img
-                class="get-apple-img"
-                src="../asset/images/get-on-apple.png"
-                alt=""
+                src="../../asset/images/sme-apply-btn.png"
+                alt="立即申辦"
+                class="btn-img"
               />
-            </router-link>
-            <router-link to="/borrowLink" target="_blank">
-              <img src="../asset/images/get-on-google.png" alt="" />
-            </router-link>
-          </div>
-          <div class="phone-show">
-            <router-link to="/borrowLink" target="_blank">
+            </button>
+          </router-link>
+          <router-link :to="{ name: 'sme-consult' }" target="_blank">
+            <button class="btn">
               <img
-                class="get-apple-img"
-                src="/images/ios_download_link_mobile.svg"
-                alt="download app"
+                class="btn-img"
+                src="../../asset/images/sme-consult-btn.png"
+                alt="我要諮詢"
               />
-            </router-link>
-            <router-link to="/borrowLink" target="_blank">
-              <img
-                src="/images/android_download_link_mobile.svg"
-                class="get-android-img"
-                alt="download app"
-              />
-            </router-link>
-          </div>
+            </button>
+          </router-link>
         </div>
       </div>
     </div>
+    <title-dots :no_color="true">
+        <div class="title">不一樣的企業貸款</div>
+    </title-dots>
     <div class="features-row">
-      <div class="feature d-none d-sm-block">
+      <div class="feature" v-for="(feature, i) in features" :key="i">
         <div class="icon">
-          <img src="../asset/images/loan-f1.png" class="icon-img" />
+          <!-- <img src="" class="icon-img" /> -->
+          <img :src="feature.img" class="icon-img" />
         </div>
-        <div class="feature-title">信保融資專案</div>
-        <div class="feature-text">
-          <div>符合信保資格</div>
-          <div>滿足不同資金額度需求</div>
-          <div>普匯微企APP申請</div>
-          <div>銀行快速額貸</div>
+        <div class="feature-title" v-if="feature.title">
+          {{ feature.title }}
         </div>
-      </div>
-      <div class="feature e-loan">
-        <div class="icon">
-          <img src="../asset/images/loan-f2.png" class="icon-img" />
-        </div>
-        <div class="feature-title">微企e秒貸</div>
-        <div class="feature-text">
-          <div>中小微企業都適合</div>
-          <div>100萬信保融資，超低利率</div>
-          <div>普匯無人化APP申請、免費媒合</div>
-          <div>銀行撥款、信保擔保</div>
-        </div>
-      </div>
-      <div class="feature d-block d-sm-none">
-        <div class="icon">
-          <img src="../asset/images/loan-f1.png" class="icon-img" />
-        </div>
-        <div class="feature-title">信保融資專案</div>
-        <div class="feature-text">
-          <div>符合信保資格</div>
-          <div>滿足不同資金額度需求</div>
-          <div>普匯微企APP申請</div>
-          <div>銀行快速額貸</div>
-        </div>
-      </div>
-      <div class="feature">
-        <div class="icon">
-          <img src="../asset/images/loan-f3.png" class="icon-img" />
-        </div>
-        <div class="feature-title">一般企業融資</div>
-        <div class="feature-text">
-          <div>中小企業融資好幫手</div>
-          <div>只要有統編，資格就符合</div>
-          <div>VIP專人服務</div>
-          <div>多方資金媒合</div>
-        </div>
+        <ol class="feature-text">
+          <li v-for="text in feature.text" :key="text">{{ text }}</li>
+        </ol>
       </div>
     </div>
     <div class="suitable-row">
@@ -138,7 +82,7 @@
               </div>
             </div>
             <div class="suit-cover item-1 suit-col col-sm col-auto">
-              <img src="../asset/images/suit-1.png" class="suit-img" />
+              <img src="../../asset/images/suit-1.png" class="suit-img" />
             </div>
           </div>
           <div class="row no-gutters flex-nowrap">
@@ -160,7 +104,7 @@
               </div>
             </div>
             <div class="suit-cover item-2 suit-col col-auto">
-              <img src="../asset/images/suit-2.png" class="suit-img" />
+              <img src="../../asset/images/suit-2.png" class="suit-img" />
             </div>
           </div>
           <div class="row no-gutters flex-nowrap">
@@ -182,7 +126,7 @@
               </div>
             </div>
             <div class="suit-cover item-3 suit-col col-sm col-auto">
-              <img src="../asset/images/suit-3.png" class="suit-img" />
+              <img src="../../asset/images/suit-3.png" class="suit-img" />
             </div>
           </div>
         </div>
@@ -190,79 +134,18 @@
     </div>
     <div>
       <div class="apply-row">
-        <title-dots :reverse="true">
-          <div class="title">不一樣的企業貸款</div>
-        </title-dots>
-        <div class="apply-intro">
-          <div class="apply-title">全台唯一 免費資金媒合</div>
-          <div class="apply-text">
-            金融科技
-            <img src="../asset/images/coin.png" class="apply-icon" /> 銀行資金
-            <img src="../asset/images/coin.png" class="apply-icon" /> 信保保證
-          </div>
-        </div>
-        <div class="apply-features">
-          <div class="feature-order order-1">1</div>
-          <div class="feature-order order-2">2</div>
-          <div class="feature-order order-3">3</div>
-          <div class="feature-order order-4">4</div>
-          <img
-            class="feature-order item-2-img"
-            src="../asset/images/boss.png"
-            alt=""
-          />
-          <div class="feature-item item-1">
-            <div class="feature-title">獲得銀行肯定、政策支持</div>
-            <div class="feature-text">
-              <div>台灣第一，全線上無人化</div>
-              <div>中小微企業線上審核融資平台</div>
-            </div>
-          </div>
-          <div class="feature-item item-2">
-            <div class="feature-title">AI全線上無人化審核</div>
-            <div class="feature-text">
-              <div>全程無人化手機APP申請</div>
-              <div>AI人工智慧風控審核</div>
-            </div>
-          </div>
-          <div class="feature-item item-3">
-            <div class="feature-title">銀行資金</div>
-            <div class="feature-text">
-              <div>全程手機申貸</div>
-              <div>資料API直串銀行系統</div>
-              <div>銀行即時同步系統審核</div>
-              <div>核准條件同步普匯APP</div>
-              <div>銀行簽約對保放款</div>
-            </div>
-          </div>
-          <div class="feature-item item-4">
-            <div class="feature-title">信保基金保證</div>
-            <div class="feature-text">
-              <div>移送政府信保基金保證</div>
-              <div>協助中小企業加強擔保力</div>
-            </div>
-          </div>
-        </div>
         <div class="">
           <div class="apply-qualify">
             <div class="qualify-title">申請資格</div>
             <ul class="qualify-text">
-              <li>具有公司登記或商業登記執照。</li>
-              <li>不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。</li>
-              <li>實收資本額不得超過1億。</li>
-              <li>近一年平均投保員工人數不得大於200人。</li>
-              <li>企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。</li>
+              <li v-for="text in applyQualify" :key="text">{{ text }}</li>
             </ul>
             <div class="qualify-line"></div>
           </div>
           <div class="apply-require">
             <div class="require-title">申請條件</div>
             <ul class="require-text">
-              <li>申請額度：不限。</li>
-              <li>借款期間：1~3年。</li>
-              <li>還款方式：每月平均攤還本息。</li>
-              <li>利 費 率：3.8%起。</li>
-              <li>費率：普匯平台不收取任何費用，免費服務︒</li>
+              <li v-for="text in applyRequire" :key="text">{{ text }}</li>
             </ul>
             <div class="require-line"></div>
           </div>
@@ -327,46 +210,8 @@
         </div>
       </div>
     </div>
-    <div>
-      <div class="apply-data-row">
-        <title-dots>
-          <div class="title">申貸資料明細一覽</div>
-        </title-dots>
-        <div class="apply-data-item-row no-gutters">
-          <div class="col-auto col-text">
-            <div class="apply-title">
-              <div>公司行號</div>
-              <div>應備資料</div>
-            </div>
-            <div class="data-item">公司變更事項登記表</div>
-            <div class="data-item">公司授權核實</div>
-            <div class="data-item">近6個月封面及內頁公司存摺</div>
-            <div class="data-item">員工投保人數資料</div>
-            <div class="data-item">近三年損益表</div>
-            <div class="data-item">公司聯合徵信</div>
-            <div class="data-item">公司電子信箱</div>
-            <div class="data-item">公司資料表</div>
-          </div>
-          <div class="col-auto apply-img-cover">
-            <img src="../asset/images/business-loan-apply.png" alt="申請明細" />
-          </div>
-          <div class="col-auto col-text">
-            <div class="apply-title">
-              <div>申請人、保證人</div>
-              <div>應備資料</div>
-            </div>
-            <div class="data-item">實名認證</div>
-            <div class="data-item">聯合徵信報告+A11</div>
-            <div class="data-item">財務收支</div>
-            <div class="data-item">工作資料</div>
-            <div class="data-item">個人基本資料</div>
-            <div class="data-item">常用電子信箱</div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="step-row">
-      <title-dots :reverse="true">
+      <title-dots>
         <div class="title">三步驟•普匯微企e秒貸</div>
       </title-dots>
       <div class="swiper">
@@ -379,13 +224,13 @@
                 <router-link to="/borrowLink" target="_blank">
                   <img
                     class="get-app-img"
-                    src="../asset/images/get-on-apple.png"
+                    src="../../asset/images/get-on-apple.png"
                     alt="download app"
                   />
                 </router-link>
                 <router-link to="/borrowLink" target="_blank">
                   <img
-                    src="../asset/images/get-on-google.png"
+                    src="../../asset/images/get-on-google.png"
                     class="get-app-img"
                     alt="download app"
                   />
@@ -411,7 +256,7 @@
       </div>
     </div>
     <div class="question-row">
-      <title-dots class="title-dots">
+      <title-dots class="title-dots" :reverse="true">
         <div class="title">常見問題</div>
       </title-dots>
       <div class="questions">
@@ -437,8 +282,8 @@
 </template>
 
 <script>
-import titleDots from '../component/titleDots.vue'
-import float from "../component/floatComponent";
+import titleDots from '../../component/titleDots.vue'
+import float from "../../component/floatComponent";
 import 'swiper/swiper.scss';
 import "swiper/components/navigation/navigation.min.css"
 import SwiperCore, {
@@ -459,44 +304,64 @@ export default {
         prevEl: '.swiper-button-prev',
       },
     })
-    $('title').text('普匯中小微企業線上審核融資平台 台灣第一全線上無人化');
+    $('title').text('普匯 微企e秒貸');
   },
   data() {
     return {
+      headerText: [
+        '中小企業都適合',
+        '100萬信保融資，超低利率'
+      ],
+      features: [
+        {
+          title: '',
+          text: ['普匯無人化APP申請', 'AI全線上化提供資料', '一支手機即可完成'],
+          img: require('../../asset/images/sme-f1.png')
+        },
+        {
+          title: '',
+          text: ['免費快速媒合銀行資金', '審核流程快速', '兩天即免費幫您取得額度'],
+          img: require('../../asset/images/sme-f2.png')
+        },
+        {
+          title: '',
+          text: ['銀行撥款、信保擔保', '移送政府信保基金保證', '協助中小企業加強擔保力'],
+          img: require('../../asset/images/sme-f3.png')
+        },
+      ],
+      applyQualify: [
+        '具有公司登記或商業登記。',
+        '不得為金融及保險業、宗教、職業及類似組織、特殊娛樂業。',
+        '實收資本額不得超過一億。',
+        '近一年平均投保員工人數不得大於200人。',
+        '企業、負責人、配偶、保證人不得有任何信用瑕疵紀錄。'
+      ],
+      applyRequire: [
+        '申請額度：100萬。',
+        '借款期間：1~3年。',
+        '還款方式：每月平均攤還本息。',
+        '利 費 率：3.8%起。',
+        '費率：普匯平台不收取任何費用，免費服務︒'
+      ],
       questions: [
         {
-          question: '實名認證拍攝照片無法轉正？',
-          answer: '您好！非常抱歉造成您的困擾！因系統採取全自動化辨識，而有角度上微微的調整 發現辨識上錯誤的話，須再麻煩您重新拍照上傳～謝謝您！如還有多次未能成功再麻煩聯絡我們客服，我們會儘速與您聯繫。',
+          question: '額度申請上限？',
+          answer: '微企e秒貸可申請的額度固定為新台幣100萬。',
           active: false,
         },
         {
-          question: '工作資料有哪些？',
-          answer: `您好！目前的工作資料需提供的是『勞保異動明細』、『勞保異動明細』申請方式可至「各縣市的勞動部申請」或「自然人憑證線上申請」，申請完後的紙本資料做拍照上傳驗證的動作即可審核。`,
+          question: '什麼是信保？',
+          answer: `信保是由政府及銀行共同捐助成立之公益財團法人，目的在透過信用保證，分擔銀行辦理中小企業貸款之信用風險。`,
           active: false,
         },
         {
-          question: '財務訊息是哪些？',
-          answer: `您好！目前的<span style="color:red">財務訊息</span>需提供的是「近六個月往來存摺封面及內頁」幫我拍照上傳即可！`,
+          question: '如果信保額度已滿還可以再申請嗎？',
+          answer: `若信保額度已滿，則無法再申請微企e秒貸產品，不過還是可以在平台申請一般中小企業融資喔。`,
           active: false,
         },
         {
-          question: '聯徵如何申請？',
-          answer: '您好！以下有兩種不同身份聯徵的申請方式，請至：<a href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364" target="_blank">https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=525&pid=93&docid=364</a>「個人聯徵申請」需攜帶雙證件親自至聯徵中心、或至郵局申請正本資料，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）「企業聯徵申請」需由負責人親自至聯徵中心辦理或負責人委託他人至聯合徵信中心服務櫃檯辦理。郵局也有指定格式可以申請，並郵寄至普匯（台北市中山區松江路 111 號 11 樓之 1）。',
-          active: false,
-        },
-        {
-          question: '系統會通知我的保證人進行驗證嗎？',
-          answer: '您好！我們會根據您填寫的保證人資料，以<span style="color:red">簡訊及Email</span>方式寄送通知，因此在填寫保證人相關資料時，請幫我確認資料是否完整正確，謝謝您！',
-          active: false,
-        },
-        {
-          question: '保證人如果反悔不願擔任，該怎麼處理？',
-          answer: `您好！請先聯絡普匯客服人員提出更改，系統會先將您的案子退件，以便您重新修改，再進行申請。`,
-          active: false,
-        },
-        {
-          question: '申請人，保證人資料都驗證完成，接下來該如何處理？',
-          answer: '您好！接下來會將您的案件資訊轉由銀行做最後核決，只需等待審核通過即可！',
+          question: '申請會收取手續費嗎?',
+          answer: '在普匯平台上申請皆是「免費用」喔。',
           active: false,
         },
         {
@@ -504,38 +369,23 @@ export default {
           answer: '您透過普匯APP申請的【微企e秒貸】案件進入銀行端後，銀行會派專員與您聯繫進行對保動作，利率與實際核准額度將由銀行端與您接洽，在普匯APP上也會同步顯示出來。',
           active: false,
         },
-        {
-          question: '利率與核貸金額核定後，還能調整嗎？',
-          answer: '由銀行端核定的額度與利率即為本次申請的合約內容 您可選擇是否需要動用本次條件的申貸，至於內容能否調整，可與銀行端與您接洽的窗口洽詢。',
-          active: false,
-        },
-        {
-          question: '一般企業融資沒還款會怎樣？',
-          answer: '因貸款方為銀行，若您忘記還款，請立即與放款銀行聯繫，處理後續逾期事宜，要逾期即會造成企業、負責人的信用瑕疵，為避免上述情況發生，請務必依約定準時還款。',
-          active: false,
-        },
-        {
-          question: '這次申請過金額不夠用，還能再申請一筆這種普匯企業貸款嗎？',
-          answer: '可以的，除了固定申請一百萬額度的【微企e秒貸】，也可以在普匯申請信保專案、一般企業融資專案，解決您運營上的資金問題。',
-          active: false,
-        }
       ],
       steps: [
         {
-          img: require('../asset/images/business-step1.png'),
+          img: require('../../asset/images/business-step1.png'),
           stepTitle: 'Step 1. 簡單下載註冊',
-          stepText: '下載APP完成法人註冊\n申請⌜微型企業線上融資⌟'
+          stepText: '下載APP完成法人註冊\n申請⌜微企e秒貸⌟'
 
         },
         {
-          img: require('../asset/images/business-step2.png'),
+          img: require('../../asset/images/business-step2.png'),
           stepTitle: 'Step 2. 完成線上認證',
           stepText: '完成負責人/配偶/保證人\n公司企業資料驗證'
         },
         {
-          img: require('../asset/images/business-step3.png'),
-          stepTitle: 'Step 3. 新光對保撥款',
-          stepText: '銀行專人審核\n立即對保撥款'
+          img: require('../../asset/images/business-step3.png'),
+          stepTitle: 'Step 3. 銀行對保撥款',
+          stepText: '系統審核後\n立即對保撥款'
         },
       ]
     }
@@ -544,7 +394,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../component/alesis/alesis";
+@import "../../component/alesis/alesis";
 @keyframes bouncing {
   from {
     transform: scale(0.8);
@@ -564,9 +414,9 @@ export default {
   }
   .header {
     position: relative;
-    height: 650px;
+    height: 500px;
     min-width: 1450px;
-    background-image: url("../asset/images/business-loan-header-all.jpg");
+    background-image: url("../../asset/images/sme-header.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
@@ -577,18 +427,18 @@ export default {
     .header-title {
       margin-top: 52px;
       text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-      font-size: 34px;
+      font-size: 40px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
       letter-spacing: 2px;
       text-align: left;
-      color: #fff;
+      color: #f2e627;
     }
     .header-text {
-      margin: 8px 0 20px;
+      margin: 12px 0 24px;
       text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
-      font-size: 18px;
+      font-size: 24px;
       font-weight: normal;
       font-stretch: normal;
       font-style: normal;
@@ -597,57 +447,26 @@ export default {
       text-align: left;
       color: #fff;
     }
-    .header-slogan {
-      display: flex;
-      align-items: flex-end;
-      .yellow {
-        font-size: 55px;
-        font-weight: bold;
-        font-stretch: normal;
-        font-style: italic;
-        line-height: 55px;
-        letter-spacing: 3.15px;
-        text-align: left;
-        color: #f2e627;
+    .get-start {
+      display: grid;
+      grid-template-columns: 180px 180px;
+      gap: 15px;
+      .btn-img {
+        width: 180px;
       }
-      .cyan {
-        font-size: 44px;
-        font-weight: bold;
-        font-stretch: normal;
-        font-style: italic;
-        line-height: 55px;
-        letter-spacing: 2.45px;
-        text-align: left;
-        color: #80dde8;
-      }
-    }
-    .header-underline {
-      max-width: 435px;
-      width: 100%;
-      margin: 11px 5px;
-      border-bottom: solid 2px #fff;
-    }
-    .slogan-text {
-      .apply-icon {
-        width: 30px;
-        height: 30px;
-      }
-      font-size: 24px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: 30px;
-      letter-spacing: 1.4px;
-      text-align: left;
-      color: #fff;
-      margin-bottom: 28px;
-    }
-    .get-apple-img {
-      margin-right: 26px;
     }
   }
+  .feature-title {
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
+    background-clip: text;
+    color: rgba(255, 255, 255, 0);
+    font-size: 36px;
+    line-height: 1.2;
+  }
   .features-row {
-    padding: 80px 0;
+    padding: 30px 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -661,15 +480,14 @@ export default {
       }
       width: 320px;
       padding: 20px 5px;
-      border-radius: 20px;
-      border: solid 1px #8f8f8f;
       .icon {
         margin: 0 auto 10px;
-        width: 110px;
         text-align: center;
         border-radius: 50%;
         padding: 25px;
-        background-image: linear-gradient(to right, #0d367a, #1e549e);
+      }
+      .icon-img{
+          width: 110px;
       }
       .feature-title {
         margin-bottom: 10px;
@@ -686,7 +504,6 @@ export default {
         font-weight: normal;
         font-stretch: normal;
         font-style: normal;
-        text-align: center;
         color: #8f8f8f;
       }
     }
@@ -1062,6 +879,8 @@ export default {
     }
   }
   .step-row {
+    background-color: #f5f6f8;
+    margin: -15px 0;
     .swiper {
       width: 1220px;
       height: 710px;
@@ -1087,7 +906,7 @@ export default {
     }
   }
   .question-row {
-    background-color: #f5f6f8;
+    background-color: #fff;
     position: relative;
     .questions {
       padding-bottom: 30px;
@@ -1149,59 +968,24 @@ export default {
     .header {
       min-width: 0;
       height: 675px;
-      background-image: url("../asset/images/business-header-phone.jpg");
+      background-image: url("../../asset/images/sme-header-phone.jpg");
       .header-col {
         margin: 12px 15px;
         padding-left: 12px;
       }
       .header-title {
-        font-size: 22px;
+        font-size: 24px;
         margin: 0;
       }
       .header-text {
         margin: 5px 0 5px;
-        font-size: 12px;
-        padding-inline: 25px;
-      }
-      .header-slogan {
-        display: flex;
-        align-items: flex-end;
-        .yellow {
-          font-size: 22px;
-          line-height: 26px;
-          color: #f2e627;
-        }
-        .cyan {
-          font-size: 26px;
-          line-height: 26px;
-        }
-      }
-      .header-underline {
-        max-width: 230px;
-        width: 100%;
-        margin: 8px 0;
-        border-bottom: solid 2px #fff;
-      }
-      .slogan-text {
-        .apply-icon {
-          width: 16px;
-          height: 16px;
-        }
         font-size: 14px;
-        line-height: 16px;
-        margin-bottom: 20px;
       }
-      .get-app {
-        position: absolute;
-        right: 12px;
-        top: 130px;
-      }
-      .get-apple-img {
-        margin-right: 15px;
-        height: 44px;
-      }
-      .get-android-img {
-        height: 44px;
+      .get-start{
+          grid-template-columns: 150px 150px;
+          .btn-img{
+              width: 150px;
+          }
       }
     }
     .features-row {
@@ -1212,13 +996,10 @@ export default {
         padding: 20px 5px;
         .icon {
           margin: 0 auto 10px;
-          width: 70px;
-          height: 70px;
           padding: 17px;
-          background-image: linear-gradient(to right, #0d367a, #1e549e);
         }
         .icon-img {
-          height: 40px;
+          width: 110px;
         }
         .feature-title {
           font-size: 28px;
