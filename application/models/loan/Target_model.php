@@ -469,18 +469,19 @@ class Target_model extends MY_Model
 		$target_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
 		$target_ids = array_column($target_rows, 'id');
 
-		$this->db
-			->select('
-				CONCAT(i.target_id,"-",i.user_id) AS ary_key,
-				a3.amount AS unpaid_principal,
-				a4.amount AS unpaid_interest,
-				a5.amount AS delay_interest
-			')
-			->from('p2p_loan.investments i')
-			->join("($subquery_unpaid_principal) a3", 'a3.target_id=i.target_id', 'left')
-			->join("($subquery_unpaid_interest) a4", 'a4.target_id=i.target_id', 'left')
-			->join("($subquery_delay_interest) a5", 'a5.target_id=i.target_id', 'left')
-			->where_in('i.target_id', $target_ids);
+        $this->db
+            ->select('
+                CONCAT(i.target_id,"-",i.user_id) AS ary_key,
+                a3.amount AS unpaid_principal,
+                a4.amount AS unpaid_interest,
+                a5.amount AS delay_interest
+            ')
+            ->from('p2p_loan.investments i')
+            ->join("($subquery_unpaid_principal) a3", 'a3.target_id=i.target_id', 'left')
+            ->join("($subquery_unpaid_interest) a4", 'a4.target_id=i.target_id', 'left')
+            ->join("($subquery_delay_interest) a5", 'a5.target_id=i.target_id', 'left')
+            ->where_in('i.target_id', $target_ids)
+            ->where('i.status', INVESTMENT_STATUS_REPAYING);
 		$transaction_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
 
 		$target_rows = array_map(function ($value) {
