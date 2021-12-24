@@ -2048,8 +2048,15 @@ END:
 
         if($company == 0) {
             $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
+            $user_info = $this->user_model->get($user_id);
+            $name = $user_info->name ?? '';
+            $address = $user_info->address ?? '';
         } else {
             $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
+            $this->load->model('user/judicial_person_model');
+            $judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
+            $name = $judicial_person_info->company ?? '';
+            $address = $judicial_person_info->cooperation_address ?? '';
         }
 
         $rs = FALSE;
@@ -2070,7 +2077,7 @@ END:
                 }
             }
         } else {
-            $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', $settings);
+            $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, $name, $address, $settings);
             $contract_id = $this->contract_lib->sign_contract($contract_type_name, $contract);
 
             switch ($alias_name) {
@@ -2124,7 +2131,7 @@ END:
                     'user_qrcode_id' => $user_qrcode->id,
                     'status' => PROMOTE_REVIEW_STATUS_PENDING_TO_DRAW_UP,
                     'contract_format_id' => $contract_format->id ?? 0,
-                    'contract_content' => json_encode($this->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME)),
+                    'contract_content' => json_encode($this->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME, $name, $address)),
                 ]);
             }else if($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT && $qrcode_apply->status == PROMOTE_REVIEW_STATUS_SUCCESS) {
                 $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
