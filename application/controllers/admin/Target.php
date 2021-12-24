@@ -769,7 +769,10 @@ class Target extends MY_Admin_Controller {
                     'certification_id' => 4,
                     'status' => 1,
                 ]);
-                $instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
+
+                $instagramCertificationDetailArray = isset($instagramCertificationDetail->content) &&
+                 is_array(json_decode($instagramCertificationDetail->content, true))
+                 ? json_decode($instagramCertificationDetail->content, true) : [];
                 if (isset($instagramCertificationDetailArray["type"]) && $instagramCertificationDetailArray["type"] == "instagram") {
                     $picture = $instagramCertificationDetailArray["info"]["picture"];
                     $this->usermeta->setInstagramPicture($picture);
