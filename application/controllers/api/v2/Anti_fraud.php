@@ -10,7 +10,8 @@ class Anti_fraud extends Admin_rest_api_controller
     {
         parent::__construct();
 
-        $this->brookesia_url = 'http://52.68.199.159:9453/brookesia/api/v1.0/';
+        $brookesiaPort = '9453';
+        $this->brookesia_url = "http://" . getenv('GRACULA_IP') . ":{$brookesiaPort}/brookesia/api/v1.0/";
     }
 
     /**
