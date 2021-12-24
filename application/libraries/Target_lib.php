@@ -693,6 +693,7 @@ class Target_lib
                         } else {
                             // 直接整案退回，故不需要再執行到下面退債權的邏輯，直接返回
                             $this->cancel_success_target($target);
+                            $this->CI->notification_lib->target_credit_expired($target->user_id);
                             return TRUE;
                         }
                         foreach ($investments as $key => $value) {
@@ -767,6 +768,7 @@ class Target_lib
                         $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
                     } else {
                         $this->cancel_success_target($target);
+                        $this->CI->notification_lib->target_credit_expired($target->user_id);
                     }
                 }
                 return true;
