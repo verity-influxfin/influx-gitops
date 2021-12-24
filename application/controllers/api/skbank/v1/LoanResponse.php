@@ -123,9 +123,10 @@ class LoanResponse extends REST_Controller {
                                         if(!empty($repayment)){
                                             $updateTarget = $this->target_model->update($targetInfo->id,[
                                                 'loan_amount' => $insertData['loan_amount'],
-                                                'interest_rate' => $insertData['loan_rate'],
+                                                'interest_rate' => ((float) $insertData['loan_rate'])*100,
                                                 'repayment' => $repayment,
                                                 'status' => 504,
+                                                'loan_date' => $insertData['funding_date']
                                             ]);
                                         }
                                     }
