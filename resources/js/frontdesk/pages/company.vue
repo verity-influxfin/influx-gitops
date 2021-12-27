@@ -237,6 +237,7 @@ export default {
 
     .list {
       display: flex;
+      justify-content: space-between;
       gap: 20px;
       flex-wrap: wrap;
       width: 80%;
@@ -244,7 +245,7 @@ export default {
       overflow-y: auto;
 
       .report-row {
-        flex: 1 0 20%;
+        flex: 0 0 22%;
         border-radius: 25px;
         background-image: linear-gradient(to bottom, #ffffff, #e4eeff);
 
@@ -475,7 +476,7 @@ export default {
         gap: 10px;
         justify-content: space-evenly;
         .report-row {
-           flex: 1 0 40%;
+           flex: 0 0 47%;
           .news-title {
             font-size: 13px;
             margin: 5px;
