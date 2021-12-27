@@ -211,7 +211,6 @@ class Certification extends MY_Admin_Controller {
 				// 獲取 ocr 相關資料
 				// to do : ocr table 需優化 index 與 clinet table view
 				$this->load->library('mapping/user/Certification_table');
-				$is_template = $this->certification_table->isInTemplate($info->certification_id);
 
                 $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
                 if(in_array($info->certification_id,['1007','1017','1002','1003','12'])){
@@ -243,61 +242,6 @@ class Certification extends MY_Admin_Controller {
                     $return_type = isset($certification_content['return_type']) ? $certification_content['return_type'] : '';
                     $page_data['return_type'] = isset($return_config[$info->certification_id][$return_type]) ? $return_config[$info->certification_id][$return_type] : '';
 				}
-			if($is_template){
-				$ocr_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
-				$page_data['ocr'] = [];
-				$page_data['ocr']['url'] = [];
-				// 給人工編輯跳轉網址
-				$page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$ocr_content);
-				// 找使用者上傳圖片
-				$image_key_list = $this->certification_table->getUserPostImagesKey($info->certification_id);
-                $page_data['ocr']['img'] = [];
-                if(!empty($image_key_list)){
-                    foreach($image_key_list as $key_name){
-                        if(isset($ocr_content[$key_name]) && !empty($ocr_content[$key_name])){
-                            if(is_array($ocr_content[$key_name])){
-                                $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$ocr_content[$key_name]);
-                            }else{
-                                $page_data['ocr']['img'][] = $ocr_content[$key_name];
-                            }
-                        }
-                        // 針對圖片連結未直接放在第一層結構資料處理
-                        if(isset($ocr_content['result']) && !empty($ocr_content['result'])){
-                            $image_in_result = array_reduce($ocr_content['result'], 'array_merge', array());
-                            if(isset($image_in_result[$key_name]) && !empty($image_in_result[$key_name])){
-                                if(is_array($image_in_result[$key_name])){
-                                    $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$image_in_result[$key_name]);
-                                }else{
-                                    $page_data['ocr']['img'][] = $image_in_result[$key_name];
-                                }
-                            }
-                        }
-                    }
-                }
-
-				// ocr 總表相關資料生成
-				$data_infos = isset($ocr_content['result']) ? $ocr_content['result'] : [];
-				$error_location = isset($ocr_content['error_location']) ? $ocr_content['error_location'] : [];
-				$total_table = [];
-				if(!empty($data_infos)){
-					if($info->certification_id == 1003 || $info->certification_id == 9){
-						$total_table['data'] = array_reduce($data_infos, 'array_merge', array());
-						$total_table['type'] = $info->certification_id == 9 ? 'person' : 'company';
-					}else{
-						$total_table['data'] = $this->certification_table->getTotalTableDataArray($info->certification_id,$data_infos,$error_location);
-					}
-				}
-
-				if(! empty($total_table)){
-					if($info->certification_id == 1003 || $info->certification_id == 9){
-						$page_data['ocr']['total_table'] = $this->load->view('admin/certification/component/joint_credit_report',$total_table , true);
-					}else{
-						$page_data['ocr']['total_table'] = $this->load->view('admin/certification/ocr/total_table',$total_table , true);
-					}
-				}else{
-					$page_data['ocr']['total_table'] = '';
-				}
-				}
 
 				if(isset($page_data['content']['programming_language'])){
 					$languageList = json_decode(trim(file_get_contents(FRONT_CDN_URL.'json/config_techi.json'), "\xEF\xBB\xBF"))->languageList;
@@ -322,12 +266,8 @@ class Certification extends MY_Admin_Controller {
 				$page_data['sys_check'] 			= $info->sys_check;
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title', $this->menu);
-				// ocr認證項目指定到統一頁面
-			if(!$is_template ){
-					$this->load->view('admin/certification/' . $certification['alias'], $page_data);
-				}else{
-					$this->load->view('admin/certification/ocr/index', $page_data);
-				}
+
+				$this->load->view('admin/certification/' . $certification['alias'], $page_data);
 				$this->load->view('admin/_footer');
 			} else {
 				alert('ERROR , id is not exist', $back_url);

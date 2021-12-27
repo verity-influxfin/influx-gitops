@@ -4176,7 +4176,7 @@ class Certification extends REST_Controller {
             $data_content['image_url'] = $image_info->url;
             $this->judicial_person_model->update_by(['company_user_id' => $user_id],['sign_video' => json_encode($data_content), 'status' => 0]);
 
-            $res['result'][$time]['image_url'] = $image_info->url;
+            $res['image_url'] = $image_info->url;
 
             $param = [
                 'user_id' => $user_id,

@@ -252,4 +252,66 @@ class Judicialperson_lib{
             "company_status" => 0,
         ]);
     }
+
+    /**
+     * 法人對保通過
+     * @param  string  $company_id 法人使用者編號
+     * @return boolean
+     */
+    public function succeed_in_company_guaranty($company_id = '')
+    {
+        if ( ! empty($company_id) )
+        {
+            $this->CI->load->model('user/User_model');
+            $company_user_info = $this->CI->user_model->get($company_id);
+            if ( ! empty($company_user_info)
+                && $company_user_info->company_status == USER_IS_COMPANY
+                && ! empty($company_user_info->phone) )
+            {
+                $user_info = $this->CI->user_model->get_by([
+                    'phone' => $company_user_info->phone,
+                    'company_status' => USER_NOT_COMPANY,
+                ]);
+                if ( ! empty($user_info) )
+                {
+                    $update_by_tax_id = FALSE;
+                    if ( ! empty($company_user_info->id_number) )
+                    {
+                        $info_by_tax_id = $this->CI->judicial_person_model->get_by([
+                            'tax_id' => $company_user_info->id_number,
+                            'status' => JUDICIAL_PERSON_STATUS_SUCCESS
+                        ]);
+                        // 有已經開通的法人就覆蓋
+                        if ( ! empty($info_by_tax_id) )
+                        {
+                            $this->CI->judicial_person_model->update_by([
+                                'id' => $info_by_tax_id->id
+                                ],['status' => JUDICIAL_PERSON_STATUS_SUCCESS,
+                                    'company_user_id' => $company_user_info->id,
+                                    'user_id' => $user_info->id
+                            ]);
+                            $update_by_tax_id = TRUE;
+                        }
+                    }
+                    if ( $update_by_tax_id === FALSE )
+                    {
+                        $info_by_company_id = $this->CI->judicial_person_model->get_by([
+                            'company_user_id' => $company_user_info->id,
+                            'user_id' => $user_info->id
+                        ]);
+                        if ( !empty($info_by_company_id) )
+                        {
+                            $this->CI->judicial_person_model->update_by([
+                                'id' => $info_by_company_id->id
+                                ],['status' => JUDICIAL_PERSON_STATUS_SUCCESS,
+                                    'tax_id' => $company_user_info->id_number
+                            ]);
+                        }
+                    }
+                    return TRUE;
+                }
+            }
+        }
+        return FALSE;
+    }
 }
