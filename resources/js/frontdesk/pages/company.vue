@@ -258,6 +258,7 @@ export default {
           img {
             max-height: 60px;
             max-width: 100%;
+            padding: 10px;
           }
         }
 
@@ -488,6 +489,7 @@ export default {
           .press {
             padding: 1.5rem 0px;
             img {
+              padding: 3px;
               max-height: 35px;
             }
           }
