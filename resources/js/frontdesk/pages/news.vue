@@ -57,12 +57,17 @@ let newsRow = Vue.extend({
           <div class="img"><img :src="item.image_url" class="img-custom" /></div>
           <div class="cnt">
             <span class="date">{{item.post_date}}</span>
-            <p class="title">{{item.post_title}}</p>
+            <p class="title">{{filterBr(item.post_title)}}</p>
           </div>
           <div class="read">Read more+</div>
         </a>
       </li>
   `,
+  methods: {
+    filterBr(text) {
+        return text.replace(/<br\s*[\/]?>/gi, '');
+    }
+  }
 });
 
 export default {
