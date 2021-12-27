@@ -237,7 +237,6 @@ export default {
 
     .list {
       display: flex;
-      justify-content: space-between;
       gap: 40px;
       flex-wrap: wrap;
       width: 80%;
@@ -245,7 +244,7 @@ export default {
       overflow-y: auto;
 
       .report-row {
-        flex: 0 0 calc(25% - 15px);
+        flex: 0 0 calc(25% - 30px);
         border-radius: 25px;
         background-image: linear-gradient(to bottom, #ffffff, #e4eeff);
 
