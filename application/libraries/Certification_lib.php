@@ -3068,6 +3068,20 @@ class Certification_lib{
         return false;
     }
 
+    public function judicialguarantee_success($info)
+    {
+        if( $info )
+        {
+            $this->CI->load->library('Judicialperson_lib');
+            $apply_response = $this->CI->judicialperson_lib->succeed_in_company_guaranty($info->user_id);
+            if ( $apply_response === TRUE )
+            {
+                return $this->fail_other_cer($info);
+            }
+        }
+        return FALSE;
+    }
+
     public function get_status($user_id,$investor=0,$company=0,$get_fail=false,$target=false,$product=false){
 		if($user_id){
 			$certification = array();
