@@ -397,7 +397,11 @@ export default {
       color: #919191;
     }
     .report-contert {
+      overflow: hidden;
       color: #606060;
+      img{
+          max-width: 100%;
+      }
     }
 
     @media (min-width: 567px) {
