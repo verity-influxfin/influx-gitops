@@ -1174,4 +1174,23 @@ econtent;
         }
         return $rs;
     }
+
+    public function target_credit_expired($user_id)
+    {
+        $title = "【借款申請】 您申請的借款核准額度已失效";
+        $content = "親愛的用戶，您好！
+非常抱歉通知您，由於您的核准額度有效期已過，系統已自動下架。
+建議您可以重新申請並更新近一個月徵信資料，系統將會在核准後自動上架！";
+
+        $param = array(
+            "user_id" => $user_id,
+            "investor" => USER_BORROWER,
+            "title" => $title,
+            "content" => $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('sendemail');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03');
+        return $rs;
+    }
 }
