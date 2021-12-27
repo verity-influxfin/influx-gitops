@@ -474,7 +474,6 @@ export default {
         width: 100%;
         margin: 10px 0px;
         gap: 10px;
-        justify-content: space-evenly;
         .report-row {
            flex: 0 0 47%;
           .news-title {
