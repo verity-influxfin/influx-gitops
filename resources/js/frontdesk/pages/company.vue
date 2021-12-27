@@ -60,7 +60,7 @@
             </a>
           </div>
           <div class="news-title" @click="openModel(item)">
-            <p>{{ item.title }}</p>
+            <p class="sub-title">{{ item.title }}</p>
           </div>
         </div>
       </div>
@@ -402,6 +402,7 @@ export default {
       color: #606060;
       img{
           max-width: 100%;
+          height: auto !important;
       }
     }
 
