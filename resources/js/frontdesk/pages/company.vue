@@ -60,7 +60,7 @@
             </a>
           </div>
           <div class="news-title" @click="openModel(item)">
-            <p class="sub-title">{{ item.title }}</p>
+            <p class="sub-title" :title="item.title">{{ item.title }}</p>
           </div>
         </div>
       </div>
@@ -238,28 +238,33 @@ export default {
     .list {
       display: flex;
       justify-content: space-between;
-      gap: 20px;
+      gap: 40px;
       flex-wrap: wrap;
       width: 80%;
       margin: 1.5rem auto;
       overflow-y: auto;
 
       .report-row {
-        flex: 0 0 22%;
+        flex: 0 0 calc(25% - 15px);
         border-radius: 25px;
         background-image: linear-gradient(to bottom, #ffffff, #e4eeff);
 
         .press {
-          border-radius: 20px;
+          border-radius: 30px;
           background: #ffffff;
           border: 1px solid #81c3f3;
           text-align: center;
           padding: 2.5rem 0px;
 
+          a {
+            display: inline-block;
+            height: 5em;
+            line-height: 5em;
+          }
+
           img {
             max-height: 60px;
             max-width: 100%;
-            padding: 10px;
           }
         }
 
