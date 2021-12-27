@@ -44,7 +44,7 @@
       </div>
       <div v-if="Object.keys(partnerData).length !== 0 && isShow" class="content">
         <h5>{{ partnerData.title }}</h5>
-        <p>{{ partnerData.subTitle }}</p>
+        <p class="sub-title" :title="partnerData.subTitle">{{ partnerData.subTitle }}</p>
         <hr />
         <p v-html="partnerData.text"></p>
       </div>
@@ -146,8 +146,8 @@ export default {
           .css(
             "top",
             $target.offset().top +
-              $(".photo").outerHeight() +
-              (window.innerWidth > 767 ? 40 : 0)
+            $(".photo").outerHeight() +
+            (window.innerWidth > 767 ? 40 : 0)
           )
           .css("left", max);
       });
@@ -236,14 +236,15 @@ export default {
     overflow: hidden;
 
     .list {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
       width: 80%;
       margin: 1.5rem auto;
       overflow-y: auto;
 
       .report-row {
-        float: left;
-        width: calc(25% - 20px);
-        margin: 10px;
+        flex: 1 0 20%;
         border-radius: 25px;
         background-image: linear-gradient(to bottom, #ffffff, #e4eeff);
 
@@ -255,9 +256,17 @@ export default {
           padding: 2.5rem 0px;
 
           img {
-            height: 60px;
-            width: auto;
+            max-height: 60px;
+            max-width: 100%;
           }
+        }
+
+        .sub-title{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
         }
 
         .news-title {
@@ -458,11 +467,10 @@ export default {
       .list {
         width: 100%;
         margin: 10px 0px;
-
+        gap: 10px;
+        justify-content: space-evenly;
         .report-row {
-          width: calc(50% - 10px);
-          margin: 5px;
-
+           flex: 1 0 40%;
           .news-title {
             font-size: 13px;
             margin: 5px;
@@ -473,10 +481,14 @@ export default {
             }
           }
 
+          .sub-title{
+            -webkit-line-clamp: 3;
+          }
+
           .press {
             padding: 1.5rem 0px;
             img {
-              height: 35px;
+              max-height: 35px;
             }
           }
         }
