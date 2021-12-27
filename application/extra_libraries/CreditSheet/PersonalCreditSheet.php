@@ -26,8 +26,8 @@ class PersonalCreditSheet extends CreditSheetBase {
     protected $finalReviewerLevel = self::REVIEWER_CREDIT_ANALYST;
 
     // 可評分範圍
-    protected $scoringMin = 0;
-    protected $scoringMax = 400;
+    protected $scoringMin = -500;
+    protected $scoringMax = 500;
 
     // 還款中案件
     public $repayableTargets;
