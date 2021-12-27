@@ -6,7 +6,7 @@
                 'news-view': search.includes('news'),
             }]"
             >
-            <h3 class="title" v-if="this.articleTitle">{{ this.articleTitle }}</h3>
+            <h3 class="title" v-if="this.articleTitle">{{ parseBr(this.articleTitle) }}</h3>
             <div class="contenier">
                 <div class="title-img" v-if="this.articleImg">
                     <img :src="this.articleImg" class="img-fluid" />
@@ -134,6 +134,9 @@ export default {
     },
   },
   methods: {
+    parseBr(text) {
+        return text.replace(/<br\s*[\/]?>/gi, '\n');
+    },
     async getArticleData() {
       const urlParams = new URLSearchParams(window.location.search);
       this.search = urlParams.get("q");
@@ -188,6 +191,7 @@ export default {
     text-align: center;
     color: #061164;
     margin-bottom: 4rem;
+    white-space: pre-wrap;
   }
 
   .flex {
