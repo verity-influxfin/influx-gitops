@@ -44,7 +44,7 @@
       </div>
       <div v-if="Object.keys(partnerData).length !== 0 && isShow" class="content">
         <h5>{{ partnerData.title }}</h5>
-        <p>{{ partnerData.subTitle }}</p>
+        <p class="sub-title" :title="partnerData.subTitle">{{ partnerData.subTitle }}</p>
         <hr />
         <p v-html="partnerData.text"></p>
       </div>
@@ -60,7 +60,7 @@
             </a>
           </div>
           <div class="news-title" @click="openModel(item)">
-            <p>{{ item.title }}</p>
+            <p class="sub-title" :title="item.title">{{ item.title }}</p>
           </div>
         </div>
       </div>
@@ -146,8 +146,8 @@ export default {
           .css(
             "top",
             $target.offset().top +
-              $(".photo").outerHeight() +
-              (window.innerWidth > 767 ? 40 : 0)
+            $(".photo").outerHeight() +
+            (window.innerWidth > 767 ? 40 : 0)
           )
           .css("left", max);
       });
@@ -236,28 +236,43 @@ export default {
     overflow: hidden;
 
     .list {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
       width: 80%;
       margin: 1.5rem auto;
       overflow-y: auto;
 
       .report-row {
-        float: left;
-        width: calc(25% - 20px);
-        margin: 10px;
+        flex: 0 0 calc(25% - 30px);
         border-radius: 25px;
         background-image: linear-gradient(to bottom, #ffffff, #e4eeff);
 
         .press {
-          border-radius: 20px;
+          border-radius: 30px;
           background: #ffffff;
           border: 1px solid #81c3f3;
           text-align: center;
           padding: 2.5rem 0px;
 
-          img {
-            height: 60px;
-            width: auto;
+          a {
+            display: inline-block;
+            height: 5em;
+            line-height: 5em;
           }
+
+          img {
+            max-height: 60px;
+            max-width: 100%;
+          }
+        }
+
+        .sub-title{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
         }
 
         .news-title {
@@ -387,7 +402,12 @@ export default {
       color: #919191;
     }
     .report-contert {
+      overflow: hidden;
       color: #606060;
+      img{
+          max-width: 100%;
+          height: auto !important;
+      }
     }
 
     @media (min-width: 567px) {
@@ -458,11 +478,9 @@ export default {
       .list {
         width: 100%;
         margin: 10px 0px;
-
+        gap: 10px;
         .report-row {
-          width: calc(50% - 10px);
-          margin: 5px;
-
+           flex: 0 0 47%;
           .news-title {
             font-size: 13px;
             margin: 5px;
@@ -473,10 +491,15 @@ export default {
             }
           }
 
+          .sub-title{
+            -webkit-line-clamp: 3;
+          }
+
           .press {
             padding: 1.5rem 0px;
             img {
-              height: 35px;
+              padding: 3px;
+              max-height: 35px;
             }
           }
         }
