@@ -11,7 +11,8 @@ class LoanResponse extends REST_Controller {
         // check ip, request must from bank adapter server
         $clientIp = $this->input->ip_address();
         $allowIp = $this->config->item('bank_adapter_ip');
-        if ($clientIp !== $allowIp) {
+        log_message('error',json_encode(['type'=>'skbank_response_api','client_ip'=>$clientIp,'headers'=>$this->input->request_headers(),'body'=>$this->input->raw_input_stream]));
+        if ( ! in_array($clientIp,$allowIp) ) {
             $this->output->set_status_header(404);
             exit(0);
         }
