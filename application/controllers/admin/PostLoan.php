@@ -376,4 +376,11 @@ class PostLoan extends MY_Admin_Controller {
 			}
 		}
 	}
+
+	public function deduct(){
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/deduct.php');
+		$this->load->view('admin/_footer');
+	}
 }
