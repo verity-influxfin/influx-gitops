@@ -20,11 +20,20 @@
                 <alesis-space size="medium"></alesis-space>
                 <div class="包裹容器">
                     <img :src="img_path" class="圖片">
-                    <div class="連結">
-                        <a @click="current_risk_month = report_index" href="javascript:;" class="項目" v-for="report_index in Object.keys(report_list)">
-                            <alesis-button>2021年{{String(report_index).padStart(2, '0')}}月</alesis-button>
-                        </a>
+                    <div class="swiper">
+                    <!-- Additional required wrapper -->
+                        <div class="swiper-wrapper 連結">
+                            <!-- Slides -->
+                            <a @click="current_risk_month = report_index" href="javascript:;" class="項目  swiper-slide" v-for="report_index in Object.keys(report_list)" :key="report_index">
+                                <alesis-button>2021年{{String(report_index).padStart(2, '0')}}月</alesis-button>
+                            </a>
+                        </div>
+                        <!-- If we need navigation buttons -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
                     </div>
+
+
                     <a href="/invest" class="行動">
                         <alesis-button>立即投資</alesis-button>
                     </a>
@@ -56,6 +65,11 @@ import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
 import AlesisVerticalRoadmap   from "../component/alesis/AlesisVerticalRoadmap";
 import AlesisSpace             from "../component/alesis/AlesisSpace";
+import 'swiper/swiper.scss';
+import "swiper/components/navigation/navigation.min.css"
+import SwiperCore, {
+  Navigation
+} from 'swiper/core';
 
 export default {
     components: {
@@ -80,11 +94,13 @@ export default {
     },
     data: () => {
         return {
-            current_risk_month : 9,
+            current_risk_month : 11,
             report_list: {
                 7: '/images/risk07-report.jpg',
                 8: '/images/risk08-report.jpg',
                 9: '/images/risk09-report.jpg',
+                10: require('../asset/images/risk/risk10-report.jpg'),
+                11: require('../asset/images/risk/risk11-report.jpg'),
             },
         }
     },
@@ -95,6 +111,16 @@ export default {
     },
     created() {
         $("title").text(`風險報告書 - inFlux普匯金融科技`);
+    },
+    mounted () {
+        SwiperCore.use([Navigation]);
+            // 初始化這個案例分享容器幻燈片。
+        new Swiper('.swiper', {
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
     },
 };
 </script>
@@ -191,15 +217,17 @@ export default {
         width: 70vw;
     }
 }
+.swiper{
+    width: 340px;
+    @include rwd{
+        width: auto;
+    }
+}
 
 .報告書 .包裹容器 .連結 {
     margin-top     : 1.5rem;
     margin-bottom  : 1.5rem;
-    display        : flex;
-    gap            : 1rem;
-    align-items    : center;
-    justify-content: center;
-    flex-wrap      : wrap;
+
 }
 
 .報告書 .包裹容器 .連結 .項目 {
@@ -208,12 +236,13 @@ export default {
     --font-size: 1.1rem;
     --x-padding: 2.5rem;
     --y-padding: 0.9rem;
+    white-space: nowrap;
 
     @include rwd {
         --x-padding: 1.4rem;
         --y-padding: 0.7rem;
 
-        white-space: nowrap;
+
     }
 }
 
