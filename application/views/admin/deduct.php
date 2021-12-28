@@ -3,7 +3,7 @@
 		<div class="col-xs-12">
 			<h1 class="page-header d-flex justify-between">
 				<div>法催扣款</div>
-				<button class="btn btn-danger">新增代支紀錄</button>
+				<button class="btn btn-danger" data-toggle="modal" data-target="#newModal">新增代支紀錄</button>
 			</h1>
 		</div>
 	</div>
@@ -47,16 +47,112 @@
 				</thead>
 			</table>
 		</div>
-
 	</div>
-
+	<div class="modal fade" id="newModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title">新增代支紀錄</h3>
+				</div>
+				<div class="modal-body p-5">
+					<div class="d-flex mb-2">
+						<div class="col-20 input-require">投資人ID</div>
+						<div class="col">
+							<input type="text" required class="w-100">
+						</div>
+					</div>
+					<div class="d-flex mb-2">
+						<div class="orange-hint"></div>
+					</div>
+					<div class="d-flex mb-2">
+						<div class="col-20 input-require">金額</div>
+						<div class="col">
+							<input type="text" required class="w-100">
+						</div>
+					</div>
+					<div class="d-flex align-start mb-2">
+						<div class="col-20 input-require">事由</div>
+						<div class="col">
+							<textarea type="text" required class="w-100" rows="4"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="d-flex justify-between mx-5 mb-5">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-primary">送出</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal fade" id="deductModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title">扣繳投資人虛擬帳戶餘額</h3>
+				</div>
+				<div class="modal-body p-5">
+					<div class="d-flex mb-2">
+						<h4 class="col">投資人ID: 22222</h4>
+					</div>
+					<div class="d-flex mb-2">
+						<div class="orange-hint">
+							張○豐 虛擬帳戶餘額: $29,302
+						</div>
+					</div>
+					<div class="d-flex mb-2">
+						<h4 class="col">代支規費: $750</h4>
+					</div>
+					<div class="d-flex align-start mb-2">
+						<h4 class="col">確定扣繳嗎?</h4>
+					</div>
+				</div>
+				<div class="d-flex justify-between mx-5 mb-5">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-primary">送出</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title">註銷代支紀錄</h3>
+				</div>
+				<div class="modal-body p-5">
+					<div class="d-flex mb-2">
+						<div class="col input-require">註銷原因</div>
+					</div>
+					<div class="d-flex mb-2">
+						<div class="col">
+							<textarea rows="7" required class="w-100"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="d-flex justify-between mx-5 mb-5">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-danger">註銷</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 
 <script>
 	const buttonGroup = `
 		<div class="d-flex">
-			<button class="btn btn-primary mr-2">扣繳</button>
-			<button class="btn btn-outline-danger">註銷</button>
+			<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#deductModal">扣繳</button>
+			<button class="btn btn-outline-danger" data-toggle="modal" data-target="#cancelModal">註銷</button>
 		</div>
 	`
 	$(document).ready(function () {
@@ -102,6 +198,9 @@
 		display: flex;
 		align-items: center;
 	}
+	.align-start{
+		align-items: start;
+	}
 
 	.btn-outline-danger {
 		color: #dc3545;
@@ -116,6 +215,25 @@
 
 	.justify-between {
 		justify-content: space-between;
+	}
+	.col-20{
+		flex: 0 0 20%;
+	}
+	.col{
+		flex: 1 0 0%;
+	}
+	.w-100{
+		width: 100%;
+	}
+	.input-require::after{
+		content: '*';
+		color: #dc3545;
+		margin-left: 4px;
+		display: inline-block;
+	}
+	.orange-hint{
+		color: orange;
+		font-size: 12px;
 	}
 
 	.search-btn {
