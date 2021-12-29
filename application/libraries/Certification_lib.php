@@ -164,6 +164,7 @@ class Certification_lib{
     {
         $this->CI->load->model('user/user_qrcode_model');
         $this->CI->load->model('user/qrcode_setting_model');
+        $this->CI->load->library('qrcode_lib');
         $promoteCode = $this->CI->user_qrcode_model->get_by(['user_id' => $info->user_id, 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
         if ( ! isset($promoteCode))
         {
