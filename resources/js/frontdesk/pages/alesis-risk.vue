@@ -24,16 +24,16 @@
                     <!-- Additional required wrapper -->
                         <div class="swiper-wrapper 連結">
                             <!-- Slides -->
-                            <a @click="current_risk_month = report_index" href="javascript:;" class="項目  swiper-slide" v-for="report_index in Object.keys(report_list)" :key="report_index">
-                                <alesis-button>2021年{{String(report_index).padStart(2, '0')}}月</alesis-button>
-                            </a>
+                            <div class="swiper-slide" v-for="(item,index) in renderList" :key="index">
+                                <a @click="current_risk_month = x.month" href="javascript:;" class="項目" v-for="x in item" :key="x.month">
+                                    <alesis-button>2021年{{String(x.month).padStart(2, '0')}}月</alesis-button>
+                                </a>
+                            </div>
                         </div>
                         <!-- If we need navigation buttons -->
                         <div class="swiper-button-prev"></div>
                         <div class="swiper-button-next"></div>
                     </div>
-
-
                     <a href="/invest" class="行動">
                         <alesis-button>立即投資</alesis-button>
                     </a>
@@ -95,21 +95,46 @@ export default {
     data: () => {
         return {
             current_risk_month : 11,
-            report_list: {
-                7: '/images/risk07-report.jpg',
-                8: '/images/risk08-report.jpg',
-                9: '/images/risk09-report.jpg',
-                10: require('../asset/images/risk/risk10-report.jpg'),
-                11: require('../asset/images/risk/risk11-report.jpg'),
-            },
+            report_list: [
+                {
+                    month:7,
+                    image:'/images/risk07-report.jpg',
+                },
+                {
+                    month:8,
+                    image:'/images/risk08-report.jpg',
+                },
+                {
+                    month:9,
+                    image:'/images/risk09-report.jpg',
+                },
+                {
+                    month:10,
+                    image:require('../asset/images/risk/risk10-report.jpg'),
+                },
+                {
+                    month:11,
+                    image:require('../asset/images/risk/risk11-report.jpg'),
+                },
+            ]
         }
     },
     computed: {
         img_path() {
-            return this.report_list[this.current_risk_month];
+            return this.report_list.find(({month})=>this.current_risk_month===month).image;
         },
+        renderList(){
+            const { report_list } = this
+            report_list.reverse()
+            const ans = []
+            for (let index = 0; index < report_list.length; index+=3) {
+                ans.push(report_list.slice(index,index+3))
+            }
+            return ans
+        }
     },
     created() {
+        console.log(this.renderList)
         $("title").text(`風險報告書 - inFlux普匯金融科技`);
     },
     mounted () {
@@ -218,9 +243,17 @@ export default {
     }
 }
 .swiper{
-    width: 340px;
+    width: 800px;
     @include rwd{
-        width: auto;
+        width: 95%;
+    }
+    .swiper-slide{
+        gap: 15px;
+        display: flex;
+        justify-content: center;
+        @include rwd{
+            flex-direction: column;
+        }
     }
 }
 
