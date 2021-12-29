@@ -11,7 +11,7 @@
 			<div class="d-flex">
 				<div class="p-2">會員ID</div>
 				<div class="p-2">
-					<input type="text">
+					<input type="text" class="form-control">
 				</div>
 				<div class="search-btn">
 					<button class="btn btn-primary">搜尋</button>
@@ -61,8 +61,8 @@
 				<div class="p-2">
 					<select id="status" class="form-control">
 						<option value=""></option>
-						<option value="1" label="封鎖三個月（中風險）">封鎖三個月（中風險）</option>
-						<option value="2" label="封鎖六個月（高風險）">封鎖六個月（高風險）</option>
+						<option value="1" label="封鎖三個月">封鎖三個月</option>
+						<option value="2" label="封鎖六個月">封鎖六個月</option>
 						<option value="3" label="拒絕">拒絕</option>
 					</select>
 				</div>
@@ -102,7 +102,7 @@
 					<div class="d-flex mb-4">
 						<div class="col-20 input-require">移除原因：</div>
 						<div class="col">
-							<input type="text" required class="w-100">
+							<input type="text" required class="w-100 form-control">
 						</div>
 					</div>
 					<div class="d-flex justify-between mx-3 mb-3">
@@ -128,17 +128,16 @@
 						<div class="col">
 							<select name="" id="" class="w-100 form-control" required>
 								<option value=""></option>
-								<option value="">1</option>
+								<option value="1" label="封鎖三個月">封鎖三個月</option>
+								<option value="2" label="封鎖六個月">封鎖六個月</option>
+								<option value="3" label="拒絕">拒絕</option>
 							</select>
 						</div>
 					</div>
 					<div class="d-flex mb-4">
 						<div class="col-20 input-require">調整原因：</div>
 						<div class="col">
-							<select name="" id="" class="w-100 form-control" required>
-								<option value=""></option>
-								<option value="">1</option>
-							</select>
+							<input class="w-100 form-control" required>
 						</div>
 					</div>
 					<div class="d-flex justify-between mx-5 mb-5">
@@ -171,16 +170,37 @@
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">規則細項：</div>
 						<div class="col">
-							<select name="" id="" class="w-100 form-control" required>
+							<input type="text" class="w-100 form-control">
+						</div>
+					</div>
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">風險等級：</div>
+						<div class="col">
+							<select class="form-control">
 								<option value=""></option>
-								<option value="">1</option>
+								<option value="1">高</option>
+								<option value="2">中</option>
+								<option value="3">低</option>
+								<option value="4">拒絕</option>
+								<option value="5">無</option>
+							</select>
+						</div>
+					</div>
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">執行狀態：</div>
+						<div class="col">
+							<select id="status" class="form-control">
+								<option value=""></option>
+								<option value="1" label="封鎖三個月">封鎖三個月</option>
+								<option value="2" label="封鎖六個月">封鎖六個月</option>
+								<option value="3" label="拒絕">拒絕</option>
 							</select>
 						</div>
 					</div>
 					<div class="d-flex mb-2">
 						<div class="col-30">備註:</div>
 						<div class="col">
-							<textarea rows="7" class="w-100"></textarea>
+							<textarea rows="7" class="w-100 form-control"></textarea>
 						</div>
 					</div>
 
@@ -188,6 +208,30 @@
 				<div class="d-flex justify-between mx-5 mb-5">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
 					<button type="submit" class="btn btn-info">新增</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal fade" id="rejoinModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title">重新加入黑名單</h3>
+				</div>
+				<div class="modal-body p-5">
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">重新加入原因：</div>
+						<div class="col">
+							<input type="text" required class="w-100 form-control">
+						</div>
+					</div>
+					<div class="d-flex justify-between mx-3 mb-3">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+						<button type="submit" class="btn btn-primary">加入</button>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -210,7 +254,7 @@
 			return `
 			<div class="d-flex flex-column">
 				<div class="mb-2">${id}</div>
-				<button class="btn btn-default mr-2" disabled>
+				<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal">
 					已移除
 				</button>
 			</div>
@@ -222,6 +266,16 @@
 				<div class="mb-2">${id}</div>
 				<button class="btn btn-info mr-2" data-toggle="modal" data-target="#newModal">
 					新增
+				</button>
+			</div>
+			`
+		}
+		if (status === 'overdue') {
+			return `
+			<div class="d-flex flex-column">
+				<div class="mb-2">${id}</div>
+				<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
+					已過期
 				</button>
 			</div>
 			`
@@ -301,12 +355,13 @@
 
 
 		for (let index = 0; index < 3; index++) {
-			addRow(t1, [idGroup('14675', 'new'), 2222, 333, '信用不良紀錄', 'rules', '高', '封鎖', '.....'])
+			addRow(t1, [idGroup('14675', 'new'), 2222, 333, '信用不良紀錄', 'rules', '高', '封鎖三個月', '.....'])
 		}
+		addRow(t2, [idGroup(2222, 'overdue'), 2222, 333, '信用不良紀錄', 'rules', '高', statusGroup('解鎖', ''), '.....'])
 		for (let index = 0; index < 15; index++) {
 			const rule = Math.random() > 0.5 ? '信用不良紀錄' : '反詐欺規則'
 			const status = Math.random() > 0.5 ? '' : 'disabled'
-			addRow(t2, [idGroup(index, status), 2222, 333, rule, 'rules', '高', statusGroup('封鎖', status), '.....'])
+			addRow(t2, [idGroup(index, status), 2222, 333, rule, 'rules', '高', statusGroup('封鎖三個月', status), '.....'])
 		}
 		t1.draw()
 		t2.draw()
