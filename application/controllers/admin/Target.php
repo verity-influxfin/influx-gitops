@@ -47,7 +47,7 @@ class Target extends MY_Admin_Controller {
 						'lender' => ['name' => '投資人ID'],
 						'unpaid_principal' => ['name' => '逾期本金'],
 						'loan_date' => ['name' => '放款日期', 'width' => 12],
-						'entering_date' => ['name' => '首逾日期', 'width' => 12],
+                        'limit_date' => ['name' => '首逾日期', 'width' => 12],
 						'delayed_days' => ['name' => '逾期天數'],
 						'unpaid_interest' => ['name' => '尚欠利息'],
 						'delay_interest' => ['name' => '延滯息'],

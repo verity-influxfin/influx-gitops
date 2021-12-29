@@ -419,6 +419,7 @@ class Target_model extends MY_Model
 				a7.meta_value AS school_department,
 				a8.meta_value AS job_position
 			')
+            ->select('`tr`.`limit_date`')
 			->from('p2p_loan.targets t')
 			->join('p2p_loan.products p', 'p.id=t.product_id')
 			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
