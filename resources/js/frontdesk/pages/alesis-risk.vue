@@ -24,7 +24,7 @@
                     <!-- Additional required wrapper -->
                         <div class="swiper-wrapper 連結">
                             <!-- Slides -->
-                            <a @click="current_risk_month = report_index" href="javascript:;" class="項目  swiper-slide" v-for="report_index in Object.keys(report_list)" :key="report_index">
+                            <a class="項目  swiper-slide" v-for="report_index in Object.keys(report_list).reverse()" :key="report_index">
                                 <alesis-button>2021年{{String(report_index).padStart(2, '0')}}月</alesis-button>
                             </a>
                         </div>
@@ -120,6 +120,11 @@ export default {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
             },
+            on:{
+                slideChange:(x)=>{
+                    this.current_risk_month = 11 - x.realIndex
+                }
+            }
         });
     },
 };
