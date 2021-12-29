@@ -150,4 +150,19 @@ class User_model extends MY_Model
             ->group_by('t.user_id');
         return $this->db->get()->result();
     }
+
+    /**
+     * 撈取總會員筆數
+     * @return int
+     */
+    public function get_member_count()
+    {
+        $result = $this->db
+            ->select('COUNT(1) AS `member_count`')
+            ->from('`p2p_user`.`users`')
+            ->get()
+            ->first_row('array');
+
+        return (int) ($result['member_count'] ?? 0);
+    }
 }

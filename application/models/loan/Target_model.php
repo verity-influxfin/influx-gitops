@@ -500,4 +500,52 @@ class Target_model extends MY_Model
 
 		return array_replace_recursive($target_rows, $transaction_rows);
 	}
+
+    /**
+     * 撈取累積投資總金額
+     * @return int
+     */
+    public function get_total_loan_amount()
+    {
+        $subquery_investment = $this->db
+            ->select_sum('loan_amount')
+            ->where_in('status', [
+                INVESTMENT_STATUS_REPAYING,
+                INVESTMENT_STATUS_PAID_OFF
+            ])
+            ->get_compiled_select('`p2p_loan`.`investments`', TRUE);
+
+        $subquery_transfer = $this->db
+            ->select_sum('amount')
+            ->where('status', 10)
+            ->get_compiled_select('`p2p_loan`.`transfers`', TRUE);
+
+        $result = $this->db
+            ->select('(`r1`.`loan_amount` + `r2`.`amount`) AS total_loan_amount')
+            ->from("({$subquery_investment}) `r1`")
+            ->from("({$subquery_transfer}) `r2`")
+            ->get()
+            ->first_row('array');
+
+        return (int) ($result['total_loan_amount'] ?? 0);
+    }
+
+    /**
+     * 撈取總交易(成交)筆數
+     * @return int
+     */
+    public function get_transaction_count()
+    {
+        $result = $this->db
+            ->select('((((`r1`.`c` + (`r2`.`c` * 2)) + `r3`.`c`) + `r4`.`c`) + (`r5`.`c` * 2)) AS transaction_count')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . ' ) `r1`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . ' ) `r2`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.transfers WHERE `status` = 10 ) `r3`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.targets WHERE `status` = ' . TARGET_REPAYMENTING . ' ) `r4`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.targets WHERE `status` = ' . TARGET_REPAYMENTED . ' ) `r5`')
+            ->get()
+            ->first_row('array');
+
+        return (int) ($result['transaction_count'] ?? 0);
+    }
 }
