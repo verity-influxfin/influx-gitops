@@ -1,5 +1,13 @@
 const mix = require('laravel-mix');
-
+const path = require('path')
+mix.webpackConfig({
+    resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'resources/js/frontdesk'),
+            'images': path.join(__dirname, 'resources/js/frontdesk/asset/images'),
+        }
+    }
+})
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
