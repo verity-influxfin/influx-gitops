@@ -470,21 +470,6 @@
         </div>
         <!-- / 案例分享 -->
 
-        <!-- 普匯銀行 -->
-        <div class="普匯銀行">
-            <alesis-header>
-                <div class="標題">上班族 普匯合作專區</div>
-            </alesis-header>
-            <alesis-section :secondary="true">
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <alesis-shanghai></alesis-shanghai>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 普匯銀行 -->
-
         <!-- 應用程式推薦 -->
         <alesis-app-recommendation action="我想借款"></alesis-app-recommendation>
         <!-- / 應用程式推薦 -->
@@ -505,7 +490,6 @@ import AlesisMoon              from "../component/alesis/AlesisMoon";
 import AlesisPlan              from "../component/alesis/AlesisPlan";
 import AlesisProject           from "../component/alesis/AlesisProject";
 import AlesisSection           from "../component/alesis/AlesisSection";
-import AlesisShanghai          from "../component/alesis/AlesisShanghai";
 import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
@@ -542,7 +526,6 @@ export default {
         AlesisPlan,
         AlesisProject,
         AlesisSection,
-        AlesisShanghai,
         AlesisSuggestionReviews,
         AlesisSymcard,
         AlesisTaiwanMap,

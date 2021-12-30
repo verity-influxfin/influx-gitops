@@ -53,16 +53,12 @@ let routers = [
     { path: '*', redirect: '/index' },
     { path: '/index', component: index },
     { path: '/borrow', component: borrow },
-
     { path: '/workLoan', component: workLoan },
     { path: '/collegeLoan', component: collegeLoan },
     { path: '/faq', component: faq },
     { path: '/risk', component: risk },
     { path: '/projects', component: projects },
     { path: '/promote-code-intro', component: promoteCodeIntro },
-
-
-
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
     { path: '/mobileLoan', component: mobileLoan },
     { path: '/engineerLoan', component: engineerLoan },
