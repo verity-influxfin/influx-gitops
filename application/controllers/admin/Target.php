@@ -2176,7 +2176,7 @@ class Target extends MY_Admin_Controller {
         foreach($image_url as $image_type => $images){
             $response[$image_type] = [];
             if (!empty($image_url[$image_type])) {
-                $response[$image_type][] = $this->s3_lib->imagesToPdf($images,$target_info->user_id,$image_type,'skbank_raw_data');
+                $response[$image_type] = $this->s3_lib->imagesToPdf($images,$target_info->user_id,$image_type,'skbank_raw_data');
             }
         }
 
