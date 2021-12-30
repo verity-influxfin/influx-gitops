@@ -12,20 +12,20 @@
 			<div class="d-flex">
 				<div class="p-2">投資人ID</div>
 				<div class="p-2">
-					<input type="text">
+					<input type="text" class="form-control">
 				</div>
 				<div class="p-2">
 					代支日期
 				</div>
 				<div class="p-2">
-					<input type="text" data-toggle="datepicker">
+					<input type="text" data-toggle="datepicker" class="form-control">
 				</div>
 				<div class="p-2">
 					-
 				</div>
 
 				<div class="p-2">
-					<input type="text" data-toggle="datepicker">
+					<input type="text" data-toggle="datepicker" class="form-control">
 				</div>
 				<div class="search-btn">
 					<button class="btn btn-primary">搜尋</button>
@@ -62,7 +62,7 @@
 					<div class="d-flex mb-2">
 						<div class="col-20 input-require">投資人ID</div>
 						<div class="col">
-							<input type="text" required class="w-100">
+							<input type="text" required class="w-100 form-control">
 						</div>
 					</div>
 					<div class="d-flex mb-2">
@@ -71,13 +71,13 @@
 					<div class="d-flex mb-2">
 						<div class="col-20 input-require">金額</div>
 						<div class="col">
-							<input type="text" required class="w-100">
+							<input type="text" required class="w-100 form-control">
 						</div>
 					</div>
 					<div class="d-flex align-start mb-2">
 						<div class="col-20 input-require">事由</div>
 						<div class="col">
-							<textarea type="text" required class="w-100" rows="4"></textarea>
+							<textarea type="text" required class="w-100 form-control" rows="4"></textarea>
 						</div>
 					</div>
 				</div>
@@ -135,7 +135,7 @@
 					</div>
 					<div class="d-flex mb-2">
 						<div class="col">
-							<textarea rows="7" required class="w-100"></textarea>
+							<textarea rows="7" required class="w-100 form-control"></textarea>
 						</div>
 					</div>
 				</div>
