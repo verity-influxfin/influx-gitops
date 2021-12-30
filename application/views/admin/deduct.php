@@ -12,23 +12,22 @@
 			<div class="d-flex">
 				<div class="p-2">投資人ID</div>
 				<div class="p-2">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" v-model="search_option.user_id">
 				</div>
 				<div class="p-2">
 					代支日期
 				</div>
 				<div class="p-2">
-					<input type="text" data-toggle="datepicker" class="form-control">
+					<input type="text" data-toggle="datepicker" class="form-control" id="created_at_s">
 				</div>
 				<div class="p-2">
 					-
 				</div>
-
 				<div class="p-2">
-					<input type="text" data-toggle="datepicker" class="form-control">
+					<input type="text" data-toggle="datepicker" class="form-control" id="created_at_e">
 				</div>
 				<div class="search-btn">
-					<button class="btn btn-primary">搜尋</button>
+					<button class="btn btn-primary" @click="get_deduct_list">搜尋</button>
 				</div>
 			</div>
 		</div>
@@ -181,7 +180,8 @@
 		</div>
 	</div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 	$(document).ready(function () {
@@ -211,6 +211,9 @@
 		data() {
 			return {
 				deduct_list: [],
+				search_option: {
+					user_id: null,
+				},
 				deduct_item: {
 					'id': 11,
 					'created_at': '2021-12-30 10:00:00',
@@ -251,7 +254,16 @@
 		},
 		methods: {
 			get_deduct_list() {
-				// axios.get('admin/PostLoan/get_deduct_list').then(({data})=>{
+				const user_id = this.search_option.user_id
+				const created_at_s = document.querySelector('#created_at_s').value ? document.querySelector('#created_at_s').value : null
+				const created_at_e = document.querySelector('#created_at_e').value ? document.querySelector('#created_at_e').value : null
+				// axios.get('admin/PostLoan/get_deduct_list', {
+				// 	params: {
+				// 		user_id,
+				// 		created_at_s,
+				// 		created_at_e
+				// 	}
+				// }).then(({ data }) => {
 				// 	this.deduct_list = data
 				// })
 				this.deduct_list = [
