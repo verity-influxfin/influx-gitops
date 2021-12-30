@@ -569,10 +569,13 @@ class Certification_lib{
 		if ($person_count < 2 || $person_count > 3 || $front_count != 1) {
 			$msg .= '[azure]系統判定人臉數量不正確，可能有陰影或其他因素<br/>';
 		}
-		foreach ($person_face as $token) {
-			if (isset($token['faceId']))
-				$person_compare[] = $this->CI->azure_lib->verify($token['faceId'], $front_face[0]['faceId'], $user_id, $cer_id);
-		}
+        if ( isset($front_face[0]['faceId']) )
+        {
+            foreach ($person_face as $token) {
+    			if (isset($token['faceId']))
+    				$person_compare[] = $this->CI->azure_lib->verify($token['faceId'], $front_face[0]['faceId'], $user_id, $cer_id);
+    		}
+        }
 		if (!empty($person_compare)) {
 			$remark['face'] = [$person_compare[0]['confidence'] * 100, $person_compare[1]['confidence'] * 100];
 			$remark['face_flag'] = [$person_compare[0]['isIdentical'], $person_compare[1]['isIdentical']];
@@ -586,49 +589,62 @@ class Certification_lib{
 		// Face++
 		if ($fperson_count == 2 && $ffront_count == 1) {
 			foreach ($person_token as $token) {
-				$answer[] = $this->CI->faceplusplus_lib->token_compare($token[0], $front_token[0][0], $info->user_id, $cer_id);
-				$faceplus_data[] = [
-					'gender' => $token[1],
-					'age' => $token[2],
-				];
+                if ( isset($token[0])
+                    && isset($front_token[0][0])
+                    && isset($token[1])
+                    && isset($token[2]) )
+                {
+                    $answer[] = $this->CI->faceplusplus_lib->token_compare($token[0], $front_token[0][0], $info->user_id, $cer_id);
+    				$faceplus_data[] = [
+    					'gender' => $token[1],
+    					'age' => $token[2],
+    				];
+                }
 			}
-			sort($answer);
-			$remark['faceplus'] = $answer;
-			$remark['faceplus_data'] = $faceplus_data;
+            if ( ! empty($answer) )
+            {
+                sort($answer);
+    			$remark['faceplus'] = $answer;
+    			$remark['faceplus_data'] = $faceplus_data;
 
-			if ($answer[1] < 80)
-				$msg .= '[Face++]「身分證正面照」與「持證自拍照證件」未滿 80% 相似度<br/>';
+    			if ($answer[1] < 80)
+    				$msg .= '[Face++]「身分證正面照」與「持證自拍照證件」未滿 80% 相似度<br/>';
 
-			// 依照發證至提交資料的的時間，計算差異年數決定臉部識別相似度需多高
-			$certificationSubmitDate = new DateTime();
-			$certificationSubmitDate->setTimestamp($info->created_at);
-			$faceCompareSimilarityByYear = [2 => 80, 5 => 65, 9999 => 60];
-			$parsedIssueDate = false;
-			$years = array_keys($faceCompareSimilarityByYear);
-			$prevYear = reset($years);
-			if (isset($ocr['id_card_date'])) {
-				preg_match('/(?<year>\d{2,3})(?<month>\d{1,2})(?<day>\d{1,2})/', $ocr['id_card_date'], $regexRs);
-				if (!empty($regexRs)) {
-					$parsedIssueDate = true;
-					$dateStr = sprintf('%d-%d-%d', intval($regexRs['year']) + 1911, intval($regexRs['month']), intval($regexRs['day']));
-					$issueDate = DateTime::createFromFormat('Y-m-d', $dateStr);
-					$diffDate = $certificationSubmitDate->diff($issueDate);
-					foreach ($faceCompareSimilarityByYear as $year => $similarity) {
-						if ($diffDate->y < $year) {
-							if ($answer[0] < $similarity) {
-								if(end($years) == $year)
-									$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 ' . $similarity . '% 相似度(持證已滿' . $prevYear . '年以上)<br/>';
-								else
-									$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 ' . $similarity . '% 相似度(持證未滿' . $year . '年)<br/>';
-							}
-							break;
-						}
-						$prevYear = $year;
-					}
-				}
-			}
-			if (!$parsedIssueDate)
-				$msg .= '[Face++]系統無法解析身分證正面的發證日期<br/>';
+    			// 依照發證至提交資料的的時間，計算差異年數決定臉部識別相似度需多高
+    			$certificationSubmitDate = new DateTime();
+    			$certificationSubmitDate->setTimestamp($info->created_at);
+    			$faceCompareSimilarityByYear = [2 => 80, 5 => 65, 9999 => 60];
+    			$parsedIssueDate = false;
+    			$years = array_keys($faceCompareSimilarityByYear);
+    			$prevYear = reset($years);
+    			if (isset($ocr['id_card_date'])) {
+    				preg_match('/(?<year>\d{2,3})(?<month>\d{1,2})(?<day>\d{1,2})/', $ocr['id_card_date'], $regexRs);
+    				if (!empty($regexRs)) {
+    					$parsedIssueDate = true;
+    					$dateStr = sprintf('%d-%d-%d', intval($regexRs['year']) + 1911, intval($regexRs['month']), intval($regexRs['day']));
+    					$issueDate = DateTime::createFromFormat('Y-m-d', $dateStr);
+    					$diffDate = $certificationSubmitDate->diff($issueDate);
+    					foreach ($faceCompareSimilarityByYear as $year => $similarity) {
+    						if ($diffDate->y < $year) {
+    							if ($answer[0] < $similarity) {
+    								if(end($years) == $year)
+    									$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 ' . $similarity . '% 相似度(持證已滿' . $prevYear . '年以上)<br/>';
+    								else
+    									$msg .= '[Face++]「身分證正面照」與「持證自拍者」未滿 ' . $similarity . '% 相似度(持證未滿' . $year . '年)<br/>';
+    							}
+    							break;
+    						}
+    						$prevYear = $year;
+    					}
+    				}
+    			}
+    			if (!$parsedIssueDate)
+    				$msg .= '[Face++]系統無法解析身分證正面的發證日期<br/>';
+            }
+            else
+            {
+                $msg .= '[Face++]系統無法解析身分證<br/>';
+            }
 		} else {
 			$msg .= '[Face++]人臉數量不足<br/>';
 		}
