@@ -19,8 +19,8 @@
                 <!-- 微企e秒貸 -->
                 <div class="swiper-slide">
                     <a href="/business-loan/sme">
-                        <img src="../asset/images/sme-index-banner.gif" class="旗幟圖片">
-                        <img src="../asset/images/sme-index-banner-phone.gif" class="旗幟圖片 旗幟圖片_手機的">
+                        <img src="~images/sme-index-banner.gif" class="旗幟圖片">
+                        <img src="~images/sme-index-banner-phone.gif" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
                 </div>
                 <!-- 學生貸 -->
