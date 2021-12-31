@@ -12,10 +12,10 @@ class EdmEventFactory {
             try{
                 switch ($event['id']) {
                     case 1:
-                        $returnObject = new EdmEvent1($event);
+                        // EdmEvent1
                         break;
                     case 2:
-                        $returnObject = new EdmEvent2($event);
+                        // EdmEvent2
                         break;
                     default:
                         error_log("Nonsupport Event ID : ".$event['id']);

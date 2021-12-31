@@ -62,9 +62,6 @@ class Target_lib
                 $eventDate 	= date("Y-m-d H:i:s", strtotime("+3 day", $target_change->created_at));
                 if($eventDate >= date("Y-m-d H:i:s")) {
                     $target = $this->CI->target_model->get_by(['id' => $target_id]);
-                    if(isset($target) && in_array($target->product_id, [3,4])) {
-                        $this->CI->notification_lib->obank_event_fast_signing($target);
-                    }
                 }
             }
             return $rs;
@@ -506,9 +503,6 @@ class Target_lib
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
         $this->CI->notification_lib->approve_target($user_id, '9', $target, 0, false, $remark);
-        if(strpos($remark, "經AI系統綜合評估後") !== false && in_array($target->product_id, [3, 4])) {
-            $this->CI->notification_lib->obank_event_approve_failed($target);
-        }
 
         $guarantors = $this->get_associates_user_data($target->id, 'all', 1, false);
         if($guarantors){
@@ -1814,12 +1808,6 @@ class Target_lib
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
                                 $create_date = date('Y-m-d', $value->created_at);
-
-                                // 7天尚未提交資料時觸發王道活動通知
-                                $notification_date = date('Y-m-d H:i:s', strtotime('+7 day', $value->created_at));
-                                if(in_array($value->product_id, [3, 4]) && $notification_date >= date('Y-m-d H:i:s') && $notification_date <= date('Y-m-d H:i:s',strtotime('+1 hour'))) {
-                                    $this->CI->notification_lib->obank_event_pending_too_long($value);
-                                }
 
                                 if ($limit_date > $create_date) {
                                     $count++;
