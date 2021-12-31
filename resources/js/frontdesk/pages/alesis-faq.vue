@@ -69,7 +69,6 @@ import AlesisMoon              from "../component/alesis/AlesisMoon";
 import AlesisPlan              from "../component/alesis/AlesisPlan";
 import AlesisProject           from "../component/alesis/AlesisProject";
 import AlesisSection           from "../component/alesis/AlesisSection";
-import AlesisShanghai          from "../component/alesis/AlesisShanghai";
 import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
@@ -93,7 +92,6 @@ export default {
         AlesisPlan,
         AlesisProject,
         AlesisSection,
-        AlesisShanghai,
         AlesisSuggestionReviews,
         AlesisSymcard,
         AlesisTaiwanMap,
