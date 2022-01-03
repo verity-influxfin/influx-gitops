@@ -947,11 +947,7 @@ class Certification_lib{
                 if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
                 {
                     // 是否為活躍社交帳號判斷
-                    if ($allFollowerCount >= 30 && $allFollowingCount >= 50 && $is_fb_email && $is_fb_name)
-                    {
-                        $verifiedResult->setStatus(1);
-                    }
-                    else
+                    if ($allFollowerCount <= 30 && $allFollowingCount <= 50)
                     {
                         $verifiedResult->addMessage('IG非活躍帳號', 3, MassageDisplay::Backend);
                     }
@@ -963,17 +959,17 @@ class Certification_lib{
                 $status = $verifiedResult->getStatus();
 
                 $this->CI->user_certification_model->update($info->id, array(
-                    'status'    => $status != 3 ? 0 : $status,
-                    'sys_check' => 1,
-                    'content'   => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
-                    'remark'    => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
+                    'status'                      => $status != 3 ? 0 : $status,
+                    'sys_check'                   => 1,
+                    'content'                     => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
+                    'remark'                      => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
                 ));
 
                 if ($status == 1)
                 {
                     $this->set_success($info->id, TRUE);
                 }
-                elseif ($status == 2)
+                else if ($status == 2)
                 {
                     $notificationContent = implode("、", $verifiedResult->getAPPMessage(2));
                     $this->set_failed($info->id, $notificationContent, 1);
