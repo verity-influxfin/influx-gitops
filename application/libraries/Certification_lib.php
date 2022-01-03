@@ -958,7 +958,7 @@ class Certification_lib{
                 }
 
                 $param['content'] = $content;
-                $param['remark']['verify_result'] = array_merge($param['remark']['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
+                $param['remark']['verify_result'] = $verifiedResult->getAllMessage(MassageDisplay::Backend);
 
                 $status = $verifiedResult->getStatus();
 
@@ -969,7 +969,7 @@ class Certification_lib{
                     'remark' => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
                 ));
 
-                if ($status == 0)
+                if ($status == 1)
                 {
                     $this->set_success($info->id, TRUE);
                 }
