@@ -809,12 +809,12 @@ class Certification_lib{
             $content = json_decode($info->content, TRUE);
             if (isset($content['instagram']['username']) && isset($info->user_id))
             {
-                $allFollowerCount = '';
-                $allFollowingCount = '';
-                $param['remark'] = [];
+                $allFollowerCount                 = '';
+                $allFollowingCount                = '';
+                $param['remark']                  = [];
                 $param['remark']['verify_result'] = [];
-                $ig_username = trim($content['instagram']['username']);
-                $verifiedResult = new SocialCertificationResult(0);
+                $ig_username                      = trim($content['instagram']['username']);
+                $verifiedResult                   = new SocialCertificationResult(0);
                 $this->CI->load->library('scraper/Instagram_lib');
                 $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
                 if ($log_status || isset($log_status['status']))
@@ -843,14 +843,14 @@ class Certification_lib{
                             $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $ig_username);
                             if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == 200)
                             {
-                                $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
-                                $isPrivate = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
-                                $allPostCount = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
-                                $followStatus = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
-                                $isfollower = isset($risk_control_info['response']['result']['isfollower']) ? $risk_control_info['response']['result']['isfollower'] : '';
-                                $allFollowerCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
+                                $usernameExist     = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
+                                $isPrivate         = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
+                                $allPostCount      = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
+                                $followStatus      = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
+                                $isfollower        = isset($risk_control_info['response']['result']['isfollower']) ? $risk_control_info['response']['result']['isfollower'] : '';
+                                $allFollowerCount  = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
                                 $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
-                                $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
+                                $postsIn3Months    = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
                                 $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
                                 if ($usernameExist === FALSE)
                                 {
@@ -898,21 +898,21 @@ class Certification_lib{
                                     }
                                 }
                                 $content['instagram'] = [
-                                    'username' => $ig_username,
-                                    'link' => 'https://www.instagram.com/' . $ig_username,
-                                    'usernameExist' => $usernameExist,
+                                    'username'              => $ig_username,
+                                    'link'                  => 'https://www.instagram.com/' . $ig_username,
+                                    'usernameExist'         => $usernameExist,
                                     'info' => [
-                                        'isPrivate' => $isPrivate,
-                                        'followStatus' => $followStatus,
-                                        'isfollower' => $isfollower,
-                                        'allPostCount' => $allPostCount,
-                                        'allFollowerCount' => $allFollowerCount,
+                                        'isPrivate'         => $isPrivate,
+                                        'followStatus'      => $followStatus,
+                                        'isfollower'        => $isfollower,
+                                        'allPostCount'      => $allPostCount,
+                                        'allFollowerCount'  => $allFollowerCount,
                                         'allFollowingCount' => $allFollowingCount
                                     ]
                                 ];
                                 $content['meta'] = [
-                                    'posts_in_3months' => $postsIn3Months,
-                                    'key_word' => $postsWithKeyWords
+                                    'posts_in_3months'      => $postsIn3Months,
+                                    'key_word'              => $postsWithKeyWords
                                 ];
                             }
                             else
@@ -957,16 +957,16 @@ class Certification_lib{
                     }
                 }
 
-                $param['content'] = $content;
+                $param['content']                 = $content;
                 $param['remark']['verify_result'] = $verifiedResult->getAllMessage(MassageDisplay::Backend);
 
                 $status = $verifiedResult->getStatus();
 
                 $this->CI->user_certification_model->update($info->id, array(
-                    'status' => $status != 3 ? 0 : $status,
+                    'status'    => $status != 3 ? 0 : $status,
                     'sys_check' => 1,
-                    'content' => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
-                    'remark' => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
+                    'content'   => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
+                    'remark'    => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
                 ));
 
                 if ($status == 1)
