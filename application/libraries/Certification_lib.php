@@ -833,7 +833,7 @@ class Certification_lib{
 
     public function social_verify($info = array())
     {
-        if ($info && $info->status == 0 && $info->certification_id == 4)
+        if ($info && $info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE && $info->certification_id == 4)
         {
             $param['sys_check'] = 1;
             $content = json_decode($info->content, TRUE);
@@ -844,7 +844,7 @@ class Certification_lib{
                 $param['remark']                  = [];
                 $param['remark']['verify_result'] = [];
                 $ig_username                      = trim($content['instagram']['username']);
-                $verifiedResult                   = new SocialCertificationResult(0);
+                $verifiedResult                   = new SocialCertificationResult(CERTIFICATION_STATUS_PENDING_TO_VALIDATE);
                 $this->CI->load->library('scraper/Instagram_lib');
                 $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
                 if ($log_status || isset($log_status['status']))
@@ -865,7 +865,7 @@ class Certification_lib{
                         // IG爬蟲狀態錯誤
                         if ($log_status['response']['result']['status'] == 'failure')
                         {
-                            $verifiedResult->addMessage('IG爬蟲執行失敗', 3, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('IG爬蟲執行失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                         }
                         // IG爬蟲結束
                         if ($log_status['response']['result']['status'] == 'finished')
@@ -885,17 +885,17 @@ class Certification_lib{
                                 if ($usernameExist === FALSE)
                                 {
                                     $usernameExist = '否';
-                                    $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', 2, MassageDisplay::Backend);
-                                    $verifiedResult->addMessage('IG提供帳號無效請確認', 2, MassageDisplay::Client);
+                                    $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', CERTIFICATION_STATUS_FAILED, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('IG提供帳號無效請確認', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
                                 }
                                 else if ($usernameExist === TRUE)
                                 {
                                     $usernameExist = '是';
-                                    $verifiedResult->setStatus(1);
+                                    $verifiedResult->setStatus(CERTIFICATION_STATUS_SUCCEED);
                                 }
                                 else
                                 {
-                                    $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', 3, MassageDisplay::Backend);
+                                    $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                 }
                                 if ($isPrivate === TRUE)
                                 {
@@ -918,12 +918,12 @@ class Certification_lib{
                                             }
                                             else
                                             {
-                                                $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', 3, MassageDisplay::Backend);
+                                                $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                             }
                                         }
                                         else
                                         {
-                                            $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', 3, MassageDisplay::Backend);
+                                            $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                         }
                                     }
                                 }
@@ -947,22 +947,22 @@ class Certification_lib{
                             }
                             else
                             {
-                               $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', 3, MassageDisplay::Backend);
+                               $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                             }
                         }
                         if ($log_status['response']['result']['status'] == 'failure')
                         {
-                            $verifiedResult->addMessage('IG爬蟲執行失敗', 3, MassageDisplay::Backend);
+                            $verifiedResult->addMessage('IG爬蟲執行失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                         }
                     }
                     else
                     {
-                        $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', 3, MassageDisplay::Backend);
+                        $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                     }
                 }
                 else
                 {
-                    $verifiedResult->addMessage('IG爬蟲沒有回應', 3, MassageDisplay::Backend);
+                    $verifiedResult->addMessage('IG爬蟲沒有回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                 }
 
                 $is_fb_email = isset($content['facebook']['email']);
@@ -971,7 +971,7 @@ class Certification_lib{
                 // fb未綁定
                 if ( ! $is_fb_email || ! $is_fb_name)
                 {
-                    $verifiedResult->addMessage('FB帳號未綁定', 3, MassageDisplay::Client);
+                    $verifiedResult->addMessage('FB帳號未綁定', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Client);
                 }
 
                 if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
@@ -979,7 +979,7 @@ class Certification_lib{
                     // 是否為活躍社交帳號判斷
                     if ($allFollowerCount <= 30 && $allFollowingCount <= 50)
                     {
-                        $verifiedResult->addMessage('IG非活躍帳號', 3, MassageDisplay::Backend);
+                        $verifiedResult->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                     }
                 }
 
@@ -989,19 +989,19 @@ class Certification_lib{
                 $status = $verifiedResult->getStatus();
 
                 $this->CI->user_certification_model->update($info->id, array(
-                    'status'                      => $status != 3 ? 0 : $status,
+                    'status'                      => $status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
                     'sys_check'                   => 1,
                     'content'                     => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
                     'remark'                      => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
                 ));
 
-                if ($status == 1)
+                if ($status == CERTIFICATION_STATUS_SUCCEED)
                 {
                     $this->set_success($info->id, TRUE);
                 }
-                else if ($status == 2)
+                else if ($status == CERTIFICATION_STATUS_FAILED)
                 {
-                    $notificationContent = implode("、", $verifiedResult->getAPPMessage(2));
+                    $notificationContent = implode("、", $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
                     $this->set_failed($info->id, $notificationContent, 1);
                 }
 
