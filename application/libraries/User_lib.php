@@ -417,7 +417,7 @@ class User_lib {
         $bankAccountRs 	= $this->CI->virtual_account_model->get_many_by([
             'user_id'	=> array_column($list, 'user_id'),
             'status'	=> 1,
-            'virtual_account like ' => TAISHIN_VIRTUAL_CODE . "%",
+            'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
         ]);
         foreach ($bankAccountRs as $bankAccount) {
             $bankAccountList[$bankAccount->user_id][$bankAccount->investor] = $bankAccount;
