@@ -6,7 +6,7 @@ if(ENVIRONMENT=="development"){
         '172.18.0.1'
 	);
 
-    $config['bank_adapter_ip'] = '54.64.205.49';
+    $config['bank_adapter_ip'] = ['54.64.205.49'];
 }else{
 	$config['access_ip_list']	= array(
 		'114.34.172.44',
@@ -16,6 +16,6 @@ if(ENVIRONMENT=="development"){
 	);
     // TODO: 待確認是否為私網IP, ex: 172.xx.xx.xx
     // octopoda ip
-    $config['bank_adapter_ip'] = '13.112.225.36';
+    $config['bank_adapter_ip'] = ['210.242.177.250','175.98.118.170'];
 
 }

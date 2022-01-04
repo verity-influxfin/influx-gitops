@@ -122,10 +122,6 @@
 	{
 		$CI 	=& get_instance();
 		$list 	= $CI->config->item('access_ip_list');
-        if (ENVIRONMENT === 'development')
-        {
-            return TRUE;
-        }
 		foreach($list as $ip){
 			if(preg_match('/\.\*$/',$ip)){
 				list($main, $sub) = explode('.*', $ip);
@@ -390,6 +386,32 @@
 		return in_array($file_type, $pdf_mimes, TRUE);
 	}
 
+    /**
+	 * 依照前綴詞取得目前已定義的常數項
+	 * @param array $constants: 變數列表
+	 * @param string $prefix: 前綴詞
+	 * @return array
+	 */
+	function returnConstants (array $constants, string $prefix): array
+	{
+		foreach ($constants as $key=>$value)
+			if (substr($key,0,strlen($prefix))==$prefix)  $dump[$key] = $value;
+		if(empty($dump)) { return []; }
+		else { return $dump; }
+	}
+
+	function birthdayDateFormat($birthday) {
+		if(preg_match("/^([0-9]{1,3})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/u",
+			$birthday, $matches)){
+			$birthday = "$matches[1]/$matches[2]/$matches[3]";
+		}
+		return $birthday;
+    }
+
+    function isValidDateTime(string $datetime) {
+		return $datetime > "1911-01-01 00:00:00";
+    }
+
 	function isAvailableDate($format, $date) {
 		$dt = \DateTime::createFromFormat($format, $date);
 		return $dt !== false && !array_sum($dt::getLastErrors());
@@ -412,6 +434,14 @@
     function isJson($string) {
 		json_decode($string);
 		return json_last_error() === JSON_ERROR_NONE;
+	}
+
+	function strip_ROC_date_word($date) {
+		preg_match('/民?國?([0-9]{2,3})(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u', $date, $regex_result);
+		if(!empty($regex_result)) {
+			$date = $regex_result[1].$regex_result[3].$regex_result[5];
+		}
+		return $date;
 	}
 
 	function pagination_config($config=[]) {

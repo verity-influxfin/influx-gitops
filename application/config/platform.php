@@ -56,6 +56,10 @@ $config['admin_menu'] = [
         'cooperation?cooperation=2' => '經銷商申請列表',
         'cooperation?cooperation=1' => '經銷商管理列表',
     ],
+    'Creditmanagement' => [
+        'parent_name' => '授審表',
+        'index' => '列表(還沒做)',
+    ],
     'Certification' => [
         'parent_name' => '認證管理',
         'index' => '認證方式列表',
@@ -736,7 +740,7 @@ $config['product_list'] = [
 //        'type' => 1,
 //        'identity' => 2,
 //        'alias' => 'SSM',
-//        'name' => '百萬信保微企貸',
+//        'name' => '普匯微企e秒貸',
 //        'loan_range_s' => 500000,
 //        'loan_range_e' => 1000000,
 //        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
@@ -870,7 +874,7 @@ $config['product_list'] = [
         'type' => 1,
         'identity' => 3,
         'alias' => 'SSM',
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'loan_range_s' => 500000,
         'loan_range_e' => 6000000,
         'interest_rate_s' => 5,
@@ -961,7 +965,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'N4' => [
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
@@ -985,15 +989,17 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'J2' => [
-        'name' => '百萬信保微企貸',
-        'description' => '企業融資 專案啟動',
+        'name' => '普匯微企e秒貸',
+        'description' => '<span style=\'font-size:14px;color:white\'>1.額度最高 100 萬、3 年期、利率 3.8%。<br>
+2.由銀行簽約對保放款。<br>
+3.信保基金保證 95 成，加強中小微企業加強擔保力。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
     'LJ2' => [
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
@@ -1001,7 +1007,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TOLJ2' => [
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
@@ -1550,7 +1556,7 @@ $config['sub_product_list'] = [
         'identity' => [
             3 => [
                 'visul_id' => 'LJ2P1',
-                'name' => '百萬信保微企貸',
+                'name' => '普匯微企e秒貸',
                 'product_id' => '1002:0',
                 'loan_range_s' => 500000,
                 'loan_range_e' => 6000000,
@@ -1834,7 +1840,7 @@ $config['certifications'] = [
 
     1000 => ['id' => CERTIFICATION_BUSINESSTAX, 'alias' => 'businesstax', 'name' => '銷售額與稅額申報書(401表)', 'status' => 1, 'description' => '提供銷售額與稅額申報書(401表)', 'optional' => []],
     1001 => ['id' => CERTIFICATION_BALANCESHEET, 'alias' => 'balancesheet', 'name' => '資產負債表', 'status' => 1, 'description' => '提供資產負債表', 'optional' => []],
-    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '近三年損益表', 'status' => 1, 'description' => '提供近三年損益表', 'optional' => []],
+    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '近三年所得稅結算申報書(稅簽)', 'status' => 1, 'description' => '提供近三年所得稅結算申報書(稅簽)', 'optional' => []],
     1003 => ['id' => CERTIFICATION_INVESTIGATIONJUDICIAL, 'alias' => 'investigationjudicial', 'name' => '公司聯合徵信', 'status' => 1, 'description' => '提供公司聯合徵信', 'optional' => []],
     1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '近6個月封面及內頁公司存摺', 'status' => 1, 'description' => '提供近6個月封面及內頁公司存摺', 'optional' => []],
     1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],

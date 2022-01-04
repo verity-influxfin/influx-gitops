@@ -795,6 +795,21 @@ class Cron extends CI_Controller
 		echo json_encode($result);
 	}
 
+	//將黑名單學校的學生認證退回重審
+	public function send_certification_return_msg()
+	{
+		$this->load->model('user/user_certification_model');
+		$this->load->library('certification_lib');
+
+		$data_rows = $this->user_certification_model->get_certifications_return();
+
+		if ($data_rows) {
+			foreach ($data_rows as $value) {
+				$this->certification_lib->set_failed($value['id'], '學生評分系統更新，邀請您重新認證，體驗最新AI風控模組！');
+			}
+		}
+	}
+
     /**
      * 由於推薦碼的設定可能會更新
      * 執行該方法可以補上新的設定至每個使用者的推薦碼

@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use CreditSheet\CreditSheetFactory;
 
 class Target_lib
 {
@@ -61,9 +62,6 @@ class Target_lib
                 $eventDate 	= date("Y-m-d H:i:s", strtotime("+3 day", $target_change->created_at));
                 if($eventDate >= date("Y-m-d H:i:s")) {
                     $target = $this->CI->target_model->get_by(['id' => $target_id]);
-                    if(isset($target) && in_array($target->product_id, [3,4])) {
-                        $this->CI->notification_lib->obank_event_fast_signing($target);
-                    }
                 }
             }
             return $rs;
@@ -272,6 +270,7 @@ class Target_lib
         $this->CI->load->library('contract_lib');
         $this->CI->load->library('Anti_fraud_lib');
         $msg = false;
+        $target = $this->CI->target_model->get($target->id ?? 0);
         if (!empty($target) && ($target->status == TARGET_WAITING_APPROVE
                 || $renew
                 || $target->status == TARGET_ORDER_WAITING_VERIFY && $target->sub_status == TARGET_SUBSTATUS_NORNAL
@@ -298,18 +297,19 @@ class Target_lib
                 if(isset($product['checkOwner']) && $product['checkOwner'] == true){
                     $mix_credit = $this->get_associates_user_data($target->id, 'all', [0 ,1], true);
                     foreach ($mix_credit as $value) {
-                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true);
+                        $credit_score[] = $this->CI->credit_lib->approve_credit($value, $product_id, $sub_product_id, null, false, false, true, $target->instalment);
                     }
                     $total_point = array_sum($credit_score);
                     $rs = $this->CI->credit_lib->approve_associates_credit($target, $total_point);
                 }else{
-                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit);
+                    $rs = $this->CI->credit_lib->approve_credit($user_id, $product_id, $sub_product_id, null, $stage_cer, $credit, false, $target->instalment);
                 }
                 if ($rs) {
                     $credit = $this->CI->credit_lib->get_credit($user_id, $product_id, $sub_product_id, $target);
                 }
             }
             if ($credit) {
+                $creditSheet = CreditSheetFactory::getInstance($target->id);
                 $interest_rate = $credit['rate'];
                 if ($interest_rate) {
                     $used_amount = 0;
@@ -379,6 +379,7 @@ class Target_lib
                                     || $subloan_status
                                     || $renew
                                     || $evaluation_status
+                                    || $creditSheet->hasCreditLine()
                                 ) {
                                     $param['status'] = TARGET_WAITING_SIGNING;
 
@@ -405,9 +406,12 @@ class Target_lib
                                         }
                                         $param['contract_id'] = $this->CI->contract_lib->sign_contract($contract_type, $contract_data);
                                     }
+
+                                    $opinion = '一審通過';
                                 } else {
                                     $param['sub_status'] = TARGET_SUBSTATUS_SECOND_INSTANCE;
                                     $msg = false;
+                                    $opinion = '需二審查核';
                                 }
                                 $tempData = json_decode($target->target_data,true);
                                 if(isset($tempData) && !empty($tempData)) {
@@ -419,10 +423,17 @@ class Target_lib
                                 $param['target_data'] = json_encode($tempData);
 
                                 $rs = $this->CI->target_model->update($target->id, $param);
-                                if ($rs && $msg) {
-                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+
+                                if(!$renew) {
+                                    $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, $opinion);
+                                    if($msg)
+                                        $creditSheet->setFinalReviewerLevel($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM);
                                 }
 
+                                if ($rs && $msg) {
+                                    $creditSheet->archive($credit);
+                                    $this->CI->notification_lib->approve_target($user_id, '1', $target, $loan_amount, $subloan_status);
+                                }
                                 $this->insert_change_log($target->id, $param);
                                 return true;
                             } else if ($product_info['type'] == 2) {
@@ -441,7 +452,13 @@ class Target_lib
                                         'status' => TARGET_ORDER_WAITING_SHIP,
                                         'sub_status' => $sub_status,
                                     ];
+                                    if($sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE)
+                                        $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '需二審查核');
+                                    else
+                                        $creditSheet->approve($creditSheet::CREDIT_REVIEW_LEVEL_SYSTEM, '一審通過');
+
                                     $rs = $this->CI->target_model->update($target->id, $param);
+                                    $creditSheet->archive($credit);
                                     $this->insert_change_log($target->id, $param);
                                     if ($rs) {
                                         $this->CI->load->model('user/user_bankaccount_model');
@@ -486,9 +503,6 @@ class Target_lib
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
         $this->CI->notification_lib->approve_target($user_id, '9', $target, 0, false, $remark);
-        if(strpos($remark, "經AI系統綜合評估後") !== false && in_array($target->product_id, [3, 4])) {
-            $this->CI->notification_lib->obank_event_approve_failed($target);
-        }
 
         $guarantors = $this->get_associates_user_data($target->id, 'all', 1, false);
         if($guarantors){
@@ -516,7 +530,7 @@ class Target_lib
                     $param['expire_time'] = strtotime('+2 days', time());
                 } else {
                     // 一般
-                    $param['expire_time'] = strtotime('+14 days', time());
+                    $param['expire_time'] = strtotime('+2 month', time());
                 }
             }
 
@@ -672,13 +686,10 @@ class Target_lib
                             $this->insert_change_log($target->id, $param);
                             $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
                         } else {
-                            $target_update_param = [
-                                'launch_times' => $target->launch_times + 1,
-                                'expire_time' => strtotime('+14 days', $target->expire_time),
-                                'invested' => 0,
-                            ];
-                            $this->CI->target_model->update($target->id, $target_update_param);
-                            $this->insert_change_log($target->id, ['status' => 3]);
+                            // 直接整案退回，故不需要再執行到下面退債權的邏輯，直接返回
+                            $this->cancel_success_target($target);
+                            $this->CI->notification_lib->target_credit_expired($target->user_id);
+                            return TRUE;
                         }
                         foreach ($investments as $key => $value) {
                             $this->insert_investment_change_log($value->id, ['status' => 9]);
@@ -751,12 +762,8 @@ class Target_lib
                         $this->insert_change_log($target->id, $param, 0, 0);
                         $this->CI->notification_lib->stageCer_Target_remind($target->user_id);
                     } else {
-                        $this->CI->target_model->update($target->id, [
-                            'launch_times' => $target->launch_times + 1,
-                            'expire_time' => strtotime('+14 days', $target->expire_time),
-                            'invested' => 0,
-                        ]);
-                        $this->insert_change_log($target->id, ['status' => 3]);
+                        $this->cancel_success_target($target);
+                        $this->CI->notification_lib->target_credit_expired($target->user_id);
                     }
                 }
                 return true;
@@ -1666,7 +1673,7 @@ class Target_lib
                         $product_certification = $product['certifications'];
 
                         if($value->status != '1' && $value->product_id == 1002){
-                            // 微企貸歸戶
+                            // 普匯微企e秒貸歸戶
 							// to do : 任務控制程式過件須確認不會有其他非法人產品進來
                             if(isset($product['checkOwner']) && $product['checkOwner'] === true){
                                 $this->CI->load->model('loan/target_associate_model');
@@ -1714,7 +1721,7 @@ class Target_lib
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
-                                            // 微企貸對保不驗證
+                                            // 普匯微企e秒貸對保不驗證
                                             // 加入產品非必要項目不驗證結構
                                             if(!isset($product_list[$value->product_id]['option_certifications']) || !in_array($certification['id'],$product_list[$value->product_id]['option_certifications'])){
                                                 $finish = false;
@@ -1768,7 +1775,7 @@ class Target_lib
                                 !is_object($targetData) ? $targetData = (object)($targetData) : $targetData;
                                 $targetData->certification_id = $cer;
                                 $count++;
-								// 判斷是否為微企貸
+								// 判斷是否為普匯微企e秒貸
 								if(in_array($value->product_id, $this->CI->config->item('externalCooperation'))){
                                         $param = [
                                             'target_data' => json_encode($targetData),
@@ -1801,12 +1808,6 @@ class Target_lib
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
                                 $create_date = date('Y-m-d', $value->created_at);
-
-                                // 7天尚未提交資料時觸發王道活動通知
-                                $notification_date = date('Y-m-d H:i:s', strtotime('+7 day', $value->created_at));
-                                if(in_array($value->product_id, [3, 4]) && $notification_date >= date('Y-m-d H:i:s') && $notification_date <= date('Y-m-d H:i:s',strtotime('+1 hour'))) {
-                                    $this->CI->notification_lib->obank_event_pending_too_long($value);
-                                }
 
                                 if ($limit_date > $create_date) {
                                     $count++;
@@ -2351,5 +2352,52 @@ class Target_lib
             error_log($e->getMessage());
         }
         return $legal_collection;
+    }
+
+    /**
+     * 取得第一期還款日
+     * @param $loanDate: 借貸日期
+     * @param $formatId: 合約格式編號
+     * @return string
+     */
+    public function getFirstPaymentDate($loanDate, $formatId): string {
+        $increasedMonth = 0;
+        $day = date('d', strtotime($loanDate));
+        if($day === false)
+            return $loanDate;
+
+        switch ($formatId) {
+            // 借貸契約
+            case 1:
+                if (intval($day) <= 10)
+                    $increasedMonth = 1;
+                else
+                    $increasedMonth = 2;
+
+                break;
+        }
+        return date('Y-m-10', strtotime("+".$increasedMonth." months",
+            strtotime($loanDate)));
+    }
+
+    /**
+     * 取得最後一期還款日
+     * @param $loanDate: 借貸日期
+     * @param $formatId: 合約格式編號
+     * @param $instalment: 借款期數
+     * @return string
+     */
+    public function getLastPaymentDate($loanDate, $formatId, $instalment): string {
+        $date = "";
+        $firstPaymentDate = $this->getFirstPaymentDate($loanDate, $formatId);
+
+        switch ($formatId) {
+            // 借貸契約
+            case 1:
+                $date = date('Y-m-d', strtotime("+".($instalment-1)." months",
+                    strtotime($firstPaymentDate)));
+                break;
+        }
+        return $date;
     }
 }

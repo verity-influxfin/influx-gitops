@@ -117,6 +117,7 @@
               <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
               <td colspan="3">
                 <select name="company_type" class="table-input" id="CompType_content" disabled>
+                  <option value="" selected></option>
                   <option value="41">41:獨資</option>
                   <option value="21">21:中小企業</option>
                 </select>
@@ -134,6 +135,7 @@
               <!-- <input id="CompDuType_content" type="text" class="table-input" disabled> -->
               <td colspan="3">
                 <select name="industry_type" class="table-input" id="CompDuType_content" disabled>
+                  <option value="" selected></option>
                   <option value="01">01:水泥</option>
                   <option value="02">02:食品</option>
                   <option value="03">03:塑膠</option>
@@ -609,6 +611,7 @@
             <tr>
               <td class="bold-right-border">營業登記地址</td>
               <td colspan="3"><select name="is_biz_reg_addr_self_own" class="table-input" id="IsBizRegAddrSelfOwn_content" disabled>
+                  <option value="" selected></option>
                   <option value="1">1:自有</option>
                   <option value="0">0:非自有</option>
                 </select>
@@ -624,6 +627,7 @@
             <tr>
               <td class="bold-right-border">營業登記地址_自有</td>
               <td colspan="3"><select name="biz_reg_addr_owner" class="table-input" id="BizRegAddrOwner_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:企業</option>
                   <option value="B">B:負責人</option>
                   <option value="C">C:負責人配偶</option>
@@ -640,6 +644,7 @@
             <tr>
               <td class="bold-right-border">實際營業地址_是OR否 同營業登記地址</td>
               <td colspan="3"><select name="is_biz_addr_eq_to_biz_reg_addr" class="table-input" id="IsBizAddrEqToBizRegAddr_content" disabled>
+                  <option value="" selected></option>
                   <option value="1">1:同營業登記地址</option>
                   <option value="0">0:不同於營業登記地址</option>
                 </select>
@@ -810,6 +815,7 @@
             <tr>
               <td class="bold-right-border">實際營業地址</td>
               <td colspan="3"><select name="is_real_biz_addr_self_own" class="table-input" id="IsRealBizAddrSelfOwn_content" disabled>
+                  <option value="" selected></option>
                   <option value="1">1:自有</option>
                   <option value="0">0:非自有</option>
                 </select>
@@ -825,6 +831,7 @@
             <tr>
               <td class="bold-right-border">實際營業地址_自有</td>
               <td colspan="3"><select name="real_biz_addr_owner" class="table-input" id="RealBizAddrOwner_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:企業</option>
                   <option value="B">B:負責人</option>
                   <option value="C">C:負責人配偶</option>
@@ -889,6 +896,7 @@
             <tr>
               <td class="bold-right-border">主要營業場所所有權</td>
 			  <td colspan="3"><select name="comp_major_ownership" class="table-input" id="CompMajorOwnership_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:公司</option>
                   <option value="B">B:負責人</option>
                   <option value="C">C:配偶</option>
@@ -907,6 +915,7 @@
             <tr>
               <td class="bold-right-border">營業場所設定</td>
 			  <td colspan="3"><select name="comp_major_setting" class="table-input" id="CompMajorSetting_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:無設定</option>
                   <option value="B">B:第一順位新光</option>
                   <option value="C">C:第一順位 非新光</option>
@@ -923,6 +932,7 @@
             <tr>
               <td class="bold-right-border">營業稅申報方式</td>
               <td colspan="3"><select name="biz_tax_file_way" class="table-input" id="BizTaxFileWay_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:使用統一發票</option>
                   <option value="B">B:免用統一發票核定繳納營業稅</option>
                   <option value="C">C:未達課稅起徵點</option>
@@ -1503,6 +1513,7 @@
             <tr>
                 <td class="bold-right-border">負責人配偶_有 OR 無</td>
                 <td colspan="3"><select name="is_prmarried" class="table-input" id="IsPrMarried_content" disabled>
+                    <option value="" selected></option>
                     <option value="1">1:有</option>
                     <option value="0">0:無</option>
                   </select>
@@ -1518,6 +1529,7 @@
             <tr>
                 <td class="bold-right-border">配偶是否擔任本案保證人</td>
                 <td colspan="3"><select name="is_prspousegu" class="table-input" id="IsPrSpouseGu_content" disabled>
+                    <option value="" selected></option>
                     <option value="1">1:是</option>
                     <option value="0">0:否</option>
                   </select>
@@ -1533,6 +1545,7 @@
             <tr>
               <td class="bold-right-border">本公司實際負責人</td>
               <td colspan="3"><select name="real_pr" class="table-input" id="RealPr_content" disabled>
+                  <option value="" selected></option>
                   <option value="01">01:登記負責人</option>
                   <option value="02">02:配偶</option>
                   <option value="03">03:甲保證人</option>
@@ -1562,6 +1575,7 @@
             <tr>
               <td class="bold-right-border">負責人學歷</td>
               <td colspan="3"><select name="pr_edu_level" class="table-input" id="PrEduLevel_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:國小</option>
                   <option value="B">B:國中</option>
                   <option value="C">C:高中職</option>
@@ -1583,6 +1597,7 @@
             <tr>
               <td class="bold-right-border">實際負責(經營)人_其他實際負責經營人_與借戶負責人之關係</td>
               <td colspan="3"><select name="oth_real_pr_rel_with_pr" class="table-input" id="OthRealPrRelWithPr_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:配偶</option>
                   <option value="B">B:血親</option>
                   <option value="C">C:姻親</option>
@@ -1676,6 +1691,7 @@
             <tr>
               <td class="bold-right-border">保證人甲_與借戶負責人之關係</td>
               <td colspan="3"><select name="gu_one_rel_with_pr" class="table-input" id="GuOneRelWithPr_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:配偶</option>
                   <option value="B">B:血親</option>
                   <option value="C">C:姻親</option>
@@ -1696,6 +1712,7 @@
             <tr>
               <td class="bold-right-border">保證人甲_任職公司</td>
               <td colspan="3"><select name="gu_one_company" class="table-input" id="GuOneCompany_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:公家機關</option>
                   <option value="B">B:上市櫃公司</option>
                   <option value="C">C:專業人士</option>
@@ -1715,6 +1732,7 @@
             <tr>
               <td class="bold-right-border">保證人乙_與借戶負責人之關係</td>
               <td colspan="3"><select name="gu_two_rel_with_pr" class="table-input" id="GuTwoRelWithPr_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:配偶</option>
                   <option value="B">B:血親</option>
                   <option value="C">C:姻親</option>
@@ -1735,6 +1753,7 @@
             <tr>
               <td class="bold-right-border">保證人乙_任職公司</td>
               <td colspan="3"><select name="gu_two_company" class="table-input" id="GuTwoCompany_content" disabled>
+                  <option value="" selected></option>
                   <option value="A">A:公家機關</option>
                   <option value="B">B:上市櫃公司</option>
                   <option value="C">C:專業人士</option>
@@ -3221,7 +3240,7 @@
 	  'A01','A02','A03','A04','A05','A06','A07','A08'
   ];
   // 送出時為數字欄位
-  let is_int_array = ['CompCapital','AnnualIncome1','AnnualIncome2','AnnualIncome3','NumOfInsured1','NumOfInsured2','NumOfInsured3','NumOfInsured4','NumOfInsured5','NumOfInsured6','NumOfInsured7','NumOfInsured8','NumOfInsured9','NumOfInsured10','NumOfInsured11','NumOfInsured12','MidTermLnBal','ShortTermLnBal','CompCreditScore','PrLaborInsSalary','SpouseLaborInsSalary','GuOneLaborInsSalary','GuTwoLaborInsSalary','PrCreditScore','PrBal_CashCard','PrBal_CreditCard','PrBal_ShortTermLn','PrBal_MidTermLn','PrBal_LongTermLn','PrBal_ShortTermGuar','PrBal_MidTermLnGuar','PrBal_LongTermLnGuar','SpouseCreditScore','SpouseBal_CashCard','SpouseBal_CreditCard','SpouseBal_ShortTermLn','SpouseBal_MidTermLn','SpouseBal_LongTermLn','SpouseBal_ShortTermGuar','SpouseBal_MidTermLnGuar','SpouseBal_LongTermLnGuar','GuOneCreditScore','GuOneBal_CashCard','GuOneBal_CreditCard','GuOneBal_ShortTermLn','GuOneBal_MidTermLn','GuOneBal_LongTermLn','GuOneBal_ShortTermGuar','GuOneBal_MidTermLnGuar','GuOneBal_LongTermLnGuar','GuTwoCreditScore','GuTwoBal_CashCard','GuTwoBal_CreditCard','GuTwoBal_ShortTermLn','GuTwoBal_MidTermLn','GuTwoBal_LongTermLn','GuTwoBal_ShortTermGuar','GuTwoBal_MidTermLnGuar','GuTwoBal_LongTermLnGuar','IsPrMarried','IsPrSpouseGu','IsBizRegAddrSelfOwn','IsBizAddrEqToBizRegAddr','IsRealBizAddrSelfOwn','OthRealPrSHRatio'];
+  let is_int_array = ['CompCapital','AnnualIncome1','AnnualIncome2','AnnualIncome3','NumOfInsured1','NumOfInsured2','NumOfInsured3','NumOfInsured4','NumOfInsured5','NumOfInsured6','NumOfInsured7','NumOfInsured8','NumOfInsured9','NumOfInsured10','NumOfInsured11','NumOfInsured12','MidTermLnBal','ShortTermLnBal','CompCreditScore','PrLaborInsSalary','SpouseLaborInsSalary','GuOneLaborInsSalary','GuTwoLaborInsSalary','PrCreditScore','PrBal_CashCard','PrBal_CreditCard','PrBal_ShortTermLn','PrBal_MidTermLn','PrBal_LongTermLn','PrBal_ShortTermGuar','PrBal_MidTermLnGuar','PrBal_LongTermLnGuar','SpouseCreditScore','SpouseBal_CashCard','SpouseBal_CreditCard','SpouseBal_ShortTermLn','SpouseBal_MidTermLn','SpouseBal_LongTermLn','SpouseBal_ShortTermGuar','SpouseBal_MidTermLnGuar','SpouseBal_LongTermLnGuar','GuOneCreditScore','GuOneBal_CashCard','GuOneBal_CreditCard','GuOneBal_ShortTermLn','GuOneBal_MidTermLn','GuOneBal_LongTermLn','GuOneBal_ShortTermGuar','GuOneBal_MidTermLnGuar','GuOneBal_LongTermLnGuar','GuTwoCreditScore','GuTwoBal_CashCard','GuTwoBal_CreditCard','GuTwoBal_ShortTermLn','GuTwoBal_MidTermLn','GuTwoBal_LongTermLn','GuTwoBal_ShortTermGuar','GuTwoBal_MidTermLnGuar','GuTwoBal_LongTermLnGuar','IsPrMarried','IsBizRegAddrSelfOwn','IsBizAddrEqToBizRegAddr','IsRealBizAddrSelfOwn','OthRealPrSHRatio'];
   function edit_click(id_content,id_verified,id_reason){
     $(id_content).prop('disabled', function(i, v) {
        let s = !v;
@@ -3244,7 +3263,9 @@
         if(select_array.includes($(`#${key}`).attr('id'))){
           var $select = $(`#${key}`).selectize();
           var selectize = $select[0].selectize;
-          selectize.setValue(selectize.search(data[key]).items[0].id);
+          if(data[key] !== ''){
+            selectize.setValue(selectize.search(data[key]).items[0].id);
+          }
 	  	}
 		if(rawData_array.includes($(`#${key}`).attr('id'))){
 			Object.keys(data[key]).forEach(function(key1) {

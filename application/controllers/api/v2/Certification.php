@@ -61,14 +61,14 @@ class Certification extends REST_Controller {
                 if($this->user_info->naturalPerson && $this->request->method == 'post'){
                     $this->load->library('certification_lib');
                     //檢核變卡認證，並排除以下認證
-                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11'])){
+                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
                         $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, 0);
                         if(!$cerGovernmentauthorities && $method != 'governmentauthorities'){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
                         }
                     }
                     //要求先完成實名相關
-                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker'])){
+                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
                         $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
                         if(!$cerIDCARD){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
@@ -474,6 +474,9 @@ class Certification extends REST_Controller {
 				}
 			}
 
+            $content['id_card_date'] = strip_ROC_date_word($content['id_card_date']);
+            $content['birthday'] = strip_ROC_date_word($content['birthday']);
+
             $content['name'] 	= isset($input['name'])?$input['name']:"";
             $content['address'] = isset($input['address'])?$input['address']:"";
 
@@ -543,6 +546,129 @@ class Certification extends REST_Controller {
 			}
 		}
 		$this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    /**
+     * @api {get} /v2/certification/idcard 認證 實名認證
+     * @apiVersion 0.2.0
+     * @apiName GetCertificationIdcard
+     * @apiGroup Certification
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiParam {String{2..15}} name 姓名
+     * @apiParam {String} id_number 身分證字號
+     * @apiParam {String} id_card_date 發證日期(民國) ex:1060707
+     * @apiParam {String} id_card_place 發證地點
+     * @apiParam {String} birthday 生日(民國) ex:1020101
+     * @apiParam {String} address 地址
+     * @apiParam {Number} front_image 身分證正面照 ( 圖片ID )
+     * @apiParam {Number} back_image 身分證背面照 ( 圖片ID )
+     * @apiParam {Number} person_image 本人照 ( 圖片ID )
+     * @apiParam {Number} healthcard_image 健保卡照 ( 圖片ID )
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS"
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse InsertError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     * @apiUse IsCompany
+     *
+     * @apiError 501 此驗證尚未啟用
+     * @apiErrorExample {Object} 501
+     *     {
+     *       "result": "ERROR",
+     *       "error": "501"
+     *     }
+     *
+     */
+    public function idcard_get()
+    {
+        $certification_id 	= 1;
+        $certification 		= $this->certification[$certification_id];
+        $return_column_list = ['gender','id_number','id_card_date','id_card_place','issueType','birthday','name','front_image_id','front_image',
+                'father', 'mother', 'spouse', 'military_service', 'born', 'address','back_image_id','back_image',
+                'person_image_id','person_image',
+                'healthcard_name', 'healthcard_birthday', 'healthcard_id_number', 'healthcard_image_id', 'healthcard_image'];
+        $empty_check_list = ['id_card_date', 'birthday'];
+        $data = array_combine(array_values($return_column_list), array_fill(0, count($return_column_list), ''));
+        if($certification && $certification['status']==1){
+            $user_id 	= $this->user_info->id;
+            $investor 	= $this->user_info->investor;
+
+            $param = array(
+                'user_id'			=> $user_id,
+                'certification_id'	=> CERTIFICATION_IDCARD,
+                'investor'			=> $investor,
+                'status'            => [1,2]
+            );
+
+            $certification = $this->user_certification_model->order_by('created_at','desc')->get_by($param);
+            if($certification) {
+                $content = json_decode($certification->content, TRUE);
+                $remark = json_decode($certification->remark, TRUE);
+                if(isset($remark['OCR']) && is_array($remark['OCR']))
+                    $data = array_replace_recursive($data, $remark['OCR']);
+                $data = array_replace_recursive($data,
+                    array_intersect_key($content, array_flip($return_column_list)));
+
+                if(isset($remark['failed_type_list'])) {
+                    $remove_column_list = [];
+                    foreach ($remark['failed_type_list'] as $failed_type) {
+                        switch ($failed_type) {
+                            case REALNAME_IMAGE_TYPE_FRONT:
+                                $remove_column_list = array_merge($remove_column_list, ['gender', 'id_number','id_card_date','id_card_place','birthday','name','front_image_id','front_image']);
+                                break;
+                            case REALNAME_IMAGE_TYPE_BACK:
+                                $remove_column_list = array_merge($remove_column_list, ['father', 'mother', 'spouse', 'military_service', 'born', 'address','back_image_id', 'back_image']);
+                                break;
+                            case REALNAME_IMAGE_TYPE_PERSON:
+                                $remove_column_list = array_merge($remove_column_list, ['person_image_id','person_image']);
+                                break;
+                            case REALNAME_IMAGE_TYPE_HEALTH:
+                                $remove_column_list = array_merge($remove_column_list, ['healthcard_name', 'healthcard_birthday', 'healthcard_id_number', 'healthcard_image_id', 'healthcard_image']);
+                                break;
+                        }
+                    }
+                    $data = array_replace_recursive($data,
+                        array_combine(array_values($remove_column_list), array_fill(0, count($remove_column_list), '')));
+                }
+                $this->load->library('S3_upload');
+
+                $url_key_list = ['front_image', 'back_image', 'person_image', 'healthcard_image'];
+                foreach ($url_key_list as $key) {
+                    if(empty($data[$key]))
+                        continue;
+                    $path_info = pathinfo($data[$key]);
+                    if(empty($path_info['basename']))
+                        continue;
+
+                    $newImageUrl = $this->s3_upload->public_image_by_data(
+                        file_get_contents($data[$key]),
+                        FRONT_S3_BUCKET,
+                        $user_id,
+                        [
+                            'type' => 'tmp/'.$user_id,
+                            'name' => md5($path_info['basename']) . '.jpg',
+                        ]
+                    );
+                    $data[$key] = str_replace(S3_BUCKET, FRONT_CDN_URL, $newImageUrl);
+                }
+            }
+
+            foreach ($empty_check_list as $field)
+            {
+                if (isset($data[$field]) && empty($data[$field]))
+                {
+                    unset($data[$field]);
+                }
+            }
+            $this->response(array('result' => 'SUCCESS','data' => $data));
+        }
+        $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
 	/**
@@ -4339,5 +4465,34 @@ class Certification extends REST_Controller {
             }
         }
         $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+    }
+
+    public function livingBody_post(){
+        $input 		= $this->input->post(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+        $investor 	= $this->user_info->investor;
+
+        //必填欄位
+        $fields 	= ['imageId'];
+        foreach ($fields as $field) {
+            if(isset($input[$field])){
+                $content[$field] = $input[$field];
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+        }
+
+        // 檢查圖片是否存在
+        $image_info = $this->log_image_model->get_by([
+            'id'		=> $content['imageId'],
+            'user_id'	=> $user_id,
+        ]);
+        if(!$image_info || !isset($image_info->url)){
+            $this->response(array('result' => 'ERROR','error' => PICTURE_NOT_EXIST ));
+        }
+
+        $this->load->library('Papago_lib');
+		$face8_person_face = $this->papago_lib->detect($image_info->url, $user_id);
+        $this->response(array('result' => 'SUCCESS','data' => $face8_person_face ));
     }
 }

@@ -1512,6 +1512,113 @@ define({
         },
         {
             "type": "get",
+            "url": "/v2/certification/idcard",
+            "title": "取得 實名認證",
+            "version": "0.2.0",
+            "name": "GetCertificationIdcard2",
+            "group": "Certification",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "501",
+                            "description": "<p>此驗證尚未啟用</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "501",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"501\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "502",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"502\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "504",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"504\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "505",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"505\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Certification.php",
+            "groupTitle": "Certification",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/certification/idcard"
+                }
+            ]
+        },
+        {
+            "type": "get",
             "url": "/V2/certification/investigation",
             "title": "認證 聯徵狀態",
             "version": "0.2.0",
@@ -10154,6 +10261,7 @@ define({
                     "Success 200": [
                         {
                             "group": "Success 200",
+
                             "type": "String",
                             "optional": false,
                             "field": "result",
@@ -10371,6 +10479,7 @@ define({
                 },
                 "examples": [
                     {
+
                         "title": "100",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
                         "type": "Object"
@@ -22563,13 +22672,13 @@ define({
                             "group": "Parameter",
                             "type": "Number",
                             "field": "character",
-                            "description" : "<p>(微企貸、百萬信保微企貸) 角色 1:實際負責人 2:非實際負責人</p>"
+                            "description" : "<p>(普匯微企e秒貸) 角色 1:實際負責人 2:非實際負責人</p>"
                         },
                         {
                             "group": "Parameter",
                             "type": "Number",
                             "field": "target_id",
-                            "description" : "<p>(微企貸、百萬信保微企貸) 創業貸起案ID (同意當保證人，不同意則依照規格呼叫)</p>"
+                            "description" : "<p>(普匯微企e秒貸) 創業貸起案ID (同意當保證人，不同意則依照規格呼叫)</p>"
                         }
                     ]
                 }
@@ -48472,6 +48581,141 @@ define({
                     "url": "/api/v2/certification/companyemail"
                 }
             ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/upload_sound_file",
+            "title": "會員 上傳聲音檔案",
+            "version": "0.2.0",
+            "name": "PostUserUploadSoundFile",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "file",
+                            "allowedValues": [
+                                "\"*.mov\"",
+                                "\"*.mp4\"",
+                                "\"*.wav\""
+                            ],
+                            "optional": false,
+                            "field": "media",
+                            "description": "<p>媒體檔案</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String(30)",
+                            "optional": false,
+                            "field": "label",
+                            "description": "<p>標籤註記</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": true,
+                            "field": "group",
+                            "description": "<p>群組編號(不給則回傳該使用者的最高group編號+1)</p>"
+                        },
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "media_id",
+                            "description": "<p>媒體ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "group",
+                            "description": "<p>群組編號</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n  \"result\": \"SUCCESS\",\n  \"data\": {\n  \t\"media_id\": 191,\n  \t\"group\": 2\n  }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/upload_sound_file"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>參數錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "100",
+                            "description": "<p>Token錯誤</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "101",
+                            "description": "<p>帳戶已黑名單</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "100",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"100\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "101",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"101\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
         },
         {
             "type": "get",

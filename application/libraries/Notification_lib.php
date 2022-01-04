@@ -860,11 +860,11 @@ econtent;
 
 	public function notify_target_product_1002_associates($mail, $username, $subProduct, $character){
 
-		$title = "【百萬信保微企貸】新增 「負責人配偶/保證人」";
+		$title = "【普匯微企e秒貸】新增 「負責人配偶/保證人」";
 		$content = "「{$username}」公司已申請加入您作為「負責人配偶/保證人」
 請下載「普匯 influx」APP，並完成以下流程：
 1.註冊「一般使用者」並登入帳號，並從「資料中心」完成實名認證
-2.至「產品列表」中「百萬信保微企AI速貸」點選「查看狀態」
+2.至「產品列表」中「普匯微企e秒貸」點選「查看狀態」
 3.完成其餘資料更新（個人資料表、聯徵報告...）";
 
 		$this->CI->load->library('Sendemail');
@@ -1122,104 +1122,22 @@ econtent;
         return $rs;
     }
 
-    public function obank_event_pending_too_long($target) {
-        $eventType = 1;
-        $rs = FALSE;
+    public function target_credit_expired($user_id)
+    {
+        $title = "【借款申請】 您申請的借款核准額度已失效";
+        $content = "親愛的用戶，您好！
+非常抱歉通知您，由於您的核准額度有效期已過，系統已自動下架。
+建議您可以重新申請並更新近一個月徵信資料，系統將會在核准後自動上架！";
 
-        $notification_list = $this->CI->user_notification_model->get_many_by([
-            'user_id' => $target->user_id,
-            'investor' => USER_BORROWER,
-            'type' => NOTIFICATION_TYPE_OPENURL,
-            'created_at >= ' => strtotime('-1 hour'),
-        ]);
-
-        $sent = false;
-        foreach ($notification_list as $notification) {
-            $data = json_decode($notification->data, true);
-            if(isset($data['target_id']) && isset($data['eventType']) && $data['target_id'] == $target->id && $data['eventType'] == $eventType) {
-                $sent = true;
-            }
-        }
-        if(!$sent) {
-            $title = "【限時方案】專屬您的優惠貸款方案！";
-            $content = "僅需填寫資料、工作證明
- 享有最高500萬、首期利率0.08%
- 立即前往：普匯X王道銀行合作專案";
-            $data = ['target_id' => $target->id, 'openURL' => 'https://www.influxfin.com/obank', 'eventType' => $eventType, 'urlBtnMsg' => "立即申請"];
-            $rs = $this->send_app_with_data($target->user_id,USER_BORROWER,NOTIFICATION_TYPE_OPENURL,$title,$content,$data);
-        }
-        return $rs;
-    }
-
-    public function obank_event_approve_failed($target) {
-        $eventType = 2;
-        $rs = FALSE;
-
-        $notification_list = $this->CI->user_notification_model->get_many_by([
-            'user_id' => $target->user_id,
-            'investor' => USER_BORROWER,
-            'type' => NOTIFICATION_TYPE_OPENURL,
-        ]);
-
-        $sent = false;
-        foreach ($notification_list as $notification) {
-            $data = json_decode($notification->data, true);
-            if(isset($data['target_id']) && isset($data['eventType']) && $data['target_id'] == $target->id && $data['eventType'] == $eventType) {
-                $sent = true;
-            }
-        }
-        if(!$sent) {
-            $title = "別心慌！疫情加碼不囉唆！";
-            $content = "試試普匯推薦您的專屬優惠方案
- 立即前往申請：普匯X王道銀行合作專案";
-            $data = ['target_id' => $target->id, 'openURL' => 'https://www.influxfin.com/obank', 'eventType' => $eventType, 'urlBtnMsg' => "立即申請"];
-            $rs = $this->send_app_with_data($target->user_id,USER_BORROWER,NOTIFICATION_TYPE_OPENURL,$title,$content,$data);
-        }
-        return $rs;
-    }
-
-    public function obank_event_fast_signing($target) {
-        $eventType = 3;
-        $rs = FALSE;
-
-        $notification_list = $this->CI->user_notification_model->get_many_by([
-            'user_id' => $target->user_id,
-            'investor' => USER_BORROWER,
-            'type' => NOTIFICATION_TYPE_OPENURL
-        ]);
-
-        $sent = false;
-        foreach ($notification_list as $notification) {
-            $data = json_decode($notification->data, true);
-            if(isset($data['target_id']) && isset($data['eventType']) && $data['target_id'] == $target->id && $data['eventType'] == $eventType) {
-                $sent = true;
-            }
-        }
-        if(!$sent) {
-            $this->CI->load->library('Certification_lib');
-            $user_certification	= $this->CI->certification_lib->get_certification_info($target->user_id,CERTIFICATION_JOB,USER_BORROWER);
-
-            $obankEvent = true;
-            if($user_certification->status === 1) {
-                $content = $user_certification->content;
-                if(isset($content['employee']) && $content['employee'] == 6) {
-                    $obankEvent = false;
-                }
-            }
-
-            $title = "【專屬限定】您獲得普匯加碼資格！";
-            $data = ['target_id' => $target->id, 'eventType' => $eventType, 'urlBtnMsg' => "立即申請"];
-            if($obankEvent) {
-                $content = "您符合擴大額度最高500萬、利率首期0.08%
- 立即前往申請：普匯X王道銀行合作專案";
-                $data['openURL'] = 'https://www.influxfin.com/obank';
-            }else{
-                $content = "您符合擴大額度最高300萬、利率前三期1.88%起
- 立即前往申請：普匯X上海商銀合作專案";
-                $data['openURL'] = 'https://www.influxfin.com/scsbank?move=page';
-            }
-            $rs = $this->send_app_with_data($target->user_id,USER_BORROWER,NOTIFICATION_TYPE_OPENURL,$title,$content,$data);
-        }
+        $param = array(
+            "user_id" => $user_id,
+            "investor" => USER_BORROWER,
+            "title" => $title,
+            "content" => $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('sendemail');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03');
         return $rs;
     }
 }

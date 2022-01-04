@@ -92,6 +92,9 @@ class User extends MY_Admin_Controller {
 					'status !=' => 2,
 				));
 
+                $this->load->model('loan/credit_sheet_model');
+                $new_credit_list = $this->credit_sheet_model->get_credit_list($id);
+
 				$info 			= $this->user_model->get($id);
 				if($info){
 					$this->load->library('certification_lib');
@@ -101,6 +104,7 @@ class User extends MY_Admin_Controller {
 					$page_data['certification'] 		= $this->certification_lib->get_last_status($info->id,BORROWER,$info->company_status);
 					$page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,INVESTOR,$info->company_status);
 					$page_data['credit_list'] 			= $credit_list;
+					$page_data['new_credit_list']       = $new_credit_list;
 					$page_data['product_list']			= $this->config->item('product_list');
 					$page_data['bank_account'] 			= $bank_account;
 					$page_data['certification_list'] 	= $certification_list;
@@ -198,6 +202,9 @@ class User extends MY_Admin_Controller {
 			));
 			$info = $this->user_model->get($id);
 			if($info){
+                $this->load->model('loan/credit_sheet_model');
+                $new_credit_list = $this->credit_sheet_model->get_credit_list($id);
+
                 $this->load->library('certification_lib');
 				$page_data['data'] 					= $info;
 				$page_data['meta'] 					= $meta_data;
@@ -206,6 +213,7 @@ class User extends MY_Admin_Controller {
                 $page_data['certification_investor']= $this->certification_lib->get_last_status($info->id,INVESTOR,$info->company_status);
 				$page_data['certification_list'] 	= $certification_list;
 				$page_data['credit_list'] 			= $credit_list;
+				$page_data['new_credit_list']       = $new_credit_list;
 				$page_data['product_list']			= $this->config->item('product_list');
 				$page_data['sub_product_list'] = $this->config->item('sub_product_list');
 				$page_data['bank_account'] 			= $bank_account;
