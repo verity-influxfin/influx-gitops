@@ -164,7 +164,8 @@ class Qrcode_lib
             $cert_list = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
             if ( ! empty($cert_list))
             {
-                $investor = [$cert_list->investor];
+                $cert = reset($cert_list);
+                $investor = [$cert->investor];
             }
             else
             {
@@ -181,8 +182,8 @@ class Qrcode_lib
                 "phone" => $judicial_person->cooperation_phone,
                 "bank_name" => '國泰世華銀行',
                 "bank_account_name" => $judicial_person->company,
-                "virtual_account" => $virtual_account,
-                "investor" => $investor,
+                "virtual_account" => $virtual_account->virtual_account,
+                "investor" => $virtual_account->investor,
             ];
         }
         return $data;
