@@ -44,32 +44,7 @@
 						<th></th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr v-for="item in deduct_list" :key="item.id">
-						<td>{{item.created_at}}</td>
-						<td>{{item.user_id}}</td>
-						<td>{{item.amount}}</td>
-						<td>{{item.reason}}</td>
-						<td>{{item.admin}}</td>
-						<td>{{item.status.name}}</td>
-						<td v-if="item.status.code === 1">
-							<!-- 應付 -->
-							<div class="d-flex">
-								<button class="btn btn-primary mr-2" @click="get_deduct_info(item.id)">扣繳</button>
-								<button class="btn btn-outline-danger" @click="open_cancel_modal(item.id)">註銷</button>
-							</div>
-						</td>
-						<td v-if="item.status.code === 2">
-							<div>扣繳日期</div>
-							<div>{{item.status.updated_at}}</div>
-						</td>
-						<td v-if="item.status.code === 3">
-							<div>註銷日期</div>
-							<div>{{item.status.updated_at}}</div>
-							<div>原因: {{item.status.cancel_reason}}</div>
-						</td>
-					</tr>
-				</tbody>
+				<tbody></tbody>
 			</table>
 		</div>
 	</div>
@@ -86,8 +61,7 @@
 					<div class="d-flex mb-2">
 						<div class="col-20 input-require">投資人ID</div>
 						<div class="col">
-							<input type="text" required class="w-100 form-control"
-								v-model.number="add_deduct_info_form.user_id" @input="get_deduct_user_info">
+							<input type="text" required class="w-100 form-control" v-model.number.lazy="add_form_id">
 						</div>
 					</div>
 					<div class="d-flex mb-2">
@@ -147,7 +121,8 @@
 				</div>
 				<div class="d-flex justify-between mx-5 mb-5">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-					<button type="submit" class="btn btn-primary">送出</button>
+					<button type="submit" class="btn btn-primary"
+						:disabled="deduct_modal_data.account_amount < deduct_modal_data.deduct_amount">送出</button>
 				</div>
 			</form>
 		</div>
@@ -204,7 +179,6 @@
 			},
 			"info": false
 		});
-		$('#deduct-table').DataTable().draw()
 	});
 	const v = new Vue({
 		el: '#page-wrapper',
@@ -227,6 +201,7 @@
 						'updated_at': '2021-12-30 10:00:00'
 					}
 				},
+				add_form_id: null,
 				add_deduct_info_form: {
 					'user_id': null,
 					'amount': null,
@@ -252,7 +227,39 @@
 				}
 			}
 		},
+		watch: {
+			add_form_id(v) {
+				this.add_deduct_info_form.user_id = v
+				this.get_deduct_user_info(v)
+			}
+		},
 		methods: {
+			set_table_row(item) {
+				let status = ''
+				switch (item.status.code) {
+					case 1:
+						// 應付 
+						status = `<div class="d-flex">
+									<button class="btn btn-primary mr-2" onclick="v.get_deduct_info(${item.id})">扣繳</button>
+									<button class="btn btn-outline-danger" onclick="v.open_cancel_modal(${item.id})" >註銷</button >
+								  </div >`
+
+						break;
+					case 2:
+						status = `<div>扣繳日期</div>
+									  <div>${item.status.updated_at}</div>`
+						break;
+					case 3:
+						status = `<div>註銷日期</div>
+								  <div>${item.status.updated_at}</div>
+								  <div>原因: ${item.status.cancel_reason}</div>`
+						break;
+					default:
+						status = ''
+						break;
+				}
+				$('#deduct-table').DataTable().row.add([item.created_at, item.user_id, item.amount, item.reason, item.admin, item.status.name, status])
+			},
 			get_deduct_list() {
 				const user_id = this.search_option.user_id
 				const created_at_s = document.querySelector('#created_at_s').value ? document.querySelector('#created_at_s').value : null
@@ -265,6 +272,8 @@
 					}
 				}).then(({ data }) => {
 					this.deduct_list = data
+					this.deduct_list.forEach(item => this.set_table_row(item))
+					$('#deduct-table').DataTable().draw()
 				})
 			},
 			add_deduct_info() {
@@ -283,7 +292,6 @@
 					this.get_deduct_list()
 					$('#newModal').modal('hide')
 				})
-				console.log(add_deduct_info_form)
 				$('#newModal').modal('hide')
 			},
 			get_deduct_user_info() {
@@ -313,18 +321,19 @@
 					params: {
 						id
 					}
-				}).then(({ data: { response } }) => {
-					console.log(response)
-					if (response.result === 'SUCCESS') {
+				}).then(({ data }) => {
+					if (data.result === 'SUCCESS') {
 						$('#deductModal').modal('show')
 						this.deduct_modal_data = {
-							result: response.result,
-							...response.data
+							result: data.result,
+							...data.data
 						}
 					}
+				}).finally(() => {
+					$('#deductModal').modal('show')
+					this.update_deduct_info_form.id = id
 				})
-				$('#deductModal').modal('show')
-				this.update_deduct_info_form.id = id
+
 			},
 			open_cancel_modal(id) {
 				this.update_deduct_info_form.id = id
@@ -336,7 +345,7 @@
 				const { update_deduct_info_form } = this
 				// axios({
 				// 	method: 'post',
-				// 	url: 'admin/postloan/update_deduct_info',
+				// 	url: 'update_deduct_info',
 				// 	data: {
 				// 		...update_deduct_info_form
 				// 	}
