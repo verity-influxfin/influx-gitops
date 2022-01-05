@@ -179,6 +179,7 @@
 			},
 			"info": false
 		});
+		v.get_deduct_list()
 	});
 	const v = new Vue({
 		el: '#page-wrapper',
@@ -261,6 +262,7 @@
 				$('#deduct-table').DataTable().row.add([item.created_at, item.user_id, item.amount, item.reason, item.admin, item.status.name, status])
 			},
 			get_deduct_list() {
+				$('#deduct-table').DataTable().clear().draw()
 				const user_id = this.search_option.user_id
 				const created_at_s = document.querySelector('#created_at_s').value ? document.querySelector('#created_at_s').value : null
 				const created_at_e = document.querySelector('#created_at_e').value ? document.querySelector('#created_at_e').value : null
@@ -311,10 +313,6 @@
 						...data.data
 					}
 				})
-				this.deduct_hint = {
-					result: data.result,
-					...data.data
-				}
 			},
 			get_deduct_info(id) {
 				axios.get('get_deduct_info', {
@@ -359,12 +357,7 @@
 				})
 				$('#cancelModal').modal('hide')
 				$('#deductModal').modal('hide')
-				console.log(update_deduct_info_form)
 			},
-		},
-
-		mounted() {
-			this.get_deduct_list()
 		},
 	})
 </script>
