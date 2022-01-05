@@ -189,18 +189,30 @@
 												<h3>
 													<p><label>IG 認證 </label></p>
 												</h3>
-												<label>IG 帳號</label>
-												<a href="https://www.instagram.com/<?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?>" target="_blank">
-													<h4><?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?></h4>
-												</a>
-												<td>
-													<p>
-														<?= isset($content['instagram']['counts']['media']) ? $content['instagram']['counts']['media'] : "0" ?> 貼文 、
-														<?= isset($content['instagram']['counts']['followed_by']) ? $content['instagram']['counts']['followed_by'] : "0" ?> 位追蹤者 、
-														<?= isset($content['instagram']['counts']['follows']) ? $content['instagram']['counts']['follows'] : "0" ?> 追蹤中 </p>
-												</td>
-												<label>IG 暱稱</label>
-												<p class="form-control-static"><?= isset($content['instagram']['name']) ? $content['instagram']['name'] : "" ?></p>
+                                                <table border="1" style="text-align: center;width:100%">
+                                                    <tr>
+                                                        <td>IG 帳號</td>
+                                                        <td><a href="<?= isset($content['instagram']['link']) ? $content['instagram']['link'] : "" ?>" target="_blank">
+        													<h4><?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?></h4>
+        												</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>帳號是否存在</td>
+                                                        <td><?= isset($content['instagram']['usernameExist']) ? $content['instagram']['usernameExist'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>貼文數</td>
+                                                        <td><?= isset($content['instagram']['info']['allPostCount']) ? $content['instagram']['info']['allPostCount'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>被追蹤數</td>
+                                                        <td><?= isset($content['instagram']['info']['allFollowerCount']) ? $content['instagram']['info']['allFollowerCount'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>追蹤數</td>
+                                                        <td><?= isset($content['instagram']['info']['allFollowingCount']) ? $content['instagram']['info']['allFollowingCount'] : "" ?></td>
+                                                    </tr>
+                                                </table>
 
                                                 <? if(isset($content['instagram']['access_token'])){   ?>
 												<label>IG token(IG ID)</label>
