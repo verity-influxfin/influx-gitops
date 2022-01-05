@@ -48,6 +48,7 @@
                                 <form role="form" action="/admin/certification/sendSkbank" method="post">
                                     <table class="table table-striped table-bordered table-hover dataTable">
                                         <tbody>
+                                        <? if ( ! isset($content['affidavit_image'])) { ?>
                                             <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                             <tr><td><span>公司近01個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM1" placeholder="格式:YYYYMM"></td></tr>
@@ -75,15 +76,19 @@
                                             <tr><td><span>公司近12個月投保人數-年月</span></td><td><input class="sk-input" type="text" name="NumOfInsuredYM12" placeholder="格式:YYYYMM"></td></tr>
                                             <tr><td><span>公司近12個月投保人數-人數</span></td><td><input class="sk-input" type="text" name="NumOfInsured12"></td></tr>
                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
+                                        <? } ?>
                                         </tbody>
                                     </table>
                                 </form>
                             </div>
                             <div class="form-group">
-                              <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
-                              foreach ($ocr['url'] as $key => $value) { ?>
-                                  <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
-                              <? } ?>
+                                <? if ( ! isset($content['affidavit_image'])) { ?>
+                                    <? isset($ocr['url']) && ! is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
+                                    foreach ($ocr['url'] as $key => $value)
+                                    { ?>
+                                        <label><a href="<?= isset($value) ? $value : ''; ?>" target="_blank">前往編輯頁面</a></label>
+                                    <? } ?>
+                                <? } ?>
                             </div>
                             <div class="form-group">
                                 <label>備註</label>
@@ -131,15 +136,30 @@
                             <h1>圖片</h1>
                             <fieldset disabled>
                                 <div class="form-group">
-                                    <label>員工投保人數資料</label><br>
-                                    <? isset($content['employeeinsurancelist_image']) && !is_array($content['employeeinsurancelist_image']) ? $content['employeeinsurancelist_image'] = array($content['employeeinsurancelist_image']) : '';
-                                    if(!empty($content['employeeinsurancelist_image'])){
-                                        foreach ($content['employeeinsurancelist_image'] as $key => $value) { ?>
-                                            <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
-                                                <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
-                                        <? }
-                                    }?>
+                                    <? if (isset($content['affidavit_image'])) { ?>
+                                        <label>具結書</label><br>
+                                        <? ! is_array($content['affidavit_image']) ? $content['affidavit_image'] = array($content['affidavit_image']) : '';
+                                        if ( ! empty($content['affidavit_image']))
+                                        {
+                                            foreach ($content['affidavit_image'] as $key => $value)
+                                            { ?>
+                                                <a href="<?= $value ?? "" ?>" data-fancybox="images">
+                                                    <img src="<?= $value ?? "" ?>" style='width:30%;max-width:400px'>
+                                                </a>
+                                            <? }
+                                        } ?>
+                                    <? } else { ?>
+                                        <label>員工投保人數資料</label><br>
+                                        <? isset($content['employeeinsurancelist_image']) && !is_array($content['employeeinsurancelist_image']) ? $content['employeeinsurancelist_image'] = array($content['employeeinsurancelist_image']) : '';
+                                        if(!empty($content['employeeinsurancelist_image'])){
+                                            foreach ($content['employeeinsurancelist_image'] as $key => $value) { ?>
+                                                <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
+                                                    <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
+                                                </a>
+                                            <? }
+                                        }?>
+                                    <? } ?>
+
                                 </div>
                             </fieldset>
                         </div>

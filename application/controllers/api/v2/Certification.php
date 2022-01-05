@@ -3824,18 +3824,27 @@ class Certification extends REST_Controller {
             $this->was_verify($certification_id);
 
             //必填欄位
-            $fields 	= ['employeeinsurancelist_image'];
+            $fields 	= ['employeeinsurancelist_image', 'affidavit_image'];
+            $empty_flag = TRUE;
             foreach ($fields as $field) {
-                if (empty($input[$field])) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
-                }else{
+                if (isset($input[$field]) && ! empty($input[$field]))
+                {
+                    $empty_flag = FALSE;
                     $content[$field] = $input[$field];
                 }
             }
+            if($empty_flag)
+            {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
 
-            $file_fields = ['employeeinsurancelist_image'];
+            $file_fields = ['employeeinsurancelist_image', 'affidavit_image'];
             //多個檔案欄位
             foreach ($file_fields as $field) {
+                if ( ! isset($content[$field]) || empty($content[$field]))
+                {
+                    continue;
+                }
                 $image_ids = explode(',',$content[$field]);
                 if(count($image_ids)>15){
                     $image_ids = array_slice($image_ids,0,15);

@@ -5820,9 +5820,16 @@ define({
                         {
                             "group": "Parameter",
                             "type": "String",
-                            "optional": false,
+                            "optional": true,
                             "field": "employeeinsurancelist_image",
                             "description": "<p>員工投保人數資料 ( 圖片IDs 以逗號隔開，最多15個)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "affidavit_image",
+                            "description": "<p>切結書 ( 圖片IDs 以逗號隔開，最多15個)</p>"
                         },
                         {
                             "group": "Parameter",
