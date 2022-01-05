@@ -84,7 +84,7 @@
                                     <form role="form" action="/admin/certification/sendSkbank" method="post">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                                 <tr><td><span>負責人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="PrJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                 <tr><td><span>負責人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="PrCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
@@ -107,7 +107,7 @@
                                     <form role="form" action="/admin/certification/sendSkbank" method="post">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                                 <tr><td><span>配偶聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="SpouseJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                 <tr><td><span>配偶聯徵信用評分</span></td><td><input class="sk-input" type="text" name="SpouseCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
@@ -130,7 +130,7 @@
                                     <form role="form" action="/admin/certification/sendSkbank" method="post">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                                 <tr><td><span>甲保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuOneJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                 <tr><td><span>甲保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuOneCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>
@@ -152,7 +152,7 @@
                                     <form role="form" action="/admin/certification/sendSkbank" method="post">
                                         <table class="table table-striped table-bordered table-hover dataTable">
                                             <tbody>
-                                                <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                                <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                                 <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                                 <tr><td><span>乙保證人聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="GuTwoJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
                                                 <tr><td><span>乙保證人聯徵信用評分</span></td><td><input class="sk-input" type="text" name="GuTwoCreditScore" placeholder="顯示「此次暫時無法評分」，則傳入 0"></td></tr>

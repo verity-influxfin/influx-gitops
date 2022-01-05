@@ -275,7 +275,7 @@ class Target extends REST_Controller {
     //     "loan_rate" : 5,
     //     "status" : 504,
     // }
-    // 暫時只有撈微企貸案件資料ˊ
+    // 暫時只有撈普匯微企e秒貸案件資料ˊ
     public function judicial_list_get(){
         $input 			= $this->input->get();
 		$list			= [];
@@ -304,7 +304,7 @@ class Target extends REST_Controller {
                         $value->reason = $json_reason->reason.' - '.$json_reason->reason_description;
                     }
 
-                    // 撈微企貸資料
+                    // 撈普匯微企e秒貸貸資料
                     if($product['visul_id'] == 'J2'){
                         $this->load->library('mapping/sk_bank/msgno');
                 		$response = $this->msgno->getSKBankInfoByTargetId($value->id);

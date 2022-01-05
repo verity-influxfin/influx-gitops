@@ -59,7 +59,17 @@ class Notification extends REST_Controller {
 	 * @apiSuccess {String} title 標題
 	 * @apiSuccess {String} content 內容
 	 * @apiSuccess {Number} status 1:未讀 2:已讀
+     * @apiSuccess {Number} type 0:無行為
+     * 1:開啟強制彈窗(parameter帶空)
+     * 2.開啟URL(parameter帶URL)
+     * 3.開啟target id(parameter帶target id,product id)
+     * 4.開啟認證徵信(parameter帶alias,target id)
 	 * @apiSuccess {Number} created_at 創建日期
+     * @apiSuccess {Number} [target_id] 案件編號
+     * @apiSuccess {Number} [product_id] 案件產品編號
+     * @apiSuccess {String} [openURL] 跳轉網址
+     * @apiSuccess {String} [alias] 認證徵信項的別名
+     * @apiSuccess {String} [urlBtnMsg] 跳轉網址的按鈕名稱
 	 
 
      * @apiSuccessExample {Object} SUCCESS
@@ -77,7 +87,7 @@ class Notification extends REST_Controller {
      * 			{
     * 				"id": 241,
     * 				"title": "【會員】 交易密碼設置成功",
-    * 				"content": "您好！\r\n\t\t\t\t\t您的交易密碼設置成功。",
+    * 				"content": "您好！ 您的交易密碼設置成功。",
     * 				"status": 1,
     * 				"created_at": 1548303563
      * 			},
@@ -101,15 +111,26 @@ class Notification extends REST_Controller {
 			'investor'		=> [$investor,2]
 		]);
 		$list				= [];
+        // 可選的額外欄位
+        $optionalColumn = ['target_id', 'product_id', 'openURL', 'alias', 'urlBtnMsg'];
+
 		if(!empty($notification_list)){
 			foreach($notification_list as $key => $value){
-				$list[] = [
-					'id' 		 => intval($value->id),
-					'title' 	 => $value->title,
-					'content' 	 => $value->content,
-					'status' 	 => intval($value->status),
-					'created_at' => intval($value->created_at),
-				];
+                $notificationData = json_decode($value->data, true);
+                $temp = [
+                    'id' 		 => intval($value->id),
+                    'title' 	 => $value->title,
+                    'content' 	 => $value->content,
+                    'status' 	 => intval($value->status),
+                    'type' 	  	 => intval($value->type),
+                    'created_at' => intval($value->created_at),
+                ];
+
+                if(isset($notificationData) && is_array($notificationData)) {
+                    $optionalData = array_intersect_key($notificationData, array_flip($optionalColumn));
+                    $temp = array_merge($temp, $optionalData);
+                }
+                $list[] = $temp;
 			}
 		}
 		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);

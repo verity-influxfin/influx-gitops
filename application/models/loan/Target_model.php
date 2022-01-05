@@ -303,4 +303,249 @@ class Target_model extends MY_Model
         }
         return $targets;
     }
+
+    /**
+     * 依照放款時間篩選還款案件
+     * @param int $userId
+     * @param array $productIdList
+     * @param int $filterTime
+     * @return mixed
+     */
+    public function getRepaymentingTargets(int $userId, array $productIdList, int $filterTime=0) {
+        $this->db->select('*')
+            ->from("`p2p_loan`.`targets`")
+            ->where('status', TARGET_REPAYMENTING)
+            ->where('user_id', $userId)
+            ->where_in('product_id', $productIdList);
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.*, tra.created_at as loan_time')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->where('tra.source', SOURCE_LENDING)
+            ->where('tra.user_to', 't.user_id', FALSE)
+            ->join("($subquery) as `t`", "`t`.`id` = `tra`.`target_id`")
+            ->group_by('t.id');
+        if($filterTime)
+            $this->db->where('tra.created_at < ', $filterTime);
+        return $this->db->get()->result();
+    }
+
+    public function getDelayedTarget($targetIds) {
+        $this->db->select('target_id, entering_date, user_from, user_to')
+            ->from("`p2p_transaction`.`transactions`")
+            ->where_in('target_id', $targetIds)
+            ->where('source', SOURCE_AR_DELAYINTEREST)
+            ->group_by('target_id');
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('ta.user_id, ta.loan_date, ta.product_id, ta.sub_product_id, ta.id, t.entering_date as delay_date')
+            ->from('`p2p_loan`.`targets` AS `ta`')
+            ->join("($subquery) as `t`", "`ta`.`id` = `t`.`target_id`");
+
+        return $this->db->get()->result_array();
+    }
+
+	public function getDelayedReport($input)
+	{
+		//投資人ID/債權總額
+		$subquery_investment = $this->db
+			->select('target_id,user_id,amount')
+			->where('status', 3)
+			->get_compiled_select('p2p_loan.investments', TRUE);
+
+		//學校/公司
+		$subquery_user_meta_1 = $this->db
+			->select("
+				user_id,
+				GROUP_CONCAT(meta_value SEPARATOR '/') AS user_meta_1
+			")
+			->where_in('meta_key', ['school_name', 'job_company'])
+			->group_by('user_id')
+			->get_compiled_select('p2p_user.user_meta');
+
+		//科系
+		$subquery_user_meta_2 = $this->db
+			->select('user_id,meta_value')
+			->where('meta_key', 'school_department')
+			->group_by('user_id')
+			->get_compiled_select('p2p_user.user_meta');
+
+		//職位
+		$subquery_user_meta_3 = $this->db
+			->select('user_id,meta_value')
+			->where('meta_key', 'job_position')
+			->group_by('user_id')
+			->get_compiled_select('p2p_user.user_meta');
+
+		//逾期本金
+		$subquery_unpaid_principal = $this->db
+			->select('target_id')
+			->select_sum('amount')
+			->where(['status' => 1, 'source' => 11])
+			->group_by('target_id')
+			->get_compiled_select('p2p_transaction.transactions', TRUE);
+
+		//逾期利息
+		$subquery_unpaid_interest = $this->db
+			->select('target_id')
+			->select_sum('amount')
+			->where(['status' => 1, 'source' => 13])
+			->group_by('target_id')
+			->get_compiled_select('p2p_transaction.transactions', TRUE);
+
+		//延滯息
+		$subquery_delay_interest = $this->db
+			->select('target_id')
+			->select_sum('amount')
+			->where(['status' => 1, 'source' => 93])
+			->group_by('target_id')
+			->get_compiled_select('p2p_transaction.transactions', TRUE);
+
+		$this->db
+			->select('
+				t.id,
+				t.user_id,
+				t.product_id,
+				p.name AS product_name,
+				t.target_no,
+				t.credit_level,
+				t.loan_date,
+				a1.amount AS invest_amount,
+				a1.user_id AS lender,
+				CONCAT(a1.target_id,"-",a1.user_id) AS ary_key,
+				tr.entering_date,
+				DATEDIFF(NOW(), tr.entering_date) AS delayed_days,
+				a6.user_meta_1,
+				a7.meta_value AS school_department,
+				a8.meta_value AS job_position
+			')
+            ->select('`tr`.`limit_date`')
+			->from('p2p_loan.targets t')
+			->join('p2p_loan.products p', 'p.id=t.product_id')
+			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
+            ->join(
+                'p2p_transaction.transactions tr',
+                'tr.target_id=t.id AND tr.id=(
+                    SELECT `id`
+                      FROM `p2p_transaction`.`transactions` 
+                     WHERE `status` IN ('.TRANSACTION_STATUS_DELETED.','.TRANSACTION_STATUS_TO_BE_PAID.','.TRANSACTION_STATUS_PAID_OFF.')
+                       AND `source`='.SOURCE_AR_DELAYINTEREST.'
+                       AND `target_id`=`tr`.`target_id`
+                     ORDER BY `id` LIMIT 1)',
+                'left',
+                FALSE)
+			->join("($subquery_user_meta_1) a6", 'a6.user_id=t.user_id', 'left')
+			->join("($subquery_user_meta_2) a7", 'a7.user_id=t.user_id', 'left')
+			->join("($subquery_user_meta_3) a8", 'a8.user_id=t.user_id', 'left')
+			->where(['t.delay' => 1, 't.status' => 5])
+			->order_by('t.target_no');
+
+		foreach ($input as $key => $value) {
+			switch ($key) {
+				case 'tsearch': //搜尋(使用者代號(UserID)/姓名/身份證字號/案號)
+					if (!empty($input['tsearch'])) {
+						$this->db
+							->join('p2p_user.users u', 'u.id=t.user_id')
+							->group_start()
+							->like('u.id', $input['tsearch'])
+							->or_like('u.name', $input['tsearch'])
+							->or_like('u.id_number', $input['tsearch'])
+							->or_like('t.target_no', $input['tsearch'])
+							->group_end();
+					}
+					break;
+				case 'sdate': //從
+					if (!empty($input['sdate'])) {
+						$this->db->where('t.created_at >=', strtotime($input['sdate']));
+					}
+					break;
+				case 'edate': //到
+					if (!empty($input['edate'])) {
+						$this->db->where('t.created_at <=', strtotime($input['edate']));
+					}
+					break;
+			}
+		}
+
+		$target_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
+		$target_ids = array_column($target_rows, 'id');
+
+        $this->db
+            ->select('
+                CONCAT(i.target_id,"-",i.user_id) AS ary_key,
+                a3.amount AS unpaid_principal,
+                a4.amount AS unpaid_interest,
+                a5.amount AS delay_interest
+            ')
+            ->from('p2p_loan.investments i')
+            ->join("($subquery_unpaid_principal) a3", 'a3.target_id=i.target_id', 'left')
+            ->join("($subquery_unpaid_interest) a4", 'a4.target_id=i.target_id', 'left')
+            ->join("($subquery_delay_interest) a5", 'a5.target_id=i.target_id', 'left')
+            ->where_in('i.target_id', $target_ids)
+            ->where('i.status', INVESTMENT_STATUS_REPAYING);
+		$transaction_rows = array_column($this->db->get()->result_array(), NULL, 'ary_key');
+
+		$target_rows = array_map(function ($value) {
+			if (isset($value['school_department']) && !empty($value['school_department'])) {
+				$value['user_meta_2'][] = $value['school_department'];
+			}
+			if (isset($value['job_position']) && empty($value['job_position']) && $value['job_position'] !== 0) {
+				$position_name = $this->config->item('position_name');
+				$value['user_meta_2'][] = $position_name[$value['job_position']] ?? '';
+			}
+
+			$value['user_meta_2'] = implode('/', $value['user_meta_2']);
+			return $value;
+		}, $target_rows);
+
+		return array_replace_recursive($target_rows, $transaction_rows);
+	}
+
+    /**
+     * 撈取累積投資總金額
+     * @return int
+     */
+    public function get_total_loan_amount()
+    {
+        $subquery_investment = $this->db
+            ->select_sum('loan_amount')
+            ->where_in('status', [
+                INVESTMENT_STATUS_REPAYING,
+                INVESTMENT_STATUS_PAID_OFF
+            ])
+            ->get_compiled_select('`p2p_loan`.`investments`', TRUE);
+
+        $subquery_transfer = $this->db
+            ->select_sum('amount')
+            ->where('status', 10)
+            ->get_compiled_select('`p2p_loan`.`transfers`', TRUE);
+
+        $result = $this->db
+            ->select('(`r1`.`loan_amount` + `r2`.`amount`) AS total_loan_amount')
+            ->from("({$subquery_investment}) `r1`")
+            ->from("({$subquery_transfer}) `r2`")
+            ->get()
+            ->first_row('array');
+
+        return (int) ($result['total_loan_amount'] ?? 0);
+    }
+
+    /**
+     * 撈取總交易(成交)筆數
+     * @return int
+     */
+    public function get_transaction_count()
+    {
+        $result = $this->db
+            ->select('((((`r1`.`c` + (`r2`.`c` * 2)) + `r3`.`c`) + `r4`.`c`) + (`r5`.`c` * 2)) AS transaction_count')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . ' ) `r1`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . ' ) `r2`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.transfers WHERE `status` = 10 ) `r3`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.targets WHERE `status` = ' . TARGET_REPAYMENTING . ' ) `r4`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.targets WHERE `status` = ' . TARGET_REPAYMENTED . ' ) `r5`')
+            ->get()
+            ->first_row('array');
+
+        return (int) ($result['transaction_count'] ?? 0);
+    }
 }

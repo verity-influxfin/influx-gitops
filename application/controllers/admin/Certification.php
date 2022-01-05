@@ -211,17 +211,16 @@ class Certification extends MY_Admin_Controller {
 				// 獲取 ocr 相關資料
 				// to do : ocr table 需優化 index 與 clinet table view
 				$this->load->library('mapping/user/Certification_table');
-				$is_template = $this->certification_table->isInTemplate($info->certification_id);
 
                 $certification_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
                 if(in_array($info->certification_id,['1007','1017','1002','1003','12'])){
                     $page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$certification_content);
                 }
 
-                if($info->certification_id == 1003 || $info->certification_id == 9 || $info->certification_id == 12) {
+                if(in_array($info->certification_id,['1003','9','12','501','1018'])) {
                     // 上傳檔案功能
                     if($info->status == 0 || $info->status == 3){
-                        $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
+                        $input_config['data'] = ['upload_location'=>'Certification/media_upload','file_type'=> 'image/*,.heic,.heif','is_multiple'=>1,'extra_info'=>['user_certification_id'=>$info->id,'user_id'=>$info->user_id,'certification_id'=>$info->certification_id]];
 						$page_data['ocr']['upload_page'] = $this->load->view('admin/certification/component/media_upload', $input_config , true);
                     }
                     $return_config = [
@@ -242,61 +241,6 @@ class Certification extends MY_Admin_Controller {
                     ];
                     $return_type = isset($certification_content['return_type']) ? $certification_content['return_type'] : '';
                     $page_data['return_type'] = isset($return_config[$info->certification_id][$return_type]) ? $return_config[$info->certification_id][$return_type] : '';
-				}
-			if($is_template){
-				$ocr_content = isset($info->content) ? json_decode($info->content,TRUE) : [];
-				$page_data['ocr'] = [];
-				$page_data['ocr']['url'] = [];
-				// 給人工編輯跳轉網址
-				$page_data['ocr']['url'] = $this->certification_table->getOcrUrl($info->id,$info->certification_id,$ocr_content);
-				// 找使用者上傳圖片
-				$image_key_list = $this->certification_table->getUserPostImagesKey($info->certification_id);
-                $page_data['ocr']['img'] = [];
-                if(!empty($image_key_list)){
-                    foreach($image_key_list as $key_name){
-                        if(isset($ocr_content[$key_name]) && !empty($ocr_content[$key_name])){
-                            if(is_array($ocr_content[$key_name])){
-                                $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$ocr_content[$key_name]);
-                            }else{
-                                $page_data['ocr']['img'][] = $ocr_content[$key_name];
-                            }
-                        }
-                        // 針對圖片連結未直接放在第一層結構資料處理
-                        if(isset($ocr_content['result']) && !empty($ocr_content['result'])){
-                            $image_in_result = array_reduce($ocr_content['result'], 'array_merge', array());
-                            if(isset($image_in_result[$key_name]) && !empty($image_in_result[$key_name])){
-                                if(is_array($image_in_result[$key_name])){
-                                    $page_data['ocr']['img'] = array_merge($page_data['ocr']['img'],$image_in_result[$key_name]);
-                                }else{
-                                    $page_data['ocr']['img'][] = $image_in_result[$key_name];
-                                }
-                            }
-                        }
-                    }
-                }
-
-				// ocr 總表相關資料生成
-				$data_infos = isset($ocr_content['result']) ? $ocr_content['result'] : [];
-				$error_location = isset($ocr_content['error_location']) ? $ocr_content['error_location'] : [];
-				$total_table = [];
-				if(!empty($data_infos)){
-					if($info->certification_id == 1003 || $info->certification_id == 9){
-						$total_table['data'] = array_reduce($data_infos, 'array_merge', array());
-						$total_table['type'] = $info->certification_id == 9 ? 'person' : 'company';
-					}else{
-						$total_table['data'] = $this->certification_table->getTotalTableDataArray($info->certification_id,$data_infos,$error_location);
-					}
-				}
-
-				if(! empty($total_table)){
-					if($info->certification_id == 1003 || $info->certification_id == 9){
-						$page_data['ocr']['total_table'] = $this->load->view('admin/certification/component/joint_credit_report',$total_table , true);
-					}else{
-						$page_data['ocr']['total_table'] = $this->load->view('admin/certification/ocr/total_table',$total_table , true);
-					}
-				}else{
-					$page_data['ocr']['total_table'] = '';
-				}
 				}
 
 				if(isset($page_data['content']['programming_language'])){
@@ -322,12 +266,8 @@ class Certification extends MY_Admin_Controller {
 				$page_data['sys_check'] 			= $info->sys_check;
 				$this->load->view('admin/_header');
 				$this->load->view('admin/_title', $this->menu);
-				// ocr認證項目指定到統一頁面
-			if(!$is_template ){
-					$this->load->view('admin/certification/' . $certification['alias'], $page_data);
-				}else{
-					$this->load->view('admin/certification/ocr/index', $page_data);
-				}
+
+				$this->load->view('admin/certification/' . $certification['alias'], $page_data);
 				$this->load->view('admin/_footer');
 			} else {
 				alert('ERROR , id is not exist', $back_url);
@@ -494,9 +434,8 @@ class Certification extends MY_Admin_Controller {
 								'remark' => json_encode($remark),
 								'expire_time'=>$expiretime,
 							]);
-							if($post['status'] == 2) {
-								// 退工作認證時，需把聯徵也一起退掉 issue #1202
-								$this->load->library('Certification_lib');
+							$this->load->library('Certification_lib');
+							if($post['status'] == 2 && $this->certification_lib->isRejectedResult($fail)) {
 								$this->certification_lib->withdraw_investigation($info->user_id, $info->investor);
 							}
 						} elseif ($info->certification_id == CERTIFICATION_INVESTIGATION) {
@@ -532,6 +471,16 @@ class Certification extends MY_Admin_Controller {
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						} elseif ($info->certification_id == CERTIFICATION_CERCREDITJUDICIAL) {
 							$fail = '評估表已失效';
+						} elseif ($info->certification_id == CERTIFICATION_IDCARD) {
+							if(isset($post['failed_type_list'])) {
+								$remark = json_decode($info->remark, TRUE);
+								if ($remark === FALSE)
+									$remark = [];
+								$remark['failed_type_list'] = $post['failed_type_list'];
+								$this->user_certification_model->update($post['id'], [
+									'remark' => json_encode($remark)
+								]);
+							}
 						}
 						$this->load->library('Certification_lib');
 						$this->load->model('log/log_usercertification_model');
@@ -1344,6 +1293,15 @@ class Certification extends MY_Admin_Controller {
                     if($post['certification_id'] == 1003){
                         $image_name = 'legal_person_mq_image';
                     }
+                    if($post['certification_id'] == 9){
+                        $image_name = 'postal_image';
+                    }
+                    if($post['certification_id'] == 1018){
+                        $image_name = 'RealLandOwnership';
+                    }
+                    if($post['certification_id'] == 501){
+                        $image_name = 'labor_image';
+                    }
 
                     if(isset($certification_content[$image_name])){
                         if(is_array($certification_content[$image_name])){
@@ -1352,6 +1310,7 @@ class Certification extends MY_Admin_Controller {
                             $certification_content[$image_name] = $media;
                         }
                     }else{
+                        $certification_content[$image_name] = [];
                         $certification_content[$image_name] = array_merge($certification_content[$image_name],$media);
                     }
 					$certification_content['group_id'] = $group_id;

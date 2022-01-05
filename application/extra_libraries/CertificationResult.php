@@ -24,14 +24,15 @@ abstract class MassageDisplay
 class CertificationResult implements CertificationResultInterface
 {
 	protected $msgList;
-	protected $status;
+	protected $manualStatus;
 	protected $resubmitExpirationMonth;
 	protected $banResubmit;
+    public static $FAILED_MESSAGE = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。';
 
 	public function __construct($status = 0, $resubmitExpirationMonth=6)
 	{
 		$this->msgList = [];
-		$this->status = $status;
+		$this->manualStatus = $status;
 		$this->resubmitExpirationMonth = $resubmitExpirationMonth;
 		$this->banResubmit = 0;
 	}
@@ -68,13 +69,13 @@ class CertificationResult implements CertificationResultInterface
 	}
 
 	public function setStatus($status) {
-		$this->status = $status;
+		$this->manualStatus = $status;
 	}
 
 	public function getStatus(): int
 	{
 		return array_key_exists(2, $this->msgList) ? 2
-			: (array_key_exists(3, $this->msgList) ? 3 : $this->status);
+			: (array_key_exists(3, $this->msgList) ? 3 : $this->manualStatus);
 	}
 
 	public function setBanResubmit($resubmitExpirationMonth=null) {

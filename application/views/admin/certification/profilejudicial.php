@@ -48,7 +48,7 @@
                                 <form role="form" action="/admin/certification/sendSkbank" method="post">
                                     <table class="table table-striped table-bordered table-hover dataTable">
                                         <tbody>
-                                            <tr style="text-align: center;"><td colspan="2"><span>新光百萬信保微企貸資料確認</span></td></tr>
+                                            <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
                                             <tr><td><span>公司產業別</span></td><td><select name="CompDuType" class="table-input sk-input">
                                                 <option value="01">01:水泥</option>
@@ -274,7 +274,7 @@
                                             foreach ($content['BizLandOwnership'] as $key => $value) { ?>
                                                 <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                     <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                                </a>
+                                                </a><br>
                                             <? }
                                         }?>
                                     <label>建物所有權狀</label><br>
@@ -283,7 +283,7 @@
                                         foreach ($content['BizHouseOwnership'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
+                                            </a><br>
                                         <?}
                                     }?>
                                     <label>實際土地所有權狀</label><br>
@@ -292,7 +292,7 @@
                                         foreach ($content['RealLandOwnership'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
+                                            </a><br>
                                         <? }
                                     }?>
                                     <label>實際建物所有權狀</label><br>
@@ -301,11 +301,16 @@
                                         foreach ($content['RealHouseOwnership'] as $key => $value) { ?>
                                             <a href="<?= isset($value) ? $value : "" ?>" data-fancybox="images">
                                                 <img src="<?= $value ? $value : "" ?>" style='width:30%;max-width:400px'>
-                                            </a>
+                                            </a><br>
                                         <? }
                                     }?>
                                 </div>
                             </fieldset>
+                            <? if( $data->certification_id == 1018 && isset($ocr['upload_page']) ){ ?>
+                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                              <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
+                            </div>
+                            <? } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->

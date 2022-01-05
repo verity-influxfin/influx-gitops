@@ -10,6 +10,9 @@
             span {
                 white-space: nowrap;
             }
+            .is-line-up {
+                display: flex;
+            }
             .btn {
                 width: 30px;
                 height: 30px;
@@ -48,11 +51,11 @@
 			textarea {
 				word-break:keep-all;
 				padding: 0;
-				width: 670px;
-				max-width: 670px;
+                width: 100%;
 				box-sizing: border-box;
 				height: 300px;
 				overflow: auto;
+                resize : none;
 			}
         </style>
     </head>
@@ -66,28 +69,19 @@
                     <h1 style="text-align:center;">授信審核表</h1>
                     <div style="float:right;">
                         <p>
-                            <script language="javascript">
-                                var Today = new Date();
-                                document.write(Today.getFullYear() + " 年 " + (Today.getMonth() + 1) + " 月 " + Today.getDate() + " 日");
-                            </script>
+                            <input id="reportDate" style="border: 0px;">
                         </p>
-                        <p>單位：新台幣千元</p>
                     </div>
                     <div>
-                        <form>
-                            <input type="radio" name="case-type" checked>新案
-                            <input type="radio" name="case-type">增貸
-                            <input type="radio" name="case-type">續約
-                            <input type="radio" name="case-type">改貸
-                            <input type="radio" name="case-type">產品轉換
+                        <!-- 案件類型 -->
+                        <form id="creditCategoryList" class="is-line-up">
                         </form>
                     </div>
                     <div>
-                        <p>
-                            本件核貸層次：<input type="radio" name="action-user">二審人員
-                            <input type="radio" name="action-user">風控長
-                            <input type="radio" name="action-user">總經理
-                        </p>
+                        <!-- 審核人員 -->
+                        <form id="reviewedLevelList" class="is-line-up">
+                            <span>本件核貸層次：</span>
+                        </form>
                     </div>
                     <table class="table">
                         <tbody>
@@ -98,8 +92,8 @@
                                 </td>
                                 <td colspan="2" rowspan="2">
 									<form name="user_type">
-										<div><input type="radio" value="1" name="user_type_radio"><span>學生</span></div>
-	                                    <div><input type="radio" value="2" name="user_type_radio"><span>上班族</span></div>
+										<div><input type="radio" value="1" name="user_type_radio" checked="checked"><span>個人</span></div>
+	                                    <div><input type="radio" value="2" name="user_type_radio"><span>法人</span></div>
 									</form>
                                 </td>
                                 <td rowspan="2"><span>戶籍地址</span></td>
@@ -109,13 +103,13 @@
                             </tr>
                             <tr>
                                 <td colspan="2"><span>身分證字號：</span>
-                                    <input type="text" id="id_card_number">
+                                    <input type="text" id="id_number">
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2"><span>任職公司：</span></td>
                                 <td colspan="2">
-                                    <input type="text" id="company_name">
+                                    <input type="text" id="company">
                                 </td>
                                 <td rowspan="2"><span>常用信箱</span></td>
                                 <td colspan="3" rowspan="2">
@@ -127,7 +121,7 @@
                             <tr>
                                 <td colspan="2"><span>就讀(畢業)學校/科系：</span></td>
                                 <td colspan="2">
-                                    <input type="text" id="director_id">
+                                    <input type="text" id="school">
                                 </td>
                             </tr>
                             <tr>
@@ -144,41 +138,43 @@
                                 </td>
                                 <td><span>信評時間</span></td>
                                 <td>
-                                    <input type="text">
+                                    <input id="creditDate"  type="text">
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="4"><span>產品類別：</span>
-                                    <div><input type="radio" name="is-credit-guarantee" checked><span>學生貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>學生工程師貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>上班族貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>上班族工程師貸</span></div>
-                                    <div><input type="radio" name="is-credit-guarantee"><span>上班族簡易速貸</span></div>
+                                <!-- 產品類別： -->
+                                <td colspan="4">
+                                    <span>產品類別：</span>
+                                    <form id="productCategoryList">
+                                    </form>
                                 </td>
                                 <td><span>信評等級</span></td>
                                 <td>
-                                    <input type="text">
+                                    <input id="creditRank" type="text">
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div id="white"></div>
+                    <div style="float:right;">
+                        <p>單位：新台幣千元</p>
+                    </div>
                     <table class="table">
                         <tbody>
                             <tr>
                                 <td colspan="2"><span>核貸授信總額度(含本案)</span></td>
-                                <td colspan="3"><input type="text"id="loan_list_total"></td>
+                                <td colspan="3"><input type="text"id="unusedCreditLine"></td>
                                 <td rowspan="2"><span>額度到期日</span></td>
-                                <td rowspan="2"><input type="text"></td>
+                                <td rowspan="2"><input id="creditLineExpiredDate" type="text"></td>
                             </tr>
                             <tr>
                                 <td><span>申貸額度及條件</span></td>
                                 <td>
-                                    <input type="radio" name="quota-type" checked><span>單項額度</span><br>
-                                    <input type="radio" name="quota-type"><span>綜合額度</span>
+                                    <form id="applyLineTypeList">
+                                    </form>
                                 </td>
                                 <td>額度合計</td>
-                                <td colspan="2"><input type="text" id="total_amount"></td>
+                                <td colspan="2"><input type="text" id="todayApplyLine"></td>
                             </tr>
                             <tr>
                                 <td>授信種類</td>
@@ -190,49 +186,50 @@
                                 <td>動撥方式</td>
                             </tr>
                         </tbody>
-                        <tbody id="loan_list">
-                            <!-- <tr>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                                <td><input type="text"></td>
-                            </tr> -->
+                        <tbody id="creditLineInfo_approvedCreditList">
                         </tbody>
                         <tbody>
                             <tr>
                                 <th>授信總額度</th>
-                                <td id="loan_list_amount">0</td>
-                                <td id="loan_list_applied_amount">0</td>
+                                <td><input type="text" id="totalUnusedCreditLine"></td>
+                                <td><input type="text" id="totalApplyLine"></td>
                                 <td colspan="4"><canvas class="slash" style="width: 100%;height: 18px;margin: -1px;"></canvas></td>
                             </tr>
                         </tbody>
                     </table>
                     <form>
-                         <p>借款原因：<input class="input" type="text" id="reason" name="txt_CreditUse" size="115"
+                        <p>借款原因：<textarea id="reasonList" type="text" style="height: 100px;width: 100%;"></textarea></p>
+                        <p>還款方式：<input class="input" type="text" id="paymentType" name="txt_RepaymentSources" size="115"
                                 style="text-align: left;border:1px; border-bottom-style: solid;"></p>
-                        <p>還款方式：<input class="input" type="text" name="txt_RepaymentSources" size="115"
-                                style="text-align: left;border:1px; border-bottom-style: solid;"></p>
-                        <p>其他條件：<input class="input" type="text" name="txt_OtherConditions" size="115"
+                        <p>其他條件：<input class="input" type="text" id="otherCondition" name="txt_OtherConditions" size="115"
                                 style="text-align: left;border:1px; border-bottom-style: solid;"></p>
                     </form>
                     <div id="white"></div>
                     <table class="table">
                         <tr>
                             <td style="width: 30px;">審核<br>主管</td>
-                            <td><input type="text"></td>
+                            <td><input type="text" value="風控長"></td>
                             <td style="width: 30px;">審核<br>人員</td>
-                            <td><input type="text"></td>
+                            <td><input type="text" id="creditAnalystName"></td>
                         </tr>
                     </table>
                     <div id="white"></div>
                     <table class="table">
                         <tr>
-                            <td rowspan="7" style="width: 80px;">核貸層級批示</td>
+                            <td rowspan="9" style="width: 80px;">核貸層級批示</td>
                             <td>本次核准額度(仟元)：</td>
-                            <td><input type="text"></td>
+                            <td><input id="unusedCreditLine" type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">一審</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div>ㄧ審意見：</div>
+                                <div><textarea type="text" id="1_opinion" style="height: 100px;"></textarea></div>
+                                <div style="width: 35%;"><span>一審評分：</span><input type="text" id="1_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="1_name" style="width: 90%;height: 20px;"></div>
+                            </td>
                         </tr>
 						<tr>
                             <td colspan="2" style="text-align: center;">二審</td>
@@ -240,8 +237,9 @@
                         <tr>
                             <td colspan="2">
                                 <div>二審意見：</div>
-                                <div><textarea type="text" style="height: 100px;"></textarea></div>
-                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                                <div><textarea type="text" id="2_opinion" style="height: 100px;"></textarea></div>
+                                <div><span>專家分數調整</span><span class="scoringMin"></span><span>~</span><span class="scoringMax"></span><span>：</span><input type="text" id="2_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="2_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
 						<tr>
@@ -250,9 +248,9 @@
                         <tr>
                             <td colspan="2">
                                 <div>風控長意見：</div>
-                                <div><textarea type="text" style="height: 100px;"></textarea></div>
-                                <div><span>專家分數調整（±400）：</span><input type="text" style="width: 75%;height: 20px;"></div>
-                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                                <div><textarea type="text" id="3_opinion" style="height: 100px;"></textarea></div>
+                                <div><span>專家分數調整</span><span class="scoringMin"></span><span>~</span><span class="scoringMax"></span><span>：</span><input type="text" id="3_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="3_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
 						<tr>
@@ -261,9 +259,9 @@
                         <tr>
                             <td colspan="2">
                                 <div>總經理意見：</div>
-                                <div><textarea type="text" style="height: 100px;"></textarea></div>
-								<div><span>專家分數調整（±1500）：</span><input type="text" style="width: 75%;height: 20px;"></div>
-                                <div><span>姓名：</span><input type="text" style="width: 90%;height: 20px;"></div>
+                                <div><textarea type="text" id="4_opinion" style="height: 100px;"></textarea></div>
+								<div><span>專家分數調整</span><span class="scoringMin"></span><span>~</span><span class="scoringMax"></span><span>：</span><input type="text" id="4_score" style="width: 65%;height: 20px;"></div>
+                                <div><span>姓名：</span><input type="text" id="4_name" style="width: 90%;height: 20px;"></div>
                             </td>
                         </tr>
                     </table>
@@ -295,6 +293,9 @@
                     </tr> -->
                 </table>
                 <div id="white"></div>
+                <div style="float:right;">
+                    <p>單位：新台幣千元</p>
+                </div>
                 <h3>擔保品明細</h3>
                 <table class="table">
                     <tbody>
@@ -372,9 +373,12 @@
                     </tr>
                 </table>
                 <div id="white"></div>
+                <div style="float:right;">
+                    <p>單位：新台幣千元</p>
+                </div>
                 <h3>現放明細</h3>
-                <table class="table">
-                    <tbody>
+                <div style="display:flex;">
+                    <table class="table " style="width:75%;">
                         <tr>
                             <td rowspan="2">授信種類(會計科目)</td>
                             <td>現有核准額度</td>
@@ -382,61 +386,37 @@
                             <td rowspan="2">利(費)率</td>
                             <td rowspan="2">額度到期日</td>
                             <td rowspan="2">餘額最後到期日</td>
-                            <td colspan="2">
-                                <div style="display: flex;">最近一年內（<input type="text"
-                                        style="height:initial;width: 20px;">年<input type="text"
-                                        style="height:initial;width: 20px;">月）</div>
-                            </td>
                         </tr>
                         <tr>
-                            <td colspan="2">
-                                <div style="display: flex;">（<input type="text" style="height:initial;width: 20px;">年<input
-                                        type="text" style="height:initial;width: 20px;">月<input type="text"
-                                        style="height:initial;width: 20px;">日）</div>
-                            </td>
-                            <td>最高額度</td>
-                            <td>最高餘額</td>
+                            <td colspan="2"><input type="text" id="approvedDate"></td>
                         </tr>
-                    </tbody>
-                    <tbody id="loan_total0">
-                        <!-- <tr>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                        </tr> -->
-                    </tbody>
-                    <tbody id="loan_total1">
-
-                        <tr>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td><input type="text"></td>
-                            <td colspan="2" rowspan="$param" style="vertical-align:text-top;">
-                                <div>其他說明:</div>
-                                <div><input type="text"></div>
-                            </td>
-                        </tr>
-                    </tbody>
-					<tbody id="loan_total">
-					</tbody>
-                    <tbody>
+                        <tbody id="cashLoanInfo_approvedCreditList">
+                        </tbody>
                         <tr>
                             <td>合計</td>
-                            <td><canvas class="slash" style="width: 100%;height: 18px;margin: -1px;"></canvas></td>
-                            <td><input type="text"></td>
-                            <td colspan="3"><canvas class="slash" style="width: 100%;height: 18px;margin: -1px;"></canvas>
+                            <td><canvas class="slash" style="width: 100%;height: 17px;margin: -1px;"></canvas></td>
+                            <td><input type="text" id="lastYearTotalLoanAmount"></td>
+                            <td colspan="3"><canvas class="slash" style="width: 100%;height: 17px;margin: -1px;"></canvas>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
+                    </table>
+                    <table class="table "style="width:25%;">
+                        <tr>
+                            <td colspan="2" style="white-space: nowrap;">最近一年內(<input type="text" style="width:50%;" id="lastYearDate">)</td>
+                        </tr>
+                        <tr>
+                            <td>總額度</td>
+                            <td>總餘額</td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="lastYearTotalLine"></td>
+                            <td><input type="text" id="lastYearTotalLoanAmount2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input id="note" type="text"></td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
         </div>
@@ -452,66 +432,166 @@
             ctx.lineTo(0, item.height);
             ctx.stroke();
         });
+
+        // 授審表選單項目 html
+        function create_item_option_html(type,name,option_name,option_value){
+            return `<div><input type="${type}" name="${name}" value="${option_value}"><span>${option_name}</span></div>`;
+        }
+
+        // 取得授審表選單項目
+        function get_default_item(target_id,type){
+            let report_item = {};
+            $.ajax({
+                type: "GET",
+                url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=${type}`,
+                async: false,
+                success: function (response) {
+                    report_item = response.response;
+                },
+                error: function(error) {
+                    alert(error);
+                }
+            });
+            return report_item;
+        }
+
+        // 取得案件資料
+        function get_report_data(target_id,type){
+            let report_data = {};
+            $.ajax({
+                type: "GET",
+                url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=${type}`,
+                async: false,
+                success: function (response) {
+                    report_data = response.response;
+                },
+                error: function(error) {
+                    alert(error);
+                }
+            });
+            return report_data;
+        }
+
+        // 生成資料列 html
+        function create_table_list_html(data_list){
+            let html = '';
+            if(data_list){
+                html = '<tr>';
+                Object.keys(data_list).forEach(function (key) {
+                    html += `<td><input type="text" value="${data_list[key]}"></td>`;
+                })
+                html += '</tr>';
+            }
+            return html;
+        }
+
         $(document).ready(function () {
           let urlString = window.location.href;
           let url = new URL(urlString);
           let target_id = url.searchParams.get("target_id");
           let type = url.searchParams.get("type");
 		  let td_array = ['relationship','loan_list','loan_total'];
+          let is_checkbox = ['productCategory', 'creditCategory', 'reviewedLevel', 'applyLineType'];
+          let is_data_array = ['approvedCreditList', 'reasonList', 'reviewedInfoList', 'approvedCreditList','relation'];
 
-          $.ajax({
-              type: "GET",
-              url: `/admin/creditmanagement/get_data?target_id=${target_id}&type=${type}`,
-              success: function (response) {
-                  if (!response) {
-                      alert(response);
-                      return;
+          report_item = get_default_item(target_id,type);
+
+          if(jQuery.isEmptyObject(report_item)){
+              alert('無法取得項目選單，請聯絡開發人員');
+              return;
+          }
+
+          // 生成表格選單項目
+          Object.keys(report_item).forEach(function (area_name) {
+              Object.keys(report_item[area_name]).forEach(function (form_title) {
+                  Object.keys(report_item[area_name][form_title]).forEach(function (form_option) {
+                      if(form_title == 'productCategoryList'){
+                          type = 'checkbox';
+                      }else{
+                          type = 'radio';
+                      }
+                      option_html = create_item_option_html(type,form_title,report_item[area_name][form_title][form_option],form_option);
+                      $(`#${form_title}`).append(option_html);
+                  })
+              })
+          })
+          // 專家調整分數
+          if(report_item.hasOwnProperty("creditLineInfo") && report_item.creditLineInfo.hasOwnProperty("scoringMin") && report_item.creditLineInfo.hasOwnProperty("scoringMax")){
+              $(`.scoringMin`).text(`${report_item.creditLineInfo.scoringMin}`);
+              $(`.scoringMax`).text(`${report_item.creditLineInfo.scoringMax}`);
+          }
+
+          report_data = get_report_data(target_id,type);
+
+          if(jQuery.isEmptyObject(report_data)){
+              alert('無法取得受審表資料，請聯絡開發人員');
+              return;
+          }
+
+          // 填寫資料
+          Object.keys(report_data).forEach(function (area_name) {
+              Object.keys(report_data[area_name]).forEach(function (input_title) {
+                  // 資料非物件
+                  if(typeof(report_data[area_name][input_title]) !== 'object'){
+                      // 判斷是否為選單
+                      if(is_checkbox.includes(input_title)){
+                          let checkbox_name = input_title + 'List';
+                          let radios = $(`input:radio[name=${checkbox_name}]`);
+                          radios.filter(`[value=${report_data[area_name][input_title]}]`).prop('checked', true);
+                      }else{
+                          $(`#${input_title}`).val(report_data[area_name][input_title]);
+                      }
+                  }else{
+                      // 判斷是否為表格資料
+                      if(is_data_array.includes(input_title)){
+                          // 借款原因
+                          if(input_title == 'reasonList'){
+                              let data_reason = '';
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+                                  data_reason += report_data[area_name][input_title][list_key] + '、\n';
+                              })
+                              $(`#reasonList`).val(data_reason);
+                              // 核貸層級批示
+                          }else if(input_title == 'reviewedInfoList'){
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+                                  $(`#${list_key}_name`).val(report_data[area_name][input_title][list_key]['name']);
+                                  $(`#${list_key}_opinion`).val(report_data[area_name][input_title][list_key]['opinion']);
+                                  $(`#${list_key}_score`).val(report_data[area_name][input_title][list_key]['score']);
+                              })
+                          }else{
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+
+                                  // 更改動撥方式與計息方式
+                                  if(area_name == 'creditLineInfo' && input_title == 'approvedCreditList'){
+                                      // 計息方式
+                                      report_data[area_name][input_title][list_key]['interestType'] =
+                                        report_item['creditLineInfo']['interestTypeList'].hasOwnProperty(`${report_data[area_name][input_title][list_key]['interestType']}`)
+                                        ? report_item['creditLineInfo']['interestTypeList'][`${report_data[area_name][input_title][list_key]['interestType']}`]
+                                        : report_data[area_name][input_title][list_key]['interestType'];
+                                      // 動撥方式
+                                      report_data[area_name][input_title][list_key]['drawdownType'] =
+                                        report_item['creditLineInfo']['drawdownTypeList'].hasOwnProperty(`${report_data[area_name][input_title][list_key]['drawdownType']}`)
+                                        ? report_item['creditLineInfo']['drawdownTypeList'][`${report_data[area_name][input_title][list_key]['drawdownType']}`]
+                                        : report_data[area_name][input_title][list_key]['drawdownType'];
+                                  }
+                                  list_html = create_table_list_html(report_data[area_name][input_title][list_key]);
+                                  $(`#${area_name}_${input_title}`).append(list_html);
+                              })
+                          }
+                      }
+                      if(is_checkbox.includes(input_title)){
+                          let checkbox_name = input_title + 'List';
+                          let radios = $(`input:checkbox[name=${checkbox_name}]`);
+                          if(input_title == 'productCategory'){
+                              Object.keys(report_data[area_name][input_title]).forEach(function (list_key) {
+                                  radios.filter(`[value=${report_data[area_name][input_title][list_key]}]`).prop('checked', true);
+                              })
+                          }
+                      }
                   }
-                  // console.log(response);
-                  // return
-                  if(response.response){
-                    Object.keys(response.response).forEach(function (key) {
-						// console.log(key);
-						if( td_array.includes(key)){
-							if(Array.isArray(response.response[key])){
-								// console.log(response.response[key]);
-								Object.keys(response.response[key]).forEach(function (key1) {
-									// console.log(response.response[key][key1]);
-									html_id = key;
-									td_string = '<tr>';
-									Object.keys(response.response[key][key1]).forEach(function (key2) {
-										td_string += `<td><input type="text" value="${response.response[key][key1][key2]}"></td>`;
-									})
-									if(key == 'loan_total' && key1 == 0){
-										html_id = key + '0';
-										td_string += `<td><input type="text"></td><td><input type="text"></td>`;
-									}
-									if(key == 'loan_total' && key1 == 1){
-										html_id = key + '1';
-										td_string += `<td colspan="2" rowspan="$param" style="vertical-align:text-top;">
-											<div>其他說明:</div>
-											<div><input type="text"></div>
-										</td>`;
-									}
-									// console.log(response.response[key][key1][key2]);
-									td_string += '</tr>';
-									$(`#${html_id}`).append(td_string);
-								})
-							}
-						}else{
-							if(key == 'company_type'){
-								document.company_type.company_type_radio.value=response.response[key];
-							}else{
-								$(`#${key}`).val(response.response[key]);
-							}
-						}
-                    })
-                  }
-              },
-              error: function(error) {
-                  alert(response);
-              }
-          });
+              })
+          })
+          return;
         });
     </script>
 

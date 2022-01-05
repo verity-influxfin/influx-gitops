@@ -15,6 +15,9 @@ class S3_upload {
 	public $vedio_type = array(
 		'video/mp4' =>	'.mp4' ,
 		'video/mov'	 => '.mov' ,
+		'video/wav'	 => '.wav' ,
+		'audio/wave'	 => '.wav' ,
+
 	);
 	private $client;
 
@@ -22,6 +25,7 @@ class S3_upload {
     {
         $this->CI 		= &get_instance();
 		$this->CI->load->model('log/log_image_model');
+		$this->CI->load->model('user/sound_record_model');
 		$this->client 	= S3Client::factory(
 			array(
 				'version' 	=> 'latest',
@@ -341,28 +345,47 @@ class S3_upload {
 	}
 
 	//return id
-	public function media_id ($files,$name='media',$user_id=0,$type='test')
+	public function media_id($files,$name='media',$user_id=0,$type='test',$logType=1,$data=[])
     {
 		if (isset($files[$name]) && $files[$name]) {
 
 			if(isset($this->vedio_type[$files[$name]['type']])){
 				$fileType = $this->vedio_type[$files[$name]['type']];
 				$format= strrchr($files['media']['name'],'.');
+
+				$key = $type.'/'.$name.$user_id.round(microtime(true) * 1000).rand(1,99).$format;
+				if($logType == 2) {
+					// 聲紋的存擋格式
+					$key = $type . "/" . ($data['group'] ?? '0') . "/" . ($data['label'] ?? round(microtime(true) * 1000) . rand(1, 99)) . $format;
+				}
+
 				$result = $this->client->putObject(array(
 					'Bucket' 		=> S3_BUCKET,
-					'Key'    		=> $type.'/'.$name.$user_id.round(microtime(true) * 1000).rand(1,99).$format,
+					'Key'    		=> $key,
 					'SourceFile'   		=> $files['media']['tmp_name']
 				));
 
 				if(isset($result['ObjectURL'])){
-					$data = array(
-						'type'		=> $type,
-						'user_id'	=> $user_id,
-						'file_name'	=> $files[$name]['name'],
-						'url'		=> $result['ObjectURL'],
-					);
-
-					$media_id = $this->CI->log_image_model->insert($data);
+					if($logType == 1) {
+						$insertData = array(
+							'type'		=> $type,
+							'user_id'	=> $user_id,
+							'file_name'	=> $files[$name]['name'],
+							'url'		=> $result['ObjectURL'],
+						);
+						$media_id = $this->CI->log_image_model->insert($insertData);
+					}else {
+						$insertData = array(
+							'type'		=> $type,
+							'user_id'	=> $user_id,
+							'label'		=> $data['label'] ?? '',
+							'group'		=> $data['group'] ?? '',
+							'status'	=> $data['status'] ?? '1',
+							'file_name'	=> $files[$name]['name'],
+							'url'		=> $result['ObjectURL'],
+						);
+						$media_id = $this->CI->sound_record_model->insert($insertData);
+					}
 					return $media_id;
 				}else{
 					$this->error = 'upload error.';

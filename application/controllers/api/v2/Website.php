@@ -694,4 +694,159 @@ class Website extends REST_Controller {
         $product = $this->sub_product_profile($product,$sub_product_data);
         return $product;
     }
+
+    /**
+     * @api {get} /v2/website/company_name 官網 利用統一編號取得公司(或商行)名稱
+     * @apiVersion 0.2.0
+     * @apiGroup Website
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     * "result": "SUCCESS",
+     * "data": "普匯金融科技股份有限公司"
+     * }
+     */
+    public function company_name_get()
+    {
+        $tax_id = $this->input->get('tax_id');
+        if (empty($tax_id))
+        {
+            $this->response([
+                'result' => 'ERROR',
+                'data' => ''
+            ]);
+        }
+
+        $data = $this->company_info($tax_id);
+        if (isset($data['result']) && $data['result'] === TRUE && isset($data['data'][0]['Company_Name']))
+        {
+            $this->response(['result' => 'SUCCESS', 'data' => $data['data'][0]['Company_Name']]);
+        }
+
+        $data = $this->president_info($tax_id);
+        if (isset($data['result']) && $data['result'] === TRUE && isset($data['data'][0]['Business_Name']))
+        {
+            $this->response(array('result' => 'SUCCESS', 'data' => $data['data'][0]['Business_Name']));
+        }
+
+        $this->response(array('result' => 'SUCCESS', 'data' => ''));
+    }
+
+    private function company_info(string $tax_id)
+    {
+        try
+        {
+            $this->load->library('Gcis_lib');
+            $data = $this->gcis_lib->get_company_info($tax_id);
+
+            return ['result' => TRUE, 'data' => $data];
+        }
+        catch (Exception $e)
+        {
+            return ['result' => FALSE, 'msg' => $e->getMessage()];
+        }
+    }
+
+    private function president_info(string $tax_id)
+    {
+        try
+        {
+            $this->load->library('Gcis_lib');
+            $data = $this->gcis_lib->get_president_info($tax_id);
+
+            return ['result' => TRUE, 'data' => $data];
+        }
+        catch (Exception $e)
+        {
+            return ['result' => FALSE, 'msg' => $e->getMessage()];
+        }
+    }
+
+    /*
+     * @api {get} /v2/website/total_loan_amount 出借方 累積放款(媒合)金額
+     * @apiVersion 0.2.0
+     * @apiName GetWebsiteTotalLoanAmount
+     * @apiGroup Website
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} amount 累積媒合金額
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *        "amount": 9999,
+     *      }
+     *    }
+     */
+    public function total_loan_amount_get()
+    {
+        $this->load->model('loan/target_model');
+
+        $data = [
+            'amount' => $this->target_model->get_total_loan_amount(),
+        ];
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    /**
+     * @api {get} /v2/website/transaction_count 出借方 累積交易(成交)筆數
+     * @apiVersion 0.2.0
+     * @apiName GetWebsiteTransactionCount
+     * @apiGroup Website
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} count 累積交易筆數
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *        "count": 9999,
+     *      }
+     *    }
+     */
+    public function transaction_count_get()
+    {
+        $this->load->model('loan/target_model');
+
+        $data = [
+            'count' => $this->target_model->get_transaction_count(),
+        ];
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    /**
+     * @api {get} /v2/website/member_count 會員 累積註冊用戶
+     * @apiVersion 0.2.0
+     * @apiName GetWebsiteMemberCount
+     * @apiGroup Website
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} count 累積註冊用戶
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *        "count": 9999,
+     *      }
+     *    }
+     */
+    public function member_count_get()
+    {
+        $this->load->model('user/user_model');
+
+        $data = [
+            'count' => $this->user_model->get_member_count(),
+        ];
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
 }

@@ -17,6 +17,7 @@ class Target extends MY_Admin_Controller {
 		$this->load->model('loan/credit_model');
 		$this->load->library('target_lib');
 		$this->load->library('financial_lib');
+		$this->load->library('Spreadsheet_lib');
  	}
 
     public function isJson($inputString) {
@@ -31,6 +32,33 @@ class Target extends MY_Admin_Controller {
 		$where		= [];
 		$list		= [];
 		$fields 	= ['status','delay'];
+
+		if (isset($input['export'])) {
+			switch ($input['export']) {
+				case 2:
+					$title_rows = [
+						'user_id' => ['name' => '借款人ID'],
+						'product_name' => ['name' => '產品名稱'],
+						'target_no' => ['name' => '案號', 'width' => 20],
+						'credit_level' => ['name' => '核准信評'],
+						'user_meta_1' => ['name' => '學校/公司', 'width' => 25],
+						'user_meta_2' => ['name' => '科系/職位', 'width' => 25],
+						'invest_amount' => ['name' => '債權總額'],
+						'lender' => ['name' => '投資人ID'],
+						'unpaid_principal' => ['name' => '逾期本金'],
+						'loan_date' => ['name' => '放款日期', 'width' => 12],
+                        'limit_date' => ['name' => '首逾日期', 'width' => 12],
+						'delayed_days' => ['name' => '逾期天數'],
+						'unpaid_interest' => ['name' => '尚欠利息'],
+						'delay_interest' => ['name' => '延滯息'],
+						'damage' => ['name' => '違約金']
+					];
+					$data_rows = $this->target_model->getDelayedReport($input);
+					$this->spreadsheet_lib->save($title_rows, $data_rows);
+					return;
+			}
+		}
+
 		foreach ($fields as $field) {
 			if (isset($input[$field])&&$input[$field]!='') {
 			    $where[$field] = $input[$field];
@@ -548,8 +576,6 @@ class Target extends MY_Admin_Controller {
 
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
-		if($points>400){$points=400;}
-		if($points<-400){$points=-400;}
 
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
@@ -577,7 +603,7 @@ class Target extends MY_Admin_Controller {
                 : false;
             $level = $certificationStatus ? 3 : 4 ;
         }
-        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
+        $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
         $credit["amount"] = $newCredits["amount"];
         $credit["points"] = $newCredits["points"];
         $credit["level"] = $newCredits["level"];
@@ -643,7 +669,7 @@ class Target extends MY_Admin_Controller {
                 $level = $certificationStatus ? 3 : 4 ;
             }
             $this->load->library('credit_lib');
-            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level);
+            $newCredits = $this->credit_lib->approve_credit($userId,$target->product_id,$target->sub_product_id, $this->approvalextra, $level, false, false, $target->instalment);
         }
 
         $remark = (empty($target->remark) ? $remark : $target->remark . ', '.$remark);
@@ -658,7 +684,7 @@ class Target extends MY_Admin_Controller {
                     'user_id' => $userId,
                     'product_id' => $target->product_id,
                     'sub_product_id'=> $target->sub_product_id,
-                    'status' => 1
+                    'status' => 1,
                 ],
                 ['status'=> 0]
             );
@@ -743,7 +769,10 @@ class Target extends MY_Admin_Controller {
                     'certification_id' => 4,
                     'status' => 1,
                 ]);
-                $instagramCertificationDetailArray = json_decode($instagramCertificationDetail->content, true);
+
+                $instagramCertificationDetailArray = isset($instagramCertificationDetail->content) &&
+                 is_array(json_decode($instagramCertificationDetail->content, true))
+                 ? json_decode($instagramCertificationDetail->content, true) : [];
                 if (isset($instagramCertificationDetailArray["type"]) && $instagramCertificationDetailArray["type"] == "instagram") {
                     $picture = $instagramCertificationDetailArray["info"]["picture"];
                     $this->usermeta->setInstagramPicture($picture);

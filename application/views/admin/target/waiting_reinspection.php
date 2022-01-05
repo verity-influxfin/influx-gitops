@@ -359,13 +359,45 @@
                       let comp_id = $('#skbankCompId').text();
                       if(case_no && comp_id){
                           let request_data = [];
-                          let data_count = Object.keys(response.response).length;
+                          let data_count = 0;
+                          Object.keys(response.response).forEach( (image_type_key) => {
+                              data_count += Object.keys(response.response[image_type_key]).length;
+                          });
                           Object.keys(response.response).forEach( (image_type_key) => {
                               Object.keys(response.response[image_type_key]).forEach( (key) => {
                                   console.log(response.response[image_type_key][key]);
                                   let skbank_image_type = image_type_key;
                                   let skbank_image_url = response.response[image_type_key][key];
                                   let image_count = key;
+                                  let doc_file_type = 0;
+
+                                  let img_type = skbank_image_url.replace(/.*\./, '');
+                                    switch (img_type) {
+                                        case 'pdf':
+                                            doc_file_type = 1;
+                                            break;
+                                        case 'jpg':
+                                            doc_file_type = 2;
+                                            break;
+                                        case 'jpeg':
+                                            doc_file_type = 3;
+                                            break;
+                                        case 'png':
+                                            doc_file_type = 4;
+                                            break;
+                                        case 'tiff':
+                                            doc_file_type = 5;
+                                            break;
+                                        case 'heic':
+                                            doc_file_type = 6;
+                                            break;
+                                        case 'heif':
+                                            doc_file_type = 7;
+                                            break;
+                                      default:
+                                            doc_file_type = 2;
+                                            break;
+                                    }
                                   getMappingMsgNo(caseId, 'send', image_type_key,  (data) => {
                                       msg_data = data;
                                       msg_no = msg_data.data.msg_no;
@@ -375,7 +407,7 @@
                                           'CaseNo' : case_no,
                                           'DocType' : image_type_key,
                                           'DocSeq' : parseInt(image_count)+1,
-                                          'DocFileType' : 4,
+                                          'DocFileType' : doc_file_type,
                                           'DocUrl' : skbank_image_url
                                       });
                                       if(Object.keys(request_data).length == data_count){
