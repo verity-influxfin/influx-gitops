@@ -8,15 +8,15 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<div class="d-flex">
+			<form class="d-flex" @submit.prevent="getBlockUserById">
 				<div class="p-2">會員ID</div>
 				<div class="p-2">
-					<input type="text" class="form-control">
+					<input type="text" class="form-control" required>
 				</div>
 				<div class="search-btn">
-					<button class="btn btn-primary">搜尋</button>
+					<button class="btn btn-primary" type="submit">搜尋</button>
 				</div>
-			</div>
+			</form>
 		</div>
 		<div class="p-3">
 			<h4>單一user</h4>
@@ -32,7 +32,7 @@
 						<th>規則細項</th>
 						<th>風險等級</th>
 						<th>執行狀態</th>
-						<th>備註</th>
+						<th style="width: 150px;">備註</th>
 						<th>會員資訊</th>
 					</tr>
 				</thead>
@@ -82,7 +82,7 @@
 						<th>規則細項</th>
 						<th>風險等級</th>
 						<th>執行狀態</th>
-						<th>備註</th>
+						<th style="width: 150px;">備註</th>
 						<th>會員資訊</th>
 					</tr>
 				</thead>
@@ -115,7 +115,7 @@
 	</div>
 	<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content">
+			<form class="modal-content" @submit.prement="updateStatus">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -126,7 +126,7 @@
 					<div class="d-flex mb-4">
 						<div class="col-20 input-require">調整狀態：</div>
 						<div class="col">
-							<select name="" id="" class="w-100 form-control" required>
+							<select name="" id="" class="w-100 form-control" v-model="updateStatusForm.blockTimeText" required>
 								<option value=""></option>
 								<option value="1" label="封鎖三個月">封鎖三個月</option>
 								<option value="2" label="封鎖六個月">封鎖六個月</option>
@@ -137,7 +137,7 @@
 					<div class="d-flex mb-4">
 						<div class="col-20 input-require">調整原因：</div>
 						<div class="col">
-							<input class="w-100 form-control" required>
+							<input class="w-100 form-control" v-model="updateStatusForm.blockRemark" required>
 						</div>
 					</div>
 					<div class="d-flex justify-between mx-5 mb-5">
@@ -150,7 +150,7 @@
 	</div>
 	<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content">
+			<form class="modal-content" @submit.prevent="blockUserAdd" >
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -161,46 +161,53 @@
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">符合黑名單規則：</div>
 						<div class="col">
-							<select name="" id="" class="w-100 form-control" required>
+							<select name="" id="" class="w-100 form-control" v-model="blockUserAddForm.blockRule"
+								required>
 								<option value=""></option>
-								<option value="">1</option>
+								<option value="信用不良紀錄">信用不良紀錄</option>
+								<option value="第三方資料結果">第三方資料結果</option>
+								<option value="反詐欺規則">反詐欺規則</option>
+								<option value="其他(人為加入)">其他(人為加入)</option>
+								<option value="信用不良紀錄">授信政策</option>
 							</select>
 						</div>
 					</div>
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">規則細項：</div>
 						<div class="col">
-							<input type="text" class="w-100 form-control">
+							<input type="text" class="w-100 form-control" v-model="blockUserAddForm.blockDescription"
+								required>
 						</div>
 					</div>
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">風險等級：</div>
 						<div class="col">
-							<select class="form-control">
+							<select class="form-control" v-model="blockUserAddForm.blockRisk" required>
 								<option value=""></option>
-								<option value="1">高</option>
-								<option value="2">中</option>
-								<option value="3">低</option>
-								<option value="4">拒絕</option>
-								<option value="5">無</option>
+								<option value="無">無</option>
+								<option value="低風險">低風險</option>
+								<option value="中風險">中風險</option>
+								<option value="高風險">高風險</option>
+								<option value="拒絕">拒絕</option>
 							</select>
 						</div>
 					</div>
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">執行狀態：</div>
 						<div class="col">
-							<select id="status" class="form-control">
+							<select id="status" class="form-control" v-model="blockUserAddForm.blockTimeText" required>
 								<option value=""></option>
-								<option value="1" label="封鎖三個月">封鎖三個月</option>
-								<option value="2" label="封鎖六個月">封鎖六個月</option>
-								<option value="3" label="拒絕">拒絕</option>
+								<option value="封鎖三個月">封鎖三個月</option>
+								<option value="封鎖六個月">封鎖六個月</option>
+								<option value="永久封鎖">永久封鎖</option>
 							</select>
 						</div>
 					</div>
 					<div class="d-flex mb-2">
-						<div class="col-30">備註:</div>
+						<div class="col-30 input-require">備註:</div>
 						<div class="col">
-							<textarea rows="7" class="w-100 form-control"></textarea>
+							<textarea rows="7" class="w-100 form-control" v-model="blockUserAddForm.blockRemark"
+								required></textarea>
 						</div>
 					</div>
 
@@ -237,78 +244,11 @@
 		</div>
 	</div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
-	const buttonToID = (id) => {
-		return `
-		<div class="d-flex">
-			<button class="btn btn-default mr-2" data-toggle="modal" data-target="#deductModal">
-				<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
-			</button>
-		</div>
-		`
-	}
-	const idGroup = (id, status) => {
-		if (status === 'disabled') {
-			// 已移除
-			return `
-			<div class="d-flex flex-column">
-				<div class="mb-2">${id}</div>
-				<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal">
-					已移除
-				</button>
-			</div>
-			`
-		}
-		if (status === 'new') {
-			return `
-			<div class="d-flex flex-column">
-				<div class="mb-2">${id}</div>
-				<button class="btn btn-info mr-2" data-toggle="modal" data-target="#newModal">
-					新增
-				</button>
-			</div>
-			`
-		}
-		if (status === 'overdue') {
-			return `
-			<div class="d-flex flex-column">
-				<div class="mb-2">${id}</div>
-				<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
-					已過期
-				</button>
-			</div>
-			`
-		}
-		return `
-			<div class="d-flex flex-column">
-				<div class="mb-2">${id}</div>
-				<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal">
-					移除
-				</button>
-			</div>
-		`
-	}
-	const statusGroup = (text, status) => {
-		if (status === 'disabled') {
-			return `
-			<div class="d-flex flex-column">
-				<div class="mb-2">${text}</div>
-				<button class="btn btn-default mr-2" disabled>
-					已移除
-				</button>
-			</div>
-			`
-		}
-		return `
-			<div class="d-flex flex-column">
-				<div class="mb-2">${text}</div>
-				<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal">
-					調整
-				</button>
-			</div>
-			`
-	}
 	$(document).ready(function () {
 		const t1 = $('#search-table').DataTable({
 			'ordering': false,
@@ -352,26 +292,303 @@
 		$('#rule-option').on('change', function () {
 			t2.search(this.selectedOptions[0].label).draw()
 		})
-
-
-		for (let index = 0; index < 3; index++) {
-			addRow(t1, [idGroup('14675', 'new'), 2222, 333, '信用不良紀錄', 'rules', '高', '封鎖三個月', '.....'])
-		}
-		addRow(t2, [idGroup(2222, 'overdue'), 2222, 333, '信用不良紀錄', 'rules', '高', statusGroup('解鎖', ''), '.....'])
-		for (let index = 0; index < 15; index++) {
-			const rule = Math.random() > 0.5 ? '信用不良紀錄' : '反詐欺規則'
-			const status = Math.random() > 0.5 ? '' : 'disabled'
-			addRow(t2, [idGroup(index, status), 2222, 333, rule, 'rules', '高', statusGroup('封鎖三個月', status), '.....'])
-		}
-		t1.draw()
-		t2.draw()
+		// mounted 因須確保jquery能用
+		v.getAllBlockUsers()
 	});
+	const v = new Vue({
+		el: '#page-wrapper',
+		data() {
+			return {
+				allBlockUsers: [
+					{
+						'userId': 44291,
+						'blockDescription': '疑似聯徵造假',
+						'blockInfo': {
+							'blockTimeText': '封鎖三個月',
+							'action': 'block-apply-product',
+							'startAt': 1641213321,
+							'endAt': 2505126921
+						},
+						'blockRemark': '調整狀態: 封鎖三個月\n調整原因: 重新提供非偽造支聯徵報告',
+						'blockRisk': '中風險',
+						'blockRule': '信用不良紀錄',
+						'history': [],
+						'status': 0,
+						'updatedAt': 1641213321,
+						'updatedBy': '44291',
+						'updateReason': '加入黑名單'
+					},
+					{
+						'userId': 44291,
+						'blockDescription': '疑似聯徵造假',
+						'blockInfo': {
+							'blockTimeText': '封鎖三個月',
+							'action': 'block-apply-product',
+							'startAt': 1641213321,
+							'endAt': 2505126921
+						},
+						'blockRemark': '調整狀態: 封鎖三個月\n調整原因: 重新提供非偽造支聯徵報告',
+						'blockRisk': '中風險',
+						'blockRule': '信用不良紀錄',
+						'history': [],
+						'status': 1,
+						'updatedAt': 1641213321,
+						'updatedBy': '44291',
+						'updateReason': '加入黑名單'
 
-	function addRow(table, [itemA, keyB, keyC, keyD, keyE, keyF, itemG, keyH]) {
-		table.row.add([itemA, keyB, keyC, keyD, keyE, keyF, itemG, keyH, buttonToID(47346)])
-	}
+					},
+				],
+				allBlockUserParam: {
+					blockRule: null,
+					blockTimeText: null
+				},
+				searchUserId: null,
+				searchUserData: {
+					'userId': 12333,
+					'blockDescription': '疑似聯徵造假',
+					'blockInfo': {
+						'blockTimeText': '封鎖三個月',
+						'action': 'block-apply-product',
+						'startAt': 1641213321,
+						'endAt': 2505126921
+					},
+					'blockRemark': '調整狀態: 封鎖三個月\n調整原因: 重新提供非偽造支聯徵報告',
+					'blockRisk': '中風險',
+					'blockRule': '信用不良紀錄',
+					'history': [],
+					'status': 1,
+					'updatedAt': 1641213321,
+					'updatedBy': '44291',
+					'updateReason': '加入黑名單'
+				},
+				blockUserAddForm: {
+					userId: null,
+					blockRule: null,
+					blockDescription: null,
+					blockRemark: null,
+					blockRisk: null,
+					blockTimeText: null,
+				},
+				updateStatusForm:{
+					userId:null,
+					blockRemark:null,
+					blockTimeText:null,
+				}
+			}
+		},
+		methods: {
+			convertTime(time) {
+				d = new Date(time * 1000)
+				return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+			},
+			setMainTableRow(item) {
+				const buttonToID = (id) => {
+					return `<div class="d-flex">
+								<button class="btn btn-default mr-2" data-toggle="modal" data-target="#deductModal">
+									<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
+								</button>
+							</div>`
+				}
+				const idGroup = (id, status) => {
+					if (status === 0) {
+						// 取消封鎖
+						return `<div class="d-flex flex-column">
+									<div class="mb-2">${id}</div>
+									<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal">
+										已移除
+									</button>
+								</div>`
+					}
+					if (status === 1) {
+						// 封鎖中
+						return `<div class="d-flex flex-column">
+							<div class="mb-2">${id}</div>
+							<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal">
+								移除
+							</button>
+						</div>`
+					}
+					if (status === 2) {
+						// 封鎖時間已過
+						return `<div class="d-flex flex-column">
+								<div class="mb-2">${id}</div>
+								<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
+									已過期
+								</button>
+							</div>`
+					}
+					return `<div class="d-flex flex-column">
+									<div class="mb-2">${id}</div>
+									<button class="btn btn-info mr-2" data-toggle="modal" data-target="#newModal">
+										新增
+									</button>
+								</div>`
+				}
+				const statusGroup = (text, status,id) => {
+					if (status === 'disabled') {
+						return `<div class="d-flex flex-column">
+								<div class="mb-2">${text}</div>
+								<button class="btn btn-default mr-2" disabled>
+									已移除
+								</button>
+							</div>`
+					}
+					return `<div class="d-flex flex-column">
+							<div class="mb-2" style="white-space:pre-wrap;">${text}</div>
+							<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal" onclick="v.$data.updateStatusForm.userId = ${id}">
+								調整
+							</button>
+						</div>`
+				}
+				const reason = (text) => {
+					return `<div style="white-space:pre-wrap;">${text}</div>`
+				}
+				$('#main-table').DataTable().row.add([
+					idGroup(item.userId, item.status),
+					this.convertTime(item.updatedAt),
+					item.updateReason, item.blockRule,
+					item.blockDescription, item.blockRisk,
+					statusGroup(item.blockInfo.blockTimeText, item.status, item.userId),
+					reason(item.blockRemark),
+					buttonToID(item.id)
+				])
+			},
+			setSearchTableRow(item) {
+				const buttonToID = (id) => {
+					return `<div class="d-flex">
+								<button class="btn btn-default mr-2" data-toggle="modal" data-target="#deductModal">
+									<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
+								</button>
+							</div>`
+				}
+				// 暫時停用status
+				const idGroup = (id, status) => {
+					// if (status === 0) {
+					// 	// 取消封鎖
+					// 	return `<div class="d-flex flex-column">
+					// 				<div class="mb-2">${id}</div>
+					// 				<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal">
+					// 					已移除
+					// 				</button>
+					// 			</div>`
+					// }
+					// if (status === 1) {
+					// 	// 封鎖中
+					// 	return `<div class="d-flex flex-column">
+					// 		<div class="mb-2">${id}</div>
+					// 		<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal">
+					// 			移除
+					// 		</button>
+					// 	</div>`
+					// }
+					// if (status === 2) {
+					// 	// 封鎖時間已過
+					// 	return `<div class="d-flex flex-column">
+					// 			<div class="mb-2">${id}</div>
+					// 			<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
+					// 				已過期
+					// 			</button>
+					// 		</div>`
+					// }
+					return `<div class="d-flex flex-column">
+									<div class="mb-2">${id}</div>
+									<button class="btn btn-info mr-2" data-toggle="modal" data-target="#newModal" onclick="v.$data.blockUserAddForm.userId = ${id}">
+										新增
+									</button>
+								</div>`
+				}
+				const statusGroup = (text, status) => {
+					if (status === 'disabled') {
+						return `<div class="d-flex flex-column">
+								<div class="mb-2">${text}</div>
+								<button class="btn btn-default mr-2" disabled>
+									已移除
+								</button>
+							</div>`
+					}
+					return `<div class="d-flex flex-column">
+							<div class="mb-2" style="white-space:pre-wrap;">${text}</div>
+							<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal">
+								調整
+							</button>
+						</div>`
+				}
+				const reason = (text) => {
+					return `<div style="white-space:pre-wrap;">${text}</div>`
+				}
+				$('#search-table').DataTable().row.add([
+					idGroup(item.userId, item.status),
+					this.convertTime(item.updatedAt),
+					item.updateReason, item.blockRule,
+					item.blockDescription, item.blockRisk,
+					statusGroup(item.blockInfo.blockTimeText, item.status),
+					reason(item.blockRemark),
+					buttonToID(item.id)
+				])
+			},
+			getAllBlockUsers() {
+				// const { blockRule, blockTimeText } = this.allBlockUserParam
+				// axios.get('blockUser/getAllBlockUsers', {
+				// 	params: {
+				// 		blockRule,
+				// 		blockTimeText
+				// 	}
+				// }).then(({ data }) => {
+				// 	this.allBlockUsers = data.results
+				// 	this.allBlockUsers.forEach(item => this.setMainTableRow(item))
+				// 	$('#main-table').DataTable().draw()
+				// })
+				this.allBlockUsers.forEach(item => this.setMainTableRow(item))
+				$('#main-table').DataTable().draw()
+			},
+			getBlockUserById() {
+				// const userId = this.searchUserId
+				// axios.get('blockUser/getBlockUserById', {
+				// 	params: {
+				// 		userId,
+				// 	}
+				// }).then(({ data }) => {
+				// 	this.searchUserData = data.results
+				// 	this.setSearchTableRow(this.searchUserData)
+				// 	$('#search-table').DataTable().draw()
+				// })
+				this.setSearchTableRow(this.searchUserData)
+				$('#search-table').DataTable().draw()
+			},
+			blockUserAdd() {
+				const { blockUserAddForm } = this
+				axios.post('blockUser/add', {
+					data: {
+						...blockUserAddForm
+					}
+				}).then(({ data }) => {
+					if (data.status !== 200) {
+						alert(data.message)
+					}
+				}).finally(()=>{
+					$('#newModal').modal('hide')
+					this.getBlockUserById(userId)
+				})
+			},
+			updateStatus(){
+				const { updateStatusForm } = this
+				axios.post('blockUser/update', {
+					data: {
+						...updateStatusForm
+					}
+				}).then(({ data }) => {
+					if (data.status !== 200) {
+						alert(data.message)
+					}
+				}).finally(()=>{
+					$('#statusModal').modal('hide')
+					this.getAllBlockUsers()
+				})
+			}
+		},
+	})
+
 </script>
-
 <style>
 	.d-flex {
 		display: flex;
