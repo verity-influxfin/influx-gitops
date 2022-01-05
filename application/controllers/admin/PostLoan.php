@@ -389,14 +389,15 @@ class PostLoan extends MY_Admin_Controller {
     {
         $this->load->model('user/deduct_model');
 
+        // 取得搜尋條件
         $get = $this->input->get(NULL, TRUE);
         $data = $this->deduct_model->get_deduct_list(
-            $get['user_id'] ?? 0,
-            $get['created_at_s'] ?? '',
-            $get['created_at_e'] ?? ''
+            $get['user_id'] ?? 0,       // 投資人ID
+            $get['created_at_s'] ?? '', // 代支日期 開始
+            $get['created_at_e'] ?? ''  // 代支日期 結束
         );
-        $status_list = $this->deduct_model->status_lsit;
 
+        $status_list = $this->deduct_model->status_list;
         array_walk($data, function (&$value, $key) use (&$data, $status_list) {
             $data[$key]['status'] = [
                 'code' => (int) $data[$key]['status'],
@@ -421,63 +422,222 @@ class PostLoan extends MY_Admin_Controller {
         echo json_encode($data);
     }
 
-    // 新增法催扣繳資料
+    // 新增法催扣繳紀錄
     public function add_deduct_info()
     {
-        $this->load->model('user/deduct_model');
-
-        $user_id = $this->input->post('user_id');
-        $amount = $this->input->post('amount');
-        $reason = $this->input->post('reason');
-
-        if (empty($user_id))
-        {
-            echo json_encode([
-                'result' => 'ERROR',
-                'msg' => '新增失敗，投資人ID必填'
-            ]);
-            return;
-        }
-
-        if (empty($amount))
-        {
-            echo json_encode([
-                'result' => 'ERROR',
-                'msg' => '新增失敗，金額必填'
-            ]);
-            return;
-        }
-
-        if (empty($reason))
-        {
-            echo json_encode([
-                'result' => 'ERROR',
-                'msg' => '新增失敗，事由必填'
-            ]);
-            return;
-        }
 
         try
         {
+            $this->load->model('user/deduct_model');
+
+            $post = json_decode($this->input->raw_input_stream, TRUE);
+
+            if (empty($post['user_id']))
+            {
+                throw new Exception('新增失敗，投資人ID必填');
+            }
+
+            if (empty($post['amount']))
+            {
+                throw new Exception('新增失敗，金額必填');
+            }
+
+            if (empty($post['reason']))
+            {
+                throw new Exception('新增失敗，事由必填');
+            }
+
+            $this->load->model('virtual_account_model');
+
+            $virtual_account = $this->virtual_account_model->get_investor_account_by_user_id($post['user_id']);
+            if (empty($virtual_account))
+            {
+                throw new Exception('新增失敗，查無投資人虛擬帳戶');
+            }
+
+            $this->load->model('transaction_model');
+            $this->transaction_model->trans_begin();
+            $this->deduct_model->trans_begin();
+
+            // 新增「內帳交易」紀錄
+            $data = [
+                'source' => SOURCE_AR_LAW_FEE,
+                'entering_date' => date('Y-m-d'),
+                'user_from' => $post['user_id'],
+                'bank_account_from' => $virtual_account,
+                'amount' => $post['amount'],
+                'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
+                'limit_date' => NULL,
+            ];
+            $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
+            $data['created_ip'] = $data['updated_ip'] = get_ip();
+            $transaction_id = $this->transaction_model->insert_get_id($data);
+            if ($transaction_id === FALSE)
+            {
+                $this->deduct_model->trans_rollback();
+                $this->transaction_model->trans_rollback();
+                throw new Exception('新增失敗，請洽工程師');
+            }
+
+            // 新增「法催扣繳」紀錄
             $this->deduct_model->insert([
-                'user_id' => $user_id,
-                'amount' => (int) $amount,
-                'reason' => $reason,
+                'transaction_id' => $transaction_id,
+                'user_id' => $post['user_id'],
+                'amount' => (int) $post['amount'],
+                'reason' => $post['reason'],
                 'created_admin_id' => $this->login_info->id,
-                'updated_admin_id' => $this->login_info->id,
+                'updated_admin_id' => $this->login_info->id
             ]);
 
-            echo json_encode([
-                'result' => 'SUCCESS',
-                'msg' => '新增成功',
-            ]);
+            $this->deduct_model->trans_commit();
+            $this->transaction_model->trans_commit();
         }
         catch (Exception $e)
         {
             echo json_encode([
                 'result' => 'ERROR',
-                'msg' => '新增失敗，請洽工程師',
+                'msg' => $e->getMessage()
             ]);
+        }
+    }
+
+    // 更新法催扣繳資料
+    public function update_deduct_info()
+    {
+        $this->load->model('user/deduct_model');
+
+        $post = json_decode($this->input->raw_input_stream, TRUE);
+
+        if (empty($post['id']))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '更新失敗，查無此法催扣繳紀錄'
+            ]);
+            return;
+        }
+
+        switch ($post['action'])
+        {
+            case DEDUCT_STATUS_CANCEL: // 註銷
+                try
+                {
+                    if (empty($post['cancel_reason']))
+                    {
+                        throw new Exception('更新失敗，註銷原因必填');
+                    }
+
+                    // 更新「內帳交易」紀錄
+                    $transaction_id = $this->deduct_model->get_transaction_id_by_deduct_id($post['id']);
+                    $update_result = $this->transaction_model->update($transaction_id, [
+                        'status' => TRANSACTION_STATUS_DELETED
+                    ]);
+                    if ($update_result === FALSE)
+                    {
+                        throw new Exception('更新內帳失敗，請洽系統工程師');
+                    }
+
+                    // 更新「法催扣繳」紀錄
+                    $this->deduct_model->update($post['id'], [
+                        'status' => DEDUCT_STATUS_CANCEL,
+                        'cancel_reason' => $post['cancel_reason']
+                    ]);
+
+                    echo json_encode([
+                        'result' => 'SUCCESS',
+                        'msg' => '註銷成功'
+                    ]);
+                }
+                catch (Exception $e)
+                {
+                    echo json_encode([
+                        'result' => 'ERROR',
+                        'msg' => $e->getMessage()
+                    ]);
+                }
+
+                break;
+            case DEDUCT_STATUS_CONFIRM: // 扣繳
+                try
+                {
+                    $response_amount = $this->deduct_model->get_deduct_and_virtual_amount($post['id']);
+                    if ( ! isset($response_amount['deduct_amount']))
+                    {
+                        throw new Exception('更新失敗，查無此法催扣繳紀錄');
+                    }
+
+                    if ( ! isset($response_amount['account_amount']) || $response_amount['deduct_amount'] > $response_amount['account_amount'])
+                    {
+                        throw new Exception('更新失敗，虛擬帳戶餘額不足');
+                    }
+
+                    $this->load->model('transaction_model');
+                    $this->deduct_model->trans_begin();
+                    $this->transaction_model->trans_begin();
+                    $rollback = function () {
+                        $this->transaction_model->trans_rollback();
+                        $this->deduct_model->trans_rollback();
+                    };
+
+                    // 更新「內帳交易」紀錄
+                    $update_result = $this->transaction_model->update($response_amount['transaction_id'], [
+                        'status' => TRANSACTION_STATUS_PAID_OFF
+                    ]);
+                    if ($update_result === FALSE)
+                    {
+                        $rollback();
+                        throw new Exception('更新內帳失敗，請洽系統工程師');
+                    }
+
+                    $data = [
+                        'source' => SOURCE_LAW_FEE,
+                        'entering_date' => date('Y-m-d'),
+                        'user_from' => $response_amount['user_id'],
+                        'bank_account_from' => $response_amount['virtual_account'],
+                        'amount' => $response_amount['deduct_amount'],
+                        'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
+                        'limit_date' => NULL,
+                        'status' => TRANSACTION_STATUS_PAID_OFF
+                    ];
+                    $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
+                    $data['created_ip'] = $data['updated_ip'] = get_ip();
+                    $transaction_id = $this->transaction_model->insert_get_id($data);
+                    if ($transaction_id === FALSE)
+                    {
+                        $rollback();
+                        throw new Exception('新增失敗，請洽工程師');
+                    }
+
+                    $this->load->library('passbook_lib');
+                    if ($this->passbook_lib->enter_account($transaction_id) === FALSE)
+                    {
+                        $rollback();
+                        throw new Exception('扣繳失敗，請洽工程師');
+                    }
+
+                    // 更新「法催扣繳」紀錄
+                    $this->deduct_model->update($post['id'], [
+                        'status' => DEDUCT_STATUS_CONFIRM,
+                        'transaction_id' => $transaction_id
+                    ]);
+
+                    $this->transaction_model->trans_commit();
+                    $this->deduct_model->trans_commit();
+
+                    echo json_encode([
+                        'result' => 'SUCCESS',
+                        'msg' => '扣繳成功'
+                    ]);
+                }
+                catch (Exception $e)
+                {
+                    echo json_encode([
+                        'result' => 'ERROR',
+                        'msg' => $e->getMessage()
+                    ]);
+                }
+
+                break;
         }
     }
 
@@ -498,7 +658,7 @@ class PostLoan extends MY_Admin_Controller {
         {
             echo json_encode([
                 'result' => 'ERROR',
-                'msg' => '查無此投資人資訊',
+                'msg' => '查無此投資人資訊'
             ]);
         }
 
@@ -507,7 +667,7 @@ class PostLoan extends MY_Admin_Controller {
         {
             echo json_encode([
                 'result' => 'ERROR',
-                'msg' => '查無此投資人資訊',
+                'msg' => '查無此投資人資訊'
             ]);
         }
         else
@@ -523,12 +683,14 @@ class PostLoan extends MY_Admin_Controller {
                     'O'.
                     mb_substr($data['user_name'], -1, 1, "UTF-8");
             }
+            $data['account_amount'] = empty($data['account_amount']) ? 0 : $data['account_amount'];
 
             echo json_encode([
                 'result' => 'SUCCESS',
                 'msg' => '',
                 'data' => [
-                    'account_amount' => empty($data['account_amount']) ? 0 : $data['account_amount'],
+                    'account_amount' => $data['account_amount'],
+                    'account_amount_formatted' => number_format($data['account_amount']),
                     'user_name' => $user_name
                 ]
             ]);
@@ -545,17 +707,46 @@ class PostLoan extends MY_Admin_Controller {
         {
             echo json_encode([
                 'result' => 'ERROR',
-                'msg' => '查無此扣繳資訊',
+                'msg' => '查無此扣繳資訊'
             ]);
             return;
         }
 
         $data = $this->deduct_model->get_deduct_info($id);
+        if ( ! empty($data['user_name']))
+        {
+            $data['user_name'] = (
+                mb_substr($data['user_name'], 0, 1, "UTF-8").
+                'O'.
+                mb_substr($data['user_name'], -1, 1, "UTF-8")
+            );
+        }
+
+        if ( ! empty($data['deduct_amount']))
+        {
+            $data['deduct_amount'] = (int) $data['deduct_amount'];
+            $data['deduct_amount_formatted'] = number_format($data['deduct_amount']);
+        }
+        else
+        {
+            $data['deduct_amount'] = $data['deduct_amount_formatted'] = 0;
+        }
+
+        if ( ! empty($data['account_amount']))
+        {
+            $data['account_amount'] = (int) $data['account_amount'];
+            $data['account_amount_formatted'] = number_format($data['account_amount']);
+        }
+        else
+        {
+            $data['account_amount'] = $data['account_amount_formatted'] = 0;
+        }
+
         if (empty($data))
         {
             echo json_encode([
                 'result' => 'ERROR',
-                'msg' => '查無此扣繳資訊',
+                'msg' => '查無此扣繳資訊'
             ]);
             return;
         }

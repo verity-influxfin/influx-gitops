@@ -67,7 +67,7 @@
 					<div class="d-flex mb-2">
 						<div class="col-20"></div>
 						<div class="orange-hint" v-if="deduct_hint.result === 'SUCCESS'">
-							{{ deduct_hint.user_name }} 虛擬帳戶餘額: ${{ deduct_hint.account_amount }}
+							{{ deduct_hint.user_name }} 虛擬帳戶餘額: ${{ deduct_hint.account_amount_formatted }}
 						</div>
 					</div>
 					<div class="d-flex mb-2">
@@ -95,7 +95,7 @@
 	</div>
 	<div class="modal fade" id="deductModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content" @submit.prevent="update_deduct_info(1)">
+			<form class="modal-content" @submit.prevent="update_deduct_info(2)">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -108,11 +108,11 @@
 					</div>
 					<div class="d-flex mb-2">
 						<div class="orange-hint">
-							{{ deduct_modal_data.user_name }} 虛擬帳戶餘額: ${{ deduct_modal_data.account_amount }}
+							{{ deduct_modal_data.user_name }} 虛擬帳戶餘額: ${{ deduct_modal_data.account_amount_formatted }}
 						</div>
 					</div>
 					<div class="d-flex mb-2">
-						<h4 class="col">{{ deduct_modal_data.deduct_reason }}: ${{ deduct_modal_data.deduct_amount }}
+						<h4 class="col">{{ deduct_modal_data.deduct_reason }}: ${{ deduct_modal_data.deduct_amount_formatted }}
 						</h4>
 					</div>
 					<div class="d-flex align-start mb-2">
@@ -129,7 +129,7 @@
 	</div>
 	<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content" @submit.prevent="update_deduct_info(2)">
+			<form class="modal-content" @submit.prevent="update_deduct_info(3)">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -343,20 +343,20 @@
 			update_deduct_info(action) {
 				this.update_deduct_info_form.action = action
 				const { update_deduct_info_form } = this
-				// axios({
-				// 	method: 'post',
-				// 	url: 'update_deduct_info',
-				// 	data: {
-				// 		...update_deduct_info_form
-				// 	}
-				// }).then(({ data }) => {
-				// 	if (data.result === 'ERROR') {
-				// 		alert(data.msg)
-				// 		return
-				// 	}
-				// 	this.get_deduct_list()
-				// 	$('#cancelModal').modal('hide')
-				// })
+				axios({
+					method: 'post',
+					url: 'update_deduct_info',
+					data: {
+						...update_deduct_info_form
+					}
+				}).then(({ data }) => {
+					if (data.result === 'ERROR') {
+						alert(data.msg)
+						return
+					}
+					this.get_deduct_list()
+					$('#cancelModal').modal('hide')
+				})
 				$('#cancelModal').modal('hide')
 				$('#deductModal').modal('hide')
 				console.log(update_deduct_info_form)

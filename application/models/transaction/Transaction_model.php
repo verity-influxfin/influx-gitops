@@ -134,5 +134,10 @@ class Transaction_model extends MY_Model
 		return $query->result();
 	}
 
-
+    // 新增內帳交易紀錄，並回傳ID
+    public function insert_get_id($data)
+    {
+        $this->db->set($data)->insert("`p2p_transaction`.`{$this->_table}`");
+        return $this->db->insert_id();
+    }
 }

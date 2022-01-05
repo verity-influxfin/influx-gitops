@@ -1,5 +1,6 @@
 CREATE TABLE `deduct` (
                           `id` int(11) NOT NULL AUTO_INCREMENT,
+                          `transaction_id` int(11) NOT NULL COMMENT '內帳交易ID',
                           `user_id` int(11) NOT NULL COMMENT '使用者ID',
                           `amount` int(11) DEFAULT '0' COMMENT '金額',
                           `reason` text NOT NULL COMMENT '事由',
@@ -9,9 +10,9 @@ CREATE TABLE `deduct` (
                           `created_ip` varchar(15) NOT NULL COMMENT '創建者IP',
                           `created_admin_id` int(11) NOT NULL COMMENT '創建者ID',
                           `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最後更新時間',
-                          `udpated_ip` varchar(15) NOT NULL COMMENT '最後更新者IP',
+                          `updated_ip` varchar(15) NOT NULL COMMENT '最後更新者IP',
                           `updated_admin_id` int(11) NOT NULL COMMENT '最後更新者ID',
                           PRIMARY KEY (`id`),
                           KEY `deduct_user_id_IDX` (`user_id`) USING BTREE,
                           KEY `deduct_created_at_IDX` (`created_at`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='法催扣款'
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='法催扣款'
