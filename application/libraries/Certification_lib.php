@@ -973,11 +973,15 @@ class Certification_lib{
                 }
                 else
                 {
+                    // todo: 待APP上版將 return False; 移除
+                    return False;
                     $verifiedResult->addMessage('FB帳號未綁定', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
                 }
             }
             else
             {
+                // todo: 待APP上版將 return False; 移除
+                return False;
                 $verifiedResult->addMessage('社交認證尚有缺少認證項', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
             }
             $remark['verify_result'] = $verifiedResult->getAllMessage(MassageDisplay::Backend);
