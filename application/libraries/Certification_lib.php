@@ -833,9 +833,9 @@ class Certification_lib{
 
     public function social_verify($info = array())
     {
-        if ($info && $info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE && $info->certification_id == 4)
+        if ($info && $info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE && $info->certification_id == CERTIFICATION_SOCIAL)
         {
-            $param['sys_check'] = 1;
+            $param['sys_check'] = SYSTEM_CHECK;
             $content = json_decode($info->content, TRUE);
             if (isset($content['instagram']['username']) && isset($info->user_id))
             {
@@ -850,12 +850,12 @@ class Certification_lib{
                 if ($log_status || isset($log_status['status']))
                 {
                     // 沒有IG爬蟲紀錄查詢log紀錄
-                    if ($log_status['status'] == 204)
+                    if ($log_status['status'] == SCRAPER_STATUS_NO_CONTENT)
                     {
                         $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
                         return FALSE;
                     }
-                    else if ($log_status['status'] == 200 && isset($log_status['response']['result']['status']))
+                    else if ($log_status['status'] == SCRAPER_STATUS_SUCCESS && isset($log_status['response']['result']['status']))
                     {
                         // IG爬蟲沒爬完
                         if ($log_status['response']['result']['status'] == 'requested' || $log_status['response']['result']['status'] == 'runnig')
@@ -871,7 +871,7 @@ class Certification_lib{
                         if ($log_status['response']['result']['status'] == 'finished')
                         {
                             $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $ig_username);
-                            if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == 200)
+                            if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == SCRAPER_STATUS_SUCCESS)
                             {
                                 $usernameExist     = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
                                 $isPrivate         = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
@@ -909,7 +909,7 @@ class Certification_lib{
                                         $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username, 'follow');
                                         if ($follow_status && isset($follow_status['status']))
                                         {
-                                            if ($follow_status['status'] == 200 && isset($follow_status['response']['result']['status']))
+                                            if ($follow_status['status'] == SCRAPER_STATUS_SUCCESS && isset($follow_status['response']['result']['status']))
                                             {
                                                 if ($follow_status['response']['result']['status'] !== 'finished')
                                                 {
@@ -990,7 +990,7 @@ class Certification_lib{
 
                 $this->CI->user_certification_model->update($info->id, array(
                     'status'                      => $status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
-                    'sys_check'                   => 1,
+                    'sys_check'                   => SYSTEM_CHECK,
                     'content'                     => json_encode($param['content'], JSON_INVALID_UTF8_IGNORE),
                     'remark'                      => json_encode($param['remark'], JSON_INVALID_UTF8_IGNORE),
                 ));
@@ -1002,7 +1002,7 @@ class Certification_lib{
                 else if ($status == CERTIFICATION_STATUS_FAILED)
                 {
                     $notificationContent = implode("、", $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
-                    $this->set_failed($info->id, $notificationContent, 1);
+                    $this->set_failed($info->id, $notificationContent, SYSTEM_CHECK);
                 }
 
             }
