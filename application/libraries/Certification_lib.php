@@ -977,7 +977,7 @@ class Certification_lib{
                 if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
                 {
                     // 是否為活躍社交帳號判斷
-                    if ($allFollowerCount <= 30 && $allFollowingCount <= 50)
+                    if ($allFollowerCount <= FOLLOWER_ACTIVATE && $allFollowingCount <= FOLLOWING_ACTIVATE)
                     {
                         $verifiedResult->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                     }

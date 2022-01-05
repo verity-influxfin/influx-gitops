@@ -1844,7 +1844,7 @@ class Certification extends REST_Controller {
                     $info['username'] = $input['access_token'];
                     $info['info'] = [];
                     $time = isset($log_status['response']['result']['updatedAt'])? $log_status['response']['result']['updatedAt'] : 0;
-                    if ($log_status && $log_status['status'] == 204 || $time > strtotime(date('Y-m-d H:i:s', time()) . "-72 hours")) {
+                    if ($log_status && $log_status['status'] == SCRAPER_STATUS_NO_CONTENT || $time > strtotime(date('Y-m-d H:i:s', time()) . "-72 hours")) {
                         $this->instagram_lib->updateRiskControlInfo($user_id, $input['access_token']);
                     }
 
