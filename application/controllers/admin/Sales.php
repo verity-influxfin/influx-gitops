@@ -812,7 +812,7 @@ class Sales extends MY_Admin_Controller {
         }
 
         $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate']??'', $input['edate']??'');
-        $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all()), TRUE) ?? [];
+        $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all(['status' => 1])), TRUE) ?? [];
         $page_data['data'] = reset($list);
 
         $contract = $this->contract_lib->get_contract(isset($page_data['data']['info']) ? $page_data['data']['info']['contract_id'] : 0);

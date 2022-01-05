@@ -2257,7 +2257,7 @@ END:
         );
 
         // 建立合作方案的初始化資料結構
-        $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_all()), TRUE) ?? [];
+        $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_many_by(['status' => 1])), TRUE) ?? [];
         $collaboratorList = array_column($collaboratorList, NULL, 'id');
         $collaboratorInitList = array_combine(array_keys($collaboratorList), array_fill(0,count($collaboratorList), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
         foreach ($collaboratorInitList as $collaboratorIdx => $value) {

@@ -269,7 +269,7 @@ class Qrcode_lib
             }
         }
 
-        $collaboratorList = json_decode(json_encode($this->CI->qrcode_collaborator_model->get_all()), TRUE) ?? [];
+        $collaboratorList = json_decode(json_encode($this->CI->qrcode_collaborator_model->get_all(['status' => 1])), TRUE) ?? [];
         $collaboratorList = array_column($collaboratorList, NULL, 'id');
         $data['collaboratorList'] = $collaboratorList;
 
