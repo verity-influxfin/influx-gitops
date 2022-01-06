@@ -845,7 +845,7 @@ class Certification_lib{
                 {
                     // ig爬蟲狀態
                     $ig_username = trim($content['instagram']['username']);
-                    $this->CI->load->library('scraper/Instagram_lib');
+                    $this->CI->load->library('scraper/instagram_lib');
                     $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
                     if ($log_status || isset($log_status['status']))
                     {
@@ -861,7 +861,7 @@ class Certification_lib{
                                     $isPrivate         = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
                                     $allPostCount      = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
                                     $followStatus      = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
-                                    $isFollower        = isset($risk_control_info['response']['result']['isfollower']) ? $risk_control_info['response']['result']['isfollower'] : '';
+                                    $isFollower        = isset($risk_control_info['response']['result']['isFollower']) ? $risk_control_info['response']['result']['isFollower'] : '';
                                     $allFollowerCount  = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
                                     $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
                                     $postsIn3Months    = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
@@ -999,7 +999,7 @@ class Certification_lib{
             }
             else if ($status == CERTIFICATION_STATUS_FAILED)
             {
-                $notificationContent = implode("、", $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
+                $notificationContent = implode('、', $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
                 $this->set_failed($info->id, $notificationContent, SYSTEM_CHECK);
             }
             return TRUE;
