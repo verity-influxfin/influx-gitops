@@ -2608,12 +2608,24 @@ class Certification_lib{
 				$data['fb_email'] = $content['facebook']['email'];
 				$data['fb_access_token'] = $content['facebook']['access_token'];
 			}
-			if (isset($content['instagram'])) {
-				isset($content['instagram']['id']) ? $data['ig_id'] = $content['instagram']['id'] : '';
-				isset($content['instagram']['username']) ? $data['ig_username'] = $content['instagram']['username'] : '';
-				isset($content['instagram']['name']) ? $data['ig_name'] = $content['instagram']['name'] : '';
-				isset($content['instagram']['access_token']) ? $data['ig_access_token'] = $content['instagram']['access_token'] : '';
-			}
+            if (isset($content['instagram']))
+            {
+                isset($content['instagram']['username']) ? $data['ig_username'] = $content['instagram']['username'] : '';
+                isset($content['instagram']['link']) ? $data['ig_link'] = $content['instagram']['link'] : '';
+                isset($content['instagram']['usernameExist']) ? $data['ig_usernameExist'] = $content['instagram']['usernameExist'] : '';
+                isset($content['instagram']['info']['isPrivate']) ? $data['ig_isPrivate'] = $content['instagram']['info']['isPrivate'] : '';
+                isset($content['instagram']['info']['followStatus']) ? $data['ig_followStatus'] = $content['instagram']['info']['followStatus'] : '';
+                isset($content['instagram']['info']['isFollower']) ? $data['ig_isFollower'] = $content['instagram']['info']['isFollower'] : '';
+                isset($content['instagram']['info']['allPostCount']) ? $data['ig_allPostCount'] = $content['instagram']['info']['allPostCount'] : '';
+                isset($content['instagram']['info']['allFollowerCount']) ? $data['ig_allFollowerCount'] = $content['instagram']['info']['allFollowerCount'] : '';
+                isset($content['instagram']['info']['allFollowingCount']) ? $data['ig_allFollowingCount'] = $content['instagram']['info']['allFollowingCount'] : '';
+            }
+            if (isset($content['meta']))
+            {
+                isset($content['meta']['allFollowingCount']) ? $data['meta_allFollowingCount'] = $content['meta']['username'] : '';
+                isset($content['meta']['posts_in_3months']) ? $data['meta_posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
+                isset($content['meta']['key_word']) ? $data['meta_key_word'] = $content['meta']['key_word'] : '';
+            }
 
 
             $rs = $this->user_meta_progress($data,$info);
