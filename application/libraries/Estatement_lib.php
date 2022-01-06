@@ -1014,7 +1014,6 @@ class Estatement_lib{
             else if ($estatement && $estatement->type == 'promote_code')
             {
                 $user_info = $this->CI->user_model->get($estatement->user_id);
-                // TODO: 改為負責人的資訊及email
                 if ($user_info && $user_info->name && $user_info->email)
                 {
                     $this->CI->user_estatement_model->update($estatement_id, array("status" => 1));

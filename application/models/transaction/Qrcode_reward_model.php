@@ -35,18 +35,20 @@ class Qrcode_reward_model extends MY_Model
      * @param array $qrcode_where
      * @return mixed
      */
-    public function getSettlementRewardList(array $reward_where=[], array $qrcode_where=[]) {
+    public function getSettlementRewardList(array $reward_where = [], array $qrcode_where = [])
+    {
         $this->_database->select('*')
             ->from("`p2p_transaction`.`qrcode_reward`");
-        if(!empty($reward_where))
+        if ( ! empty($reward_where))
             $this->_set_where([$reward_where]);
         $subQuery = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database
             ->select('qr.*, uq.user_id, uq.alias, uq.promote_code, uq.settings')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
-            ->join("($subQuery) as `qr`", "`qr`.`user_qrcode_id` = `uq`.`id`", 'right');
-        if(!empty($qrcode_where)) {
+            ->join("({$subQuery}) as `qr`", "`qr`.`user_qrcode_id` = `uq`.`id`", 'right');
+        if ( ! empty($qrcode_where))
+        {
             $qrcode_where = array_combine(addPrefixToArray(array_keys($qrcode_where), "uq."), array_values($qrcode_where));
             $this->_set_where([$qrcode_where]);
         }
@@ -54,7 +56,8 @@ class Qrcode_reward_model extends MY_Model
         return $this->_database->get()->result_array();
     }
 
-    public function getUninformedRewardList(array $status) {
+    public function getUninformedRewardList(array $status)
+    {
         $this->_database->select('id, user_qrcode_id, amount, updated_at, status, json_data AS reward_data')
             ->from('`p2p_transaction`.`qrcode_reward`')
             ->where('notified_at IS NULL')
@@ -63,12 +66,12 @@ class Qrcode_reward_model extends MY_Model
         $this->_database
             ->select('uq.user_id, uq.alias, uq.settings, qr.*')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
-            ->join("($subQuery) as `qr`", "`qr`.`user_qrcode_id` = `uq`.`id`");
+            ->join("({$subQuery}) as `qr`", "`qr`.`user_qrcode_id` = `uq`.`id`");
         $subQuery2 = $this->_database->get_compiled_select('', TRUE);
         $this->_database
             ->select('u.name, u.id_number, u.phone, u.address, u.email, r.*')
             ->from('`p2p_user`.`users` AS `u`')
-            ->join("($subQuery2) as `r`", "`r`.`user_id` = `u`.`id`");
+            ->join("({$subQuery2}) as `r`", "`r`.`user_id` = `u`.`id`");
 
         return $this->_database->get()->result_array();
     }

@@ -291,39 +291,48 @@ class User extends REST_Controller {
             }
 
             // 取得 JWT token
-            try {
-                $token 		= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
+            try
+            {
+                $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
                 $request_method = $this->request->method ?? "";
 
-                if(empty($token)) {
+                if (empty($token))
+                {
                     $result['error'] = TOKEN_NOT_CORRECT;
                     goto END;
                 }
                 $this->load->library('user_lib');
                 $personal_user_info = $this->user_lib->parse_token($token, $request_method, $this->uri->uri_string());
-            }catch (Exception $e) {
+            }
+            catch (Exception $e)
+            {
                 $result['error'] = $e->getCode();
                 goto END;
             }
 
             // 確認自然人需通過實名認證
             $this->load->library('Certification_lib');
-            $user_certification	= $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
+            $user_certification = $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
                 $personal_user_info->investor);
-            if(!$user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED) {
+            if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+            {
                 $result['error'] = NO_CER_IDCARD;
                 goto END;
             }
 
             // 確認自然人姓名與登記公司負責人一樣
-            try {
+            try
+            {
                 $this->load->library('gcis_lib');
                 $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $personal_user_info->name);
-                if(!$is_business_responsible) {
+                if ( ! $is_business_responsible)
+                {
                     $result['error'] = NOT_IN_CHARGE;
                     goto END;
                 }
-            }catch (Exception $e) {
+            }
+            catch (Exception $e)
+            {
                 $result['error'] = $e->getCode();
                 goto END;
             }
@@ -598,20 +607,26 @@ END:
 				}
 
                 // 法人需判斷是否已綁定自然人帳號
-                if (isset($input['tax_id'])) {
+                if (isset($input['tax_id']))
+                {
                     // 解析 JWT Token
                     $personal_user_info = NULL;
-                    if(isset($this->input->request_headers()['request_token'])) {
+                    if (isset($this->input->request_headers()['request_token']))
+                    {
                         $this->load->library('user_lib');
-                        try {
+                        try
+                        {
                             $token = $this->input->request_headers()['request_token'];
                             $request_method = $this->request->method ?? "";
 
-                            if(!empty($token)) {
+                            if ( ! empty($token))
+                            {
                                 $personal_user_info = $this->user_lib->parse_token($token, $request_method, $this->uri->uri_string());
                             }
 
-                        }catch (Exception $e) {
+                        }
+                        catch (Exception $e)
+                        {
                             $this->response(array('result' => 'ERROR', 'error' => $e->getCode()));
                         }
                     }
@@ -622,28 +637,36 @@ END:
                         'user_id' => $user_info->id,
                         'meta_key' => 'company_responsible_user_id'
                     ]);
-                    if(!isset($company_responsible_user)) {
-                        if(!isset($personal_user_info)) {
+                    if ( ! isset($company_responsible_user))
+                    {
+                        if ( ! isset($personal_user_info))
+                        {
                             $this->response(array('result' => 'ERROR', 'error' => NO_RESPONSIBLE_USER_BIND));
-                        }else {
+                        }
+                        else
+                        {
                             $this->user_meta_model->insert([
                                 'user_id' => $user_info->id,
                                 'meta_key' => 'company_responsible_user_id',
                                 'meta_value' => $personal_user_info->id,
                             ]);
                         }
-                    }else{
+                    }
+                    else
+                    {
                         $personal_user_info = $this->user_model->get($company_responsible_user->meta_value);
-                        if(!isset($personal_user_info)) {
+                        if ( ! isset($personal_user_info))
+                        {
                             $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
                         }
                     }
 
                     // 確認自然人需通過實名認證
                     $this->load->library('Certification_lib');
-                    $user_certification	= $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
+                    $user_certification = $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
                         $investor);
-                    if(!$user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED) {
+                    if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+                    {
                         $this->response(array('result' => 'ERROR', 'error' => NO_CER_IDCARD));
                     }
 
@@ -652,20 +675,27 @@ END:
                         'user_id' => $user_info->id,
                         'meta_key' => 'company_responsible_check'
                     ]);
-                    if(!isset($company_responsible_check)) {
-                        try {
+                    if ( ! isset($company_responsible_check))
+                    {
+                        try
+                        {
                             $this->load->library('gcis_lib');
                             $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $personal_user_info->name);
-                            if(!$is_business_responsible) {
+                            if ( ! $is_business_responsible)
+                            {
                                 $this->response(array('result' => 'ERROR', 'error' => NOT_IN_CHARGE));
-                            }else{
+                            }
+                            else
+                            {
                                 $this->user_meta_model->insert([
                                     'user_id' => $user_info->id,
                                     'meta_key' => 'company_responsible_check',
                                     'meta_value' => 1,
                                 ]);
                             }
-                        }catch (Exception $e) {
+                        }
+                        catch (Exception $e)
+                        {
                             $this->response(array('result' => 'ERROR', 'error' => $e->getCode()));
                         }
                     }
@@ -2054,17 +2084,20 @@ END:
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/user_certification_model');
-        $user_id    = $this->user_info->id;
-        $investor   = $this->user_info->investor;
-        $company   = $this->user_info->company;
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $company = $this->user_info->company;
         $promote_code = $this->user_info->my_promote_code;
 
         $alias_name = '';
-        if($company == 0) {
+        if ($company == USER_NOT_COMPANY)
+        {
             // 一般方案 qrcode_setting 的 alias
             $promote_cert_list = $this->config->item('promote_code_certs');
             $alias_name = $this->qrcode_setting_model->generalCaseAliasName;
-        } else {
+        }
+        else
+        {
             // 特約方案 qrcode_setting 的 alias
             $promote_cert_list = $this->config->item('promote_code_certs_company');
             $alias_name = $this->qrcode_setting_model->appointedCaseAliasName;
@@ -2072,44 +2105,51 @@ END:
 
         $certifications = [];
         $doneCertifications = [];
-        if(!empty($promote_cert_list)) {
+        if ( ! empty($promote_cert_list))
+        {
             $param = array(
-                'user_id'			=> $user_id,
-                'certification_id'	=> $promote_cert_list,
-                'investor'			=> $investor,
-                'status'            => [0,1,3,6],
+                'user_id' => $user_id,
+                'certification_id' => $promote_cert_list,
+                'investor' => $investor,
+                'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_SUCCEED,
+                    CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
             );
-            $certList = $this->user_certification_model->order_by('created_at','desc')->get_many_by($param);
-            $certifications = array_reduce($certList, function ($list, $item) use (&$doneCertifications){
-                if(!isset($list[$item->certification_id])) {
+            $certList = $this->user_certification_model->order_by('created_at', 'desc')->get_many_by($param);
+            $certifications = array_reduce($certList, function ($list, $item) use (&$doneCertifications) {
+                if ( ! isset($list[$item->certification_id]))
+                {
                     $list[$item->certification_id] = $item;
-                    if($item->status == 1)
+                    if ($item->status == CERTIFICATION_STATUS_SUCCEED)
                         $doneCertifications[$item->certification_id] = $item;
                 }
                 return $list;
             }, []);
         }
 
-        if(count($certifications) != count($promote_cert_list)){
-            $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NEVER_VERIFY ));
+        if (count($certifications) != count($promote_cert_list))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NEVER_VERIFY));
         }
 
         $user_qrcode = $this->user_qrcode_model->get_by(['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY]]);
-        if(isset($user_qrcode) && in_array($user_qrcode->status, [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_VERIFY])) {
+        if (isset($user_qrcode) && in_array($user_qrcode->status, [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_VERIFY]))
+        {
             $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
         }
 
         $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias_name]);
-        if(!isset($qrcode_settings)) {
-            $this->response(array('result' => 'ERROR','error' => EXIT_DATABASE ));
+        if ( ! isset($qrcode_settings))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
         }
 
-        if($promote_code == '') {
+        if ($promote_code == '')
+        {
             $this->load->library('user_lib');
             $promote_code = $this->user_lib->get_promote_code($qrcode_settings->length, $qrcode_settings->prefix);
         }
 
-        $settings = json_decode($qrcode_settings->settings, true);
+        $settings = json_decode($qrcode_settings->settings, TRUE);
         $settings['certification_id'] = array_column($certifications, 'id');
         $settings['description'] = $qrcode_settings->description;
         $settings['investor'] = $investor;
@@ -2119,12 +2159,15 @@ END:
         $start_time = date('Y-m-d H:i:s');
         $end_time = date("Y-m-d H:i:s", strtotime("+ 1 year"));
 
-        if($company == 0) {
+        if ($company == USER_NOT_COMPANY)
+        {
             $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
             $user_info = $this->user_model->get($user_id);
             $name = $user_info->name ?? '';
             $address = $user_info->address ?? '';
-        } else {
+        }
+        else
+        {
             $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
             $this->load->model('user/judicial_person_model');
             $judicial_person_info = $this->judicial_person_model->get_by(['company_user_id' => $user_id]);
@@ -2133,14 +2176,18 @@ END:
         }
 
         $rs = FALSE;
-        if(isset($user_qrcode)) {
-            if($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT) {
+        if (isset($user_qrcode))
+        {
+            if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT)
+            {
                 // 不是特約方案才會直接到待審核
-                if($alias_name != $this->qrcode_setting_model->appointedCaseAliasName)
+                if ($alias_name != $this->qrcode_setting_model->appointedCaseAliasName)
                 {
                     $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
                         ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
-                }else{
+                }
+                else
+                {
                     $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
                         [
                             'start_time' => $start_time,
@@ -2149,11 +2196,14 @@ END:
                         ]);
                 }
             }
-        } else {
+        }
+        else
+        {
             $contract = $this->qrcode_lib->get_contract_format_content($contract_type_name, $name, $address, $settings);
             $contract_id = $this->contract_lib->sign_contract($contract_type_name, $contract);
 
-            switch ($alias_name) {
+            switch ($alias_name)
+            {
                 case $this->qrcode_setting_model->appointedCaseAliasName:
                     $status = PROMOTE_STATUS_PENDING_TO_SENT;
                     break;
@@ -2176,7 +2226,8 @@ END:
         }
 
         // 把待送出審核的狀態改為待驗證
-        if(!empty($settings['certification_id'])) {
+        if ( ! empty($settings['certification_id']))
+        {
             $this->user_certification_model->update_by([
                 'id' => $settings['certification_id'],
                 'user_id' => $user_id,
@@ -2191,14 +2242,15 @@ END:
             'alias' => $alias_name,
             'status != ' => PROMOTE_STATUS_DISABLED
         ]);
-        if(isset($user_qrcode) && $user_qrcode->alias == $this->qrcode_setting_model->appointedCaseAliasName) {
+        if (isset($user_qrcode) && $user_qrcode->alias == $this->qrcode_setting_model->appointedCaseAliasName)
+        {
             $this->load->model('user/user_qrcode_apply_model');
             $this->load->model('admin/contract_format_model');
             $this->load->library('qrcode_lib');
             $contract_format = $this->contract_format_model->get_by(['type' => PROMOTE_APPOINTED_CONTRACT_TYPE_NAME]);
 
             $qrcode_apply = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $user_qrcode->id, 'status !=' => PROMOTE_REVIEW_STATUS_WITHDRAW]);
-            if(!isset($qrcode_apply))
+            if ( ! isset($qrcode_apply))
             {
                 $rs = $this->user_qrcode_apply_model->insert([
                     'user_qrcode_id' => $user_qrcode->id,
@@ -2206,25 +2258,34 @@ END:
                     'contract_format_id' => $contract_format->id ?? 0,
                     'contract_content' => json_encode($this->qrcode_lib->get_contract_format_content(PROMOTE_APPOINTED_CONTRACT_TYPE_NAME, $name, $address)),
                 ]);
-            }else if($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT && $qrcode_apply->status == PROMOTE_REVIEW_STATUS_SUCCESS) {
+            }
+            else if ($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT && $qrcode_apply->status == PROMOTE_REVIEW_STATUS_SUCCESS)
+            {
                 $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
                     ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
             }
         }
 
-        if(count($doneCertifications) === count($promote_cert_list)) {
+        if (count($doneCertifications) === count($promote_cert_list))
+        {
             $this->load->library('Certification_lib');
-            if($company == 0 && isset($doneCertifications[CERTIFICATION_IDCARD])) {
+            if ($company == USER_NOT_COMPANY && isset($doneCertifications[CERTIFICATION_IDCARD]))
+            {
                 $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDCARD], FALSE);
-            } else if($company == 1 && isset($doneCertifications[CERTIFICATION_GOVERNMENTAUTHORITIES])) {
+            }
+            else if ($company == USER_IS_COMPANY && isset($doneCertifications[CERTIFICATION_GOVERNMENTAUTHORITIES]))
+            {
                 $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_GOVERNMENTAUTHORITIES], FALSE);
             }
         }
 
-        if($rs) {
+        if ($rs)
+        {
             $this->response(array('result' => 'SUCCESS', 'data' => []));
-        }else{
-            $this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
+        }
+        else
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
         }
     }
 
@@ -2242,78 +2303,90 @@ END:
         $list = [];
 
         $data = array(
-            'promote_name'	           => '',
-            'promote_alias'	           => '',
-            'promote_code'	           => '',
-            'promote_url'	           => '',
-            'promote_qrcode'           => '',
-            'start_time'               => '',
-            'expired_time'             => '',
-            'contract'                 => '',
-            'status'                   => 0,
-            'total_reward_amount'      => 0,
-            'overview'                 => [],
-            'detail_list'              => [],
+            'promote_name' => '',
+            'promote_alias' => '',
+            'promote_code' => '',
+            'promote_url' => '',
+            'promote_qrcode' => '',
+            'start_time' => '',
+            'expired_time' => '',
+            'contract' => '',
+            'status' => PROMOTE_STATUS_DISABLED,
+            'total_reward_amount' => 0,
+            'overview' => [],
+            'detail_list' => [],
         );
 
         // 建立合作方案的初始化資料結構
-        $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_many_by(['status' => 1])), TRUE) ?? [];
+        $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_many_by(['status' => PROMOTE_COLLABORATOR_AVAILABLE])), TRUE) ?? [];
         $collaboratorList = array_column($collaboratorList, NULL, 'id');
-        $collaboratorInitList = array_combine(array_keys($collaboratorList), array_fill(0,count($collaboratorList), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
-        foreach ($collaboratorInitList as $collaboratorIdx => $value) {
+        $collaboratorInitList = array_combine(array_keys($collaboratorList), array_fill(0, count($collaboratorList), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
+        foreach ($collaboratorInitList as $collaboratorIdx => $value)
+        {
             $collaboratorInitList[$collaboratorIdx]['collaborator'] = $collaboratorList[$collaboratorIdx]['collaborator'];
         }
 
         // 建立各產品的初始化資料結構
-        $categoryInitList = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0,count($this->user_lib->rewardCategories), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
+        $categoryInitList = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0, count($this->user_lib->rewardCategories), ['detail' => [], 'count' => 0, 'rewardAmount' => 0]));
         $initList = array_merge_recursive(['registered' => [], 'registeredCount' => 0, 'fullMember' => [], 'fullMemberCount' => 0, 'fullMemberRewardAmount' => 0], $categoryInitList);
         $initList = array_merge_recursive($initList, ['collaboration' => $collaboratorInitList]);
 
-        if(!$company) {
+        if ( ! $company)
+        {
             $contract_type_name = PROMOTE_GENERAL_CONTRACT_TYPE_NAME;
             $alias = $this->qrcode_setting_model->generalCaseAliasName;
-        } else {
+        }
+        else
+        {
             $contract_type_name = PROMOTE_APPOINTED_CONTRACT_TYPE_NAME;
             $alias = $this->qrcode_setting_model->appointedCaseAliasName;
         }
 
-        $contract_format             = $this->contract_format_model->order_by('created_at','desc')->get_by(['type' => $contract_type_name]);
-        if(isset($contract_format)) {
+        $contract_format = $this->contract_format_model->order_by('created_at', 'desc')->get_by(['type' => $contract_type_name]);
+        if (isset($contract_format))
+        {
             $qrcode_settings = $this->qrcode_setting_model->get_by(['alias' => $alias]);
-            if($qrcode_settings) {
-                $settings = json_decode($qrcode_settings->settings, true);
+            if ($qrcode_settings)
+            {
+                $settings = json_decode($qrcode_settings->settings, TRUE);
                 $data['contract'] = vsprintf($contract_format->content,
                     $this->qrcode_lib->get_contract_format_content($contract_type_name, '', '', $settings));
             }
         }
 
         $where = ['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY]];
-        $userQrcode         = $this->user_lib->getPromotedRewardInfo($where);
-        if(isset($userQrcode) && !empty($userQrcode)) {
-            $userQrcode         = reset($userQrcode);
-            $userQrcodeInfo     = $userQrcode['info'];
-            $settings           = $userQrcodeInfo['settings'];
-            $promote_code       = $userQrcodeInfo['promote_code'];
-            $url                = 'https://event.influxfin.com/R/url?p='.$promote_code;
-            $qrcode             = get_qrcode($url);
-            $contract           = "";
+        $userQrcode = $this->user_lib->getPromotedRewardInfo($where);
+        if (isset($userQrcode) && ! empty($userQrcode))
+        {
+            $userQrcode = reset($userQrcode);
+            $userQrcodeInfo = $userQrcode['info'];
+            $settings = $userQrcodeInfo['settings'];
+            $promote_code = $userQrcodeInfo['promote_code'];
+            $url = 'https://event.influxfin.com/R/url?p=' . $promote_code;
+            $qrcode = get_qrcode($url);
+            $contract = "";
 
-            if($userQrcodeInfo['status'] == PROMOTE_STATUS_AVAILABLE) {
+            if ($userQrcodeInfo['status'] == PROMOTE_STATUS_AVAILABLE)
+            {
                 $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
 
                 // 初始化結構
-                try {
+                try
+                {
                     $d1 = new DateTime($userQrcodeInfo['start_time']);
                     $d2 = new DateTime($userQrcodeInfo['end_time'] >= date("Y-m-d H:i:s") ? date("Y-m-d H:i:s") : $userQrcodeInfo['end_time']);
                     $start = date_create($d1->format('Y-m-01'));
                     $end = date_create($d2->format('Y-m-01'));
-                    $diffMonths = $start->diff($end)->m + ($start->diff($end)->y*12) + ($start->diff($end)->d>0?1:0);
-                } catch (Exception $e) {
+                    $diffMonths = $start->diff($end)->m + ($start->diff($end)->y * 12) + ($start->diff($end)->d > 0 ? 1 : 0);
+                }
+                catch (Exception $e)
+                {
                     $diffMonths = 0;
                     error_log($e->getMessage());
                 }
-                for ($i=0; $i<=$diffMonths; $i++) {
-                    $date = date("Y-m", strtotime(date("Y-m", strtotime($userQrcodeInfo['start_time'])).'+'.$i.' MONTH'));
+                for ($i = 0; $i <= $diffMonths; $i++)
+                {
+                    $date = date("Y-m", strtotime(date("Y-m", strtotime($userQrcodeInfo['start_time'])) . '+' . $i . ' MONTH'));
                     $list[$date] = $initList;
                 }
 
@@ -2327,25 +2400,30 @@ END:
 
                 // 處理產品案件獎金計算
                 $keys = array_flip(['id', 'user_id', 'product_id', 'loan_amount', 'loan_date']);
-                foreach ($this->user_lib->rewardCategories as $category => $productIdList) {
+                foreach ($this->user_lib->rewardCategories as $category => $productIdList)
+                {
                     $rewardAmount = 0;
 
-                    if(isset($settings['reward']) && isset($settings['reward']['product'])) {
+                    if (isset($settings['reward']) && isset($settings['reward']['product']))
+                    {
                         $rewardAmount = $this->user_lib->getRewardAmountByProduct($settings['reward']['product'], $productIdList);
                     }
-                    if(!isset($userQrcode[$category]) || empty($userQrcode[$category]))
+                    if ( ! isset($userQrcode[$category]) || empty($userQrcode[$category]))
                         continue;
 
-                    foreach ($userQrcode[$category] as $value) {
+                    foreach ($userQrcode[$category] as $value)
+                    {
                         $formattedMonth = date("Y-m", strtotime($value['loan_date']));
                         $list[$formattedMonth][$category]['detail'][] = array_intersect_key($value, $keys);
                         $list[$formattedMonth][$category]['count'] += 1;
                         $list[$formattedMonth][$category]['rewardAmount'] += $rewardAmount;
 
-                        if(isset($list[$formattedMonth][$category]['borrowerPlatformFee'])) {
+                        if (isset($list[$formattedMonth][$category]['borrowerPlatformFee']))
+                        {
                             unset($list[$formattedMonth][$category]['borrowerPlatformFee']);
                         }
-                        if(isset($list[$formattedMonth][$category]['investorPlatformFee'])) {
+                        if (isset($list[$formattedMonth][$category]['investorPlatformFee']))
+                        {
                             unset($list[$formattedMonth][$category]['investorPlatformFee']);
                         }
 
@@ -2356,12 +2434,15 @@ END:
 
                 // 處理合作資料的計算
                 $keys = array_flip(['loan_time']);
-                foreach ($userQrcode['collaboration'] as $collaboratorId => $collaborationList) {
-                    if (!isset($collaboratorList[$collaboratorId])) {
+                foreach ($userQrcode['collaboration'] as $collaboratorId => $collaborationList)
+                {
+                    if ( ! isset($collaboratorList[$collaboratorId]))
+                    {
                         continue;
                     }
                     $collaborationRewardAmount = $this->user_lib->getCollaborationRewardAmount($settings['reward'], $collaboratorList[$collaboratorId]['type']);
-                    foreach ($collaborationList as $value) {
+                    foreach ($collaborationList as $value)
+                    {
                         $formattedMonth = date("Y-m", strtotime($value['loan_time']));
                         $list[$formattedMonth]['collaboration'][$collaboratorId]['detail'][] = array_intersect_key($value, $keys);
                         $list[$formattedMonth]['collaboration'][$collaboratorId]['count'] += 1;
@@ -2374,13 +2455,15 @@ END:
 
                 // 將合作資料轉為整數索引陣列
                 $data['overview']['collaboration'] = array_values($data['overview']['collaboration']);
-                foreach ($list as $key => $value) {
+                foreach ($list as $key => $value)
+                {
                     $list[$key]['collaboration'] = array_values($value['collaboration']);
                 }
 
                 // 處理下載+註冊會員
                 $keys = array_flip(['user_id', 'created_at']);
-                foreach ($userQrcode['fullMember'] as $value) {
+                foreach ($userQrcode['fullMember'] as $value)
+                {
                     $formattedMonth = date("Y-m", strtotime($value['created_at']));
                     $list[$formattedMonth]['fullMember'][] = array_intersect_key($value, $keys);
                     $list[$formattedMonth]['fullMemberCount'] += 1;
@@ -2390,23 +2473,24 @@ END:
 
                 // 處理註冊會員
                 $keys = array_flip(['user_id', 'created_at']);
-                foreach ($userQrcode['registered'] as $value) {
+                foreach ($userQrcode['registered'] as $value)
+                {
                     $formattedMonth = date("Y-m", strtotime($value['created_at']));
                     $list[$formattedMonth]['registered'][] = array_intersect_key($value, $keys);
                     $list[$formattedMonth]['registeredCount'] += 1;
                 }
 
-                $data['promote_code']   = $userQrcodeInfo['promote_code'];
+                $data['promote_code'] = $userQrcodeInfo['promote_code'];
                 $data['promote_url'] = $url;
                 $data['promote_qrcode'] = $qrcode;
-                $data['start_time']   = $userQrcodeInfo['start_time'];
-                $data['expired_time']   = $userQrcodeInfo['end_time'];
-                $data['detail_list']   = $list;
+                $data['start_time'] = $userQrcodeInfo['start_time'];
+                $data['expired_time'] = $userQrcodeInfo['end_time'];
+                $data['detail_list'] = $list;
             }
-            $data['promote_name']   = $settings['description'] ?? '';
-            $data['promote_alias']  = $userQrcodeInfo['alias'];
+            $data['promote_name'] = $settings['description'] ?? '';
+            $data['promote_alias'] = $userQrcodeInfo['alias'];
             $data['status'] = intval($userQrcodeInfo['status']);
-            if($company)
+            if ($company)
             {
                 // 法人的 qrcode 狀態：
                 // 預設狀態或無任何已通過審查合約紀錄   : 0 (app顯示待申請)
@@ -2416,7 +2500,8 @@ END:
                 // 當該過的認證項都通過              : 3->1 (app顯示QR code和已收到的獎金)
                 $this->load->model('user/user_qrcode_apply_model');
                 $apply_info = $this->user_qrcode_apply_model->get_by(['user_qrcode_id' => $userQrcodeInfo['id']]);
-                if(isset($apply_info)) {
+                if (isset($apply_info))
+                {
                     if ($userQrcodeInfo['status'] == PROMOTE_STATUS_PENDING_TO_SENT)
                     {
                         switch ($apply_info->status)
@@ -2436,9 +2521,9 @@ END:
                     }
                 }
             }
-            $data['contract'] = !empty($contract) ? $contract['content'] : $data['contract'];
+            $data['contract'] = ! empty($contract) ? $contract['content'] : $data['contract'];
         }
 
-        $this->response(array('result' => 'SUCCESS','data' => $data));
+        $this->response(array('result' => 'SUCCESS', 'data' => $data));
     }
 }

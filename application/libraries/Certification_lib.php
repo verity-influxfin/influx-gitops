@@ -190,7 +190,7 @@ class Certification_lib{
                 $this->CI->user_qrcode_model->update_by(['id' => $promoteCode->id], [
                     'status' => PROMOTE_STATUS_PENDING_TO_SENT,
                 ]);
-                $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 2);
+                $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", CERTIFICATION_STATUS_FAILED);
             }
             else
             {
@@ -280,7 +280,7 @@ class Certification_lib{
                     $this->CI->user_bankaccount_model->update($bank_account->id, ['verify' => 2]);
                 }
 
-                $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", 1);
+                $this->CI->notification_lib->certification($info->user_id, $info->investor, "推薦有賞", CERTIFICATION_STATUS_SUCCEED);
             }
             return TRUE;
 
@@ -2298,8 +2298,9 @@ class Certification_lib{
 		return false;
 	}
 
-    private function passbook_success($info){
-        if (!empty($info))
+    private function passbook_success($info)
+    {
+        if ( ! empty($info))
         {
             $data = array(
                 'passbook_status' => 1,
@@ -2310,20 +2311,20 @@ class Certification_lib{
             {
                 $this->fail_other_cer($info);
                 $user = $this->CI->user_model->get_by(['id' => $info->user_id]);
-                if(!isset($user))
+                if ( ! isset($user))
                 {
                     return FALSE;
                 }
                 $virtual_data[] = [
                     'investor' => USER_INVESTOR,
                     'user_id' => $info->user_id,
-                    'virtual_account' => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . '0'. substr($user->id_number, 0, 8),
+                    'virtual_account' => CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE . '0' . substr($user->id_number, 0, 8),
                 ];
 
                 $virtual_data[] = [
                     'investor' => USER_BORROWER,
                     'user_id' => $info->user_id,
-                    'virtual_account' => CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE . '0'. substr($user->id_number, 0, 8),
+                    'virtual_account' => CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE . '0' . substr($user->id_number, 0, 8),
                 ];
                 $this->CI->load->model('user/virtual_account_model');
 

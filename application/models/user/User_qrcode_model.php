@@ -2,28 +2,28 @@
 
 class user_qrcode_model extends MY_Model
 {
-	public $_table = 'user_qrcode';
-	public $before_create = array( 'before_data_c' );
-	public $before_update = array( 'before_data_u' );
-	public $status_list   = array(
-		0 =>	'停用',
-		1 =>	'啟用'
-	);
-	
-	public function __construct()
-	{
-		parent::__construct();
-		$this->_database = $this->load->database('default',TRUE);
- 	}
-	
-	protected function before_data_c($data)
+    public $_table = 'user_qrcode';
+    public $before_create = array('before_data_c');
+    public $before_update = array('before_data_u');
+    public $status_list = array(
+        PROMOTE_STATUS_DISABLED => '停用',
+        PROMOTE_STATUS_AVAILABLE => '啟用'
+    );
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->_database = $this->load->database('default', TRUE);
+    }
+
+    protected function before_data_c($data)
     {
         $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
         $data['created_ip'] = $data['updated_ip'] = get_ip();
         return $data;
-    } 	
-	
-	protected function before_data_u($data)
+    }
+
+    protected function before_data_u($data)
     {
         $data['updated_at'] = date('Y-m-d H:i:s');
         $data['updated_ip'] = get_ip();
@@ -33,13 +33,16 @@ class user_qrcode_model extends MY_Model
     /**
      * 取得被推薦之使用者與推薦碼相關資訊
      * @param array $qrcode_where
+     * @param string $startTime
+     * @param string $endTime
      * @param false $returnSQL
      * @return mixed
      */
-    public function getRegisteredUserByPromoteCode(array $qrcode_where, string $startTime, string $endTime, bool $returnSQL=FALSE) {
+    public function getRegisteredUserByPromoteCode(array $qrcode_where, string $startTime, string $endTime, bool $returnSQL = FALSE)
+    {
         $this->_database->select('*')
             ->from("`p2p_user`.`user_qrcode`");
-        if(!empty($qrcode_where))
+        if ( ! empty($qrcode_where))
             $this->_set_where([$qrcode_where]);
         $subQuery = $this->_database->get_compiled_select('', TRUE);
 
@@ -48,18 +51,18 @@ class user_qrcode_model extends MY_Model
             ->from('`p2p_user`.`users` AS `u`')
             ->where("DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) >= uq.start_time")
             ->where("DATE_ADD(DATE_FORMAT(FROM_UNIXTIME(u.created_at), '%Y-%m-%d %H:%i:%s'), INTERVAL 8 HOUR) <= uq.end_time")
-            ->join("($subQuery) as `uq`", "`u`.`promote_code` = `uq`.`promote_code`");
+            ->join("({$subQuery}) as `uq`", "`u`.`promote_code` = `uq`.`promote_code`");
 
         $fullQuery = $this->_database->get_compiled_select('', TRUE);
         $this->_database
             ->select('r.*')
-            ->from("($fullQuery) AS `r`");
-        if($startTime!='')
-            $this->_database->where("r.created_at >=",  $startTime);
-        if($endTime!='')
-            $this->_database->where("r.created_at <",  $endTime);
+            ->from("({$fullQuery}) AS `r`");
+        if ($startTime != '')
+            $this->_database->where("r.created_at >=", $startTime);
+        if ($endTime != '')
+            $this->_database->where("r.created_at <", $endTime);
 
-        if($returnSQL)
+        if ($returnSQL)
             return $this->_database->get_compiled_select('', TRUE);
         return $this->_database->get()->result_array();
     }
@@ -72,13 +75,14 @@ class user_qrcode_model extends MY_Model
      * @param string $endTime 篩選結束時間
      * @return mixed
      */
-    public function getLoanedCount(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime='', string $endTime='', bool $returnSQL=FALSE) {
-        $subQuery = $this->getRegisteredUserByPromoteCode($qrcodeWhere, '','', TRUE);
+    public function getLoanedCount(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '', bool $returnSQL = FALSE)
+    {
+        $subQuery = $this->getRegisteredUserByPromoteCode($qrcodeWhere, '', '', TRUE);
 
         $this->_database
             ->select('r.user_qrcode_id, r.promote_code, r.settings, t.id, t.user_id, t.product_id, t.status, t.loan_amount, t.loan_date')
             ->from('`p2p_loan`.`targets` AS `t`')
-            ->join("($subQuery) as `r`", "`t`.`user_id` = `r`.`user_id`")
+            ->join("({$subQuery}) as `r`", "`t`.`user_id` = `r`.`user_id`")
             ->where_in("t.status", $statusList)
             ->where_in("t.product_id", $productIdList)
             ->where("t.loan_date >= DATE_FORMAT(`r`.`start_time`, '%Y-%m-%d')")
@@ -88,13 +92,13 @@ class user_qrcode_model extends MY_Model
 
         $this->_database
             ->select('r.*')
-            ->from("($fullQuery) AS `r`");
-        if($startTime!='')
-            $this->_database->where("r.loan_date >=",  $startTime);
-        if($endTime!='')
-            $this->_database->where("r.loan_date <",  $endTime);
+            ->from("({$fullQuery}) AS `r`");
+        if ($startTime != '')
+            $this->_database->where("r.loan_date >=", $startTime);
+        if ($endTime != '')
+            $this->_database->where("r.loan_date <", $endTime);
 
-        if($returnSQL)
+        if ($returnSQL)
             return $this->_database->get_compiled_select('', TRUE);
         return $this->_database->get()->result_array();
     }
@@ -107,41 +111,42 @@ class user_qrcode_model extends MY_Model
      * @param string $endTime 篩選結束時間
      * @return mixed
      */
-    public function getProductRewardList(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime='', string $endTime='') {
-        $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '','', TRUE);
+    public function getProductRewardList(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '')
+    {
+        $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '', '', TRUE);
 
         $this->db
             ->select('r.*, SUM(tra.amount) as borrower_platform_fee')
             ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` = `tra`.`user_from`")
+            ->join("({$subQuery}) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` = `tra`.`user_from`")
             ->where('tra.source', SOURCE_FEES)
             ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
             ->group_by('tra.target_id');
-        if($startTime!='')
-            $this->db->where("entering_date >=",  $startTime);
-        if($endTime!='')
-            $this->db->where("entering_date <",  $endTime);
+        if ($startTime != '')
+            $this->db->where("entering_date >=", $startTime);
+        if ($endTime != '')
+            $this->db->where("entering_date <", $endTime);
 
         $borrowerQuery = $this->db->get_compiled_select('', TRUE);
 
         $this->db
             ->select('r.*, SUM(tra.amount) as investor_platform_fee')
             ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` != `tra`.`user_from`")
+            ->join("({$subQuery}) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` != `tra`.`user_from`")
             ->where('tra.source', SOURCE_FEES)
             ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
             ->group_by('tra.target_id');
-        if($startTime!='')
-            $this->db->where("entering_date >=",  $startTime);
-        if($endTime!='')
-            $this->db->where("entering_date <",  $endTime);
+        if ($startTime != '')
+            $this->db->where("entering_date >=", $startTime);
+        if ($endTime != '')
+            $this->db->where("entering_date <", $endTime);
 
         $investorQuery = $this->db->get_compiled_select('', TRUE);
         $this->db
             ->select('r.*, br.borrower_platform_fee, ir.investor_platform_fee')
-            ->from("($subQuery) as `r`")
-            ->join("($borrowerQuery) as `br`", "`r`.`id` = `br`.`id`", 'left')
-            ->join("($investorQuery) as `ir`", "`r`.`id` = `ir`.`id`", 'left');
+            ->from("({$subQuery}) as `r`")
+            ->join("({$borrowerQuery}) as `br`", "`r`.`id` = `br`.`id`", 'left')
+            ->join("({$investorQuery}) as `ir`", "`r`.`id` = `ir`.`id`", 'left');
 
         return $this->db->get()->result_array();
     }
@@ -152,22 +157,22 @@ class user_qrcode_model extends MY_Model
      * @param array $productIdList 產品編號列表
      * @param string $startTime 篩選起始時間
      * @param string $endTime 篩選結束時間
-
      * @return mixed
      */
-    public function getBorrowerPlatformFeeList(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime='', string $endTime='') {
-        $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '','', TRUE);
+    public function getBorrowerPlatformFeeList(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '')
+    {
+        $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '', '', TRUE);
 
         $this->db
             ->select('r.*, tra.amount as platform_fee, tra.entering_date')
             ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` = `tra`.`user_from`")
+            ->join("({$subQuery}) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` = `tra`.`user_from`")
             ->where('tra.source', SOURCE_FEES)
             ->where('tra.status', TRANSACTION_STATUS_PAID_OFF);
-        if($startTime!='')
-            $this->db->where("entering_date >=",  $startTime);
-        if($endTime!='')
-            $this->db->where("entering_date <",  $endTime);
+        if ($startTime != '')
+            $this->db->where("entering_date >=", $startTime);
+        if ($endTime != '')
+            $this->db->where("entering_date <", $endTime);
 
         return $this->db->get()->result_array();
     }
@@ -178,22 +183,22 @@ class user_qrcode_model extends MY_Model
      * @param array $productIdList 產品編號列表
      * @param string $startTime 篩選起始時間
      * @param string $endTime 篩選結束時間
-
      * @return mixed
      */
-    public function getInvestorPlatformFeeList(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime='', string $endTime='') {
-        $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '','', TRUE);
+    public function getInvestorPlatformFeeList(array $qrcodeWhere, array $productIdList, array $statusList, string $startTime = '', string $endTime = '')
+    {
+        $subQuery = $this->getLoanedCount($qrcodeWhere, $productIdList, $statusList, '', '', TRUE);
 
         $this->db
             ->select('r.*, tra.amount as platform_fee, tra.entering_date')
             ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($subQuery) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` != `tra`.`user_from`")
+            ->join("({$subQuery}) as `r`", "`r`.`id` = `tra`.`target_id` AND `r`.`user_id` != `tra`.`user_from`")
             ->where('tra.source', SOURCE_FEES)
             ->where('tra.status', TRANSACTION_STATUS_PAID_OFF);
-        if($startTime!='')
-            $this->db->where("entering_date >=",  $startTime);
-        if($endTime!='')
-            $this->db->where("entering_date <",  $endTime);
+        if ($startTime != '')
+            $this->db->where("entering_date >=", $startTime);
+        if ($endTime != '')
+            $this->db->where("entering_date <", $endTime);
 
         return $this->db->get()->result_array();
     }
@@ -206,23 +211,26 @@ class user_qrcode_model extends MY_Model
      * @param int $offset
      * @return mixed
      */
-    public function getUserQrcodeInfo(array $user_where=[], array $qrcode_where=[], int $limit=0, int $offset=0) {
+    public function getUserQrcodeInfo(array $user_where = [], array $qrcode_where = [], int $limit = 0, int $offset = 0)
+    {
         $this->_database->select('*')
             ->from("`p2p_user`.`users`");
-        if(!empty($user_where))
+        if ( ! empty($user_where))
             $this->_set_where([$user_where]);
         $subQuery = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database
             ->select('u.name, uq.*')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
-            ->join("($subQuery) as `u`", "`u`.`id` = `uq`.`user_id`");
-        if($limit) {
+            ->join("({$subQuery}) as `u`", "`u`.`id` = `uq`.`user_id`");
+        if ($limit)
+        {
             $offset = max(0, $offset);
             $limit = max(0, $limit);
             $this->_database->limit($limit, $offset);
         }
-        if(!empty($qrcode_where)) {
+        if ( ! empty($qrcode_where))
+        {
             $qrcode_where = array_combine(addPrefixToArray(array_keys($qrcode_where), "uq."), array_values($qrcode_where));
             $this->_set_where([$qrcode_where]);
         }
@@ -235,23 +243,24 @@ class user_qrcode_model extends MY_Model
      * @param array $qrcode_where
      * @return mixed
      */
-    public function getQrcodeRewardInfo(array $qrcode_where=[]) {
+    public function getQrcodeRewardInfo(array $qrcode_where = [])
+    {
         $this->_database->select('*')
             ->from("`p2p_user`.`user_qrcode`");
-        if(!empty($qrcode_where))
+        if ( ! empty($qrcode_where))
             $this->_set_where([$qrcode_where]);
         $subQuery = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database
             ->select('u.id, u.promote_code, u.handle_time, u.settlementing, ur.user_qrcode_id, ur.start_time, ur.end_time, ur.amount, ur.json_data')
             ->from('`p2p_transaction`.`qrcode_reward` AS `ur`')
-            ->join("($subQuery) as `u`", "`u`.`id` = `ur`.`user_qrcode_id`", 'right')
+            ->join("({$subQuery}) as `u`", "`u`.`id` = `ur`.`user_qrcode_id`", 'right')
             ->order_by("ur.end_time", "DESC");
         $subQuery2 = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database
             ->select('r.*')
-            ->from("($subQuery2) as `r`")
+            ->from("({$subQuery2}) as `r`")
             ->group_by("r.promote_code");
 
         return $this->_database->get()->result_array();
@@ -264,33 +273,39 @@ class user_qrcode_model extends MY_Model
      * @param $new_status
      * @return array|stdClass
      */
-    public function setUserPromoteLock($promoteCode, $old_status, $new_status) {
+    public function setUserPromoteLock($promoteCode, $old_status, $new_status)
+    {
         $conditions = [
-            'promote_code'  => $promoteCode,
+            'promote_code' => $promoteCode,
             'settlementing' => $old_status,
-            'status'        => 1,
+            'status' => 1,
         ];
 
         $this->db->trans_start();
         $this->db->select_for_update('*')->where($conditions);
         $userPromoteCode = $this->db->get($this->_table)->result();
 
-        if(is_array($userPromoteCode) && !empty($userPromoteCode)) {
+        if (is_array($userPromoteCode) && ! empty($userPromoteCode))
+        {
             $userPromoteCode = $userPromoteCode[0];
             $result = $this->db->where(['id' => $userPromoteCode->id])
                 ->set(['settlementing' => $new_status])
                 ->update($this->_table);
 
             // 更新失敗需回傳 empty array
-            if($this->db->affected_rows() > 0) {
+            if ($this->db->affected_rows() > 0)
+            {
                 $userPromoteCode->settlementing = $new_status;
-            }else{
+            }
+            else
+            {
                 $userPromoteCode = [];
             }
         }
         $this->db->trans_complete();
 
-        if($this->db->trans_status() === FALSE) {
+        if ($this->db->trans_status() === FALSE)
+        {
 
             $userPromoteCode = [];
         }
@@ -298,11 +313,12 @@ class user_qrcode_model extends MY_Model
         return $userPromoteCode;
     }
 
-    public function autoRenewTime($alias) {
+    public function autoRenewTime($alias)
+    {
         $this->_database
             ->from('`p2p_user`.`user_qrcode`')
             ->where('status', PROMOTE_STATUS_AVAILABLE)
-            ->where('DATE_SUB(end_time, INTERVAL 1 DAY) <=', "'".date('Y-m-d H:i:s')."'", FALSE)
+            ->where('DATE_SUB(end_time, INTERVAL 1 DAY) <=', "'" . date('Y-m-d H:i:s') . "'", FALSE)
             ->where('alias', $alias)
             ->set('end_time', 'DATE_ADD(end_time, INTERVAL 1 YEAR)', FALSE)
             ->update();

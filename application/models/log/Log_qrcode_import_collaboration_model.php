@@ -23,16 +23,17 @@ class Log_qrcode_import_collaboration_model extends MY_Model
      * @param array $where
      * @return mixed
      */
-    public function get_imported_log_list(array $where) {
+    public function get_imported_log_list(array $where)
+    {
         $this->_database->select('id, qrcode_collaboration_id, count, created_at')
             ->from('p2p_log.qrcode_import_collaboration_log');
-        if(!empty($where))
+        if ( ! empty($where))
             $this->_set_where([$where]);
         $subQuery = $this->_database->get_compiled_select('', TRUE);
         $this->_database
             ->select('qr.id, qc.collaborator, qr.count, qr.created_at')
             ->from('`p2p_user`.`qrcode_collaborator` AS `qc`')
-            ->join("($subQuery) as `qr`", "`qr`.`qrcode_collaboration_id` = `qc`.`id`")
+            ->join("({$subQuery}) as `qr`", "`qr`.`qrcode_collaboration_id` = `qc`.`id`")
             ->order_by('qr.created_at', 'DESC');
         return $this->_database->get()->result_array();
     }
