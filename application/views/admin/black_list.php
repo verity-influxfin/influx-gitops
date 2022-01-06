@@ -11,7 +11,7 @@
 			<form class="d-flex" @submit.prevent="getBlockUserById">
 				<div class="p-2">會員ID</div>
 				<div class="p-2">
-					<input type="text" class="form-control" required>
+					<input type="text" class="form-control" v-model="searchUserId" required>
 				</div>
 				<div class="search-btn">
 					<button class="btn btn-primary" type="submit">搜尋</button>
@@ -48,11 +48,11 @@
 				<div class="p-2">
 					<select id="rule-option" class="form-control">
 						<option value=""></option>
-						<option value="1" label="信用不良紀錄">信用不良紀錄</option>
-						<option value="2" label="第三方資料結果">第三方資料結果</option>
-						<option value="3" label="反詐欺規則">反詐欺規則</option>
-						<option value="4" label="其他 （人為加入）">其他 （人為加入）</option>
-						<option value="5" label="授信政策">授信政策</option>
+						<option value="信用不良紀錄" label="信用不良紀錄">信用不良紀錄</option>
+						<option value="第三方資料結果" label="第三方資料結果">第三方資料結果</option>
+						<option value="反詐欺規則" label="反詐欺規則">反詐欺規則</option>
+						<option value="其他 （人為加入）" label="其他 （人為加入）">其他 （人為加入）</option>
+						<option value="授信政策" label="授信政策">授信政策</option>
 					</select>
 				</div>
 				<div class="p-2">
@@ -61,9 +61,11 @@
 				<div class="p-2">
 					<select id="status" class="form-control">
 						<option value=""></option>
-						<option value="1" label="封鎖三個月">封鎖三個月</option>
-						<option value="2" label="封鎖六個月">封鎖六個月</option>
-						<option value="3" label="拒絕">拒絕</option>
+						<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
+						<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
+						<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
+						<option value="轉二審" label="轉二審">轉二審</option>
+						<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
 					</select>
 				</div>
 			</div>
@@ -115,7 +117,7 @@
 	</div>
 	<div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content" @submit.prement="updateStatus">
+			<form class="modal-content" @submit.prevent="updateStatus">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -126,11 +128,14 @@
 					<div class="d-flex mb-4">
 						<div class="col-20 input-require">調整狀態：</div>
 						<div class="col">
-							<select name="" id="" class="w-100 form-control" v-model="updateStatusForm.blockTimeText" required>
+							<select name="" id="" class="w-100 form-control" v-model="updateStatusForm.blockTimeText"
+								required>
 								<option value=""></option>
-								<option value="1" label="封鎖三個月">封鎖三個月</option>
-								<option value="2" label="封鎖六個月">封鎖六個月</option>
-								<option value="3" label="拒絕">拒絕</option>
+								<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
+								<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
+								<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
+								<option value="轉二審" label="轉二審">轉二審</option>
+								<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
 							</select>
 						</div>
 					</div>
@@ -150,7 +155,7 @@
 	</div>
 	<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content" @submit.prevent="blockUserAdd" >
+			<form class="modal-content" @submit.prevent="blockUserAdd">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -188,6 +193,7 @@
 								<option value="低風險">低風險</option>
 								<option value="中風險">中風險</option>
 								<option value="高風險">高風險</option>
+								<option value="追蹤分析">追蹤分析</option>
 								<option value="拒絕">拒絕</option>
 							</select>
 						</div>
@@ -197,9 +203,12 @@
 						<div class="col">
 							<select id="status" class="form-control" v-model="blockUserAddForm.blockTimeText" required>
 								<option value=""></option>
-								<option value="封鎖三個月">封鎖三個月</option>
-								<option value="封鎖六個月">封鎖六個月</option>
-								<option value="永久封鎖">永久封鎖</option>
+								<option value=""></option>
+								<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
+								<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
+								<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
+								<option value="轉二審" label="轉二審">轉二審</option>
+								<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
 							</select>
 						</div>
 					</div>
@@ -221,7 +230,7 @@
 	</div>
 	<div class="modal fade" id="rejoinModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content">
+			<form class="modal-content" @submit.prevent="blockEnable">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -232,7 +241,7 @@
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">重新加入原因：</div>
 						<div class="col">
-							<input type="text" required class="w-100 form-control">
+							<input type="text" required class="w-100 form-control" v-model="enableForm.blockRemark">
 						</div>
 					</div>
 					<div class="d-flex justify-between mx-3 mb-3">
@@ -299,67 +308,29 @@
 		el: '#page-wrapper',
 		data() {
 			return {
-				allBlockUsers: [
-					{
-						'userId': 44291,
-						'blockDescription': '疑似聯徵造假',
-						'blockInfo': {
-							'blockTimeText': '封鎖三個月',
-							'action': 'block-apply-product',
-							'startAt': 1641213321,
-							'endAt': 2505126921
-						},
-						'blockRemark': '調整狀態: 封鎖三個月\n調整原因: 重新提供非偽造支聯徵報告',
-						'blockRisk': '中風險',
-						'blockRule': '信用不良紀錄',
-						'history': [],
-						'status': 0,
-						'updatedAt': 1641213321,
-						'updatedBy': '44291',
-						'updateReason': '加入黑名單'
-					},
-					{
-						'userId': 44291,
-						'blockDescription': '疑似聯徵造假',
-						'blockInfo': {
-							'blockTimeText': '封鎖三個月',
-							'action': 'block-apply-product',
-							'startAt': 1641213321,
-							'endAt': 2505126921
-						},
-						'blockRemark': '調整狀態: 封鎖三個月\n調整原因: 重新提供非偽造支聯徵報告',
-						'blockRisk': '中風險',
-						'blockRule': '信用不良紀錄',
-						'history': [],
-						'status': 1,
-						'updatedAt': 1641213321,
-						'updatedBy': '44291',
-						'updateReason': '加入黑名單'
-
-					},
-				],
+				allBlockUsers: [],
 				allBlockUserParam: {
 					blockRule: null,
 					blockTimeText: null
 				},
 				searchUserId: null,
 				searchUserData: {
-					'userId': 12333,
-					'blockDescription': '疑似聯徵造假',
+					'userId': null,
+					'blockDescription': '',
 					'blockInfo': {
-						'blockTimeText': '封鎖三個月',
-						'action': 'block-apply-product',
-						'startAt': 1641213321,
-						'endAt': 2505126921
+						'blockTimeText': '',
+						'action': '',
+						'startAt': null,
+						'endAt': null
 					},
-					'blockRemark': '調整狀態: 封鎖三個月\n調整原因: 重新提供非偽造支聯徵報告',
-					'blockRisk': '中風險',
-					'blockRule': '信用不良紀錄',
+					'blockRemark': '',
+					'blockRisk': '',
+					'blockRule': '',
 					'history': [],
-					'status': 1,
-					'updatedAt': 1641213321,
-					'updatedBy': '44291',
-					'updateReason': '加入黑名單'
+					'status': null,
+					'updatedAt': null,
+					'updatedBy': null,
+					'updateReason': ''
 				},
 				blockUserAddForm: {
 					userId: null,
@@ -369,14 +340,18 @@
 					blockRisk: null,
 					blockTimeText: null,
 				},
-				updateStatusForm:{
-					userId:null,
-					blockRemark:null,
-					blockTimeText:null,
+				updateStatusForm: {
+					userId: null,
+					blockRemark: null,
+					blockTimeText: null,
 				},
-				disableForm:{
-					userId:null,
-					blockRemark:null,
+				disableForm: {
+					userId: null,
+					blockRemark: null,
+				},
+				enableForm: {
+					userId: null,
+					blockRemark: null,
 				}
 			}
 		},
@@ -398,7 +373,7 @@
 						// 取消封鎖
 						return `<div class="d-flex flex-column">
 									<div class="mb-2">${id}</div>
-									<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal">
+									<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal" onclick="v.$data.enableForm.userId=${id}">
 										已移除
 									</button>
 								</div>`
@@ -428,7 +403,7 @@
 									</button>
 								</div>`
 				}
-				const statusGroup = (text, status,id) => {
+				const statusGroup = (text, status, id) => {
 					if (status === 'disabled') {
 						return `<div class="d-flex flex-column">
 								<div class="mb-2">${text}</div>
@@ -531,67 +506,62 @@
 				])
 			},
 			getAllBlockUsers() {
-				// const { blockRule, blockTimeText } = this.allBlockUserParam
-				// axios.get('blockUser/getAllBlockUsers', {
-				// 	params: {
-				// 		blockRule,
-				// 		blockTimeText
-				// 	}
-				// }).then(({ data }) => {
-				// 	this.allBlockUsers = data.results
-				// 	this.allBlockUsers.forEach(item => this.setMainTableRow(item))
-				// 	$('#main-table').DataTable().draw()
-				// })
-				this.allBlockUsers.forEach(item => this.setMainTableRow(item))
-				$('#main-table').DataTable().draw()
+				const { blockRule, blockTimeText } = this.allBlockUserParam
+				axios.get('get_all_block_users', {
+					params: {
+						blockRule,
+						blockTimeText
+					}
+				}).then(({ data }) => {
+					this.allBlockUsers = data.results
+					this.allBlockUsers.forEach(item => this.setMainTableRow(item))
+					$('#main-table').DataTable().draw()
+				})
+				// this.allBlockUsers.forEach(item => this.setMainTableRow(item))
+				// $('#main-table').DataTable().draw()
 			},
 			getBlockUserById() {
-				// const userId = this.searchUserId
-				// axios.get('blockUser/getBlockUserById', {
-				// 	params: {
-				// 		userId,
-				// 	}
-				// }).then(({ data }) => {
-				// 	this.searchUserData = data.results
-				// 	this.setSearchTableRow(this.searchUserData)
-				// 	$('#search-table').DataTable().draw()
-				// })
-				this.setSearchTableRow(this.searchUserData)
+				const userId = this.searchUserId
+				axios.get('get_block_user_by_id', {
+					params: {
+						userId,
+					}
+				}).then(({ data }) => {
+					this.searchUserData = data.results
+					this.setSearchTableRow(this.searchUserData)
+					$('#search-table').DataTable().draw()
+				})
 				$('#search-table').DataTable().draw()
 			},
 			blockUserAdd() {
 				const { blockUserAddForm } = this
-				axios.post('blockUser/add', {
-					data: {
-						...blockUserAddForm
-					}
+				axios.post('block_add', {
+					...blockUserAddForm
 				}).then(({ data }) => {
 					if (data.status !== 200) {
 						alert(data.message)
 					}
-				}).finally(()=>{
+				}).finally(() => {
 					$('#newModal').modal('hide')
 					this.getBlockUserById(userId)
 				})
 			},
-			updateStatus(){
+			updateStatus() {
 				const { updateStatusForm } = this
-				axios.post('blockUser/update', {
-					data: {
-						...updateStatusForm
-					}
+				axios.post('block_update', {
+					...updateStatusForm
 				}).then(({ data }) => {
 					if (data.status !== 200) {
 						alert(data.message)
 					}
-				}).finally(()=>{
+				}).finally(() => {
 					$('#statusModal').modal('hide')
 					this.getAllBlockUsers()
 				})
 			},
-			blockDisable(){
+			blockDisable() {
 				const { disableForm } = this
-				axios.post('blockUser/disable', {
+				axios.post('block_disable', {
 					data: {
 						...disableForm
 					},
@@ -601,6 +571,20 @@
 					}
 				}).finally(() => {
 					$('#idModal').modal('hide')
+					this.getAllBlockUsers()
+				})
+			},
+			blockEnable() {
+				const { enableForm } = this
+				axios.post('block_enable', {
+					...enableForm
+				}).then(({ data }) => {
+					console.log(data)
+					if (data.status !== 200) {
+						alert(data.message)
+					}
+				}).finally(() => {
+					$('#rejoinModal').modal('hide')
 					this.getAllBlockUsers()
 				})
 			}
