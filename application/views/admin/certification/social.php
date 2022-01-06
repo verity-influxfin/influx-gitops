@@ -58,8 +58,8 @@
 											<label>備註</label>
 											<?
 											if ($remark) {
-												if (isset($remark["fail"]) && $remark["fail"]) {
-													echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+												if (isset($remark["verify_result"]) && $remark["verify_result"]) {
+													echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["verify_result"] . '</p>';
 												}
 											}
 											?>
@@ -70,7 +70,6 @@
                                                     <tbody>
                                                         <tr style="text-align: center;"><td colspan="2"><span>風控因子確認</span></td></tr>
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                        <tr><td><span>好友數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
                                                         <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
                                                         <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
@@ -99,7 +98,7 @@
 														<? } ?>
 														<option value="other">其它</option>
 													</select>
-													<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
+													<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["verify_result"]) ? $remark["verify_result"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
 												</div>
 												<button type="submit" class="btn btn-primary">送出</button>
 											</fieldset>
@@ -192,9 +191,12 @@
                                                 <table border="1" style="text-align: center;width:100%">
                                                     <tr>
                                                         <td>IG 帳號</td>
-                                                        <td><a href="<?= isset($content['instagram']['link']) ? $content['instagram']['link'] : "" ?>" target="_blank">
-        													<h4><?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?></h4>
-        												</a></td>
+                                                        <td>
+                                                            <a href="https://www.instagram.com/<?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?>"
+                                                               target="_blank">
+                                                                <h4><?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?></h4>
+                                                            </a>
+                                                        </td>
                                                     </tr>
                                                     <tr>
                                                         <td>帳號是否存在</td>
@@ -211,6 +213,18 @@
                                                     <tr>
                                                         <td>追蹤數</td>
                                                         <td><?= isset($content['instagram']['info']['allFollowingCount']) ? $content['instagram']['info']['allFollowingCount'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>是否為私人帳號</td>
+                                                        <td><? if (isset($content['instagram']['info']['isPrivate'])){
+                                                                    echo $content['instagram']['info']['isPrivate'] == TRUE ? "是" : "否";
+                                                             } ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>是否追蹤普匯官方帳號</td>
+                                                        <td><? if (isset($content['instagram']['info']['isFollower'])){
+                                                                echo $content['instagram']['info']['isFollower'] == TRUE ? "是" : "否";
+                                                            } ?></td>
                                                     </tr>
                                                 </table>
 
@@ -241,7 +255,7 @@
                                                         <tbody>
                                                             <tr style="text-align: center;"><td colspan="2"><span>風控因子確認</span></td></tr>
                                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                            <tr><td><span>好友數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
+                                                            <tr><td><span>被追蹤數</span></td><td><input class="meta-input" type="text" name="allFollowingCount" placeholder=""></td></tr>
                                                             <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
                                                             <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
@@ -255,13 +269,22 @@
 											</div>
 											<div class="form-group">
 												<label>備註</label>
-												<?
-												if ($remark) {
-													if (isset($remark["fail"]) && $remark["fail"]) {
-														echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
-													}
-												}
-												?>
+                                                <?
+                                                if ($remark)
+                                                {
+                                                    if (isset($remark["verify_result"]) && $remark["verify_result"])
+                                                    {
+                                                        foreach ($remark["verify_result"] as $verify_result)
+                                                        {
+                                                            echo '<p style="color:red;" class="form-control-static">失敗原因：' . $verify_result . '</p>';
+                                                        }
+                                                    }
+                                                    else if (isset($remark["fail"]) && $remark["fail"])
+                                                    {
+                                                        echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                                    }
+                                                }
+                                                ?>
 											</div>
                                             <div class="form-group">
                                                 <label>系統審核</label>
@@ -292,7 +315,9 @@
 															<? } ?>
 															<option value="other">其它</option>
 														</select>
-														<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
+                                                        <input type="text" class="form-control" id="fail" name="fail"
+                                                               value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : "" ?>
+                                                            " style="background-color:white!important;display:none" disabled="false">
 													</div>
 													<button type="submit" class="btn btn-primary">送出</button>
 												</fieldset>
