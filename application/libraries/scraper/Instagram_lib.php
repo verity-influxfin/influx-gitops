@@ -6,7 +6,7 @@ class Instagram_lib
     function __construct($params = [])
     {
         $this->CI = &get_instance();
-        $this->scraperUrl = "http://" . getenv('GRACULA_IP') . ":" . getenv('GRACULA_PORT') . "/scraper/api/v1.0/instagram/";
+        $this->scraperUrl = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/instagram/';
         if (isset($params['ip']))
         {
             $this->scraperUrl = "http://{$params['ip']}/scraper/api/v1.0/";
