@@ -923,7 +923,6 @@ class Certification_lib{
                                     }
                                     $content['instagram'] = [
                                         'username'              => $ig_username,
-                                        'link'                  => 'https://www.instagram.com/' . $ig_username,
                                         'usernameExist'         => $usernameExist,
                                         'info' => [
                                             'isPrivate'         => $isPrivate,
