@@ -331,6 +331,7 @@
 
                                if(skbank_response == '成功'){
                                    $("#skbank_img_send_btn").prop("disabled", false);
+                                   $("#skbank_approve_send_btn").prop("disabled", false);
                                }else{
                                    $("#skbank_text_send_btn").prop("disabled", false);
                                }
@@ -501,18 +502,23 @@
               url: `/admin/target/skbank_text_get?target_id=${target_id}`,
               success: function (response) {
                   response = response.response;
-                  if(response){
+                  if(response && response.length != 0){
                       Object.keys(response).forEach( (key) => {
                           $(`#${key}`).text(response[key]);
-                          if(key == 'skbankMetaInfo' && response[key] == '成功'){
-                              $("#skbank_text_send_btn").prop("disabled", true);
-                              $("#skbank_img_send_btn").prop("disabled", false);
-                              $("#skbank_approve_send_btn").prop("disabled", false);
-                          }else {
-                              $("#skbank_img_send_btn").prop("disabled", true);
-                              $("#skbank_approve_send_btn").prop("disabled", true);
+                          if(key == 'skbankMetaInfo'){
+                              if(response[key] == '成功'){
+                                  $("#skbank_text_send_btn").prop("disabled", true);
+                                  $("#skbank_img_send_btn").prop("disabled", false);
+                                  $("#skbank_approve_send_btn").prop("disabled", false);
+                              }else{
+                                  $("#skbank_img_send_btn").prop("disabled", true);
+                                  $("#skbank_approve_send_btn").prop("disabled", true);
+                              }
                           }
                       })
+                  }else{
+                      $("#skbank_img_send_btn").prop("disabled", true);
+                      $("#skbank_approve_send_btn").prop("disabled", true);
                   }
               },
               error: function(error) {
