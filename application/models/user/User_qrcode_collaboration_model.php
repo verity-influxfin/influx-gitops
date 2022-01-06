@@ -48,7 +48,7 @@ class user_qrcode_collaboration_model extends MY_Model
         $this->db
             ->select('uq.id, uq.promote_code, uqc.qrcode_collaborator_id, uqc.loan_time')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
-            ->join("($subQuery) as `uqc`", "`uqc`.`user_qrcode_id` = `uq`.`id`");
+            ->join("({$subQuery}) as `uqc`", "`uqc`.`user_qrcode_id` = `uq`.`id`");
         if (is_array($userQrcodeId))
             $this->db->where_in('uq.id', $userQrcodeId);
         else
@@ -58,7 +58,7 @@ class user_qrcode_collaboration_model extends MY_Model
         $this->db
             ->select('r.*, uc.type')
             ->from('`p2p_user`.`qrcode_collaborator` AS `uc`')
-            ->join("($subQuery2) as `r`", "`r`.`qrcode_collaborator_id` = `uc`.`id`");
+            ->join("({$subQuery2}) as `r`", "`r`.`qrcode_collaborator_id` = `uc`.`id`");
 
         return $this->db->get()->result_array();
     }

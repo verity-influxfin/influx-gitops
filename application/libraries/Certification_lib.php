@@ -2409,7 +2409,7 @@ class Certification_lib{
             $rs = $this->user_meta_progress($data, $info);
             if ($rs)
             {
-                $this->CI->user_model->update($info->user_id, ['email' => $content['email']]);
+                $this->CI->user_model->update($info->user_id, ['email' => $email]);
                 return $this->fail_other_cer($info);
             }
         }

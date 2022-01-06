@@ -243,7 +243,7 @@ class Qrcode_lib
             {
                 $monthly_data = $reward_data['monthly_rewards'];
 
-                foreach ($categoryInitNum as $category => $_)
+                foreach (array_keys($categoryInitNum) as $category)
                 {
                     if ( ! isset($monthly_data[$date][$category]['targets']) || empty($monthly_data[$date][$category]['targets']))
                     {
@@ -298,7 +298,7 @@ class Qrcode_lib
         $data['list'] = [];
         foreach ($data['reward_list'] as $date => $value)
         {
-            foreach ($categoryInitNum as $category => $_)
+            foreach (array_keys($categoryInitNum) as $category)
             {
                 if ( ! isset($value[$category]) || ! $value[$category])
                     continue;
@@ -323,7 +323,7 @@ class Qrcode_lib
 
         // 逾期追回處理
         $dockAmount = 0;
-        foreach ($categoryInitNum as $category => $_)
+        foreach (array_keys($categoryInitNum) as $category)
         {
             if ( ! isset($reward_data['dockList'][$category]) || ! $reward_data['dockList'][$category])
                 continue;

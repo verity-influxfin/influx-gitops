@@ -51,7 +51,7 @@ class user_qrcode_apply_model extends MY_Model
         $this->_database
             ->select('u.user_id, u.alias, uqa.id as qrcode_apply_id, uqa.user_qrcode_id, uqa.contract_content, uqa.status, uqa.contract_format_id, uqa.created_at, uqa.draw_up_at')
             ->from('`p2p_user`.`user_qrcode_apply` AS `uqa`')
-            ->join("($sub_query) as `u`", "`u`.`id` = `uqa`.`user_qrcode_id`");
+            ->join("({$sub_query}) as `u`", "`u`.`id` = `uqa`.`user_qrcode_id`");
         if ($limit)
         {
             $offset = max(0, $offset);
