@@ -91,7 +91,7 @@
 	</div>
 	<div class="modal fade" id="idModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content">
+			<form class="modal-content" @submit.prevent="blockDisable">
 				<div class="modal-header">
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -102,7 +102,7 @@
 					<div class="d-flex mb-4">
 						<div class="col-20 input-require">移除原因：</div>
 						<div class="col">
-							<input type="text" required class="w-100 form-control">
+							<input type="text" required class="w-100 form-control" v-model="disableForm.blockRemark">
 						</div>
 					</div>
 					<div class="d-flex justify-between mx-3 mb-3">
@@ -373,6 +373,10 @@
 					userId:null,
 					blockRemark:null,
 					blockTimeText:null,
+				},
+				disableForm:{
+					userId:null,
+					blockRemark:null,
 				}
 			}
 		},
@@ -403,7 +407,7 @@
 						// 封鎖中
 						return `<div class="d-flex flex-column">
 							<div class="mb-2">${id}</div>
-							<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal">
+							<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal" onclick="v.$data.disableForm.userId=${id}">
 								移除
 							</button>
 						</div>`
@@ -582,6 +586,21 @@
 					}
 				}).finally(()=>{
 					$('#statusModal').modal('hide')
+					this.getAllBlockUsers()
+				})
+			},
+			blockDisable(){
+				const { disableForm } = this
+				axios.post('blockUser/disable', {
+					data: {
+						...disableForm
+					},
+				}).then(({ data }) => {
+					if (data.status !== 200) {
+						alert(data.message)
+					}
+				}).finally(() => {
+					$('#idModal').modal('hide')
 					this.getAllBlockUsers()
 				})
 			}
