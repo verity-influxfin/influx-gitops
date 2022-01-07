@@ -27,7 +27,7 @@
 			</div>
 			<!-- /.row -->
 			<div class="row">
-				<? if (isset($content['type'])) { ?>
+				<?php if (isset($content['type'])) { ?>
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -56,7 +56,7 @@
 										</div>
 										<div class="form-group">
 											<label>備註</label>
-											<?
+											<?php
 											if ($remark) {
 												if (isset($remark["verify_result"]) && $remark["verify_result"]) {
 													echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["verify_result"] . '</p>';
@@ -82,9 +82,9 @@
 											<fieldset>
 												<div class="form-group">
 													<select id="status" name="status" class="form-control" onchange="check_fail();">
-														<? foreach ($status_list as $key => $value) { ?>
+														<?php foreach ($status_list as $key => $value) { ?>
 															<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
-														<? } ?>
+														<?php } ?>
 													</select>
 													<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 													<input type="hidden" name="from" value="<?= isset($from) ? $from : ""; ?>">
@@ -93,9 +93,9 @@
 													<label>失敗原因</label>
 													<select id="fail" name="fail" class="form-control">
 														<option value="" disabled selected>選擇回覆內容</option>
-														<? foreach ($certifications_msg[4] as $key => $value) { ?>
+														<?php foreach ($certifications_msg[4] as $key => $value) { ?>
 															<option <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
-														<? } ?>
+														<?php } ?>
 														<option value="other">其它</option>
 													</select>
 													<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["verify_result"]) ? $remark["verify_result"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
@@ -106,7 +106,7 @@
 
 									</div>
 									<div class="col-lg-6">
-										<? if ($content['type'] == 'instagram') {
+										<?php if ($content['type'] == 'instagram') {
 											$info = isset($content['info']) ? $content['info'] : array();
 										?>
 											<table style="text-align: center;width:100%">
@@ -130,9 +130,9 @@
 												</tr>
 											</table>
 
-										<? } ?>
+										<?php } ?>
 									</div>
-									<? if (isset($info['meta']) && count($info['meta']) > 0) {
+									<?php if (isset($info['meta']) && count($info['meta']) > 0) {
 										foreach ($info['meta'] as $key => $value) {
 									?>
 											<div class="col-lg-3">
@@ -142,7 +142,7 @@
 												</a>
 												<p><?= isset($value['text']) ? $value['text'] : "" ?></p>
 											</div>
-									<? }
+									<?php }
 									} else {
 										echo '<h4>無貼文</h4>';
 									} ?>
@@ -153,7 +153,7 @@
 						</div>
 						<!-- /.panel -->
 					</div>
-				<? } else { ?>
+				<?php } else { ?>
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -216,28 +216,28 @@
                                                     </tr>
                                                     <tr>
                                                         <td>是否為私人帳號</td>
-                                                        <td><? if (isset($content['instagram']['info']['isPrivate'])){
+                                                        <td><?php if (isset($content['instagram']['info']['isPrivate'])){
                                                                     echo $content['instagram']['info']['isPrivate'] == TRUE ? "是" : "否";
                                                              } ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td>是否追蹤普匯官方帳號</td>
-                                                        <td><? if (isset($content['instagram']['info']['isFollower'])){
+                                                        <td><?php if (isset($content['instagram']['info']['isFollower'])){
                                                                 echo $content['instagram']['info']['isFollower'] == TRUE ? "是" : "否";
                                                             } ?></td>
                                                     </tr>
                                                 </table>
 
-                                                <? if(isset($content['instagram']['access_token'])){   ?>
+                                                <?php if(isset($content['instagram']['access_token'])){   ?>
 												<label>IG token(IG ID)</label>
-												<p class="form-control-static"><? echo $content['instagram']['access_token']; ?></p>
-                                                <? } ?>
+												<p class="form-control-static"><?php echo $content['instagram']['access_token']; ?></p>
+                                                <?php } ?>
 												<label>IG 大頭照</label>
 												<p><a href="<?= isset($content['instagram']['picture']) ? $content['instagram']['picture'] : "" ?>" data-fancybox="images">
 														<img src="<?= isset($content['instagram']['picture']) ? $content['instagram']['picture'] : "" ?>">
 													</a></p>
 												<label>IG 貼文</label>
-												<? if(isset($content['instagram']['meta'])) {
+												<?php if(isset($content['instagram']['meta'])) {
 													foreach ($content['instagram']['meta'] as $key => $value) {
 												?>
 													<div>
@@ -247,7 +247,7 @@
 														</a>
 														<p><?= isset($value['text']) ? $value['text'] : "" ?></p>
 													</div>
-												<? } }?>
+												<?php } }?>
 											</div>
                                             <div class="form-group">
                                                 <form role="form" action="/admin/certification/save_meta" method="post">
@@ -269,7 +269,7 @@
 											</div>
 											<div class="form-group">
 												<label>備註</label>
-                                                <?
+                                                <?php
                                                 if ($remark)
                                                 {
                                                     if (isset($remark["verify_result"]) && $remark["verify_result"])
@@ -288,7 +288,7 @@
 											</div>
                                             <div class="form-group">
                                                 <label>系統審核</label>
-                                                <?
+                                                <?php
                                                 if (isset($sys_check)) {
                                                     echo '<p class="form-control-static">' . ($sys_check==1?'是':'否') . '</p>';
                                                 }
@@ -299,9 +299,9 @@
 												<fieldset>
 													<div class="form-group">
 														<select id="status" name="status" class="form-control" onchange="check_fail();">
-															<? foreach ($status_list as $key => $value) { ?>
+															<?php foreach ($status_list as $key => $value) { ?>
 																<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
-															<? } ?>
+															<?php } ?>
 														</select>
 														<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 														<input type="hidden" name="from" value="<?= isset($from) ? $from : ""; ?>">
@@ -310,9 +310,9 @@
 														<label>失敗原因</label>
 														<select id="fail" name="fail" class="form-control">
 															<option value="" disabled selected>選擇回覆內容</option>
-															<? foreach ($certifications_msg[4] as $key => $value) { ?>
+															<?php foreach ($certifications_msg[4] as $key => $value) { ?>
 																<option <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
-															<? } ?>
+															<?php } ?>
 															<option value="other">其它</option>
 														</select>
                                                         <input type="text" class="form-control" id="fail" name="fail"
@@ -332,7 +332,7 @@
 								<!-- /.panel -->
 							</div>
 							<!-- /.col-lg-12 -->
-						<? } ?>
+						<?php } ?>
 						<!-- /.col-lg-12 -->
 						</div>
 						<!-- /.row -->
