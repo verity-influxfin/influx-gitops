@@ -191,5 +191,133 @@ class S3_lib {
 		}
 	}
 
+    // 新光附件圖片壓 pdf
+    public function imagesToPdf($fileUrlList = [], $user_id = 0, $name = 'credit', $type = 'skbank_raw_data')
+    {
+        $images = [];
+        $fileList = [];
+        $dir = 'pdf/';
+        $result = [];
+        try {
+            if ( empty($fileUrlList) || ! is_array($fileUrlList) )
+                return '';
+
+            foreach($fileUrlList as $list_name => $url)
+            {
+                $path = sprintf('%s%s_%s.jpg', $dir, $list_name, $type);
+                if ( is_writable($dir) )
+                {
+                    $content = FALSE;
+                    $content = @file_get_contents($url);
+                    if ( $content !== FALSE )
+                    {
+                        file_put_contents($path, $content);
+                    }
+                    else
+                    {
+                        log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'image file get content failed']));
+                    }
+                    if ( file_exists($path) )
+                    {
+                        $real_path = realpath($path);
+                        // 壓縮圖片
+                        $compression_image = new Imagick();
+                        $compression_image->readImage($real_path);
+                        $compression_image->setImageCompression(Imagick::COMPRESSION_JPEG);
+                        $compression_image->setImageCompressionQuality(10);
+                        $compression_image->setImageFormat('jpg');
+                        $compression_image->stripImage();
+                        $compression_image->writeImage($real_path);
+                        $compression_image->destroy();
+
+                        if ( file_exists($real_path) )
+                        {
+                            $images[] = $real_path;
+                        }
+                        else
+                        {
+                            log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'array insert failed : file not exists, maybe ']));
+                        }
+                    }
+                    else
+                    {
+                        log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'image file create failed']));
+                    }
+                }
+                else
+                {
+                    log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'folder is not writable']));
+                }
+            }
+            if ( ! empty($images) && count($fileUrlList) == count($images) )
+            {
+                // 拆分檔案，五個一組
+                $images = array_chunk($images,5);
+                // 合併多張圖片至PDF檔案
+                foreach ($images as $chunk_images)
+                {
+                    $content = FALSE;
+                    $pdfPath = $dir . round(microtime(TRUE) * 1000) . '_combined.pdf';
+
+                    $pdfImagick = new Imagick($chunk_images);
+                    $pdfImagick->setImageFormat('pdf');
+                    $pdfImagick->writeImages($pdfPath, TRUE);
+                    $pdfImagick->destroy();
+
+                    if ( file_exists($pdfPath) )
+                    {
+                        $content = @file_get_contents($pdfPath);
+
+                        // 上傳PDF至S3
+                        if( $content !== FALSE )
+                        {
+                            $s3_result = $this->client->putObject(array(
+                                'Bucket' => S3_BUCKET,
+                                'Key' =>   'user_upload/' .$user_id .'/'. round(microtime(TRUE) * 1000) . rand(1, 99) . '.pdf',
+                                'Body' => $content
+                            ));
+                            if ( ! empty($s3_result)
+                                && isset($s3_result['ObjectURL'])
+                                && ! empty($s3_result['ObjectURL']) )
+                            {
+                                $result[] = $s3_result['ObjectURL'];
+                            }
+                            else
+                            {
+                                log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'file upload failed with s3']));
+                            }
+                        }
+                        else
+                        {
+                            log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'pdf file get content failed']));
+                        }
+                    }
+                    else
+                    {
+                        log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'pdf file not exists']));
+                    }
+                }
+            }
+            else
+            {
+                log_message('error',json_encode(['function_name'=>'imagesToPdf','message'=>'number of S3 urls not equal to compression images']));
+            }
+        }
+        catch (S3Exception $e)
+        {
+            error_log('Connecting to S3 was failed. Error in '.$e->getFile().' at line '.$e->getLine());
+        }
+        finally
+        {
+            $images = array_reduce($images, 'array_merge', array());
+            foreach ($images as $filename)
+            {
+                if ( file_exists($filename) )
+                    unlink($filename);
+            }
+		}
+        return $result;
+    }
+
 }
 ?>
