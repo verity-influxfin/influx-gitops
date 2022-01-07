@@ -16,7 +16,7 @@ class Brookesia_lib
 			return false;
 		}
 
-		$url = $this->brookesiaUrl  . "check/9487/checkAll";
+		$url = $this->brookesiaUrl  . "check/checkAll";
 		$data = ["userId" => $userId];
 
 		$result = curl_get($url, $data);
@@ -35,7 +35,7 @@ class Brookesia_lib
 			return false;
 		}
 
-		$url = $this->brookesiaUrl  . "check/0/checkAll?userId=" . $userId;
+		$url = $this->brookesiaUrl  . "check/checkAll?userId=" . $userId;
 
 		$result = curl_get($url);
 		$response = json_decode($result);

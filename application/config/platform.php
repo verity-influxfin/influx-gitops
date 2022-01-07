@@ -6,6 +6,9 @@ $config['admin_menu'] = [
 	'AntiFraud' => [
 		'name' => '反詐欺管理指標'
 	],
+    'BlockList' =>[
+        'name' => '黑名單管理'
+    ],
     'Target' => [
         'parent_name' => '借款管理',
         'index' => '全部列表',
