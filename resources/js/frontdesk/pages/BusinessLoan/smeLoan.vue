@@ -196,6 +196,8 @@
               <div class="process-item item-5">
                 <div>等待系統審核</div>
                 <div>媒合資金方</div>
+                <div class="coop-title">目前資金合作方：</div>
+                <a class="coop-link" href="https://www.skbank.com.tw/df0df61416.html?" target="_blank">新光銀行（OU微企貸）</a>
                 <div class="item-5-line">
                   <div class="line"></div>
                   <div class="circle"></div>
@@ -770,6 +772,14 @@ export default {
           font-style: normal;
           line-height: 1.5;
           color: #5d5555;
+          .coop-title{
+            //   font-size: 18px;
+            font-weight: bold;
+          }
+          .coop-link{
+              color: #1e69aa;
+              text-decoration: underline;
+          }
           &.item-1 {
             grid-area: p1;
           }
