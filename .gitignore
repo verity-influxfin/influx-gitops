@@ -12,5 +12,19 @@ npm-debug.log
 yarn-error.log
 composer.lock
 
+# build files
 /public/upload
-/public/mix-manifest.json
+public/images
+public/js/backend.js
+public/js/backend.js.LICENSE.txt
+public/js/campusJoin.js
+public/js/cardgame.js
+public/js/greeting.js
+public/js/greeting.js.LICENSE.txt
+public/js/web.js
+public/js/web.js.LICENSE.txt
+public/css/backend.css
+public/css/campusJoin.css
+public/css/errors.css
+public/css/web.css
+public/mix-manifest.json
