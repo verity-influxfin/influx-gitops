@@ -168,12 +168,6 @@
                     <div class="clear-icon" @click="doClear">x</div>
                 </div>
                 <div class="item" v-show="!inputing">
-                    分期付款超市
-                    <div class="sub">
-                        <a href="/mobileLoan" class="item">手機分期</a>
-                    </div>
-                </div>
-                <div class="item" v-show="!inputing">
                     關於我們
                     <div class="sub">
                         <a href="/company" class="item">公司介紹</a>
@@ -252,12 +246,6 @@
                     <div class="sub">
                         <a href="/investment" class="item">債權投資</a>
                         <a href="/transfer" class="item">債權轉讓</a>
-                    </div>
-                </div>
-                <div class="item -dropdown">
-                    <div class="text">分期付款超市</div>
-                    <div class="sub">
-                        <a href="/mobileLoan" class="item">手機分期</a>
                     </div>
                 </div>
                 <div class="item -dropdown">
@@ -370,7 +358,6 @@
                             <a href="/workLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
                             <a href="/business-loan">企業融資</a>
-                            <a href="/mobileLoan">手機分期</a>
                         </div>
                     </div>
                     <div class="item">
