@@ -1656,7 +1656,7 @@
               if(data.status.code == 200 && data.response){
                 this.apiInfo = merge(this.apiInfo, data.response);
               }else{
-                alert(data.status.message);
+                alert(data.response[0]);
               }
             });
         },
@@ -1672,11 +1672,7 @@
               })
               .then(({ data }) => {
                 //after post
-                if(data.status.code == 200){
-                    alert(data.response[0]);
-                }else{
-                    alert(data.status.message);
-                }
+                alert(data.response[0]);
               });
         },
       },
