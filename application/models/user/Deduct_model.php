@@ -91,7 +91,7 @@ class Deduct_model extends MY_Model
                                 FROM users u, virtual_account va 
                                WHERE u.id=va.user_id 
                                  AND va.virtual_account=vp.virtual_account
-                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.virtual_account LIKE \''.CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.'%\'
                                  AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
                                  AND va.user_id='.$user_id.'
                                  AND va.investor='.INVESTOR.' )')
@@ -105,7 +105,7 @@ class Deduct_model extends MY_Model
                                 FROM users u, virtual_account va
                                WHERE u.id=va.user_id
                                  AND va.virtual_account=fa.virtual_account
-                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.virtual_account LIKE \''.CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.'%\'
                                  AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
                                  AND va.user_id='.$user_id.'
                                  AND va.investor='.INVESTOR.' )')
@@ -137,7 +137,7 @@ class Deduct_model extends MY_Model
                                WHERE d.user_id=u.id
                                  AND u.id=va.user_id
                                  AND va.virtual_account=vp.virtual_account
-                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.virtual_account LIKE \''.CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.'%\'
                                  AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
                                  AND va.investor='.INVESTOR.'
                                  AND d.id='.$id.' )')
@@ -151,7 +151,7 @@ class Deduct_model extends MY_Model
                                WHERE d.user_id=u.id
                                  AND u.id=va.user_id
                                  AND va.virtual_account=fa.virtual_account
-                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.virtual_account LIKE \''.CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE.'%\'
                                  AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
                                  AND va.investor='.INVESTOR.'
                                  AND d.id='.$id.' )')

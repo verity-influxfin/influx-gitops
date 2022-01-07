@@ -604,7 +604,7 @@ class PostLoan extends MY_Admin_Controller {
                         INVESTOR,
                         TRANSACTION_STATUS_TO_BE_PAID,
                         TRANSACTION_STATUS_PAID_OFF,
-                        '5663'.INVESTOR_VIRTUAL_CODE
+                        (CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE)
                     );
                     if (empty($virtual_account->virtual_account))
                     {
@@ -677,7 +677,7 @@ class PostLoan extends MY_Admin_Controller {
                         INVESTOR,
                         TRANSACTION_STATUS_PAID_OFF,
                         TRANSACTION_STATUS_TO_BE_PAID,
-                        '5663'.INVESTOR_VIRTUAL_CODE
+                        (CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE)
                     );
 
                     $this->transaction_model->trans_commit();
