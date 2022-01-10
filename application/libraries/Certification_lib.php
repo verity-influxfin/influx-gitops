@@ -943,15 +943,15 @@ class Certification_lib{
                                     $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                                 }
                             }
-                            // IG爬蟲沒爬完
-                            else if ($log_status['response']['result']['status'] == 'requested' || $log_status['response']['result']['status'] == 'runnig')
-                            {
-                                return FALSE;
-                            }
                             // IG爬蟲狀態錯誤
                             else if ($log_status['response']['result']['status'] == 'failure')
                             {
                                 $verifiedResult->addMessage('IG爬蟲執行失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            }
+                            // 其餘狀態下次跑批再處理
+                            else
+                            {
+                                return FALSE;
                             }
                         }
                         // 沒有IG爬蟲紀錄查詢log紀錄
