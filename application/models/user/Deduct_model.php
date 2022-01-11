@@ -85,29 +85,40 @@ class Deduct_model extends MY_Model
     public function get_deduct_user_info(int $user_id)
     {
         $subquery_virtual_account = $this->db
-            ->select_sum('vp.amount')
-            ->select('vp.virtual_account')
+            ->select('IFNULL(SUM(vp.amount),0) AS account_amount')
             ->from('p2p_transaction.virtual_passbook vp')
+            ->where('EXISTS ( SELECT 1 
+                                FROM users u, virtual_account va 
+                               WHERE u.id=va.user_id 
+                                 AND va.virtual_account=vp.virtual_account
+                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
+                                 AND va.user_id='.$user_id.'
+                                 AND va.investor='.INVESTOR.' )')
             ->group_by('vp.virtual_account')
             ->get_compiled_select('', TRUE);
 
         $subquery_frozen_amount = $this->db
-            ->select_sum('f.amount')
-            ->select('f.virtual_account')
-            ->from('p2p_transaction.frozen_amount f')
-            ->where('f.status', 1)
-            ->group_by('f.virtual_account')
+            ->select('(IFNULL(SUM(fa.amount),0)*-1) AS account_amount')
+            ->from('p2p_transaction.frozen_amount fa')
+            ->where('EXISTS ( SELECT 1
+                                FROM users u, virtual_account va
+                               WHERE u.id=va.user_id
+                                 AND va.virtual_account=fa.virtual_account
+                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
+                                 AND va.user_id='.$user_id.'
+                                 AND va.investor='.INVESTOR.' )')
+            ->where('fa.status', 1)
+            ->group_by('fa.virtual_account')
             ->get_compiled_select('', TRUE);
 
         $this->db
-            ->select('u.name AS user_name')
-            ->select('(IFNULL(a1.amount,0)-IFNULL(a2.amount,0)) AS account_amount')
+            ->select('CONCAT(LEFT(u.name, 1), \'O\', RIGHT(u.name, 1)) AS user_name')
+            ->select_sum('a.account_amount')
+            ->from("({$subquery_virtual_account} UNION {$subquery_frozen_amount}) a")
             ->from('users u')
-            ->join('virtual_account va', 'va.user_id=u.id')
-            ->join("({$subquery_virtual_account}) a1", 'a1.virtual_account=va.virtual_account', 'left')
-            ->join("({$subquery_frozen_amount}) a2", 'a2.virtual_account=va.virtual_account', 'left')
-            ->where('u.id', $user_id)
-            ->where('va.investor', INVESTOR);
+            ->where('u.id', $user_id);
 
         return $this->db->get()->first_row('array');
     }
@@ -119,62 +130,84 @@ class Deduct_model extends MY_Model
      */
     public function get_deduct_info(int $id)
     {
-        $subquery = $this->db
-            ->select_sum('vp.amount')
-            ->select('vp.virtual_account')
+        $subquery_virtual_account = $this->db
+            ->select('IFNULL(SUM(vp.amount),0) AS account_amount')
             ->from('p2p_transaction.virtual_passbook vp')
+            ->where('EXISTS ( SELECT 1 FROM deduct d, users u, virtual_account va
+                               WHERE d.user_id=u.id
+                                 AND u.id=va.user_id
+                                 AND va.virtual_account=vp.virtual_account
+                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
+                                 AND va.investor='.INVESTOR.'
+                                 AND d.id='.$id.' )')
             ->group_by('vp.virtual_account')
+            ->get_compiled_select('', TRUE);
+
+        $subquery_frozen_amount = $this->db
+            ->select('(IFNULL(SUM(fa.amount),0)*-1) AS account_amount')
+            ->from('p2p_transaction.frozen_amount fa')
+            ->where('EXISTS ( SELECT 1 FROM deduct d, users u, virtual_account va
+                               WHERE d.user_id=u.id
+                                 AND u.id=va.user_id
+                                 AND va.virtual_account=fa.virtual_account
+                                 AND va.virtual_account LIKE \'5663'.INVESTOR_VIRTUAL_CODE.'%\'
+                                 AND va.status='.VIRTUAL_ACCOUNT_STATUS_AVAILABLE.'
+                                 AND va.investor='.INVESTOR.'
+                                 AND d.id='.$id.' )')
+            ->where('fa.status', 1)
+            ->group_by('fa.virtual_account')
             ->get_compiled_select('', TRUE);
 
         $this->db
             ->select('d.id')
             ->select('d.user_id')
-            ->select('u.name AS user_name')
-            ->select('IFNULL(a.amount,0) AS account_amount')
+            ->select('CONCAT(LEFT(u.name, 1), \'O\', RIGHT(u.name, 1)) AS user_name')
+            ->select_sum('a.account_amount')
             ->select('d.reason AS deduct_reason')
             ->select('d.amount AS deduct_amount')
+            ->from("({$subquery_virtual_account} UNION {$subquery_frozen_amount}) a")
             ->from('deduct d')
             ->join('users u', 'u.id=d.user_id')
-            ->join('virtual_account va', 'va.user_id=u.id')
-            ->join("({$subquery}) a", 'a.virtual_account=va.virtual_account', 'left')
             ->where('d.id', $id);
 
         return $this->db->get()->first_row('array');
     }
 
     /**
-     * 依「法催扣繳ID」取得「扣繳金額」、「虛擬帳戶餘額」
-     * @param int $id : 法催扣繳ID
+     * 依「虛擬帳戶」取得「扣繳金額」、「虛擬帳戶餘額」
+     * @param $id
+     * @param $virtual_account : 虛擬帳戶
      * @return mixed
      */
-    public function get_deduct_and_virtual_amount(int $id)
+    public function get_deduct_and_virtual_amount($id, $virtual_account)
     {
         $subquery_virtual_account = $this->db
-            ->select_sum('vp.amount')
-            ->select('vp.virtual_account')
+            ->select('IFNULL(SUM(vp.amount),0) AS account_amount')
             ->from('p2p_transaction.virtual_passbook vp')
-            ->group_by('vp.virtual_account')
+            ->where('vp.virtual_account', $virtual_account)
             ->get_compiled_select('', TRUE);
 
         $subquery_frozen_amount = $this->db
-            ->select_sum('f.amount')
-            ->select('f.virtual_account')
-            ->from('p2p_transaction.frozen_amount f')
-            ->where('f.status', 1)
-            ->group_by('f.virtual_account')
+            ->select('(IFNULL(SUM(fa.amount),0)*-1) AS account_amount')
+            ->from('p2p_transaction.frozen_amount fa')
+            ->where('fa.virtual_account', $virtual_account)
+            ->where('fa.status', 1)
             ->get_compiled_select('', TRUE);
 
         $this->db
-            ->select('d.amount AS deduct_amount')
+            ->select('d.id')
+            ->select('d.user_id')
             ->select('d.transaction_id')
-            ->select('(IFNULL(a1.amount,0)-IFNULL(a2.amount,0)) AS account_amount')
-            ->select('va.virtual_account')
-            ->select('va.user_id')
+            ->select('CONCAT(LEFT(u.name, 1), \'O\', RIGHT(u.name, 1)) AS user_name')
+            ->select_sum('a.account_amount')
+            ->select('d.reason AS deduct_reason')
+            ->select('d.amount AS deduct_amount')
+            ->from("({$subquery_virtual_account} UNION {$subquery_frozen_amount}) a")
             ->from('deduct d')
             ->join('users u', 'u.id=d.user_id')
             ->join('virtual_account va', 'va.user_id=u.id')
-            ->join("({$subquery_virtual_account}) a1", 'a1.virtual_account=va.virtual_account', 'left')
-            ->join("({$subquery_frozen_amount}) a2", 'a2.virtual_account=va.virtual_account', 'left')
+            ->where('va.virtual_account', $virtual_account)
             ->where('d.id', $id);
 
         return $this->db->get()->first_row('array');
@@ -195,5 +228,22 @@ class Deduct_model extends MY_Model
             ->first_row('array');
 
         return $result['transaction_id'] ?? 0;
+    }
+
+    /**
+     * 依「法催扣繳ID」取得「使用者ID」
+     * @param int $id : 法催扣繳ID
+     * @return int|mixed
+     */
+    public function get_user_id_by_deduct_id(int $id)
+    {
+        $result = $this->db
+            ->select('user_id')
+            ->from($this->_table)
+            ->where('id', $id)
+            ->get()
+            ->first_row('array');
+
+        return $result['user_id'] ?? 0;
     }
 }

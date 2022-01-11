@@ -377,12 +377,14 @@ class PostLoan extends MY_Admin_Controller {
 		}
 	}
 
-	public function deduct(){
-		$this->load->view('admin/_header');
-		$this->load->view('admin/_title',$this->menu);
-		$this->load->view('admin/deduct.php');
-		$this->load->view('admin/_footer');
-	}
+    // 畫列表頁
+    public function deduct()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/deduct.php');
+        $this->load->view('admin/_footer');
+    }
 
     // 取得法催扣繳列表
     public function get_deduct_list()
@@ -406,10 +408,10 @@ class PostLoan extends MY_Admin_Controller {
 
             switch ($data[$key]['status']['code'])
             {
-                case 2: // 已付
+                case DEDUCT_STATUS_CONFIRM: // 已付
                     $data[$key]['status']['updated_at'] = $data[$key]['updated_at'];
                     break;
-                case 3: // 註銷
+                case DEDUCT_STATUS_CANCEL: // 註銷
                     $data[$key]['status']['updated_at'] = $data[$key]['updated_at'];
                     $data[$key]['status']['cancel_reason'] = $data[$key]['cancel_reason'];
                     break;
@@ -459,6 +461,11 @@ class PostLoan extends MY_Admin_Controller {
             $this->transaction_model->trans_begin();
             $this->deduct_model->trans_begin();
 
+            $rollback = function () {
+                $this->deduct_model->trans_rollback();
+                $this->transaction_model->trans_rollback();
+            };
+
             // 新增「內帳交易」紀錄
             $data = [
                 'source' => SOURCE_AR_LAW_FEE,
@@ -469,14 +476,13 @@ class PostLoan extends MY_Admin_Controller {
                 'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
                 'limit_date' => NULL,
             ];
-            $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
+            $data['created_at'] = $data['updated_at'] = time();
             $data['created_ip'] = $data['updated_ip'] = get_ip();
             $transaction_id = $this->transaction_model->insert_get_id($data);
-            if ($transaction_id === FALSE)
+            if ($transaction_id === FALSE || $this->transaction_model->trans_status() === FALSE)
             {
-                $this->deduct_model->trans_rollback();
-                $this->transaction_model->trans_rollback();
-                throw new Exception('新增失敗，請洽工程師');
+                $rollback();
+                throw new Exception('新增內帳失敗，請洽工程師');
             }
 
             // 新增「法催扣繳」紀錄
@@ -488,6 +494,11 @@ class PostLoan extends MY_Admin_Controller {
                 'created_admin_id' => $this->login_info->id,
                 'updated_admin_id' => $this->login_info->id
             ]);
+            if ($this->deduct_model->trans_status() === FALSE)
+            {
+                $rollback();
+                throw new Exception('新增扣繳失敗，請洽工程師');
+            }
 
             $this->deduct_model->trans_commit();
             $this->transaction_model->trans_commit();
@@ -527,13 +538,22 @@ class PostLoan extends MY_Admin_Controller {
                         throw new Exception('更新失敗，註銷原因必填');
                     }
 
+                    $this->load->model('transaction_model');
+                    $this->transaction_model->trans_begin();
+                    $this->deduct_model->trans_begin();
+                    $rollback = function () {
+                        $this->deduct_model->trans_rollback();
+                        $this->transaction_model->trans_rollback();
+                    };
+
                     // 更新「內帳交易」紀錄
                     $transaction_id = $this->deduct_model->get_transaction_id_by_deduct_id($post['id']);
                     $update_result = $this->transaction_model->update($transaction_id, [
                         'status' => TRANSACTION_STATUS_DELETED
                     ]);
-                    if ($update_result === FALSE)
+                    if ($update_result === FALSE || $this->transaction_model->trans_status() === FALSE)
                     {
+                        $rollback();
                         throw new Exception('更新內帳失敗，請洽系統工程師');
                     }
 
@@ -542,6 +562,14 @@ class PostLoan extends MY_Admin_Controller {
                         'status' => DEDUCT_STATUS_CANCEL,
                         'cancel_reason' => $post['cancel_reason']
                     ]);
+                    if ($this->deduct_model->trans_status() === FALSE)
+                    {
+                        $rollback();
+                        throw new Exception('註銷失敗，請洽系統工程師');
+                    }
+
+                    $this->deduct_model->trans_commit();
+                    $this->transaction_model->trans_commit();
 
                     echo json_encode([
                         'result' => 'SUCCESS',
@@ -560,16 +588,6 @@ class PostLoan extends MY_Admin_Controller {
             case DEDUCT_STATUS_CONFIRM: // 扣繳
                 try
                 {
-                    $response_amount = $this->deduct_model->get_deduct_and_virtual_amount($post['id']);
-                    if ( ! isset($response_amount['deduct_amount']))
-                    {
-                        throw new Exception('更新失敗，查無此法催扣繳紀錄');
-                    }
-
-                    if ( ! isset($response_amount['account_amount']) || $response_amount['deduct_amount'] > $response_amount['account_amount'])
-                    {
-                        throw new Exception('更新失敗，虛擬帳戶餘額不足');
-                    }
 
                     $this->load->model('transaction_model');
                     $this->deduct_model->trans_begin();
@@ -579,11 +597,39 @@ class PostLoan extends MY_Admin_Controller {
                         $this->deduct_model->trans_rollback();
                     };
 
+                    $this->load->model('user/virtual_account_model');
+                    $user_id = $this->deduct_model->get_user_id_by_deduct_id($post['id']);
+                    $virtual_account = $this->virtual_account_model->setVirtualAccount(
+                        $user_id,
+                        INVESTOR,
+                        TRANSACTION_STATUS_TO_BE_PAID,
+                        TRANSACTION_STATUS_PAID_OFF,
+                        '5663'.INVESTOR_VIRTUAL_CODE
+                    );
+                    if (empty($virtual_account->virtual_account))
+                    {
+                        $rollback();
+                        throw new Exception('更新失敗，查無此虛擬帳號');
+                    }
+
+                    $response_amount = $this->deduct_model->get_deduct_and_virtual_amount($post['id'], $virtual_account->virtual_account);
+                    if ( ! isset($response_amount['deduct_amount']))
+                    {
+                        $rollback();
+                        throw new Exception('更新失敗，查無此法催扣繳紀錄');
+                    }
+
+                    if ( ! isset($response_amount['account_amount']) || $response_amount['deduct_amount'] > $response_amount['account_amount'])
+                    {
+                        $rollback();
+                        throw new Exception('更新失敗，虛擬帳戶餘額不足');
+                    }
+
                     // 更新「內帳交易」紀錄
                     $update_result = $this->transaction_model->update($response_amount['transaction_id'], [
                         'status' => TRANSACTION_STATUS_PAID_OFF
                     ]);
-                    if ($update_result === FALSE)
+                    if ($update_result === FALSE || $this->transaction_model->trans_status() === FALSE)
                     {
                         $rollback();
                         throw new Exception('更新內帳失敗，請洽系統工程師');
@@ -593,19 +639,19 @@ class PostLoan extends MY_Admin_Controller {
                         'source' => SOURCE_LAW_FEE,
                         'entering_date' => date('Y-m-d'),
                         'user_from' => $response_amount['user_id'],
-                        'bank_account_from' => $response_amount['virtual_account'],
+                        'bank_account_from' => $virtual_account->virtual_account,
                         'amount' => $response_amount['deduct_amount'],
                         'bank_account_to' => PLATFORM_VIRTUAL_ACCOUNT,
                         'limit_date' => NULL,
                         'status' => TRANSACTION_STATUS_PAID_OFF
                     ];
-                    $data['created_at'] = $data['updated_at'] = date('Y-m-d H:i:s');
+                    $data['created_at'] = $data['updated_at'] = time();
                     $data['created_ip'] = $data['updated_ip'] = get_ip();
                     $transaction_id = $this->transaction_model->insert_get_id($data);
-                    if ($transaction_id === FALSE)
+                    if ($transaction_id === FALSE || $this->transaction_model->trans_status() === FALSE)
                     {
                         $rollback();
-                        throw new Exception('新增失敗，請洽工程師');
+                        throw new Exception('新增內帳失敗，請洽工程師');
                     }
 
                     $this->load->library('passbook_lib');
@@ -620,6 +666,19 @@ class PostLoan extends MY_Admin_Controller {
                         'status' => DEDUCT_STATUS_CONFIRM,
                         'transaction_id' => $transaction_id
                     ]);
+                    if ($this->deduct_model->trans_status() === FALSE)
+                    {
+                        $rollback();
+                        throw new Exception('扣繳失敗，請洽系統工程師');
+                    }
+
+                    $this->virtual_account_model->setVirtualAccount(
+                        $user_id,
+                        INVESTOR,
+                        TRANSACTION_STATUS_PAID_OFF,
+                        TRANSACTION_STATUS_TO_BE_PAID,
+                        '5663'.INVESTOR_VIRTUAL_CODE
+                    );
 
                     $this->transaction_model->trans_commit();
                     $this->deduct_model->trans_commit();
@@ -672,18 +731,7 @@ class PostLoan extends MY_Admin_Controller {
         }
         else
         {
-            if (empty($data['user_name']))
-            {
-                $user_name = '';
-            }
-            else
-            {
-                $user_name =
-                    mb_substr($data['user_name'], 0, 1, "UTF-8").
-                    'O'.
-                    mb_substr($data['user_name'], -1, 1, "UTF-8");
-            }
-            $data['account_amount'] = empty($data['account_amount']) ? 0 : $data['account_amount'];
+            $data['account_amount'] = $data['account_amount'] ?? 0;
 
             echo json_encode([
                 'result' => 'SUCCESS',
@@ -691,7 +739,7 @@ class PostLoan extends MY_Admin_Controller {
                 'data' => [
                     'account_amount' => $data['account_amount'],
                     'account_amount_formatted' => number_format($data['account_amount']),
-                    'user_name' => $user_name
+                    'user_name' => $data['user_name'] ?? ''
                 ]
             ]);
         }
@@ -713,14 +761,6 @@ class PostLoan extends MY_Admin_Controller {
         }
 
         $data = $this->deduct_model->get_deduct_info($id);
-        if ( ! empty($data['user_name']))
-        {
-            $data['user_name'] = (
-                mb_substr($data['user_name'], 0, 1, "UTF-8").
-                'O'.
-                mb_substr($data['user_name'], -1, 1, "UTF-8")
-            );
-        }
 
         if ( ! empty($data['deduct_amount']))
         {
@@ -753,7 +793,7 @@ class PostLoan extends MY_Admin_Controller {
 
         echo json_encode([
             'result' => 'SUCCESS',
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }
