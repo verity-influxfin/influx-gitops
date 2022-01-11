@@ -156,6 +156,9 @@ class MY_Admin_Controller extends CI_Controller{
 
     private function _check_permission()
     {
+        $controller = '';
+        $method = '';
+
         try
         {
             list($controller, $method) = $this->_parse_controller();
@@ -196,7 +199,8 @@ class MY_Admin_Controller extends CI_Controller{
                 ->join('p2p_admin.groups g', 'g.id=a.group_id')
                 ->join('p2p_admin.admin_permission ap', "ap.admin_id=a.id AND ap.model_key='{$permission_model}' AND ap.submodel_key='{$permission_submodel}'", 'left')
                 ->join('p2p_admin.group_permission gp', "gp.group_id=g.id AND gp.model_key='{$permission_model}' AND gp.submodel_key='{$permission_submodel}'", 'left')
-                ->where('a.id', $this->login_info->id);
+                ->where('a.id', $this->login_info->id)
+                ->where('a.permission_status', 1);
 
             if ((($this->db->get()->first_row('object')->action_type ?? 0) & $action) === 0)
             {
@@ -205,15 +209,17 @@ class MY_Admin_Controller extends CI_Controller{
         }
         catch (Exception $e)
         {
-            alert('權限不足。', admin_url('AdminDashboard/'));
+            alert('權限不足。('.$controller.'/'.$method.')', admin_url('AdminDashboard/'));
         }
     }
 
     /**
      * 新增、編輯、刪除的權限對應表
+     * 例1：目前「URL」為 /admin/Target/edit，則「target」為class name、「edit」為method name
+     * 例2：目前「URL」為 /admin/Passbook/user_bankaccount_edit，則「passbook」為class name、「user_bankaccount_edit」為method name
      * [
-     *     'target' => [                      // class名(e.g. class Target{})，取strtolower()
-     *         'edit' => [                    // method名(e.g. public function edit(){})，取strtolower()
+     *     'target' => [                      // class名，取strtolower()
+     *         'edit' => [                    // method名，取strtolower()
      *             'action' => 'update',      // 權限動作，對應$this->action_type_list
      *             'model_key' => 'target',   // 主模組key，對應$this->config->item('permission')
      *             'submodel_key' => 'index', // 子模組key，對應$this->config->item('permission')
@@ -325,10 +331,30 @@ class MY_Admin_Controller extends CI_Controller{
                     'model_key' => 'target',
                     'submodel_key' => 'waiting_approve_order_transfer'
                 ],
-                'legalAffairs' => [
+                'legalaffairs' => [
                     'action' => 'update',
                     'model_key' => 'target',
                     'submodel_key' => 'index'
+                ],
+                'waiting_reinspection' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_verify'
+                ],
+                'skbank_text_get' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_verify'
+                ],
+                'skbank_text_send' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_verify'
+                ],
+                'skbank_image_get' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_verify'
                 ],
             ],
             'transfer' => [
@@ -461,6 +487,31 @@ class MY_Admin_Controller extends CI_Controller{
                     'model_key' => 'passbook',
                     'submodel_key' => 'withdraw_waiting'
                 ],
+                'user_bankaccount_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_success' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_resend' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_verify' => [
+                    'action' => 'read',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ]
             ],
             'judicialperson' => [
                 'juridical_apply_edit' => [
@@ -548,27 +599,72 @@ class MY_Admin_Controller extends CI_Controller{
                 'verdict_statuses' => [
                     'action' => 'read',
                     'model_key' => 'certification',
-                    'submodel_key' => 'index'
+                    'submodel_key' => 'user_certification_list'
                 ],
                 'verdict_count' => [
                     'action' => 'read',
                     'model_key' => 'certification',
-                    'submodel_key' => 'index'
+                    'submodel_key' => 'user_certification_list'
                 ],
                 'verdict' => [
-                    'action' => 'update',
+                    'action' => 'read',
                     'model_key' => 'certification',
-                    'submodel_key' => 'index'
+                    'submodel_key' => 'user_certification_list'
                 ],
                 'judicial_yuan_case' => [
-                    'action' => 'update',
+                    'action' => 'read',
                     'model_key' => 'certification',
-                    'submodel_key' => 'index'
+                    'submodel_key' => 'user_certification_list'
                 ],
                 'media_upload' => [
                     'action' => 'update',
                     'model_key' => 'certification',
                     'submodel_key' => 'index'
+                ],
+                'hasspouse' => [ // 加入是否有配偶
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'sendskbank' => [ // 新光送件檢核表送出資料
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'getskbank' => [ // 新光送件檢核表回填資料
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'save_meta' => [ // 人工填寫風控因子
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'getmeta' => [ // 帶入風控因子
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'job_credits' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'joint_credits' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'sip' => [ // 學生身份認證
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'sip_login' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
                 ],
             ],
             'partner' => [
@@ -621,6 +717,11 @@ class MY_Admin_Controller extends CI_Controller{
                     'model_key' => 'user',
                     'submodel_key' => 'index',
                 ],
+                'judicialyuan' => [
+                    'action' => 'update',
+                    'model_key' => 'user',
+                    'submodel_key' => 'index',
+                ],
             ],
             'admin' => [
                 'add' => [
@@ -629,6 +730,11 @@ class MY_Admin_Controller extends CI_Controller{
                     'submodel_key' => 'index',
                 ],
                 'edit' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'index',
+                ],
+                'get_promote_code' => [
                     'action' => 'update',
                     'model_key' => 'admin',
                     'submodel_key' => 'index',
@@ -718,6 +824,11 @@ class MY_Admin_Controller extends CI_Controller{
             ],
             'account' => [
                 'estatement_excel' => [
+                    'action' => 'read',
+                    'model_key' => 'account',
+                    'submodel_key' => 'estatement',
+                ],
+                'estatement_s_excel' => [
                     'action' => 'read',
                     'model_key' => 'account',
                     'submodel_key' => 'estatement',
@@ -825,6 +936,16 @@ class MY_Admin_Controller extends CI_Controller{
                     'model_key' => 'agreement',
                     'submodel_key' => 'index'
                 ],
+                'deleteagreement' => [
+                    'action' => 'delete',
+                    'model_key' => 'agreement',
+                    'submodel_key' => 'index'
+                ],
+                'aliasunique' => [
+                    'action' => 'update',
+                    'model_key' => 'agreement',
+                    'submodel_key' => 'index'
+                ],
             ],
             'contract' => [
                 'editcontract' => [
@@ -842,7 +963,224 @@ class MY_Admin_Controller extends CI_Controller{
                     'model_key' => 'contract',
                     'submodel_key' => 'index',
                 ],
+                'typeunique' => [
+                    'action' => 'update',
+                    'model_key' => 'contract',
+                    'submodel_key' => 'index',
+                ],
             ],
+            'creditmanagement' => [
+                'natural_person_report' => [
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'natural_person',
+                ],
+                'final_validations_report' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation',
+                ],
+                'final_validations_get_structural_data' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation',
+                ],
+                'natural_person_get_structural_data' => [
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'natural_person',
+                ],
+                'get_reviewed_list' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation',
+                ],
+                'get_data' => [
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'natural_person',
+                ],
+                'approve' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation',
+                ],
+            ],
+            'creditmanagementtable' => [
+                'index' => [
+                    'action' => 'read',
+                    'model_key' => 'ocr',
+                    'submodel_key' => 'index',
+                ],
+                'waiting_reinspection_report' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_verify',
+                ],
+                'juridical_person_report' => [
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'juridical_person',
+                ],
+                'waiting_bidding_report' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_bidding',
+                ],
+                'report' => [
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'juridical_person',
+                ],
+            ],
+            'bankdata' => [
+                'index' => [
+                    'action' => 'read',
+                    'model_key' => 'ocr',
+                    'submodel_key' => 'index',
+                ],
+                'juridical_person_report' => [
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'juridical_person'
+                ],
+                'getmappingmsgno' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation',
+                ],
+                'savechecklistdata' => [
+                    'action' => 'update',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'juridical_person',
+                ],
+                'report' => [ // 百萬信保檢核表
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'juridical_person',
+                ],
+                'brookesia' => [
+                    'user_rule_hit' => [
+                        'action' => 'update',
+                        'model_key' => 'target',
+                        'submodel_key' => 'waiting_verify'
+                    ],
+                    'final_valid_user_rule_hit' => [
+                        'action' => 'update',
+                        'model_key' => 'target',
+                        'submodel_key' => 'waiting_evaluation'
+                    ],
+                    'user_related_user' => [
+                        'action' => 'update',
+                        'model_key' => 'target',
+                        'submodel_key' => 'waiting_verify'
+                    ],
+                    'final_valid_user_related_user' => [
+                        'action' => 'update',
+                        'model_key' => 'target',
+                        'submodel_key' => 'waiting_evaluation'
+                    ],
+                ],
+            ],
+            'scraper' => [
+                'scraper_status' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'judicial_yuan_info' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'judicial_yuan_verdict' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'judicial_yuan_case' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'sip_info' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'sip' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'bizandbr_info' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'biz' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'businessregistration' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'google_info' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'google' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'ptt_info' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'ptt' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'instagram_info' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+                'instagram' => [
+                    'action' => 'read',
+                    'model_key' => 'scraper',
+                    'submodel_key' => 'index',
+                ],
+            ],
+            'certificationreport' => [
+                'index' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation'
+                ],
+                'report' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation'
+                ],
+                'get_data' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation'
+                ],
+                'send_data' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation'
+                ],
+            ]
         ];
     }
 }

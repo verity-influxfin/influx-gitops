@@ -60,7 +60,8 @@ class Article extends MY_Admin_Controller {
 			}
 			
 			$rs = $this->article_model->insert($data);
-            $type_name = (int) ($data['type'] ?? 1) === 1 ? 'index' : 'news';
+            $data['type'] = (int) ($data['type'] ?? 1);
+            $type_name = $data['type'] === 1 ? 'index' : 'news';
 			if($rs){
                 alert('新增成功', admin_url('Article/'.$type_name.'?type='.$data['type']));
 			}else{
@@ -109,7 +110,8 @@ class Article extends MY_Admin_Controller {
 				}
 				
 				$rs = $this->article_model->update($id,$data);
-                $type_name = (int) ($data['type'] ?? 1) === 1 ? 'index' : 'news';
+                $data['type'] = (int) ($data['type'] ?? 1);
+                $type_name = $data['type'] === 1 ? 'index' : 'news';
 				if($rs){
                     alert('新增成功', admin_url('Article/'.$type_name.'?type='.$data['type']));
 				}else{

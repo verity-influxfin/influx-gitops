@@ -596,6 +596,10 @@ class Admin extends MY_Admin_Controller {
         {
             $where['name LIKE'] = "%{$get['name']}%";
         }
+        if (isset($get['division']) && ! empty($get['division']))
+        {
+            $where['division LIKE'] = "%{$get['division']}%";
+        }
 
         echo json_encode([
             'list' => $this->admin_model->get_admin_group_data($where),

@@ -11,13 +11,13 @@
 </style>
 <div id="page-wrapper">
     <div class="row">
-        <h1 class="page-header">權限審查</h1>
+        <h1 class="page-header"></h1>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="search-heading row">
                 <div>
-                    <span class="name">名稱</span>
+                    <span class="name">姓名</span>
                     <input type="text" id="search"/>
                 </div>
                 <div class="search-btn">
@@ -34,7 +34,7 @@
                     <th>部門</th>
                     <th>組別</th>
                     <th>角色</th>
-                    <th>修改</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody id="tbody">
@@ -62,6 +62,7 @@
                     'last': '尾頁'
                 }
             },
+            'order': [[5, 'asc']],
         })
 
         getDataRow(table);
@@ -86,10 +87,12 @@
 
         const button = `
         <div class="search-heading">
-            <button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_review_edit?id=${id}')">細節</button>
+            <button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_review_edit?id=${id}')">查看權限</button>
             <div class="check-item">
                 <input type="checkbox"
                        name="create" ${enabled ? 'checked' : ''}
+                       value="${enabled}"
+                       data-account="${account}"
                        data-id="${id}"
                        onclick="check_status(this)">
                 <label>啟用</label>

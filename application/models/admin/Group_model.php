@@ -33,33 +33,21 @@ class Group_model extends MY_Model
      */
     public function get_data_by_id(int $id)
     {
-        try
-        {
-            if ( ! $id)
-            {
-                throw new Exception();
-            }
+        $group_permission_data = $this->db
+            ->select('gp.model_key,gp.submodel_key,gp.action_type')
+            ->from('p2p_admin.group_permission gp')
+            ->where('gp.group_id', $id)
+            ->get()
+            ->result_array();
 
-            $group_permission_data = $this->db
-                ->select('gp.model_key,gp.submodel_key,gp.action_type')
-                ->from('p2p_admin.group_permission gp')
-                ->where('gp.group_id', $id)
-                ->get()
-                ->result_array();
+        $group_data = $this->db
+            ->select('g.id,g.division,g.department,g.position')
+            ->from('p2p_admin.groups g')
+            ->where('g.id', $id)
+            ->get()
+            ->first_row('array');
 
-            $group_data = $this->db
-                ->select('g.id,g.division,g.department,g.position')
-                ->from('p2p_admin.groups g')
-                ->where('g.id', $id)
-                ->get()
-                ->first_row('array');
-
-            return array_merge($group_data, ['permission' => $group_permission_data]);
-        }
-        catch (Exception $e)
-        {
-            return [];
-        }
+        return array_merge($group_data, ['permission' => $group_permission_data]);
     }
 
     /**
@@ -69,26 +57,14 @@ class Group_model extends MY_Model
      */
     public function get_permission_by_group_id(int $group_id)
     {
-        try
-        {
-            if ( ! $group_id)
-            {
-                throw new Exception();
-            }
+        $group_permission_data = $this->db
+            ->select('gp.model_key,gp.submodel_key,gp.action_type')
+            ->from('p2p_admin.group_permission gp')
+            ->where('gp.group_id', $group_id)
+            ->get()
+            ->result_array();
 
-            $group_permission_data = $this->db
-                ->select('gp.model_key,gp.submodel_key,gp.action_type,gp.class,gp.method')
-                ->from('p2p_admin.group_permission gp')
-                ->where('gp.group_id', $group_id)
-                ->get()
-                ->result_array();
-
-            return $group_permission_data;
-        }
-        catch (Exception $e)
-        {
-            return [];
-        }
+        return $group_permission_data;
     }
 
     /**
@@ -105,7 +81,7 @@ class Group_model extends MY_Model
 
             if ( ! is_array($group_data) || empty($group_data) || ! is_array($group_permission_data) || empty($group_permission_data))
             {
-                throw new Exception();
+                throw new Exception('Invalid data.');
             }
 
             // 新增部門
@@ -113,14 +89,14 @@ class Group_model extends MY_Model
             $group_id = $this->db->insert_id();
             if ( ! $group_id)
             {
-                throw new Exception();
+                throw new Exception('Invalid group.');
             }
 
             // 新增部門權限
             $group_permission_data = $this->_check_permission($group_id, $group_permission_data);
             if (empty($group_permission_data))
             {
-                throw new Exception();
+                throw new Exception('Invalid permission data.');
             }
             $this->db->where('group_id', $group_id)->delete('p2p_admin.group_permission');
             $this->db->insert_batch('p2p_admin.group_permission', $group_permission_data);
@@ -150,12 +126,12 @@ class Group_model extends MY_Model
 
             if ( ! $group_id)
             {
-                throw new Exception();
+                throw new Exception('Invalid group.');
             }
 
             if ( ! is_array($group_data) || empty($group_data) || ! is_array($group_permission_data) || empty($group_permission_data))
             {
-                throw new Exception();
+                throw new Exception('Invalid data.');
             }
 
             // 更新部門
@@ -165,7 +141,7 @@ class Group_model extends MY_Model
             $group_permission_data = $this->_check_permission($group_id, $group_permission_data);
             if (empty($group_permission_data))
             {
-                throw new Exception();
+                throw new Exception('Invalid permission data.');
             }
             $this->db->where('group_id', $group_id)->delete('p2p_admin.group_permission');
             $this->db->insert_batch('p2p_admin.group_permission', $group_permission_data);
@@ -216,8 +192,6 @@ class Group_model extends MY_Model
                     'model_key' => $key,
                     'submodel_key' => $key2,
                     'action_type' => array_sum($value2['action']),
-                    'class' => $value2['class'] ?? '',
-                    'method' => $value2['method'] ?? '',
                 ];
             }
         }

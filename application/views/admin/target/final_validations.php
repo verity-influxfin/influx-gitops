@@ -101,7 +101,7 @@
 				<div class="panel-body natual">
 					<div class="row">
 						<div class="col-lg-12">
-                            <iframe id="creditManagementTable" src="../creditmanagement/report?target_id=<?=$_GET['id']?>&type=person" scrolling='no' ></iframe>
+                            <iframe id="creditManagementTable" src="../creditmanagement/final_validations_report?target_id=<?=$_GET['id']?>&type=person" scrolling='no' ></iframe>
 							<div class="table-responsive">
 								<table class="table table-bordered">
 									<tr>
@@ -762,7 +762,7 @@
         let report_item = {};
         $.ajax({
             type: "GET",
-            url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=person`,
+            url: `/admin/creditmanagement/final_validations_get_structural_data?target_id=${target_id}&type=person`,
             async: false,
             success: function (response) {
                 report_item = response.response;
@@ -1004,7 +1004,7 @@
 		function fetchBrookesiaUserRuleHit(userId) {
 			$.ajax({
 				type: "GET",
-				url: "/admin/brookesia/user_rule_hit" + "?userId=" + userId,
+                url: "/admin/brookesia/final_valid_user_rule_hit" + "?userId=" + userId,
 				beforeSend: function () {
 					brookesiaDatalock = true;
 				},
@@ -1061,7 +1061,7 @@
 		function fetchRelatedUsers(userId) {
 			$.ajax({
 				type: "GET",
-				url: "/admin/brookesia/user_related_user" + "?userId=" + userId,
+				url: "/admin/brookesia/final_valid_user_related_user" + "?userId=" + userId,
 				beforeSend: function () {
 					relatedUserAjaxLock = true;
 				},

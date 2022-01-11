@@ -12,13 +12,13 @@
 
 <div id="page-wrapper">
     <div class="row">
-        <h1 class="page-header">人員權限管理</h1>
+        <h1 class="page-header"></h1>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="search-heading row">
                 <div>
-                    <span class="name">名稱</span>
+                    <span class="name">姓名</span>
                     <input type="text" id="search"/>
                 </div>
                 <div class="search-btn">
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="new-role m-4">
-            <a class="btn btn-primary" href="<?= admin_url('Admin/role_management_add') ?>" target="_blank">新增管理員</a>
+            <a class="btn btn-primary" href="<?= admin_url('Admin/role_management_add') ?>" target="_blank">新增人員權限</a>
         </div>
         <div class="table-row">
             <table class="display responsive nowrap" width="100%" id="table-roles-setting">

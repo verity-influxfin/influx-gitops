@@ -1,6 +1,16 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-//後台menu
+/*
+ * 後台menu
+ *
+ * P.S.
+ * 加新menu後要順便到$config['permission']加上權限
+ * 例：
+ * 欲在「後台人員管理」下新增一個sub-menu為「權限查詢」
+ * step.1 在$config['admin_menu']['Admin']新增：'role_permission_list' => '權限查詢'
+ * step.2 在$config['permission']['admin']['list']新增：'role_permission_list' => ['name' => '權限查詢']
+ *
+ */
 $config['admin_menu'] = [
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
 	'AntiFraud' => [
@@ -86,9 +96,9 @@ $config['admin_menu'] = [
         'parent_name' => '後台人員管理',
         'role_list' => '權限管理',
         'index' => '人員列表',
-        'role_list_setting' => '權限設置',
-        'role_management'=>'人員管理',
-        'role_list_review' => '權限審查',
+        'role_list_setting' => '部門權限設定',
+        'role_management'=>'人員權限設定',
+        'role_list_review' => '權限審核',
         'role_permission_list' => '權限查詢',
     ],
     'Sales' => [
@@ -128,6 +138,23 @@ $config['admin_menu'] = [
     'Contract' => ['name' => '合約書'],
 ];
 
+/**
+ * 後台menu對應的權限
+ *
+ * 例：
+ * 在「後台人員管理」下新增一個sub-menu為「權限查詢」
+ *
+ * [
+ *   'admin' => [ // 對應admin_menu第一層，取strtolower()
+ *     'name' => '後台人員管理', // 對應admin_menu第一層的name或parent_name，取strtolower()
+ *     'list' => [
+ *       'role_permission_list' => ['name' => '權限查詢'], // 對應admin_menu第二層
+ *       ...
+ *     ]
+ *   ],
+ *   ...
+ * ]
+ */
 $config['permission'] = [
     'product' => [
         'name' => '產品管理',
@@ -197,12 +224,24 @@ $config['permission'] = [
             'cooperation_management' => ['name' => '經銷商管理列表'],
         ]
     ],
+    'creditmanagement' => [
+        'name' => '授審表',
+        'list' => [
+            'index' => ['name' => '列表'],
+        ]
+    ],
     'certification' => [
         'name' => '認證管理',
         'list' => [
             'index' => ['name' => '認證方式列表'],
             'user_certification_list' => ['name' => '會員認證審核'],
             'difficult_word_list' => ['name' => '銀行困難字管理'],
+        ]
+    ],
+    'scraper' => [
+        'name' => '爬蟲子系統',
+        'list' => [
+            'index' => ['name' => 'API列表'],
         ]
     ],
     'partner' => [
@@ -232,10 +271,10 @@ $config['permission'] = [
         'list' => [
             'role_list' => ['name' => '權限管理'],
             'index' => ['name' => '人員列表'],
-            'role_list_setting' => ['name' => '(new)權限設置'],
-            'role_management' => ['name' => '(new)人員管理'],
-            'role_list_review' => ['name' => '(new)權限審查'],
-            'role_permission_list' => ['name' => '(new)權限查詢'],
+            'role_list_setting' => ['name' => '部門權限設定'],
+            'role_management' => ['name' => '人員權限設定'],
+            'role_list_review' => ['name' => '權限審核'],
+            'role_permission_list' => ['name' => '權限查詢'],
         ]
     ],
     'sales' => [

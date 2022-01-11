@@ -63,6 +63,10 @@
         display: flex;
         justify-content: center;
     }
+
+    .button-row .btn {
+        margin: 0 10px 10px 10px;
+    }
 </style>
 
 <form role="form" method="post">
@@ -138,6 +142,7 @@
             </div>
         <?php } ?>
         <div class="button-row">
+            <button class="btn" onclick="window.top.close()">取消</button>
             <button class="btn btn-primary">儲存</button>
         </div>
     </div>

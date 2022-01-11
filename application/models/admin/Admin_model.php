@@ -83,34 +83,22 @@ class Admin_model extends MY_Model
      */
     public function get_data_by_id(int $admin_id)
     {
-        try
-        {
-            if ( ! $admin_id)
-            {
-                throw new Exception();
-            }
+        $admin_permission_data = $this->db
+            ->select('ap.model_key,ap.submodel_key,ap.action_type')
+            ->from('p2p_admin.admin_permission ap')
+            ->where('ap.admin_id', $admin_id)
+            ->get()
+            ->result_array();
 
-            $admin_permission_data = $this->db
-                ->select('ap.model_key,ap.submodel_key,ap.action_type')
-                ->from('p2p_admin.admin_permission ap')
-                ->where('ap.admin_id', $admin_id)
-                ->get()
-                ->result_array();
+        $admin_data = $this->db
+            ->select('a.id,a.name,a.email,a.group_id,g.division,g.department,g.position')
+            ->from('p2p_admin.admins a')
+            ->join('p2p_admin.groups g', 'g.id=a.group_id')
+            ->where('a.id', $admin_id)
+            ->get()
+            ->first_row('array');
 
-            $admin_data = $this->db
-                ->select('a.id,a.name,a.email,a.group_id,g.division,g.department,g.position')
-                ->from('p2p_admin.admins a')
-                ->join('p2p_admin.groups g', 'g.id=a.group_id')
-                ->where('a.id', $admin_id)
-                ->get()
-                ->first_row('array');
-
-            return array_merge($admin_data, ['permission' => $admin_permission_data]);
-        }
-        catch (Exception $e)
-        {
-            return [];
-        }
+        return array_merge($admin_data, ['permission' => $admin_permission_data]);
     }
 
     // 撈取尚無「部門(Table: admins)」的管理員
@@ -140,7 +128,7 @@ class Admin_model extends MY_Model
 
             if ( ! $admin_id || empty($admin_data))
             {
-                throw new Exception();
+                throw new Exception('Invalid admin.');
             }
 
             // 更新人員
@@ -173,28 +161,26 @@ class Admin_model extends MY_Model
     private function check_permission(int $admin_id, array $admin_permission_data)
     {
         $data = [];
-        foreach ($admin_permission_data as $key => $value)
+        foreach ($admin_permission_data as $permission_key => $permission_value)
         {
-            if ( ! is_array($value))
+            if ( ! is_array($permission_value))
             {
                 continue;
             }
 
-            foreach ($value as $key2 => $value2)
+            foreach ($permission_value as $submodel_key => $submodel_value)
             {
 
-                if ( ! isset($value2['action']))
+                if ( ! isset($submodel_value['action']))
                 {
                     continue;
                 }
 
                 $data[] = [
                     'admin_id' => $admin_id,
-                    'model_key' => $key,
-                    'submodel_key' => $key2,
-                    'action_type' => array_sum($value2['action']),
-                    'class' => $value2['class'] ?? '',
-                    'method' => $value2['method'] ?? '',
+                    'model_key' => $permission_key,
+                    'submodel_key' => $submodel_key,
+                    'action_type' => array_sum($submodel_value['action']),
                 ];
             }
         }
@@ -209,25 +195,13 @@ class Admin_model extends MY_Model
      */
     public function get_permission(int $admin_id)
     {
-        try
-        {
-            if ( ! $admin_id)
-            {
-                throw new Exception();
-            }
+        $data = $this->db
+            ->select('ap.model_key,ap.submodel_key,ap.action_type')
+            ->from('p2p_admin.admin_permission ap')
+            ->where('ap.admin_id', $admin_id)
+            ->get()
+            ->result_array();
 
-            $data = $this->db
-                ->select('ap.model_key,ap.submodel_key,ap.action_type,ap.class,ap.method')
-                ->from('p2p_admin.admin_permission ap')
-                ->where('ap.admin_id', $admin_id)
-                ->get()
-                ->result_array();
-
-            return $data;
-        }
-        catch (Exception $e)
-        {
-            return [];
-        }
+        return $data;
     }
 }

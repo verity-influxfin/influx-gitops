@@ -11,7 +11,7 @@
 </style>
 <div id="page-wrapper">
     <div class="row">
-        <h1 class="page-header">部門權限管理</h1>
+        <h1 class="page-header"></h1>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="new-role m-4">
-            <a class="btn btn-primary" href="<?= admin_url('Admin/role_list_add') ?>" target="_blank">新增角色</a>
+            <a class="btn btn-primary" href="<?= admin_url('Admin/role_list_add') ?>" target="_blank">新增部門</a>
         </div>
         <div class="table-row">
             <table class="display responsive nowrap" width="100%" id="table-roles-setting">

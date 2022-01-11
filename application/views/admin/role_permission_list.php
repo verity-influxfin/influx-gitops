@@ -11,14 +11,16 @@
 </style>
 <div id="page-wrapper" oncontextmenu="return false;">
     <div class="row">
-        <h1 class="page-header">權限查詢</h1>
+        <h1 class="page-header"></h1>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="search-heading row">
                 <div>
-                    <span class="name">名稱</span>
+                    <span class="name">姓名</span>
                     <input type="text" id="search"/>
+                    <span class="name">部門</span>
+                    <input type="text" id="search_division"/>
                 </div>
                 <div class="search-btn">
                     <button class="btn btn-primary btn-sm">搜尋</button>
@@ -68,7 +70,9 @@
 
         $('.search-btn button').on('click', function () {
             let name = $('#search').val();
-            top.location = `./role_permission_list?name=${name}`;
+            let division = $('#search_division').val();
+
+            top.location = `./role_permission_list?name=${name}&division=${division}`;
         });
 		document.addEventListener('keyup', (e) => {
 			if (e.key == 'PrintScreen') {
@@ -85,7 +89,7 @@
         const origin = window.location.origin
 
         const button = `
-            <button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_permission_detail?id=${id}')">細節</button>
+            <button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_permission_detail?id=${id}')">查看</button>
         `
         table.row.add([account, name, part, group, role, button]).draw()
     }

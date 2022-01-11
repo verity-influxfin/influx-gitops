@@ -75,6 +75,15 @@
     .check-title {
         width: 70px;
     }
+
+    .button-row {
+        display: flex;
+        justify-content: center;
+    }
+
+    .button-row .btn {
+        margin: 0 10px 10px 10px;
+    }
 </style>
 
 <div id="page-wrapper">
@@ -207,6 +216,10 @@
             <?php } ?>
 
         </div>
+    </div>
+
+    <div class="button-row">
+        <button class="btn" onclick="window.top.close()">返回</button>
     </div>
 </div>
 <script>
