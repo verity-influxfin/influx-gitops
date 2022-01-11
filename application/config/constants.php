@@ -639,3 +639,8 @@ defined('SCRAPER_STATUS_NO_CONTENT') OR define('SCRAPER_STATUS_NO_CONTENT', 204)
 // ig非活躍帳號判斷數字
 defined('FOLLOWER_ACTIVATE') OR define('FOLLOWER_ACTIVATE', 30);
 defined('FOLLOWING_ACTIVATE') OR define('FOLLOWING_ACTIVATE', 50);
+
+// deduct table status
+defined('DEDUCT_STATUS_DEFAULT') or define('DEDUCT_STATUS_DEFAULT', 1); // 應付
+defined('DEDUCT_STATUS_CONFIRM') or define('DEDUCT_STATUS_CONFIRM', 2); // 已付
+defined('DEDUCT_STATUS_CANCEL') or define('DEDUCT_STATUS_CANCEL', 3);   // 註銷
