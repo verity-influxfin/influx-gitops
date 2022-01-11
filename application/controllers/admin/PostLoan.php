@@ -410,10 +410,12 @@ class PostLoan extends MY_Admin_Controller {
             {
                 case DEDUCT_STATUS_CONFIRM: // 已付
                     $data[$key]['status']['updated_at'] = $data[$key]['updated_at'];
+                    $data[$key]['status']['updated_admin'] = $data[$key]['updated_admin'];
                     break;
                 case DEDUCT_STATUS_CANCEL: // 註銷
                     $data[$key]['status']['updated_at'] = $data[$key]['updated_at'];
                     $data[$key]['status']['cancel_reason'] = $data[$key]['cancel_reason'];
+                    $data[$key]['status']['updated_admin'] = $data[$key]['updated_admin'];
                     break;
             }
 
@@ -560,7 +562,8 @@ class PostLoan extends MY_Admin_Controller {
                     // 更新「法催扣繳」紀錄
                     $this->deduct_model->update($post['id'], [
                         'status' => DEDUCT_STATUS_CANCEL,
-                        'cancel_reason' => $post['cancel_reason']
+                        'cancel_reason' => $post['cancel_reason'],
+                        'updated_admin_id' => $this->login_info->id
                     ]);
                     if ($this->deduct_model->trans_status() === FALSE)
                     {
@@ -664,7 +667,8 @@ class PostLoan extends MY_Admin_Controller {
                     // 更新「法催扣繳」紀錄
                     $this->deduct_model->update($post['id'], [
                         'status' => DEDUCT_STATUS_CONFIRM,
-                        'transaction_id' => $transaction_id
+                        'transaction_id' => $transaction_id,
+                        'updated_admin_id' => $this->login_info->id
                     ]);
                     if ($this->deduct_model->trans_status() === FALSE)
                     {

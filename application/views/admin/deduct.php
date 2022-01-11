@@ -248,12 +248,14 @@
 						break;
 					case 2:
 						status = `<div>扣繳日期</div>
-									  <div>${item.status.updated_at}</div>`
+                                  <div>${item.status.updated_at}</div>
+                                  <div>經辦人: ${item.status.updated_admin}</div>`
 						break;
 					case 3:
 						status = `<div>註銷日期</div>
 								  <div>${item.status.updated_at}</div>
-								  <div>原因: ${item.status.cancel_reason}</div>`
+								  <div>原因: ${item.status.cancel_reason}</div>
+                                  <div>經辦人: ${item.status.updated_admin}</div>`
 						break;
 					default:
 						status = ''

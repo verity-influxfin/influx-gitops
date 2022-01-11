@@ -53,8 +53,10 @@ class Deduct_model extends MY_Model
             ->select('d.updated_at')
             ->select('d.cancel_reason')
             ->select('a.name AS admin')
+            ->select('b.name AS updated_admin')
             ->from('deduct d')
-            ->join('p2p_admin.admins a', 'a.id=d.created_admin_id');
+            ->join('p2p_admin.admins a', 'a.id=d.created_admin_id')
+            ->join('p2p_admin.admins b', 'b.id=d.updated_admin_id');
 
         // 投資人ID
         if ( ! empty($user_id))
@@ -114,7 +116,7 @@ class Deduct_model extends MY_Model
             ->get_compiled_select('', TRUE);
 
         $this->db
-            ->select('CONCAT(LEFT(u.name, 1), \'O\', RIGHT(u.name, 1)) AS user_name')
+            ->select('u.name AS user_name')
             ->select_sum('a.account_amount')
             ->from("({$subquery_virtual_account} UNION {$subquery_frozen_amount}) a")
             ->from('users u')
@@ -162,7 +164,7 @@ class Deduct_model extends MY_Model
         $this->db
             ->select('d.id')
             ->select('d.user_id')
-            ->select('CONCAT(LEFT(u.name, 1), \'O\', RIGHT(u.name, 1)) AS user_name')
+            ->select('u.name AS user_name')
             ->select_sum('a.account_amount')
             ->select('d.reason AS deduct_reason')
             ->select('d.amount AS deduct_amount')
@@ -199,7 +201,7 @@ class Deduct_model extends MY_Model
             ->select('d.id')
             ->select('d.user_id')
             ->select('d.transaction_id')
-            ->select('CONCAT(LEFT(u.name, 1), \'O\', RIGHT(u.name, 1)) AS user_name')
+            ->select('u.name AS user_name')
             ->select_sum('a.account_amount')
             ->select('d.reason AS deduct_reason')
             ->select('d.amount AS deduct_amount')
