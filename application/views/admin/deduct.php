@@ -257,62 +257,21 @@
 				const user_id = this.search_option.user_id
 				const created_at_s = document.querySelector('#created_at_s').value ? document.querySelector('#created_at_s').value : null
 				const created_at_e = document.querySelector('#created_at_e').value ? document.querySelector('#created_at_e').value : null
-				// axios.get('admin/PostLoan/get_deduct_list', {
-				// 	params: {
-				// 		user_id,
-				// 		created_at_s,
-				// 		created_at_e
-				// 	}
-				// }).then(({ data }) => {
-				// 	this.deduct_list = data
-				// })
-				this.deduct_list = [
-					{
-						"id": 11,
-						"created_at": "2021-12-30 10:00:00",
-						"user_id": 24398,
-						"amount": 12345,
-						"reason": "代支規費1",
-						"admin": "Joanne",
-						"status": {
-							"code": 1,
-							"name": "應付"
-						}
-					},
-					{
-						"id": 21,
-						"created_at": "2021-12-30 10:00:00",
-						"user_id": 24398,
-						"amount": 12345,
-						"reason": "代支規費2",
-						"admin": "Joanne",
-						"status": {
-							"code": 2,
-							"name": "已付",
-							"updated_at": "2022-01-05 10:00:00"
-						}
-					},
-					{
-						"id": 31,
-						"created_at": "2021-12-30 10:00:00",
-						"user_id": 24398,
-						"amount": 12345,
-						"reason": "代支規費3",
-						"admin": "Joanne",
-						"status": {
-							"code": 3,
-							"name": "註銷",
-							"updated_at": "2022-01-05 10:00:00",
-							"cancel_reason": "現金繳清"
-						}
+				axios.get('get_deduct_list', {
+					params: {
+						user_id,
+						created_at_s,
+						created_at_e
 					}
-				]
+				}).then(({ data }) => {
+					this.deduct_list = data
+				})
 			},
 			add_deduct_info() {
 				const { add_deduct_info_form } = this
 				axios({
 					method: 'post',
-					url: 'admin/postloan/add_deduct_info',
+					url: 'add_deduct_info',
 					data: {
 						...add_deduct_info_form
 					}
@@ -334,53 +293,37 @@
 					user_name: '',
 					account_amount: 0
 				}
-				// axios.get('admin/postloan/get_deduct_user_info', {
-				// 	params: {
-				// 		user_id
-				// 	}
-				// }).then(({ data }) => {
-				// 	this.deduct_hint = {
-				// 		result: data.result,
-				// 		...data.data
-				// 	}
-				// })
-				const data = {
-					'result': 'SUCCESS',
-					'msg': '',
-					'data': {
-						'user_name': '王O明',
-						'account_amount': 29302
+				axios.get('get_deduct_user_info', {
+					params: {
+						user_id
 					}
-				}
+				}).then(({ data }) => {
+					this.deduct_hint = {
+						result: data.result,
+						...data.data
+					}
+				})
 				this.deduct_hint = {
 					result: data.result,
 					...data.data
 				}
 			},
 			get_deduct_info(id) {
-				// axios.get('/admin/PostLoan/get_deduct_info', {
-				// 	params: {
-				// 		id
-				// 	}
-				// }).then(({ data: { response } }) => {
-				// 	console.log(response)
-				// 	if (response.result === 'SUCCESS') {
-				// 		$('#deductModal').modal('show')
-				// 		this.deduct_modal_data = {
-				// 			result: response.result,
-				// 			...response.data
-				// 		}
-				// 	}
-				// })
+				axios.get('get_deduct_info', {
+					params: {
+						id
+					}
+				}).then(({ data: { response } }) => {
+					console.log(response)
+					if (response.result === 'SUCCESS') {
+						$('#deductModal').modal('show')
+						this.deduct_modal_data = {
+							result: response.result,
+							...response.data
+						}
+					}
+				})
 				$('#deductModal').modal('show')
-				this.deduct_modal_data = {
-					'id': 31,
-					'user_id': 24398,
-					'user_name': '王O明',
-					'account_amount': 29302,
-					'deduct_reason': '代支規費',
-					'deduct_amount': 750
-				}
 				this.update_deduct_info_form.id = id
 			},
 			open_cancel_modal(id) {

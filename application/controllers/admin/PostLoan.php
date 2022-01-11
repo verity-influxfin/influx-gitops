@@ -383,4 +383,186 @@ class PostLoan extends MY_Admin_Controller {
 		$this->load->view('admin/deduct.php');
 		$this->load->view('admin/_footer');
 	}
+
+    // 取得法催扣繳列表
+    public function get_deduct_list()
+    {
+        $this->load->model('user/deduct_model');
+
+        $get = $this->input->get(NULL, TRUE);
+        $data = $this->deduct_model->get_deduct_list(
+            $get['user_id'] ?? 0,
+            $get['created_at_s'] ?? '',
+            $get['created_at_e'] ?? ''
+        );
+        $status_list = $this->deduct_model->status_lsit;
+
+        array_walk($data, function (&$value, $key) use (&$data, $status_list) {
+            $data[$key]['status'] = [
+                'code' => (int) $data[$key]['status'],
+                'name' => $status_list[$data[$key]['status']] ?? '',
+            ];
+
+            switch ($data[$key]['status']['code'])
+            {
+                case 2: // 已付
+                    $data[$key]['status']['updated_at'] = $data[$key]['updated_at'];
+                    break;
+                case 3: // 註銷
+                    $data[$key]['status']['updated_at'] = $data[$key]['updated_at'];
+                    $data[$key]['status']['cancel_reason'] = $data[$key]['cancel_reason'];
+                    break;
+            }
+
+            unset($data[$key]['updated_at']);
+            unset($data[$key]['cancel_reason']);
+        }, $data);
+
+        echo json_encode($data);
+    }
+
+    // 新增法催扣繳資料
+    public function add_deduct_info()
+    {
+        $this->load->model('user/deduct_model');
+
+        $user_id = $this->input->post('user_id');
+        $amount = $this->input->post('amount');
+        $reason = $this->input->post('reason');
+
+        if (empty($user_id))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '新增失敗，投資人ID必填'
+            ]);
+            return;
+        }
+
+        if (empty($amount))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '新增失敗，金額必填'
+            ]);
+            return;
+        }
+
+        if (empty($reason))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '新增失敗，事由必填'
+            ]);
+            return;
+        }
+
+        try
+        {
+            $this->deduct_model->insert([
+                'user_id' => $user_id,
+                'amount' => (int) $amount,
+                'reason' => $reason,
+                'created_admin_id' => $this->login_info->id,
+                'updated_admin_id' => $this->login_info->id,
+            ]);
+
+            echo json_encode([
+                'result' => 'SUCCESS',
+                'msg' => '新增成功',
+            ]);
+        }
+        catch (Exception $e)
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '新增失敗，請洽工程師',
+            ]);
+        }
+    }
+
+    /**
+     * 取得投資人姓名、虛擬帳號餘額
+     * @param int $user_id : 使用者ID
+     */
+    public function get_deduct_user_info(int $user_id = 0)
+    {
+        $this->load->model('user/deduct_model');
+
+        if (empty($user_id))
+        {
+            $user_id = $this->input->get('user_id');
+        }
+
+        if (empty($user_id))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '查無此投資人資訊',
+            ]);
+        }
+
+        $data = $this->deduct_model->get_deduct_user_info($user_id);
+        if (empty($data))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '查無此投資人資訊',
+            ]);
+        }
+        else
+        {
+            if (empty($data['user_name']))
+            {
+                $user_name = '';
+            }
+            else
+            {
+                $user_name =
+                    mb_substr($data['user_name'], 0, 1, "UTF-8").
+                    'O'.
+                    mb_substr($data['user_name'], -1, 1, "UTF-8");
+            }
+
+            echo json_encode([
+                'result' => 'SUCCESS',
+                'msg' => '',
+                'data' => [
+                    'account_amount' => empty($data['account_amount']) ? 0 : $data['account_amount'],
+                    'user_name' => $user_name
+                ]
+            ]);
+        }
+    }
+
+    // 取得法催扣繳資料
+    public function get_deduct_info()
+    {
+        $this->load->model('user/deduct_model');
+
+        $id = $this->input->get('id');
+        if (empty($id))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '查無此扣繳資訊',
+            ]);
+            return;
+        }
+
+        $data = $this->deduct_model->get_deduct_info($id);
+        if (empty($data))
+        {
+            echo json_encode([
+                'result' => 'ERROR',
+                'msg' => '查無此扣繳資訊',
+            ]);
+            return;
+        }
+
+        echo json_encode([
+            'result' => 'SUCCESS',
+            'data' => $data
+        ]);
+    }
 }
