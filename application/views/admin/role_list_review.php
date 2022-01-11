@@ -9,10 +9,9 @@
         padding: 15px;
     }
 </style>
-
 <div id="page-wrapper">
     <div class="row">
-        <h1 class="page-header">人員權限管理</h1>
+        <h1 class="page-header">權限審查</h1>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -25,9 +24,6 @@
                     <button class="btn btn-primary btn-sm">搜尋</button>
                 </div>
             </div>
-        </div>
-        <div class="new-role m-4">
-            <a class="btn btn-primary" href="<?= admin_url('Admin/role_management_add') ?>" target="_blank">新增管理員</a>
         </div>
         <div class="table-row">
             <table class="display responsive nowrap" width="100%" id="table-roles-setting">
@@ -48,7 +44,6 @@
 
     </div>
 </div>
-
 <script>
     $(document).ready(() => {
         const table = $('#table-roles-setting').DataTable({
@@ -69,40 +64,78 @@
             },
         })
 
-        get_dataRow(table);
+        getDataRow(table);
 
         $('.search-btn button').on('click', function () {
             let name = $('#search').val();
-            top.location = `./role_management?name=${name}`;
+            top.location = `./role_list_review?name=${name}`;
         });
     });
 
-    function insertDataRow({table, account, name, part, group, role, id}) {
+    function insertDataRow({table, account, name, part, group, role, id, enabled}) {
         const origin = window.location.origin
-        const button = `<button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_management_edit?id=${id}')">Edit</button>`
+
+        const button = `
+        <div class="search-heading">
+            <button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_review_edit?id=${id}')">細節</button>
+            <div class="check-item">
+                <input type="checkbox"
+                       name="create" ${enabled ? 'checked' : ''}
+                       data-id="${id}"
+                       onclick="check_status(this)">
+                <label>啟用</label>
+            </div>
+        </div>
+        `
         table.row.add([account, name, part, group, role, button]).draw()
     }
 
-    function get_dataRow(table) {
+    function getDataRow(table) {
         $.ajax({
-            url: 'role_management_get' + window.location.search,
+            url: 'role_list_review_get' + window.location.search,
             type: 'GET',
             dataType: 'JSON',
             success: function (response) {
-
                 if (response['list']) {
                     $.each(response['list'], function (index, value) {
+                        let enabled = (parseInt(value['permission_status'] ?? 0) === 1);
                         insertDataRow({
                             table,
-                            account: value['email'], // 帳號
-                            name: value['name'], // 姓名
-                            part: value['division'], // 部門
-                            group: value['department'], // 組別
-                            role: response['position_list'][value['position']] || '', // 角色
-                            id: value['id']
-                        })
+                            account: value['email'] ?? '',
+                            name: value['name'] ?? '',
+                            part: value['division'] ?? '',
+                            group: value['department'] ?? '',
+                            role: response['position_list'][value['position']],
+                            id: value['id'],
+                            enabled
+                        });
                     });
                 }
+            }
+        });
+    }
+
+    function check_status(input) {
+        let id = $(input).data('id');
+        let checked = $(input).prop('checked');
+        $.ajax({
+            url: 'update_permission_status',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                admin_id: id,
+                permission_status: checked ? 1 : 0,
+            },
+            success: function (response) {
+                if (response['result']) {
+                    alert('更新成功');
+                } else {
+                    $(input).prop('checked', !checked);
+                    alert('更新失敗');
+                }
+            }, error: function (jqXHR, textStatus, errorThrown) {
+                $(input).prop('checked', !checked);
+                alert('更新失敗');
             }
         });
     }

@@ -97,7 +97,7 @@
                             </td>
                         </tr>
                     </table>
-                    <form action="<?= admin_url('transfer/assets_export') ?>" method="post"
+                    <form action="<?= admin_url('transfer/obligation_assets_export') ?>" method="post"
                           style="display: inline-block">
                         <input type="submit" class="btn btn-primary float-right" value="債權明細表" disabled/>
                         <input id="assets_export" type="hidden" name="ids"/>

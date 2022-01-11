@@ -6,7 +6,7 @@
                 <!-- /.col-lg-12 -->
             </div>
 			<script type="text/javascript">
-                var block_status_list = <?php echo json_encode($block_status_list); ?>;
+                var block_status_list = <?php echo json_encode($block_status_list??[]); ?>;
                 var ajaxRequestLock = false;
 
                 $(document).ready(function() {

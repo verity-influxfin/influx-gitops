@@ -1,4 +1,4 @@
-<?
+<?php
 
 class MY_Admin_Controller extends CI_Controller{
 	
@@ -6,6 +6,14 @@ class MY_Admin_Controller extends CI_Controller{
 	protected $login_info;
 	protected $menu	= array();
 	protected $edit_method = array();
+    // 動作對照表
+    protected $action_type_list = [
+        'create' => ['key' => 0, 'value' => '增'],
+        'delete' => ['key' => 1, 'value' => '刪'],
+        'update' => ['key' => 2, 'value' => '改'],
+        'read' => ['key' => 3, 'value' => '查']];
+    protected $permission_list;
+    protected $permission_edit_list;
 	
 	public function __construct(){
         parent::__construct();
@@ -20,8 +28,9 @@ class MY_Admin_Controller extends CI_Controller{
 		$this->load->helper('cookie');
 		$this->load->library('form_validation');
 		$this->login_info = check_admin();
+        $this->permission_list = $this->config->item('permission');
 		$roles = $this->role_model->get_list();
-		
+
 		$method = $this->router->fetch_method();
 		$class 	= ucfirst($this->router->fetch_class());
 		$nonAuthMethods = ['login'];
@@ -38,6 +47,9 @@ class MY_Admin_Controller extends CI_Controller{
 					if($class == 'AdminDashboard'){
 						$this->role_info 	= array('r'=>1,'u'=>1);
 					}else{
+                        $this->_get_permission_edit_list();
+                        $this->_check_permission();
+
 						$this->role_info 	= $role->permission[$class];
 					}
 
@@ -130,6 +142,708 @@ class MY_Admin_Controller extends CI_Controller{
 			}
         }
 
+    }
+
+    private function _parse_controller()
+    {
+        $this->load->helper('url');
+        return array_pad(
+            explode('/', preg_replace('/^admin\//', '', strtolower(uri_string()))),
+            2,
+            'index'
+        );
+    }
+
+    private function _check_permission()
+    {
+        try
+        {
+            list($controller, $method) = $this->_parse_controller();
+
+            while (TRUE)
+            {
+                // Read權限
+                if (isset($this->permission_list[$controller]) && isset($this->permission_list[$controller]['list'][$method]))
+                {
+                    $action = pow(2, $this->action_type_list['read']['key']);
+                    $permission_model = $controller;
+                    $permission_submodel = $method;
+                    break;
+                }
+
+                // Create, update, delete權限
+                if ( ! isset($this->permission_edit_list[$controller]) || ! isset($this->permission_edit_list[$controller][$method]))
+                {
+                    throw new Exception();
+                }
+
+                $action = $this->permission_edit_list[$controller][$method]['action'];
+                if ( ! isset($this->action_type_list[$action]['key']))
+                {
+                    throw new Exception();
+                }
+                $action = pow(2, $this->action_type_list[$action]['key']);
+
+                $permission_model = $this->permission_edit_list[$controller][$method]['model_key'];
+                $permission_submodel = $this->permission_edit_list[$controller][$method]['submodel_key'];
+
+                break;
+            }
+
+            $this->db
+                ->select('(IFNULL(ap.action_type,0) | IFNULL(gp.action_type,0)) AS action_type')
+                ->from('p2p_admin.admins a')
+                ->join('p2p_admin.groups g', 'g.id=a.group_id')
+                ->join('p2p_admin.admin_permission ap', "ap.admin_id=a.id AND ap.model_key='{$permission_model}' AND ap.submodel_key='{$permission_submodel}'", 'left')
+                ->join('p2p_admin.group_permission gp', "gp.group_id=g.id AND gp.model_key='{$permission_model}' AND gp.submodel_key='{$permission_submodel}'", 'left')
+                ->where('a.id', $this->login_info->id);
+
+            if ((($this->db->get()->first_row('object')->action_type ?? 0) & $action) === 0)
+            {
+                throw new Exception();
+            }
+        }
+        catch (Exception $e)
+        {
+            alert('權限不足。', admin_url('AdminDashboard/'));
+        }
+    }
+
+    /**
+     * 新增、編輯、刪除的權限對應表
+     * [
+     *     'target' => [                      // class名(e.g. class Target{})，取strtolower()
+     *         'edit' => [                    // method名(e.g. public function edit(){})，取strtolower()
+     *             'action' => 'update',      // 權限動作，對應$this->action_type_list
+     *             'model_key' => 'target',   // 主模組key，對應$this->config->item('permission')
+     *             'submodel_key' => 'index', // 子模組key，對應$this->config->item('permission')
+     *         ]
+     *     ]
+     * ]
+     */
+    private function _get_permission_edit_list()
+    {
+        $this->permission_edit_list = [
+            'target' => [
+                'edit' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'verify_success' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_verify'
+                ],
+                'verify_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_verify'
+                ],
+                'order_fail' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_signing'
+                ],
+                'credits' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation'
+                ],
+                'evaluation_approval' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation'
+                ],
+                'final_validations' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_evaluation'
+                ],
+                'target_loan' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_loan'
+                ],
+                'subloan_success' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_loan'
+                ],
+                're_subloan' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_loan'
+                ],
+                'loan_return' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_loan'
+                ],
+                'loan_success' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_loan'
+                ],
+                'loan_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_loan'
+                ],
+                'transaction_display' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'target_repayment_export' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'repayment'
+                ],
+                'target_finished_export' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'finished'
+                ],
+                'target_waiting_signing_export' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_signing'
+                ],
+                'amortization_export' => [
+                    'action' => 'read',
+                    'model_key' => 'target',
+                    'submodel_key' => 'repayment'
+                ],
+                'cancel_bidding' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_bidding'
+                ],
+                'approve_order_transfer' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'waiting_approve_order_transfer'
+                ],
+                'legalAffairs' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+            ],
+            'transfer' => [
+                'assets_export_new' => [
+                    'action' => 'read',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'obligations'
+                ],
+                'transfer_assets_export' => [
+                    'action' => 'read',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'index'
+                ],
+                'obligation_assets_export' => [
+                    'action' => 'read',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'obligations'
+                ],
+                'amortization_schedule' => [
+                    'action' => 'read',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'obligations'
+                ],
+                'amortization_export' => [
+                    'action' => 'read',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'index'
+                ],
+                'transfer_combination' => [
+                    'action' => 'read',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'waiting_transfer'
+                ],
+                'transfer_combination_success' => [
+                    'action' => 'read',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'waiting_transfer_success'
+                ],
+                'transfer_success' => [
+                    'action' => 'update',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'waiting_transfer_success'
+                ],
+                'transfer_cancel' => [
+                    'action' => 'update',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'waiting_transfer_success'
+                ],
+                'c_transfer_cancel' => [
+                    'action' => 'update',
+                    'model_key' => 'transfer',
+                    'submodel_key' => 'waiting_transfer_success'
+                ],
+            ],
+            'risk' => [
+                'push_info' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'push_info_add' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'push_info_remove' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'push_info_update' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'push_audit' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'push_audit_add' => [
+                    'action' => 'update',
+                    'model_key' => 'target',
+                    'submodel_key' => 'index'
+                ],
+                'judicial_associates' => [
+                    'action' => 'read',
+                    'model_key' => 'risk',
+                    'submodel_key' => 'juridical_person'
+                ],
+            ],
+            'passbook' => [
+                'edit' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'index'
+                ],
+                'display' => [ // 虛擬帳號
+                    'action' => 'read',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'index'
+                ],
+                'withdraw_loan' => [ // 轉出放款匯款單
+                    'action' => 'read',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'withdraw_waiting'
+                ],
+                'unknown_refund' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'unknown_funds'
+                ],
+                'loan_success' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'withdraw_waiting'
+                ],
+                'loan_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'withdraw_waiting'
+                ],
+                'withdraw_by_admin' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'index'
+                ],
+                'withdraw_deny' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'withdraw_waiting'
+                ],
+            ],
+            'judicialperson' => [
+                'juridical_apply_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'judicialperson',
+                    'submodel_key' => 'juridical_apply',
+                ],
+                'juridical_management_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'judicialperson',
+                    'submodel_key' => 'juridical_management',
+                ],
+                'cooperation_apply_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'judicialperson',
+                    'submodel_key' => 'cooperation_apply',
+                ],
+                'cooperation_management_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'judicialperson',
+                    'submodel_key' => 'cooperation_management',
+                ],
+                'cooperation_apply_success' => [
+                    'action' => 'update',
+                    'model_key' => 'Judicialperson',
+                    'submodel_key' => 'cooperation_apply'
+                ],
+                'cooperation_management_success' => [
+                    'action' => 'update',
+                    'model_key' => 'Judicialperson',
+                    'submodel_key' => 'cooperation_management'
+                ],
+                'cooperation_apply_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'Judicialperson',
+                    'submodel_key' => 'cooperation_apply'
+                ],
+                'cooperation_management_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'Judicialperson',
+                    'submodel_key' => 'cooperation_management'
+                ],
+            ],
+            'certification' => [
+                'user_certification_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'user_certification_list'
+                ],
+                'user_bankaccount_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_success' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_resend' => [
+                    'action' => 'update',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'user_bankaccount_verify' => [
+                    'action' => 'read',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
+                'difficult_word_add' => [
+                    'action' => 'create',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'difficult_word_list'
+                ],
+                'difficult_word_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'difficult_word_list'
+                ],
+                'verdict_statuses' => [
+                    'action' => 'read',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'index'
+                ],
+                'verdict_count' => [
+                    'action' => 'read',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'index'
+                ],
+                'verdict' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'index'
+                ],
+                'judicial_yuan_case' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'index'
+                ],
+                'media_upload' => [
+                    'action' => 'update',
+                    'model_key' => 'certification',
+                    'submodel_key' => 'index'
+                ],
+            ],
+            'partner' => [
+                'add' => [
+                    'action' => 'create',
+                    'model_key' => 'partner',
+                    'submodel_key' => 'index',
+                ],
+                'edit' => [
+                    'action' => 'update',
+                    'model_key' => 'partner',
+                    'submodel_key' => 'index',
+                ],
+                'partner_type_add' => [
+                    'action' => 'create',
+                    'model_key' => 'partner',
+                    'submodel_key' => 'partner_type',
+                ],
+            ],
+            'contact' => [
+                'edit' => [
+                    'action' => 'update',
+                    'model_key' => 'contact',
+                    'submodel_key' => 'index'
+                ],
+                'update_notificaion' => [
+                    'action' => 'update',
+                    'model_key' => 'contact',
+                    'submodel_key' => 'send_email'
+                ],
+            ],
+            'user' => [
+                'edit' => [
+                    'action' => 'update',
+                    'model_key' => 'user',
+                    'submodel_key' => 'index',
+                ],
+                'display' => [
+                    'action' => 'read',
+                    'model_key' => 'user',
+                    'submodel_key' => 'index',
+                ],
+                'block_users' => [
+                    'action' => 'update',
+                    'model_key' => 'user',
+                    'submodel_key' => 'blocked_users',
+                ],
+                'get_user_notification' => [
+                    'action' => 'update',
+                    'model_key' => 'user',
+                    'submodel_key' => 'index',
+                ],
+            ],
+            'admin' => [
+                'add' => [
+                    'action' => 'create',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'index',
+                ],
+                'edit' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'index',
+                ],
+                'role_add' => [
+                    'action' => 'create',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list',
+                ],
+                'role_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list',
+                ],
+                'role_list_setting_get' => [
+                    'action' => 'read',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list_setting',
+                ],
+                'role_list_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list_setting',
+                ],
+                'role_list_add' => [
+                    'action' => 'create',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list_setting',
+                ],
+                'role_management_get' => [
+                    'action' => 'read',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_management',
+                ],
+                'role_management_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_management',
+                ],
+                'role_management_add' => [
+                    'action' => 'create',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_management',
+                ],
+                'role_list_review_get' => [
+                    'action' => 'read',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list_review',
+                ],
+                'role_review_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list_review',
+                ],
+                'role_permission_detail' => [
+                    'action' => 'read',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_permission_list',
+                ],
+                'update_permission_status' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_list_review',
+                ],
+                'get_group_list' => [
+                    'action' => 'update',
+                    'model_key' => 'admin',
+                    'submodel_key' => 'role_management',
+                ],
+            ],
+            'sales' => [
+                'bonus_report_detail' => [
+                    'action' => 'read',
+                    'model_key' => 'sales',
+                    'submodel_key' => 'bonus_report',
+                ],
+                'promote_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'sales',
+                    'submodel_key' => 'promote_list'
+                ],
+                'promote_reward_loan' => [
+                    'action' => 'update',
+                    'model_key' => 'sales',
+                    'submodel_key' => 'promote_reward_list'
+                ],
+            ],
+            'account' => [
+                'estatement_excel' => [
+                    'action' => 'read',
+                    'model_key' => 'account',
+                    'submodel_key' => 'estatement',
+                ],
+            ],
+            'ocr' => [
+                'reports' => [
+                    'action' => 'read',
+                    'model_key' => 'ocr',
+                    'submodel_key' => 'index',
+                ],
+                'report' => [
+                    'action' => 'read',
+                    'model_key' => 'ocr',
+                    'submodel_key' => 'index',
+                ],
+                'save' => [
+                    'action' => 'update',
+                    'model_key' => 'ocr',
+                    'submodel_key' => 'index',
+                ],
+                'send' => [
+                    'action' => 'update',
+                    'model_key' => 'ocr',
+                    'submodel_key' => 'index',
+                ],
+            ],
+            'postloan' => [
+                'save_status' => [
+                    'action' => 'update',
+                    'model_key' => 'postloan',
+                    'submodel_key' => 'legal_doc',
+                ],
+                'legal_doc_status' => [
+                    'action' => 'update',
+                    'model_key' => 'postloan',
+                    'submodel_key' => 'legal_doc',
+                ],
+            ],
+            'article' => [
+                'article_add' => [
+                    'action' => 'create',
+                    'model_key' => 'article',
+                    'submodel_key' => 'index',
+                ],
+                'article_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'article',
+                    'submodel_key' => 'index',
+                ],
+                'article_success' => [
+                    'action' => 'update',
+                    'model_key' => 'article',
+                    'submodel_key' => 'index',
+                ],
+                'article_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'article',
+                    'submodel_key' => 'index',
+                ],
+                'article_del' => [
+                    'action' => 'delete',
+                    'model_key' => 'article',
+                    'submodel_key' => 'index',
+                ],
+                'news_add' => [
+                    'action' => 'create',
+                    'model_key' => 'article',
+                    'submodel_key' => 'news',
+                ],
+                'news_edit' => [
+                    'action' => 'update',
+                    'model_key' => 'article',
+                    'submodel_key' => 'news',
+                ],
+                'news_success' => [
+                    'action' => 'update',
+                    'model_key' => 'article',
+                    'submodel_key' => 'news',
+                ],
+                'news_failed' => [
+                    'action' => 'update',
+                    'model_key' => 'article',
+                    'submodel_key' => 'news',
+                ],
+                'news_del' => [
+                    'action' => 'delete',
+                    'model_key' => 'article',
+                    'submodel_key' => 'news',
+                ],
+            ],
+            'agreement' => [
+                'editagreement' => [
+                    'action' => 'update',
+                    'model_key' => 'agreement',
+                    'submodel_key' => 'index'
+                ],
+                'insertagreement' => [
+                    'action' => 'create',
+                    'model_key' => 'agreement',
+                    'submodel_key' => 'index'
+                ],
+                'updateagreement' => [
+                    'action' => 'update',
+                    'model_key' => 'agreement',
+                    'submodel_key' => 'index'
+                ],
+            ],
+            'contract' => [
+                'editcontract' => [
+                    'action' => 'update',
+                    'model_key' => 'contract',
+                    'submodel_key' => 'index',
+                ],
+                'updatecontract' => [
+                    'action' => 'update',
+                    'model_key' => 'contract',
+                    'submodel_key' => 'index',
+                ],
+                'validateinput' => [
+                    'action' => 'update',
+                    'model_key' => 'contract',
+                    'submodel_key' => 'index',
+                ],
+            ],
+        ];
     }
 }
 

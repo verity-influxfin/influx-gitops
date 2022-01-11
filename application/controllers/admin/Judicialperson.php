@@ -41,7 +41,7 @@ class Judicialperson extends MY_Admin_Controller {
 		$page_data['status_list'] 		= $this->judicial_person_model->status_list;
 		$page_data['name_list'] 		= $this->admin_model->get_name_list();
 		$page_data['company_type'] 		= $this->config->item('company_type');
-
+        $page_data['method_name'] = explode('/', preg_replace('/^admin\/judicialperson\//', '', strtolower(uri_string())));
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -296,6 +296,7 @@ class Judicialperson extends MY_Admin_Controller {
 		$page_data['list'] 				= $list;
 		$page_data['cooperation_list'] 	= $this->judicial_person_model->cooperation_list;
 		$page_data['status_list'] 		= isset($input['cooperation'])?$input['cooperation']:2;
+        $page_data['method_name'] = explode('/', preg_replace('/^admin\/judicialperson\/cooperation_/', '', strtolower(uri_string())));
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
