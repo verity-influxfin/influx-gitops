@@ -56,6 +56,10 @@ $config['admin_menu'] = [
         'cooperation?cooperation=2' => '經銷商申請列表',
         'cooperation?cooperation=1' => '經銷商管理列表',
     ],
+    'Creditmanagement' => [
+        'parent_name' => '授審表',
+        'index' => '列表(還沒做)',
+    ],
     'Certification' => [
         'parent_name' => '認證管理',
         'index' => '認證方式列表',
@@ -89,7 +93,8 @@ $config['admin_menu'] = [
         'register_report' => '註冊報表',
         'bonus_report' => '獎金報表',
         'loan_overview' => '申貸總覽',
-        'promote_list'  => '推薦有賞'
+        'promote_list'  => '推薦有賞',
+        'promote_reward_list'  => '推薦有賞放款'
     ],
     'Account' => [
         'parent_name' => '財務作業',
@@ -105,6 +110,7 @@ $config['admin_menu'] = [
 	'PostLoan' => [
 		'parent_name' => '貸後管理',
 		'legal_doc' => '法訴文件管理',
+		'deduct' => '法催扣款'
 	],
     'Article' => [
         'parent_name' => '活動及最新消息',
@@ -319,6 +325,9 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
+        'option_certifications' => [
+            CERTIFICATION_FINANCIAL
+        ],
         'certifications_stage' => [
             [
                 CERTIFICATION_IDCARD,
@@ -328,8 +337,7 @@ $config['product_list'] = [
             [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
-                CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL
+                CERTIFICATION_EMAIL
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -366,6 +374,9 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
+        'option_certifications' => [
+            CERTIFICATION_FINANCIAL
+        ],
         'certifications_stage' => [
             [
                 CERTIFICATION_IDCARD,
@@ -375,8 +386,7 @@ $config['product_list'] = [
             [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
-                CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL
+                CERTIFICATION_EMAIL
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -416,7 +426,7 @@ $config['product_list'] = [
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
             CERTIFICATION_EMAIL,
-            CERTIFICATION_FINANCIAL,
+            CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
@@ -430,7 +440,7 @@ $config['product_list'] = [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
                 CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
                 CERTIFICATION_JOB
@@ -469,7 +479,7 @@ $config['product_list'] = [
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
             CERTIFICATION_EMAIL,
-            CERTIFICATION_FINANCIAL,
+            CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
@@ -483,7 +493,7 @@ $config['product_list'] = [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
                 CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
                 CERTIFICATION_JOB
@@ -729,7 +739,7 @@ $config['product_list'] = [
 //        'type' => 1,
 //        'identity' => 2,
 //        'alias' => 'SSM',
-//        'name' => '百萬信保微企貸',
+//        'name' => '普匯微企e秒貸',
 //        'loan_range_s' => 500000,
 //        'loan_range_e' => 1000000,
 //        'interest_rate_s' => SUL_INTEREST_STARTING_RATE,
@@ -780,7 +790,7 @@ $config['product_list'] = [
             CERTIFICATION_SOCIAL,
             CERTIFICATION_EMERGENCY,
             CERTIFICATION_EMAIL,
-            CERTIFICATION_FINANCIAL,
+            CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB
@@ -794,7 +804,7 @@ $config['product_list'] = [
                 CERTIFICATION_SOCIAL,
                 CERTIFICATION_EMERGENCY,
                 CERTIFICATION_EMAIL,
-                CERTIFICATION_FINANCIAL,
+                CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
                 CERTIFICATION_JOB
@@ -863,7 +873,7 @@ $config['product_list'] = [
         'type' => 1,
         'identity' => 3,
         'alias' => 'SSM',
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'loan_range_s' => 500000,
         'loan_range_e' => 6000000,
         'interest_rate_s' => 5,
@@ -887,6 +897,9 @@ $config['product_list'] = [
             CERTIFICATION_INVESTIGATIONJUDICIAL,
 			CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
+        ],
+        'option_certifications' => [
+            CERTIFICATION_JUDICIALGUARANTEE
         ],
         'certifications_stage' => [
             [
@@ -951,7 +964,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'N4' => [
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
@@ -975,15 +988,17 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'J2' => [
-        'name' => '百萬信保微企貸',
-        'description' => '企業融資 專案啟動',
+        'name' => '普匯微企e秒貸',
+        'description' => '<span style=\'font-size:14px;color:white\'>1.額度最高 100 萬、3 年期、利率 3.8%。<br>
+2.由銀行簽約對保放款。<br>
+3.信保基金保證 95 成，加強中小微企業加強擔保力。</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'url' => '',
         'status' => 1
     ],
     'LJ2' => [
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
@@ -991,7 +1006,7 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'TOLJ2' => [
-        'name' => '百萬信保微企貸',
+        'name' => '普匯微企e秒貸',
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
@@ -1137,6 +1152,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'option_certifications' => [
+                    CERTIFICATION_FINANCIAL
+                ],
                 'certification_verify_stage' => [
                     [
                         CERTIFICATION_IDCARD,
@@ -1146,8 +1164,7 @@ $config['sub_product_list'] = [
                     [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
-                        CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL
+                        CERTIFICATION_EMAIL
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1177,7 +1194,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
@@ -1191,7 +1208,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
                         CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
                         CERTIFICATION_JOB
@@ -1315,7 +1332,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL
+                    CERTIFICATION_FINANCIALWORKER
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1379,7 +1396,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL
+                    CERTIFICATION_FINANCIALWORKER
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
                 'repayment' => [1],
@@ -1410,7 +1427,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     // CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB,
@@ -1451,6 +1468,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
+                    CERTIFICATION_FINANCIAL
+                ],
+                'option_certifications' => [
                     CERTIFICATION_FINANCIAL
                 ],
                 'certifications_stage' => [
@@ -1497,7 +1517,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
@@ -1511,7 +1531,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
                         CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
                         CERTIFICATION_JOB
@@ -1535,7 +1555,7 @@ $config['sub_product_list'] = [
         'identity' => [
             3 => [
                 'visul_id' => 'LJ2P1',
-                'name' => '百萬信保微企貸',
+                'name' => '普匯微企e秒貸',
                 'product_id' => '1002:0',
                 'loan_range_s' => 500000,
                 'loan_range_e' => 6000000,
@@ -1598,6 +1618,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
+                'option_certifications' => [
+                    CERTIFICATION_FINANCIAL
+                ],
                 'certifications_stage' => [
                     [
                         CERTIFICATION_IDCARD,
@@ -1618,7 +1641,7 @@ $config['sub_product_list'] = [
                 'weight' => [],
                 'status' => 1,
                 'dealer' => [],
-                'multi_target' => 1,
+                'multi_target' => 0,
                 'description' => '可申請額度<br>3000-12,000',
                 'checkOwner' => false,
             ],
@@ -1638,7 +1661,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_SOCIAL,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL,
+                    CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB
@@ -1652,7 +1675,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_SOCIAL,
                         CERTIFICATION_EMERGENCY,
                         CERTIFICATION_EMAIL,
-                        CERTIFICATION_FINANCIAL,
+                        CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
                         CERTIFICATION_JOB
@@ -1665,7 +1688,7 @@ $config['sub_product_list'] = [
                 'weight' => [],
                 'status' => 1,
                 'dealer' => [],
-                'multi_target' => 1,
+                'multi_target' => 0,
                 'description' => '可申請額度<br>30,000-300,000',
                 'checkOwner' => false,
             ],
@@ -1735,6 +1758,7 @@ $config['transaction_source'] = [
     31 => '應收法催執行費',
     32 => '法催執行費',
 
+    40 => '推薦獎金',
     41 => '慈善捐款',
 
     50 => '平台服務費沖正',
@@ -1791,7 +1815,8 @@ $config['transaction_type_name'] = [
     'charge_normal' => '還款',
     'unknown_refund' => '退款-不明原因',
     'platform_law_fee' => '法催執行費',
-    'charity' => '慈善捐款',
+    'promote' => '推薦獎金',
+    'charity' => '慈善捐款'
 ];
 
 $config['certifications'] = [
@@ -1801,24 +1826,24 @@ $config['certifications'] = [
     4 => ['id' => CERTIFICATION_SOCIAL, 'alias' => 'social', 'name' => '社交帳號', 'status' => 1, 'description' => '個人社交帳號', 'optional' => []],
     5 => ['id' => CERTIFICATION_EMERGENCY, 'alias' => 'emergency', 'name' => '緊急聯絡人', 'status' => 1, 'description' => '設定緊急連絡人資訊', 'optional' => []],
     6 => ['id' => CERTIFICATION_EMAIL, 'alias' => 'email', 'name' => '常用電子信箱', 'status' => 1, 'description' => '驗證常用E-Mail位址', 'optional' => []],
-    7 => ['id' => CERTIFICATION_FINANCIAL, 'alias' => 'financial', 'name' => '財務訊息', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
+    7 => ['id' => CERTIFICATION_FINANCIAL, 'alias' => 'financial', 'name' => '收支資訊', 'status' => 1, 'description' => '提供收支資訊', 'optional' => []],
     8 => ['id' => CERTIFICATION_DIPLOMA, 'alias' => 'diploma', 'name' => '最高學歷證明', 'status' => 1, 'description' => '提供最高學歷畢業資訊', 'optional' => []],
     9 => ['id' => CERTIFICATION_INVESTIGATION, 'alias' => 'investigation', 'name' => '聯合徵信報告', 'status' => 1, 'description' => '提供聯合徵信資訊', 'optional' => [3, 4]],
     10 => ['id' => CERTIFICATION_JOB, 'alias' => 'job', 'name' => '工作收入證明', 'status' => 1, 'description' => '提供工作收入證明', 'optional' => [3, 4]],
-    11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人資料表', 'status' => 1, 'description' => '提供個人資料', 'optional' => []],
-
+    11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人基本資料', 'status' => 1, 'description' => '提供個人基本資料', 'optional' => []],
     12 => ['id' => CERTIFICATION_INVESTIGATIONA11, 'alias' => 'investigationa11', 'name' => '聯合徵信報告+A11', 'status' => 1, 'description' => '提供負責人聯合徵信資訊', 'optional' => []],
+    14 => ['id' => CERTIFICATION_FINANCIALWORKER, 'alias' => 'financialWorker', 'name' => '財務訊息資訊', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
 
 
-    500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務訊息', 'status' => 1, 'description' => '提供個人簡易財務資料', 'optional' => []],
+    500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],
     501 => ['id' => CERTIFICATION_SIMPLIFICATIONJOB, 'alias' => 'simplificationjob', 'name' => '工作資料', 'status' => 1, 'description' => '提供簡易工作資料', 'optional' => []],
 
     1000 => ['id' => CERTIFICATION_BUSINESSTAX, 'alias' => 'businesstax', 'name' => '銷售額與稅額申報書(401表)', 'status' => 1, 'description' => '提供銷售額與稅額申報書(401表)', 'optional' => []],
     1001 => ['id' => CERTIFICATION_BALANCESHEET, 'alias' => 'balancesheet', 'name' => '資產負債表', 'status' => 1, 'description' => '提供資產負債表', 'optional' => []],
-    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '損益表', 'status' => 1, 'description' => '提供損益表', 'optional' => []],
-    1003 => ['id' => CERTIFICATION_INVESTIGATIONJUDICIAL, 'alias' => 'investigationjudicial', 'name' => '法人聯合徵信', 'status' => 1, 'description' => '提供法人聯合徵信', 'optional' => []],
-    1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '金流證明', 'status' => 1, 'description' => '提供金流證明', 'optional' => []],
+    1002 => ['id' => CERTIFICATION_INCOMESTATEMENT, 'alias' => 'incomestatement', 'name' => '近三年所得稅結算申報書(稅簽)', 'status' => 1, 'description' => '提供近三年所得稅結算申報書(稅簽)', 'optional' => []],
+    1003 => ['id' => CERTIFICATION_INVESTIGATIONJUDICIAL, 'alias' => 'investigationjudicial', 'name' => '公司聯合徵信', 'status' => 1, 'description' => '提供公司聯合徵信', 'optional' => []],
+    1004 => ['id' => CERTIFICATION_PASSBOOKCASHFLOW, 'alias' => 'passbookcashflow', 'name' => '近6個月封面及內頁公司存摺', 'status' => 1, 'description' => '提供近6個月封面及內頁公司存摺', 'optional' => []],
     1005 => ['id' => CERTIFICATION_INTERVIEW, 'alias' => 'interview', 'name' => '親訪報告', 'status' => 1, 'description' => '提供親訪報告', 'optional' => []],
     1006 => ['id' => CERTIFICATION_CERCREDITJUDICIAL, 'alias' => 'cercreditjudicial', 'name' => '信用評估表', 'status' => 1, 'description' => '提供信用評估表', 'optional' => []],
     1007 => ['id' => CERTIFICATION_GOVERNMENTAUTHORITIES, 'alias' => 'governmentauthorities', 'name' => '公司變更事項登記表', 'status' => 1, 'description' => '提供公司變更事項登記表', 'optional' => []],
@@ -1834,7 +1859,7 @@ $config['certifications'] = [
     1017 => ['id' => CERTIFICATION_EMPLOYEEINSURANCELIST, 'alias' => 'employeeinsurancelist', 'name' => '員工投保人數資料', 'status' => 1, 'description' => '提供員工投保人數資料', 'optional' => []],
     1018 => ['id' => CERTIFICATION_PROFILEJUDICIAL, 'alias' => 'profilejudicial', 'name' => '公司資料表', 'status' => 1, 'description' => '提供公司資料表', 'optional' => []],
     1019 => ['id' => CERTIFICATION_COMPANYEMAIL, 'alias' => 'companyemail', 'name' => '公司電子信箱', 'status' => 1, 'description' => '驗證公司E-Mail位址', 'optional' => []],
-    1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '法人對保', 'status' => 1, 'description' => '法人線上對保', 'optional' => []],
+    1020 => ['id' => CERTIFICATION_JUDICIALGUARANTEE, 'alias' => 'judicialguarantee', 'name' => '公司授權核實', 'status' => 1, 'description' => '公司授權核實', 'optional' => []],
 
     2000 => ['id' => CERTIFICATION_SALESDETAIL, 'alias' => 'salesdetail', 'name' => '庫存車銷售檔', 'status' => 1, 'description' => '', 'optional' => []],
 ];
@@ -2043,6 +2068,7 @@ $config['certifications_msg'] = [
     ],
     CERTIFICATION_CRIMINALRECORD => [
         '良民證資料有誤，請您重新確認後上傳，感謝您的配合！',
+        '請提供半年內之良民證，謝謝您！',
         '未上傳良民證資料',
     ],
 

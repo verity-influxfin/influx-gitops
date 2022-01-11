@@ -15,16 +15,16 @@
 	{
 		$currentURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
 		$currentURL .= $_SERVER["SERVER_NAME"];
-	 
+
 		if($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443")
 		{
 			$currentURL .= ":".$_SERVER["SERVER_PORT"];
-		} 
-	 
+		}
+
 			$currentURL .= $_SERVER["REQUEST_URI"];
 		return $currentURL;
 	}
-	
+
 	function dump($var,$die=false) {
 		$trace = debug_backtrace();
 		echo "<br />File: <b> ".$trace[0]['file']."</b><br/>Line : <b>".$trace[0]['line']."</b><br/>";
@@ -76,15 +76,15 @@
 		if(isset($timeout))
 			curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
 		if(!empty($data)) {
-			curl_setopt($curl, CURLOPT_POST, 1); 
-			curl_setopt($curl, CURLOPT_POSTFIELDS, $data); 
+			curl_setopt($curl, CURLOPT_POST, 1);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 		}
-		
+
 		if(!empty($header)) {
 			curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
 		}
-		
-		$rs = curl_exec($curl); 
+
+		$rs = curl_exec($curl);
 		curl_close($curl);
 		return $rs;
 	}
@@ -96,11 +96,11 @@
 			}
 			else
 				header('Location:'.$url);
-			
-			if (!empty($url)) 
+
+			if (!empty($url))
 				echo "<meta http-equiv=\"REFRESH\" content=\"0;URL='".$url."'\">";
-			else 
-				echo '<script language="javascript">window.top.location = window.top.location</script>';	
+			else
+				echo '<script language="javascript">window.top.location = window.top.location</script>';
 		}
 		else {
 			$inf = '<style>body {background-color:#eee}</style><div style="text-align:center"><div style="width:600px; border:5px solid #ddd; margin:50px; padding:0.8em; text-align:left; background-color:white; font-size:1.3em">';
@@ -108,7 +108,7 @@
 			$inf .= '<div style="font-size:12px; margin-top:1em; color:gray;">頁面正在自動跳轉<a href="'.$url.'" style="color:blue;">這個地址</a>，請稍候...<b id="left_time">'.$second.'</b> 秒,</div></div></div>';
 			if($_SERVER['SERVER_PORT'] == '443'){
 				echo "<meta http-equiv=\"REFRESH\" content=\"$second;URL='".$url."'\">";
-			}else{	
+			}else{
 				$inf .= '<script type="text/javascript">var sec = '.$second.'; window.setInterval(cooldown,1000);';
 				$inf .= 'function cooldown(){if(sec>0) sec--; else{window.clearInterval(); window.location.replace("'.$url.'"); }; document.getElementById("left_time").innerHTML = sec;}';
 				$inf .= '</script>';
@@ -117,7 +117,7 @@
 		}
 		exit;
 	}
-	
+
 	function app_access()
 	{
 		$CI 	=& get_instance();
@@ -143,7 +143,7 @@
 		}
 		return false;
 	}
-	
+
 	function check_cardid($cardid='') {
 		if(!empty($cardid)){
 			$alphabet =['A'=>'10','B'=>'11','C'=>'12','D'=>'13','E'=>'14','F'=>'15','G'=>'16','H'=>'17','I'=>'34',
@@ -161,7 +161,7 @@
 						while($i >= 2){
 							$total 	= $total + (substr($cardid,$j,1) * $i);
 							$j+=1;
-							$i--;	
+							$i--;
 						}
 						if( ($total%10) ==0)
 							return true;
@@ -171,7 +171,7 @@
 		}
 		return false;
 	}
-	
+
 	function bankaccount_substr($bank_account){
 		$bank_account 	= trim($bank_account);
 		$len 		 	= strlen($bank_account);
@@ -189,6 +189,7 @@
 		}
 		return rand(1, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9).rand(0, 9);
 	}
+
 
 	function make_promote_code($length=8) {
 		$code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -209,7 +210,7 @@
 		);
 		return $d;
 	}
-	
+
 	function is_virtual_account($account){
 		if($account){
 			$account = trim($account);
@@ -219,7 +220,7 @@
 		}
 		return false;
 	}
-	
+
 	function investor_virtual_account($account){
 		if($account){
 			if(strlen($account)==14 && substr($account,0,4)==CATHAY_VIRTUAL_CODE && substr($account,4,1)==INVESTOR_VIRTUAL_CODE || substr($account,0,5)==TAISHIN_VIRTUAL_CODE){
@@ -254,7 +255,7 @@
     function get_hidden_id($id){
         return substr($id,0,4).'○○○'.substr($id,-3);
     }
-	
+
 	function get_age($date) {
         return date_diff(date_create($date), date_create('today'))->y;
 	}
@@ -266,7 +267,7 @@
 	function get_entering_date() {
 		return date('Y-m-d');
 	}
-	
+
 	function entering_date_range($date='') {
 		if($date){
 			$sdate 	= date('Y-m-d',strtotime($date)).' 00:00:00';
@@ -278,11 +279,11 @@
 		}
 		return false;
 	}
-	
+
 	function get_qrcode($url){
 		return 'https://chart.apis.google.com/chart?cht=qr&choe=UTF-8&chl='.urlencode($url).'&chs=500x500';
 	}
-	
+
 	function nf_to_wf($strs){  //全形半形轉換
 		$nft = array(
 			"(", ")", "[", "]", "{", "}", ".", ",", ";", ":",
@@ -315,22 +316,22 @@
 
 		return str_replace($nft, $wft, $strs);
 	}
-	
-	function myErrorHandler($errno,$errstr,$errfile,$errline)  
-	{  
-		echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";  
+
+	function myErrorHandler($errno,$errstr,$errfile,$errline)
+	{
+		echo "ERROR: [ID $errno] $errstr (Line: $errline of $errfile) \n";
 	}
-	
+
 	function mb_str_splits($str){
 		return preg_split('/(?<!^)(?!$)/u', $str );
 	}
 	//民國轉西元
 	function r_to_ad($str){
-		
+
 		if($str == date('Y-m-d',strtotime($str))){
 			return $str;
 		}
-		
+
 		if($str == preg_replace('/[^\d]/','',$str)){
 			return date('Y-m-d',strtotime($str+19110000));
 		}else{
@@ -386,6 +387,32 @@
 		return in_array($file_type, $pdf_mimes, TRUE);
 	}
 
+    /**
+	 * 依照前綴詞取得目前已定義的常數項
+	 * @param array $constants: 變數列表
+	 * @param string $prefix: 前綴詞
+	 * @return array
+	 */
+	function returnConstants (array $constants, string $prefix): array
+	{
+		foreach ($constants as $key=>$value)
+			if (substr($key,0,strlen($prefix))==$prefix)  $dump[$key] = $value;
+		if(empty($dump)) { return []; }
+		else { return $dump; }
+	}
+
+	function birthdayDateFormat($birthday) {
+		if(preg_match("/^([0-9]{1,3})(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/u",
+			$birthday, $matches)){
+			$birthday = "$matches[1]/$matches[2]/$matches[3]";
+		}
+		return $birthday;
+    }
+
+    function isValidDateTime(string $datetime) {
+		return $datetime > "1911-01-01 00:00:00";
+    }
+
 	function isAvailableDate($format, $date) {
 		$dt = \DateTime::createFromFormat($format, $date);
 		return $dt !== false && !array_sum($dt::getLastErrors());
@@ -405,4 +432,16 @@
 		}, $array);
 	}
 
+    function isJson($string) {
+		json_decode($string);
+		return json_last_error() === JSON_ERROR_NONE;
+	}
+
+	function strip_ROC_date_word($date) {
+		preg_match('/民?國?([0-9]{2,3})(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u', $date, $regex_result);
+		if(!empty($regex_result)) {
+			$date = $regex_result[1].$regex_result[3].$regex_result[5];
+		}
+		return $date;
+	}
 ?>

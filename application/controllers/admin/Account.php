@@ -218,6 +218,26 @@ class Account extends MY_Admin_Controller {
 						"created_at"			=> $value->created_at,
 					);
 				}
+                if($value->source == SOURCE_PROMOTE_REWARD){
+                    $list[] = array(
+                        "entering_date"			=> $value->entering_date,
+                        "target_no"				=> '',
+                        "target_id"				=> '',
+                        "source_type"			=> 'promote',
+                        "user_from"				=> "平台",
+                        "bank_account_from"		=> $value->bank_account_from,
+                        "amount_from"			=> $value->amount_from,
+                        "v_bank_account_from"	=> $value->v_bank_account_from,
+                        "v_amount_from"			=> $value->v_amount_from,
+                        "user_to"				=> $user_name[$value->user_to] ?? 0,
+                        "bank_account_to"		=> $value->bank_account_to,
+                        "amount_to"				=> $value->amount_to,
+                        "v_bank_account_to"		=> $value->v_bank_account_to,
+                        "v_amount_to"			=> $value->v_amount_to,
+                        "created_at"			=> $value->created_at,
+                    );
+                }
+
                 // 50
 				if($value->source == SOURCE_TRANSFER_B) {
                     $item_no           = $value->target_no;

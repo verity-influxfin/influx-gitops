@@ -90,4 +90,22 @@ class Virtual_account_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    /**
+     * 依使用者ID取得「投資人身份」的虛擬帳戶號碼
+     * @param int $user_id : 使用者ID
+     * @return int|mixed
+     */
+    public function get_investor_account_by_user_id(int $user_id)
+    {
+        $result = $this->db
+            ->select('va.virtual_account')
+            ->from('virtual_account va')
+            ->where('va.investor', INVESTOR)
+            ->where('va.user_id', $user_id)
+            ->get()
+            ->first_row('array');
+
+        return $result['virtual_account'] ?? 0;
+    }
 }

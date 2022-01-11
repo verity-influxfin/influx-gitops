@@ -426,7 +426,7 @@ class Certification_data
 	 *  [creditCardHasBadDebt] => 信用卡是否有逾期、催收、呆帳紀錄
 	 * )
 	 */
-	// to do : 先以微企貸為主
+	// to do : 先以普匯微企e秒貸為主
 	// 需增加聯徵 UI顯示需求相關數值
 	public function transformJointCreditToResult($data=[]){
 		$res = [
@@ -879,7 +879,7 @@ class Certification_data
 	 *  [totalAmountCash] => 現金卡借款金額
 	 * )
 	 */
-	// to do : 先以微企貸為主
+	// to do : 先以普匯微企e秒貸為主
 	// 需增加聯徵 UI顯示需求相關數值
 	public function transformJointCreditToMeta($result=[]){
 		$meta_data =[];
@@ -897,7 +897,7 @@ class Certification_data
      * @param  array  $result    [個人資料表 result]
      * @return array  $meta_data [user meta data]
      */
-    // to do : 先以微企貸為主
+    // to do : 先以普匯微企e秒貸為主
     // 需增加聯徵 UI顯示需求相關數值
     public function transformProfileToMeta($result=[]){
         $meta_data =[];
@@ -915,7 +915,7 @@ class Certification_data
      * @param  array  $result    [公司資料表 result]
      * @return array  $meta_data [user meta data]
      */
-    // to do : 先以微企貸為主
+    // to do : 先以普匯微企e秒貸為主
     // 需增加聯徵 UI顯示需求相關數值
     public function transformProfilejudicialToMeta($result=[]){
         $meta_data =[];
@@ -1122,7 +1122,7 @@ class Certification_data
      * @param  array  $result    [公司電子信箱 result]
      * @return array  $meta_data [user meta data]
      */
-    // to do : 先以微企貸為主
+    // to do : 先以普匯微企e秒貸為主
     // 需增加聯徵 UI顯示需求相關數值
     public function transformCompanyEmailMeta($result=[]){
         $meta_data =[];

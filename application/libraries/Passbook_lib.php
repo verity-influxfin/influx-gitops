@@ -31,6 +31,8 @@ class Passbook_lib{
 		SOURCE_VERIFY_FEE_R,
 		SOURCE_REMITTANCE_FEE,
 		SOURCE_REMITTANCE_FEE_R,
+        SOURCE_PROMOTE_REWARD,
+        SOURCE_LAW_FEE
 	);
 
 	public function __construct()

@@ -1278,7 +1278,6 @@ class Product extends REST_Controller {
 
             $biddingHistory = [];
             if ($target->status == 3
-                && $target->sub_product_id != STAGE_CER_TARGET
                 && $target->sub_status != TARGET_SUBSTATUS_SUBLOAN_TARGET
             ){
             $this->load->model('loan/investment_model');
@@ -1556,7 +1555,6 @@ class Product extends REST_Controller {
             $allow_changeRate_product = $this->config->item('allow_changeRate_product');
             if (in_array($target->product_id, $allow_changeRate_product)
                 && $target->status == 3
-                && $target->sub_product_id != STAGE_CER_TARGET
                 && in_array($target->sub_status, [TARGET_SUBSTATUS_NORNAL, TARGET_SUBSTATUS_SECOND_INSTANCE_TARGET])
                 && $target->script_status == 0
                 && $target->expire_time >= time()
@@ -2211,14 +2209,14 @@ class Product extends REST_Controller {
         } elseif ($target->sub_product_id == 5) {
             $productName = "驗資基金";
         } elseif ($target->product_id == 1002) {
-            // 百萬信保微企貸
-            $productName = '信保微企貸';
+            // 普匯微企e秒貸
+            $productName = '普匯微企e秒貸';
         }
 
         $is = $character == 1 ? '借款立約人' : '保證人';
         $this->load->library('sms_lib');
         if ($target->product_id == 1002) {
-            // 百萬信保微企貸
+            // 普匯微企e秒貸
             $this->sms_lib->notify_target_product_1002_associates(
                 $this->user_info->id,
                 $this->user_info->phone,
@@ -2239,7 +2237,7 @@ class Product extends REST_Controller {
         if(isset($input['mail'])){
             $this->load->library('notification_lib');
             if ($target->product_id == 1002) {
-                // 百萬信保微企貸
+                // 普匯微企e秒貸
                 $this->notification_lib->notify_target_product_1002_associates(
                     $input['mail'],
                     $this->user_info->name,
@@ -2883,6 +2881,68 @@ class Product extends REST_Controller {
         } else {
             $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
         }
+    }
+
+    /**
+     * @api {get} /v2/product/target_verify_status 借款方 取得案件審核狀態
+     * @apiVersion 0.2.0
+     * @apiName GetTargetVerifyStatus
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     * @apiGroup Product
+     *
+     * @apiParam {Number} target_id 案件流水號
+     *
+     * @apiSuccess {String} result 響應結果
+     * @apiSuccess {Number} status 案件審核狀態 (1:已送出審核, 0:待送出審核)
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {"status": 1}
+     *    }
+     *
+     */
+    public function target_verify_status_get()
+    {
+        $input 		= $this->input->get(NULL, TRUE);
+        $user_id 	= $this->user_info->id;
+        $investor 	= $this->user_info->investor;
+        $targetId   = $input['target_id'];
+
+        if(!isset($targetId)) {
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT));
+        }
+
+        $target = $this->target_model->get($targetId);
+        if(!isset($target)) {
+            $this->response(array('result' => 'ERROR','error' => TARGET_NOT_EXIST));
+        }else if($user_id != $target->user_id) {
+            $this->response(array('result' => 'ERROR','error' => PERMISSION_DENY));
+        }
+
+        if($investor != 0) {
+            $this->response(array('result' => 'ERROR','error' => IS_INVERTOR));
+        }
+
+        $this->load->library('Certification_lib');
+
+        $targetVerifying = TRUE;
+        $targetData = json_decode($target->target_data, true);
+        if(isset($targetData['verify_cetification_list'])) {
+            $targetData['verify_cetification_list'] = json_decode($targetData['verify_cetification_list'], true);
+            $this->load->model('user/user_certification_model');
+            $userCertifications 	= $this->user_certification_model->get_many_by([
+                'id'        => $targetData['verify_cetification_list'],
+                'status '   => [CERTIFICATION_STATUS_AUTHENTICATED, CERTIFICATION_STATUS_FAILED],
+            ]);
+            if(!empty($userCertifications)) {
+                $targetVerifying = FALSE;
+            }
+        }else{
+            $targetVerifying = FALSE;
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['status' => $targetVerifying ? 1 : 0]]);
+
     }
 
     private function NS2P1($param, $product, $input)

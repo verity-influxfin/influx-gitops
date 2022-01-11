@@ -220,7 +220,40 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+	public function handle_promote() {
+        $start_time = time();
+        $this->load->library('user_lib');
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/qrcode_setting_model');
 
+        // 自動延長一般方案的結束時間
+        $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->generalCaseAliasName);
+
+        if(date("d") >= 1 && date("d") <= 4) {
+            $data = [
+                'script_name'   => 'handle_promote_reward',
+                'num'           => 0,
+                'start_time'    => $start_time,
+                'end_time'      => 0
+            ];
+            $rs = $this->log_script_model->insert($data);
+            $num = $this->user_lib->scriptHandlePromoteReward();
+        } else {
+            $data = [
+                'script_name'   => 'handle_promote_receipt',
+                'num'           => 0,
+                'start_time'    => $start_time,
+                'end_time'      => 0
+            ];
+            $rs = $this->log_script_model->insert($data);
+            $num = $this->user_lib->send_promote_receipt();
+        }
+        $this->log_script_model->update_by(['id' => $rs], [
+            'num' => $num,
+            'end_time' => time(),
+        ]);
+        die('1');
+    }
 	/**
 	 * 針對實名驗證已成功的所有用戶進行重新認證
 	 */
@@ -759,4 +792,18 @@ class Cron extends CI_Controller
 		echo json_encode($result);
 	}
 
+	//將黑名單學校的學生認證退回重審
+	public function send_certification_return_msg()
+	{
+		$this->load->model('user/user_certification_model');
+		$this->load->library('certification_lib');
+
+		$data_rows = $this->user_certification_model->get_certifications_return();
+
+		if ($data_rows) {
+			foreach ($data_rows as $value) {
+				$this->certification_lib->set_failed($value['id'], '學生評分系統更新，邀請您重新認證，體驗最新AI風控模組！');
+			}
+		}
+	}
 }

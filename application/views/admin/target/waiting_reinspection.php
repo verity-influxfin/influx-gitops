@@ -330,7 +330,8 @@
                                $('#skbankMetaInfo').text(response.meta_info);
 
                                if(skbank_response == '成功'){
-                                   $("#skbank_img_send_btn").prop("disabled", true);
+                                   $("#skbank_img_send_btn").prop("disabled", false);
+                                   $("#skbank_approve_send_btn").prop("disabled", false);
                                }else{
                                    $("#skbank_text_send_btn").prop("disabled", false);
                                }
@@ -359,13 +360,45 @@
                       let comp_id = $('#skbankCompId').text();
                       if(case_no && comp_id){
                           let request_data = [];
-                          let data_count = Object.keys(response.response).length;
+                          let data_count = 0;
+                          Object.keys(response.response).forEach( (image_type_key) => {
+                              data_count += Object.keys(response.response[image_type_key]).length;
+                          });
                           Object.keys(response.response).forEach( (image_type_key) => {
                               Object.keys(response.response[image_type_key]).forEach( (key) => {
                                   console.log(response.response[image_type_key][key]);
                                   let skbank_image_type = image_type_key;
                                   let skbank_image_url = response.response[image_type_key][key];
                                   let image_count = key;
+                                  let doc_file_type = 0;
+
+                                  let img_type = skbank_image_url.replace(/.*\./, '');
+                                    switch (img_type) {
+                                        case 'pdf':
+                                            doc_file_type = 1;
+                                            break;
+                                        case 'jpg':
+                                            doc_file_type = 2;
+                                            break;
+                                        case 'jpeg':
+                                            doc_file_type = 3;
+                                            break;
+                                        case 'png':
+                                            doc_file_type = 4;
+                                            break;
+                                        case 'tiff':
+                                            doc_file_type = 5;
+                                            break;
+                                        case 'heic':
+                                            doc_file_type = 6;
+                                            break;
+                                        case 'heif':
+                                            doc_file_type = 7;
+                                            break;
+                                      default:
+                                            doc_file_type = 2;
+                                            break;
+                                    }
                                   getMappingMsgNo(caseId, 'send', image_type_key,  (data) => {
                                       msg_data = data;
                                       msg_no = msg_data.data.msg_no;
@@ -375,7 +408,7 @@
                                           'CaseNo' : case_no,
                                           'DocType' : image_type_key,
                                           'DocSeq' : parseInt(image_count)+1,
-                                          'DocFileType' : 4,
+                                          'DocFileType' : doc_file_type,
                                           'DocUrl' : skbank_image_url
                                       });
                                       if(Object.keys(request_data).length == data_count){
@@ -386,7 +419,8 @@
                                               url: '/api/skbank/v1/LoanRequest/apply_image_list',
                                               dataType: "json",
                                               success: function (response) {
-                                                alert(response);
+                                                  let skbank_response = response.success ? '成功' : '失敗';
+                                                  alert(`新光送出結果 ： ${skbank_response}\n回應內容 ： ${response.error}\n新光送出圖片總數 ： ${response.total_image_count}\n`);
                                               },
                                               error: function(error) {
                                                 alert(error);
@@ -427,26 +461,34 @@
             $("#skbank_approve_send_btn").text("資料處理中");
             let case_no = $('#skbankCaseNo').text();
             let comp_id = $('#skbankCompId').text();
-            let msg_no = $('#skbankMsgNo').text();
-            if(case_no && comp_id && msg_no){
-                $.ajax({
-                    type: "POST",
-                    url: "/api/skbank/v1/LoanRequest/apply_image_complete",
-                    dataType: "json",
-                    data: JSON.stringify({
-                        'CaseNo':case_no,
-                        'CompId':comp_id,
-                        'MsgNo':msg_no,
-                    }),
-                    success: function (response) {
-                        if(response.success == true){
-                           $("#skbank_approve_send_btn").text("通過");
-                        }
-                        let skbank_response = response.success ? '成功' : '失敗';
-                        alert(`送出結果 ： ${skbank_response}\n回應內容 ： ${response.error}\n新光送出資料資訊 ： ${response.meta_info}\n`);
+            if(case_no && comp_id){
+                getMappingMsgNo(caseId, 'send', 'image_complete',  (data) => {
+                    msg_data = data;
+                    msg_no = msg_data.data.msg_no;
+
+                    if (msg_no) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/api/skbank/v1/LoanRequest/apply_image_complete",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                'CaseNo':case_no,
+                                'CompId':comp_id,
+                                'MsgNo':msg_no,
+                            }),
+                            success: function (response) {
+                                let skbank_response = response.success ? '成功' : '失敗';
+                                if (skbank_response == '失敗') {
+                                    $("#skbank_approve_send_btn").prop("disabled", true);
+                                }
+                                alert(`送出結果 ： ${skbank_response}\n回應內容 ： ${response.error}`);
+                            }
+                        });
+                    }else {
+                        alert(`新光發送交易序號生成失敗`);
                     }
+                    $("#skbank_approve_send_btn").text("通過");
                 });
-                $("#skbank_approve_send_btn").text("通過");
             }
         });
 
@@ -460,13 +502,23 @@
               url: `/admin/target/skbank_text_get?target_id=${target_id}`,
               success: function (response) {
                   response = response.response;
-                  if(response){
+                  if(response && response.length != 0){
                       Object.keys(response).forEach( (key) => {
                           $(`#${key}`).text(response[key]);
-                          if(key == 'skbankMetaInfo' && response[key] == '成功'){
-                              $("#skbank_text_send_btn").prop("disabled", true);
+                          if(key == 'skbankMetaInfo'){
+                              if(response[key] == '成功'){
+                                  $("#skbank_text_send_btn").prop("disabled", true);
+                                  $("#skbank_img_send_btn").prop("disabled", false);
+                                  $("#skbank_approve_send_btn").prop("disabled", false);
+                              }else{
+                                  $("#skbank_img_send_btn").prop("disabled", true);
+                                  $("#skbank_approve_send_btn").prop("disabled", true);
+                              }
                           }
                       })
+                  }else{
+                      $("#skbank_img_send_btn").prop("disabled", true);
+                      $("#skbank_approve_send_btn").prop("disabled", true);
                   }
               },
               error: function(error) {
@@ -744,7 +796,7 @@
                         <? if($targetInfo->product_id == 1002){ ?>
                             <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
                             <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">圖片送出</button>
-                            <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="" disabled>通過</button>
+                            <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">通過</button>
                         <? } ?>
                     </div>
                 </div>

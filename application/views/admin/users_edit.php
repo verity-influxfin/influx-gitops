@@ -2,6 +2,14 @@
 	function form_onsubmit() {
 		return true;
 	}
+    $(document).ready(function(){
+        $('#myTabs a').click(function (e) {
+            let show_id = $(this).attr("href");
+            $(".credit-table").hide()
+            $(show_id).show()
+        })
+        $( "#myTabs :first-child :first-child" ).trigger( "click" );
+    });
 </script>
 
 <div id="page-wrapper">
@@ -199,60 +207,125 @@
 							</div>
 						</div>
 						<div class="col-lg-6">
-							<h2>信用評分</h2>
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover" style="text-align:center;">
+                            <h2>信用評分</h2>
+
+                            <div>
+                                <ul class="nav nav-tabs" id="myTabs" role="tablist">
+                                    <li role="presentation" class="active">
+                                        <a href="#credit_table_1" role="tab" data-toggle="tab" aria-controls="test1" aria-expanded="true">新版信用評分</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#credit_table_2" role="tab" data-toggle="tab" aria-controls="test2" aria-expanded="false">舊版信用評分</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="table-responsive credit-table"  id="credit_table_1">
+                                <table class="table table-bordered table-hover" style="text-align:center;">
 									<tbody>
-										<? if (!empty($credit_list)) {
-											foreach ($credit_list as $key => $value) {
-												?>
-												<tr style="border-top:2px solid black">
-													<td style="background-color: #f5f5f5">
-														<p class="form-control-static">產品</p>
-													</td>
-													<td>
-														<p class="form-control-static"><?= isset($value->product_id) ? $product_list[$value->product_id]['name'] : ""; ?><?=isset($sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']])?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></p>
-													</td>
-													<td style="background-color: #f5f5f5">
-														<p class="form-control-static">信用等級</p>
-													</td>
-													<td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
-														<p class="form-control-static"><?= isset($value->level) ? $value->level : ""; ?></p>
-														</td>
-												</tr>
-												<tr>
-													<td style="background-color: #f5f5f5">
-														<p class="form-control-static">信用評分</p>
-													</td>
-													<td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
-														<p class="form-control-static"><?= isset($value->points) ? $value->points : ""; ?></p>
-														</td>
-														<td style="background-color: #f5f5f5">
-															<p class="form-control-static">信用額度</p>
-														</td>
-														<td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
-															<p class="form-control-static"><?= isset($value->amount) ? $value->amount : ""; ?></p>
-															</td>
-												</tr>
-												<tr>
-													<td style="background-color: #f5f5f5">
-														<p class="form-control-static">有效時間</p>
-													</td>
-													<td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
-														<p class="form-control-static"><?= isset($value->expire_time) && !empty($value->expire_time) ? date("Y-m-d H:i:s", $value->expire_time) : ""; ?></p>
-														</td>
-														<td style="background-color: #f5f5f5">
-															<p class="form-control-static">核准時間</p>
-														</td>
-														<td>
-															<p class="form-control-static"><?= isset($value->created_at) && !empty($value->created_at) ? date("Y-m-d H:i:s", $value->created_at) : ""; ?></p>
-														</td>
-												</tr>
-										<? }
-										} ?>
+                                    <? if (!empty($new_credit_list)) {
+                                        foreach ($new_credit_list as $key => $value) {
+                                            ?>
+                                            <tr style="border-top:2px solid black">
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">產品</p>
+                                                </td>
+                                                <td>
+                                                    <p class="form-control-static"><?= isset($value->product_id) ? $product_list[$value->product_id]['name'] : ""; ?><?=isset($sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']])?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></p>
+                                                </td>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">信用等級</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->level) ? $value->level : ""; ?></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">信用評分</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->points) ? $value->points : ""; ?></p>
+                                                </td>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">信用額度</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->amount) ? $value->amount : ""; ?></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">有效時間</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->expire_time) && !empty($value->expire_time) ? date("Y-m-d H:i:s", $value->expire_time) : ""; ?></p>
+                                                </td>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">核准時間</p>
+                                                </td>
+                                                <td>
+                                                    <p class="form-control-static"><?= isset($value->created_at) && !empty($value->created_at) ? date("Y-m-d H:i:s", $value->created_at) : ""; ?></p>
+                                                </td>
+                                            </tr>
+                                        <? }
+                                    } ?>
 									</tbody>
 								</table>
 							</div>
+                            <div class="table-responsive credit-table"  id="credit_table_2">
+                                <table class="table table-bordered table-hover" style="text-align:center;">
+                                    <tbody>
+                                    <? if (!empty($credit_list)) {
+                                        foreach ($credit_list as $key => $value) {
+                                            ?>
+                                            <tr style="border-top:2px solid black">
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">產品</p>
+                                                </td>
+                                                <td>
+                                                    <p class="form-control-static"><?= isset($value->product_id) ? $product_list[$value->product_id]['name'] : ""; ?><?=isset($sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']])?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></p>
+                                                </td>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">信用等級</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->level) ? $value->level : ""; ?></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">信用評分</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->points) ? $value->points : ""; ?></p>
+                                                </td>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">信用額度</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->amount) ? $value->amount : ""; ?></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">有效時間</p>
+                                                </td>
+                                                <td<?= isset($value->status) && $value->status == 0 ? " style='text-decoration:line-through'" : ""; ?>>
+                                                    <p class="form-control-static"><?= isset($value->expire_time) && !empty($value->expire_time) ? date("Y-m-d H:i:s", $value->expire_time) : ""; ?></p>
+                                                </td>
+                                                <td style="background-color: #f5f5f5">
+                                                    <p class="form-control-static">核准時間</p>
+                                                </td>
+                                                <td>
+                                                    <p class="form-control-static"><?= isset($value->created_at) && !empty($value->created_at) ? date("Y-m-d H:i:s", $value->created_at) : ""; ?></p>
+                                                </td>
+                                            </tr>
+                                        <? }
+                                    } ?>
+                                    </tbody>
+                                </table>
+                            </div>
 						</div>
 						<div class="col-lg-3">
 							<h2>借款端認證</h2>
@@ -275,14 +348,19 @@
 																if ($value['id'] == 3) {
 																	switch ($value['user_status']) {
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
+                                                                        case '6':
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			break;
 																		case '1':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $bank_acc_cer_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -292,14 +370,19 @@
 																	$certification_id = $value['certification_id'];
 																	switch ($value['user_status']) {
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
+                                                                        case '6':
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			break;
 																		case '1':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-' . $status . ' btn-circle"><i class="fa fa-check"></i> </button></a>' . $expire_status . '';;
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i> </button></a>';
 																			break;
 																		case '2':
-																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>' . $expire_status . '';
+																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i> </button></a>';
 																			break;
 																		default:
 																			echo '<p class="form-control-static">無</p>';
@@ -332,7 +415,12 @@
 																if ($value['id'] == 3) {
 																	switch ($value['user_status']) {
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
+																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
+																			break;
+                                                                        case '6':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $inv_bank_acc_cer_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;
 																		case '1':
@@ -349,6 +437,11 @@
 																	$certification_id = $value['certification_id'];
 																	switch ($value['user_status']) {
 																		case '3':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            break;
+                                                                        case '6':
+                                                                            echo '<a target="_blank" class="btn btn-default" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" >驗證</a>';
+                                                                            break;
 																		case '0':
 																			echo '<a target="_blank" href="' . admin_url('certification/user_certification_edit?id=' . $certification_id) . '" ><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i> </button></a>';
 																			break;

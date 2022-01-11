@@ -27,7 +27,7 @@
 			</div>
 			<!-- /.row -->
 			<div class="row">
-				<? if (isset($content['type'])) { ?>
+				<?php if (isset($content['type'])) { ?>
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -56,10 +56,10 @@
 										</div>
 										<div class="form-group">
 											<label>備註</label>
-											<?
+											<?php
 											if ($remark) {
-												if (isset($remark["fail"]) && $remark["fail"]) {
-													echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+												if (isset($remark["verify_result"]) && $remark["verify_result"]) {
+													echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["verify_result"] . '</p>';
 												}
 											}
 											?>
@@ -70,7 +70,6 @@
                                                     <tbody>
                                                         <tr style="text-align: center;"><td colspan="2"><span>風控因子確認</span></td></tr>
                                                         <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                        <tr><td><span>好友數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
                                                         <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
                                                         <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                         <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
@@ -83,9 +82,9 @@
 											<fieldset>
 												<div class="form-group">
 													<select id="status" name="status" class="form-control" onchange="check_fail();">
-														<? foreach ($status_list as $key => $value) { ?>
+														<?php foreach ($status_list as $key => $value) { ?>
 															<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
-														<? } ?>
+														<?php } ?>
 													</select>
 													<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 													<input type="hidden" name="from" value="<?= isset($from) ? $from : ""; ?>">
@@ -94,12 +93,12 @@
 													<label>失敗原因</label>
 													<select id="fail" name="fail" class="form-control">
 														<option value="" disabled selected>選擇回覆內容</option>
-														<? foreach ($certifications_msg[4] as $key => $value) { ?>
+														<?php foreach ($certifications_msg[4] as $key => $value) { ?>
 															<option <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
-														<? } ?>
+														<?php } ?>
 														<option value="other">其它</option>
 													</select>
-													<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
+													<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["verify_result"]) ? $remark["verify_result"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
 												</div>
 												<button type="submit" class="btn btn-primary">送出</button>
 											</fieldset>
@@ -107,7 +106,7 @@
 
 									</div>
 									<div class="col-lg-6">
-										<? if ($content['type'] == 'instagram') {
+										<?php if ($content['type'] == 'instagram') {
 											$info = isset($content['info']) ? $content['info'] : array();
 										?>
 											<table style="text-align: center;width:100%">
@@ -131,9 +130,9 @@
 												</tr>
 											</table>
 
-										<? } ?>
+										<?php } ?>
 									</div>
-									<? if (isset($info['meta']) && count($info['meta']) > 0) {
+									<?php if (isset($info['meta']) && count($info['meta']) > 0) {
 										foreach ($info['meta'] as $key => $value) {
 									?>
 											<div class="col-lg-3">
@@ -143,7 +142,7 @@
 												</a>
 												<p><?= isset($value['text']) ? $value['text'] : "" ?></p>
 											</div>
-									<? }
+									<?php }
 									} else {
 										echo '<h4>無貼文</h4>';
 									} ?>
@@ -154,7 +153,7 @@
 						</div>
 						<!-- /.panel -->
 					</div>
-				<? } else { ?>
+				<?php } else { ?>
 					<div class="col-lg-12">
 						<div class="panel panel-default">
 							<div class="panel-heading">
@@ -189,29 +188,56 @@
 												<h3>
 													<p><label>IG 認證 </label></p>
 												</h3>
-												<label>IG 帳號</label>
-												<a href="https://www.instagram.com/<?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?>" target="_blank">
-													<h4><?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?></h4>
-												</a>
-												<td>
-													<p>
-														<?= isset($content['instagram']['counts']['media']) ? $content['instagram']['counts']['media'] : "0" ?> 貼文 、
-														<?= isset($content['instagram']['counts']['followed_by']) ? $content['instagram']['counts']['followed_by'] : "0" ?> 位追蹤者 、
-														<?= isset($content['instagram']['counts']['follows']) ? $content['instagram']['counts']['follows'] : "0" ?> 追蹤中 </p>
-												</td>
-												<label>IG 暱稱</label>
-												<p class="form-control-static"><?= isset($content['instagram']['name']) ? $content['instagram']['name'] : "" ?></p>
+                                                <table border="1" style="text-align: center;width:100%">
+                                                    <tr>
+                                                        <td>IG 帳號</td>
+                                                        <td>
+                                                            <a href="https://www.instagram.com/<?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?>"
+                                                               target="_blank">
+                                                                <h4><?= isset($content['instagram']['username']) ? $content['instagram']['username'] : "" ?></h4>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>帳號是否存在</td>
+                                                        <td><?= isset($content['instagram']['usernameExist']) ? $content['instagram']['usernameExist'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>貼文數</td>
+                                                        <td><?= isset($content['instagram']['info']['allPostCount']) ? $content['instagram']['info']['allPostCount'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>被追蹤數</td>
+                                                        <td><?= isset($content['instagram']['info']['allFollowerCount']) ? $content['instagram']['info']['allFollowerCount'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>追蹤數</td>
+                                                        <td><?= isset($content['instagram']['info']['allFollowingCount']) ? $content['instagram']['info']['allFollowingCount'] : "" ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>是否為私人帳號</td>
+                                                        <td><?php if (isset($content['instagram']['info']['isPrivate'])){
+                                                                    echo $content['instagram']['info']['isPrivate'] == TRUE ? "是" : "否";
+                                                             } ?></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>是否追蹤普匯官方帳號</td>
+                                                        <td><?php if (isset($content['instagram']['info']['isFollower'])){
+                                                                echo $content['instagram']['info']['isFollower'] == TRUE ? "是" : "否";
+                                                            } ?></td>
+                                                    </tr>
+                                                </table>
 
-                                                <? if(isset($content['instagram']['access_token'])){   ?>
+                                                <?php if(isset($content['instagram']['access_token'])){   ?>
 												<label>IG token(IG ID)</label>
-												<p class="form-control-static"><? echo $content['instagram']['access_token']; ?></p>
-                                                <? } ?>
+												<p class="form-control-static"><?php echo $content['instagram']['access_token']; ?></p>
+                                                <?php } ?>
 												<label>IG 大頭照</label>
 												<p><a href="<?= isset($content['instagram']['picture']) ? $content['instagram']['picture'] : "" ?>" data-fancybox="images">
 														<img src="<?= isset($content['instagram']['picture']) ? $content['instagram']['picture'] : "" ?>">
 													</a></p>
 												<label>IG 貼文</label>
-												<? if(isset($content['instagram']['meta'])) {
+												<?php if(isset($content['instagram']['meta'])) {
 													foreach ($content['instagram']['meta'] as $key => $value) {
 												?>
 													<div>
@@ -221,7 +247,7 @@
 														</a>
 														<p><?= isset($value['text']) ? $value['text'] : "" ?></p>
 													</div>
-												<? } }?>
+												<?php } }?>
 											</div>
                                             <div class="form-group">
                                                 <form role="form" action="/admin/certification/save_meta" method="post">
@@ -229,7 +255,7 @@
                                                         <tbody>
                                                             <tr style="text-align: center;"><td colspan="2"><span>風控因子確認</span></td></tr>
                                                             <tr hidden><td><span>徵提資料ID</span></td><td><input class="meta-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                                            <tr><td><span>好友數</span></td><td><input class="meta-input" type="text" name="follow_count" placeholder=""></td></tr>
+                                                            <tr><td><span>被追蹤數</span></td><td><input class="meta-input" type="text" name="allFollowingCount" placeholder=""></td></tr>
                                                             <tr><td><span>近3個月內每發文數</span></td><td><input class="meta-input" type="text" name="posts_in_3months" placeholder=""></td></tr>
                                                             <tr><td><span>發文關鍵字</span></td><td><input class="meta-input" type="text" name="key_word" placeholder=""></td></tr>
                                                             <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
@@ -243,17 +269,26 @@
 											</div>
 											<div class="form-group">
 												<label>備註</label>
-												<?
-												if ($remark) {
-													if (isset($remark["fail"]) && $remark["fail"]) {
-														echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
-													}
-												}
-												?>
+                                                <?php
+                                                if ($remark)
+                                                {
+                                                    if (isset($remark["verify_result"]) && $remark["verify_result"])
+                                                    {
+                                                        foreach ($remark["verify_result"] as $verify_result)
+                                                        {
+                                                            echo '<p style="color:red;" class="form-control-static">失敗原因：' . $verify_result . '</p>';
+                                                        }
+                                                    }
+                                                    else if (isset($remark["fail"]) && $remark["fail"])
+                                                    {
+                                                        echo '<p style="color:red;" class="form-control-static">失敗原因：' . $remark["fail"] . '</p>';
+                                                    }
+                                                }
+                                                ?>
 											</div>
                                             <div class="form-group">
                                                 <label>系統審核</label>
-                                                <?
+                                                <?php
                                                 if (isset($sys_check)) {
                                                     echo '<p class="form-control-static">' . ($sys_check==1?'是':'否') . '</p>';
                                                 }
@@ -264,9 +299,9 @@
 												<fieldset>
 													<div class="form-group">
 														<select id="status" name="status" class="form-control" onchange="check_fail();">
-															<? foreach ($status_list as $key => $value) { ?>
+															<?php foreach ($status_list as $key => $value) { ?>
 																<option value="<?= $key ?>" <?= $data->status == $key ? "selected" : "" ?>><?= $value ?></option>
-															<? } ?>
+															<?php } ?>
 														</select>
 														<input type="hidden" name="id" value="<?= isset($data->id) ? $data->id : ""; ?>">
 														<input type="hidden" name="from" value="<?= isset($from) ? $from : ""; ?>">
@@ -275,12 +310,14 @@
 														<label>失敗原因</label>
 														<select id="fail" name="fail" class="form-control">
 															<option value="" disabled selected>選擇回覆內容</option>
-															<? foreach ($certifications_msg[4] as $key => $value) { ?>
+															<?php foreach ($certifications_msg[4] as $key => $value) { ?>
 																<option <?= $data->status == $value ? "selected" : "" ?>><?= $value ?></option>
-															<? } ?>
+															<?php } ?>
 															<option value="other">其它</option>
 														</select>
-														<input type="text" class="form-control" id="fail" name="fail" value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : ""; ?>" style="background-color:white!important;display:none" disabled="false">
+                                                        <input type="text" class="form-control" id="fail" name="fail"
+                                                               value="<?= $remark && isset($remark["fail"]) ? $remark["fail"] : "" ?>
+                                                            " style="background-color:white!important;display:none" disabled="false">
 													</div>
 													<button type="submit" class="btn btn-primary">送出</button>
 												</fieldset>
@@ -295,7 +332,7 @@
 								<!-- /.panel -->
 							</div>
 							<!-- /.col-lg-12 -->
-						<? } ?>
+						<?php } ?>
 						<!-- /.col-lg-12 -->
 						</div>
 						<!-- /.row -->

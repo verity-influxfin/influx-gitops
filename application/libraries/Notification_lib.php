@@ -101,7 +101,12 @@ class Notification_lib{
 		return $rs;
 	}
 
-	public function approve_target($user_id,$status,$amount=0,$subloan=false,$remark = false){
+	public function approve_target($user_id,$status,$target,$amount=0,$subloan=false,$remark = false) {
+        $notificationType = NOTIFICATION_TYPE_NONE;
+        $data = [];
+        $title = "";
+        $content = "";
+
 		if($status==1){
             $loan_type = $subloan?'產品轉換':'借款';
 			$title = "【".$loan_type."審核】 您的審核已通過";
@@ -123,15 +128,12 @@ class Notification_lib{
 ";
 			$remark ? $content .= '退件原因：' . $remark : '';
             $type = 'b03';
+            $notificationType = NOTIFICATION_TYPE_GOTO_TARGET;
+            $data = ['target_id' => $target->id, 'product_id' => $target->product_id];
 		}
 
-		$param = array(
-			"user_id"	=> $user_id,
-			"investor"	=> 0,
-			"title"		=> $title,
-			"content"	=> $content,
-		);
-		$rs = $this->CI->user_notification_model->insert($param);
+        $rs = $this->send_app_with_data($user_id,USER_BORROWER,$notificationType,$title,$content,$data);
+
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
 		return $rs;
@@ -736,12 +738,16 @@ $name 您好，
 		);
 		$rs = $this->CI->user_notification_model->insert($param);
 
-		$etitle 		= "【認證】聯合徵信申請";
-		$econtent 	= "親愛的用戶( 使用者編號 $user_id )，
-您好！感謝您申請普匯inFlux".$descri."聯合徵信認證，
-請將您申請完之《徵信報告》，以附件形式回覆此封mail，
-系統收到您的來信後會直接更新驗證內容，
-請進入普匯inFlux確認您的認證狀態。";
+		$etitle 		= "【資料提供】聯合徵信申請";
+        $econtent = <<<econtent
+親愛的{$user_id}用戶，感謝您提供信用報告，普匯將儘速協助您完成貸款，謝謝。
+<ul style="list-style-type: decimal; text-align: left;">
+<li>申請「個人聯徵信用報告」請進入「聯徵中心」網站查看說明。\r\n＊網址：<a href="https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=170&pid=170&docid=412">https://www.jcic.org.tw/main_ch/docDetail.aspx?uid=170&pid=170&docid=412</a></li>
+<li>申請完成後請將「個人信用報告」電子檔(PDF)以附件方式回傳此封驗證信件。</li>
+<li>請至「普匯influx」APP點選「已完成回信」，系統將自動審核。</li>
+</ul>
+<img src="https://d3imllwf4as09k.cloudfront.net/mail_assets/content_images/investigation_apply_sample.png" style="width:100%;height:auto">
+econtent;
 		$this->CI->load->library('Sendemail');
 		$this->CI->sendemail->user_notification($user_id,$etitle,nl2br($econtent),'b08',false,CREDIT_EMAIL,'普匯驗證中心');
 		return $rs;
@@ -806,11 +812,11 @@ $name 您好，
 
 	public function notify_target_product_1002_associates($mail, $username, $subProduct, $character){
 
-		$title = "【百萬信保微企貸】新增 「負責人配偶/保證人」";
+		$title = "【普匯微企e秒貸】新增 「負責人配偶/保證人」";
 		$content = "「{$username}」公司已申請加入您作為「負責人配偶/保證人」
 請下載「普匯 influx」APP，並完成以下流程：
 1.註冊「一般使用者」並登入帳號，並從「資料中心」完成實名認證
-2.至「產品列表」中「百萬信保微企AI速貸」點選「查看狀態」
+2.至「產品列表」中「普匯微企e秒貸」點選「查看狀態」
 3.完成其餘資料更新（個人資料表、聯徵報告...）";
 
 		$this->CI->load->library('Sendemail');
@@ -1054,4 +1060,36 @@ $name 您好，
         $this->CI->sendemail->user_notification($user_id,$title,nl2br($content),$type);
         return $rs;
 	}
+
+    public function send_app_with_data($user_id,$investor,$type,$title,$content,$data=""){
+        $param = array(
+            "user_id"	=> $user_id,
+            "investor"	=> $investor,
+            "title"		=> $title,
+            "content"	=> $content,
+            "type"      => $type,
+            "data"      => !empty($data)?json_encode($data):'',
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        return $rs;
+    }
+
+    public function target_credit_expired($user_id)
+    {
+        $title = "【借款申請】 您申請的借款核准額度已失效";
+        $content = "親愛的用戶，您好！
+非常抱歉通知您，由於您的核准額度有效期已過，系統已自動下架。
+建議您可以重新申請並更新近一個月徵信資料，系統將會在核准後自動上架！";
+
+        $param = array(
+            "user_id" => $user_id,
+            "investor" => USER_BORROWER,
+            "title" => $title,
+            "content" => $content,
+        );
+        $rs = $this->CI->user_notification_model->insert($param);
+        $this->CI->load->library('sendemail');
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), 'b03');
+        return $rs;
+    }
 }

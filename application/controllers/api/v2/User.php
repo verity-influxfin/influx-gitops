@@ -1503,6 +1503,79 @@ END:
             $this->response(array('result' => 'SUCCESS'));
     }
 
+    /**
+     * @api {post} /v2/user/upload_sound_file 會員 上傳聲紋檔案
+     * @apiVersion 0.2.0
+     * @apiName PostUserUploadSoundFile
+     * @apiGroup User
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     *
+     * @apiParam {file="*.mp4","*.mov"} media 媒體檔案
+     * @apiParam {String} label 標籤註記
+     * @apiParam {Number} group 群組編號(可選填，不給則回傳該使用者的最高group編號+1)
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccess {Number} media_id 媒體id
+     * @apiSuccess {Number} group 群組編號
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *      	"media_id": 191,
+     *      	"group": "2"
+     *      }
+     *    }
+     *
+     * @apiUse InputError
+     * @apiUse TokenError
+     * @apiUse BlockUser
+     *
+     */
+    public function upload_sound_file_post()
+    {
+        $input 		= $this->input->post(NULL, TRUE);
+        $inputData		= [];
+        $result         = [];
+        $fields 	= ['label'];
+        $user_id = $this->user_info->id;
+        foreach ($fields as $field) {
+            if (!isset($input[$field]) || !$input[$field]) {
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }else{
+                $inputData[$field] = $input[$field];
+            }
+        }
+
+        if(!isset($input['group'])) {
+            $this->load->model('user/sound_record_model');
+            $soundRecord = $this->sound_record_model->
+                get_many_by(['user_id' => $user_id, 'status' => 1]);
+            if(!empty($soundRecord)) {
+                $soundRecord = end($soundRecord);
+                $inputData['group'] = $soundRecord->group + 1;
+            }else
+                $inputData['group'] = 1;
+        }else{
+            $inputData['group'] = $input['group'];
+        }
+
+        //上傳檔案欄位
+        if (isset($_FILES['media']) && !empty($_FILES['media'])) {
+            $this->load->library('S3_upload');
+            $media = $this->s3_upload->media_id($_FILES,'media',$user_id,'user_upload/sound/'.$user_id,2,$inputData);
+            if($media){
+                $result['media_id'] = $media;
+                $result['group'] = $inputData['group'];
+            }else{
+                $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+            }
+        }else{
+            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+        }
+
+        $this->response(['result' => 'SUCCESS','data' => $result]);
+    }
+
 	/**
      * @api {post} /v2/user/upload_m 會員 上傳影片
 	 * @apiVersion 0.2.0
@@ -1904,6 +1977,7 @@ END:
         $settings = json_decode($qrcode_settings->settings, true);
         $settings['certification_id'] = array_column($certifications, 'id');
         $settings['description'] = $qrcode_settings->description;
+        $settings['investor'] = $investor;
 
         $this->load->library('contract_lib');
         $start_time = date('Y-m-d H:i:s');
@@ -1918,10 +1992,11 @@ END:
         $rs = FALSE;
         if(isset($user_qrcode)) {
             if($user_qrcode->status == PROMOTE_STATUS_PENDING_TO_SENT) {
-                $rs = $this->user_qrcode_model->update_by(array('id' => $user_qrcode), PROMOTE_STATUS_PENDING_TO_VERIFY);
+                $rs = $this->user_qrcode_model->update_by(['id' => $user_qrcode->id],
+                    ['status' => PROMOTE_STATUS_PENDING_TO_VERIFY]);
             }
         } else {
-            $rs = $this->user_qrcode_model->insert(array(
+            $rs = $this->user_qrcode_model->insert([
                 'user_id' => $user_id,
                 'alias' => $alias_name,
                 'promote_code' => $promote_code,
@@ -1930,8 +2005,15 @@ END:
                 'end_time' => $end_time,
                 'settings' => json_encode($settings),
                 'status' => PROMOTE_STATUS_PENDING_TO_VERIFY,
-            ));
+            ]);
         }
+
+        $this->user_certification_model->update_by([
+            'id' => $settings['certification_id'],
+            'user_id' => $user_id,
+            'investor' => $investor,
+            'status' => CERTIFICATION_STATUS_AUTHENTICATED
+        ], ['status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE]);
 
         if(count($doneCertifications) === count($promote_cert_list)){
             $this->load->library('Certification_lib');
@@ -1995,9 +2077,11 @@ END:
             $promote_code       = $userQrcodeInfo['promote_code'];
             $url                = 'https://event.influxfin.com/R/url?p='.$promote_code;
             $qrcode             = get_qrcode($url);
-            $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
+            $contract           = "";
 
             if($userQrcodeInfo['status'] == PROMOTE_STATUS_AVAILABLE) {
+                $contract = $this->contract_lib->get_contract($userQrcodeInfo['contract_id']);
+
                 // 初始化結構
                 try {
                     $d1 = new DateTime($userQrcodeInfo['start_time']);
@@ -2063,7 +2147,7 @@ END:
             $data['promote_name']   = $settings['description'] ?? '';
             $data['promote_alias']  = $userQrcodeInfo['alias'];
             $data['status'] = intval($userQrcodeInfo['status']);
-            $data['contract'] = $contract ? $contract['content'] : "";
+            $data['contract'] = !empty($contract) ? $contract['content'] : $data['contract'];
 
         }
 

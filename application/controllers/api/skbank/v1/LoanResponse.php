@@ -11,7 +11,8 @@ class LoanResponse extends REST_Controller {
         // check ip, request must from bank adapter server
         $clientIp = $this->input->ip_address();
         $allowIp = $this->config->item('bank_adapter_ip');
-        if ($clientIp !== $allowIp) {
+        log_message('error',json_encode(['type'=>'skbank_response_api','client_ip'=>$clientIp,'headers'=>$this->input->request_headers(),'body'=>$this->input->raw_input_stream]));
+        if ( ! in_array($clientIp,$allowIp) ) {
             $this->output->set_status_header(404);
             exit(0);
         }
@@ -111,7 +112,7 @@ class LoanResponse extends REST_Controller {
                                 if ($loanTargetMappingInfo) {
                                     // check target exist and update info
                                     $this->load->model('loan/target_model');
-                                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target,'product_id' => 1002]);
+                                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => 1002]);
                                     if($targetInfo){
                                         // transfer repayment type
                                         $repayment = '';
@@ -123,9 +124,10 @@ class LoanResponse extends REST_Controller {
                                         if(!empty($repayment)){
                                             $updateTarget = $this->target_model->update($targetInfo->id,[
                                                 'loan_amount' => $insertData['loan_amount'],
-                                                'interest_rate' => $insertData['loan_rate'],
+                                                'interest_rate' => ((float) $insertData['loan_rate'])*100,
                                                 'repayment' => $repayment,
                                                 'status' => 504,
+                                                'loan_date' => $insertData['funding_date']
                                             ]);
                                         }
                                     }
@@ -183,7 +185,7 @@ class LoanResponse extends REST_Controller {
                 $result['result'] = true;
             }
         } else {
-            if (isset($inputElement[$inputKey]) && !preg_match($regexPattern, $inputElement[$inputKey])) {
+            if (isset($inputElement[$inputKey]) && !empty($inputElement[$inputKey]) && !preg_match($regexPattern, $inputElement[$inputKey])) {
                 $result['errorMsg'] = sprintf("parameter '%s' value='%s' is illegal", $inputKey, $inputElement[$inputKey]);
             } else {
                 $result['result'] = true;
