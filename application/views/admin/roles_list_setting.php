@@ -64,10 +64,27 @@
 				}
 			},
 		})
-		for (let index = 0; index < 30; index++) {
-			insertDataRow({ table, part: index, group: 0, role: 0, id: index })
-		}
+
+		$.ajax({
+			url: 'role_list_setting_get',
+			type: 'GET',
+			dataType: 'JSON',
+			success: function (response) {
+				if (response['list']) {
+					$.each(response['list'], function (index, value) {
+						insertDataRow({
+							table,
+							part: value['division'], //部門
+							group: value['department'], //組別
+							role: response['position_list'][value['position']] || '', //角色名稱
+							id: value['id']
+						});
+					});
+				}
+			}
+		});
 	});
+
 	function insertDataRow({ table, part, group, role, id }) {
 		const origin = window.location.origin
 		const button = `<button class="btn btn-default" onClick="window.open('${origin}/admin/Admin/role_list_edit?id=${id}')">Edit</button>`

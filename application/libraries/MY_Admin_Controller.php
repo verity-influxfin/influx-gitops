@@ -14,6 +14,7 @@ class MY_Admin_Controller extends CI_Controller{
 		}
 		$this->load->model('admin/admin_model');
 		$this->load->model('admin/role_model');
+		$this->load->model('admin/group_model');
 		$this->load->model('log/log_admin_model');
 		$this->load->helper('admin');
 		$this->load->helper('cookie');
