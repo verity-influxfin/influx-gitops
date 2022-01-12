@@ -44584,8 +44584,14 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "216",
-                            "description": "<p>不支援法人帳號使用</p>"
+                            "field": "224",
+                            "description": "<p>法人帳號沒有綁定自然人帳號</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "225",
+                            "description": "<p>法人沒有通過負責人實名</p>"
                         }
                     ]
                 },
@@ -44678,8 +44684,14 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "216",
-                            "description": "<p>不支援法人帳號使用</p>"
+                            "field": "224",
+                            "description": "<p>法人帳號沒有綁定自然人帳號</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "225",
+                            "description": "<p>法人沒有通過負責人實名</p>"
                         },
                         {
                             "group": "Error 4xx",
@@ -44722,6 +44734,16 @@ define({
                         "type": "Object"
                     },
                     {
+                        "title": "224",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"224\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "225",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"225\"\n}",
+                        "type": "Object"
+                    },
+                    {
                         "title": "408",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
                         "type": "Object"
@@ -44734,7 +44756,387 @@ define({
                 ]
             }
         },
-
+        {
+            "type": "post",
+            "url": "/v2/user/apply_subcode",
+            "title": "會員 推薦碼subcode申請",
+            "version": "0.2.0",
+            "name": "PostUserApplyPromoteSubCode",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "registered_phone",
+                            "description": "<p>欲申請之註冊手機</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "integer",
+                            "optional": false,
+                            "field": "subcode_id",
+                            "description": "<p>subcode id</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {}\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/apply_subcode"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "404",
+                            "description": "<p>找不到合法的推薦主碼紀錄</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "408",
+                            "description": "<p>已有該手機號碼的申請紀錄</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "404",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "408",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"408\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/subcode_info",
+            "title": "會員 推薦碼subcode修改",
+            "version": "0.2.0",
+            "name": "PostUserUpdatePromoteSubCode",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subcode_id",
+                            "description": "<p>subcode的id</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "alias",
+                            "description": "<p>想設定的暱稱別名</p>"
+                        }
+                        ,
+                        {
+                            "group": "Parameter",
+                            "type": "Integer",
+                            "optional": true,
+                            "field": "status",
+                            "description": "<p>欲設定的狀態(0:停權)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {}\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/subcode_info"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "404",
+                            "description": "<p>不允許非禁用的操作或找不到合法的 subcode</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "200",
+                            "description": "<p>輸入參數有誤（別名或狀態至少要有其中一個欄位）</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "201",
+                            "description": "<p>資料更新發生錯誤</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "200",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"200\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "201",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"201\"\n}",
+                        "type": "Object"
+                    }
+                    ,
+                    {
+                        "title": "404",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "get",
+            "url": "/v2/user/subcode_list",
+            "title": "會員 推薦碼subcode",
+            "version": "0.2.0",
+            "name": "GetUserPromoteSubCode",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "subcode_ids",
+                            "description": "<p>subcode_ids(用,分開)，不填寫則全部</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "subcode_id",
+                            "description": "<p>subcode id</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "registered_phone",
+                            "description": "<p>登記之註冊手機</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "user_qrcode_id",
+                            "description": "<p>推薦主碼id</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "promote_code",
+                            "description": "<p>推廣邀請碼</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "promote_url",
+                            "description": "<p>推廣連結</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "promote_qrcode",
+                            "description": "<p>推廣QR code</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "start_time",
+                            "description": "<p>合約起始時間</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "alias",
+                            "description": "<p>別名暱稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "status",
+                            "description": "<p>狀態(0:失效,1:啟用)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "identity",
+                            "description": "<p>實名是否有通過</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n" +
+                            "    \"result\": \"SUCCESS\",\n" +
+                            "    \"data\": {\n  }\n" +
+                            "}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/subcode_list"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "224",
+                            "description": "<p>法人帳號沒有綁定自然人帳號</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "225",
+                            "description": "<p>法人沒有通過負責人實名</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "216",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
         // {
 
         //     "type": "post",

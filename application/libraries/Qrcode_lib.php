@@ -367,4 +367,32 @@ class Qrcode_lib
         return $alias == $this->CI->qrcode_setting_model->appointedCaseAliasName;
     }
 
+    /**
+     * 取得使用者實名認證徵信項
+     * @param $registered_phone
+     * @return false
+     */
+    public function get_user_identity($registered_phone) {
+        $this->CI->load->model('user/user_model');
+        $this->CI->load->library('certification_lib');
+
+        $identity = FALSE;
+        $subcode_user = $this->CI->user_model->get_by(['phone' => $registered_phone, 'block_status != ' => 1, 'company_status' => USER_NOT_COMPANY]);
+        if (isset($subcode_user))
+        {
+            $borrower = $this->CI->certification_lib->get_certification_info($subcode_user->id, CERTIFICATION_IDCARD, USER_BORROWER);
+            if($borrower !== FALSE)
+            {
+                $identity = $borrower;
+            }
+            else
+            {
+                $investor = $this->CI->certification_lib->get_certification_info($subcode_user->id, CERTIFICATION_IDCARD, USER_INVESTOR);
+                $identity = $investor;
+            }
+        }
+
+        return $identity;
+    }
+
 }

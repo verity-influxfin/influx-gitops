@@ -785,4 +785,33 @@ class User_lib {
         $user_info->expiry_time = $tokenData->expiry_time;
         return $user_info;
     }
+
+    /**
+     * 確認負責人實名是否通過
+     * @param $company_user_id : 法人使用者編號
+     * @param $investor : 借款人/投資人
+     * @return int 自然人使用者編號
+     * @throws Exception
+     */
+    public function get_identified_responsible_user($company_user_id, $investor): int
+    {
+        // 確認負責人需通過實名認證
+        $this->CI->load->model('user/user_meta_model');
+        $rs = $this->CI->user_meta_model->get_by(['user_id' => $company_user_id, 'meta_key' => 'company_responsible_user_id']);
+        if ( ! isset($rs))
+        {
+            throw new \Exception('法人沒有綁定負責人', NO_RESPONSIBLE_USER_BIND);
+        }
+        $responsible_user_id = $rs->meta_value;
+
+        $this->CI->load->library('Certification_lib');
+        $user_certification = $this->CI->certification_lib->get_certification_info($responsible_user_id, CERTIFICATION_IDCARD,
+            $investor);
+        if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+        {
+            throw new \Exception('法人沒有通過負責人實名', NO_RESPONSIBLE_IDENTITY);
+        }
+        return (int)$responsible_user_id;
+    }
+
 }
