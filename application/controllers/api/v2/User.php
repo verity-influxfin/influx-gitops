@@ -290,53 +290,6 @@ class User extends REST_Controller {
                 goto END;
             }
 
-            // 取得 JWT token
-            try
-            {
-                $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
-                $request_method = $this->request->method ?? "";
-
-                if (empty($token))
-                {
-                    $result['error'] = TOKEN_NOT_CORRECT;
-                    goto END;
-                }
-                $this->load->library('user_lib');
-                $personal_user_info = $this->user_lib->parse_token($token, $request_method, $this->uri->uri_string());
-            }
-            catch (Exception $e)
-            {
-                $result['error'] = $e->getCode();
-                goto END;
-            }
-
-            // 確認自然人需通過實名認證
-            $this->load->library('Certification_lib');
-            $user_certification = $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
-                $personal_user_info->investor);
-            if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
-            {
-                $result['error'] = NO_CER_IDCARD;
-                goto END;
-            }
-
-            // 確認自然人姓名與登記公司負責人一樣
-            try
-            {
-                $this->load->library('gcis_lib');
-                $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $personal_user_info->name);
-                if ( ! $is_business_responsible)
-                {
-                    $result['error'] = NOT_IN_CHARGE;
-                    goto END;
-                }
-            }
-            catch (Exception $e)
-            {
-                $result['error'] = $e->getCode();
-                goto END;
-            }
-
             // 檢查'法人關聯表-judicial_person'是否已存在此公司對應自然人之歸戶
             $this->load->model('user/judicial_person_model');
             $company_already_exist = $this->judicial_person_model->get_by([
@@ -426,20 +379,17 @@ class User extends REST_Controller {
                     'company_status' => 0
                 ]);
                 if (!$company_user_already_exist) {
-                    $this->user_model->insert($new_account_data);
+                    $responsible_user_id = $this->user_model->insert($new_account_data);
+                }else{
+                    $responsible_user_id = $company_user_already_exist->id;
                 }
 
                 $company_meta = [
                     [
                         'user_id' => $new_id,
                         'meta_key' => 'company_responsible_user_id',
-                        'meta_value' => $personal_user_info->id,
-                    ],
-                    [
-                        'user_id' => $new_id,
-                        'meta_key' => 'company_responsible_check',
-                        'meta_value' => 1,
-                    ],
+                        'meta_value' => (int)$responsible_user_id,
+                    ]
                     ];
                 $this->load->model('user/user_meta_model');
                 $this->user_meta_model->insert_many($company_meta);
@@ -606,101 +556,6 @@ END:
 				    $this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 				}
 
-                // 法人需判斷是否已綁定自然人帳號
-                if (isset($input['tax_id']))
-                {
-                    // 解析 JWT Token
-                    $personal_user_info = NULL;
-                    if (isset($this->input->request_headers()['request_token']))
-                    {
-                        $this->load->library('user_lib');
-                        try
-                        {
-                            $token = $this->input->request_headers()['request_token'];
-                            $request_method = $this->request->method ?? "";
-
-                            if ( ! empty($token))
-                            {
-                                $personal_user_info = $this->user_lib->parse_token($token, $request_method, $this->uri->uri_string());
-                            }
-
-                        }
-                        catch (Exception $e)
-                        {
-                            $this->response(array('result' => 'ERROR', 'error' => $e->getCode()));
-                        }
-                    }
-
-                    // 檢查法人是否有自然人帳號綁定
-                    $this->load->model('user/user_meta_model');
-                    $company_responsible_user = $this->user_meta_model->get_by([
-                        'user_id' => $user_info->id,
-                        'meta_key' => 'company_responsible_user_id'
-                    ]);
-                    if ( ! isset($company_responsible_user))
-                    {
-                        if ( ! isset($personal_user_info))
-                        {
-                            $this->response(array('result' => 'ERROR', 'error' => NO_RESPONSIBLE_USER_BIND));
-                        }
-                        else
-                        {
-                            $this->user_meta_model->insert([
-                                'user_id' => $user_info->id,
-                                'meta_key' => 'company_responsible_user_id',
-                                'meta_value' => $personal_user_info->id,
-                            ]);
-                        }
-                    }
-                    else
-                    {
-                        $personal_user_info = $this->user_model->get($company_responsible_user->meta_value);
-                        if ( ! isset($personal_user_info))
-                        {
-                            $this->response(array('result' => 'ERROR', 'error' => EXIT_DATABASE));
-                        }
-                    }
-
-                    // 確認自然人需通過實名認證
-                    $this->load->library('Certification_lib');
-                    $user_certification = $this->certification_lib->get_certification_info($personal_user_info->id, CERTIFICATION_IDCARD,
-                        $investor);
-                    if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
-                    {
-                        $this->response(array('result' => 'ERROR', 'error' => NO_CER_IDCARD));
-                    }
-
-                    // 確認自然人是否跟公司負責人姓名一致
-                    $company_responsible_check = $this->user_meta_model->get_by([
-                        'user_id' => $user_info->id,
-                        'meta_key' => 'company_responsible_check'
-                    ]);
-                    if ( ! isset($company_responsible_check))
-                    {
-                        try
-                        {
-                            $this->load->library('gcis_lib');
-                            $is_business_responsible = $this->gcis_lib->is_business_responsible($input['tax_id'], $personal_user_info->name);
-                            if ( ! $is_business_responsible)
-                            {
-                                $this->response(array('result' => 'ERROR', 'error' => NOT_IN_CHARGE));
-                            }
-                            else
-                            {
-                                $this->user_meta_model->insert([
-                                    'user_id' => $user_info->id,
-                                    'meta_key' => 'company_responsible_check',
-                                    'meta_value' => 1,
-                                ]);
-                            }
-                        }
-                        catch (Exception $e)
-                        {
-                            $this->response(array('result' => 'ERROR', 'error' => $e->getCode()));
-                        }
-                    }
-                }
-
                 $appIdentity = $this->input->request_headers()['User-Agent']??"";
 				if(strpos($appIdentity,"PuHey") !== FALSE) {
                     if ($investor == 1 && $user_info->app_investor_status == 0) {
@@ -732,6 +587,29 @@ END:
                     if ($charge_person) {
                         $userData = $this->user_model->get($charge_person->user_id);
                         $userData ? $is_charge = 1 : '';
+                    }
+
+                    // 針對法人進行法人與負責人的綁定
+                    $this->load->model('user/user_meta_model');
+                    $rs = $this->user_meta_model->get_by(['user_id' => $user_info->id, 'meta_key' => 'company_responsible_user_id']);
+                    if ( ! isset($rs))
+                    {
+                        $responsible_user_info = $this->user_model->get_by([
+                            'phone' => $input['phone'],
+                            'company_status' => 0
+                        ]);
+                        if(isset($responsible_user_info))
+                        {
+                            $company_meta = [
+                                [
+                                    'user_id' => $user_info->id,
+                                    'meta_key' => 'company_responsible_user_id',
+                                    'meta_value' => $responsible_user_info->id,
+                                ]
+                            ];
+
+                            $this->user_meta_model->insert_many($company_meta);
+                        }
                     }
                 } else {
                     // TODO: 自然人登入，是否需關聯其法人負責人
@@ -2300,6 +2178,7 @@ END:
         $this->load->library('qrcode_lib');
         $user_id = $this->user_info->id;
         $company = $this->user_info->company;
+        $investor = $this->user_info->investor;
         $list = [];
 
         $data = array(
@@ -2316,6 +2195,26 @@ END:
             'overview' => [],
             'detail_list' => [],
         );
+
+        // 確認負責人需通過實名認證
+        if ($company == USER_IS_COMPANY)
+        {
+            $this->load->model('user/user_meta_model');
+            $rs = $this->user_meta_model->get_by(['user_id' => $user_id, 'meta_key' => 'company_responsible_user_id']);
+            if ( ! isset($rs))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => NO_RESPONSIBLE_USER_BIND, 'msg' => '法人沒有綁定負責人'));
+            }
+            $responsible_user_id = $rs->meta_value;
+
+            $this->load->library('Certification_lib');
+            $user_certification = $this->certification_lib->get_certification_info($responsible_user_id, CERTIFICATION_IDCARD,
+                $investor);
+            if ( ! $user_certification || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => NO_RESPONSIBLE_IDENTITY, 'msg' => '法人沒有通過負責人實名'));
+            }
+        }
 
         // 建立合作方案的初始化資料結構
         $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_many_by(['status' => PROMOTE_COLLABORATOR_AVAILABLE])), TRUE) ?? [];
@@ -2526,4 +2425,6 @@ END:
 
         $this->response(array('result' => 'SUCCESS', 'data' => $data));
     }
+
+    
 }

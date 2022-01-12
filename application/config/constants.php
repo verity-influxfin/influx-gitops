@@ -120,6 +120,7 @@ defined('NO_CER_GOVERNMENTAUTHORITIES') or define('NO_CER_GOVERNMENTAUTHORITIES'
 defined('NO_ALLOW_CHARGE') or define('NO_ALLOW_CHARGE', 222); //不可加入負責人
 defined('NOT_INCORPORATION') or define('NOT_INCORPORATION', 223); //公司不是正常設立狀態
 defined('NO_RESPONSIBLE_USER_BIND') or define('NO_RESPONSIBLE_USER_BIND', 224); //法人帳號沒有綁定自然人帳號
+defined('NO_RESPONSIBLE_IDENTITY') or define('NO_RESPONSIBLE_IDENTITY', 225); // 法人沒有通過負責人實名 by news
 
 //User Error Code
 defined('USER_EXIST')  					OR define('USER_EXIST'					, 301);
