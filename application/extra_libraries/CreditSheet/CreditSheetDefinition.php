@@ -13,10 +13,10 @@ interface CreditSheetDefinition
     ];
 
     public const TYPE_PERSONAL = 1;
-    public const TYPE_JUDICIAL = 2;
+    public const TYPE_COMPANY = 2;
     public const TYPE_LIST = [
         self::TYPE_PERSONAL => "personal",
-        self::TYPE_JUDICIAL => "judicial",
+        self::TYPE_COMPANY => "company",
     ];
 
     // 核貸層次
