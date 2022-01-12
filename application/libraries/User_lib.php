@@ -436,6 +436,11 @@ class User_lib {
             $rs = $this->CI->sendemail->send_promote_receipt($value['email'], $value['name'], $value['id_number'], $value['phone'],
                 $value['address'], $value['updated_at'], $bankAccount->virtual_account, $rewardData['originRewardAmount'],
                 $rewardData['incomeTax'], $rewardData['healthPremium'], $value['amount']);
+            // 也要寄一份給財務人員
+            // TODO: 先暫時 hardcode，等有流程出現再依照流程修正
+            $this->CI->sendemail->send_promote_receipt('katia@influxfin.com', $value['name'], $value['id_number'], $value['phone'],
+                $value['address'], $value['updated_at'], $bankAccount->virtual_account, $rewardData['originRewardAmount'],
+                $rewardData['incomeTax'], $rewardData['healthPremium'], $value['amount']);
             if($rs) {
                 $this->CI->qrcode_reward_model->update_by(['id' => $value['id']], ['notified_at' => date('Y-m-d H:i:s')]);
                 $count++;
