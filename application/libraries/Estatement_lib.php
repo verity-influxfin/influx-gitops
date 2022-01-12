@@ -715,6 +715,14 @@ class Estatement_lib{
 								}
 								$tmp_list[$value->investment_id.'-'.$value->instalment_no.$value->entering_date]['cost_fee'] += $platform_fee;
 								break;
+                            case SOURCE_LAW_FEE: // 法催執行費
+                                $tmp_list[] = array(
+                                    'date' => $value->entering_date,
+                                    'target_no' => 0,
+                                    'title' => '手續費用 - 法訴費用',
+                                    'cost_principal' => intval($value->amount),
+                                );
+                                break;
 							default:
 								break;
 						}

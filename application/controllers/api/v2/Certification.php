@@ -1839,28 +1839,25 @@ class Certification extends REST_Controller {
                     }
                     break;
                 case "instagram":
-                    // $this->load->library('instagram_lib');
                     $this->load->library('scraper/instagram_lib');
-                    $user_followed_info = $this->instagram_lib->getUserFollow($user_id, $input['access_token']);
+                    $log_status = $this->instagram_lib->getLogStatus($user_id, $input['access_token']);
                     $info['username'] = $input['access_token'];
-                    $info['status'] = 'waitingFollowAccept';
-                    $info['counts'] = [
-                        'media' => '',
-                        'follows' => '',
-                        'followed_by' => '',
-                    ];
-                    if ($user_followed_info && $user_followed_info->status == 204) {
-                        $this->instagram_lib->autoFollow($user_id, $input['access_token']);
-                        $this->instagram_lib->updateUserFollow($user_id, $input['access_token']);
+                    $info['link'] = 'https://www.instagram.com/' . $input['access_token'];
+                    $info['info'] = [];
+                    $time = isset($log_status['response']['result']['updatedAt']) ? $log_status['response']['result']['updatedAt'] : 0;
+                    if ($log_status && $log_status['status'] == SCRAPER_STATUS_NO_CONTENT || $time > strtotime('-72 hours'))
+                    {
+                        $this->instagram_lib->updateRiskControlInfo($user_id, $input['access_token']);
                     }
 
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
-                        'user_id'    => $user_id,
+                        'user_id' => $user_id,
                         'certification_id' => 4,
-                        'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE ,CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
+                        'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
                         'investor' => $investor,
                     ]);
-                    if (empty($get_data)) {
+                    if (empty($get_data))
+                    {
                         $initialize_id = $this->social_initialize($user_id, $investor);
                         $content = [
                             'facebook' => '',
@@ -1869,7 +1866,9 @@ class Certification extends REST_Controller {
                         $rs = $this->user_certification_model->update($initialize_id, ["content" => json_encode($content)]);
                         $rs ? $this->response(array('result' => 'SUCCESS'))
                             : $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
-                    } else {
+                    }
+                    else
+                    {
                         $content_data = json_decode($get_data->content);
                         $content = [
                             'facebook' => $content_data->facebook,

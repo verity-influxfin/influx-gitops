@@ -890,58 +890,178 @@ class Certification_lib{
 
     public function social_verify($info = array())
     {
-        if ($info && $info->status == 0 && $info->certification_id == 4) {
-			$param['status'] = 3;
-            $content = json_decode($info->content);
-
-            if (isset($content->instagram->username) && isset($info->user_id)) {
-                $this->CI->load->library('scraper/instagram_lib');
-                $user_followed_info = $this->CI->instagram_lib->getUserFollow($info->user_id, $content->instagram->username);
-
-                if ($user_followed_info && $user_followed_info->status == 204) {
-                    $this->CI->instagram_lib->autoFollow($info->user_id, $content->instagram->username);
-                    $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
-                    return false;
-                }
-                $param['sys_check'] = 1;
-                if ($user_followed_info && $user_followed_info->status == 200 && !empty($user_followed_info->response->result)) {
-                    $content->instagram->status = $user_followed_info->response->result->info->followStatus;
-                    $content->instagram->link = 'https://www.instagram.com/' . $content->instagram->username;
-                    $content->instagram->counts->media = $user_followed_info->response->result->info->allPostCount;
-                    $content->instagram->counts->follows = $user_followed_info->response->result->info->allFollowingCount;
-                    $content->instagram->counts->followed_by = $user_followed_info->response->result->info->allFollowerCount;
-                    $update_time = $user_followed_info->response->result->updatedAt;
-                    if ($content->instagram->status == 'unfollowed' && $update_time && time() >= ($update_time + rand(5,30)*137)) {
-                        $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
-                    }else {
-                        if($content->instagram->counts->media != ''){
-                            if ($update_time && time() >= ($update_time + 86400)) {
-                                $this->CI->instagram_lib->updateUserFollow($info->user_id, $content->instagram->username);
+        if ($info && $info->certification_id == CERTIFICATION_SOCIAL && $info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
+        {
+            $verifiedResult = new SocialCertificationResult(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
+            $content        = json_decode($info->content, TRUE);
+            $remark         = [];
+            if (isset($info->user_id) && isset($content['facebook']['access_token']) && isset($content['instagram']['username']))
+            {
+                // fb是否綁定
+                if ( isset($content['facebook']['email']) && isset($content['facebook']['name']))
+                {
+                    // ig爬蟲狀態
+                    $ig_username = trim($content['instagram']['username']);
+                    $this->CI->load->library('scraper/instagram_lib');
+                    $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
+                    if ($log_status || isset($log_status['status']))
+                    {
+                        if ($log_status['status'] == SCRAPER_STATUS_SUCCESS && isset($log_status['response']['result']['status']))
+                        {
+                            // IG爬蟲結束
+                            if ($log_status['response']['result']['status'] == 'finished')
+                            {
+                                $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $ig_username);
+                                if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == SCRAPER_STATUS_SUCCESS)
+                                {
+                                    $usernameExist     = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
+                                    $isPrivate         = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
+                                    $allPostCount      = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
+                                    $followStatus      = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
+                                    $isFollower        = isset($risk_control_info['response']['result']['isFollower']) ? $risk_control_info['response']['result']['isFollower'] : '';
+                                    $allFollowerCount  = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
+                                    $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
+                                    $postsIn3Months    = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
+                                    $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
+                                    // 帳號是否存在
+                                    if ($usernameExist === TRUE)
+                                    {
+                                        $usernameExist = '是';
+                                        $verifiedResult->setStatus(CERTIFICATION_STATUS_SUCCEED);
+                                    }
+                                    else if ($usernameExist === FALSE)
+                                    {
+                                        $usernameExist = '否';
+                                        $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', CERTIFICATION_STATUS_FAILED, MassageDisplay::Backend);
+                                        $verifiedResult->addMessage('IG提供帳號無效請確認', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
+                                    }
+                                    else
+                                    {
+                                        $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                    }
+                                    // 是否為私人帳號判斷
+                                    if ($isPrivate === TRUE)
+                                    {
+                                        if ($followStatus == 'unfollowed')
+                                        {
+                                            $this->CI->instagram_lib->autoFollow($info->user_id, $ig_username);
+                                            return FALSE;
+                                        }
+                                        else if ($followStatus == 'waitingFollowAccept')
+                                        {
+                                            $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username, 'follow');
+                                            if ($follow_status && isset($follow_status['status']))
+                                            {
+                                                if ($follow_status['status'] == SCRAPER_STATUS_SUCCESS && isset($follow_status['response']['result']['status']))
+                                                {
+                                                    if ($follow_status['response']['result']['status'] !== 'finished')
+                                                    {
+                                                        return FALSE;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                            }
+                                        }
+                                    }
+                                    // 是否為活躍社交帳號判斷
+                                    if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
+                                    {
+                                        if ($allFollowerCount <= FOLLOWER_ACTIVATE && $allFollowingCount <= FOLLOWING_ACTIVATE)
+                                        {
+                                            $verifiedResult->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                        }
+                                    }
+                                    $content['instagram'] = [
+                                        'username'              => $ig_username,
+                                        'usernameExist'         => $usernameExist,
+                                        'info' => [
+                                            'isPrivate'         => $isPrivate,
+                                            'followStatus'      => $followStatus,
+                                            'isFollower'        => $isFollower,
+                                            'allPostCount'      => $allPostCount,
+                                            'allFollowerCount'  => $allFollowerCount,
+                                            'allFollowingCount' => $allFollowingCount
+                                        ]
+                                    ];
+                                    $content['meta'] = [
+                                        'posts_in_3months'      => $postsIn3Months,
+                                        'key_word'              => $postsWithKeyWords
+                                    ];
+                                }
+                                else
+                                {
+                                    $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                }
+                            }
+                            // IG爬蟲狀態錯誤
+                            else if ($log_status['response']['result']['status'] == 'failure')
+                            {
+                                $verifiedResult->addMessage('IG爬蟲執行失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                            }
+                            // 其餘狀態下次跑批再處理
+                            else
+                            {
+                                return FALSE;
                             }
                         }
+                        // 沒有IG爬蟲紀錄查詢log紀錄
+                        else if ($log_status['status'] == SCRAPER_STATUS_NO_CONTENT)
+                        {
+                            $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
+                            return FALSE;
+                        }
+                        else
+                        {
+                            $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        }
+                    }
+                    else
+                    {
+                        $verifiedResult->addMessage('IG爬蟲沒有回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
                     }
                 }
-                $media = $content->instagram->counts->media;
-                $followed_by = $content->instagram->counts->followed_by;
-                $is_fb_email = isset($content->facebook->email);
-                $is_fb_name = isset($content->facebook->name);
-                $this->CI->load->model('user/user_meta_model');
-                $line = $this->CI->user_meta_model->get_by(array(
-                    'user_id' => $info->user_id,
-                    'meta_key' => 'line_access_token'
-                ));
-                if ((is_numeric($media) && is_numeric($followed_by) || $is_fb_email && $is_fb_name) && isset($line)) {
-                    if ($media >= 10 && $followed_by >= 10 || is_numeric($media) && is_numeric($followed_by) ) {
-                        $param['status'] = 1;
-                        $this->set_success($info->id, true);
-                    }
+                else
+                {
+                    // todo: 待APP上版將 return False; 移除
+                    return False;
+                    $verifiedResult->addMessage('FB帳號未綁定', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
                 }
-                $param['content'] = json_encode($content);
-                $this->CI->user_certification_model->update($info->id, $param);
             }
-            return true;
+            else
+            {
+                // todo: 待APP上版將 return False; 移除
+                return False;
+                $verifiedResult->addMessage('社交認證尚有缺少認證項', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
+            }
+            $remark['verify_result'] = $verifiedResult->getAllMessage(MassageDisplay::Backend);
+            $status = $verifiedResult->getStatus();
+
+            $this->CI->user_certification_model->update($info->id, array(
+                'status'                      => $status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
+                'sys_check'                   => SYSTEM_CHECK,
+                'content'                     => json_encode($content, JSON_INVALID_UTF8_IGNORE),
+                'remark'                      => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
+            ));
+
+            if ($status == CERTIFICATION_STATUS_SUCCEED)
+            {
+                $this->set_success($info->id, TRUE);
+            }
+            else if ($status == CERTIFICATION_STATUS_FAILED)
+            {
+                $notificationContent = implode('、', $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
+                $this->set_failed($info->id, $notificationContent, SYSTEM_CHECK);
+            }
+            return TRUE;
         }
-        return false;
+        return FALSE;
     }
 
     public function emergency_verify($info = array()){
@@ -2588,12 +2708,24 @@ class Certification_lib{
 				$data['fb_email'] = $content['facebook']['email'];
 				$data['fb_access_token'] = $content['facebook']['access_token'];
 			}
-			if (isset($content['instagram'])) {
-				isset($content['instagram']['id']) ? $data['ig_id'] = $content['instagram']['id'] : '';
-				isset($content['instagram']['username']) ? $data['ig_username'] = $content['instagram']['username'] : '';
-				isset($content['instagram']['name']) ? $data['ig_name'] = $content['instagram']['name'] : '';
-				isset($content['instagram']['access_token']) ? $data['ig_access_token'] = $content['instagram']['access_token'] : '';
-			}
+            if (isset($content['instagram']))
+            {
+                isset($content['instagram']['username']) ? $data['ig_username'] = $content['instagram']['username'] : '';
+                isset($content['instagram']['link']) ? $data['ig_link'] = $content['instagram']['link'] : '';
+                isset($content['instagram']['usernameExist']) ? $data['ig_usernameExist'] = $content['instagram']['usernameExist'] : '';
+                isset($content['instagram']['info']['isPrivate']) ? $data['ig_isPrivate'] = $content['instagram']['info']['isPrivate'] : '';
+                isset($content['instagram']['info']['followStatus']) ? $data['ig_followStatus'] = $content['instagram']['info']['followStatus'] : '';
+                isset($content['instagram']['info']['isFollower']) ? $data['ig_isFollower'] = $content['instagram']['info']['isFollower'] : '';
+                isset($content['instagram']['info']['allPostCount']) ? $data['ig_allPostCount'] = $content['instagram']['info']['allPostCount'] : '';
+                isset($content['instagram']['info']['allFollowerCount']) ? $data['ig_allFollowerCount'] = $content['instagram']['info']['allFollowerCount'] : '';
+                isset($content['instagram']['info']['allFollowingCount']) ? $data['ig_allFollowingCount'] = $content['instagram']['info']['allFollowingCount'] : '';
+            }
+            if (isset($content['meta']))
+            {
+                isset($content['meta']['allFollowingCount']) ? $data['meta_allFollowingCount'] = $content['meta']['username'] : '';
+                isset($content['meta']['posts_in_3months']) ? $data['meta_posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
+                isset($content['meta']['key_word']) ? $data['meta_key_word'] = $content['meta']['key_word'] : '';
+            }
 
 
             $rs = $this->user_meta_progress($data,$info);

@@ -109,10 +109,11 @@ $config['admin_menu'] = [
         'parent_name' => 'OCR 結果',
         'index' => '報表',
     ],
-    'PostLoan' => [
-        'parent_name' => '貸後管理',
-        'legal_doc' => '法訴文件管理',
-    ],
+	'PostLoan' => [
+		'parent_name' => '貸後管理',
+		'legal_doc' => '法訴文件管理',
+		'deduct' => '法催扣款'
+	],
     'Article' => [
         'parent_name' => '活動及最新消息',
         'index' => '最新活動',

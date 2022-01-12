@@ -230,7 +230,7 @@ class Cron extends CI_Controller
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->generalCaseAliasName);
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->appointedCaseAliasName);
 
-        if(date("d") >= 1 && date("d") <= 4) {
+        if(date("d") >= 1 && date("d") <= 9) {
             $data = [
                 'script_name'   => 'handle_promote_reward',
                 'num'           => 0,

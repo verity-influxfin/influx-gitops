@@ -1040,7 +1040,7 @@ class Sales extends MY_Admin_Controller
                 try
                 {
                     $amount = intval(round($value['amount'], 0));
-                    $transaction_param[] = [
+                    $transaction_param = [
                         'source' => SOURCE_PROMOTE_REWARD,
                         'entering_date' => $date,
                         'user_from' => 0,

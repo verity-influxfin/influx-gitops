@@ -1254,6 +1254,7 @@ class Certification extends MY_Admin_Controller {
 
 	public function media_upload()
 	{
+        $this->load->library('output/json_output');
 		$post 		= $this->input->post();
 		if (!empty($post)) {
 			$this->load->library('S3_upload');
@@ -1276,7 +1277,7 @@ class Certification extends MY_Admin_Controller {
 					}
 				}
 				if ($media_check === false) {
-					alert('檔案上傳失敗，請洽工程師', admin_url('certification/user_certification_edit?id='.$post['user_certification_id']));
+                    $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，請洽工程師')->send();
 				} else {
 					$group_id = time();
 					$this->load->model('log/log_image_model');
@@ -1332,14 +1333,15 @@ class Certification extends MY_Admin_Controller {
 				    //     $imageLogs = $this->log_image_model->getUrlByGroupID($group_id);
 					// 	$this->report_scan_lib->requestForScan('credit_investigation', $imageLogs, $post['user_id'], $ocr_type);
 					// }
-
-					($res)?
-						alert('檔案上傳成功', 'user_certification_edit?id='.$post['user_certification_id'])
-						:alert('檔案上傳失敗，資料更新失敗，請洽工程師', admin_url('certification/user_certification_edit?id='.$post['user_certification_id']));
+                    if ($res) {
+                        $this->json_output->setStatusCode(200)->setResponse(['message'=>'檔案上傳成功'])->send();
+                    }else {
+                        $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，資料更新失敗，請洽工程師')->send();
+                    }
 				}
 			}
 		} else {
-			alert('檔案上傳失敗，缺少參數，請洽工程師', admin_url('certification/user_certification_edit?id='.$post['user_certification_id']));
+            $this->json_output->setStatusCode(204)->setErrorCode('檔案上傳失敗，缺少參數，請洽工程師')->send();
 		}
 	}
 
