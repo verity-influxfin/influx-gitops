@@ -89,57 +89,50 @@ class LoanResponse extends REST_Controller {
             if ($allInputLegal) {
                 $this->load->model('skbank/LoanResult_model');
 
-                // check case_no not duplicated in database
-                $msgNoExist = $this->LoanResult_model->get_by(['case_no' => $input['case_no']]);
-                if (!$msgNoExist) {
+                // set default status
+                $insertData['status'] = 0;
 
-                    // set default status
-                    $insertData['status'] = 0;
+                $newLoanResultId = $this->LoanResult_model->insert($insertData);
+                if ($newLoanResultId) {
+                    $response['result'] = 'SUCCESS';
 
-                    $newLoanResultId = $this->LoanResult_model->insert($insertData);
-                    if ($newLoanResultId) {
-                        $response['result'] = 'SUCCESS';
-
-                        // TODO: merge all sql query in one
-                        if(isset($insertData['apply_agree']) && isset($insertData['apply_accept']) && $insertData['apply_agree'] == 'A' && $insertData['apply_accept'] == 'A'){
-                            // search loan request log data
-                            $this->load->model('skbank/LoanSendRequestLog_model');
-            				$loanRequestLogInfo = $this->LoanSendRequestLog_model->get_by(['case_no' => $input['case_no']]);
-                            if ($loanRequestLogInfo) {
-                                // search mapping info by loan request msg_no
-                                $this->load->model('skbank/LoanTargetMappingMsgNo_model');
-                                $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $loanRequestLogInfo->msg_no]);
-                                if ($loanTargetMappingInfo) {
-                                    // check target exist and update info
-                                    $this->load->model('loan/target_model');
-                                    $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => 1002]);
-                                    if($targetInfo){
-                                        // transfer repayment type
-                                        $repayment = '';
-                                        if (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'A') {
-                                            $repayment = 1;
-                                        }elseif (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'B') {
-                                            $repayment = 2;
-                                        }
-                                        if(!empty($repayment)){
-                                            $updateTarget = $this->target_model->update($targetInfo->id,[
-                                                'loan_amount' => $insertData['loan_amount'],
-                                                'interest_rate' => ((float) $insertData['loan_rate'])*100,
-                                                'repayment' => $repayment,
-                                                'status' => 504,
-                                                'loan_date' => $insertData['funding_date']
-                                            ]);
-                                        }
+                    // TODO: merge all sql query in one
+                    if(isset($insertData['apply_agree']) && isset($insertData['apply_accept']) && $insertData['apply_agree'] == 'A' && $insertData['apply_accept'] == 'A'){
+                        // search loan request log data
+                        $this->load->model('skbank/LoanSendRequestLog_model');
+        				$loanRequestLogInfo = $this->LoanSendRequestLog_model->get_by(['case_no' => $input['case_no']]);
+                        if ($loanRequestLogInfo) {
+                            // search mapping info by loan request msg_no
+                            $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+                            $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no' => $loanRequestLogInfo->msg_no]);
+                            if ($loanTargetMappingInfo) {
+                                // check target exist and update info
+                                $this->load->model('loan/target_model');
+                                $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => 1002]);
+                                if($targetInfo){
+                                    // transfer repayment type
+                                    $repayment = '';
+                                    if (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'A') {
+                                        $repayment = 1;
+                                    }elseif (isset($insertData['interest_bearing_type']) && $insertData['interest_bearing_type'] == 'B') {
+                                        $repayment = 2;
+                                    }
+                                    if(!empty($repayment)){
+                                        $updateTarget = $this->target_model->update($targetInfo->id,[
+                                            'loan_amount' => $insertData['loan_amount'],
+                                            'interest_rate' => ((float) $insertData['loan_rate'])*100,
+                                            'repayment' => $repayment,
+                                            'status' => 504,
+                                            'loan_date' => $insertData['funding_date']
+                                        ]);
                                     }
                                 }
                             }
                         }
-
-                    } else {
-                        $response['error'] = 'database insert fail';
                     }
+
                 } else {
-                    $response['error'] = sprintf("parameter 'case_no' value='%s' was already existed", $input['case_no']);
+                    $response['error'] = 'database insert fail';
                 }
             }
         } catch (Exception $e) {
