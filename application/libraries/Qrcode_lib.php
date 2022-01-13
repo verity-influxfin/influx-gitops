@@ -369,19 +369,20 @@ class Qrcode_lib
 
     /**
      * 取得使用者實名認證徵信項
-     * @param $registered_phone
+     * @param $registered_id
      * @return false
      */
-    public function get_user_identity($registered_phone) {
+    public function get_user_identity($registered_id)
+    {
         $this->CI->load->model('user/user_model');
         $this->CI->load->library('certification_lib');
 
         $identity = FALSE;
-        $subcode_user = $this->CI->user_model->get_by(['phone' => $registered_phone, 'block_status != ' => 1, 'company_status' => USER_NOT_COMPANY]);
+        $subcode_user = $this->CI->user_model->get_by(['id_number' => $registered_id, 'block_status != ' => 1, 'company_status' => USER_NOT_COMPANY]);
         if (isset($subcode_user))
         {
             $borrower = $this->CI->certification_lib->get_certification_info($subcode_user->id, CERTIFICATION_IDCARD, USER_BORROWER);
-            if($borrower !== FALSE)
+            if ($borrower !== FALSE)
             {
                 $identity = $borrower;
             }
@@ -394,5 +395,252 @@ class Qrcode_lib
 
         return $identity;
     }
+
+    /**
+     * 取得 subcode 列表
+     * @param $company_user_id
+     * @param $conditions
+     * @return array
+     */
+    public function get_subcode_list($company_user_id, $conditions): array
+    {
+        $this->CI->load->model('user/user_qrcode_model');
+        $this->CI->load->model('user/user_subcode_model');
+        $master_user_qrcode = $this->CI->user_qrcode_model->get_by(['user_id' => $company_user_id, 'status' => PROMOTE_STATUS_AVAILABLE]);
+        if ( ! isset($master_user_qrcode))
+        {
+            return [];
+        }
+
+        return $this->CI->user_subcode_model->get_subcode_list($master_user_qrcode->id, $conditions);
+    }
+
+    /**
+     * 更新 subcode 資訊
+     * @param $subcode_id
+     * @param $subcode_param
+     * @param $qrcode_param
+     * @return bool
+     */
+    public function update_subcode_info($subcode_id, $subcode_param, $qrcode_param): bool
+    {
+        $this->CI->load->model('user/user_qrcode_model');
+        $this->CI->load->model('user/user_subcode_model');
+        $this->CI->user_qrcode_model->trans_begin();
+        $this->CI->user_subcode_model->trans_begin();
+        $rollback = function () {
+            $this->CI->user_qrcode_model->trans_rollback();
+            $this->CI->user_subcode_model->trans_rollback();
+        };
+
+        try {
+            $subcode = $this->CI->user_subcode_model->get($subcode_id);
+            if(!isset($subcode))
+            {
+                throw new \Exception('找不到 subcode 紀錄');
+            }
+
+            $subcode_rs = $this->CI->user_subcode_model->update_by(['id' => $subcode->id], $subcode_param);
+            $qrcode_rs = $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], $qrcode_param);
+            if ( ! $subcode_rs || ! $qrcode_rs ||
+                $this->CI->user_qrcode_model->trans_status() === FALSE ||
+                $this->CI->user_subcode_model->trans_status() === FALSE)
+            {
+                throw new \Exception('更新 qrcode 失敗');
+            }
+            $this->CI->user_qrcode_model->trans_commit();
+            $this->CI->user_subcode_model->trans_commit();
+            return TRUE;
+        }
+        catch (Exception $e)
+        {
+            $rollback();
+            return FALSE;
+        }
+    }
+
+    /**
+     * 取得用戶資料與推薦碼相關資訊
+     * @param array $user_where
+     * @param array $qrcode_where
+     * @param int $limit
+     * @param int $offset
+     * @return mixed
+     */
+    public function get_user_qrcode_info(array $user_where = [], array $qrcode_where = [], int $limit = 0, int $offset = 0)
+    {
+        $this->CI->load->model('user/user_qrcode_model');
+        $promote_codes_list = $this->CI->user_qrcode_model->getUserQrcodeInfo($user_where, $qrcode_where, $limit, $offset);
+
+        // subcode 的 settings 需換成 main code 的內容
+        $promote_codes_list = array_column($promote_codes_list, NULL, 'id');
+        $sub_user_qrcode_ids = array_keys(array_filter($promote_codes_list, function ($item) {
+            return $item['subcode_flag'] == IS_PROMOTE_SUBCODE;
+        }));
+        if(!empty($sub_user_qrcode_ids))
+        {
+            $this->CI->load->model('user/user_subcode_model');
+            $subcode_list = $this->CI->user_subcode_model->get_subcode_by_id($sub_user_qrcode_ids);
+            $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
+            $master_qrcode_ids = array_unique(array_column($subcode_list, 'master_user_qrcode_id'));
+            $master_qrcode_list = $this->CI->user_qrcode_model->getUserQrcodeInfo([], ['id' => $master_qrcode_ids], 0, 0);
+            $master_qrcode_list = array_column($master_qrcode_list, NULL, 'id');
+            foreach ($sub_user_qrcode_ids as $sub_qrcode_id)
+            {
+                $master_qrcode_id = $subcode_list[$sub_qrcode_id]['master_user_qrcode_id'] ?? 0;
+                if (array_key_exists($sub_qrcode_id, $promote_codes_list) &&
+                    array_key_exists($master_qrcode_id, $master_qrcode_list))
+                {
+                    $promote_codes_list[$sub_qrcode_id]['settings'] = $master_qrcode_list[$master_qrcode_id]['settings'];
+                }
+            }
+        }
+        return $promote_codes_list;
+    }
+
+    /**
+     * 取得推薦碼獎勵及相關資訊
+     * @param array $where
+     * @param string $start_date
+     * @param string $end_date
+     * @param int $limit
+     * @param int $offset
+     * @param bool $filter_delayed
+     * @return array
+     */
+    public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE): array
+    {
+        $this->CI->load->library('user_lib');
+
+        $main_qrcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where, $start_date, $end_date, $limit, $offset, $filter_delayed);
+        $main_qrcode_ids = [];
+        foreach ($main_qrcode_reward_list as $main_qrcode) {
+            $main_qrcode_ids[] = $main_qrcode['info']['id'];
+        }
+        $this->CI->load->model('user/user_subcode_model');
+        $subcode_list = $this->CI->user_subcode_model->get_subcode_list($main_qrcode_ids);
+        $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
+        $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo(['id' => array_keys($subcode_list)],
+            $start_date, $end_date, $limit, $offset, $filter_delayed);
+
+        foreach ($subcode_reward_list as $subcode_reward) {
+            $user_qrcode_id = $subcode_reward['info']['id'];
+            $main_qrcode_id = $subcode_list[$user_qrcode_id]['master_user_qrcode_id'];
+            $main_qrcode_reward_list[$main_qrcode_id] = $this->merge_reward_info($main_qrcode_reward_list[$main_qrcode_id], $subcode_reward);
+        }
+        return $main_qrcode_reward_list;
+    }
+
+    public function merge_reward_info($main_info, $info) {
+        $this->CI->load->library('user_lib');
+        $categoryInitList = array_combine(array_keys($this->CI->user_lib->rewardCategories), array_fill(0, count($this->CI->user_lib->rewardCategories), []));
+
+        // 合併產品相關數據
+        foreach (array_keys($this->CI->user_lib->rewardCategories) as $category) {
+            $main_info[$category] = array_merge($main_info[$category], $info[$category]);
+            $main_info['borrowerPlatformFee'][$category] = ($main_info['borrowerPlatformFee'][$category]??0) + $info['borrowerPlatformFee'][$category];
+            $main_info['investorPlatformFee'][$category] = ($main_info['investorPlatformFee'][$category]??0) + $info['investorPlatformFee'][$category];
+            $main_info['rewardAmount'][$category] = ($main_info['rewardAmount'][$category]??0) + $info['rewardAmount'][$category];
+            $main_info['loanedCount'][$category] = ($main_info['loanedCount'][$category]??0) + $info['loanedCount'][$category];
+            $main_info['loanedBalance'][$category] = ($main_info['loanedBalance'][$category]??0) + $info['loanedBalance'][$category];
+        }
+
+        // 合併月結算結果
+        foreach ($info['monthly'] as $month => $item)
+        {
+            if ( ! isset($main_info['monthly'][$month]))
+            {
+                $main_info['monthly'][$month] = $categoryInitList;
+            }
+
+            foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
+            {
+                if(empty($info['monthly'][$month][$category])) {
+                    continue;
+                }
+                foreach ($info['monthly'][$month][$category]['targets'] as $target_id => $target_list)
+                {
+                    // 沒有該類別就直接複製
+                    if ( ! isset($main_info['monthly'][$month][$category]))
+                    {
+                        $main_info['monthly'][$month][$category] = $info['monthly'][$month][$category];
+                        continue;
+                    }
+
+                    // 合併案件明細
+                    foreach ($target_list as $i => $target)
+                    {
+                        if (is_numeric($i))
+                        {
+                            $main_info['monthly'][$month][$category]['targets'][$target_id][] = $target;
+                        }
+                    }
+
+                    // 合併案件列表內的金額
+                    if (isset($target_list['borrowerPlatformFee']))
+                    {
+                        $main_info['monthly'][$month][$category]['targets'][$target_id]['borrowerPlatformFee'] = ($main_info['monthly'][$month][$category]['targets'][$target_id]['borrowerPlatformFee'] ?? 0) + $target_list['borrowerPlatformFee'];
+                    }
+                    if (isset($target_list['investorPlatformFee']))
+                    {
+                        $main_info['monthly'][$month][$category]['targets'][$target_id]['investorPlatformFee'] = ($main_info['monthly'][$month][$category]['targets'][$target_id]['investorPlatformFee'] ?? 0) + $target_list['investorPlatformFee'];
+                    }
+                }
+
+                // 合併案件列表內的金額
+                if (isset($info['monthly'][$month][$category]['borrowerPlatformFee']))
+                {
+                    $main_info['monthly'][$month][$category]['borrowerPlatformFee'] = ($main_info['monthly'][$month][$category]['borrowerPlatformFee'] ?? 0) + $info['monthly'][$month][$category]['borrowerPlatformFee'];
+                }
+                if (isset($info['monthly'][$month][$category]['investorPlatformFee']))
+                {
+                    $main_info['monthly'][$month][$category]['investorPlatformFee'] = ($main_info['monthly'][$month][$category]['investorPlatformFee'] ?? 0) + $info['monthly'][$month][$category]['investorPlatformFee'];
+                }
+                if (isset($info['monthly'][$month][$category]['rewardAmount']))
+                {
+                    $main_info['monthly'][$month][$category]['rewardAmount'] = ($main_info['monthly'][$month][$category]['rewardAmount'] ?? 0) + $info['monthly'][$month][$category]['rewardAmount'];
+                }
+            }
+        }
+
+        // 第三方合作金額合併
+        $this->CI->load->model('user/qrcode_collaborator_model');
+        $collaborator_list = $this->CI->qrcode_collaborator_model->db->where(['status' => 1])->get('p2p_user.qrcode_collaborator')->result_array();
+        $collaborator_ids = array_column($collaborator_list, 'id');
+        foreach ($collaborator_ids as $id) {
+            if (isset($info['collaboration'][$id]) && ! empty($info['collaboration'][$id]))
+            {
+                if ( ! isset($main_info['collaboration'][$id]))
+                {
+                    $main_info['collaboration'][$id] = $info['collaboration'][$id];
+                }
+                else
+                {
+                    $main_info['collaboration'][$id] = array_merge($main_info['collaboration'][$id], $info['collaboration'][$id]);
+                }
+            }
+            if(isset($info['collaborationCount'][$id]))
+            {
+                $main_info['collaborationCount'][$id] = ($main_info['collaborationCount'][$id] ?? 0) + $info['collaborationCount'][$id];
+            }
+            if(isset($info['collaborationRewardAmount'][$id]))
+            {
+                $main_info['collaborationRewardAmount'][$id] = ($main_info['collaborationRewardAmount'][$id] ?? 0) + $info['collaborationRewardAmount'][$id];
+            }
+        }
+
+        // 其他數據合併
+        $main_info['totalCollaborationRewardAmount'] = ($main_info['totalCollaborationRewardAmount']??0) + $info['totalCollaborationRewardAmount'];
+        $main_info['fullMemberCount'] = ($main_info['fullMemberCount']??0) + $info['fullMemberCount'];
+        $main_info['fullMember'] = array_merge($main_info['fullMember'], $info['fullMember']);
+        $main_info['registeredCount'] = ($main_info['registeredCount']??0) + $info['registeredCount'];
+        $main_info['registered'] = array_merge($main_info['registered'], $info['registered']);
+        $main_info['totalRewardAmount'] = ($main_info['totalRewardAmount']??0) + $info['totalRewardAmount'];
+        $main_info['totalLoanedAmount'] = ($main_info['totalLoanedAmount']??0) + $info['totalLoanedAmount'];
+        $main_info['downloadedCount'] = ($main_info['downloadedCount']??0) + $info['downloadedCount'];
+        $main_info['fullMemberRewardAmount'] = ($main_info['fullMemberRewardAmount']??0) + $info['fullMemberRewardAmount'];
+        return $main_info;
+    }
+
 
 }

@@ -120,15 +120,22 @@ class User_lib {
      * 取得推薦碼
      * @param int $length : 推薦碼長度
      * @param string $prefix : 前綴詞
+     * @param int $retries : 重試次數
      * @return string
+     * @throws Exception
      */
-    public function get_promote_code(int $length, string $prefix = ''): string
+    public function get_promote_code(int $length, string $prefix = '', int $retries=0): string
     {
+        if($retries >= 1000) {
+            throw new \Exception('超過1000次的重複命中，請檢查資料庫是否已經使用滿組合數');
+        }
+        $this->CI->load->model('user/user_qrcode_model');
         $code = $prefix . make_promote_code($length);
-        $result = $this->CI->user_model->get_by('my_promote_code', $code);
-        if ($result)
+        $user = $this->CI->user_model->get_by(['my_promote_code' => $code]);
+        $user_qrcode = $this->CI->user_qrcode_model->get_by(['promote_code' => $code]);
+        if (isset($user) || isset($user_qrcode))
         {
-            return $this->get_promote_code($length, $prefix);
+            return $this->get_promote_code($length, $prefix, $retries + 1);
         }
         else
         {
@@ -229,7 +236,7 @@ class User_lib {
             $where['status'] = [PROMOTE_STATUS_DISABLED, PROMOTE_STATUS_AVAILABLE];
 
         // 取得推薦碼資料
-        $promoteCodesRs = $this->CI->user_qrcode_model->getUserQrcodeInfo([], $where, $limit, $offset);
+        $promoteCodesRs = $this->CI->qrcode_lib->get_user_qrcode_info([], $where, $limit, $offset);
         foreach ($promoteCodesRs as $promoteCodeRs)
         {
             if ( ! isset($list[$promoteCodeRs['id']]))
@@ -247,6 +254,7 @@ class User_lib {
                 $list[$userQrcodeId]['fullMember'] = [];
                 $list[$userQrcodeId]['registeredCount'] = 0;
                 $list[$userQrcodeId]['registered'] = [];
+                $list[$userQrcodeId]['rewardAmount'] = [];
                 $promoteCodeList[$userQrcodeId] = $promoteCodeRs;
             }
         }
@@ -306,6 +314,7 @@ class User_lib {
             {
                 $list[$userQrcodeId]['loanedCount'][$category] = count($list[$userQrcodeId][$category]);
                 $list[$userQrcodeId]['loanedBalance'][$category] = array_sum(array_column($list[$userQrcodeId][$category], 'loan_amount'));
+                $list[$userQrcodeId]['rewardAmount'][$category] = 0;
 
                 if (isset($settings['reward']) && isset($settings['reward']['product']))
                 {
@@ -386,7 +395,7 @@ class User_lib {
                     $computePlatformFee($rs, 'investorPlatformFee', $rewardInvestorPercent);
                 }
 
-                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['rewardAmount'][$category];
+                $list[$userQrcodeId]['totalRewardAmount'] += $list[$userQrcodeId]['rewardAmount'][$category] ?? 0;
                 $list[$userQrcodeId]['totalLoanedAmount'] += $list[$userQrcodeId]['loanedBalance'][$category];
             }
 
@@ -479,6 +488,7 @@ class User_lib {
             ( ! isset($promoteCode->handle_time) || $promoteCode->handle_time < $endTime))
         {
             $this->CI->load->model('transaction/qrcode_reward_model');
+            $this->CI->load->library('qrcode_lib');
 
             $today = date("Y-m-d H:i:s");
             $rollback = function () {
@@ -488,7 +498,8 @@ class User_lib {
 
             $this->CI->user_qrcode_model->trans_begin();
             $this->CI->qrcode_reward_model->trans_begin();
-            $info = $this->getPromotedRewardInfo(['id' => $qrcode['id']], $startTime, $endTime, 0, 0, TRUE);
+            //$info = $this->getPromotedRewardInfo(['id' => $qrcode['id']], $startTime, $endTime, 0, 0, TRUE);
+            $info = $this->CI->qrcode_lib->get_promoted_reward_info(['id' => $qrcode['id']], $startTime, $endTime, 0, 0, TRUE);
 
             try
             {

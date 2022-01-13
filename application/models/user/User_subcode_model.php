@@ -30,20 +30,49 @@ class user_subcode_model extends MY_Model
         return $data;
     }
 
-    public function get_subcode_list($company_user_id, $conditions) {
-
+    /**
+     * 取得 subcode 的推薦碼資訊列表
+     * @param $master_qrcode_id : 推薦主碼 id
+     * @param array $subcode_conditions
+     * @param array $qrcode_conditions
+     * @return mixed
+     */
+    public function get_subcode_list($master_qrcode_id, array $subcode_conditions = [], array $qrcode_conditions = [])
+    {
         $this->_database->select('*')
             ->from('p2p_user.user_subcode as us');
-        $this->_set_where([0 => $conditions]);
+        if ( ! empty($subcode_conditions))
+        {
+            $this->_set_where([0 => $subcode_conditions]);
+        }
         $user_subcode = $this->_database->get_compiled_select('', TRUE);
 
-        $this->_database->select('r.*')
+        $this->_database->select('r.id, r.alias, r.registered_id, r.master_user_qrcode_id, uq.id AS user_qrcode_id, uq.promote_code, uq.status, uq.start_time, uq.end_time')
             ->from('p2p_user.user_qrcode as uq')
-            ->join("($user_subcode) as `r`", "`r`.`user_qrcode_id` = `uq`.`id`")
-            ->where('uq.user_id', $company_user_id);
+            ->join("({$user_subcode}) as `r`", "`r`.`user_qrcode_id` = `uq`.`id`");
 
+        if (is_array($master_qrcode_id) && ! empty($master_qrcode_id))
+        {
+            $this->_database->where_in('r.master_user_qrcode_id', $master_qrcode_id);
+        }
+        else
+        {
+            $this->_database->where('r.master_user_qrcode_id', $master_qrcode_id);
+        }
+
+        if ( ! empty($qrcode_conditions))
+        {
+            $qrcode_conditions = array_combine(addPrefixToArray(array_keys($qrcode_conditions), "uq."), array_values($qrcode_conditions));
+            $this->_set_where([$qrcode_conditions]);
+        }
         return $this->_database->get()->result_array();
+    }
 
+    public function get_subcode_by_id($ids) {
+        $this->db->select('*')
+            ->from('p2p_user.user_subcode')
+            ->where_in('user_qrcode_id', $ids);
+        return $this->db->get()->result_array();
     }
 
 }

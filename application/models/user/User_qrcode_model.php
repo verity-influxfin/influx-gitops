@@ -222,7 +222,7 @@ class user_qrcode_model extends MY_Model
         $this->_database
             ->select('u.name, uq.*')
             ->from('`p2p_user`.`user_qrcode` AS `uq`')
-            ->join("({$subQuery}) as `u`", "`u`.`id` = `uq`.`user_id`");
+            ->join("({$subQuery}) as `u`", "`u`.`id` = `uq`.`user_id`", 'left');
         if ($limit)
         {
             $offset = max(0, $offset);

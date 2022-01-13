@@ -2256,8 +2256,10 @@ END:
             }
         }
 
-        $where = ['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY]];
-        $userQrcode = $this->user_lib->getPromotedRewardInfo($where);
+        $where = ['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY],
+            'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
+        //$userQrcode = $this->user_lib->getPromotedRewardInfo($where);
+        $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
         if (isset($userQrcode) && ! empty($userQrcode))
         {
             $userQrcode = reset($userQrcode);
@@ -2437,52 +2439,81 @@ END:
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/user_certification_model');
         $this->load->library('certification_lib');
+        $this->load->library('qrcode_lib');
 
         $user_id = $this->user_info->id;
 
         $input = $this->input->post(NULL, TRUE);
-        $registered_phone = isset($input['registered_phone'])?trim($input['registered_phone']):'';
-        if( empty($registered_phone)) {
-            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '不能輸入空的手機號碼'));
+        $registered_id = isset($input['registered_id']) ? trim($input['registered_id']) : '';
+        if (empty($registered_id))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '不能輸入空的身分證字號'));
+        }
+        $id_check = check_cardid($registered_id);
+        if ( ! $id_check)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_IDNUMBER_ERROR, 'msg' => '錯誤格式的身分證字號'));
         }
 
-        $user_qrcode = $this->user_qrcode_model->get_by(['user_id' => $user_id, 'status' => PROMOTE_STATUS_AVAILABLE]);
-        if ( ! isset($user_qrcode))
+        $master_user_qrcode = $this->user_qrcode_model->get_by(['user_id' => $user_id, 'status' => PROMOTE_STATUS_AVAILABLE]);
+        if ( ! isset($master_user_qrcode))
         {
             $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '找不到合法的推薦主碼紀錄'));
         }
 
-        $subcode_list = $this->user_subcode_model->get_many_by(['registered_phone' => $registered_phone,
-            'user_qrcode_id' => $user_qrcode->id,
-            'status' => PROMOTE_STATUS_AVAILABLE]);
+        $subcode_list = $this->qrcode_lib->get_subcode_list($user_id, ['registered_id' => $registered_id],
+            ['status' => PROMOTE_STATUS_AVAILABLE]);
         if ( ! empty($subcode_list))
         {
             $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST, 'msg' => '已有該手機號碼的申請紀錄'));
         }
 
         $this->load->library('qrcode_lib');
-        $identity = $this->qrcode_lib->get_user_identity($registered_phone);
+        $identity = $this->qrcode_lib->get_user_identity($registered_id);
 
         $this->load->library('user_lib');
         $promote_code = $this->user_lib->get_promote_code(8, 'SUB');
-        $settings = [];
 
-        $rs = $this->user_subcode_model->insert([
-            'user_id' => $identity->user_id ?? 0,
-            'registered_phone' => $registered_phone,
-            'user_qrcode_id' => $user_qrcode->id,
-            'promote_code' => $promote_code,
-            'status' => PROMOTE_STATUS_AVAILABLE,
-            'start_time' => date('Y-m-d H:i:s'),
-            'settings' => json_encode($settings),
-        ]);
+        $this->user_qrcode_model->trans_begin();
+        $this->user_subcode_model->trans_begin();
+        $rollback = function () {
+            $this->user_qrcode_model->trans_rollback();
+            $this->user_subcode_model->trans_rollback();
+        };
 
-        if ($rs)
+        try
         {
-            $this->response(array('result' => 'SUCCESS', 'data' => ['subcode_id' => $rs]));
+            $new_qrcode_id = $this->user_qrcode_model->insert([
+                'user_id' => $identity->user_id ?? 0,
+                'alias' => $master_user_qrcode->alias,
+                'promote_code' => $promote_code,
+                'status' => PROMOTE_STATUS_AVAILABLE,
+                'subcode_flag' => 1,
+                'start_time' => date('Y-m-d H:i:s'),
+                'end_time' => $master_user_qrcode->end_time,
+                'contract_end_time' => '0000-00-00 00:00:00',
+                'settings' => json_encode([]),
+            ]);
+
+            $user_subcode_id = $this->user_subcode_model->insert([
+                'registered_id' => $registered_id,
+                'master_user_qrcode_id' => $master_user_qrcode->id,
+                'user_qrcode_id' => (int) $new_qrcode_id,
+            ]);
+
+            if ( ! $new_qrcode_id || ! $user_subcode_id ||
+                $this->user_qrcode_model->trans_status() === FALSE ||
+                $this->user_subcode_model->trans_status() === FALSE)
+            {
+                throw new \Exception('新增qrcode失敗');
+            }
+            $this->user_qrcode_model->trans_commit();
+            $this->user_subcode_model->trans_commit();
+            $this->response(array('result' => 'SUCCESS', 'data' => ['subcode_id' => $user_subcode_id]));
         }
-        else
+        catch (Exception $e)
         {
+            $rollback();
             $this->response(array('result' => 'ERROR', 'error' => INSERT_ERROR));
         }
     }
@@ -2495,6 +2526,7 @@ END:
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/user_certification_model');
         $this->load->library('certification_lib');
+        $this->load->library('qrcode_lib');
 
         $user_id = $this->user_info->id;
 
@@ -2507,34 +2539,31 @@ END:
             $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '非禁用的操作不允許'));
         }
 
-        $user_subcode = $this->user_subcode_model->get_subcode_list($user_id, ['id' => $id]);
+        $user_subcode = $this->qrcode_lib->get_subcode_list($user_id, ['id' => $id]);
         if ( empty($user_subcode))
         {
             $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '找不到合法的 subcode 紀錄'));
         }
         $user_subcode = reset($user_subcode);
 
-        $param = [];
+        $subcode_param = [];
+        $promote_param = [];
         if (isset($alias))
         {
-            $param['alias'] = $alias;
+            $subcode_param['alias'] = $alias;
         }
         if (isset($status) && $status == PROMOTE_STATUS_DISABLED)
         {
-            $param['status'] = $status;
-            $param['end_time'] = date('Y-m-d H:i:s');
+            $promote_param['status'] = $status;
+            $promote_param['end_time'] = date('Y-m-d H:i:s');
         }
 
-        $rs = FALSE;
-        if ( ! empty($param))
-        {
-            $rs = $this->user_subcode_model->update_by(['id' => $user_subcode['id'] ?? ''], $param);
-        }
-        else
+        if ( empty($subcode_param) && empty($promote_param))
         {
             $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT, 'msg' => '輸入參數有誤'));
         }
 
+        $rs = $this->qrcode_lib->update_subcode_info($user_subcode['id'] ?? '', $subcode_param, $promote_param);
         if ($rs)
         {
             $this->response(array('result' => 'SUCCESS', 'data' => []));
@@ -2553,6 +2582,7 @@ END:
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/user_certification_model');
         $this->load->library('certification_lib');
+        $this->load->library('qrcode_lib');
 
         $user_id = $this->user_info->id;
         $company = $this->user_info->company;
@@ -2565,34 +2595,33 @@ END:
 
         $input = $this->input->get(NULL, TRUE);
         $id_str = isset($input['subcode_ids'])?trim($input['subcode_ids']):'';
-        // str='' 要取消第一個空白元素
+        // 針對空元素透過 filter 過濾
         $ids = array_filter(explode(',', $id_str));
 
-        $conditions = ['status' => PROMOTE_STATUS_AVAILABLE];
+        $conditions = [];
         if(!empty($ids))
         {
             $conditions['id'] = $ids;
         }
 
-        $user_subcode_list = $this->user_subcode_model->get_subcode_list($user_id, $conditions);
+        $user_subcode_list = $this->qrcode_lib->get_subcode_list($user_id, $conditions, ['status' => PROMOTE_STATUS_AVAILABLE]);
         foreach ($user_subcode_list as $user_subcode)
         {
-            $keys = array_flip(['user_qrcode_id', 'registered_phone', 'alias', 'promote_code', 'status', 'start_time', 'end_time']);
+            $keys = array_flip(['registered_id', 'alias', 'promote_code', 'status', 'start_time', 'end_time']);
             $data = array_intersect_key($user_subcode, $keys);
 
             $data['subcode_id'] = (int)$user_subcode['id'];
-            $data['user_qrcode_id'] = (int)$data['user_qrcode_id'];
             $data['status'] = (int)$data['status'];
             // TODO: subcode 接收者的實名跳轉 url
             $data['promote_url'] = 'https://event.influxfin.com/R/url?p=' . ($user_subcode['promote_code']??'');
             $data['promote_qrcode'] = get_qrcode($data['promote_url']);
 
             $this->load->library('qrcode_lib');
-            $identity = $this->qrcode_lib->get_user_identity($user_subcode['registered_phone']);
+            $identity = $this->qrcode_lib->get_user_identity($user_subcode['registered_id']);
             $data['identity'] = $identity !== FALSE;
             $list[] = $data;
         }
 
-        $this->response(array('result' => 'SUCCESS', 'data' => $list));
+        $this->response(array('result' => 'SUCCESS', 'data' => ['list' => $list]));
     }
 }

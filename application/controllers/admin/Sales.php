@@ -832,6 +832,7 @@ class Sales extends MY_Admin_Controller
     {
         $this->load->library('user_lib');
         $this->load->library("pagination");
+        $this->load->library('qrcode_lib');
         $this->load->model('user/qrcode_setting_model');
 
         $input = $this->input->get(NULL, TRUE);
@@ -896,8 +897,10 @@ class Sales extends MY_Admin_Controller
         {
             unset($where['alias']);
         }
+        $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
-        $fullPromoteList = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'], $input['edate']);
+        //$fullPromoteList = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'], $input['edate']);
+        $fullPromoteList = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'], $input['edate']);
 
         $config = pagination_config();
         $config['per_page'] = 40; //每頁顯示的資料數
@@ -931,6 +934,7 @@ class Sales extends MY_Admin_Controller
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('user/qrcode_collaborator_model');
         $this->load->library('contract_lib');
+        $this->load->library('qrcode_lib');
 
         $input = $this->input->get(NULL, TRUE);
         $where = [];
@@ -944,8 +948,10 @@ class Sales extends MY_Admin_Controller
                 $where[$field] = $input[$field];
             }
         }
+        $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
-        $list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'] ?? '', $input['edate'] ?? '');
+        //$list = $this->user_lib->getPromotedRewardInfo($where, $input['sdate'] ?? '', $input['edate'] ?? '');
+        $list = $this->qrcode_lib->get_promoted_reward_info($where, $input['sdate'] ?? '', $input['edate'] ?? '');
         $page_data['collaborator_list'] = json_decode(json_encode($this->qrcode_collaborator_model->get_all(['status' => 1])), TRUE) ?? [];
         $page_data['data'] = reset($list);
 

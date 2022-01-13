@@ -2338,6 +2338,14 @@ class Certification_lib{
 				'health_card_front'	=> $content['healthcard_image'],
 			);
 
+			// 通過實名時更新 subcode 綁定之 user
+            $this->CI->load->model('user/user_subcode_model');
+            $user = $this->CI->user_model->get_by(['id' => $info->user_id]);
+            if (isset($user))
+            {
+                $this->CI->user_subcode_model->update(['phone' => $user->phone, 'user_id' => 0], ['user_id' => $user->id]);
+            }
+
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
                 $birthday 	= trim($content["birthday"]);
