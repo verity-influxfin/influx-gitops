@@ -8,45 +8,16 @@
 	</div>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<form class="d-flex" @submit.prevent="getBlockUserById">
+			<form class="d-flex" @submit.prevent="getAllBlockUsers">
 				<div class="p-2">會員ID</div>
 				<div class="p-2">
-					<input type="text" class="form-control" v-model="searchUserId" required>
+					<input type="text" class="form-control" v-model="allBlockUserParam.userId">
 				</div>
-				<div class="search-btn">
-					<button class="btn btn-primary" type="submit">搜尋</button>
-				</div>
-			</form>
-		</div>
-		<div class="p-3">
-			<h4>單一user</h4>
-		</div>
-		<div class="p-3">
-			<table id="search-table">
-				<thead>
-					<tr>
-						<th>會員ID</th>
-						<th>更新時間</th>
-						<th>更新原因</th>
-						<th>符合黑名單規則</th>
-						<th>規則細項</th>
-						<th>風險等級</th>
-						<th>執行狀態</th>
-						<th style="width: 150px;">備註</th>
-						<th>會員資訊</th>
-					</tr>
-				</thead>
-			</table>
-		</div>
-	</div>
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="d-flex">
 				<div class="p-2">
 					黑名單規則
 				</div>
 				<div class="p-2">
-					<select id="rule-option" class="form-control">
+					<select id="rule-option" class="form-control" v-model="allBlockUserParam.blockRule">
 						<option value=""></option>
 						<option value="信用不良紀錄" label="信用不良紀錄">信用不良紀錄</option>
 						<option value="第三方資料結果" label="第三方資料結果">第三方資料結果</option>
@@ -59,7 +30,7 @@
 					執行狀態
 				</div>
 				<div class="p-2">
-					<select id="status" class="form-control">
+					<select id="status" class="form-control" v-model="allBlockUserParam.blockTimeText">
 						<option value=""></option>
 						<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
 						<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
@@ -68,10 +39,13 @@
 						<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
 					</select>
 				</div>
-			</div>
-		</div>
-		<div class="p-3">
-			<h4>全部結果</h4>
+				<div class="search-btn">
+					<button class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#newModal">
+						新增
+					</button>
+					<button class="btn btn-primary" type="submit">搜尋</button>
+				</div>
+			</form>
 		</div>
 		<div class="p-3">
 			<table id="main-table">
@@ -160,9 +134,15 @@
 					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					<h3 class="modal-title">新增至黑名單</h3>
+					<h3 class="modal-title">將使用者新增至黑名單</h3>
 				</div>
 				<div class="modal-body p-5">
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">使用者ID</div>
+						<div class="col">
+							<input type="text" class="w-100 form-control" v-model="blockUserAddForm.userId" required>
+						</div>
+					</div>
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">符合黑名單規則：</div>
 						<div class="col">
@@ -202,7 +182,6 @@
 						<div class="col-30 input-require">執行狀態：</div>
 						<div class="col">
 							<select id="status" class="form-control" v-model="blockUserAddForm.blockTimeText" required>
-								<option value=""></option>
 								<option value=""></option>
 								<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
 								<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
@@ -259,25 +238,6 @@
 
 <script>
 	$(document).ready(function () {
-		const t1 = $('#search-table').DataTable({
-			'ordering': false,
-			'language': {
-				'processing': '處理中...',
-				'lengthMenu': '顯示 _MENU_ 項結果',
-				'zeroRecords': '目前無資料',
-				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
-				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
-				'infoFiltered': '(從 _MAX_ 項結果過濾)',
-				'search': '使用本次搜尋結果快速搜尋',
-				'paginate': {
-					'first': '首頁',
-					'previous': '上頁',
-					'next': '下頁',
-					'last': '尾頁'
-				}
-			},
-			"info": false
-		});
 		const t2 = $('#main-table').DataTable({
 			'ordering': false,
 			'language': {
@@ -297,10 +257,6 @@
 			},
 			"info": false
 		});
-
-		$('#rule-option').on('change', function () {
-			t2.search(this.selectedOptions[0].label).draw()
-		})
 		// mounted 因須確保jquery能用
 		v.getAllBlockUsers()
 	});
@@ -310,27 +266,9 @@
 			return {
 				allBlockUsers: [],
 				allBlockUserParam: {
+					userId: null,
 					blockRule: null,
 					blockTimeText: null
-				},
-				searchUserId: null,
-				searchUserData: {
-					'userId': null,
-					'blockDescription': '',
-					'blockInfo': {
-						'blockTimeText': '',
-						'action': '',
-						'startAt': null,
-						'endAt': null
-					},
-					'blockRemark': '',
-					'blockRisk': '',
-					'blockRule': '',
-					'history': [],
-					'status': null,
-					'updatedAt': null,
-					'updatedBy': null,
-					'updateReason': ''
 				},
 				blockUserAddForm: {
 					userId: null,
@@ -387,21 +325,14 @@
 							</button>
 						</div>`
 					}
-					if (status === 2) {
-						// 封鎖時間已過
-						return `<div class="d-flex flex-column">
-								<div class="mb-2">${id}</div>
-								<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
-									已過期
-								</button>
-							</div>`
-					}
+					// 封鎖時間已過
 					return `<div class="d-flex flex-column">
-									<div class="mb-2">${id}</div>
-									<button class="btn btn-info mr-2" data-toggle="modal" data-target="#newModal">
-										新增
-									</button>
-								</div>`
+								<div class="mb-2">${id}</div>
+							<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
+								已過期
+							</button>
+						</div>`
+
 				}
 				const statusGroup = (text, status, id) => {
 					if (status === 'disabled') {
@@ -432,106 +363,20 @@
 					buttonToID(item.id)
 				])
 			},
-			setSearchTableRow(item) {
-				const buttonToID = (id) => {
-					return `<div class="d-flex">
-								<button class="btn btn-default mr-2" data-toggle="modal" data-target="#deductModal">
-									<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
-								</button>
-							</div>`
-				}
-				// 暫時停用status
-				const idGroup = (id, status) => {
-					// if (status === 0) {
-					// 	// 取消封鎖
-					// 	return `<div class="d-flex flex-column">
-					// 				<div class="mb-2">${id}</div>
-					// 				<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal">
-					// 					已移除
-					// 				</button>
-					// 			</div>`
-					// }
-					// if (status === 1) {
-					// 	// 封鎖中
-					// 	return `<div class="d-flex flex-column">
-					// 		<div class="mb-2">${id}</div>
-					// 		<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal">
-					// 			移除
-					// 		</button>
-					// 	</div>`
-					// }
-					// if (status === 2) {
-					// 	// 封鎖時間已過
-					// 	return `<div class="d-flex flex-column">
-					// 			<div class="mb-2">${id}</div>
-					// 			<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
-					// 				已過期
-					// 			</button>
-					// 		</div>`
-					// }
-					return `<div class="d-flex flex-column">
-									<div class="mb-2">${id}</div>
-									<button class="btn btn-info mr-2" data-toggle="modal" data-target="#newModal" onclick="v.$data.blockUserAddForm.userId = ${id}">
-										新增
-									</button>
-								</div>`
-				}
-				const statusGroup = (text, status) => {
-					if (status === 'disabled') {
-						return `<div class="d-flex flex-column">
-								<div class="mb-2">${text}</div>
-								<button class="btn btn-default mr-2" disabled>
-									已移除
-								</button>
-							</div>`
-					}
-					return `<div class="d-flex flex-column">
-							<div class="mb-2" style="white-space:pre-wrap;">${text}</div>
-							<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal">
-								調整
-							</button>
-						</div>`
-				}
-				const reason = (text) => {
-					return `<div style="white-space:pre-wrap;">${text}</div>`
-				}
-				$('#search-table').DataTable().row.add([
-					idGroup(item.userId, item.status),
-					this.convertTime(item.updatedAt),
-					item.updateReason, item.blockRule,
-					item.blockDescription, item.blockRisk,
-					statusGroup(item.blockInfo.blockTimeText, item.status),
-					reason(item.blockRemark),
-					buttonToID(item.id)
-				])
-			},
 			getAllBlockUsers() {
-				const { blockRule, blockTimeText } = this.allBlockUserParam
+				const { allBlockUserParam } = this
 				axios.get('get_all_block_users', {
 					params: {
-						blockRule,
-						blockTimeText
+						...allBlockUserParam
 					}
 				}).then(({ data }) => {
+					$('#main-table').DataTable().clear()
 					this.allBlockUsers = data.results
 					this.allBlockUsers.forEach(item => this.setMainTableRow(item))
 					$('#main-table').DataTable().draw()
 				})
 				// this.allBlockUsers.forEach(item => this.setMainTableRow(item))
 				// $('#main-table').DataTable().draw()
-			},
-			getBlockUserById() {
-				const userId = this.searchUserId
-				axios.get('get_block_user_by_id', {
-					params: {
-						userId,
-					}
-				}).then(({ data }) => {
-					this.searchUserData = data.results
-					this.setSearchTableRow(this.searchUserData)
-					$('#search-table').DataTable().draw()
-				})
-				$('#search-table').DataTable().draw()
 			},
 			blockUserAdd() {
 				const { blockUserAddForm } = this
@@ -543,7 +388,7 @@
 					}
 				}).finally(() => {
 					$('#newModal').modal('hide')
-					this.getBlockUserById(userId)
+					this.getAllBlockUsers()
 				})
 			},
 			updateStatus() {

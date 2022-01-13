@@ -641,18 +641,10 @@ class Risk extends MY_Admin_Controller {
 
 	// brookesia/api/v1.0/blockUser/getAllBlockUsers
 	public function get_all_block_users(){
+		$input = $this->input->get(NULL, TRUE);
 		// TODO: call brookesia API
 		$result = json_decode('[{"userId":44291,"blockDescription":"疑似聯徵造假","blockInfo":{"blockTimeText":"封鎖三個月","action":"block-apply-product","startAt":1641213321,"endAt":2505126921},"blockRemark":"調整狀態: 封鎖三個月\\n調整原因: 重新提供非偽造支聯徵報告","blockRisk":"中風險","blockRule":"信用不良紀錄","history":[],"status":0,"updatedAt":1641213321,"updatedBy":"44291","updateReason":"加入黑名單"},{"userId":44291,"blockDescription":"疑似聯徵造假","blockInfo":{"blockTimeText":"封鎖三個月","action":"block-apply-product","startAt":1641213321,"endAt":2505126921},"blockRemark":"調整狀態: 封鎖三個月\\n調整原因: 重新提供非偽造支聯徵報告","blockRisk":"中風險","blockRule":"信用不良紀錄","history":[],"status":1,"updatedAt":1641213321,"updatedBy":"44291","updateReason":"加入黑名單"}]');
-		echo json_encode(['results'=>$result,'status'=>200]);
-	}
-
-	// brookesia/api/v1.0/blockUser/getBlockUserById
-	public function get_block_user_by_id(){
-		// TODO: call brookesia API
-		$input = $this->input->get(NULL, TRUE);;
-		$result = json_decode('{"userId":12333,"blockDescription":"疑似聯徵造假","blockInfo":{"blockTimeText":"封鎖三個月","action":"block-apply-product","startAt":1641213321,"endAt":2505126921},"blockRemark":"調整狀態: 封鎖三個月\\n調整原因: 重新提供非偽造支聯徵報告","blockRisk":"中風險","blockRule":"信用不良紀錄","history":[],"status":1,"updatedAt":1641213321,"updatedBy":"44291","updateReason":"加入黑名單"}');
-		echo json_encode(['results'=>$result,'status'=>200, 'input'=>$input]);
-
+		echo json_encode(['results'=>$result,'status'=>200,'input'=>$input]);
 	}
 	
 	// brookesia/api/v1.0/blockUser/add
