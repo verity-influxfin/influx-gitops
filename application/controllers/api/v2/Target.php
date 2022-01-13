@@ -890,7 +890,7 @@ class Target extends REST_Controller {
             }
 
             // 案件關係人資料
-            $guarantorInfo_list = [];
+            $guarantorInfo_list = ['guarantorInfo' => []];
 
             $this->load->model('loan/target_associate_model');
             $guarantorInfo = $this->target_associate_model->get_many_by(['target_id' => $target_id, 'product_id' => $target->product_id, 'status' => 2, 'guarantor' => 1]);
