@@ -58,22 +58,4 @@ class Virtual_passbook_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
-
-    public function get_list($virtual_account, array $exclude_sources = [], $limit = 0)
-    {
-        $this->db->select('*')
-            ->from('p2p_transaction.virtual_passbook AS vp')
-            ->join('p2p_transaction.transactions AS tra', 'vp.transaction_id = tra.id')
-            ->where('vp.virtual_account', $virtual_account)
-            ->order_by('vp.tx_datetime, vp.created_at', 'asc');
-        if ( ! empty($exclude_sources))
-        {
-            $this->db->where_not_in('tra.source', $exclude_sources);
-        }
-        if ($limit)
-        {
-            $this->db->limit($limit);
-        }
-        return $this->db->get()->result();
-    }
 }

@@ -84,27 +84,17 @@ class Passbook_lib{
 		}
 		return false;
 	}
-
+	
 	//取得資金資料
-    public function get_passbook_list($virtual_account = '', $limit = FALSE, array $exclude_sources = [])
-    {
+	public function get_passbook_list($virtual_account='',$limit=false){
 		$list = [];
 		if($virtual_account){
-            if (empty($exclude_sources))
-            {
-                if ( ! $limit)
-                {
-                    $this->CI->virtual_passbook_model->limit($limit);
-                }
-                $virtual_passbook = $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at', 'asc')->get_many_by([
-                    'virtual_account' => $virtual_account
-                ]);
+		    if(!$limit){
+                $this->CI->virtual_passbook_model->limit($limit);
             }
-            else
-            {
-                $virtual_passbook = $this->CI->virtual_passbook_model->get_list($virtual_account, $exclude_sources, $limit);
-            }
-
+			$virtual_passbook 	= $this->CI->virtual_passbook_model->order_by('tx_datetime,created_at','asc')->get_many_by([
+				'virtual_account' => $virtual_account
+			]);
 			if($virtual_passbook){
 				$total 	= 0;
 				foreach($virtual_passbook as $key => $value){
