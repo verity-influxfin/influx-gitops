@@ -1,7 +1,6 @@
 import freshGraduateLoan from "../pages/freshGraduateLoan";
 import engineerLoan from "../pages/engineerLoan";
 import transfer from "../pages/transfer";
-import mobileLoan from "../pages/mobileLoan";
 import qa from "../pages/qa";
 import company from "../pages/company";
 import news from "../pages/news";
@@ -60,7 +59,6 @@ let routers = [
     { path: '/projects', component: projects },
     { path: '/promote-code-intro', component: promoteCodeIntro },
     { path: '/freshGraduateLoan', component: freshGraduateLoan },
-    { path: '/mobileLoan', component: mobileLoan },
     { path: '/engineerLoan', component: engineerLoan },
     { path: '/investment', component: invest },
     { path: '/transfer', component: transfer },
