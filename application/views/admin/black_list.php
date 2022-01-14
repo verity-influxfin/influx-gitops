@@ -19,10 +19,9 @@
 				<div class="p-2">
 					<select id="rule-option" class="form-control" v-model="allBlockUserParam.blockRule">
 						<option value=""></option>
-						<option value="信用不良紀錄" label="信用不良紀錄">信用不良紀錄</option>
 						<option value="第三方資料結果" label="第三方資料結果">第三方資料結果</option>
 						<option value="反詐欺規則" label="反詐欺規則">反詐欺規則</option>
-						<option value="其他 （人為加入）" label="其他 （人為加入）">其他 （人為加入）</option>
+						<option value="其他(人為加入)" label="其他(人為加入)">其他(人為加入)</option>
 						<option value="授信政策" label="授信政策">授信政策</option>
 					</select>
 				</div>
@@ -35,16 +34,19 @@
 						<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
 						<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
 						<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
-						<option value="轉二審" label="轉二審">轉二審</option>
 						<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
+                        <option value="轉二審" label="轉二審">轉二審</option>
 					</select>
 				</div>
 				<div class="search-btn">
-					<button class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#newModal">
-						新增
-					</button>
 					<button class="btn btn-primary" type="submit">搜尋</button>
 				</div>
+                <div class="add-btn">
+                    <button class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#newModal">
+                        新增
+                    </button>
+                </div>
+
 			</form>
 		</div>
 		<div class="p-3">
@@ -58,7 +60,7 @@
 						<th>規則細項</th>
 						<th>風險等級</th>
 						<th>執行狀態</th>
-						<th style="width: 150px;">備註</th>
+						<th style="width: 110px;">備註</th>
 						<th>會員資訊</th>
 					</tr>
 				</thead>
@@ -108,8 +110,8 @@
 								<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
 								<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
 								<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
-								<option value="轉二審" label="轉二審">轉二審</option>
 								<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
+                                <option value="轉二審" label="轉二審">轉二審</option>
 							</select>
 						</div>
 					</div>
@@ -149,11 +151,10 @@
 							<select name="" id="" class="w-100 form-control" v-model="blockUserAddForm.blockRule"
 								required>
 								<option value=""></option>
-								<option value="信用不良紀錄">信用不良紀錄</option>
 								<option value="第三方資料結果">第三方資料結果</option>
 								<option value="反詐欺規則">反詐欺規則</option>
 								<option value="其他(人為加入)">其他(人為加入)</option>
-								<option value="信用不良紀錄">授信政策</option>
+								<option value="授信政策">授信政策</option>
 							</select>
 						</div>
 					</div>
@@ -169,12 +170,11 @@
 						<div class="col">
 							<select class="form-control" v-model="blockUserAddForm.blockRisk" required>
 								<option value=""></option>
-								<option value="無">無</option>
 								<option value="低風險">低風險</option>
 								<option value="中風險">中風險</option>
 								<option value="高風險">高風險</option>
+                                <option value="拒絕">拒絕</option>
 								<option value="追蹤分析">追蹤分析</option>
-								<option value="拒絕">拒絕</option>
 							</select>
 						</div>
 					</div>
@@ -237,6 +237,8 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
+    const apiUrl = "/api/v2/black_list"
+
 	$(document).ready(function () {
 		const t2 = $('#main-table').DataTable({
 			'ordering': false,
@@ -353,9 +355,19 @@
 				const reason = (text) => {
 					return `<div style="white-space:pre-wrap;">${text}</div>`
 				}
+
+				const updateTime = ({updatedAt,updatedBy}) =>{
+				    return `<div>
+				                <div class="mb-2">${this.convertTime(updatedAt)}</div>
+                                <div>${updatedBy==0?'(系統)':'(人工) '+updatedBy}</div>
+                            </div>
+				            `
+                }
+
+
 				$('#main-table').DataTable().row.add([
 					idGroup(item.userId, item.status),
-					this.convertTime(item.updatedAt),
+                    updateTime({updatedAt:item.updatedAt,updatedBy:item.updatedBy}),
 					item.updateReason, item.blockRule,
 					item.blockDescription, item.blockRisk,
 					statusGroup(item.blockInfo.blockTimeText, item.status, item.userId),
@@ -365,11 +377,14 @@
 			},
 			getAllBlockUsers() {
 				const { allBlockUserParam } = this
-				axios.get('get_all_block_users', {
+				axios.get(`${apiUrl}/get_all_block_users`, {
 					params: {
 						...allBlockUserParam
 					}
 				}).then(({ data }) => {
+                    if (!data.results) {
+                        alert(data.message)
+                    }
 					$('#main-table').DataTable().clear()
 					this.allBlockUsers = data.results
 					this.allBlockUsers.forEach(item => this.setMainTableRow(item))
@@ -380,7 +395,7 @@
 			},
 			blockUserAdd() {
 				const { blockUserAddForm } = this
-				axios.post('block_add', {
+				axios.post(`${apiUrl}/block_add`, {
 					...blockUserAddForm
 				}).then(({ data }) => {
 					if (data.status !== 200) {
@@ -393,7 +408,7 @@
 			},
 			updateStatus() {
 				const { updateStatusForm } = this
-				axios.post('block_update', {
+				axios.post(`${apiUrl}/block_update`, {
 					...updateStatusForm
 				}).then(({ data }) => {
 					if (data.status !== 200) {
@@ -406,10 +421,8 @@
 			},
 			blockDisable() {
 				const { disableForm } = this
-				axios.post('block_disable', {
-					data: {
-						...disableForm
-					},
+				axios.post(`${apiUrl}/block_disable`, {
+                    ...disableForm
 				}).then(({ data }) => {
 					if (data.status !== 200) {
 						alert(data.message)
@@ -421,7 +434,7 @@
 			},
 			blockEnable() {
 				const { enableForm } = this
-				axios.post('block_enable', {
+				axios.post(`${apiUrl}/block_enable`, {
 					...enableForm
 				}).then(({ data }) => {
 					console.log(data)
@@ -497,6 +510,12 @@
 	.search-btn {
 		display: flex;
 		justify-content: flex-end;
-		flex: 1 0 auto;
+		flex: 0.2 0 auto;
 	}
+
+    .add-btn {
+        display: flex;
+        justify-content: flex-end;
+        flex: 0.2 0 auto;
+    }
 </style>
