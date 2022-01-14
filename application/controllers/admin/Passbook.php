@@ -46,6 +46,7 @@ class Passbook extends MY_Admin_Controller {
 	public function edit(){
 		$get 	= $this->input->get(NULL, TRUE);
 		$id 	= isset($get['id'])?$get['id']:'';
+        $exclude_sources = [];
 		$virtual_accounts = [PLATFORM_VIRTUAL_ACCOUNT,PLATFORM_TAISHIN_VIRTUAL_ACCOUNT];
 		if(in_array($id,$virtual_accounts)){
 			$virtual_account = new stdClass();
@@ -53,12 +54,14 @@ class Passbook extends MY_Admin_Controller {
 			$virtual_account->virtual_account = $id;
 			$virtual_account->user_id 		= 0;
 			$virtual_account->investor 		= 0;
+            // 平台因推薦獎金入帳為不明資金，不會出現在明細表，故需移除推薦獎金的明細
+            $exclude_sources = [SOURCE_PROMOTE_REWARD];
 		}else{
 			$virtual_account 	= $this->virtual_account_model->get($id);
 		}
 
 		if($virtual_account){
-			$list 				= $this->passbook_lib->get_passbook_list($virtual_account->virtual_account);
+            $list 				= $this->passbook_lib->get_passbook_list($virtual_account->virtual_account, FALSE, $exclude_sources);
 			$frozen_list 		= $this->frozen_amount_model->order_by('tx_datetime','ASC')->get_many_by(array('virtual_account'=>$virtual_account->virtual_account));
 			$frozen_type 		= $this->frozen_amount_model->type_list;
 			$page_data['list'] 					= $list;
