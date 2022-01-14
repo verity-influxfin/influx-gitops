@@ -505,10 +505,11 @@ class Qrcode_lib
      * @param string $end_date
      * @param int $limit
      * @param int $offset
-     * @param bool $filter_delayed
+     * @param bool $filter_delayed: 是否要過濾逾期案
+     * @param bool $merge_subcode: 是否合併 subcode 資訊至主推薦碼
      * @return array
      */
-    public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE): array
+    public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE, $merge_subcode = TRUE): array
     {
         $this->CI->load->library('user_lib');
 
@@ -523,26 +524,42 @@ class Qrcode_lib
         $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo(['id' => array_keys($subcode_list)],
             $start_date, $end_date, $limit, $offset, $filter_delayed);
 
-        foreach ($subcode_reward_list as $subcode_reward) {
-            $user_qrcode_id = $subcode_reward['info']['id'];
-            $main_qrcode_id = $subcode_list[$user_qrcode_id]['master_user_qrcode_id'];
-            $main_qrcode_reward_list[$main_qrcode_id] = $this->merge_reward_info($main_qrcode_reward_list[$main_qrcode_id], $subcode_reward);
+        if($merge_subcode)
+        {
+            foreach ($subcode_reward_list as $subcode_reward)
+            {
+                $user_qrcode_id = $subcode_reward['info']['id'];
+                $main_qrcode_id = $subcode_list[$user_qrcode_id]['master_user_qrcode_id'];
+                $main_qrcode_reward_list[$main_qrcode_id] = $this->merge_reward_info($main_qrcode_reward_list[$main_qrcode_id], $subcode_reward);
+            }
+        }
+        else
+        {
+            $main_qrcode_reward_list = array_merge($main_qrcode_reward_list, $subcode_reward_list);
         }
         return $main_qrcode_reward_list;
     }
 
-    public function merge_reward_info($main_info, $info) {
+    /**
+     * 合併兩個 qrcode 的獎勵資訊
+     * @param array $main_info: 合併目標
+     * @param array $info: 合併來源
+     * @return array
+     */
+    public function merge_reward_info(array $main_info, array $info): array
+    {
         $this->CI->load->library('user_lib');
         $categoryInitList = array_combine(array_keys($this->CI->user_lib->rewardCategories), array_fill(0, count($this->CI->user_lib->rewardCategories), []));
 
         // 合併產品相關數據
-        foreach (array_keys($this->CI->user_lib->rewardCategories) as $category) {
+        foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
+        {
             $main_info[$category] = array_merge($main_info[$category], $info[$category]);
-            $main_info['borrowerPlatformFee'][$category] = ($main_info['borrowerPlatformFee'][$category]??0) + $info['borrowerPlatformFee'][$category];
-            $main_info['investorPlatformFee'][$category] = ($main_info['investorPlatformFee'][$category]??0) + $info['investorPlatformFee'][$category];
-            $main_info['rewardAmount'][$category] = ($main_info['rewardAmount'][$category]??0) + $info['rewardAmount'][$category];
-            $main_info['loanedCount'][$category] = ($main_info['loanedCount'][$category]??0) + $info['loanedCount'][$category];
-            $main_info['loanedBalance'][$category] = ($main_info['loanedBalance'][$category]??0) + $info['loanedBalance'][$category];
+            $main_info['borrowerPlatformFee'][$category] = ($main_info['borrowerPlatformFee'][$category] ?? 0) + $info['borrowerPlatformFee'][$category];
+            $main_info['investorPlatformFee'][$category] = ($main_info['investorPlatformFee'][$category] ?? 0) + $info['investorPlatformFee'][$category];
+            $main_info['rewardAmount'][$category] = ($main_info['rewardAmount'][$category] ?? 0) + $info['rewardAmount'][$category];
+            $main_info['loanedCount'][$category] = ($main_info['loanedCount'][$category] ?? 0) + $info['loanedCount'][$category];
+            $main_info['loanedBalance'][$category] = ($main_info['loanedBalance'][$category] ?? 0) + $info['loanedBalance'][$category];
         }
 
         // 合併月結算結果
@@ -555,7 +572,8 @@ class Qrcode_lib
 
             foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
             {
-                if(empty($info['monthly'][$month][$category])) {
+                if (empty($info['monthly'][$month][$category]))
+                {
                     continue;
                 }
                 foreach ($info['monthly'][$month][$category]['targets'] as $target_id => $target_list)
@@ -607,7 +625,8 @@ class Qrcode_lib
         $this->CI->load->model('user/qrcode_collaborator_model');
         $collaborator_list = $this->CI->qrcode_collaborator_model->db->where(['status' => 1])->get('p2p_user.qrcode_collaborator')->result_array();
         $collaborator_ids = array_column($collaborator_list, 'id');
-        foreach ($collaborator_ids as $id) {
+        foreach ($collaborator_ids as $id)
+        {
             if (isset($info['collaboration'][$id]) && ! empty($info['collaboration'][$id]))
             {
                 if ( ! isset($main_info['collaboration'][$id]))
@@ -619,26 +638,26 @@ class Qrcode_lib
                     $main_info['collaboration'][$id] = array_merge($main_info['collaboration'][$id], $info['collaboration'][$id]);
                 }
             }
-            if(isset($info['collaborationCount'][$id]))
+            if (isset($info['collaborationCount'][$id]))
             {
                 $main_info['collaborationCount'][$id] = ($main_info['collaborationCount'][$id] ?? 0) + $info['collaborationCount'][$id];
             }
-            if(isset($info['collaborationRewardAmount'][$id]))
+            if (isset($info['collaborationRewardAmount'][$id]))
             {
                 $main_info['collaborationRewardAmount'][$id] = ($main_info['collaborationRewardAmount'][$id] ?? 0) + $info['collaborationRewardAmount'][$id];
             }
         }
 
         // 其他數據合併
-        $main_info['totalCollaborationRewardAmount'] = ($main_info['totalCollaborationRewardAmount']??0) + $info['totalCollaborationRewardAmount'];
-        $main_info['fullMemberCount'] = ($main_info['fullMemberCount']??0) + $info['fullMemberCount'];
+        $main_info['totalCollaborationRewardAmount'] = ($main_info['totalCollaborationRewardAmount'] ?? 0) + $info['totalCollaborationRewardAmount'];
+        $main_info['fullMemberCount'] = ($main_info['fullMemberCount'] ?? 0) + $info['fullMemberCount'];
         $main_info['fullMember'] = array_merge($main_info['fullMember'], $info['fullMember']);
-        $main_info['registeredCount'] = ($main_info['registeredCount']??0) + $info['registeredCount'];
+        $main_info['registeredCount'] = ($main_info['registeredCount'] ?? 0) + $info['registeredCount'];
         $main_info['registered'] = array_merge($main_info['registered'], $info['registered']);
-        $main_info['totalRewardAmount'] = ($main_info['totalRewardAmount']??0) + $info['totalRewardAmount'];
-        $main_info['totalLoanedAmount'] = ($main_info['totalLoanedAmount']??0) + $info['totalLoanedAmount'];
-        $main_info['downloadedCount'] = ($main_info['downloadedCount']??0) + $info['downloadedCount'];
-        $main_info['fullMemberRewardAmount'] = ($main_info['fullMemberRewardAmount']??0) + $info['fullMemberRewardAmount'];
+        $main_info['totalRewardAmount'] = ($main_info['totalRewardAmount'] ?? 0) + $info['totalRewardAmount'];
+        $main_info['totalLoanedAmount'] = ($main_info['totalLoanedAmount'] ?? 0) + $info['totalLoanedAmount'];
+        $main_info['downloadedCount'] = ($main_info['downloadedCount'] ?? 0) + $info['downloadedCount'];
+        $main_info['fullMemberRewardAmount'] = ($main_info['fullMemberRewardAmount'] ?? 0) + $info['fullMemberRewardAmount'];
         return $main_info;
     }
 
