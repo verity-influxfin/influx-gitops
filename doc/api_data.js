@@ -49066,6 +49066,54 @@ define({
                     "url": "/api/v2/website/credit_department"
                 }
             ]
+        },
+        {
+            "type": "get",
+            "url": "/v2/product/chk_famous_school/:school_short_name",
+            "title": "借款方 檢查學校是否符合名校貸資格",
+            "version": "0.2.0",
+            "name": "GetChkFamousSchool",
+            "group": "Product",
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": false,
+                            "field": "school_short_name",
+                            "description": "<p>學校英文名縮寫</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "chk_result",
+                            "description": "<p>檢查結果</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"chk_result\":true\n    }\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Target",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/chk_famous_school/:school_short_name"
+                }
+            ]
         }
     ]
 });

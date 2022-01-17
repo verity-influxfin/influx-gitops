@@ -12,7 +12,7 @@ class Product extends REST_Controller {
         $this->load->library('Certification_lib');
         $this->load->library('Target_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = [];
+        $nonAuthMethods = ['chk_famous_school'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
@@ -3129,5 +3129,38 @@ class Product extends REST_Controller {
             }
             $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
         }
+    }
+
+    /**
+     * @api {get} /v2/product/chk_famous_school 借款方 檢查學校是否符合名校貸資格
+     * @apiVersion 0.2.0
+     * @apiName GetChkFamousSchool
+     * @apiGroup Product
+     *
+     * @apiParam {String} school_short_name 學校英文名縮寫
+     *
+     * @apiSuccess {Boolean} result 檢查結果
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     *     "result":"SUCCESS",
+     *     "data":{
+     *         "result":true
+     *     }
+     * }
+     *
+     */
+    public function chk_famous_school_get($school_short_name)
+    {
+        $result = FALSE;
+
+        // 名校清單
+        $famous_school_list = $this->config->item('famous_school_list');
+
+        if (isset($famous_school_list[strtoupper($school_short_name)]))
+        {
+            $result = TRUE;
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['chk_result' => $result]]);
     }
 }

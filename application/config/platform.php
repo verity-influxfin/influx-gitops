@@ -315,7 +315,7 @@ $config['product_list'] = [
         'interest_rate_e' => 16,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [5000, STAGE_CER_TARGET, 1],
+        'sub_product' => [5000, STAGE_CER_TARGET, 1, 6],
         'certifications' => [
             CERTIFICATION_IDCARD,
             CERTIFICATION_STUDENT,
@@ -349,7 +349,8 @@ $config['product_list'] = [
         'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
+        'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000',
+        'checkOwner' => FALSE
     ],
     2 => [
         'id' => 2,
@@ -1082,6 +1083,14 @@ $config['visul_id_des'] = [
         'url' => '',
         'status' => 1
     ],
+    'NSL1' => [
+        'name' => '名校貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>名校學生獎勵方案，提供最佳融資條件、最彈性償還方案</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'url' => '',
+        'status' => 1
+    ],
     'LS1' => [
         'name' => '學生貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>資金小幫手生活超easy</span><br><span style=\'font-size:14px;color:#4a4a4a\'>全台大學生與碩博士均可申請</span>',
@@ -1519,6 +1528,62 @@ $config['sub_product_list'] = [
                 'description' => '可申請額度<br>10,000-1,500,000',
                 'checkOwner' => true,
             ],
+        ],
+        'status' => 1
+    ],
+    6 => [
+        'visul_id' => 'NSL1',
+        'identity' => [
+            1 => [
+                'visul_id' => 'NSL1P1',
+                'name' => '名校貸',
+                'product_id' => '1:6',
+                'loan_range_s' => 6000, // 金額下限
+                'loan_range_e' => 144000, // 金額上限
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
+                'certifications' => [ // 必填認證
+                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_STUDENT,
+                    CERTIFICATION_DEBITCARD,
+                    CERTIFICATION_SOCIAL,
+                    CERTIFICATION_EMERGENCY,
+                    CERTIFICATION_EMAIL,
+                    CERTIFICATION_FINANCIAL
+                ],
+                'option_certifications' => [
+                    CERTIFICATION_FINANCIAL
+                ],
+                'certification_verify_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL
+                    ]
+                ],
+                'instalment' => [ // 分期期數
+                    3, 6, 12, 18, 24, 36
+                ],
+                'repayment' => [ // 還款方式
+                    1, // 本息均攤
+                    2, // 繳息不還本
+                ],
+                'targetData' => [],
+                'secondInstance' => FALSE,
+                'weight' => [],
+                'status' => 1,
+                'dealer' => [],
+                'multi_target' => 0,
+                'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000',
+                'checkOwner' => FALSE,
+            ]
         ],
         'status' => 1
     ],
@@ -2260,3 +2325,20 @@ $config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDC
 
 // 捐款案收據方式
 $config['charity_receipt_type_list'] = [CHARITY_RECEIPT_TYPE_SINGLE_PAPER => "單次紙本收據"];
+
+// 名校貸承作的學校列表
+$config['famous_school_list'] = [
+    'NTU' => '國立臺灣大學',
+    'NTHU' => '國立清華大學',
+    'NCKU' => '國立成功大學',
+    'NYCU' => '國立陽明交通大學',
+    'NCCU' => '國立政治大學',
+    'NTNU' => '國立臺灣師範大學',
+    'NTUST' => '國立臺灣科技大學',
+    'NCU' => '國立中央大學',
+    'NSYSU' => '國立中山大學',
+    'NCHU' => '國立中興大學',
+    'CCU' => '國立中正大學',
+    'NTPU' => '國立臺北大學',
+    'NTUT' => '國立臺北科技大學',
+];
