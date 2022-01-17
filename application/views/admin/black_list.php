@@ -372,7 +372,7 @@
 					item.blockDescription, item.blockRisk,
 					statusGroup(item.blockInfo.blockTimeText, item.status, item.userId),
 					reason(item.blockRemark),
-					buttonToID(item.id)
+					buttonToID(item.userId)
 				])
 			},
 			getAllBlockUsers() {
