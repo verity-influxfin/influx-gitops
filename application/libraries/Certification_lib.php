@@ -934,6 +934,7 @@ class Certification_lib{
                                         ]
                                     ];
                                     $content['meta'] = [
+                                        'follow_count'          => $allFollowerCount,
                                         'posts_in_3months'      => $postsIn3Months,
                                         'key_word'              => $postsWithKeyWords
                                     ];
@@ -2622,7 +2623,7 @@ class Certification_lib{
             }
             if (isset($content['meta']))
             {
-                isset($content['meta']['allFollowingCount']) ? $data['meta_allFollowingCount'] = $content['meta']['username'] : '';
+                isset($content['meta']['follow_count']) ? $data['meta_follow_count'] = $content['meta']['follow_count'] : '';
                 isset($content['meta']['posts_in_3months']) ? $data['meta_posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
                 isset($content['meta']['key_word']) ? $data['meta_key_word'] = $content['meta']['key_word'] : '';
             }
