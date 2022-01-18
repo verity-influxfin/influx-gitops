@@ -32,11 +32,6 @@ class Certification extends REST_Controller {
 				$this->response(array('result' => 'ERROR','error' => BLOCK_USER ));
 			}
 
-            //代理人
-            if($tokenData->company==1 && $tokenData->incharge != 1 && $this->user_info->name != null ){
-                $this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
-            }
-
             if($this->request->method != 'get'){
                 $this->load->model('log/log_request_model');
                 $this->log_request_model->insert(array(
