@@ -33,14 +33,14 @@
 									</div>
 									<div class="form-group">
 										<label>備註</label>
-										<? 
+										<?
 											if($remark){
 												if(isset($remark["fail"]) && $remark["fail"]){
 													echo '<p style="color:red;" class="form-control-static">失敗原因：'.$remark["fail"].'</p>';
 												}
 											}
 										?>
-									</div>									
+									</div>
 									<h4>審核</h4>
                                     <form role="form" method="post">
                                         <fieldset>
@@ -77,6 +77,11 @@
                                             <? }} ?>
 										</div>
 									</fieldset>
+                                    <? if($data->certification_id == 500 && isset($ocr['upload_page']) ){ ?>
+        							<div class="form-group" style="background:#f5f5f5;border-style:double;">
+        							  <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
+        							</div>
+        							<? } ?>
 								</div>
                             </div>
                             <!-- /.row (nested) -->
