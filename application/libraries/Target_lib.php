@@ -1737,6 +1737,56 @@ class Target_lib
                                     $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
                                 }
                             }
+                            // 法人產品自然人認證徵信完成判斷
+                            // TODO: 認證徵信個金企金待系統整合
+                            if ($finish && in_array($value->product_id, [PRODUCT_SK_MILLION_SMEG]))
+                            {
+                                // 歸案之自然人資料
+                                $associates_list = $this->CI->target_associate_model->get_many_by([
+                                    'status' => ASSOCIATES_STATUS_APPROVED,
+                                    'target_id' => $value->id
+                                ]);
+                                if ( ! empty($associates_list))
+                                {
+                                    $user_id_list = array_column($associates_list, 'user_id', 'charter');
+                                    // 有尚未註冊之自然人
+                                    if(count(array_filter($user_id_list)) != count($user_id_list)){
+                                        $finish = FALSE;
+                                    }
+                                    else
+                                    {
+                                        $associates_certifications_config = $this->CI->config->item('associates_certifications');
+                                        if (isset($associates_certifications_config[$value->product_id]))
+                                        {
+                                            $this->CI->load->model('user/user_certification_model');
+                                            $associates_certifications = $associates_certifications_config[$value->product_id];
+                                            foreach ($associates_list as $associates_info)
+                                            {
+                                                if (isset($associates_certifications[$associates_info->character]))
+                                                {
+                                                    $associates_certifications_list = $this->CI->user_certification_model->get_many_by([
+                                                        'investor' => BORROWER,
+                                                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                                                        'user_id' => $associates_info->user_id,
+                                                        'certification_id' => $associates_certifications[$associates_info->character]
+                                                    ]);
+                                                    // 確認認證徵信是否完成
+                                                    if (count($associates_certifications[$associates_info->character]
+                                                        != count(json_decode(json_encode($associates_certifications_list), TRUE))))
+                                                    {
+                                                        $finish = FALSE;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    $finish = FALSE;
+                                }
+                            }
 
                             //反詐欺
                             $this->CI->load->library('brookesia/brookesia_lib');
