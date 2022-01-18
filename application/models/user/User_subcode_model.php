@@ -55,7 +55,7 @@ class user_subcode_model extends MY_Model
         {
             $this->_database->where_in('r.master_user_qrcode_id', $master_qrcode_id);
         }
-        else
+        else if ( ! empty($master_qrcode_id))
         {
             $this->_database->where('r.master_user_qrcode_id', $master_qrcode_id);
         }
