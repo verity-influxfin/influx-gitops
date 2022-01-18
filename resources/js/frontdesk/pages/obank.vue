@@ -6,7 +6,7 @@
     <div class="obank-form">
         <div class="event-form">
             <div class="input-group " style="margin: 3vw auto;">
-                <img src="/images/oBankTopContent.svg" class="obank-bottom-img">
+                <img src="~images/oBankTopContent.svg" class="obank-bottom-img">
             </div>
             <div class="input-group group-text " style="margin: 3vw auto 4vw auto;">
                 <span class="obank-black-link"></span>

@@ -20,6 +20,10 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::fallback(function () {
+    return view('index');
+});
+
 Route::post('/getListData', 'Controller@getListData');
 
 Route::post('/getIndexBanner', 'Controller@getIndexBanner');
@@ -325,4 +329,13 @@ Route::prefix('api/v1')->group(function() {
 
     // 全站搜尋
     Route::get('search', 'SearchController@page');
+
+    // 立即申辦表單
+    Route::post('saveApplyForm', 'SmeFormController@saveApplyForm');
+
+    // 我要諮詢表單
+    Route::post('saveConsultForm', 'SmeFormController@saveConsultForm');
+
+    // 統一編號取公司名稱
+    Route::get('getCompanyName', 'SmeFormController@getCompanyName');
 });

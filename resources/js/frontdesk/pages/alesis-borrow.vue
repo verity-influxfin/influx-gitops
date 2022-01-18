@@ -43,22 +43,6 @@
         </div>
         <!-- / 特色區域 -->
 
-        <!-- 普匯推薦 -->
-        <div class="普匯推薦">
-            <alesis-header>
-                <div class="標題">普惠推薦 銀行速貸</div>
-                <div class="標題">透過普匯，可享最高額度300萬，超低利率1.88%起！</div>
-            </alesis-header>
-            <alesis-section :secondary="true">
-                <alesis-space size="medium"></alesis-space>
-                <div class="包裹容器">
-                    <alesis-shanghai></alesis-shanghai>
-                </div>
-                <alesis-space size="medium"></alesis-space>
-            </alesis-section>
-        </div>
-        <!-- / 普匯推薦 -->
-
         <!-- 聽聽他們怎麼說 -->
         <div class="推薦人物">
             <alesis-header class="區塊標題_拖尾的">
@@ -88,7 +72,6 @@ import AlesisMoon              from "../component/alesis/AlesisMoon";
 import AlesisPlan              from "../component/alesis/AlesisPlan";
 import AlesisProject           from "../component/alesis/AlesisProject";
 import AlesisSection           from "../component/alesis/AlesisSection";
-import AlesisShanghai          from "../component/alesis/AlesisShanghai";
 import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
 import AlesisSymcard           from "../component/alesis/AlesisSymcard";
 import AlesisTaiwanMap         from "../component/alesis/AlesisTaiwanMap";
@@ -109,7 +92,6 @@ export default {
         AlesisPlan,
         AlesisProject,
         AlesisSection,
-        AlesisShanghai,
         AlesisSuggestionReviews,
         AlesisSymcard,
         AlesisTaiwanMap,
@@ -308,21 +290,6 @@ export default {
         gap      : 4rem 1rem;
         transform: scale(1);
     }
-}
-
-/**
- * 普匯推薦
- */
-
-.普匯推薦 {
-    position: relative;
-}
-
-.普匯推薦 .包裹容器 {
-    display        : flex;
-    align-items    : center;
-    justify-content: center;
-    margin         : 3rem 0 0;
 }
 
 /**

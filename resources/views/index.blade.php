@@ -2,6 +2,13 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,6 +38,7 @@
     <link rel="stylesheet" href="{{ asset('css/package/pagination.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/package/hover-min.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans+TC">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link
     rel="stylesheet"
@@ -105,6 +113,10 @@
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{env('APP_ENV') == 'production' ? 'GTM-5Z439PW' : 'GTM-589Z9H6'}}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <noscript>
         please turn on your jacascript
     </noscript>
@@ -116,12 +128,29 @@
             <div class="center">
                 <div class="item">
                     我要借款
-                    <div class="sub">
-                        <a href="/collegeLoan" class="item">學生貸款</a>
-                        <a href="/workLoan" class="item">上班族貸款</a>
-                        <a href="/engineerLoan" class="item">資訊工程師專案</a>
-                        <div class="item -disabled">外匯車貸(coming soon)</div>
-                        <div class="item -disabled">新創企業主貸(coming soon)</div>
+                    <div class="item-content">
+                        <div class="sub">
+                            <div class="sub-title">
+                                <div class="sub-title-icon">
+                                    <img src="/images/personal-header-icon.svg" alt="">
+                                </div>
+                                <div>個人金融</div>
+                            </div>
+                            <a href="/collegeLoan" class="item">學生貸款</a>
+                            <a href="/workLoan" class="item">上班族貸款</a>
+                            <a href="/engineerLoan" class="item">資訊工程師專案</a>
+                        </div>
+                        <div class="sub">
+                            <a class="sub-title" href="/business-loan">
+                                <div class="sub-title-icon">
+                                    <img src="/images/business-header-icon.svg" alt="">
+                                </div>
+                                <div>企業融資</div>
+                            </a>
+                            <a href="/business-loan/sme" class="item">微企e秒貸</a>
+                            <div class="item -disabled ">信保專案融資 (coming soon)</div>
+                            <div class="item -disabled ">一般企業融資 (coming soon)</div>
+                        </div>
                     </div>
                 </div>
                 <div class="separator"><img src="/images/alesis-drop-separator.svg" class="image"></div>
@@ -137,12 +166,6 @@
                 <div class="search-group" :class="{inputing}">
                     <input class="search-input" ref="search" placeholder="搜尋..." v-model="searchText" @keyup.enter="doSearch" />
                     <div class="clear-icon" @click="doClear">x</div>
-                </div>
-                <div class="item" v-show="!inputing">
-                    分期付款超市
-                    <div class="sub">
-                        <a href="/mobileLoan" class="item">手機分期</a>
-                    </div>
                 </div>
                 <div class="item" v-show="!inputing">
                     關於我們
@@ -200,11 +223,24 @@
                 <div class="item -dropdown">
                     <div class="text">我要借款</div>
                     <div class="sub">
+                        <div class="sub-title">
+                            <div class="sub-title-icon">
+                                <img src="/images/personal-header-icon.svg" alt="">
+                            </div>
+                            <div>個人金融</div>
+                        </div>
                         <a href="/collegeLoan" class="item">學生貸款</a>
                         <a href="/workLoan" class="item">上班族貸款</a>
                         <a href="/engineerLoan" class="item">資訊工程師專案</a>
-                        <div class="item -disabled">外匯車貸(coming soon)</div>
-                        <div class="item -disabled">新創企業主貸(coming soon)</div>
+                        <div class="sub-title">
+                            <div class="sub-title-icon">
+                                <img src="/images/business-header-icon.svg" alt="">
+                            </div>
+                            <a href="/business-loan">企業融資</a>
+                        </div>
+                        <a href="/business-loan/sme" class="item">微企e秒貸</a>
+                        <div class="item -disabled">信保專案融資  (coming soon)</div>
+                        <div class="item -disabled">一般企業融資  (coming soon)</div>
                     </div>
                 </div>
                 <div class="item -dropdown">
@@ -212,12 +248,6 @@
                     <div class="sub">
                         <a href="/investment" class="item">債權投資</a>
                         <a href="/transfer" class="item">債權轉讓</a>
-                    </div>
-                </div>
-                <div class="item -dropdown">
-                    <div class="text">分期付款超市</div>
-                    <div class="sub">
-                        <a href="/mobileLoan" class="item">手機分期</a>
                     </div>
                 </div>
                 <div class="item -dropdown">
@@ -330,9 +360,7 @@
                             <a href="/collegeLoan">學生貸款</a>
                             <a href="/workLoan">上班族貸款</a>
                             <a href="/engineerLoan">資訊工程師專案</a>
-                            <a>車輛融資</a>
-                            <a>企業融資</a>
-                            <a href="/mobileLoan">手機分期</a>
+                            <a href="/business-loan">企業融資</a>
                         </div>
                     </div>
                     <div class="item">
@@ -390,9 +418,13 @@
                     <a href="/companycooperation" class="item">企業合作</a> |
                     <a href="/promote-code-intro" class="item">推薦有賞</a>
                 </div>
-                <div class="externals">
-                    <a class="item" href="/borrowLink">我想申貸</a>
+                <div class="externals" v-if="!location.pathname.includes('/business-loan/sme')">
+                    <a class="item" href="/borrowLink" >我想申貸</a>
                     <a class="item -invest" href="/investLink">我想投資</a>
+                </div>
+                 <div class="externals" v-else>
+                    <a class="item" href="/business-loan/sme/apply" >立即申辦</a>
+                    <a class="item -invest" href="/business-loan/sme/consult">我要諮詢</a>
                 </div>
             </div>
         </div>
