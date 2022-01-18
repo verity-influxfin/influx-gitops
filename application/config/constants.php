@@ -644,3 +644,16 @@ defined('FOLLOWING_ACTIVATE') OR define('FOLLOWING_ACTIVATE', 50);
 defined('DEDUCT_STATUS_DEFAULT') or define('DEDUCT_STATUS_DEFAULT', 1); // 應付
 defined('DEDUCT_STATUS_CONFIRM') or define('DEDUCT_STATUS_CONFIRM', 2); // 已付
 defined('DEDUCT_STATUS_CANCEL') or define('DEDUCT_STATUS_CANCEL', 3);   // 註銷
+
+// target_associates table status
+defined('ASSOCIATES_STATUS_WAITTING_APPROVE') or define('ASSOCIATES_STATUS_WAITTING_APPROVE', 0); // 自然人歸案狀態待同意
+defined('ASSOCIATES_STATUS_APPROVED') or define('ASSOCIATES_STATUS_APPROVED', 1); // 自然人歸案狀態已同意
+defined('ASSOCIATES_STATUS_CERTIFICATION_CHECKED') or define('ASSOCIATES_STATUS_CERTIFICATION_CHECKED', 2); // 自然人歸案狀態已驗證
+
+// target_associates table character
+defined('ASSOCIATES_CHARACTER_REGISTER_OWNER') or define('ASSOCIATES_CHARACTER_REGISTER_OWNER', 0); // 自然人歸案角色登記負責人
+defined('ASSOCIATES_CHARACTER_OWNER') or define('ASSOCIATES_CHARACTER_OWNER', 1); // 自然人歸案角色負責人
+defined('ASSOCIATES_CHARACTER_REAL_OWNER') or define('ASSOCIATES_CHARACTER_REAL_OWNER', 2); // 自然人歸案角色實際負責人
+defined('ASSOCIATES_CHARACTER_SPOUSE') or define('ASSOCIATES_CHARACTER_SPOUSE', 3); // 自然人歸案角色配偶
+defined('ASSOCIATES_CHARACTER_GUARANTOR_A') or define('ASSOCIATES_CHARACTER_GUARANTOR_A', 4); // 自然人歸案角色保證人甲
+defined('ASSOCIATES_CHARACTER_GUARANTOR_B') or define('ASSOCIATES_CHARACTER_GUARANTOR_B', 5); // 自然人歸案角色保證人乙
