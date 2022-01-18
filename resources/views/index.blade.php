@@ -189,8 +189,10 @@
                         <a href="/projects" class="item">查看案件</a>
                     </div>
                 </div>
+                <!-- 捐款專區更改 -->
+                <a href="/charitable" class="item" v-show="!inputing">慈善專區</a>
                 <a href="/news" class="item" v-show="!inputing">平台公告</a>
-                <a href="/borrowLink" target="_blank" class="item" v-show="!inputing">下載APP</a>
+                <!-- <a href="/borrowLink" target="_blank" class="item" v-show="!inputing">下載APP</a> -->
                 <div class="item" v-show="!inputing" @click="clickSearch">
                     <img class="search-icon" src="/images/alesis-search-icon.svg">
                 </div>
@@ -271,6 +273,7 @@
                     </div>
                 </div>
                 <a href="/borrowLink" target="_blank" class="item">下載APP</a>
+                <a href="/charitable" class="item">慈善專區</a>
                 <div class="item">
                     <div v-if="!flag || flag === 'logout'" @click="openLoginModal" class="login"><i class="fas fa-user"></i> SIGN IN</div>
                     <div v-if="Object.keys(userData).length !== 0" class="nav-item dropdown">

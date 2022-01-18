@@ -152,4 +152,12 @@ class Membercentrecontroller extends BaseController
         }
         return Excel::download(new StatementExport($data), '對帳單.xlsx');
     }
+
+    public function getPromoteCode(Request $request)
+    {
+        $curlScrapedPage = shell_exec('curl -k -X GET "' . $this->apiGetway . 'user/promote_code" -H "' . "request_token:" . Session::get('token') . '"');
+        $data = json_decode($curlScrapedPage, true);
+
+        return response()->json($data, $data['result'] === "SUCCESS" ? 200 : 400);
+    }
 }
