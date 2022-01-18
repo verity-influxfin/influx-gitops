@@ -51,7 +51,7 @@
         <div class="yt-top">
           <div class="yt-top-icon"></div>
           <div class="yt-top-text">台大兒童健康基金會</div>
-          <router-link to="/borrowLink" target="_blank">
+          <router-link to="/investLink" target="_blank">
             <button class="btn btn-outlined yt-top-donate">捐款去</button>
           </router-link>
         </div>
@@ -189,7 +189,7 @@
             <img class="go-donate-text" src="../asset/images/愛心.svg" />
             <img class="go-donate-bird" src="../asset/images/NTUCHbird.png" />
             <div class="go-donate-text"></div>
-            <router-link to="/borrowLink" target="_blank">
+            <router-link to="/investLink" target="_blank">
               <div class="go-donate-button"></div>
             </router-link>
           </div>
