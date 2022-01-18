@@ -2624,4 +2624,136 @@ END:
 
         $this->response(array('result' => 'SUCCESS', 'data' => ['list' => $list]));
     }
+
+    public function subcode_detail_get()
+    {
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/qrcode_setting_model');
+        $this->load->model('admin/contract_format_model');
+        $this->load->model('user/qrcode_collaborator_model');
+        $this->load->library('contract_lib');
+        $this->load->library('user_lib');
+        $this->load->library('qrcode_lib');
+        $user_id = $this->user_info->id;
+        $company = $this->user_info->company;
+        $investor = $this->user_info->investor;
+        $list = [];
+
+        $input = $this->input->get(NULL, TRUE);
+
+        // 確認負責人需通過實名認證
+        if ($company == USER_IS_COMPANY)
+        {
+            try
+            {
+                $responsible_user = $this->user_lib->get_identified_responsible_user($user_id, $investor);
+            }
+            catch (Exception $e)
+            {
+                $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
+            }
+        }
+
+        // 建立合作方案的初始化資料結構
+        $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_many_by(['status' => PROMOTE_COLLABORATOR_AVAILABLE])), TRUE) ?? [];
+        $collaboratorList = array_column($collaboratorList, NULL, 'id');
+        $collaboratorInitList = array_combine(array_keys($collaboratorList), array_fill(0, count($collaboratorList), ['count' => 0]));
+        foreach ($collaboratorInitList as $collaboratorIdx => $value)
+        {
+            $collaboratorInitList[$collaboratorIdx]['collaborator'] = $collaboratorList[$collaboratorIdx]['collaborator'];
+        }
+
+        // 建立各產品的初始化資料結構
+        $categoryInitList = array_combine(array_keys($this->user_lib->rewardCategories), array_fill(0, count($this->user_lib->rewardCategories), ['count' => 0]));
+
+        $start_time = $input['start_time'] ?? date('Y-m-01 00:00:00');
+        $end_time = $input['end_time'] ?? date('Y-m-d H:i:s');
+        $end_time = max(min($end_time, date('Y-m-d H:i:s')), $start_time);
+
+        try
+        {
+            $d1 = new DateTime($start_time);
+            $d2 = new DateTime($end_time);
+            $start = date_create($d1->format('Y-m-d'));
+            $end = date_create($d2->format('Y-m-d'));
+            $diffMonths = ($start->format('m') !== $end->format('m') ? $start->diff($end)->m : 0) + ($start->diff($end)->y * 12) +
+                ($start->format('d') > $end->format('d') ? 1 : 0);
+        }
+        catch (Exception $e)
+        {
+            $diffMonths = 0;
+            error_log($e->getMessage());
+        }
+        for ($i = 0; $i <= $diffMonths; $i++)
+        {
+            $date = date("Y-m", strtotime(date("Y-m", strtotime($start_time)) . '+' . $i . ' MONTH'));
+            $list[$date] = [];
+        }
+
+        $where['user_id'] = $user_id;
+        $where['status'] = [PROMOTE_STATUS_AVAILABLE];
+        $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
+
+        $user_qrcode_list = $this->qrcode_lib->get_promoted_reward_info($where, $start_time ?? '', $end_time ?? '', 0, 0, FALSE, FALSE);
+        $user_subcode_list = $this->qrcode_lib->get_subcode_list($user_id, [], ['status' => PROMOTE_STATUS_AVAILABLE]);
+        $user_subcode_list = array_column($user_subcode_list, NULL, 'user_qrcode_id');
+
+        foreach ($user_qrcode_list as $user_qrcode)
+        {
+            if ( ! isset($user_qrcode) || empty($user_qrcode) ||
+                ! isset($user_qrcode['info']['subcode_flag']) || $user_qrcode['info']['subcode_flag'] == IS_NOT_PROMOTE_SUBCODE)
+            {
+                continue;
+            }
+
+            $user_qrcode_info = $user_qrcode['info'];
+            $user_qrcode_id = $user_qrcode_info['id'];
+
+            // 初始化結構
+            for ($i = 0; $i <= $diffMonths; $i++)
+            {
+                $date = date("Y-m", strtotime(date("Y-m", strtotime($start_time)) . '+' . $i . ' MONTH'));
+                $list[$date][$user_qrcode_id] = $categoryInitList;
+                $list[$date][$user_qrcode_id]['collaboration'] = $collaboratorInitList;
+                $list[$date][$user_qrcode_id]['full_member_count'] = 0;
+                $list[$date][$user_qrcode_id]['subcode_id'] = (int)$user_subcode_list[$user_qrcode_id]['id'];
+                $list[$date][$user_qrcode_id]['alias'] = $user_subcode_list[$user_qrcode_id]['alias'];
+                $list[$date][$user_qrcode_id]['registered_id'] = $user_subcode_list[$user_qrcode_id]['registered_id'];
+            }
+
+            // 處理各個產品
+            foreach (array_keys($this->user_lib->rewardCategories) as $category)
+            {
+                if ( ! isset($user_qrcode[$category]) || empty($user_qrcode[$category]))
+                {
+                    continue;
+                }
+
+                foreach ($user_qrcode[$category] as $value)
+                {
+                    $formattedMonth = date("Y-m", strtotime($value['loan_date']));
+                    $list[$formattedMonth][$user_qrcode_id][$category]['count'] += 1;
+                }
+            }
+
+            // 處理合作資料的計算
+            foreach ($user_qrcode['collaboration'] as $collaborator_id => $collaboration_list)
+            {
+                foreach ($collaboration_list as $value)
+                {
+                    $formattedMonth = date("Y-m", strtotime($value['loan_time']));
+                    $list[$formattedMonth][$user_qrcode_id]['collaboration'][$collaborator_id]['count'] += 1;
+                }
+            }
+
+            // 下載+註冊
+            foreach ($user_qrcode['fullMember'] as $value)
+            {
+                $formattedMonth = date("Y-m", strtotime($value['created_at']));
+                $list[$formattedMonth][$user_qrcode_id]['full_member_count'] += 1;
+            }
+        }
+
+        $this->response(array('result' => 'SUCCESS', 'data' => ['detail_list' => $list]));
+    }
 }

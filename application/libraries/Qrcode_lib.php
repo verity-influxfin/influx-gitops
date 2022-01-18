@@ -509,7 +509,7 @@ class Qrcode_lib
      * @param bool $merge_subcode: 是否合併 subcode 資訊至主推薦碼
      * @return array
      */
-    public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE, $merge_subcode = TRUE): array
+    public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE, bool $merge_subcode = TRUE): array
     {
         $this->CI->load->library('user_lib');
 
