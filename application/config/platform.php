@@ -1984,7 +1984,7 @@ $config['certifications'] = [
     14 => ['id' => CERTIFICATION_FINANCIALWORKER, 'alias' => 'financialWorker', 'name' => '財務訊息資訊', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
     15 => ['id' => CERTIFICATION_REPAYMENT_CAPACITY, 'alias' => 'repayment_capacity', 'name' => '還款力計算', 'status' => 1, 'description' => '提供還款力計算結果', 'optional' => [], 'show' => FALSE],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
-    21 => ['id' => CERTIFICATION_SOCIAL_INTELLIGENT, 'alias' => 'social_intelligent', 'name' => '名校貸社交帳號', 'status' => 1, 'description' => '名校貸個人社交帳號', 'optional' => []],
+    21 => ['id' => CERTIFICATION_SOCIAL_INTELLIGENT, 'alias' => 'social_intelligent', 'name' => '社交帳號', 'status' => 1, 'description' => '個人社交帳號', 'optional' => []],
 
 
     500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],

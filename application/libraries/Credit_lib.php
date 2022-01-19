@@ -577,12 +577,6 @@ class Credit_lib{
                     $this->scoreHistory[] = '學制:博士 = 500';
                 }
 
-				//if(!empty($school_major)){
-				//	$schoolMajorPoint = isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
-				//	$point += $schoolMajorPoint;
-				//	$this->scoreHistory[] = '大學學門分類:'.$school_major.' = '.$schoolMajorPoint;
-				//}
-
 				if($school_department) {
 					$school_data = $school_list['department_points'];
 					if(!empty($school_data)) {

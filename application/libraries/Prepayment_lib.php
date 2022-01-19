@@ -15,22 +15,6 @@ class Prepayment_lib{
 	public function get_prepayment_info($target=[]){
 		if($target->status == 5 && $target->delay_days==0){
 
-            // 名校貸，滿三個月後提前清償者，不收取違約金
-            if ($target->product_id == 1 && $target->sub_product_id == 6)
-            {
-                $this->load->model('transaction/transaction_model');
-                $transaction_status = $this->transaction_model->get_repayment_status_by_target_id(
-                    $target->id,
-                    SOURCE_INTEREST,
-                    3
-                );
-
-                if ( ! isset($transaction_status['status']) || $transaction_status['status'] != TRANSACTION_STATUS_PAID_OFF)
-                {
-                    return FALSE;
-                }
-            }
-
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
 				'target_id' => $target->id,
 				'user_from' => $target->user_id,
@@ -140,6 +124,22 @@ class Prepayment_lib{
 					$data['interest_payable'] 		= $interest_payable;
 					$data['liquidated_damages'] 	= $liquidated_damages;
 				}
+
+                // 名校貸，滿三個月後提前清償者，不收取違約金
+                if ($target->product_id == 1 && $target->sub_product_id == 6)
+                {
+                    $this->CI->load->model('transaction/transaction_model');
+                    $transaction_status = $this->transaction_model->get_repayment_status_by_target_id(
+                        $target->id,
+                        SOURCE_INTEREST,
+                        3
+                    );
+
+                    if (isset($transaction_status['status']) && $transaction_status['status'] == TRANSACTION_STATUS_PAID_OFF)
+                    {
+                        $data['liquidated_damages'] = 0;
+                    }
+                }
 				
 				$data['total'] = $data['remaining_principal'] + $data['interest_payable'] + $data['liquidated_damages'];
 				return $data;
