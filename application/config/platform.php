@@ -1084,7 +1084,15 @@ $config['visul_id_des'] = [
         'status' => 1
     ],
     'NSL1' => [
-        'name' => '名校貸',
+        'name' => '3S名校貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>名校學生獎勵方案，提供最佳融資條件、最彈性償還方案</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TONSL1' => [ // 前面多個TO，才會顯示到APP的banner上
+        'name' => '3S名校貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>名校學生獎勵方案，提供最佳融資條件、最彈性償還方案</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
@@ -1550,11 +1558,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DEBITCARD,
                     CERTIFICATION_SOCIAL_INTELLIGENT,
                     CERTIFICATION_EMERGENCY,
-                    CERTIFICATION_EMAIL,
-                    CERTIFICATION_FINANCIAL
+                    CERTIFICATION_EMAIL
                 ],
                 'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1847,7 +1853,7 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
+    'nature' => ['LS1', 'NS1', 'LF1', 'DS2', 'NSL1'],
     'company' => ['DS2','LJ2'],
 ];
 
