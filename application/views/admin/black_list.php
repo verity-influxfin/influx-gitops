@@ -64,6 +64,7 @@
 						<th>到期時間</th>
 						<th style="width: 110px;">備註</th>
 						<th>會員資訊</th>
+                        <th>歷史資訊</th>
 					</tr>
 				</thead>
 			</table>
@@ -246,7 +247,6 @@
 					<table id="history-table">
 						<thead>
 							<tr>
-								<th>會員ID</th>
 								<th>更新時間</th>
 								<th>更新原因</th>
 								<th>符合黑名單規則</th>
@@ -255,7 +255,6 @@
 								<th>執行狀態</th>
 								<th>到期時間</th>
 								<th>備註</th>
-								<th>會員資訊</th>
 							</tr>
 						</thead>
 					</table>
@@ -352,16 +351,20 @@
 				return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
 			},
 			setMainTableRow(item) {
-				const buttonToID = (id, item) => {
+				const buttonToID = (id) => {
 					return `<div class="d-flex">
 								<button class="btn btn-default mr-2">
 									<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
 								</button>
-								<button class="btn btn-info" onclick="v.initHistory('${item}')">
-									查看歷史資訊
-								</button>
 							</div>`
 				}
+                const buttonToHistory = (history) => {
+                    return `<div class="d-flex">
+								<button class="btn btn-info" onclick="v.initHistory('${history}')">
+									查看
+								</button>
+							</div>`
+                }
 				const idGroup = (id, status) => {
 					if (status === 0) {
 						// 取消封鎖
@@ -428,7 +431,8 @@
 					statusGroup(item.blockInfo.blockTimeText, item.status, item.userId),
 					endDate,
 					reason(item.blockRemark),
-					buttonToID(item.userId, btoa(encodeURI(JSON.stringify(item.history))))
+					buttonToID(item.userId),
+                    buttonToHistory(btoa(encodeURI(JSON.stringify(item.history))))
 				])
 			},
 			getAllBlockUsers() {
@@ -455,7 +459,7 @@
 					...blockUserAddForm
 				}).then(({ data }) => {
 					if (data.status !== 200) {
-						alert(data.message)
+						alert(data.response.message)
 						return
 					}
 					$('#newModal').modal('hide')
@@ -505,11 +509,6 @@
 				const reason = (text) => {
 					return `<div style="white-space:pre-wrap;">${text}</div>`
 				}
-				const buttonId = (id) => {
-					return `<button class="btn btn-default mr-2">
-								<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
-							</button>`
-				}
 				const updateTime = ({ updatedAt, updatedBy }) => {
 					return `<div>
 				                <div class="mb-2">${this.convertTime(updatedAt)}</div>
@@ -523,7 +522,6 @@
 				for (const item of o) {
 					const endDate = item.blockInfo.endAt > 0 ? this.convertTime(item.blockInfo.endAt) : '永久'
 					$('#history-table').DataTable().row.add([
-						item.userId,
 						updateTime({ updatedAt: item.updatedAt, updatedBy: item.updatedBy }),
 						item.updateReason,
 						item.blockRule,
@@ -531,8 +529,7 @@
 						item.blockRisk,
 						item.blockInfo.blockTimeText,
 						endDate,
-						reason(item.blockRemark),
-						buttonId(item.userId)
+						reason(item.blockRemark)
 					])
 				}
 				$('#history-table').DataTable().draw()

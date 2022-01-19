@@ -86,7 +86,9 @@ class Black_list extends Admin_rest_api_controller
         if ( ! $result)
         {
             $error = [
-                'message' => '黑名單系統無回應，請洽工程師。'
+                'response' => [
+                    'message' => '黑名單系統無回應，請洽工程師。'
+                ]
             ];
             $this->response($error);
         }
