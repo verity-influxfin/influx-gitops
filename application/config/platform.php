@@ -315,7 +315,7 @@ $config['product_list'] = [
         'interest_rate_e' => 16,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [5000, STAGE_CER_TARGET, 1, SUBPRODUCT_INTELLIGENT_STUDENT],
+        'sub_product' => [SUBPRODUCT_INTELLIGENT_STUDENT, 5000, STAGE_CER_TARGET, 1],
         'certifications' => [
             CERTIFICATION_IDCARD,
             CERTIFICATION_STUDENT,
@@ -1853,7 +1853,7 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['LS1', 'NS1', 'LF1', 'DS2', 'NSL1'],
+    'nature' => ['NSL1', 'LS1', 'NS1', 'LF1', 'DS2'],
     'company' => ['DS2','LJ2'],
 ];
 
