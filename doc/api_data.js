@@ -45129,13 +45129,29 @@ define({
                             "optional": false,
                             "field": "225",
                             "description": "<p>法人沒有通過負責人實名</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "226",
+                            "description": "<p>該推薦碼不存在</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
-                        "title": "216",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "title": "224",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"224\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "225",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"225\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "226",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"226\"\n}",
                         "type": "Object"
                     }
                 ]
@@ -45271,13 +45287,144 @@ define({
                             "optional": false,
                             "field": "225",
                             "description": "<p>法人沒有通過負責人實名</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "226",
+                            "description": "<p>該推薦碼不存在</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
-                        "title": "216",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"216\"\n}",
+                        "title": "224",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"224\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "225",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"225\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "226",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"226\"\n}",
+                        "type": "Object"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "post",
+            "url": "/v2/user/subcode_detail_email",
+            "title": "會員 推薦碼subcode詳細列表寄送",
+            "version": "0.2.0",
+            "name": "PostPromoteSubCodeDetailEmail",
+            "group": "User",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "start_time",
+                            "description": "<p>搜尋開始時間，不給則是當月1號 (Y-m-d H:i:s)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "String",
+                            "optional": true,
+                            "field": "end_time",
+                            "description": "<p>搜尋結束時間，不給則是目前時間 (Y-m-d H:i:s)</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "result",
+                            "description": "<p>SUCCESS</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        \"detail_list\": {\n            \"2021-10\": {\n                \"82\": {\n                    \"student\": {\n                        \"count\": 1\n                    },\n                    \"salary_man\": {\n                        \"count\": 0\n                    },\n                    \"small_enterprise\": {\n                        \"count\": 0\n                    },\n                    \"collaboration\": {\n                        \"1\": {\n                            \"count\": 0,\n                            \"collaborator\": \"王道銀行\"\n                        },\n                        \"2\": {\n                            \"count\": 0,\n                            \"collaborator\": \"凱基銀行\"\n                        },\n                        \"3\": {\n                            \"count\": 0,\n                            \"collaborator\": \"上海銀行\"\n                        }\n                    },\n                    \"full_member_count\": 1,\n                    \"subcode_id\": 5,\n                    \"alias\": \"\",\n                    \"registered_id\": \"A161214954\"\n                },\n                \"83\": {\n                    \"student\": {\n                        \"count\": 0\n                    },\n                    \"salary_man\": {\n                        \"count\": 0\n                    },\n                    \"small_enterprise\": {\n                        \"count\": 0\n                    },\n                    \"collaboration\": {\n                        \"1\": {\n                            \"count\": 0,\n                            \"collaborator\": \"王道銀行\"\n                        },\n                        \"2\": {\n                            \"count\": 0,\n                            \"collaborator\": \"凱基銀行\"\n                        },\n                        \"3\": {\n                            \"count\": 0,\n                            \"collaborator\": \"上海銀行\"\n                        }\n                    },\n                    \"full_member_count\": 0,\n                    \"subcode_id\": 6,\n                    \"alias\": \"水電工阿強\",\n                    \"registered_id\": \"A118161077\"\n                }\n            }\n        }\n    }\n}",
+                        "type": "Object"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/User.php",
+            "groupTitle": "User",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/user/subcode_detail_email"
+                }
+            ],
+            "error": {
+                "fields": {
+                    "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "4",
+                            "description": "<p>系統無法生成檔案</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "224",
+                            "description": "<p>法人帳號沒有綁定自然人帳號</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "225",
+                            "description": "<p>法人沒有通過負責人實名</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "226",
+                            "description": "<p>該推薦碼不存在</p>"
+                        }
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "224",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"224\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "225",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"225\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "226",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"226\"\n}",
                         "type": "Object"
                     }
                 ]

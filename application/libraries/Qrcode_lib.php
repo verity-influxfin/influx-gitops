@@ -669,7 +669,16 @@ class Qrcode_lib
         return $main_info;
     }
 
-    public function get_subcode_detail_list($company_user_id, $start_time=NULL, $end_time=NULL)
+    /**
+     * 取得 subcode 列表
+     * @param $master_user_id
+     * @param $investor
+     * @param null $start_time
+     * @param null $end_time
+     * @throws Exception
+     * @return array
+     */
+    public function get_subcode_detail_list($master_user_id, $investor, $start_time=NULL, $end_time=NULL): array
     {
         $this->CI->load->model('user/user_qrcode_model');
         $this->CI->load->model('user/qrcode_setting_model');
@@ -679,6 +688,20 @@ class Qrcode_lib
         $this->CI->load->library('user_lib');
         $this->CI->load->library('qrcode_lib');
         $list = [];
+
+        $where = ['user_id' => $master_user_id, 'status' => [PROMOTE_STATUS_AVAILABLE],
+            'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
+        $user_qrcode = $this->CI->qrcode_lib->get_promoted_reward_info($where);
+        if (!isset($user_qrcode) || empty($user_qrcode))
+        {
+            throw new \Exception('該推薦碼不存在', PROMOTE_CODE_NOT_EXIST);
+        }
+
+        $user_qrcode = reset($user_qrcode);
+        if($this->is_company($user_qrcode['info']['alias'])) {
+            /* @throws Exception */
+            $responsible_user = $this->CI->user_lib->get_identified_responsible_user($master_user_id, $investor);
+        }
 
         // 建立合作方案的初始化資料結構
         $collaboratorList = json_decode(json_encode($this->CI->qrcode_collaborator_model->get_many_by(['status' => PROMOTE_COLLABORATOR_AVAILABLE])), TRUE) ?? [];
@@ -717,12 +740,12 @@ class Qrcode_lib
         }
 
         $where = [];
-        $where['user_id'] = $company_user_id;
+        $where['user_id'] = $master_user_id;
         $where['status'] = [PROMOTE_STATUS_AVAILABLE];
         $where['subcode_flag'] = IS_NOT_PROMOTE_SUBCODE;
 
         $user_qrcode_list = $this->CI->qrcode_lib->get_promoted_reward_info($where, $start_time ?? '', $end_time ?? '', 0, 0, FALSE, FALSE);
-        $user_subcode_list = $this->CI->qrcode_lib->get_subcode_list($company_user_id, [], ['status' => PROMOTE_STATUS_AVAILABLE]);
+        $user_subcode_list = $this->CI->qrcode_lib->get_subcode_list($master_user_id, [], ['status' => PROMOTE_STATUS_AVAILABLE]);
         $user_subcode_list = array_column($user_subcode_list, NULL, 'user_qrcode_id');
 
         foreach ($user_qrcode_list as $user_qrcode)

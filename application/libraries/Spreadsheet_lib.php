@@ -8,9 +8,12 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Spreadsheet_lib
 {
+
+    private $spreadsheet;
 	/**
 	 * 標題列
 	 * $title_rows = [
@@ -30,11 +33,11 @@ class Spreadsheet_lib
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => '487']
 	 * ]
 	 */
-	function save($title_rows, $data_rows)
+	function load($title_rows, $data_rows)
 	{
-		$spreadsheet = new Spreadsheet();
-		$sheet = $spreadsheet->getActiveSheet();
-		$style = $spreadsheet->getDefaultStyle();
+		$this->spreadsheet = new Spreadsheet();
+		$sheet = $this->spreadsheet->getActiveSheet();
+		$style = $this->spreadsheet->getDefaultStyle();
 		$style->getFont()->setName('微軟正黑體');
 		$style->getFont()->setSize(12);
 		$style->getAlignment()->setWrapText(true);
@@ -42,18 +45,28 @@ class Spreadsheet_lib
 
 		$this->draw_title($sheet, $title_rows);
 		$this->draw_data($sheet, $title_rows, $data_rows);
-
-		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment;filename="export2.xlsx"');
-		header('Cache-Control: max-age=0');
-		header('Cache-Control: max-age=1');
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
-		header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-		header('Pragma: public'); // HTTP/1.0
-		$writer = new Xlsx($spreadsheet);
-		$writer->save('php://output');
 	}
+
+    public function save($filename)
+    {
+        $writer = IOFactory::createWriter($this->spreadsheet, 'Xlsx');
+        $writer->save($filename);
+    }
+
+    public function output()
+    {
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="export2.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
+        header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header('Pragma: public'); // HTTP/1.0
+
+        $writer = new Xlsx($this->spreadsheet);
+        $writer->save('php://output');
+    }
 
 	/**
 	 * 畫標題

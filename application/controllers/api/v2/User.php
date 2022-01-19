@@ -2613,7 +2613,7 @@ END:
             $data['subcode_id'] = (int)$user_subcode['id'];
             $data['status'] = (int)$data['status'];
             // TODO: subcode 接收者的實名跳轉 url
-            $data['promote_url'] = 'https://event.influxfin.com/R/url?p=' . ($user_subcode['promote_code']??'');
+            $data['promote_url'] = 'https://event.influxfin.com/R/url?identity=subcode';
             $data['promote_qrcode'] = get_qrcode($data['promote_url']);
 
             $this->load->library('qrcode_lib');
@@ -2627,34 +2627,84 @@ END:
 
     public function subcode_detail_get()
     {
-        $this->load->model('user/user_qrcode_model');
-        $this->load->model('user/qrcode_setting_model');
-        $this->load->model('admin/contract_format_model');
-        $this->load->model('user/qrcode_collaborator_model');
-        $this->load->library('contract_lib');
-        $this->load->library('user_lib');
         $this->load->library('qrcode_lib');
-        $user_id = $this->user_info->id;
-        $company = $this->user_info->company;
-        $investor = $this->user_info->investor;
 
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+        $list = [];
         $input = $this->input->get(NULL, TRUE);
 
-        // 確認負責人需通過實名認證
-        if ($company == USER_IS_COMPANY)
+        try
         {
-            try
-            {
-                $responsible_user = $this->user_lib->get_identified_responsible_user($user_id, $investor);
-            }
-            catch (Exception $e)
-            {
-                $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
-            }
+            $list = $this->qrcode_lib->get_subcode_detail_list($user_id, $investor, $input['start_time'] ?? NULL, $input['end_time'] ?? NULL);
+        }
+        catch (Exception $e)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
         }
 
-        $list = $this->qrcode_lib->get_subcode_detail_list($user_id, $input['start_time'] ?? NULL, $input['end_time'] ?? NULL);
-
         $this->response(array('result' => 'SUCCESS', 'data' => ['detail_list' => $list]));
+    }
+
+    public function subcode_detail_email_post()
+    {
+        $this->load->library('qrcode_lib');
+        $this->load->library('spreadsheet_lib');
+
+        $user_id = $this->user_info->id;
+        $investor = $this->user_info->investor;
+
+        try
+        {
+            $list = $this->qrcode_lib->get_subcode_detail_list($user_id, $investor, $input['start_time'] ?? NULL, $input['end_time'] ?? NULL);
+
+            $data_rows = [];
+            foreach ($list as $month => $reward_list)
+            {
+                foreach ($reward_list as $reward_info)
+                {
+                    $data_rows[] = [
+                        'alias' => empty($reward_info['alias']) ? $reward_info['registered_id'] : $reward_info['alias'],
+                        'student' => $reward_info['student']['count'],
+                        'salary_man' => $reward_info['salary_man']['count'],
+                        'small_enterprise' => $reward_info['small_enterprise']['count'],
+                        'month' => $month,
+                    ];
+                }
+            }
+
+            $title_rows = [
+                'month' => ['name' => '統計月份', 'width' => 8],
+                'alias' => ['name' => '暱稱別名', 'width' => 15],
+                'student' => ['name' => '學生貸數量', 'width' => 10],
+                'salary_man' => ['name' => '上班族貸數量', 'width' => 12],
+                'small_enterprise' => ['name' => '微企貸數量', 'width' => 10],
+            ];
+
+            $user = $this->user_model->get($user_id);
+
+            $this->spreadsheet_lib->load($title_rows, $data_rows);
+            $filepath = 'tmp/subcode_' . round(microtime(true) * 1000) .'.xlsx';
+
+            $this->spreadsheet_lib->save($filepath);
+            if (file_exists($filepath))
+            {
+                $title = '【普匯金融推薦有賞明細】';
+                $content = '親愛的會員您好：<br> 　　茲寄送您推薦有賞明細列表，請您核對。<br>若有疑問請洽Line@粉絲團客服，我們將竭誠為您服務。<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;"></p>';
+                $this->load->library('sendemail');
+                $this->sendemail->email_file_estatement($user->email, $title, $content, $filepath, '', $investor, '推薦碼明細.xlsx');
+                unlink($filepath);
+            }
+            else
+            {
+                $this->response(array('result' => 'ERROR', 'error' => EXIT_UNKNOWN_FILE, 'msg' => '系統無法生成檔案'));
+            }
+        }
+        catch (Exception $e)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
+        }
+
+        $this->response(array('result' => 'SUCCESS', 'data' => []));
     }
 }

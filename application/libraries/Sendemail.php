@@ -156,7 +156,7 @@ class Sendemail
 	}
 
 
-	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status=""){
+	public function email_file_estatement($email="",$title="",$content="",$estatement="",$estatement_detail="",$investor_status="",$estatment_filename="estatement.pdf",$estatement_detail_filename="estatement_detail.pdf"){
 		if($email){
 		    $mail_event = $this->CI->config->item('mail_event');
 		    $type = $investor_status==1?'i':'b';
@@ -168,10 +168,10 @@ class Sendemail
 			$this->CI->email->subject($title);
 			$this->CI->email->message($content);
 			if($estatement!=""){
-				$this->CI->email->attach($estatement,"","estatement.pdf");
+				$this->CI->email->attach($estatement,"",$estatment_filename);
 			}
 			if($estatement_detail!=""){
-				$this->CI->email->attach($estatement_detail,"","estatement_detail.pdf");
+				$this->CI->email->attach($estatement_detail,"",$estatement_detail_filename);
 			}
 
 			$rs = $this->CI->email->send();

@@ -1112,10 +1112,12 @@ class Sales extends MY_Admin_Controller
     {
         $this->load->model('user/qrcode_setting_model');
         $this->load->model('transaction/qrcode_reward_model');
+        $this->load->model('user/virtual_account_model');
 
         $input = $this->input->get(NULL, TRUE);
         $where = [];
         $list = [];
+        $virtual_account_list = [];
         $fields = ['alias'];
 
         foreach ($fields as $field)
@@ -1182,11 +1184,37 @@ class Sales extends MY_Admin_Controller
                 $reward_where['end_time <= '] = $input['edate'];
 
             $list = $this->qrcode_reward_model->getSettlementRewardList($reward_where, $where);
+
+            // 確認虛擬帳號
+            $virtual_account_rs = $this->virtual_account_model->get_many_by([
+                'user_id' => array_column($list, 'user_id'),
+                'status' => [VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING],
+                'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
+            ]);
+            foreach ($virtual_account_rs as $virtual_account)
+            {
+                $virtual_account_list[$virtual_account->user_id][$virtual_account->investor] = $virtual_account;
+            }
+            foreach ($list as $key => $value)
+            {
+                // 找不到虛擬帳號
+                $settings = json_decode($value['settings'], TRUE);
+                if ($settings === FALSE || ! isset($virtual_account_list[$value['user_id']]) ||
+                    ! isset($settings['investor']) || ! isset($virtual_account_list[$value['user_id']][$settings['investor']])
+                )
+                {
+                    $list[$key]['has_virtual_account'] = FALSE;
+                }
+                else
+                {
+                    $list[$key]['has_virtual_account'] = TRUE;
+                }
+            }
         }
 
-        $qrcodeSettingList = $this->qrcode_setting_model->get_all();
+        $qrcode_setting_list = $this->qrcode_setting_model->get_all();
         $alias_list = ['all' => "全部方案"];
-        $alias_list = array_merge($alias_list, array_combine(array_column($qrcodeSettingList, 'alias'), array_column($qrcodeSettingList, 'description')));
+        $alias_list = array_merge($alias_list, array_combine(array_column($qrcode_setting_list, 'alias'), array_column($qrcode_setting_list, 'description')));
 
         $page_data['list'] = $list;
         $page_data['alias_list'] = $alias_list;
