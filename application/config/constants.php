@@ -347,6 +347,9 @@ defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002); /
 
 defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法人產品ID範圍
 
+// sub-product
+defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUDENT', 6); // 3S名校貸
+
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE'	, '9'); //virtual_account
 defined('BORROWER_VIRTUAL_CODE')    OR define('BORROWER_VIRTUAL_CODE'	, '1'); //virtual_account

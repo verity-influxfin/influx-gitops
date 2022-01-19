@@ -22464,6 +22464,12 @@ define({
                             "type": "Number",
                             "field": "target_id",
                             "description" : "<p>(普匯微企e秒貸) 創業貸起案ID (同意當保證人，不同意則依照規格呼叫)</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "field": "repayment",
+                            "description" : "<p>還款方式<br/>1:本息均攤<br/>2:繳息不還本</p>"
                         }
                     ]
                 }

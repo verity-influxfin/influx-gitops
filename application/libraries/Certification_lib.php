@@ -1115,6 +1115,7 @@ class Certification_lib{
                                     ]
                                 ];
                                 $content['meta'] = [
+                                    'follow_count' => $allFollowerCount,
                                     'posts_in_3months' => $postsIn3Months,
                                     'key_word' => $postsWithKeyWords
                                 ];

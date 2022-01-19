@@ -625,12 +625,27 @@ class Product extends REST_Controller {
                 }
             }
 
+            if (isset($product['repayment']))
+            {
+                if (isset($input['repayment']) && in_array($input['repayment'], $product['repayment']))
+                {
+                    $repayment = $input['repayment'];
+                }
+                else
+                {
+                    $repayment = $product['repayment'][0];
+                }
+            }
+            else
+            {
+                $repayment = 1;
+            }
 
             $param		= [
                 'product_id' => $product['id'],
                 'sub_product_id' => $sub_product_id,
                 'user_id' => $user_id,
-                'repayment' => $product['repayment'][0],
+                'repayment' => $repayment,
                 'damage_rate' => LIQUIDATED_DAMAGES,
             ];
 

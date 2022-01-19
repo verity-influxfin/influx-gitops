@@ -18,11 +18,14 @@ class Prepayment_lib{
             // 名校貸，滿三個月後提前清償者，不收取違約金
             if ($target->product_id == 1 && $target->sub_product_id == 6)
             {
-                // 該案已結清總筆數
                 $this->load->model('transaction/transaction_model');
-                $transaction_done_count = $this->transaction_model->get_count_by_target_id($target->id, TRANSACTION_STATUS_PAID_OFF);
+                $transaction_status = $this->transaction_model->get_repayment_status_by_target_id(
+                    $target->id,
+                    SOURCE_INTEREST,
+                    3
+                );
 
-                if ($transaction_done_count >= 3)
+                if ( ! isset($transaction_status['status']) || $transaction_status['status'] != TRANSACTION_STATUS_PAID_OFF)
                 {
                     return FALSE;
                 }

@@ -309,13 +309,13 @@ $config['product_list'] = [
         'identity' => 1,
         'alias' => 'STN',
         'name' => '學生貸',
-        'loan_range_s' => 12000,
+        'loan_range_s' => 6000,
         'loan_range_e' => 150000,
         'interest_rate_s' => 4,
         'interest_rate_e' => 16,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [5000, STAGE_CER_TARGET, 1, 6],
+        'sub_product' => [5000, STAGE_CER_TARGET, 1, SUBPRODUCT_INTELLIGENT_STUDENT],
         'certifications' => [
             CERTIFICATION_IDCARD,
             CERTIFICATION_STUDENT,
@@ -349,7 +349,7 @@ $config['product_list'] = [
         'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'description' => '須提供有效學生證<br>可申請額度<br>12,000-150,000',
+        'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
         'checkOwner' => FALSE
     ],
     2 => [
@@ -1536,10 +1536,10 @@ $config['sub_product_list'] = [
         'identity' => [
             1 => [
                 'visul_id' => 'NSL1P1',
-                'name' => '名校貸',
+                'name' => '3S名校貸',
                 'product_id' => '1:6',
                 'loan_range_s' => 6000, // 金額下限
-                'loan_range_e' => 144000, // 金額上限
+                'loan_range_e' => 180000, // 金額上限
                 'interest_rate_s' => 5,
                 'interest_rate_e' => 20,
                 'charge_platform' => PLATFORM_FEES,
@@ -1581,7 +1581,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000',
+                'description' => '須提供有效學生證<br>可申請額度<br>6,000-180,000',
                 'checkOwner' => FALSE,
             ]
         ],
@@ -1594,7 +1594,7 @@ $config['sub_product_list'] = [
                 'visul_id' => 'LS1P1',
                 'name' => '學生貸',
                 'product_id' => '1:0',
-                'loan_range_s' => 12000,
+                'loan_range_s' => 6000,
                 'loan_range_e' => 150000,
                 'interest_rate_s' => 4,
                 'interest_rate_e' => 16,
@@ -1632,7 +1632,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'description' => '須提供有效學生證<br>可申請額度<br>12,000-150,000'
+                'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000'
             ]
         ],
         'status' => 1

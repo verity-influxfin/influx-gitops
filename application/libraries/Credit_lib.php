@@ -539,7 +539,7 @@ class Credit_lib{
         return $rs;
     }
 
-    public function get_school_point($school_name = '', $school_system = 0, $school_major = '', $school_department = FALSE, $sub_product_id = 1)
+    public function get_school_point($school_name = '', $school_system = 0, $school_major = '', $school_department = FALSE, $sub_product_id = 0)
     {
 		$point = 0;
 		if(!empty($school_name)){

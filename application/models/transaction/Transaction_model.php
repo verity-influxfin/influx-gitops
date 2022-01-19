@@ -142,29 +142,20 @@ class Transaction_model extends MY_Model
     }
 
     /**
-     * 依target ID、狀態取得明細數量
+     * 依target ID及科目名稱找第N期的還款狀態
      * @param $target_id
-     * @param int|array $status : 狀態
-     * @return int|mixed
+     * @param $source : 科目名稱
+     * @return mixed
      */
-    public function get_count_by_target_id($target_id, $status)
+    public function get_repayment_status_by_target_id($target_id, $source, $instalment_no)
     {
         $this->db
-            ->select('COUNT(1) AS count')
+            ->select('status')
             ->from('p2p_transaction.' . $this->_table)
-            ->where('target_id', $target_id);
+            ->where('target_id', $target_id)
+            ->where('source', $source)
+            ->where('instalment_no', $instalment_no);
 
-        if (is_numeric($status))
-        {
-            $this->db->where('status', $status);
-        }
-        elseif (is_array($status))
-        {
-            $this->db->where_in('status', $status);
-        }
-
-        $result = $this->db->get()->first_row('array');
-
-        return $result['count'] ?? 0;
+        return $this->db->get()->first_row('array');
     }
 }
