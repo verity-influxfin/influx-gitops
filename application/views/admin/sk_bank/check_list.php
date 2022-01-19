@@ -77,7 +77,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司核准設立日期</td>
+              <td class="bold-right-border">
+                  <div>公司核准設立日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="CompSetDate_content" type="text" class="table-input" disabled>
               </td>
 
@@ -296,7 +299,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">現任負責人擔任公司起日-日期</td>
+              <td class="bold-right-border">
+                  <div>現任負責人擔任公司起日-日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="PrOnboardDay_content" type="text" class="table-input" disabled>
               </td>
 
@@ -320,7 +326,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">前任負責人擔任公司起日-日期</td>
+              <td class="bold-right-border">
+                  <div>前任負責人擔任公司起日-日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="ExPrOnboardDay_content" type="text" class="table-input" disabled>
               </td>
 
@@ -344,7 +353,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">前二任負責人擔任公司起日-日期</td>
+              <td class="bold-right-border">
+                  <div>前二任負責人擔任公司起日-日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="ExPrOnboardDay2_content" type="text" class="table-input" disabled>
               </td>
 
@@ -1162,7 +1174,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">負責人出生日期</td>
+              <td class="bold-right-border">
+                  <div>負責人出生日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="PrBirth_content" type="text" class="table-input" disabled>
               </td>
 
@@ -1234,7 +1249,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">甲保證人出生日期</td>
+              <td class="bold-right-border">
+                  <div>甲保證人出生日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="GuOneBirth_content" type="text" class="table-input" disabled>
               </td>
 
@@ -1306,7 +1324,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">乙保證人出生日期</td>
+              <td class="bold-right-border">
+                  <div>乙保證人出生日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="GuTwoBirth_content" type="text" class="table-input" disabled>
               </td>
 
@@ -1378,7 +1399,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">配偶出生日期</td>
+              <td class="bold-right-border">
+                  <div>配偶出生日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="SpouseBirth_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2026,7 +2050,10 @@
               <td class="title input-center bold-bottom-border bold-right-border" rowspan="6">F-所得稅申報書<br>
                   （損益表）
               </td>
-              <td class="bold-right-border">近一年結算申報書營業收入-年度</td>
+              <td class="bold-right-border">
+                  <div>近一年結算申報書營業收入-年度</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="AnnualIncomeYear1_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2050,7 +2077,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">近二年結算申報書營業收入-年度</td>
+              <td class="bold-right-border">
+                  <div>近二年結算申報書營業收入-年度</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="AnnualIncomeYear2_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2074,7 +2104,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">近三年結算申報書營業收入-年度</td>
+              <td class="bold-right-border">
+                  <div>近三年結算申報書營業收入-年度</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="AnnualIncomeYear3_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2099,7 +2132,10 @@
             </tr>
             <tr>
               <td class="title input-center bold-bottom-border bold-right-border" rowspan="24">G-勞保局投保人數</td>
-              <td class="bold-right-border">公司近01個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近01個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM1_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2123,7 +2159,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近02個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近02個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM2_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2147,7 +2186,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近03個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近03個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM3_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2159,7 +2201,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近03個月投保人數-人數</td>
+              <td class="bold-right-border">
+                  <div>公司近03個月投保人數-人數</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsured3_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2171,7 +2216,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近04個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近04個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM4_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2183,7 +2231,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近04個月投保人數-人數</td>
+              <td class="bold-right-border">
+                  <div>公司近04個月投保人數-人數</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsured4_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2195,7 +2246,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近05個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近05個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM5_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2219,7 +2273,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近06個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近06個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM6_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2243,7 +2300,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近07個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近07個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM7_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2267,7 +2327,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近08個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近08個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM8_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2291,7 +2354,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近09個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近09個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM9_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2315,7 +2381,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近10個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近10個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM10_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2339,7 +2408,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近11個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近11個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM11_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2363,7 +2435,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司近12個月投保人數-年月</td>
+              <td class="bold-right-border">
+                  <div>公司近12個月投保人數-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="NumOfInsuredYM12_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2388,7 +2463,10 @@
             </tr>
             <tr>
               <td class="title input-center bold-bottom-border bold-right-border" rowspan="53">H-聯徵資料</td>
-              <td class="bold-right-border">企業聯徵查詢日期</td>
+              <td class="bold-right-border">
+                  <div>企業聯徵查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="CompJCICQueryDate_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2400,7 +2478,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司中期放款餘額-年月</td>
+              <td class="bold-right-border">
+                  <div>公司中期放款餘額-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="MidTermLnYM_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2424,7 +2505,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">公司短期放款餘額-年月</td>
+              <td class="bold-right-border">
+                  <div>公司短期放款餘額-年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="ShortTermLnYM_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2448,7 +2532,10 @@
                 </td>
             </tr>
 			<tr>
-              <td class="bold-right-border">企業聯徵J02資料年月</td>
+              <td class="bold-right-border">
+                  <div>企業聯徵J02資料年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="CompJCICDataDate_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2472,7 +2559,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">負責人聯徵查詢日期</td>
+              <td class="bold-right-border">
+                  <div>負責人聯徵查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="PrJCICQueryDate_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2496,7 +2586,10 @@
                 </td>
             </tr>
 			<tr>
-              <td class="bold-right-border">負責人聯徵J01資料年月</td>
+              <td class="bold-right-border">
+                  <div>負責人聯徵J01資料年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="PrJCICDataDate_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2604,7 +2697,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">配偶聯徵查詢日期</td>
+              <td class="bold-right-border">
+                  <div>配偶聯徵查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3"><input id="SpouseJCICQueryDate_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2628,7 +2724,10 @@
                 </td>
             </tr>
 			<tr>
-              <td class="bold-right-border">配偶聯徵J01資料年月</td>
+              <td class="bold-right-border">
+                  <div>配偶聯徵J01資料年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3"><input id="SpouseJCICDataDate_content" type="text" class="table-input" disabled>
               </td>
 
@@ -2736,7 +2835,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">甲保證人聯徵查詢日期</td>
+              <td class="bold-right-border">
+                  <div>甲保證人聯徵查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3">
                 <input id="GuOneJCICQueryDate_content" type="text" class="table-input" disabled>
               </td>
@@ -2760,7 +2862,10 @@
                 </td>
             </tr>
 			<tr>
-              <td class="bold-right-border">甲保證人聯徵J01資料年月</td>
+              <td class="bold-right-border">
+                  <div>甲保證人聯徵J01資料年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3">
                 <input id="GuOneJCICDataDate_content" type="text" class="table-input" disabled>
               </td>
@@ -2868,7 +2973,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">乙保證人聯徵查詢日期</td>
+              <td class="bold-right-border">
+                  <div>乙保證人聯徵查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3">
                 <input id="GuTwoJCICQueryDate_content" type="text" class="table-input" disabled>
               </td>
@@ -2892,7 +3000,10 @@
                 </td>
             </tr>
 			<tr>
-              <td class="bold-right-border">乙保證人聯徵J01資料年月</td>
+              <td class="bold-right-border">
+                  <div>乙保證人聯徵J01資料年月</div>
+                  <div style="color:red;">格式:YYYYMM</div>
+              </td>
               <td colspan="3">
                 <input id="GuTwoJCICDataDate_content" type="text" class="table-input" disabled>
               </td>
@@ -3025,7 +3136,10 @@
             </tr>
             <tr>
               <td class="title input-center bold-bottom-border bold-right-border" rowspan="8">I-勞保異動明細</td>
-              <td class="bold-right-border">負責人-被保險人勞保異動查詢日期</td>
+              <td class="bold-right-border">
+                  <div>負責人-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3">
                 <input id="PrLaborQryDate_content" type="text" class="table-input" disabled>
               </td>
@@ -3049,7 +3163,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">配偶-被保險人勞保異動查詢日期</td>
+              <td class="bold-right-border">
+                  <div>配偶-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3">
                 <input id="SpouseLaborQryDate_content" type="text" class="table-input" disabled>
               </td>
@@ -3073,7 +3190,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">甲保證人-被保險人勞保異動查詢日期</td>
+              <td class="bold-right-border">
+                  <div>甲保證人-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3">
                 <input id="GuOneLaborQryDate_content" type="text" class="table-input" disabled>
               </td>
@@ -3097,7 +3217,10 @@
                 </td>
             </tr>
             <tr>
-              <td class="bold-right-border">乙保證人-被保險人勞保異動查詢日期</td>
+              <td class="bold-right-border">
+                  <div>乙保證人-被保險人勞保異動查詢日期</div>
+                  <div style="color:red;">格式:YYYYMMDD</div>
+              </td>
               <td colspan="3">
                 <input id="GuTwoLaborQryDate_content" type="text" class="table-input" disabled>
               </td>
