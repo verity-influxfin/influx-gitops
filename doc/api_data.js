@@ -44832,7 +44832,7 @@ define({
                         {
                             "group": "Error 4xx",
                             "optional": false,
-                            "field": "404",
+                            "field": "226",
                             "description": "<p>找不到合法的推薦主碼紀錄</p>"
                         },
                         {
@@ -44851,8 +44851,8 @@ define({
                 },
                 "examples": [
                     {
-                        "title": "404",
-                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"404\"\n}",
+                        "title": "226",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"226\"\n}",
                         "type": "Object"
                     },
                     {

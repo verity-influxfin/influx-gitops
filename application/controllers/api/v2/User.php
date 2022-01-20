@@ -2458,7 +2458,7 @@ END:
         $master_user_qrcode = $this->user_qrcode_model->get_by(['user_id' => $user_id, 'status' => PROMOTE_STATUS_AVAILABLE]);
         if ( ! isset($master_user_qrcode))
         {
-            $this->response(array('result' => 'ERROR', 'error' => APPLY_NOT_EXIST, 'msg' => '找不到合法的推薦主碼紀錄'));
+            $this->response(array('result' => 'ERROR', 'error' => PROMOTE_CODE_NOT_EXIST, 'msg' => '找不到合法的推薦主碼紀錄'));
         }
 
         $subcode_list = $this->qrcode_lib->get_subcode_list($user_id, ['registered_id' => $registered_id],
