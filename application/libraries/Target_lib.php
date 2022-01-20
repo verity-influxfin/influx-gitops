@@ -1748,7 +1748,7 @@ class Target_lib
                                 ]);
                                 if ( ! empty($associates_list))
                                 {
-                                    $user_id_list = array_column($associates_list, 'user_id', 'charter');
+                                    $user_id_list = array_column($associates_list, 'user_id', 'character');
                                     // 有尚未註冊之自然人
                                     if(count(array_filter($user_id_list)) != count($user_id_list)){
                                         $finish = FALSE;
@@ -1771,8 +1771,8 @@ class Target_lib
                                                         'certification_id' => $associates_certifications[$associates_info->character]
                                                     ]);
                                                     // 確認認證徵信是否完成
-                                                    if (count($associates_certifications[$associates_info->character]
-                                                        != count(json_decode(json_encode($associates_certifications_list), TRUE))))
+                                                    if (count($associates_certifications[$associates_info->character])
+                                                        != count(json_decode(json_encode($associates_certifications_list), TRUE)))
                                                     {
                                                         $finish = FALSE;
                                                         break;
