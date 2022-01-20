@@ -1958,6 +1958,7 @@ END:
 
     public function apply_promote_code_post()
     {
+        $this->load->library('user_lib');
         $this->load->model('user/user_model');
         $this->load->model('user/user_qrcode_model');
         $this->load->model('user/qrcode_setting_model');
