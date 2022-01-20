@@ -45364,13 +45364,27 @@ define({
                             "optional": false,
                             "field": "result",
                             "description": "<p>SUCCESS</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Object",
+                            "optional": false,
+                            "field": "data",
+                            "description": "<p>回應資料 payload</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Boolean",
+                            "optional": false,
+                            "field": "data.sent",
+                            "description": "<p>是否寄送成功</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n        \"detail_list\": {\n            \"2021-10\": {\n                \"82\": {\n                    \"student\": {\n                        \"count\": 1\n                    },\n                    \"salary_man\": {\n                        \"count\": 0\n                    },\n                    \"small_enterprise\": {\n                        \"count\": 0\n                    },\n                    \"collaboration\": {\n                        \"1\": {\n                            \"count\": 0,\n                            \"collaborator\": \"王道銀行\"\n                        },\n                        \"2\": {\n                            \"count\": 0,\n                            \"collaborator\": \"凱基銀行\"\n                        },\n                        \"3\": {\n                            \"count\": 0,\n                            \"collaborator\": \"上海銀行\"\n                        }\n                    },\n                    \"full_member_count\": 1,\n                    \"subcode_id\": 5,\n                    \"alias\": \"\",\n                    \"registered_id\": \"A161214954\"\n                },\n                \"83\": {\n                    \"student\": {\n                        \"count\": 0\n                    },\n                    \"salary_man\": {\n                        \"count\": 0\n                    },\n                    \"small_enterprise\": {\n                        \"count\": 0\n                    },\n                    \"collaboration\": {\n                        \"1\": {\n                            \"count\": 0,\n                            \"collaborator\": \"王道銀行\"\n                        },\n                        \"2\": {\n                            \"count\": 0,\n                            \"collaborator\": \"凱基銀行\"\n                        },\n                        \"3\": {\n                            \"count\": 0,\n                            \"collaborator\": \"上海銀行\"\n                        }\n                    },\n                    \"full_member_count\": 0,\n                    \"subcode_id\": 6,\n                    \"alias\": \"水電工阿強\",\n                    \"registered_id\": \"A118161077\"\n                }\n            }\n        }\n    }\n}",
+                        "content": "{\n    \"result\": \"SUCCESS\",\n    \"data\": {\n       \"sent\": true\n    }\n}",
                         "type": "Object"
                     }
                 ]

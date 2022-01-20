@@ -2650,7 +2650,7 @@ END:
     {
         $this->load->library('qrcode_lib');
         $this->load->library('spreadsheet_lib');
-
+        $sent = FALSE;
         $user_id = $this->user_info->id;
         $investor = $this->user_info->investor;
 
@@ -2673,12 +2673,16 @@ END:
                 }
             }
 
+            $product_list = $this->config->item('product_list');
+            $student_name = $product_list[PRODUCT_ID_STUDENT]['name'] ?? '';
+            $salary_man_name = $product_list[PRODUCT_ID_SALARY_MAN]['name'] ?? '';
+            $small_enterprise_name = $product_list[PRODUCT_SK_MILLION_SMEG]['name'] ?? '';
             $title_rows = [
-                'month' => ['name' => '統計月份', 'width' => 8],
-                'alias' => ['name' => '暱稱別名', 'width' => 15],
-                'student' => ['name' => '學生貸數量', 'width' => 10],
-                'salary_man' => ['name' => '上班族貸數量', 'width' => 12],
-                'small_enterprise' => ['name' => '微企貸數量', 'width' => 10],
+                'month' => ['name' => '統計月份', 'width' => 8,'alignment' => ['h' => 'center','v' => 'center']],
+                'alias' => ['name' => '暱稱別名', 'width' => 15, 'alignment' => ['h' => 'center','v' => 'center']],
+                'student' => ['name' => "{$student_name}數量", 'width' => 10, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']],
+                'salary_man' => ['name' => "{$salary_man_name}數量", 'width' => 12, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']],
+                'small_enterprise' => ['name' => "{$small_enterprise_name}數量", 'width' => 15, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']]
             ];
 
             $user = $this->user_model->get($user_id);
@@ -2692,7 +2696,7 @@ END:
                 $title = '【普匯金融推薦有賞明細】';
                 $content = '親愛的會員您好：<br> 　　茲寄送您推薦有賞明細列表，請您核對。<br>若有疑問請洽Line@粉絲團客服，我們將竭誠為您服務。<br>普匯金融科技有限公司　敬上 <br><p style="color:red;font-size:14px;"></p>';
                 $this->load->library('sendemail');
-                $this->sendemail->email_file_estatement($user->email, $title, $content, $filepath, '', $investor, '推薦碼明細.xlsx');
+                $sent = $this->sendemail->email_file_estatement($user->email, $title, $content, $filepath, '', $investor, '推薦碼明細.xlsx');
                 unlink($filepath);
             }
             else
@@ -2705,6 +2709,6 @@ END:
             $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
         }
 
-        $this->response(array('result' => 'SUCCESS', 'data' => []));
+        $this->response(array('result' => 'SUCCESS', 'data' => ['sent' => $sent]));
     }
 }

@@ -119,7 +119,8 @@ class Spreadsheet_lib
 					$data_value = $this_data_row[$key];
 				}
 
-				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, DataType::TYPE_STRING);
+				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, $value['datatype'] ?? DataType::TYPE_STRING);
+
 
 				if (isset($value['alignment'])) {
 					$alignment = $sheet->getStyle($column_index . $row_index)->getAlignment();
