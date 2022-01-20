@@ -2340,10 +2340,15 @@ class Certification_lib{
 
 			// 通過實名時更新 subcode 綁定之 user
             $this->CI->load->model('user/user_subcode_model');
+            $this->CI->load->model('user/user_qrcode_model');
             $user = $this->CI->user_model->get_by(['id' => $info->user_id]);
             if (isset($user))
             {
-                $this->CI->user_subcode_model->update(['phone' => $user->phone, 'user_id' => 0], ['user_id' => $user->id]);
+                $subcode = $this->CI->user_subcode_model->get_by(['registered_id' => $content['id_number']]);
+                if (isset($subcode))
+                {
+                    $this->CI->user_qrcode_model->update_by(['id' => $subcode->user_qrcode_id], ['user_id' => $user->id]);
+                }
             }
 
             $rs = $this->user_meta_progress($data,$info);
