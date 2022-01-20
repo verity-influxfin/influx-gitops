@@ -89,6 +89,45 @@
 		return $rs;
 	}
 
+    function curl_get_statuscode($url, $data = array(), $header = array(), $timeout = NULL)
+    {
+        $curl = curl_init($url);
+        if (ENVIRONMENT == "production")
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        }
+        else
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); //不直接顯示回傳結果
+        if (isset($timeout))
+            curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+        if ( ! empty($data))
+        {
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        }
+
+        if ( ! empty($header))
+        {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        }
+
+        $rs = curl_exec($curl);
+        $return_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        $result = [
+            'code' => $return_code,
+            'response' => $rs
+        ];
+
+        return $result;
+    }
+
 	function alert($msg='', $url='', $second=0) {
 		if(empty($second)){
 			if(!empty($msg)) {
