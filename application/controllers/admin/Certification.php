@@ -158,23 +158,8 @@ class Certification extends MY_Admin_Controller {
 							if(isset($info_content['result'][$group_id])){
 								$report_data['type'] = 'person';
 								$report_data['data'] = $info_content['result'][$group_id];
-								// 還款力計算
-								// 薪資22倍
-								$report_data['data']['total_repayment'] = $info_content['total_repayment'];
-								// 投保金額
-								$report_data['data']['monthly_repayment'] = $info_content['monthly_repayment'];
-								// 借款總額是否小於薪資22倍
-								$report_data['data']['total_repayment_enough'] = $info_content['total_repayment_enough'];
-								// 每月還款是否小於投保金額
-								$report_data['data']['monthly_repayment_enough'] = $info_content['monthly_repayment_enough'];
 
-								// 負債比
-								if(isset($info_content['debt_to_equity_ratio'])) {
-									$report_data['data']['debt_to_equity_ratio'] = $info_content['debt_to_equity_ratio'];
-								}else
-									$report_data['data']['debt_to_equity_ratio'] = round(floatval($report_data['data']['totalMonthlyPayment']) / floatval($report_data['data']['monthly_repayment']) * 100, 2);
-
-								$convertToIntegerList = ['liabilities_totalAmount', 'total_repayment'];
+                                $convertToIntegerList = ['liabilities_totalAmount'];
 								foreach($convertToIntegerList as $key) {
 									preg_match('/(\d+[,]*)+/', $report_data['data'][$key], $regexResult);
 									if (!empty($regexResult)) {
@@ -208,6 +193,49 @@ class Certification extends MY_Admin_Controller {
 						$page_data['job_title'] = isset($cut[1]) ? preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0] : '' ;
 					}
 				}
+                elseif ($info->certification_id == CERTIFICATION_REPAYMENT_CAPACITY)
+                {
+                    $content = json_decode($info->content, TRUE);
+
+                    $data = [
+                        'long_assure_monthly_payment' => $content['longAssureMonthlyPayment'] ?? 0,
+                        'mid_assure_monthly_payment' => $content['midAssureMonthlyPayment'] ?? 0,
+                        'long_monthly_payment' => $content['longMonthlyPayment'] ?? 0,
+                        'mid_monthly_payment' => $content['midMonthlyPayment'] ?? 0,
+                        'short_monthly_payment' => $content['shortMonthlyPayment'] ?? 0,
+                        'student_loans_monthly_payment' => $content['studentLoansMonthlyPayment'] ?? 0,
+                        'credit_card_monthly_payment' => $content['creditCardMonthlyPayment'] ?? 0,
+                        'total_monthly_payment' => $content['totalMonthlyPayment'] ?? 0,
+                        'liabilities_without_assure_total_amount' => $content['liabilitiesWithoutAssureTotalAmount'] ?? 0,
+                        'monthly_repayment' => $content['monthly_repayment'] ?? 0,
+                        'total_repayment' => $content['total_repayment'] ?? 0,
+                        'monthly_repayment_enough' => $content['monthly_repayment_enough'] ?? '',
+                        'total_repayment_enough' => $content['total_repayment_enough'] ?? '',
+                    ];
+
+                    // 負債比
+                    if ( ! isset($content['debt_to_equity_ratio']))
+                    {
+                        if ( ! isset($content['totalMonthlyPayment']) || ! isset($content['monthly_repayment']))
+                        {
+                            $data['debt_to_equity_ratio'] = $content['debt_to_equity_ratio'] ?? 0;
+                        }
+                        else
+                        {
+                            $data['debt_to_equity_ratio'] = round(floatval($content['totalMonthlyPayment']) / floatval($content['monthly_repayment']) * 100, 2);
+                        }
+                    }
+                    else
+                    {
+                        $data['debt_to_equity_ratio'] = $content['debt_to_equity_ratio'] ?? 0;
+                    }
+
+                    $certification = $this->certification[$info->certification_id];
+                    $page_data = [
+                        'data' => $data,
+                        'certification_type' => $certification['name'],
+                    ];
+                }
 				// 獲取 ocr 相關資料
 				// to do : ocr table 需優化 index 與 clinet table view
 				$this->load->library('mapping/user/Certification_table');

@@ -123,95 +123,119 @@ class Data_verify_lib{
 			return $res;
 		}
 
-		/**
-		 * [check_credit_investigation 自然人聯徵信保標準檢核]
-		 * @param CertificationResult $verifiedResult [檢核結果]
-		 * @param  array $data [自然人聯徵 user meta]
-		 * @return CertificationResult [檢核結果]
-		 * (
-		 *  [status_code] => 1(通過)/2(退件)/3(轉人工)
-		 *  []error_message] => 不過件原因
-		 * )
-		 */
-		public function check_investigation(CertificationResult $verifiedResult, $data=[], $certification_content){
-			if($data['scoreComment'] < 450) {
-				$verifiedResult->addMessage('待人工驗證：信用評分低於 450 分', 3, MassageDisplay::Backend);
-			}
+    /**
+     * [check_credit_investigation 自然人聯徵信保標準檢核]
+     * @param CertificationResult $verifiedResult [檢核結果]
+     * @param array $data [自然人聯徵 user meta]
+     * @return CertificationResult [檢核結果]
+     * (
+     *  [status_code] => 1(通過)/2(退件)/3(轉人工)
+     *  []error_message] => 不過件原因
+     * )
+     */
+    public function check_investigation(CertificationResult $verifiedResult, $data = [], $certification_content)
+    {
+        if (isset($data['scoreComment']) && $data['scoreComment'] < 450)
+        {
+            $verifiedResult->addMessage('待人工驗證：信用評分低於 450 分', 3, MassageDisplay::Backend);
+        }
 
-			if($data['totalMonthlyPayment'] >= $certification_content['monthly_repayment']) {
-				$verifiedResult->addMessage('待人工驗證：總共月繳 >= 投保薪資', 3, MassageDisplay::Backend);
-			}
+        if (isset($data['totalMonthlyPayment']) && isset($certification_content['monthly_repayment']) &&
+            $data['totalMonthlyPayment'] >= $certification_content['monthly_repayment'])
+        {
+            $verifiedResult->addMessage('待人工驗證：總共月繳 >= 投保薪資', 3, MassageDisplay::Backend);
+        }
 
-			if($data['debt_to_equity_ratio'] > 100) {
-				$verifiedResult->addMessage('負債比計算 > 100%', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}else if($data['debt_to_equity_ratio'] >= 70) {
-				$verifiedResult->addMessage('待人工驗證：負債比計算 >= 70%', 3, MassageDisplay::Backend);
-			}
+        if (isset($data['debt_to_equity_ratio']) && $data['debt_to_equity_ratio'] > 100)
+        {
+            $verifiedResult->addMessage('負債比計算 > 100%', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
+        else if (isset($data['debt_to_equity_ratio']) && $data['debt_to_equity_ratio'] >= 70)
+        {
+            $verifiedResult->addMessage('待人工驗證：負債比計算 >= 70%', 3, MassageDisplay::Backend);
+        }
 
-			if(is_numeric($data['liabilitiesWithoutAssureTotalAmount']) && ($data['liabilitiesWithoutAssureTotalAmount']/1000) >= $certification_content['total_repayment']) {
-				$verifiedResult->addMessage('待人工驗證：借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
-			}
+        if (isset($data['liabilitiesWithoutAssureTotalAmount']) && isset($certification_content['total_repayment']) &&
+            is_numeric($data['liabilitiesWithoutAssureTotalAmount']) && ($data['liabilitiesWithoutAssureTotalAmount'] / 1000) >= $certification_content['total_repayment'])
+        {
+            $verifiedResult->addMessage('待人工驗證：借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
+        }
 
-			if($data['creditUtilizationRate'] > 100) {
-				$verifiedResult->addMessage('信貸額度動用率 > 100%', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}else if($data['creditUtilizationRate'] >= 80) {
-				$verifiedResult->addMessage('待人工驗證：負債比計算 >= 80%', 3, MassageDisplay::Backend);
-			}
+        if (isset($data['creditUtilizationRate']) && $data['creditUtilizationRate'] > 100)
+        {
+            $verifiedResult->addMessage('信貸額度動用率 > 100%', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
+        else if (isset($data['creditUtilizationRate']) && $data['creditUtilizationRate'] >= 80)
+        {
+            $verifiedResult->addMessage('待人工驗證：負債比計算 >= 80%', 3, MassageDisplay::Backend);
+        }
 
-			if($data['liabilities_badDebtInfo'] != '無') {
-				$verifiedResult->addMessage('有借款餘額、催收或呆帳紀錄', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+        if (isset($data['liabilities_badDebtInfo']) && $data['liabilities_badDebtInfo'] != '無')
+        {
+            $verifiedResult->addMessage('有借款餘額、催收或呆帳紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
 
-			if($data['repaymentDelay'] != '無') {
-				$verifiedResult->addMessage('有借款延遲記錄', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+        if (isset($data['repaymentDelay']) && $data['repaymentDelay'] != '無')
+        {
+            $verifiedResult->addMessage('有借款延遲記錄', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
 
-			if($data['creditLogCount'] < 1) {
-				$verifiedResult->addMessage('待人工驗證：無信用記錄', 3, MassageDisplay::Backend);
-			}
+        if (isset($data['creditLogCount']) && $data['creditLogCount'] < 1)
+        {
+            $verifiedResult->addMessage('待人工驗證：無信用記錄', 3, MassageDisplay::Backend);
+        }
 
-			if($data['creditCardUseRate'] > 90) {
-				$verifiedResult->addMessage('近一個月信用卡使用率 > 90%', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}else if($data['creditCardUseRate'] >= 70) {
-				$verifiedResult->addMessage('待人工驗證：90% >= 近一個月信用卡使用率 >= 70%', 3, MassageDisplay::Backend);
-			}
+        if (isset($data['creditCardUseRate']) && $data['creditCardUseRate'] > 90)
+        {
+            $verifiedResult->addMessage('近一個月信用卡使用率 > 90%', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
+        else if (isset($data['creditCardUseRate']) && $data['creditCardUseRate'] >= 70)
+        {
+            $verifiedResult->addMessage('待人工驗證：90% >= 近一個月信用卡使用率 >= 70%', 3, MassageDisplay::Backend);
+        }
 
-			if($data['delayLessMonth'] > 1) {
-				$verifiedResult->addMessage('延遲未滿一個月次數 > 1', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+        if (isset($data['delayLessMonth']) && $data['delayLessMonth'] > 1)
+        {
+            $verifiedResult->addMessage('延遲未滿一個月次數 > 1', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
 
-			if($data['delayMoreMonth'] > 0) {
-				$verifiedResult->addMessage('延遲超過一個月次數 > 0', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+        if (isset($data['delayMoreMonth']) && $data['delayMoreMonth'] > 0)
+        {
+            $verifiedResult->addMessage('延遲超過一個月次數 > 0', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
 
-			if($data['creditCardHasBadDebt'] != '無') {
-				$verifiedResult->addMessage('有信用卡催收、呆帳紀錄', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+        if (isset($data['creditCardHasBadDebt']) && $data['creditCardHasBadDebt'] != '無')
+        {
+            $verifiedResult->addMessage('有信用卡催收、呆帳紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
 
-			if($data['checkingAccount_largeAmount'] != '無') {
-				$verifiedResult->addMessage('有大額存款不足退票資訊紀錄', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+        if (isset($data['checkingAccount_largeAmount']) && $data['checkingAccount_largeAmount'] != '無')
+        {
+            $verifiedResult->addMessage('有大額存款不足退票資訊紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
 
-			if($data['checkingAccount_rejectInfo'] != '無') {
-				$verifiedResult->addMessage('有票據拒絕往來資訊紀錄', 2, MassageDisplay::Backend);
-				$verifiedResult->setBanResubmit();
-			}
+        if (isset($data['checkingAccount_rejectInfo']) && $data['checkingAccount_rejectInfo'] != '無')
+        {
+            $verifiedResult->addMessage('有票據拒絕往來資訊紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->setBanResubmit();
+        }
 
-			if($data['S1Count'] >= 3) {
-				$verifiedResult->addMessage('待人工驗證：被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MassageDisplay::Backend);
-			}
+        if (isset($data['S1Count']) && $data['S1Count'] >= 3)
+        {
+            $verifiedResult->addMessage('待人工驗證：被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MassageDisplay::Backend);
+        }
 
-			return $verifiedResult;
-		}
+        return $verifiedResult;
+    }
 
 		/**
 		 * [check_job 工作認證過件檢核]
