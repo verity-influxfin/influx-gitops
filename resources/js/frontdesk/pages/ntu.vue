@@ -116,7 +116,10 @@
         </div>
         <div class="d-flex justify-content-center">
           <img src="../asset/images/彩虹.svg" class="img-moon" alt="" />
-          <img src="../asset/images/活動單位.svg" class="img-text-2" />
+          <div class="active-title">
+            <div>台大兒醫普匯希望</div>
+            <div>聯合勸募活動</div>
+          </div>
         </div>
         <div class="title-dot-down">
           <div
@@ -127,24 +130,47 @@
           <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
           <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
         </div>
-        <div class="fund">
-          <img
-            src="../asset/images/fund.png"
-            class="fund-img"
-            alt="財團法人台大兒童基金會"
-          />
-        </div>
         <div class="fund-text">
+          <p>你我的小小舉動，燃起孩子們的大大希望！</p>
           <p>
-            財團法人台大兒童基金會以提昇兒童健康福祉為宗旨，
-            希望經由您的支持，提升兒童醫院之最佳醫療服務。
+            本次活動由「台大兒童健康基金會」與「普匯金融科技公司」
+            聯手，推出「線上勸募系統」，希望可以透過金融科技幫助
+            更多孩童獲得醫療資源，您的一份小愛心，可以換取孩童 健康未來！
           </p>
-          <div>致力推動下列事項：</div>
-          <div>一、協助兒童醫院提昇最佳醫療。</div>
-          <div>二、發展兒童醫療研究、使醫療得以創新與精進。</div>
-          <div>三、協助培育兒童醫療人才。</div>
-          <div>四、促進社會人士對兒童醫療及兒童健康之關懷。</div>
-          <div>五、辦理其他提昇兒童健康事項。</div>
+          <p>2月10日 與您一起守護兒童！一起成為孩童的守護天使！</p>
+          <div class="dashed"></div>
+        </div>
+        <div class="physical">
+          <div class="physical-title-text">
+            <div>臺大兒童健康基金會 X 普匯金融科技 X 張鈞甯</div>
+            <div>ESG聯合勸募 慈善樂捐活動</div>
+          </div>
+          <div class="row no-gutters">
+            <div class="col physical-info-text">
+              <div>日期：2022年02月10日</div>
+              <div>時間：下午2:00-3:30</div>
+              <div class="hint">(1:30開放進場)</div>
+              <div>地點：臺大醫院國際會議中心</div>
+              <div class="hint">(台北市中正區徐州路2號3樓301廳)</div>
+            </div>
+            <div class="col">
+              <div class="go-apply">
+                <div class="go-donate-title">我要報名</div>
+                <div class="divider"></div>
+                <div class="img-rocket"></div>
+                <img class="img-rocket" src="~images/NTUCH02F.png" alt="" />
+                <div>
+                  <img class="img-heart" src="~images/愛心.svg" />
+                </div>
+                <a
+                  class="btn btn-outline go-donate-button"
+                  href="https://forms.gle/onW2ttbP6AftWXkC8"
+                  target="_blank"
+                  >報名去</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-auto">
@@ -175,22 +201,53 @@
           <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
           <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
         </div>
-        <div class="donate-text">
-          <p>普匯收到您的善款</p>
-          <p>
-            立即轉付「財團法人台大兒童健康基金會」，捐款成功後
-            您將收到該基金會致贈的「電子感謝狀」及「紙本收據」，
-            非常感謝您的善心善行！
-          </p>
+        <div class="donate-step">
+          <div class="step-item">
+            <div>步驟1：</div>
+            <div>下載並註冊</div>
+            <div>「普匯投資APP」</div>
+          </div>
+          <div class="step-item">
+            <div>步驟2：</div>
+            <div>選取</div>
+            <div>「台大兒童健康基金會」</div>
+            <div>愛心勸募捐款</div>
+          </div>
+          <div class="step-item">
+            <div>步驟3：</div>
+            <div>選擇捐贈金額</div>
+            <div>確認送出</div>
+          </div>
+          <div class="step-item">
+            <div>步驟4：</div>
+            <div>金額同步入帳</div>
+            <div>基金會</div>
+          </div>
+          <div class="step-item">
+            <div>步驟5：</div>
+            <div>獲得</div>
+            <div>聯合勸募感謝函</div>
+          </div>
+          <div class="step-item">
+            <div>步驟6：</div>
+            <div>將收到</div>
+            <div>基金會開立之</div>
+            <div>捐款收據</div>
+          </div>
+        </div>
+        <div class="donate-info">
+          <div>所有捐款全數入帳基金會幫助兒童健康</div>
+          <div class="hint">普匯免費提供平台服務</div>
         </div>
         <div class="go-donate-out">
           <div class="go-donate">
-            <img class="go-donate-title" src="../asset/images/具名捐款.svg" />
+            <div class="go-donate-title">具名捐款</div>
+            <div class="divider"></div>
             <img class="go-donate-text" src="../asset/images/愛心.svg" />
             <img class="go-donate-bird" src="../asset/images/NTUCHbird.png" />
             <div class="go-donate-text"></div>
             <router-link to="/investLink" target="_blank">
-              <div class="go-donate-button"></div>
+              <div class="go-donate-button">捐款去</div>
             </router-link>
           </div>
         </div>
@@ -214,7 +271,7 @@ export default {};
 
 <style lang="scss" scoped>
 .main-content {
-  background-image: url("../asset/images/ntu-bg.jpg");
+  background-image: url('../asset/images/ntu-bg.jpg');
   padding-bottom: 50px;
 }
 .banner {
@@ -230,6 +287,18 @@ export default {};
   margin-left: auto;
   margin-right: auto;
 }
+.dashed {
+  width: 100%;
+  height: 2px;
+  background-image: linear-gradient(
+    to right,
+    #7d7d7d 0%,
+    #7d7d7d 50%,
+    transparent 50%
+  );
+  background-size: 30px 2px;
+  background-repeat: repeat-x;
+}
 .title-text {
   color: rgba($color: #fff, $alpha: 0);
   background: linear-gradient(to right, #1e2973 0%, #319acf 50%, #1e2973 75%);
@@ -243,7 +312,6 @@ export default {};
 .content-text {
   padding: 0 15px;
   margin: 62.5px 90px 65px 0;
-  font-family: NotoSansTC;
   font-size: 30px;
   font-weight: 500;
   font-stretch: normal;
@@ -261,14 +329,13 @@ export default {};
   .yt-top-icon {
     width: 76px;
     height: 76px;
-    background-image: url("../asset/images/NTUCH02F.png");
+    background-image: url('../asset/images/NTUCH02F.png');
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center center;
   }
   .yt-top-text {
     margin: 0 24px;
-    font-family: NotoSansTC;
     font-size: 30px;
     font-weight: 500;
     font-stretch: normal;
@@ -279,7 +346,6 @@ export default {};
     color: #0085c4;
   }
   .yt-top-donate {
-    font-family: NotoSansTC;
     font-size: 34px;
     font-weight: normal;
     font-stretch: normal;
@@ -320,6 +386,17 @@ export default {};
 .dinosaurs-text {
   margin: 0 0 0 40px;
 }
+.active-title {
+  margin-left: 20px;
+  font-size: 34px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.24;
+  letter-spacing: 1.7px;
+  text-align: center;
+  color: #0666b2;
+}
 .fund {
   display: flex;
   justify-content: center;
@@ -328,8 +405,7 @@ export default {};
   position: relative;
   margin: 0 auto 63px;
   padding: 0 15px;
-  max-width: 535px;
-  font-family: NotoSansTC;
+  max-width: 565px;
   font-size: 20px;
   font-weight: normal;
   font-stretch: normal;
@@ -344,24 +420,136 @@ export default {};
     right: -235px;
   }
 }
+.physical {
+  .physical-title-text {
+    margin-bottom: 25px;
+    font-size: 26.2px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.6;
+    letter-spacing: 1.31px;
+    text-align: center;
+    color: #000;
+  }
+  .physical-info-text {
+    font-size: 20px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.2;
+    letter-spacing: 1px;
+    text-align: left;
+    color: #7d7d7d;
+  }
+  .hint {
+    padding-left: 60px;
+    font-size: 12.5px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: 0.63px;
+    text-align: left;
+    color: #7d7d7d;
+  }
+  .go-apply {
+    position: relative;
+    background-image: url('~images/donate-apply-bg.webp');
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 261px;
+    height: 170px;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .go-donate-title {
+      margin: 8px 0;
+      transform: rotate(-8deg);
+      font-size: 22px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 0.94;
+      letter-spacing: 0.85px;
+      text-align: center;
+      color: #036eb7;
+    }
+    .divider {
+      width: 80%;
+      margin-top: 4px;
+      border-bottom: 1.5px solid #d4d4d4;
+      transform: rotate(-8deg);
+    }
+    .go-donate-text {
+      transform: rotate(-8deg);
+    }
+    .img-heart {
+      margin-top: 8px;
+      width: 80px;
+      text-align: center;
+    }
+    .img-rocket {
+      position: absolute;
+      width: 70px;
+      left: 10px;
+      top: 50%;
+    }
+    .go-donate-button {
+      margin: 8px 0 0 0;
+      transform: rotate(-8deg);
+      border: #585858 1px solid;
+      border-radius: 25px;
+      padding: 6px 10px;
+      font-size: 17px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 0.94;
+      letter-spacing: 0.85px;
+      text-align: left;
+      color: #585858;
+    }
+  }
+}
 .organizer {
   margin: 80px 0;
   grid-column-gap: 120px;
 }
-.donate-text {
-  position: relative;
-  margin: 0 auto 52px;
-  padding: 0 15px;
-  max-width: 578px;
-  font-family: NotoSansTC;
+.donate-step {
+  display: grid;
+  grid-template-columns: repeat(3, 160px);
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+  .step-item {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='rgb(64,64,64)' stroke-width='3' stroke-dasharray='4%2c10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    border-radius: 32px;
+    border-radius: 20px;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.73;
+    letter-spacing: 0.75px;
+    text-align: center;
+    color: #000;
+  }
+}
+.donate-info {
+    margin: 15px 0;
   font-size: 20px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
-  line-height: 1.4;
+  line-height: 1.8;
   letter-spacing: 1px;
-  text-align: left;
+  text-align: center;
   color: #000;
+  .hint {
+    color: #0666b2;
+  }
 }
 .go-donate-out {
   position: relative;
@@ -384,38 +572,59 @@ export default {};
 }
 .go-donate {
   position: relative;
-  background-image: url("../asset/images/紙條.png");
+  background-image: url('~images/go-donate-bg.webp');
   background-size: cover;
   background-repeat: no-repeat;
-  margin: 0 auto 50px;
-  width: 520px;
-  height: 330px;
+  margin: 20px auto;
+  width: 327px;
+  height: 216px;
   padding: 20px 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
   .go-donate-title {
     margin: 10px 0;
-    transform: rotate(-1deg);
-    width: 225px;
+    transform: rotate(-8deg);
+    font-size: 22px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 0.94;
+    letter-spacing: 0.85px;
+    text-align: center;
+    color: #036eb7;
+  }
+  .divider {
+    width: 80%;
+    margin-top: 4px;
+    border-bottom: 1.5px solid #d4d4d4;
+    transform: rotate(-8deg);
   }
   .go-donate-text {
     transform: rotate(-3deg);
+    margin-top: 10px;
+    width: 80px;
   }
   .go-donate-bird {
     position: absolute;
-    height: 150px;
-    left: -20px;
-    top: 140px;
+    height: 90px;
+    left: -15px;
+    top: 90px;
   }
   .go-donate-button {
-    margin: 15px 0 0 15px;
-    transform: rotate(-1deg);
-    height: 60px;
-    width: 180px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-image: url("../asset/images/捐款去.svg");
+    margin: 10px 0 0 0;
+    transform: rotate(-8deg);
+    border: #585858 1px solid;
+    border-radius: 25px;
+    padding: 6px 10px;
+    font-size: 17px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 0.94;
+    letter-spacing: 0.85px;
+    text-align: left;
+    color: #585858;
   }
 }
 .img-text-1 {
@@ -476,14 +685,13 @@ export default {};
     .yt-top-icon {
       width: 46px;
       height: 46px;
-      background-image: url("../asset/images/NTUCH02F.png");
+      background-image: url('../asset/images/NTUCH02F.png');
       background-repeat: no-repeat;
       background-size: contain;
       background-position: center center;
     }
     .yt-top-text {
       margin: 0 6px;
-      font-family: NotoSansTC;
       font-size: 18px;
     }
     .yt-top-donate {
@@ -513,7 +721,7 @@ export default {};
   }
   .fund-text {
     width: 300px;
-    margin: 0 auto 40px;
+    margin: 0 auto 20px;
     font-size: 14px;
     .img-dec-1 {
       width: 150px;
@@ -521,6 +729,7 @@ export default {};
       right: -50px;
     }
   }
+
   .donate-text {
     margin: 0 auto;
     width: 300px;
