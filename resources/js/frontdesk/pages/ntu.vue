@@ -265,7 +265,7 @@
           ></div>
         </div>
         <div class="d-flex justify-content-center envoy-title">
-          <img src="~images/candy.png" alt="" />
+          <img class="img-icon" src="~images/candy.png" alt="" />
           <div class="active-title">
             <div>台大兒醫普匯希望</div>
             <div>公益愛心大使</div>
@@ -289,13 +289,13 @@
             <div class="mb-3">#熱心公益</div>
             <div class="mb-3">
               集陽光、知性、美於一身，出道以來 擁有許多膾炙人口的代表作，收穫廣
-              大粉絲的喜愛。而私下的她，長期關 注社會議題 , 對於公益活動，都是大
-              力響應。
+              大粉絲的喜愛。而私下的她，長期關 注社會議題 , 對於公益活動，
+              都是大力響應。
             </div>
             <div>
               此次擔任「台大兒醫普匯希望 聯合 勸募公益活動」愛心大使，想透過
-              自己向社會傳遞溫暖與正能量，同 時也號召更多善心人士，一同為孩
-              子出一份力！
+              自己向社會傳遞溫暖與正能量，同 時也號召更多善心人士，
+              一同為孩子出一份力！
             </div>
           </div>
           <img
@@ -316,7 +316,7 @@
           ></div>
         </div>
         <div class="d-flex justify-content-center envoy-title">
-          <img src="~images/法杖.png" alt="" />
+          <img class="img-icon" src="~images/法杖.png" alt="" />
           <div class="active-title">
             <div>台大兒醫普匯希望</div>
             <div>活動主持人</div>
@@ -390,8 +390,8 @@ export default {};
   margin-left: auto;
   margin-right: auto;
 }
-.page-title-1{
-    margin-right: 110px;
+.page-title-1 {
+  margin-right: 110px;
 }
 .dashed {
   width: 100%;
@@ -503,9 +503,9 @@ export default {};
   text-align: center;
   color: #0666b2;
 }
-.organizer-title{
-    margin-right: 84px;
-    margin-bottom: 10px;
+.organizer-title {
+  margin-right: 84px;
+  margin-bottom: 10px;
 }
 .fund {
   display: flex;
@@ -634,8 +634,7 @@ export default {};
   gap: 14px;
   .step-item {
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='rgb(64,64,64)' stroke-width='3' stroke-dasharray='4%2c10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
-    border-radius: 32px;
-    border-radius: 20px;
+    border-radius: 18px;
     padding: 15px;
     font-size: 15px;
     font-weight: normal;
@@ -661,8 +660,8 @@ export default {};
     color: #0666b2;
   }
 }
-.how-title{
-    margin-right: 90px;
+.how-title {
+  margin-right: 90px;
 }
 .go-donate-out {
   position: relative;
@@ -766,9 +765,9 @@ export default {};
 .envoy {
   width: 575px;
   margin-bottom: 30px;
-  .envoy-title{
-      margin-right: 84px;
-      margin-bottom: 10px;
+  .envoy-title {
+    margin-right: 84px;
+    margin-bottom: 10px;
   }
   .envoy-intro {
     position: relative;
@@ -827,6 +826,13 @@ export default {};
 .footer-img {
   max-width: 100%;
 }
+@media screen and (max-width: 1300px) {
+  .img-whale {
+    width: 200px;
+    right: -30px;
+    top: -10px;
+  }
+}
 @media screen and (max-width: 944px) {
   .banner {
     margin-top: 40px;
@@ -849,6 +855,9 @@ export default {};
   .banner {
     margin-top: 0;
     margin-bottom: 30px;
+  }
+  .page-title-1 {
+    margin-right: 0;
   }
 
   .yt-top {
@@ -890,17 +899,75 @@ export default {};
     margin: 30px 0;
     padding: 0 10px;
   }
+  .organizer-title {
+    margin-right: 0;
+  }
+  .active-title {
+    font-size: 24px;
+  }
+  .physical {
+    .physical-title-text {
+      margin-bottom: 25px;
+      font-size: 18px;
+    }
+    .physical-info-text {
+      font-size: 16px;
+    }
+    .hint {
+      padding-left: 50px;
+    }
+    .go-apply {
+      .go-donate-title {
+        font-size: 16px;
+      }
+      .img-heart {
+        width: 60px;
+      }
+      .img-rocket {
+        position: absolute;
+        width: 70px;
+        left: 10px;
+        top: 50%;
+      }
+      .go-donate-button {
+        font-size: 15px;
+      }
+    }
+  }
   .fund-img {
     width: 210px;
   }
   .fund-text {
     width: 300px;
     margin: 0 auto 20px;
-    font-size: 14px;
+    font-size: 16px;
     .img-dec-1 {
       width: 150px;
       top: 50px;
       right: -50px;
+    }
+  }
+  .donate-step {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr 1fr 1fr;
+    .step-item {
+      padding: 10px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  }
+  .donate-info {
+    margin: 15px 0;
+    font-size: 20px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.8;
+    letter-spacing: 1px;
+    text-align: center;
+    color: #000;
+    .hint {
+      color: #0666b2;
     }
   }
 
@@ -918,6 +985,9 @@ export default {};
       right: -55px;
       bottom: 7px;
     }
+  }
+  .how-title {
+    margin-right: 0;
   }
   .go-donate-out {
     .img-dec-4 {
@@ -947,22 +1017,54 @@ export default {};
     height: 210px;
     width: 300px;
     .go-donate-title {
-      margin: 0;
       width: 145px;
-    }
-    .go-donate-text {
-      height: 60px;
     }
     .go-donate-bird {
       height: 80px;
-      left: -28px;
-      top: 100px;
+      left: -10px;
+      top: 90px;
     }
-
     .go-donate-button {
       margin: 5px 0 0 5px;
-      height: 50px;
-      width: 130px;
+    }
+  }
+  .envoy {
+    max-width: 95%;
+    margin: 0 12px;
+    .envoy-title {
+      .img-icon{
+          width: 65px;
+      }
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+    .envoy-intro {
+      width: 75%;
+      padding: 15px;
+      .envoy-intro-title {
+        font-size: 20px;
+        line-height: 1.5;
+      }
+      .envoy-intro-name {
+        font-size: 22px;
+        line-height: 1.6;
+      }
+      .envoy-intro-text {
+        max-width: 175px;
+        font-size: 14px;
+      }
+      .envoy-portrait {
+        top: 20px;
+        right: -165px;
+        height: 420px;
+      }
+      .host-portrait {
+        position: absolute;
+        top: 30px;
+        right: -115px;
+        height: 380px;
+        width: 200px;
+      }
     }
   }
 }
