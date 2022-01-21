@@ -1985,7 +1985,7 @@ class Certification extends REST_Controller {
                     ]);
                     if (empty($get_data))
                     {
-                        $initialize_id = $this->social_initialize($user_id, $investor);
+                        $initialize_id = $this->social_initialize($user_id, $investor, CERTIFICATION_SOCIAL_INTELLIGENT);
                         $content = [
                             'facebook' => '',
                             'instagram' => $info,
@@ -4180,14 +4180,16 @@ class Certification extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED_EMAIL ));
         }
 	}
-	private function social_initialize($user_id,$investor){
+
+    private function social_initialize($user_id, $investor, $certification_id = CERTIFICATION_SOCIAL)
+    {
         $content = [
 			'facebook' => '',
 			'instagram' => '',
         ];
         $param	= [
 			'user_id'			=> $user_id,
-			'certification_id'	=> 4,
+			'certification_id'	=> $certification_id,
 			'investor'			=> $investor,
 			'content'			=> json_encode($content),
             'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
