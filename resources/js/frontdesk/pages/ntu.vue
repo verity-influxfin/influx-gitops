@@ -146,14 +146,14 @@
             <div>ESG聯合勸募 慈善樂捐活動</div>
           </div>
           <div class="row no-gutters">
-            <div class="col physical-info-text">
+            <div class="col-sm col-12  physical-info-text">
               <div>日期：2022年02月10日</div>
               <div>時間：下午2:00-3:30</div>
               <div class="hint">(1:30開放進場)</div>
               <div>地點：臺大醫院國際會議中心</div>
               <div class="hint">(台北市中正區徐州路2號3樓301廳)</div>
             </div>
-            <div class="col">
+            <div class="col-sm col-12 d-flex d-sm-block justify-content-center">
               <div class="go-apply">
                 <div class="go-donate-title">我要報名</div>
                 <div class="divider"></div>
@@ -289,13 +289,13 @@
             <div class="mb-3">#熱心公益</div>
             <div class="mb-3">
               集陽光、知性、美於一身，出道以來 擁有許多膾炙人口的代表作，收穫廣
-              大粉絲的喜愛。而私下的她，長期關 注社會議題 , 對於公益活動，
+              大粉絲的喜愛。而私下的她，長期關注社會議題，對於公益活動，
               都是大力響應。
             </div>
             <div>
-              此次擔任「台大兒醫普匯希望 聯合 勸募公益活動」愛心大使，想透過
-              自己向社會傳遞溫暖與正能量，同 時也號召更多善心人士，
-              一同為孩子出一份力！
+              此次擔任「台大兒醫普匯希望聯合募公益活動」愛心大使，
+              想透過自己向社會傳遞溫暖與正能量，
+              同時也號召更多善心人士，一同為孩子出一份力！
             </div>
           </div>
           <img
@@ -339,13 +339,13 @@
             <div>#二寶媽</div>
             <div class="mb-3">#熱心公益</div>
             <div class="mb-3">
-              早期以旅遊節目嶄露頭角，而後主持 兒童少年節目，近期在戲劇影視方面
-              榮獲多項金鐘獎！ 私下的她，有著幽默風趣的個性，也
-              經常關注孩子議題，如今身為二寶 媽，更是在乎每個孩子的成長。
+              早期以旅遊節目嶄露頭角，而後主持兒童少年節目，近期在戲劇影視方面
+              榮獲多項金鐘獎！私下的她，有著幽默風趣的個性也經常關注孩子議題，
+              如今身為二寶媽，更是在乎每個孩子的成長。
             </div>
             <div>
-              此次擔任「台大兒醫普匯希望 聯合 勸募公益活動」主持人，也想盡自
-              己的最大力量，幫助更多孩童重拾 希望！
+              此次擔任「台大兒醫普匯希望聯合勸募公益活動」主持人，
+              也想盡自己的最大力量，幫助更多孩童重拾希望！
             </div>
           </div>
           <img
@@ -911,6 +911,8 @@ export default {};
       font-size: 18px;
     }
     .physical-info-text {
+      margin-bottom: 10px;
+      margin-left: 20px;
       font-size: 16px;
     }
     .hint {
@@ -1032,8 +1034,8 @@ export default {};
     max-width: 95%;
     margin: 0 12px;
     .envoy-title {
-      .img-icon{
-          width: 65px;
+      .img-icon {
+        width: 65px;
       }
       margin-right: 0;
       margin-bottom: 10px;
