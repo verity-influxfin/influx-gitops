@@ -4,6 +4,7 @@ import transfer from "../pages/transfer";
 import qa from "../pages/qa";
 import company from "../pages/company";
 import news from "../pages/news";
+import ntu from "../pages/ntu"
 import blog from "../pages/blog";
 import vlog from "../pages/vlog";
 import videoPage from '../pages/videoPage';
@@ -18,6 +19,7 @@ import firmCooperation from '../pages/firmCooperation';
 import companyCooperation from '../pages/companyCooperation';
 import register from '../pages/register';
 import myInvestment from '../pages/myInvestment';
+import promoteCode from '../pages/promoteCode.vue'
 import debt from '../pages/debt';
 import closedcase from '../pages/closedcase';
 import detail from '../pages/detail';
@@ -80,6 +82,7 @@ let routers = [
             { path: '/myrepayment', component: myrepayment }
         ]
     },
+    { path: '/promoteCode', component: promoteCode},
     {
         path: '/business-loan',
         component: businessIndex,
@@ -135,7 +138,8 @@ let routers = [
     { path: '/scsbank', component: scsbank },
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
-    { path: '/search', name: 'search', component: search },
+    {path:'/charitable',component:ntu},
+    { path: '/search',name:'search', component: search }
 ];
 
 export default routers;

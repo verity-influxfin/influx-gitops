@@ -91,7 +91,6 @@ Route::post('/resetPassword', 'Accountcontroller@resetPassword');
 
 Route::post('/doRegister', 'Accountcontroller@doRegister');
 
-
 //Membercentre
 
 
@@ -119,7 +118,7 @@ Route::post('/getRecoveriesInfo', 'Membercentrecontroller@getRecoveriesInfo');
 
 Route::get('/downloadStatement', 'Membercentrecontroller@downloadStatement');
 
-
+Route::get('/getPromoteCode', 'Membercentrecontroller@getPromoteCode');
 // backstage
 
 
