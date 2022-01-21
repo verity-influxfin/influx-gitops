@@ -2623,9 +2623,9 @@ class Certification_lib{
             }
             if (isset($content['meta']))
             {
-                isset($content['meta']['follow_count']) ? $data['meta_follow_count'] = $content['meta']['follow_count'] : '';
-                isset($content['meta']['posts_in_3months']) ? $data['meta_posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
-                isset($content['meta']['key_word']) ? $data['meta_key_word'] = $content['meta']['key_word'] : '';
+                isset($content['meta']['follow_count']) ? $data['follow_count'] = $content['meta']['follow_count'] : '';
+                isset($content['meta']['posts_in_3months']) ? $data['posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
+                isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
             }
 
 
