@@ -2259,7 +2259,7 @@ END:
 
         $where = ['user_id' => $user_id, 'status' => [PROMOTE_STATUS_AVAILABLE, PROMOTE_STATUS_PENDING_TO_SENT, PROMOTE_STATUS_PENDING_TO_VERIFY],
             'subcode_flag' => IS_NOT_PROMOTE_SUBCODE];
-        //$userQrcode = $this->user_lib->getPromotedRewardInfo($where);
+
         $userQrcode = $this->qrcode_lib->get_promoted_reward_info($where);
         if (isset($userQrcode) && ! empty($userQrcode))
         {

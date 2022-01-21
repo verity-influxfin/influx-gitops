@@ -498,7 +498,7 @@ class User_lib {
 
             $this->CI->user_qrcode_model->trans_begin();
             $this->CI->qrcode_reward_model->trans_begin();
-            //$info = $this->getPromotedRewardInfo(['id' => $qrcode['id']], $startTime, $endTime, 0, 0, TRUE);
+
             $info = $this->CI->qrcode_lib->get_promoted_reward_info(['id' => $qrcode['id']], $startTime, $endTime, 0, 0, TRUE);
 
             try

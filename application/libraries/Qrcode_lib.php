@@ -516,7 +516,6 @@ class Qrcode_lib
     public function get_promoted_reward_info(array $where, string $start_date = '', string $end_date = '', int $limit = 0, int $offset = 0, bool $filter_delayed = FALSE, bool $merge_subcode = TRUE): array
     {
         $this->CI->load->library('user_lib');
-        $where = [];
 
         $main_qrcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where, $start_date, $end_date, $limit, $offset, $filter_delayed);
         if (empty($main_qrcode_reward_list))
@@ -532,7 +531,7 @@ class Qrcode_lib
         $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
         if ( ! empty($subcode_list))
         {
-            $where['id'] = array_keys($subcode_list);
+            $where = ['id' => array_keys($subcode_list)];
         }
         $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
             $start_date, $end_date, $limit, $offset, $filter_delayed);
