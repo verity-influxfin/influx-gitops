@@ -297,13 +297,22 @@
                                                             case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
                                                             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
                                                             case CERTIFICATION_STATUS_AUTHENTICATED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_SUCCEED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-' . $status . '' . $sys_check . ' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_FAILED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-danger' . $sys_check . ' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                }
                                                                 break;
                                                             default:
                                                                 break;
@@ -371,6 +380,7 @@
                                     }
                                 }
                                 ?>
+                                <th>授信審核表</th>
                                 <?if(isset($input['investor']) && $input['investor'] != 1){?>
                                     <th>退件</th>
                                 <?}?>
@@ -523,16 +533,28 @@
                                                             case CERTIFICATION_STATUS_PENDING_TO_VALIDATE:
                                                             case CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION:
                                                             case CERTIFICATION_STATUS_AUTHENTICATED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_SUCCEED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-'.$status.''.$sys_check.' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-' . $status . '' . $sys_check . ' nhide"><i class="fa fa-check"></i></button></a><span class="sword" style="display:none">完成</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_FAILED:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" ><button type="button" class="btn btn-danger'.$sys_check.' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" ><button type="button" class="btn btn-danger' . $sys_check . ' nhide"><i class="fa fa-times"></i></button></a><span class="sword" style="display:none">已退回</span>';
+                                                                }
                                                                 break;
                                                             case CERTIFICATION_STATUS_PENDING_TO_REVIEW:
-                                                                echo '<a target="_blank" href="'.admin_url('certification/user_bankaccount_edit?id='.$value->bank_account->id).'" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                if(isset($value->bank_account->id))
+                                                                {
+                                                                    echo '<a target="_blank" href="' . admin_url('certification/user_bankaccount_edit?id=' . $value->bank_account->id) . '" class="btn btn-default btn-md nhide" >驗證</a><span class="sword" style="display:none">可驗證</span>';
+                                                                }
                                                                 break;
                                                             default:
                                                                 break;
@@ -562,6 +584,7 @@
                                             }
                                         }
                                         ?>
+                                        <td><a target="_blank" href="<?=admin_url('creditmanagement/report')."?type=person&target_id=".$value->id ?>" class="btn btn-default">查看</a></td>
                                         <? if(isset($input['investor']) && $input['investor'] != 1){?>
                                             <td><button class="btn btn-outline btn-danger" onclick="failed(<?=isset($value->id)?$value->id:"" ?>,'<?=isset($value->target_no)?$value->target_no:"" ?>');" >退件</button></td>
                                         <?}?>

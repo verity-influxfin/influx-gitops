@@ -162,6 +162,10 @@ N                                                <?
                                             <p class="form-control-static"><? echo $reason != '' ? $reason : "未填寫"; ?></p>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td><p class="form-control-static">授信審核表</p></td>
+                                        <td><a target="_blank" href="<?=admin_url('creditmanagement/report')."?type=person&target_id=" . $data->id ?? "";  ?>" class="btn btn-default">查看</a></td>
+                                    </tr>
                                     <? if ($data->order_id == 0) { ?>
                                         <tr>
                                             <td><p class="form-control-static">簽約照片</p></td>
