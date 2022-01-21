@@ -1104,6 +1104,7 @@ class Certification_data
     {
         $res = [
             'printDatetime' => '',
+            'totalAmountQuota' => 0,
             'longAssureMonthlyPayment' => 0,
             'midAssureMonthlyPayment' => 0,
             'longMonthlyPayment' => 0,
@@ -1188,6 +1189,10 @@ class Certification_data
                 {
                     continue;
                 }
+
+                // 訂約金額總額度
+                $res['totalAmountQuota'] += $value['totalAmount'];
+
                 if ($value['accountDescription'] == '短期放款' || $value['accountDescription'] == '其他短期放款')
                 {
                     $total_amount_short += $value['totalAmount'];

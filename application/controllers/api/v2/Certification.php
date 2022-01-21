@@ -2155,18 +2155,6 @@ class Certification extends REST_Controller {
 			);
 			$insert = $this->user_certification_model->insert($param);
 
-            if ((int) $investor === 0)
-            {
-                // 還款力計算
-                $this->user_certification_model->insert([
-                    'user_id' => $user_id,
-                    'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
-                    'investor' => 0,
-                    'content' => json_encode([]),
-                    'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
-                ]);
-            }
-
 			if($insert){
 			    if($send_mail){
                     $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));

@@ -3395,6 +3395,8 @@ class Certification_lib{
 							$this->set_failed($value->id,'未在有效時間內完成認證');
 						}
 						break;
+                    case CERTIFICATION_REPAYMENT_CAPACITY:
+                        break;
 					default:
 						$this->verify($value);
 						break;
@@ -3402,6 +3404,17 @@ class Certification_lib{
 				$count++;
 			}
 		}
+
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([0]);
+        foreach ($user_lists as $user)
+        {
+            $info_repayment_capacity = $this->repayment_capacity_verify($user['user_id']);
+            if ($info_repayment_capacity !== FALSE)
+            {
+                $this->repayment_capacity_success($info_repayment_capacity);
+            }
+        }
+
 		return $count;
 	}
 
@@ -3714,10 +3727,10 @@ class Certification_lib{
     }
 
     // 還款力計算驗證
-    public function repayment_capacity_verify($info = [])
+    public function repayment_capacity_verify($user_id)
     {
         // 聯合徵信報告
-        $joint_credit_info = $this->get_certification_info($info->user_id, CERTIFICATION_INVESTIGATION);
+        $joint_credit_info = $this->get_certification_info($user_id, CERTIFICATION_INVESTIGATION);
         if ($joint_credit_info === FALSE || ! isset($joint_credit_info->status) || (int) $joint_credit_info->status !== CERTIFICATION_STATUS_SUCCEED)
         {
             // 未通過驗證
@@ -3725,7 +3738,7 @@ class Certification_lib{
         }
 
         // 工作收入證明
-        $job_info = $this->get_certification_info($info->user_id, CERTIFICATION_JOB);
+        $job_info = $this->get_certification_info($user_id, CERTIFICATION_JOB);
         if ($job_info === FALSE || ! isset($job_info->status) || (int) $job_info->status !== CERTIFICATION_STATUS_SUCCEED)
         {
             // 未通過驗證
@@ -3743,7 +3756,23 @@ class Certification_lib{
             $joint_credit_content = [];
         }
 
-        $remark = isset($info->remark) ? json_decode($info->remark, TRUE) : [];
+        $info = $this->get_certification_info($user_id, CERTIFICATION_REPAYMENT_CAPACITY);
+        if (empty($info))
+        {
+            $this->CI->user_certification_model->insert([
+                'user_id' => $user_id,
+                'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
+                'investor' => USER_BORROWER,
+                'content' => json_encode([]),
+                'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+            ]);
+            $info = $this->get_certification_info($user_id, CERTIFICATION_REPAYMENT_CAPACITY);
+        }
+
+        $remark = isset($info->remark)
+            ? (! is_array($info->remark) ? json_decode($info->remark, TRUE) : $info->remark)
+            : [];
+
         $remark['verify_result'] = [];
         $verified_result = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
 
@@ -3899,7 +3928,7 @@ class Certification_lib{
                 $this->certi_failed($info->id, $notification_content, $can_resubmit_date);
             }
 
-            return TRUE;
+            return $info;
         }
         return FALSE;
     }
