@@ -17,7 +17,7 @@
         <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
         <div class="dots" style="opacity: 0.75; width: 6px; height: 6px"></div>
       </div>
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center page-title-1">
         <img src="../asset/images/太陽.svg" class="img-icon" alt="" />
         <img src="../asset/images/孩子健康 看見希望.svg" class="img-text-1" />
       </div>
@@ -114,7 +114,7 @@
             style="opacity: 0.75; width: 6px; height: 6px"
           ></div>
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center organizer-title">
           <img src="../asset/images/彩虹.svg" class="img-moon" alt="" />
           <div class="active-title">
             <div>台大兒醫普匯希望</div>
@@ -183,7 +183,7 @@
             style="opacity: 0.75; width: 6px; height: 6px"
           ></div>
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="d-flex justify-content-center how-title">
           <img src="../asset/images/月亮.svg" class="img-icon" />
           <img
             src="../asset/images/如何捐款.svg"
@@ -210,7 +210,7 @@
           <div class="step-item">
             <div>步驟2：</div>
             <div>選取</div>
-            <div>「台大兒童健康基金會」</div>
+            <div style="margin: 0 -30px">「台大兒童健康基金會」</div>
             <div>愛心勸募捐款</div>
           </div>
           <div class="step-item">
@@ -253,6 +253,109 @@
         </div>
       </div>
     </div>
+    <div class="row no-gutters envoy-content">
+      <div class="col-auto envoy">
+        <div class="title-dot-up">
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+        </div>
+        <div class="d-flex justify-content-center envoy-title">
+          <img src="~images/candy.png" alt="" />
+          <div class="active-title">
+            <div>台大兒醫普匯希望</div>
+            <div>公益愛心大使</div>
+          </div>
+        </div>
+        <div class="title-dot-down">
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+        </div>
+        <div class="envoy-intro">
+          <div class="envoy-intro-title">公益愛心大使</div>
+          <div class="envoy-intro-name">張鈞甯</div>
+          <div class="envoy-intro-text">
+            <div>#氣質女神</div>
+            <div>#知名藝人</div>
+            <div class="mb-3">#熱心公益</div>
+            <div class="mb-3">
+              集陽光、知性、美於一身，出道以來 擁有許多膾炙人口的代表作，收穫廣
+              大粉絲的喜愛。而私下的她，長期關 注社會議題 , 對於公益活動，都是大
+              力響應。
+            </div>
+            <div>
+              此次擔任「台大兒醫普匯希望 聯合 勸募公益活動」愛心大使，想透過
+              自己向社會傳遞溫暖與正能量，同 時也號召更多善心人士，一同為孩
+              子出一份力！
+            </div>
+          </div>
+          <img
+            class="envoy-portrait"
+            src="~images/envoy-portrait.webp"
+            alt="公益愛心大使-張鈞甯"
+          />
+        </div>
+      </div>
+      <div class="col-auto envoy">
+        <div class="title-dot-up">
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+        </div>
+        <div class="d-flex justify-content-center envoy-title">
+          <img src="~images/法杖.png" alt="" />
+          <div class="active-title">
+            <div>台大兒醫普匯希望</div>
+            <div>活動主持人</div>
+          </div>
+        </div>
+        <div class="title-dot-down">
+          <div
+            class="dots"
+            style="opacity: 0.75; width: 6px; height: 6px"
+          ></div>
+          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+        </div>
+        <div class="envoy-intro">
+          <div class="envoy-intro-title">公益活動主持人</div>
+          <div class="envoy-intro-name">鍾欣凌</div>
+          <div class="envoy-intro-text">
+            <div>#金鐘視后</div>
+            <div>#二寶媽</div>
+            <div class="mb-3">#熱心公益</div>
+            <div class="mb-3">
+              早期以旅遊節目嶄露頭角，而後主持 兒童少年節目，近期在戲劇影視方面
+              榮獲多項金鐘獎！ 私下的她，有著幽默風趣的個性，也
+              經常關注孩子議題，如今身為二寶 媽，更是在乎每個孩子的成長。
+            </div>
+            <div>
+              此次擔任「台大兒醫普匯希望 聯合 勸募公益活動」主持人，也想盡自
+              己的最大力量，幫助更多孩童重拾 希望！
+            </div>
+          </div>
+          <img
+            class="host-portrait"
+            src="~images/host-portrait.webp"
+            alt="公益活動主持人-鍾欣凌"
+          />
+        </div>
+      </div>
+    </div>
     <div class="footer">
       <div>
         <img
@@ -286,6 +389,9 @@ export default {};
   margin-bottom: 12px;
   margin-left: auto;
   margin-right: auto;
+}
+.page-title-1{
+    margin-right: 110px;
 }
 .dashed {
   width: 100%;
@@ -397,13 +503,17 @@ export default {};
   text-align: center;
   color: #0666b2;
 }
+.organizer-title{
+    margin-right: 84px;
+    margin-bottom: 10px;
+}
 .fund {
   display: flex;
   justify-content: center;
 }
 .fund-text {
   position: relative;
-  margin: 0 auto 63px;
+  margin: 0 auto 25px;
   padding: 0 15px;
   max-width: 565px;
   font-size: 20px;
@@ -519,7 +629,7 @@ export default {};
 }
 .donate-step {
   display: grid;
-  grid-template-columns: repeat(3, 160px);
+  grid-template-columns: repeat(3, 172px);
   grid-template-rows: 1fr 1fr;
   gap: 14px;
   .step-item {
@@ -538,7 +648,7 @@ export default {};
   }
 }
 .donate-info {
-    margin: 15px 0;
+  margin: 15px 0;
   font-size: 20px;
   font-weight: normal;
   font-stretch: normal;
@@ -550,6 +660,9 @@ export default {};
   .hint {
     color: #0666b2;
   }
+}
+.how-title{
+    margin-right: 90px;
 }
 .go-donate-out {
   position: relative;
@@ -646,9 +759,70 @@ export default {};
   margin-right: 16px;
   width: 90px;
 }
+.envoy-content {
+  gap: 25px 100px;
+  justify-content: center;
+}
+.envoy {
+  width: 575px;
+  margin-bottom: 30px;
+  .envoy-title{
+      margin-right: 84px;
+      margin-bottom: 10px;
+  }
+  .envoy-intro {
+    position: relative;
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='18' ry='18' stroke='%23BCBCBCFF' stroke-width='5' stroke-dasharray='8' stroke-dashoffset='4' stroke-linecap='square'/%3e%3c/svg%3e");
+    border-radius: 18px;
+    width: 425px;
+    padding: 30px;
+    .envoy-intro-title {
+      font-size: 20px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.8;
+      letter-spacing: 1px;
+      text-align: left;
+      color: #000;
+    }
+    .envoy-intro-name {
+      font-size: 26.2px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.6;
+      letter-spacing: 1.31px;
+      text-align: left;
+      color: #0666b2;
+    }
+    .envoy-intro-text {
+      max-width: 275px;
+      font-size: 16px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: 0.8px;
+      text-align: left;
+      color: #7d7d7d;
+    }
+    .envoy-portrait {
+      position: absolute;
+      top: -80px;
+      right: -230px;
+    }
+    .host-portrait {
+      position: absolute;
+      top: -60px;
+      right: -180px;
+    }
+  }
+}
 .footer {
   margin: auto;
   max-width: 1300px;
+  text-align: center;
 }
 .footer-img {
   max-width: 100%;
