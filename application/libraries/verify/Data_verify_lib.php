@@ -234,6 +234,18 @@ class Data_verify_lib{
             $verifiedResult->addMessage('待人工驗證：被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MassageDisplay::Backend);
         }
 
+        if (isset($data['studentLoans']) && isset($data['studentLoansCount']))
+        {
+            $data['studentLoans'] = (int) $data['studentLoans'];
+            $data['studentLoansCount'] = (int) $data['studentLoansCount'];
+
+            if (($data['studentLoans'] === 0 && $data['studentLoansCount'] !== 0) ||
+                ($data['studentLoans'] !== 0 && $data['studentLoansCount'] === 0))
+            {
+                $verifiedResult->addMessage('待人工驗證：助學貸款總訂約金額與總筆數，其中一個為0，另一個不為0', 3, MassageDisplay::Backend);
+            }
+        }
+
         return $verifiedResult;
     }
 

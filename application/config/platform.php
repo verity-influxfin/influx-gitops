@@ -432,6 +432,9 @@ $config['product_list'] = [
             CERTIFICATION_JOB,
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
+        'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
         'certifications_stage' => [
             [
                 CERTIFICATION_IDCARD,
@@ -485,6 +488,9 @@ $config['product_list'] = [
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB,
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        'option_certifications' => [
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'certifications_stage' => [
@@ -798,6 +804,9 @@ $config['product_list'] = [
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
             CERTIFICATION_JOB,
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        'option_certifications' => [
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'certifications_stage' => [
@@ -1260,6 +1269,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_JOB,
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
+                'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
                 'certification_verify_stage' => [
                     [
                         CERTIFICATION_IDCARD,
@@ -1585,6 +1597,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_JOB,
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
+                'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
                 'certifications_stage' => [
                     [
                         CERTIFICATION_IDCARD,
@@ -1729,6 +1744,9 @@ $config['sub_product_list'] = [
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
                     CERTIFICATION_JOB,
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                'option_certifications' => [
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
                 'certifications_stage' => [
