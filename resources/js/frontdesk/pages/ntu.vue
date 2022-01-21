@@ -164,7 +164,7 @@
                 </div>
                 <a
                   class="btn btn-outline go-donate-button"
-                  href="https://forms.gle/onW2ttbP6AftWXkC8"
+                  href="https://forms.gle/w1g4gAXRbcyQxcZ1A"
                   target="_blank"
                   >報名去</a
                 >
