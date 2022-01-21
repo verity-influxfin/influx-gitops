@@ -163,20 +163,20 @@ class Credit_lib{
             }
 
             // 近一學期成績
-            if (isset($data['school_lastest_grade']) &&
-                ( ! empty($data['school_lastest_grade']) || $data['school_lastest_grade'] == 0))
+            if (isset($data['last_grade']) &&
+                ( ! empty($data['last_grade']) || $data['last_grade'] == 0))
             {
-                if ($data['school_lastest_grade'] > 90)
+                if ($data['last_grade'] > 90)
                 {
                     $total += 200;
                     $this->scoreHistory[] = '提供學校成績單(>90分) = 200\n';
                 }
-                elseif ($data['school_lastest_grade'] > 85)
+                elseif ($data['last_grade'] > 85)
                 {
                     $total += 150;
                     $this->scoreHistory[] = '提供學校成績單(85-90分) = 150\n';
                 }
-                elseif ($data['school_lastest_grade'] > 80)
+                elseif ($data['last_grade'] > 80)
                 {
                     $total += 100;
                     $this->scoreHistory[] = '提供學校成績單(80-85分) = 100\n';
@@ -184,7 +184,7 @@ class Credit_lib{
                 else
                 {
                     $total += 50;
-                    $this->scoreHistory[] = '提供學校成績單(<80分) = 100\n';
+                    $this->scoreHistory[] = '提供學校成績單(<80分) = 50\n';
                 }
             }
 
@@ -199,7 +199,7 @@ class Credit_lib{
             // 最高上限150分
             if (isset($data['follow_count']) && ! empty($data['follow_count']))
             {
-                $calculate_points = max(floor($data['follow_count'] / 10), 150);
+                $calculate_points = min(floor($data['follow_count'] / 10), 150);
                 $total += $calculate_points;
                 $this->scoreHistory[] = "IG好友數 = {$calculate_points}\n";
             }
@@ -208,7 +208,7 @@ class Credit_lib{
             // 最高得分150
             if (isset($data['posts_in_3months']) && ! empty($data['posts_in_3months']))
             {
-                $calculate_points = max($data['posts_in_3months'] * 10, 150);
+                $calculate_points = min($data['posts_in_3months'] * 10, 150);
                 $total += $calculate_points;
                 $this->scoreHistory[] = "IG近3個月內發文 = {$calculate_points}\n";
             }
@@ -217,7 +217,7 @@ class Credit_lib{
             // 最高得分150
             if (isset($data['key_word']) && ! empty($data['key_word']))
             {
-                $calculate_points = max($data['posts_in_3months'] * 10, 150);
+                $calculate_points = min($data['posts_in_3months'] * 10, 150);
                 $total += $calculate_points;
                 $this->scoreHistory[] = "IG近3個月內發文 = {$calculate_points}\n";
             }
@@ -304,6 +304,7 @@ class Credit_lib{
                 'sub_product_id' => $sub_product_id,
                 'user_id' => $user_id,
                 'status' => 1,
+                'remark' => json_encode(['scoreHistory' => $this->scoreHistory])
             ],
             ['status'=> 0]
         );

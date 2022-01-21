@@ -1,0 +1,1 @@
+ALTER TABLE p2p_loan.credits ADD remark TEXT NULL;
