@@ -293,6 +293,22 @@ class Certification extends REST_Controller {
                     case 14:
                         $fields 	= [];
 						break;
+                    case CERTIFICATION_SOCIAL_INTELLIGENT:
+                        if (isset($rs->content['type']))
+                        {
+                            if ($rs->content['type'] == 'instagram')
+                            {
+                                $ig_exist = 1;
+                            }
+                        }
+                        if (isset($rs->content['instagram']) && $rs->content['instagram'] != NULL)
+                        {
+                            $ig_exist = 1;
+                        }
+                        $ig_bind = isset($ig_exist) ? 1 : 0;
+                        $fields = [];
+                        $data['ig_bind'] = $ig_bind;
+                        break;
 					case 500:
                         $fields 	= [];
 						break;
