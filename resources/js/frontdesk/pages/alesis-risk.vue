@@ -92,7 +92,7 @@ export default {
     },
     data: () => {
         return {
-            current_risk_month : 11,
+            current_risk_month : 12,
             report_list: [
                 {
                     month:7,
@@ -113,6 +113,10 @@ export default {
                 {
                     month:11,
                     image:require('../asset/images/risk/risk11-report.jpg'),
+                },
+                {
+                    month:12,
+                    image:require('../asset/images/risk/risk12-report.jpg'),
                 },
             ]
         }
