@@ -114,7 +114,7 @@ class Credit_lib{
             'amount' => 0,
             'expire_time' => $expire_time,
         ];
-        $param['level'] = $this->get_credit_level($total_point, $product_id);
+        $param['level'] = $this->get_credit_level($total_point, $product_id, $sub_product_id);
         if (isset($this->credit['credit_amount_' . $product_id])) {
             foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
@@ -269,7 +269,7 @@ class Credit_lib{
             return $param['points'];
         }
 
-        $param['level'] 	= $this->get_credit_level($total,$product_id);
+        $param['level'] 	= $this->get_credit_level($total,$product_id,$sub_product_id);
 
         // 取得額度對照表
         if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
@@ -408,7 +408,7 @@ class Credit_lib{
             return $param['points'];
         }
 
-        $param['level'] = $this->get_credit_level($total, $product_id, $stage_cer);
+        $param['level'] = $this->get_credit_level($total, $product_id, $sub_product_id, $stage_cer);
         if (isset($this->credit['credit_amount_' . $product_id])) {
             foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
@@ -521,7 +521,7 @@ class Credit_lib{
         }
 
         $param['points'] 	= intval($total);
-        $param['level'] 	= $this->get_credit_level($total,$product_id);
+        $param['level'] 	= $this->get_credit_level($total,$product_id,$sub_product_id);
         if(isset($this->credit['credit_amount_'.$product_id])){
             foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
                 if($param['points']>=$value['start'] && $param['points']<=$value['end']){
@@ -779,26 +779,43 @@ class Credit_lib{
 		return false;
 	}
 
-	public function  get_credit_level($points=0,$product_id=0, $stage_cer = false){
-		if((intval($points)>0 || $stage_cer) && $product_id ){
-			if(isset($this->credit['credit_level_'.$product_id])){
-				foreach($this->credit['credit_level_'.$product_id] as $level => $value){
-					if($points >= $value['start'] && $points <= $value['end']){
-						return $level;
-						break;
-					}
-				}
-			}
+    public function get_credit_level($points = 0, $product_id = 0, $sub_product_id = 0, $stage_cer = FALSE)
+    {
+        if ((intval($points) > 0 || $stage_cer) && $product_id)
+        {
+            $credit_level_list = $this->credit['credit_level_' . $product_id];
+            if (isset($this->credit['credit_level_' . $product_id . '_' . $sub_product_id]))
+            {
+                $credit_level_list = $this->credit['credit_level_' . $product_id . '_' . $sub_product_id];
+            }
+            if (isset($credit_level_list))
+            {
+                foreach ($credit_level_list as $level => $value)
+                {
+                    if ($points >= $value['start'] && $points <= $value['end'])
+                    {
+                        return $level;
+                        break;
+                    }
+                }
+            }
 
-		}
-		return false;
-	}
+        }
+        return FALSE;
+    }
 
 	public function get_rate($level,$instalment,$product_id,$sub_product_id=0,$target=[]){
 		$credit = $this->CI->config->item('credit');
-		if(isset($this->credit['credit_level_'.$product_id][$level])){
-			if(isset($this->credit['credit_level_'.$product_id][$level]['rate'][$instalment])){
-                $rate = $this->credit['credit_level_'.$product_id][$level]['rate'][$instalment];
+        $credit_level_list = $credit['credit_level_' . $product_id];
+        if (isset($credit['credit_level_' . $product_id . '_' . $sub_product_id]))
+        {
+            $credit_level_list = $credit['credit_level_' . $product_id . '_' . $sub_product_id];
+        }
+        if (isset($credit_level_list[$level]))
+        {
+            if (isset($credit_level_list[$level]['rate'][$instalment]))
+            {
+                $rate = $credit_level_list[$level]['rate'][$instalment];
                 //副產品減免
                 if($sub_product_id){
                     $info        = $this->CI->user_meta_model->get_many_by(['user_id'=>$target->user_id]);
