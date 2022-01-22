@@ -523,6 +523,7 @@ class Qrcode_lib
             return [];
         }
         $main_qrcode_ids = [];
+        $subcode_reward_list = [];
         foreach ($main_qrcode_reward_list as $main_qrcode) {
             $main_qrcode_ids[] = $main_qrcode['info']['id'];
         }
@@ -532,9 +533,9 @@ class Qrcode_lib
         if ( ! empty($subcode_list))
         {
             $where = ['id' => array_keys($subcode_list)];
+            $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
+                $start_date, $end_date, $limit, $offset, $filter_delayed);
         }
-        $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
-            $start_date, $end_date, $limit, $offset, $filter_delayed);
 
         if($merge_subcode)
         {
