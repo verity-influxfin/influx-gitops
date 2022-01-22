@@ -1718,13 +1718,6 @@ class Target_lib
                                 if ($finish && in_array($certification['id'], $product_certification)) {
 
                                     if ($certification['user_status'] != '1') {
-
-                                        // 還款力計算若驗證不通過，會進入待二審
-                                        if ($certification['id'] == CERTIFICATION_REPAYMENT_CAPACITY)
-                                        {
-                                            $second_instance_check = TRUE;
-                                        }
-
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {

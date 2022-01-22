@@ -146,23 +146,4 @@ class User_certification_model extends MY_Model
 
 		return $this->db->get()->result_array();
 	}
-
-    /**
-     * 依「ID」與「驗證項」撈驗證資料
-     * @param $id
-     * @return mixed|string
-     */
-    public function get_certification_data_by_id($id)
-    {
-        $this->db
-            ->select('uc.content')
-            ->select('uc.created_at')
-            ->select('uc.user_id')
-            ->select('uc.investor')
-            ->select('uc.status')
-            ->from('p2p_user.user_certification uc')
-            ->where('uc.id', $id);
-
-        return $this->db->get()->first_row('array');
-    }
 }

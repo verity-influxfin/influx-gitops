@@ -1655,11 +1655,10 @@ class Certification_lib{
 	public function investigation_verify($info = array(), $url=null)
 	{
 		$user_certification	= $this->get_certification_info($info->user_id,1,$info->investor);
-        if ($user_certification == FALSE || $user_certification->status != 1)
-        {
-            return FALSE;
-        }
-        
+		$job_certification = $this->get_certification_info($info->user_id,10,$info->investor);
+		if($user_certification==false || $user_certification->status!=1 ||$job_certification ==false || $job_certification->status!=1){
+			return false;
+		}
 		$result = [];
 		$time = time();
 		$printDatetime = '';
@@ -1721,6 +1720,59 @@ class Certification_lib{
 						$certification_content['months'] = isset($result['creditLogCount']) ? $result['creditLogCount'] : 0;
 						$certification_content['printDatetime'] = $time;
 						$certification_content['printDate'] = $printDatetime;
+
+						// 還款力計算-22倍薪資
+						// 薪資22倍
+						$certification_content['total_repayment'] = '';
+						// 投保金額
+						$certification_content['monthly_repayment'] = '';
+						// 借款總額是否小於薪資22倍
+						$certification_content['total_repayment_enough'] = '';
+						// 每月還款是否小於投保金額
+						$certification_content['monthly_repayment_enough'] = '';
+						// 負債比
+						$certification_content['debt_to_equity_ratio'] = 0;
+
+						if (isset($job_certification->content)) {
+							if (!is_array($job_certification->content)) {
+								$job_certification_content = json_decode($job_certification->content, true);
+							} else {
+								$job_certification_content = $job_certification->content;
+							}
+							$certification_content['monthly_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? $job_certification_content['salary'] / 1000 : '';
+							$certification_content['total_repayment'] = isset($job_certification_content['salary']) && is_numeric($job_certification_content['salary']) ? $job_certification_content['salary'] * 22 / 1000 : '';
+						}
+
+						if (isset($result['totalMonthlyPayment']) && $certification_content['monthly_repayment']) {
+							// 每月還款是否小於投保金額
+							if ($result['totalMonthlyPayment'] < $certification_content['monthly_repayment']) {
+								$certification_content['monthly_repayment_enough'] = '是';
+							} else {
+								$certification_content['monthly_repayment_enough'] = '否';
+							}
+						} else {
+							$certification_content['monthly_repayment_enough'] = '資料不齊無法比對';
+						}
+
+						if (isset($result['totalAmountQuota']) && $certification_content['total_repayment']) {
+							// 借款總額是否小於薪資22倍
+							if ($result['totalAmountQuota'] < $certification_content['total_repayment']) {
+								$certification_content['total_repayment_enough'] = '是';
+							} else {
+								$certification_content['total_repayment_enough'] = '否';
+							}
+						} else {
+							$certification_content['total_repayment_enough'] = '資料不齊無法比對';
+						}
+
+						if (isset($approve_status['status_code']) && $approve_status['status_code'] == 2) {
+							// to do : 鎖三十天
+							// $certification_content['mail_file_status'] = 2;
+						}
+
+						// 負債比計算，投保薪資不能為0
+						if (is_numeric($certification_content['monthly_repayment']))
+							$certification_content['debt_to_equity_ratio'] = round($result['totalMonthlyPayment'] / $certification_content['monthly_repayment'] * 100, 2);
 
 						// 自然人聯徵正確性驗證
 						$this->CI->load->library('verify/data_legalize_lib');
@@ -2142,6 +2194,10 @@ class Certification_lib{
 				$canResubmitDate = $verifiedResult->getCanResubmitDate($info->created_at);
 				$notificationContent = $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED);
 				$this->certi_failed($info->id, $notificationContent, $canResubmitDate);
+
+				// 退工作認證時，需把聯徵也一起退掉 issue #1202
+                if($this->certification_lib->isRejectedResult($notificationContent))
+                    $this->withdraw_investigation($info->user_id, $info->investor);
 			}
 			return true;
 		}
@@ -3282,16 +3338,6 @@ class Certification_lib{
                 if($target){
                     // 有過期判斷
                     $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
-                    if ($key == CERTIFICATION_REPAYMENT_CAPACITY)
-                    {
-                        if (isset($user_certification->status))
-                        {
-                            if ($user_certification->status !== CERTIFICATION_STATUS_SUCCEED && $user_certification->status !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
-                            {
-                                $user_certification = [];
-                            }
-                        }
-                    }
                 }else {
                     // 沒有過期判斷
                     $user_certification = $this->get_last_certification_info($ruser_id,$key,$investor);
@@ -3405,8 +3451,6 @@ class Certification_lib{
 							$this->set_failed($value->id,'未在有效時間內完成認證');
 						}
 						break;
-                    case CERTIFICATION_REPAYMENT_CAPACITY:
-                        break;
 					default:
 						$this->verify($value);
 						break;
@@ -3414,20 +3458,6 @@ class Certification_lib{
 				$count++;
 			}
 		}
-
-        $user_lists = $this->CI->target_model->get_distinct_user_by_status([0]);
-        foreach ($user_lists as $user)
-        {
-            $info_repayment_capacity = $this->repayment_capacity_verify($user['user_id']);
-            if ($info_repayment_capacity !== FALSE)
-            {
-                if (isset($info_repayment_capacity->status) && $info_repayment_capacity->status == CERTIFICATION_STATUS_SUCCEED)
-                {
-                    $this->repayment_capacity_success($info_repayment_capacity);
-                }
-            }
-        }
-
 		return $count;
 	}
 
@@ -3737,254 +3767,5 @@ class Certification_lib{
 
     public function isRejectedResult($msg) {
         return strpos($msg, "經AI系統綜合評估後") !== FALSE;
-    }
-
-    // 還款力計算驗證
-    public function repayment_capacity_verify($user_id)
-    {
-        // 聯合徵信報告
-        $joint_credit_info = $this->get_certification_info($user_id, CERTIFICATION_INVESTIGATION);
-        if ($joint_credit_info === FALSE || ! isset($joint_credit_info->status) || (int) $joint_credit_info->status !== CERTIFICATION_STATUS_SUCCEED)
-        {
-            // 未通過驗證
-            return FALSE;
-        }
-
-        // 工作收入證明
-        $job_info = $this->get_certification_info($user_id, CERTIFICATION_JOB);
-        if ($job_info === FALSE || ! isset($job_info->status) || (int) $job_info->status !== CERTIFICATION_STATUS_SUCCEED)
-        {
-            // 未通過驗證
-            return FALSE;
-        }
-
-        if (isset($joint_credit_info->content))
-        {
-            $joint_credit_content = is_array($joint_credit_info->content)
-                ? $joint_credit_info->content
-                : json_decode($joint_credit_info->content, TRUE);
-        }
-        else
-        {
-            $joint_credit_content = [];
-        }
-
-        $info = $this->get_certification_info($user_id, CERTIFICATION_REPAYMENT_CAPACITY);
-        if (empty($info))
-        {
-            $this->CI->user_certification_model->insert([
-                'user_id' => $user_id,
-                'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
-                'investor' => USER_BORROWER,
-                'content' => json_encode([]),
-                'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
-            ]);
-            $info = $this->get_certification_info($user_id, CERTIFICATION_REPAYMENT_CAPACITY);
-        }
-
-        $remark = isset($info->remark)
-            ? (! is_array($info->remark) ? json_decode($info->remark, TRUE) : $info->remark)
-            : [];
-
-        $remark['verify_result'] = [];
-        $verified_result = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
-
-        if ($info && $info->certification_id == CERTIFICATION_REPAYMENT_CAPACITY && $this->canVerify($info->status))
-        {
-            if ( ! isset($joint_credit_content['return_type']) || $joint_credit_content['return_type'] != 0)
-            {
-                // 尚未回信上傳檔案
-                if ( ! isset($joint_credit_content['mail_file_status']) || ! $joint_credit_content['mail_file_status'])
-                {
-                    return FALSE;
-                }
-
-                $this->CI->load->library('joint_credit_lib');
-                $url = ($joint_credit_content['pdf_file'] ?? NULL);
-
-                $mime = get_mime_by_extension($url);
-                if (strpos($mime, 'jpg') === FALSE &&
-                    strpos($mime, 'jpeg') === FALSE &&
-                    strpos($mime, 'jpe') === FALSE &&
-                    strpos($mime, 'png') === FALSE &&
-                    strpos($mime, 'heic') === FALSE
-                )
-                {
-                    $parser = new \Smalot\PdfParser\Parser();
-                    $text = '';
-                    try
-                    {
-                        $pdf = $parser->parseFile($url);
-                        $text = $pdf->getText();
-                        $response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
-                    }
-                    catch (Exception $e)
-                    {
-                        $response = FALSE;
-                    }
-
-                    if ($response && strpos($text, '綜合信用報告') !== FALSE)
-                    {
-                        // 資料轉 result
-                        $this->CI->load->library('mapping/user/certification_data');
-                        $result = $this->CI->certification_data->transform_joint_credit_to_repayment_capacity($response);
-
-                        // 印表日期
-                        $this->CI->load->library('mapping/time');
-                        $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $result['printDatetime']);
-                        $print_timestamp = $this->CI->time->ROCDateToUnixTimestamp($print_timestamp);
-
-                        $certification_content = $result;
-
-                        if (isset($job_info->content))
-                        {
-                            if ( ! is_array($job_info->content))
-                            {
-                                $job_content = json_decode($job_info->content, TRUE);
-                            }
-                            else
-                            {
-                                $job_content = $job_info->content;
-                            }
-
-                            // 薪資收入
-                            $certification_content['monthly_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
-                                ? $job_content['salary'] / 1000
-                                : '';
-
-                            // 薪資22倍
-                            $certification_content['total_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
-                                ? $job_content['salary'] * 22 / 1000
-                                : '';
-                        }
-
-                        // 負債比計算，投保薪資不能為0
-                        if (is_numeric($certification_content['monthly_repayment']))
-                        {
-                            $certification_content['debt_to_equity_ratio'] = round(
-                                $result['totalMonthlyPayment'] / $certification_content['monthly_repayment'] * 100,
-                                2
-                            );
-                        }
-
-                        $this->CI->load->library('verify/data_verify_lib');
-                        $verified_result = $this->CI->data_verify_lib->check_investigation($verified_result, $result, $certification_content);
-
-                        $remark['fail'] = implode('、', $verified_result->getAPPMessage(CERTIFICATION_STATUS_FAILED));
-                    }
-                }
-            }
-            
-            $this->update_repayment_certification(
-                $info->id,
-                $print_timestamp,
-                $verified_result,
-                $certification_content,
-                $remark
-            );
-
-            return $info;
-        }
-        return FALSE;
-    }
-
-    public function update_repayment_certification($id, $print_timestamp, $verified_result, $certification_content, $remark)
-    {
-        $remark['verify_result'] = array_merge($remark['verify_result'] ?? [], $verified_result->getAllMessage(MassageDisplay::Backend));
-        $status = $verified_result->getStatus();
-
-        $this->CI->user_certification_model->update($id, array(
-            'status' => in_array($status, [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED]) ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
-            'sys_check' => 1,
-            'content' => json_encode($certification_content, JSON_INVALID_UTF8_IGNORE),
-            'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
-        ));
-
-        if ($status == CERTIFICATION_STATUS_SUCCEED)
-        {
-            $expire_time = new DateTime;
-            $expire_time->setTimestamp($print_timestamp);
-            $expire_time->modify('+ 1 month');
-            $expire_timestamp = $expire_time->getTimestamp();
-            $this->set_success($id, TRUE, $expire_timestamp);
-        }
-        elseif ($status == CERTIFICATION_STATUS_FAILED)
-        {
-            $this->set_failed($id);
-        }
-    }
-
-    private function repayment_capacity_success($info)
-    {
-        if ($info)
-        {
-            return $this->fail_other_cer($info);
-        }
-        return FALSE;
-    }
-
-    // 計算長期擔保月繳
-    public function get_long_assure_monthly_payment($long_assure = 0)
-    {
-        return number_format(
-            $long_assure * (pow(1.0020833, 300) * 0.0020833) / (pow(1.0020833, 300) - 1),
-            2
-        );
-    }
-
-    // 計算中期擔保月繳
-    public function get_mid_assure_monthly_payment($mid_assure = 0)
-    {
-        return number_format(
-            $mid_assure * (pow(1.0041666, 84) * 0.0041666) / (pow(1.0041666, 84) - 1),
-            2
-        );
-    }
-
-    // 計算長期放款月繳
-    public function get_long_monthly_payment($long = 0)
-    {
-        return number_format(
-            $long * (pow(1.0020833, 300) * 0.0020833) / (pow(1.0020833, 300) - 1),
-            2
-        );
-    }
-    
-    // 計算中期放款月繳
-    public function get_mid_monthly_payment($mid = 0)
-    {
-        return number_format(
-            $mid * (pow(1.0083333, 60) * 0.0083333) / (pow(1.0083333, 60) - 1),
-            2
-        );
-    }
-
-    // 計算短期放款月繳
-    public function get_short_monthly_payment($short = 0)
-    {
-        return number_format($short * 0.0083333, 2);
-    }
-
-    // 計算學生貸款月繳
-    public function get_student_loans_monthly_payment($student_loans = 0, int $student_loans_count = 1)
-    {
-        if ($student_loans_count === 0)
-        {
-            return 0;
-        }
-
-        return number_format(
-            $student_loans / ($student_loans_count * 12),
-            2
-        );
-    }
-
-    // 計算信用卡帳款月繳
-    public function get_credit_card_monthly_payment($credit_card = 0)
-    {
-        return round(
-            $credit_card * 0.1 / 1000,
-            2
-        );
     }
 }

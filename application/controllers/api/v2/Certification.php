@@ -2154,7 +2154,6 @@ class Certification extends REST_Controller {
                 'status'            => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
 			);
 			$insert = $this->user_certification_model->insert($param);
-
 			if($insert){
 			    if($send_mail){
                     $this->notification_lib->notice_cer_investigation($user_id, implode(' / ', $target));
