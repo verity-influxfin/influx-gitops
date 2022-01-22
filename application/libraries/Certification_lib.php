@@ -862,8 +862,8 @@ class Certification_lib{
                                     $allPostCount      = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
                                     $followStatus      = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
                                     $isFollower        = isset($risk_control_info['response']['result']['isFollower']) ? $risk_control_info['response']['result']['isFollower'] : '';
-                                    $allFollowerCount  = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
-                                    $allFollowingCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
+                                    $allFollowingCount  = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
+                                    $allFollowerCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
                                     $postsIn3Months    = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
                                     $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
                                     // 帳號是否存在
