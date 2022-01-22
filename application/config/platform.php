@@ -429,11 +429,7 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
-            CERTIFICATION_JOB,
-            CERTIFICATION_REPAYMENT_CAPACITY
-        ],
-        'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY
+            CERTIFICATION_JOB
         ],
         'certifications_stage' => [
             [
@@ -447,8 +443,7 @@ $config['product_list'] = [
                 CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
-                CERTIFICATION_JOB,
-                CERTIFICATION_REPAYMENT_CAPACITY
+                CERTIFICATION_JOB
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -487,11 +482,7 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
-            CERTIFICATION_JOB,
-            CERTIFICATION_REPAYMENT_CAPACITY
-        ],
-        'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY
+            CERTIFICATION_JOB
         ],
         'certifications_stage' => [
             [
@@ -505,8 +496,7 @@ $config['product_list'] = [
                 CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
-                CERTIFICATION_JOB,
-                CERTIFICATION_REPAYMENT_CAPACITY
+                CERTIFICATION_JOB
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -803,11 +793,7 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
-            CERTIFICATION_JOB,
-            CERTIFICATION_REPAYMENT_CAPACITY
-        ],
-        'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY
+            CERTIFICATION_JOB
         ],
         'certifications_stage' => [
             [
@@ -821,8 +807,7 @@ $config['product_list'] = [
                 CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
-                CERTIFICATION_JOB,
-                CERTIFICATION_REPAYMENT_CAPACITY
+                CERTIFICATION_JOB
             ]
         ],
         'instalment' => [180],
@@ -1266,11 +1251,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB,
-                    CERTIFICATION_REPAYMENT_CAPACITY
-                ],
-                'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_JOB
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1284,8 +1265,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB,
-                        CERTIFICATION_REPAYMENT_CAPACITY
+                        CERTIFICATION_JOB
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1594,11 +1574,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB,
-                    CERTIFICATION_REPAYMENT_CAPACITY
-                ],
-                'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_JOB
                 ],
                 'certifications_stage' => [
                     [
@@ -1612,8 +1588,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB,
-                        CERTIFICATION_REPAYMENT_CAPACITY
+                        CERTIFICATION_JOB
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1743,11 +1718,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB,
-                    CERTIFICATION_REPAYMENT_CAPACITY
-                ],
-                'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_JOB
                 ],
                 'certifications_stage' => [
                     [
@@ -1761,8 +1732,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB,
-                        CERTIFICATION_REPAYMENT_CAPACITY
+                        CERTIFICATION_JOB
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1915,7 +1885,6 @@ $config['certifications'] = [
     11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人基本資料', 'status' => 1, 'description' => '提供個人基本資料', 'optional' => []],
     12 => ['id' => CERTIFICATION_INVESTIGATIONA11, 'alias' => 'investigationa11', 'name' => '聯合徵信報告+A11', 'status' => 1, 'description' => '提供負責人聯合徵信資訊', 'optional' => []],
     14 => ['id' => CERTIFICATION_FINANCIALWORKER, 'alias' => 'financialWorker', 'name' => '財務訊息資訊', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
-    15 => ['id' => CERTIFICATION_REPAYMENT_CAPACITY, 'alias' => 'repayment_capacity', 'name' => '還款力計算', 'status' => 1, 'description' => '提供還款力計算結果', 'optional' => []],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
 
 

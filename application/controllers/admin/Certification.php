@@ -158,8 +158,23 @@ class Certification extends MY_Admin_Controller {
 							if(isset($info_content['result'][$group_id])){
 								$report_data['type'] = 'person';
 								$report_data['data'] = $info_content['result'][$group_id];
+								// 還款力計算
+								// 薪資22倍
+								$report_data['data']['total_repayment'] = $info_content['total_repayment'];
+								// 投保金額
+								$report_data['data']['monthly_repayment'] = $info_content['monthly_repayment'];
+								// 借款總額是否小於薪資22倍
+								$report_data['data']['total_repayment_enough'] = $info_content['total_repayment_enough'];
+								// 每月還款是否小於投保金額
+								$report_data['data']['monthly_repayment_enough'] = $info_content['monthly_repayment_enough'];
 
-                                $convertToIntegerList = ['liabilities_totalAmount'];
+								// 負債比
+								if(isset($info_content['debt_to_equity_ratio'])) {
+									$report_data['data']['debt_to_equity_ratio'] = $info_content['debt_to_equity_ratio'];
+								}else
+									$report_data['data']['debt_to_equity_ratio'] = round(floatval($report_data['data']['totalMonthlyPayment']) / floatval($report_data['data']['monthly_repayment']) * 100, 2);
+
+								$convertToIntegerList = ['liabilities_totalAmount', 'total_repayment'];
 								foreach($convertToIntegerList as $key) {
 									preg_match('/(\d+[,]*)+/', $report_data['data'][$key], $regexResult);
 									if (!empty($regexResult)) {
@@ -193,25 +208,6 @@ class Certification extends MY_Admin_Controller {
 						$page_data['job_title'] = isset($cut[1]) ? preg_split('/"},{/',preg_split('/'.$page_data['content']['job_title'].'","des":"/',$job_title)[1])[0] : '' ;
 					}
 				}
-                elseif ($info->certification_id == CERTIFICATION_REPAYMENT_CAPACITY)
-                {
-                    // 負債比
-                    if ( ! isset($page_data['content']['debt_to_equity_ratio']))
-                    {
-                        if ( ! isset($page_data['content']['totalMonthlyPayment']) || ! isset($page_data['content']['monthly_repayment']))
-                        {
-                            $page_data['content']['debt_to_equity_ratio'] = 0;
-                        }
-                        else
-                        {
-                            $page_data['content']['debt_to_equity_ratio'] = round((float) $page_data['content']['totalMonthlyPayment'] / (float) $page_data['content']['monthly_repayment'] * 100, 2);
-                        }
-                    }
-
-                    $certification = $this->certification[$info->certification_id];
-                    $page_data['certification_type'] = $certification['name'];
-                    $page_data['status'] = $info->status;
-                }
 				// 獲取 ocr 相關資料
 				// to do : ocr table 需優化 index 與 clinet table view
 				$this->load->library('mapping/user/Certification_table');
@@ -277,32 +273,6 @@ class Certification extends MY_Admin_Controller {
 				alert('ERROR , id is not exist', $back_url);
 			}
 		}else{
-
-            if (isset($post['certification_id']))
-            {
-                switch ($post['certification_id'])
-                {
-                    case CERTIFICATION_REPAYMENT_CAPACITY: // 還款力計算
-                        $save_result = $this->_save_certification_repayment_capacity($post);
-                        if (isset($save_result['result']))
-                        {
-                            if ($save_result['result'] === TRUE)
-                            {
-                                alert($save_result['msg'] ?? '更新成功', $back_url);
-                            }
-                            else
-                            {
-                                alert($save_result['msg'] ?? '更新失敗', $back_url);
-                            }
-                        }
-                        else
-                        {
-                            alert('更新失敗', $back_url);
-                        }
-                        break;
-                }
-            }
-
             if(!empty($post['salary'])){
                 $id = $post['id'];
                 $info = $this->user_certification_model->get($id);
@@ -1522,132 +1492,6 @@ class Certification extends MY_Admin_Controller {
             $response_data = $content['meta'];
         }
         $this->json_output->setStatusCode(200)->setResponse($response_data)->send();
-    }
-
-    // 後台儲存「還款力計算」的表單欄位
-    private function _save_certification_repayment_capacity($post_data)
-    {
-        if (empty($post_data))
-        {
-            return $this->_return_error('資料傳輸錯誤，更新失敗');
-        }
-
-        if (empty($post_data['id']))
-        {
-            return $this->_return_error('查無此ID，更新失敗');
-        }
-
-        $this->load->model('user/user_certification_model');
-        $this->load->library('certification_lib');
-        $this->load->library('verify/data_verify_lib');
-
-        $old_data = $this->user_certification_model->get_certification_data_by_id($post_data['id']);
-        if (empty($old_data['status']) || $old_data['status'] != CERTIFICATION_STATUS_PENDING_TO_REVIEW)
-        {
-            return $this->_return_error('狀態非待人工審核，更新失敗');
-        }
-        $old_data_content = json_decode($old_data['content'] ?? '', TRUE);
-
-        $new_data_content = $old_data_content;
-
-        // 長期擔保
-        if (isset($post_data['longAssure']))
-        {
-            $new_data_content['longAssure'] = (int) str_replace(',', '', $post_data['longAssure']);
-            $new_data_content['longAssureMonthlyPayment'] = $this->certification_lib->get_long_assure_monthly_payment($new_data_content['longAssure']);
-        }
-
-        // 中期擔保
-        if (isset($post_data['midAssure']))
-        {
-            $new_data_content['midAssure'] = (int) str_replace(',', '', $post_data['midAssure']);
-            $new_data_content['midAssureMonthlyPayment'] = $this->certification_lib->get_mid_assure_monthly_payment($new_data_content['midAssure']);
-        }
-
-        // 長期放款
-        if (isset($post_data['long']))
-        {
-            $new_data_content['long'] = (int) str_replace(',', '', $post_data['long']);
-            $new_data_content['longMonthlyPayment'] = $this->certification_lib->get_long_monthly_payment($new_data_content['long']);
-        }
-
-        // 中期放款
-        if (isset($post_data['mid']))
-        {
-            $new_data_content['mid'] = (int) str_replace(',', '', $post_data['mid']);
-            $new_data_content['midMonthlyPayment'] = $this->certification_lib->get_mid_monthly_payment($new_data_content['mid']);
-        }
-
-        // 短期放款
-        if (isset($post_data['short']))
-        {
-            $new_data_content['short'] = (int) str_replace(',', '', $post_data['short']);
-            $new_data_content['shortMonthlyPayment'] = $this->certification_lib->get_short_monthly_payment($new_data_content['short']);
-        }
-
-        // 助學貸款
-        if (isset($post_data['studentLoans']))
-        {
-            $new_data_content['studentLoans'] = (int) str_replace(',', '', $post_data['studentLoans']);
-            $new_data_content['studentLoansCount'] = (int) str_replace(',', '', $post_data['studentLoansCount']);
-
-            if (($new_data_content['studentLoans'] !== 0 || $new_data_content['studentLoansCount'] !== 0) &&
-                ($new_data_content['studentLoans'] * $new_data_content['studentLoansCount'] === 0))
-            {
-                return $this->_return_error('助學貸款總訂約金額與總筆數，不可其中一個為0，另一個不為0');
-            }
-            $new_data_content['studentLoansMonthlyPayment'] = $this->certification_lib->get_student_loans_monthly_payment(
-                $new_data_content['studentLoans'],
-                $new_data_content['studentLoansCount']
-            );
-        }
-
-        // 信用卡
-        if (isset($post_data['creditCard']))
-        {
-            $new_data_content['creditCard'] = (int) str_replace(',', '', $post_data['creditCard']);
-            $new_data_content['creditCardMonthlyPayment'] = $this->certification_lib->get_credit_card_monthly_payment($new_data_content['creditCard']);
-        }
-
-        // 借款總餘額
-        if ( ! empty($post_data['liabilitiesWithoutAssureTotalAmount']))
-        {
-            $new_data_content['liabilitiesWithoutAssureTotalAmount'] = (float) str_replace(',', '', $post_data['liabilitiesWithoutAssureTotalAmount']);
-        }
-
-        // 總共月繳
-        $new_data_content['totalMonthlyPayment'] =
-            $new_data_content['longAssureMonthlyPayment'] +
-            $new_data_content['midAssureMonthlyPayment'] +
-            $new_data_content['longMonthlyPayment'] +
-            $new_data_content['midMonthlyPayment'] +
-            $new_data_content['shortMonthlyPayment'] +
-            $new_data_content['studentLoansMonthlyPayment'] +
-            $new_data_content['creditCardMonthlyPayment'];
-
-        // 負債比
-        $new_data_content['debt_to_equity_ratio'] = round(
-            (float) $new_data_content['totalMonthlyPayment'] / (float) $new_data_content['monthly_repayment'] * 100, 2
-        );
-
-        $verified_result = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
-        $this->load->library('verify/data_verify_lib');
-        $verified_result = $this->data_verify_lib->check_investigation($verified_result, $new_data_content, $new_data_content);
-        $remark = ['fail' => implode('、', $verified_result->getAPPMessage(CERTIFICATION_STATUS_FAILED))];
-        $this->certification_lib->update_repayment_certification(
-            $post_data['id'],
-            $old_data_content['printDatetime'],
-            $verified_result,
-            $new_data_content,
-            $remark
-        );
-
-        return ['result' => TRUE];
-    }
-
-    private function _return_error($msg = 'ERROR')
-    {
-        return ['result' => FALSE, 'msg' => $msg];
     }
 }
 ?>

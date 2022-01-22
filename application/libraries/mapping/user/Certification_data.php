@@ -433,6 +433,8 @@ class Certification_data
 			'personId' => '',
 			'taxId' => '',
 			'liabilities_totalAmount'=>'',
+			'liabilitiesWithoutAssureTotalAmount'=>'',
+			'debt_to_equity_ratio'=> 0,
 			'liabilities_metaInfo'=>'',
 			'liabilities_badDebtInfo'=>'',
 			'creditCard_cardInfo'=>'',
@@ -491,6 +493,14 @@ class Certification_data
 			'S2Count' => 0,
 			'commentReason' => '',
 			'A11TaxId' => '',
+			'longAssureMonthlyPayment' => 0,
+			'midAssureMonthlyPayment' => 0,
+			'longMonthlyPayment' => 0,
+			'midMonthlyPayment' => 0,
+			'shortMonthlyPayment' => 0,
+			'studentLoansMonthlyPayment' => 0,
+			'creditCardMonthlyPayment' => 0,
+			'totalMonthlyPayment' => 0,
 			'creditCardHasDelay' => '無',
 			'creditCardHasBadDebt' => '無',
 		];
@@ -638,6 +648,8 @@ class Certification_data
 						}
 					}
 				}
+				// 由於總借款餘額已經在解析時將千位數作轉換
+				$res['liabilitiesWithoutAssureTotalAmount'] = intval($res['liabilities_totalAmount']) - ($res['balanceShortAssure']+$res['balanceMidAssure']+$res['balanceLongAssure'])*1000;
 
 				// 借款家數
 				$res['bankCount'] = count($bank_array);
@@ -751,6 +763,10 @@ class Certification_data
 					$totalAmount = intval(preg_replace('/\,|千元/','',$res['creditCard_totalAmount']));
 					$res['creditCardUseRate'] = round($totalAmount/$totalQuota*100, 2);
 				}
+
+				// 信用卡月繳
+				$res['creditCardMonthlyPayment'] = round(intval(preg_replace('/\,|元/', '', $data['K2']['totalAmount'])) * 0.1 / 1000, 2);
+
 			}
 			// 被查詢記錄
 			$mappingInstitutionList = ['中信' => '中國信託'];
@@ -779,6 +795,39 @@ class Certification_data
 			if(! empty($data['companyCreditScore']['noCommentReason'])){
 				$res['commentReason'] = $data['companyCreditScore']['noCommentReason'];
 			}
+
+			// 長擔月繳(房貸)
+			if(is_numeric($res['totalAmountLongAssure']) && $res['totalAmountLongAssure']!= 0){
+				$res['longAssureMonthlyPayment'] = number_format($res['totalAmountLongAssure']*(pow(1.0020833,300)*0.0020833)/(pow(1.0020833,300)-1),2);
+			}
+
+			// 中擔月繳(車貸)
+			if(is_numeric($res['totalAmountMidAssure']) && $res['totalAmountMidAssure']!= 0){
+				$res['midAssureMonthlyPayment'] = number_format($res['totalAmountMidAssure']*(pow(1.0041666,84)*0.0041666)/(pow(1.0041666,84)-1),2);
+			}
+
+			// 長放月繳
+			if(is_numeric($res['totalAmountLong']) && $res['totalAmountLong']!= 0){
+				$res['longMonthlyPayment'] = number_format($res['totalAmountLong']*(pow(1.0020833,300)*0.0020833)/(pow(1.0020833,300)-1),2);
+			}
+
+			// 中放月繳
+			if(is_numeric($res['totalAmountMid']) && $res['totalAmountMid']!= 0){
+				$res['midMonthlyPayment'] = number_format($res['totalAmountMid']*(pow(1.0083333,60)*0.0083333)/(pow(1.0083333,60)-1),2);
+			}
+
+			// 短放月繳
+			if(is_numeric($res['totalAmountShort']) && $res['totalAmountShort']!= 0){
+				$res['shortMonthlyPayment'] = number_format($res['totalAmountShort']*0.0083333,2);
+			}
+
+			// 助學貸款月繳
+			if(is_numeric($res['totalAmountStudentLoans']) && is_numeric($res['totalAmountStudentLoansCount']) && $res['totalAmountStudentLoans']> 0 && $res['totalAmountStudentLoans']> 0){
+				$res['studentLoansMonthlyPayment'] = number_format($res['totalAmountStudentLoans']/($res['totalAmountStudentLoansCount']*12),2);
+			}
+
+			// 總共月繳
+			$res['totalMonthlyPayment'] = $res['longAssureMonthlyPayment'] + $res['midAssureMonthlyPayment'] + $res['longMonthlyPayment'] + $res['midMonthlyPayment'] + $res['shortMonthlyPayment'] + $res['studentLoansMonthlyPayment'] + $res['creditCardMonthlyPayment'];
 
 			// A11
 			$taxid_array = [];
@@ -1081,301 +1130,5 @@ class Certification_data
             $meta_data = array_reduce($result, 'array_merge', array());
         }
         return $meta_data;
-    }
-
-    /**
-     * 聯徵解析資料 轉存為 還款力計算
-     * @param array $data
-     * @return array
-     * [
-     *     'printDatetime' => '',                       // 印表時間
-     *     'longAssure' => 0,                           // 長期擔保放款訂約總金額
-     *     'longAssureMonthlyPayment' => 0,             // 長期擔保放款月繳(房貸月繳金額) = 長期擔保放款訂約總金額 * ...
-     *     'midAssure' => 0,                            // 中期擔保放款訂約總金額
-     *     'midAssureMonthlyPayment' => 0,              // 中期擔保放款月繳(車貸月繳金額) = 中期擔保放款訂約總金額 * ...
-     *     'long' => 0,                                 // 長期放款訂約總金額
-     *     'longMonthlyPayment' => 0,                   // 長期放款月繳(長期信貸月繳金額) = 長期放款訂約總金額 * ...
-     *     'mid' => 0,                                  // 中期放款訂約總金額
-     *     'midMonthlyPayment' => 0,                    // 中期放款月繳(中期信貸月繳金額) = 中期放款訂約總金額 * ...
-     *     'short' => 0,                                // 短期放款訂約總金額
-     *     'shortMonthlyPayment' => 0,                  // 短期放款月繳(短期信貸月繳金額) = 短期放款訂約總金額 * ...
-     *     'studentLoans' => 0,                         // 助學貸款訂約總金額
-     *     'studentLoansMonthlyPayment' => 0,           // 助學貸款月繳 = 助學貸款訂約總金額 * ...
-     *     'studentLoansCount' => 0,                    // 助學貸款總筆數
-     *     'creditCard' => 0,                           // 信用卡帳款總餘額
-     *     'creditCardMonthlyPayment' => 0,             // 信用卡月繳 = 信用卡帳款總餘額 * ...
-     *     'totalMonthlyPayment' => 0,                  // 總共月繳
-     *     'liabilitiesWithoutAssureTotalAmount' => '', // 借款總餘額
-     * ]
-     */
-    public function transform_joint_credit_to_repayment_capacity(array $data = [])
-    {
-        $res = [
-            'printDatetime' => '',
-            'totalAmountQuota' => 0,
-            'longAssure' => 0,
-            'longAssureMonthlyPayment' => 0,
-            'midAssure' => 0,
-            'midAssureMonthlyPayment' => 0,
-            'long' => 0,
-            'longMonthlyPayment' => 0,
-            'mid' => 0,
-            'midMonthlyPayment' => 0,
-            'short' => 0,
-            'shortMonthlyPayment' => 0,
-            'studentLoans' => 0,
-            'studentLoansMonthlyPayment' => 0,
-            'studentLoansCount' => 0,
-            'creditCard' => 0,
-            'creditCardMonthlyPayment' => 0,
-            'totalMonthlyPayment' => 0,
-            'liabilitiesWithoutAssureTotalAmount' => 0,
-        ];
-
-        if (empty($data))
-        {
-            return $res;
-        }
-
-        // 印表時間
-        $res['printDatetime'] = $data['applierInfo']['creditInfo']['printDatetime'] ?? '';
-
-        // 有無信用資訊項目
-        if ( ! empty($data['applierInfo']['creditInfo']))
-        {
-            $convert_integer_multiplier = ['liabilities' => ['totalAmount' => 1000], 'totalAmount' => ['totalAmount' => 1]];
-            foreach ($data['applierInfo']['creditInfo'] as $k => $v)
-            {
-                if ( ! is_array($v))
-                {
-                    continue;
-                }
-                foreach ($v as $k1 => $v1)
-                {
-                    if ( ! is_array($v1))
-                    {
-                        continue;
-                    }
-                    foreach ($v1 as $k2 => $v2)
-                    {
-                        $name = $k.'_'.$k1;
-                        if ( ! isset($res[$name]))
-                        {
-                            continue;
-                        }
-
-                        $res[$name] = $v1['existCreditInfo'];
-                        if (empty($convert_integer_multiplier[$k][$k1]))
-                        {
-                            continue;
-                        }
-
-                        preg_match('/(\d+[,]*)+/', $res[$name], $regexResult);
-                        if (empty($regexResult))
-                        {
-                            continue;
-                        }
-                        $res[$name] = (int) (str_replace(',', '', $regexResult[0])) * $convert_integer_multiplier[$k][$k1];
-                    }
-                }
-            }
-        }
-
-        $total_amount_student_loans =
-        $total_amount_student_loans_count =
-        $total_amount_short =
-        $total_amount_mid =
-        $total_amount_long =
-        $total_amount_mid_assure =
-        $total_amount_long_assure =
-        $balance_mid_assure =
-        $balance_long_assure =
-        $balance_short_assure = 0;
-
-        // 表B1-借款餘額明細資訊
-        if ( ! empty($data['B1']['dataList']))
-        {
-            foreach ($data['B1']['dataList'] as $value)
-            {
-                $value['totalAmount'] = preg_replace('/\,|千元/', '', $value['totalAmount']);
-                $value['noDelayAmount'] = preg_replace('/\,|千元/', '', $value['noDelayAmount']);
-                $value['delayAmount'] = preg_replace('/\,|千元/', '', $value['delayAmount']);
-
-                if ( ! is_numeric($value['totalAmount']) || ! is_numeric($value['noDelayAmount']) || ! is_numeric($value['delayAmount']))
-                {
-                    continue;
-                }
-
-                // 訂約金額總額度
-                $res['totalAmountQuota'] += $value['totalAmount'];
-
-                if ($value['accountDescription'] == '短期放款' || $value['accountDescription'] == '其他短期放款')
-                {
-                    $total_amount_short += $value['totalAmount'];
-                }
-                if ($value['accountDescription'] == '中期放款')
-                {
-                    $total_amount_mid += $value['totalAmount'];
-                }
-                if ($value['accountDescription'] == '長期放款')
-                {
-                    $total_amount_long += $value['totalAmountLong'];
-                }
-                if ($value['accountDescription'] == '短期擔保放款' || $value['accountDescription'] == '其他短期擔保放款')
-                {
-                    $balance_short_assure += $value['noDelayAmount'] + $value['delayAmount'];
-                }
-                if ($value['accountDescription'] == '中期擔保放款')
-                {
-                    $total_amount_mid_assure += $value['totalAmount'];
-                    $balance_mid_assure += $value['noDelayAmount'] + $value['delayAmount'];
-                }
-                if ($value['accountDescription'] == '長期擔保放款')
-                {
-                    $total_amount_long_assure += $value['totalAmount'];
-                    $balance_long_assure += $value['noDelayAmount'] + $value['delayAmount'];
-                }
-                if ($value['accountDescription'] == '助學貸款')
-                {
-                    $total_amount_student_loans += $value['totalAmount'];
-                    $total_amount_student_loans_count += 1;
-                }
-            }
-
-            foreach ($data['B1-extra']['dataList'] as $value)
-            {
-                $value['appropriationAmount'] = isset($value['appropriationAmount']) ? preg_replace('/\,|千元/', '', $value['appropriationAmount']) : 0;
-                $value['repaymentAmount'] = isset($value['appropriationAmount']) ? preg_replace('/\,|千元/', '', $value['repaymentAmount']) : 0;
-
-                if ( ! is_numeric($value['appropriationAmount']) || ! is_numeric($value['repaymentAmount']))
-                {
-                    continue;
-                }
-
-                if ($value['accountDescription'] == '短期擔保放款' || $value['accountDescription'] == '其他短期擔保放款')
-                {
-                    if ($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0)
-                    {
-                        $balance_short_assure += $value['appropriationAmount'];
-                    }
-                    else
-                    {
-                        $balance_short_assure -= $value['repaymentAmount'];
-                    }
-                }
-
-                if ($value['accountDescription'] == '中期擔保放款')
-                {
-                    if ($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0)
-                    {
-                        $total_amount_mid_assure += $value['appropriationAmount'];
-                        $balance_mid_assure += $value['appropriationAmount'];
-                    }
-                    else
-                    {
-                        $balance_mid_assure -= $value['repaymentAmount'];
-                    }
-                }
-
-                if ($value['accountDescription'] == '長期擔保放款')
-                {
-                    if ($value['appropriationAmount'] > 0 && $value['repaymentAmount'] == 0)
-                    {
-                        $total_amount_long_assure += $value['appropriationAmount'];
-                        $balance_long_assure += $value['appropriationAmount'];
-                    }
-                    else
-                    {
-                        $balance_mid_assure -= $value['repaymentAmount'];
-                    }
-                }
-            }
-
-            // 借款總餘額
-            $res['liabilitiesWithoutAssureTotalAmount'] = ($balance_short_assure + $balance_mid_assure + $balance_long_assure) * 1000;
-        }
-
-        $this->CI->load->library('certification_lib');
-
-        // 表K2-信用卡戶帳款資訊
-        if ( ! empty($data['K2']['totalAmount']))
-        {
-            // 信用卡帳款總餘額
-            $res['creditCard'] = (int) (preg_replace('/\,|元/', '', $data['K2']['totalAmount']));
-
-            // 信用卡月繳
-            $res['creditCardMonthlyPayment'] = $this->CI->certification_lib->get_credit_card_monthly_payment($res['creditCard']);
-        }
-
-        if (is_numeric($total_amount_long_assure) && $total_amount_long_assure != 0)
-        {
-            // 長期擔保放款訂約總金額
-            $res['longAssure'] = $total_amount_long_assure;
-
-            // 長期擔保放款月繳(房貸月繳金額)
-            $res['longAssureMonthlyPayment'] = $this->CI->certification_lib->get_long_assure_monthly_payment($res['longAssure']);
-        }
-
-        if (is_numeric($total_amount_mid_assure) && $total_amount_mid_assure != 0)
-        {
-            // 中期擔保放款訂約總金額
-            $res['midAssure'] = $total_amount_mid_assure;
-
-            // 中期擔保放款月繳(車貸月繳金額)
-            $res['midAssureMonthlyPayment'] = $this->CI->certification_lib->get_mid_assure_monthly_payment($res['midAssure']);
-        }
-
-        if (is_numeric($total_amount_long) && $total_amount_long != 0)
-        {
-            // 長期放款訂約總金額
-            $res['long'] = $total_amount_long;
-
-            // 長期放款月繳
-            $res['longMonthlyPayment'] = $this->CI->certification_lib->get_long_monthly_payment($res['long']);
-        }
-
-        if (is_numeric($total_amount_mid) && $total_amount_mid != 0)
-        {
-            // 中期放款訂約總金額
-            $res['mid'] = $total_amount_mid;
-
-            // 中期放款月繳
-            $res['midMonthlyPayment'] = $this->CI->certification_lib->get_mid_monthly_payment($res['mid']);
-        }
-
-        if (is_numeric($total_amount_short) && $total_amount_short != 0)
-        {
-            // 短期放款訂約總金額
-            $res['short'] = $total_amount_short;
-
-            // 短期放款月繳
-            $res['shortMonthlyPayment'] = $this->CI->certification_lib->get_short_monthly_payment($res['short']);
-        }
-
-        if (is_numeric($total_amount_student_loans) && is_numeric($total_amount_student_loans_count) && $total_amount_student_loans > 0)
-        {
-            // 助學貸款訂約總金額
-            $res['studentLoans'] = $total_amount_student_loans;
-
-            // 助學貸款月繳
-            $res['studentLoansMonthlyPayment'] = $this->CI->certification_lib->get_student_loans_monthly_payment(
-                $total_amount_student_loans,
-                $total_amount_student_loans_count
-            );
-
-            $res['studentLoansCount'] = $total_amount_student_loans_count;
-        }
-
-        // 總共月繳
-        $res['totalMonthlyPayment'] =
-            $res['longAssureMonthlyPayment'] +
-            $res['midAssureMonthlyPayment'] +
-            $res['longMonthlyPayment'] +
-            $res['midMonthlyPayment'] +
-            $res['shortMonthlyPayment'] +
-            $res['studentLoansMonthlyPayment'] +
-            $res['creditCardMonthlyPayment'];
-
-        return $res;
     }
 }
