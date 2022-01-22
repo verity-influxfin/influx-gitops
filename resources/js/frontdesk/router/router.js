@@ -5,6 +5,7 @@ import qa from "../pages/qa";
 import company from "../pages/company";
 import news from "../pages/news";
 import ntu from "../pages/ntu"
+import charitableStatus from "../pages/charitableStatus"
 import blog from "../pages/blog";
 import vlog from "../pages/vlog";
 import videoPage from '../pages/videoPage';
@@ -139,6 +140,7 @@ let routers = [
     { path: '/skbank', component: skbank },
     { path: '/obank', component: obank },
     {path:'/charitable',component:ntu},
+    { path: '/charitable-status', component: charitableStatus},
     { path: '/search',name:'search', component: search }
 ];
 
