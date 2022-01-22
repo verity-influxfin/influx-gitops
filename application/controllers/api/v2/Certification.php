@@ -1229,7 +1229,7 @@ class Certification extends REST_Controller {
                 $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
             }
 
-            if($investor == 0){
+            if($investor == USER_BORROWER || $investor == USER_INVESTOR){
                 $name_limit = array('爸爸','媽媽','爺爺','奶奶','父親','母親');
                 if(in_array($content['name'],$name_limit)){
                     $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
