@@ -50,8 +50,9 @@ export default {
       return a
     },
     duration() {
+      const length = this.marqee.length * 1.5 > 10 ? this.marqee.length * 1.5 : 10
       return {
-        animationDuration: this.marqee.length * 1.5+'s'
+        animationDuration: length + 's'
       }
     }
   },
@@ -67,20 +68,20 @@ export default {
 .main-content {
   margin: 30px auto;
   width: 900px;
-  border: 1px solid #707070;
+  border: 1px solid #5a6a7c;
   .status-header {
     display: flex;
     flex-direction: column;
     padding: 12px 0;
     margin: 0 20px;
-    border-bottom: 1px solid #707070;
+    border-bottom: 1px solid #5a6a7c;
     .header-title {
       font-size: 30px;
       font-style: normal;
       text-align: center;
     }
     .header-info {
-      color: #ffeb3b;
+      color: #f7c352;
       font-size: 36px;
       text-align: center;
     }
@@ -88,7 +89,7 @@ export default {
   .status-rank {
     padding: 20px 0;
     margin: 0 12px;
-    border-bottom: 1px solid #707070;
+    border-bottom: 1px solid #5a6a7c;
     .rank-item {
       display: flex;
       padding: 10px;
@@ -102,15 +103,15 @@ export default {
         width: 50px;
         color: #fff;
         &.rank-1 {
-          background-color: #ffeb3b;
+          background-color: #fedf05;
         }
         &.rank-2 {
-          background-color: #c7bebe;
+          background-color: #d9d9d9;
         }
         &.rank-3,
         &.rank-4,
         &.rank-5 {
-          background-color: #ffc107;
+          background-color: #c65916;
         }
       }
       .rank-value {
