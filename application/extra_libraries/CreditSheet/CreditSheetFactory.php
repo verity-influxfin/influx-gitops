@@ -1,7 +1,9 @@
 <?php
 namespace CreditSheet;
 use CreditSheet\BasicInfo\PersonalBasicInfo;
+use CreditSheet\BasicInfo\CompanyBasicInfo;
 use CreditSheet\BasicInfo\ArchivingPersonalBasicInfo;
+use CreditSheet\BasicInfo\ArchivingCompanyBasicInfo;
 use CreditSheet\CreditLine\CreditLineInfo;
 use CreditSheet\CreditLine\ArchivingCreditLineInfo;
 use CreditSheet\CashLoan\CashLoanInfo;
@@ -9,7 +11,7 @@ use CreditSheet\CashLoan\ArchivingCashLoanInfo;
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class CreditSheetFactory {
-    public static function getInstance($targetId): ?PersonalCreditSheet
+    public static function getInstance($targetId)
     {
         $CI = &get_instance();
         $CI->load->model('user/user_model');
@@ -21,47 +23,60 @@ class CreditSheetFactory {
 
         // 判斷類型
         $call_type = '';
-        if (in_array($target->product_id,['1002']))
+        if (in_array($target->product_id, [PRODUCT_SK_MILLION_SMEG]))
         {
-            $call_type = TYPE_COMPANY;
+            $call_type = USER_IS_COMPANY;
         }
-        elseif (in_array($target->product_id,['1','2','3','4']))
+        elseif (in_array($target->product_id, [
+            PRODUCT_ID_STUDENT,
+            PRODUCT_ID_STUDENT_ORDER,
+            PRODUCT_ID_SALARY_MAN,
+            PRODUCT_ID_SALARY_MAN_ORDER]))
         {
-            $call_type = TYPE_PERSONAL;
+            $call_type = USER_NOT_COMPANY;
         }
 
         if(isset($creditSheetRecord)) {
             // 已封存之個金授審表
-            if ($call_type == TYPE_PERSONAL)
+            if ($call_type == USER_NOT_COMPANY)
             {
                 $basicInfo = new ArchivingPersonalBasicInfo();
                 $creditLineInfo = new ArchivingCreditLineInfo();
                 $cashLoanInfo = new ArchivingCashLoanInfo();
             }
-            elseif ($call_type == TYPE_COMPANY)
+            // 已封存之企金授審表
+            elseif ($call_type == USER_IS_COMPANY)
             {
+                $basicInfo = new ArchivingCompanyBasicInfo();
+                $creditLineInfo = new ArchivingCreditLineInfo();
+                $cashLoanInfo = new ArchivingCashLoanInfo();
             }
         }else{
             // 未封存之個金授審表
-            if ($call_type == TYPE_PERSONAL)
+            if ($call_type == USER_NOT_COMPANY)
             {
                 $basicInfo = new PersonalBasicInfo();
                 $creditLineInfo = new CreditLineInfo();
                 $cashLoanInfo = new CashLoanInfo();
             }
-            elseif ($call_type == TYPE_COMPANY)
+            // 未封存之企金授審表
+            elseif ($call_type == USER_IS_COMPANY)
             {
+                $basicInfo = new CompanyBasicInfo();
+                $creditLineInfo = new CreditLineInfo();
+                $cashLoanInfo = new CashLoanInfo();
             }
         }
 
         $returnObject = NULL;
         try{
-            if ($call_type == TYPE_PERSONAL)
+            if ($call_type == USER_NOT_COMPANY)
             {
                 $returnObject = new PersonalCreditSheet($target, $user, $basicInfo, $creditLineInfo, $cashLoanInfo);
             }
-            elseif ($call_type == TYPE_COMPANY)
+            elseif ($call_type == USER_IS_COMPANY)
             {
+                $returnObject = new CompanyCreditSheet($target, $user, $basicInfo, $creditLineInfo, $cashLoanInfo);
             }
         }catch (\InvalidArgumentException $e) {
             error_log("Invalid Argument Exception: ". $e->getMessage());
