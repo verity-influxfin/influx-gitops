@@ -26,40 +26,6 @@
 	  <td>信用評分原因</td>
 	  <td><p><?= isset($data['commentReason']) ? $data['commentReason'] : '-'; ?></p></td>
 	</tr>
-	<tr>
-	  <td>還款力計算</td>
-	  <td colspan="2">
-		<?php
-		 if($type == 'person'){
-		?>
-			<p>長期擔保放款：<?= isset($data['longAssureMonthlyPayment']) ? (strpos($data['longAssureMonthlyPayment'], ',') === false ? number_format($data['longAssureMonthlyPayment']*1000) : $data['longAssureMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>中期擔保放款：<?= isset($data['midAssureMonthlyPayment']) ? (strpos($data['midAssureMonthlyPayment'], ',') === false ? number_format($data['midAssureMonthlyPayment']*1000) : $data['midAssureMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>長期放款：<?= isset($data['longMonthlyPayment']) ? (strpos($data['longMonthlyPayment'], ',') === false ? number_format($data['longMonthlyPayment']*1000) : $data['longMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>中期放款：<?= isset($data['midMonthlyPayment']) ? (strpos($data['midMonthlyPayment'], ',') === false ? number_format($data['midMonthlyPayment']*1000) : $data['midMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>短期放款：<?= isset($data['shortMonthlyPayment']) ? (strpos($data['shortMonthlyPayment'], ',') === false ? number_format($data['shortMonthlyPayment']*1000) : $data['shortMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>助學貸款月繳：<?= isset($data['studentLoansMonthlyPayment']) ? (strpos($data['studentLoansMonthlyPayment'], ',') === false ? number_format($data['studentLoansMonthlyPayment']*1000) : $data['studentLoansMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>信用卡月繳：<?= isset($data['creditCardMonthlyPayment']) ? (strpos($data['creditCardMonthlyPayment'], ',') === false ? number_format($data['creditCardMonthlyPayment']*1000) : $data['creditCardMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>總共月繳：<?= isset($data['totalMonthlyPayment']) ? (strpos($data['totalMonthlyPayment'], ',') === false ? number_format($data['totalMonthlyPayment']*1000) : $data['totalMonthlyPayment'] . '千元') : '-'; ?></p>
-			<p>是否小於投保薪資：<?= isset($data['monthly_repayment_enough']) ? $data['monthly_repayment_enough'] : '-'; ?></p>
-			<p>
-				<span>投保薪資：<?= isset($data['monthly_repayment']) ? (strpos($data['monthly_repayment'], ',') === false ? number_format($data['monthly_repayment']*1000) : $data['monthly_repayment']. '千元') : '-'; ?></span>；
-				<span>總共月繳：<?= isset($data['totalMonthlyPayment']) ? (strpos($data['totalMonthlyPayment'], ',') === false ? number_format($data['totalMonthlyPayment']*1000) : $data['totalMonthlyPayment'] . '千元') : '-'; ?></span>
-			</p>
-			<p>是否小於薪資22倍：<?= isset($data['total_repayment_enough']) ? $data['total_repayment_enough'] : '-'; ?></p>
-			<p>
-				<span>薪資22倍：<?= isset($data['total_repayment']) ? (strpos($data['total_repayment'], ',') === false ? number_format($data['total_repayment']*1000) : $data['total_repayment'] . '千元') : '-'; ?></span>；
-				<span>借款總餘額：<?= isset($data['liabilitiesWithoutAssureTotalAmount']) && is_numeric($data['liabilitiesWithoutAssureTotalAmount']) ? (strpos($data['liabilitiesWithoutAssureTotalAmount'], ',') === false ? number_format($data['liabilitiesWithoutAssureTotalAmount']) : $data['liabilitiesWithoutAssureTotalAmount']) : '-'; ?></span>
-			</p>
-			<p>
-				<span>
-					負債比計算：<?= isset($data['debt_to_equity_ratio']) ? $data['debt_to_equity_ratio'] : '-'; ?>%</span>
-				</span>
-			</p>
-		<?php
-		 }
-		?>
-	  </td>
-	</tr>
   </tbody>
 </table>
 
