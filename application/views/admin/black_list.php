@@ -437,7 +437,8 @@
 		methods: {
 			convertTime(time) {
 				d = new Date(time * 1000)
-				return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
+                return d.toLocaleString()
+				// return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
 			},
 			setMainTableRow(item) {
 				const buttonToID = (id) => {
