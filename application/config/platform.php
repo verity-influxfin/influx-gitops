@@ -1579,7 +1579,6 @@ $config['sub_product_list'] = [
                 ],
                 'repayment' => [ // 還款方式
                     1, // 本息均攤
-                    2, // 繳息不還本
                 ],
                 'targetData' => [],
                 'secondInstance' => FALSE,
