@@ -586,6 +586,11 @@ class MY_Admin_Controller extends CI_Controller{
                     'model_key' => 'passbook',
                     'submodel_key' => 'user_bankaccount_list'
                 ],
+                'user_bankaccount_list' => [
+                    'action' => 'read',
+                    'model_key' => 'passbook',
+                    'submodel_key' => 'user_bankaccount_list'
+                ],
                 'difficult_word_add' => [
                     'action' => 'create',
                     'model_key' => 'certification',
