@@ -548,4 +548,18 @@ class Target_model extends MY_Model
 
         return (int) ($result['transaction_count'] ?? 0);
     }
+
+    /** 依targets.status取得不重複的使用者ID
+     * @param array $status
+     * @return mixed
+     */
+    public function get_distinct_user_by_status(array $status)
+    {
+        $this->db
+            ->select('DISTINCT(user_id) AS user_id')
+            ->from('p2p_loan.targets')
+            ->where_in('status', $status);
+
+        return $this->db->get()->result_array();
+    }
 }
