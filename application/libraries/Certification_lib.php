@@ -1505,11 +1505,12 @@ class Certification_lib{
 		// 	return false;
 		// }
 		$info->content = isset($info->content) ? json_decode($info->content,true) : [];
-		if($info && $info->certification_id == 1017 && $info->status == 0 && !empty($info->content['employeeinsurancelist_image'])){
+		if($info && $info->certification_id == 1017 && $info->status == 0){
 			$status = 3;
 			$data = [];
 
-			if(isset($info->content['result']) && !empty($info->content['result'])){
+            if ( ! empty($info->content['employeeinsurancelist_image']) && isset($info->content['result']) && ! empty($info->content['result']))
+            {
                 foreach($info->content['result'] as $k=>$v){
     				if(isset($v['origin_type']) && $v['origin_type'] == 'user_confirm'){
     					$imageIds[] = $k;
