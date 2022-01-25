@@ -4,7 +4,7 @@
     <alesis-loan-header
       :header-img="require('@/asset/images/3S-title.webp')"
       header-img-class="img-title"
-      content="學生貸款史上最低利3%~5%<br>最高額度18萬，點先繳息不還本<br>最高額度 15 萬、最低利率 5%<br>鼓勵名校同學創業、投資、自我成長"
+      content="學生貸款史上最低利3%~5%<br>最高額度18萬，可先繳息不還本<br>鼓勵名校同學創業、投資、自我成長"
       :image="require('@/asset/images/3S-banner.webp')"
       :image-phone="require('@/asset/images/3S-banner-phone.webp')"
     ></alesis-loan-header>
@@ -129,7 +129,7 @@
       </alesis-header>
       <alesis-section :secondary="true">
         <alesis-space size="medium"></alesis-space>
-        <div class="step-grid">
+        <div class="step-grid hidden-phone">
           <div class="step-item">
             <div class="step-title">選擇額度</div>
             <div class="step-picture">
@@ -171,6 +171,53 @@
             </div>
             <div class="step-info">24小時收到款項</div>
           </div>
+        </div>
+        <div class="swiper hidden-desktop">
+          <div class="swiper-wrapper">
+            <div class="step-item swiper-slide">
+              <div class="step-title">選擇額度</div>
+              <div class="step-picture">
+                <div class="step-num step-1">1</div>
+                <img class="step-img" src="~images/3S-step1.webp" />
+              </div>
+              <div class="step-info">
+                <div>提供完整資訊</div>
+                <div>有助提高額度</div>
+              </div>
+            </div>
+            <div class="step-item swiper-slide">
+              <div class="step-title">上傳資料</div>
+              <div class="step-picture">
+                <div class="step-num step-2">2</div>
+                <img class="step-img" src="~images/3S-step2.webp" />
+              </div>
+              <div class="step-info">
+                <div>AI數據分析審核</div>
+                <div>全程無人打擾</div>
+              </div>
+            </div>
+            <div class="step-item swiper-slide">
+              <div class="step-title">持證自拍</div>
+              <div class="step-picture">
+                <div class="step-num step-3">3</div>
+                <img class="step-img" src="~images/3S-step3.webp" />
+              </div>
+              <div class="step-info">
+                <div>審核成功後</div>
+                <div>立即上架幫您媒合投資人</div>
+              </div>
+            </div>
+            <div class="step-item swiper-slide">
+              <div class="step-title">上架媒合</div>
+              <div class="step-picture">
+                <div class="step-num step-4">4</div>
+                <img class="step-img" src="~images/3S-step4.webp" />
+              </div>
+              <div class="step-info">24小時收到款項</div>
+            </div>
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </div>
         <alesis-space size="medium"></alesis-space>
       </alesis-section>
@@ -256,7 +303,18 @@ export default {
     AlesisVerticalRoadmap,
     AlesisSpace
   },
-  mounted() {},
+  mounted() {
+    SwiperCore.use([Navigation])
+    const swiper = new Swiper('.swiper', {
+      // Navigation arrows
+
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    })
+    $('title').text('普匯3S名校貸');
+  },
 }
 </script>
 
@@ -265,8 +323,8 @@ export default {
 .img-title {
   width: 340px;
   @include rwd {
-        width: 220px;
-    }
+    width: 220px;
+  }
 }
 
 .alesis-steps {
@@ -286,7 +344,12 @@ export default {
 /**
  * 適用對象
  */
-
+.hidden-desktop {
+  display: none !important;
+}
+.hidden-phone{
+    display:grid !important;
+}
 .適用對象 {
   position: relative;
   --alesis-xheader-offset: 20%;
@@ -341,6 +404,7 @@ export default {
     margin: 20px 0 40px;
   }
   .points-grid {
+      margin: 0 -20px;
     display: flex;
     justify-content: space-between;
     .point-item {
@@ -598,11 +662,17 @@ export default {
 }
 
 @media screen and (max-width: 768px) {
+  .hidden-phone {
+    display: none !important;
+  }
+  .hidden-desktop {
+    display: block !important;
+  }
   .intro {
     max-width: 1200px;
     margin: auto;
     .intro-title {
-      font-size: 26px;
+      font-size: 19px;
       line-height: 1.25;
       letter-spacing: 1px;
       text-align: left;
@@ -620,13 +690,13 @@ export default {
           content: '';
           width: 22px;
           height: 22px;
-          margin-right: 15px;
+          margin-right: 5px;
           background-position: center center;
           background-size: contain;
           background-repeat: no-repeat;
           background-image: url('~images/check-item.png');
         }
-        font-size: 16px;
+        font-size: 13px;
         letter-spacing: 1.2px;
       }
     }
@@ -640,7 +710,7 @@ export default {
       justify-content: space-between;
       .point-item {
         max-width: 30%;
-        font-size: 14px;
+        font-size: 12px;
         letter-spacing: 1px;
       }
       .point-img {
@@ -689,63 +759,82 @@ export default {
       }
     }
   }
-  .step-grid {
-    display: grid;
-    margin: auto;
-    grid-template-columns: 290px 290px 300px 290px;
-    gap: 35px;
-    width: fit-content;
-    .step-item {
-      padding-left: 100px;
-      .step-title {
-        font-size: 20px;
-        margin-bottom: 15px;
-      }
-      .step-picture {
-        position: relative;
-        .step-num {
-          -webkit-text-stroke: 4px #f29600;
-          color: #fff;
-          font-family: Arial;
-          font-size: 262px;
-          font-stretch: normal;
-          font-style: normal;
-          font-weight: bold;
-          letter-spacing: 13.1px;
-          line-height: 1.15;
-          position: absolute;
-          text-align: left;
-          z-index: -1;
-          &.step-1 {
-            left: -115px;
-            top: 35px;
-          }
-          &.step-2 {
-            left: -105px;
-            top: 35px;
-          }
-          &.step-3 {
-            left: -105px;
-            top: 35px;
-          }
-          &.step-4 {
-            left: -105px;
-            top: 35px;
-          }
+  .step-item {
+      padding-left: 85px;
+      padding-right: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .step-title {
+      font-size: 20px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.25;
+      letter-spacing: normal;
+      text-align: center;
+      color: #1e69aa;
+      margin-bottom: 15px;
+    }
+    .step-picture {
+      position: relative;
+      .step-num {
+        -webkit-text-stroke: 4px #f29600;
+        color: #fff;
+        font-family: Arial;
+        font-size: 163px;
+        font-stretch: normal;
+        font-style: normal;
+        font-weight: bold;
+        letter-spacing: 13.1px;
+        line-height: 1.15;
+        position: absolute;
+        text-align: left;
+        z-index: -1;
+        &.step-1 {
+          left: -60px;
+          top: 55px;
+        }
+        &.step-2 {
+          left: -65px;
+          top: 55px;
+        }
+        &.step-3 {
+          left: -65px;
+          top: 55px;
+        }
+        &.step-4 {
+          left: -65px;
+          top: 55px;
         }
       }
-      .step-info {
-        font-size: 16px;
+      .step-img{
+          width: 140px;
       }
     }
+    .step-info {
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.56;
+      letter-spacing: normal;
+      text-align: center;
+      color: #404040;
+      margin-top: 25px;
+    }
+  }
+  .swipper {
+    width: 350px;
+    height: 350px;
   }
   .apply-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    .apply-item-img{
-        width: 52px;
+    .apply-item-img {
+      width: 52px;
     }
     &.apply-arrow {
       padding: 0 0 20px;
