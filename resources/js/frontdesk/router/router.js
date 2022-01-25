@@ -40,6 +40,7 @@ import risk from '../pages/alesis-risk';
 import projects from '../pages/alesis-projects';
 import workLoan from '../pages/alesis-workLoan';
 import collegeLoan from "../pages/alesis-collegeLoan";
+import collegeLoan3S from "../pages/3SCollegeLoan"
 import search from "../pages/search.vue";
 import promoteCodeIntro from '../pages/promoteCodeIntro.vue'
 import businessIndex from '../pages/BusinessLoan/index'
@@ -56,6 +57,7 @@ let routers = [
     { path: '/borrow', component: borrow },
     { path: '/workLoan', component: workLoan },
     { path: '/collegeLoan', component: collegeLoan },
+    { path: '/3s-college-loan', component: collegeLoan3S },
     { path: '/faq', component: faq },
     { path: '/risk', component: risk },
     { path: '/projects', component: projects },
