@@ -6,6 +6,7 @@
       header-img-class="img-title"
       content="學生貸款史上最低利3%~5%<br>最高額度18萬，點先繳息不還本<br>最高額度 15 萬、最低利率 5%<br>鼓勵名校同學創業、投資、自我成長"
       :image="require('@/asset/images/3S-banner.webp')"
+      :image-phone="require('@/asset/images/3S-banner-phone.webp')"
     ></alesis-loan-header>
     <!-- 標頭 -->
     <div class="intro">
@@ -26,17 +27,17 @@
         <div class="intro-list-underline"></div>
         <div class="points-grid">
           <div class="point-item">
-            <img src="~images/3S-simple.png" alt="" />
+            <img src="~images/3S-simple.png" class="point-img" alt="" />
             <div>簡單便利，</div>
             <div>一支手機即可申辦</div>
           </div>
           <div class="point-item">
-            <img src="~images/3S-speed.png" alt="" />
+            <img src="~images/3S-speed.png" class="point-img" alt="" />
             <div>AI自動審核，</div>
             <div>365天快速放款</div>
           </div>
           <div class="point-item">
-            <img src="~images/3S-safety.png" alt="" />
+            <img src="~images/3S-safety.png" class="point-img" alt="" />
             <div>申貸全程隱私，</div>
             <div>無人照會</div>
           </div>
@@ -180,21 +181,21 @@
         <alesis-space size="small"></alesis-space>
         <div class="row no-gutters justify-content-center">
           <div class="col-auto apply-item">
-            <img src="~images/3S-apply1.png" />
+            <img src="~images/3S-apply1.png" class="apply-item-img" />
             <span class="apply-text"
               ><span class="apply-hint">5</span>分鐘申請
             </span>
           </div>
           <div class="col-auto apply-item apply-arrow">➜</div>
           <div class="col-auto apply-item">
-            <img src="~images/3S-apply2.png" />
+            <img src="~images/3S-apply2.png" class="apply-item-img" />
             <span class="apply-text">
               <span class="apply-hint">10</span>分鐘審核
             </span>
           </div>
           <div class="col-auto apply-item apply-arrow">➜</div>
           <div class="col-auto apply-item">
-            <img src="~images/3S-apply3.png" />
+            <img src="~images/3S-apply3.png" class="apply-item-img" />
             <span class="apply-text">
               <span class="apply-hint">60</span>分鐘到帳
             </span>
@@ -230,21 +231,11 @@ import AlesisTaiwanMap from '../component/alesis/AlesisTaiwanMap'
 import AlesisVerticalRoadmap from '../component/alesis/AlesisVerticalRoadmap'
 import AlesisSpace from '../component/alesis/AlesisSpace'
 // 遠端資料
-import CollegeSchools from '../data/college_schools'
-import StudentDone from '../data/projects_student_done'
 
 import 'swiper/swiper.scss'
 import 'swiper/components/navigation/navigation.min.css'
 import SwiperCore, { Navigation } from 'swiper/core'
 
-// $(document).ready(function () {
-//   setTimeout(() => {
-//     let toPoint = location.hash;
-//     if (toPoint) {
-//       document.getElementById("credit_report").scrollIntoView();
-//     }
-//   }, 3500)
-// });
 export default {
   components: {
     AlesisAppRecommendation,
@@ -265,121 +256,7 @@ export default {
     AlesisVerticalRoadmap,
     AlesisSpace
   },
-  filters: {
-    amount: value => {
-      return Number(parseFloat(value).toFixed(3)).toLocaleString('en')
-    }
-  },
-  data: () => ({
-    formSchool: '',
-    formSchoolDiscipline: '',
-    formRank: '',
-    formHasAward: '',
-    name: '',
-    email: '',
-    isStudentLoan: null,
-    isPartTimeJob: null,
-    monthlyEconomy: null,
-    formCalculated: false,
-    schools: [],
-    schoolDisciplines: {},
-    originalSchools: CollegeSchools,
-    collegePreviews: {},
-    borrowReportResult: {},
-    isFormValid: true
-  }),
-  created() {
-    $('title').text(`學生貸 - inFlux普匯金融科技`)
-    this.getStudentCase()
-  },
-  mounted() {
-    this.initSchools()
-    this.initSteps()
-  },
-  methods: {
-    // initSchools 會扁平化學校清單，並且展開其科系資料作為下拉式選單選項。
-    initSchools() {
-      // 遍歷整個學校，然後扁平化其結構。
-      Object.keys(this.originalSchools).forEach(v => {
-        // 將每個學校推入到學校清單中。
-        this.schools.push({
-          title: v,
-          value: this.originalSchools[v].shortName
-        })
-        // 替這個學校建立對應的科系陣列。
-        this.schoolDisciplines[v] = []
-        // 遍歷這個學校的科系陣列，並將期推到對應的科系清單裡，試圖扁平化。
-        Object.keys(this.originalSchools[v].discipline).forEach(j => {
-          this.schoolDisciplines[v].push({
-            disabled: true,
-            title: j,
-            value: ''
-          })
-          // 扁平化這個科系下的子科系，但用全形空白當作 Indent。
-          this.originalSchools[v].discipline[j].forEach(k => {
-            this.schoolDisciplines[v].push({
-              disabled: false,
-              title: `　　${k}`,
-              value: k
-            })
-          })
-        })
-      })
-    },
-    // 學生案件
-    getStudentCase() {
-      let studenCase = new FormData()
-      studenCase.append('status', 10)
-      studenCase.append('product_id', 1)
-
-      axios
-        .post(`${location.origin}/getCase`, studenCase)
-        .then(res => {
-          this.collegePreviews = res.data
-        })
-        .catch(error => {
-          console.error('getCase 發生錯誤，請稍後再試')
-        })
-    },
-
-    // initSteps 會初始化步驟教學幻燈片。
-    initSteps() {
-      SwiperCore.use([Navigation])
-      new Swiper('.swiper-container.steps-container', {
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        }
-      })
-    },
-
-    // calculateForm 會計算表單。
-    calculateForm() {
-      this.isFormValid = false
-      let data = new FormData(this.$refs.borrowReport)
-
-      axios({
-        url: `${location.origin}/getBorrowReport`,
-        method: 'post',
-        data: data,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Accept: 'application/json'
-        }
-      })
-        .then(res => {
-          this.borrowReportResult.amount = res.data.amount
-          this.borrowReportResult.rate = res.data.rate
-          this.borrowReportResult.platform_fee = res.data.platform_fee
-          this.borrowReportResult.repayment = res.data.repayment
-          this.formCalculated = true
-          this.isFormValid = true
-        })
-        .catch(error => {
-          console.error('getBorrowReport 發生錯誤，請稍後再試')
-        })
-    }
-  }
+  mounted() {},
 }
 </script>
 
@@ -387,6 +264,9 @@ export default {
 @import '../component/alesis/alesis';
 .img-title {
   width: 340px;
+  @include rwd {
+        width: 220px;
+    }
 }
 
 .alesis-steps {
@@ -715,5 +595,171 @@ export default {
   position: relative;
 
   --alesis-xsection-offset-top: 7rem;
+}
+
+@media screen and (max-width: 768px) {
+  .intro {
+    max-width: 1200px;
+    margin: auto;
+    .intro-title {
+      font-size: 26px;
+      line-height: 1.25;
+      letter-spacing: 1px;
+      text-align: left;
+      color: #1e69aa;
+      margin-bottom: 15px;
+    }
+    .intro-title-underline {
+      width: 125px;
+      border: solid 2px #1e69aa;
+    }
+    .intro-list {
+      margin: 20px 0;
+      .intro-list-item {
+        &::before {
+          content: '';
+          width: 22px;
+          height: 22px;
+          margin-right: 15px;
+          background-position: center center;
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-image: url('~images/check-item.png');
+        }
+        font-size: 16px;
+        letter-spacing: 1.2px;
+      }
+    }
+    .intro-list-underline {
+      border: solid 2px #1e69aa;
+      width: 73px;
+      margin: 20px 0;
+    }
+    .points-grid {
+      display: flex;
+      justify-content: space-between;
+      .point-item {
+        max-width: 30%;
+        font-size: 14px;
+        letter-spacing: 1px;
+      }
+      .point-img {
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+  }
+  .suit-info {
+    font-size: 16px;
+    line-height: 1.25;
+    letter-spacing: 1px;
+  }
+  .download-button {
+    margin: 20px auto 20px;
+    .orange-download-btn {
+      padding: 6px 15px;
+      font-size: 18px;
+      letter-spacing: 1.25px;
+    }
+  }
+  .download-info {
+    padding-bottom: 150px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .choose-grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: 1fr 1fr;
+    .choose-item {
+      padding: 4px;
+      .choose-title {
+        width: fit-content;
+        font-size: 20px;
+        letter-spacing: 1px;
+        padding: 8px 16px;
+        margin-bottom: 20px;
+      }
+      .choose-info {
+        padding: 10px 0;
+        font-size: 14px;
+        letter-spacing: 1px;
+        text-align: center;
+        color: #404040;
+      }
+    }
+  }
+  .step-grid {
+    display: grid;
+    margin: auto;
+    grid-template-columns: 290px 290px 300px 290px;
+    gap: 35px;
+    width: fit-content;
+    .step-item {
+      padding-left: 100px;
+      .step-title {
+        font-size: 20px;
+        margin-bottom: 15px;
+      }
+      .step-picture {
+        position: relative;
+        .step-num {
+          -webkit-text-stroke: 4px #f29600;
+          color: #fff;
+          font-family: Arial;
+          font-size: 262px;
+          font-stretch: normal;
+          font-style: normal;
+          font-weight: bold;
+          letter-spacing: 13.1px;
+          line-height: 1.15;
+          position: absolute;
+          text-align: left;
+          z-index: -1;
+          &.step-1 {
+            left: -115px;
+            top: 35px;
+          }
+          &.step-2 {
+            left: -105px;
+            top: 35px;
+          }
+          &.step-3 {
+            left: -105px;
+            top: 35px;
+          }
+          &.step-4 {
+            left: -105px;
+            top: 35px;
+          }
+        }
+      }
+      .step-info {
+        font-size: 16px;
+      }
+    }
+  }
+  .apply-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .apply-item-img{
+        width: 52px;
+    }
+    &.apply-arrow {
+      padding: 0 0 20px;
+      font-size: 36px;
+      letter-spacing: 1.6px;
+    }
+    .apply-text {
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+    .apply-hint {
+      font-family: Arial;
+      font-size: 20px;
+    }
+  }
 }
 </style>

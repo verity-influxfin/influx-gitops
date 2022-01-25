@@ -1,7 +1,11 @@
 <template>
     <div class="貸款標頭">
         <div class="背景">
-            <img :src="image" class="圖片">
+            <img :src="image" class="圖片 hidden-desktop">
+            <div class="圖片 hidden-phone"
+                :style="{backgroundImage:`url(${imagePhone})`}"
+                style="background-position: top center;background-size: cover;">
+            </div>
         </div>
         <div class="遮罩">
             <div class="標題" v-if="headerImg">
@@ -42,6 +46,9 @@ export default {
         },
         image  : {
             default: "",
+        },
+        imagePhone:{
+            default:"",
         },
         headerImg:{
             default:"",
