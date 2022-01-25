@@ -7,7 +7,14 @@
       content="學生貸款史上最低利3%~5%<br>最高額度18萬，可先繳息不還本<br>鼓勵名校同學創業、投資、自我成長"
       :image="require('@/asset/images/3S-banner.webp')"
       :image-phone="require('@/asset/images/3S-banner-phone.webp')"
-    ></alesis-loan-header>
+    >
+      <div class="header-info">
+        <div class="header-em">每月限額100名</div>
+        <router-link to="/borrowLink" target="_blank">
+          <button class="btn header-download">搶先申請</button>
+        </router-link>
+      </div>
+    </alesis-loan-header>
     <!-- 標頭 -->
     <div class="intro">
       <alesis-section>
@@ -347,12 +354,43 @@ export default {
 .hidden-desktop {
   display: none !important;
 }
-.hidden-phone{
-    display:grid !important;
+.hidden-phone {
+  display: grid !important;
 }
 .適用對象 {
   position: relative;
   --alesis-xheader-offset: 20%;
+}
+.header-info {
+  margin: 25px 0;
+  .header-em {
+    margin-bottom: 15px;
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+    font-family: ArialNarrow;
+    font-size: 36px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: italic;
+    line-height: 1.17;
+    letter-spacing: 1.8px;
+    text-align: left;
+    color: #f2e627;
+  }
+  .header-download {
+    padding: 12px 95px;
+    font-size: 22px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.09;
+    letter-spacing: 4.4px;
+    text-align: left;
+    color: #fff;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-image: url('~images/3S-header-btn.webp');
+  }
 }
 .標題 {
   margin-bottom: 10px;
@@ -404,7 +442,7 @@ export default {
     margin: 20px 0 40px;
   }
   .points-grid {
-      margin: 0 -20px;
+    margin: 0 -20px;
     display: flex;
     justify-content: space-between;
     .point-item {
@@ -668,6 +706,20 @@ export default {
   .hidden-desktop {
     display: block !important;
   }
+  .header-info {
+    margin: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    .header-em {
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+    .header-download {
+      padding: 8px 35px;
+      font-size: 16px;
+      background-image: url('~images/3S-header-btn-phone.webp');
+    }
+  }
   .intro {
     max-width: 1200px;
     margin: auto;
@@ -760,8 +812,8 @@ export default {
     }
   }
   .step-item {
-      padding-left: 85px;
-      padding-right: 40px;
+    padding-left: 85px;
+    padding-right: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -808,8 +860,8 @@ export default {
           top: 55px;
         }
       }
-      .step-img{
-          width: 140px;
+      .step-img {
+        width: 140px;
       }
     }
     .step-info {

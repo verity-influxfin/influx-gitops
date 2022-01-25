@@ -13,23 +13,24 @@
             </div>
             <div class="標題" v-if="header">{{ header }}</div>
             <div class="內容" v-html="content"></div>
-            <div class="動作 hidden-phone header_app_dl_link_mobile">
+            <slot>
+                <div class="動作 hidden-phone header_app_dl_link_mobile">
                 <a href="https://event.influxfin.com/R/url?p=webbanner">
                     <img src="/images/android_download_link_mobile.svg">
                 </a>
                 <a href="https://event.influxfin.com/R/url?p=webbanner" target="_balnk">
                     <img src="/images/ios_download_link_mobile.svg">
                 </a>
-            </div>
-
-            <div class="動作 hidden-desktop header_app_dl_link">
-                <a href="https://event.influxfin.com/R/url?p=webbanner" target="_balnk">
-                    <img src="/images/ios_download_link_desktop.png">
-                </a>
-                <a href="https://event.influxfin.com/R/url?p=webbanner">
-                    <img src="/images/android_download_link_desktop.png">
-                </a>
-            </div>
+                </div>
+                <div class="動作 hidden-desktop header_app_dl_link">
+                    <a href="https://event.influxfin.com/R/url?p=webbanner" target="_balnk">
+                        <img src="/images/ios_download_link_desktop.png">
+                    </a>
+                    <a href="https://event.influxfin.com/R/url?p=webbanner">
+                        <img src="/images/android_download_link_desktop.png">
+                    </a>
+                </div>
+            </slot>
         </div>
     </div>
 </template>
