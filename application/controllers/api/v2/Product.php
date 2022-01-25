@@ -1163,13 +1163,13 @@ class Product extends REST_Controller {
             }
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
-                    
+
                     // $config['certifications'] 設定 show=FALSE 則不顯示
                     if (isset($value['show']) && $value['show'] === FALSE)
                     {
                         continue;
                     }
-                    
+
 					// 返回認證資料
 					if(isset($value['content'])){
 						unset($value['content']);
@@ -2187,11 +2187,6 @@ class Product extends REST_Controller {
             'status' => 0,
             'content' => json_encode($input),
         ];
-
-        // 配偶自動同意
-        if($content["character"] == 3 || ($content["character"] == 2 && $content["relationship"] == 0) ){
-            $associate['status'] = 1;
-        }
 
         $this->load->model('loan/target_associate_model');
 
