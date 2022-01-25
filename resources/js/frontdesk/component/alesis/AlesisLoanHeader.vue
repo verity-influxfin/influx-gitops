@@ -4,7 +4,10 @@
             <img :src="image" class="圖片">
         </div>
         <div class="遮罩">
-            <div class="標題">{{ header }}</div>
+            <div class="標題" v-if="headerImg">
+                <img :src="headerImg" :class="headerImgClass" alt="">
+            </div>
+            <div class="標題" v-if="header">{{ header }}</div>
             <div class="內容" v-html="content"></div>
             <div class="動作 hidden-phone header_app_dl_link_mobile">
                 <a href="https://event.influxfin.com/R/url?p=webbanner">
@@ -40,6 +43,12 @@ export default {
         image  : {
             default: "",
         },
+        headerImg:{
+            default:"",
+        },
+        headerImgClass:{
+            default:"",
+        }
     }
 };
 </script>
