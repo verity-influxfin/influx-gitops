@@ -8,6 +8,43 @@
       :image="require('@/asset/images/3S-banner.webp')"
     ></alesis-loan-header>
     <!-- 標頭 -->
+    <div class="intro">
+      <alesis-section>
+        <alesis-space size="small"></alesis-space>
+        <div class="intro-title">普匯貸你度過資金難關、勇敢追夢</div>
+        <div class="intro-title-underline"></div>
+        <div class="intro-list">
+          <div class="intro-list-item">日常開銷：學雜費、生活費、住宿費</div>
+          <div class="intro-list-item">
+            自我成長：自學進修、補習考研、留學交換
+          </div>
+          <div class="intro-list-item">
+            人生夢想：投資理財、財務自由、車庫創業
+          </div>
+          <div class="intro-list-item">必備工具：手機、3C筆電、摩托車</div>
+        </div>
+        <div class="intro-list-underline"></div>
+        <div class="points-grid">
+          <div class="point-item">
+            <img src="~images/3S-simple.png" alt="" />
+            <div>簡單便利，</div>
+            <div>一支手機即可申辦</div>
+          </div>
+          <div class="point-item">
+            <img src="~images/3S-speed.png" alt="" />
+            <div>AI自動審核，</div>
+            <div>365天快速放款</div>
+          </div>
+          <div class="point-item">
+            <img src="~images/3S-safety.png" alt="" />
+            <div>申貸全程隱私，</div>
+            <div>無人照會</div>
+          </div>
+        </div>
+        <alesis-space size="small"></alesis-space>
+      </alesis-section>
+    </div>
+
     <!-- 適用對象 -->
     <div class="適用對象">
       <alesis-space size="medium"></alesis-space>
@@ -91,97 +128,81 @@
       </alesis-header>
       <alesis-section :secondary="true">
         <alesis-space size="medium"></alesis-space>
-        <div class="swiper-container steps-container">
-          <div class="swiper-wrapper">
-            <!-- 步驟一 -->
-            <div class="swiper-slide">
-              <div class="步驟一">
-                <div class="左邊"></div>
-                <div class="中間">
-                  <img
-                    src="/images/alesis-collegeloan-step1.svg"
-                    class="圖片"
-                  />
-                </div>
-                <div class="右邊">
-                  <div class="標題">Step 1. 選擇額度</div>
-                  <div class="內容">
-                    提供完整資訊<br />
-                    有助提高額度
-                  </div>
-                </div>
-              </div>
+        <div class="step-grid">
+          <div class="step-item">
+            <div class="step-title">選擇額度</div>
+            <div class="step-picture">
+              <div class="step-num step-1">1</div>
+              <img class="step-img" src="~images/3S-step1.webp" />
             </div>
-            <!-- / 步驟一 -->
-
-            <!-- 步驟二 -->
-            <div class="swiper-slide">
-              <div class="步驟二">
-                <div class="左邊"></div>
-                <div class="中間">
-                  <img
-                    src="/images/alesis-collegeloan-step2.svg"
-                    class="圖片"
-                  />
-                </div>
-                <div class="右邊">
-                  <div class="標題">Step 2. 上傳資料</div>
-                  <div class="內容">
-                    AI數據分析審核<br />
-                    全程無人打擾
-                  </div>
-                </div>
-              </div>
+            <div class="step-info">
+              <div>提供完整資訊</div>
+              <div>有助提高額度</div>
             </div>
-            <!-- / 步驟二 -->
-
-            <!-- 步驟三 -->
-            <div class="swiper-slide">
-              <div class="步驟三">
-                <div class="左邊"></div>
-                <div class="中間">
-                  <img
-                    src="/images/alesis-collegeloan-step3.svg"
-                    class="圖片"
-                  />
-                </div>
-                <div class="右邊">
-                  <div class="標題">Step 3. 持證自拍</div>
-                  <div class="內容">
-                    審核成功後<br />
-                    立即上架幫您媒合投資人
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- / 步驟三 -->
-
-            <!-- 步驟四 -->
-            <div class="swiper-slide">
-              <div class="步驟四">
-                <div class="左邊"></div>
-                <div class="中間">
-                  <img
-                    src="/images/alesis-collegeloan-step4.svg"
-                    class="圖片"
-                  />
-                </div>
-                <div class="右邊">
-                  <div class="標題">Step 4. 上架媒合</div>
-                  <div class="內容">24小時收到款項</div>
-                </div>
-              </div>
-            </div>
-            <!-- / 步驟四 -->
           </div>
-
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
+          <div class="step-item">
+            <div class="step-title">上傳資料</div>
+            <div class="step-picture">
+              <div class="step-num step-2">2</div>
+              <img class="step-img" src="~images/3S-step2.webp" />
+            </div>
+            <div class="step-info">
+              <div>AI數據分析審核</div>
+              <div>全程無人打擾</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-title">持證自拍</div>
+            <div class="step-picture">
+              <div class="step-num step-3">3</div>
+              <img class="step-img" src="~images/3S-step3.webp" />
+            </div>
+            <div class="step-info">
+              <div>審核成功後</div>
+              <div>立即上架幫您媒合投資人</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-title">上架媒合</div>
+            <div class="step-picture">
+              <div class="step-num step-4">4</div>
+              <img class="step-img" src="~images/3S-step4.webp" />
+            </div>
+            <div class="step-info">24小時收到款項</div>
+          </div>
         </div>
         <alesis-space size="medium"></alesis-space>
       </alesis-section>
     </div>
     <!-- / 步驟說明 -->
+    <div>
+      <alesis-section>
+        <alesis-space size="small"></alesis-space>
+        <div class="row no-gutters justify-content-center">
+          <div class="col-auto apply-item">
+            <img src="~images/3S-apply1.png" />
+            <span class="apply-text"
+              ><span class="apply-hint">5</span>分鐘申請
+            </span>
+          </div>
+          <div class="col-auto apply-item apply-arrow">➜</div>
+          <div class="col-auto apply-item">
+            <img src="~images/3S-apply2.png" />
+            <span class="apply-text">
+              <span class="apply-hint">10</span>分鐘審核
+            </span>
+          </div>
+          <div class="col-auto apply-item apply-arrow">➜</div>
+          <div class="col-auto apply-item">
+            <img src="~images/3S-apply3.png" />
+            <span class="apply-text">
+              <span class="apply-hint">60</span>分鐘到帳
+            </span>
+          </div>
+        </div>
+        <alesis-space size="small"></alesis-space>
+      </alesis-section>
+    </div>
 
     <!-- 應用程式推薦 -->
     <alesis-app-recommendation action="我想借款"></alesis-app-recommendation>
@@ -191,32 +212,30 @@
 
 <script>
 // Alesis 元件
-import AlesisAppRecommendation from "../component/alesis/AlesisAppRecommendation";
-import AlesisBullet from "../component/alesis/AlesisBullet";
-import AlesisButton from "../component/alesis/AlesisButton";
-import AlesisCounter from "../component/alesis/AlesisCounter";
-import AlesisHeader from "../component/alesis/AlesisHeader";
-import AlesisHorizontalRoadmap from "../component/alesis/AlesisHorizontalRoadmap";
-import AlesisHuman from "../component/alesis/AlesisHuman";
-import AlesisLoanHeader from "../component/alesis/AlesisLoanHeader";
-import AlesisMoon from "../component/alesis/AlesisMoon";
-import AlesisPlan from "../component/alesis/AlesisPlan";
-import AlesisProject from "../component/alesis/AlesisProject";
-import AlesisSection from "../component/alesis/AlesisSection";
-import AlesisSuggestionReviews from "../component/alesis/AlesisSuggestionReviews";
-import AlesisSymcard from "../component/alesis/AlesisSymcard";
-import AlesisTaiwanMap from "../component/alesis/AlesisTaiwanMap";
-import AlesisVerticalRoadmap from "../component/alesis/AlesisVerticalRoadmap";
-import AlesisSpace from "../component/alesis/AlesisSpace";
+import AlesisAppRecommendation from '../component/alesis/AlesisAppRecommendation'
+import AlesisBullet from '../component/alesis/AlesisBullet'
+import AlesisButton from '../component/alesis/AlesisButton'
+import AlesisCounter from '../component/alesis/AlesisCounter'
+import AlesisHeader from '../component/alesis/AlesisHeader'
+import AlesisHorizontalRoadmap from '../component/alesis/AlesisHorizontalRoadmap'
+import AlesisHuman from '../component/alesis/AlesisHuman'
+import AlesisLoanHeader from '../component/alesis/AlesisLoanHeader'
+import AlesisMoon from '../component/alesis/AlesisMoon'
+import AlesisPlan from '../component/alesis/AlesisPlan'
+import AlesisProject from '../component/alesis/AlesisProject'
+import AlesisSection from '../component/alesis/AlesisSection'
+import AlesisSuggestionReviews from '../component/alesis/AlesisSuggestionReviews'
+import AlesisSymcard from '../component/alesis/AlesisSymcard'
+import AlesisTaiwanMap from '../component/alesis/AlesisTaiwanMap'
+import AlesisVerticalRoadmap from '../component/alesis/AlesisVerticalRoadmap'
+import AlesisSpace from '../component/alesis/AlesisSpace'
 // 遠端資料
-import CollegeSchools from "../data/college_schools"
-import StudentDone from "../data/projects_student_done"
+import CollegeSchools from '../data/college_schools'
+import StudentDone from '../data/projects_student_done'
 
-import 'swiper/swiper.scss';
-import "swiper/components/navigation/navigation.min.css"
-import SwiperCore, {
-  Navigation
-} from 'swiper/core';
+import 'swiper/swiper.scss'
+import 'swiper/components/navigation/navigation.min.css'
+import SwiperCore, { Navigation } from 'swiper/core'
 
 // $(document).ready(function () {
 //   setTimeout(() => {
@@ -244,20 +263,20 @@ export default {
     AlesisSymcard,
     AlesisTaiwanMap,
     AlesisVerticalRoadmap,
-    AlesisSpace,
+    AlesisSpace
   },
   filters: {
-    amount: (value) => {
+    amount: value => {
       return Number(parseFloat(value).toFixed(3)).toLocaleString('en')
     }
   },
   data: () => ({
-    formSchool: "",
-    formSchoolDiscipline: "",
-    formRank: "",
-    formHasAward: "",
-    name: "",
-    email: "",
+    formSchool: '',
+    formSchoolDiscipline: '',
+    formRank: '',
+    formHasAward: '',
+    name: '',
+    email: '',
     isStudentLoan: null,
     isPartTimeJob: null,
     monthlyEconomy: null,
@@ -267,15 +286,15 @@ export default {
     originalSchools: CollegeSchools,
     collegePreviews: {},
     borrowReportResult: {},
-    isFormValid: true,
+    isFormValid: true
   }),
   created() {
-    $("title").text(`學生貸 - inFlux普匯金融科技`);
-    this.getStudentCase();
+    $('title').text(`學生貸 - inFlux普匯金融科技`)
+    this.getStudentCase()
   },
   mounted() {
-    this.initSchools();
-    this.initSteps();
+    this.initSchools()
+    this.initSteps()
   },
   methods: {
     // initSchools 會扁平化學校清單，並且展開其科系資料作為下拉式選單選項。
@@ -288,20 +307,20 @@ export default {
           value: this.originalSchools[v].shortName
         })
         // 替這個學校建立對應的科系陣列。
-        this.schoolDisciplines[v] = [];
+        this.schoolDisciplines[v] = []
         // 遍歷這個學校的科系陣列，並將期推到對應的科系清單裡，試圖扁平化。
         Object.keys(this.originalSchools[v].discipline).forEach(j => {
           this.schoolDisciplines[v].push({
             disabled: true,
             title: j,
-            value: "",
+            value: ''
           })
           // 扁平化這個科系下的子科系，但用全形空白當作 Indent。
           this.originalSchools[v].discipline[j].forEach(k => {
             this.schoolDisciplines[v].push({
               disabled: false,
               title: `　　${k}`,
-              value: k,
+              value: k
             })
           })
         })
@@ -309,30 +328,29 @@ export default {
     },
     // 學生案件
     getStudentCase() {
-      let studenCase = new FormData();
-      studenCase.append('status', 10);
-      studenCase.append('product_id', 1);
+      let studenCase = new FormData()
+      studenCase.append('status', 10)
+      studenCase.append('product_id', 1)
 
-      axios.post(
-        `${location.origin}/getCase`,
-        studenCase
-      ).then((res) => {
-        this.collegePreviews = res.data;
-      })
-        .catch((error) => {
-          console.error('getCase 發生錯誤，請稍後再試');
-        });
+      axios
+        .post(`${location.origin}/getCase`, studenCase)
+        .then(res => {
+          this.collegePreviews = res.data
+        })
+        .catch(error => {
+          console.error('getCase 發生錯誤，請稍後再試')
+        })
     },
 
     // initSteps 會初始化步驟教學幻燈片。
     initSteps() {
-      SwiperCore.use([Navigation]);
+      SwiperCore.use([Navigation])
       new Swiper('.swiper-container.steps-container', {
         navigation: {
           nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      });
+          prevEl: '.swiper-button-prev'
+        }
+      })
     },
 
     // calculateForm 會計算表單。
@@ -346,23 +364,23 @@ export default {
         data: data,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json',
+          Accept: 'application/json'
         }
-      }).then((res) => {
-        this.borrowReportResult.amount = res.data.amount
-        this.borrowReportResult.rate = res.data.rate
-        this.borrowReportResult.platform_fee = res.data.platform_fee
-        this.borrowReportResult.repayment = res.data.repayment
-        this.formCalculated = true
-        this.isFormValid = true
       })
-        .catch((error) => {
-          console.error('getBorrowReport 發生錯誤，請稍後再試');
-        });
-
-    },
-  },
-};
+        .then(res => {
+          this.borrowReportResult.amount = res.data.amount
+          this.borrowReportResult.rate = res.data.rate
+          this.borrowReportResult.platform_fee = res.data.platform_fee
+          this.borrowReportResult.repayment = res.data.repayment
+          this.formCalculated = true
+          this.isFormValid = true
+        })
+        .catch(error => {
+          console.error('getBorrowReport 發生錯誤，請稍後再試')
+        })
+    }
+  }
+}
 </script>
 
 <style lang="scss">
@@ -395,6 +413,67 @@ export default {
 }
 .標題 {
   margin-bottom: 10px;
+}
+.intro {
+  max-width: 1200px;
+  margin: auto;
+  .intro-title {
+    font-size: 42px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.45;
+    letter-spacing: 5.6px;
+    text-align: left;
+    color: #1e69aa;
+    margin-bottom: 25px;
+  }
+  .intro-title-underline {
+    width: 225px;
+    border: solid 4px #1e69aa;
+  }
+  .intro-list {
+    margin: 40px 0;
+    .intro-list-item {
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 52px;
+        height: 52px;
+        margin-right: 35px;
+        background-image: url('~images/check-item.png');
+      }
+      display: flex;
+      align-items: center;
+      font-size: 28px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      letter-spacing: 2.8px;
+      text-align: left;
+      color: #404040;
+      margin-bottom: 30px;
+    }
+  }
+  .intro-list-underline {
+    border: solid 2px #1e69aa;
+    width: 113px;
+    margin: 20px 0 40px;
+  }
+  .points-grid {
+    display: flex;
+    justify-content: space-between;
+    .point-item {
+      font-size: 28px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: 2.8px;
+      text-align: center;
+      color: #8f8f8f;
+    }
+  }
 }
 .suit-info {
   font-size: 26px;
@@ -457,6 +536,7 @@ export default {
       text-align: left;
       color: #fff;
       padding: 11px 22px;
+      margin-bottom: 30px;
       border-radius: 20px;
       background-color: #1e69aa;
     }
@@ -473,45 +553,106 @@ export default {
     }
   }
 }
-
-.swiper-container.steps-container {
-  width: 900px;
-  height: 549px;
-
-  @include rwd {
-    width: 100%;
-  }
-}
-
-button:disabled,
-button[disabled] {
-  cursor: no-drop;
-}
-
-.swiper-container.human-container {
-  max-width: 1170px;
-  padding-bottom: 3rem;
-  padding-top: 3rem;
-
-  .swiper-slide {
-    .set {
-      max-width: 90%;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 3rem;
-      margin: 0 auto;
+.step-grid {
+  display: grid;
+  margin: auto;
+  grid-template-columns: 290px 290px 300px 290px;
+  gap: 35px;
+  width: fit-content;
+  .step-item {
+    padding-left: 100px;
+    .step-title {
+      font-size: 26px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.25;
+      letter-spacing: normal;
+      text-align: center;
+      color: #1e69aa;
+      margin-bottom: 25px;
+    }
+    .step-picture {
+      position: relative;
+      .step-num {
+        -webkit-text-stroke: 4px #f29600;
+        color: #fff;
+        font-family: Arial;
+        font-size: 262px;
+        font-stretch: normal;
+        font-style: normal;
+        font-weight: bold;
+        letter-spacing: 13.1px;
+        line-height: 1.15;
+        position: absolute;
+        text-align: left;
+        z-index: -1;
+        &.step-1 {
+          left: -115px;
+          top: 35px;
+        }
+        &.step-2 {
+          left: -105px;
+          top: 35px;
+        }
+        &.step-3 {
+          left: -105px;
+          top: 35px;
+        }
+        &.step-4 {
+          left: -105px;
+          top: 35px;
+        }
+      }
+    }
+    .step-info {
+      font-size: 18px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.56;
+      letter-spacing: normal;
+      text-align: center;
+      color: #404040;
+      margin-top: 25px;
     }
   }
 }
-
-.swiper-button-next,
-.swiper-button-prev {
-  opacity: 0.6;
-  transform: scale(0.7);
-}
-
-.swiper-button-disabled {
-  display: none;
+.apply-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &.apply-arrow {
+    padding: 0 77px;
+    -webkit-text-stroke: 2px #f29600;
+    font-family: Arial;
+    font-size: 128px;
+    font-weight: bold;
+    font-stretch: normal;
+    line-height: 0.27;
+    letter-spacing: 12.6px;
+    text-align: left;
+    color: #fff;
+  }
+  .apply-text {
+    font-size: 26px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.31;
+    letter-spacing: 2.6px;
+    text-align: left;
+    color: #404040;
+  }
+  .apply-hint {
+    font-family: Arial;
+    font-size: 50px;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 5px;
+    color: #f29600;
+  }
 }
 
 .alesis-humans {
@@ -530,96 +671,10 @@ button[disabled] {
   --alesis-xsection-offset-top: 8rem;
 }
 
-.步驟說明 .步驟一,
-.步驟說明 .步驟二,
-.步驟說明 .步驟三,
-.步驟說明 .步驟四 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 3rem;
-  max-width: 900px;
-
-  @include rwd {
-    grid-template-columns: repeat(1, 1fr);
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.步驟說明 .步驟一 .左邊,
-.步驟說明 .步驟二 .左邊,
-.步驟說明 .步驟三 .左邊,
-.步驟說明 .步驟四 .左邊 {
-  @include rwd {
-    display: none;
-  }
-}
-
-.步驟說明 .步驟一 .中間,
-.步驟說明 .步驟二 .中間,
-.步驟說明 .步驟三 .中間,
-.步驟說明 .步驟四 .中間 {
-  text-align: center;
-}
-
-.步驟說明 .步驟一 .中間 .圖片,
-.步驟說明 .步驟二 .中間 .圖片,
-.步驟說明 .步驟三 .中間 .圖片,
-.步驟說明 .步驟四 .中間 .圖片 {
-  @include rwd {
-    width: 200px;
-  }
-}
-
-.步驟說明 .步驟一 .右邊,
-.步驟說明 .步驟二 .右邊,
-.步驟說明 .步驟三 .右邊,
-.步驟說明 .步驟四 .右邊 {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-
-  @include rwd {
-    margin: 0 auto;
-    padding-left: 1rem;
-  }
-}
-
-.步驟說明 .步驟一 .右邊 .標題,
-.步驟說明 .步驟二 .右邊 .標題,
-.步驟說明 .步驟三 .右邊 .標題,
-.步驟說明 .步驟四 .右邊 .標題 {
-  color: #112e53;
-  font-size: 1.3rem;
-
-  @include rwd {
-    font-size: 1.1rem;
-  }
-}
-
-.步驟說明 .步驟一 .右邊 .標題 .內容,
-.步驟說明 .步驟二 .右邊 .標題 .內容,
-.步驟說明 .步驟三 .右邊 .標題 .內容,
-.步驟說明 .步驟四 .右邊 .標題 .內容 {
-  color: #5d5555;
-  font-size: 1.1rem;
-
-  @include rwd {
-    font-size: 1rem;
-    padding-left: 1rem;
-  }
-}
-.步驟說明 .swiper-button-next,
-.步驟說明 .swiper-button-prev {
-  @include rwd {
-    margin-top: -7rem;
-  }
-}
-
 .適用對象 .項目列表 {
   display: grid;
   max-width: 900px;
-  margin: 0 auto;
+  margin: 40px auto 20px;
   grid-template-columns: repeat(4, 1fr);
 
   @include rwd {
@@ -661,5 +716,4 @@ button[disabled] {
 
   --alesis-xsection-offset-top: 7rem;
 }
-
 </style>
