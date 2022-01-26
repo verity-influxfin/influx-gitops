@@ -1946,9 +1946,9 @@ class Certification extends REST_Controller {
      */
     public function social_intelligent_post()
     {
-        $certification_id = 4;
+        $certification_id = CERTIFICATION_SOCIAL_INTELLIGENT;
         $certification = $this->certification[$certification_id];
-        if ($certification && $certification['status'] == 1)
+        if ($certification && $certification['status'] == CERTIFICATION_STATUS_SUCCEED)
         {
             $input = $this->input->post(NULL, TRUE);
             $type = $input['type'];
@@ -1979,7 +1979,7 @@ class Certification extends REST_Controller {
 
                     $get_data = $this->user_certification_model->order_by('id', 'desc')->get_by([
                         'user_id' => $user_id,
-                        'certification_id' => 4,
+                        'certification_id' => $certification_id,
                         'status' => [CERTIFICATION_STATUS_PENDING_TO_VALIDATE, CERTIFICATION_STATUS_PENDING_TO_REVIEW, CERTIFICATION_STATUS_AUTHENTICATED],
                         'investor' => $investor,
                     ]);

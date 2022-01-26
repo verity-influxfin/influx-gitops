@@ -2034,6 +2034,7 @@ $config['certifications_sort'] = [
     CERTIFICATION_PROFILE,
 	CERTIFICATION_INVESTIGATIONA11,
     CERTIFICATION_CRIMINALRECORD,
+    CERTIFICATION_SOCIAL_INTELLIGENT,
     CERTIFICATION_SIMPLIFICATIONFINANCIAL,
     CERTIFICATION_SIMPLIFICATIONJOB,
 
@@ -2192,6 +2193,10 @@ $config['certifications_msg'] = [
     ],
     CERTIFICATION_DEBITCARD => [],
     CERTIFICATION_SOCIAL => [
+        '您認證的IG非常用帳號，系統無法驗證',
+        '您認證的IG非常用帳號，請洽 LINE@influxfin 客服，提供使用者編號協助進行FB驗證',
+    ],
+    CERTIFICATION_SOCIAL_INTELLIGENT => [ // (名校貸)社交認證
         '您認證的IG非常用帳號，系統無法驗證',
         '您認證的IG非常用帳號，請洽 LINE@influxfin 客服，提供使用者編號協助進行FB驗證',
     ],
