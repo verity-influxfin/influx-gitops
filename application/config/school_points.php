@@ -84,7 +84,7 @@ $config['school_points'] = array(
     ['name' => '國立陽明交通大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
     ['name' => '國立中央大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
     ['name' => '國立中山大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
-    ['name' =>'國立陽明大學', 'points' =>550, 'national' => 1 ],
+    ['name' => '國立陽明大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
     ['name' =>'中國醫藥大學', 'points' =>350, 'national' => 0 ],
     ['name' => '國立政治大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
     ['name' => '國立臺灣師範大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
