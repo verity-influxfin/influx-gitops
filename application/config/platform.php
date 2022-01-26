@@ -1843,6 +1843,7 @@ $config['transaction_source'] = [
     32 => '法催執行費',
 
     40 => '推薦獎金',
+    41 => '慈善捐款',
 
     50 => '平台服務費沖正',
     51 => '債權轉讓服務費沖正',
@@ -1899,6 +1900,7 @@ $config['transaction_type_name'] = [
     'unknown_refund' => '退款-不明原因',
     'platform_law_fee' => '法催執行費',
     'promote' => '推薦獎金',
+    'charity' => '慈善捐款'
 ];
 
 $config['certifications'] = [
@@ -2255,3 +2257,6 @@ $config['cer_profilejudicial'] = [
 
 // 推薦碼需要的徵信項目
 $config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
+
+// 捐款案收據方式
+$config['charity_receipt_type_list'] = [CHARITY_RECEIPT_TYPE_SINGLE_PAPER => "單次紙本收據"];
