@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="loan-3S">
     <!-- 標頭 -->
     <alesis-loan-header
       :header-img="require('@/asset/images/3S-title.webp')"
@@ -333,6 +333,17 @@ export default {
     width: 220px;
   }
 }
+.loan-3S {
+  @include rwd {
+    .單個區塊 {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+    .貸款標頭 .遮罩 {
+      padding: 12px;
+    }
+  }
+}
 
 .alesis-steps {
   .carousel {
@@ -442,9 +453,8 @@ export default {
     margin: 20px 0 40px;
   }
   .points-grid {
-    margin: 0 -20px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     .point-item {
       font-size: 28px;
       font-weight: normal;
@@ -724,7 +734,8 @@ export default {
     max-width: 1200px;
     margin: auto;
     .intro-title {
-      font-size: 19px;
+      font-size: 20px;
+      width: max-content;
       line-height: 1.25;
       letter-spacing: 1px;
       text-align: left;
@@ -767,7 +778,7 @@ export default {
       }
       .point-img {
         width: 100%;
-        max-width: 200px;
+        max-width: 150px;
       }
     }
   }
@@ -796,8 +807,8 @@ export default {
     .choose-item {
       padding: 4px;
       .choose-title {
-        width: fit-content;
-        font-size: 20px;
+        width: max-content;
+        font-size: 19px;
         letter-spacing: 1px;
         padding: 8px 16px;
         margin-bottom: 20px;
@@ -812,8 +823,6 @@ export default {
     }
   }
   .step-item {
-    padding-left: 85px;
-    padding-right: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -877,7 +886,7 @@ export default {
     }
   }
   .swipper {
-    width: 350px;
+    width: 95%;
     height: 350px;
   }
   .apply-item {
