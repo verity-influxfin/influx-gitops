@@ -18,11 +18,8 @@
 				</div>
 				<div class="p-2">
 					<select id="rule-option" class="form-control" v-model="allBlockUserParam.blockRule">
-						<option value=""></option>
-						<option value="第三方資料結果" label="第三方資料結果">第三方資料結果</option>
-						<option value="反詐欺規則" label="反詐欺規則">反詐欺規則</option>
-						<option value="其他(人為加入)" label="其他(人為加入)">其他(人為加入)</option>
-						<option value="授信政策" label="授信政策">授信政策</option>
+						<option value="" ></option>
+						<option :value="item" v-for="item in options.block_rule" :key="item">{{item}}</option>
 					</select>
 				</div>
 				<div class="p-2">
@@ -31,11 +28,7 @@
 				<div class="p-2">
 					<select id="status" class="form-control" v-model="allBlockUserParam.blockTimeText">
 						<option value=""></option>
-						<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
-						<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
-						<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
-						<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
-						<option value="轉二審" label="轉二審">轉二審</option>
+						<option :value="item" v-for="item in options.block_text" :key="item">{{item}}</option>
 					</select>
 				</div>
 				<div class="d-flex">
@@ -64,7 +57,7 @@
 						<th>到期時間</th>
 						<th style="width: 110px;">備註</th>
 						<th>會員資訊</th>
-                        <th>歷史資訊</th>
+						<th>歷史資訊</th>
 					</tr>
 				</thead>
 			</table>
@@ -110,11 +103,7 @@
 							<select name="" id="" class="w-100 form-control" v-model="updateStatusForm.blockTimeText"
 								required>
 								<option value=""></option>
-								<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
-								<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
-								<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
-								<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
-								<option value="轉二審" label="轉二審">轉二審</option>
+								<option :value="item" v-for="item in options.block_text" :key="item">{{item}}</option>
 							</select>
 						</div>
 					</div>
@@ -154,10 +143,7 @@
 							<select name="" id="" class="w-100 form-control" v-model="blockUserAddForm.blockRule"
 								required>
 								<option value=""></option>
-								<option value="第三方資料結果">第三方資料結果</option>
-								<option value="反詐欺規則">反詐欺規則</option>
-								<option value="其他(人為加入)">其他(人為加入)</option>
-								<option value="授信政策">授信政策</option>
+								<option :value="item" v-for="item in options.block_rule" :key="item">{{item}}</option>
 							</select>
 						</div>
 					</div>
@@ -173,11 +159,7 @@
 						<div class="col">
 							<select class="form-control" v-model="blockUserAddForm.blockRisk" required>
 								<option value=""></option>
-								<option value="低風險">低風險</option>
-								<option value="中風險">中風險</option>
-								<option value="高風險">高風險</option>
-								<option value="拒絕">拒絕</option>
-								<option value="追蹤分析">追蹤分析</option>
+								<option :value="item" v-for="item in options.risk" :key="item">{{item}}</option>
 							</select>
 						</div>
 					</div>
@@ -186,11 +168,7 @@
 						<div class="col">
 							<select id="status" class="form-control" v-model="blockUserAddForm.blockTimeText" required>
 								<option value=""></option>
-								<option value="封鎖一個月" label="封鎖一個月">封鎖一個月</option>
-								<option value="封鎖三個月" label="封鎖三個月">封鎖三個月</option>
-								<option value="封鎖六個月" label="封鎖六個月">封鎖六個月</option>
-								<option value="轉二審" label="轉二審">轉二審</option>
-								<option value="永久封鎖" label="永久封鎖">永久封鎖</option>
+								<option :value="item" v-for="item in options.block_text" :key="item">{{item}}</option>
 							</select>
 						</div>
 					</div>
@@ -311,6 +289,7 @@
 		});
 		// mounted 因須確保jquery能用
 		v.getAllBlockUsers()
+		v.getOption()
 	});
 	const v = new Vue({
 		el: '#page-wrapper',
@@ -342,6 +321,12 @@
 				enableForm: {
 					userId: null,
 					blockRemark: null,
+				},
+				options: {
+					block_rule: [],
+					block_text: [],
+					index: [],
+					risk: [],
 				}
 			}
 		},
@@ -358,13 +343,13 @@
 								</button>
 							</div>`
 				}
-                const buttonToHistory = (history) => {
-                    return `<div class="d-flex">
+				const buttonToHistory = (history) => {
+					return `<div class="d-flex">
 								<button class="btn btn-info" onclick="v.initHistory('${history}')">
 									查看
 								</button>
 							</div>`
-                }
+				}
 				const idGroup = (id, status) => {
 					if (status === 0) {
 						// 取消封鎖
@@ -432,8 +417,18 @@
 					endDate,
 					reason(item.blockRemark),
 					buttonToID(item.userId),
-                    buttonToHistory(btoa(encodeURI(JSON.stringify(item.history))))
+					buttonToHistory(btoa(encodeURI(JSON.stringify(item.history))))
 				])
+			},
+			getOption() {
+				axios.get(`${apiUrl}/get_option`)
+					.then(({ data }) => {
+						if (!data.results) {
+							alert(data.message)
+							return
+						}
+						this.options = { ...data.results }
+					})
 			},
 			getAllBlockUsers() {
 				const { allBlockUserParam } = this
