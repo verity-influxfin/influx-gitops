@@ -2171,7 +2171,7 @@ $config['cer_profilejudicial'] = [
 ];
 
 // 推薦碼需要的徵信項目
-$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD];
+$config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
 
 // 捐款案收據方式
 $config['charity_receipt_type_list'] = [CHARITY_RECEIPT_TYPE_SINGLE_PAPER => "單次紙本收據"];
