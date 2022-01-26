@@ -9,9 +9,9 @@
       ></div>
     </div>
     <div class="status-rank">
-      <div class="rank-item" v-for="item in ranks" :key="item.rank">
+      <div class="rank-item" v-for="(item, index) in ranks" :key="item.rank">
         <div :class="[`rank-${item.rank}`, 'rank-icon']">{{ item.rank }}</div>
-        <div class="rank-value">{{ convertNum(item.value) }}</div>
+        <div class="rank-value" v-html="rankArray[index]"></div>
       </div>
     </div>
     <div class="status-footer">
@@ -22,24 +22,6 @@
       </div>
     </div>
     <canvas class="fireworks" style="position: absolute; top: -200px"></canvas>
-    <!-- <div v-for="i in 8" :key="i">
-      <svg
-        width="200"
-        height="200"
-        viewBox="0,0,200,200"
-        :class="'svg'"
-        style="display: block; position: absolute;"
-        :style="{
-          transform: `rotate(45deg) scale(${Math.random()})`,
-          right: `calc( ${Math.random() * 100}% - 100px )`,
-          bottom: (15+Math.random()*180) + 'px'
-        }"
-      >
-        <circle cx="50" cy="100" r="50" fill="#FF4949" />
-        <rect x="50" y="50" fill="#FF4949" width="100" height="100" />
-        <circle cx="100" cy="50" r="50" fill="#FF4949" />
-      </svg>
-    </div> -->
   </div>
 </template>
 
@@ -48,30 +30,25 @@ import anime from 'animejs';
 export default {
   computed: {
     ranks() {
-      return [
-        {
-          rank: 1,
-          value: 1234545
-        },
-        {
-          rank: 2,
-          value: 123455
-        },
-        {
-          rank: 3,
-          value: 14545
-        }
-      ]
+        // rank,value
+        console.log(typeof this.rankOriginal,this.rankOriginal)
+       return this.rankOriginal.map((x,i)=>{
+           return {
+               value:x.amount,
+               id:x.id,
+               rank:i+1,
+           }
+       })
     },
     marqee() {
-      let a = []
-      for (let index = 0; index < 30; index++) {
-        a.push({
-          name: 'test-' + index,
-          value: Math.floor(Math.random() * 10000)
+        // name,value
+        return this.realtimeOriginal.map(({name,id,amount})=>{
+            return{
+                name,
+                id,
+                value:amount
+            }
         })
-      }
-      return a
     },
     duration() {
       const length = this.marqee.length * 1.5 > 10 ? this.marqee.length * 1.5 : 10
@@ -79,10 +56,16 @@ export default {
         animationDuration: length + 's'
       }
     },
+    rankArray() {
+      return this.animatedRank.trim().split(' ').map(x => this.convertNum(x))
+    }
   },
   data() {
     return {
       animatedValue: 0,
+      animatedRank: '',
+      rankOriginal:[],
+      realtimeOriginal:[],
       totalCount: 1234556,
       test: 0,
       firework: false
@@ -90,7 +73,10 @@ export default {
   },
   methods: {
     convertNum(n) {
-      return n.toLocaleString()
+      if (!isNaN(Number(n))) {
+        return Number(n).toLocaleString()
+      }
+      return n
     },
     animateValue(v) {
       anime({
@@ -100,6 +86,17 @@ export default {
         easing: 'easeInSine',
         duration: 2000,
       }).finished.then(() => { this.firework = false })
+    },
+    animateRank(v) {
+      const test = v.map(x => x.value).toString().split(',').join(' ')
+      anime({
+        targets: this,
+        animatedRank: test,
+        round: 1,
+        delay:200,
+        easing: 'easeInSine',
+        duration: 2000,
+      })
     },
     autoClick() {
       var centerX = window.innerWidth / 2;
@@ -211,24 +208,31 @@ export default {
   watch: {
     totalCount(newValue) {
       this.animateValue(newValue);
+    },
+    ranks(v) {
+      this.animateRank(v)
     }
   },
   mounted() {
     this.animateValue(this.totalCount);
+    this.animateRank(this.ranks);
     const evtSource = new EventSource(location.origin + "/event/charity/donation");
     evtSource.addEventListener("ranking_data", (event) => {
-      console.log(event)
-      //   this.autoClick()
+      if(JSON.stringify(this.rankOriginal)!==JSON.stringify(event.data)){
+        this.rankOriginal = JSON.parse(event.data)
+      }
     });
     evtSource.addEventListener("realtime_data", (event) => {
-      console.log(event)
-      this.autoClick()
+        const arrData = JSON.parse(event.data)
+        if(this.realtimeOriginal.length !== arrData.length){
+            this.realtimeOriginal = arrData
+            this.autoClick()
+        }
     });
-    // setInterval(() => {
-    //   this.firework = true
-    //   this.totalCount += 1000
-    //   this.autoClick()
-    // }, 8000);
+    evtSource.addEventListener("pong", (event) => {
+      evtSource.close()
+      console.log('close')
+    });
     window.human = false;
     var canvasEl = document.querySelector('.fireworks');
     var ctx = canvasEl.getContext('2d');
