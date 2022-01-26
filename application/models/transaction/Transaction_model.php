@@ -140,4 +140,31 @@ class Transaction_model extends MY_Model
         $this->db->set($data)->insert("`p2p_transaction`.`{$this->_table}`");
         return $this->db->insert_id();
     }
+
+    /**
+     * 依target ID、狀態取得明細數量
+     * @param $target_id
+     * @param int|array $status : 狀態
+     * @return int|mixed
+     */
+    public function get_count_by_target_id($target_id, $status)
+    {
+        $this->db
+            ->select('COUNT(1) AS count')
+            ->from('p2p_transaction.' . $this->_table)
+            ->where('target_id', $target_id);
+
+        if (is_numeric($status))
+        {
+            $this->db->where('status', $status);
+        }
+        elseif (is_array($status))
+        {
+            $this->db->where_in('status', $status);
+        }
+
+        $result = $this->db->get()->first_row('array');
+
+        return $result['count'] ?? 0;
+    }
 }

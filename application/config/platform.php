@@ -309,8 +309,8 @@ $config['product_list'] = [
         'identity' => 1,
         'alias' => 'STN',
         'name' => '學生貸',
-        'loan_range_s' => 6000,
-        'loan_range_e' => 144000,
+        'loan_range_s' => 12000,
+        'loan_range_e' => 150000,
         'interest_rate_s' => 4,
         'interest_rate_e' => 16,
         'charge_platform' => PLATFORM_FEES,
@@ -349,7 +349,7 @@ $config['product_list'] = [
         'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000',
+        'description' => '須提供有效學生證<br>可申請額度<br>12,000-150,000',
         'checkOwner' => FALSE
     ],
     2 => [
@@ -1548,7 +1548,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_IDCARD,
                     CERTIFICATION_STUDENT,
                     CERTIFICATION_DEBITCARD,
-                    CERTIFICATION_SOCIAL,
+                    CERTIFICATION_SOCIAL_INTELLIGENT,
                     CERTIFICATION_EMERGENCY,
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
@@ -1563,7 +1563,7 @@ $config['sub_product_list'] = [
                         CERTIFICATION_DEBITCARD,
                     ],
                     [
-                        CERTIFICATION_SOCIAL,
+                        CERTIFICATION_SOCIAL_INTELLIGENT,
                         CERTIFICATION_EMERGENCY,
                         CERTIFICATION_EMAIL
                     ]
@@ -1594,8 +1594,8 @@ $config['sub_product_list'] = [
                 'visul_id' => 'LS1P1',
                 'name' => '學生貸',
                 'product_id' => '1:0',
-                'loan_range_s' => 6000,
-                'loan_range_e' => 144000,
+                'loan_range_s' => 12000,
+                'loan_range_e' => 150000,
                 'interest_rate_s' => 4,
                 'interest_rate_e' => 16,
                 'charge_platform' => PLATFORM_FEES,
@@ -1632,7 +1632,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
+                'description' => '須提供有效學生證<br>可申請額度<br>12,000-150,000'
             ]
         ],
         'status' => 1
@@ -1984,6 +1984,7 @@ $config['certifications'] = [
     14 => ['id' => CERTIFICATION_FINANCIALWORKER, 'alias' => 'financialWorker', 'name' => '財務訊息資訊', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
     15 => ['id' => CERTIFICATION_REPAYMENT_CAPACITY, 'alias' => 'repayment_capacity', 'name' => '還款力計算', 'status' => 1, 'description' => '提供還款力計算結果', 'optional' => [], 'show' => FALSE],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
+    21 => ['id' => CERTIFICATION_SOCIAL_INTELLIGENT, 'alias' => 'social_intelligent', 'name' => '名校貸社交帳號', 'status' => 1, 'description' => '名校貸個人社交帳號', 'optional' => []],
 
 
     500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],

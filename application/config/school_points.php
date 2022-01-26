@@ -67,25 +67,34 @@ $config['lock_school'] = array(
     '中華科技大學'
 );
 
+/*
+ * 產品風控模組-學生貸
+ * [
+ *     'name' => '國立清華大學',     // 學校名稱
+ *     'points' => 550,            // 學校得分
+ *     'national' => 1,            // 是否為公立學校
+ *     'intelligent_points' => 950 // 學校得分 for 名校貸
+ * ]
+ */
 $config['school_points'] = array(
-    ['name' =>'國立清華大學', 'points' =>550, 'national' => 1 ],
-    ['name' =>'國立臺灣大學', 'points' =>600, 'national' => 1 ],
-    ['name' =>'國立成功大學', 'points' =>550, 'national' => 1 ],
-    ['name' =>'國立交通大學', 'points' =>550, 'national' => 1 ],
-    ['name' =>'國立陽明交通大學', 'points' =>550, 'national' => 1 ],
-    ['name' =>'國立中央大學', 'points' =>450, 'national' => 1 ],
-    ['name' =>'國立中山大學', 'points' =>450, 'national' => 1 ],
+    ['name' => '國立清華大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
+    ['name' => '國立臺灣大學', 'points' => 600, 'national' => 1, 'intelligent_points' => 1000],
+    ['name' => '國立成功大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
+    ['name' => '國立交通大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
+    ['name' => '國立陽明交通大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
+    ['name' => '國立中央大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
+    ['name' => '國立中山大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
     ['name' =>'國立陽明大學', 'points' =>550, 'national' => 1 ],
     ['name' =>'中國醫藥大學', 'points' =>350, 'national' => 0 ],
-    ['name' =>'國立政治大學', 'points' =>550, 'national' => 1 ],
-    ['name' =>'國立臺灣師範大學', 'points' =>450, 'national' => 1 ],
+    ['name' => '國立政治大學', 'points' => 550, 'national' => 1, 'intelligent_points' => 950],
+    ['name' => '國立臺灣師範大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
     ['name' =>'臺北醫學大學', 'points' =>500, 'national' => 0 ],
-    ['name' =>'國立中興大學', 'points' =>450, 'national' => 1 ],
-    ['name' =>'國立中正大學', 'points' =>450, 'national' => 1 ],
-    ['name' =>'國立臺北大學', 'points' =>450, 'national' => 1 ],
+    ['name' => '國立中興大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
+    ['name' => '國立中正大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
+    ['name' => '國立臺北大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 650],
     ['name' =>'馬偕醫學院', 'points' =>150, 'national' => 0 ],
-    ['name' =>'國立臺灣科技大學', 'points' =>450, 'national' => 1 ],
-    ['name' =>'國立臺北科技大學', 'points' =>400, 'national' => 1 ],
+    ['name' => '國立臺灣科技大學', 'points' => 450, 'national' => 1, 'intelligent_points' => 750],
+    ['name' => '國立臺北科技大學', 'points' => 400, 'national' => 1, 'intelligent_points' => 600],
     ['name' =>'國立臺北護理健康大學', 'points' =>150, 'national' => 1 ],
     ['name' =>'國立高雄餐旅大學', 'points' =>100, 'national' => 1 ],
     ['name' =>'國立臺北商業大學', 'points' =>250, 'national' => 1 ],

@@ -14,6 +14,20 @@ class Prepayment_lib{
  
 	public function get_prepayment_info($target=[]){
 		if($target->status == 5 && $target->delay_days==0){
+
+            // 名校貸，滿三個月後提前清償者，不收取違約金
+            if ($target->product_id == 1 && $target->sub_product_id == 6)
+            {
+                // 該案已結清總筆數
+                $this->load->model('transaction/transaction_model');
+                $transaction_done_count = $this->transaction_model->get_count_by_target_id($target->id, TRANSACTION_STATUS_PAID_OFF);
+
+                if ($transaction_done_count >= 3)
+                {
+                    return FALSE;
+                }
+            }
+
 			$transaction 	= $this->CI->transaction_model->order_by('limit_date','asc')->get_many_by([
 				'target_id' => $target->id,
 				'user_from' => $target->user_id,

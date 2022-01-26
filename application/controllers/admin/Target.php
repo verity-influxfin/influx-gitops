@@ -585,6 +585,9 @@ class Target extends MY_Admin_Controller {
 		$targetId = isset($get["id"]) ? intval($get["id"]) : 0;
 		$points = isset($get["points"]) ? intval($get["points"]) : 0;
 
+        $points = min($points, 500);
+        $points = max($points, 0);
+
 		$this->load->library('output/json_output');
 		$target = $this->target_model->get($targetId);
 
