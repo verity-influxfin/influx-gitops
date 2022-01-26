@@ -231,14 +231,15 @@ class User_lib {
      * @param int $product_id
      * @return string
      */
-    public function getVirtualAccountPrefix(int $investor, int $product_id=0): string
+    public function getVirtualAccountPrefix(int $investor, int $product_id = 0): string
     {
-        switch ($investor) {
+        switch ($investor)
+        {
             case USER_BORROWER:
-                return CATHAY_VIRTUAL_CODE.BORROWER_VIRTUAL_CODE;
+                return CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE;
                 break;
             case USER_INVESTOR:
-                return CATHAY_VIRTUAL_CODE.INVESTOR_VIRTUAL_CODE;
+                return CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE;
                 break;
         }
     }
