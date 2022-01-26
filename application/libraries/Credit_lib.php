@@ -158,13 +158,13 @@ class Credit_lib{
                     $data['school_system'],
                     $data['school_major'],
                     $data['school_department'],
-                    $sub_product_id
+                    $sub_product_id,
+                    $product_id
                 );
             }
 
             // 近一學期成績
-            if (isset($data['last_grade']) &&
-                ( ! empty($data['last_grade']) || $data['last_grade'] == 0))
+            if (isset($data['last_grade']) && is_numeric($data['last_grade']))
             {
                 if ($data['last_grade'] > 90)
                 {
@@ -303,11 +303,11 @@ class Credit_lib{
                 'product_id' => $product_id,
                 'sub_product_id' => $sub_product_id,
                 'user_id' => $user_id,
-                'status' => 1,
-                'remark' => json_encode(['scoreHistory' => $this->scoreHistory])
+                'status' => 1
             ],
-            ['status'=> 0]
+            ['status' => 0]
         );
+        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
@@ -540,7 +540,7 @@ class Credit_lib{
         return $rs;
     }
 
-    public function get_school_point($school_name = '', $school_system = 0, $school_major = '', $school_department = FALSE, $sub_product_id = 0)
+    public function get_school_point($school_name = '', $school_system = 0, $school_major = '', $school_department = FALSE, $sub_product_id = 0, $product_id = 0)
     {
 		$point = 0;
 		if(!empty($school_name)){
@@ -556,13 +556,23 @@ class Credit_lib{
             if(!empty($school_info)) {
 
                 // 取得學校得分
-                switch ($sub_product_id)
+                if ($product_id == PRODUCT_ID_STUDENT && $sub_product_id == SUBPRODUCT_INTELLIGENT_STUDENT)
                 {
-                    case 6: // 名校貸
+                    // 名校貸
+                    if (empty($school_info['intelligent_points']))
+                    {
+                        $schoolPoing = 0;
+                        $this->scoreHistory[] = '此申貸案為名校貸，但系統無設定對應的名校分數';
+                    }
+                    else
+                    {
                         $schoolPoing = $school_info['intelligent_points'];
-                        break;
-                    default:
-                        $schoolPoing = $school_info['points'];
+                    }
+                }
+                else
+                {
+                    // 一般學生貸
+                    $schoolPoing = $school_info['points'];
                 }
 
                 $point = $schoolPoing;
