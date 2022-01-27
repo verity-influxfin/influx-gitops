@@ -402,7 +402,7 @@ class Qrcode_lib
      * @param $conditions
      * @return array
      */
-    public function get_subcode_list($company_user_id, $conditions): array
+    public function get_subcode_list($company_user_id, $conditions, $subcode_conditions): array
     {
         if (empty($company_user_id))
         {
@@ -416,7 +416,7 @@ class Qrcode_lib
             return [];
         }
 
-        return $this->CI->user_subcode_model->get_subcode_list($master_user_qrcode->id, $conditions);
+        return $this->CI->user_subcode_model->get_subcode_list($master_user_qrcode->id, $conditions, $subcode_conditions);
     }
 
     /**

@@ -45,20 +45,21 @@ class user_subcode_model extends MY_Model
         {
             $this->_set_where([0 => $subcode_conditions]);
         }
+
+        if (is_array($master_qrcode_id) && ! empty($master_qrcode_id))
+        {
+            $this->_database->where_in('master_user_qrcode_id', $master_qrcode_id);
+        }
+        else if ( ! empty($master_qrcode_id))
+        {
+            $this->_database->where('master_user_qrcode_id', $master_qrcode_id);
+        }
+
         $user_subcode = $this->_database->get_compiled_select('', TRUE);
 
         $this->_database->select('r.id, r.alias, r.registered_id, r.master_user_qrcode_id, uq.id AS user_qrcode_id, uq.promote_code, uq.status, uq.start_time, uq.end_time')
             ->from('p2p_user.user_qrcode as uq')
             ->join("({$user_subcode}) as `r`", "`r`.`user_qrcode_id` = `uq`.`id`");
-
-        if (is_array($master_qrcode_id) && ! empty($master_qrcode_id))
-        {
-            $this->_database->where_in('r.master_user_qrcode_id', $master_qrcode_id);
-        }
-        else if ( ! empty($master_qrcode_id))
-        {
-            $this->_database->where('r.master_user_qrcode_id', $master_qrcode_id);
-        }
 
         if ( ! empty($qrcode_conditions))
         {
