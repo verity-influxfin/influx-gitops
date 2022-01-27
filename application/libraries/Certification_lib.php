@@ -140,7 +140,8 @@ class Certification_lib{
                 $this->CI->user_certification_model->update($info->id,$param);
 				if(method_exists($this, $method)){
 					$rs = $this->$method($info);
-					if($rs){
+                    if ($rs && $info->certification_id != CERTIFICATION_REPAYMENT_CAPACITY)
+                    {
 						$this->CI->notification_lib->certification($info->user_id,$info->investor,$certification['name'],1);
 					}
 
@@ -3881,15 +3882,25 @@ class Certification_lib{
                 $print_timestamp,
                 $verified_result,
                 $certification_content,
-                $remark
+                $remark,
+                $info->created_at
             );
 
-            return $info;
+            return TRUE;
         }
         return FALSE;
     }
 
-    public function update_repayment_certification($id, $print_timestamp, $verified_result, $certification_content, $remark)
+    /**
+     * @param $id : user_certification.id
+     * @param $print_timestamp : 印表日期
+     * @param $verified_result : 資料驗證結果
+     * @param $certification_content : user_certification.content
+     * @param $remark : user_certification.remark
+     * @param $created_at : user_certification.created_at
+     * @return void
+     */
+    public function update_repayment_certification($id, $print_timestamp, $verified_result, $certification_content, $remark, $created_at)
     {
         $remark['verify_result'] = array_merge($remark['verify_result'] ?? [], $verified_result->getAllMessage(MassageDisplay::Backend));
         $status = $verified_result->getStatus();
@@ -3903,11 +3914,22 @@ class Certification_lib{
 
         if ($status == CERTIFICATION_STATUS_SUCCEED)
         {
-            $expire_time = new DateTime;
-            $expire_time->setTimestamp($print_timestamp);
-            $expire_time->modify('+ 1 month');
-            $expire_timestamp = $expire_time->getTimestamp();
-            $this->set_success($id, TRUE, $expire_timestamp);
+            if ( ! $print_timestamp)
+            {
+                $expire_time = new DateTime;
+                $expire_time->setTimestamp($created_at);
+                $expire_time->modify('+ 3 month');
+                $expire_timestamp = $expire_time->getTimestamp();
+                $this->set_success($id, TRUE, $expire_timestamp);
+            }
+            else
+            {
+                $expire_time = new DateTime;
+                $expire_time->setTimestamp($print_timestamp);
+                $expire_time->modify('+ 1 month');
+                $expire_timestamp = $expire_time->getTimestamp();
+                $this->set_success($id, TRUE, $expire_timestamp);
+            }
         }
         elseif ($status == CERTIFICATION_STATUS_FAILED)
         {

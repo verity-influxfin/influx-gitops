@@ -246,6 +246,11 @@ class Data_verify_lib{
             }
         }
 
+        if (isset($data['printDatetime']) && empty($data['printDatetime']))
+        {
+            $verifiedResult->addMessage('待人工驗證：聯徵資料有誤', 3, MassageDisplay::Backend);
+        }
+
         return $verifiedResult;
     }
 
