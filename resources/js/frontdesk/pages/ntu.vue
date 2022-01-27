@@ -30,9 +30,11 @@
     </div>
     <div class="row justify-content-center">
       <div class="content-text col-auto">
-        <div class="yt-top d-md-none d-flex">
+        <div class="yt-top d-md-none d-flex mb-2">
           <div class="yt-top-icon"></div>
           <div class="yt-top-text">台大兒童健康基金會</div>
+        </div>
+        <div class="d-flex yt-top">
           <router-link to="/investLink" target="_blank">
             <button class="btn btn-outlined yt-top-donate">捐款去</button>
           </router-link>
