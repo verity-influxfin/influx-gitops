@@ -2455,12 +2455,24 @@ class Product extends REST_Controller {
 
         // 多案申請判斷
         if($product['multi_target'] == 0){
-            $exist = $this->target_model->get_by([
+            $condition = [
                 'status <=' => 1,
                 'user_id' => $param['user_id'],
                 'product_id' => $param['product_id'],
-                'sub_product_id' => $param['sub_product_id'],
-            ]);
+                'sub_product_id' => $param['sub_product_id']
+            ];
+
+            // 學生貸跟名校貸不可同時存在
+            if ($param['product_id'] == PRODUCT_ID_STUDENT &&
+                ($param['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT || $param['sub_product_id'] == 0))
+            {
+                $condition['sub_product_id'] = [0, SUBPRODUCT_INTELLIGENT_STUDENT];
+            }
+
+            $exist = $this->target_model->get_by(
+                $condition
+            );
+
             if ($exist) {
                 $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
             }
