@@ -30,6 +30,15 @@
     </div>
     <div class="row justify-content-center">
       <div class="content-text col-auto">
+        <div class="yt-top d-md-none d-flex mb-2">
+          <div class="yt-top-icon"></div>
+          <div class="yt-top-text">台大兒童健康基金會</div>
+        </div>
+        <div class="d-flex yt-top">
+          <router-link to="/investLink" target="_blank">
+            <button class="btn btn-outlined yt-top-donate">捐款去</button>
+          </router-link>
+        </div>
         <p>
           孩子愈來愈少了，<br />
           我們未來主人翁的健康好重要 <br />
@@ -48,7 +57,7 @@
         </p>
       </div>
       <div class="col-auto">
-        <div class="yt-top">
+        <div class="yt-top d-none d-md-flex">
           <div class="yt-top-icon"></div>
           <div class="yt-top-text">台大兒童健康基金會</div>
           <router-link to="/investLink" target="_blank">
@@ -146,7 +155,7 @@
             <div>ESG聯合勸募 慈善樂捐活動</div>
           </div>
           <div class="row no-gutters">
-            <div class="col-sm col-12  physical-info-text">
+            <div class="col-sm col-12 physical-info-text">
               <div>日期：2022年02月10日</div>
               <div>時間：下午2:00-3:30</div>
               <div class="hint">(1:30開放進場)</div>
@@ -859,7 +868,9 @@ export default {};
   .page-title-1 {
     margin-right: 0;
   }
-
+  .yt-iframe {
+    width: 95vw;
+  }
   .yt-top {
     display: flex;
     justify-content: center;
