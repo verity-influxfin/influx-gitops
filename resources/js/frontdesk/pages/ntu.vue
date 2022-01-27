@@ -34,7 +34,7 @@
           <div class="yt-top-icon"></div>
           <div class="yt-top-text">台大兒童健康基金會</div>
         </div>
-        <div class="d-flex yt-top">
+        <div class="d-flex yt-top d-md-none d-flex">
           <router-link to="/investLink" target="_blank">
             <button class="btn btn-outlined yt-top-donate">捐款去</button>
           </router-link>
