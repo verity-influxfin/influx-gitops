@@ -1022,117 +1022,133 @@ class Sales extends MY_Admin_Controller {
         $fields = ['product_id'];
         foreach ($fields as $field)
         {
-            if (empty($input[$field]))
-            {
-                $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
-            }
-            else
+            if (!empty($input[$field]))
             {
                 $where[$field] = $input[$field];
             }
         }
 
         $product_list = $this->config->item('product_list');
-        $product_info = $product_list[$where['product_id']];
-        if ($this->target_lib->is_sub_product($product_info, $where['sub_product_id'] ?? 0)) {
-            $product_info = $this->trans_sub_product($product_info, $where['sub_product_id'] ?? 0);
-        }
-
-        $start_date = $input['start_date'] ?? date('Y-m-1');
-        $six_months_ago_date = date('Y-m-d', strtotime($start_date . '-6 months'));
-        $end_date = $input['end_date'] ?? date('Y-m-d');
-
-        $condition = [
-            'product_id' => $where['product_id'],
-            'created_at >= ' => strtotime($start_date),
-            'created_at <= ' => strtotime($end_date),
-        ];
-
-        $target_list = $this->target_model->get_many_by($condition);
-        $target_list = array_column(json_decode(json_encode($target_list), TRUE), NULL, 'id');
-        if ( ! empty($target_list))
+        if(isset($where['product_id']))
         {
-            $target_ids = array_keys($target_list);
-            $user_ids = array_unique(array_column($target_list, 'user_id'));
-
-            $condition_with_user = array_replace_recursive($condition, [
-                'user_id' => $user_ids]);
-
-            $apply_count_list = array_column($this->target_model->get_apply_target_count(array_replace_recursive($condition_with_user, [
-                'created_at >= ' => strtotime($six_months_ago_date)])), NULL, 'user_id');
-
-            $apply_frequent_list = array_column($this->target_model->get_apply_frequent($condition_with_user), NULL, 'user_id');
-
-            $target_banned_list = array_column($this->target_model->get_banned_list($condition_with_user), 'total_count', 'user_id');
-            $cert_banned_list = array_column($this->user_certification_model->get_banned_list(['user_id' => $user_ids]), 'total_count', 'user_id');
-
-            $loaned_count_list = array_column($this->target_model->getUserStatusByTargetId($target_ids), 'total_count', 'user_id');
-            $principal_list = array_column($this->transaction_model->get_delayed_principle($target_ids, $end_date, 'user_id'), NULL, 'user_id');
-            $older_apply_list = array_column($this->target_model->get_many_by([
-                'user_id' => $user_ids,
-                'status' => [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING],
-                'created_at < ' => strtotime($start_date),
-            ]), NULL, 'user_id');
-
-            $identity_list = array_column($this->user_certification_model->get_many_by([
-                'user_id' => $user_ids,
-                'status' => CERTIFICATION_STATUS_SUCCEED,
-                'certification_id' => CERTIFICATION_IDCARD
-            ]), NULL, 'user_id');
-            foreach ($user_ids as $user_id)
+            $product_info = $product_list[$where['product_id']];
+            if ($this->target_lib->is_sub_product($product_info, $where['sub_product_id'] ?? 0))
             {
-                // 半年內申貸案數
-                $list[$user_id]['count'] = $apply_count_list[$user_id]['total_count'] ?? 0;
+                $product_info = $this->trans_sub_product($product_info, $where['sub_product_id'] ?? 0);
+            }
 
-                // 申貸頻率(天)
-                $list[$user_id]['frequent'] = 1;
-                $info = $apply_frequent_list[$user_id];
-                if ($info['last_id'] != $info['first_id'])
-                {
-                    $time = $target_list[$info['last_id']]['created_at'] - $target_list[$info['first_id']]['created_at'];
-                    $list[$info['user_id']]['frequent'] = round($time/86400, 2);
-                }
+            $start_date = isset($input['start_date']) && !empty($input['start_date']) ? $input['start_date'] : date('Y-m-1');
+            $six_months_ago_date = date('Y-m-d', strtotime($start_date . '-6 months'));
+            $end_date = isset($input['end_date']) && !empty($input['end_date']) ? $input['end_date'] : date('Y-m-d');
+            $is_export = $input['export'] ?? 0;
 
-                // 系統拒絕紀錄
-                $banned_count = ($target_banned_list[$user_id]['total_count'] ?? 0) + ($cert_banned_list[$user_id]['total_count'] ?? 0);
-                $list[$user_id]['banned_flag'] = $banned_count > 0 ? '有' : '無';
+            $condition = [
+                'product_id' => $where['product_id'],
+                'created_at >= ' => strtotime($start_date),
+                'created_at <= ' => strtotime($end_date),
+            ];
 
-                // 申貸紀錄
-                $loaned_count = $loaned_count_list[$user_id] ?? 0;
-                if ($loaned_count <= 0 && ($principal_list[$user_id] ?? 0) <= 0)
-                {
-                    $list[$user_id]['apply_status'] = 'NN';
-                }
-                else if ($loaned_count > 0)
-                {
-                    $list[$user_id]['apply_status'] = '有';
-                }
-                else
-                {
-                    $list[$user_id]['apply_status'] = '無';
-                }
+            $target_list = $this->target_model->get_many_by($condition);
+            $target_list = array_column(json_decode(json_encode($target_list), TRUE), NULL, 'id');
+            if ( ! empty($target_list))
+            {
+                $user_ids = array_unique(array_column($target_list, 'user_id'));
 
-                // 信用額度
-                $list[$user_id]['credit_status'] = '失效/未評估';
-                $credit = $this->credit_lib->get_credit($user_id, $where['product_id'], $where['sub_product_id'] ?? 0, FALSE);
-                if ($credit !== FALSE)
+                $condition_with_user = array_replace_recursive($condition, [
+                    'user_id' => $user_ids]);
+
+                $apply_count_list = array_column($this->target_model->get_apply_target_count(array_replace_recursive($condition_with_user, [
+                    'created_at >= ' => strtotime($six_months_ago_date)])), NULL, 'user_id');
+
+                $apply_frequent_list = array_column($this->target_model->get_apply_frequent(array_replace_recursive($condition_with_user, [
+                    'created_at >= ' => strtotime($six_months_ago_date)])), NULL, 'user_id');
+                $target_ids = array_unique(array_merge(array_column($apply_frequent_list, 'last_id'), array_column($apply_frequent_list, 'first_id')));
+                $target_list = $this->target_model->get_many_by(['id' => $target_ids]);
+                $target_list = array_column(json_decode(json_encode($target_list), TRUE), NULL, 'id');
+
+                $target_banned_list = array_column($this->target_model->get_banned_list($condition_with_user), 'total_count', 'user_id');
+                $cert_banned_list = array_column($this->user_certification_model->get_banned_list(['user_id' => $user_ids]), 'total_count', 'user_id');
+
+                $loaned_count_list = array_column($this->target_model->getUserStatusByTargetId($target_ids), 'total_count', 'user_id');
+                $principal_list = array_column($this->transaction_model->get_delayed_principle($target_ids, $end_date, 'user_id'), NULL, 'user_id');
+
+                $identity_list = array_column($this->user_certification_model->get_many_by([
+                    'user_id' => $user_ids,
+                    'status' => CERTIFICATION_STATUS_SUCCEED,
+                    'certification_id' => CERTIFICATION_IDCARD
+                ]), NULL, 'user_id');
+                foreach ($user_ids as $user_id)
                 {
-                    $amount = $credit['amount'] - ($principal_list[$user_id]['total_amount'] ?? 0);
-                    if($amount >= $product_info['loan_range_s'])
+                    // 使用者編號
+                    $list[$user_id]['user_id'] = $user_id;
+
+                    // 半年內申貸案數
+                    $list[$user_id]['count'] = $apply_count_list[$user_id]['total_count'] ?? 0;
+
+                    // 申貸頻率(天)
+                    $list[$user_id]['frequent'] = 1;
+                    $info = $apply_frequent_list[$user_id];
+                    if ($info['last_id'] != $info['first_id'])
                     {
-                        $list[$user_id]['credit_status'] = number_format($amount);
+                        $time = $target_list[$info['last_id']]['created_at'] - $target_list[$info['first_id']]['created_at'];
+                        $list[$info['user_id']]['frequent'] = round($time / 86400 / $list[$user_id]['count'], 2);
+                    }
+
+                    // 系統拒絕紀錄
+                    $banned_count = ($target_banned_list[$user_id]['total_count'] ?? 0) + ($cert_banned_list[$user_id]['total_count'] ?? 0);
+                    $list[$user_id]['banned_flag'] = $banned_count > 0 ? '有' : '無';
+
+                    // 申貸紀錄
+                    $loaned_count = $loaned_count_list[$user_id] ?? 0;
+                    if ($loaned_count <= 0 && ($principal_list[$user_id] ?? 0) <= 0)
+                    {
+                        $list[$user_id]['apply_status'] = 'NN';
+                    }
+                    else if ($loaned_count > 0)
+                    {
+                        $list[$user_id]['apply_status'] = '有';
                     }
                     else
                     {
-                        // 該戶已無信用額度 (已全部動撥、該戶為逾期戶)
-                        $list[$user_id]['credit_status'] = '無';
+                        $list[$user_id]['apply_status'] = '無';
                     }
+
+                    // 信用額度
+                    $list[$user_id]['credit_status'] = '失效/未評估';
+                    $credit = $this->credit_lib->get_credit($user_id, $where['product_id'], $where['sub_product_id'] ?? 0, FALSE);
+                    if ($credit !== FALSE)
+                    {
+                        $amount = $credit['amount'] - ($principal_list[$user_id]['total_amount'] ?? 0);
+                        if ($amount >= $product_info['loan_range_s'])
+                        {
+                            $list[$user_id]['credit_status'] = $amount;
+                        }
+                        else
+                        {
+                            // 該戶已無信用額度 (已全部動撥、該戶為逾期戶)
+                            $list[$user_id]['credit_status'] = '無';
+                        }
+                    }
+
+                    $list[$user_id]['identity'] = isset($identity_list[$user_id]) ? '有' : '無';
                 }
-
-                $list[$user_id]['identity'] = isset($identity_list[$user_id]) ? '有' : '無';
-
             }
 
+            if ($is_export)
+            {
+                $this->load->library('spreadsheet_lib');
+                $title_rows = [
+                    'user_id' => ['name' => '借款人ID', 'width' => 10, 'alignment' => ['h' => 'center','v' => 'center']],
+                    'count' => ['name' => '半年內申貸案數', 'width' => 14, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']],
+                    'frequent' => ['name' => '申貸頻率(天)', 'width' => 12, 'datatype' => PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC, 'alignment' => ['h' => 'center','v' => 'center']],
+                    'banned_flag' => ['name' => '系統拒絕紀錄', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']],
+                    'apply_status' => ['name' => '申貸紀錄', 'width' => 10,'alignment' => ['h' => 'center','v' => 'center']],
+                    'credit_status' => ['name' => '信用額度', 'width' => 15, 'alignment' => ['h' => 'center','v' => 'center']],
+                    'identity' => ['name' => '通過實名', 'width' => 12,'alignment' => ['h' => 'center','v' => 'center']]
+                ];
+                $this->spreadsheet_lib->save($title_rows, $list, "{$product_info['name']}_高價值用戶_{$start_date}_{$end_date}.xlsx");
+                return;
+            }
         }
 
         $page_data['list'] = $list;

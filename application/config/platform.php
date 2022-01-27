@@ -94,6 +94,7 @@ $config['admin_menu'] = [
         'register_report' => '註冊報表',
         'bonus_report' => '獎金報表',
         'loan_overview' => '申貸總覽',
+        'valuable_report' => '高價值用戶報表',
         'promote_list'  => '推薦有賞',
         'promote_reward_list'  => '推薦有賞放款'
     ],

@@ -15,7 +15,22 @@
                     width: 640px;
                 }
             </style>
-
+            <script type="text/javascript">
+                function showChang() {
+                    var dateRange = '&start_date=' + $('#sdate').val() + '&end_date=' + $('#edate').val();
+                    var exports = $('#export :selected').val();
+                    var product_id = $('#product_id :selected').val();
+                    if (confirm("即將撈取各狀態案件，過程可能需點時間，請勿直接關閉， 確認是否執行？")) {
+                        top.location = './valuable_report?product_id=' + product_id + (exports==1?'&export=1':'') + dateRange;
+                    }
+                }
+                $(document).off("keypress","input[type=text]").on("keypress","input[type=text]" ,  function(e){
+                    code = (e.keyCode ? e.keyCode : e.which);
+                    if (code == 13){
+                        showChang();
+                    }
+                });
+            </script>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
@@ -25,7 +40,7 @@
 								<tr>
                                     <td>產品：</td>
                                     <td colspan="5">
-                                        <select id="alias">
+                                        <select id="product_id">
                                             <? foreach($product_list as $key => $value){ ?>
                                             <option value="<?=$key?>" <?=isset($_GET['product_id'])&&$_GET['product_id']!=''&&$_GET['product_id']==$key?"selected":''?>><?=$value['name']?></option>
                                             <? } ?>
@@ -37,8 +52,15 @@
                                     <td><input type="text" value="<?=isset($_GET['start_date'])&&$_GET['start_date']!=''?$_GET['start_date']:''?>" id="sdate" data-toggle="datepicker" placeholder="不指定區間" /></td>
                                     <td style="">到：</td>
                                     <td><input type="text" value="<?=isset($_GET['end_date'])&&$_GET['end_date']!=''?$_GET['end_date']:''?>" id="edate" data-toggle="datepicker" style="width: 182px;"  placeholder="不指定區間" /></td>
+                                    <td>
+                                        <select id="export">
+                                            <option value='0' >頁面顯示</option>
+                                            <option value='1' >Excel輸出</option>
+                                        </select>
+                                    </td>
                                     <td colspan="2" style="text-align: right"><a href="javascript:showChang();" class="btn btn-default">查詢</a></td>
                                 </tr>
+
                             </table>
                         </div>
                         <!-- /.panel-heading -->

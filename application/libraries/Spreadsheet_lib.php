@@ -30,7 +30,7 @@ class Spreadsheet_lib
 	 *     ['target_no' => 'STS2019061700001', 'user_id' => '487']
 	 * ]
 	 */
-	function save($title_rows, $data_rows)
+	function save($title_rows, $data_rows, $filename='export2.xlsx')
 	{
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
@@ -44,7 +44,7 @@ class Spreadsheet_lib
 		$this->draw_data($sheet, $title_rows, $data_rows);
 
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-		header('Content-Disposition: attachment;filename="export2.xlsx"');
+		header("Content-Disposition: attachment;filename={$filename}");
 		header('Cache-Control: max-age=0');
 		header('Cache-Control: max-age=1');
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
@@ -106,7 +106,9 @@ class Spreadsheet_lib
 					$data_value = $this_data_row[$key];
 				}
 
-				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, DataType::TYPE_STRING);
+                $data_type = $value['datatype'] ?? DataType::TYPE_STRING;
+                $data_type = is_numeric($data_value) ? DataType::TYPE_NUMERIC : $data_type;
+				$sheet->setCellValueExplicit($column_index . ($row_index), $data_value, $data_type);
 
 				if (isset($value['alignment'])) {
 					$alignment = $sheet->getStyle($column_index . $row_index)->getAlignment();
