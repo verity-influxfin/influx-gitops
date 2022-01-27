@@ -443,7 +443,7 @@
             let report_item = {};
             $.ajax({
                 type: "GET",
-                url: `/admin/creditmanagement/natural_person_get_structural_data?target_id=${target_id}&type=${type}`,
+                url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=${type}`,
                 async: false,
                 success: function (response) {
                     report_item = response.response;
