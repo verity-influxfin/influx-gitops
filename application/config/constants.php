@@ -155,6 +155,7 @@ defined('ORDER_STATUS_ERROR')  			OR define('ORDER_STATUS_ERROR'			, 412);
 defined('ORDER_NO_PERMISSION')  			OR define('ORDER_NO_PERMISSION'			, 413);
 defined('PRODUCT_CLOSE') OR define('PRODUCT_CLOSE' , 414);
 defined('PRODUCT_RATE_ERROR') OR define('PRODUCT_RATE_ERROR' , 414);
+defined('PRODUCT_STUDENT_NOT_INTELLIGENT') or define('PRODUCT_STUDENT_NOT_INTELLIGENT', 416); // 申請名校貸但身份非名校
 defined('M_ORDER_NOT_EXIST')  			OR define('M_ORDER_NOT_EXIST'			, 420);
 defined('M_ORDER_STATUS_ERROR')  		OR define('M_ORDER_STATUS_ERROR'		, 421);
 defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);

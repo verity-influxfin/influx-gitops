@@ -557,6 +557,27 @@ class Product extends REST_Controller {
         $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
         $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
         if ($product) {
+
+            // 申請名校貸者，先檢查是否已提交學生驗證、且符合名校資格
+            if (isset($product['sub_product']) && in_array(SUBPRODUCT_INTELLIGENT_STUDENT, $product['sub_product']))
+            {
+                $this->load->library('certification_lib');
+                $certification_info = $this->certification_lib->get_certification_info($user_id, CERTIFICATION_STUDENT);
+                if (isset($certification_info->content['school']))
+                {
+                    $famous_school_list = $this->config->item('famous_school_list');
+                    $school_short_name = array_search($certification_info->content['school'], $famous_school_list);
+
+                    if ( ! isset($famous_school_list[strtoupper($school_short_name)]))
+                    {
+                        $this->response([
+                            'result' => 'ERROR',
+                            'error' => PRODUCT_STUDENT_NOT_INTELLIGENT
+                        ]);
+                    }
+                }
+            }
+
             //檢核身分
             if($product['identity'] == 3 && $this->user_info->company != 1 && (!isset($product['checkOwner']) || !$product['checkOwner'])){
                 $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
