@@ -2,7 +2,7 @@
 			function success(id){
 				if(id){
 					$.ajax({
-						url: './success?id='+id,
+                        url: './<?=$type_name.(! $type_name ? '' : '_')?>success?id=' + id,
 						type: 'GET',
 						success: function(response) {
 							alert(response);
@@ -15,7 +15,7 @@
 			function failed(id){
 				if(id){
 					$.ajax({
-						url: './failed?id='+id,
+						url: './<?=$type_name.(! $type_name ? '' : '_')?>failed?id='+id,
 						type: 'GET',
 						success: function(response) {
 							alert(response);
@@ -28,7 +28,7 @@
 			function del(id){
 				if(id){
 					$.ajax({
-						url: './del?id='+id,
+						url: './<?=$type_name.(! $type_name ? '' : '_')?>del?id='+id,
 						type: 'GET',
 						success: function(response) {
 							alert(response);
@@ -52,7 +52,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
 							<span><?=$type_list[$type] ?></span>
-							<a href="<?=admin_url('Article/add?type='.$type) ?>">
+                            <a href="<?= admin_url('Article/' . $type_name . (! $type_name ? '' : '_') . 'add?type='.$type) ?>">
 								<button class="btn btn-primary">新增</button>
 							</a>
                         </div>
@@ -95,7 +95,7 @@
 												<? } ?>
 											</td>
 											<td><?=isset($value->rank)?$value->rank:"" ?></td>
-											<td><a href="<?=admin_url('Article/edit?id=').$value->id ?>" class="btn btn-default">Edit</a></td> 
+											<td><a href="<?=admin_url('Article/' . $type_name . (! $type_name ? '' : '_') . 'edit?id=').$value->id ?>" class="btn btn-default">Edit</a></td>
 											<td><button onclick="del(<?=isset($value->id)?$value->id:"" ?>);" type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button></td> 
 										</tr>
 									<?php 

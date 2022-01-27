@@ -115,7 +115,7 @@
                                             <td><?=isset($value->remark)?$value->remark:"" ?></td>
                                             <td><?=isset($status_list[$value->status])?$status_list[$value->status]:"" ?></td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):"" ?></td>
-											<td><a target="_blank" href="<?=admin_url('judicialperson/edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
+											<td><a target="_blank" href="<?=admin_url('judicialperson/' .(isset($method_name[0]) ? ($method_name[0].'_') : ''). 'edit')."?id=".$value->id ?>" class="btn btn-default">管理</a></td>
                                         </tr>
 									<?php 
 										}}
