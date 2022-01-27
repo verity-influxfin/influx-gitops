@@ -1,16 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-/*
- * 後台menu
- *
- * P.S.
- * 加新menu後要順便到$config['permission']加上權限
- * 例：
- * 欲在「後台人員管理」下新增一個sub-menu為「權限查詢」
- * step.1 在$config['admin_menu']['Admin']新增：'role_permission_list' => '權限查詢'
- * step.2 在$config['permission']['admin']['list']新增：'role_permission_list' => ['name' => '權限查詢']
- *
- */
+//後台menu
 $config['admin_menu'] = [
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
 	'AntiFraud' => [
@@ -26,7 +16,7 @@ $config['admin_menu'] = [
         'waiting_loan' => '待放款',
         'repayment' => '還款中',
         'finished' => '已結案',
-        'repayment_delayed' => '逾期中', // =admin/Target/index?delay=1&status=5
+        'index?delay=1&status=5' => '逾期中',
         'prepayment' => '提前還款',
         'order_target' => '消費貸 - 案件列表',
         'waiting_approve_order_transfer' => '消費貸 - 債轉待批覆',
@@ -43,16 +33,16 @@ $config['admin_menu'] = [
     'Risk' => [
         'parent_name' => '風控專區',
         //'index' => '風控審核(全)',
-        'natural_person?investor=0&company=0' => '自然人借款端審核', // =admin/Risk/index?investor=0&company=0
-        'juridical_person?investor=0&company=1' => '法人借款端審核', // =admin/Risk/index?investor=0&company=1
-        'investor?investor=1' => '投資端審核', // =admin/Risk/index?investor=1
+        'index?investor=0&company=0' => '自然人借款端審核',
+        'index?investor=0&company=1' => '法人借款端審核',
+        'index?investor=1' => '投資端審核',
         'credit' => '信評管理',
 		'credit_management' => '授信審核表'
         //'loaned_wait_push' => '貸後催收',
         //'loaned_wait_push?slist=1' => '貸後已催收列表',
     ],
     'Passbook' => [
-        'user_bankaccount_list?verify=2' => '金融帳號認證', // =admin/Certification/user_bankaccount_list?verify=2
+        '../Certification/user_bankaccount_list?verify=2' => '金融帳號認證',
         'parent_name' => '虛擬帳號管理',
         'index' => '虛擬帳號列表',
         'withdraw_list' => '提領紀錄',
@@ -61,10 +51,10 @@ $config['admin_menu'] = [
     ],
     'Judicialperson' => [
         'parent_name' => '法人管理',
-        'juridical_apply?status=0' => '法人申請列表', // =admin/Judicialperson/index?status=0
-        'juridical_management?status=1' => '法人管理列表', // =admin/Judicialperson/index?status=1
-        'cooperation_apply?cooperation=2' => '經銷商申請列表', // =admin/Judicialperson/cooperation?cooperation=2
-        'cooperation_management?cooperation=1' => '經銷商管理列表',  // =admin/Judicialperson/cooperation?cooperation=1
+        'index?status=0' => '法人申請列表',
+        'index?status=1' => '法人管理列表',
+        'cooperation?cooperation=2' => '經銷商申請列表',
+        'cooperation?cooperation=1' => '經銷商管理列表',
     ],
     'Creditmanagement' => [
         'parent_name' => '授審表',
@@ -96,10 +86,6 @@ $config['admin_menu'] = [
         'parent_name' => '後台人員管理',
         'role_list' => '權限管理',
         'index' => '人員列表',
-        'role_list_setting' => '部門權限設定',
-        'role_management'=>'人員權限設定',
-        'role_list_review' => '權限審核',
-        'role_permission_list' => '權限查詢',
     ],
     'Sales' => [
         'parent_name' => '業務報表',
@@ -129,7 +115,7 @@ $config['admin_menu'] = [
     'Article' => [
         'parent_name' => '活動及最新消息',
         'index' => '最新活動',
-        'news?type=2' => '最新消息', // =admin/Article/index?type=2
+        'index?type=2' => '最新消息',
     ],
     // 'Creditmanagementtable' => [
     //     'parent_name' => '授信審核表',
@@ -139,197 +125,6 @@ $config['admin_menu'] = [
     'Contract' => ['name' => '合約書'],
 ];
 
-/**
- * 後台menu對應的權限
- *
- * 例：
- * 在「後台人員管理」下新增一個sub-menu為「權限查詢」
- *
- * [
- *   'admin' => [ // 對應admin_menu第一層，取strtolower()
- *     'name' => '後台人員管理', // 對應admin_menu第一層的name或parent_name，取strtolower()
- *     'list' => [
- *       'role_permission_list' => ['name' => '權限查詢'], // 對應admin_menu第二層
- *       ...
- *     ]
- *   ],
- *   ...
- * ]
- */
-$config['permission'] = [
-    'product' => [
-        'name' => '產品管理',
-        'list' => [
-            'index' => ['name' => '產品管理'],
-        ]
-    ],
-    'antifraud' => [
-        'name' => '反詐欺管理指標',
-        'list' => [
-            'index' => ['name' => '反詐欺管理指標'],
-        ]
-    ],
-    'target' => [
-        'name' => '借款管理',
-        'list' => [
-            'index' => ['name' => '全部列表'],
-            'waiting_evaluation' => ['name' => '二審'],
-            'waiting_signing' => ['name' => '待簽約'],
-            'waiting_verify' => ['name' => '待上架'],
-            'waiting_bidding' => ['name' => '已上架'],
-            'waiting_loan' => ['name' => '待放款'],
-            'repayment' => ['name' => '還款中'],
-            'finished' => ['name' => '已結案'],
-            'repayment_delayed' => ['name' => '逾期中'],
-            'prepayment' => ['name' => '提前還款'],
-            'order_target' => ['name' => '消費貸 - 案件列表'],
-            'waiting_approve_order_transfer' => ['name' => '消費貸 - 債轉待批覆'],
-        ]
-    ],
-    'transfer' => [
-        'name' => '債權管理',
-        'list' => [
-            'index' => ['name' => '全部列表'],
-            'obligations' => ['name' => '全部列表(New)'],
-            'waiting_transfer' => ['name' => '債轉待收購'],
-            'waiting_transfer_success' => ['name' => '債轉待放款'],
-            'bidding' => ['name' => '已投標'],
-        ]
-    ],
-    'risk' => [
-        'name' => '風控專區',
-        'list' => [
-            'natural_person' => ['name' => '自然人借款端審核'],
-            'juridical_person' => ['name' => '法人借款端審核'],
-            'investor' => ['name' => '投資端審核'],
-            'credit' => ['name' => '信評管理'],
-            'credit_management' => ['name' => '授信審核表'],
-        ]
-    ],
-    'passbook' => [
-        'name' => '虛擬帳號管理',
-        'list' => [
-            'user_bankaccount_list' => ['name' => '金融帳號認證'],
-            'index' => ['name' => '虛擬帳號列表'],
-            'withdraw_list' => ['name' => '提領紀錄'],
-            'withdraw_waiting' => ['name' => '提領待放款'],
-            'unknown_funds' => ['name' => '不明來源退款'],
-        ]
-    ],
-    'judicialperson' => [
-        'name' => '法人管理',
-        'list' => [
-            'juridical_apply' => ['name' => '法人申請列表'],
-            'juridical_management' => ['name' => '法人管理列表'],
-            'cooperation_apply' => ['name' => '經銷商申請列表'],
-            'cooperation_management' => ['name' => '經銷商管理列表'],
-        ]
-    ],
-    'creditmanagement' => [
-        'name' => '授審表',
-        'list' => [
-            'index' => ['name' => '列表'],
-        ]
-    ],
-    'certification' => [
-        'name' => '認證管理',
-        'list' => [
-            'index' => ['name' => '認證方式列表'],
-            'user_certification_list' => ['name' => '會員認證審核'],
-            'difficult_word_list' => ['name' => '銀行困難字管理'],
-        ]
-    ],
-    'scraper' => [
-        'name' => '爬蟲子系統',
-        'list' => [
-            'index' => ['name' => 'API列表'],
-        ]
-    ],
-    'partner' => [
-        'name' => '合作夥伴管理',
-        'list' => [
-            'partner_type' => ['name' => '合作商類別'],
-            'index' => ['name' => '合作商列表'],
-        ]
-    ],
-    'contact' => [
-        'name' => '客服管理',
-        'list' => [
-            'index' => ['name' => '投訴與建議'],
-            'send_email' => ['name' => '通知工具'],
-            'certifications' => ['name' => '會員認證審核列表'],
-        ]
-    ],
-    'user' => [
-        'name' => '會員管理',
-        'list' => [
-            'index' => ['name' => '會員列表'],
-            'blocked_users' => ['name' => '鎖定帳號管理'],
-        ]
-    ],
-    'admin' => [
-        'name' => '後台人員管理',
-        'list' => [
-            'role_list' => ['name' => '權限管理'],
-            'index' => ['name' => '人員列表'],
-            'role_list_setting' => ['name' => '部門權限設定'],
-            'role_management' => ['name' => '人員權限設定'],
-            'role_list_review' => ['name' => '權限審核'],
-            'role_permission_list' => ['name' => '權限查詢'],
-        ]
-    ],
-    'sales' => [
-        'name' => '業務報表',
-        'list' => [
-            'index' => ['name' => '借款報表'],
-            'register_report' => ['name' => '註冊報表'],
-            'bonus_report' => ['name' => '獎金報表'],
-            'loan_overview' => ['name' => '申貸總覽'],
-            'promote_list' => ['name' => '推薦有賞'],
-            'promote_reward_list' => ['name' => '推薦有賞放款'],
-        ]
-    ],
-    'account' => [
-        'name' => '財務作業',
-        'list' => [
-            'daily_report' => ['name' => '虛擬帳戶交易明細表'],
-            'passbook_report' => ['name' => '虛擬帳號餘額明細表'],
-            'estatement' => ['name' => '個人對帳單'],
-            'index' => ['name' => '收支統計表'],
-        ]
-    ],
-    'ocr' => [
-        'name' => 'OCR 結果',
-        'list' => [
-            'index' => ['name' => '報表'],
-        ]
-    ],
-    'postloan' => [
-        'name' => '貸後管理',
-        'list' => [
-            'legal_doc' => ['name' => '法訴文件管理'],
-        ]
-    ],
-    'article' => [
-        'name' => '活動及最新消息',
-        'list' => [
-            'index' => ['name' => '最新活動'],
-            'news' => ['name' => '最新消息'],
-        ]
-    ],
-    'agreement' => [
-        'name' => '協議書',
-        'list' => [
-            'index' => ['name' => '協議書']
-        ]
-    ],
-    'contract' => [
-        'name' => '合約書',
-        'list' => [
-            'index' => ['name' => '合約書']
-        ]
-    ],
-];
 
 $config['role_permission'] = [
     'RolePostLoan' => [
