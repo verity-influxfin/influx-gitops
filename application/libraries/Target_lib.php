@@ -351,10 +351,17 @@ class Target_lib
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
                     if ($user_current_credit_amount >= 1000 || $subloan_status) {
+                        $this->CI->config->load('credit',TRUE);
+                        $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_'.$target->product_id];
+
                         //該產品額度
                         $used_amount = $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
+
+                        // 依照借款期間調整額度
+                        $credit['amount'] = round($credit['amount'] * (isset($instalment_modifier_list[$target->instalment]) ? $instalment_modifier_list[$target->instalment] : 1));
+
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         // 金額取整程式，2020/10/30排除產轉
                         $loan_amount = ($loan_amount % 1000 != 0 && $subloan_status == false) ? floor($loan_amount * 0.001) * 1000 : $loan_amount;

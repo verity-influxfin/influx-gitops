@@ -114,7 +114,7 @@ class Credit_lib{
             'amount' => 0,
             'expire_time' => $expire_time,
         ];
-        $param['level'] = $this->get_credit_level($total_point, $product_id);
+        $param['level'] = $this->get_credit_level($total_point, $product_id, $sub_product_id);
         if (isset($this->credit['credit_amount_' . $product_id])) {
             foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
@@ -136,139 +136,119 @@ class Credit_lib{
             'amount' => 0,
             'instalment' => $instalment
         ];
+
+        $this->CI->config->load('credit', TRUE);
+        $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
+
 	    if($stage_cer == 0) {
             $info = $this->CI->user_meta_model->get_many_by(['user_id' => $user_id]);
             $user_info = $this->CI->user_model->get($user_id);
             $this->CI->load->model('user/user_certification_model');
-            $user_certification_list = $this->CI->user_certification_model->get_many_by([
-                'user_id' => $user_id,
-                'status' => 1,
-            ]);
 
-            $transcript = false;
-            if ($user_certification_list) {
-                foreach ($user_certification_list as $key => $value) {
-                    $data = json_decode($value->content);
-                    if($value->certification_id == 2){
-                        if(isset($data->transcript_image)){
-                            !empty($data->transcript_image) ? $transcript = true : '';
-                        }
-                    }elseif($value->certification_id == 4){
-                        if (isset($data->instagram->meta)) {
-                            $three_month_ago = strtotime("-3 months", time());
-                            if (count($data->instagram->meta) >= 10) {
-                                $three_month_ago < $data->instagram->meta[9]->created_time ? $total += 100 : '';
-                                $this->scoreHistory[] = '3個月內發文次數大於10次 = 100\n';
-                            }
-                            foreach ($data->instagram->meta as $igKey => $igValue) {
-                                if (preg_match_all('/' . $this->CI->config->item('social_patten') . '/', $igValue->text)) {
-                                    $total += 200;
-                                    $this->scoreHistory[] = '發文關鍵字/全球、財經、數位、兩岸 = 200\n';
-                                    break;
-                                }
-                            }
-                            $last_social_cer_list = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by([
-                                'user_id' => $user_id,
-                                'certification_id' => 4,
-                            ]);
-                            if (is_array($last_social_cer_list) && count($last_social_cer_list) >= 2) {
-                                foreach ($last_social_cer_list as $lastIgKey => $lastIgValue) {
-                                    if ($three_month_ago >= $lastIgValue->created_at && $lastIgKey > 0) {
-                                        $all_contents = json_decode($lastIgValue->content);
-                                        $last_ig_follows = isset($all_contents->instagram) ? $all_contents->instagram->counts->follows : $all_contents->info->counts->follows;
-                                        $data->instagram->counts->follows - $last_ig_follows > $last_ig_follows * 0.1 ? $total += 100 : '';
-                                        $this->scoreHistory[] = '好友數>100且較3個月前增加10%以上 = 100\n';
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
             $data = [];
             foreach ($info as $key => $value) {
                 $data[$value->meta_key] = $value->meta_value;
             }
 
-            if ($sub_product_id) {
-                $sub_product = $this->get_sub_product_data($sub_product_id);
-                //techie
-                if ($sub_product && $sub_product_id == 1) {
-                    //系所加分
-                    $total += in_array($data['school_department'], $sub_product->majorList) ? 200 : 0;
-                    $this->scoreHistory[] = ' = 200\n';
-                    $total += isset($data['student_game_work_level']) ? $data['student_game_work_level'] * 50 : 0;
-                    $this->scoreHistory[] = ' = 50\n';
-                    $total += isset($data['student_license_level']) ? $data['student_license_level'] * 50 : 0;
-                    $this->scoreHistory[] = ' = 50\n';
-                    $total += isset($data['student_pro_level']) ? $data['student_pro_level'] * 100 : 0;
-                    $this->scoreHistory[] = ' = 100\n';
+            // 學校
+            if (isset($data['school_name']) && ! empty($data['school_name']))
+            {
+                $total += $this->get_school_point(
+                    $data['school_name'],
+                    $data['school_system'],
+                    $data['school_major'],
+                    $data['school_department'],
+                    $sub_product_id,
+                    $product_id
+                );
+            }
+
+            // 近一學期成績
+            if (isset($data['last_grade']) && is_numeric($data['last_grade']))
+            {
+                if ($data['last_grade'] > 90)
+                {
+                    $total += 200;
+                    $this->scoreHistory[] = '提供學校成績單(>90分) = 200\n';
+                }
+                elseif ($data['last_grade'] > 85)
+                {
+                    $total += 150;
+                    $this->scoreHistory[] = '提供學校成績單(85-90分) = 150\n';
+                }
+                elseif ($data['last_grade'] > 80)
+                {
+                    $total += 100;
+                    $this->scoreHistory[] = '提供學校成績單(80-85分) = 100\n';
+                }
+                else
+                {
+                    $total += 50;
+                    $this->scoreHistory[] = '提供學校成績單(<80分) = 50\n';
                 }
             }
 
-            //學校
-            if (isset($data['school_name']) && !empty($data['school_name'])) {
-                $total += $this->get_school_point($data['school_name'], $data['school_system'], $data['school_major'], $data['school_department']) ;
-            }
-
-            //財務證明
-            if (isset($data['financial_status']) && !empty($data['financial_status'])) {
+            // 財務證明
+            if (isset($data['financial_status']) && ! empty($data['financial_status']))
+            {
                 $total += 50;
                 $this->scoreHistory[] = '借款人提供個人財務數據表(自填) = 50\n';
-                if (isset($data['financial_passbook']) && !empty($data['financial_passbook'])) {
-                    $total += 100;
-                    $this->scoreHistory[] = '近3個月存摺內頁/收入證明 = 100\n';
-                }
-                if (isset($data['financial_bill_phone']) && !empty($data['financial_bill_phone'])) {
-                    $total += 100;
-                    $this->scoreHistory[] = '提供電話費帳單 = 100\n';
-                }
-                if (isset($data['financial_creditcard']) && !empty($data['financial_creditcard'])) {
-                    $total += 100;
-                    $this->scoreHistory[] = '近期信用卡帳單 = 100\n';
-                }
             }
 
-            if (isset($data['line_access_token']) && !empty($data['line_access_token'])) {
-                $total += 50;
-                $this->scoreHistory[] = '提供社交帳戶認證LINE = 50\n';
+            // IG好友數每增加10個得10分(個位數無條件捨去)
+            // 最高上限150分
+            if (isset($data['follow_count']) && ! empty($data['follow_count']))
+            {
+                $calculate_points = min(floor($data['follow_count'] / 10), 150);
+                $total += $calculate_points;
+                $this->scoreHistory[] = "IG好友數 = {$calculate_points}\n";
             }
 
-            //聯徵
-            if (isset($data['investigation_status']) && !empty($data['investigation_status'])) {
-                if (isset($data['investigation_times'])) {
-                    $investigationTimes = round($this->get_investigation_times_point(intval($data['investigation_times']))/3);
-                    $total += $investigationTimes;
-                    $this->scoreHistory[] = '提供聯徵(使用次數) = '.$investigationTimes;
-                }
+            // IG近3個月內每發文1次得10分
+            // 最高得分150
+            if (isset($data['posts_in_3months']) && ! empty($data['posts_in_3months']))
+            {
+                $calculate_points = min($data['posts_in_3months'] * 10, 150);
+                $total += $calculate_points;
+                $this->scoreHistory[] = "IG近3個月內發文 = {$calculate_points}\n";
+            }
 
-                if (isset($data['investigation_credit_rate'])) {
-                    $investigationCreditRate = round($this->get_investigation_rate_point(intval($data['investigation_credit_rate']))/3);
-                    $total += $investigationCreditRate;
-                    $this->scoreHistory[] = '提供聯徵(使用額度) = '.$investigationCreditRate;
-                }
+            // IG發文關鍵字每1個得10分/全球、財經、數位、兩岸
+            // 最高得分150
+            if (isset($data['key_word']) && ! empty($data['key_word']))
+            {
+                $calculate_points = min($data['posts_in_3months'] * 10, 150);
+                $total += $calculate_points;
+                $this->scoreHistory[] = "IG近3個月內發文 = {$calculate_points}\n";
+            }
 
-                if (isset($data['investigation_months'])) {
-                    $investigationMonths = round($this->get_investigation_months_point(intval($data['investigation_months']))/3);
-                    $total += $investigationMonths;
-                    $this->scoreHistory[] = '提供聯徵(使用紀錄月份) = '.$investigationMonths;
-                }
+            if (isset($data['line_access_token']) && ! empty($data['line_access_token']))
+            {
+                $total += 100;
+                $this->scoreHistory[] = '提供社交帳戶認證LINE = 100\n';
+            }
+
+            // 聯徵
+            if (isset($data['investigation_status']) && ! empty($data['investigation_status']))
+            {
+                $investigationStatus = 150;
+                $total += $investigationStatus;
+                $this->scoreHistory[] = '提供聯徵 = ' . $investigationStatus;
             }
 
             //SIP
             //if(!empty($data['student_sip_account']) && !empty($data['student_sip_password'])){
             //$total += 150;
             //}
-            if (isset($data['transcript_front']) && !empty($data['transcript_front']) || $transcript) {
+            if (isset($data['transcript_front']) && !empty($data['transcript_front'])) {
                 $total += 50;
                 $this->scoreHistory[] = '提供成績單 = 50';
             }
             //緊急聯絡人
-            if (isset($data['emergency_relationship']) && $data['emergency_relationship'] == '監護人') {
-                $total = $total - 400;//mantis 0000003
-                $this->scoreHistory[] = '緊急聯絡人為監護人 = 400';
-            }
+            // if (isset($data['emergency_relationship']) && $data['emergency_relationship'] == '監護人') {
+            //     $total = $total - 400;//mantis 0000003
+            //     $this->scoreHistory[] = '緊急聯絡人為監護人 = 400';
+            // }
 
             if ($approvalExtra && $approvalExtra->getExtraPoints()) {
                 $total += $approvalExtra->getExtraPoints();
@@ -276,6 +256,8 @@ class Credit_lib{
 
             $total = $user_info->sex == 'M' ? round($total * 0.95) : $total;
             $this->scoreHistory[] = '性別:'.($user_info->sex == 'M' ? '男 * 0.95' : '女 * 1');
+            $total = round($total * (isset($instalment_modifier_list[$instalment]) ? $instalment_modifier_list[$instalment] : 1));
+            $this->scoreHistory[] = '借款期數' . $instalment . '期: * ' . (isset($instalment_modifier_list[$instalment]) ? $instalment_modifier_list[$instalment] : 0);
             $param['points'] = intval($total);
 
         }
@@ -287,9 +269,22 @@ class Credit_lib{
             return $param['points'];
         }
 
-        $param['level'] 	= $this->get_credit_level($total,$product_id);
-        if(isset($this->credit['credit_amount_'.$product_id])){
-            foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
+        $param['level'] 	= $this->get_credit_level($total,$product_id,$sub_product_id);
+
+        // 取得額度對照表
+        if (isset($this->credit['credit_amount_' . $product_id . '_' . $sub_product_id]))
+        {
+            $credit_amount = $this->credit['credit_amount_' . $product_id . '_' . $sub_product_id];
+        }
+        else
+        {
+            $credit_amount = $this->credit['credit_amount_' . $product_id];
+        }
+
+        if ( ! empty($credit_amount))
+        {
+            foreach ($credit_amount as $key => $value)
+            {
                 if($param['points']>=$value['start'] && $param['points']<=$value['end']){
                     $param['amount'] = $value['amount'];
                     break;
@@ -308,10 +303,11 @@ class Credit_lib{
                 'product_id' => $product_id,
                 'sub_product_id' => $sub_product_id,
                 'user_id' => $user_id,
-                'status' => 1,
+                'status' => 1
             ],
-            ['status'=> 0]
+            ['status' => 0]
         );
+        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
@@ -412,7 +408,7 @@ class Credit_lib{
             return $param['points'];
         }
 
-        $param['level'] = $this->get_credit_level($total, $product_id, $stage_cer);
+        $param['level'] = $this->get_credit_level($total, $product_id, $sub_product_id, $stage_cer);
         if (isset($this->credit['credit_amount_' . $product_id])) {
             foreach ($this->credit['credit_amount_' . $product_id] as $key => $value) {
                 if ($param['points'] >= $value['start'] && $param['points'] <= $value['end']) {
@@ -525,7 +521,7 @@ class Credit_lib{
         }
 
         $param['points'] 	= intval($total);
-        $param['level'] 	= $this->get_credit_level($total,$product_id);
+        $param['level'] 	= $this->get_credit_level($total,$product_id,$sub_product_id);
         if(isset($this->credit['credit_amount_'.$product_id])){
             foreach($this->credit['credit_amount_'.$product_id] as $key => $value){
                 if($param['points']>=$value['start'] && $param['points']<=$value['end']){
@@ -544,7 +540,8 @@ class Credit_lib{
         return $rs;
     }
 
-	public function get_school_point($school_name='',$school_system=0,$school_major='',$school_department = false ){
+    public function get_school_point($school_name = '', $school_system = 0, $school_major = '', $school_department = FALSE, $sub_product_id = 0, $product_id = 0)
+    {
 		$point = 0;
 		if(!empty($school_name)){
 			$school_list = $this->CI->config->item('school_points');
@@ -557,7 +554,27 @@ class Credit_lib{
 			}
 
             if(!empty($school_info)) {
-                $schoolPoing = $school_info['points'];
+
+                // 取得學校得分
+                if ($product_id == PRODUCT_ID_STUDENT && $sub_product_id == SUBPRODUCT_INTELLIGENT_STUDENT)
+                {
+                    // 名校貸
+                    if (empty($school_info['intelligent_points']))
+                    {
+                        $schoolPoing = 0;
+                        $this->scoreHistory[] = '此申貸案為名校貸，但系統無設定對應的名校分數';
+                    }
+                    else
+                    {
+                        $schoolPoing = $school_info['intelligent_points'];
+                    }
+                }
+                else
+                {
+                    // 一般學生貸
+                    $schoolPoing = $school_info['points'];
+                }
+
                 $point = $schoolPoing;
                 $this->scoreHistory[] = '學校得分:'.$school_name.' = '.$schoolPoing;
                 if($school_system == 0){
@@ -570,12 +587,6 @@ class Credit_lib{
                     $point += 500;
                     $this->scoreHistory[] = '學制:博士 = 500';
                 }
-
-				if(!empty($school_major)){
-					$schoolMajorPoint = isset($school_list['school_major_point'][$school_major])?$school_list['school_major_point'][$school_major]:100;
-					$point += $schoolMajorPoint;
-					$this->scoreHistory[] = '大學學門分類:'.$school_major.' = '.$schoolMajorPoint;
-				}
 
 				if($school_department) {
 					$school_data = $school_list['department_points'];
@@ -778,26 +789,43 @@ class Credit_lib{
 		return false;
 	}
 
-	public function  get_credit_level($points=0,$product_id=0, $stage_cer = false){
-		if((intval($points)>0 || $stage_cer) && $product_id ){
-			if(isset($this->credit['credit_level_'.$product_id])){
-				foreach($this->credit['credit_level_'.$product_id] as $level => $value){
-					if($points >= $value['start'] && $points <= $value['end']){
-						return $level;
-						break;
-					}
-				}
-			}
+    public function get_credit_level($points = 0, $product_id = 0, $sub_product_id = 0, $stage_cer = FALSE)
+    {
+        if ((intval($points) > 0 || $stage_cer) && $product_id)
+        {
+            $credit_level_list = $this->credit['credit_level_' . $product_id];
+            if (isset($this->credit['credit_level_' . $product_id . '_' . $sub_product_id]))
+            {
+                $credit_level_list = $this->credit['credit_level_' . $product_id . '_' . $sub_product_id];
+            }
+            if (isset($credit_level_list))
+            {
+                foreach ($credit_level_list as $level => $value)
+                {
+                    if ($points >= $value['start'] && $points <= $value['end'])
+                    {
+                        return $level;
+                        break;
+                    }
+                }
+            }
 
-		}
-		return false;
-	}
+        }
+        return FALSE;
+    }
 
 	public function get_rate($level,$instalment,$product_id,$sub_product_id=0,$target=[]){
 		$credit = $this->CI->config->item('credit');
-		if(isset($this->credit['credit_level_'.$product_id][$level])){
-			if(isset($this->credit['credit_level_'.$product_id][$level]['rate'][$instalment])){
-                $rate = $this->credit['credit_level_'.$product_id][$level]['rate'][$instalment];
+        $credit_level_list = $credit['credit_level_' . $product_id];
+        if (isset($credit['credit_level_' . $product_id . '_' . $sub_product_id]))
+        {
+            $credit_level_list = $credit['credit_level_' . $product_id . '_' . $sub_product_id];
+        }
+        if (isset($credit_level_list[$level]))
+        {
+            if (isset($credit_level_list[$level]['rate'][$instalment]))
+            {
+                $rate = $credit_level_list[$level]['rate'][$instalment];
                 //副產品減免
                 if($sub_product_id){
                     $info        = $this->CI->user_meta_model->get_many_by(['user_id'=>$target->user_id]);

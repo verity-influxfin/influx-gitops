@@ -135,11 +135,18 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 &&  !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 &&  !in_array($key,[1,2,3,4,5,6,7,8,9,10,14, CERTIFICATION_SOCIAL_INTELLIGENT])
                                         ){
                                             unset($certification[$key]);
                                             continue;
                                         }
+
+                                        if ($key == CERTIFICATION_SOCIAL_INTELLIGENT)
+                                        {
+                                            echo '<th>' . ($key == 9 && isset($input['company']) && $input['company'] == 1 ? '自然人' : '') . '名校貸' . $value['name'] . '</th>';
+                                            continue;
+                                        }
+
                                         echo '<th>'.($key==9 && isset($input['company']) && $input['company']==1?'自然人':'').$value['name'].'</th>';
                                     }
                                 }
@@ -362,11 +369,18 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14, CERTIFICATION_SOCIAL_INTELLIGENT])
                                         ){
                                             unset($certification[$key]);
                                             continue;
                                         }
+
+                                        if ($key == CERTIFICATION_SOCIAL_INTELLIGENT)
+                                        {
+                                            echo '<th>' . ($key == 9 && isset($input['company']) && $input['company'] == 1 ? '自然人' : '') . '名校貸' . $value['name'] . '</th>';
+                                            continue;
+                                        }
+
                                         echo '<th>'.($key==9 && isset($input['company']) && $input['company']==1?'自然人':'').$value['name'].'</th>';
                                     }
                                 }
@@ -591,11 +605,18 @@
                                     foreach($certification as $key => $value){
                                         if(isset($input['investor']) && $input['investor'] == 1 && !in_array($key, $investor_cer)
                                             || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 1 && $key <= 10
-                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14])
+                                            || isset($input['investor']) && $input['investor'] == 0 && isset($input['company']) && $input['company'] == 0 && !in_array($key,[1,2,3,4,5,6,7,8,9,10,14, CERTIFICATION_SOCIAL_INTELLIGENT])
                                         ){
                                             unset($certification[$key]);
                                             continue;
                                         }
+                                        
+                                        if ($key == CERTIFICATION_SOCIAL_INTELLIGENT)
+                                        {
+                                            echo '<th>' . ($key == 9 && isset($input['company']) && $input['company'] == 1 ? '自然人' : '') . '名校貸' . $value['name'] . '</th>';
+                                            continue;
+                                        }
+
                                         echo '<th>'.($key==9 && isset($input['company']) && $input['company']==1?'自然人':'').$value['name'].'</th>';
                                     }
                                 }

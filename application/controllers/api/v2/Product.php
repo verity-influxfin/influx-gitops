@@ -12,7 +12,7 @@ class Product extends REST_Controller {
         $this->load->library('Certification_lib');
         $this->load->library('Target_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = [];
+        $nonAuthMethods = ['chk_famous_school'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
@@ -557,6 +557,27 @@ class Product extends REST_Controller {
         $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
         $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
         if ($product) {
+
+            // 申請名校貸者，先檢查是否已提交學生驗證、且符合名校資格
+            if (isset($product['sub_product']) && SUBPRODUCT_INTELLIGENT_STUDENT == $sub_product_id)
+            {
+                $this->load->library('certification_lib');
+                $certification_info = $this->certification_lib->get_certification_info($user_id, CERTIFICATION_STUDENT);
+                if (isset($certification_info->content['school']))
+                {
+                    $famous_school_list = $this->config->item('famous_school_list');
+                    $school_short_name = array_search($certification_info->content['school'], $famous_school_list);
+
+                    if ( ! isset($famous_school_list[strtoupper($school_short_name)]))
+                    {
+                        $this->response([
+                            'result' => 'ERROR',
+                            'error' => PRODUCT_STUDENT_NOT_INTELLIGENT
+                        ]);
+                    }
+                }
+            }
+
             //檢核身分
             if($product['identity'] == 3 && $this->user_info->company != 1 && (!isset($product['checkOwner']) || !$product['checkOwner'])){
                 $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
@@ -625,12 +646,27 @@ class Product extends REST_Controller {
                 }
             }
 
+            if (isset($product['repayment']))
+            {
+                if (isset($input['repayment']) && in_array($input['repayment'], $product['repayment']))
+                {
+                    $repayment = $input['repayment'];
+                }
+                else
+                {
+                    $repayment = $product['repayment'][0];
+                }
+            }
+            else
+            {
+                $repayment = 1;
+            }
 
             $param		= [
                 'product_id' => $product['id'],
                 'sub_product_id' => $sub_product_id,
                 'user_id' => $user_id,
-                'repayment' => $product['repayment'][0],
+                'repayment' => $repayment,
                 'damage_rate' => LIQUIDATED_DAMAGES,
             ];
 
@@ -2419,12 +2455,24 @@ class Product extends REST_Controller {
 
         // 多案申請判斷
         if($product['multi_target'] == 0){
-            $exist = $this->target_model->get_by([
+            $condition = [
                 'status <=' => 1,
                 'user_id' => $param['user_id'],
                 'product_id' => $param['product_id'],
-                'sub_product_id' => $param['sub_product_id'],
-            ]);
+                'sub_product_id' => $param['sub_product_id']
+            ];
+
+            // 學生貸跟名校貸不可同時存在
+            if ($param['product_id'] == PRODUCT_ID_STUDENT &&
+                ($param['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT || $param['sub_product_id'] == 0))
+            {
+                $condition['sub_product_id'] = [0, SUBPRODUCT_INTELLIGENT_STUDENT];
+            }
+
+            $exist = $this->target_model->get_by(
+                $condition
+            );
+
             if ($exist) {
                 $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
             }
@@ -3129,5 +3177,38 @@ class Product extends REST_Controller {
             }
             $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
         }
+    }
+
+    /**
+     * @api {get} /v2/product/chk_famous_school 借款方 檢查學校是否符合名校貸資格
+     * @apiVersion 0.2.0
+     * @apiName GetChkFamousSchool
+     * @apiGroup Product
+     *
+     * @apiParam {String} school_short_name 學校英文名縮寫
+     *
+     * @apiSuccess {Boolean} result 檢查結果
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     *     "result":"SUCCESS",
+     *     "data":{
+     *         "result":true
+     *     }
+     * }
+     *
+     */
+    public function chk_famous_school_get($school_short_name)
+    {
+        $result = FALSE;
+
+        // 名校清單
+        $famous_school_list = $this->config->item('famous_school_list');
+
+        if (isset($famous_school_list[strtoupper($school_short_name)]))
+        {
+            $result = TRUE;
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['chk_result' => $result]]);
     }
 }

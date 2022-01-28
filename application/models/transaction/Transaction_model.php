@@ -140,4 +140,22 @@ class Transaction_model extends MY_Model
         $this->db->set($data)->insert("`p2p_transaction`.`{$this->_table}`");
         return $this->db->insert_id();
     }
+
+    /**
+     * 依target ID及科目名稱找第N期的還款狀態
+     * @param $target_id
+     * @param $source : 科目名稱
+     * @return mixed
+     */
+    public function get_repayment_status_by_target_id($target_id, $source, $instalment_no)
+    {
+        $this->db
+            ->select('status')
+            ->from('p2p_transaction.' . $this->_table)
+            ->where('target_id', $target_id)
+            ->where('source', $source)
+            ->where('instalment_no', $instalment_no);
+
+        return $this->db->get()->first_row('array');
+    }
 }
