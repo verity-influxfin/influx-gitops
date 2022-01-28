@@ -4,6 +4,22 @@
 		flex-direction: column;
 	}
 
+	.justify-between {
+		justify-content: space-between;
+	}
+
+	.col-20 {
+		flex: 0 0 20%;
+	}
+
+	.col-30 {
+		flex: 0 0 30%;
+	}
+
+	.col {
+		flex: 1 0 0%;
+	}
+
 	.w-100 {
 		width: 100% !important;
 	}
@@ -205,7 +221,7 @@
 							<option :value="50">50</option>
 						</select>
 					</div>
-					
+
 					<table id="andtfraud">
 						<thead>
 							<tr>
@@ -251,67 +267,103 @@
 				</div>
 			</div>
 			<div class="panel panel-default mt-4">
-				<div class="mask"></div>
+				<div class=""></div>
 				<div class="panel-heading p-4">
 					新增風險等級
 				</div>
-				<div class="panel-body">
+				<form class="panel-body" @submit.prevent="openNewRisk">
 					<div class="result-data-row">
 						<div class="result-data-item">
 							<div class="result-header-item key">項目</div>
 							<div class="result-value-item value">
-								<select class="form-select w-100" id="new-risk-1">
+								<select class="form-select w-100" id="new-risk-1" v-model="riskTreeSelect.node1"
+									required>
 									<option value="-1">請選擇</option>
+									<option :value="item" v-for="item in riskTree" :key="item.id">
+										{{ item.name }}
+									</option>
 								</select>
 							</div>
 						</div>
 						<div class="result-data-item">
 							<div class="result-header-item key">資料來源</div>
 							<div class="result-value-item value">
-								<select class="form-select w-100" id="new-risk-2">
+								<select class="form-select w-100" id="new-risk-2" v-model="riskTreeSelect.node2"
+									required>
 									<option value="-1">請選擇</option>
+									<option :value="item" v-for="item in riskTreeSelect.node1.children" :key="item.id">
+										{{ item.name }}
+									</option>
 								</select>
 							</div>
 						</div>
 						<div class="result-data-item">
 							<div class="result-header-item key">歸類</div>
 							<div class="result-value-item value">
-								<select class="form-select w-100" id="new-risk-3">
+								<select class="form-select w-100" id="new-risk-3" v-model="riskTreeSelect.node3"
+									required>
 									<option value="-1">請選擇</option>
+									<option :value="item" v-for="item in riskTreeSelect.node2.children" :key="item.id">
+										{{ item.name }}
+									</option>
 								</select>
 							</div>
 						</div>
 						<div class="result-data-item">
 							<div class="result-header-item key">內容</div>
 							<div class="result-value-item value">
-								<select class="form-select w-100" id="new-risk-4">
+								<select class="form-select w-100" id="new-risk-4" v-model="riskTreeSelect.node4"
+									required>
 									<option value="-1">請選擇</option>
+									<option :value="item" v-for="item in riskTreeSelect.node3.children" :key="item.id">
+										{{ item.description }}
+									</option>
 								</select>
 							</div>
 						</div>
 						<div class="result-data-item">
 							<div class="result-header-item key">風險</div>
 							<div class="result-value-item value">
-								<select class="form-select w-100" id="new-risk-5">
-									<option value="-1">請選擇</option>
-								</select>
+								{{riskTreeSelect.node4.risk}}
 							</div>
 						</div>
 						<div class="result-data-item">
 							<div class="result-header-item key">解決方式</div>
 							<div class="result-value-item value">
-								<select class="form-select w-100" id="new-risk-6">
-									<option value="-1">請選擇</option>
-								</select>
+								{{riskTreeSelect.node4.block}}
 							</div>
 						</div>
 					</div>
 					<div class="d-flex justify-end mt-4">
-						<button class="btn btn-primary" onclick="">
-							送出
+						<button class="btn btn-primary">
+							下一步
 						</button>
 					</div>
-				</div>
+				</form>
+			</div>
+		</div>
+		<div class="modal fade" id="riskModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<form class="modal-content" @submit.prevent>
+					<div class="modal-header">
+						<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h3 class="modal-title">新增風險等級</h3>
+					</div>
+					<div class="modal-body p-5" v-if="riskTreeSelect.node4">
+						<div class="d-flex mb-4" v-for="item in riskTreeSelect.node4.columnMap" :key="item.key">
+							<div class="col-20 input-require">{{item.label}}</div>
+							<div class="col">
+								<input type="text" required class="w-100 form-control" v-model="item.value">
+							</div>
+						</div>
+						<div class="d-flex justify-between mx-3 mb-3">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+							<button type="submit" class="btn btn-primary">送出</button>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -367,18 +419,29 @@
 					last_page: 1,
 					per_page: 10
 				},
-				antiTable:[]
+				antiTable: [],
+				riskTree: [],
+				riskTreeSelect: {
+					node1: {},
+					node2: {},
+					node3: {},
+					node4: {},
+				}
 			}
 		},
 		methods: {
-			convertDate(n){
-				return new Date(n*1000).toLocaleString()
+			convertDate(n) {
+				return new Date(n * 1000).toLocaleString()
 			},
 			onReady() {
 				this.getOption()
+				this.getNewTree()
 			},
 			onChangePage(page) {
-				this.doSearch({page})
+				this.doSearch({ page })
+			},
+			openNewRisk() {
+				$('#riskModal').modal('toggle')
 			},
 			getOption() {
 				axios.get(`${apiUrl}/get_option`)
@@ -390,7 +453,7 @@
 						this.options = { ...data.results }
 					})
 			},
-			doSearch({page}) {
+			doSearch({ page }) {
 				const { searchParam, pagination } = this
 				const pageParam = page ?? this.pagination.current_page
 				axios.get(`${apiUrl}/get_anti_list`, {
@@ -412,6 +475,16 @@
 					}
 				})
 			},
+			getNewTree() {
+				axios.get(`${apiUrl}/get_new_tree`)
+					.then(({ data }) => {
+						if (!data.results) {
+							alert(data.message)
+							return
+						}
+						this.riskTree = data.results
+					})
+			}
 		},
 		watch: {
 			antiTable(data) {
@@ -428,6 +501,15 @@
 					table.row.add(t)
 				})
 				table.draw()
+			},
+			"riskTreeSelect.node1"() {
+				this.riskTreeSelect.node2 = {}
+				this.riskTreeSelect.node3 = {}
+				this.riskTreeSelect.node4 = {}
+			},
+			"riskTreeSelect.node2"(data) {
+				this.riskTreeSelect.node3 = {}
+				this.riskTreeSelect.node4 = {}
 			},
 		},
 	})
