@@ -129,7 +129,7 @@ class Prepayment_lib{
                 if ($target->product_id == 1 && $target->sub_product_id == 6)
                 {
                     $this->CI->load->model('transaction/transaction_model');
-                    $transaction_status = $this->transaction_model->get_repayment_status_by_target_id(
+                    $transaction_status = $this->CI->transaction_model->get_repayment_status_by_target_id(
                         $target->id,
                         SOURCE_INTEREST,
                         3
