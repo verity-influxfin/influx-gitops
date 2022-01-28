@@ -10,7 +10,7 @@ CREATE TABLE `p2p_user`.`user_subcode` (
    `updated_at` TIMESTAMP NOT NULL,
    `updated_ip` VARCHAR(15) NOT NULL,
    PRIMARY KEY (`id`),
-   INDEX `user_idx` USING BTREE (`user_id`, `registered_id`),
-   INDEX `master_qrcode_idx` USING BTREE (`master_qrcode_id`),
-   INDEX `qrcode_idx` USING BTREE (`qrcode_id`),
+   INDEX `registered_idx` USING BTREE (`registered_id`),
+   INDEX `master_qrcode_idx` USING BTREE (`master_user_qrcode_id`),
+   INDEX `user_qrcode_idx` USING BTREE (`user_qrcode_id`),
    INDEX `status_idx` USING BTREE (`status`));
