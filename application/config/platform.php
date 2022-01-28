@@ -2,6 +2,7 @@
 
 //後台menu
 $config['admin_menu'] = [
+    'Ntu' => ['name' => '台大慈善', 'icon' => 'fa-briefcase'],
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
 	'AntiFraud' => [
 		'name' => '反詐欺管理指標'
