@@ -559,7 +559,7 @@ class Product extends REST_Controller {
         if ($product) {
 
             // 申請名校貸者，先檢查是否已提交學生驗證、且符合名校資格
-            if (isset($product['sub_product']) && in_array(SUBPRODUCT_INTELLIGENT_STUDENT, $product['sub_product']))
+            if (isset($product['sub_product']) && SUBPRODUCT_INTELLIGENT_STUDENT == $sub_product_id)
             {
                 $this->load->library('certification_lib');
                 $certification_info = $this->certification_lib->get_certification_info($user_id, CERTIFICATION_STUDENT);
