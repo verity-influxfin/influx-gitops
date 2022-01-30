@@ -975,10 +975,10 @@ class Certification extends REST_Controller {
         $university = $this->image_recognition_lib->getStudentCardIdentification($imageLog);
 
         if ($university) {
-            $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university]]);
+            $this->response(['result' => 'SUCCESS', 'data' => ['university' => $university, 'status' => 1]]);
         }
 
-        $this->response(['result' => 'SUCCESS']);
+        $this->response(['result' => 'SUCCESS', 'data' => ['university' => '', 'status' => 1]]);
     }
 
 	/**
