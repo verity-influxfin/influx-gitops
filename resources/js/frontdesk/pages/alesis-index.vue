@@ -2,13 +2,6 @@
     <div class="index-wrapper">
         <div class="swiper-container 標頭幻燈片">
             <div class="swiper-wrapper">
-                <!-- 微企e秒貸 - 記者會 -->
-                <div class="swiper-slide">
-                    <a href="/business-loan/sme">
-                        <img src="~images/sme-press-conference-index-banner.jpg" class="旗幟圖片">
-                        <img src="~images/sme-press-conference-index-banner-phone.jpg" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
                 <!-- 微企e秒貸 x ou微企貸 -->
                 <div class="swiper-slide">
                     <a href="/business-loan/sme">
@@ -67,19 +60,6 @@
                         <img :src="item.desktop" class="旗幟圖片">
                         <img :src="item.mobile" class="旗幟圖片 旗幟圖片_手機的">
                     </a>
-                </div>
-                <!-- 新光 -->
-                <div class="swiper-slide">
-                    <img src="~images/skBankIndex.jpg" class="旗幟圖片">
-                    <img src="~images/skBankIndexM.jpg" class="旗幟圖片 旗幟圖片_手機的">
-                    <div class="新光銀行功能">
-                        <a href="/skbank" class="連結">
-                            <img src="~images/skbankbuttom1.svg">
-                        </a>
-                        <a href="https://reurl.cc/7r0XQ9" class="連結" target="_blank">
-                            <img src="~images/skbankbuttom2.svg">
-                        </a>
-                    </div>
                 </div>
             </div>
 
