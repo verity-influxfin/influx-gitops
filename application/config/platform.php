@@ -1087,7 +1087,7 @@ $config['visul_id_des'] = [
         'name' => '3S名校貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>名校學生獎勵方案，提供最佳融資條件、最彈性償還方案</span>',
         'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
-        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_intelligent_student2.jpg',
         'url' => '',
         'status' => 1
     ],
