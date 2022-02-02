@@ -1094,7 +1094,7 @@ $config['visul_id_des'] = [
     'TONSL1' => [ // 前面多個TO，才會顯示到APP的banner上
         'name' => '3S名校貸',
         'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>名校學生獎勵方案，提供最佳融資條件、最彈性償還方案</span>',
-        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_intelligent_student.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'url' => '',
         'status' => 1
