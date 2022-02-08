@@ -49,4 +49,19 @@ class Charity_model extends MY_Model
 
         return $this->_database->get()->result_array();
     }
+
+    public function get_ntu_donation_list(int $max_id)
+    {
+        $this->_database
+            ->select('id')
+            ->select('amount')
+            ->select('created_at')
+            ->select('updated_at')
+            ->select('data')
+            ->from('p2p_transaction.' . $this->_table)
+            ->where('id>', $max_id)
+            ->order_by('id');
+
+        return $this->_database->get()->result_array();
+    }
 }
