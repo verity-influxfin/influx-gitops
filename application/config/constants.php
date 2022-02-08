@@ -137,6 +137,7 @@ defined('COOPERATION_EXIST')  			OR define('COOPERATION_EXIST'			, 314); //已�
 defined('COOPERATION_NOT_EXIST')  		OR define('COOPERATION_NOT_EXIST'		, 315); //沒申請過經銷商
 defined('COOPERATION_TYPE_ERROR')  		OR define('COOPERATION_TYPE_ERROR'		, 316); //經銷商類別錯誤
 defined('SMS_SEND_FAIL')                OR define('SMS_SEND_FAIL'               , 317); //簡訊驗證碼SMS發送失敗
+defined('CHARITY_INVALID_AMOUNT')       OR define('CHARITY_INVALID_AMOUNT'      , 318); //無效的慈善捐款金額
 
 //Product Error Code
 defined('PRODUCT_NOT_EXIST')  			OR define('PRODUCT_NOT_EXIST'			, 401);
@@ -154,6 +155,7 @@ defined('ORDER_STATUS_ERROR')  			OR define('ORDER_STATUS_ERROR'			, 412);
 defined('ORDER_NO_PERMISSION')  			OR define('ORDER_NO_PERMISSION'			, 413);
 defined('PRODUCT_CLOSE') OR define('PRODUCT_CLOSE' , 414);
 defined('PRODUCT_RATE_ERROR') OR define('PRODUCT_RATE_ERROR' , 414);
+defined('PRODUCT_STUDENT_NOT_INTELLIGENT') or define('PRODUCT_STUDENT_NOT_INTELLIGENT', 416); // 申請名校貸但身份非名校
 defined('M_ORDER_NOT_EXIST')  			OR define('M_ORDER_NOT_EXIST'			, 420);
 defined('M_ORDER_STATUS_ERROR')  		OR define('M_ORDER_STATUS_ERROR'		, 421);
 defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
@@ -191,6 +193,7 @@ defined('CERTIFICATION_INVESTIGATIONA11') OR define('CERTIFICATION_INVESTIGATION
 defined('CERTIFICATION_FINANCIALWORKER')   OR define('CERTIFICATION_FINANCIALWORKER'       , 14);
 defined('CERTIFICATION_REPAYMENT_CAPACITY') or define('CERTIFICATION_REPAYMENT_CAPACITY', 15); // 還款力
 defined('CERTIFICATION_CRIMINALRECORD') OR define('CERTIFICATION_CRIMINALRECORD'     , 20);
+defined('CERTIFICATION_SOCIAL_INTELLIGENT') or define('CERTIFICATION_SOCIAL_INTELLIGENT', 21); // 名校貸社交帳號
 
 defined('CERTIFICATION_SIMPLIFICATIONFINANCIAL') or define('CERTIFICATION_SIMPLIFICATIONFINANCIAL', 500);
 defined('CERTIFICATION_SIMPLIFICATIONJOB') or define('CERTIFICATION_SIMPLIFICATIONJOB', 501);
@@ -345,6 +348,9 @@ defined('PRODUCT_SK_MILLION_SMEG') or define('PRODUCT_SK_MILLION_SMEG', 1002); /
 
 defined('PRODUCT_FOR_JUDICIAL') or define('PRODUCT_FOR_JUDICIAL', 1000); //法人產品ID範圍
 
+// sub-product
+defined('SUBPRODUCT_INTELLIGENT_STUDENT') or define('SUBPRODUCT_INTELLIGENT_STUDENT', 6); // 3S名校貸
+
 defined('TARGET_AMOUNT_MIN')      	OR define('TARGET_AMOUNT_MIN'		, 1000); //最小投資額
 defined('INVESTOR_VIRTUAL_CODE')    OR define('INVESTOR_VIRTUAL_CODE'	, '9'); //virtual_account
 defined('BORROWER_VIRTUAL_CODE')    OR define('BORROWER_VIRTUAL_CODE'	, '1'); //virtual_account
@@ -409,6 +415,7 @@ defined('SOURCE_AR_LAW_FEE')        OR define('SOURCE_AR_LAW_FEE'       , '31');
 defined('SOURCE_LAW_FEE')           OR define('SOURCE_LAW_FEE'          , '32');//法催執行費
 
 defined('SOURCE_PROMOTE_REWARD')           OR define('SOURCE_PROMOTE_REWARD'          , '40');//推薦獎金
+defined('SOURCE_CHARITY')           OR define('SOURCE_CHARITY'          , '41');//慈善捐款
 
 defined('SOURCE_FEES_B')        	OR define('SOURCE_FEES_B'			, '50');//平台服務費沖正
 defined('SOURCE_TRANSFER_FEES_B')   OR define('SOURCE_TRANSFER_FEES_B'	, '51');//債權轉讓服務費沖正
@@ -613,6 +620,8 @@ defined('PROMOTE_REWARD_STATUS_TO_BE_PAID') OR define('PROMOTE_REWARD_STATUS_TO_
 defined('PROMOTE_REWARD_STATUS_PAID_OFF') OR define('PROMOTE_REWARD_STATUS_PAID_OFF', 2);
 
 defined('PROMOTE_GENERAL_CONTRACT_TYPE_NAME') OR define('PROMOTE_GENERAL_CONTRACT_TYPE_NAME', "qrcode_general");
+
+defined('CHARITY_RECEIPT_TYPE_SINGLE_PAPER') OR define('CHARITY_RECEIPT_TYPE_SINGLE_PAPER', 0);
 
 defined('REALNAME_IMAGE_TYPE_FRONT') OR define('REALNAME_IMAGE_TYPE_FRONT', 1);
 defined('REALNAME_IMAGE_TYPE_BACK') OR define('REALNAME_IMAGE_TYPE_BACK', 2);

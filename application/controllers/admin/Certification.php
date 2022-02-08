@@ -1634,12 +1634,19 @@ class Certification extends MY_Admin_Controller {
         $this->load->library('verify/data_verify_lib');
         $verified_result = $this->data_verify_lib->check_investigation($verified_result, $new_data_content, $new_data_content);
         $remark = ['fail' => implode('、', $verified_result->getAPPMessage(CERTIFICATION_STATUS_FAILED))];
+
+        // 印表日期
+        $this->CI->load->library('mapping/time');
+        $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $old_data_content['printDatetime']);
+        $print_timestamp = $this->CI->time->ROCDateToUnixTimestamp($print_timestamp);
+
         $this->certification_lib->update_repayment_certification(
             $post_data['id'],
-            $old_data_content['printDatetime'],
+            $print_timestamp,
             $verified_result,
             $new_data_content,
-            $remark
+            $remark,
+            $old_data_content['created_at']
         );
 
         return ['result' => TRUE];

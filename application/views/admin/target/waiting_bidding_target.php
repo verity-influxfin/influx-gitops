@@ -117,7 +117,7 @@
                                             <td><? echo date("Y-m-d H:i:s",isset($value->expire_time) && $typeKey != 'judicialPersonFormBank'?$value->expire_time:$value->updated_at) ?></td>
                                             <td><?= isset($value->bidding_date)?date("Y-m-d H:i:s",$value->bidding_date) :'' ?></td>
                                             <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
-											<td><a class="btn btn-primary btn-info" href="<? echo $typeKey != 'judicialPersonFormBank' ? admin_url('creditmanagementtable/report?target_id='.$value->id.'&table_type=management'):admin_url('target/waiting_reinspection'."?target_id=".$value->id)?>" target="_blank" >查看</a></td>
+											<td><a class="btn btn-primary btn-info" href="<? echo $typeKey != 'judicialPersonFormBank' ? admin_url('creditmanagement/report?type=person&target_id='.$value->id.''):admin_url('target/waiting_reinspection'."?target_id=".$value->id)?>" target="_blank" >查看</a></td>
                                             <? if($value->status == TARGET_WAITING_BIDDING) {?><td><button class="btn btn-danger" onclick="cancel(<?=isset($value->id)?$value->id:"" ?>)">下架</button></td><? } ?>
                                         </tr>
 									<?php
