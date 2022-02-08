@@ -69,6 +69,13 @@
                                    placeholder="請輸入整數0-10，數字越小，權重越高">
                         </div>
                     </div>
+                    <div class="d-flex mb-2">
+                        <div class="col-20">是否排行</div>
+                        <div class="col">
+                            <input type="checkbox" class=""
+                                   v-model="add_info_form.type">
+                        </div>
+                    </div>
                 </div>
                 <div class="d-flex justify-between mx-5 mb-5">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
@@ -170,7 +177,8 @@
                 add_info_form: {
                     user_id: null,
                     amount: null,
-                    weight: null
+                    weight: null,
+                    type: 0
                 },
                 update_info_form: {
                     id: null,

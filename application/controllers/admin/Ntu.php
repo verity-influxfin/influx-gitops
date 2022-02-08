@@ -121,6 +121,7 @@ class Ntu extends MY_Admin_Controller
                 'weight' => $post['weight'],
                 'updated_admin_id' => $this->login_info->id,
                 'data_source' => 1,
+                'type' => isset($post['type']) && $post['type'] ? 0 : 1
             ]);
 
             echo json_encode([
