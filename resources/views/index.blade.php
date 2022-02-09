@@ -410,7 +410,9 @@
                     <div class="links">
                         <a href="/userTerms" class="item">使用者條款</a> |
                         <a href="/privacyTerms" class="item">隱私權條款</a> |
-                        <a href="/loanerTerms" class="item">借款人服務條款</a>
+                        <a href="/loanerTerms" class="item">借款人服務條款</a> |
+                        <a href="/lenderTerms" class="item">貸款人服務條款</a> |
+                        <a href="/transferTerms" class="item">債權受讓人服務條款</a>
                     </div>
                 </div>
                 <div class="links">
