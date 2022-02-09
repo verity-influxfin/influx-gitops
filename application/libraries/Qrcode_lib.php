@@ -763,6 +763,10 @@ class Qrcode_lib
 
             $user_qrcode_info = $user_qrcode['info'];
             $user_qrcode_id = $user_qrcode_info['id'];
+            if ( ! isset($user_subcode_list[$user_qrcode_id]))
+            {
+                continue;
+            }
 
             // 初始化結構
             for ($i = 0; $i <= $diffMonths; $i++)
