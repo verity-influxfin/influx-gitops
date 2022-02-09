@@ -32,13 +32,13 @@ class CharityController extends Controller
 
             // 排名
             echo "event: ranking_data\n";
-            echo sprintf("data: %s\n\n", 
-                CharityEvent::where('type', 0)->orderBy('amount', 'DESC')->take(10)->get()->toJson()
+            echo sprintf("data: %s\n\n",
+                CharityEvent::where('type', 0)->orderBy('amount', 'DESC')->take(5)->get()->toJson()
             );
 
             // 即時
             echo "event: realtime_data\n";
-            echo sprintf("data: %s\n\n", 
+            echo sprintf("data: %s\n\n",
                 CharityEvent::where('type', 1)
                     ->where('amount', '>', 10000)
                     ->orderBy('amount', 'DESC')
