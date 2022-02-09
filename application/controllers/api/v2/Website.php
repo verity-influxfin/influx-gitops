@@ -890,4 +890,17 @@ class Website extends REST_Controller {
             'data' => $data,
         ]);
     }
+
+    public function ntu_donation_list_manual_get()
+    {
+        $max = (int) $this->input->get('max');
+
+        $this->load->model('user/ntu_model');
+        $data = $this->ntu_model->get_list_bigger_than($max);
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
 }

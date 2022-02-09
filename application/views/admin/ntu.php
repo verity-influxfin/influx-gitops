@@ -25,9 +25,8 @@
                 <tr>
                     <th>投資人ID/姓名</th>
                     <th>捐款金額</th>
-                    <th>狀態</th>
                     <th>權重</th>
-                    <th>資料來源</th>
+                    <th>排行</th>
                     <th>建立時間</th>
                     <th>最後更新時間</th>
                     <th></th>
@@ -108,25 +107,21 @@
                         <div class="col">{{ modal_data.formatted_amount }}</div>
                     </div>
                     <div class="d-flex mb-2">
-                        <div class="col-20">狀態 :</div>
-                        <div class="col">{{ modal_data.status_title }}</div>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <div class="col-20">資料來源 :</div>
-                        <div class="col">{{ modal_data.source_title }}</div>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <div class="col-20 input-require">權重</div>
+                        <div class="col-20">權重</div>
                         <div class="col">
-                            <input type="text" required class="w-100 form-control"
-                                   v-model.number="update_info_form.weight">
+                            <div class="col">{{ modal_data.weight }}</div>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <div class="col-20">是否排行</div>
+                        <div class="col">
+                            <div class="col">{{ modal_data.type }}</div>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex justify-between mx-5 mb-5">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-primary">送出
-                    </button>
+                    <button type="submit" class="btn btn-outline-danger">刪除</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
                 </div>
             </form>
         </div>
@@ -172,7 +167,8 @@
                     formatted_amount: null,
                     status_title: null,
                     source_title: null,
-                    weight: null
+                    weight: null,
+                    type: null
                 },
                 add_info_form: {
                     user_id: null,
@@ -181,8 +177,7 @@
                     type: 0
                 },
                 update_info_form: {
-                    id: null,
-                    weight: '',
+                    id: null
                 }
             }
         },
@@ -190,15 +185,14 @@
             set_table_row(item) {
                 let edit_btn = '';
                 if (item.status === '0') {
-                    edit_btn = `<div class="d-flex"><button class="btn btn-primary mr-2" onclick="v.get_info(${item.id})">編輯</button></div>`;
+                    edit_btn = `<div class="d-flex"><button class="btn btn-primary mr-2" onclick="v.get_info(${item.id})">瀏覽</button></div>`;
                 }
 
                 $('#my-table').DataTable().row.add([
                     `${item.user_id}/${item.user_name}`,
                     parseInt(item.amount).toLocaleString('en-US'),
-                    item.status_title,
                     item.weight,
-                    item.source_title,
+                    parseInt(item.type || 0) === 0 ? '是' : '否',
                     item.created_at,
                     item.updated_at,
                     edit_btn
@@ -226,7 +220,7 @@
                     $('#updateModal').modal('show')
                     this.modal_data = data;
                     this.modal_data.formatted_amount = parseInt(data.amount).toLocaleString('en-US');
-                    this.update_info_form.weight = data.weight;
+                    this.modal_data.type = parseInt(data.type || 0) === 0 ? '是' : '否';
                 }).finally(() => {
                     $('#updateModal').modal('show')
                     this.update_info_form.id = id
@@ -243,7 +237,7 @@
                     }
                 }).then(({data}) => {
                     if (data.result === 'SUCCESS') {
-                        alert('更新成功');
+                        alert('刪除成功');
                         this.get_list();
                         return;
                     }

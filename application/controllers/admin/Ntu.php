@@ -73,15 +73,10 @@ class Ntu extends MY_Admin_Controller
 
             if (empty($post['id']))
             {
-                throw new Exception('更新失敗，查無此ID');
+                throw new Exception('刪除失敗，查無此ID');
             }
 
-            if (empty($post['weight']) && ! is_numeric($post['weight']) || $post['weight'] < 0 || $post['weight'] > 10)
-            {
-                throw new Exception('更新失敗，權重必須為0-10');
-            }
-
-            $this->ntu_model->update_by(['id' => $post['id']], ['weight' => $post['weight']]);
+            $this->ntu_model->delete($post['id']);
 
             echo json_encode([
                 'result' => 'SUCCESS'

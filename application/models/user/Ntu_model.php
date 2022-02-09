@@ -43,6 +43,7 @@ class Ntu_model extends MY_Model
             ->select('n.data_source')
             ->select('n.created_at')
             ->select('n.updated_at')
+            ->select('n.type')
             ->select('u.name AS user_name')
             ->select('a.name AS admin')
             ->from("{$this->_table} n")
@@ -67,11 +68,29 @@ class Ntu_model extends MY_Model
             ->select('n.weight')
             ->select('n.status')
             ->select('n.data_source')
+            ->select('n.type')
             ->select('u.name AS user_name')
             ->from("{$this->_table} n")
             ->join('users u', 'u.id=n.user_id')
             ->where('n.id', $id);
 
         return $this->db->get()->first_row('array');
+    }
+
+    public function get_list_bigger_than($max_id)
+    {
+        $this->db
+            ->select('n.id')
+            ->select('n.amount')
+            ->select('n.weight')
+            ->select('n.type')
+            ->select('n.created_at')
+            ->select('n.updated_at')
+            ->select('u.name AS user_name')
+            ->from("{$this->_table} n")
+            ->join('users u', 'u.id=n.user_id')
+            ->where('n.id>', $max_id);
+
+        return $this->db->get()->result_array();
     }
 }
