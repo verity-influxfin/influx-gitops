@@ -198,7 +198,7 @@ class Certification extends MY_Admin_Controller {
                     // 負債比
                     if ( ! isset($page_data['content']['debt_to_equity_ratio']))
                     {
-                        if ( ! isset($page_data['content']['totalMonthlyPayment']) || ! isset($page_data['content']['monthly_repayment']))
+                        if ( ! isset($page_data['content']['totalMonthlyPayment']) || empty($page_data['content']['monthly_repayment']))
                         {
                             $page_data['content']['debt_to_equity_ratio'] = 0;
                         }
@@ -1626,9 +1626,16 @@ class Certification extends MY_Admin_Controller {
             $new_data_content['creditCardMonthlyPayment'];
 
         // 負債比
-        $new_data_content['debt_to_equity_ratio'] = round(
-            (float) $new_data_content['totalMonthlyPayment'] / (float) $new_data_content['monthly_repayment'] * 100, 2
-        );
+        if ( ! empty($new_data_content['monthly_repayment']))
+        {
+            $new_data_content['debt_to_equity_ratio'] = round(
+                (float) $new_data_content['totalMonthlyPayment'] / (float) $new_data_content['monthly_repayment'] * 100, 2
+            );
+        }
+        else
+        {
+            $new_data_content['debt_to_equity_ratio'] = 0;
+        }
 
         $verified_result = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
         $this->load->library('verify/data_verify_lib');
@@ -1636,9 +1643,9 @@ class Certification extends MY_Admin_Controller {
         $remark = ['fail' => implode('、', $verified_result->getAPPMessage(CERTIFICATION_STATUS_FAILED))];
 
         // 印表日期
-        $this->CI->load->library('mapping/time');
+        $this->load->library('mapping/time');
         $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $old_data_content['printDatetime']);
-        $print_timestamp = $this->CI->time->ROCDateToUnixTimestamp($print_timestamp);
+        $print_timestamp = $this->time->ROCDateToUnixTimestamp($print_timestamp);
 
         $this->certification_lib->update_repayment_certification(
             $post_data['id'],
@@ -1646,7 +1653,7 @@ class Certification extends MY_Admin_Controller {
             $verified_result,
             $new_data_content,
             $remark,
-            $old_data_content['created_at']
+            $old_data['created_at']
         );
 
         return ['result' => TRUE];

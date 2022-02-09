@@ -3494,17 +3494,15 @@ class Certification_lib{
                 // 歸戶顯示資料不進行是否過期判斷
                 if($target){
                     // 有過期判斷
-                    $user_certification = $this->get_certification_info($ruser_id,$key,$investor);
                     if ($key == CERTIFICATION_REPAYMENT_CAPACITY)
                     {
-                        if (isset($user_certification->status))
-                        {
-                            if ($user_certification->status !== CERTIFICATION_STATUS_SUCCEED && $user_certification->status !== CERTIFICATION_STATUS_PENDING_TO_REVIEW)
-                            {
-                                $user_certification = [];
-                            }
-                        }
+                        $get_failed = TRUE;
                     }
+                    else
+                    {
+                        $get_failed = FALSE;
+                    }
+                    $user_certification = $this->get_certification_info($ruser_id, $key, $investor, $get_failed);
                 }else {
                     // 沒有過期判斷
                     $user_certification = $this->get_last_certification_info($ruser_id,$key,$investor);
@@ -4004,6 +4002,9 @@ class Certification_lib{
 
         if ($info && $info->certification_id == CERTIFICATION_REPAYMENT_CAPACITY && $this->canVerify($info->status))
         {
+            $print_timestamp = 0;
+            $certification_content = [];
+
             if ( ! isset($joint_credit_content['return_type']) || $joint_credit_content['return_type'] != 0)
             {
                 // 尚未回信上傳檔案
@@ -4115,6 +4116,12 @@ class Certification_lib{
     {
         $remark['verify_result'] = array_merge($remark['verify_result'] ?? [], $verified_result->getAllMessage(MassageDisplay::Backend));
         $status = $verified_result->getStatus();
+
+        // Frank言: 還款力計算，若跑批結果為失敗(CERTIFICATION_STATUS_FAILED)，則自動轉為待人工(CERTIFICATION_STATUS_PENDING_TO_REVIEW)
+        if ($status == CERTIFICATION_STATUS_FAILED)
+        {
+            $status = CERTIFICATION_STATUS_PENDING_TO_REVIEW;
+        }
 
         $this->CI->user_certification_model->update($id, array(
             'status' => in_array($status, [CERTIFICATION_STATUS_SUCCEED, CERTIFICATION_STATUS_FAILED]) ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
