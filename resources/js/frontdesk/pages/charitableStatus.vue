@@ -86,7 +86,6 @@ export default {
     },
     duration() {
       let length = this.marqee.length * 3 > 5 ? this.marqee.length * 3 : 5
-      length = length > 60 ? 60 : length
       return {
         animationDuration: length + 's'
       }

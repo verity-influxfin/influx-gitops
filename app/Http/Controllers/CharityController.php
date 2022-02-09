@@ -41,7 +41,6 @@ class CharityController extends Controller
             echo sprintf("data: %s\n\n",
                 CharityEvent::where('type', 1)
                     ->orderBy('amount', 'DESC')
-                    ->take(100)
                     ->get()
                     ->toJson()
             );
