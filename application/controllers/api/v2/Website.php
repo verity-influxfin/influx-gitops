@@ -849,4 +849,58 @@ class Website extends REST_Controller {
             'data' => $data,
         ]);
     }
+
+    /**
+     * @api {get} /v2/website/ntu_donation_list 會員 台大慈善捐款名單
+     * @apiVersion 0.2.0
+     * @apiName GetWebsiteNtuDonationList
+     * @apiGroup Website
+     * @apiSuccessExample {Object} SUCCESS
+     *    {
+     *      "result": "SUCCESS",
+     *      "data": {
+     *          "id": "1",
+     *          "institution_id": "1",
+     *          "user_id": "47181",
+     *          "investor": "1",
+     *          "amount": "101.000",
+     *          "transaction_id": "2352866",
+     *          "tx_datetime": "2021-11-11 15:15:30",
+     *          "receipt_type": "0",
+     *          "data": "{"name\": \"王韋翔\", "email\": \"fmww5418@gmail.com\", "phone\": \"0988912157\", "receipt_address\": \"高雄市喔喔喔喔耶\", "receipt_id_number\": \"S124599064\"}",
+     *          "created_at": "2021-11-11 15:15:30",
+     *          "created_ip": "172.18.0.1",
+     *          "updated_at": "2021-11-11 15:15:30",
+     *          "updated_ip": "172.18.0.1",
+     *          "alias": "NTUH",
+     *          "name": "財團法人台大兒童健康基金會",
+     *          "CoA_content": null
+     *      }
+     *    }
+     */
+    public function ntu_donation_list_get()
+    {
+        $max = (int) $this->input->get('max');
+
+        $this->load->model('transaction/charity_model');
+        $data = $this->charity_model->get_ntu_donation_list($max);
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
+
+    public function ntu_donation_list_manual_get()
+    {
+        $max = (int) $this->input->get('max');
+
+        $this->load->model('user/ntu_model');
+        $data = $this->ntu_model->get_list_bigger_than($max);
+
+        $this->response([
+            'result' => 'SUCCESS',
+            'data' => $data,
+        ]);
+    }
 }
