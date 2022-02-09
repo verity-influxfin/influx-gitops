@@ -66,7 +66,6 @@ export default {
   computed: {
     ranks() {
       // rank,value
-      console.log(typeof this.rankOriginal, this.rankOriginal)
       return this.rankOriginal.map((x, i) => {
         return {
           value: x.amount,
@@ -86,7 +85,7 @@ export default {
       })
     },
     duration() {
-      const length = this.marqee.length * 1.5 > 15 ? this.marqee.length * 1.5 : 15
+      let length = this.marqee.length * 3 > 5 ? this.marqee.length * 3 : 5
       return {
         animationDuration: length + 's'
       }
@@ -139,7 +138,6 @@ export default {
       const arrData = JSON.parse(event.data)
       if (this.realtimeOriginal.length !== arrData.length) {
         this.realtimeOriginal = arrData
-        this.autoClick()
       }
     });
     // evtSource.addEventListener("pong", (event) => {
