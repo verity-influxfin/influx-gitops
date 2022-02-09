@@ -1,27 +1,25 @@
 <template>
-  <div class="main-content">
-    <div class="status-header">
-      <div class="header-title">捐贈總金額</div>
-      <div
-        class="header-info"
-        ref="totalCount"
-        v-html="convertNum(animatedValue)"
-      ></div>
-    </div>
-    <div class="status-rank">
-      <div class="rank-item" v-for="(item, index) in ranks" :key="item.rank">
-        <div :class="[`rank-${item.rank}`, 'rank-icon']">{{ item.rank }}</div>
-        <div class="rank-value" v-html="rankArray[index]"></div>
+  <div class="out">
+    <div class="main-content">
+      <div class="test-img">
+        <img class="img-1" src="~images/月亮.svg" alt="" />
       </div>
-    </div>
-    <div class="status-footer">
-      <div class="footer-content" :style="duration">
-        <div class="footer-item" v-for="item in marqee" :key="item.name">
-          感謝 {{ item.name }} 捐贈 {{ convertNum(item.value) }} 元
+      <div class="status-rank">
+        <div class="rank-item" v-for="(item, index) in ranks" :key="item.rank">
+          <div class="rank-icon">{{ item.rank }}</div>
+          <div :class="[`rank-${item.rank}`, 'rank-img']"></div>
+          <div class="rank-value" v-html="rankArray[index]"></div>
+          <div class="">元</div>
+        </div>
+      </div>
+      <div class="status-footer">
+        <div class="footer-content" :style="duration">
+          <div class="footer-item" v-for="item in marqee" :key="item.name">
+            感謝 {{ item.name }} 捐贈 {{ convertNum(item.value) }} 元
+          </div>
         </div>
       </div>
     </div>
-    <canvas class="fireworks" style="position: absolute; top: -200px"></canvas>
   </div>
 </template>
 
@@ -30,25 +28,25 @@ import anime from 'animejs';
 export default {
   computed: {
     ranks() {
-        // rank,value
-        console.log(typeof this.rankOriginal,this.rankOriginal)
-       return this.rankOriginal.map((x,i)=>{
-           return {
-               value:x.amount,
-               id:x.id,
-               rank:i+1,
-           }
-       })
+      // rank,value
+      console.log(typeof this.rankOriginal, this.rankOriginal)
+      return this.rankOriginal.map((x, i) => {
+        return {
+          value: x.amount,
+          id: x.id,
+          rank: i + 1,
+        }
+      })
     },
     marqee() {
-        // name,value
-        return this.realtimeOriginal.map(({name,id,amount})=>{
-            return{
-                name,
-                id,
-                value:amount
-            }
-        })
+      // name,value
+      return this.realtimeOriginal.map(({ name, id, amount }) => {
+        return {
+          name,
+          id,
+          value: amount
+        }
+      })
     },
     duration() {
       const length = this.marqee.length * 1.5 > 10 ? this.marqee.length * 1.5 : 10
@@ -62,11 +60,9 @@ export default {
   },
   data() {
     return {
-      animatedValue: 0,
       animatedRank: '',
-      rankOriginal:[],
-      realtimeOriginal:[],
-      totalCount: 1234556,
+      rankOriginal: [],
+      realtimeOriginal: [],
       test: 0,
       firework: false
     }
@@ -78,234 +74,137 @@ export default {
       }
       return n
     },
-    animateValue(v) {
-      anime({
-        targets: this,
-        animatedValue: v,
-        round: 1,
-        easing: 'easeInSine',
-        duration: 2000,
-      }).finished.then(() => { this.firework = false })
-    },
     animateRank(v) {
       const test = v.map(x => x.value).toString().split(',').join(' ')
       anime({
         targets: this,
         animatedRank: test,
         round: 1,
-        delay:200,
         easing: 'easeInSine',
-        duration: 2000,
+        duration: 4000,
       })
     },
-    autoClick() {
-      var centerX = window.innerWidth / 2;
-      var centerY = window.innerHeight / 2;
-      if (window.human) return;
-      this.animateParticules(
-        anime.random(centerX, centerX + 50),
-        anime.random(centerY - 10, centerY + 20)
-      );
-      this.animateParticules(
-        anime.random(centerX - 300, centerX - 100),
-        anime.random(centerY - 10, centerY + 10)
-      );
-      this.animateParticules(
-        anime.random(centerX - 300, centerX - 100),
-        anime.random(centerY - 30, centerY + 10)
-      );
-      anime({ duration: 1090 })
-    },
-    animateParticules(x, y) {
-      var numberOfParticules = 110;
-      var pointerX = 0;
-      var pointerY = 0;
-      var circle = createCircle(x, y);
-      var colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C', 'cyan', 'red'];
-      var particules = [];
-      var canvasEl = document.querySelector('.fireworks');
-      var ctx = canvasEl.getContext('2d');
-
-      function setParticuleDirection(p) {
-        var angle = anime.random(0, 360) * Math.PI / 180;
-        var value = anime.random(50, 180);
-        var radius = [-1, 1][anime.random(0, 1)] * value;
-        return {
-          x: p.x + radius * Math.cos(angle),
-          y: p.y + radius * Math.sin(angle)
-        }
-      }
-
-      function createParticule(x, y) {
-        var p = {};
-        p.x = x;
-        p.y = y;
-        p.color = colors[anime.random(0, colors.length - 1)];
-        p.radius = anime.random(10, 30);
-        p.endPos = setParticuleDirection(p);
-        p.draw = function () {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-          ctx.fillStyle = p.color;
-          ctx.fill();
-        }
-        return p;
-      }
-
-      function createCircle(x, y) {
-        var p = {};
-        p.x = x;
-        p.y = y;
-        p.color = '#FFF';
-        p.radius = 0.1;
-        p.alpha = .5;
-        p.lineWidth = 6;
-        p.draw = function () {
-          ctx.globalAlpha = p.alpha;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI, true);
-          ctx.lineWidth = p.lineWidth;
-          ctx.strokeStyle = p.color;
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
-        return p;
-      }
-
-      function renderParticule(anim) {
-        for (var i = 0; i < anim.animatables.length; i++) {
-          anim.animatables[i].target.draw();
-        }
-      }
-      for (var i = 0; i < numberOfParticules; i++) {
-        particules.push(createParticule(x, y));
-      }
-      anime.timeline().add({
-        targets: particules,
-        x: function (p) { return p.endPos.x; },
-        y: function (p) { return p.endPos.y; },
-        radius: 0.1,
-        duration: anime.random(1200, 1800),
-        easing: 'easeOutExpo',
-        update: renderParticule
-      })
-        .add({
-          targets: circle,
-          radius: anime.random(80, 160),
-          lineWidth: 0,
-          alpha: {
-            value: 0,
-            easing: 'linear',
-            duration: anime.random(600, 800),
-          },
-          duration: anime.random(1200, 1800),
-          easing: 'easeOutExpo',
-          update: renderParticule,
-          offset: 0
-        });
-    }
   },
   watch: {
-    totalCount(newValue) {
-      this.animateValue(newValue);
-    },
     ranks(v) {
       this.animateRank(v)
     }
   },
   mounted() {
-    this.animateValue(this.totalCount);
     this.animateRank(this.ranks);
     const evtSource = new EventSource(location.origin + "/event/charity/donation");
     evtSource.addEventListener("ranking_data", (event) => {
-      if(JSON.stringify(this.rankOriginal)!==JSON.stringify(event.data)){
+      if (JSON.stringify(this.rankOriginal) !== JSON.stringify(event.data)) {
         this.rankOriginal = JSON.parse(event.data)
       }
     });
     evtSource.addEventListener("realtime_data", (event) => {
-        const arrData = JSON.parse(event.data)
-        if(this.realtimeOriginal.length !== arrData.length){
-            this.realtimeOriginal = arrData
-            this.autoClick()
-        }
-    });
-    evtSource.addEventListener("pong", (event) => {
-      evtSource.close()
-      console.log('close')
-    });
-    window.human = false;
-    var canvasEl = document.querySelector('.fireworks');
-    var ctx = canvasEl.getContext('2d');
-
-    anime({
-      duration: Infinity,
-      update: function () {
-        ctx.clearRect(0, 0, canvasEl.width, canvasEl.height);
+      const arrData = JSON.parse(event.data)
+      if (this.realtimeOriginal.length !== arrData.length) {
+        this.realtimeOriginal = arrData
+        this.autoClick()
       }
     });
-    function setCanvasSize() {
-      canvasEl.width = window.innerWidth * 2;
-      canvasEl.height = window.innerHeight * 2;
-      canvasEl.style.width = window.innerWidth + 'px';
-      canvasEl.style.height = window.innerHeight + 'px';
-      canvasEl.getContext('2d').scale(2, 2);
-    }
-
-    setCanvasSize();
+    // evtSource.addEventListener("pong", (event) => {
+    //   evtSource.close()
+    //   console.log('close')
+    // });
   },
 }
 </script>
 
 <style lang="scss" scoped>
+.out {
+  background-color: #cfeaf4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 820px;
+  width: 100%;
+}
 .main-content {
-  position: relative;
-  margin: 30px auto;
   width: 900px;
-  border: 1px solid #5a6a7c;
+  height: fit-content;
+  min-height: 600px;
+  background-color: #fff;
+  border-radius: 36px;
   .status-header {
     display: flex;
     flex-direction: column;
     padding: 12px 0;
     margin: 0 20px;
-    border-bottom: 1px solid #5a6a7c;
+    border-bottom: 1px solid #fff;
     .header-title {
-      font-size: 30px;
+      font-size: 42px;
       font-style: normal;
       text-align: center;
     }
     .header-info {
       color: #f7c352;
-      font-size: 36px;
+      font-size: 48px;
       text-align: center;
     }
   }
   .status-rank {
     padding: 20px 0;
     margin: 0 12px;
-    border-bottom: 1px solid #5a6a7c;
+    border-bottom: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .rank-item {
       display: flex;
       padding: 10px;
-      font-size: 30px;
+      font-size: 35px;
       text-align: center;
-      line-height: 50px;
-      margin-left: 315px;
+      line-height: 70px;
       .rank-icon {
         border-radius: 50%;
-        height: 50px;
-        width: 50px;
+        height: 70px;
+        width: 70px;
         color: #fff;
-        &.rank-1 {
-          background-color: #fedf05;
-        }
-        &.rank-2 {
-          background-color: #d9d9d9;
-        }
-        &.rank-3,
-        &.rank-4,
-        &.rank-5 {
-          background-color: #c65916;
-        }
+        background-color: #e1effa;
+
+        // &.rank-2 {
+        //   background-color: #d9d9d9;
+        // }
+        // &.rank-3,
+        // &.rank-4,
+        // &.rank-5 {
+        //   background-color: #c65916;
+        // }
+      }
+      .rank-img.rank-1::before {
+        content: '';
+        background-image: url('~images/rank-1.svg');
+        width: 78px;
+        height: 40px;
+        display: inline-block;
+        margin: 0 12px 0 24px;
+      }
+      .rank-img.rank-2::before {
+        content: '';
+        background-image: url('~images/rank-2.svg');
+        width: 78px;
+        height: 40px;
+        display: inline-block;
+        margin: 0 12px 0 24px;
+      }
+      .rank-img.rank-3::before {
+        content: '';
+        background-image: url('~images/rank-3.svg');
+        width: 78px;
+        height: 40px;
+        display: inline-block;
+        margin: 0 12px 0 24px;
+      }
+      .rank-img.rank-4::before {
+        content: '';
+        margin: 0 59px;
+      }
+      .rank-img.rank-5::before {
+        content: '';
+        margin: 0 59px;
       }
       .rank-value {
         margin-left: 12px;
@@ -320,17 +219,44 @@ export default {
     padding: 10px;
     position: relative;
     overflow: hidden;
+    border: solid 6px #e1effa;
+    border-radius: 18px;
     .footer-content {
       display: flex;
       width: max-content;
       position: absolute;
       transform: translate3d(var(--move-initial), 0, 0);
-      animation: marquee 20s linear infinite;
+      animation: marquee 30s linear infinite;
       animation-play-state: running;
     }
     .footer-item {
       margin: 0 12px;
       font-size: 30px;
+    }
+  }
+  .test-img {
+    position: relative;
+    .img-1 {
+      position: absolute;
+      animation: cloud 2s linear infinite;
+      animation-play-state: running;
+    }
+  }
+  @keyframes cloud {
+    0% {
+      left: 0px;
+    }
+    25% {
+      left: 15px;
+    }
+    50% {
+      left: 0;
+    }
+    75% {
+      left: -15px;
+    }
+    100% {
+      left: 0;
     }
   }
   @keyframes marquee {
