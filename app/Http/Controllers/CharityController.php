@@ -40,9 +40,8 @@ class CharityController extends Controller
             echo "event: realtime_data\n";
             echo sprintf("data: %s\n\n",
                 CharityEvent::where('type', 1)
-                    ->where('amount', '>', 10000)
                     ->orderBy('amount', 'DESC')
-                    ->take(50)
+                    ->take(100)
                     ->get()
                     ->toJson()
             );
