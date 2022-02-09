@@ -8,6 +8,7 @@ CREATE TABLE `p2p_user`.`ntu_press_conference` (
                                         `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '最後更新時間',
                                         `updated_admin_id` int(11) NOT NULL COMMENT '最後更新者ID',
                                         `data_source` tinyint(4) NOT NULL DEFAULT '0' COMMENT '資料來源(0:APP自動新增,1:後台人工新增)',
+                                        `type` tinyint(4) DEFAULT '0' COMMENT '類型 (0:排行/ 1:即時)',
                                         PRIMARY KEY (`id`),
                                         KEY `ntu_press_conference_amount_IDX` (`amount`) USING BTREE,
                                         KEY `ntu_press_conference_user_id_IDX` (`user_id`) USING BTREE,
