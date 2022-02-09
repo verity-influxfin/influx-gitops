@@ -12,6 +12,8 @@ import articlePage from '../pages/articlePage';
 import userTerms from '../pages/userTerms';
 import privacyTerms from '../pages/privacyTerms';
 import loanerTerms from '../pages/loanerTerms';
+import lenderTerms from '../pages/lenderTerms';
+import transferTerms from '../pages/transferTerms';
 import recruiting from '../pages/recruiting';
 import campusPartner from '../pages/campusPartner';
 import clubCooperation from '../pages/clubCooperation';
@@ -77,6 +79,8 @@ let routers = [
     { path: '/userTerms', component: userTerms },
     { path: '/privacyTerms', component: privacyTerms },
     { path: '/loanerTerms', component: loanerTerms },
+    { path: '/lenderTerms', component: lenderTerms },
+    { path: '/transferTerms', component: transferTerms },
     { path: '/register', component: register },
     {
         path: '/myloan', component: myLoan, children: [
