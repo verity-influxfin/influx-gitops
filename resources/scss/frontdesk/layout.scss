@@ -773,6 +773,7 @@ $ci-color: #153a71;
 
         @include rwd {
             margin-top: 2rem;
+            margin-bottom: 4rem;
             flex-direction: column-reverse;
             align-items: center;
         }
