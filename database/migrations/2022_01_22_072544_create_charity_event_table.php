@@ -14,11 +14,13 @@ class CreateCharityEventTable extends Migration
     public function up()
     {
         Schema::create('charity_event', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id')->nullable(false);
+            $table->string('prefix', 1)->nullable(false)->comment('對應主站資料表 (a:charity/ m:ntu_press_conference)');
             $table->string('name', 50)->nullable(false)->comment('捐款⼈姓名/⾏號');
             $table->tinyInteger('type')->default(0)->comment('類型 (0:排行/ 1:即時)');
             $table->integer('amount')->nullable(false)->default(0)->comment('捐款⾦額');
             $table->tinyInteger('weight')->default(0)->comment('權值');
+            $table->primary(['id', 'prefix']);
             $table->timestamps();
         });
     }
