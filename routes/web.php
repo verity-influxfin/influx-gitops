@@ -339,3 +339,6 @@ Route::prefix('api/v1')->group(function() {
     // 統一編號取公司名稱
     Route::get('getCompanyName', 'SmeFormController@getCompanyName');
 });
+
+// 捐款動畫 SSE API
+Route::get('/event/charity/donation', 'CharityController@getDonation');
