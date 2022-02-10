@@ -890,13 +890,12 @@ class Sales extends MY_Admin_Controller {
                         'status' => TRANSACTION_STATUS_PAID_OFF
                     ];
 
-                    $transRsList = $this->transaction_model->insert_many($transaction_param);
-                    if ($transRsList) {
-                        foreach ($transRsList as $transRs) {
-                            $this->passbook_lib->enter_account($transRs);
-                        }
+                    $trans_rs = $this->transaction_model->insert($transaction_param);
+                    if ($trans_rs) {
+                        $this->passbook_lib->enter_account($trans_rs);
+
                         $data = json_decode($value['json_data'], true);
-                        $data['transaction_id'] = $transRsList;
+                        $data['transaction_id'] = $trans_rs;
                         $this->qrcode_reward_model->update_by(['id' => $value['id']], ['status' => PROMOTE_REWARD_STATUS_PAID_OFF,
                             'json_data' => json_encode($data), 'settlement_time' => date('Y-m-d H:i:s')]);
                     }else{
