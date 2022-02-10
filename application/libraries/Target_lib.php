@@ -2228,7 +2228,7 @@ class Target_lib
         return $this->CI->target_associate_model->get_many_by($params);
     }
 
-    public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [0, 1, 500, 501]){
+    public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE]){
         $targets = $target_id ? '' : [];
         $get_associates_list = $this->get_associates($user_id);
         if($get_associates_list){
