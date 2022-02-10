@@ -19,7 +19,8 @@
 		"phpoffice/phpspreadsheet":"1.6.*",
 		"smalot/pdfparser":"*",
 	  	"ext-json": "*",
-		"symfony/http-client": "^5.2"
+		"symfony/http-client": "^5.2",
+		"lcobucci/jwt": "^3.4"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x",
