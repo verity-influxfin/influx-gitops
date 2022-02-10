@@ -457,7 +457,7 @@ class User_lib {
         $startTime = date('Y-m-01 00:00:00', strtotime("-1 month"));
         $endTime = date('Y-m-01 00:00:00');
         $userQrcodes = $this->CI->user_qrcode_model->getQrcodeRewardInfo(['status' => [PROMOTE_STATUS_AVAILABLE],
-            'settlementing' => 0]);
+            'settlementing' => 0, 'subcode_flag' => 0]);
         foreach ($userQrcodes as $qrcode)
         {
             if (isset($qrcode['end_time']))
