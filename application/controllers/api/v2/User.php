@@ -2615,7 +2615,7 @@ END:
             $data['status'] = (int)$data['status'];
             // TODO: subcode 接收者的實名跳轉 url
             $data['promote_url'] = 'https://event.influxfin.com/R/url?identity=subcode';
-            $data['promote_qrcode'] = get_qrcode($data['promote_url']);
+            $data['promote_qrcode'] = get_qrcode('https://event.influxfin.com/R/url?p='.$data['promote_code']);
 
             $this->load->library('qrcode_lib');
             $identity = $this->qrcode_lib->get_user_identity($user_subcode['registered_id']);
