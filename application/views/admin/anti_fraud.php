@@ -138,6 +138,13 @@
 		overflow-wrap: anywhere;
 	}
 
+	.input-require::after {
+		content: '*';
+		color: #dc3545;
+		margin-left: 4px;
+		display: inline-block;
+	}
+
 
 	.result-date {
 		flex: 0 0 25%;
@@ -203,7 +210,7 @@
 					<option value="">請選擇</option>
 					<option :value="item" v-for="item in options.risk" :key="item">{{item}}</option>
 				</select>
-				<button class="btn ml-5 search-btn" @click="doSearch">
+				<button class="btn ml-5 search-btn" @click="doSearch({page:1})">
 					搜尋
 				</button>
 			</div>
@@ -221,7 +228,6 @@
 							<option :value="50">50</option>
 						</select>
 					</div>
-
 					<table id="andtfraud">
 						<thead>
 							<tr>
@@ -240,34 +246,33 @@
 				</div>
 			</div>
 			<div class="panel panel-default mt-4">
-				<div class="mask"></div>
+				<div class="mask" v-show="!searchUserIdStatus"></div>
 				<div class="panel-heading p-4">
-					狀態
+					黑名單狀態
 				</div>
 				<div class="panel-body">
-					<div class="d-flex align-items-center">
-						<div class="head-item-title mx-2">現在狀態: </div>
-						<div class="input-group input">
-							<input type="text" class="form-control input" id="status-now" value="封鎖六個月" disabled />
-						</div>
-						<div class="mx-2 head-item-title">調整:</div>
-						<select class="form-select" id="status-change">
-							<option value="-1">請選擇</option>
-						</select>
-						<div class="mx-2 head-item-title">註記:</div>
-						<div class="input-group input">
-							<input type="text" class="form-control input" id="status-mark" />
-						</div>
-					</div>
-					<div class="d-flex justify-end mt-4">
-						<button class="btn btn-primary" onclick="">
-							送出
-						</button>
-					</div>
+					<table id="status">
+						<thead>
+							<tr>
+								<th>會員ID</th>
+								<th>更新時間</th>
+								<th>更新原因</th>
+								<th>符合黑名單規則</th>
+								<th>規則細項</th>
+								<th>風險等級</th>
+								<th>執行狀態</th>
+								<th>到期時間</th>
+								<th style="width: 110px;">備註</th>
+								<th>會員資訊</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
 				</div>
 			</div>
 			<div class="panel panel-default mt-4">
-				<div class=""></div>
+				<div class="mask" v-show="!searchUserIdStatus"></div>
 				<div class="panel-heading p-4">
 					新增風險等級
 				</div>
@@ -314,7 +319,7 @@
 							<div class="result-value-item value">
 								<select class="form-select w-100" id="new-risk-4" v-model="riskTreeSelect.node4"
 									required>
-									<option value="-1">請選擇</option>
+									<option value="">請選擇</option>
 									<option :value="item" v-for="item in riskTreeSelect.node3.children" :key="item.id">
 										{{ item.description }}
 									</option>
@@ -335,7 +340,7 @@
 						</div>
 					</div>
 					<div class="d-flex justify-end mt-4">
-						<button class="btn btn-primary">
+						<button class="btn btn-primary" :disabled="!riskNext">
 							下一步
 						</button>
 					</div>
@@ -344,7 +349,7 @@
 		</div>
 		<div class="modal fade" id="riskModal" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
-				<form class="modal-content" @submit.prevent>
+				<form class="modal-content" @submit.prevent="submitRisk">
 					<div class="modal-header">
 						<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
@@ -368,8 +373,8 @@
 		</div>
 	</div>
 </div>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/assets/admin/js/vue-components.js"></script>
 <script>
@@ -379,6 +384,28 @@
 			'ordering': false,
 			"paging": false,
 			"info": false,
+			'language': {
+				'processing': '處理中...',
+				'lengthMenu': '顯示 _MENU_ 項結果',
+				'zeroRecords': '目前無資料',
+				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+				'infoFiltered': '(從 _MAX_ 項結果過濾)',
+				'search': '使用本次搜尋結果快速搜尋',
+				'paginate': {
+					'first': '首頁',
+					'previous': '上頁',
+					'next': '下頁',
+					'last': '尾頁'
+				}
+			},
+			"info": false
+		})
+		const t2 = $('#status').DataTable({
+			'ordering': false,
+			"paging": false,
+			"info": false,
+			"searching": false,
 			'language': {
 				'processing': '處理中...',
 				'lengthMenu': '顯示 _MENU_ 項結果',
@@ -426,7 +453,14 @@
 					node2: {},
 					node3: {},
 					node4: {},
-				}
+				},
+				searchUserId: null,
+				searchUserIdStatus: false
+			}
+		},
+		computed: {
+			riskNext() {
+				return Object.keys(this.riskTreeSelect.node4).length > 0
 			}
 		},
 		methods: {
@@ -455,6 +489,10 @@
 			},
 			doSearch({ page }) {
 				const { searchParam, pagination } = this
+				this.searchUserIdStatus = false
+				this.searchUserId = null
+				const table = $('#status').DataTable()
+				table.clear().draw()
 				const pageParam = page ?? this.pagination.current_page
 				axios.get(`${apiUrl}/get_anti_list`, {
 					params: {
@@ -467,6 +505,10 @@
 						alert(data.message)
 						return
 					}
+					if (searchParam.userId) {
+						this.searchUserIdStatus = true
+						this.searchUserId = searchParam.userId
+					}
 					this.antiTable = data.results
 					this.pagination = {
 						current_page: data.pagination.page,
@@ -474,6 +516,53 @@
 						per_page: data.pagination.count
 					}
 				})
+				// other axios 
+				if (searchParam.userId) {
+					// get 
+					axios.get(`${apiUrl}/get_all_block_users`, {
+						params: {
+							userId: searchParam.userId
+						}
+					}).then(({ data }) => {
+						// draw table
+						const table = $('#status').DataTable()
+						table.clear()
+						const reason = (text) => {
+							return `<div style="white-space:pre-wrap;">${text}</div>`
+						}
+						const buttonToID = (id) => {
+							return `<div class="d-flex">
+								<button class="btn btn-default mr-2">
+									<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
+								</button>
+							</div>`
+						}
+						const idGroup = (id)=>{
+							return `<div>
+								<div>${id}</div>
+								<button class="btn btn-default mr-2">
+									<a href="/admin/Risk/black_list?id=${id}" target="_blank">查看黑名單資訊</a>
+								</button>
+							</div>`
+						}
+						data.results.forEach(item => {
+							const endDate = item.blockInfo.endAt > 0 ? this.convertDate(item.blockInfo.endAt) : '永久'
+							table.row.add([
+								idGroup(item.userId),
+								this.convertDate(item.updatedAt),
+								item.updateReason,
+								item.blockRule,
+								item.blockDescription,
+								item.blockRisk,
+								item.status,
+								endDate,
+								reason(item.blockRemark),
+								buttonToID(item.userId),
+							])
+						})
+						table.draw()
+					})
+				}
 			},
 			getNewTree() {
 				axios.get(`${apiUrl}/get_new_tree`)
@@ -484,6 +573,19 @@
 						}
 						this.riskTree = data.results
 					})
+			},
+			submitRisk() {
+				axios.post(`${apiUrl}/new_risk`, {
+					userId: this.searchParam.userId,
+					...this.riskTreeSelect.node4
+				}).then(({ data }) => {
+					if (data.status !== 200) {
+						alert(data.message)
+						return
+					}
+					$('#riskModal').modal('hide')
+					this.doSearch()
+				})
 			}
 		},
 		watch: {

@@ -432,6 +432,10 @@
 			},
 			getAllBlockUsers() {
 				const { allBlockUserParam } = this
+				const url = new URL(location.href)
+				if(url.searchParams.has('id')){
+					this.allBlockUserParam.userId = url.searchParams.get('id')
+				}
 				axios.get(`${apiUrl}/get_all_block_users`, {
 					params: {
 						...allBlockUserParam
