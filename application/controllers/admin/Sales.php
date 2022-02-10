@@ -1184,15 +1184,21 @@ class Sales extends MY_Admin_Controller
             $list = $this->qrcode_reward_model->getSettlementRewardList($reward_where, $where);
 
             // 確認虛擬帳號
-            $virtual_account_rs = $this->virtual_account_model->get_many_by([
-                'user_id' => array_column($list, 'user_id'),
-                'status' => [VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING],
-                'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
-            ]);
-            foreach ($virtual_account_rs as $virtual_account)
+            $user_ids = array_column($list, 'user_id');
+            if ( ! empty($user_ids))
             {
-                $virtual_account_list[$virtual_account->user_id][$virtual_account->investor] = $virtual_account;
+                $virtual_account_rs = $this->virtual_account_model->get_many_by([
+                    'user_id' => $user_ids,
+                    'status' => [VIRTUAL_ACCOUNT_STATUS_AVAILABLE, VIRTUAL_ACCOUNT_STATUS_USING],
+                    'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
+                ]);
+
+                foreach ($virtual_account_rs as $virtual_account)
+                {
+                    $virtual_account_list[$virtual_account->user_id][$virtual_account->investor] = $virtual_account;
+                }
             }
+
             foreach ($list as $key => $value)
             {
                 // 找不到虛擬帳號
