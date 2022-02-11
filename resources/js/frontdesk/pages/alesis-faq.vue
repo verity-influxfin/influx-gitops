@@ -5,10 +5,10 @@
             <div class="包裹容器">
                 <div class="標題">有任何疑問嗎？這裡為您解答</div>
                 <div class="說明">請輸入關鍵字</div>
-                <div class="搜尋">
+                <form class="搜尋" @submit.prevent>
                     <img class="圖示" src="/images/alesis-search-icon.svg">
                     <input class="輸入欄位" type="text" placeholder="搜尋..." v-model="keyword" autocomplete="off" />
-                </div>
+                </form>
                 <div class="分類">
                     <a @click="category('all')" class="項目" :class="{'項目_啟用的': current_category === 'all'}">全部</a>
                     <a @click="category('product')" class="項目" :class="{'項目_啟用的': current_category === 'product'}">產品相關</a>
