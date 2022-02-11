@@ -15,7 +15,7 @@ class Page extends CI_Controller
     public function get_eboard_data()
     {
         $retval = [];
-        $first_day = (new DateTimeImmutable())->modify('- 6 day');
+        $first_day = (new DateTimeImmutable(date('Y-m-d')))->modify('- 6 day');
 
 
         for ($i=0; $i<7; $i++)
