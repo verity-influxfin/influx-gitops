@@ -42,7 +42,8 @@ $config['admin_menu'] = [
         'index?investor=1' => '投資端審核',
         'credit' => '信評管理',
         'credit_management' => '授信審核表',
-        'black_list' => '黑名單列表'
+        'black_list' => '黑名單列表',
+		'sme_loan' => '普匯微企e秒貸'
         //'loaned_wait_push' => '貸後催收',
         //'loaned_wait_push?slist=1' => '貸後已催收列表',
     ],

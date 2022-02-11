@@ -854,5 +854,11 @@ class Risk extends MY_Admin_Controller {
 	//
 	// 	return
 	// }
+	public function sme_loan(){
+		$this->load->view('admin/_header');
+		$this->load->view('admin/_title',$this->menu);
+		$this->load->view('admin/risk/sme_loan');
+		$this->load->view('admin/_footer');
+	}
 }
 ?>
