@@ -668,7 +668,8 @@ class Product extends REST_Controller {
                 [
                     'user_id'          => $user_id,
                     'certification_id' => 4,
-                    'status'           => 1
+                    'status'           => 1,
+                    'updated_at < '       => 1643299200
                 ],
                 [
                     'status'           => 0
