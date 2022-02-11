@@ -664,29 +664,38 @@ class Product extends REST_Controller {
 
 //            社交跑分可能異常 重新驗證社交 並退掉分數
             $this->load->model('user/user_certification_model');
-            $this->user_certification_model->update_by(
+            $cer = $this->user_certification_model->get_by(
                 [
                     'user_id'          => $user_id,
-                    'certification_id' => 4,
-                    'status'           => 1,
-                    'updated_at < '       => 1643299200
-                ],
-                [
-                    'status'           => 0
+                    'certification_id' => CERTIFICATION_SOCIAL,
+                    'status'           => CERTIFICATION_STATUS_SUCCEED,
+                    'updated_at < '    => 1643299200
                 ]
             );
-            $this->load->model('loan/credit_model');
-            $this->credit_model->update_by(
-                [
-                    'product_id'       => $product['id'],
-                    'user_id'          => $user_id,
-                    'status'           => 1,
-                    'points > '        => 0
-                ],
-                [
-                    'status'           => 0
-                ]
-            );
+            if (isset($cer))
+            {
+                $this->user_certification_model->update_by(
+                    [
+                        'id' => $cer->id
+                    ],
+                    [
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                    ]
+                );
+                $this->load->model('loan/credit_model');
+                $this->credit_model->update_by(
+                    [
+                        'product_id'       => $product['id'],
+                        'user_id'          => $user_id,
+                        'status'           => 1,
+                        'points > '        => 0
+                    ],
+                    [
+                        'status'           => 0
+                    ]
+                );
+            }
+
 
             $param		= [
                 'product_id' => $product['id'],
