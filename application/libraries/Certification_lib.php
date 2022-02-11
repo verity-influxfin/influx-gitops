@@ -4027,7 +4027,7 @@ class Certification_lib{
                 // 尚未回信上傳檔案
                 if ( ! isset($joint_credit_content['mail_file_status']) || ! $joint_credit_content['mail_file_status'])
                 {
-                    $verified_result->addMessage('待人工驗證：聯徵檔案未回信上傳', 3, MassageDisplay::Backend);
+                    $verified_result->addMessage('待人工驗證：聯徵檔案未回信上傳', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
 
                     $this->update_repayment_certification(
                         $info->id,
@@ -4045,7 +4045,7 @@ class Certification_lib{
                 $this->CI->load->library('joint_credit_lib');
                 if (empty($joint_credit_content['pdf_file']))
                 {
-                    $verified_result->addMessage('待人工驗證：查無聯徵檔案', 3, MassageDisplay::Backend);
+                    $verified_result->addMessage('待人工驗證：查無聯徵檔案', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
 
                     $this->update_repayment_certification(
                         $info->id,
@@ -4111,7 +4111,7 @@ class Certification_lib{
                 }
                 else
                 {
-                    $verified_result->addMessage('待人工驗證：聯徵檔案格式有誤', 3, MassageDisplay::Backend);
+                    $verified_result->addMessage('待人工驗證：聯徵檔案格式有誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
 
                     $this->update_repayment_certification(
                         $info->id,
@@ -4127,7 +4127,7 @@ class Certification_lib{
             }
             else
             {
-                $verified_result->addMessage('待人工驗證：聯徵檔案為紙本郵寄', 3, MassageDisplay::Backend);
+                $verified_result->addMessage('待人工驗證：聯徵檔案為紙本郵寄', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
 
                 $this->update_repayment_certification(
                     $info->id,
