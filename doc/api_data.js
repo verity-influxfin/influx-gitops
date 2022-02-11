@@ -25847,7 +25847,21 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_description",
+                            "description": "<p>法催狀態說明</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_handle_time",
+                            "description": "<p>法催狀態最後處理時間 (Y-m-d H:i:s)</p>"
                         }
                     ]
                 },
@@ -25915,6 +25929,8 @@ define({
                             "      }\n" +
                             "    },\n" +
                             "    \"legal_collection\": 0,\n" +
+                            "    \"lc_description\": \"LINE客服\",\n" +
+                            "    \"lc_handle_time\": \"2019-02-16 12:15:05\",\n" +
                             "  }\n" +
                             "}",
                         "type": "Object"
@@ -26292,7 +26308,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
                         },
                     ]
                 },
@@ -26620,7 +26636,21 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_description",
+                            "description": "<p>法催狀態說明</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": true,
+                            "field": "lc_handle_time",
+                            "description": "<p>法催狀態最後處理時間 (Y-m-d H:i:s)</p>"
                         },
                     ]
                 },
@@ -26656,6 +26686,8 @@ define({
                             "        \"next_repayment\": [],\n" +
                             "        \"accounts_receivable\": []\n" +
                             "        \"legal_collection\": 1,\n" +
+                            "        \"lc_description\": \"LINE客服\",\n" +
+                            "        \"lc_handle_time\": \"2019-02-16 12:15:05\",\n" +
                             "      }\n" +
                             "    ]\n" +
                             "  }\n" +
@@ -29822,7 +29854,7 @@ define({
                             "type": "Number",
                             "optional": false,
                             "field": "legal_collection",
-                            "description": "<p>法催進行中</p>"
+                            "description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
                         },
 
                     ]
@@ -33780,7 +33812,7 @@ define({
 							"type": "Number",
 							"optional": false,
 							"field": "legal_collection",
-							"description": "<p>法催中</p>"
+							"description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
 						}
                     ]
                 },
@@ -33965,7 +33997,7 @@ define({
 							"type": "Number",
 							"optional": false,
 							"field": "legal_collection",
-							"description": "<p>法催中</p>"
+							"description": "<p>法催進行中 (有匯出支付命令才會是1，否則0)</p>"
 						}
                     ]
                 },
