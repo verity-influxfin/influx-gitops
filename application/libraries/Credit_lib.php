@@ -354,9 +354,13 @@ class Credit_lib{
         if ($sub_product_id) {
             //techie
             if ($sub_product_id == 1) {
-                //系所加分
-                $total += isset($data['job_license']) ? $data['job_license'] * 50 : 0;
-                $total += isset($data['job_pro_level']) ? $data['job_pro_level'] * 100 : 0;
+                $job_license_point =  isset($data['job_license']) ? $data['job_license'] * 50 : 0;
+                $total += $job_license_point;
+                $this->scoreHistory[] = '工程師貸提供專業證書: ' . $job_license_point . ' * 50';
+
+                $job_pro_level_point = isset($data['job_pro_level']) ? $data['job_pro_level'] * 100 : 0;
+                $total += $job_pro_level_point;
+                $this->scoreHistory[] = '工程師貸專家調整: ' . $job_pro_level_point . ' * 100';
             }
         }
 
@@ -366,59 +370,90 @@ class Credit_lib{
         }
 
         if (isset($data['job_type'])) {
-            $total += $data['job_type'] ? 50 : 100;
+            $job_type_point =  $data['job_type'] ? 50 : 100;
+            $total += $job_type_point;
+            $this->scoreHistory[] = '職務性質(內/外勤): ' . $job_type_point;
         }
 
         if (isset($data['job_salary'])) {
-            $total += $this->get_job_salary_point(intval($data['job_salary']));
+            $job_salary_point = $this->get_job_salary_point(intval($data['job_salary']));
+            $total += $job_salary_point;
+            $this->scoreHistory[] = '薪資: ' . $job_salary_point;
         }
 
         if (isset($data['job_license']) && $data['job_license']) {
-            $total += 100;
+            $job_license_point = 100;
+            $total += $job_license_point;
+            $this->scoreHistory[] = '提供專業證書: ' . $job_license_point;
         }
 
         if (isset($data['job_employee'])) {
-            $total += $this->get_job_employee_point(intval($data['job_employee']));
+            $job_employee_point =  $this->get_job_employee_point(intval($data['job_employee']));
+            $total += $job_employee_point;
+            $this->scoreHistory[] = '任職公司規模: ' . $job_employee_point;
         }
 
         if (isset($data['job_position'])) {
-            $total += $this->get_job_position_point(intval($data['job_position']));
+            $job_position_point = $this->get_job_position_point(intval($data['job_position']));
+            $total += $job_position_point;
+            $this->scoreHistory[] = '職位: ' . $job_position_point;
         }
 
         if (isset($data['job_seniority'])) {
-            $total += $this->get_job_seniority_point(intval($data['job_seniority']), intval($data['job_salary']));
+            $job_seniority_point = $this->get_job_seniority_point(intval($data['job_seniority']), intval($data['job_salary']));
+            $total += $job_seniority_point;
+            $this->scoreHistory[] = '畢業以來的工作期間: ' . $job_seniority_point;
         }
 
         if (isset($data['job_company_seniority'])) {
-            $total += $this->get_job_seniority_point(intval($data['job_company_seniority']), intval($data['job_salary']));
+            $job_company_seniority_point = $this->get_job_seniority_point(intval($data['job_company_seniority']), intval($data['job_salary']));
+            $total += $job_company_seniority_point;
+            $this->scoreHistory[] = '此公司工作期間: ' . $job_company_seniority_point;
         }
 
         if (isset($data['job_industry'])) {
-            $total += $this->get_job_industry_point($data['job_industry']);
+            $job_industry_point = $this->get_job_industry_point($data['job_industry']);
+            $total += $job_industry_point;
+            $this->scoreHistory[] = '公司類型: ' . $job_industry_point;
         }
 
         //聯徵
         if (isset($data['investigation_status']) && !empty($data['investigation_status'])) {
             if (isset($data['investigation_times'])) {
-                $total += $this->get_investigation_times_point(intval($data['investigation_times']));
+                $investigation_times_point = $this->get_investigation_times_point(intval($data['investigation_times']));
+                $total += $investigation_times_point;
+                $this->scoreHistory[] = '聯徵查詢次數: ' . $investigation_times_point;
             }
 
             if (isset($data['investigation_credit_rate'])) {
-                $total += $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
+                $investigation_credit_rate_point = $this->get_investigation_rate_point(intval($data['investigation_credit_rate']));
+                $total += $investigation_credit_rate_point;
+                $this->scoreHistory[] = '聯徵信用卡使用率: ' . $investigation_credit_rate_point;
             }
 
             if (isset($data['investigation_months'])) {
-                $total += $this->get_investigation_months_point(intval($data['investigation_months']));
+                $data['investigation_months'] = (int) $data['investigation_months'];
+                $investigation_months_point = $this->get_investigation_months_point($data['investigation_months']);
+                $total += $investigation_months_point;
+                $this->scoreHistory[] = '聯徵信用記錄' . $data['investigation_months'] . '個月: ' . $investigation_months_point;
             }
         }
 
         if ($approvalExtra && $approvalExtra->getExtraPoints()) {
-            $total += $approvalExtra->getExtraPoints();
+            $extra_point = $approvalExtra->getExtraPoints();
+            $total += $extra_point;
+            $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
         }
 
         $param['points'] = (int) $total;
 
-        $stage_cer ? $total = 100 : '';
+        if ($stage_cer)
+        {
+            $total = 100;
+            $this->scoreHistory = [
+                ['階段上架: 100']
+            ];
+        }
 
         if($mix_credit){
             return $param['points'];
@@ -487,6 +522,7 @@ class Credit_lib{
             $rs 		= $this->CI->credit_model->update($credit['id'],$param);
             return $rs;
         }
+        $param['remark'] = json_encode(['scoreHistory' => $this->scoreHistory]);
         $rs 		= $this->CI->credit_model->insert($param);
 		return $rs;
 	}
