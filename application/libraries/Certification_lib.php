@@ -3999,16 +3999,66 @@ class Certification_lib{
             $print_timestamp = 0;
             $certification_content = [];
 
+            // 「工作收入證明(CERTIFICATION_JOB)」驗證項：算出 1.算薪資收入 2.薪資22倍
+            if (isset($job_info->content))
+            {
+                if ( ! is_array($job_info->content))
+                {
+                    $job_content = json_decode($job_info->content, TRUE);
+                }
+                else
+                {
+                    $job_content = $job_info->content;
+                }
+
+                // 薪資收入
+                $certification_content['monthly_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
+                    ? $job_content['salary'] / 1000
+                    : '';
+
+                // 薪資22倍
+                $certification_content['total_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
+                    ? $job_content['salary'] * 22 / 1000
+                    : '';
+            }
+
             if ( ! isset($joint_credit_content['return_type']) || $joint_credit_content['return_type'] != 0)
             {
                 // 尚未回信上傳檔案
                 if ( ! isset($joint_credit_content['mail_file_status']) || ! $joint_credit_content['mail_file_status'])
                 {
+                    $verified_result->addMessage('待人工驗證：聯徵檔案未回信上傳', 3, MassageDisplay::Backend);
+
+                    $this->update_repayment_certification(
+                        $info->id,
+                        $print_timestamp,
+                        $verified_result,
+                        $certification_content,
+                        $remark,
+                        $info->created_at
+                    );
+
                     return FALSE;
                 }
 
+                // 資料庫抓不到聯徵的PDF檔案
                 $this->CI->load->library('joint_credit_lib');
-                $url = ($joint_credit_content['pdf_file'] ?? NULL);
+                if (empty($joint_credit_content['pdf_file']))
+                {
+                    $verified_result->addMessage('待人工驗證：查無聯徵檔案', 3, MassageDisplay::Backend);
+
+                    $this->update_repayment_certification(
+                        $info->id,
+                        $print_timestamp,
+                        $verified_result,
+                        $certification_content,
+                        $remark,
+                        $info->created_at
+                    );
+
+                    return FALSE;
+                }
+                $url = $joint_credit_content['pdf_file'];
 
                 $mime = get_mime_by_extension($url);
                 if (strpos($mime, 'jpg') === FALSE &&
@@ -4042,32 +4092,10 @@ class Certification_lib{
                         $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $result['printDatetime']);
                         $print_timestamp = $this->CI->time->ROCDateToUnixTimestamp($print_timestamp);
 
-                        $certification_content = $result;
-
-                        if (isset($job_info->content))
-                        {
-                            if ( ! is_array($job_info->content))
-                            {
-                                $job_content = json_decode($job_info->content, TRUE);
-                            }
-                            else
-                            {
-                                $job_content = $job_info->content;
-                            }
-
-                            // 薪資收入
-                            $certification_content['monthly_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
-                                ? $job_content['salary'] / 1000
-                                : '';
-
-                            // 薪資22倍
-                            $certification_content['total_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
-                                ? $job_content['salary'] * 22 / 1000
-                                : '';
-                        }
+                        $certification_content = array_merge($certification_content, $result);
 
                         // 負債比計算，投保薪資不能為0
-                        if (is_numeric($certification_content['monthly_repayment']))
+                        if ( ! empty($certification_content['monthly_repayment']) && is_numeric($certification_content['monthly_repayment']))
                         {
                             $certification_content['debt_to_equity_ratio'] = round(
                                 $result['totalMonthlyPayment'] / $certification_content['monthly_repayment'] * 100,
@@ -4081,6 +4109,36 @@ class Certification_lib{
                         $remark['fail'] = implode('、', $verified_result->getAPPMessage(CERTIFICATION_STATUS_FAILED));
                     }
                 }
+                else
+                {
+                    $verified_result->addMessage('待人工驗證：聯徵檔案格式有誤', 3, MassageDisplay::Backend);
+
+                    $this->update_repayment_certification(
+                        $info->id,
+                        $print_timestamp,
+                        $verified_result,
+                        $certification_content,
+                        $remark,
+                        $info->created_at
+                    );
+
+                    return FALSE;
+                }
+            }
+            else
+            {
+                $verified_result->addMessage('待人工驗證：聯徵檔案為紙本郵寄', 3, MassageDisplay::Backend);
+
+                $this->update_repayment_certification(
+                    $info->id,
+                    $print_timestamp,
+                    $verified_result,
+                    $certification_content,
+                    $remark,
+                    $info->created_at
+                );
+
+                return FALSE;
             }
             
             $this->update_repayment_certification(
@@ -4092,7 +4150,7 @@ class Certification_lib{
                 $info->created_at
             );
 
-            return TRUE;
+            return $info;
         }
         return FALSE;
     }

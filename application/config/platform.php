@@ -435,7 +435,6 @@ $config['product_list'] = [
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'certifications_stage' => [
             [
@@ -493,7 +492,6 @@ $config['product_list'] = [
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'certifications_stage' => [
             [
@@ -809,7 +807,6 @@ $config['product_list'] = [
             CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'option_certifications' => [
-            CERTIFICATION_REPAYMENT_CAPACITY
         ],
         'certifications_stage' => [
             [
@@ -1288,7 +1285,6 @@ $config['sub_product_list'] = [
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
                 'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1669,7 +1665,6 @@ $config['sub_product_list'] = [
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
                 'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
                 ],
                 'certifications_stage' => [
                     [
@@ -1818,7 +1813,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_REPAYMENT_CAPACITY
                 ],
                 'option_certifications' => [
-                    CERTIFICATION_REPAYMENT_CAPACITY
+                    CERTIFICATION_DIPLOMA,
                 ],
                 'certifications_stage' => [
                     [

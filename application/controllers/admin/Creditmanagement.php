@@ -152,7 +152,17 @@ class Creditmanagement extends MY_Admin_Controller
         $user_certification = $this->user_certification_model->get_certification_data_by_user_id($response->user_id);
         $user_certification = array_column($user_certification, 'status', 'certification_id');
 
-        foreach ($product_detail['certifications'] as $certification_id)
+        // 必填的驗證項
+        if (isset($product_detail['option_certifications']))
+        {
+            $certification_need_chk = array_diff($product_detail['certifications'], $product_detail['option_certifications']);
+        }
+        else
+        {
+            $certification_need_chk = $product_detail['certifications'];
+        }
+
+        foreach ($certification_need_chk as $certification_id)
         {
             // DB查無認證項資料
             if ( ! isset($user_certification[$certification_id]))
