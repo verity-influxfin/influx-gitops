@@ -107,12 +107,13 @@ class Sendemail
 		return false;
 	}
 
-	public function user_notification($user_id=0,$title="",$content="",$type=false,$attach=false,$replay_to=false,$replay_to_name=false){
+    public function user_notification($user_id = 0, $title = "", $content = "", $type = FALSE, $attach = FALSE, $replay_to = FALSE, $replay_to_name = FALSE, $app_icon = TRUE)
+    {
 		if($user_id){
 			$user_info 		= $this->CI->user_model->get($user_id);
 			if($user_info && $user_info->email){
 			    $mail_event = $this->CI->config->item('mail_event');
-				$content 	= $this->CI->parser->parse('email/user_notification', array("title" => $title , "content"=> $content , "type"=> $type , "mail_event"=> $mail_event),TRUE);
+                $content = $this->CI->parser->parse('email/user_notification', array('title' => $title, 'content' => $content, 'type' => $type, 'mail_event' => $mail_event, 'app_icon' => $app_icon), TRUE);
 				if($attach){
                     $this->CI->email->initialize($this->config);
                     $this->CI->email->clear(TRUE);

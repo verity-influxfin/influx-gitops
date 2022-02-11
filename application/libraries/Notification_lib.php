@@ -105,7 +105,7 @@ class Notification_lib{
         );
         $rs = $this->CI->user_notification_model->insert($param);
         $this->CI->load->library('sendemail');
-        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), $type);
+        $this->CI->sendemail->user_notification($user_id, $title, nl2br($content), $type, FALSE, FALSE, FALSE, FALSE);
 
         return $rs;
     }
