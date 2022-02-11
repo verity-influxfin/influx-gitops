@@ -1116,8 +1116,36 @@ $config['credit_instalment_modifier_1'] = [
 $config['credit_instalment_modifier_2'] = [
 ];
 $config['credit_instalment_modifier_3'] = [
+    3 => 1.0,
+    6 => 0.95,
+    12 => 0.90,
+    18 => 0.85,
+    24 => 0.80,
+    36 => 0.75
 ];
 $config['credit_instalment_modifier_4'] = [
+    3 => 1.0,
+    6 => 0.95,
+    12 => 0.90,
+    18 => 0.85,
+    24 => 0.80,
+    36 => 0.75
+];
+$config['credit_instalment_modifier_8'] = [
+    3 => 1.0,
+    6 => 0.95,
+    12 => 0.90,
+    18 => 0.85,
+    24 => 0.80,
+    36 => 0.75
+];
+$config['credit_instalment_modifier_10'] = [
+    3 => 1.0,
+    6 => 0.95,
+    12 => 0.90,
+    18 => 0.85,
+    24 => 0.80,
+    36 => 0.75
 ];
 $config['credit_instalment_modifier_1000'] = [
 ];

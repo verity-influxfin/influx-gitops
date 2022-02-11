@@ -254,10 +254,6 @@ class Credit_lib{
                 $total += $approvalExtra->getExtraPoints();
             }
 
-            $total = $user_info->sex == 'M' ? round($total * 0.95) : $total;
-            $this->scoreHistory[] = '性別:'.($user_info->sex == 'M' ? '男 * 0.95' : '女 * 1');
-            $total = round($total * (isset($instalment_modifier_list[$instalment]) ? $instalment_modifier_list[$instalment] : 1));
-            $this->scoreHistory[] = '借款期數' . $instalment . '期: * ' . (isset($instalment_modifier_list[$instalment]) ? $instalment_modifier_list[$instalment] : 0);
             $param['points'] = intval($total);
 
         }
@@ -291,8 +287,29 @@ class Credit_lib{
                 }
             }
         }
+
+        // 額度調整 = 額度 * 性別對應的系數
+        if ($user_info->sex == 'M')
+        {
+            // 男
+            $param['amount'] *= 0.95;
+            $this->scoreHistory[] = '性別男: 額度 * 0.95';
+        }
+        else
+        {
+            $this->scoreHistory[] = '性別女: 額度 * 1';
+        }
+
+        // 調整額度 = 額度 * 分期期數對應的系數
+        $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
+        $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
+
         $param['expire_time'] = $expire_time;
-//      $param['scoreHistory'] = $this->scoreHistory;
+
+        // 額度不能「小」於產品的最「小」允許額度
+        $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
+
+        // 額度不能「大」於產品的最「大」允許額度
 		$param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
 
 		if ($approvalExtra && $approvalExtra->shouldSkipInsertion() || $credit['level'] == 10) {
@@ -399,8 +416,7 @@ class Credit_lib{
             $total += $approvalExtra->getExtraPoints();
         }
 
-        $total = $user_info->sex == 'M' ? round($total * 0.9) : $total;
-        $param['points'] = intval($total);
+        $param['points'] = (int) $total;
 
         $stage_cer ? $total = 100 : '';
 
@@ -421,9 +437,6 @@ class Credit_lib{
 
         if($stage_cer != 0) {
             $expire_time = strtotime('+1 days', $time);
-        }else{
-        	// 低於最小放款額度時則不予授信
-            $param['amount'] = $param['amount'] < intval($this->product_list[$product_id]['loan_range_s']) ? 0 : $param['amount'];
         }
         $param['expire_time'] = $expire_time;
 
@@ -432,8 +445,30 @@ class Credit_lib{
 			$job_salary = intval($data['job_salary']) * $this->product_list[$product_id]['condition_rate']['rate'];
             $param['amount'] = intval(min($param['amount'], $job_salary));
         }
-		// 額度不能大於最大允許額度
-		$param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
+
+        // 額度調整 = 額度 * 性別對應的系數
+        if ($user_info->sex == 'M')
+        {
+            // 男
+            $param['amount'] *= 0.9;
+            $this->scoreHistory[] = '性別男: 額度 * 0.9';
+        }
+        else
+        {
+            $this->scoreHistory[] = '性別女: 額度 * 1';
+        }
+
+        // 額度調整 = 額度 * 分期期數對應的系數
+        $this->CI->config->load('credit', TRUE);
+        $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_' . $product_id];
+        $param['amount'] = round($param['amount'] * ($instalment_modifier_list[$instalment] ?? 1));
+        $this->scoreHistory[] = '借款期數' . $instalment . '期: 額度 * ' . ($instalment_modifier_list[$instalment] ?? 1);
+
+        // 額度不能「小」於產品的最「小」允許額度
+        $param['amount'] = $param['amount'] < (int) $this->product_list[$product_id]['loan_range_s'] ? 0 : $param['amount'];
+
+        // 額度不能「大」於產品的最「大」允許額度
+        $param['amount'] = min($this->product_list[$product_id]['loan_range_e'], $param['amount']);
 
         if ($approvalExtra && $approvalExtra->shouldSkipInsertion()) {
 			return $param;
@@ -674,20 +709,20 @@ class Credit_lib{
 
 	public function get_job_seniority_point($seniority = 0,$job_salary = 0){
 		switch ($seniority) {
-			case 1:
+            case 1: // 三個月至半年（含）
 				return 100;
 				break;
-			case 2:
+            case 2: // 半年至一年（含）
 				return 150;
 				break;
-			case 3:
+            case 3: // 一年至三年（含）
 				if($job_salary < 40000){
 					return 100;
 				}else{
 					return 200;
 				}
 				break;
-			case 3:
+            case 4: // 三年以上
 				if($job_salary < 50000){
 					return 100;
 				}else{
