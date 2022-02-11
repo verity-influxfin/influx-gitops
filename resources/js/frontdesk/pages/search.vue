@@ -12,7 +12,7 @@
     </div>
     <div class="search-block">
       <div class="text">關鍵字</div>
-      <div class="search-input-group">
+      <form class="search-input-group" @submit.prevent>
         <input
           class="search-input"
           placeholder="搜尋..."
@@ -26,7 +26,7 @@
           src="../asset/images/loupe.svg"
           @click="fetchSearchData({})"
         />
-      </div>
+      </form>
 
       <div class="text" v-if="!isPaginationEmpty">
         共有

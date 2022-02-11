@@ -16,7 +16,7 @@
       </div>
       <div class="header">
         <h1 class="float-left">最新消息</h1>
-        <div class="input-custom float-right">
+        <form class="input-custom float-right" @submit.prevent>
           <i class="fas fa-search"></i>
           <input
             type="text"
@@ -26,7 +26,7 @@
             v-model="filter"
           />
           <i class="fas fa-times" v-if="filter" @click="filter = ''"></i>
-        </div>
+        </form>
       </div>
     </div>
     <div class="hr"></div>
