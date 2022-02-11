@@ -662,6 +662,31 @@ class Product extends REST_Controller {
                 $repayment = 1;
             }
 
+//            社交跑分可能異常 重新驗證社交 並退掉分數
+            $this->load->model('user/user_certification_model');
+            $this->user_certification_model->update_by(
+                [
+                    'user_id'          => $user_id,
+                    'certification_id' => 4,
+                    'status'           => 1
+                ],
+                [
+                    'status'           => 0
+                ]
+            );
+            $this->load->model('loan/credit_model');
+            $this->credit_model->update_by(
+                [
+                    'product_id'       => $product['id'],
+                    'user_id'          => $user_id,
+                    'status'           => 1,
+                    'points > '        => 0
+                ],
+                [
+                    'status'           => 0
+                ]
+            );
+
             $param		= [
                 'product_id' => $product['id'],
                 'sub_product_id' => $sub_product_id,
@@ -674,6 +699,7 @@ class Product extends REST_Controller {
             if(method_exists($this, $method)){
                 $this->$method($param,$product,$input);
             }
+
         }
         $this->response(['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST]);
     }
