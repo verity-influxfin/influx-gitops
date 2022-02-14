@@ -2203,5 +2203,55 @@ class Target extends MY_Admin_Controller {
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
+
+    public function sme_loan()
+    {
+        $page_data = [];
+        $target_list = $this->target_model->get_many_by([
+            'status' => TARGET_WAITING_VERIFY,
+            'sub_status' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
+        ]);
+        foreach ($target_list as $target)
+        {
+            $target->target_data = json_decode($target->target_data, TRUE);
+        }
+
+        $page_data['list'] = $target_list;
+        $page_data['product_list'] = $this->config->item('product_list');
+        $page_data['subloan_list'] = $this->config->item('subloan_list');
+
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/target/sme_loan', $page_data);
+        $this->load->view('admin/_footer');
+    }
+
+    public function sme_failed()
+    {
+        $post = $this->input->post(NULL, TRUE);
+        $this->load->library('output/json_output');
+
+        if ( ! $this->input->is_ajax_request() || ! isset($post['target_id']) || empty($post) || ! is_numeric($post['target_id']))
+        {
+            $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->setResponse(['success' => FALSE, "msg" => '錯誤的案件編號'])->send();
+        }
+
+        $target = $this->target_model->get_by([
+            'id' => $post['target_id'],
+            'status' => TARGET_WAITING_VERIFY,
+            'sub_status' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
+        ]);
+        if ( ! isset($target))
+        {
+            $this->json_output->setStatusCode(400)->setErrorCode(APPLY_NOT_EXIST)->setResponse(['success' => FALSE, "msg" => '找不到案件'])->send();
+        }
+        $param = [
+            'status' => TARGET_FAIL,
+        ];
+        $this->target_model->update($target->id, $param);
+        $this->load->library('Target_lib');
+        $this->target_lib->insert_change_log($target->id, $param, 0, $this->login_info->id);
+        $this->json_output->setStatusCode(200)->setResponse(['success' => TRUE, 'msg' => '退件成功'])->send();
+    }
 }
 ?>

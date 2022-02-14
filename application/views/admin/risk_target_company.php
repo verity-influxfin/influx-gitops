@@ -100,6 +100,32 @@
                         $('.sword').css('display','block');
                     }
                 });
+
+                function setDisabled(e){
+                    $(e).attr("disabled",true);
+                    $(e).text("已送出");
+                }
+
+                $(document).off("click",".manual_handling").on("click",".manual_handling",  function(){
+                    setDisabled(this);
+                    let target_id = $(this).data('target_id');
+
+                    Pace.track(() => {
+                        $.ajax({
+                            type: 'POST',
+                            url: "<?=admin_url('target/waiting_reinspection')?>",
+                            data: {target_id: target_id, manual_handling: 1},
+                            async: true,
+                            success: (rsp) => {
+                                console.log(rsp['response']);
+                                alert(rsp['response']['msg']);
+                            },
+                            error: function (xhr, textStatus, thrownError) {
+                                alert(textStatus);
+                            }
+                        });
+                    });
+                });
 			</script>
             <!-- /.row -->
             <div class="row">
@@ -421,7 +447,7 @@
                                                 if(isset($input['investor']) && $input['investor'] == 0){
                                                     if($isExternalCoop) {
                                                         if (!isset($input['target_id'])) {
-                                                            echo '<td><button id="manual_handling" class="btn btn-primary btn-warning" onclick=""'.($value->status == TARGET_WAITING_VERIFY && $value->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE || $value->status == TARGET_BANK_FAIL ?'':' disabled').'>轉人工</button></td>';
+                                                            echo '<td><button class="btn btn-primary btn-warning manual_handling" onclick=""' .($value->status == TARGET_WAITING_VERIFY && $value->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE || $value->status == TARGET_BANK_FAIL ?'':' disabled'). ' data-target_id='.$value->id.'>轉人工</button></td>';
                                                         }else{
                                                             echo '<td><button class="btn btn-primary btn-info" onclick="" >圖片資料</button></td>';
                                                         }

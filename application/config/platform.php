@@ -22,6 +22,7 @@ $config['admin_menu'] = [
         'finished' => '已結案',
         'index?delay=1&status=5' => '逾期中',
         'prepayment' => '提前還款',
+        'sme_loan' => '微企貸轉人工',
         'order_target' => '消費貸 - 案件列表',
         'waiting_approve_order_transfer' => '消費貸 - 債轉待批覆',
     ],

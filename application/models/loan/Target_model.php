@@ -32,6 +32,7 @@ class Target_model extends MY_Model
         509 => "銀行退件",
         510 => "銀行已結案",
     );
+
     public $sub_list = array(
         0 => "無",
         1 => "轉貸中",
