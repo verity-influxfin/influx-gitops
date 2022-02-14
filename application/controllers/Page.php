@@ -116,6 +116,48 @@ class Page extends CI_Controller
         return $query['amount'] ?? 0;
     }
 
+    /**
+     * 取得公司同事QRCode推廣績效
+     * @param DateTimeInterface $date
+     * @return array
+     * [
+     *     [
+     *         'name' => 'XXX',
+     *         'user_id' => 82,
+     *         'full_member_count' => 100, // 註冊+下載核貸數量
+     *         'student_count' => 10, // 學生貸核貸數量
+     *         'salary_man_count' => 20, // 上班族貸核貸數量
+     *     ],
+     * ]
+     */
+    private function _get_total_qrcode_apply(DateTimeInterface $date)
+    {
+        $this->load->config('influx_users');
+        $user_list = $this->config->item('influx_user_list');
+        $user_ids = array_column($user_list, 'user_id');
+
+        $this->load->library('user_lib');
+        $data_list = $this->user_lib->getPromotedRewardInfo(
+            ['user_id' => $user_ids],
+            $date->getTimestamp(),
+            $date->modify('+1 day')->getTimestamp()
+        );
+
+        $result = [];
+        foreach ($data_list as $data)
+        {
+            $result[] = [
+                'user_id' => $data['info']['user_id'] ?? '',
+                'name' => $data['info']['name'] ?? '',
+                'full_member_count' => $data['fullMemberCount'] ?? 0,
+                'student_count' => $value['loanedCount']['student'] ?? 0,
+                'salary_man_count' => $value['loanedCount']['salary_man'] ?? 0,
+            ];
+        }
+
+        return $result;
+    }
+
     private function _get_ios_sales_summary_data()
     {
         $ch = curl_init();
