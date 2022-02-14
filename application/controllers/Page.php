@@ -45,7 +45,7 @@ class Page extends CI_Controller
                 'app_downloads'        => $rs->app_downloads ?? 0,
 
                 // 各產品每月申貸數
-                'product_bids'         => 0,
+                'product_bids'         => $this->_get_product_bids($date),
 
                 // 成交
                 'deals'                => $this->_get_deals($date)
@@ -62,6 +62,74 @@ class Page extends CI_Controller
                         'data'   => $retval
                     ]));
     }
+
+	private function _get_product_bids(DateTimeInterface $date)
+	{
+		$month_ini = new DateTime("first day of this month");
+		$month_end = new DateTime("first day of next month");
+		$month_ini = $month_ini->setTime(0, 0, 0);
+		$month_end = $month_end->setTime(0, 0, 0);
+
+		$this->target_model->db->select([
+				'user_id',
+				'product_id',
+				'sub_product_id',
+				'min(created_at) as first_target_at'
+			])->from('p2p_loan.targets')
+			->where([
+				'created_at >=' => $month_ini->getTimestamp(),
+				'created_at <'  => $month_end->getTimestamp(),
+			])
+			->group_by('user_id');
+
+		$sub_query = $this->target_model->db->get_compiled_select('', TRUE);
+
+		$this->load->model('loan/target_model');
+		$query = $this->target_model->db->select([
+											'user_id',
+											'product_id',
+											'sub_product_id',
+											'first_target_at'
+										])->from("($sub_query) as r")
+										->where([
+											'first_target_at >=' => $date->getTimestamp(),
+											'first_target_at <'  => $date->modify('+1 day')->getTimestamp(),
+										])
+										->get()
+										->result_array();
+
+		$result = [
+			'SMART_STUDENT' => 0,
+			'STUDENT'       => 0,
+			'SALARY_MAN'    => 0,
+			'SK_MILLION'    => 0
+		];
+
+		foreach ($query as $data)
+		{
+			switch (TRUE)
+			{
+				case $data["product_id"] == PRODUCT_ID_STUDENT AND $data["sub_product_id"] == SUBPRODUCT_INTELLIGENT_STUDENT:
+					$result['SMART_STUDENT'] += 1;
+					break;
+
+				case $data["product_id"] == PRODUCT_ID_STUDENT:
+					$result['STUDENT'] += 1;
+					break;
+
+				case $data["product_id"] == PRODUCT_ID_SALARY_MAN:
+					$result['SALARY_MAN'] += 1;
+					break;
+
+				case $data["product_id"] == PRODUCT_SK_MILLION_SMEG:
+					$result['SK_MILLION'] += 1;
+					break;
+			}
+		}
+
+		return implode(' / ', array_values($result));
+
+	}
 
     private function _get_deals(DateTimeInterface $date)
     {
@@ -92,7 +160,7 @@ class Page extends CI_Controller
                                 ->select($unixtime_query . ' AS date')
                                 ->from('p2p_user.users')
                                 ->where([
-                                    'status'        => 1
+									'created_at <' => $date->modify('+1 day')->getTimestamp(),
                                 ])
                                 ->group_by($unixtime_query)
                                 ->get()
@@ -113,7 +181,6 @@ class Page extends CI_Controller
                                 ->where([
                                     'created_at >=' => $date->getTimestamp(),
                                     'created_at <'  => $date->modify('+1 day')->getTimestamp(),
-                                    'status'        => 1
                                 ])
                                 ->group_by($unixtime_query)
                                 ->get()
