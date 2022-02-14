@@ -17,10 +17,15 @@ class Page extends CI_Controller
         $retval = [];
         $first_day = (new DateTimeImmutable(date('Y-m-d')))->modify('- 6 day');
 
+        $this->load->model('user/sale_dashboard_model');
 
         for ($i=0; $i<7; $i++)
         {
             $date = $i > 0 ? $first_day->modify("+ {$i} day") : $first_day;
+            $rs = $this->sale_dashboard_model->get_by([
+                'created_at >= ' => $date->format('Y-m-d 00:00:00'),
+                'created_at <=' => $date->format('Y-m-d 23:59:59'),
+            ]);
 
             $retval[] = [
 
@@ -28,7 +33,7 @@ class Page extends CI_Controller
                 'date'                 => $tx_date = $date->format('Y-m-d'),
 
                 // 官網流量
-                'official_site_trends' => 0,
+                'official_site_trends' => $rs->official_site_trends ?? 0,
 
                 // 新增會員
                 'new_member'           => $this->_get_new_member($date),
@@ -37,7 +42,7 @@ class Page extends CI_Controller
                 'total_member'         => $this->_get_total_member($date),
 
                 // APP下載
-                'app_downloads'        => 0,
+                'app_downloads'        => $rs->app_downloads ?? 0,
 
                 // 各產品每月申貸數
                 'product_bids'         => 0,
