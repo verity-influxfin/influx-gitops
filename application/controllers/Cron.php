@@ -990,7 +990,8 @@ class Cron extends CI_Controller
                     }
                     else
                     {
-                            continue;
+                        $log_status = $this->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
+                        continue;
                     }
                 }
                 else if (isset($log_status['status']) && $log_status['status'] == SCRAPER_STATUS_NO_CONTENT)
