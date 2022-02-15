@@ -865,7 +865,7 @@ class Cron extends CI_Controller
 
     public function script_renew_social_verify()
     {
-        $query = $this->db->query('SELECT t.* FROM p2p_loan.targets t JOIN p2p_user.user_certification uc ON uc.user_id = t.user_id where t.status = 0 and uc.investor = 0 and uc.certification_id = 4 and uc.status in (1) and t.product_id = 1');
+        $query = $this->db->query('SELECT t.user_id, uc.id, uc.status, uc.content FROM p2p_loan.targets t JOIN p2p_user.user_certification uc ON uc.user_id = t.user_id where t.status = 0 and uc.investor = 0 and uc.certification_id = 4 and uc.status in (1) and t.product_id = 1');
         foreach ($query->result() as $info)
         {
             $this->load->library('scraper/instagram_lib');
