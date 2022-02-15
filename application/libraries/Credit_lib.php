@@ -445,8 +445,6 @@ class Credit_lib{
             $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
         }
 
-        $param['points'] = (int) $total;
-
         if ($stage_cer)
         {
             $total = 100;
@@ -454,6 +452,8 @@ class Credit_lib{
                 ['階段上架: 100']
             ];
         }
+
+        $param['points'] = (int) $total;
 
         if($mix_credit){
             return $param['points'];
