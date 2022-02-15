@@ -199,7 +199,7 @@ class Credit_lib{
             // 最高上限150分
             if (isset($data['follow_count']) && ! empty($data['follow_count']))
             {
-                $calculate_points = min(floor($data['follow_count'] / 10), 150);
+                $calculate_points = min(floor($data['follow_count'] / 10) * 10, 150);
                 $total += $calculate_points;
                 $this->scoreHistory[] = "IG好友數 = {$calculate_points}\n";
             }
