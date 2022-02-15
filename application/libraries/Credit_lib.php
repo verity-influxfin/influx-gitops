@@ -62,6 +62,7 @@ class Credit_lib{
                 }
             }
 
+            $this->scoreHistory = [];
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
 				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
@@ -449,7 +450,7 @@ class Credit_lib{
         {
             $total = 100;
             $this->scoreHistory = [
-                ['階段上架: 100']
+                '階段上架: 100'
             ];
         }
 
