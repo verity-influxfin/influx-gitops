@@ -83,6 +83,32 @@
         font-weight:bold;
         letter-spacing: 25px;
     }
+	.d-flex {
+		display: flex;
+		align-items: center;
+	}
+	.col-20 {
+		flex: 0 0 20%;
+	}
+
+	.col-30 {
+		flex: 0 0 30%;
+	}
+
+	.col {
+		flex: 1 0 0%;
+	}
+
+	.justify-between {
+		justify-content: space-between;
+	}
+
+	.input-require::after {
+		content: '*';
+		color: #dc3545;
+		margin-left: 4px;
+		display: inline-block;
+	}
 </style>
 <div id="page-wrapper">
 	<div class="row">
@@ -611,6 +637,9 @@
                             <input id="credit_test" type="text" name="score" value="0"/ disabled>
                             <button class="btn btn-warning" type="submit">額度試算</button>
                             <button class="btn btn-danger" data-url="/admin/Target/verify_failed" id="verify_failed">不通過</button>
+							<button class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#newModal">
+								新增至黑名單
+							</button>
                         </div>
                     </form>
                 </div>
@@ -724,6 +753,78 @@
             </div>
         </div>
 	</div>
+	<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content" id="blockUserForm">
+				<div class="modal-header">
+					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title">將使用者新增至黑名單</h3>
+				</div>
+				<div class="modal-body p-5">
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">使用者ID</div>
+						<div class="col">
+							<input type="text" class="w-100 form-control" id="blockUserId" disabled required>
+						</div>
+					</div>
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">符合黑名單規則：</div>
+						<div class="col">
+							<select name="" id="blockRule" class="w-100 form-control"
+								required disabled>
+								<option value="授信政策">授信政策</option>
+							</select>
+						</div>
+					</div>
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">規則細項：</div>
+						<div class="col">
+							<input type="text" class="w-100 form-control" id="blockDescription"
+								required>
+						</div>
+					</div>
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">風險等級：</div>
+						<div class="col">
+							<select class="form-control" id="blockRisk" required>
+								<option value=""></option>
+								<option value="低">低</option>
+								<option value="中">中</option>
+								<option value="高">高</option>
+								<option value="拒絕">拒絕</option>
+							</select>
+						</div>
+					</div>
+					<div class="d-flex mb-4">
+						<div class="col-30 input-require">執行狀態：</div>
+						<div class="col">
+							<select id="blockTimeText" class="form-control" required>
+								<option value=""></option>
+								<option value="封鎖一個月">封鎖一個月</option>
+								<option value="封鎖三個月">封鎖三個月</option>
+								<option value="封鎖六個月">封鎖六個月</option>
+								<option value="永久封鎖">永久封鎖</option>
+							</select>
+						</div>
+					</div>
+					<div class="d-flex mb-2">
+						<div class="col-30">備註:</div>
+						<div class="col">
+							<textarea rows="7" class="w-100 form-control"
+								id="blockRemark"></textarea>
+						</div>
+					</div>
+
+				</div>
+				<div class="d-flex justify-between mx-5 mb-5">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+					<button type="submit" class="btn btn-info">新增</button>
+				</div>
+			</form>
+		</div>
+	</div>
 	<!-- /.row -->
 </div>
 </div>
@@ -813,6 +914,48 @@
         }
         return status_icon;
     }
+
+	async function  blockUserAdd(){
+		const apiUrl = "/api/v2/black_list"
+		const blockDescription = $('#blockDescription').val()
+        const blockRemark =  $('#blockRemark').val()
+		const blockRisk = $('#blockRisk').val()
+		const blockRule = $('#blockRule').val()
+		const blockTimeText = $('#blockTimeText').val()
+		const blockUserId = $('#blockUserId').val()
+		return await fetch(`${apiUrl}/block_add`,{
+			method:'POST',
+			headers:{
+				'content-type': 'application/json'
+			},
+			body:JSON.stringify({
+				blockDescription,
+				blockRemark,
+				blockRisk, blockRule,
+				blockTimeText,
+				userId: blockUserId
+			})
+		}).then(res=>res.json())
+		.then(data=>{
+			return data
+		})
+	}
+	document.querySelector('#blockUserForm').addEventListener('submit',async(e)=>{
+		e.preventDefault()
+		const data = await blockUserAdd()
+		if (data.status !== 200) {
+			alert(data.response.message)
+			return
+		}
+		//reset
+		const blockDescription = $('#blockDescription').val('')
+		const blockRemark = $('#blockRemark').val('')
+		const blockRisk = $('#blockRisk').val('')
+		const blockTimeText = $('#blockTimeText').val('')
+		
+		$('#newModal').modal('hide')
+	})
+
 	$(document).ready(function() {
 		var urlString = window.location.href;
 		var url = new URL(urlString);
@@ -821,7 +964,7 @@
 		var modifiedPoints = null;
 		var targetInfoAjaxLock = false;
 		var relatedUserAjaxLock = false;
-
+		$('#blockUserId').val(userId);
 		changeReevaluationLoading(false);
 		fillFakeVerifications("borrowing");
 		fillFakeVerifications("investing");
