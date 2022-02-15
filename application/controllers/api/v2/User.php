@@ -2207,19 +2207,6 @@ END:
             'detail_list' => [],
         );
 
-        // 確認負責人需通過實名認證
-        if ($company == USER_IS_COMPANY)
-        {
-            try
-            {
-                $responsible_user = $this->user_lib->get_identified_responsible_user($user_id, $investor);
-            }
-            catch (Exception $e)
-            {
-                $this->response(array('result' => 'ERROR', 'error' => $e->getCode(), 'msg' => $e->getMessage()));
-            }
-        }
-
         // 建立合作方案的初始化資料結構
         $collaboratorList = json_decode(json_encode($this->qrcode_collaborator_model->get_many_by(['status' => PROMOTE_COLLABORATOR_AVAILABLE])), TRUE) ?? [];
         $collaboratorList = array_column($collaboratorList, NULL, 'id');
