@@ -359,8 +359,6 @@ class Target_lib
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
 
-                        // 依照借款期間調整額度
-                        $credit['amount'] = round($credit['amount'] * (isset($instalment_modifier_list[$target->instalment]) ? $instalment_modifier_list[$target->instalment] : 1));
 
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         // 金額取整程式，2020/10/30排除產轉
