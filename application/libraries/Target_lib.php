@@ -2493,4 +2493,23 @@ class Target_lib
         }
         return $date;
     }
+
+    public function get_enterprise_product_ids() : array {
+        return [PRODUCT_FOREX_CAR_VEHICLE, PRODUCT_SK_MILLION_SMEG];
+    }
+
+    public function get_individual_product_ids() : array {
+        return [PRODUCT_ID_STUDENT, PRODUCT_ID_STUDENT_ORDER, PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER];
+    }
+
+    public function get_product_id_by_tab($tabname): array
+    {
+        switch ($tabname) {
+            case 'enterprise':
+                return $this->get_enterprise_product_ids();
+            case 'individual':
+            default:
+                return $this->get_individual_product_ids();
+        }
+    }
 }

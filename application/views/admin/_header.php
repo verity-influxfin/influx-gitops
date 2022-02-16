@@ -27,7 +27,7 @@
     <link href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
     <link href="//cdn.datatables.net/responsive/1.0.7/css/responsive.dataTables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
-    
+
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <!-- /#wrapper -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
@@ -54,16 +54,17 @@
 	<script src="/assets/admin/js/vue-components.js"></script>
     <?php endif?>
 
-    <script>
-        $(document).ready(function() {
-            
-            $('[data-toggle="datepicker"]').datepicker({
-              format: 'yyyy-mm-dd',
-            });
-            
-            $('.fancyframe').fancybox({
-                'type':'iframe',
-            });
+	<script>
+        let url;
+		$(document).ready(function() {
+			
+			$('[data-toggle="datepicker"]').datepicker({
+			  format: 'yyyy-mm-dd',
+			});
+			
+			$('.fancyframe').fancybox({
+				'type':'iframe',
+			});
 
             var RotateImage = function (instance) {
                 this.instance = instance;
@@ -122,7 +123,18 @@
                 }
             });
 
-        });
+
+            url = new URL(location.href)
+            const tab1 = document.querySelector('#tab1')
+            const tab2 = document.querySelector('#tab2')
+            if(url.searchParams.get('tab')){
+                if(url.searchParams.get('tab')==='enterprise'){
+                    tab2.classList.add('active')
+                    tab1.classList.remove('active')
+                }
+            }
+
+		});
         var explode = function(){
             location.pathname=="/admin/Certification/user_bankaccount_list"?$('li[data-id=Passbook] a').click():"";
         };

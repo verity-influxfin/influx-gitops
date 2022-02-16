@@ -376,3 +376,22 @@
 .w-100{
 	width: 100%;
 }
+
+.category-tab {
+    margin-bottom: 10px;
+    display: inline-block;
+    border-radius: 8px;
+    border: 1px solid #326398;
+}
+.category-tab-item {
+    padding: 10px 30px;
+    font-size: 16px;
+    color: #326398;
+    background-color: #fff;
+    border-radius: 8px;
+    border: none;
+}
+.category-tab-item.active {
+    color: #fff;
+    background-color: #326398;
+}

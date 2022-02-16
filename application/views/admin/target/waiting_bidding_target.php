@@ -106,8 +106,8 @@
 											</td>
 											<td><?=isset($value->credit_level)?$value->credit_level:'' ?></td>
                                             <td><?=isset($value->company)?$value->company:'' ?><?=isset($value->company)&&isset($value->school_name)?' / ':'' ?><?=isset($value->school_name)?$value->school_name:'' ?></td>
-                                            <?=isset($value->school_department) && $typeKey == 'personal' ? '<td>'.$value->school_department.'</td>':'<td></td>' ?>
-                                            <?=isset($value->amount) && $typeKey != 'judicialPersonFormBank' ? '<td>'. $value->amount . '</td>':'<td></td>' ?>
+                                            <?=isset($value->school_department) && $typeKey == 'personal' ? '<td>'.$value->school_department.'</td>':'' ?>
+                                            <?=isset($value->amount) && $typeKey != 'judicialPersonFormBank' ? '<td>'. $value->amount . '</td>':'' ?>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
                                             <td><? echo isset($value->interest_rate)&&$value->interest_rate != ''?floatval($value->interest_rate).'%':'-' ?></td>
                                             <td><?=isset($value->instalment)?$instalment_list[$value->instalment]:'' ?></td>
@@ -117,7 +117,7 @@
                                             <td><? echo date("Y-m-d H:i:s",isset($value->expire_time) && $typeKey != 'judicialPersonFormBank'?$value->expire_time:$value->updated_at) ?></td>
                                             <td><?= isset($value->bidding_date)?date("Y-m-d H:i:s",$value->bidding_date) :'' ?></td>
                                             <td><?=isset($value->promote_code)?$value->promote_code:'' ?></td>
-											<td><a class="btn btn-primary btn-info" href="<? echo $typeKey != 'judicialPersonFormBank' ? admin_url('creditmanagement/report?type=person&target_id='.$value->id.''):admin_url('target/waiting_reinspection'."?target_id=".$value->id)?>" target="_blank" >查看</a></td>
+											<td><a class="btn btn-primary btn-info" href="<? echo $typeKey != 'judicialPersonFormBank' ? admin_url('creditmanagement/report?type=person&target_id='.$value->id.''):admin_url('target/waiting_reinspection'."?id=".$value->id)?>" target="_blank" >查看</a></td>
                                             <? if($value->status == TARGET_WAITING_BIDDING) {?><td><button class="btn btn-danger" onclick="cancel(<?=isset($value->id)?$value->id:"" ?>)">下架</button></td><? } ?>
                                         </tr>
 									<?php

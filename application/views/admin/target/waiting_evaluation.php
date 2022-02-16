@@ -9,6 +9,10 @@
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
+    <div class="category-tab">
+        <button class="category-tab-item active" id="tab1" onclick="location.search = 'tab=individual'">個金</button>
+        <button class="category-tab-item" id="tab2" onclick="location.search = 'tab=enterprise'">企金</button>
+    </div>
 	<!-- /.row -->
 	<div class="row">
 		<div class="col-lg-12">
@@ -45,6 +49,9 @@
         $.ajax({
             type: "GET",
             url: "/admin/Target/waiting_evaluation",
+            data: {
+                tab: url.searchParams.get('tab')
+            },
             beforeSend: function () {
             },
             complete: function () {
@@ -90,11 +97,12 @@
 		}
 
         function fillTargetsInfo(targets, users) {
+            let validation_url = url.searchParams.get('tab') === 'enterprise' ? 'waiting_reinspection?target_id=' : 'final_validations?id=';
 			for (var i = 0; i < targets.length; i++) {
 				let target = targets[i];
 				let user = users[i];
 
-				let detailButton = '<a href="/admin/target/final_validations?id=' + target.id + '&user_id=' + user.id +'" target="_blank"><button class="btn btn-danger">審核</button></a>';
+				let detailButton = '<a href="/admin/target/'+validation_url + target.id + '&user_id=' + user.id +'" target="_blank"><button class="btn btn-danger">審核</button></a>';
 				$("<tr>").append(
                     getCenterTextCell(target.number),
 					getCenterTextCell(target.product.name),

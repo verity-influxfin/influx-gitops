@@ -539,6 +539,18 @@ class Target extends MY_Admin_Controller {
 				$where[$field] = $input[$field];
 			}
 		}
+        $this->load->library('target_lib');
+        $tab = $input['tab'] ?? '';
+        $filter_product_ids = $this->target_lib->get_product_id_by_tab($tab);
+        if(!empty($filter_product_ids))
+        {
+            $where['product_id'] = $filter_product_ids;
+            if($tab == 'enterprise')
+            {
+                $where['status'] = [TARGET_WAITING_VERIFY, TARGET_BANK_VERIFY];
+            }
+        }
+
 		$waiting_list 				= array();
 		$list 						= $this->target_model->get_many_by($where);
 		if($list){
@@ -887,6 +899,13 @@ class Target extends MY_Admin_Controller {
 			$this->load->library('output/json_output');
 
 			$where = ["status" => TARGET_WAITING_APPROVE, "sub_status" => TARGET_SUBSTATUS_SECOND_INSTANCE];
+
+            $this->load->library('target_lib');
+            $tab = $this->input->get('tab', TRUE) ?? '';
+			$filter_product_ids = $this->target_lib->get_product_id_by_tab($tab);
+			if(!empty($filter_product_ids))
+			    $where['product_id'] = $filter_product_ids;
+
 			$targets = $this->target_model->get_many_by($where);
 			if (!$targets) {
 				$this->json_output->setStatusCode(204)->send();
@@ -1159,7 +1178,21 @@ class Target extends MY_Admin_Controller {
 	public function repayment(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);
-		$list 						= $this->target_model->get_many_by(['status'=>TARGET_REPAYMENTING]);
+        $where = ['status' => TARGET_REPAYMENTING];
+
+        $this->load->library('target_lib');
+        $category = $input['tab'] ?? '';
+        $filter_product_ids = $this->target_lib->get_product_id_by_tab($category);
+        if ( ! empty($filter_product_ids))
+        {
+            $where['product_id'] = $filter_product_ids;
+            if ($category == 'enterprise')
+            {
+                $where['status'] = [TARGET_BANK_REPAYMENTING];
+            }
+        }
+
+		$list 						= $this->target_model->get_many_by($where);
 		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];
@@ -1181,6 +1214,11 @@ class Target extends MY_Admin_Controller {
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
+                $user_data = $this->user_model->get_by(["id" => $value->user_id]);
+                $list[$key]->company = $user_data->name ?? '';
+                // TODO: 已還款期數計算
+                // $list[$key]->paid_instalment = 0;
+
 			}
 
 			$this->load->model('user/user_meta_model');
@@ -1202,6 +1240,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['school_list'] 		= $school_list;
 		$page_data['product_list']		= $this->config->item('product_list');
         $page_data['sub_product_list'] = $this->config->item('sub_product_list');
+        $page_data['category'] = $category;
 
         $this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
@@ -1442,7 +1481,7 @@ class Target extends MY_Admin_Controller {
 
 	public function waiting_bidding(){
 		$page_data 					= array('type'=>'list');
-		$list 						= $this->target_model->get_many_by(['status'=>[TARGET_WAITING_BIDDING, TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE, TARGET_BANK_LOAN]]);
+		$list 						= $this->target_model->get_many_by(['status'=>[TARGET_WAITING_BIDDING, TARGET_BANK_GUARANTEE, TARGET_BANK_LOAN]]);
         $tmp  = [];
         $personal = [];
         $judicialPerson = [];

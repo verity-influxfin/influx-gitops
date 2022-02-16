@@ -1,7 +1,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">借款 - 待審批</h1>
+                    <h1 class="page-header">借款 - 待上架</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -50,6 +50,10 @@
 
 			</script>
             <!-- /.row -->
+            <div class="category-tab">
+                <button class="category-tab-item active" id="tab1" onclick="location.search = 'tab=individual'">個金</button>
+                <button class="category-tab-item" id="tab2" onclick="location.search = 'tab=enterprise'">企金</button>
+            </div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -69,8 +73,7 @@
 											<th>核准利率</th>
                                             <th>貸放期間</th>
                                             <th>計息方式</th>
-                                            <th>狀態
-											</th>
+                                            <th>狀態</th>
                                             <th>申請日期</th>
                                             <th>備註</th>
                                             <th>Detail</th>
@@ -100,21 +103,9 @@
                                             <td>
 												<?
                                                 $unFinish = true;
-                                                if($isExternalCoop){
-												    $target_data = json_decode($value->target_data);
-                                                    if(!isset($target_data->reinspection->reinspection_opinion)){
-                                                        echo '待二審批覆';
-                                                    }elseif(!isset($target_data->reinspection->CRO_opinion)){
-                                                        echo '待風控長批覆';
-                                                    }elseif(!isset($target_data->reinspection->general_manager_opinion)){
-                                                        echo '待總經理批覆';
-                                                    }else{
-                                                        $unFinish = false;
-                                                        ?>
-                                                        <button id="send_bank" data-id="<?=isset($value->id)?$value->id:'' ?>" class="btn btn-warning" onclick="">送件至銀行</button>
-                                                        <button class="btn btn-danger" onclick="failed(<?=isset($value->id)?$value->id:'' ?>)">不通過</button>
-                                                    <? }
-                                                }else{
+                                                if($isExternalCoop){ ?>
+												   <?= '<button class="category-tab-item active">待銀行審核中</button>' ?>
+                                                <?}else{
                                                     if($value->bankaccount_verify==0){ ?>
                                                         <button class="btn btn-info"  onclick="window.location.href='<?=admin_url('certification/user_bankaccount_list?verify=2')."?id=".$value->id ?>'">待金融驗證</button>
                                                     <? }else{ ?>
@@ -126,7 +117,7 @@
 											</td>
                                             <td><?=isset($value->created_at)?date("Y-m-d H:i:s",$value->created_at):'' ?></td>
                                             <td><?=isset($value->remark)?$value->remark:'' ?></td>
-											<td><a target="_blank" href="<? echo !$isExternalCoop ? admin_url('target/edit')."?id=".$value->id : admin_url('target/waiting_reinspection')."?target_id=".$value->id ?>" class="btn btn-<? echo !$unFinish || !$isExternalCoop ? 'default' : 'danger' ?>"><? echo !$isExternalCoop ? '詳情' : '二審' ?></a></td>
+											<td><a target="_blank" href="<? echo  admin_url('target/edit')."?id=".$value->id  ?>" class="btn btn-<? echo 'default' ?>"><? echo '詳情' ?></a></td>
                                         </tr>                                        
 									<?php 
 										}}
