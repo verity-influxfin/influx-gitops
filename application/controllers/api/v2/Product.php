@@ -2461,6 +2461,7 @@ class Product extends REST_Controller {
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
+            'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
         );
     }
 
@@ -2872,7 +2873,9 @@ class Product extends REST_Controller {
 
         $company = ['DS2P1'];
         if(!in_array($product['visul_id'],$company)){
-            if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 55 ){
+            $age = get_age($this->user_info->birthday);
+
+            if($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55) ){
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
         }
