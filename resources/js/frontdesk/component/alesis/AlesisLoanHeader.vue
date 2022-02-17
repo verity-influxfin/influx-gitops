@@ -1,8 +1,10 @@
 <template>
     <div class="貸款標頭">
         <div class="背景">
-            <img :src="image" class="圖片 hidden-desktop">
-            <div class="圖片 hidden-phone"
+            <img :src="image" class="圖片 " :class="{'hidden-desktop':imagePhone}">
+            <div
+                class="圖片 hidden-phone"
+                v-if="imagePhone"
                 :style="{backgroundImage:`url(${imagePhone})`}"
                 style="background-position: top center;background-size: cover;">
             </div>
