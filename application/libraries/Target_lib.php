@@ -2512,4 +2512,33 @@ class Target_lib
                 return $this->get_individual_product_ids();
         }
     }
+
+    public function get_next_repayment($target)
+    {
+        $next_repayment = ['instalment' => 0, 'date' => '', 'amount' => 0];
+        if (isset($target))
+        {
+            switch ($target->product_id)
+            {
+                case PRODUCT_SK_MILLION_SMEG:
+                    $today = get_entering_date();
+                    for ($i = 1; $i <= $target->instalment; $i++)
+                    {
+                        $repayment_date = date('Y-m-d', strtotime($target->loan_date . '+' . $i . 'month'));
+                        if ($repayment_date >= $today)
+                        {
+                            $next_repayment['date'] = $repayment_date;
+                            $next_repayment['instalment'] = $i;
+                            // TODO: amount 待定
+                            break;
+                        }
+                    }
+                    break;
+                default:
+                    // TODO: 待移植其他產品
+                    break;
+            }
+        }
+        return $next_repayment;
+    }
 }

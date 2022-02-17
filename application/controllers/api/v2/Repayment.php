@@ -386,7 +386,21 @@ class Repayment extends REST_Controller {
 					}
 				}
 
-				$list[] = [
+                $this->load->library('target_lib');
+                $rs = $this->target_lib->get_next_repayment($value);
+                if ( ! empty($rs['instalment']))
+                {
+                    $next_repayment = $rs;
+                }
+                // 待整理至 target_lib
+                if($value->product_id == PRODUCT_SK_MILLION_SMEG) {
+                    $pay_off_at = date('Y-m-d', strtotime($value->loan_date . '+' . $value->instalment . 'month'));
+                }else{
+                    // 其他產品待整理
+                    $pay_off_at = date('Y-m-d');
+                }
+
+                $list[] = [
 					'id' 				=> intval($value->id),
 					'target_no' 		=> $value->target_no,
                     'product_name' => $product_name,
@@ -404,7 +418,9 @@ class Repayment extends REST_Controller {
 					'sub_status' 		=> intval($value->sub_status),
 					'created_at' 		=> intval($value->created_at),
 					'next_repayment' 	=> $next_repayment,
+					'pay_off_at' 	    => $pay_off_at,
 				];
+
 			}
 		}
 		$this->response(['result' => 'SUCCESS','data' => ['list' => $list] ]);
