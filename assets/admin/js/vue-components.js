@@ -13,7 +13,7 @@ Vue.component('v-page', {
 		const length = last_page
 		const maxLength = this.maxLength ?? 7
 		if (length < maxLength) {
-			return this.range(1,this.length)
+			return this.range(1, length)
 		}
 		const even = maxLength % 2 === 0 ? 1 : 0
 		const left = Math.floor(maxLength / 2)

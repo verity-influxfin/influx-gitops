@@ -221,7 +221,7 @@
 				<div class="panel-body">
 					<div class="d-flex">
 						<div>每頁顯示：</div>
-						<select v-model="pagination.per_page" @change="doSearch">
+						<select v-model="pagination.per_page" @change="doSearch({page:1})">
 							<option :value="5">5</option>
 							<option :value="10">10</option>
 							<option :value="20">20</option>
