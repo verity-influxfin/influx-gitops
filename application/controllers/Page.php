@@ -19,36 +19,34 @@ class Page extends CI_Controller
 
         $this->load->model('user/sale_dashboard_model');
 
-        for ($i=0; $i<7; $i++)
+        for ($i = 0; $i < 7; $i++) 
         {
             $date = $i > 0 ? $first_day->modify("+ {$i} day") : $first_day;
-            $rs = $this->sale_dashboard_model->get_by([
-                'created_at >= ' => $date->format('Y-m-d 00:00:00'),
-                'created_at <=' => $date->format('Y-m-d 23:59:59'),
-            ]);
+            $amounts = $this->sale_dashboard_model->get_amounts_at($date);
 
             $retval[] = [
 
                 // 日期
-                'date'                 => $tx_date = $date->format('Y-m-d'),
+                'date' => $tx_date = $date->format('Y-m-d'),
 
                 // 官網流量
-                'official_site_trends' => $rs->official_site_trends ?? 0,
+                'official_site_trends' => $amounts[sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
 
                 // 新增會員
-                'new_member'           => $this->_get_new_member($date),
+                'new_member' => $this->_get_new_member($date),
 
                 // 會員總數
-                'total_member'         => $this->_get_total_member($date),
+                'total_member' => $this->_get_total_member($date),
 
                 // APP下載
-                'app_downloads'        => $rs->app_downloads ?? 0,
+                'android_downloads' => $amounts[sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
+                'ios_downloads' => $amounts[sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
 
                 // 各產品每月申貸數
-                'product_bids'         => $this->_get_product_bids($date),
+                'product_bids' => $this->_get_product_bids($date),
 
                 // 成交
-                'deals'                => $this->_get_deals($date)
+                'deals' => $this->_get_deals($date),
             ];
         }
 
