@@ -6,7 +6,12 @@
 			</h1>
 		</div>
 	</div>
-	<div class="panel panel-default">
+	<div class="tab">
+		<button class="tab-item" :class="{'active':tab==='list'}" @click="location.search = 'tab=list'">黑名單列表</button>
+		<button class="tab-item" :class="{'active':tab==='history'}"
+			@click="location.search = 'tab=history'">黑名單處置紀錄</button>
+	</div>
+	<div class="panel panel-default" v-show="tab!=='history'">
 		<div class="panel-heading">
 			<form class="d-flex" @submit.prevent="getAllBlockUsers">
 				<div class="p-2">會員ID</div>
@@ -18,7 +23,7 @@
 				</div>
 				<div class="p-2">
 					<select id="rule-option" class="form-control" v-model="allBlockUserParam.blockRule">
-						<option value="" ></option>
+						<option value=""></option>
 						<option :value="item" v-for="item in options.block_rule" :key="item">{{item}}</option>
 					</select>
 				</div>
@@ -57,6 +62,37 @@
 						<th>到期時間</th>
 						<th style="width: 110px;">備註</th>
 						<th>會員資訊</th>
+						<th>歷史資訊</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="panel panel-default" v-show="tab==='history'">
+		<div class="panel-heading">
+			<form class="d-flex" @submit.prevent="getAllBlockUsers">
+				<div class="p-2">會員ID</div>
+				<div class="p-2">
+					<input type="text" class="form-control" v-model="allBlockUserParam.userId">
+				</div>
+				<div class="d-flex">
+					<div class="search-btn">
+						<button class="btn btn-primary" type="submit">搜尋</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="p-3">
+			<table id="record-table">
+				<thead>
+					<tr>
+						<th>會員ID</th>
+						<th>更新時間</th>
+						<th>黑名單規則</th>
+						<th>規則細項</th>
+						<th>風險等級</th>
+						<th>黑名單處置結果</th>
+						<th>備註</th>
 						<th>歷史資訊</th>
 					</tr>
 				</thead>
@@ -240,6 +276,32 @@
 			</form>
 		</div>
 	</div>
+	<div class="modal fade" id="recordModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document">
+			<form class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title">歷史資訊</h3>
+				</div>
+				<div class="modal-body p-5">
+					<table id="reocord-modal-table">
+						<thead>
+							<tr>
+								<th>更新時間</th>
+								<th>黑名單規則</th>
+								<th>規則細項</th>
+								<th>風險等級</th>
+								<th>黑名單處置結果</th>
+								<th>備註</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
 <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
@@ -250,6 +312,44 @@
 
 	$(document).ready(function () {
 		const t2 = $('#main-table').DataTable({
+			'ordering': false,
+			'language': {
+				'processing': '處理中...',
+				'lengthMenu': '顯示 _MENU_ 項結果',
+				'zeroRecords': '目前無資料',
+				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+				'infoFiltered': '(從 _MAX_ 項結果過濾)',
+				'search': '使用本次搜尋結果快速搜尋',
+				'paginate': {
+					'first': '首頁',
+					'previous': '上頁',
+					'next': '下頁',
+					'last': '尾頁'
+				}
+			},
+			"info": false
+		});
+		const recordTable = $('#record-table').DataTable({
+			'ordering': false,
+			'language': {
+				'processing': '處理中...',
+				'lengthMenu': '顯示 _MENU_ 項結果',
+				'zeroRecords': '目前無資料',
+				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+				'infoFiltered': '(從 _MAX_ 項結果過濾)',
+				'search': '使用本次搜尋結果快速搜尋',
+				'paginate': {
+					'first': '首頁',
+					'previous': '上頁',
+					'next': '下頁',
+					'last': '尾頁'
+				}
+			},
+			"info": false
+		});
+		const reocordModalTable = $('#reocord-modal-table').DataTable({
 			'ordering': false,
 			'language': {
 				'processing': '處理中...',
@@ -288,8 +388,8 @@
 			"info": false
 		});
 		// mounted 因須確保jquery能用
-		v.getAllBlockUsers()
-		v.getOption()
+		v.onReady()
+
 	});
 	const v = new Vue({
 		el: '#page-wrapper',
@@ -300,6 +400,9 @@
 					userId: null,
 					blockRule: null,
 					blockTimeText: null
+				},
+				blockHistoryParam: {
+					userId: null
 				},
 				blockUserAddForm: {
 					userId: null,
@@ -327,7 +430,8 @@
 					block_text: [],
 					index: [],
 					risk: [],
-				}
+				},
+				tab: 'list'
 			}
 		},
 		methods: {
@@ -420,6 +524,38 @@
 					buttonToHistory(btoa(encodeURI(JSON.stringify(item.history))))
 				])
 			},
+			setHistoryTableRow(item) {
+				const buttonToHistory = (history) => {
+					return `<div class="d-flex">
+								<button class="btn btn-info" onclick="v.initRecordHistory('${history}')">
+									查看
+								</button>
+							</div>`
+				}
+				$('#record-table').DataTable().row.add([
+					item.userId,
+					this.convertTime(item.updatedAt),
+					item.blockRule,
+					item.blockDescription,
+					item.blockRisk,
+					item.blockLogAction,
+					item.blockRemark,
+					buttonToHistory(btoa(encodeURI(JSON.stringify(item.history))))
+				])
+			},
+			onReady() {
+				const url = new URL(location.href)
+				if (url.searchParams.get('tab')) {
+					this.tab = url.searchParams.get('tab')
+				}
+				if (this.tab !== 'history') {
+					this.getOption()
+					this.getAllBlockUsers()
+				}
+				else {
+					this.blockHistory()
+				}
+			},
 			getOption() {
 				axios.get(`${apiUrl}/get_option`)
 					.then(({ data }) => {
@@ -433,7 +569,7 @@
 			getAllBlockUsers() {
 				const { allBlockUserParam } = this
 				const url = new URL(location.href)
-				if(url.searchParams.has('id')){
+				if (url.searchParams.has('id')) {
 					this.allBlockUserParam.userId = url.searchParams.get('id')
 				}
 				axios.get(`${apiUrl}/get_all_block_users`, {
@@ -533,6 +669,38 @@
 				}
 				$('#history-table').DataTable().draw()
 			},
+			initRecordHistory(x) {
+				$('#recordModal').modal('toggle')
+				$('#reocord-modal-table').DataTable().clear()
+				const o = JSON.parse(decodeURI(atob(x)))
+				for (const item of o) {
+					$('#reocord-modal-table').DataTable().row.add([
+						this.convertTime(item.updatedAt),
+						item.blockRule,
+						item.blockDescription,
+						item.blockRisk,
+						item.blockLogAction,
+						item.blockRemark,
+					])
+				}
+				$('#reocord-modal-table').DataTable().draw()
+			},
+			// tab history
+			blockHistory() {
+				const { blockHistoryParam } = this
+				axios.get(`${apiUrl}/block_history`, {
+					params: {
+						...blockHistoryParam
+					}
+				}).then(({ data }) => {
+					if (!data.results) {
+						alert(data.message)
+					}
+					$('#record-table').DataTable().clear()
+					data.results.forEach(item => this.setHistoryTableRow(item))
+					$('#record-table').DataTable().draw()
+				})
+			}
 		},
 	})
 
@@ -607,5 +775,26 @@
 		margin-left: 10px;
 		display: flex;
 		justify-content: flex-end;
+	}
+
+	.tab {
+		margin-bottom: 10px;
+		display: inline-block;
+		border-radius: 8px;
+		border: 1px solid #326398;
+	}
+
+	.tab-item {
+		padding: 10px 30px;
+		font-size: 16px;
+		color: #326398;
+		background-color: #fff;
+		border-radius: 8px;
+		border: none;
+	}
+
+	.tab-item.active {
+		color: #fff;
+		background-color: #326398;
 	}
 </style>

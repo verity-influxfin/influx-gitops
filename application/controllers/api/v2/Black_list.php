@@ -216,4 +216,9 @@ class Black_list extends Admin_rest_api_controller
 
     }
 
+	public function block_history_get()
+    {
+		$this->response(json_decode('{"results":[{"userId":"123","blockRule":"aaaa","blockDescription":"bbb","blockRemark":"yrdy","blockRisk":"sdf","blockLogAction":"trd","history":[{"userId":"123","blockRule":"aaaa","blockDescription":"bbb","blockRemark":"yrdy","blockRisk":"sdf","blockLogAction":"trd","updatedAt":"1645154829"}],"updatedAt":"1632514699"},{"userId":"123","blockRule":"aaaa","blockDescription":"bbb","blockRemark":"yrdy","blockRisk":"sdf","blockLogAction":"trd","history":[],"updatedAt":"16451548819"}]}'));
+	}
+
 }
