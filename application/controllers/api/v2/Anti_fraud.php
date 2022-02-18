@@ -271,4 +271,67 @@ class Anti_fraud extends Admin_rest_api_controller
 
         $this->response($response);
     }
+
+	public function get_new_tree_get(){
+		$url = $this->brookesia_url . 'rule/indexMap';
+		$result = curl_get($url);
+		$json = json_decode($result, TRUE);
+		$this->response($json['response']);
+	}
+
+	public function get_anti_list_get(){
+		$input = $this->input->get(NULL, TRUE);
+		$page = isset($input['page']) ? $input['page'] : 1;
+		$count = isset($input['count']) ? $input['count'] : 10;
+		$userId = isset($input['userId']) ? $input['userId'] : '';
+		$blockRule = isset($input['blockRule']) ? $input['blockRule'] : '';
+		$risk = isset($input['risk']) ? $input['risk'] : '';
+		$url = $this->brookesia_url . 'result/search'
+		.'?page='.$page
+		.'&count='.$count
+		.'&userId='.$userId
+		.'&blockRule='.$blockRule
+		.'&risk='.$risk
+		;
+		$result = curl_get($url);
+		if (!$result)
+        {
+            $error = [
+                'message' => '黑名單系統無回應，請洽工程師。'
+            ];
+            $this->response($error);
+        }
+		$json = json_decode($result, TRUE);
+		if ($json['status'] == 204)
+        {
+            $this->response(['results' => [] ]);
+        }
+		$this->response($json['response']);
+	}
+
+	public function new_risk_post(){
+        $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
+		$userId = isset($input['userId']) ? $input['userId'] : '';
+		$typeId = isset($input['ruleType']) ? $input['ruleType'] : '';
+		$ruleId = isset($input['id']) ? $input['id'] : '';
+		$description = isset($input['description']) ? $input['description'] : '';
+		$columnMap = isset($input['columnMap']) ? json_encode($input['columnMap']) : '';
+		$risk = isset($input['risk']) ? $input['risk'] : '';
+		$payload = [
+            'userId'        => $userId,
+            'typeId'        => $typeId,
+            'ruleId'        => $ruleId,
+            'description'   => $description,
+            'columnMap'     => $columnMap,
+            'risk'          => $risk,
+        ];
+		$url = $this->brookesia_url .'result/add';
+        $result = curl_get($url, $payload);
+		$json = json_decode($result, TRUE);
+		if ($json['status'] == 420)
+        {
+            $this->response($json['response']);
+        }
+		$this->response($json);
+	}
 }

@@ -378,7 +378,7 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/assets/admin/js/vue-components.js"></script>
 <script>
-	const apiUrl = "/api/v2/black_list"
+	const apiUrl = "/api/v2/anti_fraud"
 	$(document).ready(function () {
 		const t = $('#andtfraud').DataTable({
 			'ordering': false,
@@ -478,7 +478,7 @@
 				$('#riskModal').modal('toggle')
 			},
 			getOption() {
-				axios.get(`${apiUrl}/get_option`)
+				axios.get(`/api/v2/black_list/get_option`)
 					.then(({ data }) => {
 						if (!data.results) {
 							alert(data.message)
@@ -519,7 +519,7 @@
 				// other axios 
 				if (searchParam.userId) {
 					// get 
-					axios.get(`${apiUrl}/get_all_block_users`, {
+					axios.get(`/api/v2/black_list/get_all_block_users`, {
 						params: {
 							userId: searchParam.userId
 						}
