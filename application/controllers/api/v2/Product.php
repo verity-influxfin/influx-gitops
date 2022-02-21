@@ -662,6 +662,41 @@ class Product extends REST_Controller {
                 $repayment = 1;
             }
 
+//            社交跑分可能異常 重新驗證社交 並退掉分數
+            $this->load->model('user/user_certification_model');
+            $cer = $this->user_certification_model->get_by(
+                [
+                    'user_id'          => $user_id,
+                    'certification_id' => CERTIFICATION_SOCIAL,
+                    'status'           => CERTIFICATION_STATUS_SUCCEED,
+                    'updated_at < '    => 1643299200
+                ]
+            );
+            if (isset($cer))
+            {
+                $this->user_certification_model->update_by(
+                    [
+                        'id' => $cer->id
+                    ],
+                    [
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                    ]
+                );
+                $this->load->model('loan/credit_model');
+                $this->credit_model->update_by(
+                    [
+                        'product_id'       => $product['id'],
+                        'user_id'          => $user_id,
+                        'status'           => 1,
+                        'points > '        => 0
+                    ],
+                    [
+                        'status'           => 0
+                    ]
+                );
+            }
+
+
             $param		= [
                 'product_id' => $product['id'],
                 'sub_product_id' => $sub_product_id,
@@ -674,6 +709,7 @@ class Product extends REST_Controller {
             if(method_exists($this, $method)){
                 $this->$method($param,$product,$input);
             }
+
         }
         $this->response(['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST]);
     }
@@ -1249,7 +1285,7 @@ class Product extends REST_Controller {
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
             }
 
-            $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id);
+                $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id, $target);
 
             $contract = '';
             if($target->contract_id){
@@ -2425,6 +2461,7 @@ class Product extends REST_Controller {
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
+            'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
         );
     }
 
@@ -2836,7 +2873,9 @@ class Product extends REST_Controller {
 
         $company = ['DS2P1'];
         if(!in_array($product['visul_id'],$company)){
-            if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 55 ){
+            $age = get_age($this->user_info->birthday);
+
+            if($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55) ){
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
         }

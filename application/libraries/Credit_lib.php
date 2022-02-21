@@ -62,6 +62,7 @@ class Credit_lib{
                 }
             }
 
+            $this->scoreHistory = [];
 			$method		= 'approve_'.$product_id;
 			if(method_exists($this, $method)){
 				$rs = $this->$method($user_id,$product_id,$sub_product_id,$expire_time, $approvalExtra, $stage_cer, $credit, $mix_credit, $instalment);
@@ -195,31 +196,53 @@ class Credit_lib{
                 $this->scoreHistory[] = '借款人提供個人財務數據表(自填) = 50\n';
             }
 
-            // IG好友數每增加10個得10分(個位數無條件捨去)
-            // 最高上限150分
+            // IG好友數
+            // 1. 10-50人得200分
+            // 2. 51-100人得300分
+            // 3. 超過101人(含)起，好友數每增加10人再得10分(個位數無條件捨去)
+            // 最高上限350分
             if (isset($data['follow_count']) && ! empty($data['follow_count']))
             {
-                $calculate_points = min(floor($data['follow_count'] / 10), 150);
+                if ($data['follow_count'] >= 101)
+                { // 超過101人(含)起，好友數每增加10人再得10分(個位數無條件捨去)
+                    $calculate_points = 300 + floor(($data['follow_count'] - 100) / 10) * 10;
+                }
+                elseif ($data['follow_count'] >= 51)
+                { // 51-100人得300分
+                    $calculate_points = 300;
+                }
+                elseif ($data['follow_count'] >= 10)
+                { // 10-50人得200分
+                    $calculate_points = 200;
+                }
+                else
+                {
+                    $calculate_points = 0;
+                }
+
+                // 最高上限350分
+                $calculate_points = min($calculate_points, 350);
+
                 $total += $calculate_points;
                 $this->scoreHistory[] = "IG好友數 = {$calculate_points}\n";
             }
 
             // IG近3個月內每發文1次得10分
-            // 最高得分150
+            // 最高得分100
             if (isset($data['posts_in_3months']) && ! empty($data['posts_in_3months']))
             {
-                $calculate_points = min($data['posts_in_3months'] * 10, 150);
+                $calculate_points = min($data['posts_in_3months'] * 10, 100);
                 $total += $calculate_points;
                 $this->scoreHistory[] = "IG近3個月內發文 = {$calculate_points}\n";
             }
 
             // IG發文關鍵字每1個得10分/全球、財經、數位、兩岸
-            // 最高得分150
+            // 最高得分100
             if (isset($data['key_word']) && ! empty($data['key_word']))
             {
-                $calculate_points = min($data['posts_in_3months'] * 10, 150);
+                $calculate_points = min($data['key_word'] * 10, 100);
                 $total += $calculate_points;
-                $this->scoreHistory[] = "IG近3個月內發文 = {$calculate_points}\n";
+                $this->scoreHistory[] = "IG發文關鍵字 = {$calculate_points}\n";
             }
 
             if (isset($data['line_access_token']) && ! empty($data['line_access_token']))
@@ -445,15 +468,15 @@ class Credit_lib{
             $this->scoreHistory[] = '二審專家調整: ' . $extra_point;
         }
 
-        $param['points'] = (int) $total;
-
         if ($stage_cer)
         {
             $total = 100;
             $this->scoreHistory = [
-                ['階段上架: 100']
+                '階段上架: 100'
             ];
         }
+
+        $param['points'] = (int) $total;
 
         if($mix_credit){
             return $param['points'];
@@ -827,6 +850,13 @@ class Credit_lib{
 				'status'			=> 1,
 				'expire_time >='	=> time(),
 			);
+
+            // 申貸額度若要共用，需要為同產品(product_id)、同期間(instalment)
+            if (isset($target->instalment) && is_numeric($target->instalment))
+            {
+                $param['instalment'] = $target->instalment;
+            }
+
 			$rs 	= $this->CI->credit_model->order_by('created_at','desc')->get_by($param);
 			if($rs){
                 $data = [

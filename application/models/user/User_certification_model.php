@@ -169,10 +169,9 @@ class User_certification_model extends MY_Model
     /**
      * 依「使用者ID」撈其所有驗證資料
      * @param int $user_id : 使用者ID
-     * @param int $investor : 使用者身份(INVESTOR/BORROWER)
      * @return mixed
      */
-    public function get_certification_data_by_user_id(int $user_id, int $investor)
+    public function get_certification_data_by_user_id(int $user_id)
     {
         $this->db
             ->select('uc.certification_id')
@@ -184,4 +183,19 @@ class User_certification_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    public function get_banned_list($where)
+    {
+        $this->_database->select('user_id, COUNT(*) as total_count')
+            ->from("`p2p_user`.`user_certification`")
+            ->like('remark', 'AI\\\\\\\\u7cfb\\\\\\\\u7d71', 'both', FALSE)
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
+
 }

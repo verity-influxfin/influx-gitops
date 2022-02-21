@@ -94,6 +94,7 @@ $config['admin_menu'] = [
         'register_report' => '註冊報表',
         'bonus_report' => '獎金報表',
         'loan_overview' => '申貸總覽',
+        'valuable_report' => '高價值用戶報表',
         'promote_list'  => '推薦有賞',
         'promote_reward_list'  => '推薦有賞放款'
     ],
@@ -350,6 +351,7 @@ $config['product_list'] = [
         'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
+        'allow_age_range' => [20, 35],
         'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
         'checkOwner' => FALSE
     ],
@@ -401,6 +403,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
+        'allow_age_range' => [20, 35],
         'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
         'checkOwner' => false,
     ],
@@ -462,6 +465,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
+        'allow_age_range' => [20, 55],
         'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
         'checkOwner' => false,
     ],
@@ -519,6 +523,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
+        'allow_age_range' => [20, 55],
         'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
         'checkOwner' => false,
     ],
@@ -949,6 +954,7 @@ $config['product_list'] = [
         'hiddenSubProduct' => true,
         'description' => '',
         'checkOwner' => true,
+        'allow_age_range' => [20, 55],
     ],
 ];
 
@@ -1259,6 +1265,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 35],
                 'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
                 'checkOwner' => false,
             ],
@@ -1310,6 +1317,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 55],
                 'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
                 'checkOwner' => false,
             ]
@@ -1583,6 +1591,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 35],
                 'description' => '須提供有效學生證<br>可申請額度<br>6,000-180,000',
                 'checkOwner' => FALSE,
             ]
@@ -1634,6 +1643,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 35],
                 'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000'
             ]
         ],
@@ -1689,6 +1699,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 55],
                 'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
                 'checkOwner' => false,
             ]
@@ -1736,6 +1747,7 @@ $config['sub_product_list'] = [
                 'hiddenMainProduct' => false,
                 'description' => '',
                 'checkOwner' => true,
+                'allow_age_range' => [20, 55],
                 'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000'
             ]
         ],
@@ -1787,6 +1799,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 35],
                 'description' => '可申請額度<br>3000-12,000',
                 'checkOwner' => false,
             ],
@@ -1839,6 +1852,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 55],
                 'description' => '可申請額度<br>30,000-300,000',
                 'checkOwner' => false,
             ],

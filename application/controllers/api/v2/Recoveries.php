@@ -487,6 +487,16 @@ class Recoveries extends REST_Controller
                     'legal_collection' => $this->target_lib->isLegalCollection($value->legal_collection_at),
                 );
 
+                $this->load->model('log/log_legaldoc_status_model');
+                $legal_log = $this->log_legaldoc_status_model->order_by('id','DESC')->limit(1)->get_by([
+                    'target_id'=> $target_info->id
+                ]);
+                if(isset($legal_log))
+                {
+                    $temp['lc_description'] = $this->log_legaldoc_status_model->process_status[$legal_log->status];
+                    $temp['lc_handle_time'] = $legal_log->created_at;
+                }
+
                 $value->aiBidding == 1 ? $temp['aiBidding'] = true : '';
                 $list[] = $temp;
             }
@@ -1069,6 +1079,17 @@ class Recoveries extends REST_Controller
                 'amortization_schedule' => $this->target_lib->get_investment_amortization_table($target_info, $investment),
 				'legal_collection' => $this->target_lib->isLegalCollection($investment->legal_collection_at),
             ];
+
+            $this->load->model('log/log_legaldoc_status_model');
+            $legal_log = $this->log_legaldoc_status_model->order_by('id','DESC')->limit(1)->get_by([
+                'target_id'=> $target_info->id
+            ]);
+            if(isset($legal_log))
+            {
+                $data['lc_description'] = $this->log_legaldoc_status_model->process_status[$legal_log->status];
+                $data['lc_handle_time'] = $legal_log->created_at;
+            }
+
             $investment->aiBidding == 1 ? $data['aiBidding'] = true : '';
 
             $this->response(['result' => 'SUCCESS', 'data' => $data]);

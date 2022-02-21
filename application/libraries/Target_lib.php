@@ -359,9 +359,6 @@ class Target_lib
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
 
-                        // 依照借款期間調整額度
-                        $credit['amount'] = round($credit['amount'] * (isset($instalment_modifier_list[$target->instalment]) ? $instalment_modifier_list[$target->instalment] : 1));
-
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         // 金額取整程式，2020/10/30排除產轉
                         $loan_amount = ($loan_amount % 1000 != 0 && $subloan_status == false) ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
@@ -383,6 +380,8 @@ class Target_lib
                                     && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
                                     && $this->judicialyuan($user_id)
                                     && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                    // 依照產品部門需求，上班族暫時全部強制進待二審
+                                    && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
                                     || $subloan_status
                                     || $renew
                                     || $evaluation_status
@@ -2139,7 +2138,7 @@ class Target_lib
         return false;
     }
 
-    private function is_sub_product($product, $sub_product_id)
+    public function is_sub_product($product, $sub_product_id)
     {
         $sub_product_list = $this->CI->config->item('sub_product_list');
         return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']);
