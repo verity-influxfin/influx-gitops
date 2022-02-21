@@ -284,13 +284,13 @@ class Anti_fraud extends Admin_rest_api_controller
 		$page = isset($input['page']) ? $input['page'] : 1;
 		$count = isset($input['count']) ? $input['count'] : 10;
 		$userId = isset($input['userId']) ? $input['userId'] : '';
-		$blockRule = isset($input['blockRule']) ? $input['blockRule'] : '';
+		$index = isset($input['index']) ? $input['index'] : '';
 		$risk = isset($input['risk']) ? $input['risk'] : '';
 		$url = $this->brookesia_url . 'result/search'
 		.'?page='.$page
 		.'&count='.$count
 		.'&userId='.$userId
-		.'&blockRule='.$blockRule
+		.'&index='.$index
 		.'&risk='.$risk
 		;
 		$result = curl_get($url);
@@ -333,5 +333,14 @@ class Anti_fraud extends Admin_rest_api_controller
             $this->response($json['response']);
         }
 		$this->response($json);
+	}
+
+	public function manual_add_post(){
+        $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
+		$res = [
+			'status'=>200,
+			'input'=>$input,
+		];
+		$this->response($res);
 	}
 }

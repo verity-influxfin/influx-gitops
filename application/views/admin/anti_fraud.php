@@ -3,6 +3,10 @@
 		display: flex;
 		flex-direction: column;
 	}
+	
+	.panel-heading{
+		height: 64px;
+	}
 
 	.justify-between {
 		justify-content: space-between;
@@ -157,7 +161,7 @@
 	.mask {
 		position: absolute;
 		width: 100%;
-		height: 100%;
+		height: calc(100% - 64px);
 		background-color: #c3c3c388;
 		z-index: 5;
 	}
@@ -201,9 +205,9 @@
 					<input type="text" v-model="searchParam.userId" />
 				</div>
 				<div class="mx-2 head-item-title">指標項目:</div>
-				<select class="form-select" id="target-option" v-model="searchParam.blockRule">
+				<select class="form-select" id="target-option" v-model="searchParam.index">
 					<option value="">請選擇</option>
-					<option :value="item" v-for="item in options.block_rule" :key="item">{{item}}</option>
+					<option :value="item" v-for="item in options.index" :key="item">{{item}}</option>
 				</select>
 				<div class="mx-2 head-item-title">風險：</div>
 				<select class="form-select" id="risk-option" v-model="searchParam.risk">
@@ -246,10 +250,10 @@
 				</div>
 			</div>
 			<div class="panel panel-default mt-4">
-				<div class="mask" v-show="!searchUserIdStatus"></div>
 				<div class="panel-heading p-4">
 					黑名單狀態
 				</div>
+				<div class="mask" v-show="!searchUserIdStatus"></div>
 				<div class="panel-body">
 					<table id="status">
 						<thead>
@@ -272,10 +276,13 @@
 				</div>
 			</div>
 			<div class="panel panel-default mt-4">
-				<div class="mask" v-show="!searchUserIdStatus"></div>
 				<div class="panel-heading p-4">
 					新增風險等級
+					<button class="btn btn-info ml-5" type="button" @click="openManualAddModal">
+						＋手動新增反詐欺規則
+					</button>
 				</div>
+				<div class="mask" v-show="!searchUserIdStatus"></div>
 				<form class="panel-body" @submit.prevent="openNewRisk">
 					<div class="result-data-row">
 						<div class="result-data-item">
@@ -371,6 +378,49 @@
 				</form>
 			</div>
 		</div>
+		<div class="modal fade" id="manualAddModal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<form class="modal-content" @submit.prevent="submitManualAdd">
+					<div class="modal-header">
+						<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h3 class="modal-title">手動新增風險等級</h3>
+					</div>
+					<div class="modal-body p-5">
+						<div class="d-flex mb-4">
+							<div class="col-20 input-require">內容</div>
+							<div class="col">
+								<input type="text" v-model="manualAddParam.description" required class="w-100 form-control">
+							</div>
+						</div>
+						<div class="d-flex mb-4">
+							<div class="col-20 input-require">風險</div>
+							<div class="col">
+								<select class="form-control" v-model="manualAddParam.risk" required>
+									<option value="">請選擇</option>
+									<option :value="item" v-for="item in options.risk" :key="item">{{item}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="d-flex mb-4">
+							<div class="col-20 input-require">解決方式</div>
+							<div class="col">
+								<select class="form-control" v-model="manualAddParam.block_text" required>
+									<option value="">請選擇</option>
+									<option :value="item" v-for="item in options.block_text" :key="item">{{item}}
+									</option>
+								</select>
+							</div>
+						</div>
+						<div class="d-flex justify-between mx-3 mb-3">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+							<button type="submit" class="btn btn-primary">送出</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -432,7 +482,12 @@
 			return {
 				searchParam: {
 					userId: null,
-					blockRule: null,
+					index: null,
+					risk: null
+				},
+				manualAddParam: {
+					description: null,
+					block_text: null,
 					risk: null
 				},
 				options: {
@@ -476,6 +531,9 @@
 			},
 			openNewRisk() {
 				$('#riskModal').modal('toggle')
+			},
+			openManualAddModal() {
+				$('#manualAddModal').modal('toggle')
 			},
 			getOption() {
 				axios.get(`/api/v2/black_list/get_option`)
@@ -537,7 +595,7 @@
 								</button>
 							</div>`
 						}
-						const idGroup = (id)=>{
+						const idGroup = (id) => {
 							return `<div>
 								<div>${id}</div>
 								<button class="btn btn-default mr-2">
@@ -584,9 +642,21 @@
 						return
 					}
 					$('#riskModal').modal('hide')
-					this.doSearch()
+					this.doSearch({})
 				})
-			}
+			},
+			submitManualAdd(){
+				axios.post(`${apiUrl}/manual_add`, {
+					...this.manualAddParam
+				}).then(({ data }) => {
+					if (data.status !== 200) {
+						alert(data.message)
+						return
+					}
+					$('#manualAddModal').modal('hide')
+					this.doSearch({})
+				})
+			},
 		},
 		watch: {
 			antiTable(data) {
