@@ -205,7 +205,7 @@ class Credit_lib{
             {
                 if ($data['follow_count'] >= 101)
                 { // 超過101人(含)起，好友數每增加10人再得10分(個位數無條件捨去)
-                    $calculate_points = 300 + floor($data['follow_count'] / 10) * 10;
+                    $calculate_points = 300 + floor(($data['follow_count'] - 100) / 10) * 10;
                 }
                 elseif ($data['follow_count'] >= 51)
                 { // 51-100人得300分
@@ -240,9 +240,9 @@ class Credit_lib{
             // 最高得分100
             if (isset($data['key_word']) && ! empty($data['key_word']))
             {
-                $calculate_points = min($data['posts_in_3months'] * 10, 100);
+                $calculate_points = min($data['key_word'] * 10, 100);
                 $total += $calculate_points;
-                $this->scoreHistory[] = "IG近3個月內發文 = {$calculate_points}\n";
+                $this->scoreHistory[] = "IG發文關鍵字 = {$calculate_points}\n";
             }
 
             if (isset($data['line_access_token']) && ! empty($data['line_access_token']))
