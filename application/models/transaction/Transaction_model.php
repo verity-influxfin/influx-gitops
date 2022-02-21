@@ -158,4 +158,29 @@ class Transaction_model extends MY_Model
 
         return $this->db->get()->first_row('array');
     }
+
+    public function get_delayed_principle($target_ids, $end_date, $group_by) {
+        $this->db
+            ->select('id, user_id')
+            ->from('`p2p_loan`.`targets`')
+            ->where('loan_date <= ', $end_date)
+            ->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED]);
+        if ( ! empty($target_ids))
+        {
+            $this->db->where_in('id', $target_ids);
+        }
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.user_id, SUM(tra.amount) as total_amount')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join("($subquery) as `t`", "`tra`.`target_id` = `t`.`id`")
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->where_in('status', [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF])
+            ->where('`tra`.`limit_date` > ', $end_date);
+        if ( ! empty($group_by))
+        {
+            $this->db->group_by($group_by);
+        }
+        return $this->db->get()->result_array();
+    }
 }

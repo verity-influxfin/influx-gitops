@@ -2138,7 +2138,7 @@ class Target_lib
         return false;
     }
 
-    private function is_sub_product($product, $sub_product_id)
+    public function is_sub_product($product, $sub_product_id)
     {
         $sub_product_list = $this->CI->config->item('sub_product_list');
         return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']);

@@ -182,4 +182,19 @@ class User_certification_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    public function get_banned_list($where)
+    {
+        $this->_database->select('user_id, COUNT(*) as total_count')
+            ->from("`p2p_user`.`user_certification`")
+            ->like('remark', 'AI\\\\\\\\u7cfb\\\\\\\\u7d71', 'both', FALSE)
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
+
 }

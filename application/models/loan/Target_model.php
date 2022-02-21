@@ -562,4 +562,44 @@ class Target_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    public function get_apply_target_count($where)
+    {
+        $this->_database->select('user_id, COUNT(*) as total_count')
+            ->from("`p2p_loan`.`targets`")
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
+
+    public function get_apply_frequent($where)
+    {
+        $this->_database->select('user_id, MIN(id) as first_id, MAX(id) as last_id')
+            ->from("`p2p_loan`.`targets`")
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
+
+    public function get_banned_list($where)
+    {
+        $this->_database->select('user_id, COUNT(*) as total_count')
+            ->from("`p2p_loan`.`targets`")
+            ->like('remark', '經AI')
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
 }
