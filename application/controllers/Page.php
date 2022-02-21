@@ -338,25 +338,20 @@ class Page extends CI_Controller
 
     private function _generate_app_store_connect_api_token()
     {
-        $time   = new DateTimeImmutable();
+        $time = new DateTimeImmutable();
         $signer = new Sha256();
-        $token  = new Builder();
+        $token = new Builder();
 
-        $token->setHeader('alg','ES256');
-        $token->setHeader('typ','JWT');
-        $token->setHeader('kid','7RU6XMTDHZ');
+        $token->setHeader('alg', 'ES256');
+        $token->setHeader('typ', 'JWT');
+        $token->setHeader('kid', '7RU6XMTDHZ');
 
-        $token->set('iss','d1131f2b-f0a2-4e6a-b7c8-3ec40137057a');
+        $token->set('iss', 'd1131f2b-f0a2-4e6a-b7c8-3ec40137057a');
         $token->set('iat', $time);
-        $token->set('exp', $time->modify( '+20 min' ));
-        $token->set('aud','appstoreconnect-v1');
+        $token->set('exp', $time->modify('+20 min'));
+        $token->set('aud', 'appstoreconnect-v1');
 
-        return $token->getToken($signer, new Key('-----BEGIN PRIVATE KEY-----
-MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgST75E7HzthaY4Xs2
-Y6JOXMA7m9EdhbfPZEsCpskCOPugCgYIKoZIzj0DAQehRANCAAR/W+y0k9sqr4kH
-7FiAXKYlA0K/5f/fYj2f2KEme+eIfq7RCqdqTtV7V2oMg93EDYXCgBoPDCRCxzP8
-VhvEDNkC
------END PRIVATE KEY-----'));
+        return $token->getToken($signer, new Key(file_get_contents('./ios_key.txt')));
     }
 
     // init google client for ga service
