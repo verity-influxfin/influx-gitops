@@ -337,10 +337,18 @@ class Anti_fraud extends Admin_rest_api_controller
 
 	public function manual_add_post(){
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-		$res = [
-			'status'=>200,
-			'input'=>$input,
-		];
-		$this->response($res);
+		$block_text = isset($input['block_text']) ? $input['block_text'] : '';
+		$description = isset($input['description']) ? $input['description'] : '';
+		$risk = isset($input['risk']) ? $input['risk'] : '';
+		$manually_add_type_id = isset($input['manually_add_type_id']) ? $input['manually_add_type_id'] : '';
+		$url = $this->brookesia_url .'rule/'.$manually_add_type_id;
+		$payload = [
+            'description'   => $description,
+            'risk'          => $risk,
+			'block'	=> $block_text
+        ];
+		$result = curl_get($url, $payload);
+		$json = json_decode($result, TRUE);
+		$this->response($json);
 	}
 }

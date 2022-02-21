@@ -23,7 +23,10 @@ class Black_list extends Admin_rest_api_controller
 
 	public function get_option_get()
 	{
-		$this->response( json_decode('{"results":{"risk":["追蹤分析","低","中","高","拒絕"],"index":["實名認證","學生","社群","金融","手機","普匯","工作","資料庫","手動新增"],"block_text":["轉二審","封鎖一個月","封鎖三個月","封鎖六個月","永久封鎖"],"block_rule":["反詐欺規則","其他(人為加入)","授信政策"]}}'));
+		$url = $this->brookesia_url . 'rule/options';
+		$result = curl_get($url);
+        $json = json_decode($result, TRUE);
+		$this->response($json['response']);
 	}
 
     /**

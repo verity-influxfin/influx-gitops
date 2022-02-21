@@ -3,8 +3,8 @@
 		display: flex;
 		flex-direction: column;
 	}
-	
-	.panel-heading{
+
+	.panel-heading {
 		height: 64px;
 	}
 
@@ -391,7 +391,8 @@
 						<div class="d-flex mb-4">
 							<div class="col-20 input-require">內容</div>
 							<div class="col">
-								<input type="text" v-model="manualAddParam.description" required class="w-100 form-control">
+								<input type="text" v-model="manualAddParam.description" required
+									class="w-100 form-control">
 							</div>
 						</div>
 						<div class="d-flex mb-4">
@@ -495,6 +496,7 @@
 					block_text: [],
 					index: [],
 					risk: [],
+					manually_add_type_id: ''
 				},
 				pagination: {
 					current_page: 1,
@@ -523,6 +525,7 @@
 				return new Date(n * 1000).toLocaleString()
 			},
 			onReady() {
+				this.doSearch({})
 				this.getOption()
 				this.getNewTree()
 			},
@@ -645,8 +648,9 @@
 					this.doSearch({})
 				})
 			},
-			submitManualAdd(){
+			submitManualAdd() {
 				axios.post(`${apiUrl}/manual_add`, {
+					'manually_add_type_id': this.options.manually_add_type_id,
 					...this.manualAddParam
 				}).then(({ data }) => {
 					if (data.status !== 200) {
@@ -655,6 +659,7 @@
 					}
 					$('#manualAddModal').modal('hide')
 					this.doSearch({})
+					this.getNewTree()
 				})
 			},
 		},
