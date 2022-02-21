@@ -180,7 +180,7 @@ class User_certification_model extends MY_Model
             ->from('`p2p_user`.`user_certification` uc')
             ->where('uc.user_id', $user_id)
             ->where('uc.investor', $investor)
-            ->where("id IN (SELECT MAX(id) FROM `p2p_user`.`{$this->_table}` WHERE user_id={$user_id} GROUP BY certification_id)");
+            ->where("id IN (SELECT MAX(id) FROM `p2p_user`.`{$this->_table}` WHERE user_id='{$user_id}' AND investor='{$investor}' GROUP BY certification_id)");
 
         return $this->db->get()->result_array();
     }
