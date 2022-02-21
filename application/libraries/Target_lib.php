@@ -2513,9 +2513,14 @@ class Target_lib
         }
     }
 
-    public function get_next_repayment($target)
+    /**
+     * 取得下期還款資料
+     * @param $target
+     * @return array
+     */
+    public function get_repayment_schedule($target): array
     {
-        $next_repayment = ['instalment' => 0, 'date' => '', 'amount' => 0];
+        $repayment_list = [];
         if (isset($target))
         {
             switch ($target->product_id)
@@ -2527,18 +2532,27 @@ class Target_lib
                         $repayment_date = date('Y-m-d', strtotime($target->loan_date . '+' . $i . 'month'));
                         if ($repayment_date >= $today)
                         {
-                            $next_repayment['date'] = $repayment_date;
-                            $next_repayment['instalment'] = $i;
                             // TODO: amount 待定
-                            break;
+                            $tmp = ['instalment' => $i, 'date' => $repayment_date, 'amount' => 0];
+                            $repayment_list[] = $tmp;
                         }
                     }
                     break;
                 default:
-                    // TODO: 待移植其他產品
+                    $this->CI->load->model('transaction/transaction_model');
+                    $repayment_schedule = $this->CI->transaction_model->get_repayment_schedule($target->id);
+                    if ( ! empty($repayment_schedule))
+                    {
+                        foreach ($repayment_schedule as $repayment)
+                        {
+                            $tmp =  ['instalment' => (int) $repayment['instalment_no'],
+                                'date' => $repayment['limit_date'], 'amount' => (int) $repayment['amount']];
+                            $repayment_list[] = $tmp;
+                        }
+                    }
                     break;
             }
         }
-        return $next_repayment;
+        return $repayment_list;
     }
 }
