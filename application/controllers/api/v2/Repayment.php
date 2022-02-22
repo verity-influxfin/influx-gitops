@@ -362,13 +362,13 @@ class Repayment extends REST_Controller {
                 if ( ! empty($repayment_schedule))
                 {
                     $next_repayment = $repayment_schedule[array_key_first($repayment_schedule)];
-                    $pay_off_at = $repayment_schedule[array_key_last($repayment_schedule)]['date'];
                 }
                 else
                 {
                     $next_repayment = ['instalment' => '', 'date' => '', 'amount' => 0];
-                    $pay_off_at = '';
                 }
+
+                $pay_off_at = $this->target_lib->get_pay_off_date($value);
 
                 $list[] = [
 					'id' 				=> intval($value->id),

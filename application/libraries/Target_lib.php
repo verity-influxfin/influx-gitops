@@ -2555,4 +2555,34 @@ class Target_lib
         }
         return $repayment_list;
     }
+
+    /**
+     * 取得案件最後一期還款日期
+     * @param $target
+     * @return string
+     */
+    public function get_pay_off_date($target): string
+    {
+        $pay_off_date = '';
+        if (isset($target))
+        {
+            switch ($target->product_id)
+            {
+                case PRODUCT_SK_MILLION_SMEG:
+                    $pay_off_date = date('Y-m-d', strtotime($target->loan_date . '+' . $target->instalment . 'month'));
+                    break;
+                default:
+                    $this->load->model('transaction/transaction_model');
+                    $rs = $this->transaction_model->order_by('limit_date', 'DESC')->get_by(['target_id' => $target->id,
+                        'source' => [SOURCE_AR_PRINCIPAL],
+                        'status' => [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF]]);
+                    if (isset($rs))
+                    {
+                        $pay_off_date = $rs['limit_date'];
+                    }
+                    break;
+            }
+        }
+        return $pay_off_date;
+    }
 }
