@@ -80,7 +80,7 @@
 											<th>核准日期</th>
                                             <th>Detail</th>
                                         <?php } else { ?>
-                                            <th>案號</th>
+                                            <th>案號 <a href="javascript:void(0)" onclick="checked_all();" id="chl" class="btn" >全選</a></th>
                                             <th>產品</th>
                                             <th>會員 ID</th>
                                             <th>信用等級</th>
@@ -90,7 +90,7 @@
                                             <th>貸放期間</th>
                                             <th>計息方式</th>
                                             <th>已還款期數</th>
-                                            <th>放架日期</th>
+                                            <th>放款日期</th>
                                             <th>逾期狀況</th>
                                             <th>狀態</th>
                                             <th>申請日期</th>
@@ -135,7 +135,10 @@
                                         </tr>
                                     <?php } else { ?>
                                         <tr class="<?=$count%2==0?"odd":"even"; ?>">
-                                            <td><?=isset($value->target_no)?$value->target_no:'' ?></td>
+                                            <td>
+                                                <input class="targets" type="checkbox" onclick="check_checked();" value="<?=isset($value->id)?$value->id:'' ?>" />
+                                                <?=isset($value->target_no)?$value->target_no:'' ?>
+                                            </td>
                                             <td><?=isset($product_list[$value->product_id])?$product_list[$value->product_id]['name']:'' ?><?=$value->sub_product_id!=0?' / '.$sub_product_list[$value->sub_product_id]['identity'][$product_list[$value->product_id]['identity']]['name']:'' ?></td>
                                             <td>
                                                 <a class="fancyframe" href="<?=admin_url('User/display?id='.$value->user_id) ?>" >

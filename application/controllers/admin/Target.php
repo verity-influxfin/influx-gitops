@@ -1216,8 +1216,16 @@ class Target extends MY_Admin_Controller {
 				];
                 $user_data = $this->user_model->get_by(["id" => $value->user_id]);
                 $list[$key]->company = $user_data->name ?? '';
-                // TODO: 已還款期數計算
-                // $list[$key]->paid_instalment = 0;
+                $repayment_schedule = $this->target_lib->get_repayment_schedule($value);
+                if ( ! empty($repayment_schedule))
+                {
+                    $list[$key]->paid_instalment = $repayment_schedule[array_key_first($repayment_schedule)]['instalment'] - 1;
+                }
+                else
+                {
+                    $list[$key]->paid_instalment = $value->instalment;
+                }
+
 
 			}
 
@@ -1251,7 +1259,7 @@ class Target extends MY_Admin_Controller {
 	public function target_export(){
 		$post 	= $this->input->post(NULL, TRUE);
 		$ids 	= isset($post['ids'])&&$post['ids']?explode(',',$post['ids']):'';
-		$status = isset($post['status'])&&$post['status']?$post['status']:TARGET_REPAYMENTING;
+		$status = isset($post['status'])&&$post['status']?$post['status']:[TARGET_REPAYMENTING, TARGET_BANK_REPAYMENTING];
 		if($ids && is_array($ids)){
 			$where = ['id'=>$ids];
 		}else{
@@ -2113,9 +2121,12 @@ class Target extends MY_Admin_Controller {
                         && $target_info->sub_status ==TARGET_SUBSTATUS_SECOND_INSTANCE
                         || $target_info->status == TARGET_BANK_FAIL
                     ) {
+                        $target_data = json_decode($target_info->target_data, TRUE);
+                        $target_data['manual_reason'] = TARGET_MSG_NOT_CREDIT_STANDARD;
                         $param = [
                             'status' => TARGET_WAITING_VERIFY,
                             'sub_status' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL,
+                            'target_data' => json_encode($target_data)
                         ];
                         $this->target_model->update($target_info->id, $param);
                         $this->load->library('Target_lib');
