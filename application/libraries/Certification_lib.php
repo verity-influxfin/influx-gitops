@@ -362,7 +362,12 @@ class Certification_lib{
 		return false;
 	}
 
-	public function realname_verify($info = [])	{
+    public function realname_verify($info = [])
+    {
+        if (is_array($info))
+        {
+            $info = json_decode(json_encode($info));
+        }
 
 		$user_id = $info->user_id;
 		$cer_id = $info->id;
@@ -775,44 +780,18 @@ class Certification_lib{
 		return $returnData;
 	}
 
-    public function identity_verify($info = []) {
-		if($info && $info->status ==0 && $info->certification_id==1) {
-            $status = 3;
-			$result = $this->realname_verify($info);
+    // 實名認證
+    public function identity_verify($info = [])
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
 
-			// 1 成功 2 失敗 3 人工
-			$param = [
-                'status' => 3,
-				'remark' => json_encode($result['remark']),
-				'content' => json_encode($result['content']),
-				'sys_check' => 1,
-			];
-
-			if ($result['risVerified']) {
-				if ($result['remark']['error'] == '' && !$result['risVerificationFailed'] && !$result['ocrCheckFailed']) {
-                    $status = 1;
-                    $param['status'] = 0;
-				} else if ($result['risVerificationFailed']) {
-                    $status = 2;
-                    $result['remark']['failed_type_list'] = [REALNAME_IMAGE_TYPE_FRONT, REALNAME_IMAGE_TYPE_BACK, REALNAME_IMAGE_TYPE_PERSON];
-                    $param['status'] = 0;
-                    $param['remark'] = json_encode($result['remark']);
-				}
-			}
-
-            $this->CI->user_certification_model->update($info->id, $param);
-
-            if($status == 1){
-                $this->set_success($info->id, true);
-            }
-
-            if($status == 2){
-                $this->set_failed($info->id, '親愛的會員您好，為確保資料真實性，請至我的>資料中心>實名認證，更新您的訊息，謝謝。', true);
-            }
-			return true;
-
-		}
-        return false;
+    // 學生身份認證
+    public function student_verify($info = [])
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
     }
 
     // public function student_verify($info = array()){
@@ -836,381 +815,75 @@ class Certification_lib{
     //    return false;
     // }
 
+    // 金融帳號認證
+    public function debitcard_verify($info = [])
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
+
+    // 社交帳號
     public function social_verify($info = array())
     {
-        if ($info && $info->certification_id == CERTIFICATION_SOCIAL && $info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
-        {
-            $verifiedResult = new SocialCertificationResult(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
-            $content        = json_decode($info->content, TRUE);
-            $remark         = [];
-            if (isset($info->user_id) && isset($content['facebook']['access_token']) && isset($content['instagram']['username']))
-            {
-                // fb是否綁定
-                if ( isset($content['facebook']['email']) && isset($content['facebook']['name']))
-                {
-                    // ig爬蟲狀態
-                    $ig_username = trim($content['instagram']['username']);
-                    $this->CI->load->library('scraper/instagram_lib');
-                    $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
-                    if ($log_status || isset($log_status['status']))
-                    {
-                        if ($log_status['status'] == SCRAPER_STATUS_SUCCESS && isset($log_status['response']['result']['status']))
-                        {
-                            // IG爬蟲結束
-                            if ($log_status['response']['result']['status'] == 'finished')
-                            {
-                                $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $ig_username);
-                                if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == SCRAPER_STATUS_SUCCESS)
-                                {
-                                    $usernameExist     = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
-                                    $isPrivate         = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
-                                    $allPostCount      = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
-                                    $followStatus      = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
-                                    $isFollower        = isset($risk_control_info['response']['result']['isFollower']) ? $risk_control_info['response']['result']['isFollower'] : '';
-                                    $allFollowingCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
-                                    $allFollowerCount  = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
-                                    $postsIn3Months    = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
-                                    $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
-                                    // 帳號是否存在
-                                    if ($usernameExist === TRUE)
-                                    {
-                                        $usernameExist = '是';
-                                        $verifiedResult->setStatus(CERTIFICATION_STATUS_SUCCEED);
-                                    }
-                                    else if ($usernameExist === FALSE)
-                                    {
-                                        $usernameExist = '否';
-                                        $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
-                                        $verifiedResult->addMessage('IG提供帳號無效請確認', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-                                    }
-                                    else
-                                    {
-                                        $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                    }
-                                    // 是否為私人帳號判斷
-                                    if ($isPrivate === TRUE)
-                                    {
-                                        if ($followStatus == 'unfollowed')
-                                        {
-                                            $this->CI->instagram_lib->autoFollow($info->user_id, $ig_username);
-                                            return FALSE;
-                                        }
-                                        else if ($followStatus == 'waitingFollowAccept')
-                                        {
-                                            $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username, 'follow');
-                                            if ($follow_status && isset($follow_status['status']))
-                                            {
-                                                if ($follow_status['status'] == SCRAPER_STATUS_SUCCESS && isset($follow_status['response']['result']['status']))
-                                                {
-                                                    if ($follow_status['response']['result']['status'] !== 'finished')
-                                                    {
-                                                        return FALSE;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                            }
-                                        }
-                                    }
-                                    // 是否為活躍社交帳號判斷
-                                    if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
-                                    {
-                                        if ($allFollowerCount <= FOLLOWER_ACTIVATE && $allFollowingCount <= FOLLOWING_ACTIVATE)
-                                        {
-                                            $verifiedResult->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                        }
-                                    }
-                                    $content['instagram'] = [
-                                        'username'              => $ig_username,
-                                        'usernameExist'         => $usernameExist,
-                                        'info' => [
-                                            'isPrivate'         => $isPrivate,
-                                            'followStatus'      => $followStatus,
-                                            'isFollower'        => $isFollower,
-                                            'allPostCount'      => $allPostCount,
-                                            'allFollowerCount'  => $allFollowerCount,
-                                            'allFollowingCount' => $allFollowingCount
-                                        ]
-                                    ];
-                                    $content['meta'] = [
-                                        'follow_count'          => $allFollowerCount,
-                                        'posts_in_3months'      => $postsIn3Months,
-                                        'key_word'              => $postsWithKeyWords
-                                    ];
-                                }
-                                else
-                                {
-                                    $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                }
-                            }
-                            // IG爬蟲狀態錯誤
-                            else if ($log_status['response']['result']['status'] == 'failure')
-                            {
-                                $verifiedResult->addMessage('IG爬蟲執行失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                            }
-                            // 其餘狀態下次跑批再處理
-                            else
-                            {
-                                return FALSE;
-                            }
-                        }
-                        // 沒有IG爬蟲紀錄查詢log紀錄
-                        else if ($log_status['status'] == SCRAPER_STATUS_NO_CONTENT)
-                        {
-                            $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
-                            return FALSE;
-                        }
-                        else
-                        {
-                            $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                        }
-                    }
-                    else
-                    {
-                        $verifiedResult->addMessage('IG爬蟲沒有回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                    }
-                }
-                else
-                {
-                    $verifiedResult->addMessage('FB帳號未綁定', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-                }
-            }
-            else
-            {
-                $verifiedResult->addMessage('社交認證尚有缺少認證項', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-            }
-            $remark['verify_result'] = $verifiedResult->getAllMessage(MessageDisplay::Backend);
-            $status = $verifiedResult->getStatus();
-
-            $this->CI->user_certification_model->update($info->id, array(
-                'status'                      => $status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
-                'sys_check'                   => SYSTEM_CHECK,
-                'content'                     => json_encode($content, JSON_INVALID_UTF8_IGNORE),
-                'remark'                      => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
-            ));
-
-            if ($status == CERTIFICATION_STATUS_SUCCEED)
-            {
-                $this->set_success($info->id, TRUE);
-            }
-            else if ($status == CERTIFICATION_STATUS_FAILED)
-            {
-                $notificationContent = implode('、', $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
-                $this->set_failed($info->id, $notificationContent, SYSTEM_CHECK);
-            }
-            return TRUE;
-        }
-        return FALSE;
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
     }
 
     // 名校貸社交帳號
     public function social_intelligent_verify($info = array())
     {
-        // 僅須提供IG帳號綁定，不需提供FB、LINE
-
-        if ($info && $info->certification_id == CERTIFICATION_SOCIAL_INTELLIGENT && $info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE)
-        {
-            $verifiedResult = new SocialCertificationResult(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
-            $content = json_decode($info->content, TRUE);
-            $remark = [];
-
-            if (isset($info->user_id) && isset($content['instagram']['username']))
-            {
-                // IG爬蟲狀態
-                $ig_username = trim($content['instagram']['username']);
-                $this->CI->load->library('scraper/instagram_lib');
-                $log_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username);
-                if ($log_status || isset($log_status['status']))
-                {
-                    if ($log_status['status'] == SCRAPER_STATUS_SUCCESS && isset($log_status['response']['result']['status']))
-                    {
-                        // IG爬蟲結束
-                        if ($log_status['response']['result']['status'] == 'finished')
-                        {
-                            $risk_control_info = $this->CI->instagram_lib->getRiskControlInfo($info->user_id, $ig_username);
-                            if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == SCRAPER_STATUS_SUCCESS)
-                            {
-                                $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
-                                $isPrivate = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
-                                $allPostCount = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
-                                $followStatus = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
-                                $isFollower = isset($risk_control_info['response']['result']['isFollower']) ? $risk_control_info['response']['result']['isFollower'] : '';
-                                $allFollowerCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['following'] : '';
-                                $allFollowingCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['followers'] : '';
-                                $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
-                                $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
-
-                                // 帳號是否存在
-                                if ($usernameExist === TRUE)
-                                {
-                                    $usernameExist = '是';
-                                    $verifiedResult->setStatus(CERTIFICATION_STATUS_SUCCEED);
-                                }
-                                else if ($usernameExist === FALSE)
-                                {
-                                    $usernameExist = '否';
-                                    $verifiedResult->addMessage('IG未爬到正確資訊(帳號不存在)', CERTIFICATION_STATUS_FAILED, MessageDisplay::Backend);
-                                    $verifiedResult->addMessage('IG提供帳號無效請確認', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-                                }
-                                else
-                                {
-                                    $verifiedResult->addMessage('IG爬蟲確認帳號是否存在功能出現錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                }
-
-                                // 是否為私人帳號判斷
-                                if ($isPrivate === TRUE)
-                                {
-                                    if ($followStatus == 'unfollowed')
-                                    {
-                                        $this->CI->instagram_lib->autoFollow($info->user_id, $ig_username);
-                                        return FALSE;
-                                    }
-                                    else if ($followStatus == 'waitingFollowAccept')
-                                    {
-                                        $follow_status = $this->CI->instagram_lib->getLogStatus($info->user_id, $ig_username, 'follow');
-                                        if ($follow_status && isset($follow_status['status']))
-                                        {
-                                            if ($follow_status['status'] == SCRAPER_STATUS_SUCCESS && isset($follow_status['response']['result']['status']))
-                                            {
-                                                if ($follow_status['response']['result']['status'] !== 'finished')
-                                                {
-                                                    return FALSE;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                $verifiedResult->addMessage('IG爬蟲結果回應錯誤(子系統回應非200)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                        }
-                                    }
-                                }
-
-                                // 是否為活躍社交帳號判斷
-                                if (is_numeric($allFollowerCount) && is_numeric($allFollowingCount))
-                                {
-                                    if ($allFollowerCount <= FOLLOWER_ACTIVATE && $allFollowingCount <= FOLLOWING_ACTIVATE)
-                                    {
-                                        $verifiedResult->addMessage('IG非活躍帳號', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                                    }
-                                }
-                                $content['instagram'] = [
-                                    'username' => $ig_username,
-                                    'usernameExist' => $usernameExist,
-                                    'info' => [
-                                        'isPrivate' => $isPrivate,
-                                        'followStatus' => $followStatus,
-                                        'isFollower' => $isFollower,
-                                        'allPostCount' => $allPostCount,
-                                        'allFollowerCount' => $allFollowerCount,
-                                        'allFollowingCount' => $allFollowingCount
-                                    ]
-                                ];
-                                $content['meta'] = [
-                                    'follow_count' => $allFollowerCount,
-                                    'posts_in_3months' => $postsIn3Months,
-                                    'key_word' => $postsWithKeyWords
-                                ];
-                            }
-                            else
-                            {
-                                $verifiedResult->addMessage('IG爬蟲結果無回應(子系統無回應)', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                            }
-                        }
-                        // IG爬蟲狀態錯誤
-                        else if ($log_status['response']['result']['status'] == 'failure')
-                        {
-                            $verifiedResult->addMessage('IG爬蟲執行失敗', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                        }
-                        // 其餘狀態下次跑批再處理
-                        else
-                        {
-                            return FALSE;
-                        }
-                    }
-                    // 沒有IG爬蟲紀錄查詢log紀錄
-                    else if ($log_status['status'] == SCRAPER_STATUS_NO_CONTENT)
-                    {
-                        $this->CI->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
-                        return FALSE;
-                    }
-                    else
-                    {
-                        $verifiedResult->addMessage('IG爬蟲回應非200或找不到爬蟲回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                    }
-                }
-                else
-                {
-                    $verifiedResult->addMessage('IG爬蟲沒有回應', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-                }
-            }
-            else
-            {
-                $verifiedResult->addMessage('社交認證尚有缺少認證項', CERTIFICATION_STATUS_FAILED, MessageDisplay::Client);
-            }
-            $remark['verify_result'] = $verifiedResult->getAllMessage(MessageDisplay::Backend);
-            $status = $verifiedResult->getStatus();
-
-            $this->CI->user_certification_model->update($info->id, array(
-                'status' => $status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
-                'sys_check' => SYSTEM_CHECK,
-                'content' => json_encode($content, JSON_INVALID_UTF8_IGNORE),
-                'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
-            ));
-
-            if ($status == CERTIFICATION_STATUS_SUCCEED)
-            {
-                $this->set_success($info->id, TRUE);
-            }
-            else if ($status == CERTIFICATION_STATUS_FAILED)
-            {
-                $notificationContent = implode('、', $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED));
-                $this->set_failed($info->id, $notificationContent, SYSTEM_CHECK);
-            }
-            return TRUE;
-        }
-        return FALSE;
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
     }
 
-    public function emergency_verify($info = array()){
-		if($info && $this->canVerify($info->status) && $info->certification_id==CERTIFICATION_EMERGENCY){
-			$content	= json_decode($info->content,true);
-			$name 		= $content['name'];
+    // 緊急聯絡人
+    public function emergency_verify($info = array())
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
 
-			$identity		= $this->get_certification_info($info->user_id,CERTIFICATION_IDENTITY,$info->investor);
-			if($identity && $identity->status==CERTIFICATION_STATUS_SUCCEED){
-				$status 		= CERTIFICATION_STATUS_PENDING_TO_REVIEW;
+    // 常用電子信箱
+    public function email_verify($info = array())
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
 
-				$phone_used = $this->CI->user_model->get_by(array(
-					'id'    => $info->user_id,
-					'phone' => $content['phone'],
-				));
-				if($phone_used){
-					$this->set_failed($info->id,'與註冊電話相同',true);
-				}
-				else{
-					$this->set_success($info->id, true);
-					$status = CERTIFICATION_STATUS_SUCCEED;
-				}
+    // 收支資訊
+    public function financial_verify($info = array())
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
 
-                $this->CI->user_certification_model->update($info->id,array(
-                    'status'	=> $status,
-                    'sys_check'	=> 1,
-                ));
-                return true;
-            }
-		}
-		return false;
-	}
+    // 最高學歷證明
+    public function diploma_verify($info = array())
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
+
+    // 個人基本資料
+    public function profile_verify($info = array())
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
+
+    // 財務訊息資訊
+    public function financialWorker_verify($info = array())
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
+
+    // 良民證
+    public function criminalrecord_verify($info = array())
+    {
+        $cert = Certification_factory::get_instance_by_model_resource($info);
+        return $cert->verify();
+    }
 
 	public function governmentauthorities_verify($info = array(), $url=null){
 		$info->content = isset($info->content) ? json_decode($info->content,true) : '';
@@ -3390,16 +3063,6 @@ class Certification_lib{
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
-					case 2:
-						if(time() > ($value->created_at + 3600)){
-							$this->set_failed($value->id,'未在有效時間內完成認證');
-						}
-						break;
-					case 6:
-						if(time() > ($value->created_at + 3600)){
-							$this->set_failed($value->id,'未在有效時間內完成認證');
-						}
-						break;
                     case CERTIFICATION_REPAYMENT_CAPACITY:
                         break;
 					default:
@@ -3410,24 +3073,19 @@ class Certification_lib{
 			}
 		}
 
-        $user_lists = $this->CI->target_model->get_distinct_user_by_status([0]);
-        foreach ($user_lists as $user)
-        {
-            $info_repayment_capacity = $this->repayment_capacity_verify($user['user_id']);
-            if ($info_repayment_capacity !== FALSE)
-            {
-                if (isset($info_repayment_capacity->status) && $info_repayment_capacity->status == CERTIFICATION_STATUS_SUCCEED)
-                {
-                    $this->repayment_capacity_success($info_repayment_capacity);
-                }
-            }
-        }
+        $this->repayment_capacity_verify();
 
 		return $count;
 	}
 
-    //寫入或更新muser_meta
-	private function user_meta_progress($data,$info){
+    // 寫入或更新muser_meta
+    public function user_meta_progress($data, $info)
+    {
+        if (is_array($info))
+        {
+            $info = json_decode(json_encode($info));
+        }
+
         foreach($data as $key => $value) {
             $exist = $this->CI->user_meta_model->get_by(array('user_id' => $info->user_id, 'meta_key' => $key));
             if ($exist) {
@@ -3448,8 +3106,14 @@ class Certification_lib{
         return true;
     }
 
-    //失效其他認證
-	private function fail_other_cer($info){
+    // 失效其他認證
+    public function fail_other_cer($info)
+    {
+        if (is_array($info))
+        {
+            $info = json_decode(json_encode($info));
+        }
+
         $this->CI->user_certification_model->update(
             $info->id,
             ['status'=>1]
@@ -3736,214 +3400,30 @@ class Certification_lib{
     }
 
     // 還款力計算驗證
-    public function repayment_capacity_verify($user_id)
+    public function repayment_capacity_verify()
     {
-        // 聯合徵信報告
-        $joint_credit_info = $this->get_certification_info($user_id, CERTIFICATION_INVESTIGATION);
-        if ($joint_credit_info === FALSE || ! isset($joint_credit_info->status) || (int) $joint_credit_info->status !== CERTIFICATION_STATUS_SUCCEED)
+        // 取得有案件「待核可」的使用者ID
+        $user_lists = $this->CI->target_model->get_distinct_user_by_status([TARGET_WAITING_APPROVE]);
+        foreach ($user_lists as $user)
         {
-            // 未通過驗證
-            return FALSE;
-        }
-
-        // 工作收入證明
-        $job_info = $this->get_certification_info($user_id, CERTIFICATION_JOB);
-        if ($job_info === FALSE || ! isset($job_info->status) || (int) $job_info->status !== CERTIFICATION_STATUS_SUCCEED)
-        {
-            // 未通過驗證
-            return FALSE;
-        }
-
-        if (isset($joint_credit_info->content))
-        {
-            $joint_credit_content = is_array($joint_credit_info->content)
-                ? $joint_credit_info->content
-                : json_decode($joint_credit_info->content, TRUE);
-        }
-        else
-        {
-            $joint_credit_content = [];
-        }
-
-        $info = $this->get_certification_info($user_id, CERTIFICATION_REPAYMENT_CAPACITY);
-        if (empty($info))
-        {
-            $this->CI->user_certification_model->insert([
-                'user_id' => $user_id,
-                'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
-                'investor' => USER_BORROWER,
-                'content' => json_encode([]),
-                'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
-            ]);
-            $info = $this->get_certification_info($user_id, CERTIFICATION_REPAYMENT_CAPACITY);
-        }
-
-        $remark = isset($info->remark)
-            ? (! is_array($info->remark) ? json_decode($info->remark, TRUE) : $info->remark)
-            : [];
-
-        $remark['verify_result'] = [];
-        $verified_result = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
-
-        if ($info && $info->certification_id == CERTIFICATION_REPAYMENT_CAPACITY && $this->canVerify($info->status))
-        {
-            $print_timestamp = 0;
-            $certification_content = [];
-
-            // 「工作收入證明(CERTIFICATION_JOB)」驗證項：算出 1.算薪資收入 2.薪資22倍
-            if (isset($job_info->content))
+            $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY);
+            if (empty($info))
             {
-                if ( ! is_array($job_info->content))
-                {
-                    $job_content = json_decode($job_info->content, TRUE);
-                }
-                else
-                {
-                    $job_content = $job_info->content;
-                }
-
-                // 薪資收入
-                $certification_content['monthly_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
-                    ? $job_content['salary'] / 1000
-                    : '';
-
-                // 薪資22倍
-                $certification_content['total_repayment'] = isset($job_content['salary']) && is_numeric($job_content['salary'])
-                    ? $job_content['salary'] * 22 / 1000
-                    : '';
+                $this->CI->user_certification_model->insert([
+                    'user_id' => $user['user_id'],
+                    'certification_id' => CERTIFICATION_REPAYMENT_CAPACITY,
+                    'investor' => USER_BORROWER,
+                    'content' => json_encode([]),
+                    'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                ]);
+                $info = $this->get_certification_info($user['user_id'], CERTIFICATION_REPAYMENT_CAPACITY);
             }
 
-            if ( ! isset($joint_credit_content['return_type']) || $joint_credit_content['return_type'] != 0)
-            {
-                // 尚未回信上傳檔案
-                if ( ! isset($joint_credit_content['mail_file_status']) || ! $joint_credit_content['mail_file_status'])
-                {
-                    $verified_result->addMessage('待人工驗證：聯徵檔案未回信上傳', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-
-                    $this->update_repayment_certification(
-                        $info->id,
-                        $print_timestamp,
-                        $verified_result,
-                        $certification_content,
-                        $remark,
-                        $info->created_at
-                    );
-
-                    return FALSE;
-                }
-
-                // 資料庫抓不到聯徵的PDF檔案
-                $this->CI->load->library('joint_credit_lib');
-                if (empty($joint_credit_content['pdf_file']))
-                {
-                    $verified_result->addMessage('待人工驗證：查無聯徵檔案', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-
-                    $this->update_repayment_certification(
-                        $info->id,
-                        $print_timestamp,
-                        $verified_result,
-                        $certification_content,
-                        $remark,
-                        $info->created_at
-                    );
-
-                    return FALSE;
-                }
-                $url = $joint_credit_content['pdf_file'];
-
-                $mime = get_mime_by_extension($url);
-                if (strpos($mime, 'jpg') === FALSE &&
-                    strpos($mime, 'jpeg') === FALSE &&
-                    strpos($mime, 'jpe') === FALSE &&
-                    strpos($mime, 'png') === FALSE &&
-                    strpos($mime, 'heic') === FALSE
-                )
-                {
-                    $parser = new \Smalot\PdfParser\Parser();
-                    $text = '';
-                    try
-                    {
-                        $pdf = $parser->parseFile($url);
-                        $text = $pdf->getText();
-                        $response = $this->CI->joint_credit_lib->transfrom_pdf_data($text);
-                    }
-                    catch (Exception $e)
-                    {
-                        $response = FALSE;
-                    }
-
-                    if ($response && strpos($text, '綜合信用報告') !== FALSE)
-                    {
-                        // 資料轉 result
-                        $this->CI->load->library('mapping/user/certification_data');
-                        $result = $this->CI->certification_data->transform_joint_credit_to_repayment_capacity($response);
-
-                        // 印表日期
-                        $this->CI->load->library('mapping/time');
-                        $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $result['printDatetime']);
-                        $print_timestamp = $this->CI->time->ROCDateToUnixTimestamp($print_timestamp);
-
-                        $certification_content = array_merge($certification_content, $result);
-
-                        // 負債比計算，投保薪資不能為0
-                        if ( ! empty($certification_content['monthly_repayment']) && is_numeric($certification_content['monthly_repayment']))
-                        {
-                            $certification_content['debt_to_equity_ratio'] = round(
-                                $result['totalMonthlyPayment'] / $certification_content['monthly_repayment'] * 100,
-                                2
-                            );
-                        }
-
-                        $this->CI->load->library('verify/data_verify_lib');
-                        $verified_result = $this->CI->data_verify_lib->check_investigation($verified_result, $result, $certification_content);
-
-                        $remark['fail'] = implode('、', $verified_result->getAPPMessage(CERTIFICATION_STATUS_FAILED));
-                    }
-                }
-                else
-                {
-                    $verified_result->addMessage('待人工驗證：聯徵檔案格式有誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-
-                    $this->update_repayment_certification(
-                        $info->id,
-                        $print_timestamp,
-                        $verified_result,
-                        $certification_content,
-                        $remark,
-                        $info->created_at
-                    );
-
-                    return FALSE;
-                }
-            }
-            else
-            {
-                $verified_result->addMessage('待人工驗證：聯徵檔案為紙本郵寄', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
-
-                $this->update_repayment_certification(
-                    $info->id,
-                    $print_timestamp,
-                    $verified_result,
-                    $certification_content,
-                    $remark,
-                    $info->created_at
-                );
-
-                return FALSE;
-            }
-
-            $this->update_repayment_certification(
-                $info->id,
-                $print_timestamp,
-                $verified_result,
-                $certification_content,
-                $remark,
-                $info->created_at
-            );
-
-            return $info;
+            $cert = Certification_factory::get_instance_by_model_resource($info);
+            return $cert->verify();
         }
-        return FALSE;
+
+        return TRUE;
     }
 
     /**

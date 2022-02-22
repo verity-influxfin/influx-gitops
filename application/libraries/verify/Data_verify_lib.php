@@ -129,13 +129,14 @@ class Data_verify_lib{
      * [check_credit_investigation 自然人聯徵信保標準檢核]
      * @param CertificationResult $verifiedResult [檢核結果]
      * @param array $data [自然人聯徵 user meta]
+     * @param array $certification_content [依照聯徵資料計算得出的衍生資料]
      * @return CertificationResult [檢核結果]
      * (
      *  [status_code] => 1(通過)/2(退件)/3(轉人工)
-     *  []error_message] => 不過件原因
+     *  [error_message] => 不過件原因
      * )
      */
-    public function check_investigation(CertificationResult $verifiedResult, $data = [], $certification_content)
+    public function check_investigation(CertificationResult $verifiedResult, $data = [], $certification_content = [])
     {
         if (isset($data['scoreComment']) && $data['scoreComment'] < 450)
         {
@@ -251,6 +252,87 @@ class Data_verify_lib{
         if (isset($data['printDatetime']) && empty($data['printDatetime']))
         {
             $verifiedResult->addMessage('待人工驗證：聯徵資料有誤', 3, MessageDisplay::Backend);
+        }
+
+        return $verifiedResult;
+    }
+
+    /**
+     * 還款力檢核
+     * @param CertificationResult $verifiedResult
+     * @param $data
+     * @return CertificationResult
+     */
+    public function check_repayment_capacity(CertificationResult $verifiedResult, $data = [])
+    {
+        if (isset($data['totalMonthlyPayment']) &&
+            isset($data['monthly_repayment']) &&
+            $data['totalMonthlyPayment'] >= $data['monthly_repayment'])
+        {
+            $verifiedResult->addMessage(
+                '待人工驗證：總共月繳 >= 投保薪資',
+                CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                MessageDisplay::Backend
+            );
+        }
+
+        // 負債比
+        if (isset($data['debt_to_equity_ratio']))
+        {
+            if ($data['debt_to_equity_ratio'] > 100)
+            {
+                $verifiedResult->addMessage(
+                    '待人工驗證：負債比計算 > 100%',
+                    CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                    MessageDisplay::Backend
+                );
+            }
+            else if ($data['debt_to_equity_ratio'] >= 70)
+            {
+                $verifiedResult->addMessage(
+                    '待人工驗證：負債比計算 >= 70%',
+                    CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                    MessageDisplay::Backend
+                );
+            }
+        }
+
+        if (isset($data['liabilitiesWithoutAssureTotalAmount']) &&
+            isset($data['total_repayment']) &&
+            is_numeric($data['liabilitiesWithoutAssureTotalAmount']) &&
+            ($data['liabilitiesWithoutAssureTotalAmount'] / 1000) >= $data['total_repayment'])
+        {
+            $verifiedResult->addMessage(
+                '待人工驗證：借款總餘額 >= 投保薪資22倍',
+                CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                MessageDisplay::Backend
+            );
+        }
+
+        // 助學貸款
+        if (isset($data['studentLoans']) && isset($data['studentLoansCount']))
+        {
+            $data['studentLoans'] = (int) $data['studentLoans'];
+            $data['studentLoansCount'] = (int) $data['studentLoansCount'];
+
+            if (($data['studentLoans'] === 0 && $data['studentLoansCount'] !== 0) ||
+                ($data['studentLoans'] !== 0 && $data['studentLoansCount'] === 0))
+            {
+                $verifiedResult->addMessage(
+                    '待人工驗證：助學貸款總訂約金額與總筆數，其中一個為0，另一個不為0',
+                    CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                    MessageDisplay::Backend
+                );
+            }
+        }
+
+        if (empty($data['printDatetime']))
+        {
+            $verifiedResult->addMessage(
+                '待人工驗證：聯徵資料有誤',
+                CERTIFICATION_STATUS_PENDING_TO_REVIEW,
+                MessageDisplay::Backend
+            );
         }
 
         return $verifiedResult;
