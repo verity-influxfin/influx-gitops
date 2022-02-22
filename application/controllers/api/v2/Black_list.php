@@ -203,9 +203,35 @@ class Black_list extends Admin_rest_api_controller
 
     }
 
-	public function block_history_get()
-    {
-		$this->response(json_decode('{"results":[{"userId":"123","blockRule":"aaaa","blockDescription":"bbb","blockRemark":"yrdy","blockRisk":"sdf","blockLogAction":"trd","history":[{"userId":"123","blockRule":"aaaa","blockDescription":"bbb","blockRemark":"yrdy","blockRisk":"sdf","blockLogAction":"trd","updatedAt":"1645154829"}],"updatedAt":"1632514699"},{"userId":"123","blockRule":"aaaa","blockDescription":"bbb","blockRemark":"yrdy","blockRisk":"sdf","blockLogAction":"trd","history":[],"updatedAt":"16451548819"}]}'));
+	/*
+	 * 取得黑名單的處置歷史紀錄
+	 */
+	public function block_log_get()
+	{
+		$input = $this->input->get(NULL, TRUE);
+		$userId = isset($input['userId']) ? urlencode($input['userId']) : '';
+
+		$url = $this->brookesia_url . 'blockUser/log';
+		$url =  $userId ? $url . '?userId=' . $userId : $url;
+
+		$result = curl_get($url);
+		$json = json_decode($result, TRUE);
+
+		if ( ! $result)
+		{
+			$error = [
+				'message' => '黑名單系統無回應，請洽工程師。'
+			];
+			$this->response($error);
+		}
+
+		if ($json['status'] == 204)
+		{
+			$this->response(['results' => [] ]);
+		}
+
+		$this->response($json['response']);
+
 	}
 
 }

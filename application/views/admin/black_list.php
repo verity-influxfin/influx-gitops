@@ -689,7 +689,7 @@
 			// tab history
 			blockHistory() {
 				const { blockHistoryParam } = this
-				axios.get(`${apiUrl}/block_history`, {
+				axios.get(`${apiUrl}/block_log`, {
 					params: {
 						...blockHistoryParam
 					}
