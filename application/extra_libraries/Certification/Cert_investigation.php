@@ -20,7 +20,7 @@ class Cert_investigation extends Certification_base
     /**
      * @var array 所需依賴徵信項之編號
      */
-    protected $dependency_cert_id = [CERTIFICATION_IDENTITY, CERTIFICATION_JOB];
+    protected $dependency_cert_id = [CERTIFICATION_IDENTITY];
 
     /**
      * @var array 依賴該徵信項相關之徵信項編號
@@ -108,74 +108,6 @@ class Cert_investigation extends Certification_base
                 $parsed_content['months'] = $this->transform_data['creditLogCount'] ?? 0;
                 $parsed_content['printDatetime'] = time();
                 $parsed_content['printDate'] = $printDatetime;
-
-                // 還款力計算-22倍薪資
-                // 薪資22倍
-                $parsed_content['total_repayment'] = '';
-                // 投保金額
-                $parsed_content['monthly_repayment'] = '';
-                // 借款總額是否小於薪資22倍
-                $parsed_content['total_repayment_enough'] = '';
-                // 每月還款是否小於投保金額
-                $parsed_content['monthly_repayment_enough'] = '';
-                // 負債比
-                $parsed_content['debt_to_equity_ratio'] = 0;
-
-                if (isset($this->dependency_cert_list[CERTIFICATION_JOB]))
-                {
-                    if ( ! is_array($this->dependency_cert_list[CERTIFICATION_JOB]->content))
-                    {
-                        $job_certification_content = json_decode($this->dependency_cert_list[CERTIFICATION_JOB]->content, TRUE);
-                    }
-                    else
-                    {
-                        $job_certification_content = $this->dependency_cert_list[CERTIFICATION_JOB]->content;
-                    }
-                    $parsed_content['monthly_repayment'] = isset($job_certification_content['salary']) &&
-                    is_numeric($job_certification_content['salary']) ? $job_certification_content['salary'] / 1000 : '';
-                    $parsed_content['total_repayment'] = isset($job_certification_content['salary']) &&
-                    is_numeric($job_certification_content['salary']) ? $job_certification_content['salary'] * 22 / 1000 : '';
-                }
-
-                if (isset($this->transform_data['totalMonthlyPayment']) && $parsed_content['monthly_repayment'])
-                {
-                    // 每月還款是否小於投保金額
-                    if ($this->transform_data['totalMonthlyPayment'] < $parsed_content['monthly_repayment'])
-                    {
-                        $parsed_content['monthly_repayment_enough'] = '是';
-                    }
-                    else
-                    {
-                        $parsed_content['monthly_repayment_enough'] = '否';
-                    }
-                }
-                else
-                {
-                    $parsed_content['monthly_repayment_enough'] = '資料不齊無法比對';
-                }
-
-                if (isset($this->transform_data['totalAmountQuota']) && $parsed_content['total_repayment'])
-                {
-                    // 借款總額是否小於薪資22倍
-                    if ($this->transform_data['totalAmountQuota'] < $parsed_content['total_repayment'])
-                    {
-                        $parsed_content['total_repayment_enough'] = '是';
-                    }
-                    else
-                    {
-                        $parsed_content['total_repayment_enough'] = '否';
-                    }
-                }
-                else
-                {
-                    $parsed_content['total_repayment_enough'] = '資料不齊無法比對';
-                }
-
-                // 負債比計算，投保薪資不能為0
-                if (is_numeric($parsed_content['monthly_repayment']))
-                {
-                    $parsed_content['debt_to_equity_ratio'] = round($this->transform_data['totalMonthlyPayment'] / $parsed_content['monthly_repayment'] * 100, 2);
-                }
             }
         }
         return $parsed_content;
