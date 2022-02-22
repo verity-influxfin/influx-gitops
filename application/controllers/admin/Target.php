@@ -1586,10 +1586,24 @@ class Target extends MY_Admin_Controller {
 	public function finished(){
 		$page_data 					= ['type'=>'list'];
 		$input 						= $this->input->get(NULL, TRUE);
-		$list 						= $this->target_model->get_many_by(['status'=>TARGET_REPAYMENTED]);
 		$school_list 				= [];
 		$user_list 					= [];
 		$amortization_table 		= [];
+        $where = ['status' => TARGET_REPAYMENTED];
+
+        $this->load->library('target_lib');
+        $category = $input['tab'] ?? '';
+        $filter_product_ids = $this->target_lib->get_product_id_by_tab($category);
+        if ( ! empty($filter_product_ids))
+        {
+            $where['product_id'] = $filter_product_ids;
+            if ($category == 'enterprise')
+            {
+                $where['status'] = TARGET_BANK_REPAYMENTED;
+            }
+        }
+
+        $list = $this->target_model->get_many_by($where);
 		if($list){
 			foreach($list as $key => $value){
 				$user_list[] = $value->user_id;
@@ -1608,6 +1622,17 @@ class Target extends MY_Admin_Controller {
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
+                $user_data = $this->user_model->get_by(["id" => $value->user_id]);
+                $list[$key]->company = $user_data->name ?? '';
+                $repayment_schedule = $this->target_lib->get_repayment_schedule($value);
+                if ( ! empty($repayment_schedule))
+                {
+                    $list[$key]->paid_instalment = $repayment_schedule[array_key_first($repayment_schedule)]['instalment'] - 1;
+                }
+                else
+                {
+                    $list[$key]->paid_instalment = $value->instalment;
+                }
 			}
 
 			$this->load->model('user/user_meta_model');
@@ -1630,6 +1655,7 @@ class Target extends MY_Admin_Controller {
 		$page_data['status_list'] 		= $this->target_model->status_list;
 		$page_data['sub_list'] 			= $this->target_model->sub_list;
 		$page_data['school_list'] 		= $school_list;
+        $page_data['category'] = $category;
 
 		$this->load->view('admin/_header');
 		$this->load->view('admin/_title',$this->menu);
