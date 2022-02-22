@@ -143,7 +143,15 @@ class CertificationResult implements CertificationResultInterface
             $content = $cert['content'];
         }
 
-        $data = json_decode($content, TRUE);
+        if (is_string($content))
+        {
+            $data = json_decode($content, TRUE);
+        }
+        else
+        {
+            $data = $content;
+        }
+
         if(isset($data['result']) && is_array($data['result']))
         {
             $result = $data['result'];

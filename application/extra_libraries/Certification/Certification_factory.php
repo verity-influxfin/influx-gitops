@@ -86,12 +86,34 @@ class Certification_factory
 
         $certification_result = CertificationResultFactory::getInstance($certification['certification_id'], CERTIFICATION_STATUS_SUCCEED);
         switch ($certification['certification_id']) {
-            case CERTIFICATION_IDENTITY:
+            case CERTIFICATION_IDENTITY: // 實名認證
                 return new Cert_identity($certification, $certification_result);
-            case CERTIFICATION_INVESTIGATION:
+            case CERTIFICATION_STUDENT: // 學生身份認證
+                return new Cert_student($certification, $certification_result);
+            case CERTIFICATION_SOCIAL: // 社交帳號
+                return new Cert_social($certification, $certification_result);
+            case CERTIFICATION_EMERGENCY: // 緊急聯絡人
+                return new Cert_emergency($certification, $certification_result);
+            case CERTIFICATION_EMAIL: // 常用電子信箱
+                return new Cert_email($certification, $certification_result);
+            case CERTIFICATION_FINANCIAL: // 收支資訊
+                return new Cert_financial($certification, $certification_result);
+            case CERTIFICATION_DIPLOMA: // 最高學歷證明
+                return new Cert_diploma($certification, $certification_result);
+            case CERTIFICATION_INVESTIGATION: // 聯合徵信報告
                 return new Cert_investigation($certification, $certification_result);
-            case CERTIFICATION_JOB:
+            case CERTIFICATION_JOB: // 工作收入證明
                 return new Cert_job($certification, $certification_result);
+            case CERTIFICATION_PROFILE: // 個人基本資料
+                return new Cert_profile($certification, $certification_result);
+            case CERTIFICATION_FINANCIALWORKER: // 財務訊息資訊
+                return new Cert_financialworker($certification, $certification_result);
+            case CERTIFICATION_REPAYMENT_CAPACITY: // 還款力計算
+                return new Cert_repayment_capacity($certification, $certification_result);
+            case CERTIFICATION_CRIMINALRECORD: // 良民證
+                return new Cert_criminalrecord($certification, $certification_result);
+            case CERTIFICATION_SOCIAL_INTELLIGENT: // (名校貸)社交帳號
+                return new Cert_social_intelligent($certification, $certification_result);
             default:
                 log_msg('error', "欲建立未支援的認證徵信項目 (認證編號:{$certification['certification_id']}) ");
                 return NULL;

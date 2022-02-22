@@ -63,9 +63,19 @@ abstract class Certification_base implements Certification_definition
         $this->CI->load->model('user/user_certification_model');
 
         $this->certification = $certification;
-        $this->content = json_decode($certification['content'] ?? [], TRUE);
+
+        $this->content = empty($certification['content'])
+            ? []
+            : is_string($certification['content'])
+                ? json_decode($certification['content'], TRUE)
+                : $certification['content'];
         $this->content = ! is_array($this->content) ? [] : $this->content;
-        $this->remark = json_decode($certification['remark'] ?? [], TRUE);
+
+        $this->remark = empty($certification['remark'])
+            ? []
+            : is_string($certification['remark'])
+                ? json_decode($certification['remark'], TRUE)
+                : $certification['remark'];
         $this->remark = ! is_array($this->remark) ? [] : $this->remark;
 
         $this->result = $result;
@@ -295,9 +305,13 @@ abstract class Certification_base implements Certification_definition
      * 審核成功的通知
      * @return bool
      */
-    public function success_notification(): bool {
-        return $this->CI->notification_lib->certification($this->certification['user_id'],
-            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_SUCCEED);
+    public function success_notification(): bool
+    {
+        // todo: 目前個金徵信項改為不通知，但企金配偶的徵信項是否通知？
+
+        return TRUE;
+        //        return $this->CI->notification_lib->certification($this->certification['user_id'],
+        //            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_SUCCEED);
     }
 
     /**
@@ -306,10 +320,13 @@ abstract class Certification_base implements Certification_definition
      */
     public function failure_notification(): bool
     {
-        $msg_list = $this->result->getAPPMessage(CERTIFICATION_STATUS_FAILED);
-        $msg = implode("、", $msg_list);
-        return $this->CI->notification_lib->certification($this->certification['user_id'],
-            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_FAILED, $msg);
+        // todo: 目前個金徵信項改為不通知，但企金配偶的徵信項是否通知？
+
+        return TRUE;
+        //        $msg_list = $this->result->getAPPMessage(CERTIFICATION_STATUS_FAILED);
+        //        $msg = implode("、", $msg_list);
+        //        return $this->CI->notification_lib->certification($this->certification['user_id'],
+        //            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_FAILED, $msg);
     }
 
     /**
