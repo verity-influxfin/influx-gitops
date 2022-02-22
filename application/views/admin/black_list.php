@@ -70,10 +70,10 @@
 	</div>
 	<div class="panel panel-default" v-show="tab==='history'">
 		<div class="panel-heading">
-			<form class="d-flex" @submit.prevent="getAllBlockUsers">
+			<form class="d-flex" @submit.prevent="blockHistory">
 				<div class="p-2">會員ID</div>
 				<div class="p-2">
-					<input type="text" class="form-control" v-model="allBlockUserParam.userId">
+					<input type="text" class="form-control" v-model="blockHistoryParam.userId">
 				</div>
 				<div class="d-flex">
 					<div class="search-btn">
