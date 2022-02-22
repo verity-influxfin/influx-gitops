@@ -169,9 +169,10 @@ class User_certification_model extends MY_Model
     /**
      * 依「使用者ID」撈其所有驗證資料
      * @param int $user_id : 使用者ID
+     * @param int $investor : 使用者身份(INVESTOR/BORROWER)
      * @return mixed
      */
-    public function get_certification_data_by_user_id(int $user_id)
+    public function get_certification_data_by_user_id(int $user_id, int $investor)
     {
         $this->db
             ->select('uc.certification_id')
