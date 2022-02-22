@@ -310,7 +310,7 @@ class Page extends CI_Controller
         {
             if ($list[2] == 'com.influxfin.borrow' && $list[6] == 1)
             {
-                $amounts += 1;
+                $amounts += $list[7];
             }
         }
 
