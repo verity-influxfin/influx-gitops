@@ -105,9 +105,9 @@ class Certification extends REST_Controller {
     }
 
 	/**
-     * @api {post} /certification/idcard 認證 實名認證
+     * @api {post} /certification/identity 認證 實名認證
 	 * @apiVersion 0.1.0
-	 * @apiName PostCertificationIdcard
+	 * @apiName PostCertificationIdentity
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
@@ -161,7 +161,7 @@ class Certification extends REST_Controller {
      *     }
 	 *
      */
-	public function idcard_post()
+	public function identity_post()
     {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];
@@ -251,9 +251,9 @@ class Certification extends REST_Controller {
     }
 	
 	/**
-     * @api {get} /certification/idcard 認證 實名認證資料
+     * @api {get} /certification/identity 認證 實名認證資料
 	 * @apiVersion 0.1.0
-	 * @apiName GetCertificationIdcard
+	 * @apiName GetCertificationIdentity
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      *
@@ -304,7 +304,7 @@ class Certification extends REST_Controller {
      *       "error": "503"
      *     }
      */
-	public function idcard_get()
+	public function identity_get()
     {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];

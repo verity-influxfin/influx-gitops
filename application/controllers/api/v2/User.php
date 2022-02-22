@@ -2017,7 +2017,7 @@ END:
 
         if(count($doneCertifications) === count($promote_cert_list)){
             $this->load->library('Certification_lib');
-            $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDCARD], FALSE);
+            $this->certification_lib->verify_promote_code($doneCertifications[CERTIFICATION_IDENTITY], FALSE);
         }
 
         if($rs) {

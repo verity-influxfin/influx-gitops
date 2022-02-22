@@ -2191,9 +2191,9 @@ class Product extends REST_Controller {
         $this->load->library('Judicialperson_lib');
         $naturalPerson = $this->judicialperson_lib->getNaturalPerson($this->user_info->id);
         $this->load->library('certification_lib');
-        $cerIDCARD = $this->certification_lib->get_certification_info($naturalPerson->id, CERTIFICATION_IDCARD, 0);
-        if(!$cerIDCARD){
-            $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
+        $cerIDENTITY = $this->certification_lib->get_certification_info($naturalPerson->id, CERTIFICATION_IDENTITY, 0);
+        if(!$cerIDENTITY){
+            $this->response(array('result' => 'ERROR','error' => NO_CER_IDENTITY ));
         }
 
         $character = $content['character'];

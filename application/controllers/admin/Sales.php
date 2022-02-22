@@ -1075,7 +1075,7 @@ class Sales extends MY_Admin_Controller {
                 $identity_list = array_column($this->user_certification_model->get_many_by([
                     'user_id' => $user_ids,
                     'status' => CERTIFICATION_STATUS_SUCCEED,
-                    'certification_id' => CERTIFICATION_IDCARD
+                    'certification_id' => CERTIFICATION_IDENTITY
                 ]), NULL, 'user_id');
                 foreach ($user_ids as $user_id)
                 {

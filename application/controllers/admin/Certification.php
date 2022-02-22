@@ -501,7 +501,7 @@ class Certification extends MY_Admin_Controller {
 							$this->user_certification_model->update($post['id'],['content'=>json_encode($content)]);
 						} elseif ($info->certification_id == CERTIFICATION_CERCREDITJUDICIAL) {
 							$fail = '評估表已失效';
-						} elseif ($info->certification_id == CERTIFICATION_IDCARD) {
+						} elseif ($info->certification_id == CERTIFICATION_IDENTITY) {
 							if(isset($post['failed_type_list'])) {
 								$remark = json_decode($info->remark, TRUE);
 								if ($remark === FALSE)
@@ -1645,7 +1645,7 @@ class Certification extends MY_Admin_Controller {
         $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $old_data_content['printDatetime']);
         $print_timestamp = $this->time->ROCDateToUnixTimestamp($print_timestamp);
 
-        $verified_result->addMessage('人工審核通過', CERTIFICATION_STATUS_SUCCEED, MassageDisplay::Backend);
+        $verified_result->addMessage('人工審核通過', CERTIFICATION_STATUS_SUCCEED, MessageDisplay::Backend);
         $this->certification_lib->update_repayment_certification(
             $post_data['id'],
             $print_timestamp,

@@ -2,6 +2,8 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use CertificationResult\CertificationResult;
+use CertificationResult\MessageDisplay;
 class Data_legalize_lib{
 
 	public function __construct(){
@@ -413,22 +415,23 @@ class Data_legalize_lib{
 		return $res;
 	}
 
-	/**
-	 * [legalize_investigation description]
-	 * @param CertificationResult $verifiedResult [驗證結果]
-	 * @param string $user_id [使用者 ID]
-	 * @param array $data [驗證資料]
-	 * @param int $hsa_a11
-	 * @return CertificationResult  $res     [驗證結果]
-	 * (
-	 *  [error_location] => 資料不正確欄位
-	 *  [error_message] => 資料錯誤說明備註
-	 *  [result] =>
-	 *           (
-	 *            [id] => 統一編號
-	 *           )
-	 * )
-	 */
+    /**
+     * [legalize_investigation description]
+     * @param CertificationResult $verifiedResult [驗證結果]
+     * @param string $user_id [使用者 ID]
+     * @param array $result
+     * @param int $created_at
+     * @param int $hsa_a11
+     * @return CertificationResult  $res     [驗證結果]
+     * (
+     *  [error_location] => 資料不正確欄位
+     *  [error_message] => 資料錯誤說明備註
+     *  [result] =>
+     *           (
+     *            [id] => 統一編號
+     *           )
+     * )
+     */
 	public function legalize_investigation(CertificationResult $verifiedResult, $user_id='', $result=[], $created_at=0, $hsa_a11=0){
 		if($user_id) {
 			$this->CI->load->model('user/user_model');
@@ -436,7 +439,7 @@ class Data_legalize_lib{
 			if (isset($user_info) && isset($result['personId'])) {
 
 				if ($result['personId'] != $user_info->id_number) {
-					$verifiedResult->addMessage('聯徵報告身分證字號與實名認證不符', 2, MassageDisplay::Client);
+					$verifiedResult->addMessage('聯徵報告身分證字號與實名認證不符', 2, MessageDisplay::Client);
 				}
 
 				// TODO: 普匯微企e秒貸的聯徵a11 return 及 $res 要改
@@ -449,7 +452,7 @@ class Data_legalize_lib{
 //				}
 
 			} else {
-				$verifiedResult->addMessage('待人工驗證：查無使用者相關資訊', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('待人工驗證：查無使用者相關資訊', 3, MessageDisplay::Backend);
 			}
 		}
 
@@ -461,7 +464,7 @@ class Data_legalize_lib{
 			// 印表日期
 			$validReportTime = strtotime(date('Y-m-d H:i:s', $created_at) . " - 1 month");
 			if($reportTime < $validReportTime) {
-				$verifiedResult->addMessage('聯徵報告非近一個月申請', 2, MassageDisplay::Client);
+				$verifiedResult->addMessage('聯徵報告非近一個月申請', 2, MessageDisplay::Client);
 			}
 		}
 
@@ -544,37 +547,37 @@ class Data_legalize_lib{
 			$user_info = $this->CI->user_model->get_by(['id'=>$user_id]);
 			if($user_info && $data['person_id']){
 				if($data['person_id'] != $user_info->id_number){
-					$res->addMessage('勞保資料身分證字號與實名認證不符', 2, MassageDisplay::Client);
+					$res->addMessage('勞保資料身分證字號與實名認證不符', 2, MessageDisplay::Client);
 				}
 				if($data['name'] != $user_info->name){
-					$res->addMessage('勞保資料姓名與實名認證不符', 2, MassageDisplay::Client);
+					$res->addMessage('勞保資料姓名與實名認證不符', 2, MessageDisplay::Client);
 				}
 				if(!preg_match("/^[\x{4e00}-\x{9fa5}]+$/u", $data['last_insurance_info']['companyName'])) {
-					$res->addMessage('勞保PDF資料解析完的公司名稱有非中文字元', 3, MassageDisplay::Backend);
+					$res->addMessage('勞保PDF資料解析完的公司名稱有非中文字元', 3, MessageDisplay::Backend);
 				}else if($data['last_insurance_info']['companyName'] != $content['company']){
-					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
+					$res->addMessage('任職公司名稱與勞保資料不符', 2, MessageDisplay::Client);
 				}
 			}else{
-				$res->addMessage('解析失敗：查無使用者身分證字號資訊', 3, MassageDisplay::Backend);
+				$res->addMessage('解析失敗：查無使用者身分證字號資訊', 3, MessageDisplay::Backend);
 			}
 
 
 			/* TODO: 更改為使用公司名稱進行勾稽 (商行號無法使用API查詢)
 			if(isset($content['gcis_info']) && !empty($content['gcis_info'])){
 				if(mb_substr($content['gcis_info']['Company_Name'], 0, 4, "utf-8") != mb_substr($data['last_insurance_info']['companyName'], 0, 4, "utf-8")){
-					$res->addMessage('任職公司名稱與勞保資料不符', 2, MassageDisplay::Client);
+					$res->addMessage('任職公司名稱與勞保資料不符', 2, MessageDisplay::Client);
 				}
 				if($content['gcis_info']['Business_Accounting_NO'] != $content['tax_id']){
-					$res->addMessage('任職公司統編錯誤', 2, MassageDisplay::Client);
+					$res->addMessage('任職公司統編錯誤', 2, MessageDisplay::Client);
 				}
 			}
 			else{
-				$res->addMessage('查無商業司資料', 3, MassageDisplay::Backend);
+				$res->addMessage('查無商業司資料', 3, MessageDisplay::Backend);
 			}
 			*/
 		}
 
-		preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $data['report_date'], $regexResult);
+		preg_match('/^(?<year>(1[0-9]{2}|[0-9]{2}))(?<month>(0?[1-9]|1[012]))(?<day>(0?[1-9]|[12][0-9]|3[01]))$/', $data['report_date'] ?? '', $regexResult);
 		if(!empty($regexResult)) {
 			$date = sprintf("%d-%'.02d-%'.02d", intval($regexResult['year'])+1911,
 				intval($regexResult['month']), intval($regexResult['day']));
@@ -583,10 +586,10 @@ class Data_legalize_lib{
 			$certificationSubmitDate->setTimestamp($created_at);
 			$diffDate = $certificationSubmitDate->diff($reportDate);
 			if($diffDate->m >= 1) {
-				$res->addMessage('勞保非近一個月申請', 2, MassageDisplay::Client);
+				$res->addMessage('勞保非近一個月申請', 2, MessageDisplay::Client);
 			}
 		}else{
-			$res->addMessage('解析失敗：勞保印表日期解析失敗', 3, MassageDisplay::Backend);
+			$res->addMessage('解析失敗：勞保印表日期解析失敗', 3, MessageDisplay::Backend);
 		}
 
 		return $res;

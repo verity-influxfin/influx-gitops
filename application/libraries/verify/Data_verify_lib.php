@@ -1,6 +1,8 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+use CertificationResult\CertificationResult;
+use CertificationResult\MessageDisplay;
 
 class Data_verify_lib{
 
@@ -137,101 +139,101 @@ class Data_verify_lib{
     {
         if (isset($data['scoreComment']) && $data['scoreComment'] < 450)
         {
-            $verifiedResult->addMessage('待人工驗證：信用評分低於 450 分', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：信用評分低於 450 分', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['totalMonthlyPayment']) && isset($certification_content['monthly_repayment']) &&
             $data['totalMonthlyPayment'] >= $certification_content['monthly_repayment'])
         {
-            $verifiedResult->addMessage('待人工驗證：總共月繳 >= 投保薪資', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：總共月繳 >= 投保薪資', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['debt_to_equity_ratio']) && $data['debt_to_equity_ratio'] > 100)
         {
-            $verifiedResult->addMessage('負債比計算 > 100%', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('負債比計算 > 100%', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
         else if (isset($data['debt_to_equity_ratio']) && $data['debt_to_equity_ratio'] >= 70)
         {
-            $verifiedResult->addMessage('待人工驗證：負債比計算 >= 70%', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：負債比計算 >= 70%', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['liabilitiesWithoutAssureTotalAmount']) && isset($certification_content['total_repayment']) &&
             is_numeric($data['liabilitiesWithoutAssureTotalAmount']) && ($data['liabilitiesWithoutAssureTotalAmount'] / 1000) >= $certification_content['total_repayment'])
         {
-            $verifiedResult->addMessage('待人工驗證：借款總餘額 >= 投保薪資22倍', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：借款總餘額 >= 投保薪資22倍', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['creditUtilizationRate']) && $data['creditUtilizationRate'] > 100)
         {
-            $verifiedResult->addMessage('信貸額度動用率 > 100%', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('信貸額度動用率 > 100%', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
         else if (isset($data['creditUtilizationRate']) && $data['creditUtilizationRate'] >= 80)
         {
-            $verifiedResult->addMessage('待人工驗證：負債比計算 >= 80%', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：負債比計算 >= 80%', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['liabilities_badDebtInfo']) && $data['liabilities_badDebtInfo'] != '無')
         {
-            $verifiedResult->addMessage('有借款餘額、催收或呆帳紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('有借款餘額、催收或呆帳紀錄', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
 
         if (isset($data['repaymentDelay']) && $data['repaymentDelay'] != '無')
         {
-            $verifiedResult->addMessage('有借款延遲記錄', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('有借款延遲記錄', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
 
         if (isset($data['creditLogCount']) && $data['creditLogCount'] < 1)
         {
-            $verifiedResult->addMessage('待人工驗證：無信用記錄', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：無信用記錄', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['creditCardUseRate']) && $data['creditCardUseRate'] > 90)
         {
-            $verifiedResult->addMessage('近一個月信用卡使用率 > 90%', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('近一個月信用卡使用率 > 90%', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
         else if (isset($data['creditCardUseRate']) && $data['creditCardUseRate'] >= 70)
         {
-            $verifiedResult->addMessage('待人工驗證：90% >= 近一個月信用卡使用率 >= 70%', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：90% >= 近一個月信用卡使用率 >= 70%', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['delayLessMonth']) && $data['delayLessMonth'] > 1)
         {
-            $verifiedResult->addMessage('延遲未滿一個月次數 > 1', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('延遲未滿一個月次數 > 1', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
 
         if (isset($data['delayMoreMonth']) && $data['delayMoreMonth'] > 0)
         {
-            $verifiedResult->addMessage('延遲超過一個月次數 > 0', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('延遲超過一個月次數 > 0', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
 
         if (isset($data['creditCardHasBadDebt']) && $data['creditCardHasBadDebt'] != '無')
         {
-            $verifiedResult->addMessage('有信用卡催收、呆帳紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('有信用卡催收、呆帳紀錄', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
 
         if (isset($data['checkingAccount_largeAmount']) && $data['checkingAccount_largeAmount'] != '無')
         {
-            $verifiedResult->addMessage('有大額存款不足退票資訊紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('有大額存款不足退票資訊紀錄', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
 
         if (isset($data['checkingAccount_rejectInfo']) && $data['checkingAccount_rejectInfo'] != '無')
         {
-            $verifiedResult->addMessage('有票據拒絕往來資訊紀錄', 2, MassageDisplay::Backend);
+            $verifiedResult->addMessage('有票據拒絕往來資訊紀錄', 2, MessageDisplay::Backend);
             $verifiedResult->setBanResubmit();
         }
 
         if (isset($data['S1Count']) && $data['S1Count'] >= 3)
         {
-            $verifiedResult->addMessage('待人工驗證：被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：被電子支付或電子票證發行機構查詢紀錄 >= 3', 3, MessageDisplay::Backend);
         }
 
         if (isset($data['studentLoans']) && isset($data['studentLoansCount']))
@@ -242,13 +244,13 @@ class Data_verify_lib{
             if (($data['studentLoans'] === 0 && $data['studentLoansCount'] !== 0) ||
                 ($data['studentLoans'] !== 0 && $data['studentLoansCount'] === 0))
             {
-                $verifiedResult->addMessage('待人工驗證：助學貸款總訂約金額與總筆數，其中一個為0，另一個不為0', 3, MassageDisplay::Backend);
+                $verifiedResult->addMessage('待人工驗證：助學貸款總訂約金額與總筆數，其中一個為0，另一個不為0', 3, MessageDisplay::Backend);
             }
         }
 
         if (isset($data['printDatetime']) && empty($data['printDatetime']))
         {
-            $verifiedResult->addMessage('待人工驗證：聯徵資料有誤', 3, MassageDisplay::Backend);
+            $verifiedResult->addMessage('待人工驗證：聯徵資料有誤', 3, MessageDisplay::Backend);
         }
 
         return $verifiedResult;
@@ -268,11 +270,11 @@ class Data_verify_lib{
 //			$top_enterprise = $this->CI->config->item("top_enterprise");
 
 			if($data['total_count'] < 3 || $data['this_company_count'] < 3 ) {
-				$verifiedResult->addMessage('總工作年資或現任公司年資沒有超過 3 個月', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('總工作年資或現任公司年資沒有超過 3 個月', 3, MessageDisplay::Backend);
 			}
 
 			if($data['last_insurance_info']['insuranceSalary'] < 23800) {
-				$verifiedResult->addMessage('投保薪資月薪小於 23800', 2, MassageDisplay::Backend);
+				$verifiedResult->addMessage('投保薪資月薪小於 23800', 2, MessageDisplay::Backend);
 				$verifiedResult->setBanResubmit();
 			}
 
@@ -282,19 +284,19 @@ class Data_verify_lib{
 				preg_match('/F/', $data['last_insurance_info']['arrearage']) ||
 				preg_match('/D/', $data['last_insurance_info']['arrearage'])
 				) {
-				$verifiedResult->addMessage('註記有部分工時、不適用就業保險、F、D', 2, MassageDisplay::Backend);
+				$verifiedResult->addMessage('註記有部分工時、不適用就業保險、F、D', 2, MessageDisplay::Backend);
 				$verifiedResult->setBanResubmit();
 			}
 
 			/* TODO: 更改為使用公司名稱進行勾稽 (商行號無法使用API查詢)
 			if(!empty($content) && isset($content['gcis_info']['Company_Status_Desc'])) {
 				if(preg_match('/解散/', $content['gcis_info']['Company_Status_Desc'])) {
-					$verifiedResult->addMessage('任職公司非為營業中', 2, MassageDisplay::Client);
+					$verifiedResult->addMessage('任職公司非為營業中', 2, MessageDisplay::Client);
 				}else if(!preg_match('/核准設立|核准登記/', $content['gcis_info']['Company_Status_Desc'])) {
-					$verifiedResult->addMessage('任職公司非為營業中', 3, MassageDisplay::Client);
+					$verifiedResult->addMessage('任職公司非為營業中', 3, MessageDisplay::Client);
 				}
 			}else{
-				$verifiedResult->addMessage('沒有查詢到公司狀態', 3, MassageDisplay::Backend);
+				$verifiedResult->addMessage('沒有查詢到公司狀態', 3, MessageDisplay::Backend);
 			}
 			*/
 

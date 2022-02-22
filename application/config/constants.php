@@ -115,7 +115,7 @@ defined('NOT_COMPANY')  				OR define('NOT_COMPANY'					, 217); //請登入公�
 defined('NOT_DEALER')                   OR define('NOT_DEALER'                  , 218); //未有該商品類型的經銷商資格
 
 defined('TAX_ID_LENGTH_ERROR')          OR define('TAX_ID_LENGTH_ERROR'         , 219); //統一編號長度非8碼
-defined('NO_CER_IDCARD') or define('NO_CER_IDCARD', 220); //未通過實名認證
+defined('NO_CER_IDENTITY') or define('NO_CER_IDENTITY', 220); //未通過實名認證
 defined('NO_CER_GOVERNMENTAUTHORITIES') or define('NO_CER_GOVERNMENTAUTHORITIES', 221); //未通過法人實名認證
 defined('NO_ALLOW_CHARGE') or define('NO_ALLOW_CHARGE', 222); //不可加入負責人
 
@@ -178,7 +178,7 @@ defined('MAIL_EXIST') OR define('MAIL_EXIST', 512);
 defined('CERTIFICATION_NOT_EXIST') 	OR define('CERTIFICATION_NOT_EXIST'	, 513); // 該認證資料不存在
 
 //Certification
-defined('CERTIFICATION_IDCARD')        OR define('CERTIFICATION_IDCARD'            , 1);
+defined('CERTIFICATION_IDENTITY')        OR define('CERTIFICATION_IDENTITY'            , 1);
 defined('CERTIFICATION_STUDENT')       OR define('CERTIFICATION_STUDENT'           , 2);
 defined('CERTIFICATION_DEBITCARD')     OR define('CERTIFICATION_DEBITCARD'         , 3);
 defined('CERTIFICATION_SOCIAL')        OR define('CERTIFICATION_SOCIAL'            , 4);
@@ -240,6 +240,13 @@ defined('CERTIFICATION_STATUS_NOT_COMPLETED') OR define('CERTIFICATION_STATUS_NO
 defined('CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION') OR define('CERTIFICATION_STATUS_PENDING_TO_AUTHENTICATION', 5);
 // 已驗證資料真實性待使用者送出審核 -> 送出審核後會變為待驗證
 defined('CERTIFICATION_STATUS_AUTHENTICATED') OR define('CERTIFICATION_STATUS_AUTHENTICATED', 6);
+
+// 資料格式有誤
+defined('CERTIFICATION_SUBSTATUS_WRONG_FORMAT') OR define('CERTIFICATION_SUBSTATUS_WRONG_FORMAT', 1);
+// 資料核實失敗
+defined('CERTIFICATION_SUBSTATUS_VERIFY_FAILED') OR define('CERTIFICATION_SUBSTATUS_VERIFY_FAILED', 2);
+// 未符合授信標準
+defined('CERTIFICATION_SUBSTATUS_REVIEW_FAILED') OR define('CERTIFICATION_SUBSTATUS_REVIEW_FAILED', 3);
 
 // 通知類型
 defined('NOTIFICATION_TYPE_NONE') OR define('NOTIFICATION_TYPE_NONE', 0);

@@ -197,7 +197,7 @@ class Risk extends MY_Admin_Controller {
 					$user_investor_list[$value->user_id] = $value->user_id;
 				}
 			}
-			$investor_cer = [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL];
+			$investor_cer = [CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL];
 			foreach($investor_cer as $ckey => $cvalue){
 				$useCer[$cvalue] = $cer[$cvalue];
 			}

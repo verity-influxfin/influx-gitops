@@ -202,7 +202,7 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.$value->credit_level.'</td>';
                     $html .= '<td>'.(isset($value->company)?$value->company:'').(isset($value->company)&&isset($value->school_name)?' / ':'').(isset($value->school_name)?$value->school_name:'').'</td>';
                     $html .= '<td>'.(isset($value->school_department)?$value->school_department:'').'</td>';
-                    $html .= '<td>'.(isset($userCertList[$value->user_id]) && isset($userCertList[$value->user_id][CERTIFICATION_IDCARD]) ? "是" : "否").'</td>';
+                    $html .= '<td>'.(isset($userCertList[$value->user_id]) && isset($userCertList[$value->user_id][CERTIFICATION_IDENTITY]) ? "是" : "否").'</td>';
                     $html .= '<td>'.$value->amount.'</td>';
                     $html .= '<td>'.(isset($value->credit->amount)?$value->credit->amount:'').'</td>';
                     $html .= '<td>'.$value->loan_amount.'</td>';

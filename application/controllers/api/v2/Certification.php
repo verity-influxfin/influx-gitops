@@ -56,17 +56,17 @@ class Certification extends REST_Controller {
                 if($this->user_info->naturalPerson && $this->request->method == 'post'){
                     $this->load->library('certification_lib');
                     //檢核變卡認證，並排除以下認證
-                    if(!in_array($method, ['governmentauthorities','idcard','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
+                    if(!in_array($method, ['governmentauthorities','identity','debitcard','email','investigation','profile','simplificationfinancial','simplificationjob','investigationa11','livingBody'])){
                         $cerGovernmentauthorities = $this->certification_lib->get_certification_info($tokenData->id, CERTIFICATION_GOVERNMENTAUTHORITIES, 0);
                         if(!$cerGovernmentauthorities && $method != 'governmentauthorities'){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_GOVERNMENTAUTHORITIES ));
                         }
                     }
                     //要求先完成實名相關
-                    if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
-                        $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
-                        if(!$cerIDCARD){
-                            $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
+                    if(!in_array($method, ['identity','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
+                        $cerIDENTITY = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDENTITY, 0);
+                        if(!$cerIDENTITY){
+                            $this->response(array('result' => 'ERROR','error' => NO_CER_IDENTITY ));
                         }
                     }
 //                elseif(!in_array($method,['debitcard','list','social','investigation','businesstax','balancesheet','incomestatement','investigationjudicial','passbookcashflow','salesdetail','governmentauthorities','charter','registerofmembers','mainproductstatus','startupfunds','business_plan','verification','condensedbalancesheet','condensedincomestatement','purchasesalesvendorlist','employeeinsurancelist','companyemail'])){
@@ -405,9 +405,9 @@ class Certification extends REST_Controller {
     }
 
 	/**
-     * @api {post} /v2/certification/idcard 認證 實名認證
+     * @api {post} /v2/certification/identity 認證 實名認證
 	 * @apiVersion 0.2.0
-	 * @apiName PostCertificationIdcard
+	 * @apiName PostCertificationIdentity
      * @apiGroup Certification
 	 * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
@@ -462,7 +462,7 @@ class Certification extends REST_Controller {
      *     }
 	 *
      */
-	public function idcard_post()
+	public function identity_post()
     {
 		$certification_id 	= 1;
 		$certification 		= $this->certification[$certification_id];
@@ -560,9 +560,9 @@ class Certification extends REST_Controller {
     }
 
     /**
-     * @api {get} /v2/certification/idcard 認證 實名認證
+     * @api {get} /v2/certification/identity 認證 實名認證
      * @apiVersion 0.2.0
-     * @apiName GetCertificationIdcard
+     * @apiName GetCertificationIdentity
      * @apiGroup Certification
      * @apiHeader {String} request_token 登入後取得的 Request Token
      * @apiParam {String{2..15}} name 姓名
@@ -596,7 +596,7 @@ class Certification extends REST_Controller {
      *     }
      *
      */
-    public function idcard_get()
+    public function identity_get()
     {
         $certification_id 	= 1;
         $certification 		= $this->certification[$certification_id];
@@ -612,7 +612,7 @@ class Certification extends REST_Controller {
 
             $param = array(
                 'user_id'			=> $user_id,
-                'certification_id'	=> CERTIFICATION_IDCARD,
+                'certification_id'	=> CERTIFICATION_IDENTITY,
                 'investor'			=> $investor,
                 'status'            => [1,2]
             );

@@ -1335,10 +1335,10 @@ define({
         },
         {
             "type": "get",
-            "url": "/certification/idcard",
+            "url": "/certification/identity",
             "title": "認證 實名認證資料",
             "version": "0.1.0",
-            "name": "GetCertificationIdcard",
+            "name": "GetCertificationIdentity",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -1506,16 +1506,16 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/certification/idcard"
+                    "url": "/api/certification/identity"
                 }
             ]
         },
         {
             "type": "get",
-            "url": "/v2/certification/idcard",
+            "url": "/v2/certification/identity",
             "title": "取得 實名認證",
             "version": "0.2.0",
-            "name": "GetCertificationIdcard2",
+            "name": "GetCertificationIdentity2",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -1613,7 +1613,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/certification/idcard"
+                    "url": "/api/v2/certification/identity"
                 }
             ]
         },
@@ -10311,10 +10311,10 @@ define({
         },
         {
             "type": "post",
-            "url": "/v2/certification/idcard",
+            "url": "/v2/certification/identity",
             "title": "認證 實名認證",
             "version": "0.2.0",
-            "name": "PostCertificationIdcard",
+            "name": "PostCertificationIdentity",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -10544,16 +10544,16 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/certification/idcard"
+                    "url": "/api/v2/certification/identity"
                 }
             ]
         },
         {
             "type": "post",
-            "url": "/certification/idcard",
+            "url": "/certification/identity",
             "title": "認證 實名認證",
             "version": "0.1.0",
-            "name": "PostCertificationIdcard",
+            "name": "PostCertificationIdentity",
             "group": "Certification",
             "header": {
                 "fields": {
@@ -10766,7 +10766,7 @@ define({
             "groupTitle": "Certification",
             "sampleRequest": [
                 {
-                    "url": "/api/certification/idcard"
+                    "url": "/api/certification/identity"
                 }
             ]
         },
@@ -11727,7 +11727,7 @@ define({
                             "        \"certification\": [\n" +
                             "            {\n" +
                             "                \"id\": 1,\n" +
-                            "                \"alias\": \"idcard\",\n" +
+                            "                \"alias\": \"identity\",\n" +
                             "                \"name\": \"實名認證\",\n" +
                             "                \"status\": 1,\n" +
                             "                \"description\": \"驗證個人身份資訊\",\n" +
@@ -17190,7 +17190,7 @@ define({
                             "                    \"certification\": [\n" +
                             "                        {\n" +
                             "                            \"id\": 1,\n" +
-                            "                            \"alias\": \"idcard\",\n" +
+                            "                            \"alias\": \"identity\",\n" +
                             "                            \"name\": \"實名認證\",\n" +
                             "                            \"status\": 1,\n" +
                             "                            \"description\": \"驗證個人身份資訊\",\n" +
@@ -17304,7 +17304,7 @@ define({
                             "                    \"certification\": [\n" +
                             "                        {\n" +
                             "                            \"id\": 1,\n" +
-                            "                            \"alias\": \"idcard\",\n" +
+                            "                            \"alias\": \"identity\",\n" +
                             "                            \"name\": \"實名認證\",\n" +
                             "                            \"status\": 1,\n" +
                             "                            \"description\": \"驗證個人身份資訊\",\n" +
@@ -17432,7 +17432,7 @@ define({
                             "                    },\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -17572,7 +17572,7 @@ define({
                             "            },\n" +
                             "            {\n" +
                             "                \"id\": 1,\n" +
-                            "                \"alias\": \"idcard\",\n" +
+                            "                \"alias\": \"identity\",\n" +
                             "                \"name\": \"實名認證\",\n" +
                             "                \"status\": 1,\n" +
                             "                \"description\": \"驗證個人身份資訊\",\n" +
@@ -20244,7 +20244,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20349,7 +20349,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20454,7 +20454,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20588,7 +20588,7 @@ define({
                             "                \"certification\": [\n" +
                             "                    {\n" +
                             "                        \"id\": 1,\n" +
-                            "                        \"alias\": \"idcard\",\n" +
+                            "                        \"alias\": \"identity\",\n" +
                             "                        \"name\": \"實名認證\",\n" +
                             "                        \"status\": 1,\n" +
                             "                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20768,7 +20768,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -20881,7 +20881,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -21011,7 +21011,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21118,7 +21118,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21264,7 +21264,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21381,7 +21381,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21537,7 +21537,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21643,7 +21643,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21803,7 +21803,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -21909,7 +21909,7 @@ define({
                             "                                        \"certifications\": [\n" +
                             "                                            {\n" +
                             "                                                \"id\": 1,\n" +
-                            "                                                \"alias\": \"idcard\",\n" +
+                            "                                                \"alias\": \"identity\",\n" +
                             "                                                \"name\": \"實名認證\",\n" +
                             "                                                \"status\": 1,\n" +
                             "                                                \"description\": \"驗證個人身份資訊\",\n" +
@@ -22078,7 +22078,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +
@@ -22187,7 +22187,7 @@ define({
                             "                                \"certification\": [\n" +
                             "                                    {\n" +
                             "                                        \"id\": 1,\n" +
-                            "                                        \"alias\": \"idcard\",\n" +
+                            "                                        \"alias\": \"identity\",\n" +
                             "                                        \"name\": \"實名認證\",\n" +
                             "                                        \"status\": 1,\n" +
                             "                                        \"description\": \"驗證個人身份資訊\",\n" +

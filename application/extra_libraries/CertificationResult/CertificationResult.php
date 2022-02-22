@@ -1,5 +1,6 @@
 <?php
-
+namespace CertificationResult;
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 interface CertificationResultInterface
 {
@@ -13,7 +14,7 @@ interface CertificationResultInterface
 	public function getCanResubmitDate();
 }
 
-abstract class MassageDisplay
+abstract class MessageDisplay
 {
 	const Client = 0;
 	const Backend = 1;
@@ -25,23 +26,24 @@ class CertificationResult implements CertificationResultInterface
 {
 	protected $msgList;
 	protected $manualStatus;
+	protected $subStatus;
 	protected $resubmitExpirationMonth;
 	protected $banResubmit;
     public static $FAILED_MESSAGE = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。';
 
 	public function __construct($status = 0, $resubmitExpirationMonth=6)
 	{
-		$this->msgList = [];
 		$this->manualStatus = $status;
+		$this->subStatus = 0;
 		$this->resubmitExpirationMonth = $resubmitExpirationMonth;
-		$this->banResubmit = 0;
+		$this->clear();
 	}
 
-	public function addMessage($msg, $status, $showFlag=MassageDisplay::All) {
+	public function addMessage($msg, $status, $showFlag=MessageDisplay::All) {
 		$this->msgList[$status][] = [$msg, $showFlag];
 	}
 
-	public function getMessage($status, $showFlag=MassageDisplay::All): array {
+	public function getMessage($status, $showFlag=MessageDisplay::All): array {
 		if(array_key_exists($status, $this->msgList)) {
 			$result = array_filter($this->msgList[$status], function ($msg) use ($showFlag) {
 				return $msg[1] <= $showFlag;
@@ -52,7 +54,7 @@ class CertificationResult implements CertificationResultInterface
 		return [];
 	}
 
-	public function getAllMessage($showFlag=MassageDisplay::All): array
+	public function getAllMessage($showFlag=MessageDisplay::All): array
 	{
 		if(array_key_exists(2, $this->msgList)) {
 			return $this->getMessage(2, $showFlag);
@@ -65,7 +67,7 @@ class CertificationResult implements CertificationResultInterface
 
 	public function getAPPMessage($status): array
 	{
-		return $this->getMessage($status, MassageDisplay::Client);
+		return $this->getMessage($status, MessageDisplay::Client);
 	}
 
 	public function setStatus($status) {
@@ -84,12 +86,17 @@ class CertificationResult implements CertificationResultInterface
 		$this->banResubmit = true;
 	}
 
+    public function clear() {
+        $this->msgList = [];
+        $this->banResubmit = 0;
+    }
+
 	public function getCanResubmitDate($timestamp=0): string
 	{
 		$canResubmitDate = '';
 
 		if ($this->banResubmit) {
-			$canResubmitDate = new DateTime;
+			$canResubmitDate = new \DateTime;
 			if ($timestamp)
 				$canResubmitDate->setTimestamp($timestamp);
 			$canResubmitDate->modify( '+'.$this->resubmitExpirationMonth.' month' );
@@ -97,4 +104,55 @@ class CertificationResult implements CertificationResultInterface
 		}
 		return $canResubmitDate;
 	}
+
+    public function setSubStatus($status) {
+        $this->subStatus = $status;
+    }
+
+    public function getSubStatus() {
+        return $this->subStatus;
+    }
+
+    /**
+     * 轉換為 JSON 資料格式
+     * @param bool $pretty_print
+     * @return false|string
+     */
+    public function jsonDump(bool $pretty_print=TRUE)
+    {
+        return json_encode(
+                ['msgList' => $this->msgList, 'manualStatus' => $this->manualStatus,
+                    'resubmitExpirationMonth' => $this->resubmitExpirationMonth, 'banResubmit' => $this->banResubmit],
+                $pretty_print ? JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT : JSON_UNESCAPED_SLASHES
+            );
+    }
+
+    /**
+     * 轉換為 JSON 資料格式
+     * @param $cert
+     * @return bool
+     */
+    public function loadResult($cert): bool
+    {
+        $content = '';
+        if(!isset($cert)) {
+            return FALSE;
+        }else if(is_object($cert) && isset($cert->content)) {
+            $content = $cert->content;
+        }else if(is_array($cert) && isset($cert['content'])) {
+            $content = $cert['content'];
+        }
+
+        $data = json_decode($content, TRUE);
+        if(isset($data['result']) && is_array($data['result']))
+        {
+            $result = $data['result'];
+            $this->msgList = $result['msgList'] ?? $this->msgList;
+            $this->manualStatus = $result['manualStatus'] ?? $this->manualStatus;
+            $this->resubmitExpirationMonth = $result['resubmitExpirationMonth'] ?? $this->resubmitExpirationMonth;
+            $this->banResubmit = $result['banResubmit'] ?? $this->banResubmit;
+            return TRUE;
+        }
+        return FALSE;
+    }
 }
