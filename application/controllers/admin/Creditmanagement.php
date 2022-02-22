@@ -149,7 +149,7 @@ class Creditmanagement extends MY_Admin_Controller
             return ['result' => FALSE, 'msg' => '查無產品設定認證項'];
         }
 
-        $user_certification = $this->user_certification_model->get_certification_data_by_user_id($response->user_id);
+        $user_certification = $this->user_certification_model->get_certification_data_by_user_id($response->user_id, BORROWER);
         $user_certification = array_column($user_certification, 'status', 'certification_id');
 
         // 必填的驗證項
