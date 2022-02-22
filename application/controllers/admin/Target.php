@@ -902,9 +902,11 @@ class Target extends MY_Admin_Controller {
 
             $this->load->library('target_lib');
             $tab = $this->input->get('tab', TRUE) ?? '';
-			$filter_product_ids = $this->target_lib->get_product_id_by_tab($tab);
-			if(!empty($filter_product_ids))
-			    $where['product_id'] = $filter_product_ids;
+            $filter_product_ids = $this->target_lib->get_product_id_by_tab($tab);
+            if ( ! empty($filter_product_ids))
+            {
+                $where['product_id'] = $filter_product_ids;
+            }
 
 			$targets = $this->target_model->get_many_by($where);
 			if (!$targets) {
@@ -1214,7 +1216,7 @@ class Target extends MY_Admin_Controller {
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
-                $user_data = $this->user_model->get_by(["id" => $value->user_id]);
+                $user_data = $this->user_model->get_by(['id' => $value->user_id]);
                 $list[$key]->company = $user_data->name ?? '';
                 $repayment_schedule = $this->target_lib->get_repayment_schedule($value);
                 if ( ! empty($repayment_schedule))
@@ -1622,7 +1624,7 @@ class Target extends MY_Admin_Controller {
 					'total_payment'			=> $amortization_table['total_payment'],
 					'remaining_principal'	=> $amortization_table['remaining_principal'],
 				];
-                $user_data = $this->user_model->get_by(["id" => $value->user_id]);
+                $user_data = $this->user_model->get_by(['id' => $value->user_id]);
                 $list[$key]->company = $user_data->name ?? '';
                 $repayment_schedule = $this->target_lib->get_repayment_schedule($value);
                 if ( ! empty($repayment_schedule))

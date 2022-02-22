@@ -395,9 +395,10 @@ class Transaction_model extends MY_Model
      * @param $target_id
      * @return mixed
      */
-    public function get_repayment_schedule($target_id) {
+    public function get_repayment_schedule($target_id)
+    {
         $this->db->select('id')
-            ->from("`p2p_transaction`.`transactions`")
+            ->from('`p2p_transaction`.`transactions`')
             ->where('status', TRANSACTION_STATUS_TO_BE_PAID)
             ->where('target_id', $target_id)
             ->where_in('source', [SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST,
@@ -407,7 +408,7 @@ class Transaction_model extends MY_Model
             ->select('instalment_no, limit_date, SUM(amount) as amount')
             ->from('`p2p_transaction`.`transactions` AS `tra`')
             ->join("($sub_query) as `r`", "`tra`.`id` = `r`.`id`")
-            ->order_by('limit_date','ASC')
+            ->order_by('limit_date', 'ASC')
             ->group_by('limit_date', 'ASC');
         return $this->db->get()->result_array();
     }
