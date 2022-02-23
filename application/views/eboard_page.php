@@ -8,7 +8,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <title>電子看板</title>
     </head>
-    <body id="app" style="background-color: #212529;">
+    <body id="app" style="background-color: #212529;font-size: 1.5vw;">
         <table class="table table-dark table-striped h-100 w-100" v-if="state.data">
             <thead>
                 <tr>
