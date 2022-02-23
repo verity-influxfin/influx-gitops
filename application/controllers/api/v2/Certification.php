@@ -64,7 +64,7 @@ class Certification extends REST_Controller {
                     }
                     //要求先完成實名相關
                     if(!in_array($method, ['idcard','debitcard','email','financial','diploma','investigation','job','investigationa11','financialWorker','livingBody'])){
-                        $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, 0);
+                        $cerIDCARD = $this->certification_lib->get_certification_info($this->user_info->naturalPerson->id, CERTIFICATION_IDCARD, $this->user_info->investor);
                         if(!$cerIDCARD){
                             $this->response(array('result' => 'ERROR','error' => NO_CER_IDCARD ));
                         }
