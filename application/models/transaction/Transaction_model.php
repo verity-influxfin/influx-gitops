@@ -407,9 +407,9 @@ class Transaction_model extends MY_Model
         $this->db
             ->select('instalment_no, limit_date, SUM(amount) as amount')
             ->from('`p2p_transaction`.`transactions` AS `tra`')
-            ->join("($sub_query) as `r`", "`tra`.`id` = `r`.`id`")
+            ->join("({$sub_query}) as `r`", "`tra`.`id` = `r`.`id`")
             ->order_by('limit_date', 'ASC')
-            ->group_by('limit_date', 'ASC');
+            ->group_by('limit_date');
         return $this->db->get()->result_array();
     }
 }
