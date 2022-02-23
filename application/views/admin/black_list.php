@@ -7,9 +7,8 @@
 		</div>
 	</div>
 	<div class="tab">
-		<button class="tab-item" :class="{'active':tab==='list'}" @click="location.search = 'tab=list'">黑名單列表</button>
-		<button class="tab-item" :class="{'active':tab==='history'}"
-			@click="location.search = 'tab=history'">黑名單處置紀錄</button>
+		<button class="tab-item" :class="{'active':tab==='list'}" @click="changeLocation('list')">黑名單列表</button>
+		<button class="tab-item" :class="{'active':tab==='history'}" @click="changeLocation('history')">黑名單處置紀錄</button>
 	</div>
 	<div class="panel panel-default" v-show="tab!=='history'">
 		<div class="panel-heading">
@@ -304,8 +303,8 @@
 		</div>
 	</div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
@@ -441,7 +440,7 @@
 		methods: {
 			convertTime(time) {
 				d = new Date(time * 1000)
-                return d.toLocaleString()
+				return d.toLocaleString()
 				// return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()
 			},
 			setMainTableRow(item) {
@@ -617,7 +616,7 @@
 					if (data.status !== 200) {
 						alert(data.message)
 						return
-					}		
+					}
 					$('#statusModal').modal('hide')
 					$('#historyModal').modal('hide')
 					this.getAllBlockUsers()
@@ -683,7 +682,7 @@
 								移除
 							</button>
 						</div>`
-					} 
+					}
 				}
 				const statusGroup = (text, status, id, recordId) => {
 					if (status === 'disabled') {
@@ -709,13 +708,13 @@
 					console.log(item)
 					const endDate = item.blockInfo.endAt > 0 ? this.convertTime(item.blockInfo.endAt) : '永久'
 					$('#history-table').DataTable().row.add([
-						idGroup(item.userId,item.status, item.recordId),
+						idGroup(item.userId, item.status, item.recordId),
 						updateTime({ updatedAt: item.updatedAt, updatedBy: item.updatedBy }),
 						item.updateReason,
 						item.blockRule,
 						item.blockDescription,
 						item.blockRisk,
-						statusGroup(item.blockInfo.blockTimeText, item.status, item.userId,item.recordId),
+						statusGroup(item.blockInfo.blockTimeText, item.status, item.userId, item.recordId),
 						endDate,
 						reason(item.blockRemark)
 					])
@@ -753,6 +752,9 @@
 					data.results.forEach(item => this.setHistoryTableRow(item))
 					$('#record-table').DataTable().draw()
 				})
+			},
+			changeLocation(tab) {
+				window.location.search = 'tab=' + tab
 			}
 		},
 	})
