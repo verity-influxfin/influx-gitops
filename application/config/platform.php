@@ -328,9 +328,7 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIAL
         ],
         // [APP]上選填的徵信項，避免系統無法一審
-        'option_certifications' => [
-            CERTIFICATION_FINANCIAL
-        ],
+        'option_certifications' => [],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
         ],
@@ -383,9 +381,7 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIAL
         ],
         // [APP]上選填的徵信項，避免系統無法一審
-        'option_certifications' => [
-            CERTIFICATION_FINANCIAL
-        ],
+        'option_certifications' => [],
         // [後台]上選填的徵信項，避免人工無法二三四..審
         'backend_option_certifications' => [
         ],
@@ -1270,9 +1266,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIAL
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
-                ],
+                'option_certifications' => [],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
@@ -1661,9 +1655,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIAL
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
-                ],
+                'option_certifications' => [],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
@@ -1825,9 +1817,7 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIAL
                 ],
                 // [APP]上選填的徵信項，避免系統無法一審
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
-                ],
+                'option_certifications' => [],
                 // [後台]上選填的徵信項，避免人工無法二三四..審
                 'backend_option_certifications' => [
                 ],
