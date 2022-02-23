@@ -18,6 +18,7 @@ class Page extends CI_Controller
         // 從 ga 抓官網流量 - 昨天的
         $analytics = $this->_initialize_analytics();
         $ga_amounts = $this->_get_report($analytics, $today->modify('-1 day')->format('Y-m-d'));
+
         // 更新官網流量到 db
         $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS, $ga_amounts);
 
@@ -34,6 +35,7 @@ class Page extends CI_Controller
     {
         $today = (new DateTimeImmutable(date('Y-m-d')));
         $this->load->model('user/sale_dashboard_model');
+
         // ga init
         $analytics = $this->_initialize_analytics();
 
@@ -276,7 +278,6 @@ class Page extends CI_Controller
     // get ios downloads at daily report infos
     private function _get_ios_sales_summary_data(String $date_string)
     {
-
         $client = new GuzzleHttp\Client();
         $res = $client->request('GET', 'https://api.appstoreconnect.apple.com/v1/salesReports', [
             'headers' => [
@@ -358,9 +359,10 @@ class Page extends CI_Controller
     private function _initialize_analytics()
     {
         $KEY_FILE_LOCATION = './influx-e-board-f5ba47ed5c0d.json';
+
         // Create and configure a new client object.
         $client = new Google\Client();
-        $client->setApplicationName("Hello Analytics Reporting");
+        $client->setApplicationName('Hello Analytics Reporting');
         $client->setAuthConfig($KEY_FILE_LOCATION);
         $client->setScopes(['https://www.googleapis.com/auth/analytics.readonly']);
         $analytics = new Google_Service_AnalyticsReporting($client);
@@ -371,7 +373,7 @@ class Page extends CI_Controller
     private function _get_report($analytics, $date_string)
     {
         // Replace with your view ID, for example XXXX.
-        $VIEW_ID = "217790473";
+        $VIEW_ID = '217790473';
 
         // Create the DateRange object.
         $dateRange = new Google_Service_AnalyticsReporting_DateRange();
@@ -379,8 +381,8 @@ class Page extends CI_Controller
         $dateRange->setEndDate($date_string);
 
         $users = new Google_Service_AnalyticsReporting_Metric();
-        $users->setExpression("ga:users");
-        $users->setAlias("users");
+        $users->setExpression('ga:users');
+        $users->setAlias('users');
 
         // Create the ReportRequest object.
         $request = new Google_Service_AnalyticsReporting_ReportRequest();
