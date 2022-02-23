@@ -116,14 +116,21 @@ class Black_list extends Admin_rest_api_controller
     {
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
         $updatedBy = $this->login_info->id;
+		$recordId = isset($input['recordId']) ? $input['recordId'] : '';
 
         $url = $this->brookesia_url . 'blockUser/update';
         $payload = [
-            'userId'           => $input['userId'],
-            'updatedBy'        => $updatedBy,
-            'blockRemark'        => $input['blockRemark'],
-            'blockTimeText' => $input['blockTimeText']
-        ];
+            'userId'            => $input['userId'],
+            'updatedBy'         => $updatedBy,
+            'blockRemark'       => $input['blockRemark'],
+            'blockTimeText' 	=> $input['blockTimeText'],
+		];
+
+		if ( $recordId)
+		{
+			$payload['recordId'] = $recordId;
+		}
+
         $result = curl_get($url, $payload);
 
         if ( ! $result)
@@ -149,13 +156,20 @@ class Black_list extends Admin_rest_api_controller
     {
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
         $updatedBy = $this->login_info->id;
+		$recordId = isset($input['recordId']) ? $input['recordId'] : '';
 
         $url = $this->brookesia_url . 'blockUser/disable';
         $payload = [
-            'userId'           => $input['userId'],
-            'updatedBy'        => $updatedBy,
-            'blockRemark'        => $input['blockRemark']
+            'userId'           	=> $input['userId'],
+            'updatedBy'        	=> $updatedBy,
+            'blockRemark'       => $input['blockRemark']
         ];
+
+		if ( $recordId)
+		{
+			$payload['recordId'] = $recordId;
+		}
+
         $result = curl_get($url, $payload);
 
         if ( ! $result)
@@ -182,12 +196,21 @@ class Black_list extends Admin_rest_api_controller
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
         $updatedBy = $this->login_info->id;
 
+		$recordId = isset($input['recordId']) ? $input['recordId'] : '';
+
         $url = $this->brookesia_url . 'blockUser/enable';
         $payload = [
-            'userId'           => $input['userId'],
-            'updatedBy'        => $updatedBy,
-            'blockRemark'        => $input['blockRemark']
+            'userId'           	=> $input['userId'],
+            'updatedBy'        	=> $updatedBy,
+            'blockRemark'       => $input['blockRemark'],
+			'recordId' 			=> $input['recordId']
         ];
+
+		if ( $recordId)
+		{
+			$payload['recordId'] = $recordId;
+		}
+		
         $result = curl_get($url, $payload);
 
         if ( ! $result)

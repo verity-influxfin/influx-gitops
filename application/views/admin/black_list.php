@@ -99,6 +99,35 @@
 			</table>
 		</div>
 	</div>
+	<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document">
+			<form class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h3 class="modal-title">歷史資訊</h3>
+				</div>
+				<div class="modal-body p-5">
+					<table id="history-table">
+						<thead>
+							<tr>
+								<th>會員ID</th>
+								<th>更新時間</th>
+								<th>更新原因</th>
+								<th>符合黑名單規則</th>
+								<th>規則細項</th>
+								<th>風險等級</th>
+								<th>執行狀態</th>
+								<th>到期時間</th>
+								<th>備註</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</form>
+		</div>
+	</div>
 	<div class="modal fade" id="idModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<form class="modal-content" @submit.prevent="blockDisable">
@@ -248,34 +277,6 @@
 			</form>
 		</div>
 	</div>
-	<div class="modal fade" id="historyModal" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog modal-xl" role="document">
-			<form class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close mb-3" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-					<h3 class="modal-title">歷史資訊</h3>
-				</div>
-				<div class="modal-body p-5">
-					<table id="history-table">
-						<thead>
-							<tr>
-								<th>更新時間</th>
-								<th>更新原因</th>
-								<th>符合黑名單規則</th>
-								<th>規則細項</th>
-								<th>風險等級</th>
-								<th>執行狀態</th>
-								<th>到期時間</th>
-								<th>備註</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</form>
-		</div>
-	</div>
 	<div class="modal fade" id="recordModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog modal-xl" role="document">
 			<form class="modal-content">
@@ -303,8 +304,8 @@
 		</div>
 	</div>
 </div>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script> -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
@@ -416,14 +417,17 @@
 					userId: null,
 					blockRemark: null,
 					blockTimeText: null,
+					recordId: undefined,
 				},
 				disableForm: {
 					userId: null,
 					blockRemark: null,
+					recordId: undefined,
 				},
 				enableForm: {
 					userId: null,
 					blockRemark: null,
+					recordId: undefined,
 				},
 				options: {
 					block_rule: [],
@@ -460,7 +464,8 @@
 						// 取消封鎖
 						return `<div class="d-flex flex-column">
 									<div class="mb-2">${id}</div>
-									<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal" onclick="v.$data.enableForm.userId=${id}">
+									<button class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal" 
+										onclick="v.$data.enableForm.userId=${id};v.$data.enableForm.recordId = undefined">
 										已移除
 									</button>
 								</div>`
@@ -469,7 +474,8 @@
 						// 封鎖中
 						return `<div class="d-flex flex-column">
 							<div class="mb-2">${id}</div>
-							<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal" onclick="v.$data.disableForm.userId=${id}">
+							<button class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal" 
+								onclick="v.$data.disableForm.userId=${id};v.$data.disableForm.recordId = undefined">
 								移除
 							</button>
 						</div>`
@@ -494,7 +500,8 @@
 					}
 					return `<div class="d-flex flex-column">
 							<div class="mb-2" style="white-space:pre-wrap;">${text}</div>
-							<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal" onclick="v.$data.updateStatusForm.userId = ${id}">
+							<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal" 
+							onclick="v.$data.updateStatusForm.userId = ${id};v.$data.updateStatusForm.recordId = undefined">
 								調整
 							</button>
 						</div>`
@@ -610,8 +617,9 @@
 					if (data.status !== 200) {
 						alert(data.message)
 						return
-					}
+					}		
 					$('#statusModal').modal('hide')
+					$('#historyModal').modal('hide')
 					this.getAllBlockUsers()
 				})
 			},
@@ -625,6 +633,7 @@
 						return
 					}
 					$('#idModal').modal('hide')
+					$('#historyModal').modal('hide')
 					this.getAllBlockUsers()
 				})
 			},
@@ -638,6 +647,8 @@
 						return
 					}
 					$('#rejoinModal').modal('hide')
+					$('#historyModal').modal('hide')
+					this.enableForm.recordId = null
 					this.getAllBlockUsers()
 				})
 			},
@@ -652,18 +663,59 @@
                             </div>
 				            `
 				}
+				const idGroup = (id, status, recordId) => {
+					if (status === 0) {
+						// 取消封鎖
+						return `<div class="d-flex flex-column">
+									<div class="mb-2">${id}</div>
+									<button type="button" class="btn btn-default mr-2" data-toggle="modal" data-target="#rejoinModal" 
+										onclick="v.$data.enableForm.userId=${id};v.$data.enableForm.recordId=${recordId};">
+										已移除
+									</button>
+								</div>`
+					}
+					if (status === 1) {
+						// 封鎖中
+						return `<div class="d-flex flex-column">
+							<div class="mb-2">${id}</div>
+							<button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#idModal" 
+								onclick="v.$data.disableForm.userId=${id};v.$data.disableForm.recordId=${recordId}">
+								移除
+							</button>
+						</div>`
+					} 
+				}
+				const statusGroup = (text, status, id, recordId) => {
+					if (status === 'disabled') {
+						return `<div class="d-flex flex-column">
+								<div class="mb-2">${text}</div>
+								<button type="button" class="btn btn-default mr-2" disabled>
+									已移除
+								</button>
+							</div>`
+					}
+					return `<div class="d-flex flex-column">
+							<div class="mb-2" style="white-space:pre-wrap;">${text}</div>
+							<button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal" 
+								onclick="v.$data.updateStatusForm.userId = ${id};v.$data.updateStatusForm.recordId = ${recordId};">
+								調整
+							</button>
+						</div>`
+				}
 				const o = JSON.parse(decodeURI(atob(x)))
 				$('#historyModal').modal('toggle')
 				$('#history-table').DataTable().clear()
 				for (const item of o) {
+					console.log(item)
 					const endDate = item.blockInfo.endAt > 0 ? this.convertTime(item.blockInfo.endAt) : '永久'
 					$('#history-table').DataTable().row.add([
+						idGroup(item.userId,item.status, item.recordId),
 						updateTime({ updatedAt: item.updatedAt, updatedBy: item.updatedBy }),
 						item.updateReason,
 						item.blockRule,
 						item.blockDescription,
 						item.blockRisk,
-						item.blockInfo.blockTimeText,
+						statusGroup(item.blockInfo.blockTimeText, item.status, item.userId,item.recordId),
 						endDate,
 						reason(item.blockRemark)
 					])
