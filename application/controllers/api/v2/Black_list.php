@@ -126,9 +126,10 @@ class Black_list extends Admin_rest_api_controller
             'blockTimeText' 	=> $input['blockTimeText'],
 		];
 
-		if ( $recordId)
+        # 是否修改黑名單歷史record
+		if (isset($input['recordId']))
 		{
-			$payload['recordId'] = $recordId;
+			$payload['recordId'] = $input['recordId'];
 		}
 
         $result = curl_get($url, $payload);
@@ -156,7 +157,6 @@ class Black_list extends Admin_rest_api_controller
     {
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
         $updatedBy = $this->login_info->id;
-		$recordId = isset($input['recordId']) ? $input['recordId'] : '';
 
         $url = $this->brookesia_url . 'blockUser/disable';
         $payload = [
@@ -165,10 +165,11 @@ class Black_list extends Admin_rest_api_controller
             'blockRemark'       => $input['blockRemark']
         ];
 
-		if ( $recordId)
-		{
-			$payload['recordId'] = $recordId;
-		}
+        # 是否修改黑名單歷史record
+        if (isset($input['recordId']))
+        {
+            $payload['recordId'] = $input['recordId'];
+        }
 
         $result = curl_get($url, $payload);
 
@@ -196,8 +197,6 @@ class Black_list extends Admin_rest_api_controller
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
         $updatedBy = $this->login_info->id;
 
-		$recordId = isset($input['recordId']) ? $input['recordId'] : '';
-
         $url = $this->brookesia_url . 'blockUser/enable';
         $payload = [
             'userId'           	=> $input['userId'],
@@ -206,10 +205,11 @@ class Black_list extends Admin_rest_api_controller
 			'recordId' 			=> $input['recordId']
         ];
 
-		if ( $recordId)
-		{
-			$payload['recordId'] = $recordId;
-		}
+        # 是否修改黑名單歷史record
+        if (isset($input['recordId']))
+        {
+            $payload['recordId'] = $input['recordId'];
+        }
 		
         $result = curl_get($url, $payload);
 

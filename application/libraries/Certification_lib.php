@@ -2251,8 +2251,6 @@ class Certification_lib{
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
-                $this->CI->load->library('brookesia/brookesia_lib');
-                $this->CI->brookesia_lib->userCheckAllRules($info->user_id);
                 return $this->fail_other_cer($info);
 			}
 		}

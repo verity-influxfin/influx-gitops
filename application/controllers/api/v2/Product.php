@@ -551,6 +551,17 @@ class Product extends REST_Controller {
         $amount = isset($input['amount']) ? $input['amount'] : 0;
         $user_id = $this->user_info->id;
 
+		// 確認黑名單結果是否禁止申貸
+		$this->load->library('brookesia/black_list_lib');
+		$is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
+
+        // 子系統若無回應不處理
+        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
+		{
+            $this->CI->black_list_lib->add_block_log($is_user_blocked);
+			$this->response(['result' => 'ERROR', 'error' => BLACK_LIST_APPLY_PRODUCT]);
+		}
+
         $product_list = $this->config->item('product_list');
         $sub_product_list = $this->config->item('sub_product_list');
         $exp_product  = explode(':',$input['product_id']);

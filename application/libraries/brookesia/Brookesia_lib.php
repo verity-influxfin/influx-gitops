@@ -29,10 +29,10 @@ class Brookesia_lib
 		return true;
 	}
 
-	public function userCheckAllLog($userId)
+	public function userNotChecked($userId)
 	{
 		if(!$userId) {
-			return false;
+			return FALSE;
 		}
 
 		$url = $this->brookesiaUrl  . "check/checkAll?userId=" . $userId;
@@ -40,49 +40,22 @@ class Brookesia_lib
 		$result = curl_get($url);
 		$response = json_decode($result);
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
+        // 子系統無回應（案件會因流程轉二審，暫不觸發反詐欺）
+		if (!$result || !isset($response->status)) {
+			return FALSE;
 		}
+        // 子系統無 check log 資料
+        else if($response->status != 200)
+        {
+            return TRUE;
+        }
+        // check log 有資料，但未完成
+        else if (isset($response->response->result->status) && $response->response->result->status != 'finished')
+        {
+            return TRUE;
+        }
 
-		return $response;
+		return FALSE;
 	}
-
-	public function getRuleHitByUserId($userId)
-	{
-		if(!$userId) {
-			return;
-		}
-
-		$url = $this->brookesiaUrl . "result/userHitRule?userId=" . $userId;
-
-		$result = curl_get($url);
-		$response = json_decode($result);
-
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
-
-		return $response;
-	}
-
-	public function getRelatedUserByUserId($userId)
-	{
-		if (!$userId) {
-			return;
-		}
-
-		$url = $this->brookesiaUrl . "result/relatedUser?userId=" . $userId;
-
-		$result = curl_get($url);
-		$response = json_decode($result);
-
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
-
-		return $response;
-	}
-
-
 
 }
