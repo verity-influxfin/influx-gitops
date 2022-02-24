@@ -23,12 +23,12 @@
 	<div id="sme-loan">
 		<div class="row">
 			<div class="col-12">
-				<h1 class="page-header">普匯微企e秒貸</h1>
+				<h1 class="page-header">微企貸轉人工</h1>
 			</div>
 		</div>
 		<div class="panel panel-default mt-4">
 			<div class="panel-heading p-4">
-				普匯微企e秒貸
+                微企貸轉人工
 			</div>
 			<div class="panel-body">
 				<table id="sme-table">

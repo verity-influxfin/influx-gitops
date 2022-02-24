@@ -789,10 +789,8 @@
                     </div>
                     <? } ?>
                     <div class="targetAction">
-                        <? if($active){ ?>
                         <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
                         <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
-                        <? } ?>
                         <? if($targetInfo->product_id == 1002){ ?>
                             <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
                             <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">圖片送出</button>

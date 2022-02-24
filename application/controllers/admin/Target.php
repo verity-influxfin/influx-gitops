@@ -2145,10 +2145,8 @@ class Target extends MY_Admin_Controller {
                     }
                 }
                 elseif(isset($post['manual_handling'])){
-                    if($target_info->status == TARGET_WAITING_VERIFY
-                        && $target_info->sub_status ==TARGET_SUBSTATUS_SECOND_INSTANCE
-                        || $target_info->status == TARGET_BANK_FAIL
-                    ) {
+                    if ( ! in_array($target_info->status, [TARGET_BANK_LOAN, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]))
+                    {
                         $target_data = json_decode($target_info->target_data, TRUE);
                         $target_data['manual_reason'] = TARGET_MSG_NOT_CREDIT_STANDARD;
                         $param = [

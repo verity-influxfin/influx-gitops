@@ -447,7 +447,7 @@
                                                 if(isset($input['investor']) && $input['investor'] == 0){
                                                     if($isExternalCoop) {
                                                         if (!isset($input['target_id'])) {
-                                                            echo '<td><button class="btn btn-primary btn-warning manual_handling" onclick=""' .($value->status == TARGET_WAITING_VERIFY && $value->sub_status == TARGET_SUBSTATUS_SECOND_INSTANCE || $value->status == TARGET_BANK_FAIL ?'':' disabled'). ' data-target_id='.$value->id.'>轉人工</button></td>';
+                                                            echo '<td><button class="btn btn-primary btn-warning manual_handling" onclick=""' .(in_array($value->status, [TARGET_BANK_LOAN, TARGET_BANK_REPAYMENTING, TARGET_BANK_REPAYMENTED]) ?'disabled':' '). ' data-target_id='.$value->id.'>轉人工</button></td>';
                                                         }else{
                                                             echo '<td><button class="btn btn-primary btn-info" onclick="" >圖片資料</button></td>';
                                                         }
