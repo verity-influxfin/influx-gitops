@@ -7,8 +7,10 @@
 		</div>
 	</div>
 	<div class="tab">
-		<button class="tab-item" :class="{'active':tab==='list'}" @click="changeLocation('list')">黑名單列表</button>
-		<button class="tab-item" :class="{'active':tab==='history'}" @click="changeLocation('history')">黑名單處置紀錄</button>
+		<button class="tab-item" :class="{'active':tab==='list'}"
+			@click="changeLocation({ tab: 'list' })">黑名單列表</button>
+		<button class="tab-item" :class="{'active':tab==='history'}"
+			@click="changeLocation({ tab: 'history' })">黑名單處置紀錄</button>
 	</div>
 	<div class="panel panel-default" v-show="tab!=='history'">
 		<div class="panel-heading">
@@ -72,7 +74,7 @@
 			<form class="d-flex" @submit.prevent="blockHistory">
 				<div class="p-2">會員ID</div>
 				<div class="p-2">
-					<input type="text" class="form-control" v-model="blockHistoryParam.userId">
+					<input type="text" class="form-control" v-model="allBlockUserParam.userId">
 				</div>
 				<div class="d-flex">
 					<div class="search-btn">
@@ -401,9 +403,6 @@
 					blockRule: null,
 					blockTimeText: null
 				},
-				blockHistoryParam: {
-					userId: null
-				},
 				blockUserAddForm: {
 					userId: null,
 					blockRule: null,
@@ -552,8 +551,11 @@
 			},
 			onReady() {
 				const url = new URL(location.href)
-				if (url.searchParams.get('tab')) {
+				if (url.searchParams.has('tab')) {
 					this.tab = url.searchParams.get('tab')
+				}
+				if (url.searchParams.has('id')) {
+					this.allBlockUserParam.userId = url.searchParams.get('id')
 				}
 				if (this.tab !== 'history') {
 					this.getOption()
@@ -575,10 +577,6 @@
 			},
 			getAllBlockUsers() {
 				const { allBlockUserParam } = this
-				const url = new URL(location.href)
-				if (url.searchParams.has('id')) {
-					this.allBlockUserParam.userId = url.searchParams.get('id')
-				}
 				axios.get(`${apiUrl}/get_all_block_users`, {
 					params: {
 						...allBlockUserParam
@@ -725,6 +723,7 @@
 				$('#recordModal').modal('toggle')
 				$('#reocord-modal-table').DataTable().clear()
 				const o = JSON.parse(decodeURI(atob(x)))
+				o.reverse()
 				for (const item of o) {
 					$('#reocord-modal-table').DataTable().row.add([
 						this.convertTime(item.updatedAt),
@@ -739,10 +738,10 @@
 			},
 			// tab history
 			blockHistory() {
-				const { blockHistoryParam } = this
+				const { userId } = this.allBlockUserParam
 				axios.get(`${apiUrl}/block_log`, {
 					params: {
-						...blockHistoryParam
+						userId
 					}
 				}).then(({ data }) => {
 					if (!data.results) {
@@ -753,8 +752,12 @@
 					$('#record-table').DataTable().draw()
 				})
 			},
-			changeLocation(tab) {
-				window.location.search = 'tab=' + tab
+			changeLocation({ tab }) {
+				let url = 'tab=' + tab
+				if (this.allBlockUserParam.userId) {
+					url += `&id=${this.allBlockUserParam.userId}`
+				}
+				window.location.search = url
 			}
 		},
 	})
