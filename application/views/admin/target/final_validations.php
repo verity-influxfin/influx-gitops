@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js" ></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/admin/js/common/datetime.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/user.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/verification.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/user/bankaccount.js"></script>
@@ -9,84 +9,105 @@
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/credit.js"></script>
 <script src="<?=base_url()?>assets/admin/js/mapping/loan/target.js"></script>
 <style type="text/css">
-	.creditArea{
-		width: 82px;line-height: 20px;text-align: center;margin-bottom: 6px;
+	.creditArea {
+		width: 82px;
+		line-height: 20px;
+		text-align: center;
+		margin-bottom: 6px;
 	}
-	.creditArea:disabled{
-		border:0;line-height: 24px;background-color: #f4f4f4;
+
+	.creditArea:disabled {
+		border: 0;
+		line-height: 24px;
+		background-color: #f4f4f4;
 	}
-	.targetDataInputblock div{
+
+	.targetDataInputblock div {
 		line-height: 24px;
 	}
-    #creditManagementTable{
-        height: 2500px;
-    }
-    iframe{
-        width: 100%;
-        overflow: hidden;
-        border: 0;
-    }
-    .opinion_item {
-        display: flex;
-        margin: 10px;
-        border-bottom-style: ridge;
-        position: relative;
-    }
-    .opinion_item div {
-        margin: 0 10px;
-    }
-    .opinion_status {
-        display: flex;
-        width: 10%;
-        justify-content: center;
-        align-items: center;
-    }
-    .opinion_description {
-        display: flex;
-        width: 10%;
-        justify-content: center;
-        align-items: center;
-    }
-    .opinion_info {
-        width: 70%;
-    }
-    .opinion_info input{
-        width: 100%;
-    }
-    .opinion_info textarea{
-        width: 100%;
-        height: 70px;
-        resize : none;
-        word-break:keep-all;
-    }
-    .opinion_info div{
-        display: flex;
-    }
-    .opinion_button {
-        display: flex;
-        width: 10%;
-        justify-content: center;
-        align-items: center;
-    }
-    .mask {
-        z-index: 10;
-        background-color: gray;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        opacity: 0.3;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 50px;
-        font-weight:bold;
-        letter-spacing: 25px;
-    }
+
+	#creditManagementTable {
+		height: 2500px;
+	}
+
+	iframe {
+		width: 100%;
+		overflow: hidden;
+		border: 0;
+	}
+
+	.opinion_item {
+		display: flex;
+		margin: 10px;
+		border-bottom-style: ridge;
+		position: relative;
+	}
+
+	.opinion_item div {
+		margin: 0 10px;
+	}
+
+	.opinion_status {
+		display: flex;
+		width: 10%;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.opinion_description {
+		display: flex;
+		width: 10%;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.opinion_info {
+		width: 70%;
+	}
+
+	.opinion_info input {
+		width: 100%;
+	}
+
+	.opinion_info textarea {
+		width: 100%;
+		height: 70px;
+		resize: none;
+		word-break: keep-all;
+	}
+
+	.opinion_info div {
+		display: flex;
+	}
+
+	.opinion_button {
+		display: flex;
+		width: 10%;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.mask {
+		z-index: 10;
+		background-color: gray;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		opacity: 0.3;
+		color: white;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 50px;
+		font-weight: bold;
+		letter-spacing: 25px;
+	}
+
 	.d-flex {
 		display: flex;
 		align-items: center;
 	}
+
 	.col-20 {
 		flex: 0 0 20%;
 	}
@@ -127,79 +148,113 @@
 				<div class="panel-body natual">
 					<div class="row">
 						<div class="col-lg-12">
-                            <iframe id="creditManagementTable" src="../creditmanagement/report?target_id=<?=$_GET['id']?>&type=person" scrolling='no' ></iframe>
+							<iframe id="creditManagementTable"
+								src="../creditmanagement/report?target_id=<?=$_GET['id']?>&type=person"
+								scrolling='no'></iframe>
 							<div class="table-responsive">
 								<table class="table table-bordered">
 									<tr>
-										<td class="table-field"><p class="form-control-static">姓名</p></td>
+										<td class="table-field">
+											<p class="form-control-static">姓名</p>
+										</td>
 										<td class="table-ten">
 											<p id="name" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">性別</p></td>
+										<td class="table-field">
+											<p class="form-control-static">性別</p>
+										</td>
 										<td class="table-ten">
 											<p id="gender" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">學校名稱</p></td>
+										<td class="table-field">
+											<p class="form-control-static">學校名稱</p>
+										</td>
 										<td class="table-twenty">
 											<p id="school" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">借款端銀行/分行</p></td>
+										<td class="table-field">
+											<p class="form-control-static">借款端銀行/分行</p>
+										</td>
 										<td class="table-twenty">
 											<p id="borrower-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">身分證字號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">身分證字號</p>
+										</td>
 										<td class="table-ten">
 											<p id="id-card" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">婚姻</p></td>
+										<td class="table-field">
+											<p class="form-control-static">婚姻</p>
+										</td>
 										<td class="table-ten">
 											<p id="marriage" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">學制/學門</p></td>
+										<td class="table-field">
+											<p class="form-control-static">學制/學門</p>
+										</td>
 										<td class="table-twenty">
 											<p id="school-system" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">借款端帳號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">借款端帳號</p>
+										</td>
 										<td class="table-twenty">
 											<p id="borrower-account" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">生日</p></td>
+										<td class="table-field">
+											<p class="form-control-static">生日</p>
+										</td>
 										<td class="table-ten">
 											<p id="birthday" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">地址</p></td>
+										<td class="table-field">
+											<p class="form-control-static">地址</p>
+										</td>
 										<td class="table-ten">
 											<div class="scrollable">
 												<p id="address" class="form-control-static"></p>
 											</div>
 										</td>
-										<td class="table-field"><p class="form-control-static">系所</p></td>
+										<td class="table-field">
+											<p class="form-control-static">系所</p>
+										</td>
 										<td class="table-twenty">
 											<p id="school-department" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">投資端銀行/分行</p></td>
+										<td class="table-field">
+											<p class="form-control-static">投資端銀行/分行</p>
+										</td>
 										<td class="table-twenty">
 											<p id="investor-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">發證日期</p></td>
+										<td class="table-field">
+											<p class="form-control-static">發證日期</p>
+										</td>
 										<td class="table-ten">
 											<p id="id-card-issued-at" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">E-mail</p></td>
+										<td class="table-field">
+											<p class="form-control-static">E-mail</p>
+										</td>
 										<td class="table-ten">
 											<p id="email" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">(預計)畢業日期</p></td>
+										<td class="table-field">
+											<p class="form-control-static">(預計)畢業日期</p>
+										</td>
 										<td class="table-twenty">
 											<p id="graduated-at" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">投資端帳號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">投資端帳號</p>
+										</td>
 										<td class="table-twenty">
 											<p id="investor-account" class="form-control-static"></p>
 										</td>
@@ -207,53 +262,75 @@
 								</table>
 								<table class="table table-bordered">
 									<tr>
-										<td class="table-field"><p class="form-control-static">使用者編號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">使用者編號</p>
+										</td>
 										<td class="table-twenty">
 											<p id="id" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">手機號碼</p></td>
+										<td class="table-field">
+											<p class="form-control-static">手機號碼</p>
+										</td>
 										<td class="table-twenty">
 											<p id="phone" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">註冊日期</p></td>
+										<td class="table-field">
+											<p class="form-control-static">註冊日期</p>
+										</td>
 										<td class="table-ten">
 											<p id="registered-at" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">持證自拍照</p></td>
+										<td class="table-field">
+											<p class="form-control-static">持證自拍照</p>
+										</td>
 										<td class="table-twenty table-picture">
 											<p id="profile-image" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">簽約照</p></td>
+										<td class="table-field">
+											<p class="form-control-static">簽約照</p>
+										</td>
 										<td class="table-twenty table-picture">
 											<p id="applicant-signing-target-image" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">借款端虛擬帳戶餘額</p></td>
+										<td class="table-field">
+											<p class="form-control-static">借款端虛擬帳戶餘額</p>
+										</td>
 										<td class="table-ten">
 											<p id="borrower-virtual-account-total" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">FB照片</p></td>
+										<td class="table-field">
+											<p class="form-control-static">FB照片</p>
+										</td>
 										<td class="table-twenty table-picture">
 											<p id="facebook-profile-picture" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">FB暱稱</p></td>
+										<td class="table-field">
+											<p class="form-control-static">FB暱稱</p>
+										</td>
 										<td class="table-ten">
 											<p id="facebook-username" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">投資端虛擬帳戶餘額</p></td>
+										<td class="table-field">
+											<p class="form-control-static">投資端虛擬帳戶餘額</p>
+										</td>
 										<td class="table-ten">
 											<p id="investor-virtual-account-total" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">IG照片</p></td>
+										<td class="table-field">
+											<p class="form-control-static">IG照片</p>
+										</td>
 										<td class="table-twenty table-picture">
 											<p id="instagram-profile-picture" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">IG帳號名稱</p></td>
+										<td class="table-field">
+											<p class="form-control-static">IG帳號名稱</p>
+										</td>
 										<td class="table-ten">
 											<p id="instagram-username" class="form-control-static"></p>
 										</td>
@@ -269,21 +346,29 @@
 							<div class="table-responsive">
 								<table class="table table-bordered">
 									<tr>
-										<td class="table-field"><p class="form-control-static">使用者編號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">使用者編號</p>
+										</td>
 										<td class="table-twenty">
 											<p id="id" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">E-mail</p></td>
+										<td class="table-field">
+											<p class="form-control-static">E-mail</p>
+										</td>
 										<td class="table-ten">
 											<p id="email" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">公司登記名稱</p></td>
+										<td class="table-field">
+											<p class="form-control-static">公司登記名稱</p>
+										</td>
 										<td class="table-ten">
 											<p id="name" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">統一編號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">統一編號</p>
+										</td>
 										<td class="table-ten">
 											<p id="id-card" class="form-control-static"></p>
 										</td>
@@ -291,31 +376,43 @@
 								</table>
 								<table class="table table-bordered">
 									<tr>
-										<td class="table-field"><p class="form-control-static">借款端虛擬帳戶餘額</p></td>
+										<td class="table-field">
+											<p class="form-control-static">借款端虛擬帳戶餘額</p>
+										</td>
 										<td class="table-ten">
 											<p id="borrower-virtual-account-total" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">投資端虛擬帳戶餘額</p></td>
+										<td class="table-field">
+											<p class="form-control-static">投資端虛擬帳戶餘額</p>
+										</td>
 										<td class="table-ten">
 											<p id="investor-virtual-account-total" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">借款端銀行/分行</p></td>
+										<td class="table-field">
+											<p class="form-control-static">借款端銀行/分行</p>
+										</td>
 										<td class="table-twenty">
 											<p id="borrower-bank" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">投資端銀行/分行</p></td>
+										<td class="table-field">
+											<p class="form-control-static">投資端銀行/分行</p>
+										</td>
 										<td class="table-twenty">
 											<p id="investor-bank" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field"><p class="form-control-static">借款端帳號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">借款端帳號</p>
+										</td>
 										<td class="table-twenty">
 											<p id="borrower-account" class="form-control-static"></p>
 										</td>
-										<td class="table-field"><p class="form-control-static">投資端帳號</p></td>
+										<td class="table-field">
+											<p class="form-control-static">投資端帳號</p>
+										</td>
 										<td class="table-twenty">
 											<p id="investor-account" class="form-control-static"></p>
 										</td>
@@ -341,10 +438,10 @@
 							<div class="table-responsive">
 								<table id="borrowing-verifications" class="table table-bordered table-hover">
 									<thead>
-									<tr class="odd list">
-										<th class="center-text" width="40%">認證名稱</th>
-										<th class="center-text" width="60%">狀態</th>
-									</tr>
+										<tr class="odd list">
+											<th class="center-text" width="40%">認證名稱</th>
+											<th class="center-text" width="60%">狀態</th>
+										</tr>
 									</thead>
 									<tbody>
 									</tbody>
@@ -366,10 +463,10 @@
 							<div class="table-responsive">
 								<table id="investing-verifications" class="table table-bordered table-hover">
 									<thead>
-									<tr class="odd list">
-										<th class="center-text" width="40%">認證名稱</th>
-										<th class="center-text" width="60%">狀態</th>
-									</tr>
+										<tr class="odd list">
+											<th class="center-text" width="40%">認證名稱</th>
+											<th class="center-text" width="60%">狀態</th>
+										</tr>
 									</thead>
 									<tbody>
 									</tbody>
@@ -391,37 +488,49 @@
 							<div class="table-responsive">
 								<table class="table table-bordered table-hover">
 									<tr>
-										<td class="table-field center-text"><p class="form-control-static">產品</p></td>
+										<td class="table-field center-text">
+											<p class="form-control-static">產品</p>
+										</td>
 										<td class="center-text table-twenty">
 											<p id="product-name" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field center-text"><p class="form-control-static">信用等級</p></td>
+										<td class="table-field center-text">
+											<p class="form-control-static">信用等級</p>
+										</td>
 										<td class="center-text table-twenty">
 											<p id="credit-level" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field center-text"><p class="form-control-static">信用評分</p></td>
+										<td class="table-field center-text">
+											<p class="form-control-static">信用評分</p>
+										</td>
 										<td class="center-text table-twenty">
 											<p id="credit-points" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field center-text"><p class="form-control-static">信用額度</p></td>
+										<td class="table-field center-text">
+											<p class="form-control-static">信用額度</p>
+										</td>
 										<td class="center-text table-twenty">
 											<p id="credit-amount" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field center-text"><p class="form-control-static">有效時間</p></td>
+										<td class="table-field center-text">
+											<p class="form-control-static">有效時間</p>
+										</td>
 										<td class="center-text table-twenty">
 											<p id="credit-expired-at" class="form-control-static"></p>
 										</td>
 									</tr>
 									<tr>
-										<td class="table-field center-text"><p class="form-control-static">核准時間</p></td>
+										<td class="table-field center-text">
+											<p class="form-control-static">核准時間</p>
+										</td>
 										<td class="center-text table-twenty">
 											<p id="credit-created-at" class="form-control-static"></p>
 										</td>
@@ -444,10 +553,10 @@
 							<div class="table-responsive">
 								<table id="judicial-yuan" class="table table-bordered table-hover table-striped">
 									<thead>
-									<tr class="odd list">
-										<th width="70%">裁判案由</th>
-										<th width="30%">總數</th>
-									</tr>
+										<tr class="odd list">
+											<th width="70%">裁判案由</th>
+											<th width="30%">總數</th>
+										</tr>
 									</thead>
 								</table>
 							</div>
@@ -467,11 +576,11 @@
 							<div class="table-responsive">
 								<table id="brookesia_results" class="table table-bordered table-hover table-striped">
 									<thead>
-									<tr class="odd list">
-										<th width="25%">風險等級</th>
-										<th width="30%">事件時間</th>
-										<th width="45%">指標內容</th>
-									</tr>
+										<tr class="odd list">
+											<th width="25%">風險等級</th>
+											<th width="30%">事件時間</th>
+											<th width="45%">指標內容</th>
+										</tr>
 									</thead>
 								</table>
 							</div>
@@ -491,27 +600,27 @@
 							<div class="table-responsive center-text">
 								<table id="related-users" class="table table-bordered table-hover table-striped">
 									<thead>
-									<tr class="odd list">
-										<th width="20%">使用者編號</th>
-										<th width="50%">關聯原因</th>
-										<th width="30%">關聯值</th>
-									</tr>
+										<tr class="odd list">
+											<th width="20%">使用者編號</th>
+											<th width="50%">關聯原因</th>
+											<th width="30%">關聯值</th>
+										</tr>
 									</thead>
 									<tbody>
-									<tr class="odd list">
-										<td class="center-text fake-fields">
-											<p class="form-control-static"></p>
-										</td>
-										<td class="center-text fake-fields">
-											<p class="form-control-static"></p>
-										</td>
-										<td class="center-text fake-fields">
-											<p class="form-control-static"></p>
-										</td>
-										<td class="center-text fake-fields">
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
+										<tr class="odd list">
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 								<button id="load-more" class="btn btn-default">載入更多</button>
@@ -559,24 +668,24 @@
 							<div class="table-responsive">
 								<table id="targetData" class="table table-bordered">
 									<thead>
-									<tr class="odd list">
-										<th width="10%">資料項目</th>
-										<th width="10%">繳交狀態</th>
-										<th width="10%">加分項目</th>
-									</tr>
+										<tr class="odd list">
+											<th width="10%">資料項目</th>
+											<th width="10%">繳交狀態</th>
+											<th width="10%">加分項目</th>
+										</tr>
 									</thead>
 									<tbody>
-									<tr class="odd list">
-										<td class="center-text fake-fields">
-											<p class="form-control-static"></p>
-										</td>
-										<td class="center-text fake-fields">
-											<p class="form-control-static"></p>
-										</td>
-										<td class="center-text fake-fields">
-											<p class="form-control-static"></p>
-										</td>
-									</tr>
+										<tr class="odd list">
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+											<td class="center-text fake-fields">
+												<p class="form-control-static"></p>
+											</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -596,18 +705,18 @@
 							<div class="table-responsive">
 								<table id="targets" class="table table-bordered">
 									<thead>
-									<tr class="odd list">
-										<th width="10%">案號</th>
-										<th width="10%">產品</th>
-										<th width="10%">申請金額</th>
-										<th width="10%">核准金額</th>
-										<th width="10%">本金餘額</th>
-										<th width="10%">可動用餘額</th>
-										<th width="6%">狀態</th>
-										<th width="10%">有效時間</th>
-										<th width="14%">借款原因</th>
-										<th width="10%">詳情</th>
-									</tr>
+										<tr class="odd list">
+											<th width="10%">案號</th>
+											<th width="10%">產品</th>
+											<th width="10%">申請金額</th>
+											<th width="10%">核准金額</th>
+											<th width="10%">本金餘額</th>
+											<th width="10%">可動用餘額</th>
+											<th width="6%">狀態</th>
+											<th width="10%">有效時間</th>
+											<th width="14%">借款原因</th>
+											<th width="10%">詳情</th>
+										</tr>
 									</thead>
 									<tbody>
 
@@ -623,162 +732,191 @@
 			<div class="panel panel-default">
 				<div class="panel-heading">額度試算</div>
 				<div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <tr>
-                                <td class="table-field center-text"><p>產品</p></td>
-                                <td class="center-text table-reevaluation">
-                                    <p id="new-product-name"></p>
-                                </td>
-                                <td class="table-field center-text"><p>信用等級</p></td>
-                                <td class="center-text table-reevaluation">
-                                    <p id="new-credit-level"></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="table-field center-text"><p>信用評分</p></td>
-                                <td class="center-text table-reevaluation">
-                                    <p id="new-credit-points"></p>
-                                </td>
-                                <td class="table-field center-text"><p>信用額度</p></td>
-                                <td class="center-text table-reevaluation">
-                                    <p id="new-credit-amount"></p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="table-field center-text"><p>核准時間</p></td>
-                                <td class="center-text table-reevaluation">
-                                    <p id="new-credit-created-at"></p>
-                                </td>
-                                <td class="table-field center-text"><p>有效時間</p></td>
-                                <td class="center-text table-reevaluation">
-                                    <p id="new-credit-expired-at"></p>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+					<div class="table-responsive">
+						<table class="table table-bordered">
+							<tr>
+								<td class="table-field center-text">
+									<p>產品</p>
+								</td>
+								<td class="center-text table-reevaluation">
+									<p id="new-product-name"></p>
+								</td>
+								<td class="table-field center-text">
+									<p>信用等級</p>
+								</td>
+								<td class="center-text table-reevaluation">
+									<p id="new-credit-level"></p>
+								</td>
+							</tr>
+							<tr>
+								<td class="table-field center-text">
+									<p>信用評分</p>
+								</td>
+								<td class="center-text table-reevaluation">
+									<p id="new-credit-points"></p>
+								</td>
+								<td class="table-field center-text">
+									<p>信用額度</p>
+								</td>
+								<td class="center-text table-reevaluation">
+									<p id="new-credit-amount"></p>
+								</td>
+							</tr>
+							<tr>
+								<td class="table-field center-text">
+									<p>核准時間</p>
+								</td>
+								<td class="center-text table-reevaluation">
+									<p id="new-credit-created-at"></p>
+								</td>
+								<td class="table-field center-text">
+									<p>有效時間</p>
+								</td>
+								<td class="center-text table-reevaluation">
+									<p id="new-credit-expired-at"></p>
+								</td>
+							</tr>
+						</table>
+					</div>
 				</div>
-                <div class="panel-body">
-                    <form id="credit-evaluation" method="POST" action="/admin/Target/credits">
-                        <div class="col-lg-12 text-center">
-                            <input id="credit_test" type="text" name="score" value="0"/ disabled>
-                            <button class="btn btn-warning" type="submit">額度試算</button>
-                            <button class="btn btn-danger" data-url="/admin/Target/verify_failed" id="verify_failed">不通過</button>
+				<div class="panel-body">
+					<form id="credit-evaluation" method="POST" action="/admin/Target/credits">
+						<div class="col-lg-12 text-center">
+							<input id="credit_test" type="text" name="score" value="0" / disabled>
+							<button class="btn btn-warning" type="submit">額度試算</button>
+							<button class="btn btn-danger" data-url="/admin/Target/verify_failed"
+								id="verify_failed">不通過</button>
 							<button class="btn btn-info mr-2" type="button" data-toggle="modal" data-target="#newModal">
 								新增至黑名單
 							</button>
-                        </div>
-                    </form>
-                </div>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">審批</div>
-                <div class="panel-body" id="opinion">
-                    <div class="opinion_item">
-                        <div id="1_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
-                        <div id="1_opinion_status" class="opinion_status">
-                            <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
-                        </div>
-                        <div class="opinion_info">
-                            <div>
-                                <span style="width:30%;display:flex;align-items:center;">一審結果：</span>
-                                <span style="width:70%;"><textarea id="1_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
-                            </div>
-                            <div>
-                                <span style="width:30%;">
-                                    <span>分數調整</span>
-                                    <span class="score_range"></span>
-                                    <span>：</span>
-                                </span>
-                                <span style="width:70%;"><input id="1_score" type="number" value="0" min="0" step="1" disabled></span>
-                            </div>
-                            <div><span style="width:30%;">姓名：</span><span id="1_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="1_approvedTime"></span></div>
-                        </div>
-                        <div class="opinion_button">
-                            <button id="1_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,1)" disabled>送出</button>
-                        </div>
-                    </div>
-                    <div class="opinion_item">
-                        <div id="2_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
-                        <div id="2_opinion_status" class="opinion_status">
-                            <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
-                        </div>
-                        <div class="opinion_info">
-                            <div>
-                                <span style="width:30%;display:flex;align-items:center;">二審意見：</span>
-                                <span style="width:70%;"><textarea id="2_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
-                            </div>
-                            <div>
-                                <span style="width:30%;">
-                                    <span>分數調整</span>
-                                    <span class="score_range"></span>
-                                    <span>：</span>
-                                </span>
-                                <span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1" disabled></span>
-                            </div>
-                            <div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
-                        </div>
-                        <div class="opinion_button">
-                            <button id="2_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,2)" disabled>送出</button>
-                        </div>
-                    </div>
-                    <div class="opinion_item">
-                        <div id="3_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
-                        <div id="3_opinion_status" class="opinion_status">
-                            <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
-                        </div>
-                        <div class="opinion_info">
-                            <div>
-                                <span style="width:30%;display:flex;align-items:center;">風控長意見：</span>
-                                <span style="width:70%;"><textarea id="3_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
-                            </div>
-                            <div>
-                                <span style="width:30%;">
-                                    <span>分數調整</span>
-                                    <span class="score_range"></span>
-                                    <span>：</span>
-                                </span>
-                                <span style="width:70%;"><input id="3_score" type="number" value="0" min="0" step="1" disabled></span>
-                            </div>
-                            <div><span style="width:30%;">姓名：</span><span id="3_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="3_approvedTime"></span></div>
-                        </div>
-                        <div class="opinion_button">
-                            <button id="3_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,3)" disabled>送出</button>
-                        </div>
-                    </div>
-                    <div class="opinion_item">
-                        <div id="4_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
-                        <div id="4_opinion_status" class="opinion_status">
-                            <button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>
-                        </div>
-                        <div class="opinion_info">
-                            <div>
-                                <span style="width:30%;display:flex;align-items:center;">總經理意見：</span>
-                                <span style="width:70%;"><textarea id="4_opinion" type="text" placeholder="請輸入..." value="" disabled></textarea></span>
-                            </div>
-                            <div>
-                                <span style="width:30%;">
-                                    <span>分數調整</span>
-                                    <span class="score_range"></span>
-                                    <span>：</span>
-                                </span>
-                                <span style="width:70%;"><input id="4_score" type="number" value="0" min="0" step="1" disabled></span>
-                            </div>
-                            <div><span style="width:30%;">姓名：</span><span id="4_name"></span></div>
-                            <div><span style="width:30%;">時間：</span><span id="4_approvedTime"></span></div>
-                        </div>
-                        <div class="opinion_button">
-                            <button id="4_opinion_button" class="btn btn-primary btn-info score" onclick="send_opinion(<?=$_GET['id']?>,4)" disabled>送出</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">審批</div>
+				<div class="panel-body" id="opinion">
+					<div class="opinion_item">
+						<div id="1_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+						<div id="1_opinion_status" class="opinion_status">
+							<button type="button" class="btn btn-secondary btn-circle"><i
+									class="fa fa-minus"></i></button>
+						</div>
+						<div class="opinion_info">
+							<div>
+								<span style="width:30%;display:flex;align-items:center;">一審結果：</span>
+								<span style="width:70%;"><textarea id="1_opinion" type="text" placeholder="請輸入..."
+										value="" disabled></textarea></span>
+							</div>
+							<div>
+								<span style="width:30%;">
+									<span>分數調整</span>
+									<span class="score_range"></span>
+									<span>：</span>
+								</span>
+								<span style="width:70%;"><input id="1_score" type="number" value="0" min="0" step="1"
+										disabled></span>
+							</div>
+							<div><span style="width:30%;">姓名：</span><span id="1_name"></span></div>
+							<div><span style="width:30%;">時間：</span><span id="1_approvedTime"></span></div>
+						</div>
+						<div class="opinion_button">
+							<button id="1_opinion_button" class="btn btn-primary btn-info score"
+								onclick="send_opinion(<?=$_GET['id']?>,1)" disabled>送出</button>
+						</div>
+					</div>
+					<div class="opinion_item">
+						<div id="2_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+						<div id="2_opinion_status" class="opinion_status">
+							<button type="button" class="btn btn-secondary btn-circle"><i
+									class="fa fa-minus"></i></button>
+						</div>
+						<div class="opinion_info">
+							<div>
+								<span style="width:30%;display:flex;align-items:center;">二審意見：</span>
+								<span style="width:70%;"><textarea id="2_opinion" type="text" placeholder="請輸入..."
+										value="" disabled></textarea></span>
+							</div>
+							<div>
+								<span style="width:30%;">
+									<span>分數調整</span>
+									<span class="score_range"></span>
+									<span>：</span>
+								</span>
+								<span style="width:70%;"><input id="2_score" type="number" value="0" min="0" step="1"
+										disabled></span>
+							</div>
+							<div><span style="width:30%;">姓名：</span><span id="2_name"></span></div>
+							<div><span style="width:30%;">時間：</span><span id="2_approvedTime"></span></div>
+						</div>
+						<div class="opinion_button">
+							<button id="2_opinion_button" class="btn btn-primary btn-info score"
+								onclick="send_opinion(<?=$_GET['id']?>,2)" disabled>送出</button>
+						</div>
+					</div>
+					<div class="opinion_item">
+						<div id="3_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+						<div id="3_opinion_status" class="opinion_status">
+							<button type="button" class="btn btn-secondary btn-circle"><i
+									class="fa fa-minus"></i></button>
+						</div>
+						<div class="opinion_info">
+							<div>
+								<span style="width:30%;display:flex;align-items:center;">風控長意見：</span>
+								<span style="width:70%;"><textarea id="3_opinion" type="text" placeholder="請輸入..."
+										value="" disabled></textarea></span>
+							</div>
+							<div>
+								<span style="width:30%;">
+									<span>分數調整</span>
+									<span class="score_range"></span>
+									<span>：</span>
+								</span>
+								<span style="width:70%;"><input id="3_score" type="number" value="0" min="0" step="1"
+										disabled></span>
+							</div>
+							<div><span style="width:30%;">姓名：</span><span id="3_name"></span></div>
+							<div><span style="width:30%;">時間：</span><span id="3_approvedTime"></span></div>
+						</div>
+						<div class="opinion_button">
+							<button id="3_opinion_button" class="btn btn-primary btn-info score"
+								onclick="send_opinion(<?=$_GET['id']?>,3)" disabled>送出</button>
+						</div>
+					</div>
+					<div class="opinion_item">
+						<div id="4_opinion_mask" class="mask" style="margin: unset;">非核貸最高層級</div>
+						<div id="4_opinion_status" class="opinion_status">
+							<button type="button" class="btn btn-secondary btn-circle"><i
+									class="fa fa-minus"></i></button>
+						</div>
+						<div class="opinion_info">
+							<div>
+								<span style="width:30%;display:flex;align-items:center;">總經理意見：</span>
+								<span style="width:70%;"><textarea id="4_opinion" type="text" placeholder="請輸入..."
+										value="" disabled></textarea></span>
+							</div>
+							<div>
+								<span style="width:30%;">
+									<span>分數調整</span>
+									<span class="score_range"></span>
+									<span>：</span>
+								</span>
+								<span style="width:70%;"><input id="4_score" type="number" value="0" min="0" step="1"
+										disabled></span>
+							</div>
+							<div><span style="width:30%;">姓名：</span><span id="4_name"></span></div>
+							<div><span style="width:30%;">時間：</span><span id="4_approvedTime"></span></div>
+						</div>
+						<div class="opinion_button">
+							<button id="4_opinion_button" class="btn btn-primary btn-info score"
+								onclick="send_opinion(<?=$_GET['id']?>,4)" disabled>送出</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -799,8 +937,7 @@
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">符合黑名單規則：</div>
 						<div class="col">
-							<select name="" id="blockRule" class="w-100 form-control"
-								required disabled>
+							<select name="" id="blockRule" class="w-100 form-control" required disabled>
 								<option value="授信政策">授信政策</option>
 							</select>
 						</div>
@@ -808,8 +945,7 @@
 					<div class="d-flex mb-4">
 						<div class="col-30 input-require">規則細項：</div>
 						<div class="col">
-							<input type="text" class="w-100 form-control" id="blockDescription"
-								required>
+							<input type="text" class="w-100 form-control" id="blockDescription" required>
 						</div>
 					</div>
 					<div class="d-flex mb-4">
@@ -839,8 +975,7 @@
 					<div class="d-flex mb-2">
 						<div class="col-30">備註:</div>
 						<div class="col">
-							<textarea rows="7" class="w-100 form-control"
-								id="blockRemark"></textarea>
+							<textarea rows="7" class="w-100 form-control" id="blockRemark"></textarea>
 						</div>
 					</div>
 
@@ -859,116 +994,116 @@
 
 <script>
 
-    // 授審表評分意見送出
-    function send_opinion(target_id = '', group_id = ''){
-        let score = $(`#${group_id}_score`).val();
-        let opinion = $(`#${group_id}_opinion`).val();
-        if(group_id && target_id){
-            $.ajax({
-                type: "POST",
-                url: `/admin/creditmanagement/approve`,
-                data: {
-                    'target_id' : target_id,
-                    'score' : score,
-                    'opinion' : opinion,
-                    'group' : group_id,
-                    'type' : 'person',
-                },
-                async: false,
-                success: function (response) {
-                    alert(`${response.response.msg}`);
-                },
-                error: function(error) {
-                    alert(error);
-                }
-            });
-        }
-    }
+	// 授審表評分意見送出
+	function send_opinion(target_id = '', group_id = '') {
+		let score = $(`#${group_id}_score`).val();
+		let opinion = $(`#${group_id}_opinion`).val();
+		if (group_id && target_id) {
+			$.ajax({
+				type: "POST",
+				url: `/admin/creditmanagement/approve`,
+				data: {
+					'target_id': target_id,
+					'score': score,
+					'opinion': opinion,
+					'group': group_id,
+					'type': 'person',
+				},
+				async: false,
+				success: function (response) {
+					alert(`${response.response.msg}`);
+				},
+				error: function (error) {
+					alert(error);
+				}
+			});
+		}
+	}
 
-    // 取得授審表設定檔資料
-    function get_default_item(target_id,type){
-        let report_item = {};
-        $.ajax({
-            type: "GET",
-            url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=person`,
-            async: false,
-            success: function (response) {
-                report_item = response.response;
-            },
-            error: function(error) {
-                alert(error);
-            }
-        });
-        return report_item;
-    }
+	// 取得授審表設定檔資料
+	function get_default_item(target_id, type) {
+		let report_item = {};
+		$.ajax({
+			type: "GET",
+			url: `/admin/creditmanagement/get_structural_data?target_id=${target_id}&type=person`,
+			async: false,
+			success: function (response) {
+				report_item = response.response;
+			},
+			error: function (error) {
+				alert(error);
+			}
+		});
+		return report_item;
+	}
 
-    // 取得授審表案件核貸資料
-    function get_report_data(target_id){
-        let report_data = {};
-        $.ajax({
-            type: "GET",
-            url: `/admin/creditmanagement/get_reviewed_list?target_id=${target_id}&type=person`,
-            async: false,
-            success: function (response) {
-                report_data = response.response;
-            },
-            error: function(error) {
-                alert(error);
-            }
-        });
-        return report_data;
-    }
+	// 取得授審表案件核貸資料
+	function get_report_data(target_id) {
+		let report_data = {};
+		$.ajax({
+			type: "GET",
+			url: `/admin/creditmanagement/get_reviewed_list?target_id=${target_id}&type=person`,
+			async: false,
+			success: function (response) {
+				report_data = response.response;
+			},
+			error: function (error) {
+				alert(error);
+			}
+		});
+		return report_data;
+	}
 
-    // 取得狀態icon
-    function get_status_icon(status = 'default'){
-        let status_icon = '';
-        switch (status) {
-          // 成功
-          case 'success':
-            status_icon = `<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i></button>`;
-            break;
-          // 等待中
-          case 'pending':
-          status_icon = `<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>`;
-            break;
-          // 失敗
-          case 'fail':
-          status_icon = `<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>`;
-            break;
-          // 未啟用
-          default:
-            status_icon = `<button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>`;
-        }
-        return status_icon;
-    }
+	// 取得狀態icon
+	function get_status_icon(status = 'default') {
+		let status_icon = '';
+		switch (status) {
+			// 成功
+			case 'success':
+				status_icon = `<button type="button" class="btn btn-success btn-circle"><i class="fa fa-check"></i></button>`;
+				break;
+			// 等待中
+			case 'pending':
+				status_icon = `<button type="button" class="btn btn-warning btn-circle"><i class="fa fa-refresh"></i></button>`;
+				break;
+			// 失敗
+			case 'fail':
+				status_icon = `<button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>`;
+				break;
+			// 未啟用
+			default:
+				status_icon = `<button type="button" class="btn btn-secondary btn-circle"><i class="fa fa-minus"></i></button>`;
+		}
+		return status_icon;
+	}
 
-	async function blockUserAdd(){
+	async function blockUserAdd() {
 		const apiUrl = "/api/v2/black_list"
 		const blockDescription = $('#blockDescription').val()
-        const blockRemark =  $('#blockRemark').val()
+		const blockRemark = $('#blockRemark').val()
 		const blockRisk = $('#blockRisk').val()
 		const blockRule = $('#blockRule').val()
 		const blockTimeText = $('#blockTimeText').val()
 		const blockUserId = $('#blockUserId').val()
-		return await fetch(`${apiUrl}/block_add`,{
-			method:'POST',
-			headers:{
+		return await fetch(`${apiUrl}/block_add`, {
+			method: 'POST',
+			headers: {
 				'content-type': 'application/json'
 			},
-			body:JSON.stringify({
+			body: JSON.stringify({
 				blockDescription,
 				blockRemark,
 				blockRisk, blockRule,
 				blockTimeText,
 				userId: blockUserId
 			})
-		}).then(res=>res.json())
-		.then(data=>{
-			return data
-		})
+		}).then(res => res.json())
+			.then(data => {
+				return data
+			})
 	}
 
-	function initBlackList({userId}) {
+	function initBlackList({ userId }) {
 		//set table
 		const t2 = $('#status').DataTable({
 			'ordering': false,
@@ -992,12 +1127,12 @@
 			},
 			"info": false
 		})
-		if(!userId){
+		if (!userId) {
 			return
 		}
 		// 黑名單狀態
 		fetch(`/api/v2/black_list/get_all_block_users?userId=${userId}`)
-			.then(res=>res.json())
+			.then(res => res.json())
 			.then((data) => {
 				// draw table
 				const table = $('#status').DataTable()
@@ -1020,7 +1155,7 @@
 						</button>
 					</div>`
 				}
-				const convertDate = (n)=> {
+				const convertDate = (n) => {
 					return new Date(n * 1000).toLocaleString()
 				}
 				data.results.forEach(item => {
@@ -1042,7 +1177,7 @@
 			})
 	}
 
-	document.querySelector('#blockUserForm').addEventListener('submit',async(e)=>{
+	document.querySelector('#blockUserForm').addEventListener('submit', async (e) => {
 		e.preventDefault()
 		const data = await blockUserAdd()
 		if (data.status !== 200) {
@@ -1054,11 +1189,11 @@
 		const blockRemark = $('#blockRemark').val('')
 		const blockRisk = $('#blockRisk').val('')
 		const blockTimeText = $('#blockTimeText').val('')
-		
+
 		$('#newModal').modal('hide')
 	})
 
-	$(document).ready(function() {
+	$(document).ready(function () {
 		var urlString = window.location.href;
 		var url = new URL(urlString);
 		var caseId = url.searchParams.get("id");
@@ -1067,7 +1202,7 @@
 		var targetInfoAjaxLock = false;
 		var relatedUserAjaxLock = false;
 		$('#blockUserId').val(userId);
-		initBlackList({userId})
+		initBlackList({ userId })
 		changeReevaluationLoading(false);
 		fillFakeVerifications("borrowing");
 		fillFakeVerifications("investing");
@@ -1087,7 +1222,7 @@
 			success: function (response) {
 				fetchBrookesiaUserRuleHit(userId);
 				fetchRelatedUsers(userId);
-                fetchJudicialyuanData(userId)
+				fetchJudicialyuanData(userId)
 				hideLoadingAnimation();
 				fillFakeBrookesiaUserHitRule(false)
 				fillFakeVerifications("borrowing", false);
@@ -1104,16 +1239,16 @@
 				let currentTargetJson = response.response.target;
 				target = new Target(currentTargetJson);
 				fillCurrentTargetInfo(target)
-				!$.isEmptyObject(target.targetData)?fillCurrentTargetData(target.targetData,target.productTargetData,target.creditTargetData):'';
+				!$.isEmptyObject(target.targetData) ? fillCurrentTargetData(target.targetData, target.productTargetData, target.creditTargetData) : '';
 
 				let userJson = response.response.user;
 				user = new User(userJson);
-				if(Object.keys(response.response.target.productTargetData).length > 0){
-					$('.natual').css('display','none');
-					$('.company').css('display','block');
+				if (Object.keys(response.response.target.productTargetData).length > 0) {
+					$('.natual').css('display', 'none');
+					$('.company').css('display', 'block');
 					$('#targetDatas').removeClass('hide');
 					fillCompanyUserInfo(user);
-				}else{
+				} else {
 					fillUserInfo(user)
 				}
 
@@ -1123,11 +1258,11 @@
 
 				let bankAccountJson = response.response.bank_accounts;
 				bankAccounts = new BankAccounts(bankAccountJson);
-				fillBankAccounts(bankAccounts,response.response.user.company)
+				fillBankAccounts(bankAccounts, response.response.user.company)
 
 				let virtualAccountJson = response.response.virtual_accounts;
 				virtualAccounts = new VirtualAccounts(virtualAccountJson);
-				fillVirtualAccounts(virtualAccounts,response.response.user.company);
+				fillVirtualAccounts(virtualAccounts, response.response.user.company);
 
 				var borrowerVerifications = [];
 				let verificationsJson = response.response.verifications;
@@ -1150,102 +1285,102 @@
 				fillTargets(targets);
 
 			},
-			error: function(error) {
+			error: function (error) {
 				alert('資料載入失敗。請重新整理。');
 			}
 		});
 
-        // 取得案件核貸資料
-        case_aprove_item = get_default_item(caseId);
-        // 最高核貸層級
-        let last_mask = 4;
-        if(case_aprove_item && case_aprove_item.hasOwnProperty(`basicInfo`) && case_aprove_item.basicInfo.hasOwnProperty(`finalReviewedLevel`)){
-            last_mask = case_aprove_item.basicInfo.finalReviewedLevel;
-            for(i=1;i<=last_mask;i++){
-                $(`#${i}_opinion_mask`).css("display","none");
-                if(case_aprove_item.basicInfo.hasOwnProperty(`reviewedLevelList`) && case_aprove_item.basicInfo.reviewedLevelList.hasOwnProperty(`${i-1}`)){
-                    let reviewer_name = case_aprove_item.basicInfo.reviewedLevelList[i-1];
-                    $(`#${i}_opinion_mask`).text(`${reviewer_name}意見未送出`);
-                }
-            }
-        }
-        // 專家調整分數
-        if(case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("scoringMin") && case_aprove_item.creditLineInfo.hasOwnProperty("scoringMax")){
-            $(`.score_range`).text(`${case_aprove_item.creditLineInfo.scoringMin}~${case_aprove_item.creditLineInfo.scoringMax}`);
-            $(`#1_score`).attr({
-               "max" : case_aprove_item.creditLineInfo.scoringMax,
-               "min" : case_aprove_item.creditLineInfo.scoringMin,
-               "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
-            });
-            $(`#2_score`).attr({
-               "max" : case_aprove_item.creditLineInfo.scoringMax,
-               "min" : case_aprove_item.creditLineInfo.scoringMin,
-               "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
-            });
-            $(`#3_score`).attr({
-               "max" : case_aprove_item.creditLineInfo.scoringMax,
-               "min" : case_aprove_item.creditLineInfo.scoringMin,
-               "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
-            });
-            $(`#4_score`).attr({
-               "max" : case_aprove_item.creditLineInfo.scoringMax,
-               "min" : case_aprove_item.creditLineInfo.scoringMin,
-               "oninput" : `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
-            });
-        }
+		// 取得案件核貸資料
+		case_aprove_item = get_default_item(caseId);
+		// 最高核貸層級
+		let last_mask = 4;
+		if (case_aprove_item && case_aprove_item.hasOwnProperty(`basicInfo`) && case_aprove_item.basicInfo.hasOwnProperty(`finalReviewedLevel`)) {
+			last_mask = case_aprove_item.basicInfo.finalReviewedLevel;
+			for (i = 1; i <= last_mask; i++) {
+				$(`#${i}_opinion_mask`).css("display", "none");
+				if (case_aprove_item.basicInfo.hasOwnProperty(`reviewedLevelList`) && case_aprove_item.basicInfo.reviewedLevelList.hasOwnProperty(`${i - 1}`)) {
+					let reviewer_name = case_aprove_item.basicInfo.reviewedLevelList[i - 1];
+					$(`#${i}_opinion_mask`).text(`${reviewer_name}意見未送出`);
+				}
+			}
+		}
+		// 專家調整分數
+		if (case_aprove_item && case_aprove_item.hasOwnProperty("creditLineInfo") && case_aprove_item.creditLineInfo.hasOwnProperty("scoringMin") && case_aprove_item.creditLineInfo.hasOwnProperty("scoringMax")) {
+			$(`.score_range`).text(`${case_aprove_item.creditLineInfo.scoringMin}~${case_aprove_item.creditLineInfo.scoringMax}`);
+			$(`#1_score`).attr({
+				"max": case_aprove_item.creditLineInfo.scoringMax,
+				"min": case_aprove_item.creditLineInfo.scoringMin,
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+			});
+			$(`#2_score`).attr({
+				"max": case_aprove_item.creditLineInfo.scoringMax,
+				"min": case_aprove_item.creditLineInfo.scoringMin,
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+			});
+			$(`#3_score`).attr({
+				"max": case_aprove_item.creditLineInfo.scoringMax,
+				"min": case_aprove_item.creditLineInfo.scoringMin,
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+			});
+			$(`#4_score`).attr({
+				"max": case_aprove_item.creditLineInfo.scoringMax,
+				"min": case_aprove_item.creditLineInfo.scoringMin,
+				"oninput": `if(value>=${case_aprove_item.creditLineInfo.scoringMax})value=${case_aprove_item.creditLineInfo.scoringMax}`
+			});
+		}
 
-        // 取得案件核貸資料
-        case_aprove_data = get_report_data(caseId);
-        if(case_aprove_data){
-            Object.keys(case_aprove_data).forEach(function (area_name) {
-              Object.keys(case_aprove_data[area_name]).forEach(function (input_title) {
-                  if(input_title == 'reviewedInfoList'){
-                      stop_flag = false;
-                      let total_score = 0;
-                      // 資料寫入
-                      Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
-                          $(`#${list_key}_name`).text(case_aprove_data[area_name][input_title][list_key]['name']);
-                          $(`#${list_key}_apporvedTime`).text(case_aprove_data[area_name][input_title][list_key]['approvedTime']);
-                          $(`#${list_key}_opinion`).val(case_aprove_data[area_name][input_title][list_key]['opinion']);
-                          let score = case_aprove_data[area_name][input_title][list_key]['score'] && case_aprove_data[area_name][input_title][list_key]['score'] != '' ? parseInt(case_aprove_data[area_name][input_title][list_key]['score']) : 0;
-                          total_score += score;
-                          $(`#${list_key}_score`).val(score);
-                      })
-                      $('#credit_test').val(total_score);
-                      // 顯示更改,核可層級解鎖
-                      Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
-                          status_html = get_status_icon('success');
-                          $(`#${list_key}_opinion_status`).html(status_html);
+		// 取得案件核貸資料
+		case_aprove_data = get_report_data(caseId);
+		if (case_aprove_data) {
+			Object.keys(case_aprove_data).forEach(function (area_name) {
+				Object.keys(case_aprove_data[area_name]).forEach(function (input_title) {
+					if (input_title == 'reviewedInfoList') {
+						stop_flag = false;
+						let total_score = 0;
+						// 資料寫入
+						Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
+							$(`#${list_key}_name`).text(case_aprove_data[area_name][input_title][list_key]['name']);
+							$(`#${list_key}_apporvedTime`).text(case_aprove_data[area_name][input_title][list_key]['approvedTime']);
+							$(`#${list_key}_opinion`).val(case_aprove_data[area_name][input_title][list_key]['opinion']);
+							let score = case_aprove_data[area_name][input_title][list_key]['score'] && case_aprove_data[area_name][input_title][list_key]['score'] != '' ? parseInt(case_aprove_data[area_name][input_title][list_key]['score']) : 0;
+							total_score += score;
+							$(`#${list_key}_score`).val(score);
+						})
+						$('#credit_test').val(total_score);
+						// 顯示更改,核可層級解鎖
+						Object.keys(case_aprove_data[area_name][input_title]).forEach(function (list_key) {
+							status_html = get_status_icon('success');
+							$(`#${list_key}_opinion_status`).html(status_html);
 
-                          // 前級審核未通過
-                          if(stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == ''){
-                              status_html = get_status_icon('pending');
-                              $(`#${list_key}_opinion_status`).html(status_html);
-                              $(`#${list_key}_opinion_mask`).show();
-                          }
+							// 前級審核未通過
+							if (stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == '') {
+								status_html = get_status_icon('pending');
+								$(`#${list_key}_opinion_status`).html(status_html);
+								$(`#${list_key}_opinion_mask`).show();
+							}
 
-                          // 當前審核層級解鎖
-                          if(!stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == ''){
-                              status_html = get_status_icon('pending');
-                              $(`#${list_key}_opinion_status`).html(status_html);
-                              $(`#${list_key}_opinion`).prop('disabled', false);
-                              $(`#${list_key}_score`).prop('disabled', false);
-                              $(`#${list_key}_opinion_button`).prop('disabled', false);
-                              stop_flag = true;
-                          }
-                      })
-                  }
-              })
-          })
-        }
+							// 當前審核層級解鎖
+							if (!stop_flag && case_aprove_data[area_name][input_title][list_key]['name'] == '' && case_aprove_data[area_name][input_title][list_key]['opinion'] == '' && case_aprove_data[area_name][input_title][list_key]['score'] == '') {
+								status_html = get_status_icon('pending');
+								$(`#${list_key}_opinion_status`).html(status_html);
+								$(`#${list_key}_opinion`).prop('disabled', false);
+								$(`#${list_key}_score`).prop('disabled', false);
+								$(`#${list_key}_opinion_button`).prop('disabled', false);
+								stop_flag = true;
+							}
+						})
+					}
+				})
+			})
+		}
 
-        $( "#1_score,#2_score,#3_score,#4_score" ).change(function() {
-            let score_vue = 0;
-            for(i=1;i<=last_mask;i++){
-                score_vue += parseInt($(`#${i}_score`).val());
-            }
-            $('#credit_test').val(score_vue);
-        });
+		$("#1_score,#2_score,#3_score,#4_score").change(function () {
+			let score_vue = 0;
+			for (i = 1; i <= last_mask; i++) {
+				score_vue += parseInt($(`#${i}_score`).val());
+			}
+			$('#credit_test').val(score_vue);
+		});
 		var brookesiaData = [];
 		function fetchBrookesiaUserRuleHit(userId) {
 			$.ajax({
@@ -1277,9 +1412,9 @@
 
 			for (var i = 0; i < 1; i++) {
 				$("<tr>").append(
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
 				).appendTo("#brookesia_results");
 			}
 		}
@@ -1288,17 +1423,17 @@
 			for (var i = 0; i < brookesiaData.length; i++) {
 				var risk = '<p class="form-control-static">' + brookesiaData[i].risk + '</p>';
 				var updatedAt = '<p class="form-control-static">' +
-						new DateTime(brookesiaData[i].updatedAt).values()+ '</p>';
+					new DateTime(brookesiaData[i].updatedAt).values() + '</p>';
 				var description = '<p class="form-control-static">' + brookesiaData[i].description + '</p>';
-				var riskColor = (brookesiaData[i].risk === "拒絕") ?"red"
-						: (brookesiaData[i].risk === "高") ? "Tomato"
-								: (brookesiaData[i].risk === "中") ? "Orange"
-										: (brookesiaData[i].risk === "低") ? "green" : "black"
+				var riskColor = (brookesiaData[i].risk === "拒絕") ? "red"
+					: (brookesiaData[i].risk === "高") ? "Tomato"
+						: (brookesiaData[i].risk === "中") ? "Orange"
+							: (brookesiaData[i].risk === "低") ? "green" : "black"
 
 				$("<tr>").append(
-						$('<td class="center-text" style="color:'+ riskColor +';">').append(risk),
-						$('<td class="center-text" style="color:black;">').append(updatedAt),
-						$('<td class="center-text" style="color:black;">').append(description),
+					$('<td class="center-text" style="color:' + riskColor + ';">').append(risk),
+					$('<td class="center-text" style="color:black;">').append(updatedAt),
+					$('<td class="center-text" style="color:black;">').append(description),
 				).appendTo("#brookesia_results");
 			}
 		}
@@ -1335,10 +1470,10 @@
 
 			for (var i = 0; i < 3; i++) {
 				$("<tr>").append(
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
 				).appendTo("#related-users");
 			}
 		}
@@ -1349,20 +1484,20 @@
 				var userLink = '<a href="' + '/admin/user/display?id=' + relatedUserId + '" target="_blank"><p>' + relatedUserId + '</p></a>'
 				var descriptionText = relatedUsers[i].description;
 				var description = '<p class="form-control-static">' + descriptionText + '</p>';
-				if (relatedUsers[i]){
+				if (relatedUsers[i]) {
 					var relatedInfo = '<p class="form-control-static">' + relatedUsers[i].relatedKey +
-							' : '+ relatedUsers[i].relatedValue +'</p>';
-				} else { var relatedInfo = "無"}
+						' : ' + relatedUsers[i].relatedValue + '</p>';
+				} else { var relatedInfo = "無" }
 
 				$("<tr>").append(
-						$('<td class="center-text">').append(userLink),
-						$('<td class="center-text">').append(description),
-						$('<td class="center-text">').append(relatedInfo),
+					$('<td class="center-text">').append(userLink),
+					$('<td class="center-text">').append(description),
+					$('<td class="center-text">').append(relatedInfo),
 				).appendTo("#related-users");
 			}
 		}
 
-		$('#load-more').on('click', function() {
+		$('#load-more').on('click', function () {
 			fillRelatedUsers();
 		});
 
@@ -1415,15 +1550,15 @@
 
 			for (var i = 0; i < 3; i++) {
 				$("<tr>").append(
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
 				).appendTo("#judicial-yuan");
 			}
 		}
 
 		function filljudicialyuanData() {
 			var maxNumInPage = 5;
-			var start = (judicialyuanDataIndex-1) * maxNumInPage;
+			var start = (judicialyuanDataIndex - 1) * maxNumInPage;
 			var end = judicialyuanDataIndex * maxNumInPage;
 			if (end > judicialyuanData.length) end = judicialyuanData.judicial_yuan.length;
 			if (start > end) {
@@ -1436,11 +1571,11 @@
 				var name = '<p class="form-control-static">' + judicialyuanData.judicial_yuan[i].name + '</p>';
 				var count = '<a target="_blank" href="../certification/judicial_yuan_case?name=' + judicialyuanData.userName + '&amp;case=' + judicialyuanData.judicial_yuan[i].name + '&amp;page=1&amp;count=' + judicialyuanData.judicial_yuan[i].count + '">' + judicialyuanData.judicial_yuan[i].count + '</a>';
 				$("<tr>").append(
-						$('<td class="center-text" style="color:red;">').append(name),
-						$('<td class="center-text" style="color:red;">').append(count),
+					$('<td class="center-text" style="color:red;">').append(name),
+					$('<td class="center-text" style="color:red;">').append(count),
 				).appendTo("#judicial-yuan");
 			}
-			judicialyuanDataIndex+=1;
+			judicialyuanDataIndex += 1;
 		}
 
 		// function mapRelatedUsersReasons(reason) {
@@ -1465,40 +1600,40 @@
 			$("#applicant-signing-target-image").prepend('<img src="' + target.image + '" style="width: 30%;"></img>');
 		}
 
-		function fillCurrentTargetData(targetData,productTargetData,creditTargetData) {
+		function fillCurrentTargetData(targetData, productTargetData, creditTargetData) {
 			var targetDatas = $.parseJSON(targetData);
-			var newPageData = '', content = '' , addbouns = false;
+			var newPageData = '', content = '', addbouns = false;
 			$('#targetData tbody tr').remove();
-			$.each(productTargetData,function (k,v) {
-				if(v[0]=='Picture'){
+			$.each(productTargetData, function (k, v) {
+				if (v[0] == 'Picture') {
 					content = '';
-					$.each(targetDatas[k],function (sk,sv) {
-						content += '<a href="'+sv+'" data-fancybox="images"><img style="width: 100px" src="'+sv+'" /></a>';
+					$.each(targetDatas[k], function (sk, sv) {
+						content += '<a href="' + sv + '" data-fancybox="images"><img style="width: 100px" src="' + sv + '" /></a>';
 					});
-				}else{
+				} else {
 					content = targetDatas[k];
 				}
 				var bonus = '無加權分數';
-				if(creditTargetData[k]!=undefined){
+				if (creditTargetData[k] != undefined) {
 					addbouns = true;
-					bonus = '<span id="targetDataAudit" data-id="'+k+'"><select class="form-control">';
-					$.each(creditTargetData[k],function (tk,tv) {
+					bonus = '<span id="targetDataAudit" data-id="' + k + '"><select class="form-control">';
+					$.each(creditTargetData[k], function (tk, tv) {
 						bonus += '<option value="' + tv + '">加分 ' + tv + '</option>';
 					});
-					bonus +='</select><br /><a class="btn btn-warning">加至分數調整區</a></span>';
+					bonus += '</select><br /><a class="btn btn-warning">加至分數調整區</a></span>';
 				}
-				$('#targetData tbody').append('<tr><td><p class="form-control-static">'+v[1]+'</p></td><td>'+(targetDatas[k]!=''?content:'未送件')+'</td><td><p class="form-control-static">'+bonus+'</p></td></tr>');
-				addbouns?$('.targetDataInputblock,[name=score]').removeClass('hide'):'';
+				$('#targetData tbody').append('<tr><td><p class="form-control-static">' + v[1] + '</p></td><td>' + (targetDatas[k] != '' ? content : '未送件') + '</td><td><p class="form-control-static">' + bonus + '</p></td></tr>');
+				addbouns ? $('.targetDataInputblock,[name=score]').removeClass('hide') : '';
 			});
-			$('.credit-input').on('keyup mouseup', function() {
-				$('[name=score]').val(parseInt($(this).val())+parseInt($('.targetDataInput').val()));
+			$('.credit-input').on('keyup mouseup', function () {
+				$('[name=score]').val(parseInt($(this).val()) + parseInt($('.targetDataInput').val()));
 			});
-			$('#targetDataAudit a').on('click', function() {
-				$(this).attr('disabled',true);
+			$('#targetDataAudit a').on('click', function () {
+				$(this).attr('disabled', true);
 				var item = $(this).parent();
-				var bonus = '<div data-source="'+item.closest('span').data('id')+'" data-score="'+item.find(':selected').val()+'">'+item.closest('tr').find('td').eq(0).text()+' + '+item.find(':selected').val()+'</div>';
+				var bonus = '<div data-source="' + item.closest('span').data('id') + '" data-score="' + item.find(':selected').val() + '">' + item.closest('tr').find('td').eq(0).text() + ' + ' + item.find(':selected').val() + '</div>';
 				$('.targetDataInputblock div').append(bonus);
-				$('.targetDataInput').val(parseInt($('.targetDataInput').val())+parseInt(item.find(':selected').val()));
+				$('.targetDataInput').val(parseInt($('.targetDataInput').val()) + parseInt(item.find(':selected').val()));
 				$('.credit-input').keyup();
 				$('#credit-evaluation [type=submit]').click();
 			});
@@ -1524,7 +1659,7 @@
 			$("#school-department").text(user.school.department);
 			$("#graduated-at").text(user.school.graduateAt ? user.school.graduateAt : '未提供');
 
-			if(user.instagram){
+			if (user.instagram) {
 				$("#instagram-username").text(user.instagram.username);
 				$("#instagram-profile-picture").prepend('<img id="instagram-profile-picture-content" src="' + user.instagram.profileImage + '" style="width:30%;" />');
 			}
@@ -1536,7 +1671,7 @@
 
 		function fillCompanyUserInfo(user) {
 			$(".company #id").text(user.id);
-			$(".company #name").html(user.name+" - <a target='_blank' href='.././judicialperson/edit?id="+user.judicial_id+"'>法人申請資料</a> / <a target='_blank' href='.././judicialperson/cooperation_edit?id="+user.judicial_id+"'>經銷商申請資料</a>");
+			$(".company #name").html(user.name + " - <a target='_blank' href='.././judicialperson/edit?id=" + user.judicial_id + "'>法人申請資料</a> / <a target='_blank' href='.././judicialperson/cooperation_edit?id=" + user.judicial_id + "'>經銷商申請資料</a>");
 			$(".company #gender").text(user.gender);
 			$(".company #birthday").text(user.birthday);
 			$(".company #email").text(user.contact.email);
@@ -1560,8 +1695,8 @@
 
 		function fillCreditInfo(credit, isReEvaluated = false) {
 			var prefix = '';
-			if(credit.product.id == 1 && credit.product.sub_product_id == 9999){
-				$('#credit-evaluation button').attr('disabled',false);
+			if (credit.product.id == 1 && credit.product.sub_product_id == 9999) {
+				$('#credit-evaluation button').attr('disabled', false);
 				$('#evaluation-complete [type=submit]').text('通過');
 				$('#evaluation-complete [type=submit]').removeClass('btn-warning').addClass('btn-success');
 				$('.changeCredit').hide();
@@ -1586,8 +1721,8 @@
 
 				for (var i = 0; i < 3; i++) {
 					$("<tr>").append(
-							$('<td class="table-field center-text">').append(pTag),
-							$('<td class="fake-fields center-text">').append(pTag),
+						$('<td class="table-field center-text">').append(pTag),
+						$('<td class="fake-fields center-text">').append(pTag),
 					).appendTo(tableId);
 				}
 			}
@@ -1597,8 +1732,8 @@
 			for (var i = 0; i < verifications.length; i++) {
 				pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
 				$("<tr>").append(
-						$('<td class="table-field center-text">').append(pTag),
-						'<td class="center-text">' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
+					$('<td class="table-field center-text">').append(pTag),
+					'<td class="center-text">' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
 				).appendTo("#investing-verifications");
 			}
 		}
@@ -1607,39 +1742,39 @@
 			for (var i = 0; i < verifications.length; i++) {
 				pTag = '<p class="form-control-static">' + verifications[i].name + '</p>';
 				$("<tr>").append(
-						$('<td  class="table-field center-text">').append(pTag),
-						'<td class="center-text">' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
+					$('<td  class="table-field center-text">').append(pTag),
+					'<td class="center-text">' + getVerificationButton(bankAccounts, verifications[i]) + '</td>'
 				).appendTo("#borrowing-verifications");
 			}
 		}
 
-		function fillBankAccounts(bankAccounts,company) {
-			var type = company==1?'.company ':'.natual ';
+		function fillBankAccounts(bankAccounts, company) {
+			var type = company == 1 ? '.company ' : '.natual ';
 			if (bankAccounts.borrower) {
 				var text = bankAccounts.borrower.bankCode + " / " + bankAccounts.borrower.branchCode;
-				$(type+"#borrower-bank").text(text);
-				$(type+"#borrower-account").text(bankAccounts.borrower.account);
+				$(type + "#borrower-bank").text(text);
+				$(type + "#borrower-account").text(bankAccounts.borrower.account);
 			}
 
 			if (bankAccounts.investor) {
 				var text = bankAccounts.investor.bankCode + " / " + bankAccounts.investor.branchCode;
-				$(type+"#investor-bank").text(text);
-				$(type+"#investor-account").text(bankAccounts.investor.account);
+				$(type + "#investor-bank").text(text);
+				$(type + "#investor-account").text(bankAccounts.investor.account);
 			}
 		}
 
-		function fillVirtualAccounts(virtualAccounts,company) {
-			var type = company==1?'.company ':'.natual ';
+		function fillVirtualAccounts(virtualAccounts, company) {
+			var type = company == 1 ? '.company ' : '.natual ';
 			if (virtualAccounts.borrower) {
 				var total = virtualAccounts.borrower.funds.total - virtualAccounts.borrower.funds.frozen;
 				total = convertNumberSplitedByThousands(total);
-				$(type+"#borrower-virtual-account-total").text(total + "元");
+				$(type + "#borrower-virtual-account-total").text(total + "元");
 			}
 
 			if (virtualAccounts.investor) {
 				var total = virtualAccounts.investor.funds.total - virtualAccounts.investor.funds.frozen;
 				total = convertNumberSplitedByThousands(total);
-				$(type+"#investor-virtual-account-total").text(total + "元");
+				$(type + "#investor-virtual-account-total").text(total + "元");
 			}
 		}
 
@@ -1693,16 +1828,16 @@
 			pTag = '<p class="form-control-static"></p>';
 			for (var i = 0; i < 3; i++) {
 				$("<tr>").append(
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag),
-						$('<td class="fake-fields center-text">').append(pTag)
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag),
+					$('<td class="fake-fields center-text">').append(pTag)
 				).appendTo("#targets");
 			}
 		}
@@ -1718,16 +1853,16 @@
 				var principal = convertNumberSplitedByThousands(target.amount.principal);
 
 				$("<tr>").append(
-						getCenterTextCell(target.number, backgroundColor),
-						getCenterTextCell(target.product.name, backgroundColor),
-						getCenterTextCell(amountRequested, backgroundColor),
-						getCenterTextCell(amountApproved, backgroundColor),
-						getCenterTextCell(amountRemaining, backgroundColor),
-						getCenterTextCell(principal, backgroundColor),
-						getCenterTextCell(target.status.text, backgroundColor),
-						getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
-						getCenterTextCell(target.reason, backgroundColor),
-						getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
+					getCenterTextCell(target.number, backgroundColor),
+					getCenterTextCell(target.product.name, backgroundColor),
+					getCenterTextCell(amountRequested, backgroundColor),
+					getCenterTextCell(amountApproved, backgroundColor),
+					getCenterTextCell(amountRemaining, backgroundColor),
+					getCenterTextCell(principal, backgroundColor),
+					getCenterTextCell(target.status.text, backgroundColor),
+					getCenterTextCell(target.getExpireAtHumanReadable(), backgroundColor),
+					getCenterTextCell(target.reason, backgroundColor),
+					getCenterTextCell('<a href="/admin/target/edit?id=' + target.id + '" target="_blank"><button class="btn btn-info">詳情</button></a>', backgroundColor)
 				).appendTo("#targets");
 			}
 		}
@@ -1740,18 +1875,18 @@
 			var convertedNumbers = value;
 			try {
 				convertedNumbers = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-			} catch(err) {
+			} catch (err) {
 
 			}
 			return convertedNumbers;
 		}
 
-		$("#credit-evaluation").submit(function(e) {
+		$("#credit-evaluation").submit(function (e) {
 			e.preventDefault();
-			$('#credit-evaluation button').attr('disabled',true);
+			$('#credit-evaluation button').attr('disabled', true);
 			if (relatedUserAjaxLock || targetInfoAjaxLock) {
 				alert("請等待資料載入完成後，再行試算。");
-				$('#credit-evaluation button').attr('disabled',false);
+				$('#credit-evaluation button').attr('disabled', false);
 				return;
 			}
 
@@ -1778,24 +1913,24 @@
 					credit = new Credit(creditJson);
 					fillCreditInfo(credit, true);
 					modifiedPoints = points;
-					$('#credit-evaluation button').attr('disabled',false);
+					$('#credit-evaluation button').attr('disabled', false);
 				}
 			});
 		});
 
-		$("#evaluation-complete").submit(function(e) {
+		$("#evaluation-complete").submit(function (e) {
 			e.preventDefault();
-			$('#evaluation-complete button').attr('disabled',true);
+			$('#evaluation-complete button').attr('disabled', true);
 			if (modifiedPoints === null) {
 				$('#credit-evaluation [type=submit]').click();
-				$('#evaluation-complete button').attr('disabled',false);
+				$('#evaluation-complete button').attr('disabled', false);
 				$('#evaluation-complete [type=submit]').click();
 				return;
 			}
 
 			var isConfirmed = confirm("確認是否要通過審核？");
-			if (!isConfirmed){
-				$('#evaluation-complete button').attr('disabled',false);
+			if (!isConfirmed) {
+				$('#evaluation-complete button').attr('disabled', false);
 				return false;
 			}
 
@@ -1804,15 +1939,15 @@
 			var description = form.find('input[name="description"]').val();
 
 			var data = {
-				'id' : caseId,
-				'points' : modifiedPoints,
-				'reason' : description
+				'id': caseId,
+				'points': modifiedPoints,
+				'reason': description
 			}
 			$.ajax({
 				type: "POST",
 				url: url,
 				data: data, // serializes the form's elements.
-				success: function(response) {
+				success: function (response) {
 					if (response.status.code != 200) {
 						alert('審核失敗，請重整頁面後，再試一次。');
 						return;
@@ -1820,18 +1955,18 @@
 					alert("審核成功，點選OK關閉頁面。");
 					window.close();
 				},
-				error: function() {
+				error: function () {
 					alert('審核失敗，請重整頁面後，再試一次。');
 				}
 			});
 		});
 
-		$("#verify_failed").click(function(e) {
+		$("#verify_failed").click(function (e) {
 			e.preventDefault();
-			$('#evaluation-complete button').attr('disabled',true);
+			$('#evaluation-complete button').attr('disabled', true);
 			var isConfirmed = confirm("確認是否要退件？");
-			if (!isConfirmed){
-				$('#evaluation-complete button').attr('disabled',false);
+			if (!isConfirmed) {
+				$('#evaluation-complete button').attr('disabled', false);
 				return false;
 			}
 
@@ -1839,18 +1974,18 @@
 			var description = $('input[name="description"]').val();
 
 			var data = {
-				'id' : caseId,
-				'remark' : description
+				'id': caseId,
+				'remark': description
 			}
 			$.ajax({
 				type: "get",
 				url: url,
 				data: data, // serializes the form's elements.
-				success: function(response) {
+				success: function (response) {
 					alert("審核成功，點選OK關閉頁面。");
 					window.close();
 				},
-				error: function() {
+				error: function () {
 					alert('審核失敗，請重整頁面後，再試一次。');
 				}
 			});
@@ -1890,16 +2025,19 @@
 		text-align: center;
 	}
 
-	@keyframes placeHolderShimmer{
-		0%{
+	@keyframes placeHolderShimmer {
+		0% {
 			background-position: -468px 0
 		}
-		100%{
+
+		100% {
 			background-position: 468px 0
 		}
 	}
 
-	.table-ten p, .table-twenty p, .table-reevaluation p {
+	.table-ten p,
+	.table-twenty p,
+	.table-reevaluation p {
 		animation-duration: 1.25s;
 		animation-fill-mode: forwards;
 		animation-iteration-count: infinite;
