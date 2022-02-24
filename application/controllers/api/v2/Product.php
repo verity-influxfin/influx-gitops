@@ -478,6 +478,45 @@ class Product extends REST_Controller {
         $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
     }
 
+    public function blackList_get()
+    {
+        $input 		= $this->input->get(NULL, TRUE);
+        $user_id = $this->user_info->id;
+
+        $fields = ['product_id', 'sub_product_id'];
+        foreach ($fields as $field) {
+            if (empty($input[$field])) {
+                $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+            }
+        }
+
+        // 確認黑名單結果是否禁止申貸
+        $this->load->library('brookesia/black_list_lib');
+        $is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
+
+        // 子系統若無回應不處理
+        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
+        {
+            $this->black_list_lib->add_block_log($is_user_blocked);
+            $this->response(
+                [
+                    'result'   => 'ERROR',
+                    'error'    => BLACK_LIST_APPLY_PRODUCT,
+                    'data'     => [
+                        'text' => $this->black_list_lib->get_black_list_text($user_id, $input['product_id'], $input['sub_product_id'])
+                    ]
+                ]
+            );
+        }
+
+        $this->response(
+            [
+                'result'   => 'SUCCESS'
+            ]
+        );
+
+    }
+
     /**
      * @api {post} /v2/product/apply 借款方 申請借款
      * @apiVersion 0.2.0
@@ -544,6 +583,16 @@ class Product extends REST_Controller {
      *       'error': '410'
      *     }
      *
+     * @apiError 424 黑名單禁止申貸錯誤
+     * @apiErrorExample {Object} 424
+     *     {
+     *       'result': 'ERROR',
+     *       'error': '424',
+     *       'data': {
+     *              'text': 'App端禁止申貸呈現文字'
+     *          }
+     *     }
+     *
      */
     public function apply_post()
     {
@@ -551,22 +600,32 @@ class Product extends REST_Controller {
         $amount = isset($input['amount']) ? $input['amount'] : 0;
         $user_id = $this->user_info->id;
 
-		// 確認黑名單結果是否禁止申貸
-		$this->load->library('brookesia/black_list_lib');
-		$is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
-
-        // 子系統若無回應不處理
-        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
-		{
-            $this->CI->black_list_lib->add_block_log($is_user_blocked);
-			$this->response(['result' => 'ERROR', 'error' => BLACK_LIST_APPLY_PRODUCT]);
-		}
-
         $product_list = $this->config->item('product_list');
         $sub_product_list = $this->config->item('sub_product_list');
         $exp_product  = explode(':',$input['product_id']);
         $product = isset($product_list[$exp_product[0]])?$product_list[$exp_product[0]]:[];
+        $product_id = $product['id'];
         $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
+
+        // 確認黑名單結果是否禁止申貸
+        $this->load->library('brookesia/black_list_lib');
+        $is_user_blocked = $this->black_list_lib->check_user($user_id, CHECK_APPLY_PRODUCT);
+
+        // 子系統若無回應不處理
+        if (isset($is_user_blocked['isUserBlocked']) && $is_user_blocked['isUserBlocked'])
+        {
+            $this->black_list_lib->add_block_log($is_user_blocked);
+            $this->response(
+                [
+                    'result'   => 'ERROR',
+                    'error'    => BLACK_LIST_APPLY_PRODUCT,
+                    'data'     => [
+                        'text' => $this->black_list_lib->get_black_list_text($user_id, $product_id, $sub_product_id)
+                    ]
+                ]
+            );
+        }
+
         if ($product) {
             //檢核身分
             if($product['identity'] == 3 && $this->user_info->company != 1 && (!isset($product['checkOwner']) || !$product['checkOwner'])){

@@ -48,7 +48,7 @@ class Black_list_lib
 	{
 		$url = $this->brookesiaUrl  . 'blockUser/log';
 		$payload = [
-			'blockUser' => $block_user
+			'blockUser' => json_encode($block_user)
 		];
 
 		$result = curl_get($url, $payload);
@@ -62,5 +62,15 @@ class Black_list_lib
 
 		return json_decode($result, TRUE);
 	}
+
+    /*
+     * 判斷封鎖訊息
+     */
+    public function get_black_list_text($user_id, $product_id, $sub_product_id): string
+    {
+        $black_list_text = '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。';
+
+        return $black_list_text;
+    }
 
 }
