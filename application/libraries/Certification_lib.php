@@ -811,26 +811,214 @@ class Certification_lib{
         return false;
     }
 
-    // public function student_verify($info = array()){
-    //    if($info && $info->status ==0 && $info->certification_id==2) {
-    //        $status 	 = 3;
-    //        $content     = json_decode($info->content);
-    //        $user_id        = $info->user_id;
-    //        $cer_id         = $info->id;
-    //        $school       = $content->info->counts->school;
-    //        $student_id   = $content->info->counts->student_id;
-	//
-    //        $rawData['front_image']      = $this->CI->scan_lib->scanData($content['front_image'],$user_id,$cer_id);
-    //        $rawData['back_image']       = $this->CI->scan_lib->detectText($content['back_image'],$user_id,$cer_id,'[a-zA-Z]');
-	//
-    //        $this->CI->user_certification_model->update($info->id,array(
-    //            'status'	=> $status,
-    //            'sys_check'	=> 1,
-    //        ));
-    //        return true;
-    //    }
-    //    return false;
-    // }
+    public function student_verify($info = array())
+    {
+        $user_certification = $this->get_certification_info($info->user_id, CERTIFICATION_IDCARD, $info->investor);
+        if ($user_certification == FALSE || $user_certification->status != CERTIFICATION_STATUS_SUCCEED)
+        {
+            return FALSE;
+        }
+
+        if ($info && $info->status == CERTIFICATION_STATUS_PENDING_TO_VALIDATE && $info->certification_id == CERTIFICATION_STUDENT)
+        {
+            $content = json_decode($info->content, TRUE);
+            $verifiedResult = new StudentCertificationResult(CERTIFICATION_STATUS_SUCCEED);
+            $sys_check = SYSTEM_CHECK;
+            $reference = $content['front_image_id'] . '-' . $content['back_image_id'];
+            $content['meta'] = isset($content['meta']) ? $content['meta'] : [];
+
+            $this->CI->load->library('scraper/sip_lib');
+            if ( ! empty($content['school']) && ! empty($content['sip_account']) && ! empty($content['sip_password']))
+            {
+                // 爬蟲執行結果
+                $sip_log = $this->CI->sip_lib->getLoginLog($content['school'], $content['sip_account']);
+                if ($sip_log && isset($sip_log['status']) && isset($sip_log['response']['status']))
+                {
+                    if ($sip_log['status'] == SCRAPER_STATUS_SUCCESS)
+                    {
+                        // SIP 爬蟲任務完成
+                        if ($sip_log['response']['status'] == 'finished')
+                        {
+                            // 判斷 SIP 帳號密碼是否正確
+                            if (isset($sip_log['response']['isRight']) && $sip_log['response']['isRight'] == TRUE)
+                            {
+                                // 判斷 SIP 是否成功登入
+                                if (isset($sip_log['response']['isLogin']) && $sip_log['response']['isLogin'] == TRUE)
+                                {
+                                    $sip_data                      = $this->CI->sip_lib->getDeepData($content['school'], $content['sip_account']);
+                                    $content['sip_data']           = isset($sip_data['response']) ? $sip_data['response'] : [];
+                                    $content['meta']['last_grade'] = isset($sip_data['response']['result']['latestGrades']) ? $sip_data['response']['result']['latestGrades'] : '';
+                                    $user_info = ! empty($user_certification->content) ? $user_certification->content : [];
+                                    if ($sip_data && isset($sip_data['response']['result']))
+                                    {
+                                        if (isset($user_info['name']) && isset($user_info['id_number']) && isset($sip_data['response']['result']['name']) && isset($sip_data['response']['result']['idNumber']))
+                                        {
+                                            if ($user_info['name'] != $sip_data['response']['result']['name'])
+                                            {
+                                                $verifiedResult->addMessage("SIP姓名與實名認證資訊不同:1.實名認證姓名=\"{$user_info['name']}\"2.SIP姓名=\"{$sip_data['response']['result']['name']}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                            }
+                                            if ($user_info['id_number'] != $sip_data['response']['result']['idNumber'])
+                                            {
+                                                $verifiedResult->addMessage("SIP身分證與實名認證資訊不同1.實名認證身分證=\"{$user_info['id_number']}\"2.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            isset($user_info['name']) ? $user_info['name'] : $user_info['name'] = '';
+                                            isset($user_info['id_number']) ? $user_info['id_number'] : $user_info['id_number'] = '';
+                                            isset($sip_data['response']['result']['name']) ? $sip_data['response']['result']['name'] : $sip_data['response']['result']['name'] = '';
+                                            isset($sip_data['response']['result']['idNumber']) ? $sip_data['response']['result']['idNumber'] : $sip_data['response']['result']['idNumber'] = '';
+                                            $verifiedResult->addMessage("SIP身分證與實名認證資訊不同:1.實名認證姓名=\"{$user_info['name']}\"2.實名認證身分證=\"{$user_info['id_number']}\"3.SIP姓名=\"{$sip_data['response']['result']['name']}\"4.SIP身分證=\"{$sip_data['response']['result']['idNumber']}\"", CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $verifiedResult->addMessage('SIP DeepScraper沒有資料，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                    }
+                                }
+                                else
+                                {
+                                    // SIP 帳號密碼判定正確，但登入爬取過程中出現異常
+                                    $verifiedResult->addMessage('SIP帳號密碼正確，爬蟲執行失敗，請確認是否為在學中帳號，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                }
+                            }
+                            else
+                            {
+                                if (isset($sip_log['response']['universityStatus']) && $sip_log['response']['universityStatus'] != SCRAPER_SIP_NORMALLY)
+                                {
+                                    $status_mapping = [
+                                        SCRAPER_SIP_RECAPTCHA => '驗證碼問題',
+                                        SCRAPER_SIP_NORMALLY => '正常狀態',
+                                        SCRAPER_SIP_BLOCK => '黑名單學校',
+                                        SCRAPER_SIP_SERVER_ERROR => 'server問題',
+                                        SCRAPER_SIP_VPN => 'VPN相關問題',
+                                        SCRAPER_SIP_CHANGE_PWD => '要求改密碼',
+                                        SCRAPER_SIP_FILL_QUEST => '問卷問題',
+                                        SCRAPER_SIP_UNSTABLE => '不穩定 有時有未知異常',
+                                    ];
+                                    $verifiedResult->addMessage('SIP登入失敗，學校狀態: ' .
+                                        $status_mapping[$sip_log['response']['universityStatus']] .
+                                        '，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                }
+                                else
+                                {
+                                    $verifiedResult->addMessage('SIP登入失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                                }
+                            }
+                        }
+                        else if ($sip_log['response']['status'] == 'failure')
+                        {
+                            $verifiedResult->addMessage('SIP爬蟲執行失敗，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        }
+                        else if ($sip_log['response']['status'] == 'university_not_found')
+                        {
+                            $verifiedResult->addMessage('SIP學校不在清單內，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        }
+                        else if ($sip_log['response']['status'] == 'university_not_enabled')
+                        {
+                            $verifiedResult->addMessage('SIP學校為黑名單，請人工進行驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        }
+                        // 爬蟲未跑完
+                        else if ($sip_log['response']['status'] == 'started' || $sip_log['response']['status'] == 'retry' || $sip_log['response']['status'] == 'requested')
+                        {
+                            return FALSE;
+                        }
+                        else
+                        {
+                            $verifiedResult->addMessage('SIP爬蟲回應status非預期，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                        }
+                    }
+                    else if ($sip_log['status'] == SCRAPER_STATUS_NO_CONTENT)
+                    {
+                        $this->sip_lib->requestDeep($content['school'], $content['sip_account'], $content['sip_password']);
+                        return FALSE;
+                    }
+                    else if ($sip_log['status'] == SCRAPER_STATUS_CREATED)
+                    {
+                        return FALSE;
+                    }
+                    else
+                    {
+                        $verifiedResult->addMessage('SIP爬蟲http回應狀態非預期，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                    }
+                }
+                else
+                {
+                    $verifiedResult->addMessage('SIP LoginLog無回應，請洽工程師', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                }
+            }
+            else
+            {
+                $verifiedResult->addMessage('SIP填入資訊為空', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+            }
+
+            // 預計畢業時間
+            if (isset($content['graduate_date']) && ! empty($content['graduate_date']))
+            {
+                if (preg_match('/^民國[0-9]{2,3}(年|-|\/)(0?[1-9]|1[012])(月|-|\/)(0?[1-9]|[12][0-9]|3[01])(日?)$/u', $content['graduate_date']))
+                {
+                    $graduate_date = preg_replace('/民國/', '', $content['graduate_date']);
+                    $this->CI->load->library('mapping/time');
+                    $graduate_date = $this->CI->time->ROCDateToUnixTimestamp($graduate_date);
+                    // 是否畢業
+                    if (is_numeric($graduate_date) && $graduate_date <= strtotime(date('Y-m-d', $info->created_at)))
+                    {
+                        // 是否超過六年
+                        if ($graduate_date <= strtotime(date('Y-m-d', $info->created_at) . '-6 years'))
+                        {
+                            $verifiedResult->addMessage('已畢業，請申請上班族貸', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
+                        }
+                    }
+                }
+                else
+                {
+                    $verifiedResult->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+                }
+            }
+            else
+            {
+                $verifiedResult->addMessage('預計畢業時間格式錯誤', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MassageDisplay::Backend);
+            }
+
+            // OCR辨識結果(含手填)是否為黑名單學校
+            $this->CI->config->load('school_points', TRUE);
+            $school_config = $this->CI->config->item('school_points');
+            $this->CI->load->library('student_card_recognition_lib');
+            $result = $this->CI->student_card_recognition_lib->get_student_card_identification($reference);
+            if ($result['status'] == 1)
+            {
+                if(in_array($result['university'] ,$school_config['lock_school']))
+                {
+                    $verifiedResult->addMessage('經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務', CERTIFICATION_STATUS_FAILED, MassageDisplay::Client);
+                }
+            }
+
+            $status                  = $verifiedResult->getStatus();
+            $remark                  = is_array(json_decode($info->remark, TRUE)) ? json_decode($info->remark, TRUE) : [];
+            $remark['verify_result'] = isset($remark['verify_result']) ? $remark['verify_result'] : [];
+            $remark['verify_result'] = array_merge($remark['verify_result'], $verifiedResult->getAllMessage(MassageDisplay::Backend));
+
+            $this->CI->user_certification_model->update($info->id, array(
+                'status'    => $status != CERTIFICATION_STATUS_PENDING_TO_REVIEW ? CERTIFICATION_STATUS_PENDING_TO_VALIDATE : $status,
+                'sys_check' => $sys_check,
+                'content'   => json_encode($content, JSON_INVALID_UTF8_IGNORE),
+                'remark'    => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
+            ));
+
+            if ($status == CERTIFICATION_STATUS_SUCCEED)
+            {
+                $this->set_success($info->id, TRUE);
+            }
+            else if ($status == CERTIFICATION_STATUS_FAILED)
+            {
+                $notificationContent = $verifiedResult->getAPPMessage(CERTIFICATION_STATUS_FAILED);
+                $this->set_failed($info->id, $notificationContent, $sys_check);
+            }
+
+            return TRUE;
+        }
+        return FALSE;
+    }
 
     public function social_verify($info = array())
     {
@@ -2467,6 +2655,10 @@ class Certification_lib{
 			isset($content['graduate_date']) ? $data['graduate_date'] = $content['graduate_date'] : '';
             isset($content['programming_language']) ? $data['student_programming_language'] = count($content['programming_language']) : '';
             isset($content['transcript_image']) ? $data['transcript_front'] = $content['transcript_image'][0] : '';
+            if (isset($content['meta']))
+            {
+                isset($content['meta']['last_grade']) ? $data['last_grade'] = $content['meta']['last_grade'] : '';
+            }
 
             $rs = $this->user_meta_progress($data,$info);
             if($rs){
@@ -3600,11 +3792,6 @@ class Certification_lib{
 		if($user_certifications){
 			foreach($user_certifications as $key => $value){
 				switch($value->certification_id){
-					case 2:
-						if(time() > ($value->created_at + 3600)){
-							$this->set_failed($value->id,'未在有效時間內完成認證');
-						}
-						break;
 					case 6:
 						if(time() > ($value->created_at + 3600)){
 							$this->set_failed($value->id,'未在有效時間內完成認證');
@@ -3683,24 +3870,10 @@ class Certification_lib{
             ]);
             if ($certification) {
                 foreach ($certification as $key => $value) {
-                    $expireGraduateDate = false;
-                    if($value->certification_id == CERTIFICATION_STUDENT && $value->status == 1){
-                        $content = json_decode($value->content);
-                        if(isset($content->graduate_date) && !empty($content->graduate_date)){
-                            preg_match_all('/\d+/', $content->graduate_date, $matches);
-                            $rocYear = date('Y') - 1911;
-                            if($rocYear >= $matches[0][0]){
-                                $expireGraduateDate = true;
-                                $rocYear == $matches[0][0] && date('m') <= $matches[0][1] ? $expireGraduateDate = false : '';
-                            }
-                        }
-                    }
-
                     if (!in_array($value->certification_id, [CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL, CERTIFICATION_DIPLOMA])
                                 && $value->expire_time <= time()
                             || in_array($value->certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB])
                                 && $value->status == 1 && time() > strtotime('+2 months', $value->updated_at)
-                            || $expireGraduateDate
                     ) {
                         $this->set_failed($value->id, '認證已逾期。', true);
                     }

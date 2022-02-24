@@ -6,19 +6,95 @@ class Student_card_recognition_lib
     function __construct()
     {
         $this->CI = &get_instance();
-        if (empty(getenv('STUDENT_CARD_IP')) || empty(getenv('STUDENT_CARD_PORT'))) {
+        if (empty(getenv('STUDENT_CARD_IP')) || empty(getenv('STUDENT_CARD_PORT')))
+        {
             throw new Exception('can not get student card machine learning ip or port');
         }
         $this->url = 'http://' . getenv('STUDENT_CARD_IP') . ':' . getenv('STUDENT_CARD_PORT') . '/student_card/';
     }
 
-    public function get_student_card_identification($image)
+    public function request_student_card_identification($front_image_log, $back_image_log, $famous_only = 'false', $score_threshold = '')
     {
-        if(empty($image)) {
+        if (empty($front_image_log) || empty($back_image_log) || ! isset($front_image_log->url) || ! isset($back_image_log->url))
+        {
             return FALSE;
         }
 
-        $url = $this->url  . 'recognition';
+        $reference = $front_image_log->id . '-' . $back_image_log->id;
+        $image_url_list = array($front_image_log->url, $back_image_log->url);
+
+        if ($score_threshold)
+        {
+            $url = $this->url . "batch_recognition/task/{$reference}?famous_only={$famous_only}&score_threshold={$score_threshold}";
+        }
+        else
+        {
+            $url = $this->url . "batch_recognition/task/{$reference}?famous_only={$famous_only}";
+        }
+        $headers = [
+            'accept: application/json',
+            'Content-Type: application/json;'
+        ];
+        $data = json_encode(['image_url_list' => $image_url_list]);
+        $result = curl_get_statuscode($url, $data, $headers);
+
+        if ( ! $result || $result['code'] != 201)
+        {
+            return FALSE;
+        }
+
+        return $result;
+    }
+
+    public function get_student_card_identification($reference)
+    {
+        $t = microtime(true);
+        $res = [
+            'status' => 0,
+            'student_id' => '',
+            'student_department' => '',
+            'student_academic_degree' => '',
+            'university' => '',
+            'spent_time' => ''
+        ];
+        if (empty($reference))
+        {
+            return FALSE;
+        }
+
+        $url = $this->url . "batch_recognition/task/{$reference}";
+        $result = curl_get_statuscode($url);
+
+        if ( ! $result || $result['code'] != 200)
+        {
+            return FALSE;
+        }
+
+        if (isset($result['response']['responseItem']['body']['studentCardRecognitionOut_list']) &&
+            is_array($result['response']['responseItem']['body']['studentCardRecognitionOut_list']))
+        {
+            $rs = $this->get_result_by_score($result);
+            if ($rs)
+            {
+                $res['university'] = isset($rs['university_name']) ? $rs['university_name'] : '';
+                $res['student_id'] = isset($rs['student_id']) ? $rs['student_id'] : '';
+                $res['student_department'] = isset($rs['student_department']) ? $rs['student_department'] : '';
+                $res['student_academic_degree'] = isset($rs['student_academic_degree']) ? $rs['student_academic_degree'] : '';
+                $res['status'] = 1;
+            }
+        }
+        $res['spent_time'] = microtime(true)-$t;
+        return $res;
+    }
+
+    public function get_student_card_recognition($image)
+    {
+        if (empty($image))
+        {
+            return FALSE;
+        }
+
+        $url = $this->url . 'recognition';
         $headers = [
             'accept: application/json',
             'Content-Type: application/json;'
@@ -26,10 +102,38 @@ class Student_card_recognition_lib
         $data = json_encode(['image_url' => $image->url]);
         $result = curl_get_statuscode($url, $data, $headers);
 
-        if (!$result) {
+        if ( ! $result)
+        {
             return FALSE;
         }
 
         return $result;
+    }
+
+    private function get_result_by_score($result)
+    {
+        $first_result  = $result['response']['responseItem']['body']['studentCardRecognitionOut_list'][0];
+        $second_result = $result['response']['responseItem']['body']['studentCardRecognitionOut_list'][1];
+
+        // 找出符合標準的命中結果
+        if ($first_result && $second_result)
+        {
+            $first_magnification  = $first_result['compare_result_list'][0]['score'] / ($first_result['compare_result_list'][1]['score'] + 1e-7) > 1.3 ?
+                $first_result['compare_result_list'][0]['score']  / ($first_result['compare_result_list'][1]['score'] + 1e-7) : 0;
+            $second_magnification = $second_result['compare_result_list'][0]['score'] / ($second_result['compare_result_list'][1]['score'] + 1e-7) > 1.3 ?
+                $second_result['compare_result_list'][0]['score'] / ($second_result['compare_result_list'][1]['score'] + 1e-7) : 0;
+            if ($first_magnification || $second_magnification)
+            {
+                if ($first_magnification > $second_magnification)
+                {
+                    return $first_result;
+                }
+                else
+                {
+                    return $second_result;
+                }
+            }
+        }
+        return FALSE;
     }
 }
