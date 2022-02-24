@@ -436,18 +436,17 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					反詐欺管理指標-狀態
+					司法院查詢
 				</div>
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table id="brookesia_results" class="table table-bordered table-hover table-striped">
+								<table id="judicial-yuan" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
-										<th width="25%">風險等級</th>
-										<th width="30%">事件時間</th>
-										<th width="45%">指標內容</th>
+										<th width="70%">裁判案由</th>
+										<th width="30%">總數</th>
 									</tr>
 									</thead>
 								</table>
@@ -460,17 +459,18 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					司法院查詢
+					反詐欺管理指標-狀態
 				</div>
 				<div class="panel-body">
 					<div class="row">
 						<div class="col-lg-12">
 							<div class="table-responsive">
-								<table id="judicial-yuan" class="table table-bordered table-hover table-striped">
+								<table id="brookesia_results" class="table table-bordered table-hover table-striped">
 									<thead>
 									<tr class="odd list">
-										<th width="70%">裁判案由</th>
-										<th width="30%">總數</th>
+										<th width="25%">風險等級</th>
+										<th width="30%">事件時間</th>
+										<th width="45%">指標內容</th>
 									</tr>
 									</thead>
 								</table>
@@ -518,6 +518,33 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-12">
+			<div class="panel panel-default mt-4">
+				<div class="panel-heading p-4">
+					黑名單狀態
+				</div>
+				<div class="panel-body">
+					<table id="status">
+						<thead>
+							<tr>
+								<th>會員ID</th>
+								<th>更新時間</th>
+								<th>更新原因</th>
+								<th>符合黑名單規則</th>
+								<th>規則細項</th>
+								<th>風險等級</th>
+								<th>執行狀態</th>
+								<th>到期時間</th>
+								<th style="width: 110px;">備註</th>
+								<th>會員資訊</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -915,7 +942,7 @@
         return status_icon;
     }
 
-	async function  blockUserAdd(){
+	async function blockUserAdd(){
 		const apiUrl = "/api/v2/black_list"
 		const blockDescription = $('#blockDescription').val()
         const blockRemark =  $('#blockRemark').val()
@@ -940,6 +967,81 @@
 			return data
 		})
 	}
+
+	function initBlackList({userId}) {
+		//set table
+		const t2 = $('#status').DataTable({
+			'ordering': false,
+			"paging": false,
+			"info": false,
+			"searching": false,
+			'language': {
+				'processing': '處理中...',
+				'lengthMenu': '顯示 _MENU_ 項結果',
+				'zeroRecords': '目前無資料',
+				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+				'infoFiltered': '(從 _MAX_ 項結果過濾)',
+				'search': '使用本次搜尋結果快速搜尋',
+				'paginate': {
+					'first': '首頁',
+					'previous': '上頁',
+					'next': '下頁',
+					'last': '尾頁'
+				}
+			},
+			"info": false
+		})
+		if(!userId){
+			return
+		}
+		// 黑名單狀態
+		fetch(`/api/v2/black_list/get_all_block_users?userId=${userId}`)
+			.then(res=>res.json())
+			.then((data) => {
+				// draw table
+				const table = $('#status').DataTable()
+				table.clear()
+				const reason = (text) => {
+					return `<div style="white-space:pre-wrap;">${text}</div>`
+				}
+				const buttonToID = (id) => {
+					return `<div class="d-flex">
+						<button class="btn btn-default mr-2">
+							<a href="/admin/user/edit?id=${id}" target="_blank">查看</a>
+						</button>
+					</div>`
+				}
+				const idGroup = (id) => {
+					return `<div>
+						<div>${id}</div>
+						<button class="btn btn-default mr-2">
+							<a href="/admin/Risk/black_list?id=${id}" target="_blank">查看黑名單資訊</a>
+						</button>
+					</div>`
+				}
+				const convertDate = (n)=> {
+					return new Date(n * 1000).toLocaleString()
+				}
+				data.results.forEach(item => {
+					const endDate = item.blockInfo.endAt > 0 ? convertDate(item.blockInfo.endAt) : '永久'
+					table.row.add([
+						idGroup(item.userId),
+						convertDate(item.updatedAt),
+						item.updateReason,
+						item.blockRule,
+						item.blockDescription,
+						item.blockRisk,
+						item.status,
+						endDate,
+						reason(item.blockRemark),
+						buttonToID(item.userId),
+					])
+				})
+				table.draw()
+			})
+	}
+
 	document.querySelector('#blockUserForm').addEventListener('submit',async(e)=>{
 		e.preventDefault()
 		const data = await blockUserAdd()
@@ -965,6 +1067,7 @@
 		var targetInfoAjaxLock = false;
 		var relatedUserAjaxLock = false;
 		$('#blockUserId').val(userId);
+		initBlackList({userId})
 		changeReevaluationLoading(false);
 		fillFakeVerifications("borrowing");
 		fillFakeVerifications("investing");
@@ -1756,6 +1859,7 @@
 		function refreshParent() {
 			window.opener.location.reload();
 		}
+
 	});
 </script>
 <style>
