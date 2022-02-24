@@ -153,9 +153,9 @@ class Creditmanagement extends MY_Admin_Controller
         $user_certification = array_column($user_certification, 'status', 'certification_id');
 
         // 必填的驗證項
-        if (isset($product_detail['option_certifications']))
-        {
-            $certification_need_chk = array_diff($product_detail['certifications'], $product_detail['option_certifications']);
+        if (isset($product_detail['backend_option_certifications']))
+        { // 過濾掉[後台]上選填的徵信項
+            $certification_need_chk = array_diff($product_detail['certifications'], $product_detail['backend_option_certifications']);
         }
         else
         {
