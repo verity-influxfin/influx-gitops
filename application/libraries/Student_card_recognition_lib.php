@@ -70,8 +70,7 @@ class Student_card_recognition_lib
             return FALSE;
         }
 
-        if (isset($result['response']['responseItem']['body']['studentCardRecognitionOut_list']) &&
-            is_array($result['response']['responseItem']['body']['studentCardRecognitionOut_list']))
+        if (isset($result['response']['responseItem']['status_code']) && $result['response']['responseItem']['status_code'] == 200)
         {
             $rs = $this->get_result_by_score($result);
             if ($rs)
@@ -80,8 +79,8 @@ class Student_card_recognition_lib
                 $res['student_id'] = isset($rs['student_id']) ? $rs['student_id'] : '';
                 $res['student_department'] = isset($rs['student_department']) ? $rs['student_department'] : '';
                 $res['student_academic_degree'] = isset($rs['student_academic_degree']) ? $rs['student_academic_degree'] : '';
-                $res['status'] = 1;
             }
+            $res['status'] = 1;
         }
         $res['spent_time'] = microtime(true)-$t;
         return $res;
@@ -112,26 +111,36 @@ class Student_card_recognition_lib
 
     private function get_result_by_score($result)
     {
-        $first_result  = $result['response']['responseItem']['body']['studentCardRecognitionOut_list'][0];
-        $second_result = $result['response']['responseItem']['body']['studentCardRecognitionOut_list'][1];
+        $front_list = $result['response']['responseItem']['body']['studentCardRecognitionOut_list'][0];
+        $back_list  = $result['response']['responseItem']['body']['studentCardRecognitionOut_list'][1];
+
+        $f_0_score  = $front_list['compare_result_list'][0]['score'];
+        $f_1_score  = $front_list['compare_result_list'][1]['score'];
+        $b_0_score  = $back_list['compare_result_list'][0]['score'];
+        $b_1_score  = $back_list['compare_result_list'][1]['score'];
 
         // 找出符合標準的命中結果
-        if ($first_result && $second_result)
+        if ( ! $f_1_score || ! $b_1_score)
         {
-            $first_magnification  = $first_result['compare_result_list'][0]['score'] / ($first_result['compare_result_list'][1]['score'] + 1e-7) > 1.3 ?
-                $first_result['compare_result_list'][0]['score']  / ($first_result['compare_result_list'][1]['score'] + 1e-7) : 0;
-            $second_magnification = $second_result['compare_result_list'][0]['score'] / ($second_result['compare_result_list'][1]['score'] + 1e-7) > 1.3 ?
-                $second_result['compare_result_list'][0]['score'] / ($second_result['compare_result_list'][1]['score'] + 1e-7) : 0;
-            if ($first_magnification || $second_magnification)
+            $front_rate = $f_0_score > 0.1 ? $f_0_score : 0;
+            $back_rate  = $b_0_score > 0.1 ? $b_0_score : 0;
+        }
+        else
+        {
+            $front_rate = $f_0_score / $f_1_score > 1.3 ? $f_0_score / $f_1_score : 0;
+            $back_rate  = $b_0_score / $b_1_score > 1.3 ? $b_0_score / $b_1_score : 0;
+        }
+
+        // 回傳符合標準的命中結果
+        if ($front_rate || $back_rate)
+        {
+            if ($front_rate > $back_rate)
             {
-                if ($first_magnification > $second_magnification)
-                {
-                    return $first_result;
-                }
-                else
-                {
-                    return $second_result;
-                }
+                return $front_list;
+            }
+            else
+            {
+                return $back_list;
             }
         }
         return FALSE;
