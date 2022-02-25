@@ -488,14 +488,6 @@
 
 				}
 				const statusGroup = (text, status, id) => {
-					if (status === 'disabled') {
-						return `<div class="d-flex flex-column">
-								<div class="mb-2">${text}</div>
-								<button class="btn btn-default mr-2" disabled>
-									已移除
-								</button>
-							</div>`
-					}
 					return `<div class="d-flex flex-column">
 							<div class="mb-2" style="white-space:pre-wrap;">${text}</div>
 							<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal" 
@@ -683,14 +675,6 @@
 					}
 				}
 				const statusGroup = (text, status, id, recordId) => {
-					if (status === 'disabled') {
-						return `<div class="d-flex flex-column">
-								<div class="mb-2">${text}</div>
-								<button type="button" class="btn btn-default mr-2" disabled>
-									已移除
-								</button>
-							</div>`
-					}
 					return `<div class="d-flex flex-column">
 							<div class="mb-2" style="white-space:pre-wrap;">${text}</div>
 							<button type="button" class="btn btn-primary mr-2" data-toggle="modal" data-target="#statusModal" 
