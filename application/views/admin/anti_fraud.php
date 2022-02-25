@@ -4,6 +4,11 @@
 		flex-direction: column;
 	}
 
+	.popover-content {
+		padding: 10px;
+		white-space: pre-line;
+	}
+
 	.panel-heading {
 		height: 64px;
 	}
@@ -239,6 +244,7 @@
 								<th>事件時間</th>
 								<th>指標項目</th>
 								<th>指標內容</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -253,7 +259,8 @@
 				<div class="panel-heading p-4">
 					黑名單狀態
 					<div style="display: inline-block;" class="ml-2">
-						<a class="btn btn-default" :href="'/admin/Risk/black_list?id='+searchUserId" target="_blank" :disabled="!searchUserIdStatus">查看黑名單資訊</a>
+						<a class="btn btn-default" :href="'/admin/Risk/black_list?id='+searchUserId" target="_blank"
+							:disabled="!searchUserIdStatus">查看黑名單資訊</a>
 					</div>
 				</div>
 				<div class="mask" v-show="!searchUserIdStatus"></div>
@@ -477,9 +484,6 @@
 			},
 			"info": false
 		})
-		$(function () {
-			$('[data-toggle="popover"]').popover()
-		})
 		v.onReady()
 	})
 
@@ -623,7 +627,7 @@
 						data.results.forEach(item => {
 							const endDate = item.blockInfo.endAt > 0 ? this.convertDate(item.blockInfo.endAt) : '永久'
 							table.row.add([
-								idGroup(item.userId,item.status),
+								idGroup(item.userId, item.status),
 								this.convertDate(item.updatedAt),
 								item.updateReason,
 								item.blockRule,
@@ -682,16 +686,50 @@
 				// draw table
 				const table = $('#andtfraud').DataTable()
 				table.clear()
+				const pop = (s) => {
+					return `
+				<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="${s}">
+					 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+				</button>`
+				}
 				data.forEach(e => {
+					let popText = '指標：\n'
+					for (const text of e.index) {
+						popText += text + ', '
+					}
+					popText = popText.substr(0, popText.length - 2)
+					popText += '\n\n'
+					for (const obj of e.columnMap) {
+						let s = ''
+						if (typeof obj.value === 'object') {
+							for (const iterator of obj.value) {
+								if (typeof iterator === 'object') {
+									for (const [k, v] of Object.entries(iterator)) {
+										s += `${v} - `
+									}
+									s = s.substr(0, s.length - 3)
+									s += '\n'
+								} else {
+									s += iterator + ', '
+								}
+							}
+						} else {
+							s += obj.value
+						}
+						popText += `${obj.label}： \n ${s} \n\n`
+					}
 					const t = [
 						`${e.risk} - ${e.userId}`,
 						this.convertDate(e.updatedAt),
 						e.mainDescription,
-						e.description
+						e.description,
+						pop(popText)
 					]
+
 					table.row.add(t)
 				})
 				table.draw()
+				$('[data-toggle="popover"]').popover()
 			},
 			"riskTreeSelect.node1"() {
 				this.riskTreeSelect.node2 = {}
