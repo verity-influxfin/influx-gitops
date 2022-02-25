@@ -427,121 +427,124 @@
 		<!-- /.panel -->
 
 		<!-- /.col-lg-12 -->
-		<div class="col-sm-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					借款端認證
+		<div class="col-lg-12" style="display: flex; justify-content: space-between;">
+			<div style="width: 32.33%;">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						借款端認證
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="table-responsive">
+									<table id="borrowing-verifications" class="table table-bordered table-hover">
+										<thead>
+											<tr class="odd list">
+												<th class="center-text" width="40%">認證名稱</th>
+												<th class="center-text" width="60%">狀態</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="table-responsive">
-								<table id="borrowing-verifications" class="table table-bordered table-hover">
-									<thead>
-										<tr class="odd list">
-											<th class="center-text" width="40%">認證名稱</th>
-											<th class="center-text" width="60%">狀態</th>
+			</div>
+			<div style="width: 32.33%;">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						投資端認證
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="table-responsive">
+									<table id="investing-verifications" class="table table-bordered table-hover">
+										<thead>
+											<tr class="odd list">
+												<th class="center-text" width="40%">認證名稱</th>
+												<th class="center-text" width="60%">狀態</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="width: 32.33%;">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						信用評分
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="table-responsive">
+									<table class="table table-bordered table-hover">
+										<tr>
+											<td class="table-field center-text">
+												<p class="form-control-static">產品</p>
+											</td>
+											<td class="center-text table-twenty">
+												<p id="product-name" class="form-control-static"></p>
+											</td>
 										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					投資端認證
-				</div>
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="table-responsive">
-								<table id="investing-verifications" class="table table-bordered table-hover">
-									<thead>
-										<tr class="odd list">
-											<th class="center-text" width="40%">認證名稱</th>
-											<th class="center-text" width="60%">狀態</th>
+										<tr>
+											<td class="table-field center-text">
+												<p class="form-control-static">信用等級</p>
+											</td>
+											<td class="center-text table-twenty">
+												<p id="credit-level" class="form-control-static"></p>
+											</td>
 										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>
+										<tr>
+											<td class="table-field center-text">
+												<p class="form-control-static">信用評分</p>
+											</td>
+											<td class="center-text table-twenty">
+												<p id="credit-points" class="form-control-static"></p>
+											</td>
+										</tr>
+										<tr>
+											<td class="table-field center-text">
+												<p class="form-control-static">信用額度</p>
+											</td>
+											<td class="center-text table-twenty">
+												<p id="credit-amount" class="form-control-static"></p>
+											</td>
+										</tr>
+										<tr>
+											<td class="table-field center-text">
+												<p class="form-control-static">有效時間</p>
+											</td>
+											<td class="center-text table-twenty">
+												<p id="credit-expired-at" class="form-control-static"></p>
+											</td>
+										</tr>
+										<tr>
+											<td class="table-field center-text">
+												<p class="form-control-static">核准時間</p>
+											</td>
+											<td class="center-text table-twenty">
+												<p id="credit-created-at" class="form-control-static"></p>
+											</td>
+										</tr>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					信用評分
-				</div>
-				<div class="panel-body">
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="table-responsive">
-								<table class="table table-bordered table-hover">
-									<tr>
-										<td class="table-field center-text">
-											<p class="form-control-static">產品</p>
-										</td>
-										<td class="center-text table-twenty">
-											<p id="product-name" class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="table-field center-text">
-											<p class="form-control-static">信用等級</p>
-										</td>
-										<td class="center-text table-twenty">
-											<p id="credit-level" class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="table-field center-text">
-											<p class="form-control-static">信用評分</p>
-										</td>
-										<td class="center-text table-twenty">
-											<p id="credit-points" class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="table-field center-text">
-											<p class="form-control-static">信用額度</p>
-										</td>
-										<td class="center-text table-twenty">
-											<p id="credit-amount" class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="table-field center-text">
-											<p class="form-control-static">有效時間</p>
-										</td>
-										<td class="center-text table-twenty">
-											<p id="credit-expired-at" class="form-control-static"></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="table-field center-text">
-											<p class="form-control-static">核准時間</p>
-										</td>
-										<td class="center-text table-twenty">
-											<p id="credit-created-at" class="form-control-static"></p>
-										</td>
-									</tr>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -634,6 +637,9 @@
 			<div class="panel panel-default mt-4">
 				<div class="panel-heading p-4">
 					黑名單狀態
+					<button class="btn btn-default mr-2">
+						<a id="blackLink" target="_blank">查看黑名單資訊</a>
+					</button>
 				</div>
 				<div class="panel-body">
 					<table id="status">
@@ -1147,12 +1153,22 @@
 						</button>
 					</div>`
 				}
-				const idGroup = (id) => {
+				const idGroup = (id, status) => {
+					let s = ''
+					if (status === 0) {
+						s = '停用'
+					}
+					if (status === 1) {
+						s = '封鎖中'
+					}
+					if (status === 2) {
+						s = '已過期'
+					}
 					return `<div>
 						<div>${id}</div>
-						<button class="btn btn-default mr-2">
-							<a href="/admin/Risk/black_list?id=${id}" target="_blank">查看黑名單資訊</a>
-						</button>
+						<div>
+							${s}
+						</div>
 					</div>`
 				}
 				const convertDate = (n) => {
@@ -1161,13 +1177,13 @@
 				data.results.forEach(item => {
 					const endDate = item.blockInfo.endAt > 0 ? convertDate(item.blockInfo.endAt) : '永久'
 					table.row.add([
-						idGroup(item.userId),
+						idGroup(item.userId, item.status),
 						convertDate(item.updatedAt),
 						item.updateReason,
 						item.blockRule,
 						item.blockDescription,
 						item.blockRisk,
-						item.status,
+						item.blockInfo.blockTimeText,
 						endDate,
 						reason(item.blockRemark),
 						buttonToID(item.userId),
@@ -1191,6 +1207,7 @@
 		const blockTimeText = $('#blockTimeText').val('')
 
 		$('#newModal').modal('hide')
+		location.reload()
 	})
 
 	$(document).ready(function () {
@@ -1202,6 +1219,7 @@
 		var targetInfoAjaxLock = false;
 		var relatedUserAjaxLock = false;
 		$('#blockUserId').val(userId);
+		$('#blackLink').prop('href', `/admin/Risk/black_list?id=${userId}`)
 		initBlackList({ userId })
 		changeReevaluationLoading(false);
 		fillFakeVerifications("borrowing");
