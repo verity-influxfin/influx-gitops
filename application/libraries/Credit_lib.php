@@ -1070,6 +1070,7 @@ class Credit_lib{
             ],
             'product_id' => $product_id,
             'sub_product_id' => $sub_product_id,
+            'instalment' => $instalment,
             'id !=' => $except_target_id
         ]);
         $total_target_amount = array_sum(array_column($target_list, 'amount'));

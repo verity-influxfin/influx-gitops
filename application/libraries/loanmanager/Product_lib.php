@@ -37,6 +37,7 @@ class Product_lib
             'charge_platform' => $sub_product['charge_platform'],
             'charge_platform_min' => $sub_product['charge_platform_min'],
             'certifications' => $sub_product['certifications'],
+            'option_certifications' => $sub_product['option_certifications'] ?? [],
             'instalment' => $sub_product['instalment'],
             'repayment' => $sub_product['repayment'],
             'targetData' => $sub_product['targetData'],

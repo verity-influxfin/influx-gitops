@@ -2,6 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/REST_Controller.php');
 
+use Certification\Certification_factory;
+
 class Certification extends REST_Controller {
 
 	public $user_info,$certification;
@@ -2617,11 +2619,12 @@ class Certification extends REST_Controller {
         $input 		= $this->input->post(NULL, TRUE);
         $user_id 	= $this->user_info->id;
         $investor 	= $this->user_info->investor;
-        $targetId   = $input['target_id'];
 
-        if(!isset($targetId)) {
-            $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT));
+        if ( ! isset($input['target_id']))
+        {
+            $this->response(array('result' => 'ERROR', 'error' => INPUT_NOT_CORRECT));
         }
+        $targetId = $input['target_id'];
 
         $target = $this->target_model->get($targetId);
         if(!isset($target)) {
@@ -2634,12 +2637,31 @@ class Certification extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => IS_INVERTOR));
         }
 
-        $this->load->library('Certification_lib');
-        $result = $this->certification_lib->verify_certifications($target, 1);
-        if($result)
-            $this->response(['result' => 'SUCCESS']);
-        else
-            $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
+        // 檢查驗證項是否已提交
+        $this->load->library('loanmanager/product_lib');
+        $product = $this->product_lib->getProductInfo($target->product_id, $target->sub_product_id);
+        $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
+        $this->load->model('user_certification_model');
+        foreach ($need_chk_cert as $certification_id)
+        {
+            $info = $this->user_certification_model->get_by([
+                'user_id' => $this->user_info->id,
+                'certification_id' => $certification_id,
+                'investor' => $investor
+            ]);
+            if (empty($info))
+            {
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+            }
+
+            $cert = Certification_factory::get_instance_by_model_resource($info);
+            if ( ! $cert->is_submitted())
+            {
+                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+            }
+        }
+
+        $this->response(['result' => 'SUCCESS']);
     }
 
     public function simplificationfinancial_post()

@@ -90,6 +90,8 @@ class Certification_factory
                 return new Cert_identity($certification, $certification_result);
             case CERTIFICATION_STUDENT: // 學生身份認證
                 return new Cert_student($certification, $certification_result);
+            case CERTIFICATION_DEBITCARD: // 金融帳號認證
+                return new Cert_debitcard($certification, $certification_result);
             case CERTIFICATION_SOCIAL: // 社交帳號
                 return new Cert_social($certification, $certification_result);
             case CERTIFICATION_EMERGENCY: // 緊急聯絡人
