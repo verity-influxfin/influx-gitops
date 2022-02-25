@@ -252,6 +252,9 @@
 			<div class="panel panel-default mt-4">
 				<div class="panel-heading p-4">
 					黑名單狀態
+					<div style="display: inline-block;" class="ml-2">
+						<a class="btn btn-default" :href="'/admin/Risk/black_list?id='+searchUserId" target="_blank" :disabled="!searchUserIdStatus">查看黑名單資訊</a>
+					</div>
 				</div>
 				<div class="mask" v-show="!searchUserIdStatus"></div>
 				<div class="panel-body">
@@ -474,6 +477,9 @@
 			},
 			"info": false
 		})
+		$(function () {
+			$('[data-toggle="popover"]').popover()
+		})
 		v.onReady()
 	})
 
@@ -598,24 +604,32 @@
 								</button>
 							</div>`
 						}
-						const idGroup = (id) => {
+						const idGroup = (id, status) => {
+							let s = ''
+							if (status === 0) {
+								s = '停用'
+							}
+							if (status === 1) {
+								s = '封鎖中'
+							}
+							if (status === 2) {
+								s = '已過期'
+							}
 							return `<div>
 								<div>${id}</div>
-								<button class="btn btn-default mr-2">
-									<a href="/admin/Risk/black_list?id=${id}" target="_blank">查看黑名單資訊</a>
-								</button>
+								<div>${s}</div>
 							</div>`
 						}
 						data.results.forEach(item => {
 							const endDate = item.blockInfo.endAt > 0 ? this.convertDate(item.blockInfo.endAt) : '永久'
 							table.row.add([
-								idGroup(item.userId),
+								idGroup(item.userId,item.status),
 								this.convertDate(item.updatedAt),
 								item.updateReason,
 								item.blockRule,
 								item.blockDescription,
 								item.blockRisk,
-								item.status,
+								item.blockInfo.blockTimeText,
 								endDate,
 								reason(item.blockRemark),
 								buttonToID(item.userId),
