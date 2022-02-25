@@ -160,6 +160,7 @@ defined('M_ORDER_NOT_EXIST')  			OR define('M_ORDER_NOT_EXIST'			, 420);
 defined('M_ORDER_STATUS_ERROR')  		OR define('M_ORDER_STATUS_ERROR'		, 421);
 defined('M_ORDER_ACTION_ERROR')  		OR define('M_ORDER_ACTION_ERROR'		, 422);
 defined('PICTURE_NOT_EXIST')  		OR define('PICTURE_NOT_EXIST'		, 423);
+defined('PRODUCT_HAS_NO_CREDIT') or define('PRODUCT_HAS_NO_CREDIT', 424); // 該產品已無額度，不起新案
 
 //Certification Error Code
 defined('CERTIFICATION_NOT_ACTIVE') 	OR define('CERTIFICATION_NOT_ACTIVE'	, 501);

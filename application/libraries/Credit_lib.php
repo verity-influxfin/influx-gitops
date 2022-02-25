@@ -1032,4 +1032,53 @@ class Credit_lib{
         }
 	    return false;
     }
+
+    /**
+     * 取得使用者申請同產品的剩餘額度
+     * @param int $user_id
+     * @param int $product_id
+     * @param int $sub_product_id
+     * @param int $instalment
+     * @param int $except_target_id
+     * @return void
+     */
+    public function get_remain_amount(int $user_id, int $product_id, int $sub_product_id, int $instalment, int $except_target_id = 0)
+    {
+        // 撈取同產品的最新一筆核可資訊
+        $credit = $this->CI->credit_model->order_by('created_at','desc')->get_by([
+            'user_id' => $user_id,
+            'product_id' => $product_id,
+            'sub_product_id' => $sub_product_id,
+            'instalment' => $instalment,
+            'expire_time>' => time()
+        ]);
+        if (isset($credit->amount))
+        {
+            $credit_amount = (int) $credit->amount;
+        }
+        else
+        {
+            $credit_amount = 0;
+        }
+
+        $target_list = $this->CI->target_model->get_many_by([
+            'user_id' => $user_id,
+            'status NOT' => [
+                TARGET_CANCEL, // 已取消
+                TARGET_FAIL, // 申請失敗
+                TARGET_REPAYMENTED, // 已結案
+            ],
+            'product_id' => $product_id,
+            'sub_product_id' => $sub_product_id,
+            'id !=' => $except_target_id
+        ]);
+        $total_target_amount = array_sum(array_column($target_list, 'amount'));
+
+        return [
+            'credit_amount' => $credit_amount, // 核可額度
+            'target_amount' => $total_target_amount, // 佔用中的額度
+            'remain_amount' => $credit_amount - $total_target_amount, // 剩餘可用額度
+            'target_list' => $target_list
+        ];
+    }
 }

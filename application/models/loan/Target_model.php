@@ -602,4 +602,31 @@ class Target_model extends MY_Model
 
         return $this->_database->get()->result_array();
     }
+
+    public function get_failed_target(int $user_id)
+    {
+        $subqery = $this->db
+            ->select('MAX(id)')
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->where('status', TARGET_FAIL)
+            ->group_by('product_id')
+            ->group_by('sub_product_id')
+            ->get_compiled_select(NULL, TRUE);
+
+        $this->db
+            ->select('t.id')
+            ->select('t.target_no')
+            ->select('t.product_id')
+            ->select('t.sub_product_id')
+            ->select('t.user_id')
+            ->select('t.remark')
+            ->select('t.created_at')
+            ->from('p2p_loan.targets t')
+            ->where('t.status', TARGET_FAIL)
+            ->where('t.user_id', $user_id)
+            ->where("t.id IN ($subqery)");
+
+        return $this->db->get()->result_array();
+    }
 }

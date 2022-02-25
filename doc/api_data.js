@@ -19079,11 +19079,24 @@ define({
         },
         {
             "type": "get",
-            "url": "/v2/product/info/:id",
+            "url": "/v2/product/info/:id/:target_id",
             "title": "借款方 取得產品資訊",
             "version": "0.2.0",
             "name": "GetProductInfo",
             "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
             "parameter": {
                 "fields": {
                     "Parameter": [
@@ -19093,6 +19106,13 @@ define({
                             "optional": false,
                             "field": "id",
                             "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
                         }
                     ]
                 }
@@ -19113,6 +19133,13 @@ define({
                             "optional": false,
                             "field": "id",
                             "description": "<p>Product ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_product_id",
+                            "description": "<p>子產品 ID</p>"
                         },
                         {
                             "group": "Success 200",
@@ -19197,13 +19224,27 @@ define({
                             "optional": false,
                             "field": "repayment",
                             "description": "<p>可選計息方式 1:等額本息</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "NULL/Number",
+                            "optional": false,
+                            "field": "remain_amount",
+                            "description": "<p>可用額度</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "NULL/Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>有額度的Targets ID</p>"
                         }
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": "{\n\t\"result\": \"SUCCESS\",\n\t\t\"data\": {\n\t\t\t\"id\": 1,\n\t\t\t\"type\": 1,\n\t\t\t\"identity\": 1,\n\t\t\t\"name\": \"學生貸\",\n\t\t\t\"description\": \"\\r\\n普匯學生貸\\r\\n計畫留學、創業或者實現更多理想嗎？\\r\\n需要資金卻無法向銀行聲請借款嗎？\\r\\n普匯陪你一起實現夢想\",\n\t\t\t\"loan_range_s\": 5000,\n\t\t\t\"loan_range_e\": 120000,\n\t\t\t\"interest_rate_s\": 5,\n\t\t\t\"interest_rate_e\": 20,\n\t\t\t\"charge_platform\": 3,\n\t\t\t\"charge_platform_min\": 500,\n\t\t\t\"instalment\": [\n\t\t\t\t3,\n\t\t\t\t6,\n\t\t\t\t12,\n\t\t\t\t18,\n\t\t\t\t24\n\t\t\t],\n\t\t\t\"repayment\": [\n\t\t\t\t1\n\t\t\t]\n\t\t}\n}",
+                        "content": "{\n\t\"result\": \"SUCCESS\",\n\t\t\"data\": {\n\t\t\t\"id\": 1,\n\t\t\t\"sub_product_id\": 0 ,\n\t\t\t\"type\": 1,\n\t\t\t\"identity\": 1,\n\t\t\t\"name\": \"學生貸\",\n\t\t\t\"description\": \"\\r\\n普匯學生貸\\r\\n計畫留學、創業或者實現更多理想嗎？\\r\\n需要資金卻無法向銀行聲請借款嗎？\\r\\n普匯陪你一起實現夢想\",\n\t\t\t\"loan_range_s\": 5000,\n\t\t\t\"loan_range_e\": 120000,\n\t\t\t\"interest_rate_s\": 5,\n\t\t\t\"interest_rate_e\": 20,\n\t\t\t\"charge_platform\": 3,\n\t\t\t\"charge_platform_min\": 500,\n\t\t\t\"instalment\": [\n\t\t\t\t3,\n\t\t\t\t6,\n\t\t\t\t12,\n\t\t\t\t18,\n\t\t\t\t24\n\t\t\t],\n\t\t\t\"repayment\": [\n\t\t\t\t1\n\t\t\t],\n\t\t\t\"remain_amount\": 10000,\n\t\t\t\"target_id\": 100574\n\t\t}\n}",
                         "type": "Object"
                     }
                 ]
@@ -19211,6 +19252,12 @@ define({
             "error": {
                 "fields": {
                     "Error 4xx": [
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "806",
+                            "description": "<p>申貸案不存在</p>"
+                        },
                         {
                             "group": "Error 4xx",
                             "optional": false,
@@ -19245,6 +19292,11 @@ define({
                 },
                 "examples": [
                     {
+                        "title": "806",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"806\"\n}",
+                        "type": "Object"
+                    },
+                    {
                         "title": "401",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"401\"\n}",
                         "type": "Object"
@@ -19275,7 +19327,7 @@ define({
             "groupTitle": "Product",
             "sampleRequest": [
                 {
-                    "url": "/api/v2/product/info/:id"
+                    "url": "/api/v2/product/info/:id/:target_id"
                 }
             ]
         },
@@ -22774,6 +22826,12 @@ define({
                             "optional": false,
                             "field": "414",
                             "description": "<p>產品關閉</p>"
+                        },
+                        {
+                            "group": "Error 4xx",
+                            "optional": false,
+                            "field": "424",
+                            "description": "<p>產品已無額度，不起新案</p>"
                         }
                     ]
                 },
@@ -22801,6 +22859,11 @@ define({
                     {
                         "title": "410",
                         "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"410\"\n}",
+                        "type": "Object"
+                    },
+                    {
+                        "title": "424",
+                        "content": "{\n  \"result\": \"ERROR\",\n  \"error\": \"424\"\n}",
                         "type": "Object"
                     },
                     {
@@ -49306,6 +49369,169 @@ define({
             "sampleRequest": [
                 {
                     "url": "/api/v2/product/chk_famous_school/:school_short_name"
+                }
+            ]
+        },
+        {
+            "type": "get",
+            "url": "/v2/product/targetfaillist",
+            "title": "借款方 取得申請失敗列表",
+            "version": "0.2.0",
+            "name": "GetProductTargetfaillist",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": []
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "product_name",
+                            "description": "<p>產品名稱</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "product_id",
+                            "description": "<p>產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "sub_product_id",
+                            "description": "<p>子產品ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "user_id",
+                            "description": "<p>Users ID</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "String",
+                            "optional": false,
+                            "field": "remark",
+                            "description": "<p>備註</p>"
+                        },
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "created_at",
+                            "description": "<p>建立時間</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"list\":[\n            {\n                "id": 1000559,\n                "product_name": "3S名校貸",\n                "product_id": 1,\n                "sub_product_id": 6,\n                "user_id": 1000025,\n                "remark": "",\n                "created_at": 1645169600\n            }\n        ]\n    }\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/targetfaillist"
+                }
+            ]
+        },
+        {
+            "type": "post",
+            "url": "/v2/product/update",
+            "title": "借款方 調整額度",
+            "version": "0.2.0",
+            "name": "PostProductUpdate",
+            "group": "Product",
+            "header": {
+                "fields": {
+                    "Header": [
+                        {
+                            "group": "Header",
+                            "type": "String",
+                            "optional": false,
+                            "field": "request_token",
+                            "description": "<p>登入後取得的 Request Token</p>"
+                        }
+                    ]
+                }
+            },
+            "parameter": {
+                "fields": {
+                    "Parameter": [
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                        {
+                            "group": "Parameter",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "amount",
+                            "description": "<p>調整後的額度</p>"
+                        }
+                    ]
+                }
+            },
+            "success": {
+                "fields": {
+                    "Success 200": [
+                        {
+                            "group": "Success 200",
+                            "type": "Number",
+                            "optional": false,
+                            "field": "target_id",
+                            "description": "<p>Targets ID</p>"
+                        },
+                    ]
+                },
+                "examples": [
+                    {
+                        "title": "SUCCESS",
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        "target_id": 1000576\n    }\n}`,
+                        "type": "Boolean"
+                    }
+                ]
+            },
+            "filename": "application/controllers/api/v2/Product.php",
+            "groupTitle": "Product",
+            "sampleRequest": [
+                {
+                    "url": "/api/v2/product/update"
                 }
             ]
         }

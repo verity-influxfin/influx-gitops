@@ -379,10 +379,13 @@ class Product extends REST_Controller {
      * @apiVersion 0.2.0
      * @apiName GetProductInfo
      * @apiGroup Product
+     * @apiHeader {String} [request_token] 登入後取得的 Request Token
      * @apiParam {Number} id 產品ID
+     * @apiParam {Number} target_id Targets ID
      *
      * @apiSuccess {Object} result SUCCESS
      * @apiSuccess {String} id Product ID
+     * @apiSuccess {Number} sub_product_id 子產品 ID
      * @apiSuccess {String} type 類型 1:信用貸款 2:分期付款
      * @apiSuccess {Number} identity 身份 1:學生 2:社會新鮮人
      * @apiSuccess {String} name 名稱
@@ -395,6 +398,8 @@ class Product extends REST_Controller {
      * @apiSuccess {String} charge_platform_min 平台最低服務費(元)
      * @apiSuccess {Object} instalment 可選期數 0:其他
      * @apiSuccess {Object} repayment 可選計息方式 1:等額本息
+     * @apiSuccess {NULL/Number} remain_amount 可用額度
+     * @apiSuccess {NULL/Number} target_id 有額度的Targets ID
      * @apiSuccessExample {Object} SUCCESS
      * {
      * 	'result': 'SUCCESS',
@@ -419,7 +424,9 @@ class Product extends REST_Controller {
      * 			],
      * 			'repayment': [
      * 				1
-     * 			]
+     * 			],
+     *          'remain_amount': 10000,
+     *          'target_id': 100574
      * 		}
      * }
      *
@@ -435,15 +442,14 @@ class Product extends REST_Controller {
      *       'error': '401'
      *     }
      */
-
-    public function info_get($id)
+    public function info_get($id, $target_id)
     {
         if($id){
             $exp_product  = explode('%3A',$id);
             $id = $exp_product[0];
             $product_list = $this->config->item('product_list');
             $sub_product_list = $this->config->item('sub_product_list');
-            $sub_product_id = isset($exp_product[1])?$exp_product[1]:0;
+            $sub_product_id = (int) ($exp_product[1] ?? 0);
 
             if(isset($product_list[$id])){
                 $product = $product_list[$id];
@@ -457,8 +463,34 @@ class Product extends REST_Controller {
                         $this->response(array('result' => 'ERROR','error' => PRODUCT_NOT_EXIST ));
                     }
                 }
+
+                $target = $this->target_model->get_by(['id' => $target_id]);
+                if (empty($target))
+                {
+                    $this->response(['result' => 'ERROR', 'error' => TARGET_APPLY_NOT_EXIST]);
+                }
+                $this->load->library('credit_lib');
+                $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $product['id'], $sub_product_id, $target->instalment, $target_id);
+                $chk_data = ['remain_amount' => NULL, 'target_id' => NULL];
+                if ($chk_credit['credit_amount'] != 0)
+                {
+                    $chk_data['remain_amount'] = $chk_credit['remain_amount'];
+                    $chk_target = $this->target_model->order_by('created_at', 'DESC')->get_by([
+                        'user_id' => $this->user_info->id,
+                        'product_id' => $product['id'],
+                        'sub_product_id' => $sub_product_id,
+                        'loan_amount>' => 0,
+                        'id !=' => $target_id
+                    ]);
+                    if (isset($chk_target->id))
+                    {
+                        $chk_data['target_id'] = (int) $chk_target->id;
+                    }
+                }
+
                 $data = array(
                     'id' 					=> $product['id'],
+                    'sub_product_id'        => $sub_product_id,
                     'type' 					=> $product['type'],
                     'identity' 				=> $product['identity'],
                     'name' 					=> $product['name'],
@@ -472,6 +504,7 @@ class Product extends REST_Controller {
                     'instalment'			=> $product['instalment'],
                     'repayment'				=> $product['repayment'],
                 );
+                $data = array_merge($data, $chk_data);
                 $this->response(array('result' => 'SUCCESS','data' => $data ));
             }
         }
@@ -542,6 +575,13 @@ class Product extends REST_Controller {
      *     {
      *       'result': 'ERROR',
      *       'error': '410'
+     *     }
+     *
+     * @apiError 424 產品已無額度，不起新案
+     * @apiErrorExample {Object} 424
+     *     {
+     *       'result': 'ERROR',
+     *       'error': '424'
      *     }
      *
      */
@@ -617,14 +657,6 @@ class Product extends REST_Controller {
                 $this->response(array('result' => 'ERROR', 'error' => PRODUCT_CLOSE));
             }
 
-            // 角色判斷
-            // if($product['checkOwner']){
-                // character 法人角色 0:非實際負責人 1:實際負責人
-//                if(isset($input['character']) && $input['character'] == 2){
-//                    $input['instalment'] = 36;
-//                }
-            // }
-
             // 外匯車判斷
             if($product['id'] == PRODUCT_FOREX_CAR_VEHICLE){
                 $input['instalment'] = 90;
@@ -662,7 +694,7 @@ class Product extends REST_Controller {
                 $repayment = 1;
             }
 
-//            社交跑分可能異常 重新驗證社交 並退掉分數
+            // 社交跑分可能異常 重新驗證社交 並退掉分數
             $this->load->model('user/user_certification_model');
             $cer = $this->user_certification_model->get_by(
                 [
@@ -706,6 +738,22 @@ class Product extends REST_Controller {
             ];
 
             $method = 'type'.$product['type'].'_apply';
+
+            $this->load->library('credit_lib');
+            $chk_credit = $this->credit_lib->get_remain_amount($user_id, $product['id'], $sub_product_id, $input['instalment']);
+
+            if ($chk_credit['credit_amount'] > 0)
+            { // 有效期內的核可額度(條件：同產品、同子產品、同期間)
+                if ($chk_credit['remain_amount'] >= $input['amount'])
+                { // 該產品有未使用額度
+                    $param['status'] = TARGET_WAITING_SIGNING;
+                }
+                else
+                { // 該產品已無使用額度
+                    $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT]);
+                }
+            }
+
             if(method_exists($this, $method)){
                 $this->$method($param,$product,$input);
             }
@@ -3249,5 +3297,125 @@ class Product extends REST_Controller {
         }
 
         $this->response(['result' => 'SUCCESS', 'data' => ['chk_result' => $result]]);
+    }
+
+    /**
+     * @api {post} /v2/product/targetfaillist 借款方 取得申請失敗列表
+     * @apiVersion 0.2.0
+     * @apiName GetProductTargetfaillist
+     * @apiGroup Product
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     *     'result':'SUCCESS',
+     *     'data':{
+     *         'list': [
+     *             {
+     *                 "id": 1000559,
+     *                 "product_name": "3S名校貸",
+     *                 "product_id": 1,
+     *                 "sub_product_id": 6,
+     *                 "user_id": 1000025,
+     *                 "remark": "",
+     *                 "created_at": 1645169600
+     *             },
+     *         ]
+     *     }
+     * }
+     */
+    public function targetfaillist_get()
+    {
+        $product_list = $this->config->item('product_list');
+        $this->load->model('loan/target_model');
+        $targets = $this->target_model->get_failed_target($this->user_info->id);
+
+        $list = [];
+
+        foreach ($targets as $value)
+        {
+            if ( ! isset($product_list[$value['product_id']]))
+            {
+                continue;
+            }
+            $product = $product_list[$value['product_id']];
+            $sub_product_id = $value['sub_product_id'];
+            if ($this->is_sub_product($product, $sub_product_id))
+            {
+                $product = $this->trans_sub_product($product, $sub_product_id);
+            }
+
+            $list[] = [
+                'id' => (int) $value['id'],
+                'product_name' => $product['name'],
+                'product_id' => (int) $value['product_id'],
+                'sub_product_id' => (int) $value['sub_product_id'],
+                'user_id' => (int) $value['user_id'],
+                'remark' => $value['remark'],
+                'created_at' => (int) $value['created_at'],
+            ];
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['list' => $list]]);
+    }
+
+    /**
+     * @api {post} /v2/product/update 借款方 調整額度
+     * @apiVersion 0.2.0
+     * @apiName PostProductUpdate
+     * @apiGroup Product
+     * @apiHeader {String} request_token 登入後取得的 Request Token
+     *
+     * @apiSuccess {Object} result SUCCESS
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     *     'result':'SUCCESS',
+     *     'data':{
+     *         'target_id':'1000576'
+     *     }
+     * }
+     */
+    public function update_post()
+    {
+        $input = $this->input->post(NULL, TRUE);
+
+        if (empty($input['target_id']))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        if (empty($input['amount']))
+        {
+            $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
+        }
+
+        $target = $this->target_model->get_by([
+            'id' => $input['target_id'],
+            'user_id' => $this->user_info->id
+        ]);
+        if (empty($target))
+        {
+            $this->response(['result' => 'ERROR', 'error' => TARGET_NOT_EXIST]);
+        }
+
+        if($target->status != TARGET_WAITING_SIGNING){
+            $this->response(['result' => 'ERROR','error' => TARGET_APPLY_STATUS_ERROR]);
+        }
+
+        $this->load->library('credit_lib');
+        $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $target->product_id, $target->sub_product_id, $target->instalment, $input['target_id']);
+
+        if ($input['amount'] > $chk_credit['remain_amount'])
+        {
+            $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT]);
+        }
+
+        $this->target_model->update(
+            $input['target_id'],
+            ['amount' => (int) $input['amount']]
+        );
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => (int) $input['target_id']]]);
     }
 }
