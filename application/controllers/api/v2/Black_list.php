@@ -201,8 +201,7 @@ class Black_list extends Admin_rest_api_controller
         $payload = [
             'userId'           	=> $input['userId'],
             'updatedBy'        	=> $updatedBy,
-            'blockRemark'       => $input['blockRemark'],
-			'recordId' 			=> $input['recordId']
+            'blockRemark'       => $input['blockRemark']
         ];
 
         # 是否修改黑名單歷史record
