@@ -124,11 +124,20 @@
 		justify-content: space-between;
 	}
 
+	.justify-end {
+		justify-content: flex-end;
+	}
+
 	.input-require::after {
 		content: '*';
 		color: #dc3545;
 		margin-left: 4px;
 		display: inline-block;
+	}
+
+	.popover-content {
+		padding: 10px;
+		white-space: pre-line;
 	}
 </style>
 <div id="page-wrapper">
@@ -545,7 +554,7 @@
 			</div>
 		</div>
 
-		<div class="col-lg-12">
+		<!-- <div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					司法院查詢
@@ -567,27 +576,41 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<div class="col-lg-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					反詐欺管理指標-狀態
+			<div class="panel panel-default mt-4">
+				<div class="panel-heading p-4">
+					反詐欺指標
+					<div style="display: inline-block;" class="ml-2">
+						<a class="btn btn-default" :href="'/admin/AntiFraud?id='+searchUserId" target="_blank"
+							:disabled="!searchUserId">查看反詐欺指標</a>
+					</div>
 				</div>
 				<div class="panel-body">
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="table-responsive">
-								<table id="brookesia_results" class="table table-bordered table-hover table-striped">
-									<thead>
-										<tr class="odd list">
-											<th width="25%">風險等級</th>
-											<th width="30%">事件時間</th>
-											<th width="45%">指標內容</th>
-										</tr>
-									</thead>
-								</table>
-							</div>
-						</div>
+					<div class="d-flex">
+						<div>每頁顯示：</div>
+						<select v-model="pagination.per_page" @change="doSearch({page:1})">
+							<option :value="5">5</option>
+							<option :value="10">10</option>
+							<option :value="20">20</option>
+							<option :value="50">50</option>
+						</select>
+					</div>
+					<table id="antifraud">
+						<thead>
+							<tr>
+								<th>風險等級</th>
+								<th>事件時間</th>
+								<th>指標項目</th>
+								<th>指標內容</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					<div class="d-flex justify-end">
+						<v-page :data="pagination" @change_page="onChangePage"></v-page>
 					</div>
 				</div>
 			</div>
@@ -1220,6 +1243,22 @@
 		var relatedUserAjaxLock = false;
 		$('#blockUserId').val(userId);
 		$('#blackLink').prop('href', `/admin/Risk/black_list?id=${userId}`)
+		const t = $('#antifraud').DataTable({
+			'ordering': false,
+			"paging": false,
+			"info": false,
+			'language': {
+				'processing': '處理中...',
+				'lengthMenu': '顯示 _MENU_ 項結果',
+				'zeroRecords': '目前無資料',
+				'info': '顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項',
+				'infoEmpty': '顯示第 0 至 0 項結果，共 0 項',
+				'infoFiltered': '(從 _MAX_ 項結果過濾)',
+				'search': '使用本次搜尋結果快速搜尋',
+			},
+			"info": false
+		})
+		v.doSearch({ id: userId })
 		initBlackList({ userId })
 		changeReevaluationLoading(false);
 		fillFakeVerifications("borrowing");
@@ -2014,6 +2053,108 @@
 		}
 
 	});
+
+	const v = new Vue({
+		el: '#page-wrapper',
+		data() {
+			return {
+				pagination: {
+					current_page: 1,
+					last_page: 1,
+					per_page: 10
+				},
+				searchUserId: null,
+				antiTable: []
+			}
+		},
+
+		methods: {
+			convertDate(n) {
+				return new Date(n * 1000).toLocaleString()
+			},
+			onChangePage(page) {
+				this.doSearch({ page })
+			},
+			doSearch({ page, id }) {
+				const { pagination } = this
+				const pageParam = page ?? this.pagination.current_page
+				if (id) {
+					this.searchUserId = id
+				}
+				axios.get(`/api/v2/anti_fraud/get_anti_list`, {
+					params: {
+						userId: this.searchUserId,
+						page: pageParam,
+						count: pagination.per_page
+					}
+				}).then(({ data }) => {
+					if (!data.results) {
+						alert(data.message)
+						return
+					}
+					this.antiTable = data.results
+					this.pagination = {
+						current_page: data.pagination.page,
+						last_page: data.pagination.last_page,
+						per_page: data.pagination.count
+					}
+				})
+			}
+		},
+		watch: {
+			antiTable(data) {
+				// draw table
+				const table = $('#antifraud').DataTable()
+				table.clear()
+				const pop = (s) => {
+					return `
+				<button type="button" class="btn btn-default" data-container="body" data-toggle="popover" data-placement="left" data-content="${s}">
+					 <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+				</button>`
+				}
+				data.forEach(e => {
+					let popText = '指標：\n'
+					for (const text of e.index) {
+						popText += text + ', '
+					}
+					popText = popText.substr(0, popText.length - 2)
+					popText += '\n\n'
+					for (const obj of e.columnMap) {
+						let s = ''
+						if (typeof obj.value === 'object') {
+							for (const iterator of obj.value) {
+								if (typeof iterator === 'object') {
+									for (const [k, v] of Object.entries(iterator)) {
+										s += `${v} - `
+									}
+									s = s.substr(0, s.length - 3)
+									s += '\n'
+								} else {
+									s += iterator + ', '
+								}
+							}
+						} else {
+							s += obj.value
+						}
+						popText += `${obj.label}： \n ${s} \n\n`
+					}
+					const t = [
+						`${e.risk} - ${e.userId}`,
+						this.convertDate(e.updatedAt),
+						e.mainDescription,
+						e.description,
+						pop(popText)
+					]
+
+					table.row.add(t)
+				})
+				table.draw()
+				$('[data-toggle="popover"]').popover()
+			}
+		}
+	})
+
+
 </script>
 <style>
 	.table-field {

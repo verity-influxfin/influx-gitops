@@ -535,6 +535,10 @@
 				return new Date(n * 1000).toLocaleString()
 			},
 			onReady() {
+				const url = new URL(location.href);
+				if(url.searchParams.has('id')){
+					this.searchParam.userId = url.searchParams.get('id')
+				}
 				this.doSearch({})
 				this.getOption()
 				this.getNewTree()
