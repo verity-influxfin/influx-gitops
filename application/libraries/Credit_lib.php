@@ -1073,7 +1073,9 @@ class Credit_lib{
             'instalment' => $instalment,
             'id !=' => $except_target_id
         ]);
-        $total_target_amount = array_sum(array_column($target_list, 'amount'));
+        $total_target_amount = array_sum(array_map(function ($item) {
+            return ! $item->loan_amount ? $item->amount : $item->loan_amount;
+        }, $target_list));
 
         return [
             'credit_amount' => $credit_amount, // 核可額度

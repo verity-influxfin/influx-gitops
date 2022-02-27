@@ -2661,6 +2661,11 @@ class Certification extends REST_Controller {
             }
         }
 
+        $this->target_model->update($targetId, [
+            'status' => TARGET_WAITING_APPROVE,
+            'certificate_status' => 1
+        ]);
+
         $this->response(['result' => 'SUCCESS']);
     }
 

@@ -609,7 +609,13 @@ class Target_model extends MY_Model
             ->select('MAX(id)')
             ->from('p2p_loan.targets')
             ->where('user_id', $user_id)
-            ->where('status', TARGET_FAIL)
+            ->group_start()
+                ->where('status', TARGET_FAIL)
+                ->or_group_start()
+                    ->where('status', TARGET_WAITING_APPROVE)
+                    ->where('certificate_status', 1)
+                ->group_end()
+            ->group_end()
             ->group_by('product_id')
             ->group_by('sub_product_id')
             ->get_compiled_select(NULL, TRUE);
@@ -622,9 +628,9 @@ class Target_model extends MY_Model
             ->select('t.user_id')
             ->select('t.remark')
             ->select('t.created_at')
+            ->select('t.status')
+            ->select('t.certificate_status')
             ->from('p2p_loan.targets t')
-            ->where('t.status', TARGET_FAIL)
-            ->where('t.user_id', $user_id)
             ->where("t.id IN ($subqery)");
 
         return $this->db->get()->result_array();

@@ -3313,13 +3313,14 @@ class Product extends REST_Controller {
      *     'data':{
      *         'list': [
      *             {
-     *                 "id": 1000559,
      *                 "product_name": "3S名校貸",
-     *                 "product_id": 1,
-     *                 "sub_product_id": 6,
-     *                 "user_id": 1000025,
      *                 "remark": "",
-     *                 "created_at": 1645169600
+     *                 "certifications": {
+     *                     "1":[],
+     *                     "2":[
+     *                         "error msg"
+     *                     ]
+     *                 }
      *             },
      *         ]
      *     }
@@ -3329,6 +3330,7 @@ class Product extends REST_Controller {
     {
         $product_list = $this->config->item('product_list');
         $this->load->model('loan/target_model');
+        $this->load->library('loanmanager/product_lib');
         $targets = $this->target_model->get_failed_target($this->user_info->id);
 
         $list = [];
@@ -3339,21 +3341,44 @@ class Product extends REST_Controller {
             {
                 continue;
             }
-            $product = $product_list[$value['product_id']];
-            $sub_product_id = $value['sub_product_id'];
-            if ($this->is_sub_product($product, $sub_product_id))
+            $product = $this->product_lib->getProductInfo($value['product_id'], $value['sub_product_id']);
+            $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
+            $this->load->model('user_certification_model');
+
+            $failed_cert_reson = [];
+
+            if ($value['status'] == TARGET_WAITING_APPROVE && $value['certificate_status'] == 1)
             {
-                $product = $this->trans_sub_product($product, $sub_product_id);
+                foreach ($need_chk_cert as $certification_id)
+                {
+                    $info = $this->user_certification_model->get_by([
+                        'user_id' => $this->user_info->id,
+                        'certification_id' => $certification_id,
+                        'investor' => $this->user_info->investor
+                    ]);
+                    if (empty($info->remark))
+                    {
+                        $failed_cert_reson[$certification_id] = [];
+                        continue;
+                    }
+
+                    $remark = json_decode($info->remark, TRUE);
+                    if ( ! empty($remark['fail']))
+                    {
+                        $failed_cert_reson[$certification_id] = explode('、', $remark['fail']);
+                    }
+                    else
+                    {
+                        $failed_cert_reson[$certification_id] = [];
+                    }
+                }
             }
 
             $list[] = [
                 'id' => (int) $value['id'],
                 'product_name' => $product['name'],
-                'product_id' => (int) $value['product_id'],
-                'sub_product_id' => (int) $value['sub_product_id'],
-                'user_id' => (int) $value['user_id'],
                 'remark' => $value['remark'],
-                'created_at' => (int) $value['created_at'],
+                'certifications' => $failed_cert_reson
             ];
         }
 

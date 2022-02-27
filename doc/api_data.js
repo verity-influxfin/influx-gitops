@@ -49416,27 +49416,6 @@ define({
                         },
                         {
                             "group": "Success 200",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "product_id",
-                            "description": "<p>產品ID</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "sub_product_id",
-                            "description": "<p>子產品ID</p>"
-                        },
-                        {
-                            "group": "Success 200",
-                            "type": "Number",
-                            "optional": false,
-                            "field": "user_id",
-                            "description": "<p>Users ID</p>"
-                        },
-                        {
-                            "group": "Success 200",
                             "type": "String",
                             "optional": false,
                             "field": "remark",
@@ -49444,17 +49423,17 @@ define({
                         },
                         {
                             "group": "Success 200",
-                            "type": "Number",
+                            "type": "Object",
                             "optional": false,
-                            "field": "created_at",
-                            "description": "<p>建立時間</p>"
+                            "field": "certifications",
+                            "description": "<p>徵信項驗證失敗的原因</p>"
                         },
                     ]
                 },
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"list\":[\n            {\n                "id": 1000559,\n                "product_name": "3S名校貸",\n                "product_id": 1,\n                "sub_product_id": 6,\n                "user_id": 1000025,\n                "remark": "",\n                "created_at": 1645169600\n            }\n        ]\n    }\n}`,
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"list\":[\n            {\n                "id": 1000559,\n                "product_name": "3S名校貸",\n                "remark": "",\n                "certifications": {\n                     "1": [],\n                     "2":[\n                         "error msg 1",\n                         "error msg 2"\n                     ]\n                 }\n            }\n        ]\n    }\n}`,
                         "type": "Boolean"
                     }
                 ]
