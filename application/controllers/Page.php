@@ -110,8 +110,8 @@ class Page extends CI_Controller
 
 	private function _get_product_bids(DateTimeInterface $date)
 	{
-		$month_ini = new DateTime("first day of this month");
-		$month_end = new DateTime("first day of next month");
+		$month_ini = $date->modify("first day of this month");
+		$month_end = $date->modify("first day of next month");
 		$month_ini = $month_ini->setTime(0, 0, 0);
 		$month_end = $month_end->setTime(0, 0, 0);
 
