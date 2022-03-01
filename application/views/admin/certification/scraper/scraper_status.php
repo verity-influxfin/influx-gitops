@@ -144,7 +144,7 @@
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>圖示說明：</h4>
+            <h4>爬蟲儀表板 - 圖示說明：</h4>
             <div class="d-flex aic my-2">
                 <div>
                     <button type="button" class="btn btn-success btn-circle">

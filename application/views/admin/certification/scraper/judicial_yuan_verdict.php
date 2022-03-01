@@ -18,6 +18,15 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
+	.d-flex{
+		display: flex;
+	}
+	.jcb{
+		justify-content: space-between;
+	}
+	.aic{
+		align-items: center;
+	}
 </style>
 <script type="text/javascript">
     let isClick = false;
@@ -273,10 +282,13 @@
     });
 </script>
 <div id="page-wrapper">
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">司法院判決案例</h1>
+    <div class="d-flex jcb aic page-header">
+        <div>
+            <h1>司法院判決案例</h1>
         </div>
+		<div>
+			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
+		</div>
     </div>
     <table class="table table-bordered table-hover table-striped">
         <tbody>

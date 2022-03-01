@@ -7,6 +7,15 @@
     .table-content {
         word-break: break-all;
     }
+	.d-flex{
+		display: flex;
+	}
+	.jcb{
+		justify-content: space-between;
+	}
+	.aic{
+		align-items: center;
+	}
 </style>
 <script type="text/javascript">
     let riskLevelResponse = []
@@ -184,10 +193,13 @@
     });
 </script>
 <div id="page-wrapper">
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">學生SIP資訊</h1>
+    <div class="d-flex jcb aic page-header">
+        <div>
+            <h1>學生SIP資訊</h1>
         </div>
+		<div>
+			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
+		</div>
     </div>
     <table class="table table-bordered table-hover table-striped">
         <tbody>
