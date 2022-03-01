@@ -1002,4 +1002,64 @@ class Cron extends CI_Controller
             }
         }
     }
+
+    /**
+     * 慈善機構批次提領
+     * @return void
+     */
+    public function charity_daily_withdraw()
+    {
+        $start_time = time();
+        $num = 0;
+
+        $this->load->model('user/charity_institution_model');
+        $this->load->model('transaction/virtual_passbook_model');
+        $this->load->model('user/user_bankaccount_model');
+        $this->load->library('transaction_lib');
+
+        $charity_institution_data_list = $this->charity_institution_model->get_withdraw_list();
+
+        foreach ($charity_institution_data_list as $value)
+        {
+            if (empty($value['virtual_account']) || empty($value['user_id']))
+            {
+                continue;
+            }
+
+            // 確認可提領金額
+            $virtual_funds = $this->transaction_lib->get_virtual_funds([$value['virtual_account']]);
+            if (empty($virtual_funds['total']))
+            {
+                continue;
+            }
+            $amount = $virtual_funds['total'] - $virtual_funds['frozen'] ?? 0;
+
+            // 檢查是否有銀行帳戶
+            $bank_account = $this->user_bankaccount_model->get_by(array(
+                'investor' => INVESTOR,
+                'status' => 1,
+                'user_id' => $value['user_id'],
+                'verify' => 1
+            ));
+            if (empty($bank_account))
+            {
+                continue;
+            }
+
+            // 提領
+            $response = $this->transaction_lib->withdraw($value['user_id'], (int) $amount);
+            if ($response)
+            {
+                $num++;
+            }
+        }
+
+        $this->log_script_model->insert([
+            'script_name' => __FUNCTION__,
+            'num' => $num,
+            'start_time' => $start_time,
+            'end_time' => time()
+        ]);
+        die(1);
+    }
 }
