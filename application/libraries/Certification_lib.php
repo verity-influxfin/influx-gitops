@@ -2145,6 +2145,28 @@ class Certification_lib{
 				'health_card_front'	=> $content['healthcard_image'],
 			);
 
+            // 通過實名時觸發google、司法院爬蟲
+            $this->CI->load->library('scraper/judicial_yuan_lib.php');
+            $this->CI->load->library('scraper/google_lib.php');
+            $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($content['name']);
+            if(isset($verdicts_statuses['status']))
+            {
+                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 3 month'))
+                    || $verdicts_statuses['status'] == 204)
+                {
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($content['name']);
+                }
+            }
+            $google_statuses = $this->CI->google_lib->get_google_status($content['name']);
+            if (isset($google_statuses['status']))
+            {
+                if (($google_statuses['status'] == 200 && $google_statuses['response']['updatedAt'] < strtotime('- 3 month'))
+                    || $google_statuses['status'] == 204)
+                {
+                    $this->CI->google_lib->request_google($content['name']);
+                }
+            }
+
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){
                 $birthday 	= trim($content["birthday"]);
