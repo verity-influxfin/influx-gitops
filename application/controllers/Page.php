@@ -26,7 +26,9 @@ class Page extends CI_Controller
         $ios_amounts = $this->_get_ios_sales_summary_data($today->modify('-2 day')->format('Y-m-d'));
         $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), sale_dashboard_model::PLATFORM_TYPE_IOS, $ios_amounts);
 
-        // 更新 Android 下載量 - TODO
+        // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
+        $android_amounts = $this->_get_android_install_report($today->modify('-4 day'));
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), sale_dashboard_model::PLATFORM_TYPE_ANDROID, $android_amounts);
         echo 'ok';
     }
 
@@ -173,7 +175,6 @@ class Page extends CI_Controller
 		}
 
 		return implode(' / ', array_values($result));
-
 	}
 
     private function _get_deals(DateTimeInterface $date)
@@ -396,4 +397,41 @@ class Page extends CI_Controller
         return $reports[0]->getData()->getRows()[0]->getMetrics()[0]->getValues()[0];
     }
 
+    // 取得 google play 的報表資料
+    private function _get_android_install_report(DateTimeInterface $date)
+    {
+        $report_month = $date->format('Ym');
+        $date_string = $date->format('Y-m-d');
+
+        $KEY_FILE_LOCATION = './influx-e-board-f5ba47ed5c0d.json';
+        $report_bucket = 'pubsite_prod_rev_17015371377322917626';
+        $report_path = 'stats/installs/installs_com.influxfin.borrow_' . $report_month . '_overview.csv';
+
+        $storage = new StorageClient([
+            'keyFile' => json_decode(file_get_contents($KEY_FILE_LOCATION), TRUE)
+        ]);
+
+        $storage->registerStreamWrapper();
+        $contents = file_get_contents("gs://{$report_bucket}/{$report_path}");
+
+        $matrix = array_map(function ($row) {
+            return explode("\t", $row);
+        }, array_filter(
+            explode(PHP_EOL, $contents),
+            function ($row) { return ! empty($row); }
+        ));
+
+        $amounts = 0;
+        foreach ($matrix as $key => $list)
+        {
+            $filter = preg_replace('/[^a-zA-Z0-9.,-]/u', '', (string) $list[0]);
+            $row_data = explode(",", $filter);
+            if ($row_data[0] == $date_string)
+            {
+                $amounts = $row_data[2];
+            }
+        }
+
+        return $amounts;
+    }
 }
