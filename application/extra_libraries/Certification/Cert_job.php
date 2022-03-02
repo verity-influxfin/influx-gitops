@@ -44,11 +44,13 @@ class Cert_job extends Certification_base
      */
     public function is_submitted(): bool
     {
-        return isset($this->content['labor_type']) &&
-            // 非 PDF 提交方式
-            ($this->content['labor_type'] != 1 ||
-            // PDF 提交方式時，需要有回信檔案
-            ($this->content['labor_type'] == 1 && isset($this->content['mail_file_status']) && $this->content['mail_file_status'] == 1));
+        return
+            ! empty($this->content['financial_image']) ||
+            (isset($this->content['labor_type']) &&
+                // 非 PDF 提交方式
+                ($this->content['labor_type'] != 1 ||
+                    // PDF 提交方式時，需要有回信檔案
+                    ($this->content['labor_type'] == 1 && isset($this->content['mail_file_status']) && $this->content['mail_file_status'] == 1)));
     }
 
     /**

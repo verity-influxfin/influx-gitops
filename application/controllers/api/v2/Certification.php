@@ -2644,7 +2644,7 @@ class Certification extends REST_Controller {
         $this->load->model('user_certification_model');
         foreach ($need_chk_cert as $certification_id)
         {
-            $info = $this->user_certification_model->get_by([
+            $info = $this->user_certification_model->order_by('created_at', 'DESC')->get_by([
                 'user_id' => $this->user_info->id,
                 'certification_id' => $certification_id,
                 'investor' => $investor
