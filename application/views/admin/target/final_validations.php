@@ -2149,7 +2149,7 @@
 					table.row.add(t)
 				})
 				table.draw()
-				$('[data-toggle="popover"]').popover()
+				$('[data-toggle="popover"]').popover({ trigger: 'focus' })
 			}
 		}
 	})
