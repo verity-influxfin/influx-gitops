@@ -115,22 +115,23 @@ class Page extends CI_Controller
     {
         $month_ini = $date->modify("first day of this month");
         $month_end = $date->modify("first day of next month");
-        $month_ini = $month_ini->setTime(0, 0, 0);
-        $month_end = $month_end->setTime(0, 0, 0);
+        $month_ini = $month_ini->setTime(0, 0, 0)->getTimestamp();
+        $month_end = $month_end->setTime(0, 0, 0)->getTimestamp();
 
-        $this->target_model->db->select([
-            'user_id',
-            'product_id',
-            'sub_product_id',
-            'min(created_at) as first_target_at',
-        ])->from('p2p_loan.targets')
-            ->where([
-                'created_at >=' => $month_ini->getTimestamp(),
-                'created_at <' => $month_end->getTimestamp(),
-            ])
-            ->group_by('user_id');
-
-        $sub_query = $this->target_model->db->get_compiled_select('', TRUE);
+        $sub_query = "SELECT
+            `p2p_loan`.`targets`.`user_id`,
+            `p2p_loan`.`targets`.`product_id`,
+            `p2p_loan`.`targets`.`sub_product_id`,
+            min(`p2p_loan`.`targets`.`created_at`) as `first_target_at`
+            FROM `p2p_loan`.`targets`
+            WHERE (
+                SELECT `p2p_loan`.`subloan`.`id`
+                FROM `p2p_loan`.`subloan`
+                WHERE `p2p_loan`.`subloan`.`new_target_id` = `p2p_loan`.`targets`.`id`
+            ) is NULL
+            AND `p2p_loan`.`targets`.`created_at` >= {$month_ini}
+            AND `p2p_loan`.`targets`.`created_at` < {$month_end}
+            GROUP BY `p2p_loan`.`targets`.`user_id`";
 
         $this->load->model('loan/target_model');
         $query = $this->target_model->db->select([
