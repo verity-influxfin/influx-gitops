@@ -1547,6 +1547,7 @@ class Product extends REST_Controller {
                 'certification'		    => $certification,
                 'amortization_schedule'	=> $amortization_schedule,
                 'biddingHistory' => $biddingHistory,
+                'certificate_status' => (int) $target->certificate_status
             ];
 
             in_array($target->product_id, $this->config->item('allow_changeRate_product')) && $target->status == 3 ? $data['isSupportRateAdjust'] = true : '';
