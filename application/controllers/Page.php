@@ -79,7 +79,7 @@ class Page extends CI_Controller
                 'date' => $tx_date = $date->format('Y-m-d'),
 
                 // 官網流量
-                'official_site_trends' => $amounts[sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
+                'official_site_trends' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
 
                 // 新增會員
                 'new_member' => $this->_get_new_member($date),
@@ -88,8 +88,8 @@ class Page extends CI_Controller
                 'total_member' => $this->_get_total_member($date),
 
                 // APP下載
-                'android_downloads' => $amounts[sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
-                'ios_downloads' => $amounts[sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
+                'android_downloads' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
+                'ios_downloads' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
 
                 // 各產品每月申貸數
                 'product_bids' => $this->_get_product_bids($date),
@@ -119,19 +119,15 @@ class Page extends CI_Controller
         $month_end = $month_end->setTime(0, 0, 0)->getTimestamp();
 
         $sub_query = "SELECT
-            `p2p_loan`.`targets`.`user_id`,
-            `p2p_loan`.`targets`.`product_id`,
-            `p2p_loan`.`targets`.`sub_product_id`,
-            min(`p2p_loan`.`targets`.`created_at`) as `first_target_at`
-            FROM `p2p_loan`.`targets`
-            WHERE (
-                SELECT `p2p_loan`.`subloan`.`id`
-                FROM `p2p_loan`.`subloan`
-                WHERE `p2p_loan`.`subloan`.`new_target_id` = `p2p_loan`.`targets`.`id`
-            ) is NULL
-            AND `p2p_loan`.`targets`.`created_at` >= {$month_ini}
-            AND `p2p_loan`.`targets`.`created_at` < {$month_end}
-            GROUP BY `p2p_loan`.`targets`.`user_id`";
+            t.`user_id`,
+            t.`product_id`,
+            t.`sub_product_id`,
+            min(t.`created_at`) as `first_target_at`
+            FROM `p2p_loan`.`targets` t LEFT JOIN `p2p_loan`.`subloan` s ON s.`new_target_id` = t.`id`
+            WHERE s.id is NULL
+            AND t.`created_at` >= {$month_ini}
+            AND t.`created_at` < {$month_end}
+            GROUP BY t.`user_id`";
 
         $this->load->model('loan/target_model');
         $query = $this->target_model->db->select([
