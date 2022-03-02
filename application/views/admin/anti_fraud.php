@@ -200,7 +200,7 @@
 	<div id="anti-fraud-app">
 		<div class="row">
 			<div class="col-12">
-				<h1 class="page-header">反詐欺與授信政策管理指標</h1>
+				<h1 class="page-header">反詐欺管理指標</h1>
 			</div>
 		</div>
 		<div class="row" id="panel">
@@ -242,8 +242,8 @@
 							<tr>
 								<th>風險等級</th>
 								<th>事件時間</th>
-								<th>指標項目</th>
-								<th>指標內容</th>
+								<th>規則項目</th>
+								<th>規則內容</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -296,7 +296,7 @@
 				<form class="panel-body" @submit.prevent="openNewRisk">
 					<div class="result-data-row">
 						<div class="result-data-item">
-							<div class="result-header-item key">項目</div>
+							<div class="result-header-item key">指標項目</div>
 							<div class="result-value-item value">
 								<select class="form-select w-100" id="new-risk-1" v-model="riskTreeSelect.node1"
 									required>
