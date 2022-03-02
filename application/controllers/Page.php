@@ -20,15 +20,15 @@ class Page extends CI_Controller
         $ga_amounts = $this->_get_report($analytics, $today->modify('-1 day')->format('Y-m-d'));
 
         // 更新官網流量到 db
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS, $ga_amounts);
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS, $ga_amounts);
 
         // 更新 iOS 下載量 - 前天的
         $ios_amounts = $this->_get_ios_sales_summary_data($today->modify('-2 day')->format('Y-m-d'));
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), sale_dashboard_model::PLATFORM_TYPE_IOS, $ios_amounts);
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), Sale_dashboard_model::PLATFORM_TYPE_IOS, $ios_amounts);
 
         // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
         $android_amounts = $this->_get_android_install_report($today->modify('-4 day'));
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), sale_dashboard_model::PLATFORM_TYPE_ANDROID, $android_amounts);
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), Sale_dashboard_model::PLATFORM_TYPE_ANDROID, $android_amounts);
         echo 'ok';
     }
 
