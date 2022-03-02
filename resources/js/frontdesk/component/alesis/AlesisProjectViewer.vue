@@ -90,7 +90,7 @@ export default {
                 for (let i=0; i< v.length; i+=this.count) {
                     this.paginated_results.push(this.results.slice(i, i+this.count))
                 }
-                this.max_page = parseInt(this.results.length / this.count, 10);
+                this.max_page = Math.ceil(this.results.length / this.count);
             })
         },
         changeProductID(v) {
