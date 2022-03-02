@@ -2,13 +2,6 @@
     <div class="index-wrapper">
         <div class="swiper-container 標頭幻燈片">
             <div class="swiper-wrapper">
-                <!-- 微企e秒貸 x ou微企貸 -->
-                <div class="swiper-slide">
-                    <a href="/business-loan/sme">
-                        <img src="~images/sme-ou-index-banner.jpg" class="旗幟圖片">
-                        <img src="~images/sme-ou-index-banner-phone.jpg" class="旗幟圖片 旗幟圖片_手機的">
-                    </a>
-                </div>
                 <!-- 微企e秒貸 -->
                 <div class="swiper-slide">
                     <a href="/business-loan/sme">
