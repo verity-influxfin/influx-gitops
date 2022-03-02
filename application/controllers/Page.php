@@ -68,7 +68,7 @@ class Page extends CI_Controller
 
         $this->load->model('user/sale_dashboard_model');
 
-        for ($i = 0; $i < 7; $i++) 
+        for ($i = 0; $i < 7; $i++)
         {
             $date = $i > 0 ? $first_day->modify("+ {$i} day") : $first_day;
             $amounts = $this->sale_dashboard_model->get_amounts_at($date);
@@ -99,99 +99,100 @@ class Page extends CI_Controller
             ];
         }
 
-        usort($retval, function ($a, $b) {
+        usort($retval, function ($a, $b)
+        {
             return $b['date'] <=> $a['date'];
         });
 
         $this->output->set_content_type('application/json')
-                    ->set_output(json_encode([
-                        'result' => 'success',
-                        'data'   => $retval
-                    ]));
+            ->set_output(json_encode([
+                'result' => 'success',
+                'data' => $retval,
+            ]));
     }
 
-	private function _get_product_bids(DateTimeInterface $date)
-	{
-		$month_ini = $date->modify("first day of this month");
-		$month_end = $date->modify("first day of next month");
-		$month_ini = $month_ini->setTime(0, 0, 0);
-		$month_end = $month_end->setTime(0, 0, 0);
+    private function _get_product_bids(DateTimeInterface $date)
+    {
+        $month_ini = $date->modify("first day of this month");
+        $month_end = $date->modify("first day of next month");
+        $month_ini = $month_ini->setTime(0, 0, 0);
+        $month_end = $month_end->setTime(0, 0, 0);
 
-		$this->target_model->db->select([
-				'user_id',
-				'product_id',
-				'sub_product_id',
-				'min(created_at) as first_target_at'
-			])->from('p2p_loan.targets')
-			->where([
-				'created_at >=' => $month_ini->getTimestamp(),
-				'created_at <'  => $month_end->getTimestamp(),
-			])
-			->group_by('user_id');
+        $this->target_model->db->select([
+            'user_id',
+            'product_id',
+            'sub_product_id',
+            'min(created_at) as first_target_at',
+        ])->from('p2p_loan.targets')
+            ->where([
+                'created_at >=' => $month_ini->getTimestamp(),
+                'created_at <' => $month_end->getTimestamp(),
+            ])
+            ->group_by('user_id');
 
-		$sub_query = $this->target_model->db->get_compiled_select('', TRUE);
+        $sub_query = $this->target_model->db->get_compiled_select('', TRUE);
 
-		$this->load->model('loan/target_model');
-		$query = $this->target_model->db->select([
-											'user_id',
-											'product_id',
-											'sub_product_id',
-											'first_target_at'
-										])->from("($sub_query) as r")
-										->where([
-											'first_target_at >=' => $date->getTimestamp(),
-											'first_target_at <'  => $date->modify('+1 day')->getTimestamp(),
-										])
-										->get()
-										->result_array();
+        $this->load->model('loan/target_model');
+        $query = $this->target_model->db->select([
+            'user_id',
+            'product_id',
+            'sub_product_id',
+            'first_target_at',
+        ])->from("($sub_query) as r")
+            ->where([
+                'first_target_at >=' => $date->getTimestamp(),
+                'first_target_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->get()
+            ->result_array();
 
-		$result = [
-			'SMART_STUDENT' => 0,
-			'STUDENT'       => 0,
-			'SALARY_MAN'    => 0,
-			'SK_MILLION'    => 0
-		];
+        $result = [
+            'SMART_STUDENT' => 0,
+            'STUDENT' => 0,
+            'SALARY_MAN' => 0,
+            'SK_MILLION' => 0,
+        ];
 
-		foreach ($query as $data)
-		{
-			switch (TRUE)
-			{
-				case $data["product_id"] == PRODUCT_ID_STUDENT AND $data["sub_product_id"] == SUBPRODUCT_INTELLIGENT_STUDENT:
-					$result['SMART_STUDENT'] += 1;
-					break;
+        foreach ($query as $data)
+        {
+            switch (TRUE)
+            {
+            case $data["product_id"] == PRODUCT_ID_STUDENT AND $data["sub_product_id"] == SUBPRODUCT_INTELLIGENT_STUDENT:
+                $result['SMART_STUDENT'] += 1;
+                break;
 
-				case $data["product_id"] == PRODUCT_ID_STUDENT:
-					$result['STUDENT'] += 1;
-					break;
+            case $data["product_id"] == PRODUCT_ID_STUDENT:
+                $result['STUDENT'] += 1;
+                break;
 
-				case $data["product_id"] == PRODUCT_ID_SALARY_MAN:
-					$result['SALARY_MAN'] += 1;
-					break;
+            case $data["product_id"] == PRODUCT_ID_SALARY_MAN:
+                $result['SALARY_MAN'] += 1;
+                break;
 
-				case $data["product_id"] == PRODUCT_SK_MILLION_SMEG:
-					$result['SK_MILLION'] += 1;
-					break;
-			}
-		}
+            case $data["product_id"] == PRODUCT_SK_MILLION_SMEG:
+                $result['SK_MILLION'] += 1;
+                break;
+            }
+        }
 
-		return implode(' / ', array_values($result));
-	}
+        return implode(' / ', array_values($result));
+    }
 
     private function _get_deals(DateTimeInterface $date)
     {
         $this->load->model('loan/target_model');
         $query = $this->target_model->db->select([
-                                            'COUNT(*) AS amount',
-                                            'loan_date'
-                                        ])->from('p2p_loan.targets')
-                                        ->where_in('status', [5, 10])
-                                        ->where([
-                                            'loan_status' => 1,
-                                            'loan_date'   => $date->format('Y-m-d')
-                                        ])
-                                        ->group_by('loan_date')
-                                        ->get()
-                                        ->first_row('array');
+            'COUNT(*) AS amount',
+            'loan_date',
+        ])->from('p2p_loan.targets')
+            ->where_in('status', [5, 10])
+            ->where([
+                'loan_status' => 1,
+                'loan_date' => $date->format('Y-m-d'),
+            ])
+            ->group_by('loan_date')
+            ->get()
+            ->first_row('array');
         return $query['amount'] ?? 0;
     }
 
@@ -201,16 +202,16 @@ class Page extends CI_Controller
         $this->load->model('user/user_model');
 
         $unixtime_query = sprintf('FROM_UNIXTIME(created_at, \'%s\')', $date->format('Y m d'));
-        
+
         $query = $this->user_model->db->select('COUNT(id) AS amount')
-                                ->select($unixtime_query . ' AS date')
-                                ->from('p2p_user.users')
-                                ->where([
-									'created_at <' => $date->modify('+1 day')->getTimestamp(),
-                                ])
-                                ->group_by($unixtime_query)
-                                ->get()
-                                ->first_row('array');
+            ->select($unixtime_query . ' AS date')
+            ->from('p2p_user.users')
+            ->where([
+                'created_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->group_by($unixtime_query)
+            ->get()
+            ->first_row('array');
         return $query['amount'] ?? 0;
     }
 
@@ -220,17 +221,17 @@ class Page extends CI_Controller
         $this->load->model('user/user_model');
 
         $unixtime_query = sprintf('FROM_UNIXTIME(created_at, \'%s\')', $date->format('Y m d'));
-        
+
         $query = $this->user_model->db->select('COUNT(id) AS amount')
-                                ->select($unixtime_query . ' AS date')
-                                ->from('p2p_user.users')
-                                ->where([
-                                    'created_at >=' => $date->getTimestamp(),
-                                    'created_at <'  => $date->modify('+1 day')->getTimestamp(),
-                                ])
-                                ->group_by($unixtime_query)
-                                ->get()
-                                ->first_row('array');
+            ->select($unixtime_query . ' AS date')
+            ->from('p2p_user.users')
+            ->where([
+                'created_at >=' => $date->getTimestamp(),
+                'created_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->group_by($unixtime_query)
+            ->get()
+            ->first_row('array');
         return $query['amount'] ?? 0;
     }
 
@@ -298,16 +299,9 @@ class Page extends CI_Controller
         ]);
 
         $text = gzdecode($res->getBody());
-
-        $matrix = array_map(function ($row) {
-            return explode("\t", $row);
-        }, array_filter(
-            explode(PHP_EOL, $text),
-            function ($row) { return ! empty($row); }
-        ));
+        $matrix = $this->_parse_file_to_array($text);
 
         $amounts = 0;
-        // 計算借貸app的下載次數
         foreach ($matrix as $key => $list)
         {
             if ($list[2] == 'com.influxfin.borrow' && $list[6] == 1)
@@ -323,17 +317,17 @@ class Page extends CI_Controller
     {
         $this->load->driver('cache', [
             'adapter' => 'apc',
-            'backup'  => 'file'
+            'backup' => 'file',
         ]);
 
         $key = 'app_store_connect_api_token';
 
-        if ( ! $token = $this->cache->get($key))
+        if (!$token = $this->cache->get($key))
         {
-                $token = $this->_generate_app_store_connect_api_token();
+            $token = $this->_generate_app_store_connect_api_token();
 
-                // 存放 5 分鐘
-                $this->cache->save($key, $token, 1200);
+            // 存放 5 分鐘
+            $this->cache->save($key, $token, 1200);
         }
         return $token;
     }
@@ -408,18 +402,12 @@ class Page extends CI_Controller
         $report_path = 'stats/installs/installs_com.influxfin.borrow_' . $report_month . '_overview.csv';
 
         $storage = new StorageClient([
-            'keyFile' => json_decode(file_get_contents($KEY_FILE_LOCATION), TRUE)
+            'keyFile' => json_decode(file_get_contents($KEY_FILE_LOCATION), TRUE),
         ]);
 
         $storage->registerStreamWrapper();
         $contents = file_get_contents("gs://{$report_bucket}/{$report_path}");
-
-        $matrix = array_map(function ($row) {
-            return explode("\t", $row);
-        }, array_filter(
-            explode(PHP_EOL, $contents),
-            function ($row) { return ! empty($row); }
-        ));
+        $matrix = $this->_parse_file_to_array($contents);
 
         $amounts = 0;
         foreach ($matrix as $key => $list)
@@ -433,5 +421,19 @@ class Page extends CI_Controller
         }
 
         return $amounts;
+    }
+
+    private function _parse_file_to_array($contents)
+    {
+        return array_map(function ($row)
+        {
+            return explode("\t", $row);
+        }, array_filter(
+            explode(PHP_EOL, $contents),
+            function ($row)
+            {
+                return !empty($row);
+            }
+        ));
     }
 }
