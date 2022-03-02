@@ -1326,4 +1326,14 @@ class Transaction_lib{
     {
         return $this->CI->transaction_model->getDelayUserList();
     }
+
+    public function get_investor_average_principle($user_id, $start_time, $end_time)
+    {
+        $this->CI->transaction_model->get_many_by();
+
+    }
+
+    public function get_realized_rate_of_return_info() {
+
+    }
 }

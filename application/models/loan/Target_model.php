@@ -605,29 +605,39 @@ class Target_model extends MY_Model
 
     /**
      * 撈取案件未結算交易科目
-     * @param  integer $userId     投資人使用者編號
-     * @param  boolean $isDelay    是否逾期
-     * @param  array   $sourceList 科目代號
-     * @param  boolean $isGroup      是否
+     * @param integer $userId 投資人使用者編號
+     * @param boolean $isDelay 是否逾期
+     * @param array $sourceList 科目代號
+     * @param array $product_id_list 產品編號列表
+     * @param boolean $isGroup 是否
      * @return array
      */
-    public function getTransactionSourceByInvestor(int $userId=0, bool $isDelay=false, array $sourceList, bool $isGroup=false)
+    public function getTransactionSourceByInvestor(int $userId = 0, bool $isDelay = FALSE, array $sourceList = [], array $product_id_list = [], bool $isGroup = FALSE): array
     {
         $this->db->select('source, status, target_id, user_to, amount')
             ->from("`p2p_transaction`.`transactions`")
-            ->where_in('source', $sourceList)
-            ->where('status', 1)
+            ->where('status', TRANSACTION_STATUS_TO_BE_PAID)
             ->where('user_to', $userId);
-        $subquery = $this->db->get_compiled_select('', TRUE);
+        if ( ! empty($sourceList))
+        {
+            $this->db->where_in('source', $sourceList);
+        }
+
+        $sub_query = $this->db->get_compiled_select('', TRUE);
         $logic = $isDelay ? '>' : '<=';
         $this->db->select('t.product_id, SUM(tra.amount) as amount')
             ->from('`p2p_loan`.`targets` AS `t`')
-            ->join("{$subquery} as `tra`", "`t`.`id` = `tra`.`target_id`")
-            ->where("t.delay_days {$logic} 7");
-            if ($isGroup) {
-                $this->db->group_by('t.product_id');
-            }
+            ->join("({$sub_query}) as `tra`", "`t`.`id` = `tra`.`target_id`")
+            ->where("t.delay_days {$logic}", GRACE_PERIOD);
+        if ( ! empty($product_id_list))
+        {
+            $this->db->where_in('t.product_id', $product_id_list);
+        }
+        if ($isGroup)
+        {
+            $this->db->group_by('t.product_id');
+        }
 
-        return $this->db->get()->result();
+        return $this->db->get()->result_array();
     }
 }

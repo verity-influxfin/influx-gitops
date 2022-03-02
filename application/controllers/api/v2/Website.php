@@ -904,21 +904,25 @@ class Website extends REST_Controller {
         ]);
     }
 
-    public function invest_report_post(){
+    public function invest_report_post()
+    {
 
-        if(!app_access()){
-            $this->response(array('result' => 'ERROR','data' => [ ] ), 401);
+        if ( ! app_access())
+        {
+            $this->response(array('result' => 'ERROR', 'data' => []), 401);
         }
 
-        $token = isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
+        $token = isset($this->input->request_headers()['request_token']) ? $this->input->request_headers()['request_token'] : '';
         $tokenData = AUTHORIZATION::getUserInfoByToken($token);
-        if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time()) {
-            $this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
+        if (empty($tokenData->id) || empty($tokenData->phone) || $tokenData->expiry_time < time())
+        {
+            $this->response(array('result' => 'ERROR', 'error' => TOKEN_NOT_CORRECT));
         }
 
         $this->user_info = $this->user_model->get($tokenData->id);
-        if($tokenData->auth_otp != $this->user_info->auth_otp){
-            $this->response(array('result' => 'ERROR','error' => TOKEN_NOT_CORRECT ));
+        if ($tokenData->auth_otp != $this->user_info->auth_otp)
+        {
+            $this->response(array('result' => 'ERROR', 'error' => TOKEN_NOT_CORRECT));
         }
         $user_id = $tokenData->id;
         $investor = $tokenData->investor;
@@ -1045,38 +1049,42 @@ class Website extends REST_Controller {
             ]
         ];
 
-        if (! empty($user_id) && $investor == 1) {
+        if ( ! empty($user_id) && $investor == 1)
+        {
             $response = [];
             $this->load->model('loan/investment_model');
             $this->load->model('transaction/transaction_model');
             // 首筆投資資訊
-            $firstInvestInfo = $this->investment_model->limit(1)->order_by('tx_datetime','asc')->get_by(['user_id'=>$user_id,'status'=>[SOURCE_LENDING,SOURCE_TRANSFER]]);
-            if (!empty($firstInvestInfo)) {
+            $firstInvestInfo = $this->investment_model->limit(1)->order_by('tx_datetime', 'asc')->get_by(['user_id' => $user_id, 'status' => [SOURCE_LENDING, SOURCE_TRANSFER]]);
+            if ( ! empty($firstInvestInfo))
+            {
                 // basicInfo
                 $response['basicInfo']['id'] = $user_id;
                 $response['basicInfo']['firstInvestDate'] = $firstInvestInfo->loan_amount;
-                $response['basicInfo']['investAmount'] = date('Y/m/d',strtotime($firstInvestInfo->tx_datetime));
+                $response['basicInfo']['investAmount'] = date('Y/m/d', strtotime($firstInvestInfo->tx_datetime));
 
                 // 產品列表名稱
-                $productNameList = [];
                 $productList = $this->config->item('product_list');
                 $productNameList = array_column($productList, 'name', 'id');
 
                 // 正常還款本金餘額
-                $PrincipalBalance = $this->target_model->getTransactionSourceByInvestor($user_id,false,[SOURCE_AR_PRINCIPAL],true);
-                if (!empty($PrincipalBalance)) {
-                    $PrincipalBalance = array_column($PrincipalBalance,'amount','product_id');
+                $PrincipalBalance = $this->target_model->getTransactionSourceByInvestor($user_id, FALSE, [SOURCE_AR_PRINCIPAL], TRUE);
+                if ( ! empty($PrincipalBalance))
+                {
+                    $PrincipalBalance = array_column($PrincipalBalance, 'amount', 'product_id');
                 }
                 // 逾期中本金餘額
-                $PrincipalBalanceDelay = $this->target_model->getTransactionSourceByInvestor($user_id,true,[SOURCE_AR_PRINCIPAL],true);
-                if (!empty($PrincipalBalanceDelay)) {
-                    $PrincipalBalanceDelay = array_column($PrincipalBalanceDelay,'amount','product_id');
+                $PrincipalBalanceDelay = $this->target_model->getTransactionSourceByInvestor($user_id, TRUE, [SOURCE_AR_PRINCIPAL], TRUE);
+                if ( ! empty($PrincipalBalanceDelay))
+                {
+                    $PrincipalBalanceDelay = array_column($PrincipalBalanceDelay, 'amount', 'product_id');
                 }
                 // assetsDescription
                 $amountNotDelayAll = 0;
                 $amountDelayAll = 0;
                 $totalAmountAll = 0;
-                foreach ($productNameList as $key => $value) {
+                foreach ($productNameList as $key => $value)
+                {
                     $amountNotDelay = isset($PrincipalBalance[$key]) && is_numeric($PrincipalBalance[$key]) ? $PrincipalBalance[$key] : 0;
                     $amountDelay = isset($PrincipalBalanceDelay[$key]) && is_numeric($PrincipalBalanceDelay[$key]) ? $PrincipalBalanceDelay[$key] : 0;
                     $totalAmount = $amountNotDelay + $amountDelay;
@@ -1101,12 +1109,13 @@ class Website extends REST_Controller {
                 // investPerformance
                 // realizedRateOfReturn
                 //
-                $bb = $this->target_model->getTransactionSourceByInvestor($user_id,true,[SOURCE_AR_DELAYINTEREST]);
+                $bb = $this->target_model->getTransactionSourceByInvestor($user_id, TRUE, [SOURCE_AR_DELAYINTEREST]);
 
-                print_r($bb);exit;
+                print_r($bb);
+                exit;
             }
         }
 
-        return $this->response(array('result' => 'SUCCESS','data' => $report_data ));
+        return $this->response(array('result' => 'SUCCESS', 'data' => $report_data));
     }
 }
