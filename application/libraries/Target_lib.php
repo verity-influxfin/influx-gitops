@@ -1792,9 +1792,9 @@ class Target_lib
 
 								// 所有徵信項完成後，確認是否需要觸發反詐欺
 								$this->CI->load->library('brookesia/brookesia_lib');
-								$userNotChecked = $this->CI->brookesia_lib->userNotChecked($value->user_id);
+								$user_checked = $this->CI->brookesia_lib->is_user_checked($value->user_id);
 
-								if ($userNotChecked)
+								if (!$user_checked)
 								{
 									$this->CI->brookesia_lib->userCheckAllRules($value->user_id);
 								}

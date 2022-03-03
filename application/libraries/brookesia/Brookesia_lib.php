@@ -29,12 +29,8 @@ class Brookesia_lib
 		return true;
 	}
 
-	public function userNotChecked($userId)
+	public function is_user_checked($userId)
 	{
-		if(!$userId) {
-			return FALSE;
-		}
-
 		$url = $this->brookesiaUrl  . "check/checkAll?userId=" . $userId;
 
 		$result = curl_get($url);
