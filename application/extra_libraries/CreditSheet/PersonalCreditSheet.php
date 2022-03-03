@@ -235,7 +235,7 @@ class PersonalCreditSheet extends CreditSheetBase {
 
         $separator = ', ';
         $opinions = implode($separator, array_column($reviewedInfoList, 'opinion'));
-        $remark = (empty($this->target->remark) ? $opinions : $this->target->remark . $separator . $opinions);
+        $remark = (empty($this->target->remark) ? '' : $this->target->remark);
 
         if (isset($estimatedCredit) && $estimatedCredit !== False && isset($credit) &&
                 ($estimatedCredit["amount"] != $credit['amount']
@@ -259,7 +259,7 @@ class PersonalCreditSheet extends CreditSheetBase {
             $this->CI->target_model->update($this->target->id,$param);
         }
         else{
-            $this->CI->target_lib->approve_target($this->target,$remark,true);
+            $this->CI->target_lib->approve_target($this->target,FALSE,TRUE);
         }
     }
 

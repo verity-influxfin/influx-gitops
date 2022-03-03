@@ -229,7 +229,7 @@ class Cron extends CI_Controller
         // 自動延長一般方案的結束時間
         $this->user_qrcode_model->autoRenewTime($this->qrcode_setting_model->generalCaseAliasName);
 
-        if(date("d") >= 1 && date("d") <= 4) {
+        if(date("d") >= 1 && date("d") <= 9) {
             $data = [
                 'script_name'   => 'handle_promote_reward',
                 'num'           => 0,
@@ -806,4 +806,260 @@ class Cron extends CI_Controller
 			}
 		}
 	}
+
+    /**
+     * 由於推薦碼的設定可能會更新
+     * 執行該方法可以補上新的設定至每個使用者的推薦碼
+     */
+    public function update_user_qrcode()
+    {
+        $this->load->model('user/user_qrcode_model');
+        $this->load->model('user/qrcode_setting_model');
+
+        $user_qrcode = $this->user_qrcode_model->get_all();
+        $qrcode_setting_list = $this->qrcode_setting_model->get_all();
+        $qrcode_setting_list = json_decode(json_encode($qrcode_setting_list), TRUE);
+        $qrcode_setting_list = array_column($qrcode_setting_list, NULL, 'alias');
+        foreach ($qrcode_setting_list as $alias => $qrcode_setting)
+        {
+            $qrcode_setting_list[$alias]['settings'] = json_decode($qrcode_setting['settings'], TRUE) ?? [];
+        }
+
+        $count = 0;
+        $start_time = time();
+
+        $data = [
+            'script_name' => 'update_user_qrcode',
+            'num' => 0,
+            'start_time' => $start_time,
+            'end_time' => 0
+        ];
+        $inserted_id = $this->log_script_model->insert($data);
+
+        foreach ($user_qrcode as $i => $qrcode)
+        {
+            $settings = json_decode($qrcode->settings, TRUE);
+            if (isset($settings) && array_key_exists($qrcode->alias, $qrcode_setting_list))
+            {
+                $settings['reward'] = array_replace_recursive($qrcode_setting_list[$qrcode->alias]['settings']['reward'], $settings['reward']);
+                $qrcode->settings = json_encode($settings) ?? [];
+                $rs = $this->user_qrcode_model->update_by(['id' => $qrcode->id], ['settings' => $qrcode->settings]);
+                if ($rs)
+                {
+                    $count++;
+                }
+            }
+        }
+
+        $end_time = time();
+        $updateData = [
+            'num' => $count,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->update_by(
+            ['id' => $inserted_id],
+            $updateData
+        );
+        die('1');
+    }
+
+    public function script_renew_social_verify()
+    {
+        $query = $this->db->query('SELECT t.user_id, uc.id, uc.status, uc.content FROM p2p_loan.targets t JOIN p2p_user.user_certification uc ON uc.user_id = t.user_id where t.status = 0 and uc.investor = 0 and uc.certification_id = 4 and uc.status in (1) and t.product_id = 1');
+        foreach ($query->result() as $info)
+        {
+            $this->load->library('scraper/instagram_lib');
+            $content = json_decode($info->content, TRUE);
+            $ig_username = isset($content['instagram']['username']) ? $content['instagram']['username']:'';
+            if ($ig_username)
+            {
+                $log_status = $this->instagram_lib->getLogStatus($info->user_id, $ig_username);
+                if (isset($log_status['status']) && $log_status['status'] == SCRAPER_STATUS_SUCCESS)
+                {
+                    // IG爬蟲結束
+                    if ($log_status['response']['result']['status'] == 'finished' && $log_status['response']['result']['updatedAt'] > 1643299200)
+                    {
+                        $risk_control_info = $this->instagram_lib->getRiskControlInfo($info->user_id, $ig_username);
+                        if ($risk_control_info && isset($risk_control_info['status']) && $risk_control_info['status'] == SCRAPER_STATUS_SUCCESS)
+                        {
+                            $usernameExist = isset($risk_control_info['response']['result']['isExist']) ? $risk_control_info['response']['result']['isExist'] : '';
+                            $isPrivate = isset($risk_control_info['response']['result']['isPrivate']) ? $risk_control_info['response']['result']['isPrivate'] : '';
+                            $allPostCount = isset($risk_control_info['response']['result']['posts']) ? $risk_control_info['response']['result']['posts'] : '';
+                            $followStatus = isset($risk_control_info['response']['result']['followStatus']) ? $risk_control_info['response']['result']['followStatus'] : '';
+                            $isFollower = isset($risk_control_info['response']['result']['isFollower']) ? $risk_control_info['response']['result']['isFollower'] : '';
+                            $allFollowingCount = isset($risk_control_info['response']['result']['following']) ? $risk_control_info['response']['result']['following'] : '';
+                            $allFollowerCount = isset($risk_control_info['response']['result']['followers']) ? $risk_control_info['response']['result']['followers'] : '';
+                            $postsIn3Months = isset($risk_control_info['response']['result']['postsIn3Months']) ? $risk_control_info['response']['result']['postsIn3Months'] : '';
+                            $postsWithKeyWords = isset($risk_control_info['response']['result']['postsWithKeyWords']) ? $risk_control_info['response']['result']['postsWithKeyWords'] : '';
+                            // 是否為私人帳號判斷
+                            if ($isPrivate === TRUE)
+                            {
+                                if ($followStatus == 'unfollowed')
+                                {
+                                    $this->instagram_lib->autoFollow($info->user_id, $ig_username);
+                                    continue;
+                                }
+                                else if ($followStatus == 'waitingFollowAccept')
+                                {
+                                    $follow_status = $this->instagram_lib->getLogStatus($info->user_id, $ig_username, 'follow');
+                                    if ($follow_status && isset($follow_status['status']) && $follow_status['status'] == SCRAPER_STATUS_SUCCESS)
+                                    {
+                                        if (isset($follow_status['response']['result']['status']) && $follow_status['response']['result']['status'] !== 'finished')
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $this->instagram_lib->autoFollow($info->user_id, $ig_username);
+                                        continue;
+                                    }
+                                }
+                            }
+                            // 帳號是否存在
+                            if ($usernameExist === TRUE)
+                            {
+                                $usernameExist = '是';
+                                $content['instagram'] = [
+                                    'username' => $ig_username,
+                                    'usernameExist' => $usernameExist,
+                                    'info' => [
+                                        'isPrivate' => $isPrivate,
+                                        'followStatus' => $followStatus,
+                                        'isFollower' => $isFollower,
+                                        'allPostCount' => $allPostCount,
+                                        'allFollowerCount' => $allFollowerCount,
+                                        'allFollowingCount' => $allFollowingCount
+                                    ]
+                                ];
+                                $content['meta'] = [
+                                    'follow_count' => $allFollowerCount,
+                                    'posts_in_3months' => $postsIn3Months,
+                                    'key_word' => $postsWithKeyWords
+                                ];
+                                $this->load->model('user/user_certification_model');
+                                $this->user_certification_model->update($info->id, array(
+                                    'sys_check'                   => SYSTEM_CHECK,
+                                    'content'                     => json_encode($content, JSON_INVALID_UTF8_IGNORE),
+                                ));
+                                $data = array(
+                                    'social_status' => 1,
+                                );
+                                if (isset($content['instagram']))
+                                {
+                                    isset($content['instagram']['username']) ? $data['ig_username'] = $content['instagram']['username'] : '';
+                                    isset($content['instagram']['usernameExist']) ? $data['ig_usernameExist'] = $content['instagram']['usernameExist'] : '';
+                                    isset($content['instagram']['info']['isPrivate']) ? $data['ig_isPrivate'] = $content['instagram']['info']['isPrivate'] : '';
+                                    isset($content['instagram']['info']['followStatus']) ? $data['ig_followStatus'] = $content['instagram']['info']['followStatus'] : '';
+                                    isset($content['instagram']['info']['isFollower']) ? $data['ig_isFollower'] = $content['instagram']['info']['isFollower'] : '';
+                                    isset($content['instagram']['info']['allPostCount']) ? $data['ig_allPostCount'] = $content['instagram']['info']['allPostCount'] : '';
+                                    isset($content['instagram']['info']['allFollowerCount']) ? $data['ig_allFollowerCount'] = $content['instagram']['info']['allFollowerCount'] : '';
+                                    isset($content['instagram']['info']['allFollowingCount']) ? $data['ig_allFollowingCount'] = $content['instagram']['info']['allFollowingCount'] : '';
+                                }
+                                if (isset($content['meta']))
+                                {
+                                    isset($content['meta']['follow_count']) ? $data['follow_count'] = $content['meta']['follow_count'] : '';
+                                    isset($content['meta']['posts_in_3months']) ? $data['posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
+                                    isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
+                                }
+                                $this->load->model('user/user_meta_model');
+                                foreach($data as $key => $value) {
+                                    $exist = $this->user_meta_model->get_by(array('user_id' => $info->user_id, 'meta_key' => $key));
+                                    if ($exist) {
+                                        $param = array(
+                                            'user_id' => $info->user_id,
+                                            'meta_key' => $key,
+                                        );
+                                        $this->user_meta_model->update_by($param, array('meta_value' => $value));
+                                    }else{
+                                        $param = array(
+                                            'user_id'		=> $info->user_id,
+                                            'meta_key' 		=> $key,
+                                            'meta_value'	=> $value
+                                        );
+                                        $this->user_meta_model->insert($param);
+                                    }
+                                }
+                            }
+                            else if ($usernameExist === FALSE)
+                            {
+                                $usernameExist = '否';
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        $log_status = $this->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
+                        continue;
+                    }
+                }
+                else if (isset($log_status['status']) && $log_status['status'] == SCRAPER_STATUS_NO_CONTENT)
+                {
+                    $log_status = $this->instagram_lib->updateRiskControlInfo($info->user_id, $ig_username);
+                    continue;
+                }
+            }
+        }
+    }
+
+    /**
+     * 慈善機構批次提領
+     * @return void
+     */
+    public function charity_daily_withdraw()
+    {
+        $start_time = time();
+        $num = 0;
+
+        $this->load->model('user/charity_institution_model');
+        $this->load->model('transaction/virtual_passbook_model');
+        $this->load->model('user/user_bankaccount_model');
+        $this->load->library('transaction_lib');
+
+        $charity_institution_data_list = $this->charity_institution_model->get_withdraw_list();
+
+        foreach ($charity_institution_data_list as $value)
+        {
+            if (empty($value['virtual_account']) || empty($value['user_id']))
+            {
+                continue;
+            }
+
+            // 確認可提領金額
+            $virtual_funds = $this->transaction_lib->get_virtual_funds([$value['virtual_account']]);
+            if (empty($virtual_funds['total']))
+            {
+                continue;
+            }
+            $amount = $virtual_funds['total'] - $virtual_funds['frozen'] ?? 0;
+
+            // 檢查是否有銀行帳戶
+            $bank_account = $this->user_bankaccount_model->get_by(array(
+                'investor' => INVESTOR,
+                'status' => 1,
+                'user_id' => $value['user_id'],
+                'verify' => 1
+            ));
+            if (empty($bank_account))
+            {
+                continue;
+            }
+
+            // 提領
+            $response = $this->transaction_lib->withdraw($value['user_id'], (int) $amount);
+            if ($response)
+            {
+                $num++;
+            }
+        }
+
+        $this->log_script_model->insert([
+            'script_name' => __FUNCTION__,
+            'num' => $num,
+            'start_time' => $start_time,
+            'end_time' => time()
+        ]);
+        die(1);
+    }
 }

@@ -1169,10 +1169,6 @@ class Judicialperson extends REST_Controller {
 		if($this->user_info->company != 1 ){
 			$this->response(array('result' => 'ERROR','error' => NOT_COMPANY ));
 		}
-
-		if($this->user_info->incharge != 1 && $this->user_info->name != null){
-			$this->response(array('result' => 'ERROR','error' => NOT_IN_CHARGE ));
-		}
 	}
 
 }

@@ -261,13 +261,9 @@ END:
                     $this->load->model('loan/target_model');
                     $targetInfo = $this->target_model->get_by(['id' => $loanTargetMappingInfo->target_id,'product_id' => 1002]);
                     if($targetInfo){
-                        // transfer repayment type
-                        $repayment = '';
-                        if(!empty($repayment)){
-                            $updateTarget = $this->target_model->update($targetInfo->id,[
-                                'status' => 500
-                            ]);
-                        }
+                        $updateTarget = $this->target_model->update($targetInfo->id,[
+                            'status' => 500
+                        ]);
                     }
                 }
             }

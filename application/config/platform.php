@@ -2,6 +2,7 @@
 
 //後台menu
 $config['admin_menu'] = [
+    'Ntu' => ['name' => '台大慈善', 'icon' => 'fa-briefcase'],
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
 	'AntiFraud' => [
 		'name' => '反詐欺管理指標'
@@ -70,6 +71,10 @@ $config['admin_menu'] = [
         'user_certification_list' => '會員認證審核',
         'difficult_word_list' => '銀行困難字管理',
     ],
+	'Scraper' => [
+        'parent_name' => '爬蟲子系統',
+        'index' => 'API列表',
+    ],
     'Partner' => [
         'parent_name' => '合作夥伴管理',
         'partner_type' => '合作商類別',
@@ -97,6 +102,7 @@ $config['admin_menu'] = [
         'register_report' => '註冊報表',
         'bonus_report' => '獎金報表',
         'loan_overview' => '申貸總覽',
+        'valuable_report' => '高價值用戶報表',
         'promote_list'  => '推薦有賞',
         'promote_reward_list'  => '推薦有賞放款'
     ],
@@ -114,6 +120,7 @@ $config['admin_menu'] = [
 	'PostLoan' => [
 		'parent_name' => '貸後管理',
 		'legal_doc' => '法訴文件管理',
+		'deduct' => '法催扣款'
 	],
     'Article' => [
         'parent_name' => '活動及最新消息',
@@ -313,12 +320,12 @@ $config['product_list'] = [
         'alias' => 'STN',
         'name' => '學生貸',
         'loan_range_s' => 6000,
-        'loan_range_e' => 144000,
+        'loan_range_e' => 150000,
         'interest_rate_s' => 4,
         'interest_rate_e' => 16,
         'charge_platform' => PLATFORM_FEES,
         'charge_platform_min' => PLATFORM_FEES_MIN,
-        'sub_product' => [5000, STAGE_CER_TARGET, 1],
+        'sub_product' => [SUBPRODUCT_INTELLIGENT_STUDENT, 5000, STAGE_CER_TARGET, 1],
         'certifications' => [
             CERTIFICATION_IDCARD,
             CERTIFICATION_STUDENT,
@@ -328,8 +335,10 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
-        'option_certifications' => [
-            CERTIFICATION_FINANCIAL
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -352,7 +361,9 @@ $config['product_list'] = [
         'dealer' => [],
         'multi_target' => 0,
         'hiddenMainProduct' => false,
-        'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
+        'allow_age_range' => [20, 35],
+        'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000',
+        'checkOwner' => FALSE
     ],
     2 => [
         'id' => 2,
@@ -377,8 +388,10 @@ $config['product_list'] = [
             CERTIFICATION_EMAIL,
             CERTIFICATION_FINANCIAL
         ],
-        'option_certifications' => [
-            CERTIFICATION_FINANCIAL
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -402,6 +415,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
+        'allow_age_range' => [20, 35],
         'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
         'checkOwner' => false,
     ],
@@ -432,7 +446,15 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
-            CERTIFICATION_JOB
+            CERTIFICATION_JOB,
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -446,7 +468,8 @@ $config['product_list'] = [
                 CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
-                CERTIFICATION_JOB
+                CERTIFICATION_JOB,
+                CERTIFICATION_REPAYMENT_CAPACITY
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -459,6 +482,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
+        'allow_age_range' => [20, 55],
         'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000',
         'checkOwner' => false,
     ],
@@ -485,7 +509,15 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
-            CERTIFICATION_JOB
+            CERTIFICATION_JOB,
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -499,7 +531,8 @@ $config['product_list'] = [
                 CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
-                CERTIFICATION_JOB
+                CERTIFICATION_JOB,
+                CERTIFICATION_REPAYMENT_CAPACITY
             ]
         ],
         'instalment' => [3, 6, 12, 18, 24],
@@ -512,6 +545,7 @@ $config['product_list'] = [
         'multi_target' => 0,
         'hiddenMainProduct' => false,
         'hiddenSubProduct' => false,
+        'allow_age_range' => [20, 55],
         'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
         'checkOwner' => false,
     ],
@@ -796,7 +830,15 @@ $config['product_list'] = [
             CERTIFICATION_FINANCIALWORKER,
             CERTIFICATION_DIPLOMA,
             CERTIFICATION_INVESTIGATION,
-            CERTIFICATION_JOB
+            CERTIFICATION_JOB,
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [APP]上選填的徵信項，避免系統無法一審
+        'option_certifications' => [
+            CERTIFICATION_REPAYMENT_CAPACITY
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -810,7 +852,8 @@ $config['product_list'] = [
                 CERTIFICATION_FINANCIALWORKER,
                 CERTIFICATION_DIPLOMA,
                 CERTIFICATION_INVESTIGATION,
-                CERTIFICATION_JOB
+                CERTIFICATION_JOB,
+                CERTIFICATION_REPAYMENT_CAPACITY
             ]
         ],
         'instalment' => [180],
@@ -901,8 +944,12 @@ $config['product_list'] = [
 			CERTIFICATION_INVESTIGATIONA11,
             CERTIFICATION_COMPANYEMAIL,
         ],
+        // [APP]上選填的徵信項，避免系統無法一審
         'option_certifications' => [
             CERTIFICATION_JUDICIALGUARANTEE
+        ],
+        // [後台]上選填的徵信項，避免人工無法二三四..審
+        'backend_option_certifications' => [
         ],
         'certifications_stage' => [
             [
@@ -938,7 +985,62 @@ $config['product_list'] = [
         'hiddenSubProduct' => true,
         'description' => '',
         'checkOwner' => true,
+        'allow_age_range' => [20, 55],
     ],
+];
+
+// 案件綁多個自然人所需認證徵信
+$config['associates_certifications'] = [
+    PRODUCT_SK_MILLION_SMEG => [
+        ASSOCIATES_CHARACTER_REGISTER_OWNER => [
+            CERTIFICATION_IDCARD,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_PROFILE,
+            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_SIMPLIFICATIONJOB
+        ],
+        ASSOCIATES_CHARACTER_OWNER => [
+            CERTIFICATION_IDCARD,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_PROFILE,
+            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_SIMPLIFICATIONJOB
+        ],
+        ASSOCIATES_CHARACTER_REAL_OWNER => [
+            CERTIFICATION_IDCARD,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_PROFILE,
+            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_SIMPLIFICATIONJOB
+        ],
+        ASSOCIATES_CHARACTER_SPOUSE => [
+            CERTIFICATION_IDCARD,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_PROFILE,
+            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_SIMPLIFICATIONJOB
+        ],
+        ASSOCIATES_CHARACTER_GUARANTOR_A => [
+            CERTIFICATION_IDCARD,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_PROFILE,
+            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_SIMPLIFICATIONJOB
+        ],
+        ASSOCIATES_CHARACTER_GUARANTOR_B => [
+            CERTIFICATION_IDCARD,
+            CERTIFICATION_EMAIL,
+            CERTIFICATION_PROFILE,
+            CERTIFICATION_INVESTIGATIONA11,
+            CERTIFICATION_SIMPLIFICATIONFINANCIAL,
+            CERTIFICATION_SIMPLIFICATIONJOB
+        ]
+    ]
 ];
 
 $config['visul_id_des'] = [
@@ -1013,6 +1115,22 @@ $config['visul_id_des'] = [
         'description' => '企業融資 專案啟動',
         'icon' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
         'banner' => FRONT_CDN_URL . 'app_asset/image_loan_03.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'NSL1' => [
+        'name' => '3S名校貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>名校學生獎勵方案，提供最佳融資條件、最彈性償還方案</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_intelligent_student2.jpg',
+        'url' => '',
+        'status' => 1
+    ],
+    'TONSL1' => [ // 前面多個TO，才會顯示到APP的banner上
+        'name' => '3S名校貸',
+        'description' => '<span style=\'font-size:16px;color:black;font-weight: 900;\'>名校學生獎勵方案，提供最佳融資條件、最彈性償還方案</span>',
+        'icon' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_intelligent_student.jpg',
+        'banner' => FRONT_CDN_URL . 'app_asset/marketing_res/marketing_app_product_student.jpg',
         'url' => '',
         'status' => 1
     ],
@@ -1155,8 +1273,10 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1178,6 +1298,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 35],
                 'description' => '須提供有效學生證<br>可申請額度<br>5,000-120,000',
                 'checkOwner' => false,
             ],
@@ -1200,7 +1321,15 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB
+                    CERTIFICATION_JOB,
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certification_verify_stage' => [
                     [
@@ -1214,7 +1343,8 @@ $config['sub_product_list'] = [
                         CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB
+                        CERTIFICATION_JOB,
+                        CERTIFICATION_REPAYMENT_CAPACITY
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1225,6 +1355,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 55],
                 'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
                 'checkOwner' => false,
             ]
@@ -1451,6 +1582,64 @@ $config['sub_product_list'] = [
         ],
         'status' => 1
     ],
+    6 => [
+        'visul_id' => 'NSL1',
+        'identity' => [
+            1 => [
+                'visul_id' => 'NSL1P1',
+                'name' => '3S名校貸',
+                'product_id' => '1:6',
+                'loan_range_s' => 6000, // 金額下限
+                'loan_range_e' => 180000, // 金額上限
+                'interest_rate_s' => 5,
+                'interest_rate_e' => 20,
+                'charge_platform' => PLATFORM_FEES,
+                'charge_platform_min' => PLATFORM_FEES_MIN,
+                'certifications' => [ // 必填認證
+                    CERTIFICATION_IDCARD,
+                    CERTIFICATION_STUDENT,
+                    CERTIFICATION_DEBITCARD,
+                    CERTIFICATION_SOCIAL_INTELLIGENT,
+                    CERTIFICATION_EMERGENCY,
+                    CERTIFICATION_EMAIL
+                ],
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
+                ],
+                'certification_verify_stage' => [
+                    [
+                        CERTIFICATION_IDCARD,
+                        CERTIFICATION_STUDENT,
+                        CERTIFICATION_DEBITCARD,
+                    ],
+                    [
+                        CERTIFICATION_SOCIAL_INTELLIGENT,
+                        CERTIFICATION_EMERGENCY,
+                        CERTIFICATION_EMAIL
+                    ]
+                ],
+                'instalment' => [ // 分期期數
+                    3, 6, 12, 18, 24, 36
+                ],
+                'repayment' => [ // 還款方式
+                    1, // 本息均攤
+                ],
+                'targetData' => [],
+                'secondInstance' => FALSE,
+                'weight' => [],
+                'status' => 1,
+                'dealer' => [],
+                'multi_target' => 0,
+                'allow_age_range' => [20, 35],
+                'description' => '須提供有效學生證<br>可申請額度<br>6,000-180,000',
+                'checkOwner' => FALSE,
+            ]
+        ],
+        'status' => 1
+    ],
     5000 => [
         'visul_id' => 'LS1',
         'identity' => [
@@ -1459,7 +1648,7 @@ $config['sub_product_list'] = [
                 'name' => '學生貸',
                 'product_id' => '1:0',
                 'loan_range_s' => 6000,
-                'loan_range_e' => 144000,
+                'loan_range_e' => 150000,
                 'interest_rate_s' => 4,
                 'interest_rate_e' => 16,
                 'charge_platform' => PLATFORM_FEES,
@@ -1473,8 +1662,10 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certifications_stage' => [
                     [
@@ -1496,7 +1687,8 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
-                'description' => '須提供有效學生證<br>可申請額度<br>6,000-144,000'
+                'allow_age_range' => [20, 35],
+                'description' => '須提供有效學生證<br>可申請額度<br>6,000-150,000'
             ]
         ],
         'status' => 1
@@ -1523,7 +1715,15 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB
+                    CERTIFICATION_JOB,
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certifications_stage' => [
                     [
@@ -1537,7 +1737,8 @@ $config['sub_product_list'] = [
                         CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB
+                        CERTIFICATION_JOB,
+                        CERTIFICATION_REPAYMENT_CAPACITY
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1547,6 +1748,7 @@ $config['sub_product_list'] = [
                 'status' => 1,
                 'dealer' => [],
                 'multi_target' => 0,
+                'allow_age_range' => [20, 55],
                 'description' => '須提供工作證明<br>可申請額度<br>10,000-200,000',
                 'checkOwner' => false,
             ]
@@ -1594,6 +1796,7 @@ $config['sub_product_list'] = [
                 'hiddenMainProduct' => false,
                 'description' => '',
                 'checkOwner' => true,
+                'allow_age_range' => [20, 55],
                 'description' => '須提供工作證明<br>可申請額度<br>30,000-300,000'
             ]
         ],
@@ -1621,8 +1824,10 @@ $config['sub_product_list'] = [
                     CERTIFICATION_EMAIL,
                     CERTIFICATION_FINANCIAL
                 ],
-                'option_certifications' => [
-                    CERTIFICATION_FINANCIAL
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
                 ],
                 'certifications_stage' => [
                     [
@@ -1644,7 +1849,8 @@ $config['sub_product_list'] = [
                 'weight' => [],
                 'status' => 1,
                 'dealer' => [],
-                'multi_target' => 1,
+                'multi_target' => 0,
+                'allow_age_range' => [20, 35],
                 'description' => '可申請額度<br>3000-12,000',
                 'checkOwner' => false,
             ],
@@ -1667,7 +1873,17 @@ $config['sub_product_list'] = [
                     CERTIFICATION_FINANCIALWORKER,
                     CERTIFICATION_DIPLOMA,
                     CERTIFICATION_INVESTIGATION,
-                    CERTIFICATION_JOB
+                    CERTIFICATION_JOB,
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [APP]上選填的徵信項，避免系統無法一審
+                'option_certifications' => [
+                    CERTIFICATION_DIPLOMA,
+                    CERTIFICATION_REPAYMENT_CAPACITY
+                ],
+                // [後台]上選填的徵信項，避免人工無法二三四..審
+                'backend_option_certifications' => [
+                    CERTIFICATION_DIPLOMA,
                 ],
                 'certifications_stage' => [
                     [
@@ -1681,7 +1897,8 @@ $config['sub_product_list'] = [
                         CERTIFICATION_FINANCIALWORKER,
                         CERTIFICATION_DIPLOMA,
                         CERTIFICATION_INVESTIGATION,
-                        CERTIFICATION_JOB
+                        CERTIFICATION_JOB,
+                        CERTIFICATION_REPAYMENT_CAPACITY
                     ]
                 ],
                 'instalment' => [3, 6, 12, 18, 24],
@@ -1691,7 +1908,8 @@ $config['sub_product_list'] = [
                 'weight' => [],
                 'status' => 1,
                 'dealer' => [],
-                'multi_target' => 1,
+                'multi_target' => 0,
+                'allow_age_range' => [20, 55],
                 'description' => '可申請額度<br>30,000-300,000',
                 'checkOwner' => false,
             ],
@@ -1701,7 +1919,7 @@ $config['sub_product_list'] = [
 ];
 
 $config['app_product_totallist'] = [
-    'nature' => ['LS1', 'NS1', 'LF1', 'DS2'],
+    'nature' => ['NSL1', 'LS1', 'NS1', 'LF1', 'DS2'],
     'company' => ['DS2','LJ2'],
 ];
 
@@ -1762,6 +1980,7 @@ $config['transaction_source'] = [
     32 => '法催執行費',
 
     40 => '推薦獎金',
+    41 => '慈善捐款',
 
     50 => '平台服務費沖正',
     51 => '債權轉讓服務費沖正',
@@ -1818,6 +2037,7 @@ $config['transaction_type_name'] = [
     'unknown_refund' => '退款-不明原因',
     'platform_law_fee' => '法催執行費',
     'promote' => '推薦獎金',
+    'charity' => '慈善捐款'
 ];
 
 $config['certifications'] = [
@@ -1834,7 +2054,9 @@ $config['certifications'] = [
     11 => ['id' => CERTIFICATION_PROFILE, 'alias' => 'profile', 'name' => '個人基本資料', 'status' => 1, 'description' => '提供個人基本資料', 'optional' => []],
     12 => ['id' => CERTIFICATION_INVESTIGATIONA11, 'alias' => 'investigationa11', 'name' => '聯合徵信報告+A11', 'status' => 1, 'description' => '提供負責人聯合徵信資訊', 'optional' => []],
     14 => ['id' => CERTIFICATION_FINANCIALWORKER, 'alias' => 'financialWorker', 'name' => '財務訊息資訊', 'status' => 1, 'description' => '提供財務訊息資訊', 'optional' => []],
+    15 => ['id' => CERTIFICATION_REPAYMENT_CAPACITY, 'alias' => 'repayment_capacity', 'name' => '還款力計算', 'status' => 1, 'description' => '提供還款力計算結果', 'optional' => [], 'show' => FALSE],
     20 => ['id' => CERTIFICATION_CRIMINALRECORD, 'alias' => 'criminalrecord', 'name' => '良民證', 'status' => 1, 'description' => '提供良民證', 'optional' => []],
+    21 => ['id' => CERTIFICATION_SOCIAL_INTELLIGENT, 'alias' => 'social_intelligent', 'name' => '社交帳號', 'status' => 1, 'description' => '個人社交帳號', 'optional' => []],
 
 
     500 => ['id' => CERTIFICATION_SIMPLIFICATIONFINANCIAL, 'alias' => 'simplificationfinancial', 'name' => '財務收支', 'status' => 1, 'description' => '提供個人財務收支資料', 'optional' => []],
@@ -1878,6 +2100,7 @@ $config['certifications_sort'] = [
     CERTIFICATION_PROFILE,
 	CERTIFICATION_INVESTIGATIONA11,
     CERTIFICATION_CRIMINALRECORD,
+    CERTIFICATION_SOCIAL_INTELLIGENT,
     CERTIFICATION_SIMPLIFICATIONFINANCIAL,
     CERTIFICATION_SIMPLIFICATIONJOB,
 
@@ -2039,6 +2262,10 @@ $config['certifications_msg'] = [
         '您認證的IG非常用帳號，系統無法驗證',
         '您認證的IG非常用帳號，請洽 LINE@influxfin 客服，提供使用者編號協助進行FB驗證',
     ],
+    CERTIFICATION_SOCIAL_INTELLIGENT => [ // (名校貸)社交認證
+        '您認證的IG非常用帳號，系統無法驗證',
+        '您認證的IG非常用帳號，請洽 LINE@influxfin 客服，提供使用者編號協助進行FB驗證',
+    ],
     CERTIFICATION_EMERGENCY => [
         '緊急連絡人資訊有誤',
         '請提供監護人之佐證資料，如：戶口名簿等政府單位核發文件',
@@ -2173,3 +2400,25 @@ $config['cer_profilejudicial'] = [
 
 // 推薦碼需要的徵信項目
 $config['promote_code_certs'] = [CERTIFICATION_CRIMINALRECORD, CERTIFICATION_IDCARD, CERTIFICATION_DEBITCARD, CERTIFICATION_EMAIL];
+
+// 捐款案收據方式
+$config['charity_receipt_type_list'] = [CHARITY_RECEIPT_TYPE_SINGLE_PAPER => "單次紙本收據"];
+
+// 名校貸承作的學校列表
+$config['famous_school_list'] = [
+    'NTU' => '國立臺灣大學',
+    'NTHU' => '國立清華大學',
+    'NCKU' => '國立成功大學',
+    'NYCU' => '國立陽明交通大學',
+    'NCTU' => '國立交通大學',
+    'YM' => '國立陽明大學',
+    'NCCU' => '國立政治大學',
+    'NTNU' => '國立臺灣師範大學',
+    'NTUST' => '國立臺灣科技大學',
+    'NCU' => '國立中央大學',
+    'NSYSU' => '國立中山大學',
+    'NCHU' => '國立中興大學',
+    'CCU' => '國立中正大學',
+    'NTPU' => '國立臺北大學',
+    'NTUT' => '國立臺北科技大學',
+];

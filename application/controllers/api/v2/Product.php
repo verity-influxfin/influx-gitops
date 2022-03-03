@@ -12,7 +12,7 @@ class Product extends REST_Controller {
         $this->load->library('Certification_lib');
         $this->load->library('Target_lib');
         $method = $this->router->fetch_method();
-        $nonAuthMethods = [];
+        $nonAuthMethods = ['chk_famous_school'];
         if (!in_array($method, $nonAuthMethods)) {
             $token 				= isset($this->input->request_headers()['request_token'])?$this->input->request_headers()['request_token']:'';
             $tokenData 			= AUTHORIZATION::getUserInfoByToken($token);
@@ -630,6 +630,27 @@ class Product extends REST_Controller {
         }
 
         if ($product) {
+
+            // 申請名校貸者，先檢查是否已提交學生驗證、且符合名校資格
+            if (isset($product['sub_product']) && SUBPRODUCT_INTELLIGENT_STUDENT == $sub_product_id)
+            {
+                $this->load->library('certification_lib');
+                $certification_info = $this->certification_lib->get_certification_info($user_id, CERTIFICATION_STUDENT);
+                if (isset($certification_info->content['school']))
+                {
+                    $famous_school_list = $this->config->item('famous_school_list');
+                    $school_short_name = array_search($certification_info->content['school'], $famous_school_list);
+
+                    if ( ! isset($famous_school_list[strtoupper($school_short_name)]))
+                    {
+                        $this->response([
+                            'result' => 'ERROR',
+                            'error' => PRODUCT_STUDENT_NOT_INTELLIGENT
+                        ]);
+                    }
+                }
+            }
+
             //檢核身分
             if($product['identity'] == 3 && $this->user_info->company != 1 && (!isset($product['checkOwner']) || !$product['checkOwner'])){
                 $this->response(array('result' => 'ERROR', 'error' => NOT_COMPANY));
@@ -698,12 +719,62 @@ class Product extends REST_Controller {
                 }
             }
 
+            if (isset($product['repayment']))
+            {
+                if (isset($input['repayment']) && in_array($input['repayment'], $product['repayment']))
+                {
+                    $repayment = $input['repayment'];
+                }
+                else
+                {
+                    $repayment = $product['repayment'][0];
+                }
+            }
+            else
+            {
+                $repayment = 1;
+            }
+
+//            社交跑分可能異常 重新驗證社交 並退掉分數
+            $this->load->model('user/user_certification_model');
+            $cer = $this->user_certification_model->get_by(
+                [
+                    'user_id'          => $user_id,
+                    'certification_id' => CERTIFICATION_SOCIAL,
+                    'status'           => CERTIFICATION_STATUS_SUCCEED,
+                    'updated_at < '    => 1643299200
+                ]
+            );
+            if (isset($cer))
+            {
+                $this->user_certification_model->update_by(
+                    [
+                        'id' => $cer->id
+                    ],
+                    [
+                        'status' => CERTIFICATION_STATUS_PENDING_TO_VALIDATE
+                    ]
+                );
+                $this->load->model('loan/credit_model');
+                $this->credit_model->update_by(
+                    [
+                        'product_id'       => $product['id'],
+                        'user_id'          => $user_id,
+                        'status'           => 1,
+                        'points > '        => 0
+                    ],
+                    [
+                        'status'           => 0
+                    ]
+                );
+            }
+
 
             $param		= [
                 'product_id' => $product['id'],
                 'sub_product_id' => $sub_product_id,
                 'user_id' => $user_id,
-                'repayment' => $product['repayment'][0],
+                'repayment' => $repayment,
                 'damage_rate' => LIQUIDATED_DAMAGES,
             ];
 
@@ -711,6 +782,7 @@ class Product extends REST_Controller {
             if(method_exists($this, $method)){
                 $this->$method($param,$product,$input);
             }
+
         }
         $this->response(['result' => 'ERROR', 'error' => PRODUCT_NOT_EXIST]);
     }
@@ -1236,6 +1308,13 @@ class Product extends REST_Controller {
             }
             if(!empty($certification_list)){
                 foreach($certification_list as $key => $value){
+
+                    // $config['certifications'] 設定 show=FALSE 則不顯示
+                    if (isset($value['show']) && $value['show'] === FALSE)
+                    {
+                        continue;
+                    }
+
 					// 返回認證資料
 					if(isset($value['content'])){
 						unset($value['content']);
@@ -1279,7 +1358,7 @@ class Product extends REST_Controller {
                 $amortization_schedule = $this->financial_lib->get_amortization_schedule($target->loan_amount,$target);
             }
 
-            $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id);
+                $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id, $target);
 
             $contract = '';
             if($target->contract_id){
@@ -2254,11 +2333,6 @@ class Product extends REST_Controller {
             'content' => json_encode($input),
         ];
 
-        // 配偶自動同意
-        if($content["character"] == 3 || ($content["character"] == 2 && $content["relationship"] == 0) ){
-            $associate['status'] = 1;
-        }
-
         $this->load->model('loan/target_associate_model');
 
         $associates = $this->target_lib->get_associates_user_data($targetId, 'all', 0, false);
@@ -2460,6 +2534,7 @@ class Product extends REST_Controller {
             'multi_target' => $sub_product['multi_target'],
             'checkOwner' => isset($value['checkOwner']) ? $value['checkOwner']: false,
             'status' => $sub_product['status'],
+            'allow_age_range' => $sub_product['allow_age_range'] ?? [20, 55],
         );
     }
 
@@ -2490,12 +2565,24 @@ class Product extends REST_Controller {
 
         // 多案申請判斷
         if($product['multi_target'] == 0){
-            $exist = $this->target_model->get_by([
+            $condition = [
                 'status <=' => 1,
                 'user_id' => $param['user_id'],
                 'product_id' => $param['product_id'],
-                'sub_product_id' => $param['sub_product_id'],
-            ]);
+                'sub_product_id' => $param['sub_product_id']
+            ];
+
+            // 學生貸跟名校貸不可同時存在
+            if ($param['product_id'] == PRODUCT_ID_STUDENT &&
+                ($param['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT || $param['sub_product_id'] == 0))
+            {
+                $condition['sub_product_id'] = [0, SUBPRODUCT_INTELLIGENT_STUDENT];
+            }
+
+            $exist = $this->target_model->get_by(
+                $condition
+            );
+
             if ($exist) {
                 $this->response(['result' => 'ERROR', 'error' => APPLY_EXIST]);
             }
@@ -2842,7 +2929,9 @@ class Product extends REST_Controller {
 
         $company = ['DS2P1'];
         if(!in_array($product['visul_id'],$company)){
-            if(get_age($this->user_info->birthday) < 20 || get_age($this->user_info->birthday) > 55 ){
+            $age = get_age($this->user_info->birthday);
+
+            if($age < ($product['allow_age_range'][0] ?? 20) || $age > ($product['allow_age_range'][1] ?? 55) ){
                 $this->response(array('result' => 'ERROR','error' => UNDER_AGE ));
             }
         }
@@ -3183,5 +3272,38 @@ class Product extends REST_Controller {
             }
             $this->response(array('result' => 'ERROR', 'error' => APPLY_EXIST));
         }
+    }
+
+    /**
+     * @api {get} /v2/product/chk_famous_school 借款方 檢查學校是否符合名校貸資格
+     * @apiVersion 0.2.0
+     * @apiName GetChkFamousSchool
+     * @apiGroup Product
+     *
+     * @apiParam {String} school_short_name 學校英文名縮寫
+     *
+     * @apiSuccess {Boolean} result 檢查結果
+     * @apiSuccessExample {Object} SUCCESS
+     * {
+     *     "result":"SUCCESS",
+     *     "data":{
+     *         "result":true
+     *     }
+     * }
+     *
+     */
+    public function chk_famous_school_get($school_short_name)
+    {
+        $result = FALSE;
+
+        // 名校清單
+        $famous_school_list = $this->config->item('famous_school_list');
+
+        if (isset($famous_school_list[strtoupper($school_short_name)]))
+        {
+            $result = TRUE;
+        }
+
+        $this->response(['result' => 'SUCCESS', 'data' => ['chk_result' => $result]]);
     }
 }

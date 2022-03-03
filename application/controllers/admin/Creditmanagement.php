@@ -104,11 +104,107 @@ class Creditmanagement extends MY_Admin_Controller
         if(!isset($this->inputData['group']) || !isset($this->inputData['score']) || !isset($this->inputData['opinion'])) {
             $this->json_output->setStatusCode(400)->setResponse(['lack of parameter'])->send();
         }
+
+        // 檢查該驗證的驗證項是否都過了
+        if (isset($this->inputData['target_id']))
+        {
+            $response = $this->_chk_certification($this->inputData['target_id']);
+
+            if ($response['result'] !== TRUE)
+            {
+                $this->json_output->setStatusCode(400)->setResponse(['msg' => $response['msg']])->send();
+            }
+        }
+
         $adminId 		= $this->login_info->id;
         $rs = $this->creditSheet->approve(intval($this->inputData['group']), $this->inputData['opinion'],
             intval($this->inputData['score']), $adminId);
 
         $this->json_output->setStatusCode(200)->setResponse(['responseCode' => intval($rs),
             'msg' => $this->creditSheet::RESPONSE_CODE_LIST[$rs]])->send();
+    }
+
+    /**
+     * 比對user申請的產品所對應的驗證項，是否已全數通過
+     * @param $target_id
+     * @return array|bool[]
+     */
+    private function _chk_certification($target_id)
+    {
+        $response = $this->target_model->get($target_id);
+
+        if ( ! isset($response->product_id) || ! isset($response->sub_product_id))
+        {
+            return ['result' => FALSE, 'msg' => '查無申貸產品紀錄'];
+        }
+
+        $product_detail = $this->_get_product_detail($response->product_id, $response->sub_product_id);
+        if ( ! $product_detail)
+        {
+            return ['result' => FALSE, 'msg' => '查無產品設定資料'];
+        }
+
+        if ( ! isset($product_detail['certifications']))
+        {
+            return ['result' => FALSE, 'msg' => '查無產品設定認證項'];
+        }
+
+        $user_certification = $this->user_certification_model->get_certification_data_by_user_id($response->user_id, BORROWER);
+        $user_certification = array_column($user_certification, 'status', 'certification_id');
+
+        // 必填的驗證項
+        if (isset($product_detail['backend_option_certifications']))
+        { // 過濾掉[後台]上選填的徵信項
+            $certification_need_chk = array_diff($product_detail['certifications'], $product_detail['backend_option_certifications']);
+        }
+        else
+        {
+            $certification_need_chk = $product_detail['certifications'];
+        }
+
+        foreach ($certification_need_chk as $certification_id)
+        {
+            // DB查無認證項資料
+            if ( ! isset($user_certification[$certification_id]))
+            {
+                return ['result' => FALSE, 'msg' => '尚有認證項未完成(' . $certification_id . ')'];
+            }
+
+            // 認證項不成功
+            if ($user_certification[$certification_id] != CERTIFICATION_STATUS_SUCCEED)
+            {
+                return ['result' => FALSE, 'msg' => '尚有認證項未通過(' . $certification_id . ')'];
+            }
+        }
+
+        return ['result' => TRUE];
+    }
+
+    /**
+     * 依「主/副產品ID」取得對應的產品設定
+     * @param $product_id : 主產品ID
+     * @param $sub_product_id : 副產品ID
+     * @return false|mixed
+     */
+    private function _get_product_detail($product_id, $sub_product_id)
+    {
+        $product_list = $this->config->item('product_list');
+        $sub_product_list = $this->config->item('sub_product_list');
+
+        if ( ! isset($product_list[$product_id]))
+        {
+            return FALSE;
+        }
+
+        $product = $product_list[$product_id];
+
+        if (isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']))
+        {
+            return $sub_product_list[$sub_product_id]['identity'][$product['identity']];
+        }
+        else
+        {
+            return $product;
+        }
     }
 }

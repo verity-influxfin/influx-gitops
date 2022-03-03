@@ -47,7 +47,7 @@ class Target extends MY_Admin_Controller {
 						'lender' => ['name' => '投資人ID'],
 						'unpaid_principal' => ['name' => '逾期本金'],
 						'loan_date' => ['name' => '放款日期', 'width' => 12],
-						'entering_date' => ['name' => '首逾日期', 'width' => 12],
+                        'limit_date' => ['name' => '首逾日期', 'width' => 12],
 						'delayed_days' => ['name' => '逾期天數'],
 						'unpaid_interest' => ['name' => '尚欠利息'],
 						'delay_interest' => ['name' => '延滯息'],
@@ -173,7 +173,13 @@ class Target extends MY_Admin_Controller {
 		if(isset($input['export'])&&$input['export']==1){
             header('Content-type:application/vnd.ms-excel');
             header('Content-Disposition: attachment; filename=All_targets_'.date('Ymd').'.xls');
-            $html = '<table><thead><tr><th>案號</th><th>產品</th><th>會員ID</th><th>新舊戶</th><th>信評</th><th>公司/學校</th><th>科系</th><th>是否完成實名驗證</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>本金餘額</th><th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th><th>狀態</th><th>借款原因</th><th>申請日期</th><th>核准日期</th><th>邀請碼</th><th>備註</th></tr></thead><tbody>';
+            $html = '<table><thead>
+                    <tr><th>案號</th><th>產品</th><th>會員ID</th><th>新舊戶</th><th>信評</th><th>公司/學校</th>
+                    <th>科系</th><th>是否完成實名驗證</th><th>申請金額</th><th>核准金額</th><th>動用金額</th><th>本金餘額</th>
+                    <th>年化利率</th><th>期數</th><th>還款方式</th><th>放款日期</th><th>逾期狀況</th><th>逾期天數</th>
+                    <th>狀態</th><th>借款原因</th><th>申請日期</th><th>申請時間</th><th>核准日期</th><th>核准時間</th>
+                    <th>邀請碼</th><th>備註</th></tr>
+                    </thead><tbody>';
 
             if(isset($list) && !empty($list)){
                 $this->load->model('user/user_certification_model');
@@ -209,8 +215,10 @@ class Target extends MY_Admin_Controller {
                     $html .= '<td>'.intval($value->delay_days).'</td>';
                     $html .= '<td>'.$status_list[$value->status].'</td>';
                     $html .= '<td>'.$value->reason.'</td>';
-                    $html .= '<td>'.date("Y-m-d H:i:s",$value->created_at).'</td>';
-                    $html .= '<td>'.(isset($value->credit->created_at)?date("Y-m-d H:i:s",$value->credit->created_at):'').'</td>';
+                    $html .= '<td>'.date("Y-m-d",$value->created_at).'</td>';
+                    $html .= '<td>'.date("H:i:s",$value->created_at).'</td>';
+                    $html .= '<td>'.(isset($value->credit->created_at)?date("Y-m-d",$value->credit->created_at):'').'</td>';
+                    $html .= '<td>'.(isset($value->credit->created_at)?date("H:i:s",$value->credit->created_at):'').'</td>';
                     $html .= '<td>'.$value->promote_code.'</td>';
                     $html .= '<td>'.$value->remark.'</td>';
                     $html .= '</tr>';
@@ -2164,6 +2172,7 @@ class Target extends MY_Admin_Controller {
     public function skbank_image_get(){
         $get = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
+        $response = [];
 
         $target_info 	= $this->target_model->get_by(['id'=>$get['target_id']]);
         if(!$target_info){
@@ -2172,7 +2181,15 @@ class Target extends MY_Admin_Controller {
         $this->load->library('mapping/sk_bank/check_list');
         $image_url = $this->check_list->get_raw_data($target_info);
 
-        $this->json_output->setStatusCode(200)->setResponse($image_url)->send();
+        $this->load->library('S3_lib');
+        foreach($image_url as $image_type => $images){
+            $response[$image_type] = [];
+            if (!empty($image_url[$image_type])) {
+                $response[$image_type] = $this->s3_lib->imagesToPdf($images,$target_info->user_id,$image_type,'skbank_raw_data');
+            }
+        }
+
+        $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 }
 ?>

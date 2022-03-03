@@ -134,5 +134,53 @@ class Transaction_model extends MY_Model
 		return $query->result();
 	}
 
+    // 新增內帳交易紀錄，並回傳ID
+    public function insert_get_id($data)
+    {
+        $this->db->set($data)->insert("`p2p_transaction`.`{$this->_table}`");
+        return $this->db->insert_id();
+    }
 
+    /**
+     * 依target ID及科目名稱找第N期的還款狀態
+     * @param $target_id
+     * @param $source : 科目名稱
+     * @return mixed
+     */
+    public function get_repayment_status_by_target_id($target_id, $source, $instalment_no)
+    {
+        $this->db
+            ->select('status')
+            ->from('p2p_transaction.' . $this->_table)
+            ->where('target_id', $target_id)
+            ->where('source', $source)
+            ->where('instalment_no', $instalment_no);
+
+        return $this->db->get()->first_row('array');
+    }
+
+    public function get_delayed_principle($target_ids, $end_date, $group_by) {
+        $this->db
+            ->select('id, user_id')
+            ->from('`p2p_loan`.`targets`')
+            ->where('loan_date <= ', $end_date)
+            ->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED]);
+        if ( ! empty($target_ids))
+        {
+            $this->db->where_in('id', $target_ids);
+        }
+        $subquery = $this->db->get_compiled_select('', TRUE);
+        $this->db
+            ->select('t.user_id, SUM(tra.amount) as total_amount')
+            ->from('`p2p_transaction`.`transactions` AS `tra`')
+            ->join("($subquery) as `t`", "`tra`.`target_id` = `t`.`id`")
+            ->where('source', SOURCE_AR_PRINCIPAL)
+            ->where_in('status', [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF])
+            ->where('`tra`.`limit_date` > ', $end_date);
+        if ( ! empty($group_by))
+        {
+            $this->db->group_by($group_by);
+        }
+        return $this->db->get()->result_array();
+    }
 }

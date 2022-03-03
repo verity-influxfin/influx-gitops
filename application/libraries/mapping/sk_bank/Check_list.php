@@ -313,10 +313,10 @@ class Check_list
 				'location' => 'A08',
 				'raw_data_name' => ['passbook_image']
 			],
-			// '' => [
-			// 	'location' => '',
-			// 	'raw_data_name' => []
-			// ]
+			'1004' => [
+				'location' => 'A08',
+				'raw_data_name' => ['passbook_image']
+			]
 		];
 
         $user_list = [];

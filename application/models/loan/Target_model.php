@@ -419,6 +419,7 @@ class Target_model extends MY_Model
 				a7.meta_value AS school_department,
 				a8.meta_value AS job_position
 			')
+            ->select('`tr`.`limit_date`')
 			->from('p2p_loan.targets t')
 			->join('p2p_loan.products p', 'p.id=t.product_id')
 			->join("($subquery_investment) a1", 'a1.target_id=t.id', 'left')
@@ -499,4 +500,106 @@ class Target_model extends MY_Model
 
 		return array_replace_recursive($target_rows, $transaction_rows);
 	}
+
+    /**
+     * 撈取累積投資總金額
+     * @return int
+     */
+    public function get_total_loan_amount()
+    {
+        $subquery_investment = $this->db
+            ->select_sum('loan_amount')
+            ->where_in('status', [
+                INVESTMENT_STATUS_REPAYING,
+                INVESTMENT_STATUS_PAID_OFF
+            ])
+            ->get_compiled_select('`p2p_loan`.`investments`', TRUE);
+
+        $subquery_transfer = $this->db
+            ->select_sum('amount')
+            ->where('status', 10)
+            ->get_compiled_select('`p2p_loan`.`transfers`', TRUE);
+
+        $result = $this->db
+            ->select('(`r1`.`loan_amount` + `r2`.`amount`) AS total_loan_amount')
+            ->from("({$subquery_investment}) `r1`")
+            ->from("({$subquery_transfer}) `r2`")
+            ->get()
+            ->first_row('array');
+
+        return (int) ($result['total_loan_amount'] ?? 0);
+    }
+
+    /**
+     * 撈取總交易(成交)筆數
+     * @return int
+     */
+    public function get_transaction_count()
+    {
+        $result = $this->db
+            ->select('((((`r1`.`c` + (`r2`.`c` * 2)) + `r3`.`c`) + `r4`.`c`) + (`r5`.`c` * 2)) AS transaction_count')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_REPAYING . ' ) `r1`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.investments WHERE `status` = ' . INVESTMENT_STATUS_PAID_OFF . ' ) `r2`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.transfers WHERE `status` = 10 ) `r3`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.targets WHERE `status` = ' . TARGET_REPAYMENTING . ' ) `r4`')
+            ->from('(SELECT COUNT(1) as c FROM p2p_loan.targets WHERE `status` = ' . TARGET_REPAYMENTED . ' ) `r5`')
+            ->get()
+            ->first_row('array');
+
+        return (int) ($result['transaction_count'] ?? 0);
+    }
+
+    /** 依targets.status取得不重複的使用者ID
+     * @param array $status
+     * @return mixed
+     */
+    public function get_distinct_user_by_status(array $status)
+    {
+        $this->db
+            ->select('DISTINCT(user_id) AS user_id')
+            ->from('p2p_loan.targets')
+            ->where_in('status', $status);
+
+        return $this->db->get()->result_array();
+    }
+
+    public function get_apply_target_count($where)
+    {
+        $this->_database->select('user_id, COUNT(*) as total_count')
+            ->from("`p2p_loan`.`targets`")
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
+
+    public function get_apply_frequent($where)
+    {
+        $this->_database->select('user_id, MIN(id) as first_id, MAX(id) as last_id')
+            ->from("`p2p_loan`.`targets`")
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
+
+    public function get_banned_list($where)
+    {
+        $this->_database->select('user_id, COUNT(*) as total_count')
+            ->from("`p2p_loan`.`targets`")
+            ->like('remark', '經AI')
+            ->group_by('user_id');
+        if ( ! empty($where))
+        {
+            $this->_set_where([0 => $where]);
+        }
+
+        return $this->_database->get()->result_array();
+    }
 }

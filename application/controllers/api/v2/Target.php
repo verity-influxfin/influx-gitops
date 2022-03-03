@@ -631,7 +631,13 @@ class Target extends REST_Controller {
                 }
                 foreach ($product['certifications'] as $key => $value) {
                     $cer = $certification[$value];
-                    if (!isset($cur_cer[$value])) {
+                    // 不顯示於 APP 的徵信項目
+                    if (($cer['show'] ?? TRUE) == FALSE)
+                    {
+                        continue;
+                    }
+                    else if ( ! isset($cur_cer[$value]))
+                    {
                         $cer['description'] = '未' . $cer['description'];
                         $cer['user_status'] = 2;
                         $cer['certification_id'] = null;
@@ -890,7 +896,7 @@ class Target extends REST_Controller {
             }
 
             // 案件關係人資料
-            $guarantorInfo_list = [];
+            $guarantorInfo_list = ['guarantorInfo' => []];
 
             $this->load->model('loan/target_associate_model');
             $guarantorInfo = $this->target_associate_model->get_many_by(['target_id' => $target_id, 'product_id' => $target->product_id, 'status' => 2, 'guarantor' => 1]);

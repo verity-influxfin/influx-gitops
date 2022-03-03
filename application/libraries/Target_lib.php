@@ -62,9 +62,6 @@ class Target_lib
                 $eventDate 	= date("Y-m-d H:i:s", strtotime("+3 day", $target_change->created_at));
                 if($eventDate >= date("Y-m-d H:i:s")) {
                     $target = $this->CI->target_model->get_by(['id' => $target_id]);
-                    if(isset($target) && in_array($target->product_id, [3,4])) {
-                        $this->CI->notification_lib->obank_event_fast_signing($target);
-                    }
                 }
             }
             return $rs;
@@ -354,10 +351,14 @@ class Target_lib
                     //個人最高歸戶剩餘額度
                     $user_current_credit_amount = $user_max_credit_amount - ($used_amount + $other_used_amount);
                     if ($user_current_credit_amount >= 1000 || $subloan_status) {
+                        $this->CI->config->load('credit',TRUE);
+                        $instalment_modifier_list = $this->CI->config->item('credit')['credit_instalment_modifier_'.$target->product_id];
+
                         //該產品額度
                         $used_amount = $credit['amount'] - $used_amount;
                         //檢核產品額度，不得高於個人最高歸戶剩餘額度
                         $credit['amount'] = $used_amount > $user_current_credit_amount ? $user_current_credit_amount : $used_amount;
+
                         $loan_amount = $target->amount > $credit['amount'] && $subloan_status == false ? $credit['amount'] : $target->amount;
                         // 金額取整程式，2020/10/30排除產轉
                         $loan_amount = ($loan_amount % 1000 != 0 && $subloan_status == false) ? floor($loan_amount * 0.001) * 1000 : $loan_amount;
@@ -379,6 +380,8 @@ class Target_lib
 //                                    && !$this->CI->anti_fraud_lib->judicialyuan($target->user_id)
 //                                    && $this->judicialyuan($user_id)
                                     && $target->product_id < 1000 && $target->sub_status != TARGET_SUBSTATUS_SECOND_INSTANCE
+                                    // 依照產品部門需求，上班族暫時全部強制進待二審
+                                    && ! in_array($target->product_id, [PRODUCT_ID_SALARY_MAN, PRODUCT_ID_SALARY_MAN_ORDER])
                                     || $subloan_status
                                     || $renew
                                     || $evaluation_status
@@ -505,9 +508,6 @@ class Target_lib
         $this->CI->target_model->update($target->id, $param);
         $this->insert_change_log($target->id, $param);
         $this->CI->notification_lib->approve_target($user_id, '9', $target, 0, false, $remark);
-        if(strpos($remark, "經AI系統綜合評估後") !== false && in_array($target->product_id, [3, 4])) {
-            $this->CI->notification_lib->obank_event_approve_failed($target);
-        }
 
         $guarantors = $this->get_associates_user_data($target->id, 'all', 1, false);
         if($guarantors){
@@ -1723,6 +1723,13 @@ class Target_lib
                                 if ($finish && in_array($certification['id'], $product_certification)) {
 
                                     if ($certification['user_status'] != '1') {
+
+                                        // 還款力計算若驗證不通過，會進入待二審
+                                        if ($certification['id'] == CERTIFICATION_REPAYMENT_CAPACITY)
+                                        {
+                                            $second_instance_check = TRUE;
+                                        }
+
                                         if (in_array($value->product_id, $allow_stage_cer) && in_array($certification['id'], [CERTIFICATION_DIPLOMA]) && ($sub_product_id == 0 || $sub_product_id == STAGE_CER_TARGET) && !$subloan_status) {
                                             $finish_stage_cer[] = $certification['id'];
                                         } else {
@@ -1740,6 +1747,56 @@ class Target_lib
 										}
 									}
                                     $certification['user_status'] == '1' ? $cer[] = $certification['certification_id'] : '';
+                                }
+                            }
+                            // 法人產品自然人認證徵信完成判斷
+                            // TODO: 認證徵信個金企金待系統整合
+                            if ($finish && in_array($value->product_id, [PRODUCT_SK_MILLION_SMEG]))
+                            {
+                                // 歸案之自然人資料
+                                $associates_list = $this->CI->target_associate_model->get_many_by([
+                                    'status' => ASSOCIATES_STATUS_APPROVED,
+                                    'target_id' => $value->id
+                                ]);
+                                if ( ! empty($associates_list))
+                                {
+                                    $user_id_list = array_column($associates_list, 'user_id', 'character');
+                                    // 有尚未註冊之自然人
+                                    if(count(array_filter($user_id_list)) != count($user_id_list)){
+                                        $finish = FALSE;
+                                    }
+                                    else
+                                    {
+                                        $associates_certifications_config = $this->CI->config->item('associates_certifications');
+                                        if (isset($associates_certifications_config[$value->product_id]))
+                                        {
+                                            $this->CI->load->model('user/user_certification_model');
+                                            $associates_certifications = $associates_certifications_config[$value->product_id];
+                                            foreach ($associates_list as $associates_info)
+                                            {
+                                                if (isset($associates_certifications[$associates_info->character]))
+                                                {
+                                                    $associates_certifications_list = $this->CI->user_certification_model->get_many_by([
+                                                        'investor' => BORROWER,
+                                                        'status' => CERTIFICATION_STATUS_SUCCEED,
+                                                        'user_id' => $associates_info->user_id,
+                                                        'certification_id' => $associates_certifications[$associates_info->character]
+                                                    ]);
+                                                    // 確認認證徵信是否完成
+                                                    if (count($associates_certifications[$associates_info->character])
+                                                        != count(json_decode(json_encode($associates_certifications_list), TRUE)))
+                                                    {
+                                                        $finish = FALSE;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    $finish = FALSE;
                                 }
                             }
 
@@ -1835,12 +1892,6 @@ class Target_lib
                                 //自動取消
                                 $limit_date = date('Y-m-d', strtotime('-' . TARGET_APPROVE_LIMIT . ' days'));
                                 $create_date = date('Y-m-d', $value->created_at);
-
-                                // 7天尚未提交資料時觸發王道活動通知
-                                $notification_date = date('Y-m-d H:i:s', strtotime('+7 day', $value->created_at));
-                                if(in_array($value->product_id, [3, 4]) && $notification_date >= date('Y-m-d H:i:s') && $notification_date <= date('Y-m-d H:i:s',strtotime('+1 hour'))) {
-                                    $this->CI->notification_lib->obank_event_pending_too_long($value);
-                                }
 
                                 if ($limit_date > $create_date) {
                                     $count++;
@@ -2108,7 +2159,7 @@ class Target_lib
         return false;
     }
 
-    private function is_sub_product($product, $sub_product_id)
+    public function is_sub_product($product, $sub_product_id)
     {
         $sub_product_list = $this->CI->config->item('sub_product_list');
         return isset($sub_product_list[$sub_product_id]['identity'][$product['identity']]) && in_array($sub_product_id, $product['sub_product']);
@@ -2197,7 +2248,7 @@ class Target_lib
         return $this->CI->target_associate_model->get_many_by($params);
     }
 
-    public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [0, 1, 500, 501]){
+    public function get_associates_target_list($user_id, $target_id = false ,$self = false, $status = [TARGET_WAITING_APPROVE, TARGET_WAITING_SIGNING, TARGET_WAITING_VERIFY, TARGET_BANK_VERIFY, TARGET_BANK_GUARANTEE]){
         $targets = $target_id ? '' : [];
         $get_associates_list = $this->get_associates($user_id);
         if($get_associates_list){

@@ -226,6 +226,25 @@ class User_lib {
     }
 
     /**
+     * 取得虛擬帳號前綴帳號
+     * @param int $investor
+     * @param int $product_id
+     * @return string
+     */
+    public function getVirtualAccountPrefix(int $investor, int $product_id = 0): string
+    {
+        switch ($investor)
+        {
+            case USER_BORROWER:
+                return CATHAY_VIRTUAL_CODE . BORROWER_VIRTUAL_CODE;
+                break;
+            case USER_INVESTOR:
+                return CATHAY_VIRTUAL_CODE . INVESTOR_VIRTUAL_CODE;
+                break;
+        }
+    }
+
+    /**
      * 結算所有推薦碼的獎勵
      * @return int
      */
@@ -417,7 +436,7 @@ class User_lib {
         $bankAccountRs 	= $this->CI->virtual_account_model->get_many_by([
             'user_id'	=> array_column($list, 'user_id'),
             'status'	=> 1,
-            'virtual_account like ' => TAISHIN_VIRTUAL_CODE . "%",
+            'virtual_account like ' => CATHAY_VIRTUAL_CODE . "%",
         ]);
         foreach ($bankAccountRs as $bankAccount) {
             $bankAccountList[$bankAccount->user_id][$bankAccount->investor] = $bankAccount;
@@ -434,6 +453,11 @@ class User_lib {
             $rewardData = json_decode($value['reward_data'], TRUE);
 
             $rs = $this->CI->sendemail->send_promote_receipt($value['email'], $value['name'], $value['id_number'], $value['phone'],
+                $value['address'], $value['updated_at'], $bankAccount->virtual_account, $rewardData['originRewardAmount'],
+                $rewardData['incomeTax'], $rewardData['healthPremium'], $value['amount']);
+            // 也要寄一份給財務人員
+            // TODO: 先暫時 hardcode，等有流程出現再依照流程修正
+            $this->CI->sendemail->send_promote_receipt('katia@influxfin.com', $value['name'], $value['id_number'], $value['phone'],
                 $value['address'], $value['updated_at'], $bankAccount->virtual_account, $rewardData['originRewardAmount'],
                 $rewardData['incomeTax'], $rewardData['healthPremium'], $value['amount']);
             if($rs) {
