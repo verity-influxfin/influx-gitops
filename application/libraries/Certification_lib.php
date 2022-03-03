@@ -2151,7 +2151,7 @@ class Certification_lib{
             $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($content['name']);
             if(isset($verdicts_statuses['status']))
             {
-                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 3 month'))
+                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
                     || $verdicts_statuses['status'] == 204)
                 {
                     $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($content['name']);
@@ -2160,7 +2160,7 @@ class Certification_lib{
             $google_statuses = $this->CI->google_lib->get_google_status($content['name']);
             if (isset($google_statuses['status']))
             {
-                if (($google_statuses['status'] == 200 && $google_statuses['response']['updatedAt'] < strtotime('- 3 month'))
+                if (($google_statuses['status'] == 200 && $google_statuses['response']['updatedAt'] < strtotime('- 1 week'))
                     || $google_statuses['status'] == 204)
                 {
                     $this->CI->google_lib->request_google($content['name']);
