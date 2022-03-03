@@ -481,7 +481,9 @@
 					// 封鎖時間已過
 					return `<div class="d-flex flex-column">
 								<div class="mb-2">${id}</div>
-							<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal">
+							<button class="btn btn-warning mr-2" data-toggle="modal" data-target="#newModal"
+									onclick="v.$data.blockUserAddForm = {userId: ${id}, blockRule: null, blockDescription: null, blockRemark: null, blockRisk: null, blockTimeText: null,}"
+							>
 								已過期
 							</button>
 						</div>`
