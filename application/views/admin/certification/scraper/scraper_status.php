@@ -97,13 +97,13 @@
         t2.clear()
         t2.row.add([
             user_id,
-            judicial_yuan_html,
             household_registration_html,
+            judicial_yuan_html,
+            google_html,
+            instagram_html,
             sip_html,
             biz_html,
-            business_registration_html,
-            google_html,
-            instagram_html
+            business_registration_html
         ])
         t2.draw()
     }
@@ -185,13 +185,13 @@
                 <thead>
                     <tr>
                         <th>會員編號</th>
-                        <th>司法院判決案例</th>
                         <th>內政部戶政司</th>
+                        <th>司法院判決案例</th>
+                        <th>Google</th>
+                        <th>Instagram</th>
                         <th>SIP學生資訊</th>
                         <th>經濟部商業司</th>
                         <th>財務部稅籍登記</th>
-                        <th>Google</th>
-                        <th>Instagram</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
