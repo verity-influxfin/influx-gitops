@@ -673,6 +673,12 @@
 							</button>
 						</div>`
 					}
+					return `<div class="d-flex flex-column">
+								<div class="mb-2">${id}</div>
+							<button class="btn btn-warning mr-2" disabled>
+								已過期
+							</button>
+						</div>`
 				}
 				const statusGroup = (text, status, id, recordId) => {
 					return `<div class="d-flex flex-column">

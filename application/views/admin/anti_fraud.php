@@ -536,7 +536,7 @@
 			},
 			onReady() {
 				const url = new URL(location.href);
-				if(url.searchParams.has('id')){
+				if (url.searchParams.has('id')) {
 					this.searchParam.userId = url.searchParams.get('id')
 				}
 				this.doSearch({})
@@ -733,7 +733,7 @@
 					table.row.add(t)
 				})
 				table.draw()
-				$('[data-toggle="popover"]').popover()
+				$('[data-toggle="popover"]').popover({ trigger: 'focus' })
 			},
 			"riskTreeSelect.node1"() {
 				this.riskTreeSelect.node2 = {}
