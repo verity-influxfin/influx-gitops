@@ -25,7 +25,7 @@ class Scraper extends MY_Admin_Controller
     {
         $input = $this->input->get(NULL, TRUE);
         $page_view = isset($input['view']) ? $input['view'] : '';
-        $this->load->view('admin/_header',$data=['use_vuejs'=>true]);
+		$this->load->view('admin/_header',$data=['use_vuejs'=>true]);
         $this->load->view('admin/_title', $this->menu);
         if ( ! empty($page_view))
         {
@@ -292,7 +292,7 @@ class Scraper extends MY_Admin_Controller
 
         if (empty($judicial_yuan_response) || ! isset($judicial_yuan_response['response']))
         {
-            $judicial_yuan_response = isset($judicial_yuan_response['response']) ? $judicial_yuan_response['response'] : ['message' => 'judiciayuan not response'];
+            $judicial_yuan_response = isset($judicial_yuan_response['response']) ? $judicial_yuan_response['response'] : ['message' => 'judicialyuan not response'];
             $this->json_output->setStatusCode(401)->setResponse($judicial_yuan_response)->send();
         }
 

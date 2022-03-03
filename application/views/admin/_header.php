@@ -40,6 +40,12 @@
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/moment.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/admin/scripts/progressbar.min.js"></script>
 	<script data-pace-options='{ "ajax": true }' src="<?=base_url()?>assets/admin/scripts/pace.js"></script>
+	 <?php if ($use_vuejs ?? false):?>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="/assets/admin/js/vue-components.js"></script>
+    <?php endif?>
 
 	<script>
 		$(document).ready(function() {

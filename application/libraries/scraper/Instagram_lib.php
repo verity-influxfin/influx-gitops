@@ -6,11 +6,12 @@ class Instagram_lib
     function __construct($params = [])
     {
         $this->CI = &get_instance();
-        $this->scraperUrl = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/instagram/';
-        if (isset($params['ip']))
+        if (empty(getenv('GRACULA_IP')) || empty(getenv('GRACULA_PORT')))
         {
-            $this->scraperUrl = "http://{$params['ip']}/scraper/api/v1.0/";
+            throw new Exception('can not get Instagram ip or port');
         }
+        $end_point = 'instagram';
+        $this->scraper_url = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/' . $end_point . '/';
     }
 
     public function autoFollow($reference, $followed_account)
@@ -20,7 +21,7 @@ class Instagram_lib
             return FALSE;
         }
 
-        $url = $this->scraperUrl . "{$reference}/{$followed_account}/follow";
+        $url = $this->scraper_url . "{$reference}/{$followed_account}/follow";
         $data = ['key' => ''];
         $result = curl_get($url, $data);
         $response = json_decode($result, TRUE);
@@ -40,7 +41,7 @@ class Instagram_lib
             return FALSE;
         }
 
-        $url = $this->scraperUrl . "{$reference}/{$followed_account}/info";
+        $url = $this->scraper_url . "{$reference}/{$followed_account}/info";
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
 
@@ -59,7 +60,7 @@ class Instagram_lib
             return FALSE;
         }
 
-        $url = $this->scraperUrl . "{$reference}/{$followed_account}/info";
+        $url = $this->scraper_url . "{$reference}/{$followed_account}/info";
         $data = ['key' => ''];
         $result = curl_get($url, $data);
         $response = json_decode($result, TRUE);
@@ -79,7 +80,7 @@ class Instagram_lib
             return FALSE;
         }
 
-        $url = $this->scraperUrl . "{$reference}/{$followed_account}/status?action={$action}";
+        $url = $this->scraper_url . "{$reference}/{$followed_account}/status?action={$action}";
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
 
@@ -98,7 +99,7 @@ class Instagram_lib
             return FALSE;
         }
 
-        $url = $this->scraperUrl . "{$reference}/{$followed_account}/taskLog";
+        $url = $this->scraper_url . "{$reference}/{$followed_account}/taskLog";
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
 
@@ -117,7 +118,7 @@ class Instagram_lib
             return FALSE;
         }
 
-        $url = $this->scraperUrl . "{$reference}/{$followed_account}/riskControlInfo";
+        $url = $this->scraper_url . "{$reference}/{$followed_account}/riskControlInfo";
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
         if ( ! $result || ! isset($response['status']))
@@ -135,7 +136,7 @@ class Instagram_lib
             return FALSE;
         }
 
-        $url = $this->scraperUrl . "{$reference}/{$followed_account}/riskControlInfo";
+        $url = $this->scraper_url . "{$reference}/{$followed_account}/riskControlInfo";
         $data = ['key' => ''];
         $result = curl_get($url, $data);
         $response = json_decode($result, TRUE);
