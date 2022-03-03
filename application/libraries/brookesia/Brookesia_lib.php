@@ -16,7 +16,7 @@ class Brookesia_lib
 			return false;
 		}
 
-		$url = $this->brookesiaUrl  . "check/9487/checkAll";
+		$url = $this->brookesiaUrl  . "check/checkAll";
 		$data = ["userId" => $userId];
 
 		$result = curl_get($url, $data);
@@ -29,60 +29,71 @@ class Brookesia_lib
 		return true;
 	}
 
-	public function userCheckAllLog($userId)
+	public function userNotChecked($userId)
 	{
 		if(!$userId) {
-			return false;
+			return FALSE;
 		}
 
-		$url = $this->brookesiaUrl  . "check/0/checkAll?userId=" . $userId;
+		$url = $this->brookesiaUrl  . "check/checkAll?userId=" . $userId;
 
 		$result = curl_get($url);
 		$response = json_decode($result);
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
+        // 子系統無回應（案件會因流程轉二審，暫不觸發反詐欺）
+		if (!$result || !isset($response->status)) {
+			return FALSE;
 		}
+        // 子系統無 check log 資料
+        else if($response->status != 200)
+        {
+            return TRUE;
+        }
+        // check log 有資料，但未完成
+        else if (isset($response->response->result->status) && $response->response->result->status != 'finished')
+        {
+            return TRUE;
+        }
 
-		return $response;
+		return FALSE;
 	}
 
-	public function getRuleHitByUserId($userId)
-	{
-		if(!$userId) {
-			return;
-		}
+    // for second instance page
 
-		$url = $this->brookesiaUrl . "result/userHitRule?userId=" . $userId;
+    public function getRuleHitByUserId($userId)
+    {
+        if(!$userId) {
+            return;
+        }
 
-		$result = curl_get($url);
-		$response = json_decode($result);
+        $url = $this->brookesiaUrl . "result/userHitRule?userId=" . $userId;
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
+        $result = curl_get($url);
+        $response = json_decode($result);
 
-		return $response;
-	}
+        if (!$result || !isset($response->status) || $response->status != 200) {
+            return;
+        }
 
-	public function getRelatedUserByUserId($userId)
-	{
-		if (!$userId) {
-			return;
-		}
+        return $response;
+    }
 
-		$url = $this->brookesiaUrl . "result/relatedUser?userId=" . $userId;
+    public function getRelatedUserByUserId($userId)
+    {
+        if (!$userId) {
+            return;
+        }
 
-		$result = curl_get($url);
-		$response = json_decode($result);
+        $url = $this->brookesiaUrl . "result/relatedUser?userId=" . $userId;
 
-		if (!$result || !isset($response->status) || $response->status != 200) {
-			return;
-		}
+        $result = curl_get($url);
+        $response = json_decode($result);
 
-		return $response;
-	}
+        if (!$result || !isset($response->status) || $response->status != 200) {
+            return;
+        }
 
-
+        return $response;
+    }
 
 }

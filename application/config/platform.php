@@ -7,6 +7,9 @@ $config['admin_menu'] = [
 	'AntiFraud' => [
 		'name' => '反詐欺管理指標'
 	],
+    'BlockList' =>[
+        'name' => '黑名單管理'
+    ],
     'Target' => [
         'parent_name' => '借款管理',
         'index' => '全部列表',
@@ -38,7 +41,8 @@ $config['admin_menu'] = [
         'index?investor=0&company=1' => '法人借款端審核',
         'index?investor=1' => '投資端審核',
         'credit' => '信評管理',
-		'credit_management' => '授信審核表'
+		'credit_management' => '授信審核表',
+		'black_list' => '黑名單列表'
         //'loaned_wait_push' => '貸後催收',
         //'loaned_wait_push?slist=1' => '貸後已催收列表',
     ],
