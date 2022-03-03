@@ -485,7 +485,7 @@ class Product extends REST_Controller {
 
         $fields = ['product_id', 'sub_product_id'];
         foreach ($fields as $field) {
-            if (empty($input[$field])) {
+            if (!isset($input[$field])) {
                 $this->response(['result' => 'ERROR', 'error' => INPUT_NOT_CORRECT]);
             }
         }
@@ -500,10 +500,10 @@ class Product extends REST_Controller {
             $this->black_list_lib->add_block_log($is_user_blocked);
             $this->response(
                 [
-                    'result'   => 'ERROR',
-                    'error'    => BLACK_LIST_APPLY_PRODUCT,
+                    'result'   => 'SUCCESS',
                     'data'     => [
-                        'text' => $this->black_list_lib->get_black_list_text($user_id, $input['product_id'], $input['sub_product_id'])
+                        'valid'  => FALSE,
+                        'text'   => $this->black_list_lib->get_black_list_text($user_id, $input['product_id'], $input['sub_product_id'])
                     ]
                 ]
             );
@@ -511,7 +511,10 @@ class Product extends REST_Controller {
 
         $this->response(
             [
-                'result'   => 'SUCCESS'
+                'result'   => 'SUCCESS',
+                'data'     => [
+                    'valid'  => TRUE
+                ]
             ]
         );
 
