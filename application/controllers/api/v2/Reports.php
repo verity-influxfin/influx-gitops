@@ -195,7 +195,9 @@ class Reports extends REST_Controller {
         }
         $numRequested = count($imageLogs);
         $response = $this->report_scan_lib->requestForResult($batchType, $imageIds);
-
+        if (!$response) {
+           $this->response(['result' => 'ERROR','error' => EXIT_ERROR,'msg' => 'The result not found.']);
+        }
         //removed already OCRed image so sleep time can be reduced
         if ($response->status == 200) {
             foreach ($response->response->$logKey->items as $eachOcr) {
@@ -225,9 +227,15 @@ class Reports extends REST_Controller {
         #waiting for data to be completed
         $sleepingTime = $numRequested * 3;
         sleep($sleepingTime);
+        if (!$numRequestedIds) {
+            $this->response(['result' => 'ERROR','error' => EXIT_ERROR, 'msg' => 'numRequestedIds not found.']);
+        }
 
         $scannedResult = [];
         $response = $this->report_scan_lib->requestForResult($batchType, $numRequestedIds);
+        if (!$response) {
+            $this->response(['result' => 'ERROR','error' => EXIT_ERROR, 'msg' => 'The scan result not found.']);
+        }
 
         if (isset($response->response)) {
             if(($type == 'amendment_of_register' && $type == 'credit_investigation') && isset($imageIds[0])){
