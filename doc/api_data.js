@@ -49433,7 +49433,7 @@ define({
                 "examples": [
                     {
                         "title": "SUCCESS",
-                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"list\":[\n            {\n                "id": 1000559,\n                "product_name": "3S名校貸",\n                "remark": "",\n                "certifications": {\n                     "1": [],\n                     "2":[\n                         "error msg 1",\n                         "error msg 2"\n                     ]\n                 }\n            }\n        ]\n    }\n}`,
+                        "content": `{\n    \"result\":\"SUCCESS\",\n    \"data\":{\n        \"list\":[\n            {\n                "id": 1000559,\n                "product_name": "3S名校貸",\n                "remark": "",\n                "certifications": {\n                     "1": {},\n                     "2":{\n                         "name":"學生身份認證",\n                         "description":[\n                             "error msg 1",\n                             "error msg 2"\n                         ]\n                     }\n                 }\n            }\n        ]\n    }\n}`,
                         "type": "Boolean"
                     }
                 ]

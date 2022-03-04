@@ -2,6 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/REST_Controller.php');
 
+use Certification\Certification_factory;
+
 class Product extends REST_Controller {
 
     public $user_info;
@@ -750,7 +752,9 @@ class Product extends REST_Controller {
                 }
                 else
                 { // 該產品已無使用額度
-                    $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT]);
+                    $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT,
+                        'data' => ['text' => '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。']
+                    ]);
                 }
             }
 
@@ -3345,32 +3349,49 @@ class Product extends REST_Controller {
             $product = $this->product_lib->getProductInfo($value['product_id'], $value['sub_product_id']);
             $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
             $this->load->model('user_certification_model');
-
-            $failed_cert_reson = [];
-
+            $cert_list = $this->config->item('certifications');
+            $failed_cert_reason = [];
             if ($value['status'] == TARGET_WAITING_APPROVE && $value['certificate_status'] == 1)
             {
                 foreach ($need_chk_cert as $certification_id)
                 {
-                    $info = $this->user_certification_model->get_by([
+                    $info = $this->user_certification_model->order_by('created_at', 'DESC')->get_by([
                         'user_id' => $this->user_info->id,
                         'certification_id' => $certification_id,
                         'investor' => $this->user_info->investor
                     ]);
-                    if (empty($info->remark))
+                    $failed_cert_reason[$certification_id] = (object) [];
+
+                    $cert_factory = Certification_factory::get_instance_by_model_resource($info);
+                    if ( ! $cert_factory->is_failed())
                     {
-                        $failed_cert_reson[$certification_id] = [];
-                        continue;
+                        if (in_array($certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB]))
+                        {
+                            if ($cert_factory->can_re_submit())
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
 
                     $remark = json_decode($info->remark, TRUE);
                     if ( ! empty($remark['fail']))
                     {
-                        $failed_cert_reson[$certification_id] = explode('、', $remark['fail']);
+                        $failed_cert_reason[$certification_id] = [
+                            'name' => $cert_list[$certification_id]['name'],
+                            'description' => explode('、', $remark['fail'])
+                        ];
                     }
                     else
                     {
-                        $failed_cert_reson[$certification_id] = [];
+                        $failed_cert_reason[$certification_id] = [
+                            'name' => $cert_list[$certification_id]['name'],
+                            'description' => []
+                        ];
                     }
                 }
             }
@@ -3379,7 +3400,7 @@ class Product extends REST_Controller {
                 'id' => (int) $value['id'],
                 'product_name' => $product['name'],
                 'remark' => $value['remark'],
-                'certifications' => $failed_cert_reson
+                'certifications' => $failed_cert_reason
             ];
         }
 
@@ -3434,7 +3455,9 @@ class Product extends REST_Controller {
 
         if ($input['amount'] > $chk_credit['remain_amount'])
         {
-            $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT]);
+            $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT,
+                'data' => ['text' => '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。']
+            ]);
         }
 
         $this->load->library('loanmanager/product_lib');

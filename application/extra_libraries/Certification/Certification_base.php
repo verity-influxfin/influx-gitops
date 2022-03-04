@@ -370,7 +370,7 @@ abstract class Certification_base implements Certification_definition
      */
     public function is_expired(): bool
     {
-        return !empty($this->certification['expire_time']) && $this->certification['expire_time'] > time();
+        return ! empty($this->certification['expire_time']) && $this->certification['expire_time'] < time();
     }
 
     /**
@@ -475,5 +475,14 @@ abstract class Certification_base implements Certification_definition
                 );
             }
         }
+    }
+
+    /**
+     * 是否可以重新提交
+     * @return bool
+     */
+    public function can_re_submit(): bool
+    {
+        return $this->certification['can_resubmit_at'] < time();
     }
 }

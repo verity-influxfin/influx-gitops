@@ -193,4 +193,10 @@ interface Certification_definition
      * @return bool
      */
     public function is_qualified(): bool;
+
+    /**
+     * 是否可以重新提交
+     * @return bool
+     */
+    public function can_re_submit(): bool;
 }
