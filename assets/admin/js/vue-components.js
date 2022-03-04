@@ -167,7 +167,7 @@ Vue.component('scraper-status', {
 		</div>
 	`,
 	mounted() {
-		$(document).ready(()=>{
+		$(document).ready(() => {
 			let urlString = window.location.href;
 			let url = new URL(urlString);
 			const t2 = $('#scraper-status-table').DataTable({
@@ -214,7 +214,7 @@ Vue.component('scraper-status', {
 				type: "GET",
 				url: "/admin/scraper/scraper_status" + "?user_id=" + user_id,
 				async: false,
-				success: (response)=> {
+				success: (response) => {
 					if (response.status.code != 200) {
 						console.log(response.status.code)
 						return false;
@@ -290,6 +290,62 @@ Vue.component('scraper-status', {
                         </button>
                     </a>
 				`;
+		}
+	},
+})
+
+Vue.component('scraper-status-icon', {
+	props: ['column'],
+	template: `
+	<span>
+		<button class="btn btn-success btn-circle btn-sm" v-if="status == 'finished'">
+			<i class="fa fa-check"></i>
+		</button>
+		<button class="btn btn-danger btn-circle btn-sm" v-else-if="status == 'failure'">
+			<i class="fa fa-times"></i>
+		</button>
+		<button class="btn btn-secondary btn-circle btn-sm" v-else-if="status == 'requested'">
+			<i class="fa fa-pause"></i>
+		</button>
+
+		<button class="btn btn-warning btn-circle btn-sm" v-else-if="status == 'started'">
+			<i class="fa fa-refresh"></i>
+		</button>
+		<button class="btn btn-default btn-circle btn-sm" v-else>
+			<i class="fa fa-info"></i>
+		</button>
+	</span>
+	`,
+	data() {
+		return {
+			status: ''
+		}
+	},
+	mounted() {
+		let url = new URL(location.href);
+		user_id = url.searchParams.get("user_id");
+		this.getStatus(user_id)
+	},
+	methods: {
+		getStatus(user_id) {
+			$.ajax({
+				type: "GET",
+				url: "/admin/scraper/scraper_status" + "?user_id=" + user_id,
+				async: false,
+				success: (response) => {
+					if (response.status.code != 200) {
+						console.log(response.status.code)
+						return false;
+					}
+					// console.log(response);
+					this.status = response.response[this.column] ?? ''
+				},
+				error: function (XMLHttpRequest, textStatus) {
+					console.log(XMLHttpRequest.status);
+					console.log(XMLHttpRequest.readyState);
+					console.log(textStatus);
+				},
+			});
 		}
 	},
 })

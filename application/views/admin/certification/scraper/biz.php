@@ -266,6 +266,7 @@
             <h1>經濟部商業司資訊</h1>
         </div>
 		<div>
+			<scraper-status-icon :column="column"></scraper-status-icon>
 			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
 		</div>
     </div>
@@ -382,3 +383,13 @@
         </table>
     </table>
 </div>
+<script>
+	const v = new Vue({
+		el:'#page-wrapper',
+		computed: {
+			column(){
+				return 'biz_status'
+			}
+		},
+	})
+</script>

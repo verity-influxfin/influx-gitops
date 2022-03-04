@@ -194,6 +194,7 @@
             <h1 id="title-date">財政部稅籍登記資訊</h1>
         </div>
 		<div>
+			<scraper-status-icon :column="column"></scraper-status-icon>
 			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
 		</div>
     </div>
@@ -274,3 +275,13 @@
         </table>
     </table>
 </div>
+<script>
+	const v = new Vue({
+		el:'#page-wrapper',
+		computed: {
+			column(){
+				return 'business_registration_status'
+			}
+		},
+	})
+</script>

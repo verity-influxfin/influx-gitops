@@ -295,7 +295,6 @@
 			}
 		})
     });
-	
 </script>
 <div id="page-wrapper">
     <div class="d-flex jcb aic page-header">
@@ -303,6 +302,7 @@
             <h1>司法院判決案例</h1>
         </div>
 		<div>
+			<scraper-status-icon :column="column"></scraper-status-icon>
 			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
 		</div>
     </div>
@@ -386,3 +386,13 @@
         </tr>
     </table>
 </div>
+<script>
+	const v = new Vue({
+		el:'#page-wrapper',
+		computed: {
+			column(){
+				return 'judicial_yuan_status'
+			}
+		},
+	})
+</script>
