@@ -201,12 +201,7 @@ Vue.component('scraper-status', {
 		fetchStatus() {
 			user_id = $('#id-textbox').val();
 			if (user_id != '') {
-				if (user_id.length > 5) {
-					$('#id-textbox').val('');
-					alert('文字過長,請重新輸入！');
-				} else {
-					this.getAjax(user_id);
-				}
+				this.getAjax(user_id);
 			}
 		},
 		getAjax(user_id) {
