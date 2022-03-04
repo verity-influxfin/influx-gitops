@@ -182,7 +182,7 @@ class Page extends CI_Controller
             'COUNT(*) AS amount',
             'loan_date',
         ])->from('p2p_loan.targets')
-            ->where_in('status', [5, 10])
+            ->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
             ->where([
                 'loan_status' => 1,
                 'loan_date' => $date->format('Y-m-d'),
@@ -319,7 +319,7 @@ class Page extends CI_Controller
 
         $key = 'app_store_connect_api_token';
 
-        if (!$token = $this->cache->get($key))
+        if ( ! $token = $this->cache->get($key))
         {
             $token = $this->_generate_app_store_connect_api_token();
 
@@ -429,7 +429,7 @@ class Page extends CI_Controller
             explode(PHP_EOL, $contents),
             function ($row)
             {
-                return !empty($row);
+                return ! empty($row);
             }
         ));
     }
