@@ -3,6 +3,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
+use Certification_btn\Certification_btn_factory;
+
 class Risk extends MY_Admin_Controller {
 
 	protected $edit_method = array('add','edit','partner_type_add');
@@ -19,6 +21,178 @@ class Risk extends MY_Admin_Controller {
 		$this->load->library('target_lib');
 		$this->load->library('certification_lib');
  	}
+
+    public function person_borrower()
+    {
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/risk_target_person_borrower');
+        $this->load->view('admin/_footer');
+    }
+
+    public function get_person_borrower_list()
+    {
+        // 取得$_GET的產品ID和子產品ID
+        list($product_id, $sub_product_id) = array_pad(explode(':', $this->input->get('product')), 2, 0);
+        $this->load->library('loanmanager/product_lib');
+        $product_info = $this->product_lib->getProductInfo($product_id, $sub_product_id);
+
+        // 取得現階段要呈現的徵信項
+        switch ($this->input->get('stage'))
+        {
+            case 0: // 身份驗證階段
+                $this_stage_cert = $product_info['certifications_stage'][0] ?? [];
+                $prev_stage_cert = [];
+                break;
+            case 1: // 收件檢核階段
+                $this_stage_cert = array_merge(
+                    $product_info['certifications_stage'][0] ?? [],
+                    $product_info['certifications_stage'][1] ?? []
+                );
+                $prev_stage_cert = $product_info['certifications_stage'][0] ?? [];
+                break;
+            case 2: // 審核中階段
+                $this_stage_cert = array_merge(
+                    $product_info['certifications_stage'][0] ?? [],
+                    $product_info['certifications_stage'][1] ?? []
+                );
+                $prev_stage_cert = $this_stage_cert;
+                break;
+            default:
+                $this_stage_cert = []; // 這一階段的徵信項
+                $prev_stage_cert = []; // 前一階段的徵信項
+                break;
+        }
+
+        if (empty($this_stage_cert))
+        {
+            echo json_encode([]);
+            return TRUE;
+        }
+        $result = ['cols' => [
+            ['id' => 'target_no', 'name' => '案號'],
+            ['id' => 'user', 'name' => '會員編號'],
+            ['id' => 'product', 'name' => '產品名稱'],
+            ['id' => 'status', 'name' => '狀態'],
+            ['id' => 'updated_at', 'name' => '最後更新時間'],
+        ]];
+        $cert_config = $this->config->item('certifications');
+        foreach ($this_stage_cert as $cert)
+        {
+            $result['cols'][] = ['id' => 'cert' . $cert, 'name' => $cert_config[$cert]['name']];
+        }
+
+        // 撈target
+        $target_list = $this->target_model->get_risk_person_list(BORROWER, [
+            CERTIFICATION_STATUS_PENDING_TO_VALIDATE,
+            CERTIFICATION_STATUS_SUCCEED,
+            CERTIFICATION_STATUS_PENDING_TO_REVIEW
+        ], $product_id, ($product_id == PRODUCT_ID_SALARY_MAN ? $sub_product_id == STAGE_CER_TARGET : NULL));
+        $target_list = array_column($target_list, NULL, 'id');
+        if (empty($target_list))
+        {
+            echo json_encode($result);
+            return TRUE;
+        }
+
+        $userStatusList = $this->target_model->getUserStatusByTargetId(array_keys($target_list));
+        $userStatusList = array_column($userStatusList, 'total_count', 'user_id');
+
+        $user_cert_list = [];
+        $user_prod_list = [];
+        foreach ($target_list as $target)
+        {
+            if ( ! isset($user_prod_list[$target->product_id][$target->sub_product_id]))
+            {
+                if ( ! in_array($target->sub_product_id, [STAGE_CER_TARGET, 0]))
+                {
+                    $product_info = $this->product_lib->getProductInfo($product_id, $target->sub_product_id);;
+                }
+                $user_prod_list[$target->product_id][$target->sub_product_id] = $product_info['name'];
+            }
+
+            if ( ! isset($user_cert_list[$target->user_id]))
+            {
+                if (isset($userStatusList[$target->user_id]) && $userStatusList[$target->user_id] > 0)
+                {
+                    $user_cert_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
+                        admin_url('User/display?id=' . $target->user_id) . '" >' .
+                        $target->user_id . ' 舊戶</a>';
+                }
+                else
+                {
+                    $user_cert_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
+                        admin_url('User/display?id=' . $target->user_id) . '" >' .
+                        $target->user_id . ' 新戶</a>';
+                }
+
+                // 撈user每個徵信項的最新狀態
+                $tmp = $this->certification_lib->get_last_status($target->user_id, BORROWER, USER_NOT_COMPANY, $target);
+                $tmp = array_reduce($tmp, function ($list, $item) {
+                    $list[$item['id']] = [
+                        'id' => $item['certification_id'], // =user_certification.id
+                        'certification_id' => $item['id'], // =user_certification.certification_id
+                        'status' => $item['user_status'],  // =user_certification.status
+                        'sys_check' => $item['sys_check'], // =user_certification.sys_check
+                        'expire_time' => $item['expire_time']
+                    ];
+                    return $list;
+                }, []);
+
+                // 整理出驗證成功的徵信項
+                $tmp_success = $this->certification_lib->filterCertIdsInStatusList($tmp, [CERTIFICATION_STATUS_SUCCEED]);
+                $user_cert_list[$target->user_id]['prev_success'] = array_intersect($prev_stage_cert, $tmp_success);
+                $user_cert_list[$target->user_id]['prev_success_status'] = count($user_cert_list[$target->user_id]['prev_success']) == count($prev_stage_cert);
+
+                // 畫徵信項的狀態按鈕
+                $user_cert_list[$target->user_id]['btn'] = [];
+                foreach ($this_stage_cert as $cert)
+                {
+                    $btn_factory = Certification_btn_factory::get_instance($tmp[$cert]);
+
+                    if ($btn_factory)
+                    {
+                        $user_cert_list[$target->user_id]['btn']['cert' . $cert] = $btn_factory->draw();
+                    }
+                    else
+                    {
+                        $user_cert_list[$target->user_id]['btn']['cert' . $cert] = '';
+                    }
+                }
+            }
+
+            // 前一階段徵信項未通過
+            if ( ! $user_cert_list[$target->user_id]['prev_success_status']) continue;
+
+            $additional_btn = [];
+            if ($this->input->get('stage') == 2)
+            {
+                $additional_btn['report'] = '<a class="btn btn-primary btn-info" href="' .
+                    admin_url('Creditmanagement/report') . '?target_id=' . $target->id . '&type=person" target="_blank" >查看<br />授信審核表</a>';
+                $additional_btn['fail'] = '<button class="btn btn-outline btn-danger" onclick="failed(' . $target->id . ',\'' . $target->target_no . '\')" >退件</button>';
+            }
+
+            $result['list'][] = array_merge($user_cert_list[$target->user_id]['btn'], [
+                // todo: 因應權限表設定，url可能需要調整
+                'target_no' => '<a class="fancyframe" href="' . admin_url('Target/edit?display=1&id=' . $target->id) . '" >' . $target->target_no . '</a>',
+                'user' => $user_cert_list[$target->user_id]['user_name'],
+                'product' => $user_prod_list[$target->product_id][$target->sub_product_id],
+                'status' => $this->target_model->status_list[$target->status] ?? '',
+                'updated_at' => date('Y-m-d H:i:s', $target->updated_at)
+            ], $additional_btn);
+        }
+
+        if ($this->input->get('stage') == 2)
+        {
+            $result['cols'] = array_merge($result['cols'], [
+                ['id' => 'report', 'name' => '授信審核表'],
+                ['id' => 'fail', 'name' => '退件']
+            ]);
+        }
+
+        echo json_encode($result);
+        return TRUE;
+    }
 
 	public function index(){
 		$input 						= $this->input->get(NULL, TRUE);

@@ -635,4 +635,42 @@ class Target_model extends MY_Model
 
         return $this->db->get()->result_array();
     }
+
+    /**
+     * @param int $investor : 投資人/借款人
+     * @param array $cert_status : 徵信項狀態 (參考constant(CERTIFICATION_STATUS_*))
+     * @param int $product_id : 產品ID
+     * @param $has_stage_target : 是否撈取階段上架的相關申貸案 (TRUE=只撈階段上架 FALSE=不撈取階段上架 NULL=不管是不是階段上架都撈)
+     * @return mixed
+     */
+    public function get_risk_person_list(int $investor, array $cert_status, int $product_id, $has_stage_target = NULL)
+    {
+        $subquery = $this->db
+            ->select('DISTINCT(user_id) AS user_id')
+            ->from('p2p_user.user_certification uc')
+            ->where_in('uc.status', $cert_status)
+            ->where('uc.investor', $investor)
+            ->get_compiled_select(NULL, TRUE);
+
+        $this->db
+            ->select('t.*')
+            ->from('p2p_loan.targets t')
+            ->join("({$subquery}) AS a", 'a.user_id=t.user_id')
+            ->where('t.product_id<', PRODUCT_FOREX_CAR_VEHICLE)
+            ->where_in('t.status', [0, 1, 2, 21, 22, 30, 31, 32])
+            ->where('t.product_id', $product_id)
+            ->order_by('t.id', 'ASC');
+
+        if ($has_stage_target === FALSE)
+        {
+            $this->db->where('t.sub_product_id !=', STAGE_CER_TARGET);
+        }
+        elseif ($has_stage_target === TRUE)
+        {
+            $this->db->where('t.sub_product_id', STAGE_CER_TARGET);
+        }
+
+        return $this->db->get()->result();
+    }
+
 }
