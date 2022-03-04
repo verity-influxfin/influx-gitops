@@ -1,83 +1,79 @@
-<?php
-
-require(APPPATH . "/libraries/MY_Admin_Controller.php");
+<?php require(APPPATH . '/libraries/MY_Admin_Controller.php');
 
 class TestScript extends MY_Admin_Controller
 {
     public function __construct()
     {
         parent::__construct();
-		if(!is_development()){
-			show_404();
-		}
-        $this->load->model("loan/investment_model");
-        $this->load->model("transaction/payment_model");
-        $this->load->model("user/virtual_account_model");
-        $this->load->model("user/user_bankaccount_model");
-        $this->load->library("Transaction_lib");
+        if ( ! is_development())
+        {
+            show_404();
+        }
     }
 
     public function index()
     {
-        $virtualAccountList = $this->virtual_account_model->get_all();
-        $userBankAccountList = $this->user_bankaccount_model->get_all();
-        $paymentList = $this->payment_model->get_all();
-
-        $viewData = [
-            "virtualAccountList" 	=> $virtualAccountList,
-            "userBankAccountList" 	=> $userBankAccountList,
-            "paymentList" 			=> $paymentList,
-			"payment_status"		=> $this->payment_model->status_list,
-			"bankaccount_verify"	=> array("0"=>"未驗證","1"=>"驗證成功","2"=>"待驗證","3"=>"已發送","4"=>"驗證失敗"),
-        ];
-
-        $this->load->view("admin/_header");
-        $this->load->view("admin/_title",$this->menu);
-        $this->load->view("admin/test_payment_script", $viewData);
-        $this->load->view("admin/_footer");
+        $this->load->view('admin/_header');
+        $this->load->view('admin/_title', $this->menu);
+        $this->load->view('admin/test_payment_script');
+        $this->load->view('admin/_footer');
     }
 
-    public function insertPayment()
+    /**
+     * 測試工具 - 新增匯款資料
+     *
+     * @created_at          2022-03-04
+     * @created_by          Jack
+     */
+    public function mockingTransfer()
     {
-        // payment表
-        // Cron.handle_payment() > Payment_lib.script_handle_payment()
+        switch (TRUE)
+        {
+            case ! is_numeric($user_id = trim($this->input->post('user_id'))):
+                exit('無效的使用者');
+                break;
 
-        // condition:
-        // status=0
-        // amount正數為入帳receipt()，負數為出帳expense()
-        // virtual_account, bank_id ,bank_code, bank_account為有效值才可入帳
-        $bankAccountNo 	= "015035006475";
-        $amount 		= $this->input->post("amount");
-        $virtualAccount = $this->input->post("virtual_account");
-        $bankCode 		= $this->input->post("bank_code");
-        $bankAccount 	= $this->input->post("bank_account");
+            case ! in_array($investor = trim($this->input->post('investor')), ['0', '1']):
+                exit('無效的身分');
+                break;
 
-        $txDatetime = date("Y-m-d H:i:s", strtotime("now"));
-        $txSeqNo	= rand(10000, 99999);
-        $txIdNo 	= rand(1000, 9999);
-        $txMach 	= "0999";
-        $txSpec 	= "網銀轉帳";
-        $bankAmount = 0;
-        $bankId 	= $bankCode;
-        $accName 	= "金普匯";
-        $bankAcc 	= $bankCode . $bankAccount;
+            case ! is_numeric($amount = trim($this->input->post('amount'))):
+            case $amount <= 0:
+                exit('無效的金額');
+                break;
+        }
 
-        $param = [
-            "tx_datetime" 		=> $txDatetime,
-            "bankaccount_no" 	=> $bankAccountNo,
-            "amount" 			=> $amount,
-            "virtual_account" 	=> $virtualAccount,
-            "tx_seq_no" 		=> $txSeqNo,
-            "tx_id_no" 			=> $txIdNo,
-            "tx_mach" 			=> $txMach,
-            "tx_spec" 			=> $txSpec,
-            "bank_amount" 		=> $bankAmount,
-            "bank_id" 			=> $bankId,
-            "acc_name" 			=> $accName,
-            "bank_acc" 			=> $bankAcc,
-        ];
-        $this->payment_model->insert($param);
-			
+        if (empty($virtual_account = $this->virtual_account_model->get_virtual_account_by_user($user_id, $investor)))
+        {
+            exit('找不到該用戶的虛擬帳戶');
+        }
+
+        $this->load->model([
+            'transaction/payment_model',
+            'user/virtual_account_model',
+            'user/user_bankaccount_model'
+        ]);
+
+        $bank = $this->user_bankaccount_model->get_bank_account_by_user($user_id, $investor);
+        if (empty($bank['bank_code']) || empty($bank['bank_account']))
+        {
+            exit('找不到該用戶的實體銀行帳戶');
+        }
+
+        $this->payment_model->insert([
+            'tx_datetime'     => date('Y-m-d H:i:s'),
+            'bankaccount_no'  => '015035006475',
+            'amount'          => $amount,
+            'virtual_account' => $virtual_account,
+            'tx_seq_no'       => rand(10000, 99999),
+            'tx_id_no'        => rand(1000, 9999),
+            'tx_mach'         => '0999',
+            'tx_spec'         => '網銀轉帳',
+            'bank_amount'     => 0,
+            'bank_id'         => $bank['bank_code'],
+            'acc_name'        => '金普匯',
+            'bank_acc'        => $bank['bank_code'] . $bank['bank_account'],
+        ]);
         redirect(admin_url('TestScript'));
     }
 }
