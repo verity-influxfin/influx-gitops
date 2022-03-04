@@ -3437,9 +3437,13 @@ class Product extends REST_Controller {
             $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT]);
         }
 
+        $this->load->library('loanmanager/product_lib');
+        $product_info = $this->product_lib->getProductInfo($target->product_id, $target->sub_product_id);
         $this->target_model->update(
-            $input['target_id'],
-            ['amount' => (int) $input['amount']]
+            $input['target_id'], [
+                'loan_amount' => $input['amount'],
+                'platform_fee' => $this->financial_lib->get_platform_fee($input['amount'], $product_info['charge_platform'])
+            ]
         );
 
         $this->response(['result' => 'SUCCESS', 'data' => ['target_id' => (int) $input['target_id']]]);
