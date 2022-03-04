@@ -379,7 +379,7 @@ class Cron extends CI_Controller
 		echo "successCnt:".$successCnt;
 		echo "failedCnt:".$failedCnt;
 	}
-	
+
     public function trigger_edm_event()
     {	//每一小時
         $this->load->library('user_lib');
@@ -1021,7 +1021,7 @@ class Cron extends CI_Controller
 
         foreach ($charity_institution_data_list as $value)
         {
-            if (empty($value['virtual_account']) || empty($value['user_id']))
+            if (empty($value['virtual_account']) || empty($value['company_user_id']))
             {
                 continue;
             }
@@ -1038,7 +1038,7 @@ class Cron extends CI_Controller
             $bank_account = $this->user_bankaccount_model->get_by(array(
                 'investor' => INVESTOR,
                 'status' => 1,
-                'user_id' => $value['user_id'],
+                'user_id' => $value['company_user_id'],
                 'verify' => 1
             ));
             if (empty($bank_account))
@@ -1047,7 +1047,7 @@ class Cron extends CI_Controller
             }
 
             // 提領
-            $response = $this->transaction_lib->withdraw($value['user_id'], (int) $amount);
+            $response = $this->transaction_lib->withdraw($value['company_user_id'], (int) $amount);
             if ($response)
             {
                 $num++;
@@ -1060,6 +1060,6 @@ class Cron extends CI_Controller
             'start_time' => $start_time,
             'end_time' => time()
         ]);
-        die(1);
+        die('1');
     }
 }
