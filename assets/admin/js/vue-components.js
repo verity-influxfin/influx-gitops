@@ -123,13 +123,19 @@ Vue.component('scraper-status', {
 						<button type="button" class="btn btn-default btn-circle">
 							<i class="fa fa-pause"></i>
 						</button>
-						<label>尚未執行</label>
+						<label>等待執行</label>
 					</div>
 					<div class="mx-3">
 						<button type="button" class="btn btn-warning btn-circle">
 							<i class="fa fa-refresh"></i>
 						</button>
 						<label>執行中</label>
+					</div>
+					<div>
+						<button type="button" class="btn btn-default btn-circle">
+							<i class="fa fa-info"></i>
+						</button>
+						<label>尚未執行</label>
 					</div>
 				</div>
 			</div>
@@ -277,7 +283,13 @@ Vue.component('scraper-status', {
                         </button>
                     </a>`;
 			} else
-				return '';
+				return `
+					<a href="${url}" target="${target}">
+                        <button class="btn btn-default btn-circle btn-sm">
+                            <i class="fa fa-info"></i>
+                        </button>
+                    </a>
+				`;
 		}
 	},
 })
