@@ -188,7 +188,7 @@ class Anti_fraud extends Admin_rest_api_controller
     public function rule_all_get()
     {
         $url = $this->brookesia_url . 'rule/all';
-        $result = curl_get($url);;
+        $result = curl_get($url);
         $response = json_decode($result, TRUE);
 
         $this->response($response);

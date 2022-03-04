@@ -5,7 +5,9 @@ $config['admin_menu'] = [
     'Ntu' => ['name' => '台大慈善', 'icon' => 'fa-briefcase'],
     'Product' => ['name' => '產品管理', 'icon' => 'fa-briefcase'],
 	'AntiFraud' => [
-		'name' => '反詐欺管理指標'
+		'parent_name' => '反詐欺系統',
+		'index' => '反詐欺管理指標',
+		'list' => '反詐欺規則總覽'
 	],
     'BlockList' =>[
         'name' => '黑名單管理'
