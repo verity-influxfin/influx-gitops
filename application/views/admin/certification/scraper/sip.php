@@ -190,6 +190,22 @@
         setTimeout(fetchInfoData(user_id), 1000);
         setTimeout(fetchSipData(user_id), 1000);
         setTimeout(fetchRiskLevelData(user_id), 1000);
+		$('#redo').on('click', () => {
+			if (confirm('是否確定重新執行爬蟲？')) {
+				axios.post('/admin/scraper/request_deep', {
+					university: $('#school').text(),
+					account: $('#sip-account').text(),
+					password: $('#sip-password').text()
+				}).then(({ data }) => {
+					if (data.status == 200) {
+						location.reload()
+					}
+					else{
+						alert(data.error.code)
+					}
+				})
+			}
+		})
     });
 </script>
 <div id="page-wrapper">

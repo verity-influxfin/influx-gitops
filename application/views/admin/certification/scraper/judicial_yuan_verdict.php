@@ -279,7 +279,23 @@
         fetchInfoData(user_id);
         fetchjudicialyuan(user_id);
         setTimeout(fillRiskLevelData(riskLevelResponse), 1000);
+
+		$('#redo').on('click', () => {
+			if (confirm('是否確定重新執行爬蟲？')) {
+				axios.post('/admin/scraper/judicial_yuan_verdicts', {
+					name: $('#name').text()
+				}).then(({ data }) => {
+					if (data.status == 200) {
+						location.reload()
+					}
+					else{
+						alert(data.error.code)
+					}
+				})
+			}
+		})
     });
+	
 </script>
 <div id="page-wrapper">
     <div class="d-flex jcb aic page-header">

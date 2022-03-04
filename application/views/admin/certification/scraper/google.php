@@ -197,6 +197,20 @@
         setTimeout(fetchInfoData(user_id), 1000);
         setTimeout(fetchGoogleData(user_id), 1000);
         setTimeout(fetchRiskLevelData(user_id), 1000);
+		$('#redo').on('click', () => {
+			if (confirm('是否確定重新執行爬蟲？')) {
+				axios.post('/admin/scraper/request_google', {
+					keyword: $('#name').text(),
+				}).then(({ data }) => {
+					if (data.status == 200) {
+						location.reload()
+					}
+					else{
+						alert(data.response.message)
+					}
+				})
+			}
+		})
     });
 </script>
 <div id="page-wrapper">

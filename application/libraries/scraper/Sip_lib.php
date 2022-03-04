@@ -52,12 +52,12 @@ class Sip_lib
         $result = curl_get($url, $data);
         $response = json_decode($result, TRUE);
 
-        if ( ! $result || ! isset($response['status']) || $response['status'] != 200)
+        if ( ! $result || ! isset($response['status']))
         {
             return FALSE;
         }
 
-        return TRUE;
+        return $response;
     }
 
     public function getLoginLog($university, $account)

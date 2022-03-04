@@ -244,6 +244,20 @@
         setTimeout(fetchInfoData(user_id), 1000);
         setTimeout(fetchBizData(), 1000);
         setTimeout(fetchRiskLevelData(user_id), 1000);
+		$('#redo').on('click', () => {
+            if (confirm('是否確定重新執行爬蟲？')) {
+                axios.post('/admin/scraper/requestFindBizData', {
+                    tax_id: $('#tax-id').text(),
+                }).then(({ data }) => {
+                    if (data.status == 200) {
+                        location.reload()
+                    }
+                    else {
+                        alert(data.error.code)
+                    }
+                })
+            }
+        })
     });
 </script>
 <div id="page-wrapper">

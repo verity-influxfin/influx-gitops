@@ -7,15 +7,18 @@
     .table-content {
         word-break: break-all;
     }
-	.d-flex{
-		display: flex;
-	}
-	.jcb{
-		justify-content: space-between;
-	}
-	.aic{
-		align-items: center;
-	}
+
+    .d-flex {
+        display: flex;
+    }
+
+    .jcb {
+        justify-content: space-between;
+    }
+
+    .aic {
+        align-items: center;
+    }
 </style>
 <script type="text/javascript">
     let riskLevelResponse = []
@@ -148,6 +151,37 @@
         setTimeout(fetchInfoData(user_id), 1000);
         setTimeout(fetchInstagramData(user_id), 1000);
         setTimeout(fetchRiskLevelData(user_id), 1000);
+
+        $('#follow').on('click', () => {
+            axios.post('/admin/scraper/autoFollowIG', {
+                userId: user_id,
+                followed_account: $('#ig-username').text(),
+            }).then(({ data }) => {
+                if (data.status == 200) {
+                    // location.reload()
+					alert('已成功送出追蹤')
+                }
+                else {
+                    alert(data.response.message)
+                }
+            })
+        })
+
+        $('#redo').on('click', () => {
+            if (confirm('是否確定重新執行爬蟲？')) {
+                axios.post('/admin/scraper/updateIGUserInfo', {
+                    userId: user_id,
+                    followed_account: $('#ig-username').text(),
+                }).then(({ data }) => {
+                    if (data.status == 200) {
+                        location.reload()
+                    }
+                    else {
+                        alert(data.error.code)
+                    }
+                })
+            }
+        })
     });
 </script>
 <div id="page-wrapper">
@@ -155,29 +189,30 @@
         <div>
             <h1>社群-Instagram</h1>
         </div>
-		<div>
-			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
-		</div>
+        <div>
+            <button class="btn btn-info" id="follow">追蹤</button>
+            <button class="btn btn-danger" id="redo">重新執行爬蟲</button>
+        </div>
     </div>
     <table class="table table-bordered table-hover table-striped">
         <tbody>
-        <tr>
-            <th class="table-title">資料內容（社交認證）</th>
-        </tr>
-        <tr>
-            <td>
-                <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">姓名</th>
-                        <td style=background-color:white; id="name"></td>
-                        <th class="table-title">IG帳號</th>
-                        <td style=background-color:white;>
-                            <a id="ig-username" target="_blank" href="https://www.instagram.com/"></a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+            <tr>
+                <th class="table-title">資料內容（社交認證）</th>
+            </tr>
+            <tr>
+                <td>
+                    <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
+                        <tr>
+                            <th class="table-title">姓名</th>
+                            <td style=background-color:white; id="name"></td>
+                            <th class="table-title">IG帳號</th>
+                            <td style=background-color:white;>
+                                <a id="ig-username" target="_blank" href="https://www.instagram.com/"></a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
         </tbody>
     </table>
     <table class="table table-bordered table-hover table-striped">

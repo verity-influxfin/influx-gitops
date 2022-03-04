@@ -32,6 +32,8 @@ class Judicial_yuan_lib
         $data = ['query' => $name];
 
         $result = curl_get($url, $data);
+        $response = json_decode($result, TRUE);
+
         if ( ! $result || ! isset($response['status']))
         {
             return FALSE;
