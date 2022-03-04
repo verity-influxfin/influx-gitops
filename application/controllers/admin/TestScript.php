@@ -43,16 +43,16 @@ class TestScript extends MY_Admin_Controller
                 break;
         }
 
-        if (empty($virtual_account = $this->virtual_account_model->get_virtual_account_by_user($user_id, $investor)))
-        {
-            exit('找不到該用戶的虛擬帳戶');
-        }
-
         $this->load->model([
             'transaction/payment_model',
             'user/virtual_account_model',
             'user/user_bankaccount_model'
         ]);
+
+        if (empty($virtual_account = $this->virtual_account_model->get_virtual_account_by_user($user_id, $investor)))
+        {
+            exit('找不到該用戶的虛擬帳戶');
+        }
 
         $bank = $this->user_bankaccount_model->get_bank_account_by_user($user_id, $investor);
         if (empty($bank['bank_code']) || empty($bank['bank_account']))
