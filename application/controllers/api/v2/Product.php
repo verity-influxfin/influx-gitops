@@ -3321,10 +3321,12 @@ class Product extends REST_Controller {
      *                 "product_name": "3S名校貸",
      *                 "remark": "",
      *                 "certifications": {
-     *                     "1":[],
-     *                     "2":[
-     *                         "error msg"
-     *                     ]
+     *                     "1":{},
+     *                     "2":{
+     *                         "name":"學生身份認證"
+     *                         "description":[
+     *                             "error msg"
+     *                         ]
      *                 }
      *             },
      *         ]
