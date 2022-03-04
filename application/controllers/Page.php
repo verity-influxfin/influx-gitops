@@ -20,13 +20,15 @@ class Page extends CI_Controller
         $ga_amounts = $this->_get_report($analytics, $today->modify('-1 day')->format('Y-m-d'));
 
         // 更新官網流量到 db
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS, $ga_amounts);
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-1 day'), Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS, $ga_amounts);
 
         // 更新 iOS 下載量 - 前天的
         $ios_amounts = $this->_get_ios_sales_summary_data($today->modify('-2 day')->format('Y-m-d'));
-        $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), sale_dashboard_model::PLATFORM_TYPE_IOS, $ios_amounts);
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-2 day'), Sale_dashboard_model::PLATFORM_TYPE_IOS, $ios_amounts);
 
-        // 更新 Android 下載量 - TODO
+        // 更新 Android 下載量 - 四天前的才有數據(google 報表更新怎麼比 apple 還慢?)
+        $android_amounts = $this->_get_android_install_report($today->modify('-4 day'));
+        $this->sale_dashboard_model->set_amounts_at($today->modify('-4 day'), Sale_dashboard_model::PLATFORM_TYPE_ANDROID, $android_amounts);
         echo 'ok';
     }
 
@@ -66,7 +68,7 @@ class Page extends CI_Controller
 
         $this->load->model('user/sale_dashboard_model');
 
-        for ($i = 0; $i < 7; $i++) 
+        for ($i = 0; $i < 7; $i++)
         {
             $date = $i > 0 ? $first_day->modify("+ {$i} day") : $first_day;
             $amounts = $this->sale_dashboard_model->get_amounts_at($date);
@@ -77,7 +79,7 @@ class Page extends CI_Controller
                 'date' => $tx_date = $date->format('Y-m-d'),
 
                 // 官網流量
-                'official_site_trends' => $amounts[sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
+                'official_site_trends' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
 
                 // 新增會員
                 'new_member' => $this->_get_new_member($date),
@@ -86,8 +88,8 @@ class Page extends CI_Controller
                 'total_member' => $this->_get_total_member($date),
 
                 // APP下載
-                'android_downloads' => $amounts[sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
-                'ios_downloads' => $amounts[sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
+                'android_downloads' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
+                'ios_downloads' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
 
                 // 各產品每月申貸數
                 'product_bids' => $this->_get_product_bids($date),
@@ -97,100 +99,97 @@ class Page extends CI_Controller
             ];
         }
 
-        usort($retval, function ($a, $b) {
+        usort($retval, function ($a, $b)
+        {
             return $b['date'] <=> $a['date'];
         });
 
         $this->output->set_content_type('application/json')
-                    ->set_output(json_encode([
-                        'result' => 'success',
-                        'data'   => $retval
-                    ]));
+            ->set_output(json_encode([
+                'result' => 'success',
+                'data' => $retval,
+            ]));
     }
 
-	private function _get_product_bids(DateTimeInterface $date)
-	{
-		$month_ini = $date->modify("first day of this month");
-		$month_end = $date->modify("first day of next month");
-		$month_ini = $month_ini->setTime(0, 0, 0);
-		$month_end = $month_end->setTime(0, 0, 0);
+    private function _get_product_bids(DateTimeInterface $date)
+    {
+        $month_ini = $date->modify('first day of this month');
+        $month_end = $date->modify('first day of next month');
+        $month_ini = $month_ini->setTime(0, 0, 0)->getTimestamp();
+        $month_end = $month_end->setTime(0, 0, 0)->getTimestamp();
 
-		$this->target_model->db->select([
-				'user_id',
-				'product_id',
-				'sub_product_id',
-				'min(created_at) as first_target_at'
-			])->from('p2p_loan.targets')
-			->where([
-				'created_at >=' => $month_ini->getTimestamp(),
-				'created_at <'  => $month_end->getTimestamp(),
-			])
-			->group_by('user_id');
+        $sub_query = "SELECT
+            t.`user_id`,
+            t.`product_id`,
+            t.`sub_product_id`,
+            min(t.`created_at`) as `first_target_at`
+            FROM `p2p_loan`.`targets` t LEFT JOIN `p2p_loan`.`subloan` s ON s.`new_target_id` = t.`id`
+            WHERE s.id is NULL
+            AND t.`created_at` >= {$month_ini}
+            AND t.`created_at` < {$month_end}
+            GROUP BY t.`user_id`";
 
-		$sub_query = $this->target_model->db->get_compiled_select('', TRUE);
+        $this->load->model('loan/target_model');
+        $query = $this->target_model->db->select([
+            'user_id',
+            'product_id',
+            'sub_product_id',
+            'first_target_at',
+        ])->from("({$sub_query}) as r")
+            ->where([
+                'first_target_at >=' => $date->getTimestamp(),
+                'first_target_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->get()
+            ->result_array();
 
-		$this->load->model('loan/target_model');
-		$query = $this->target_model->db->select([
-											'user_id',
-											'product_id',
-											'sub_product_id',
-											'first_target_at'
-										])->from("($sub_query) as r")
-										->where([
-											'first_target_at >=' => $date->getTimestamp(),
-											'first_target_at <'  => $date->modify('+1 day')->getTimestamp(),
-										])
-										->get()
-										->result_array();
+        $result = [
+            'SMART_STUDENT' => 0,
+            'STUDENT' => 0,
+            'SALARY_MAN' => 0,
+            'SK_MILLION' => 0,
+        ];
 
-		$result = [
-			'SMART_STUDENT' => 0,
-			'STUDENT'       => 0,
-			'SALARY_MAN'    => 0,
-			'SK_MILLION'    => 0
-		];
+        foreach ($query as $data)
+        {
+            switch (TRUE)
+            {
+            case $data['product_id'] == PRODUCT_ID_STUDENT AND $data['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
+                $result['SMART_STUDENT'] += 1;
+                break;
 
-		foreach ($query as $data)
-		{
-			switch (TRUE)
-			{
-				case $data["product_id"] == PRODUCT_ID_STUDENT AND $data["sub_product_id"] == SUBPRODUCT_INTELLIGENT_STUDENT:
-					$result['SMART_STUDENT'] += 1;
-					break;
+            case $data['product_id'] == PRODUCT_ID_STUDENT:
+                $result['STUDENT'] += 1;
+                break;
 
-				case $data["product_id"] == PRODUCT_ID_STUDENT:
-					$result['STUDENT'] += 1;
-					break;
+            case $data['product_id'] == PRODUCT_ID_SALARY_MAN:
+                $result['SALARY_MAN'] += 1;
+                break;
 
-				case $data["product_id"] == PRODUCT_ID_SALARY_MAN:
-					$result['SALARY_MAN'] += 1;
-					break;
+            case $data['product_id'] == PRODUCT_SK_MILLION_SMEG:
+                $result['SK_MILLION'] += 1;
+                break;
+            }
+        }
 
-				case $data["product_id"] == PRODUCT_SK_MILLION_SMEG:
-					$result['SK_MILLION'] += 1;
-					break;
-			}
-		}
-
-		return implode(' / ', array_values($result));
-
-	}
+        return implode(' / ', array_values($result));
+    }
 
     private function _get_deals(DateTimeInterface $date)
     {
         $this->load->model('loan/target_model');
         $query = $this->target_model->db->select([
-                                            'COUNT(*) AS amount',
-                                            'loan_date'
-                                        ])->from('p2p_loan.targets')
-                                        ->where_in('status', [5, 10])
-                                        ->where([
-                                            'loan_status' => 1,
-                                            'loan_date'   => $date->format('Y-m-d')
-                                        ])
-                                        ->group_by('loan_date')
-                                        ->get()
-                                        ->first_row('array');
+            'COUNT(*) AS amount',
+            'loan_date',
+        ])->from('p2p_loan.targets')
+            ->where_in('status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
+            ->where([
+                'loan_status' => 1,
+                'loan_date' => $date->format('Y-m-d'),
+            ])
+            ->group_by('loan_date')
+            ->get()
+            ->first_row('array');
         return $query['amount'] ?? 0;
     }
 
@@ -200,16 +199,16 @@ class Page extends CI_Controller
         $this->load->model('user/user_model');
 
         $unixtime_query = sprintf('FROM_UNIXTIME(created_at, \'%s\')', $date->format('Y m d'));
-        
+
         $query = $this->user_model->db->select('COUNT(id) AS amount')
-                                ->select($unixtime_query . ' AS date')
-                                ->from('p2p_user.users')
-                                ->where([
-									'created_at <' => $date->modify('+1 day')->getTimestamp(),
-                                ])
-                                ->group_by($unixtime_query)
-                                ->get()
-                                ->first_row('array');
+            ->select($unixtime_query . ' AS date')
+            ->from('p2p_user.users')
+            ->where([
+                'created_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->group_by($unixtime_query)
+            ->get()
+            ->first_row('array');
         return $query['amount'] ?? 0;
     }
 
@@ -219,17 +218,17 @@ class Page extends CI_Controller
         $this->load->model('user/user_model');
 
         $unixtime_query = sprintf('FROM_UNIXTIME(created_at, \'%s\')', $date->format('Y m d'));
-        
+
         $query = $this->user_model->db->select('COUNT(id) AS amount')
-                                ->select($unixtime_query . ' AS date')
-                                ->from('p2p_user.users')
-                                ->where([
-                                    'created_at >=' => $date->getTimestamp(),
-                                    'created_at <'  => $date->modify('+1 day')->getTimestamp(),
-                                ])
-                                ->group_by($unixtime_query)
-                                ->get()
-                                ->first_row('array');
+            ->select($unixtime_query . ' AS date')
+            ->from('p2p_user.users')
+            ->where([
+                'created_at >=' => $date->getTimestamp(),
+                'created_at <' => $date->modify('+1 day')->getTimestamp(),
+            ])
+            ->group_by($unixtime_query)
+            ->get()
+            ->first_row('array');
         return $query['amount'] ?? 0;
     }
 
@@ -297,16 +296,9 @@ class Page extends CI_Controller
         ]);
 
         $text = gzdecode($res->getBody());
-
-        $matrix = array_map(function ($row) {
-            return explode("\t", $row);
-        }, array_filter(
-            explode(PHP_EOL, $text),
-            function ($row) { return ! empty($row); }
-        ));
+        $matrix = $this->_parse_file_to_array($text);
 
         $amounts = 0;
-        // 計算借貸app的下載次數
         foreach ($matrix as $key => $list)
         {
             if ($list[2] == 'com.influxfin.borrow' && $list[6] == 1)
@@ -322,17 +314,17 @@ class Page extends CI_Controller
     {
         $this->load->driver('cache', [
             'adapter' => 'apc',
-            'backup'  => 'file'
+            'backup' => 'file',
         ]);
 
         $key = 'app_store_connect_api_token';
 
         if ( ! $token = $this->cache->get($key))
         {
-                $token = $this->_generate_app_store_connect_api_token();
+            $token = $this->_generate_app_store_connect_api_token();
 
-                // 存放 5 分鐘
-                $this->cache->save($key, $token, 1200);
+            // 存放 5 分鐘
+            $this->cache->save($key, $token, 1200);
         }
         return $token;
     }
@@ -396,4 +388,49 @@ class Page extends CI_Controller
         return $reports[0]->getData()->getRows()[0]->getMetrics()[0]->getValues()[0];
     }
 
+    // 取得 google play 的報表資料
+    private function _get_android_install_report(DateTimeInterface $date)
+    {
+        $report_month = $date->format('Ym');
+        $date_string = $date->format('Y-m-d');
+
+        $KEY_FILE_LOCATION = './influx-e-board-f5ba47ed5c0d.json';
+        $report_bucket = 'pubsite_prod_rev_17015371377322917626';
+        $report_path = 'stats/installs/installs_com.influxfin.borrow_' . $report_month . '_overview.csv';
+
+        $storage = new StorageClient([
+            'keyFile' => json_decode(file_get_contents($KEY_FILE_LOCATION), TRUE),
+        ]);
+
+        $storage->registerStreamWrapper();
+        $contents = file_get_contents("gs://{$report_bucket}/{$report_path}");
+        $matrix = $this->_parse_file_to_array($contents);
+
+        $amounts = 0;
+        foreach ($matrix as $key => $list)
+        {
+            $filter = preg_replace('/[^a-zA-Z0-9.,-]/u', '', (string) $list[0]);
+            $row_data = explode(',', $filter);
+            if ($row_data[0] == $date_string)
+            {
+                $amounts = $row_data[2];
+            }
+        }
+
+        return $amounts;
+    }
+
+    private function _parse_file_to_array($contents)
+    {
+        return array_map(function ($row)
+        {
+            return explode("\t", $row);
+        }, array_filter(
+            explode(PHP_EOL, $contents),
+            function ($row)
+            {
+                return ! empty($row);
+            }
+        ));
+    }
 }

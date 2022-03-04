@@ -1,6 +1,6 @@
 <?php
 
-class sale_dashboard_model extends MY_Model
+class Sale_dashboard_model extends MY_Model
 {
     const PLATFORM_TYPE_GOOGLE_ANALYTICS = 0;
     const PLATFORM_TYPE_ANDROID = 1;
