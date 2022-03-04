@@ -113,8 +113,8 @@ class Page extends CI_Controller
 
     private function _get_product_bids(DateTimeInterface $date)
     {
-        $month_ini = $date->modify("first day of this month");
-        $month_end = $date->modify("first day of next month");
+        $month_ini = $date->modify('first day of this month');
+        $month_end = $date->modify('first day of next month');
         $month_ini = $month_ini->setTime(0, 0, 0)->getTimestamp();
         $month_end = $month_end->setTime(0, 0, 0)->getTimestamp();
 
@@ -135,7 +135,7 @@ class Page extends CI_Controller
             'product_id',
             'sub_product_id',
             'first_target_at',
-        ])->from("($sub_query) as r")
+        ])->from("({$sub_query}) as r")
             ->where([
                 'first_target_at >=' => $date->getTimestamp(),
                 'first_target_at <' => $date->modify('+1 day')->getTimestamp(),
@@ -154,19 +154,19 @@ class Page extends CI_Controller
         {
             switch (TRUE)
             {
-            case $data["product_id"] == PRODUCT_ID_STUDENT AND $data["sub_product_id"] == SUBPRODUCT_INTELLIGENT_STUDENT:
+            case $data['product_id'] == PRODUCT_ID_STUDENT AND $data['sub_product_id'] == SUBPRODUCT_INTELLIGENT_STUDENT:
                 $result['SMART_STUDENT'] += 1;
                 break;
 
-            case $data["product_id"] == PRODUCT_ID_STUDENT:
+            case $data['product_id'] == PRODUCT_ID_STUDENT:
                 $result['STUDENT'] += 1;
                 break;
 
-            case $data["product_id"] == PRODUCT_ID_SALARY_MAN:
+            case $data['product_id'] == PRODUCT_ID_SALARY_MAN:
                 $result['SALARY_MAN'] += 1;
                 break;
 
-            case $data["product_id"] == PRODUCT_SK_MILLION_SMEG:
+            case $data['product_id'] == PRODUCT_SK_MILLION_SMEG:
                 $result['SK_MILLION'] += 1;
                 break;
             }
@@ -410,7 +410,7 @@ class Page extends CI_Controller
         foreach ($matrix as $key => $list)
         {
             $filter = preg_replace('/[^a-zA-Z0-9.,-]/u', '', (string) $list[0]);
-            $row_data = explode(",", $filter);
+            $row_data = explode(',', $filter);
             if ($row_data[0] == $date_string)
             {
                 $amounts = $row_data[2];
