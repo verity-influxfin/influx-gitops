@@ -578,6 +578,9 @@
 			</div>
 		</div> -->
 		<div class="col-lg-12">
+			<scraper-status :user-id="searchUserId"></scraper-status>
+		</div>
+		<div class="col-lg-12">
 			<div class="panel panel-default mt-4">
 				<div class="panel-heading p-4">
 					反詐欺指標
@@ -685,9 +688,6 @@
 					</table>
 				</div>
 			</div>
-		</div>
-		<div class="col-lg-12">
-			<scraper-status :user-id="searchUserId"></scraper-status>
 		</div>
 		<div id="targetDatas" class="col-lg-12 hide">
 			<div class="panel panel-default">
