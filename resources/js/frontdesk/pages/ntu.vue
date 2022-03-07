@@ -113,155 +113,90 @@
       </div>
     </div>
     <div class="row justify-content-center organizer">
-      <div class="col-auto">
-        <div class="title-dot-up">
-          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
-          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
-          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
-          <div
-            class="dots"
-            style="opacity: 0.75; width: 6px; height: 6px"
-          ></div>
-        </div>
-        <div class="d-flex justify-content-center organizer-title">
-          <img src="../asset/images/彩虹.svg" class="img-moon" alt="" />
-          <div class="active-title">
-            <div>台大兒醫普匯希望</div>
-            <div>聯合勸募活動</div>
-          </div>
-        </div>
-        <div class="title-dot-down">
-          <div
-            class="dots"
-            style="opacity: 0.75; width: 6px; height: 6px"
-          ></div>
-          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
-          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
-          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
-        </div>
-        <div class="fund-text">
-          <p>你我的小小舉動，燃起孩子們的大大希望！</p>
-          <p>
-            本次活動由「台大兒童健康基金會」與「普匯金融科技公司」
-            聯手，推出「線上勸募系統」，希望可以透過金融科技幫助
-            更多孩童獲得醫療資源，您的一份小愛心，可以換取孩童 健康未來！
-          </p>
-          <p>2月10日 與您一起守護兒童！一起成為孩童的守護天使！</p>
-          <div class="dashed"></div>
-        </div>
-        <div class="physical">
-          <div class="physical-title-text">
-            <div>臺大兒童健康基金會 X 普匯金融科技 X 張鈞甯</div>
-            <div>ESG聯合勸募 慈善樂捐活動</div>
-          </div>
-          <div class="row no-gutters">
-            <div class="col-sm col-12 physical-info-text">
-              <div>日期：2022年02月10日</div>
-              <div>時間：下午2:00-3:30</div>
-              <div class="hint">(1:30開放進場)</div>
-              <div>地點：臺大醫院國際會議中心</div>
-              <div class="hint">(台北市中正區徐州路2號3樓301廳)</div>
-            </div>
-            <div class="col-sm col-12 d-flex d-sm-block justify-content-center">
-              <div class="go-apply">
-                <div class="go-donate-title">我要報名</div>
-                <div class="divider"></div>
-                <div class="img-rocket"></div>
-                <img class="img-rocket" src="~images/NTUCH02F.png" alt="" />
-                <div>
-                  <img class="img-heart" src="~images/愛心.svg" />
+            <div class="col-auto">
+                <div class="title-dot-up">
+                  <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+                  <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+                  <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+                  <div
+                    class="dots"
+                    style="opacity: 0.75; width: 6px; height: 6px"
+                  ></div>
                 </div>
-                <a
-                  class="btn btn-outline go-donate-button"
-                  href="https://forms.gle/w1g4gAXRbcyQxcZ1A"
-                  target="_blank"
-                  >報名去</a
-                >
-              </div>
+                <div class="d-flex justify-content-center how-title">
+                  <img src="../asset/images/月亮.svg" class="img-icon" />
+                  <img
+                    src="../asset/images/如何捐款.svg"
+                    class="img-text-3"
+                    alt="如何捐款"
+                  />
+                  <img src="../asset/images/NTUCHwhale.png" class="img-whale" />
+                </div>
+                <div class="title-dot-down">
+                  <div
+                    class="dots"
+                    style="opacity: 0.75; width: 6px; height: 6px"
+                  ></div>
+                  <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
+                  <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
+                  <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-auto">
-        <div class="title-dot-up">
-          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
-          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
-          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
-          <div
-            class="dots"
-            style="opacity: 0.75; width: 6px; height: 6px"
-          ></div>
-        </div>
-        <div class="d-flex justify-content-center how-title">
-          <img src="../asset/images/月亮.svg" class="img-icon" />
-          <img
-            src="../asset/images/如何捐款.svg"
-            class="img-text-3"
-            alt="如何捐款"
-          />
-          <img src="../asset/images/NTUCHwhale.png" class="img-whale" />
-        </div>
-        <div class="title-dot-down">
-          <div
-            class="dots"
-            style="opacity: 0.75; width: 6px; height: 6px"
-          ></div>
-          <div class="dots" style="opacity: 0.6; width: 6px; height: 6px"></div>
-          <div class="dots" style="opacity: 0.4; width: 4px; height: 4px"></div>
-          <div class="dots" style="opacity: 0.2; width: 2px; height: 2px"></div>
-        </div>
-        <div class="donate-step">
-          <div class="step-item">
-            <div>步驟1：</div>
-            <div>下載並註冊</div>
-            <div>「普匯投資APP」</div>
-          </div>
-          <div class="step-item">
-            <div>步驟2：</div>
-            <div>選取</div>
-            <div style="margin: 0 -30px">「台大兒童健康基金會」</div>
-            <div>愛心勸募捐款</div>
-          </div>
-          <div class="step-item">
-            <div>步驟3：</div>
-            <div>選擇捐贈金額</div>
-            <div>確認送出</div>
-          </div>
-          <div class="step-item">
-            <div>步驟4：</div>
-            <div>金額同步入帳</div>
-            <div>基金會</div>
-          </div>
-          <div class="step-item">
-            <div>步驟5：</div>
-            <div>獲得</div>
-            <div>聯合勸募感謝函</div>
-          </div>
-          <div class="step-item">
-            <div>步驟6：</div>
-            <div>將收到</div>
-            <div>基金會開立之</div>
-            <div>捐款收據</div>
-          </div>
-        </div>
-        <div class="donate-info">
-          <div>所有捐款全數入帳基金會幫助兒童健康</div>
-          <div class="hint">普匯免費提供平台服務</div>
-        </div>
-        <div class="go-donate-out">
-          <div class="go-donate">
-            <div class="go-donate-title">具名捐款</div>
-            <div class="divider"></div>
-            <img class="go-donate-text" src="../asset/images/愛心.svg" />
-            <img class="go-donate-bird" src="../asset/images/NTUCHbird.png" />
-            <div class="go-donate-text"></div>
-            <router-link to="/investLink" target="_blank">
-              <div class="go-donate-button">捐款去</div>
-            </router-link>
-          </div>
-        </div>
-      </div>
     </div>
+    <div class="row justify-content-center donate-row">
+             <div class="donate-step">
+                  <div class="step-item">
+                    <div>步驟1：</div>
+                    <div>下載並註冊</div>
+                    <div>「普匯投資APP」</div>
+                  </div>
+                  <div class="step-item">
+                    <div>步驟2：</div>
+                    <div>選取</div>
+                    <div style="margin: 0 -30px">「台大兒童健康基金會」</div>
+                    <div>愛心勸募捐款</div>
+                  </div>
+                  <div class="step-item">
+                    <div>步驟3：</div>
+                    <div>選擇捐贈金額</div>
+                    <div>確認送出</div>
+                  </div>
+                  <div class="step-item">
+                    <div>步驟4：</div>
+                    <div>金額同步入帳</div>
+                    <div>基金會</div>
+                  </div>
+                  <div class="step-item">
+                    <div>步驟5：</div>
+                    <div>獲得</div>
+                    <div>聯合勸募感謝函</div>
+                  </div>
+                  <div class="step-item">
+                    <div>步驟6：</div>
+                    <div>將收到</div>
+                    <div>基金會開立之</div>
+                    <div>捐款收據</div>
+                  </div>
+            </div>
+            <div class="col-auto">
+                <div class="donate-info">
+                  <div>所有捐款全數入帳基金會幫助兒童健康</div>
+                  <div class="hint">普匯免費提供平台服務</div>
+                </div>
+                <div class="go-donate-out">
+                  <div class="go-donate">
+                    <div class="go-donate-title">具名捐款</div>
+                    <div class="divider"></div>
+                    <img class="go-donate-text" src="../asset/images/愛心.svg" />
+                    <img class="go-donate-bird" src="../asset/images/NTUCHbird.png" />
+                    <div class="go-donate-text"></div>
+                    <router-link to="/investLink" target="_blank">
+                      <div class="go-donate-button">捐款去</div>
+                    </router-link>
+                  </div>
+                </div>
+            </div>
+        </div>
     <div class="row no-gutters envoy-content">
       <div class="col-auto envoy">
         <div class="title-dot-up">
@@ -511,6 +446,9 @@ export default {};
   letter-spacing: 1.7px;
   text-align: center;
   color: #0666b2;
+}
+.donate-row{
+    gap: 40px;
 }
 .organizer-title {
   margin-right: 84px;
