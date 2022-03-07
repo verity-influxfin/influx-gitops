@@ -105,8 +105,9 @@ Vue.component('scraper-status', {
 	template: `
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h4>爬蟲儀表板 - 圖示說明：</h4>
+				<div v-if="userId">會員爬蟲列表</div>
 				<div class="d-flex aic my-2">
+<!--					<div>圖示說明：   </div>-->
 					<div>
 						<button type="button" class="btn btn-success btn-circle">
 							<i class="fa fa-check"></i>
@@ -174,7 +175,7 @@ Vue.component('scraper-status', {
 				'ordering': false,
 				"paging": false,
 				"info": false,
-				"searching": true,
+				"searching": false,
 				'language': {
 					'processing': '處理中...',
 					'lengthMenu': '顯示 _MENU_ 項結果',
