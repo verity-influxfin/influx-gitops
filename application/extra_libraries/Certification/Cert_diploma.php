@@ -172,5 +172,12 @@ class Cert_diploma extends Certification_base
         return TRUE;
     }
 
-
+    /**
+     * 是否已過期
+     * @return bool
+     */
+    public function is_expired(): bool
+    {
+        return FALSE;
+    }
 }
