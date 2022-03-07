@@ -581,126 +581,109 @@ class User_lib {
         $display_product_ids = !empty($product_id_list) ? $product_id_list : [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN];
 
         $data = [
-            "basicInfo" => [
+            "basic_info" => [
                 "id" => "{$user_id}",
-                "firstInvestDate" => "-",
-                "investAmount" => "0",
-                'exportDate' => "{$export_date}"
+                "first_invest_date" => "-",
+                "invest_amount" => "0",
+                'export_date' => "{$export_date}"
             ],
-            "assetsDescription" => [
+            "assets_description" => [
                 $product_list[PRODUCT_ID_STUDENT]['alias'] => [
                     "name" => "學生貸",
-                    "amountNotDelay" => "126436",
-                    "totalAmount" => "137379",
-                    "amountDelay" => "57340587234"
+                    "amount_not_delay" => "126436",
+                    "total_amount" => "137379",
+                    "amount_delay" => "57340587234"
                 ],
                 $product_list[PRODUCT_ID_SALARY_MAN]['alias'] => [
                     "name" => "上班族貸",
-                    "amountNotDelay" => "126436",
-                    "totalAmount" => "137379",
-                    "amountDelay" => "57340587234"
+                    "amount_not_delay" => "126436",
+                    "total_amount" => "137379",
+                    "amount_delay" => "57340587234"
                 ],
                 'total' => [
                     "name" => "本金餘額",
-                    "amountNotDelay" => "126436",
-                    "totalAmount" => "137379",
-                    "amountDelay" => "57340587234"
+                    "amount_not_delay" => "126436",
+                    "total_amount" => "137379",
+                    "amount_delay" => "57340587234"
                 ]
             ],
-            "investPerformance" => [
-                'years' => [
-                    "name" => "投資年資",
-                    "description" => "0"
+            "invest_performance" => [
+                'years' => 0,
+                'prevHalf' => 0,
+                'average_principle' => 0,
+                'return_discount_without_delay' => 0,
+                'discount_rate_of_return' => 0.00,
+            ],
+            "realized_rate_of_return" => [
+                [
+                    'range_title' => '201801-201812',
+                    'interest' => 0,
+                    'prepaid_interest' => 0,
+                    'delayed_paid_interest' => 0,
+                    'delayed_interest' => 0,
+                    'allowance' => 0,
+                    'platform_fee' => 0,
+                    'total_income' => 0,
+                    'rate_of_return' => 0,
+                    'average_principle' => 0,
+                    'start_date' => '2018-01',
+                    'end_date' => '2018-12',
+                    'days' => 365
                 ],
-                'firstHalf' =>[
-                    "name" => "2021上半年",
-                    "description" => "7.1"
+                [
+                    'range_title' => '201901-201912',
+                    'interest' => 0,
+                    'prepaid_interest' => 0,
+                    'delayed_paid_interest' => 0,
+                    'delayed_interest' => 0,
+                    'allowance' => 0,
+                    'platform_fee' => 0,
+                    'total_income' => 0,
+                    'rate_of_return' => 0,
+                    'average_principle' => 0,
+                    'start_date' => '2019-01',
+                    'end_date' => '2019-12',
+                    'days' => 365
                 ],
-                'averagePrincipalBalance' => [
-                    "name" => "平均本金餘額",
-                    "description" => "2.9"
-                ],
-                'discountedCashFlowOfReturnNotDelay' => [
-                    "name" => "扣除逾期之折現收益",
-                    "description" => "167893934"
-                ],
-                'discountedCashIRR' => [
-                    "name" => "折現年化報酬率",
-                    "description" => "12.00"
+                [
+                    'range_title' => '累績收益率',
+                    'interest' => 0,
+                    'prepaid_interest' => 0,
+                    'delayed_paid_interest' => 0,
+                    'delayed_interest' => 0,
+                    'allowance' => 0,
+                    'platform_fee' => 0,
+                    'total_income' => 0,
+                    'rate_of_return' => 0,
+                    'average_principle' => 0,
+                    'start_date' => '2018-01',
+                    'end_date' => '2019-12',
+                    'days' => 730
                 ],
             ],
-            "realizedRateOfReturn" => [
+            "account_payable_interest" => [
                 [
-                    "rangeOfYear" => "2018 01-12",
-                    "principalBalance" => "266734",
-                    "interest" => "3271",
-                    "withdrawInterest" => "15",
-                    "repayDelayInterest" => "546",
-                    "delayInterest" => "13424",
-                    "subsidyInterest" => "90",
-                    "handlingFee" => "141241",
-                    "totalIncome" => "99573552",
-                    "rateOfReturn" => "1"
+                    "range_title" => "202101-202112",
+                    "amount" => 0,
+                    "discount_amount" => 0
                 ],
                 [
-                    "rangeOfYear" => "2018 01-12",
-                    "principalBalance" => "266734",
-                    "interest" => "3271",
-                    "withdrawInterest" => "15",
-                    "repayDelayInterest" => "546",
-                    "delayInterest" => "13424",
-                    "subsidyInterest" => "90",
-                    "handlingFee" => "141241",
-                    "totalIncome" => "99573552",
-                    "rateOfReturn" => "1"
+                    "range_title" => "202201-202203",
+                    "amount" => 0,
+                    "discount_amount" => 0
                 ],
                 [
-                    "rangeOfYear" => "累績收益率",
-                    "principalBalance" => "266734",
-                    "interest" => "3271",
-                    "withdrawInterest" => "15",
-                    "repayDelayInterest" => "546",
-                    "delayInterest" => "13424",
-                    "subsidyInterest" => "90",
-                    "handlingFee" => "141241",
-                    "totalIncome" => "99573552",
-                    "rateOfReturn" => "1"
+                    "range_title" => "202101-202203",
+                    "amount" => 0,
+                    "discount_amount" => 0
                 ]
             ],
-            "waitedRateOfReturn" => [
-                "statisticsData" => [
-                    [
-                        "rangeOfMonth" => "2021 06-12",
-                        "amount" => "62041",
-                        "discount" => "41243"
-                    ],
-                    [
-                        "rangeOfMonth" => "2021 06-12",
-                        "amount" => "62041",
-                        "discount" => "41243"
-                    ],
-                    [
-                        "rangeOfMonth" => "合計",
-                        "amount" => "62041",
-                        "discount" => "41243"
-                    ]
-                ],
-                "predictRateOfReturn" => "16.14"
+            "delay_not_return" => [
+                'principal_and_interest' => 0,
+                'delay_interest' => 0,
+                'total' => 0
             ],
-            "delayNotReturn" => [
-                'principalAndInterest' => [
-                    "name" => "逾期-尚欠本息",
-                    "amount" => "58296"
-                ],
-                'delayInterest' => [
-                    "name" => "逾期-尚欠延滯息",
-                    "amount" => "58296"
-                ],
-                'total' => [
-                    "name" => "合計",
-                    "amount" => "58296"
-                ]
-            ]
+            'estimate_IRR' => 16.1
         ];
 
         // -- 投資人資訊
@@ -709,64 +692,49 @@ class User_lib {
         $first_investment = $this->get_first_investment_info($user_id);
         if(!empty($first_investment))
         {
-            $data['basicInfo']['firstInvestDate'] = date('Y/m/d', strtotime($first_investment['tx_date']));
-            $data['basicInfo']['investAmount'] = $first_investment['amount'];
+            $data['basic_info']['first_invest_date'] = date('Y/m/d', strtotime($first_investment['tx_date']));
+            $data['basic_info']['invest_amount'] = $first_investment['amount'];
         }
 
         // -- 資產概況
         // 正常還款本金餘額
-        $PrincipalBalance = $this->CI->target_model->getTransactionSourceByInvestor($user_id, FALSE, [SOURCE_AR_PRINCIPAL], $product_id_list, TRUE);
-        if ( ! empty($PrincipalBalance))
+        $principal_balance = $this->CI->target_model->getTransactionSourceByInvestor($user_id, FALSE, [SOURCE_AR_PRINCIPAL], $product_id_list, TRUE);
+        if ( ! empty($principal_balance))
         {
-            $PrincipalBalance = array_column($PrincipalBalance, 'amount', 'product_id');
+            $principal_balance = array_column($principal_balance, 'amount', 'product_id');
         }
         // 逾期中本金餘額
-        $PrincipalBalanceDelay = $this->CI->target_model->getTransactionSourceByInvestor($user_id, TRUE, [SOURCE_AR_PRINCIPAL], $product_id_list, TRUE);
-        if ( ! empty($PrincipalBalanceDelay))
+        $principal_balance_delay = $this->CI->target_model->getTransactionSourceByInvestor($user_id, TRUE, [SOURCE_AR_PRINCIPAL], $product_id_list, TRUE);
+        if ( ! empty($principal_balance_delay))
         {
-            $PrincipalBalanceDelay = array_column($PrincipalBalanceDelay, 'amount', 'product_id');
+            $principal_balance_delay = array_column($principal_balance_delay, 'amount', 'product_id');
         }
 
-        $amountNotDelayAll = 0;
-        $amountDelayAll = 0;
-        $totalAmountAll = 0;
+        $amount_not_delay_all = 0;
+        $amount_delay_all = 0;
+        $total_amount_all = 0;
         foreach ($display_product_ids as $product_id)
         {
-            $amountNotDelay = isset($PrincipalBalance[$product_id]) && is_numeric($PrincipalBalance[$product_id]) ? $PrincipalBalance[$product_id] : 0;
-            $amountDelay = isset($PrincipalBalanceDelay[$product_id]) && is_numeric($PrincipalBalanceDelay[$product_id]) ? $PrincipalBalanceDelay[$product_id] : 0;
-            $totalAmount = $amountNotDelay + $amountDelay;
-            $data['assetsDescription'][$product_list[$product_id]['alias']] = [
+            $amount_not_delay = isset($principal_balance[$product_id]) && is_numeric($principal_balance[$product_id]) ? $principal_balance[$product_id] : 0;
+            $amount_delay = isset($principal_balance_delay[$product_id]) && is_numeric($principal_balance_delay[$product_id]) ? $principal_balance_delay[$product_id] : 0;
+            $total_amount = $amount_not_delay + $amount_delay;
+            $data['assets_description'][$product_list[$product_id]['alias']] = [
                 'name' => $product_list[$product_id]['name'],
-                'amountNotDelay' => $amountNotDelay,
-                'amountDelay' => $amountDelay,
-                'totalAmount' => $totalAmount,
+                'amount_not_delay' => $amount_not_delay,
+                'amount_delay' => $amount_delay,
+                'total_amount' => $total_amount,
             ];
             // 全部總和
-            $amountNotDelayAll += $amountNotDelay;
-            $amountDelayAll += $amountDelay;
-            $totalAmountAll += $totalAmount;
+            $amount_not_delay_all += $amount_not_delay;
+            $amount_delay_all += $amount_delay;
+            $total_amount_all += $total_amount;
         }
-        $data['assetsDescription']['total'] = [
+        $data['assets_description']['total'] = [
             'name' => '本金餘額',
-            'amountNotDelay' => $amountNotDelayAll,
-            'amountDelay' => $amountDelayAll,
-            'totalAmount' => $totalAmountAll,
+            'amount_not_delay' => $amount_not_delay_all,
+            'amount_delay' => $amount_delay_all,
+            'total_amount' => $total_amount_all,
         ];
-
-        // -- 投資績效
-        if ( ! empty($first_investment))
-        {
-            try
-            {
-                $d1 = new DateTime($first_investment['tx_date']);
-                $d2 = new DateTime($export_date);
-                $data['investPerformance']['years'] = round($d1->diff($d2)->days / 365.0, 1);
-            }
-            catch (Exception $e)
-            {
-                log_message('error', $e->getMessage());
-            }
-        }
 
         // -- 已實現收益率
         $generate_RoR_init_list = function(DateTimeImmutable $start_date, DateTimeImmutable $end_date) {
@@ -791,13 +759,13 @@ class User_lib {
         {
             try
             {
+                // -- 已實現收益率
                 $start_date = new \DateTimeImmutable(date('Y-01-01', strtotime($first_investment['tx_date'])));
                 $end_date = new \DateTimeImmutable(date('Y-m-t', strtotime("-1 month")));
                 $RoRList = [];
 
                 // 建立表格結構
                 $diff = $start_date->diff($end_date);
-                $RoRList['total'] = $generate_RoR_init_list($start_date, $end_date);
                 for ($i = 0; $i <= $diff->y; $i++)
                 {
                     $year = $start_date->add(DateInterval::createfromdatestring("+{$i} year"));
@@ -810,6 +778,7 @@ class User_lib {
                         $RoRList[$year_str]['days'] = $year->diff($end_date)->days + 1;
                     }
                 }
+                $RoRList['total'] = $generate_RoR_init_list($start_date, $end_date);
 
                 // 取得每天之本金餘額
                 $principle_list = $this->get_principle_list($user_id, $product_id_list, $start_date, $end_date);
@@ -848,16 +817,7 @@ class User_lib {
                     }
                 }
 
-                // 計算平台服務費支出
-                $expense_list = $this->CI->transaction_model->get_paid_off_list([SOURCE_FEES], $from = $user_id, $to = [], $product_id_list, $is_group = TRUE);
-                foreach ($expense_list as $info)
-                {
-                    $ym_date = new \DateTimeImmutable($info['tx_date']);
-                    $year_str = $ym_date->format('Y');
-                    $RoRList[$year_str]['platform_fee'] += $info['amount'];
-                }
-
-                // 計算提還利息
+                // 提還利息
                 $prepaid_interest_list = $this->CI->transaction_model->get_prepaid_transactions(SOURCE_INTEREST, $user_id, $product_id_list, $is_group = TRUE);
                 foreach ($prepaid_interest_list as $info)
                 {
@@ -866,13 +826,22 @@ class User_lib {
                     $RoRList[$year_str]['prepaid_interest'] += $info['amount'];
                 }
 
-                // 逾期償還利息
+                // 逾期後償還利息
                 $delayed_interest_list = $this->CI->transaction_model->get_delayed_paid_transaction(SOURCE_INTEREST, $user_id, $product_id_list, $is_group = TRUE);
                 foreach ($delayed_interest_list as $info)
                 {
                     $ym_date = new \DateTimeImmutable($info['tx_date']);
                     $year_str = $ym_date->format('Y');
                     $RoRList[$year_str]['delayed_paid_interest'] += $info['amount'];
+                }
+
+                // 平台服務費支出
+                $expense_list = $this->CI->transaction_model->get_paid_off_list([SOURCE_FEES], $from = $user_id, $to = [], $product_id_list, $is_group = TRUE);
+                foreach ($expense_list as $info)
+                {
+                    $ym_date = new \DateTimeImmutable($info['tx_date']);
+                    $year_str = $ym_date->format('Y');
+                    $RoRList[$year_str]['platform_fee'] += $info['amount'];
                 }
 
                 // 轉換為每年區間的統計數據
@@ -884,6 +853,7 @@ class User_lib {
                         $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'] +
                         $RoRList[$year_str]['allowance'] - $RoRList[$year_str]['platform_fee'];
                     $RoRList[$year_str]['rate_of_return'] = round($RoRList[$year_str]['total_income'] / $RoRList[$year_str]['average_principle'] * 100, 1);
+                    $RoRList[$year_str]['range_title'] = date('Ym', strtotime($RoRList[$year_str]['start_date'])).'-'.date('Ym', strtotime($RoRList[$year_str]['end_date']));
 
                     $RoRList['total']['average_principle'] += round($RoRList[$year_str]['average_principle'] * ($RoRList[$year_str]['days'] / $RoRList['total']['days']));
                     $RoRList['total']['interest'] += $RoRList[$year_str]['interest'];
@@ -895,8 +865,10 @@ class User_lib {
                     $RoRList['total']['total_income'] += $RoRList[$year_str]['total_income'];
                 }
                 $RoRList['total']['rate_of_return'] = round($RoRList['total']['total_income'] / $RoRList['total']['average_principle'] * 100, 1);
+                $RoRList['total']['range_title'] = '累計收益率';
+                $data['realized_rate_of_return'] = array_values($RoRList);
 
-                // 計算待實現應收利息
+                // -- 待實現應收利息
                 $ar_interest_list = [];
                 $ar_interest = $this->CI->transaction_model->get_account_payable_list(SOURCE_AR_INTEREST, $from = [], $to = $user_id,
                     $product_id_list, $is_group = TRUE, $end_date->format('Y-m-d'));
@@ -923,15 +895,20 @@ class User_lib {
                     }
                 }
 
-                $estimate_IRR = 16.1;
+                $data['estimate_IRR'] = 16.1;
                 foreach ($ar_interest_list as $year_str => $info)
                 {
                     $end = new \DateTimeImmutable($info['end_date']);
                     $diff = $end_date->setDate($end_date->format('Y'),$end_date->format('m'),1)->diff($end);
-                    $ar_interest_list[$year_str]['discount_amount'] = $info['amount'] / pow(($estimate_IRR+1),$diff->m/12);
+                    $ar_interest_list[$year_str]['discount_amount'] = round($info['amount'] / pow((($data['estimate_IRR']/100)+1),$diff->m/12));
+                    $ar_interest_list[$year_str]['range_title'] = date('Ym', strtotime($info['start_date'])).'-'.date('Ym', strtotime($info['end_date']));
                 }
+                $ar_interest_list['total']['range_title'] = '合計';
+                $ar_interest_list['total']['amount'] = array_sum(array_column($ar_interest_list, 'amount'));
+                $ar_interest_list['total']['discount_amount'] = array_sum(array_column($ar_interest_list, 'discount_amount'));
+                $data['account_payable_interest'] = array_values($ar_interest_list);
 
-                // 逾期未收
+                // -- 逾期未收
                 $delayed_ar_list_rs = $this->CI->transaction_model->get_delayed_ar_transaction([SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST], $user_id, $product_id_list, $is_group = TRUE);
                 $delayed_ar_list = [];
                 array_walk($delayed_ar_list_rs, function($item, $key) use (&$delayed_ar_list){
@@ -939,12 +916,38 @@ class User_lib {
                     $delayed_ar_list[$source] = isset($delayed_ar_list[$source]) ?  $item['amount'] + $delayed_ar_list[$source] : $item['amount'];
                 });
 
+                $data['delay_not_return']['principal_and_interest'] = ($delayed_ar_list[SOURCE_AR_PRINCIPAL] ?? 0) + ($delayed_ar_list[SOURCE_AR_INTEREST] ?? 0);
+                $data['delay_not_return']['delay_interest'] = ($delayed_ar_list[SOURCE_AR_DELAYINTEREST] ?? 0);
+                $data['delay_not_return']['total'] = $data['delay_not_return']['principal_and_interest'] + $data['delay_not_return']['delay_interest'];
+
+                // -- 投資績效
+                try
+                {
+                    $d1 = new DateTime($first_investment['tx_date']);
+                    $d2 = new DateTime($export_date);
+                    $data['invest_performance']['years'] = round($d1->diff($d2)->days / 365.0, 1);
+                    $data['invest_performance']['average_principle'] = $RoRList['total']['average_principle'] + $data['assets_description']['total']['amount_delay'];
+                    $data['invest_performance']['return_discount_without_delay'] = $RoRList['total']['total_income'] + $ar_interest_list['total']['discount_amount'] - $data['assets_description']['total']['amount_delay'];
+                    $data['invest_performance']['discount_rate_of_return'] = round($data['invest_performance']['return_discount_without_delay'] / $data['invest_performance']['average_principle'] /  $data['invest_performance']['years'] * 100, 2);
+                }
+                catch (Exception $e)
+                {
+                    log_message('error', $e->getMessage());
+                }
+
             }
             catch (Exception $e)
             {
                 log_message('error', $e->getMessage());
             }
+
+
         }
+
+
+        return $data;
     }
+
+
 
 }
