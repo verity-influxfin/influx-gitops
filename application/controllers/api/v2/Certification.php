@@ -768,7 +768,6 @@ class Certification extends REST_Controller {
 				'department',
 				'grade',
 				'student_id',
-				'email',
 				'major',
 				'sip_account',
 				'sip_password'
@@ -784,23 +783,9 @@ class Certification extends REST_Controller {
             isset($input['retry']) ? $content['retry'] = json_decode($input['retry']) : '';
 
 			$content['system'] 	 = isset($input['system']) && in_array($input['system'],array(0,1,2))?$input['system']:0;
-            isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:"";
-
-			if (!filter_var($content['email'], FILTER_VALIDATE_EMAIL) || substr($content['email'],-7,7)!='.edu.tw') {
-				$this->response(array('result' => 'ERROR','error' => INVALID_EMAIL_FORMAT ));
-			}
+            isset($input['programming_language'])?$content['programming_language']=$input['programming_language']:'';
 
 			$this->load->model('user/user_meta_model');
-
-			//Email是否使用過
-			$user_meta = $this->user_meta_model->get_by(array(
-				'meta_key'	=> 'school_email',
-				'meta_value'=> $content['email'],
-			));
-
-			if($user_meta && $user_meta->user_id != $user_id){
-				$this->response(array('result' => 'ERROR','error' => CERTIFICATION_STUDENTEMAIL_EXIST ));
-			}
 
 			//學號是否使用過
 			$user_meta = $this->user_meta_model->get_by(array(
@@ -831,6 +816,7 @@ class Certification extends REST_Controller {
                     ]);
 
                     if($rs){
+                        $content[$field . '_id'] = $rs->id;
                         $content[$field] = $rs->url;
                     }else{
                         $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
@@ -840,9 +826,9 @@ class Certification extends REST_Controller {
 
 			$file_fields = [];
             isset($input['transcript_image']) && is_numeric($input['transcript_image'])?$file_fields[]='transcript_image':'';
-            isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:"";
+            isset($input['pro_certificate'])? $content['pro_certificate']=$input['pro_certificate']:'';
             isset($input['pro_certificate_image'])?$file_fields[]='pro_certificate_image':'';
-            isset($input['game_work'])?$content['game_work']=$input['game_work']:"";
+            isset($input['game_work'])?$content['game_work']=$input['game_work']:'';
             isset($input['game_work_image']) && !empty($input['game_work_image'])?$file_fields[]='game_work_image':'';
             //多個檔案欄位
             foreach ($file_fields as $field) {
@@ -865,7 +851,10 @@ class Certification extends REST_Controller {
                 }
             }
 
-            $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:"";
+            $content['graduate_date'] = isset($input['graduate_date'])?$input['graduate_date']:'';
+            $content['school'] = trim($content['school'], ' ');
+            $content['sip_account'] = trim($content['sip_account'], ' ');
+            $content['sip_password'] = trim($content['sip_password'], ' ');
 
 			$param		= array(
 				'user_id'			=> $user_id,
@@ -877,15 +866,8 @@ class Certification extends REST_Controller {
 			$insert = $this->user_certification_model->insert($param);
 			if($insert){
 				$this->load->library('scraper/sip_lib.php');
-				$this->sip_lib->requestSipLogin(
-				    $content['school'],
-				    $content['sip_account'],
-				    $content['sip_password']
-				);
-
-				$this->load->library('Sendemail');
-				$this->sendemail->send_verify_school($insert,$content['email']);
-				$this->response(array('result' => 'SUCCESS'));
+                $this->sip_lib->requestSipLogin($content['school'], $content['sip_account'], $content['sip_password']);
+                $this->response(array('result' => 'SUCCESS'));
 			}else{
 				$this->response(array('result' => 'ERROR','error' => INSERT_ERROR ));
 			}
