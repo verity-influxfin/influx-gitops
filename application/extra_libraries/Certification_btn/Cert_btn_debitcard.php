@@ -8,9 +8,7 @@ class Cert_btn_debitcard extends Certification_btn_base
     public function draw(): string
     {
         $sys_check = $this->sys_check === 0 ? ' btn-circle' : ' ';
-        $status = $this->expire_time <= time() && ! in_array($this->certification_id, [CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL])
-            ? 'danger'
-            : 'success';
+        $status = $this->is_expired ? 'danger' : 'success';
 
         $this->CI->load->model('user/user_bankaccount_model');
         $user_bank_account = $this->CI->user_bankaccount_model->get_by(array(

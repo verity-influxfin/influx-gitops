@@ -66,16 +66,16 @@ abstract class Certification_base implements Certification_definition
 
         $this->content = empty($certification['content'])
             ? []
-            : is_string($certification['content'])
+            : (is_string($certification['content'])
                 ? json_decode($certification['content'], TRUE)
-                : $certification['content'];
+                : $certification['content']);
         $this->content = ! is_array($this->content) ? [] : $this->content;
 
         $this->remark = empty($certification['remark'])
             ? []
-            : is_string($certification['remark'])
+            : (is_string($certification['remark'])
                 ? json_decode($certification['remark'], TRUE)
-                : $certification['remark'];
+                : $certification['remark']);
         $this->remark = ! is_array($this->remark) ? [] : $this->remark;
 
         $this->result = $result;

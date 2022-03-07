@@ -123,7 +123,7 @@
         let selector = $("table");
 
         $.ajax({
-            url: `get_person_borrower_list?stage=${stage}&product=${product}`,
+            url: `get_natural_person_list?stage=${stage}&product=${product}`,
             method: 'GET',
             dataType: 'JSON',
             success: function (result) {

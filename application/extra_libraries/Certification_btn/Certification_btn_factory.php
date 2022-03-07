@@ -12,21 +12,6 @@ class Certification_btn_factory
             return NULL;
         }
 
-        if (empty($certification['status']))
-        {
-            $certification['status'] = 0;
-        }
-
-        if (empty($certification['sys_check']))
-        {
-            $certification['sys_check'] = 0;
-        }
-
-        if (empty($certification['expire_time']))
-        {
-            $certification['expire_time'] = 0;
-        }
-
         switch ($certification['certification_id'])
         {
             case CERTIFICATION_DEBITCARD:

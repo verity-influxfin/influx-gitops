@@ -22,15 +22,15 @@ class Risk extends MY_Admin_Controller {
 		$this->load->library('certification_lib');
  	}
 
-    public function person_borrower()
+    public function natural_person()
     {
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
-        $this->load->view('admin/risk_target_person_borrower');
+        $this->load->view('admin/risk_target_natural_person');
         $this->load->view('admin/_footer');
     }
 
-    public function get_person_borrower_list()
+    public function get_natural_person_list()
     {
         // 取得$_GET的產品ID和子產品ID
         list($product_id, $sub_product_id) = array_pad(explode(':', $this->input->get('product')), 2, 0);
