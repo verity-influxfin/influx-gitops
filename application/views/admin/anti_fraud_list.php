@@ -103,11 +103,11 @@
 					return text.includes(this.search)
 				}).map(x => {
 					// filter 子項目
-					x.rules = x.rules.filter(rule => {
+					const filterRules = x.rules.filter(rule => {
 						const rt = rule.block + rule.risk + rule.enabled + rule.description + x.typeId
 						return rt.includes(this.search)
 					})
-					return x
+					return {...x, rules: filterRules}
 				})
 			}
 		},
