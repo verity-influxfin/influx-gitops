@@ -96,6 +96,7 @@ class Page extends CI_Controller
                 'deals' => $this->_get_deals($date),
             ];
         }
+		$qr = $this->_get_total_qrcode_apply($first_day);
 
         usort($retval, function ($a, $b) {
             return $b['date'] <=> $a['date'];
@@ -104,7 +105,10 @@ class Page extends CI_Controller
         $this->output->set_content_type('application/json')
                     ->set_output(json_encode([
                         'result' => 'success',
-                        'data'   => $retval
+                        'data'   => [
+							'history' => $retval,
+							'qrcode' => $qr
+						]
                     ]));
     }
 
@@ -172,8 +176,7 @@ class Page extends CI_Controller
 			}
 		}
 
-		return implode(' / ', array_values($result));
-
+		return $result;
 	}
 
     private function _get_deals(DateTimeInterface $date)
