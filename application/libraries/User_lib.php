@@ -683,7 +683,7 @@ class User_lib {
                 'delay_interest' => 0,
                 'total' => 0
             ],
-            'estimate_IRR' => 16.1
+            'estimate_IRR' => 0.161
         ];
 
         // -- 投資人資訊
@@ -895,18 +895,20 @@ class User_lib {
                     }
                 }
 
-                $data['estimate_IRR'] = 16.1;
+                $data['estimate_IRR'] = 0.161;
                 foreach ($ar_interest_list as $year_str => $info)
                 {
                     $end = new \DateTimeImmutable($info['end_date']);
                     $diff = $end_date->setDate($end_date->format('Y'),$end_date->format('m'),1)->diff($end);
-                    $ar_interest_list[$year_str]['discount_amount'] = round($info['amount'] / pow((($data['estimate_IRR']/100)+1),$diff->m/12));
+                    $ar_interest_list[$year_str]['discount_exponent'] = $diff->y+round($diff->m/12,1);
+                    $ar_interest_list[$year_str]['discount_amount'] = round($info['amount'] / pow((($data['estimate_IRR']/100)+1),$ar_interest_list[$year_str]['discount_exponent']));
                     $ar_interest_list[$year_str]['range_title'] = date('Ym', strtotime($info['start_date'])).'-'.date('Ym', strtotime($info['end_date']));
                 }
+                $data['account_payable_interest'] = array_values($ar_interest_list);
                 $ar_interest_list['total']['range_title'] = '合計';
                 $ar_interest_list['total']['amount'] = array_sum(array_column($ar_interest_list, 'amount'));
                 $ar_interest_list['total']['discount_amount'] = array_sum(array_column($ar_interest_list, 'discount_amount'));
-                $data['account_payable_interest'] = array_values($ar_interest_list);
+                $ar_interest_list['total']['discount_exponent'] = 1;
 
                 // -- 逾期未收
                 $delayed_ar_list_rs = $this->CI->transaction_model->get_delayed_ar_transaction([SOURCE_AR_PRINCIPAL, SOURCE_AR_INTEREST, SOURCE_AR_DELAYINTEREST], $user_id, $product_id_list, $is_group = TRUE);
@@ -935,15 +937,16 @@ class User_lib {
                     log_message('error', $e->getMessage());
                 }
 
+                // -- start row of every part for the layout
+                $data['start_row']['realized_rate_of_return'] = 20;
+                $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])+6;;
+                $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest']+count($data['account_payable_interest']??[])+5;;
             }
             catch (Exception $e)
             {
                 log_message('error', $e->getMessage());
             }
-
-
         }
-
 
         return $data;
     }
