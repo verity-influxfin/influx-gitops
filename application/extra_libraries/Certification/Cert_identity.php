@@ -215,7 +215,7 @@ class Cert_identity extends Certification_base
 
             $this->CI->user_model->update_many($this->certification['user_id'], $user_info);
 
-            return $this->CI->certification->fail_other_cer($this->certification);
+            return $this->CI->certification_lib->fail_other_cer($this->certification);
         }
 
         return FALSE;

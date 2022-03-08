@@ -520,10 +520,11 @@ class Certification extends MY_Admin_Controller {
 							'change_admin'			=> $this->login_info->id,
 						));
 
+                        $cert = \Certification\Certification_factory::get_instance_by_model_resource($info);
 						if($post['status']=='1'){
-							$rs = $this->certification_lib->set_success($post['id']);
+                            $rs = $cert->set_success(0);
 						}else if($post['status']=='2'){
-							$rs = $this->certification_lib->set_failed($post['id'],$fail);
+                            $rs = $cert->set_failure(0);
 						}else{
 							$rs = $this->user_certification_model->update($post['id'],array(
 								'status' => intval($post['status']),
