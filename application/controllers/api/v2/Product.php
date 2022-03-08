@@ -3348,7 +3348,17 @@ class Product extends REST_Controller {
             {
                 continue;
             }
+
             $product = $this->product_lib->getProductInfo($value['product_id'], $value['sub_product_id']);
+            if ($value['status'] == TARGET_FAIL)
+            {
+                $list[] = [
+                    'id' => (int) $value['id'],
+                    'product_name' => $product['name'],
+                    'remark' => $value['remark']
+                ];
+                continue;
+            }
             $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
             $this->load->model('user_certification_model');
             $cert_list = $this->config->item('certifications');
@@ -3362,7 +3372,6 @@ class Product extends REST_Controller {
                         'certification_id' => $certification_id,
                         'investor' => $this->user_info->investor
                     ]);
-                    $failed_cert_reason[$certification_id] = (object) [];
 
                     $cert_factory = Certification_factory::get_instance_by_model_resource($info);
                     if ( ! $cert_factory->is_failed())
@@ -3396,14 +3405,17 @@ class Product extends REST_Controller {
                         ];
                     }
                 }
-            }
 
-            $list[] = [
-                'id' => (int) $value['id'],
-                'product_name' => $product['name'],
-                'remark' => $value['remark'],
-                'certifications' => $failed_cert_reason
-            ];
+                if ( ! empty($failed_cert_reason))
+                {
+                    $list[] = [
+                        'id' => (int) $value['id'],
+                        'product_name' => $product['name'],
+                        'remark' => $value['remark'],
+                        'certifications' => $failed_cert_reason
+                    ];
+                }
+            }
         }
 
         $this->response(['result' => 'SUCCESS', 'data' => ['list' => $list]]);
