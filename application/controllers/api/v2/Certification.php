@@ -1741,7 +1741,12 @@ class Certification extends REST_Controller {
 			if($insert){
                 // 有傳圖片的話轉人工，沒有自動過件
                 if($should_check == false){
-                    $this->certification_lib->set_success($insert);
+                    $info = $this->user_certification_model->order_by('certification_id', 'DESC')->get_by([
+                        'certification_id' => CERTIFICATION_FINANCIALWORKER,
+                        'user_id' => $user_id
+                    ]);
+                    $cert = Certification_factory::get_instance_by_model_resource($info);
+                    $cert->set_success(SYSTEM_CHECK);
                 }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
