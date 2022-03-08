@@ -8,7 +8,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
         <title>電子看板</title>
     </head>
-    <body id="app" style="background-color: #212529;">
+    <body id="app" style="background-color: #212529;font-size: 1.5vw;">
         <table class="table table-dark table-striped h-100 w-100" v-if="state.data">
             <thead>
                 <tr>
@@ -16,7 +16,8 @@
                     <th>官網流量</th>
                     <th>新增會員</th>
                     <th>會員總數</th>
-                    <th>APP下載</th>
+                    <th>APP下載(android)</th>
+                    <th>APP下載(ios)</th>
                     <th>各產品申貸數(3S/學/上/微)</th>
                     <th>成交</th>
                 </tr>
@@ -27,7 +28,8 @@
                     <td v-text="item.official_site_trends"></td>
                     <td v-text="item.new_member"></td>
                     <td v-text="item.total_member"></td>
-                    <td v-text="item.app_downloads"></td>
+                    <td v-text="item.android_downloads"></td>
+                    <td v-text="item.ios_downloads"></td>
                     <td v-text="item.product_bids"></td>
                     <td v-text="item.deals"></td>
                 </tr>

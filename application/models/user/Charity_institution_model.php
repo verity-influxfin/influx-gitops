@@ -32,5 +32,19 @@ class Charity_institution_model extends MY_Model
         return $data;
     }
 
+    /**
+     * 撈取「啟用」的慈善機構
+     * @return mixed
+     */
+    public function get_withdraw_list()
+    {
+        $this->db
+            ->select('jp.company_user_id')
+            ->select('ci.virtual_account')
+            ->from("p2p_user.{$this->_table} ci")
+            ->join('p2p_user.judicial_person jp', 'jp.id=ci.judicial_person_id')
+            ->where('ci.status', CHARITY_INSTITUTION_STATUS_AVAILABLE);
 
+        return $this->db->get()->result_array();
+    }
 }
