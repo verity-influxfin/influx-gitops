@@ -119,6 +119,23 @@ class Cron extends CI_Controller
 		die('1');
 	}
 
+    // 檢查待簽約案件的核可額度是否過期
+    public function chk_target_signing()
+    {
+        $this->load->library('target_lib');
+        $start_time = time();
+        $count = $this->target_lib->script_chk_signing();
+        $end_time = time();
+        $data = [
+            'script_name' => __FUNCTION__,
+            'num' => $count,
+            'start_time' => $start_time,
+            'end_time' => $end_time
+        ];
+        $this->log_script_model->insert($data);
+        die('1');
+    }
+
 	public function check_transfer_bidding()
 	{	//每五分鐘
 		$this->load->library('Transfer_lib');
