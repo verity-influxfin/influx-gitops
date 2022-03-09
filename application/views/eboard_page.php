@@ -22,13 +22,23 @@
 			position: absolute;
 			color: #fff;
 			padding: 8px 16px;
-			font-size: 20px;
+			font-size: 24px;
+			letter-spacing: 8px;
 		}
 
 		.table-border {
 			border: 2px solid rgba(255, 255, 255, 0.2);
 			background: linear-gradient(180deg, rgba(1, 81, 124, 0.5) 0%, rgba(5, 50, 92, 0.5) 100%);
 			border-radius: 12px;
+		}
+
+		.weather {
+			color: #fff;
+			padding: 8px 16px;
+			font-size: 20px;
+			display: grid;
+			text-align: center;
+			grid-template-columns: 1fr 40px 1fr 40px 1fr 40px 1fr;
 		}
 
 		.circle-table {
@@ -45,6 +55,38 @@
 			gap: 8px;
 			grid-template-columns: repeat(7, 1fr);
 			grid-template-rows: repeat(4, 1fr);
+		}
+
+		.history {
+			padding: 9px 14px;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-template-rows: 30px 1fr;
+			grid-template-areas:
+				"history-title history-title history-title"
+				". . .";
+		}
+
+		.history-title {
+			grid-area: history-title;
+			color: #fff;
+			font-size: 24px;
+			line-height: 1.2;
+		}
+
+		.num-group{
+			padding: 12px;
+			text-align: center;
+		}
+		.num-group .num{
+			color: rgb(248, 182, 45);
+			font-size: 44px;
+			line-height: 1.5;
+		}
+		.num-group .num-title{
+			color: #fff;
+			font-size: 20px;
+			line-height: 1.5;
 		}
 
 		.qr-box {
@@ -98,73 +140,44 @@
 			</div>
 			<div class="table-border position-relative mt-3">
 				<div class="table-title">即時成交動態</div>
-				<div id="real-1" style="height: 300px; width: 400px;"></div>
+				<div id="real-1" style="height: 300px; width: 560px;"></div>
 			</div>
 		</div>
-		<div class="col-4"></div>
+		<div class="col-4">
+			<div class="weather" style="height: 50px;">
+				<div>{{ state.time.showDate }}</div>
+				<div>|</div>
+				<div>{{ state.time.time }}</div>
+				<div>|</div>
+				<div>星期{{ state.time.day }}</div>
+				<div>|</div>
+				<div>天氣：晴</div>
+			</div>
+			<div class="table-border">
+				<div class="history" style="height: 180px;">
+					<div class="history-title">
+						最高成交筆數
+					</div>
+					<div class="num-group">
+						<div class="num">345</div>
+						<div class="num-title">每日筆數</div>
+					</div>
+					<div class="num-group">
+						<div class="num">82,444</div>
+						<div class="num-title">累積筆數</div>
+					</div>
+					<div class="num-group">
+						<div class="num">4,000</div>
+						<div class="num-title">每月筆數</div>
+					</div>
+				</div>
+			</div>
+			<div class="table-border mt-3 position-relative">
+				<!-- <img class="position-absolute" src="/assets/eboard/firework1.gif" alt=""> -->
+				<div id="qr-1" style="height: 690px;"></div>
+			</div>
+		</div>
 	</div>
-	<!-- <div class="row m-2 table-border" style="height: 450px;">
-		<div class="circle-table">
-			<div id="c-1" style="width: 300px; height: 300px;"></div>
-			<div id="c-2" style="width: 300px; height: 300px;"></div>
-			<div class="table-title">學生貸</div>
-			<div class="table-title">上班族貸</div>
-		</div>
-		<div class="col-5 qr-table">
-			<div class="qr-box table-border" v-for="item in state.qrcode">
-				<div class="qr-box-title">{{ item.name }}</div>
-				<div class="qr-box-item">學生： {{item.student_count}}</div>
-				<div class="qr-box-item">上班族： {{item.salary_man_count}}</div>
-			</div>
-		</div>
-		<div class="col pe-0">
-			<div class="rank-table-title">外部排名</div>
-			<div class="table-border rank-table">
-				<table class="table text-white h-100">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>名字</th>
-							<th>學生</th>
-							<th>上班族</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="(item,index) in rankInflux">
-							<td>{{ index+1 }}</td>
-							<td>{{ item.name }}</td>
-							<td>{{ item.student_count }}</td>
-							<td>{{ item.salary_man_count }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="col">
-			<div class="rank-table-title">員工排名</div>
-			<div class="table-border rank-table">
-				<table class="table text-white h-100">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>名字</th>
-							<th>學生</th>
-							<th>上班族</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr v-for="(item,index) in rankInflux">
-							<td>{{ index+1 }}</td>
-							<td>{{ item.name }}</td>
-							<td>{{ item.student_count }}</td>
-							<td>{{ item.salary_man_count }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-
-		</div>
-	</div> -->
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
@@ -173,14 +186,21 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.js"></script>
 <script>
-	const { reactive, onMounted, computed } = Vue;
+	const { reactive, ref, onMounted, computed, watch } = Vue;
 	Vue.createApp({
 		setup() {
 			const state = reactive({
 				data: [],
 				qrcode: [],
-				geoJson: {}
+				geoJson: {},
+				time: {
+					showDate: '',
+					time: '',
+					day: ''
+				},
+				date: ''
 			})
+			const renderQr = ref([])
 			const basicOption = {
 				color: ['#fff', '#42E5F3', '#F29600', '#1edf90', '#e9e54e'],
 				textStyle: {
@@ -209,19 +229,35 @@
 				},
 			}
 			onMounted(() => {
-				axios.get('/assets/eboard/taiwan.json').then(function ({ data }) {
-					state.geoJson = data
-				})
+				showTime()
+				state.date =
+					axios.get('/assets/eboard/taiwan.json').then(function ({ data }) {
+						state.geoJson = data
+					})
 				axios.get("/page/get_eboard_data").then(function ({ data }) {
 					state.data = data.data.history.reverse()
-					state.qrcode = data.data.qrcode
+					// state.qrcode = data.data.qrcode
+					state.qrcode = [[58, 32, '謝承翰'],
+					[74, 13, '許維則'],
+					[32, 15, '許維A'],
+					[74, 21, '許維B'],
+					[32, 25, '許維C'],
+					[44, 23, '許維則D'],
+					[32, 15, '許維E'],
+					[51, 32, '謝承F']
+					]
 				}).then(() => {
 					drawTable1()
 					drawTable2()
 					drawTable3()
 					drawGeo()
-					drawRound1()
-					drawRound2()
+					drawReal()
+					nextQrData()
+					setInterval(function () {
+						nextQrData()
+					}, 4000)
+					// drawRound1()
+					// drawRound2()
 				})
 
 			})
@@ -560,18 +596,18 @@
 					return b.full_member_count - a.full_member_count
 				}).slice(0, 5)
 			})
-
 			const drawGeo = () => {
 				const { geoJson } = state
 				echarts.registerMap('taiwan', { geoJSON: geoJson });
 				myChart = echarts.init(document.getElementById('map-1'))
+				const project = (point) => [point[0] / 180 * Math.PI, -Math.log(Math.tan((Math.PI / 2 + point[1] / 180 * Math.PI) / 2))]
 				option = {
 					visualMap: {
 						min: 800,
 						max: 50000,
 						left: 24,
 						bottom: 18,
-						padding: 5,
+						padding: 4.5,
 						calculable: true,
 						text: ['Max', 'Min'],
 						textStyle: {
@@ -585,10 +621,14 @@
 					series: [
 						{
 							type: 'map',
+							projection: {
+								project: (point) => project(point),
+								unproject: (point) => [point[0] * 180 / Math.PI, 2 * 180 / Math.PI * Math.atan(Math.exp(point[1])) - 90]
+							},
 							roam: true,
 							map: 'taiwan',
-							zoom: 5.65,
-							center: [120.58, 23.58],
+							zoom: 5.2,
+							center: project([120.58, 23.58]),
 							data: [
 								{ name: '宜蘭縣', value: 1234 },
 								{ name: '臺北市', value: 44534 },
@@ -601,7 +641,139 @@
 				}
 				myChart.setOption(option)
 			}
+			const drawReal = () => {
+				myChart = echarts.init(document.getElementById('real-1'))
+				const hours = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
+					'07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+					'13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
+					'19:00', '20:00', '21:00', '22:00', '23:00'
+				]
+				// const hours = ['00:00', '06:00', '12:00', '18:00', '24:00']
+				const days = [...Array(7)].map((_, i) => {
+					const d = new Date()
+					d.setDate(d.getDate() - i)
+					return `${(d.getMonth() + 1).toString().padStart(2, 0)}/${d.getDate().toString().padStart(2, 0)}`
+				}).reverse()
+				option = {
+					...basicOption,
+					color: ['#05D4FF'],
+					grid: {
+						top: '50px',
+						left: '40px',
+						right: '40px',
+						bottom: '20px',
+						containLabel: true
+					},
+					xAxis: {
+						type: 'category',
+						data: days,
+						boundaryGap: false,
+						splitLine: {
+							show: true
+						},
+						axisLine: {
+							show: false
+						}
+					},
+					yAxis: {
+						data: hours,
+					},
+					legend: {
+						show: false,
+					},
+					series: [
+						{
+							type: 'scatter',
+							symbolSize: (val) => val[2] * 2,
+							data: [[0, 0, 2], [0, 1, 5], [1, 2, 3], [2, 4, 5], [2, 1, 9]]
 
+						}
+					]
+				}
+				myChart.setOption(option)
+			}
+			const drawQr = () => {
+				myChart = echarts.init(document.getElementById('qr-1'))
+				option = {
+					...basicOption,
+					grid: {
+						top: '330px',
+						left: '6%',
+						right: '6%',
+						bottom: '30px',
+						containLabel: true
+					},
+					dataset: {
+						source: [
+							['salary_man_count', 'student_count', 'product'],
+							...renderQr.value
+
+						]
+					},
+					xAxis: {
+						type: 'category',
+						boundaryGap: [0, 0.01]
+					},
+					yAxis: {
+						type: 'value',
+						splitLine: {
+							show: true,
+							lineStyle: {
+								color: '#63656E'
+							}
+						},
+					},
+					series: [
+						{
+							name: '上班族貸',
+							type: 'bar',
+							barWidth: 10,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
+							encode: {
+								y: 'salary_man_count',
+								x: 'product'
+							}
+						},
+						{
+							name: '學生貸',
+							type: 'bar',
+							barWidth: 10,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
+							encode: {
+								y: 'student_count',
+								x: 'product'
+							}
+						}
+					]
+				}
+				myChart.setOption(option)
+			}
+			const showTime = () => {
+				var date = new Date();
+				var h = date.getHours(); // 0 - 23
+				var m = date.getMinutes(); // 0 - 59
+				var s = date.getSeconds(); // 0 - 59
+				if (h == 0) {
+					h = 12;
+				}
+				h = (h < 10) ? "0" + h : h
+				m = (m < 10) ? "0" + m : m
+				s = (s < 10) ? "0" + s : s
+				const time = h + ":" + m + ":" + s
+				const showDate = date.getFullYear() + '.' + (date.getMonth() + 1).toString().padStart(2, 0) + '.' + (date.getDate()).toString().padStart(2, 0)
+				const day = ['', '一', '二', '三', '四', '五', '六', '日'].at(date.getDay())
+				state.time = { showDate, time, day }
+				setTimeout(showTime, 1000);
+			}
+			const nextQrData = () => {
+				state.qrcode.push(state.qrcode.shift())
+				renderQr.value = state.qrcode.slice(0, 7)
+				drawQr()
+			}
 			return { state, rankInflux };
 		}
 	}).mount('#app')
