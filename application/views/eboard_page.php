@@ -10,14 +10,24 @@
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 	<title>電子看板</title>
 	<style>
+		#app {
+			height: 100vh;
+			background-image: url('/assets/eboard/bg.jpg');
+			background-position: center;
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
+
 		.table-title {
+			position: absolute;
 			color: #fff;
+			padding: 8px 16px;
 			font-size: 20px;
-			text-align: center;
 		}
 
 		.table-border {
-			border: 2px solid #fff;
+			border: 2px solid rgba(255, 255, 255, 0.2);
+			background: linear-gradient(180deg, rgba(1, 81, 124, 0.5) 0%, rgba(5, 50, 92, 0.5) 100%);
 			border-radius: 12px;
 		}
 
@@ -65,18 +75,35 @@
 	</style>
 </head>
 
-<body id="app" style="background: linear-gradient(357.26deg,#090052 -8.75%, #1177A1 102.56%); height: 100vh;">
-	<div class="row m-2 justify-content-between">
-		<div class="text-center table-title" style="width: 620px">官網</div>
-		<div class="text-center table-title" style="width: 620px">ＡＰＰ</div>
-		<div class="text-center table-title" style="width: 620px">產品申貸數</div>
+<body id="app">
+	<div class="row m-3">
+		<div class="col-4">
+			<div class="d-flex table-border position-relative">
+				<div class="table-title">官網</div>
+				<div id="main" class="mx-auto" style="height: 300px; width: 560px;"></div>
+			</div>
+			<div class="d-flex table-border position-relative my-3">
+				<div class="table-title">ＡＰＰ</div>
+				<div id="tb-2" class="mx-auto" style="height: 300px; width: 560px;"></div>
+			</div>
+			<div class="d-flex table-border position-relative">
+				<div class="table-title">產品</div>
+				<div id="tb-3" class="mx-auto" style="height: 300px; width: 560px;"></div>
+			</div>
+		</div>
+		<div class="col-4">
+			<div class="table-border position-relative">
+				<div class="table-title">申貸分佈圖</div>
+				<div id="map-1" class="mx-auto" style="height: 620px;"></div>
+			</div>
+			<div class="table-border position-relative mt-3">
+				<div class="table-title">即時成交動態</div>
+				<div id="real-1" style="height: 300px; width: 400px;"></div>
+			</div>
+		</div>
+		<div class="col-4"></div>
 	</div>
-	<div class="row m-2 justify-content-between">
-		<div class="table-border" id="main" style="width: 620px;height:450px"></div>
-		<div class="table-border" id="tb-2" style="width: 620px;height:450px;"></div>
-		<div class="table-border" id="tb-3" style="width: 620px;height:450px;"></div>
-	</div>
-	<div class="row m-2 table-border" style="height: 450px;">
+	<!-- <div class="row m-2 table-border" style="height: 450px;">
 		<div class="circle-table">
 			<div id="c-1" style="width: 300px; height: 300px;"></div>
 			<div id="c-2" style="width: 300px; height: 300px;"></div>
@@ -137,7 +164,7 @@
 			</div>
 
 		</div>
-	</div>
+	</div> -->
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
@@ -151,7 +178,8 @@
 		setup() {
 			const state = reactive({
 				data: [],
-				qrcode: []
+				qrcode: [],
+				geoJson: {}
 			})
 			const basicOption = {
 				color: ['#fff', '#42E5F3', '#F29600', '#1edf90', '#e9e54e'],
@@ -173,7 +201,7 @@
 					}
 				},
 				grid: {
-					top: '40px',
+					top: '80px',
 					left: '5px',
 					right: '5px',
 					bottom: '40px',
@@ -181,6 +209,9 @@
 				},
 			}
 			onMounted(() => {
+				axios.get('/assets/eboard/taiwan.json').then(function ({ data }) {
+					state.geoJson = data
+				})
 				axios.get("/page/get_eboard_data").then(function ({ data }) {
 					state.data = data.data.history.reverse()
 					state.qrcode = data.data.qrcode
@@ -188,6 +219,7 @@
 					drawTable1()
 					drawTable2()
 					drawTable3()
+					drawGeo()
 					drawRound1()
 					drawRound2()
 				})
@@ -297,6 +329,7 @@
 									color: '#86A0BE',
 								},
 							},
+							minInterval: 1
 						}
 					],
 					series: [
@@ -319,6 +352,61 @@
 				myChart = echarts.init(document.getElementById('tb-3'))
 				option = {
 					...basicOption,
+					color: [
+						{
+							type: 'linear',
+							x: 0,
+							y: 0,
+							x2: 0,
+							y2: 1,
+							colorStops: [{
+								offset: 0, color: '#11B4DB '
+							}, {
+								offset: 1, color: '#00527C'
+							}],
+							global: false
+						},
+						{
+							type: 'linear',
+							x: 0,
+							y: 0,
+							x2: 0,
+							y2: 1,
+							colorStops: [{
+								offset: 0, color: '#2C90DF'
+							}, {
+								offset: 1, color: '#06427A'
+							}],
+							global: false
+						},
+						{
+							type: 'linear',
+							x: 0,
+							y: 0,
+							x2: 0,
+							y2: 1,
+							colorStops: [{
+								offset: 0, color: '#7AECEA'
+							}, {
+								offset: 1, color: '#0E4470'
+							}],
+							global: false
+						},
+						{
+							type: 'linear',
+							x: 0,
+							y: 0,
+							x2: 0,
+							y2: 1,
+							colorStops: [{
+								offset: 0, color: '#B19556'
+							}, {
+								offset: 1, color: '#4D5E60'
+							}],
+							global: false
+						},
+						'#e9e54e'
+					],
 					xAxis: {
 						type: 'category',
 						axisLabel: { fontSize: '14px' },
@@ -381,21 +469,37 @@
 						{
 							name: '3S',
 							type: 'bar',
+							barWidth: 7,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
 							data: data.map(x => x.product_bids['SMART_STUDENT'])
 						},
 						{
 							name: '學生貸',
 							type: 'bar',
+							barWidth: 7,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
 							data: data.map(x => x.product_bids['STUDENT'])
 						},
 						{
 							name: '上班族貸',
 							type: 'bar',
+							barWidth: 7,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
 							data: data.map(x => x.product_bids['SALARY_MAN'])
 						},
 						{
 							name: '微企貸',
 							type: 'bar',
+							barWidth: 7,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
 							data: data.map(x => x.product_bids['SK_MILLION'])
 						},
 						{
@@ -456,6 +560,48 @@
 					return b.full_member_count - a.full_member_count
 				}).slice(0, 5)
 			})
+
+			const drawGeo = () => {
+				const { geoJson } = state
+				echarts.registerMap('taiwan', { geoJSON: geoJson });
+				myChart = echarts.init(document.getElementById('map-1'))
+				option = {
+					visualMap: {
+						min: 800,
+						max: 50000,
+						left: 24,
+						bottom: 18,
+						padding: 5,
+						calculable: true,
+						text: ['Max', 'Min'],
+						textStyle: {
+							color: '#fff',
+							fontSize: 14,
+						},
+						inRange: {
+							color: ['#05D4FF', '#0379F6', '#004DF4']
+						}
+					},
+					series: [
+						{
+							type: 'map',
+							roam: true,
+							map: 'taiwan',
+							zoom: 5.65,
+							center: [120.58, 23.58],
+							data: [
+								{ name: '宜蘭縣', value: 1234 },
+								{ name: '臺北市', value: 44534 },
+								{ name: '臺中市', value: 12534 },
+								{ name: '屏東縣', value: 33534 }
+							]
+						}
+					],
+
+				}
+				myChart.setOption(option)
+			}
+
 			return { state, rankInflux };
 		}
 	}).mount('#app')
