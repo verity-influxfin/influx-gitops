@@ -18,8 +18,6 @@
 	}
 </style>
 <script type="text/javascript">
-    let riskLevelResponse = []
-
     // SQL資料抓取
     function fetchInfoData(user_id) {
         $.ajax({
@@ -66,15 +64,7 @@
         });
     }
 
-    // 反詐欺資料
-    function fetchRiskLevelData(user_id) {
-        fillRiskLevelData(riskLevelResponse);
-    }
 
-    function approved() {
-        alert('功能尚未啟用！');
-        return false;
-    }
 
     function getNewDate(str) {
         if (!str) {
@@ -173,7 +163,7 @@
         let user_id = url.searchParams.get("user_id");
         setTimeout(fetchInfoData(user_id), 1000);
         setTimeout(fetchBusinessRegistrationData(), 1000);
-        setTimeout(fetchRiskLevelData(user_id), 1000);
+
 		$('#redo').on('click', () => {
             if (confirm('是否確定重新執行爬蟲？')) {
                 axios.post('/admin/scraper/downloadBusinessRegistration').then(({ data }) => {

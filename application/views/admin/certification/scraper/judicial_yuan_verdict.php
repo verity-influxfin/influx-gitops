@@ -29,10 +29,6 @@
 	}
 </style>
 <script type="text/javascript">
-    let isClick = false;
-    let user_id = "";
-    let riskLevelResponse = [];
-
     function fetchInfoData(user_id) {
         $.ajax({
             type: "GET",
@@ -57,7 +53,7 @@
     function fetchjudicialyuan(user_id = '') {
         $.ajax({
             type: "GET",
-            url: "/admin/scraper/judicial_yuan" + "?user_id=" + user_id + "&function=requestJudicialYuanVerdictsBornCount",
+            url: "/admin/scraper/judicial_yuan" + "?user_id=" + user_id + "&function=requestJudicialYuanVerdictsCount",
             success: function (response) {
                 if (response.status.code != 200) {
                     console.log(response.status.code)
@@ -80,7 +76,7 @@
         $.ajax({
             type: "GET",
             url: "/admin/scraper/judicial_yuan_case" + "?user_id=" + user_id + "&case_type=" + case_type +
-                "&function=requestJudicialYuanVerdictsBornCase",
+                "&function=requestJudicialYuanVerdictsCase",
             async: false,
             success: function (response) {
                 if (response.status.code != 200) {
@@ -89,7 +85,7 @@
                     return;
                 }
                 name = response.response.name;
-                dataResponse = response.response.results;
+                dataResponse = response.response;
                 filljudicialyuanData(name, dataResponse);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -108,11 +104,6 @@
         return highlighted;
     }
 
-    //todo: 更新審核狀態
-    function approved() {
-        alert('功能尚未啟用！');
-    }
-
     // 寫入textbox
     function inputCaseToTextBox(caseType) {
         $('#text-case-type').text('司法院資訊(' + caseType + ')');
@@ -128,16 +119,6 @@
             $('#' + id).removeClass('table-ellipsis');
             isClick = true;
         }
-    }
-
-    // 上一頁
-    function lastPage() {
-        alert('資料綁定製作中！');
-    }
-
-    // 下一頁
-    function nextPage() {
-        alert('資料綁定製作中！');
     }
 
     // 獲取新檔案
@@ -188,25 +169,6 @@
         return html;
     }
 
-    // risk level sample
-    function create_risk_level_html(level, time, content) {
-        html = `<div class="form-group">
-                    <table class="table table-bordered table-hover table-striped">
-                        <tr>
-                            <td class="table-title">風險等級</td>
-                            <td class="table-title">事件時間</td>
-                            <td class="table-title">指標內容</td>
-                        </tr>
-                        <tr>
-                            <td>${level}</td>
-                            <td>${time}</td>
-                            <td>${content}</td>
-                        </tr>
-                    </table>
-                </div>`
-        return html;
-    }
-
     // 插入SQL資料
     function fillInfoData(judicialyuanInfoData) {
         if (!judicialyuanInfoData) {
@@ -232,7 +194,7 @@
         if (!judicialYuanCount) {
             return;
         }
-        judicialYuanCount.results.forEach((item) => {
+        judicialYuanCount.cases.forEach((item) => {
             // console.log(item.case)
             // console.log(item.count)
             count_html = create_count_html(item.case, item.count);
@@ -261,29 +223,18 @@
         });
     }
 
-    // 插入反詐欺資料
-    function fillRiskLevelData(riskLevelResponse) {
-        if (!riskLevelResponse) {
-            return;
-        }
-        riskLevelResponse.forEach((item) => {
-            level_html = create_risk_level_html(item.level, item.time, item.content);
-            $('#risk-level').append(level_html);
-        })
-    }
-
     $(document).ready(function () {
         let urlString = window.location.href;
         let url = new URL(urlString);
         user_id = url.searchParams.get("user_id");
         fetchInfoData(user_id);
         fetchjudicialyuan(user_id);
-        setTimeout(fillRiskLevelData(riskLevelResponse), 1000);
 
 		$('#redo').on('click', () => {
 			if (confirm('是否確定重新執行爬蟲？')) {
 				axios.post('/admin/scraper/judicial_yuan_verdicts', {
-					name: $('#name').text()
+					name: $('#name').text(),
+                    address: $('#address').text()
 				}).then(({ data }) => {
 					if (data.status == 200) {
 						location.reload()
@@ -376,10 +327,7 @@
             <td style=background-color:white;>
                 <div class="d-flex justify-content-evenly">
                     <center>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <input onclick="lastPage()" class="btn btn-primary btn-sm" type="button" value="上一頁">
-                            <input onclick="nextPage()" class="btn btn-primary btn-sm" type="button" value="下一頁">
-                        </div>
+                        <div class="btn-group" role="group" aria-label="Basic example"></div>
                     </center>
                 </div>
             </td>

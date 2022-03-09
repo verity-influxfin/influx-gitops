@@ -16,11 +16,8 @@ class Scraper extends MY_Admin_Controller
         $this->load->library('scraper/google_lib');
         $this->load->library('scraper/ptt_lib');
         $this->load->library('scraper/instagram_lib');
-
-
     }
 
-    // todo : 各項功能整合待優化
     public function index()
     {
         $input = $this->input->get(NULL, TRUE);
@@ -66,31 +63,14 @@ class Scraper extends MY_Admin_Controller
         }
 
         $response = [
-            'risk_level' => '',
-            'risk_status' => '',
-            'judicial_yuan_status' => '',
             'household_registration_status' => '',
+            'judicial_yuan_status' => '',
+            'google_status' => '',
+            'instagram_status' => '',
             'sip_status' => '',
             'biz_status' => '',
             'business_registration_status' => '',
-            'google_status' => '',
-            'ptt_status' => '',
-            'instagram_status' => '',
-            'fb_status' => '',
-            'dcard_status' => ''
         ];
-
-        // verdict_status
-        $info = $this->user_model->get($input['user_id']);
-        if ( ! empty($info) && isset($info->name))
-        {
-            $name = $info->name;
-            $judicial_yuan_status = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name);
-            if (isset($judicial_yuan_status['response']['status']) && ! empty($judicial_yuan_status['response']['status']))
-            {
-                $response['judicial_yuan_status'] = $judicial_yuan_status['response']['status'];
-            }
-        }
 
         // household_registration_status
         $hrCer = $this->user_certification_model->get_household_info($input['user_id']);
@@ -101,6 +81,45 @@ class Scraper extends MY_Admin_Controller
             {
                 $hr_status = $hr_result['response']['rowData']['responseData']['checkIdCardApply'];
                 $response['household_registration_status'] = $hr_status == 1 ? 'finished' : 'failure';
+            }
+        }
+
+        // verdict_status
+        $info = $this->user_model->get($input['user_id']);
+        if ( ! empty($info) && isset($info->name))
+        {
+            $name = $info->name;
+            $address = $this->_get_new_domicile($info->address);
+            $judicial_yuan_status = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name, $address);
+            if (isset($judicial_yuan_status['response']['status']) && ! empty($judicial_yuan_status['response']['status']))
+            {
+                $response['judicial_yuan_status'] = $judicial_yuan_status['response']['status'];
+            }
+        }
+
+        // google_status
+        if ( ! empty($name))
+        {
+            $google_status = $this->google_lib->get_google_status($name);
+            if ( ! empty($google_status['response']['status']) && isset($google_status['response']['status']))
+            {
+                $response['google_status'] = $google_status['response']['status'];
+            }
+        }
+
+        // instagram_status
+        $social_content = $this->user_certification_model->get_content($input['user_id'], CERTIFICATION_SOCIAL);
+        if (! empty($social_content) && isset($social_content[0]->content))
+        {
+            $social_result = json_decode($social_content[0]->content, TRUE);
+            if (isset($social_result['instagram']['username']) && ! empty($social_result['instagram']['username']))
+            {
+                $ig_username = $social_result['instagram']['username'];
+                $ig_status = $this->instagram_lib->getLogStatus($input['user_id'], $ig_username);
+                if (isset($ig_status['response']['result']['status']) && ! empty($ig_status['response']['result']['status']))
+                {
+                    $response['instagram_status'] = $ig_status['response']['result']['status'];
+                }
             }
         }
 
@@ -147,46 +166,19 @@ class Scraper extends MY_Admin_Controller
             }
         }
 
-        // google_status
-        if ( ! empty($name))
-        {
-            $google_status = $this->google_lib->get_google_status($name);
-            if ( ! empty($google_status['response']['status']) && isset($google_status['response']['status']))
-            {
-                $response['google_status'] = $google_status['response']['status'];
-            }
-        }
-
-        // ptt_status
-        // todo: 目前尚未獲取使用者ptt帳號
-        $social_content = $this->user_certification_model->get_content($input['user_id'], CERTIFICATION_SOCIAL);
-        if ( ! empty($social_content) && isset($social_content[0]->content))
-        {
-            $social_result = json_decode($social_content[0]->content, TRUE);
-            if (isset($social_result['ptt']['username']) && ! empty($social_result['ptt']['username']))
-            {
-                $ptt_username = $social_result['ptt']['username'];
-                $ptt_status = $this->ptt_lib->get_ptt_status($input['user_id'], $ptt_username);
-                if (isset($ptt_status['response']['status']) && ! empty($ptt_status['response']['status']))
-                {
-                    $response['ptt_status'] = $ptt_status['response']['status'];
-                }
-            }
-        }
-
-        // instagram_status
-        if ( ! empty($social_result))
-        {
-            if (isset($social_result['instagram']['username']) && ! empty($social_result['instagram']['username']))
-            {
-                $ig_username = $social_result['instagram']['username'];
-                $ig_status = $this->instagram_lib->getLogStatus($input['user_id'], $ig_username);
-                if (isset($ig_status['response']['result']['status']) && ! empty($ig_status['response']['result']['status']))
-                {
-                    $response['instagram_status'] = $ig_status['response']['result']['status'];
-                }
-            }
-        }
+        //ptt 未啟用
+//        if ( ! empty($social_content))
+//        {
+//            if (isset($social_result['ptt']['username']) && ! empty($social_result['ptt']['username']))
+//            {
+//                $ptt_username = $social_result['ptt']['username'];
+//                $ptt_status = $this->ptt_lib->get_ptt_status($input['user_id'], $ptt_username);
+//                if (isset($ptt_status['response']['status']) && ! empty($ptt_status['response']['status']))
+//                {
+//                    $response['ptt_status'] = $ptt_status['response']['status'];
+//                }
+//            }
+//        }
 
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
@@ -351,7 +343,8 @@ class Scraper extends MY_Admin_Controller
 	public function judicial_yuan_verdicts(){
 		$this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-		$result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name']);
+        $address = $this->_get_new_domicile(input['address']);
+        $result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name'], $address);
 		if( ! $result){
 			$error = [
                 'response' => [

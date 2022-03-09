@@ -21,8 +21,6 @@
     }
 </style>
 <script type="text/javascript">
-    let riskLevelResponse = []
-
     // SQL資料抓取
     function fetchInfoData(user_id) {
         $.ajax({
@@ -67,15 +65,7 @@
         });
     }
 
-    // 反詐欺資料
-    function fetchRiskLevelData(user_id) {
-        fillRiskLevelData(riskLevelResponse);
-    }
 
-    function approved() {
-        alert('功能尚未啟用！');
-        return false;
-    }
 
     function create_risk_level_html(level, time, content) {
         html = `<div class="form-group">
@@ -150,7 +140,7 @@
         let user_id = url.searchParams.get("user_id");
         setTimeout(fetchInfoData(user_id), 1000);
         setTimeout(fetchInstagramData(user_id), 1000);
-        setTimeout(fetchRiskLevelData(user_id), 1000);
+
 
         $('#follow').on('click', () => {
             axios.post('/admin/scraper/autoFollowIG', {

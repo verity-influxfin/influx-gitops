@@ -11,12 +11,12 @@ class Business_registration_lib
             throw new Exception('can not get Business_registration ip or port');
         }
         $end_point = 'businessregistration';
-        $this->scraper_url = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/' . $end_point . '/';
+        $this->scraper_url = 'http://' . getenv('GRACULA_IP') . ':' . getenv('GRACULA_PORT') . '/scraper/api/v1.0/' . $end_point;
     }
 
     public function downloadBusinessRegistration()
     {
-        $url = $this->scraper_url . 'download';
+        $url = $this->scraper_url . '/download';
         $data = ['download'];
         $result = curl_get($url, $data);
 
@@ -35,7 +35,7 @@ class Business_registration_lib
             return FALSE;
         }
         $response = [];
-        $url = $this->scraper_url . "{$businessid}/data";
+        $url = $this->scraper_url . '/data?businessId=' . $businessid;
         $result = curl_get($url);
         if ( ! empty($result))
         {
@@ -48,7 +48,7 @@ class Business_registration_lib
     public function getDate()
     {
         $response = [];
-        $url = $this->scraper_url . 'date';
+        $url = $this->scraper_url . '/date';
         $result = curl_get($url);
         if ( ! empty($result))
         {
@@ -65,7 +65,7 @@ class Business_registration_lib
             return FALSE;
         }
         $response = [];
-        $url = $this->scraper_url . "{$date}/status";
+        $url = $this->scraper_url . '/status?date=' . $date;
         $result = curl_get($url);
         if ( ! empty($result))
         {
