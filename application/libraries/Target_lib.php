@@ -1898,6 +1898,37 @@ class Target_lib
         return false;
     }
 
+    public function script_chk_signing()
+    {
+        $this->CI->load->model('loan/credit_model');
+        $target = $this->CI->credit_model->get_expired_signing_list();
+        $target_id = array_column($target, 'target_id');
+        if (empty($target_id))
+        {
+            return 0;
+        }
+
+        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 4]);
+        $count = 0;
+        foreach ($target as $value)
+        {
+            $param = [
+                'status' => TARGET_FAIL,
+                'sub_status' => TARGET_SUBSTATUS_NORNAL,
+                'remark' => $value['remark'] . '系統自動取消'
+            ];
+            $this->CI->target_model->update($value['id'], $param);
+            $this->insert_change_log($value['id'], $param);
+            $this->CI->notification_lib->expired_cancel($value['user_id']);
+
+            $count++;
+        }
+
+        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 0]);
+
+        return $count;
+    }
+
     //使用者觸發架上案件智能投資
     public function aiBiddingAllTarget($userId){
         $allow_aiBidding_product = $this->CI->config->item('allow_aiBidding_product');
