@@ -1908,7 +1908,7 @@ class Target_lib
             return 0;
         }
 
-        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 4]);
+        $this->CI->target_model->update_by(['id' => $target_id], ['script_status' => 17]);
         $count = 0;
         foreach ($target as $value)
         {
