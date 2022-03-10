@@ -852,6 +852,7 @@ class User_lib {
                     $RoRList[$year_str]['total_income'] = $RoRList[$year_str]['interest'] + $RoRList[$year_str]['delayed_interest'] +
                         $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'] +
                         $RoRList[$year_str]['allowance'] - $RoRList[$year_str]['platform_fee'];
+                    $RoRList[$year_str]['interest'] -= $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'];
                     $RoRList[$year_str]['rate_of_return'] = round($RoRList[$year_str]['total_income'] / $RoRList[$year_str]['average_principle'] * 100, 1);
                     $RoRList[$year_str]['range_title'] = date('Ym', strtotime($RoRList[$year_str]['start_date'])).'-'.date('Ym', strtotime($RoRList[$year_str]['end_date']));
 
