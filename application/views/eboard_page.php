@@ -26,6 +26,10 @@
 			letter-spacing: 8px;
 		}
 
+		.target {
+			position: absolute;
+		}
+
 		.table-border {
 			border: 2px solid rgba(255, 255, 255, 0.2);
 			background: linear-gradient(180deg, rgba(1, 81, 124, 0.5) 0%, rgba(5, 50, 92, 0.5) 100%);
@@ -74,42 +78,55 @@
 			line-height: 1.2;
 		}
 
-		.num-group{
+		.num-group {
 			padding: 12px;
 			text-align: center;
 		}
-		.num-group .num{
+
+		.num-group .num {
 			color: rgb(248, 182, 45);
 			font-size: 44px;
 			line-height: 1.5;
 		}
-		.num-group .num-title{
+
+		.num-group .num-title {
 			color: #fff;
 			font-size: 20px;
-			line-height: 1.5;
 		}
 
-		.qr-box {
-			padding: 5px;
-			color: azure;
-			font-size: 16px;
-			line-height: 1.2;
+		.rank-content {
+			margin: 60px 16px 16px 16px;
+			height: 240px;
+			overflow: hidden;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-image: url('/assets/eboard/firework1.gif');
+			background-repeat: no-repeat;
+			background-position: center center;
 		}
 
-		.qr-box-title {
-			margin: 4px 0;
-		}
+		.rank-board {}
 
-		.rank-table {
-			height: calc(100% - 67px);
-			margin: 15px 0;
-		}
-
-		.rank-table-title {
+		.rank-item {
 			color: #fff;
+			font-size: 20px;
+			margin: 8px;
 			text-align: center;
-			margin: 15px 0 10px;
 		}
+
+		@keyframes marquee {
+			0% {
+				top: 250%;
+				transform: translateY(0%);
+			}
+
+			100% {
+				top: 0;
+				transform: translateY(-100%);
+			}
+		}
+
 
 		tbody>tr:nth-last-child(1) {
 			border-bottom-style: hidden;
@@ -121,7 +138,7 @@
 	<div class="row m-3">
 		<div class="col-4">
 			<div class="d-flex table-border position-relative">
-				<div class="table-title">官網</div>
+				<div class="table-title">官網 </div>
 				<div id="main" class="mx-auto" style="height: 300px; width: 560px;"></div>
 			</div>
 			<div class="d-flex table-border position-relative my-3">
@@ -151,7 +168,10 @@
 				<div>|</div>
 				<div>星期{{ state.time.day }}</div>
 				<div>|</div>
-				<div>天氣：晴</div>
+				<div v-if="state.weather">
+					<img :src="`https://www.metaweather.com/static/img/weather/${state.weather}.svg`"
+						style="height: 30px;margin-bottom: 5px;">
+				</div>
 			</div>
 			<div class="table-border">
 				<div class="history" style="height: 180px;">
@@ -173,8 +193,18 @@
 				</div>
 			</div>
 			<div class="table-border mt-3 position-relative">
+				<div class="table-title">敬請期待</div>
+				<div class="rank-content table-border">
+					<div class="rank-board">
+						<!-- <div class="rank-item" v-for="item in 5">
+							恭喜 {{item}} 得到獎金
+						</div> -->
+					</div>
+				</div>
+
+				<div class="table-title">推薦有賞績效</div>
 				<!-- <img class="position-absolute" src="/assets/eboard/firework1.gif" alt=""> -->
-				<div id="qr-1" style="height: 690px;"></div>
+				<div id="qr-1" style="height: 374px;"></div>
 			</div>
 		</div>
 	</div>
@@ -193,6 +223,7 @@
 				data: [],
 				qrcode: [],
 				geoJson: {},
+				weather: '',
 				time: {
 					showDate: '',
 					time: '',
@@ -236,7 +267,10 @@
 					})
 				axios.get("/page/get_eboard_data").then(function ({ data }) {
 					state.data = data.data.history.reverse()
-					// state.qrcode = data.data.qrcode
+					state.weather = data.data.weather
+					// state.qrcode = data.data.qrcode.map(item => {
+					// 	return [item.salary_man_count, item.student_count, item.name]
+					// })
 					state.qrcode = [[58, 32, '謝承翰'],
 					[74, 13, '許維則'],
 					[32, 15, '許維A'],
@@ -591,11 +625,6 @@
 				}
 				myChart.setOption(option)
 			}
-			const rankInflux = computed(() => {
-				return [...state.qrcode].sort((a, b) => {
-					return b.full_member_count - a.full_member_count
-				}).slice(0, 5)
-			})
 			const drawGeo = () => {
 				const { geoJson } = state
 				echarts.registerMap('taiwan', { geoJSON: geoJson });
@@ -649,11 +678,11 @@
 					'19:00', '20:00', '21:00', '22:00', '23:00'
 				]
 				// const hours = ['00:00', '06:00', '12:00', '18:00', '24:00']
-				const days = [...Array(7)].map((_, i) => {
+				const days = [...Array(8)].map((_, i) => {
 					const d = new Date()
 					d.setDate(d.getDate() - i)
 					return `${(d.getMonth() + 1).toString().padStart(2, 0)}/${d.getDate().toString().padStart(2, 0)}`
-				}).reverse()
+				}).concat('').reverse()
 				option = {
 					...basicOption,
 					color: ['#05D4FF'],
@@ -685,7 +714,7 @@
 						{
 							type: 'scatter',
 							symbolSize: (val) => val[2] * 2,
-							data: [[0, 0, 2], [0, 1, 5], [1, 2, 3], [2, 4, 5], [2, 1, 9]]
+							data: [[1, 0, 2], [1, 1, 5], [2, 2, 3], [3, 4, 5], [5, 1, 9]]
 
 						}
 					]
@@ -697,7 +726,7 @@
 				option = {
 					...basicOption,
 					grid: {
-						top: '330px',
+						top: '80px',
 						left: '6%',
 						right: '6%',
 						bottom: '30px',
@@ -774,7 +803,7 @@
 				renderQr.value = state.qrcode.slice(0, 7)
 				drawQr()
 			}
-			return { state, rankInflux };
+			return { state };
 		}
 	}).mount('#app')
 </script>

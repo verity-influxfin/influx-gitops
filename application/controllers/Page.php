@@ -63,6 +63,7 @@ class Page extends CI_Controller
     {
         $retval = [];
         $first_day = (new DateTimeImmutable(date('Y-m-d')))->modify('- 6 day');
+		$weather = $this->_get_today_weather();
 
         $this->load->model('user/sale_dashboard_model');
 
@@ -74,7 +75,7 @@ class Page extends CI_Controller
             $retval[] = [
 
                 // 日期
-                'date' => $tx_date = $date->format('Y-m-d'),
+                'date' => $tx_date = $date->format('y/m/d'),
 
                 // 官網流量
                 'official_site_trends' => $amounts[sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
@@ -107,7 +108,8 @@ class Page extends CI_Controller
                         'result' => 'success',
                         'data'   => [
 							'history' => $retval,
-							'qrcode' => $qr
+							'qrcode' => $qr,
+							'weather' => $weather
 						]
                     ]));
     }
@@ -398,5 +400,12 @@ class Page extends CI_Controller
         $reports = $analytics->reports->batchGet($body);
         return $reports[0]->getData()->getRows()[0]->getMetrics()[0]->getValues()[0];
     }
+
+	private function _get_today_weather(){
+		$url = 'https://www.metaweather.com/api/location/2306179/';
+		$res = curl_get($url);
+		$json = json_decode($res,true);
+		return $json['consolidated_weather'][0]['weather_state_abbr'] ?? ['weather_state_abbr'=>''];
+	}
 
 }
