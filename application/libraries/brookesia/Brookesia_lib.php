@@ -38,20 +38,20 @@ class Brookesia_lib
 
         // 子系統無回應（案件會因流程轉二審，暫不觸發反詐欺）
 		if (!$result || !isset($response->status)) {
-			return FALSE;
+			return TRUE;
 		}
         // 子系統無 check log 資料
         else if($response->status != 200)
         {
-            return TRUE;
+            return FALSE;
         }
         // check log 有資料，但未完成
         else if (isset($response->response->result->status) && $response->response->result->status != 'finished')
         {
-            return TRUE;
+            return FALSE;
         }
 
-		return FALSE;
+		return TRUE;
 	}
 
     // for second instance page
