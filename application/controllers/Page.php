@@ -99,7 +99,7 @@ class Page extends CI_Controller
                 'deals' => $this->_get_deals($date),
             ];
         }
-		$qr = $this->_get_total_qrcode_apply();
+        $qr = $this->_get_total_qrcode_apply();
 
         usort($retval, function ($a, $b)
         {
@@ -424,7 +424,7 @@ class Page extends CI_Controller
         return $amounts;
     }
 
-	private function _get_today_weather(){
+    private function _get_today_weather(){
         $url = 'https://www.metaweather.com/api/location/2306179/';
         $res = curl_get($url);
         $json = json_decode($res,true);
@@ -524,7 +524,7 @@ class Page extends CI_Controller
         return $result;
     }
 
-	private function _get_platform_statistic()
+    private function _get_platform_statistic()
     {
         $this->load->model('loan/target_model');
         $daily_list = $this->target_model->db
