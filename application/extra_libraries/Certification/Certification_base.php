@@ -335,6 +335,11 @@ abstract class Certification_base implements Certification_definition
             return TRUE;
         }
 
+        if (isset($this->config_cert['show']) && $this->config_cert['show'] === FALSE)
+        {
+            return TRUE;
+        }
+
         return $this->CI->notification_lib->certification($this->certification['user_id'],
             $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_SUCCEED);
     }
@@ -360,6 +365,11 @@ abstract class Certification_base implements Certification_definition
         );
 
         if ( ! empty($target))
+        {
+            return TRUE;
+        }
+
+        if (isset($this->config_cert['show']) && $this->config_cert['show'] === FALSE)
         {
             return TRUE;
         }

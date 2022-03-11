@@ -3417,7 +3417,7 @@ class Certification_lib{
             }
 
             $cert = Certification_factory::get_instance_by_model_resource($info);
-            return $cert->verify();
+            $cert->verify();
         }
 
         return TRUE;

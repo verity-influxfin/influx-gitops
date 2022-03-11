@@ -1643,15 +1643,15 @@ class Certification extends MY_Admin_Controller {
             $new_data_content['debt_to_equity_ratio'] = 0;
         }
 
-        $verified_result = new InvestigationCertificationResult(CERTIFICATION_STATUS_SUCCEED);
+        $verified_result = new \CertificationResult\RepaymentCapacityCertificationResult(CERTIFICATION_STATUS_SUCCEED);
         $this->load->library('verify/data_verify_lib');
 
         // 印表日期
         $this->load->library('mapping/time');
-        $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $old_data_content['printDatetime']);
+        $print_timestamp = preg_replace('/\s[0-9]{2}\:[0-9]{2}\:[0-9]{2}/', '', $old_data_content['printDatetime'] ?? '');
         $print_timestamp = $this->time->ROCDateToUnixTimestamp($print_timestamp);
 
-        $verified_result->addMessage('人工審核通過', CERTIFICATION_STATUS_SUCCEED, MessageDisplay::Backend);
+        $verified_result->addMessage('人工審核通過', CERTIFICATION_STATUS_SUCCEED, \CertificationResult\MessageDisplay::Backend);
         $this->certification_lib->update_repayment_certification(
             $post_data['id'],
             $print_timestamp,
