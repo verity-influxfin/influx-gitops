@@ -152,7 +152,7 @@
 		</div>
 		<div class="col-4">
 			<div class="table-border position-relative">
-				<div class="table-title">申貸分佈圖</div>
+				<div class="table-title">成交案件數分佈圖</div>
 				<div id="map-1" class="mx-auto" style="height: 620px;"></div>
 			</div>
 			<div class="table-border position-relative mt-3">
@@ -193,17 +193,15 @@
 				</div>
 			</div>
 			<div class="table-border mt-3 position-relative">
-				<div class="table-title">敬請期待</div>
+				<div class="table-title">績效榜</div>
 				<div class="rank-content table-border">
 					<div class="rank-board">
-						<!-- <div class="rank-item" v-for="item in 5">
-							恭喜 {{item}} 得到獎金
-						</div> -->
+						<div class="rank-item" v-for="(item, i) in state.rank">
+							恭喜 {{item.name}} 取得推薦有賞績效第{{i+1}}名 - 成交數 {{item.full_member_count}}
+						</div>
 					</div>
 				</div>
-
 				<div class="table-title">推薦有賞績效</div>
-				<!-- <img class="position-absolute" src="/assets/eboard/firework1.gif" alt=""> -->
 				<div id="qr-1" style="height: 374px;"></div>
 			</div>
 		</div>
@@ -216,22 +214,38 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.js"></script>
 <script>
-	const { reactive, ref, onMounted, computed, watch } = Vue;
+	const { reactive, ref, onMounted, onUnmounted, computed, watch } = Vue;
 	Vue.createApp({
 		setup() {
 			const state = reactive({
 				data: [],
-				qrcode: [],
+				date: '',
 				geoJson: {},
-				weather: '',
+				loan_statistic: [],
+				loan_distribution:[],
+				qrcode: [],
+				rank: [],
+				real: [],
 				time: {
 					showDate: '',
 					time: '',
 					day: ''
 				},
-				date: ''
+				weather: ''
 			})
 			const renderQr = ref([])
+			const intervals = reactive({
+				chart: 0,
+				api: 0
+			})
+			const charts = reactive({
+				flow: {},
+				app: {},
+				prod: {},
+				geoMap: {},
+				real: {},
+				qr: {},
+			})
 			const basicOption = {
 				color: ['#fff', '#42E5F3', '#F29600', '#1edf90', '#e9e54e'],
 				textStyle: {
@@ -260,6 +274,23 @@
 				},
 			}
 			onMounted(() => {
+				// init chart
+
+				charts.flow = echarts.init(document.getElementById('main'))
+				charts.app = echarts.init(document.getElementById('tb-2'))
+				charts.prod = echarts.init(document.getElementById('tb-3'))
+				charts.geoMap = echarts.init(document.getElementById('map-1'))
+				charts.real = echarts.init(document.getElementById('real-1'))
+				charts.qr = echarts.init(document.getElementById('qr-1'))
+				getData()
+			})
+
+			onUnmounted(() => {
+				clearInterval(intervals.api)
+				clearInterval(intervals.chart)
+			})
+
+			const getData = () => {
 				showTime()
 				state.date =
 					axios.get('/assets/eboard/taiwan.json').then(function ({ data }) {
@@ -268,36 +299,28 @@
 				axios.get("/page/get_eboard_data").then(function ({ data }) {
 					state.data = data.data.history.reverse()
 					state.weather = data.data.weather
-					// state.qrcode = data.data.qrcode.map(item => {
-					// 	return [item.salary_man_count, item.student_count, item.name]
-					// })
-					state.qrcode = [[58, 32, '謝承翰'],
-					[74, 13, '許維則'],
-					[32, 15, '許維A'],
-					[74, 21, '許維B'],
-					[32, 25, '許維C'],
-					[44, 23, '許維則D'],
-					[32, 15, '許維E'],
-					[51, 32, '謝承F']
-					]
+					state.qrcode = data.data.qrcode.map(item => {
+						return [item.salary_man_count, item.student_count, item.name]
+					})
+					state.rank = [...data.data.qrcode].sort((a, b) => { b.full_member_count - a.full_member_count }).slice(0, 3)
+					setStatisticData(data.data.loan_statistic)
+					state.loan_distribution = data.data.loan_distribution
 				}).then(() => {
 					drawTable1()
 					drawTable2()
 					drawTable3()
-					drawGeo()
 					drawReal()
 					nextQrData()
-					setInterval(function () {
+					drawGeo()
+					intervals.chart = setInterval(function () {
 						nextQrData()
 					}, 4000)
-					// drawRound1()
-					// drawRound2()
+					setTimeout(getData, 120000)
 				})
+			}
 
-			})
 			const drawTable1 = () => {
 				const { data } = state
-				myChart = echarts.init(document.getElementById('main'))
 				option = {
 					...basicOption,
 					xAxis: {
@@ -367,11 +390,10 @@
 						}
 					]
 				}
-				myChart.setOption(option)
+				charts.flow.setOption(option)
 			}
 			const drawTable2 = () => {
 				const { data } = state
-				myChart = echarts.init(document.getElementById('tb-2'))
 				option = {
 					...basicOption,
 					xAxis: {
@@ -415,11 +437,10 @@
 						}
 					]
 				}
-				myChart.setOption(option)
+				charts.app.setOption(option)
 			}
 			const drawTable3 = () => {
 				const { data } = state
-				myChart = echarts.init(document.getElementById('tb-3'))
 				option = {
 					...basicOption,
 					color: [
@@ -581,59 +602,16 @@
 
 					]
 				}
-				myChart.setOption(option)
-			}
-			const drawRound1 = () => {
-				myChart = echarts.init(document.getElementById('c-1'))
-				option = {
-					...basicOption,
-					legend: {
-						show: false,
-					},
-					series: [
-						{
-							type: 'pie',
-							symbolSize: 1,
-							label: {
-								position: 'inner',
-								fontSize: 14
-							},
-							data: state.qrcode.map(x => { return { name: x.name, value: x.student_count } })
-						}
-					]
-				}
-				myChart.setOption(option)
-			}
-			const drawRound2 = () => {
-				myChart = echarts.init(document.getElementById('c-2'))
-				option = {
-					...basicOption,
-					legend: {
-						show: false,
-					},
-					series: [
-						{
-							type: 'pie',
-							symbolSize: 1,
-							label: {
-								position: 'inner',
-								fontSize: 14
-							},
-							data: state.qrcode.map(x => { return { name: x.name, value: x.student_count } })
-						}
-					]
-				}
-				myChart.setOption(option)
+				charts.prod.setOption(option)
 			}
 			const drawGeo = () => {
 				const { geoJson } = state
 				echarts.registerMap('taiwan', { geoJSON: geoJson });
-				myChart = echarts.init(document.getElementById('map-1'))
 				const project = (point) => [point[0] / 180 * Math.PI, -Math.log(Math.tan((Math.PI / 2 + point[1] / 180 * Math.PI) / 2))]
 				option = {
 					visualMap: {
-						min: 800,
-						max: 50000,
+						min: Math.min(...state.loan_distribution.map(x=>x.value)),
+						max: Math.max(...state.loan_distribution.map(x => x.value)),
 						left: 24,
 						bottom: 18,
 						padding: 4.5,
@@ -658,20 +636,14 @@
 							map: 'taiwan',
 							zoom: 5.2,
 							center: project([120.58, 23.58]),
-							data: [
-								{ name: '宜蘭縣', value: 1234 },
-								{ name: '臺北市', value: 44534 },
-								{ name: '臺中市', value: 12534 },
-								{ name: '屏東縣', value: 33534 }
-							]
+							// center: [120.58, 23.58],
+							data: state.loan_distribution
 						}
 					],
-
 				}
-				myChart.setOption(option)
+				charts.geoMap.setOption(option)
 			}
 			const drawReal = () => {
-				myChart = echarts.init(document.getElementById('real-1'))
 				const hours = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
 					'07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
 					'13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
@@ -713,16 +685,14 @@
 					series: [
 						{
 							type: 'scatter',
-							symbolSize: (val) => val[2] * 2,
-							data: [[1, 0, 2], [1, 1, 5], [2, 2, 3], [3, 4, 5], [5, 1, 9]]
-
+							symbolSize: (val) => val[2] * 3,
+							data: state.loan_statistic
 						}
 					]
 				}
-				myChart.setOption(option)
+				charts.real.setOption(option)
 			}
 			const drawQr = () => {
-				myChart = echarts.init(document.getElementById('qr-1'))
 				option = {
 					...basicOption,
 					grid: {
@@ -779,7 +749,7 @@
 						}
 					]
 				}
-				myChart.setOption(option)
+				charts.qr.setOption(option)
 			}
 			const showTime = () => {
 				var date = new Date();
@@ -802,6 +772,18 @@
 				state.qrcode.push(state.qrcode.shift())
 				renderQr.value = state.qrcode.slice(0, 7)
 				drawQr()
+			}
+			const setStatisticData = (data) => {
+				let ans = []
+				let times = 1
+				for (let s = 0; s < data.length; s += 24) {
+					const last = s + 24
+					ans.push(...data.slice(s, last).map((x, i) => {
+						return [times, i, x.value]
+					}))
+					times += 1
+				}
+				state.loan_statistic = ans
 			}
 			return { state };
 		}
