@@ -75,7 +75,7 @@ class Page extends CI_Controller
             $retval[] = [
 
                 // 日期
-                'date' => $tx_date = $date->format('y/m/d'),
+                'date' => $tx_date = $date->format('Y/m/d'),
 
                 // 官網流量
                 'official_site_trends' => $amounts[sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
