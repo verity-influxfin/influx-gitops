@@ -99,7 +99,7 @@ class Page extends CI_Controller
                 'deals' => $this->_get_deals($date),
             ];
         }
-        $qr = $this->_get_total_qrcode_apply($first_day);
+        $qr = $this->_get_total_qrcode_apply();
 
         usort($retval, function ($a, $b)
         {
@@ -243,7 +243,6 @@ class Page extends CI_Controller
 
     /**
      * 取得公司同事QRCode推廣績效
-     * @param DateTimeInterface $date
      * @return array
      * [
      *     [
@@ -255,18 +254,14 @@ class Page extends CI_Controller
      *     ],
      * ]
      */
-    private function _get_total_qrcode_apply(DateTimeInterface $date)
+    private function _get_total_qrcode_apply()
     {
         $this->load->config('influx_users');
         $user_list = $this->config->item('influx_user_list');
         $user_ids = array_column($user_list, 'user_id');
 
         $this->load->library('user_lib');
-        $data_list = $this->user_lib->getPromotedRewardInfo(
-            ['user_id' => $user_ids],
-            $date->getTimestamp(),
-            $date->modify('+1 day')->getTimestamp()
-        );
+        $data_list = $this->user_lib->getPromotedRewardInfo(['user_id' => $user_ids]);
 
         $result = [];
         foreach ($data_list as $data)
@@ -429,7 +424,7 @@ class Page extends CI_Controller
         return $amounts;
     }
 
-	private function _get_today_weather(){
+    private function _get_today_weather(){
         $url = 'https://www.metaweather.com/api/location/2306179/';
         $res = curl_get($url);
         $json = json_decode($res,true);
@@ -446,7 +441,7 @@ class Page extends CI_Controller
             'E' => '高雄市',
             'F' => '新北市',
             'G' => '宜蘭縣',
-            'H' => '桃園縣',
+            'H' => '桃園市',
             'J' => '新竹縣',
             'K' => '苗栗縣',
             'L' => '臺中市',
@@ -520,8 +515,8 @@ class Page extends CI_Controller
         foreach ($list as $info)
         {
             $result[] = [
-                'date' => date('Y/m/d', strtotime($info['tx_datetime'])),
-                'time' => date('H:00', strtotime($info['tx_datetime'])),
+                'date' => date('Y/m/d', strtotime($info['tx_datetime'].' UTC+8')),
+                'time' => date('H:00', strtotime($info['tx_datetime'].' UTC+8')),
                 'value' => (int)$info['cnt']
             ];
         }
@@ -529,7 +524,7 @@ class Page extends CI_Controller
         return $result;
     }
 
-	private function _get_platform_statistic()
+    private function _get_platform_statistic()
     {
         $this->load->model('loan/target_model');
         $daily_list = $this->target_model->db

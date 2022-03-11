@@ -137,25 +137,25 @@
 		<div class="col-4">
 			<div class="d-flex table-border position-relative">
 				<div class="table-title">官網 </div>
-				<div id="main" class="mx-auto" style="height: 300px; width: 560px;"></div>
+				<div id="main" class="mx-auto" style="height: 338px; width: 560px;"></div>
 			</div>
 			<div class="d-flex table-border position-relative my-3">
 				<div class="table-title">ＡＰＰ</div>
-				<div id="tb-2" class="mx-auto" style="height: 300px; width: 560px;"></div>
+				<div id="tb-2" class="mx-auto" style="height: 338px; width: 560px;"></div>
 			</div>
 			<div class="d-flex table-border position-relative">
 				<div class="table-title">產品</div>
-				<div id="tb-3" class="mx-auto" style="height: 300px; width: 560px;"></div>
+				<div id="tb-3" class="mx-auto" style="height: 338px; width: 560px;"></div>
 			</div>
 		</div>
 		<div class="col-4">
 			<div class="table-border position-relative">
 				<div class="table-title">成交案件數分佈圖</div>
-				<div id="map-1" class="mx-auto" style="height: 620px;"></div>
+				<div id="map-1" class="mx-auto" style="height: 696px;"></div>
 			</div>
 			<div class="table-border position-relative mt-3">
 				<div class="table-title">即時成交動態</div>
-				<div id="real-1" style="height: 300px; width: 560px;"></div>
+				<div id="real-1" style="height: 340px; width: 540px;"></div>
 			</div>
 		</div>
 		<div class="col-4">
@@ -172,7 +172,7 @@
 				</div>
 			</div>
 			<div class="table-border">
-				<div class="history" style="height: 180px;">
+				<div class="history" style="height: 233px;">
 					<div class="history-title">
 						最高成交筆數
 					</div>
@@ -200,7 +200,7 @@
 					</div>
 				</div>
 				<div class="table-title">推薦有賞績效</div>
-				<div id="qr-1" style="height: 374px;"></div>
+				<div id="qr-1" style="height: 437px;"></div>
 			</div>
 		</div>
 	</div>
@@ -366,7 +366,6 @@
 						},
 						{
 							name: '會員總數',
-							alignTicks: true,
 							type: 'value',
 							max: Math.max(...data.map(x => x.total_member)) + 500,
 							min: Math.min(...data.map(x => x.total_member)) - 500,
