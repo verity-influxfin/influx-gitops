@@ -109,7 +109,9 @@ class Page extends CI_Controller
                         'data'   => [
 							'history' => $retval,
 							'qrcode' => $qr,
-							'weather' => $weather
+							'weather' => $weather,
+                            'loan_distribution' => $this->_get_loan_distribution(),
+                            'loan_statistic' => $this->_get_loan_statistic(strtotime('-7 days'), time())
 						]
                     ]));
     }
@@ -407,5 +409,98 @@ class Page extends CI_Controller
 		$json = json_decode($res,true);
 		return $json['consolidated_weather'][0]['weather_state_abbr'] ?? ['weather_state_abbr'=>''];
 	}
+
+    private function _get_loan_distribution(): array
+    {
+        $mapping_city_name = [
+            'A' => '臺北市',
+            'B' => '臺中市',
+            'C' => '基隆市',
+            'D' => '臺南市',
+            'E' => '高雄市',
+            'F' => '新北市',
+            'G' => '宜蘭縣',
+            'H' => '桃園縣',
+            'J' => '新竹縣',
+            'K' => '苗栗縣',
+            'L' => '臺中市',
+            'M' => '南投縣',
+            'N' => '彰化縣',
+            'P' => '雲林縣',
+            'Q' => '嘉義縣',
+            'R' => '臺南縣',
+            'S' => '高雄市',
+            'T' => '屏東縣',
+            'U' => '花蓮縣',
+            'V' => '臺東縣',
+            'X' => '澎湖縣',
+            'Y' => '臺北市',
+            'W' => '金門縣',
+            'Z' => '連江縣',
+            'I' => '嘉義市',
+            'O' => '新竹市'
+        ];
+
+        $this->load->model('user/user_model');
+
+        $list = $this->user_model->db
+            ->select('LEFT(u.id_number,1) as city')
+            ->from('p2p_loan.targets t')
+            ->join('p2p_user.users u', 'u.id = t.user_id ')
+            ->where_in('t.status', [TARGET_REPAYMENTING, TARGET_REPAYMENTED])
+            ->get()
+            ->result_array();
+
+        $rs = array_count_values(array_map('strtoupper',array_column($list, 'city')));
+        $result = [];
+        foreach ($rs as $code => $amount)
+        {
+            $result[] = [
+                'name' => $mapping_city_name[$code],
+                'value' => $amount
+            ];
+        }
+
+        return $result;
+
+    }
+
+    private function _get_loan_statistic($start_timestamp=0, $end_timestamp=0)
+    {
+        $this->load->model('transaction/transaction_model');
+
+        $this->transaction_model->db
+            ->select('DATE_FORMAT(FROM_UNIXTIME(created_at), \'%Y-%m-%d %H:00\') AS tx_datetime,')
+            ->from('p2p_transaction.transactions')
+            ->where('source =', SOURCE_LENDING)
+            ->group_by('target_id');
+        if($start_timestamp)
+        {
+            $this->transaction_model->db->where('created_at >= ', $start_timestamp);
+        }
+        if($end_timestamp)
+        {
+            $this->transaction_model->db->where('created_at <= ', $end_timestamp);
+        }
+        $sub_query = $this->transaction_model->db->get_compiled_select('', TRUE);
+
+        $list = $this->transaction_model->db
+            ->select('r.tx_datetime, COUNT(1) AS cnt')
+            ->from("({$sub_query}) AS r")
+            ->group_by('r.tx_datetime')
+            ->get()->result_array();
+
+        $result = [];
+        foreach ($list as $info)
+        {
+            $result[] = [
+                'date' => date('Y/m/d', strtotime($info['tx_datetime'])),
+                'time' => date('H:00', strtotime($info['tx_datetime'])),
+                'value' => (int)$info['cnt']
+            ];
+        }
+
+        return $result;
+    }
 
 }
