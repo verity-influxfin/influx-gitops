@@ -149,13 +149,7 @@
                                             <td><?=isset($value->credit->amount)?$value->credit->amount:'' ?></td>
                                             <td><?=isset($value->loan_amount)&&$value->loan_amount?$value->loan_amount:'' ?></td>
                                             <td><?php // 可動用額度
-                                                echo isset($value->credit->expire_time)
-                                                    ? $value->expire_time > time()
-                                                        ? ! empty($value->credit->amount) && ! empty($value->loan_amount)
-                                                            ? (int) $value->credit->amount - (int) $value->loan_amount
-                                                            : 0
-                                                        : '已過期'
-                                                    : ''; ?>
+                                                echo $value->remain_amount ?? ''; ?>
                                             </td>
                                             <td><?=isset($value->remaining_principal)?$value->remaining_principal:'' ?></td>
                                             <td><?=isset($value->interest_rate)&&$value->interest_rate?floatval($value->interest_rate):'' ?></td>

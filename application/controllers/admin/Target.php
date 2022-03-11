@@ -161,6 +161,10 @@ class Target extends MY_Admin_Controller {
                     if($credit){
                         $list[$key]->credit = $credit;
                     }
+
+                    $this->load->library('credit_lib');
+                    $remain_amount = $this->credit_lib->get_remain_amount($value->user_id, $value->product_id, $value->sub_product_id);
+                    $list[$key]->remain_amount = $remain_amount['remain_amount'];
                 }
 			}
 		}

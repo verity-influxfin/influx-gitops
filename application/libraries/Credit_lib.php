@@ -1040,48 +1040,77 @@ class Credit_lib{
      * @param int $sub_product_id
      * @param int $instalment
      * @param int $except_target_id
-     * @return void
+     * @return array
      */
-    public function get_remain_amount(int $user_id, int $product_id, int $sub_product_id, int $instalment, int $except_target_id = 0)
+    public function get_remain_amount(int $user_id, int $product_id, int $sub_product_id, int $instalment = 0, int $except_target_id = 0)
     {
-        // 撈取同產品的最新一筆核可資訊
-        $credit = $this->CI->credit_model->order_by('created_at','desc')->get_by([
-            'user_id' => $user_id,
-            'product_id' => $product_id,
-            'sub_product_id' => $sub_product_id,
-            'instalment' => $instalment,
-            'expire_time>' => time()
-        ]);
-        if (isset($credit->amount))
-        {
-            $credit_amount = (int) $credit->amount;
-        }
-        else
-        {
-            $credit_amount = 0;
-        }
-
-        $target_list = $this->CI->target_model->get_many_by([
-            'user_id' => $user_id,
-            'status NOT' => [
-                TARGET_CANCEL, // 已取消
-                TARGET_FAIL, // 申請失敗
-                TARGET_REPAYMENTED, // 已結案
-            ],
-            'product_id' => $product_id,
-            'sub_product_id' => $sub_product_id,
-            'instalment' => $instalment,
-            'id !=' => $except_target_id
-        ]);
-        $total_target_amount = array_sum(array_map(function ($item) {
-            return ! $item->loan_amount ? $item->amount : $item->loan_amount;
-        }, $target_list));
-
-        return [
-            'credit_amount' => $credit_amount, // 核可額度
-            'target_amount' => $total_target_amount, // 佔用中的額度
-            'remain_amount' => $credit_amount - $total_target_amount, // 剩餘可用額度
-            'target_list' => $target_list
+        $result = [
+            'credit_amount' => 0, // 核可額度
+            'target_amount' => 0, // 佔用中的額度
+            'remain_amount' => 0, // 剩餘可用額度
+            'target_list' => []
         ];
+
+        // 撈取同產品的最新一筆核可資訊
+        $credit = $this->get_credit($user_id, $product_id, $sub_product_id);
+        if ($credit)
+        {
+            $used_amount = 0;
+            $other_used_amount = 0;
+            $user_max_credit_amount = $this->get_user_max_credit_amount($user_id);
+            //取得所有產品申請或進行中的案件
+            $target_list = $this->CI->target_model->get_many_by([
+                'id !=' => $except_target_id,
+                'user_id' => $user_id,
+                'status NOT' => [TARGET_CANCEL, TARGET_FAIL, TARGET_REPAYMENTED]
+            ]);
+            if ($target_list)
+            {
+                foreach ($target_list as $value)
+                {
+                    if ($product_id == $value->product_id)
+                    {
+                        $used_amount = $used_amount + intval($value->loan_amount);
+                    }
+                    else
+                    {
+                        $other_used_amount = $other_used_amount + intval($value->loan_amount);
+                    }
+                    //取得案件已還款金額
+                    $pay_back_transactions = $this->CI->transaction_model->get_many_by(array(
+                        'source' => SOURCE_PRINCIPAL,
+                        'user_from' => $user_id,
+                        'target_id' => $value->id,
+                        'status' => TARGET_WAITING_VERIFY
+                    ));
+                    //扣除已還款金額
+                    foreach ($pay_back_transactions as $value2)
+                    {
+                        if ($product_id == $value->product_id)
+                        {
+                            $used_amount = $used_amount - intval($value2->amount);
+                        }
+                        else
+                        {
+                            $other_used_amount = $other_used_amount - intval($value2->amount);
+                        }
+                    }
+                }
+                //無條件進位使用額度(千元) ex: 1001 ->1100
+                $used_amount = $used_amount % 1000 != 0 ? ceil($used_amount * 0.001) * 1000 : $used_amount;
+                $other_used_amount = $other_used_amount % 1000 != 0 ? ceil($other_used_amount * 0.001) * 1000 : $other_used_amount;
+            }
+
+            $all_used_amount = $used_amount + $other_used_amount;
+
+            $result = [
+                'credit_amount' => $user_max_credit_amount, // 核可額度
+                'target_amount' => $all_used_amount, // 佔用中的額度
+                'remain_amount' => $user_max_credit_amount - $all_used_amount, // 剩餘可用額度
+                'target_list' => $target_list
+            ];
+        }
+
+        return $result;
     }
 }
