@@ -322,7 +322,7 @@ abstract class Certification_base implements Certification_definition
             }
         });
 
-        $target = $this->CI->target_model->get_failed_target_credit_list(
+        $target = $this->CI->target_model->get_by_multi_product(
             $this->certification['user_id'],
             [TARGET_WAITING_APPROVE],
             $product
@@ -351,7 +351,7 @@ abstract class Certification_base implements Certification_definition
             }
         });
 
-        $target = $this->CI->target_model->get_failed_target_credit_list(
+        $target = $this->CI->target_model->get_by_multi_product(
             $this->certification['user_id'],
             [TARGET_WAITING_APPROVE],
             $product
@@ -484,7 +484,7 @@ abstract class Certification_base implements Certification_definition
     {
         // 若同user有其他待簽約的申貸案，命中此審核失敗的徵信項的話，則將該申貸案退回
         $this->CI->load->library('target_lib');
-        $target_list = $this->CI->target_model->get_failed_target_credit_list(
+        $target_list = $this->CI->target_model->get_by_multi_product(
             $this->certification['user_id'],
             [TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_SHIP],
             $this->related_product

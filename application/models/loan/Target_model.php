@@ -679,7 +679,18 @@ class Target_model extends MY_Model
         return $this->db->get()->result();
     }
 
-    public function get_failed_target_credit_list(int $user_id, array $target_status, array $prod_subprod_id)
+    /**
+     * @param int $user_id
+     * @param array $target_status
+     * @param array $prod_subprod_id : 產品ID
+     * [
+     *     product_id => [sub_product_id],
+     *     1 => [0, 6, 9999],
+     *     3 => [0, 9999]
+     * ]
+     * @return mixed
+     */
+    public function get_by_multi_product(int $user_id, array $target_status, array $prod_subprod_id)
     {
         $this->db
             ->select('id')
