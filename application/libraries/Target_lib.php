@@ -2575,8 +2575,8 @@ class Target_lib
                     $pay_off_date = date('Y-m-d', strtotime($target->loan_date . '+' . $target->instalment . 'month'));
                     break;
                 default:
-                    $this->load->model('transaction/transaction_model');
-                    $rs = $this->transaction_model->order_by('limit_date', 'DESC')->get_by(['target_id' => $target->id,
+                    $this->CI->load->model('transaction/transaction_model');
+                    $rs = $this->CI->transaction_model->order_by('limit_date', 'DESC')->get_by(['target_id' => $target->id,
                         'source' => [SOURCE_AR_PRINCIPAL],
                         'status' => [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF]]);
                     if (isset($rs))
