@@ -111,7 +111,8 @@ class Page extends CI_Controller
 							'qrcode' => $qr,
 							'weather' => $weather,
                             'loan_distribution' => $this->_get_loan_distribution(),
-                            'loan_statistic' => $this->_get_loan_statistic(strtotime('-7 days'), time())
+                            'loan_statistic' => $this->_get_loan_statistic(strtotime('-7 days'), time()),
+                            'platform_statistic' => $this->_get_platform_statistic()
 						]
                     ]));
     }
@@ -503,4 +504,26 @@ class Page extends CI_Controller
         return $result;
     }
 
+    private function _get_platform_statistic()
+    {
+        $this->load->model('loan/target_model');
+        $daily_list = $this->target_model->db
+            ->select('loan_date, count(1) AS cnt')
+            ->from('p2p_loan.targets')
+            ->group_by('loan_date')
+            ->where('loan_date IS NOT NULL', NULL, TRUE)
+            ->get()->result_array();
+        $monthly_list = $this->target_model->db
+            ->select('loan_date, count(1) AS cnt')
+            ->from('p2p_loan.targets')
+            ->group_by('DATE_FORMAT(loan_date, \'%Y-%m\')')
+            ->where('loan_date IS NOT NULL', NULL, TRUE)
+            ->get()->result_array();
+
+        return [
+            'daily_highest_count' => (int)max(array_column($daily_list, 'cnt')),
+            'monthly_highest_count' => (int)max(array_column($monthly_list, 'cnt')),
+            'total_investment_count' => $this->target_model->get_transaction_count(),
+        ];
+    }
 }
