@@ -380,6 +380,7 @@
 								}
 							},
 							axisLabel: { fontSize: '14px' },
+							minInterval: 1,
 							axisTick: {
 								show: true,
 								lineStyle: {
