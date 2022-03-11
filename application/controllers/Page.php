@@ -254,7 +254,7 @@ class Page extends CI_Controller
      *     ],
      * ]
      */
-    public function _get_total_qrcode_apply()
+    private function _get_total_qrcode_apply()
     {
         $this->load->config('influx_users');
         $user_list = $this->config->item('influx_user_list');
