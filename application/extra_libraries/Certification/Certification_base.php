@@ -165,7 +165,7 @@ abstract class Certification_base implements Certification_definition
             'content' => json_encode($parsed_content, JSON_INVALID_UTF8_IGNORE),
             'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
         ]);
-        $this->_get_related_product();
+
         switch ($status)
         {
             case CERTIFICATION_STATUS_SUCCEED:
@@ -190,6 +190,7 @@ abstract class Certification_base implements Certification_definition
      */
     public function set_success(bool $sys_check, string $msg = ''): bool
     {
+        $this->_get_related_product();
         $pre_flag = $this->pre_success($sys_check);
         if ($pre_flag)
         {
@@ -228,6 +229,7 @@ abstract class Certification_base implements Certification_definition
      */
     public function set_failure(bool $sys_check, string $msg = ''): bool
     {
+        $this->_get_related_product();
         $pre_flag = $this->pre_failure($sys_check);
         if ($pre_flag)
         {
