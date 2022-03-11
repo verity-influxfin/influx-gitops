@@ -2835,15 +2835,6 @@ class Product extends REST_Controller {
     private function type1_signing($param,$product,$input,$target){
         $user_id 	= $target->user_id;
 
-        $stage_option_cer = $this->config->item('stage_option_cer');
-
-        $certification_list	= $this->certification_lib->get_status($user_id,0);
-        foreach($certification_list as $key => $value){
-            if(in_array($key,$product['certifications']) && $value['user_status']!=1 && !in_array($key,$stage_option_cer)){
-                $this->response(array('result' => 'ERROR','error' => NOT_VERIFIED ));
-            }
-        }
-
         //檢查金融卡綁定 NO_BANK_ACCOUNT
         $bank_account = $this->user_bankaccount_model->get_by([
             'status'	=> 1,
