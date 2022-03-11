@@ -195,7 +195,7 @@ class Spreadsheet_lib
         $width_list = [['column' => 'A', 'width' => 18.33], ['column' => 'B', 'width' => 11.17], ['column' => 'C', 'width' => 8.5],
             ['column' => 'D', 'width' => 11.17], ['column' => 'E', 'width' => 12.3], ['column' => 'F', 'width' => 6.67],
             ['column' => 'G', 'width' => 6.67], ['column' => 'H', 'width' => 8.5], ['column' => 'I', 'width' => 7.17],
-            ['column' => 'J', 'width' => 7.17]];
+            ['column' => 'J', 'width' => 10.4]];
         foreach ($width_list as $info)
         {
             $spreadsheet->getActiveSheet()->getStyle($info['column'])->getAlignment()->setHorizontal('center');
@@ -225,7 +225,7 @@ class Spreadsheet_lib
                 'format_code' => NumberFormat::FORMAT_NUMBER_00
             ],
             [
-                'range' => 'B14:B15',
+                'range' => 'B13',
                 'format_code' => '#,##0'
             ],
             [
@@ -233,7 +233,7 @@ class Spreadsheet_lib
                 'format_code' => '#,##0'
             ],
             [
-                'range' => 'B'.($data['start_row']['account_payable_interest']+1).':C'.($data['start_row']['delay_not_return']-4),
+                'range' => 'B'.($data['start_row']['account_payable_interest']+1).':B'.($data['start_row']['delay_not_return']-3),
                 'format_code' => '#,##0'
             ],
             [
@@ -241,19 +241,7 @@ class Spreadsheet_lib
                 'format_code' => '#,##0'
             ],
             [
-                'range' => 'B13',
-                'format_code' => NumberFormat::FORMAT_PERCENTAGE_00
-            ],
-            [
-                'range' => 'B16',
-                'format_code' => NumberFormat::FORMAT_PERCENTAGE_00
-            ],
-            [
                 'range' => 'J'.($data['start_row']['realized_rate_of_return']+1).':J'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
-                'format_code' => NumberFormat::FORMAT_PERCENTAGE_00
-            ],
-            [
-                'range' => 'B'.($data['start_row']['delay_not_return']-3),
                 'format_code' => NumberFormat::FORMAT_PERCENTAGE_00
             ]
         ];
@@ -284,7 +272,7 @@ class Spreadsheet_lib
                 ]
             ],
             [
-                'range' => 'A11:B16',
+                'range' => 'A11:B13',
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -293,7 +281,7 @@ class Spreadsheet_lib
                 ]
             ],
             [
-                'range' => 'A19:J'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
+                'range' => 'A16:J'.($data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])),
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -302,7 +290,7 @@ class Spreadsheet_lib
                 ]
             ],
             [
-                'range' => 'A'.$data['start_row']['account_payable_interest'].':C'.($data['start_row']['delay_not_return']-3),
+                'range' => 'A'.$data['start_row']['account_payable_interest'].':B'.($data['start_row']['delay_not_return']-3),
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,

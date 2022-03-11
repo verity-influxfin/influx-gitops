@@ -738,6 +738,7 @@ class User_lib {
 
         // -- 已實現收益率
         $generate_RoR_init_list = function(DateTimeImmutable $start_date, DateTimeImmutable $end_date) {
+            $diff = $start_date->diff($end_date);
             return [
                 'principle_list' => [],
                 'interest' => 0,
@@ -751,7 +752,8 @@ class User_lib {
                 'average_principle' => 0,
                 'start_date' => $start_date->format('Y-m'),
                 'end_date' => $end_date->format('Y-m'),
-                'days' => $start_date->diff($end_date)->days + 1
+                'days' => $diff->days + 1,
+                'diff_month' => $diff->y * 12 + $diff->m + 1
             ];
         };
 
@@ -760,7 +762,8 @@ class User_lib {
             try
             {
                 // -- 已實現收益率
-                $start_date = new \DateTimeImmutable(date('Y-01-01', strtotime($first_investment['tx_date'])));
+                $first_invest_date = new \DateTimeImmutable(date('Y-m-d', strtotime($first_investment['tx_date'])));
+                $start_date =  new \DateTimeImmutable($first_invest_date->format('Y-01-01'));
                 $end_date = new \DateTimeImmutable(date('Y-m-t', strtotime("-1 month")));
                 $RoRList = [];
 
@@ -768,15 +771,20 @@ class User_lib {
                 $diff = $start_date->diff($end_date);
                 for ($i = 0; $i <= $diff->y; $i++)
                 {
-                    $year = $start_date->add(DateInterval::createfromdatestring("+{$i} year"));
-                    $year_str = $year->format('Y');
-                    $RoRList[$year_str] = $generate_RoR_init_list(
-                        $year->setDate($year_str, 1, 1), $year->setDate($year_str, 12, 31));
-                    if ($end_date->format('Y') == $year_str)
+                    $next_year_date = $start_date->add(DateInterval::createfromdatestring("+{$i} year"));
+                    $year_str = $next_year_date->format('Y');
+                    $start_year_date = $next_year_date->setDate($year_str, 1, 1);
+                    $end_year_date = $next_year_date->setDate($year_str, 12, 31);
+                    if ($first_invest_date->diff($start_year_date)->invert)
                     {
-                        $RoRList[$year_str]['end_date'] = $end_date->format('Y-m');
-                        $RoRList[$year_str]['days'] = $year->diff($end_date)->days + 1;
+                        $start_year_date = $first_invest_date;
                     }
+                    else if ($end_date->format('Y') == $year_str)
+                    {
+                        $end_year_date = $end_date;
+                    }
+
+                    $RoRList[$year_str] = $generate_RoR_init_list($start_year_date, $end_year_date);
                 }
                 $RoRList['total'] = $generate_RoR_init_list($start_date, $end_date);
 
@@ -872,7 +880,7 @@ class User_lib {
                 // -- 待實現應收利息
                 $ar_interest_list = [];
                 $ar_interest = $this->CI->transaction_model->get_account_payable_list(SOURCE_AR_INTEREST, $from = [], $to = $user_id,
-                    $product_id_list, $is_group = TRUE, $end_date->format('Y-m-d'));
+                    $product_id_list, $is_group = TRUE);
                 foreach ($ar_interest as $info)
                 {
                     $ym_date = new \DateTimeImmutable($info['tx_date']);
@@ -939,9 +947,9 @@ class User_lib {
                 }
 
                 // -- start row of every part for the layout
-                $data['start_row']['realized_rate_of_return'] = 20;
+                $data['start_row']['realized_rate_of_return'] = 17;
                 $data['start_row']['account_payable_interest'] = $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']??[])+6;;
-                $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest']+count($data['account_payable_interest']??[])+5;;
+                $data['start_row']['delay_not_return'] = $data['start_row']['account_payable_interest']+count($data['account_payable_interest']??[])+4;
             }
             catch (Exception $e)
             {

@@ -249,7 +249,9 @@ class Transaction_model extends MY_Model
             ->from('`p2p_transaction`.`transactions` AS `tra`')
             ->join('`p2p_loan`.`targets` AS t', 't.id = tra.target_id')
             ->where_in('tra.source', $source_list)
-            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF);
+            ->where('tra.status', TRANSACTION_STATUS_PAID_OFF)
+            // 防止撈到借款人的出借手續費等科目
+            ->where('tra.investment_id !=', 0);
 
         if ($is_group)
         {

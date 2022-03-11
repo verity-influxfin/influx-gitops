@@ -90,24 +90,20 @@
 <!--                <th>--><?//= $data['invest_performance']['years'] ?><!--</th>-->
             </tr>
             <tr>
-                <th>2021上半年</th>
-                <th>??</th>
-            </tr>
-            <tr>
                 <th>平均本金餘額</th>
                 <th>=B<?= $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']) ?>+D7</th>
 <!--                <th>--><?//= $data['invest_performance']['average_principle']) ?><!--</th>-->
             </tr>
-            <tr>
-                <th>扣除逾期之折現收益</th>
-                <th>=I<?= $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']) ?>+C<?= ($data['start_row']['delay_not_return']-4) ?>-D7</th>
+<!--            <tr>-->
+<!--                <th>扣除逾期之折現收益</th>-->
+<!--                <th>=I--><?//= $data['start_row']['realized_rate_of_return']+count($data['realized_rate_of_return']) ?><!--+C--><?//= ($data['start_row']['delay_not_return']-4) ?><!---D7</th>-->
 <!--                <th>--><?//= $data['invest_performance']['return_discount_without_delay'] ?><!--</th>-->
-            </tr>
-            <tr>
-                <th>折現年化報酬率</th>
-                <th>=B15/B14/B12</th>
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <th>折現年化報酬率</th>-->
+<!--                <th>=B15/B14/B12</th>-->
 <!--                <th>--><?//= $data['invest_performance']['discount_rate_of_return'] ?><!--</th>-->
-            </tr>
+<!--            </tr>-->
             <tr>
                 <th></th>
             </tr>
@@ -120,7 +116,7 @@
                 <th colspan="5">收入</th>
                 <th>支出</th>
                 <th rowspan="2">總收益</th>
-                <th rowspan="2">報酬率</th>
+                <th rowspan="2">年化報酬率</th>
             </tr>
             <tr>
                 <th>利息收入</th>
@@ -144,7 +140,7 @@
                     <th><?= $info['allowance'] ?></th>
                     <th><?= $info['platform_fee'] ?></th>
                     <th>=SUM(C<?=$idx?>:G<?=$idx?>)-H<?=$idx?></th>
-                    <th>=I<?=$idx?>/B<?=$idx?></th>
+                    <th>=I<?=$idx?>/B<?=$idx?>/<?=$info['diff_month']?>*12</th>
                     <!--                    <th>--><?//= $info['total_income'] ?><!--</th>-->
                     <!--                    <th>--><?//= $info['rate_of_return'] ?><!--</th>-->
                 </tr>
@@ -153,7 +149,7 @@
                 <th colspan="7" style="text-align: left">1.總收益=(利息收入+提還利息+逾期償還利息+延滯息+補貼息)-回款手收</th>
             </tr>
             <tr>
-                <th colspan="7" style="text-align: left">2.報酬率=當期(總收益/本金均額)</th>
+                <th colspan="7" style="text-align: left">2.年化報酬率=當期(總收益/本金均額)/期間月數*12</th>
             </tr>
             <tr>
                 <th colspan="7" style="text-align: left">3.本金均額=年度每月底本金餘額加總/期數</th>
@@ -167,29 +163,28 @@
             <tr>
                 <th>期間</th>
                 <th>金額</th>
-                <th>折現</th>
+<!--                <th>折現</th>-->
             </tr>
             <?
-            $estimate_IRR_idx = $data['start_row']['delay_not_return'] - 3;
+//            $estimate_IRR_idx = $data['start_row']['delay_not_return'] - 3;
             foreach ($data['account_payable_interest'] as $i => $info) {
                 $idx = $data['start_row']['account_payable_interest'] + $i + 1;
                 ?>
                 <tr>
                     <th><?= $info['range_title'] ?></th>
                     <th><?= $info['amount'] ?></th>
-                    <th><?= '=B'.$idx.'/((B'.$estimate_IRR_idx.'+1)^'.$info['discount_exponent'].')' ?></th>
+<!--                    <th>--><?//= '=B'.$idx.'/((B'.$estimate_IRR_idx.'+1)^'.$info['discount_exponent'].')' ?><!--</th>-->
 <!--                    <th>--><?//= $info['discount_amount'] ?><!--</th>-->
                 </tr>
             <? } ?>
             <tr>
                 <th>合計</th>
                 <th>=SUM(B<?=($data['start_row']['account_payable_interest']+1)?>:B<?=($data['start_row']['account_payable_interest']+count($data['account_payable_interest']))?>)</th>
-                <th>=SUM(C<?=($data['start_row']['account_payable_interest']+1)?>:C<?=($data['start_row']['account_payable_interest']+count($data['account_payable_interest']))?>)</th>
             </tr>
-            <tr>
-                <th>內部報酬率預估</th>
-                <th colspan="2"><?= $data['estimate_IRR'] ?></th>
-            </tr>
+<!--            <tr>-->
+<!--                <th>內部報酬率預估</th>-->
+<!--                <th colspan="2">--><?//= $data['estimate_IRR'] ?><!--</th>-->
+<!--            </tr>-->
             <tr>
                 <th></th>
             </tr>
