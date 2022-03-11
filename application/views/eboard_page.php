@@ -804,7 +804,6 @@
 						source: [
 							['salary_man_count', 'student_count', 'product'],
 							...renderQr.value
-
 						]
 					},
 					xAxis: {
@@ -885,7 +884,9 @@
 				setTimeout(showTime, 1000);
 			}
 			const nextQrData = () => {
-				state.qrcode.push(state.qrcode.shift())
+				if(state.qrcode.length>0){
+					state.qrcode.push(state.qrcode.shift())
+				}
 				renderQr.value = state.qrcode.slice(0, 7)
 				drawQr()
 			}
