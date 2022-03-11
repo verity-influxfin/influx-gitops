@@ -355,6 +355,7 @@
 									color: '#86A0BE',
 								}
 							},
+							minInterval: 1,
 							axisLabel: { fontSize: '14px' },
 							axisTick: {
 								show: true,
@@ -367,6 +368,8 @@
 							name: '會員總數',
 							alignTicks: true,
 							type: 'value',
+							max: Math.max(...data.map(x => x.total_member)) + 500,
+							min: Math.min(...data.map(x => x.total_member)) - 500,
 							splitLine: {
 								show: false
 							},
@@ -812,6 +815,7 @@
 					},
 					yAxis: {
 						type: 'value',
+						minInterval: 1,
 						splitLine: {
 							show: true,
 							lineStyle: {
@@ -884,7 +888,7 @@
 				setTimeout(showTime, 1000);
 			}
 			const nextQrData = () => {
-				if(state.qrcode.length>0){
+				if (state.qrcode.length > 0) {
 					state.qrcode.push(state.qrcode.shift())
 				}
 				renderQr.value = state.qrcode.slice(0, 7)
