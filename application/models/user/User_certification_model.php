@@ -206,11 +206,17 @@ class User_certification_model extends MY_Model
     }
 
 
-    public function get_certification($condition) {
-        return $this->db
+    public function get_certification($condition)
+    {
+        $this->_database
             ->from('`p2p_user`.`user_certification`')
-            ->order_by('created_at', 'desc')
-            ->where($condition)
-            ->get()->row_array();
+            ->order_by('created_at', 'DESC');
+
+        if ( ! empty($condition))
+        {
+            $this->_set_where([0 => $condition]);
+        }
+
+        return $this->_database->get()->row_array();
     }
 }

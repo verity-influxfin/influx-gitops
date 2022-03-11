@@ -474,7 +474,7 @@ class Product extends REST_Controller {
                 $this->load->library('credit_lib');
                 $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $product['id'], $sub_product_id, $target->instalment, $target_id);
                 $chk_data = ['remain_amount' => NULL, 'target_id' => NULL];
-                if ($chk_credit['credit_amount'] != 0)
+                if ($chk_credit['credit_amount'] > 0)
                 {
                     $chk_data['remain_amount'] = $chk_credit['remain_amount'];
                     $chk_target = $this->target_model->order_by('created_at', 'DESC')->get_by([
@@ -482,7 +482,8 @@ class Product extends REST_Controller {
                         'product_id' => $product['id'],
                         'sub_product_id' => $sub_product_id,
                         'loan_amount>' => 0,
-                        'id !=' => $target_id
+                        'id !=' => $target_id,
+                        'status' => TARGET_WAITING_SIGNING
                     ]);
                     if (isset($chk_target->id))
                     {
@@ -3374,6 +3375,10 @@ class Product extends REST_Controller {
                     ]);
 
                     $cert_factory = Certification_factory::get_instance_by_model_resource($info);
+                    if ( ! isset($cert_factory))
+                    {
+                        continue;
+                    }
                     if ( ! $cert_factory->is_failed())
                     {
                         if (in_array($certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB]))

@@ -1,6 +1,7 @@
 <?php
+
 namespace Certification;
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 use CertificationResult\CertificationResult;
 use CertificationResult\MessageDisplay;
@@ -53,6 +54,11 @@ abstract class Certification_base implements Certification_definition
     protected $config_cert;
 
     /**
+     * @var array 與此徵信項有關聯的產品(包含子產品)
+     */
+    private $related_product;
+
+    /**
      * CertificationBase constructor.
      * @param $certification
      * @param CertificationResult $result
@@ -88,12 +94,13 @@ abstract class Certification_base implements Certification_definition
     /**
      * 取得依賴之徵信項
      */
-    protected function get_dependency_certs($status) {
+    protected function get_dependency_certs($status)
+    {
         $this->dependency_cert_list = [];
         foreach ($this->dependency_cert_id as $cert_id)
         {
             $cert = Certification_factory::get_instance_by_user($cert_id, $this->certification['user_id'], $this->certification['investor'], $status);
-            if(isset($cert))
+            if (isset($cert))
             {
                 $this->dependency_cert_list[$cert->certification_id] = $cert;
             }
@@ -134,7 +141,7 @@ abstract class Certification_base implements Certification_definition
         // 如果前置檢查沒過就不繼續解析和驗證
         $parsed_content = $this->content;
         $this->result->clear();
-        if($this->check_before_verify())
+        if ($this->check_before_verify())
         {
             $parsed_content = $this->parse();
             $well_formatted = $this->verify_format($parsed_content);
@@ -158,7 +165,7 @@ abstract class Certification_base implements Certification_definition
             'content' => json_encode($parsed_content, JSON_INVALID_UTF8_IGNORE),
             'remark' => json_encode($remark, JSON_INVALID_UTF8_IGNORE),
         ]);
-
+        $this->_get_related_product();
         switch ($status)
         {
             case CERTIFICATION_STATUS_SUCCEED:
@@ -177,14 +184,14 @@ abstract class Certification_base implements Certification_definition
 
     /**
      * 審核成功
-     * @param $sys_check
+     * @param bool $sys_check
      * @param string $msg
      * @return bool
      */
-    public function set_success($sys_check, string $msg=''): bool
+    public function set_success(bool $sys_check, string $msg = ''): bool
     {
         $pre_flag = $this->pre_success($sys_check);
-        if($pre_flag)
+        if ($pre_flag)
         {
             $sub_status = $this->result->getSubStatus();
             $param = [
@@ -208,21 +215,21 @@ abstract class Certification_base implements Certification_definition
 
             // 驗證推薦碼
             $this->CI->load->library('certification_lib');
-            $this->CI->certification_lib->verify_promote_code((object)$this->certification, FALSE);
+            $this->CI->certification_lib->verify_promote_code((object) $this->certification, FALSE);
         }
         return $pre_flag && $rs && $post_flag && $notified;
     }
 
     /**
      * 審核失敗
-     * @param $sys_check
+     * @param bool $sys_check
      * @param string $msg
      * @return bool
      */
-    public function set_failure($sys_check, string $msg=''): bool
+    public function set_failure(bool $sys_check, string $msg = ''): bool
     {
         $pre_flag = $this->pre_failure($sys_check);
-        if($pre_flag)
+        if ($pre_flag)
         {
             $sub_status = $this->result->getSubStatus();
             $param = [
@@ -252,14 +259,14 @@ abstract class Certification_base implements Certification_definition
             $post_flag = $this->post_failure($sys_check);
             $notified = $this->failure_notification();
 
-            if($rs && $post_flag && $notified)
+            if ($rs && $post_flag && $notified)
             {
                 // 退待簽約案件及信評分數
                 $this->failed_target_credit();
 
                 // 驗證推薦碼失敗
                 $this->CI->load->library('certification_lib');
-                $this->CI->certification_lib->verify_promote_code((object)$this->certification, TRUE);
+                $this->CI->certification_lib->verify_promote_code((object) $this->certification, TRUE);
 
                 return TRUE;
             }
@@ -273,10 +280,10 @@ abstract class Certification_base implements Certification_definition
      * @param string $msg
      * @return bool
      */
-    public function set_review($sys_check, string $msg=''): bool
+    public function set_review($sys_check, string $msg = ''): bool
     {
         $pre_flag = $this->pre_review($sys_check);
-        if($pre_flag)
+        if ($pre_flag)
         {
             $sub_status = $this->result->getSubStatus();
             $param = [
@@ -307,11 +314,27 @@ abstract class Certification_base implements Certification_definition
      */
     public function success_notification(): bool
     {
-        // todo: 目前個金徵信項改為不通知，但企金配偶的徵信項是否通知？
+        $product = [];
+        array_walk($this->related_product, function ($value, $key) use (&$product) {
+            if (in_array($key, $this->CI->config->item('personal_banking')))
+            {
+                $product[$key] = $value;
+            }
+        });
 
-        return TRUE;
-        //        return $this->CI->notification_lib->certification($this->certification['user_id'],
-        //            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_SUCCEED);
+        $target = $this->CI->target_model->get_failed_target_credit_list(
+            $this->certification['user_id'],
+            [TARGET_WAITING_APPROVE],
+            $product
+        );
+
+        if ( ! empty($target))
+        {
+            return TRUE;
+        }
+
+        return $this->CI->notification_lib->certification($this->certification['user_id'],
+            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_SUCCEED);
     }
 
     /**
@@ -320,27 +343,45 @@ abstract class Certification_base implements Certification_definition
      */
     public function failure_notification(): bool
     {
-        // todo: 目前個金徵信項改為不通知，但企金配偶的徵信項是否通知？
+        $product = [];
+        array_walk($this->related_product, function ($value, $key) use (&$product) {
+            if (in_array($key, $this->CI->config->item('personal_banking')))
+            {
+                $product[$key] = $value;
+            }
+        });
 
-        return TRUE;
-        //        $msg_list = $this->result->getAPPMessage(CERTIFICATION_STATUS_FAILED);
-        //        $msg = implode("、", $msg_list);
-        //        return $this->CI->notification_lib->certification($this->certification['user_id'],
-        //            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_FAILED, $msg);
+        $target = $this->CI->target_model->get_failed_target_credit_list(
+            $this->certification['user_id'],
+            [TARGET_WAITING_APPROVE],
+            $product
+        );
+
+        if ( ! empty($target))
+        {
+            return TRUE;
+        }
+
+        $msg_list = $this->result->getAPPMessage(CERTIFICATION_STATUS_FAILED);
+        $msg = implode("、", $msg_list);
+        return $this->CI->notification_lib->certification($this->certification['user_id'],
+            $this->certification['investor'], $this->config_cert['name'], CERTIFICATION_STATUS_FAILED, $msg);
     }
 
     /**
      * 轉人工的通知
      * @return bool
      */
-    public function review_notification(): bool {
+    public function review_notification(): bool
+    {
         return TRUE;
     }
 
     /**
      * 是否已完成依賴的相關徵信項目
      */
-    public function is_qualified() : bool {
+    public function is_qualified(): bool
+    {
         $this->get_dependency_certs(CERTIFICATION_STATUS_SUCCEED);
 
         $qualified = TRUE;
@@ -441,36 +482,36 @@ abstract class Certification_base implements Certification_definition
      */
     public function failed_target_credit()
     {
-        // 案件待簽約退回
-        // TODO: 沒有識別產品需求徵信像，不分青紅皂別退回感覺有問題，待確認修復？
+        // 若同user有其他待簽約的申貸案，命中此審核失敗的徵信項的話，則將該申貸案退回
         $this->CI->load->library('target_lib');
-        $targets = $this->CI->target_model->get_many_by([
-            'user_id' => $this->certification['user_id'],
-            'status' => [TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_SHIP]
-        ]);
-        if ( ! empty($targets))
+        $target_list = $this->CI->target_model->get_failed_target_credit_list(
+            $this->certification['user_id'],
+            [TARGET_WAITING_SIGNING, TARGET_ORDER_WAITING_SHIP],
+            $this->related_product
+        );
+        if ( ! empty($target_list))
         {
-            foreach ($targets as $value)
+            foreach ($target_list as $value)
             {
                 $this->CI->target_model->update_by(
-                    ['id' => $value->id],
-                    ['status' => $value->status == TARGET_WAITING_SIGNING ? TARGET_WAITING_APPROVE : TARGET_ORDER_WAITING_VERIFY]
+                    ['id' => $value['id']],
+                    ['status' => $value['status'] == TARGET_WAITING_SIGNING ? TARGET_WAITING_APPROVE : TARGET_ORDER_WAITING_VERIFY]
                 );
             }
         }
 
         // 退信評分數
         $this->CI->load->model('loan/credit_model');
-        $credit_list = $this->CI->credit_model->get_many_by([
-            'user_id' => $this->certification['user_id'],
-            'status' => 1
-        ]);
+        $credit_list = $this->CI->credit_model->get_failed_target_credit_list(
+            $this->certification['user_id'],
+            $this->related_product
+        );
         foreach ($credit_list as $value)
         {
-            if ( ! in_array($value->level, [11, 12, 13]))
+            if ( ! in_array($value['level'], [11, 12, 13]))
             {
                 $this->CI->credit_model->update_by(
-                    ['id' => $value->id],
+                    ['id' => $value['id']],
                     ['status' => 0]
                 );
             }
@@ -484,5 +525,42 @@ abstract class Certification_base implements Certification_definition
     public function can_re_submit(): bool
     {
         return $this->certification['can_resubmit_at'] < time();
+    }
+
+    private function _get_related_product()
+    {
+        $this->CI->load->library('loanmanager/product_lib');
+        $product_list = $this->CI->config->item('product_list');
+        $result = [];
+
+        foreach ($product_list as $product)
+        {
+            if ( ! isset($product['id']))
+            {
+                continue;
+            }
+
+            if ( ! isset($product['certifications']) || ! in_array($this->certification_id, $product['certifications']))
+            {
+                continue;
+            }
+            $result[$product['id']] = [0];
+
+            if ( ! isset($product['sub_product']))
+            {
+                continue;
+            }
+            for ($i = 0; $i < count($product['sub_product']); $i++)
+            {
+                $product_info = $this->CI->product_lib->getProductInfo($product['id'], $product['sub_product'][$i]);
+                if ( ! isset($product_info['certifications']) || ! in_array($this->certification_id, $product_info['certifications']))
+                {
+                    continue;
+                }
+                $result[$product['id']][] = $product['sub_product'][$i];
+            }
+        }
+
+        $this->related_product = $result;
     }
 }

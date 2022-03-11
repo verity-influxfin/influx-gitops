@@ -1620,7 +1620,7 @@ class Certification extends REST_Controller {
      */
 	public function financialWorker_post()
     {
-		$certification_id 	= 14;
+        $certification_id = CERTIFICATION_FINANCIALWORKER;
 		$certification 		= $this->certification[$certification_id];
 		if($certification && $certification['status']==1){
 			$input 		= $this->input->post(NULL, TRUE);
@@ -1742,11 +1742,11 @@ class Certification extends REST_Controller {
                 // 有傳圖片的話轉人工，沒有自動過件
                 if($should_check == false){
                     $info = $this->user_certification_model->order_by('certification_id', 'DESC')->get_by([
-                        'certification_id' => CERTIFICATION_FINANCIALWORKER,
+                        'certification_id' => $certification_id,
                         'user_id' => $user_id
                     ]);
                     $cert = Certification_factory::get_instance_by_model_resource($info);
-                    $cert->set_success(SYSTEM_CHECK);
+                    $cert->set_success(TRUE);
                 }
 				$this->response(array('result' => 'SUCCESS'));
 			}else{
@@ -2642,7 +2642,7 @@ class Certification extends REST_Controller {
             }
 
             $cert = Certification_factory::get_instance_by_model_resource($info);
-            if ( ! $cert->is_submitted())
+            if ( ! isset($cert) || ! $cert->is_submitted())
             {
                 $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
             }

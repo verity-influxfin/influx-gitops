@@ -237,14 +237,17 @@ class Certification_lib{
     }
 
 	public function verify($info){
-		if($info && $info->status != 1 && array_key_exists($info->certification_id, $this->certification)){
+        if ($info &&
+            $info->status != CERTIFICATION_STATUS_SUCCEED &&
+            array_key_exists($info->certification_id, $this->certification))
+        {
 			$certification 	= $this->certification[$info->certification_id];
 			$method			= $certification['alias'].'_verify';
 			if(method_exists($this, $method)){
 				$rs = $this->$method($info);
 			}else{
 				$rs = $this->CI->user_certification_model->update($info->id,array(
-					'status'	=> 3,
+                    'status' => CERTIFICATION_STATUS_PENDING_TO_REVIEW,
 				));
 			}
 			return $rs;
@@ -255,7 +258,8 @@ class Certification_lib{
 	public function set_failed($id,$fail='',$sys_check=false, $expire_timestamp = false){
 		if($id){
 			$info = $this->CI->user_certification_model->get($id);
-			if($info && $info->status != 2){
+            if ($info && $info->status != CERTIFICATION_STATUS_FAILED)
+            {
 				$info->content 			= json_decode($info->content,true);
                 $info->remark           = $info->remark!=''?json_decode($info->remark,true):[];
 				$info->remark['fail'] 	= $fail;
@@ -782,13 +786,6 @@ class Certification_lib{
 
     // 實名認證
     public function identity_verify($info = [])
-    {
-        $cert = Certification_factory::get_instance_by_model_resource($info);
-        return $cert->verify();
-    }
-
-    // 學生身份認證
-    public function student_verify($info = [])
     {
         $cert = Certification_factory::get_instance_by_model_resource($info);
         return $cert->verify();
@@ -3129,33 +3126,33 @@ class Certification_lib{
     }
 
     public function expire_certification($user_id,$investor=0){
-        if($user_id && $investor == 0) {
+        if($user_id && $investor == BORROWER) {
             $certification = $this->CI->user_certification_model->order_by('created_at', 'desc')->get_many_by([
                 'user_id' => $user_id,
                 'investor' => $investor,
-                'status !=' => 2,
+                'status !=' => CERTIFICATION_STATUS_FAILED,
             ]);
             if ($certification) {
-                foreach ($certification as $key => $value) {
+                foreach ($certification as $value) {
                     $expireGraduateDate = false;
-                    if($value->certification_id == CERTIFICATION_STUDENT && $value->status == 1){
+                    if($value->certification_id == CERTIFICATION_STUDENT && $value->status == CERTIFICATION_STATUS_SUCCEED){
                         $content = json_decode($value->content);
                         if(isset($content->graduate_date) && !empty($content->graduate_date)){
                             preg_match_all('/\d+/', $content->graduate_date, $matches);
                             $rocYear = date('Y') - 1911;
                             if($rocYear >= $matches[0][0]){
-                                $expireGraduateDate = true;
-                                $rocYear == $matches[0][0] && date('m') <= $matches[0][1] ? $expireGraduateDate = false : '';
+                                $expireGraduateDate = ! ($rocYear == $matches[0][0] && date('m') <= $matches[0][1]);
                             }
                         }
                     }
 
-                    if (!in_array($value->certification_id, [CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL, CERTIFICATION_DIPLOMA])
-                                && $value->expire_time <= time()
-                            || in_array($value->certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB])
-                                && $value->status == 1 && time() > strtotime('+2 months', $value->updated_at)
-                            || $expireGraduateDate
-                    ) {
+                    if ( ! in_array($value->certification_id, [CERTIFICATION_IDENTITY, CERTIFICATION_DEBITCARD, CERTIFICATION_EMERGENCY, CERTIFICATION_EMAIL, CERTIFICATION_DIPLOMA])
+                        && $value->expire_time <= time()
+                        || in_array($value->certification_id, [CERTIFICATION_INVESTIGATION, CERTIFICATION_JOB])
+                        && $value->status == CERTIFICATION_STATUS_SUCCEED && time() > strtotime('+2 months', $value->updated_at)
+                        || $expireGraduateDate
+                    )
+                    {
                         $this->set_failed($value->id, '認證已逾期。', true);
                     }
                 }
@@ -3229,10 +3226,10 @@ class Certification_lib{
         if ($url) {
             $msg = '';
             $remark = [];
-            $identity_cer = $this->get_certification_info($user_id, 1, 0);
-            $student_cer = $this->get_certification_info($user_id, 2, 0);
-            $diploma_cer = $this->get_certification_info($user_id, 8, 0);
-            if ($identity_cer && $identity_cer->status == 1
+            $identity_cer = $this->get_certification_info($user_id, CERTIFICATION_IDENTITY, BORROWER);
+            $student_cer = $this->get_certification_info($user_id, CERTIFICATION_STUDENT, BORROWER);
+            $diploma_cer = $this->get_certification_info($user_id, CERTIFICATION_DIPLOMA, BORROWER);
+            if ($identity_cer && $identity_cer->status == CERTIFICATION_STATUS_SUCCEED
                 && (isset($student_cer->content['school']) && !preg_match('/\(自填\)/', $student_cer->content['school']))
                 && (isset($diploma_cer->content['school']) && !preg_match('/\(自填\)/', $diploma_cer->content['school']))
             ) {

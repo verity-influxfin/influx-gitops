@@ -155,7 +155,7 @@ class Cert_identity extends Certification_base
         $content = $this->content;
         //檢查身分證字號
         $exist = $this->CI->user_model->get_by(array('id_number' => $content['id_number']));
-        if ($exist && $exist->id != $this->certification['user_id'])
+        if (isset($exist) && $exist->id != $this->certification['user_id'])
         {
             return FALSE;
         }
@@ -171,7 +171,7 @@ class Cert_identity extends Certification_base
         $rs = $this->CI->certification_lib->user_meta_progress($data, $this->certification);
         if ($rs)
         {
-            $birthday = trim($content["birthday"]);
+            $birthday = trim($content['birthday']);
             if (strlen($birthday) == 7 || strlen($birthday) == 6)
             {
                 $birthday = $birthday + 19110000;

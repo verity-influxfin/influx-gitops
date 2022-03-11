@@ -82,18 +82,6 @@ class Cert_student extends Certification_base
      */
     public function verify_data($content): bool
     {
-        if (time() > $this->certification['created_at'] + 3600)
-        {
-            $this->result->addMessage(
-                '未在有效時間內完成認證',
-                CERTIFICATION_STATUS_FAILED,
-                MessageDisplay::Client
-            );
-
-            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_VERIFY_FAILED);
-
-            return FALSE;
-        }
         return TRUE;
     }
 
@@ -104,6 +92,8 @@ class Cert_student extends Certification_base
      */
     public function review_data($content): bool
     {
+        // 直接轉人工
+        $this->result->setStatus(CERTIFICATION_STATUS_PENDING_TO_REVIEW);
         return TRUE;
     }
 

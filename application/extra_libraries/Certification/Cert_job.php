@@ -6,7 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 use CertificationResult\MessageDisplay;
 
 /**
- * 聯合徵信報告徵信項
+ * 勞保異動明細徵信項
  * Class Investigation
  * @package Certification
  */
@@ -72,12 +72,15 @@ class Cert_job extends Certification_base
             $text = '';
             $this->CI->load->library('labor_insurance_lib');
             $parser = new \Smalot\PdfParser\Parser();
-            try {
+            try
+            {
                 $pdf = $parser->parseFile($url);
                 $text = $pdf->getText();
                 $response = $this->CI->labor_insurance_lib->transfrom_pdf_data($text);
-            }catch (\Exception $e) {
-                $response = False;
+            }
+            catch (\Exception $e)
+            {
+                $response = FALSE;
             }
 
             if ( ! $response || strpos($text, '勞動部勞工保險局ｅ化服務系統') === FALSE)
@@ -87,7 +90,8 @@ class Cert_job extends Certification_base
             else
             {
                 // 用統編檢查商業司
-                if (isset($parsed_content['tax_id']) && $parsed_content['tax_id']) {
+                if (isset($parsed_content['tax_id']) && $parsed_content['tax_id'])
+                {
                     $this->CI->load->library('gcis_lib');
                     $gcis_res = $this->CI->gcis_lib->account_info($parsed_content['tax_id']);
                     $parsed_content['gcis_info'] = $gcis_res;
@@ -107,9 +111,10 @@ class Cert_job extends Certification_base
      * 驗證之前的前置確認作業
      * @return bool
      */
-    public function check_before_verify(): bool {
+    public function check_before_verify(): bool
+    {
         // 紙本寄送直接進人工
-        if(isset($this->content['labor_type']) && $this->content['labor_type'] == 0)
+        if (isset($this->content['labor_type']) && $this->content['labor_type'] == 0)
         {
             $this->result->addMessage('需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW);
             return FALSE;
@@ -119,7 +124,7 @@ class Cert_job extends Certification_base
 
     /**
      * 驗證格式是否正確
-     * @param $content: 徵信內容
+     * @param $content : 徵信內容
      * @return bool
      */
     public function verify_format($content): bool
@@ -129,21 +134,22 @@ class Cert_job extends Certification_base
 
     /**
      * 核實資料是否屬實
-     * @param $content: 徵信內容
+     * @param $content : 徵信內容
      * @return bool
      */
     public function verify_data($content): bool
     {
-        // 自然人聯徵正確性驗證
+        // 勞保異動明細正確性驗證
         $this->CI->load->library('verify/data_legalize_lib');
         $this->result = $this->CI->data_legalize_lib->legalize_job($this->result, $this->certification['user_id'],
             $this->transform_data, $content, $this->certification['created_at']);
 
-        if($this->result->getStatus() == CERTIFICATION_STATUS_FAILED)
+        if ($this->result->getStatus() == CERTIFICATION_STATUS_FAILED)
         {
             $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_VERIFY_FAILED);
         }
-        if(in_array($this->result->getStatus(), [CERTIFICATION_STATUS_FAILED, CERTIFICATION_STATUS_PENDING_TO_REVIEW])) {
+        if (in_array($this->result->getStatus(), [CERTIFICATION_STATUS_FAILED, CERTIFICATION_STATUS_PENDING_TO_REVIEW]))
+        {
             return FALSE;
         }
         return TRUE;
@@ -151,7 +157,7 @@ class Cert_job extends Certification_base
 
     /**
      * 依照授信規則審查資料
-     * @param $content: 徵信內容
+     * @param $content : 徵信內容
      * @return bool
      */
     public function review_data($content): bool

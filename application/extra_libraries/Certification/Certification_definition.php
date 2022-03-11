@@ -51,19 +51,19 @@ interface Certification_definition
 
     /**
      * 審核成功
-     * @param $sys_check
+     * @param bool $sys_check
      * @param string $msg
      * @return bool
      */
-    public function set_success($sys_check, string $msg): bool;
+    public function set_success(bool $sys_check, string $msg): bool;
 
     /**
      * 審核失敗
-     * @param $sys_check
+     * @param bool $sys_check
      * @param string $msg
      * @return bool
      */
-    public function set_failure($sys_check, string $msg): bool;
+    public function set_failure(bool $sys_check, string $msg): bool;
 
     /**
      * 轉人工

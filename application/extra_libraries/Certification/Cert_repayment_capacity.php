@@ -30,7 +30,7 @@ class Cert_repayment_capacity extends Certification_base
     /**
      * @var int 認證持續有效月數
      */
-    protected $valid_month = 3;
+    protected $valid_month = 1;
 
     /**
      * @var array 轉換後的資料
@@ -220,9 +220,10 @@ class Cert_repayment_capacity extends Certification_base
         }
         else
         {
+            // 若無印表時間，則以徵信項的建立時間加三個月
             $expire_time = new \DateTime;
             $expire_time->setTimestamp($this->certification->created_at);
-            $expire_time->modify('+ 1 month');
+            $expire_time->modify('+ 3 month');
             $this->expired_timestamp = $expire_time->getTimestamp();
         }
         return TRUE;
