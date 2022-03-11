@@ -329,7 +329,7 @@
 					intervals.chart = setInterval(function () {
 						nextQrData()
 					}, 4000)
-					setTimeout(getData, 120000)
+					setTimeout(getData, 300000)
 				})
 			}
 
@@ -340,7 +340,7 @@
 					xAxis: {
 						type: 'category',
 						axisLabel: { fontSize: '14px' },
-						data: data.map(x => x.date.replace('-', '\n'))
+						data: data.map(x => x.date.replace('/', '\n'))
 					},
 					yAxis: [
 						{
@@ -389,17 +389,44 @@
 						{
 							name: '流量',
 							type: 'line',
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							data: data.map(x => x.official_site_trends)
 						},
 						{
 							name: '新增會員',
 							type: 'line',
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							data: data.map(x => x.new_member)
 						},
 						{
 							name: '會員總數',
 							type: 'line',
 							yAxisIndex: 1,
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							data: data.map(x => x.total_member)
 						}
 					]
@@ -413,7 +440,7 @@
 					xAxis: {
 						type: 'category',
 						axisLabel: { fontSize: '14px' },
-						data: data.map(x => x.date.replace('-', '\n'))
+						data: data.map(x => x.date.replace('/', '\n'))
 					},
 					yAxis: [
 						{
@@ -442,11 +469,29 @@
 						{
 							name: 'APP Android',
 							type: 'line',
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							data: data.map(x => x.android_downloads)
 						},
 						{
 							name: 'APP IOS',
 							type: 'line',
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							data: data.map(x => x.ios_downloads)
 						}
 					]
@@ -524,7 +569,7 @@
 						axisTick: {
 							show: false,
 						},
-						data: data.map(x => x.date.replace('-', '\n'))
+						data: data.map(x => x.date.replace('/', '\n'))
 					},
 					yAxis: [
 						{
@@ -575,6 +620,15 @@
 							name: '3S',
 							type: 'bar',
 							barWidth: 7,
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							itemStyle: {
 								borderRadius: [4, 4, 0, 0],
 							},
@@ -584,6 +638,15 @@
 							name: '學生貸',
 							type: 'bar',
 							barWidth: 7,
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							itemStyle: {
 								borderRadius: [4, 4, 0, 0],
 							},
@@ -593,6 +656,15 @@
 							name: '上班族貸',
 							type: 'bar',
 							barWidth: 7,
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							itemStyle: {
 								borderRadius: [4, 4, 0, 0],
 							},
@@ -602,6 +674,15 @@
 							name: '微企貸',
 							type: 'bar',
 							barWidth: 7,
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							itemStyle: {
 								borderRadius: [4, 4, 0, 0],
 							},
@@ -611,6 +692,15 @@
 							name: '成交數',
 							yAxisIndex: 1,
 							type: 'line',
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							data: data.map(x => x.deals)
 						},
 
@@ -735,6 +825,15 @@
 							name: '上班族貸',
 							type: 'bar',
 							barWidth: 10,
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
 							itemStyle: {
 								borderRadius: [4, 4, 0, 0],
 							},
@@ -749,6 +848,15 @@
 							barWidth: 10,
 							itemStyle: {
 								borderRadius: [4, 4, 0, 0],
+							},
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
 							},
 							encode: {
 								y: 'student_count',
