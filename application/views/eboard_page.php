@@ -195,7 +195,7 @@
 				<div class="rank-content table-border">
 					<div class="rank-board">
 						<div class="rank-item" v-for="(item, i) in state.rank">
-							恭喜 {{item.name}} 取得推薦有賞績效第{{i+1}}名 - 成交數 {{item.full_member_count}}
+							恭喜 {{item.name}} 取得推薦有賞績效第{{i+1}}名
 						</div>
 					</div>
 				</div>
