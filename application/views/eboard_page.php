@@ -222,7 +222,7 @@
 				date: '',
 				geoJson: {},
 				loan_statistic: [],
-				loan_distribution:[],
+				loan_distribution: [],
 				qrcode: [],
 				rank: [],
 				real: [],
@@ -289,6 +289,12 @@
 				clearInterval(intervals.api)
 				clearInterval(intervals.chart)
 			})
+
+			const hours = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
+				'07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+				'13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
+				'19:00', '20:00', '21:00', '22:00', '23:00'
+			]
 
 			const getData = () => {
 				showTime()
@@ -610,7 +616,7 @@
 				const project = (point) => [point[0] / 180 * Math.PI, -Math.log(Math.tan((Math.PI / 2 + point[1] / 180 * Math.PI) / 2))]
 				option = {
 					visualMap: {
-						min: Math.min(...state.loan_distribution.map(x=>x.value)),
+						min: Math.min(...state.loan_distribution.map(x => x.value)),
 						max: Math.max(...state.loan_distribution.map(x => x.value)),
 						left: 24,
 						bottom: 18,
@@ -644,12 +650,6 @@
 				charts.geoMap.setOption(option)
 			}
 			const drawReal = () => {
-				const hours = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
-					'07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
-					'13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
-					'19:00', '20:00', '21:00', '22:00', '23:00'
-				]
-				// const hours = ['00:00', '06:00', '12:00', '18:00', '24:00']
 				const days = [...Array(8)].map((_, i) => {
 					const d = new Date()
 					d.setDate(d.getDate() - i)
@@ -685,7 +685,7 @@
 					series: [
 						{
 							type: 'scatter',
-							symbolSize: (val) => val[2] * 3,
+							symbolSize: (val) => val[2] * 4,
 							data: state.loan_statistic
 						}
 					]
@@ -774,15 +774,23 @@
 				drawQr()
 			}
 			const setStatisticData = (data) => {
+				const days = [...Array(8)].map((_, i) => {
+					const d = new Date()
+					d.setDate(d.getDate() - i)
+					return `${d.getFullYear()}/${(d.getMonth() + 1).toString().padStart(2, 0)}/${d.getDate().toString().padStart(2, 0)}`
+				}).concat('').reverse()
 				let ans = []
-				let times = 1
-				for (let s = 0; s < data.length; s += 24) {
-					const last = s + 24
-					ans.push(...data.slice(s, last).map((x, i) => {
-						return [times, i, x.value]
-					}))
-					times += 1
-				}
+				days.forEach((x, i) => {
+					if (i != 0) {
+						const dataMap = new Map()
+						data.filter(item => item.date === x).forEach(item => dataMap.set(item.time, item.value))
+						hours.forEach((hour, index) => {
+							if (dataMap.has(hour)) {
+								ans.push([i, index, dataMap.get(hour)])
+							}
+						})
+					}
+				})
 				state.loan_statistic = ans
 			}
 			return { state };
