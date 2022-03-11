@@ -861,7 +861,7 @@ class User_lib {
                         $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'] +
                         $RoRList[$year_str]['allowance'] - $RoRList[$year_str]['platform_fee'];
                     $RoRList[$year_str]['interest'] -= $RoRList[$year_str]['prepaid_interest'] + $RoRList[$year_str]['delayed_paid_interest'];
-                    $RoRList[$year_str]['rate_of_return'] = round($RoRList[$year_str]['total_income'] / $RoRList[$year_str]['average_principle'] * 100, 1);
+                    $RoRList[$year_str]['rate_of_return'] = $RoRList[$year_str]['average_principle'] != 0 ? round($RoRList[$year_str]['total_income'] / $RoRList[$year_str]['average_principle'] * 100, 1) : 0;
                     $RoRList[$year_str]['range_title'] = date('Ym', strtotime($RoRList[$year_str]['start_date'])).'-'.date('Ym', strtotime($RoRList[$year_str]['end_date']));
 
                     $RoRList['total']['average_principle'] += round($RoRList[$year_str]['average_principle'] * ($RoRList[$year_str]['days'] / $RoRList['total']['days']));
@@ -873,7 +873,7 @@ class User_lib {
                     $RoRList['total']['platform_fee'] += $RoRList[$year_str]['platform_fee'];
                     $RoRList['total']['total_income'] += $RoRList[$year_str]['total_income'];
                 }
-                $RoRList['total']['rate_of_return'] = round($RoRList['total']['total_income'] / $RoRList['total']['average_principle'] * 100, 1);
+                $RoRList['total']['rate_of_return'] = $RoRList['total']['average_principle'] != 0 ? round($RoRList['total']['total_income'] / $RoRList['total']['average_principle'] * 100, 1) : 0;
                 $RoRList['total']['range_title'] = '累計收益率';
                 $data['realized_rate_of_return'] = array_values($RoRList);
 
@@ -939,7 +939,7 @@ class User_lib {
                     $data['invest_performance']['years'] = round($d1->diff($d2)->days / 365.0, 1);
                     $data['invest_performance']['average_principle'] = $RoRList['total']['average_principle'] + $data['assets_description']['total']['amount_delay'];
                     $data['invest_performance']['return_discount_without_delay'] = $RoRList['total']['total_income'] + $ar_interest_list['total']['discount_amount'] - $data['assets_description']['total']['amount_delay'];
-                    $data['invest_performance']['discount_rate_of_return'] = round($data['invest_performance']['return_discount_without_delay'] / $data['invest_performance']['average_principle'] /  $data['invest_performance']['years'] * 100, 2);
+                    $data['invest_performance']['discount_rate_of_return'] = $data['invest_performance']['average_principle'] == 0 || $data['invest_performance']['years'] == 0 ? 0 : round($data['invest_performance']['return_discount_without_delay'] / $data['invest_performance']['average_principle'] / $data['invest_performance']['years'] * 100, 2);
                 }
                 catch (Exception $e)
                 {
