@@ -399,7 +399,7 @@ class Certification_lib{
         $content = json_decode($info->content, TRUE);
         if ( ! is_array($content) || empty($content))
         {
-            $return_data['remark']['error'] = '使用者資料解析發生錯誤<br/>';
+            $return_data['remark']['error'] = '使用者資料解析發生錯誤.<br/>';
             return $return_data;
         }
 
@@ -424,13 +424,13 @@ class Certification_lib{
         }
         catch (Exception $e)
         {
-            $return_data['remark']['error'] = '使用者的圖片無法取得' . (count($image_types) - count($images)) . '筆，無法進行實名驗證<br/>';
+            $return_data['remark']['error'] = '使用者的圖片無法取得' . (count($image_types) - count($images)) . '筆，無法進行實名驗證.<br/>';
             return $return_data;
         }
 
         if (count($images) !== count($image_types))
         {
-            $return_data['remark']['error'] = '使用者的圖片資料不足' . count($image_types) . '筆，無法進行實名驗證<br/>';
+            $return_data['remark']['error'] = '使用者的圖片資料不足' . count($image_types) . '筆，無法進行實名驗證.<br/>';
             return $return_data;
         }
 
@@ -446,7 +446,7 @@ class Certification_lib{
         $ocr_result = $this->CI->ocr2_lib->identity_verification($send_data);
         if (empty($ocr_result))
         {
-            $return_data['remark']['error'] = 'OCR 沒有在正常時間內回應，無法進行實名驗證<br/>';
+            $return_data['remark']['error'] = 'OCR 沒有在正常時間內回應，無法進行實名驗證.<br/>';
             return $return_data;
         }
 
@@ -503,12 +503,12 @@ class Certification_lib{
         {
             if ( ! $ocr_result['faceValidation'][$company]['id_card']['is_face_count_valid'])
             {
-                $msg .= '[' . $company . '] 身份證人臉數量不足<br/>';
+                $msg .= '[' . $company . '] 身份證人臉數量不足.<br/>';
             }
 
             if ( ! $ocr_result['faceValidation'][$company]['hold_card_selfie']['is_face_count_valid'])
             {
-                $msg .= '[' . $company . '] 持證自拍人臉數量不足<br/>';
+                $msg .= '[' . $company . '] 持證自拍人臉數量不足.<br/>';
             }
         }
 
@@ -530,17 +530,18 @@ class Certification_lib{
             'face' => [0, 0],
             'face_flag' => [FALSE, FALSE],
         ];
-        $msg .= '[azure] 系統無法辨識的人臉相似度<br/>';
+        $msg .= '[azure] 系統無法辨識人臉相似度.<br/>';
 
         // face8 人臉比對，以後等 OCR 做完再直接串
         $face8_compare = [
             'score' => ['n/a', 'n/a'],
         ];
-        $msg .= '[face8] 系統無法辨識的人臉相似度<br/>';
+        $msg .= '[face8] 系統無法辨識人臉相似度.<br/>';
 
         // 取回資料後解析回傳內容，將資料填入回傳格式中
         $remark = [
             'error' => '',
+
             // Azure 新增項目
             'face' => $azure_compare['face'],
             'face_flag' => $azure_compare['face_flag'],
@@ -589,8 +590,7 @@ class Certification_lib{
                     ],
                     $ocr_result['faceValidation']['face8']['id_card']['face_list'][0]['liveness'] ?? 'n/a',
                 ],
-            ],
-            'fail' => '', // ??好像沒有這個參數了??
+            ]
         ];
 
         // 僅保留 勾稽戶役政 API
