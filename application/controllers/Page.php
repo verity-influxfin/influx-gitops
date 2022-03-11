@@ -97,7 +97,7 @@ class Page extends CI_Controller
                 'deals' => $this->_get_deals($date),
             ];
         }
-		$qr = $this->_get_total_qrcode_apply($first_day);
+		$qr = $this->_get_total_qrcode_apply();
 
         usort($retval, function ($a, $b) {
             return $b['date'] <=> $a['date'];
@@ -243,7 +243,6 @@ class Page extends CI_Controller
 
     /**
      * 取得公司同事QRCode推廣績效
-     * @param DateTimeInterface $date
      * @return array
      * [
      *     [
@@ -255,18 +254,14 @@ class Page extends CI_Controller
      *     ],
      * ]
      */
-    private function _get_total_qrcode_apply(DateTimeInterface $date)
+    public function _get_total_qrcode_apply()
     {
         $this->load->config('influx_users');
         $user_list = $this->config->item('influx_user_list');
         $user_ids = array_column($user_list, 'user_id');
 
         $this->load->library('user_lib');
-        $data_list = $this->user_lib->getPromotedRewardInfo(
-            ['user_id' => $user_ids],
-            $date->getTimestamp(),
-            $date->modify('+1 day')->getTimestamp()
-        );
+        $data_list = $this->user_lib->getPromotedRewardInfo(['user_id' => $user_ids]);
 
         $result = [];
         foreach ($data_list as $data)

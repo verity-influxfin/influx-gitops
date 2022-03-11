@@ -24,4 +24,5 @@ $config['influx_user_list'] = [
     ['user_id' => 23645],
     ['user_id' => 53468],
     ['user_id' => 61858],
+    ['user_id' => 47304],
 ];
