@@ -37,8 +37,9 @@ class Risk extends MY_Admin_Controller {
         $this->load->library('loanmanager/product_lib');
         $product_info = $this->product_lib->getProductInfo($product_id, $sub_product_id);
 
+        $stage = $this->input->get('stage');
         // 取得現階段要呈現的徵信項
-        switch ($this->input->get('stage'))
+        switch ($stage)
         {
             case 0: // 身份驗證階段
                 $this_stage_cert = $product_info['certifications_stage'][0] ?? [];
@@ -77,9 +78,9 @@ class Risk extends MY_Admin_Controller {
             ['id' => 'updated_at', 'name' => '最後更新時間'],
         ]];
         $cert_config = $this->config->item('certifications');
-        foreach ($this_stage_cert as $cert)
+        foreach ($this_stage_cert as $key => $cert)
         {
-            $result['cols'][] = ['id' => 'cert' . $cert, 'name' => $cert_config[$cert]['name']];
+            $result['cols'][] = ['id' => 'cert' . $key, 'name' => $cert_config[$cert]['name']];
         }
 
         // 撈target
@@ -106,7 +107,7 @@ class Risk extends MY_Admin_Controller {
             {
                 if ( ! in_array($target->sub_product_id, [STAGE_CER_TARGET, 0]))
                 {
-                    $product_info = $this->product_lib->getProductInfo($product_id, $target->sub_product_id);;
+                    $product_info = $this->product_lib->getProductInfo($product_id, $target->sub_product_id);
                 }
                 $user_prod_list[$target->product_id][$target->sub_product_id] = $product_info['name'];
             }
@@ -139,33 +140,52 @@ class Risk extends MY_Admin_Controller {
                     return $list;
                 }, []);
 
+                if ($target->product_id == PRODUCT_ID_STUDENT && $target->sub_product_id == SUBPRODUCT_INTELLIGENT_STUDENT)
+                {
+                    array_walk($this_stage_cert, function ($value, $key) use (&$this_stage_cert) {
+                        if ($value == CERTIFICATION_SOCIAL)
+                        {
+                            $this_stage_cert[$key] = CERTIFICATION_SOCIAL_INTELLIGENT;
+                        }
+                    });
+                }
+
                 // 整理出驗證成功的徵信項
                 $tmp_success = $this->certification_lib->filterCertIdsInStatusList($tmp, [CERTIFICATION_STATUS_SUCCEED]);
+                $user_cert_list[$target->user_id]['this_success'] = array_intersect($this_stage_cert, $tmp_success);
+                $user_cert_list[$target->user_id]['this_success_status'] = count($user_cert_list[$target->user_id]['this_success']) == count($this_stage_cert);
                 $user_cert_list[$target->user_id]['prev_success'] = array_intersect($prev_stage_cert, $tmp_success);
                 $user_cert_list[$target->user_id]['prev_success_status'] = count($user_cert_list[$target->user_id]['prev_success']) == count($prev_stage_cert);
 
                 // 畫徵信項的狀態按鈕
                 $user_cert_list[$target->user_id]['btn'] = [];
-                foreach ($this_stage_cert as $cert)
+                foreach ($this_stage_cert as $key => $cert)
                 {
                     $btn_factory = Certification_btn_factory::get_instance($tmp[$cert]);
 
                     if ($btn_factory)
                     {
-                        $user_cert_list[$target->user_id]['btn']['cert' . $cert] = $btn_factory->draw();
+                        $user_cert_list[$target->user_id]['btn']['cert' . $key] = $btn_factory->draw();
                     }
                     else
                     {
-                        $user_cert_list[$target->user_id]['btn']['cert' . $cert] = '';
+                        $user_cert_list[$target->user_id]['btn']['cert' . $key] = '';
                     }
                 }
             }
 
             // 前一階段徵信項未通過
-            if ( ! $user_cert_list[$target->user_id]['prev_success_status']) continue;
+            if ( ! $user_cert_list[$target->user_id]['prev_success_status'])
+            {
+                continue;
+            }
+            if ($user_cert_list[$target->user_id]['this_success_status'] && $stage != 2)
+            {
+                continue;
+            }
 
             $additional_btn = [];
-            if ($this->input->get('stage') == 2)
+            if ($stage == 2)
             {
                 $additional_btn['report'] = '<a class="btn btn-primary btn-info" href="' .
                     admin_url('Creditmanagement/report') . '?target_id=' . $target->id . '&type=person" target="_blank" >查看<br />授信審核表</a>';
@@ -182,7 +202,7 @@ class Risk extends MY_Admin_Controller {
             ], $additional_btn);
         }
 
-        if ($this->input->get('stage') == 2)
+        if ($stage == 2)
         {
             $result['cols'] = array_merge($result['cols'], [
                 ['id' => 'report', 'name' => '授信審核表'],

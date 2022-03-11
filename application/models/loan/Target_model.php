@@ -657,7 +657,13 @@ class Target_model extends MY_Model
             ->from('p2p_loan.targets t')
             ->join("({$subquery}) AS a", 'a.user_id=t.user_id')
             ->where('t.product_id<', PRODUCT_FOREX_CAR_VEHICLE)
-            ->where_in('t.status', [0, 1, 2, 21, 22, 30, 31, 32])
+            ->where_in('t.status', [
+                TARGET_WAITING_APPROVE,
+                TARGET_WAITING_SIGNING,
+                TARGET_WAITING_VERIFY,
+                TARGET_ORDER_WAITING_SIGNING,
+                TARGET_ORDER_WAITING_VERIFY
+            ])
             ->where('t.product_id', $product_id)
             ->order_by('t.id', 'ASC');
 
@@ -673,4 +679,29 @@ class Target_model extends MY_Model
         return $this->db->get()->result();
     }
 
+    public function get_failed_target_credit_list(int $user_id, array $target_status, array $prod_subprod_id)
+    {
+        $this->db
+            ->select('id')
+            ->from('p2p_loan.targets')
+            ->where('user_id', $user_id)
+            ->where_in('status', $target_status);
+
+        if ($prod_subprod_id)
+        {
+            $this->db->group_start();
+            foreach ($prod_subprod_id as $key => $value)
+            {
+                $this->db
+                    ->or_group_start()
+                    ->where('product_id', $key)
+                    ->where_in('sub_product_id', $value)
+                    ->group_end();
+
+            }
+            $this->db->group_end();
+        }
+
+        return $this->db->get()->result_array();
+    }
 }
