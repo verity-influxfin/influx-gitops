@@ -355,6 +355,7 @@
 									color: '#86A0BE',
 								}
 							},
+							minInterval: 1,
 							axisLabel: { fontSize: '14px' },
 							axisTick: {
 								show: true,
@@ -367,6 +368,8 @@
 							name: '會員總數',
 							alignTicks: true,
 							type: 'value',
+							max: Math.max(...data.map(x => x.total_member)) + 500,
+							min: Math.min(...data.map(x => x.total_member)) - 500,
 							splitLine: {
 								show: false
 							},
@@ -377,6 +380,7 @@
 								}
 							},
 							axisLabel: { fontSize: '14px' },
+							minInterval: 1,
 							axisTick: {
 								show: true,
 								lineStyle: {
@@ -804,7 +808,6 @@
 						source: [
 							['salary_man_count', 'student_count', 'product'],
 							...renderQr.value
-
 						]
 					},
 					xAxis: {
@@ -813,6 +816,7 @@
 					},
 					yAxis: {
 						type: 'value',
+						minInterval: 1,
 						splitLine: {
 							show: true,
 							lineStyle: {
@@ -885,7 +889,9 @@
 				setTimeout(showTime, 1000);
 			}
 			const nextQrData = () => {
-				state.qrcode.push(state.qrcode.shift())
+				if (state.qrcode.length > 0) {
+					state.qrcode.push(state.qrcode.shift())
+				}
 				renderQr.value = state.qrcode.slice(0, 7)
 				drawQr()
 			}
