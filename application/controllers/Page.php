@@ -421,7 +421,7 @@ class Page extends CI_Controller
             'E' => '高雄市',
             'F' => '新北市',
             'G' => '宜蘭縣',
-            'H' => '桃園縣',
+            'H' => '桃園市',
             'J' => '新竹縣',
             'K' => '苗栗縣',
             'L' => '臺中市',
@@ -495,8 +495,8 @@ class Page extends CI_Controller
         foreach ($list as $info)
         {
             $result[] = [
-                'date' => date('Y/m/d', strtotime($info['tx_datetime'])),
-                'time' => date('H:00', strtotime($info['tx_datetime'])),
+                'date' => date('Y/m/d', strtotime($info['tx_datetime'].' UTC+8')),
+                'time' => date('H:00', strtotime($info['tx_datetime'].' UTC+8')),
                 'value' => (int)$info['cnt']
             ];
         }
