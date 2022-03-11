@@ -23,7 +23,7 @@ abstract class Certification_btn_base
         $this->sys_check = empty($certification['sys_check']) ? 0 : (int) $certification['sys_check'];
 
         $cert = Certification_factory::get_instance_by_model_resource($certification);
-        $this->is_expired = $cert->is_expired();
+        $this->is_expired = isset($cert) && $cert->is_expired();
     }
 
     abstract public function draw(): string;

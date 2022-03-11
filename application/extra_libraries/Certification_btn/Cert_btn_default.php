@@ -7,7 +7,7 @@ class Cert_btn_default extends Certification_btn_base
 {
     public function draw(): string
     {
-        $sys_check = $this->sys_check === 0 ? ' btn-circle ' : ' ';
+        $sys_check = $this->sys_check !== SYSTEM_CHECK ? ' btn-circle ' : ' ';
         $status = $this->is_expired ? 'danger' : 'success';
 
         switch ($this->status)
