@@ -106,8 +106,6 @@
 			background-position: center center;
 		}
 
-		.rank-board {}
-
 		.rank-item {
 			color: #fff;
 			font-size: 20px;
@@ -179,15 +177,15 @@
 						最高成交筆數
 					</div>
 					<div class="num-group">
-						<div class="num">345</div>
+						<div class="num">{{ covertNum(state.platform_statistic.daily_highest_count) }}</div>
 						<div class="num-title">每日筆數</div>
 					</div>
 					<div class="num-group">
-						<div class="num">82,444</div>
+						<div class="num">{{ covertNum(state.platform_statistic.total_investment_count) }}</div>
 						<div class="num-title">累積筆數</div>
 					</div>
 					<div class="num-group">
-						<div class="num">4,000</div>
+						<div class="num">{{ covertNum(state.platform_statistic.monthly_highest_count) }}</div>
 						<div class="num-title">每月筆數</div>
 					</div>
 				</div>
@@ -210,7 +208,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 	crossorigin="anonymous"></script>
-<script src="https://unpkg.com/vue@3"></script>
+<script src="https://unpkg.com/vue@3.2.31/dist/vue.global.prod.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.js"></script>
 <script>
@@ -230,6 +228,11 @@
 					showDate: '',
 					time: '',
 					day: ''
+				},
+				platform_statistic: {
+					daily_highest_count: 0,
+					monthly_highest_count: 0,
+					total_investment_count: 0
 				},
 				weather: ''
 			})
@@ -296,6 +299,10 @@
 				'19:00', '20:00', '21:00', '22:00', '23:00'
 			]
 
+			const covertNum = (num) => {
+				return num.toLocaleString()
+			}
+
 			const getData = () => {
 				showTime()
 				state.date =
@@ -311,6 +318,7 @@
 					state.rank = [...data.data.qrcode].sort((a, b) => { b.full_member_count - a.full_member_count }).slice(0, 3)
 					setStatisticData(data.data.loan_statistic)
 					state.loan_distribution = data.data.loan_distribution
+					state.platform_statistic = data.data.platform_statistic
 				}).then(() => {
 					drawTable1()
 					drawTable2()
@@ -793,7 +801,7 @@
 				})
 				state.loan_statistic = ans
 			}
-			return { state };
+			return { state, covertNum };
 		}
 	}).mount('#app')
 </script>
