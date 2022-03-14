@@ -172,7 +172,7 @@
 				</div>
 			</div>
 			<div class="table-border">
-				<div class="history" style="height: 233px;">
+				<div class="history" style="height: 180px;">
 					<div class="history-title">
 						最高成交筆數
 					</div>
@@ -200,7 +200,7 @@
 					</div>
 				</div>
 				<div class="table-title">推薦有賞績效</div>
-				<div id="qr-1" style="height: 437px;"></div>
+				<div id="qr-1" style="height: 490px;"></div>
 			</div>
 		</div>
 	</div>
@@ -315,7 +315,7 @@
 					state.qrcode = data.data.qrcode.map(item => {
 						return [item.salary_man_count, item.student_count, item.name]
 					})
-					state.rank = [...data.data.qrcode].sort((a, b) => { b.full_member_count - a.full_member_count }).slice(0, 3)
+					state.rank = [...data.data.qrcode].sort((a, b) => b.full_member_count - a.full_member_count ).slice(0, 3)
 					setStatisticData(data.data.loan_statistic)
 					state.loan_distribution = data.data.loan_distribution
 					state.platform_statistic = data.data.platform_statistic
