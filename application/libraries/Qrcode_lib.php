@@ -542,6 +542,15 @@ class Qrcode_lib
             foreach ($subcode_reward_list as $subcode_reward)
             {
                 $user_qrcode_id = $subcode_reward['info']['id'];
+
+                // 下線沒有經過實名認證時不予計算業績
+                $this->CI->load->library('qrcode_lib');
+                $identity = $this->CI->qrcode_lib->get_user_identity($subcode_list[$user_qrcode_id]['registered_id']);
+                if ( ! $identity)
+                {
+                    continue;
+                }
+
                 $main_qrcode_id = $subcode_list[$user_qrcode_id]['master_user_qrcode_id'];
                 $main_qrcode_reward_list[$main_qrcode_id] = $this->merge_reward_info($main_qrcode_reward_list[$main_qrcode_id], $subcode_reward);
             }
@@ -787,7 +796,6 @@ class Qrcode_lib
             {
                 continue;
             }
-
 
             // 處理各個產品
             foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
