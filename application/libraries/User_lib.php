@@ -223,7 +223,7 @@ class User_lib {
      * @param bool $filterDelayed 是否要過濾逾期案
      * @return array
      */
-    public function getPromotedRewardInfo(array $where, string $startDate = '', string $endDate = '', int $limit = 0, int $offset = 0, bool $filterDelayed = FALSE): array
+    public function getPromotedRewardInfo(array $where, string $startDate = '', string $endDate = '', int $limit = 0, int $offset = 0, bool $filterDelayed = FALSE, bool $initialized=FALSE): array
     {
         $this->CI->load->model('user/user_qrcode_model');
         $this->CI->load->library('qrcode_lib');
@@ -253,6 +253,7 @@ class User_lib {
                 $list[$userQrcodeId]['fullMemberCount'] = 0;
                 $list[$userQrcodeId]['fullMember'] = [];
                 $list[$userQrcodeId]['registeredCount'] = 0;
+                $list[$userQrcodeId]['downloadedCount'] = 0;
                 $list[$userQrcodeId]['registered'] = [];
                 $list[$userQrcodeId]['rewardAmount'] = [];
                 $promoteCodeList[$userQrcodeId] = $promoteCodeRs;
@@ -266,36 +267,39 @@ class User_lib {
             return $list;
         }
 
-        // 取得推薦碼下載數
-        $this->CI->load->model('behavion/user_behavior_model');
-        $firstOpenRs = $this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate);
-        foreach ($firstOpenRs as $rs)
+        if ( ! $initialized)
         {
-            $list[$rs['user_qrcode_id']]['downloadedCount'] = $rs['count'];
-        }
-
-        // 取得推薦之註冊會員數
-        if ( ! empty($promoteCodeList))
-            $where['id'] = $userQrcodeIds;
-        $registeredRs = $this->CI->user_qrcode_model->getRegisteredUserByPromoteCode($where, $startDate, $endDate);
-        foreach ($registeredRs as $rs)
-        {
-            if ($rs['app_status'] == 1)
+            // 取得推薦碼下載數
+            $this->CI->load->model('behavion/user_behavior_model');
+            $firstOpenRs = $this->CI->user_behavior_model->getFirstOpenCountByPromoteCode($promoteCodes, $startDate, $endDate);
+            foreach ($firstOpenRs as $rs)
             {
-                $list[$rs['user_qrcode_id']]['fullMemberCount'] += 1;
-                $list[$rs['user_qrcode_id']]['fullMember'][] = $rs;
+                $list[$rs['user_qrcode_id']]['downloadedCount'] = $rs['count'];
             }
-            $list[$rs['user_qrcode_id']]['registeredCount'] += 1;
-            $list[$rs['user_qrcode_id']]['registered'][] = $rs;
-        }
 
-        // 取得成功推薦申貸的數量
-        foreach ($this->rewardCategories as $category => $productIdList)
-        {
-            $rs = $this->CI->qrcode_lib->get_product_reward_list($where, $productIdList, $this->rewardedTargetStatus[$category], $startDate, $endDate, $filterDelayed);
-            foreach ($rs as $promotedTarget)
+            // 取得推薦之註冊會員數
+            if ( ! empty($promoteCodeList))
+                $where['id'] = $userQrcodeIds;
+            $registeredRs = $this->CI->user_qrcode_model->getRegisteredUserByPromoteCode($where, $startDate, $endDate);
+            foreach ($registeredRs as $rs)
             {
-                $list[$promotedTarget['user_qrcode_id']][$category][] = $promotedTarget;
+                if ($rs['app_status'] == 1)
+                {
+                    $list[$rs['user_qrcode_id']]['fullMemberCount'] += 1;
+                    $list[$rs['user_qrcode_id']]['fullMember'][] = $rs;
+                }
+                $list[$rs['user_qrcode_id']]['registeredCount'] += 1;
+                $list[$rs['user_qrcode_id']]['registered'][] = $rs;
+            }
+
+            // 取得成功推薦申貸的數量
+            foreach ($this->rewardCategories as $category => $productIdList)
+            {
+                $rs = $this->CI->qrcode_lib->get_product_reward_list($where, $productIdList, $this->rewardedTargetStatus[$category], $startDate, $endDate, $filterDelayed);
+                foreach ($rs as $promotedTarget)
+                {
+                    $list[$promotedTarget['user_qrcode_id']][$category][] = $promotedTarget;
+                }
             }
         }
 

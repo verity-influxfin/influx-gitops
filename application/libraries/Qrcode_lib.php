@@ -530,11 +530,34 @@ class Qrcode_lib
         $this->CI->load->model('user/user_subcode_model');
         $subcode_list = $this->CI->user_subcode_model->get_subcode_list($main_qrcode_ids);
         $subcode_list = array_column($subcode_list, NULL, 'user_qrcode_id');
+
+        $this->CI->load->library('qrcode_lib');
+        $no_identity_list = [];
+        $have_identity_list = [];
+        foreach ($subcode_list as $subcode)
+        {
+            // 下線沒有經過實名認證時不予計算業績
+            $identity = $this->CI->qrcode_lib->get_user_identity($subcode['registered_id']);
+            if ( ! $identity)
+            {
+                $no_identity_list[] = $subcode['user_qrcode_id'];
+            }
+            else
+            {
+                $have_identity_list[] = $subcode['user_qrcode_id'];
+            }
+
+        }
+
         if ( ! empty($subcode_list))
         {
-            $where = ['id' => array_keys($subcode_list)];
+            $where = ['id' => array_values($have_identity_list)];
             $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
                 $start_date, $end_date, $limit, $offset, $filter_delayed);
+            $where = ['id' => array_values($no_identity_list)];
+            $subcode_init_list = $this->CI->user_lib->getPromotedRewardInfo($where,
+                $start_date, $end_date, $limit, $offset, $filter_delayed, TRUE);
+            $subcode_reward_list = array_replace_recursive($subcode_reward_list, $subcode_init_list);
         }
 
         if($merge_subcode)
@@ -542,15 +565,6 @@ class Qrcode_lib
             foreach ($subcode_reward_list as $subcode_reward)
             {
                 $user_qrcode_id = $subcode_reward['info']['id'];
-
-                // 下線沒有經過實名認證時不予計算業績
-                $this->CI->load->library('qrcode_lib');
-                $identity = $this->CI->qrcode_lib->get_user_identity($subcode_list[$user_qrcode_id]['registered_id']);
-                if ( ! $identity)
-                {
-                    continue;
-                }
-
                 $main_qrcode_id = $subcode_list[$user_qrcode_id]['master_user_qrcode_id'];
                 $main_qrcode_reward_list[$main_qrcode_id] = $this->merge_reward_info($main_qrcode_reward_list[$main_qrcode_id], $subcode_reward);
             }
@@ -787,14 +801,6 @@ class Qrcode_lib
                 $list[$date][$user_qrcode_id]['subcode_id'] = (int) $user_subcode_list[$user_qrcode_id]['id'];
                 $list[$date][$user_qrcode_id]['alias'] = $user_subcode_list[$user_qrcode_id]['alias'];
                 $list[$date][$user_qrcode_id]['registered_id'] = $user_subcode_list[$user_qrcode_id]['registered_id'];
-            }
-
-            // 下線沒有經過實名認證時不予計算業績
-            $this->CI->load->library('qrcode_lib');
-            $identity = $this->CI->qrcode_lib->get_user_identity($user_subcode_list[$user_qrcode_id]['registered_id']);
-            if ( ! $identity)
-            {
-                continue;
             }
 
             // 處理各個產品
