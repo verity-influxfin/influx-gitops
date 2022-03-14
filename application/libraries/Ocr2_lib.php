@@ -27,8 +27,8 @@ class Ocr2_lib
         $this->user_id = $params['user_id'];
         $this->cer_id = $params['cer_id'];
 
-        $this->ocr2_uri = getenv('OCR2_API_URI') ?: 'http://54.64.205.49:8000';
-        $this->my_host = getenv('OCR2_LOCAL_HOST') ?: '114.34.172.44';
+        $this->ocr2_uri = getenv('OCR2_API_URI');
+        $this->my_host = getenv('OCR2_LOCAL_HOST');
 
         $this->_init_client();
     }
@@ -43,6 +43,35 @@ class Ocr2_lib
         $this->secret_key = $this->_create_secret_key();
         $this->public_key = $this->_get_public_key();
         $this->session_id = $this->_session_register();
+    }
+
+    public function check_ocr_connection()
+    {
+        $data = [
+            'error' => TRUE,
+            'msg' => '',
+        ];
+
+        if ($this->_is_valid())
+        {
+            $data['error'] = FALSE;
+            $data['msg'] = '成功與 ocr 建立連線! secret_key: ' . $this->secret_key . ', session_id: ' . $this->session_id;
+        }
+        else
+        {
+            $data['msg'] = '與 ocr 建立連線失敗!';
+            if (empty($this->public_key))
+            {
+                $data['msg'] .= '沒有取得 ocr public key，請檢查環境變數(OCR2_API_URI)是否正確。';
+            }
+
+            if (empty($this->session_id))
+            {
+                $data['msg'] .= '沒有註冊 ocr session，請檢查環境變數(OCR2_LOCAL_HOST)是否正確，或查詢資料庫錯誤紀錄。';
+            }
+        }
+
+        return $data;
     }
 
     public function identity_verification($images)
@@ -266,7 +295,7 @@ class Ocr2_lib
      * 但因 OCR 使用的加解密方式為 MGF1(algorithm=hashes.SHA256())
      * 所以只能另外導入 phpseclib 來進行加密動作
      * https://github.com/phpseclib/phpseclib
-     * */
+     **/
     private function _get_encrypted_host_dot_secret_key()
     {
         $str = $this->my_host . '.' . $this->secret_key;
