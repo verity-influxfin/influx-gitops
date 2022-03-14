@@ -35,7 +35,7 @@ class Ocr2_lib
 
     private function _init_client()
     {
-        $this->client = new GuzzleHttp\Client([
+        $this->client = new Client([
             'base_uri' => $this->ocr2_uri,
             'timeout' => 60,
         ]);
@@ -284,7 +284,7 @@ class Ocr2_lib
 
     private function _is_valid()
     {
-        return ($this->client instanceof GuzzleHttp\client
+        return ($this->client instanceof Client
             && $this->session_id !== '') ? TRUE : FALSE;
     }
 
