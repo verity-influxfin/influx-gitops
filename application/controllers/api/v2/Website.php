@@ -867,7 +867,7 @@ class Website extends REST_Controller {
      *          "transaction_id": "2352866",
      *          "tx_datetime": "2021-11-11 15:15:30",
      *          "receipt_type": "0",
-     *          "data": "{"name\": \"王韋翔\", "email\": \"fmww5418@gmail.com\", "phone\": \"0988912157\", "receipt_address\": \"高雄市喔喔喔喔耶\", "receipt_id_number\": \"S124599064\"}",
+     *          "data": "{"name\": \"User姓名\", "email\": \"test@gmail.com\", "phone\": \"09123456789\", "receipt_address\": \"地址XXX\", "receipt_id_number\": \"A123456789\"}",
      *          "created_at": "2021-11-11 15:15:30",
      *          "created_ip": "172.18.0.1",
      *          "updated_at": "2021-11-11 15:15:30",
