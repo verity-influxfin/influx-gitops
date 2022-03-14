@@ -775,10 +775,19 @@ class Qrcode_lib
                 $list[$date][$user_qrcode_id] = $categoryInitList;
                 $list[$date][$user_qrcode_id]['collaboration'] = $collaboratorInitList;
                 $list[$date][$user_qrcode_id]['full_member_count'] = 0;
-                $list[$date][$user_qrcode_id]['subcode_id'] = (int)$user_subcode_list[$user_qrcode_id]['id'];
+                $list[$date][$user_qrcode_id]['subcode_id'] = (int) $user_subcode_list[$user_qrcode_id]['id'];
                 $list[$date][$user_qrcode_id]['alias'] = $user_subcode_list[$user_qrcode_id]['alias'];
                 $list[$date][$user_qrcode_id]['registered_id'] = $user_subcode_list[$user_qrcode_id]['registered_id'];
             }
+
+            // 下線沒有經過實名認證時不予計算業績
+            $this->CI->load->library('qrcode_lib');
+            $identity = $this->CI->qrcode_lib->get_user_identity($user_subcode_list[$user_qrcode_id]['registered_id']);
+            if ( ! $identity)
+            {
+                continue;
+            }
+
 
             // 處理各個產品
             foreach (array_keys($this->CI->user_lib->rewardCategories) as $category)
