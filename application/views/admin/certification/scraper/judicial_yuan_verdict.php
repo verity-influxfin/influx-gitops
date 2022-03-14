@@ -32,49 +32,6 @@
     }
 </style>
 <script type="text/javascript">
-    function fetchInfoData(user_id) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/scraper/judicial_yuan_info" + "?user_id=" + user_id,
-            success: function (response) {
-                if (response.status.code != 200) {
-                    console.log(response.status.code)
-                    return;
-                }
-                judicialyuanInfo = response.response;
-                fillInfoData(judicialyuanInfo);
-                // tabs
-                const tabs = [judicialyuanInfo.name, judicialyuanInfo.father, judicialyuanInfo.mother, judicialyuanInfo.spouse]
-                v.tabs = tabs.filter(x => x.length > 0)
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest.status);
-                console.log(XMLHttpRequest.readyState);
-                console.log(textStatus);
-            },
-        });
-    }
-
-    // 資料抓取
-    function fetchjudicialyuan(user_id = '') {
-        $.ajax({
-            type: "GET",
-            url: "/admin/scraper/judicial_yuan" + "?user_id=" + user_id + "&function=requestJudicialYuanVerdictsCount",
-            success: function (response) {
-                if (response.status.code != 200) {
-                    console.log(response.status.code)
-                    return;
-                }
-                countResponse = response.response;
-                filljudicialYuanCount(countResponse);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest.status);
-                console.log(XMLHttpRequest.readyState);
-                console.log(textStatus);
-            },
-        });
-    }
 
     // 更新內文
     function ajaxGetCase(user_id, case_type) {
@@ -175,39 +132,6 @@
         return html;
     }
 
-    // 插入SQL資料
-    function fillInfoData(judicialyuanInfoData) {
-        if (!judicialyuanInfoData) {
-            return;
-        }
-        idCardPlace = judicialyuanInfoData.id_card_place;
-        idCardPlace = idCardPlace.split(')');
-        $('#name').text(judicialyuanInfoData.name);
-        $('#birthday').text(judicialyuanInfoData.birthday);
-        $('#id-number').text(judicialyuanInfoData.id_number);
-        $('#id-card-date').text(judicialyuanInfoData.id_card_date);
-        $('#id_card_place').text(idCardPlace[0].replace('(', ''));
-        $('#replacement').text(idCardPlace[1]);
-        $('#father').text(judicialyuanInfoData.father);
-        $('#mother').text(judicialyuanInfoData.mother);
-        $('#born').text(judicialyuanInfoData.born);
-        $('#spouse').text(judicialyuanInfoData.spouse);
-        $('#address').text(judicialyuanInfoData.address);
-    }
-
-    // 插入count資料
-    function filljudicialYuanCount(judicialYuanCount) {
-        if (!judicialYuanCount) {
-            return;
-        }
-        judicialYuanCount.cases.forEach((item) => {
-            // console.log(item.case)
-            // console.log(item.count)
-            count_html = create_count_html(item.case, item.count);
-            $('#count').append(count_html);
-        });
-    }
-
     // 插入爬蟲資料
     function filljudicialyuanData(name, dataResponse) {
         if (!dataResponse || dataResponse.result.length == 0) {
@@ -233,8 +157,6 @@
         let urlString = window.location.href;
         let url = new URL(urlString);
         user_id = url.searchParams.get("user_id");
-        fetchInfoData(user_id);
-        fetchjudicialyuan(user_id);
 
         $('#redo').on('click', () => {
             if (confirm('是否確定重新執行爬蟲？')) {
@@ -320,7 +242,12 @@
                         <th class="table-title">項目</th>
                         <th class="table-title">筆數</th>
                     </tr>
-                    <tbody id="count"></tbody>
+                    <tbody id="count">
+                        <tr v-for="item in cases">
+                            <td class="table-title"><a>{{ item.case }}</a></td>
+                            <td style=background-color:white;>{{ item.count }}</td>
+                        </tr>
+                    </tbody>
                 </table>
             </td>
         </tr>
@@ -351,12 +278,21 @@
         data() {
             return {
                 tabs: [],
-                chooseTab: ''
+                chooseTab: '',
+                userId: '',
+                judicialYuanInfo: {},
+                cases: []
             }
         },
         mounted() {
+            const url = new URL(location.href);
+            this.userId = url.searchParams.get('user_id');
             const hash = decodeURI(location.hash.slice(1))
             this.chooseTab = decodeURI(location.hash.slice(1))
+            //apis
+            this.getJudicialYuanInfo().then(() => {
+                this.getTabData()
+            })
         },
         computed: {
             column() {
@@ -366,6 +302,56 @@
         methods: {
             clickTab(tab) {
                 this.chooseTab = tab
+                this.getTabData()
+            },
+            getJudicialYuanInfo() {
+                const fillInfoData = (judicialyuanInfoData) => {
+                    if (!judicialyuanInfoData) {
+                        return;
+                    }
+                    idCardPlace = judicialyuanInfoData.id_card_place;
+                    idCardPlace = idCardPlace.split(')');
+                    $('#name').text(judicialyuanInfoData.name);
+                    $('#birthday').text(judicialyuanInfoData.birthday);
+                    $('#id-number').text(judicialyuanInfoData.id_number);
+                    $('#id-card-date').text(judicialyuanInfoData.id_card_date);
+                    $('#id_card_place').text(idCardPlace[0].replace('(', ''));
+                    $('#replacement').text(idCardPlace[1]);
+                    $('#father').text(judicialyuanInfoData.father);
+                    $('#mother').text(judicialyuanInfoData.mother);
+                    $('#born').text(judicialyuanInfoData.born);
+                    $('#spouse').text(judicialyuanInfoData.spouse);
+                    $('#address').text(judicialyuanInfoData.address);
+                }
+                return axios.get(`/admin/scraper/judicial_yuan_info?user_id=${this.userId}`).then(({ data }) => {
+                    if (data.status.code === 200) {
+                        fillInfoData(data.response)
+                        this.judicialYuanInfo = data.response
+                        // tabs
+                        const tabs = [data.response.name, data.response.father, data.response.mother, data.response.spouse]
+                        v.tabs = tabs.filter(x => x.length > 0)
+                        if (!this.chooseTab) {
+                            this.chooseTab = data.response.name
+                        }
+                    }
+                })
+            },
+            getTabData() {
+                let name = null
+                if (this.chooseTab) {
+                    name = this.chooseTab
+                }
+                return axios.get('/admin/scraper/judicial_yuan', {
+                    params: {
+                        user_id: this.userId,
+                        name,
+                        address: this.judicialYuanInfo.address
+                    }
+                }).then(({ data }) => {
+                    if (data.status.code === 200) {
+                        this.cases = data.response.cases
+                    }
+                })
             }
         },
     })

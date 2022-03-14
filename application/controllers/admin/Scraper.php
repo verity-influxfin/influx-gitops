@@ -22,7 +22,7 @@ class Scraper extends MY_Admin_Controller
     {
         $input = $this->input->get(NULL, TRUE);
         $page_view = isset($input['view']) ? $input['view'] : '';
-		$this->load->view('admin/_header',$data=['use_vuejs'=>true]);
+        $this->load->view('admin/_header',$data=['use_vuejs'=>true]);
         $this->load->view('admin/_title', $this->menu);
         if ( ! empty($page_view))
         {
@@ -247,24 +247,9 @@ class Scraper extends MY_Admin_Controller
         $this->load->library('output/json_output');
         $this->load->model('user/user_certification_model');
 
-        if (empty($input) || ! is_array($input))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'data type not correct'])->send();
-        }
-
-        if (empty($input['user_id']) || empty($input['function']))
+        if (empty($input['user_id']))
         {
             $this->json_output->setStatusCode(405)->setResponse(['message' => 'parameter not correct'])->send();
-        }
-        $function = $input['function'];
-
-        $methodVariable = [
-            $this->judicial_yuan_lib,
-            $function
-        ];
-        if ( ! is_callable($methodVariable, FALSE, $all_name))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'this function not exist'])->send();
         }
 
         $info = $this->user_model->get($input['user_id']);
@@ -273,15 +258,10 @@ class Scraper extends MY_Admin_Controller
             $this->json_output->setStatusCode(405)->setResponse(['message' => 'user name not found'])->send();
         }
 
-        if ( ! isset($info->address))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'address not found'])->send();
-        }
+        $name = isset($input['name']) ? $input['name'] : $info->name;
 
-        $domicile = $info->address;
-        $domicile = $this->_get_new_domicile($domicile);
-        $judicial_yuan_response = $this->judicial_yuan_lib->$function($info->name, $domicile);
-
+        $domicile = $this->_get_new_domicile($input['address']);
+        $judicial_yuan_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsCount($name, $domicile);
         if (empty($judicial_yuan_response) || ! isset($judicial_yuan_response['response']))
         {
             $judicial_yuan_response = isset($judicial_yuan_response['response']) ? $judicial_yuan_response['response'] : ['message' => 'judicialyuan not response'];
@@ -340,22 +320,36 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($judicial_yuan_response['response'])->send();
     }
 
-	public function judicial_yuan_verdicts(){
-		$this->load->library('output/json_output');
+    public function judicial_yuan_verdicts(){
+        $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
         $address = $this->_get_new_domicile(input['address']);
         $result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name'], $address);
-		if( ! $result){
-			$error = [
+        if( ! $result){
+            $error = [
                 'response' => [
                     'message' => '無回應，請洽工程師。'
                 ]
             ];
             echo json_encode($error);
-		}
-		// 
-		echo json_encode($result);
-	}
+        }
+        // 
+        echo json_encode($result);
+    }
+
+    public function judicial_yuan_status(){
+        $input = $this->input->get(NULL, TRUE);
+        $this->load->library('output/json_output');
+        $response = [];
+        $name = $input['name'];
+        $name = $info->name;
+        $judicial_yuan_status = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name);      
+        if (isset($judicial_yuan_status['response']['status']) && ! empty($judicial_yuan_status['response']['status']))
+        {
+            $response['judicial_yuan_status'] = $judicial_yuan_status['response']['status'];
+        }
+        echo json_encode($response);
+    }
 
     public function sip_info()
     {
@@ -446,20 +440,20 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response['response'])->send();
     }
 
-	public function request_deep(){
-		$this->load->library('output/json_output');
+    public function request_deep(){
+        $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-		$result = $this->sip_lib->requestDeep($input['university'],$input['account'],$input['password']);
-		if( ! $result){
-			$error = [
+        $result = $this->sip_lib->requestDeep($input['university'],$input['account'],$input['password']);
+        if( ! $result){
+            $error = [
                 'response' => [
                     'message' => '無回應，請洽工程師。'
                 ]
             ];
-			echo json_encode($error);
-		}
-		echo json_encode($result);
-	}
+            echo json_encode($error);
+        }
+        echo json_encode($result);
+    }
 
     public function biz_br_info()
     {
@@ -540,21 +534,21 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response['response'])->send();
     }
 
-	public function requestFindBizData(){
-		$this->load->library('output/json_output');
+    public function requestFindBizData(){
+        $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-		$result = $this->findbiz_lib->requestFindBizData($input['tax_id']);
-		if( ! $result){
-			$error = [
+        $result = $this->findbiz_lib->requestFindBizData($input['tax_id']);
+        if( ! $result){
+            $error = [
                 'response' => [
                     'message' => '無回應，請洽工程師。'
                 ]
             ];
             echo json_encode($error);
-		}
-		// 
-		echo json_encode(['status' => 200]);
-	}
+        }
+        // 
+        echo json_encode(['status' => 200]);
+    }
 
     public function business_registration()
     {
@@ -582,20 +576,20 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response['response'])->send();
     }
 
-	public function downloadBusinessRegistration(){
-		$this->load->library('output/json_output');
-		$result = $this->business_registration_lib->downloadBusinessRegistration();
-		if( ! $result){
-			$error = [
+    public function downloadBusinessRegistration(){
+        $this->load->library('output/json_output');
+        $result = $this->business_registration_lib->downloadBusinessRegistration();
+        if( ! $result){
+            $error = [
                 'response' => [
                     'message' => '無回應，請洽工程師。'
                 ]
             ];
             echo json_encode($error);
-		}
-		// 
-		echo json_encode(['status' => 200]);
-	}
+        }
+        // 
+        echo json_encode(['status' => 200]);
+    }
 
     public function google_info()
     {
@@ -661,21 +655,21 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response['response'])->send();
     }
 
-	public function request_google(){
-		$this->load->library('output/json_output');
+    public function request_google(){
+        $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-		$result = $this->google_lib->request_google($input['keyword']);
-		if( ! $result){
-			$error = [
+        $result = $this->google_lib->request_google($input['keyword']);
+        if( ! $result){
+            $error = [
                 'response' => [
                     'message' => '無回應，請洽工程師。'
                 ]
             ];
             echo json_encode($error);
-		}
-		// 
-		echo json_encode($result);
-	}
+        }
+        // 
+        echo json_encode($result);
+    }
 
     public function ptt_info()
     {
@@ -797,36 +791,36 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response['response'])->send();
     }
 
-	public function updateIGUserInfo(){
-		$this->load->library('output/json_output');
+    public function updateIGUserInfo(){
+        $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-		$result = $this->instagram_lib->updateUserInfo($input['userId'], $input['followed_account']);
-		if( ! $result){
-			$error = [
+        $result = $this->instagram_lib->updateUserInfo($input['userId'], $input['followed_account']);
+        if( ! $result){
+            $error = [
                 'response' => [
                     'message' => '無回應，請洽工程師。'
                 ]
             ];
             echo json_encode($error);
-		}
-		// 
-		echo json_encode($result);
-	}
+        }
+        // 
+        echo json_encode($result);
+    }
 
-	public function autoFollowIG(){
-		$this->load->library('output/json_output');
+    public function autoFollowIG(){
+        $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-		$result = $this->instagram_lib->autoFollow($input['userId'], $input['followed_account']);
-		if( ! $result){
-			$error = [
+        $result = $this->instagram_lib->autoFollow($input['userId'], $input['followed_account']);
+        if( ! $result){
+            $error = [
                 'response' => [
                     'message' => '無回應，請洽工程師。'
                 ]
             ];
             echo json_encode($error);
-		}
-		// 
-		echo json_encode(['status' => 200]);
-	}
+        }
+        // 
+        echo json_encode(['status' => 200]);
+    }
 }
 ?>

@@ -91,13 +91,13 @@ class Judicial_yuan_lib
 
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
+        return $response;
 
         if ( ! $result || ! isset($response['status']))
         {
             return FALSE;
         }
 
-        return $response;
     }
 
     public function requestJudicialYuanVerdictsCase($query, $case, $address='')
