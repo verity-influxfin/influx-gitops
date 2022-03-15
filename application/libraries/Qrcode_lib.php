@@ -554,10 +554,15 @@ class Qrcode_lib
             $where = ['id' => array_values($have_identity_list)];
             $subcode_reward_list = $this->CI->user_lib->getPromotedRewardInfo($where,
                 $start_date, $end_date, $limit, $offset, $filter_delayed);
-            $where = ['id' => array_values($no_identity_list)];
-            $subcode_init_list = $this->CI->user_lib->getPromotedRewardInfo($where,
-                $start_date, $end_date, $limit, $offset, $filter_delayed, TRUE);
-            $subcode_reward_list = array_replace_recursive($subcode_reward_list, $subcode_init_list);
+
+            $ids = array_values($no_identity_list);
+            if ( ! empty($ids))
+            {
+                $where = ['id' => array_values($no_identity_list)];
+                $subcode_init_list = $this->CI->user_lib->getPromotedRewardInfo($where,
+                    $start_date, $end_date, $limit, $offset, $filter_delayed, TRUE);
+                $subcode_reward_list = array_replace_recursive($subcode_reward_list, $subcode_init_list);
+            }
         }
 
         if($merge_subcode)
