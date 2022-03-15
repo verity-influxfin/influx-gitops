@@ -281,19 +281,9 @@ class Scraper extends MY_Admin_Controller
             $this->json_output->setStatusCode(405)->setResponse(['message' => 'data type not correct'])->send();
         }
 
-        if (empty($input['user_id']) || empty($input['case_type']) || empty($input['function']))
+		if (empty($input['user_id'])|| empty($input['case_type']) || empty($input['address']))
         {
             $this->json_output->setStatusCode(405)->setResponse(['message' => 'parameter not correct'])->send();
-        }
-        $function = $input['function'];
-
-        $methodVariable = [
-            $this->judicial_yuan_lib,
-            $function
-        ];
-        if ( ! is_callable($methodVariable, FALSE, $all_name))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'this function not exist'])->send();
         }
 
         $info = $this->user_model->get($input['user_id']);
@@ -302,14 +292,11 @@ class Scraper extends MY_Admin_Controller
             $this->json_output->setStatusCode(405)->setResponse(['message' => 'user name not found'])->send();
         }
 
-        if ( ! isset($info->address))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'address not found'])->send();
-        }
+        $name = isset($input['name']) ? $input['name'] : $info->name;
 
-        $domicile = $info->address;
-        $domicile = $this->_get_new_domicile($domicile);
-        $judicial_yuan_response = $this->judicial_yuan_lib->$function($info->name, $input['case_type'], $domicile);
+        $domicile = $this->_get_new_domicile($input['address']);
+        
+        $judicial_yuan_response = $this->judicial_yuan_lib->requestJudicialYuanVerdictsCase($name, $input['case_type'], $domicile);
 
         if (empty($judicial_yuan_response) || ! isset($judicial_yuan_response['response']))
         {
@@ -323,7 +310,7 @@ class Scraper extends MY_Admin_Controller
     public function judicial_yuan_verdicts(){
         $this->load->library('output/json_output');
         $input = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
-        $address = $this->_get_new_domicile(input['address']);
+        $address = $this->_get_new_domicile($input['address']);
         $result = $this->judicial_yuan_lib->requestJudicialYuanVerdicts($input['name'], $address);
         if( ! $result){
             $error = [
@@ -341,8 +328,10 @@ class Scraper extends MY_Admin_Controller
         $input = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
         $response = [];
+		if( ! isset($input['name'])){
+			echo json_encode(['message' => 'parameter not correct']);
+		}
         $name = $input['name'];
-        $name = $info->name;
         $judicial_yuan_status = $this->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($name);      
         if (isset($judicial_yuan_status['response']['status']) && ! empty($judicial_yuan_status['response']['status']))
         {

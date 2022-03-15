@@ -30,148 +30,19 @@
     .aic {
         align-items: center;
     }
+
+    .pointer {
+        cursor: pointer;
+    }
 </style>
-<script type="text/javascript">
-
-    // 更新內文
-    function ajaxGetCase(user_id, case_type) {
-        $('#case-content').empty();
-        $.ajax({
-            type: "GET",
-            url: "/admin/scraper/judicial_yuan_case" + "?user_id=" + user_id + "&case_type=" + case_type +
-                "&function=requestJudicialYuanVerdictsCase",
-            async: false,
-            success: function (response) {
-                if (response.status.code != 200) {
-                    console.log(response);
-                    $('#case-content').append(`<center>沒有資料！<center>`)
-                    return;
-                }
-                name = response.response.name;
-                dataResponse = response.response;
-                filljudicialyuanData(name, dataResponse);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest.status);
-                console.log(XMLHttpRequest.readyState);
-                console.log(textStatus);
-            },
-        });
-    }
-
-    // 關鍵字加上標號
-    function highlight(content, what, spanClass) {
-        pattern = new RegExp('([<.]*)(' + what + ')([<.]*)', 'gi'),
-            replaceWith = '$1<span ' + (spanClass ? 'class="' + spanClass + '"' : '') + '">$2</span>$3',
-            highlighted = content.replace(pattern, replaceWith);
-        return highlighted;
-    }
-
-    // 寫入textbox
-    function inputCaseToTextBox(caseType) {
-        $('#text-case-type').text('司法院資訊(' + caseType + ')');
-        getNewCase(caseType);
-    }
-
-    // 開關內文
-    function watchContent(id) {
-        if (isClick == true) {
-            $('#' + id).addClass('table-ellipsis');
-            isClick = false;
-        } else {
-            $('#' + id).removeClass('table-ellipsis');
-            isClick = true;
-        }
-    }
-
-    // 獲取新檔案
-    function getNewCase(case_type) {
-        setTimeout(ajaxGetCase(user_id, case_type), 1000);
-    }
-
-    // count
-    function create_count_html(type, count) {
-        html = `<tr>
-                    <th class="table-title"><a href="#" onclick="inputCaseToTextBox('${type}')" >${type}</a></th>
-                    <td style=background-color:white;>${count}</td>
-                </tr>`
-        return html;
-    }
-
-    // case sample
-    function create_case_html(name, url, title, date, location, content, i) {
-        content = highlight(content, name, 'f-red');
-        html = `<div class="form-group">
-                    <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                        <tbody>
-                            <tr>
-                                <th class="table-title">裁判字號</th>
-                                <td style=background-color:white;>
-                                    <a class="fancyframe" target="_blank" href="${url}">${title}</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="table-title">時間</th>
-                                <td>${date}</td>
-                            </tr>
-                            <tr>
-                                <th class="table-title">地點</th>
-                                <td style=background-color:white;>${location}</td>
-                            </tr>
-                            <tr>
-                                <th class="table-title">
-                                    <a onclick="watchContent('${i}')">內容(點我展開)</a>
-                                </th>
-                                <td class="table-content table-ellipsis" id="${i}">
-                                    ${content}
-                                </td>
-                            </tr>
-                        </tbody>
-                    <table>
-                </div>`
-        return html;
-    }
-
-    // 插入爬蟲資料
-    function filljudicialyuanData(name, dataResponse) {
-        if (!dataResponse || dataResponse.result.length == 0) {
-            $('#case-content').append(`<center>沒有資料！<center>`);
-            return;
-        }
-        i = 0;
-        console.log(dataResponse.result);
-        dataResponse.result.forEach((item) => {
-            // console.log(item.url);
-            // console.log(item.title);
-            // console.log(item.date);
-            // console.log(item.type);
-            // console.log(item.location);
-            // console.log(item.content);
-            case_html = create_case_html(name, item.url, item.title, item.date, item.location, item.content, i);
-            $('#case-content').append(case_html);
-            i += 1;
-        });
-    }
-
+<script>
     $(document).ready(function () {
         let urlString = window.location.href;
         let url = new URL(urlString);
         user_id = url.searchParams.get("user_id");
 
         $('#redo').on('click', () => {
-            if (confirm('是否確定重新執行爬蟲？')) {
-                axios.post('/admin/scraper/judicial_yuan_verdicts', {
-                    name: $('#name').text(),
-                    address: $('#address').text()
-                }).then(({ data }) => {
-                    if (data.status == 200) {
-                        location.reload()
-                    }
-                    else {
-                        alert(data.error.code)
-                    }
-                })
-            }
+
         })
     });
 </script>
@@ -179,10 +50,6 @@
     <div class="d-flex jcb aic page-header">
         <div>
             <h1>司法院判決案例</h1>
-        </div>
-        <div>
-            <scraper-status-icon :column="column"></scraper-status-icon>
-            <button class="btn btn-danger" id="redo">重新執行爬蟲</button>
         </div>
     </div>
     <table class="table table-bordered table-hover table-striped">
@@ -233,7 +100,15 @@
     </ul>
     <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
         <tr>
-            <th class="table-title">司法院筆數(點選項目進行查詢資訊)</th>
+            <th class="table-title d-flex aic">
+                <div class="mr-4">
+                    司法院筆數(點選項目進行查詢資訊)
+                </div>
+                <div>
+                    <scraper-status-icon :show-status="status"></scraper-status-icon>
+                    <button class="btn btn-danger" @click="doRedo" :disabled="status == 'loading'">重新執行爬蟲</button>
+                </div>
+            </th>
         </tr>
         <tr>
             <td>
@@ -244,7 +119,8 @@
                     </tr>
                     <tbody id="count">
                         <tr v-for="item in cases">
-                            <td class="table-title"><a>{{ item.case }}</a></td>
+                            <td class="table-title"><a @click="getCase(item.case)" class="pointer">{{ item.case }}</a>
+                            </td>
                             <td style=background-color:white;>{{ item.count }}</td>
                         </tr>
                     </tbody>
@@ -256,21 +132,32 @@
         <tr>
             <th class="table-title" id="text-case-type">司法院資訊</th>
         </tr>
-        <tr>
-            <td style=border-bottom-color:white;>
-                <div class="col-lg-12" id="case-content"></div>
-            </td>
-        </tr>
-        <tr>
-            <td style=background-color:white;>
-                <div class="d-flex justify-content-evenly">
-                    <center>
-                        <div class="btn-group" role="group" aria-label="Basic example"></div>
-                    </center>
-                </div>
-            </td>
-        </tr>
-    </table>
+        <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
+            <tbody v-for="(item,index) in infos">
+                <tr>
+                    <th class="table-title">裁判字號</th>
+                    <td style=background-color:white;>
+                        <a class="fancyframe" target="_blank" :href="item.url">{{item.title}}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="table-title">時間</th>
+                    <td>{{item.date}}</td>
+                </tr>
+                <tr>
+                    <th class="table-title">地點</th>
+                    <td style=background-color:white;>{{item.location}}</td>
+                </tr>
+                <tr>
+                    <th class="table-title">
+                        <a @click="watchContent(`case_content_${index}`)" class="pointer">內容（點我展開）</a>
+                    </th>
+                    <td class="table-content table-ellipsis" :id="`case_content_${index}`">
+                        {{item.content}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 </div>
 <script>
     const v = new Vue({
@@ -281,7 +168,9 @@
                 chooseTab: '',
                 userId: '',
                 judicialYuanInfo: {},
-                cases: []
+                cases: [],
+                infos: [],
+                status: 'loading'
             }
         },
         mounted() {
@@ -302,7 +191,11 @@
         methods: {
             clickTab(tab) {
                 this.chooseTab = tab
+                this.infos = []
                 this.getTabData()
+            },
+            watchContent(id) {
+                $('#' + id).toggleClass('table-ellipsis');
             },
             getJudicialYuanInfo() {
                 const fillInfoData = (judicialyuanInfoData) => {
@@ -341,6 +234,9 @@
                 if (this.chooseTab) {
                     name = this.chooseTab
                 }
+                this.cases = []
+                this.status = 'loading'
+                this.getStatus()
                 return axios.get('/admin/scraper/judicial_yuan', {
                     params: {
                         user_id: this.userId,
@@ -352,7 +248,45 @@
                         this.cases = data.response.cases
                     }
                 })
+            },
+            getCase(case_type) {
+                return axios.get('/admin/scraper/judicial_yuan_case', {
+                    params: {
+                        user_id: this.userId,
+                        name: this.chooseTab,
+                        case_type,
+                        address: this.judicialYuanInfo.address
+                    }
+                }).then(({ data }) => {
+                    if (data.status.code === 200) {
+                        this.infos = data.response.result
+                    }
+                })
+            },
+            getStatus() {
+                return axios.get('/admin/scraper/judicial_yuan_status', {
+                    params: {
+                        name: this.chooseTab,
+                    }
+                }).then(({ data }) => {
+                    this.status = data.judicial_yuan_status
+                })
+            },
+            doRedo() {
+                if (confirm('是否確定重新執行爬蟲？')) {
+                    axios.post('/admin/scraper/judicial_yuan_verdicts', {
+                        name: this.chooseTab,
+                        address: this.judicialYuanInfo.address
+                    }).then(({ data }) => {
+                        if (data.status == 200) {
+                            location.reload()
+                        }
+                        else {
+                            alert(data.message)
+                        }
+                    })
+                }
             }
-        },
+        }
     })
 </script>

@@ -291,10 +291,13 @@ Vue.component('scraper-status', {
 })
 
 Vue.component('scraper-status-icon', {
-	props: ['column'],
+	props: ['column', 'showStatus'],
 	template: `
 	<span>
-		<button class="btn btn-success btn-circle btn-sm" v-if="status == 'finished'">
+		<button class="btn btn-default btn-circle btn-sm" v-if="status == 'loading'">
+			<i class="fa fa-refresh"></i>
+		</button>
+		<button class="btn btn-success btn-circle btn-sm" v-else-if="status == 'finished'">
 			<i class="fa fa-check"></i>
 		</button>
 		<button class="btn btn-danger btn-circle btn-sm" v-else-if="status == 'failure'">
@@ -318,9 +321,11 @@ Vue.component('scraper-status-icon', {
 		}
 	},
 	mounted() {
-		let url = new URL(location.href);
-		user_id = url.searchParams.get("user_id");
-		this.getStatus(user_id)
+		if (!this.showStatus) {
+			let url = new URL(location.href);
+			user_id = url.searchParams.get("user_id");
+			this.getStatus(user_id)
+		}
 	},
 	methods: {
 		getStatus(user_id) {
@@ -342,6 +347,14 @@ Vue.component('scraper-status-icon', {
 					console.log(textStatus);
 				},
 			});
+		}
+	},
+	watch: {
+		showStatus: {
+			handler(v) {
+				this.status = v
+			},
+			immediate: true,
 		}
 	},
 })
