@@ -63,24 +63,93 @@
                                     ?>
                                 </p>
                             </div>
-                            <div class="form-group">
-                                <form role="form" action="/admin/certification/sendSkbank" method="post">
-                                    <table class="table table-striped table-bordered table-hover dataTable">
-                                        <tbody>
-                                            <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
-                                            <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                            <tr><td><span>企業聯徵查詢日期</span></td><td><input class="sk-input" type="text" name="CompJCICQueryDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                            <tr><td><span>公司中期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="MidTermLnYM" placeholder="格式:YYYYMM"></td></tr>
-                                            <tr><td><span>公司中期放款餘額</span></td><td><input class="sk-input" type="text" name="MidTermLnBal"></td></tr>
-                                            <tr><td><span>公司短期放款餘額-年月</span></td><td><input class="sk-input" type="text" name="ShortTermLnYM" placeholder="格式:YYYYMM"></td></tr>
-                                            <tr><td><span>公司短期放款餘額</span></td><td><input class="sk-input" type="text" name="ShortTermLnBal"></td></tr>
-                                            <tr><td><span>企業聯徵J02資料年月</span></td><td><input class="sk-input" type="text" name="CompJCICDataDate" placeholder="格式:YYYYMM"></td></tr>
-                                            <tr><td><span>企業信用評分</span></td><td><input class="sk-input" type="text" name="CompCreditScore"></td></tr>
-                                            <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
-                                        </tbody>
-                                    </table>
-                                </form>
-                            </div>
+                            <form class="form-group" @submit.prevent="doSubmit">
+                                <ul class="nav nav-tabs">
+                                    <li role="presentation" :class="{'active': tab ==='tab-1'}"><a @click="changeTab('tab-1')">新光</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-2'}"><a @click="changeTab('tab-2')">凱基</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-3'}"><a @click="changeTab('tab-3')">其他</a></li>
+                                </ul>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-1'">
+                                    <tbody>
+                                        <tr style="text-align: center;">
+                                            <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業聯徵查詢日期</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICQueryDate"
+                                                    placeholder="格式:YYYYMMDD"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司中期放款餘額-年月</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.MidTermLnYM"
+                                                    placeholder="格式:YYYYMM"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司中期放款餘額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.MidTermLnBal"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司短期放款餘額-年月</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.ShortTermLnYM"
+                                                    placeholder="格式:YYYYMM"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司短期放款餘額</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.ShortTermLnBal"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業聯徵J02資料年月</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICDataDate"
+                                                    placeholder="格式:YYYYMM"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業信用評分</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompCreditScore"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-2'">
+                                    <tbody>
+                                        <tr style="text-align: center;">
+                                            <td colspan="2"><span>普匯微企e秒貸資料確認2</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業聯徵查詢日期</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICQueryDate" placeholder="格式:YYYYMMDD">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>custom tab2</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.tab2Input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-3'">
+                                    <tbody>
+                                        <tr style="text-align: center;">
+                                            <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>企業聯徵查詢日期</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompJCICQueryDate" placeholder="格式:YYYYMMDD">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>custom tab3</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.tab3Input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
                             <div class="form-group">
                               <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
                               foreach ($ocr['url'] as $key => $value) { ?>
@@ -161,10 +230,10 @@
                                 </div>
                             </fieldset>
                             <? if( ($data->certification_id == 9 || $data->certification_id == 1003 || $data->certification_id == 12) && isset($ocr['upload_page']) ){ ?>
-							<div class="form-group" style="background:#f5f5f5;border-style:double;">
-							  <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
-							</div>
-							<? } ?>
+                            <div class="form-group" style="background:#f5f5f5;border-style:double;">
+                              <?= isset($ocr['upload_page']) ? $ocr['upload_page'] : ""?>
+                            </div>
+                            <? } ?>
                         </div>
                     </div>
                     <!-- /.row (nested) -->
@@ -178,37 +247,54 @@
     <!-- /.row -->
 </div>
 <!-- /#page-wrapper -->
+
 <script>
-$('select').selectize({
-    sortField: 'text',
-});
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: `/admin/certification/getSkbank?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
-        dataType: "json",
-        success: function (response) {
-            if(response.status.code == 200 && response.response != ''){
-                Object.keys(response.response).forEach(function(key) {
-                    console.log(key);
-                    console.log(response.response[key]);
-                    if($(`[name='${key}']`).length){
-                        if($(`[name='${key}']`).is("input")){
-                            $(`[name='${key}']`).val(response.response[key]);
-                        }else{
-                            let $select = $(`[name='${key}']`).selectize();
-                            let selectize = $select[0].selectize;
-                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
-                        }
-                    }
-                })
-            }else{
-                console.log(response);
+    const v = new Vue({
+        el: '#page-wrapper',
+        data() {
+            return {
+                tab: 'tab-1',
+                pageId: '',
+                formData: {
+                    CompJCICQueryDate: '',
+                    MidTermLnYM: '',
+                    MidTermLnBal: '',
+                    ShortTermLnYM: '',
+                    ShortTermLnBal: '',
+                    CompJCICDataDate: '',
+                    CompCreditScore: '',
+                    tab2Input: '',
+                    tab3Input: ''
+                }
             }
         },
-        error: function(error) {
-          alert(error);
-        }
-    });
-});
+        mounted() {
+            const url = new URL(location.href);
+            this.pageId = url.searchParams.get('id');
+            this.getData()
+        },
+        methods: {
+            changeTab(tab) {
+                this.tab = tab
+            },
+            doSubmit() {
+                return axios.post('/admin/certification/sendSkbank', {
+                    ...this.formData,
+                    id: this.pageId
+                }).then(({ data }) => {
+                    alert(data.result)
+                    location.reload()
+                })
+            },
+            getData() {
+                axios.get('/admin/certification/getSkbank', {
+                    params: {
+                        id: this.pageId
+                    }
+                }).then(({ data }) => {
+                    mergeDeep(this.formData, data.response)
+                })
+            }
+        },
+    })
 </script>
