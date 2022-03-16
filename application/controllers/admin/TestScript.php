@@ -24,6 +24,8 @@ class TestScript extends MY_Admin_Controller
      *
      * @created_at          2022-03-04
      * @created_by          Jack
+     * @updated_at          2022-03-16
+     * @updated_by          Jack
      */
     public function mockingTransfer()
     {
@@ -33,7 +35,7 @@ class TestScript extends MY_Admin_Controller
                 exit('無效的使用者');
                 break;
 
-            case ! in_array($investor = trim($this->input->post('investor')), ['0', '1']):
+            case ! in_array($investor = trim($this->input->post('investor')), [USER_BORROWER, USER_INVESTOR]):
                 exit('無效的身分');
                 break;
 
