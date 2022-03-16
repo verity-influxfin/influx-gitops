@@ -2446,6 +2446,7 @@ class Certification extends REST_Controller {
 			$content['type'] 		  = array_key_exists(intval($input['type']),$job_type_name)?intval($input['type']):0;
 			$content['seniority'] 	  = array_key_exists(intval($input['seniority']),$seniority_range)?intval($input['seniority']):0;
 			$content['job_seniority'] = array_key_exists(intval($input['job_seniority']),$seniority_range)?intval($input['job_seniority']):0;
+            $content['job_title'] = $input['job_title'] ?? ''; // 工作職稱
 
 			// 使用者手填資料
 			$content['LaborQryDate'] = isset($input['LaborQryDate']) ? $input['LaborQryDate'] : '';
