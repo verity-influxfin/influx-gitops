@@ -2624,36 +2624,21 @@ class Certification extends REST_Controller {
             $this->response(array('result' => 'ERROR','error' => IS_INVERTOR));
         }
 
-        // 檢查驗證項是否已提交
-        $this->load->library('loanmanager/product_lib');
-        $product = $this->product_lib->getProductInfo($target->product_id, $target->sub_product_id);
-        $need_chk_cert = array_diff($product['certifications'], $product['option_certifications']);
-        $this->load->model('user_certification_model');
-        foreach ($need_chk_cert as $certification_id)
+        $this->load->library('Certification_lib');
+        $result = $this->certification_lib->verify_certifications($target, 1);
+        if ($result)
         {
-            $info = $this->user_certification_model->order_by('created_at', 'DESC')->get_by([
-                'user_id' => $this->user_info->id,
-                'certification_id' => $certification_id,
-                'investor' => $investor
-            ]);
-            if (empty($info))
+            if (in_array($target->product_id, [PRODUCT_ID_STUDENT, PRODUCT_ID_SALARY_MAN]))
             {
-                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
+                $this->target_model->update($targetId, [
+                    'status' => TARGET_WAITING_APPROVE,
+                    'certificate_status' => 1
+                ]);
             }
-
-            $cert = Certification_factory::get_instance_by_model_resource($info);
-            if ( ! isset($cert) || ! $cert->is_submitted())
-            {
-                $this->response(array('result' => 'ERROR', 'error' => CERTIFICATION_NOT_ACTIVE));
-            }
+            $this->response(['result' => 'SUCCESS']);
         }
-
-        $this->target_model->update($targetId, [
-            'status' => TARGET_WAITING_APPROVE,
-            'certificate_status' => 1
-        ]);
-
-        $this->response(['result' => 'SUCCESS']);
+        else
+            $this->response(array('result' => 'ERROR','error' => CERTIFICATION_NOT_ACTIVE ));
     }
 
     public function simplificationfinancial_post()
