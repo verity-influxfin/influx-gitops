@@ -268,7 +268,7 @@ class Certification extends MY_Admin_Controller {
 				$page_data['certifications_msg'] 		= $this->config->item('certifications_msg');
 				$page_data['from'] 					= $from;
 				$page_data['sys_check'] 			= $info->sys_check;
-				$this->load->view('admin/_header');
+				$this->load->view('admin/_header', $data=['use_vuejs'=>true]);
 				$this->load->view('admin/_title', $this->menu);
 
 				$this->load->view('admin/certification/' . $certification['alias'], $page_data);
@@ -1432,20 +1432,20 @@ class Certification extends MY_Admin_Controller {
 
     // 新光送件檢核表送出資料
     public function sendSkbank(){
-        $post = $this->input->post();
+        $post = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
 
         if(! isset($post['id']) || empty($post['id'])){
-            alert('資料更改失敗，缺少參數', admin_url('certification/user_certification_edit?id='.$post['id']));
+			echo json_encode(['result'=>'資料更改失敗，缺少參數']);
         }
 
         $certification_info = $this->user_certification_model->get_by(['id' => $post['id']]);
 
         if(! $certification_info){
-            alert('資料更改失敗，找不到資料', admin_url('certification/user_certification_edit?id='.$post['id']));
+			echo json_encode(['result'=>'資料更改失敗，找不到資料']);
         }
 
         if(isset($certification_info->status) && $certification_info->status != 3){
-            alert('資料更改失敗，狀態未在待人工審核中', admin_url('certification/user_certification_edit?id='.$post['id']));
+            echo json_encode(['result'=>'資料更改失敗，狀態未在待人工審核中']);
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
@@ -1455,7 +1455,7 @@ class Certification extends MY_Admin_Controller {
             ['id'  => $certification_info->id],
             ['content' => json_encode($content)]
         );
-        alert('資料更新成功', admin_url('certification/user_certification_edit?id='.$certification_info->id));
+        echo json_encode(['result'=>'資料更新成功']);
     }
 
     // 新光送件檢核表回填資料
