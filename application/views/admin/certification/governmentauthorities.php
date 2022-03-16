@@ -1,5 +1,3 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js" integrity="sha256-+C0A5Ilqmu4QcSPxrlGpaZxJ04VjsRjKu+G82kl5UJk=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" integrity="sha256-ze/OEYGcFbPRmvCnrSeKbRTtjG4vGLHXgOqsyLFTRjg=" crossorigin="anonymous" />
 <style>
     .sk-input {
         width : 100%;
@@ -44,64 +42,243 @@
                                     <p><?= isset($data->user_id) ? $data->user_id : "" ?></p>
                                 </a>
                             </div>
-                            <div class="form-group">
-                                <form role="form" action="/admin/certification/sendSkbank" method="post">
-                                    <table class="table table-striped table-bordered table-hover dataTable">
-                                        <tbody>
-                                            <tr style="text-align: center;"><td colspan="2"><span>普匯微企e秒貸資料確認</span></td></tr>
-                                            <tr hidden><td><span>徵提資料ID</span></td><td><input class="sk-input" type="text" name="id" value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td></tr>
-                                            <tr><td><span>公司統一編號(變卡)</span></td><td><input class="sk-input" type="text" name="CompId"></td></tr>
-                                            <tr><td><span>公司戶名(變卡)</span></td><td><input class="sk-input" type="text" name="CompName"></td></tr>
-                                            <tr><td><span>公司核准設立日期(商業司)</span></td><td><input class="sk-input" type="text" name="CompSetDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                            <tr><td><span>公司實收資本額(變卡)</span></td><td><input class="sk-input" type="text" name="CompCapital"></td></tr>
-                                            <tr><td><span>公司型態(商業司)</span></td><td>
-                                                <select name="CompType" class="table-input sk-input">
-                                                  <option value="41">41:獨資</option>
-                                                  <option value="21">21:中小企業</option>
+                            <form class="form-group" @submit.prevent="doSubmit">
+                                <ul class="nav nav-tabs">
+                                    <li role="presentation" :class="{'active': tab ==='tab-1'}"><a @click="changeTab('tab-1')">新光</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-2'}"><a @click="changeTab('tab-2')">凱基</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-3'}"><a @click="changeTab('tab-3')">其他</a></li>
+                                </ul>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-1'">
+                                    <tbody>
+                                        <tr style="text-align: center;">
+                                            <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司統一編號(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司戶名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司核准設立日期(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompSetDate"
+                                                    placeholder="格式:YYYYMMDD"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司實收資本額(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompCapital"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司型態(商業司)</span></td>
+                                            <td>
+                                                <select v-model="formData.CompType" class="table-input sk-input form-control">
+                                                    <option value="41">41:獨資</option>
+                                                    <option value="21">21:中小企業</option>
                                                 </select>
-                                            </td></tr>
-                                            <tr><td><span>公司登記地址-郵遞區號(變卡)</span></td><td><input class="sk-input" type="text" name="CompRegAddrZip"></td></tr>
-                                            <tr><td><span>公司登記地址-郵遞區號名稱(變卡)</span></td><td><input class="sk-input" type="text" name="CompRegAddrZipName"></td></tr>
-                                            <tr><td><span>公司登記地址-非郵遞地址資料(變卡)</span></td><td><input class="sk-input" type="text" name="CompRegAddress"></td></tr>
-                                            <tr><td><span>現任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="PrOnboardDay" placeholder="格式:YYYYMMDD"></td></tr>
-                                            <tr><td><span>現任負責人擔任公司起日-姓名(商業司)</span></td><td><input class="sk-input" type="text" name="PrOnboardName"></td></tr>
-                                            <tr><td><span>前任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardDay" placeholder="格式:YYYYMMDD"></td></tr>
-                                            <tr><td><span>前任負責人擔任公司起日-姓名(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardName"></td></tr>
-                                            <tr><td><span>前二任負責人擔任公司起日-日期(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardDay2" placeholder="格式:YYYYMMDD"></td></tr>
-                                            <tr><td><span>前二任負責人擔任公司起日-姓名(商業司)</span></td><td><input class="sk-input" type="text" name="ExPrOnboardName2"></td></tr>
-                                            <tr><td><span>營業登記地址_選擇縣市(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrCityName"></td></tr>
-                                            <tr><td><span>營業登記地址_選擇鄉鎮市區(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrAreaName"></td></tr>
-                                            <tr><td><span>營業登記地址_路街名稱(不含路、街)(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrRoadName"></td></tr>
-                                            <tr><td><span>營業登記地址_路 OR 街(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrRoadType"></td></tr>
-                                            <tr><td><span>營業登記地址_段(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrSec"></td></tr>
-                                            <tr><td><span>營業登記地址_巷(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrLn"></td></tr>
-                                            <tr><td><span>營業登記地址_弄(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrAly"></td></tr>
-                                            <tr><td><span>營業登記地址_號(不含之號)(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrNo"></td></tr>
-                                            <tr><td><span>營業登記地址_之號(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrNoExt"></td></tr>
-                                            <tr><td><span>營業登記地址_樓(不含之樓、室)(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrFloor"></td></tr>
-                                            <tr><td><span>營業登記地址_之樓(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrFloorExt"></td></tr>
-                                            <tr><td><span>營業登記地址_室(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrRoom"></td></tr>
-                                            <tr><td><span>營業登記地址_其他備註(變卡)</span></td><td><input class="sk-input" type="text" name="BizRegAddrOtherMemo"></td></tr>
-                                            <tr><td><span>公司最後核准變更實收資本額日期(商業司)</span></td><td><input class="sk-input" type="text" name="LastPaidInCapitalDate" placeholder="格式:YYYYMMDD"></td></tr>
-                                            <tr><td><span>公司董監事 A 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorAName"></td></tr>
-                                            <tr><td><span>公司董監事 A 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorAId"></td></tr>
-                                            <tr><td><span>公司董監事 B 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorBName"></td></tr>
-                                            <tr><td><span>公司董監事 B 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorBId"></td></tr>
-                                            <tr><td><span>公司董監事 C 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorCName"></td></tr>
-                                            <tr><td><span>公司董監事 C 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorCId"></td></tr>
-                                            <tr><td><span>公司董監事 D 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorDName"></td></tr>
-                                            <tr><td><span>公司董監事 D 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorDId"></td></tr>
-                                            <tr><td><span>公司董監事 E 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorEName"></td></tr>
-                                            <tr><td><span>公司董監事 E 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorEId"></td></tr>
-                                            <tr><td><span>公司董監事 F 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorFName"></td></tr>
-                                            <tr><td><span>公司董監事 F 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorFId"></td></tr>
-                                            <tr><td><span>公司董監事 G 姓名(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorGName"></td></tr>
-                                            <tr><td><span>公司董監事 G 統編(變卡)</span></td><td><input class="sk-input" type="text" name="DirectorGId"></td></tr>
-                                            <tr><td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td></tr>
-                                        </tbody>
-                                    </table>
-                                </form>
-                            </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司登記地址-郵遞區號(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompRegAddrZip"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司登記地址-郵遞區號名稱(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompRegAddrZipName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司登記地址-非郵遞地址資料(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompRegAddress"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>現任負責人擔任公司起日-日期(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.PrOnboardDay"
+                                                    placeholder="格式:YYYYMMDD"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>現任負責人擔任公司起日-姓名(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.PrOnboardName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>前任負責人擔任公司起日-日期(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.ExPrOnboardDay"
+                                                    placeholder="格式:YYYYMMDD"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>前任負責人擔任公司起日-姓名(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.ExPrOnboardName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>前二任負責人擔任公司起日-日期(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.ExPrOnboardDay2"
+                                                    placeholder="格式:YYYYMMDD"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>前二任負責人擔任公司起日-姓名(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.ExPrOnboardName2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_選擇縣市(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrCityName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_選擇鄉鎮市區(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrAreaName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_路街名稱(不含路、街)(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrRoadName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_路 OR 街(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrRoadType"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_段(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrSec"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_巷(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrLn"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_弄(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrAly"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_號(不含之號)(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrNo"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_之號(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrNoExt"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_樓(不含之樓、室)(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrFloor"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_之樓(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrFloorExt"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_室(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrRoom"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>營業登記地址_其他備註(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.BizRegAddrOtherMemo"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司最後核准變更實收資本額日期(商業司)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.LastPaidInCapitalDate"
+                                                    placeholder="格式:YYYYMMDD"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 A 姓名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorAName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 A 統編(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorAId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 B 姓名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorBName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 B 統編(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorBId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 C 姓名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorCName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 C 統編(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorCId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 D 姓名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorDName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 D 統編(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorDId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 E 姓名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorEName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 E 統編(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorEId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 F 姓名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorFName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 F 統編(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorFId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 G 姓名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorGName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司董監事 G 統編(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.DirectorGId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-2'">
+                                    <tbody>
+                                        <tr style="text-align: center;">
+                                            <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司統一編號(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompId"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>公司戶名(變卡)</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.CompName"></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span>custom tab2</span></td>
+                                            <td><input class="sk-input form-control" type="text" v-model="formData.tab2Input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-3'">
+                                    <tr style="text-align: center;">
+                                        <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司統一編號(變卡)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.CompId"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>公司戶名(變卡)</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.CompName"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span>custom tab3</span></td>
+                                        <td><input class="sk-input form-control" type="text" v-model="formData.tab3Input"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
+                                    </tr>
+                                </table>
+                            </form>
                             <div class="form-group">
                               <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
                               foreach ($ocr['url'] as $key => $value) { ?>
@@ -187,36 +364,87 @@
 </div>
 <!-- /#page-wrapper -->
 <script>
-$('select').selectize({
-    sortField: 'text',
-});
-$(document).ready(function() {
-    $.ajax({
-        type: "GET",
-        url: `/admin/certification/getSkbank?id=<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>`,
-        dataType: "json",
-        success: function (response) {
-            if(response.status.code == 200 && response.response != ''){
-                Object.keys(response.response).forEach(function(key) {
-                    console.log(key);
-                    console.log(response.response[key]);
-                    if($(`[name='${key}']`).length){
-                        if($(`[name='${key}']`).is("input")){
-                            $(`[name='${key}']`).val(response.response[key]);
-                        }else{
-                            let $select = $(`[name='${key}']`).selectize();
-                            let selectize = $select[0].selectize;
-                            selectize.setValue(selectize.search(response.response[key]).items[0].id);
-                        }
-                    }
-                })
-            }else{
-                console.log(response);
+    const v = new Vue({
+        el: '#page-wrapper',
+        data() {
+            return {
+                tab: 'tab-1',
+                pageId: '',
+                formData: {
+                    CompId: '',
+                    CompName: '',
+                    CompSetDate: '',
+                    CompCapital: '',
+                    CompType: '',
+                    CompRegAddrZip: '',
+                    CompRegAddrZipName: '',
+                    CompRegAddress: '',
+                    PrOnboardDay: '',
+                    PrOnboardName: '',
+                    ExPrOnboardDay: '',
+                    ExPrOnboardName: '',
+                    ExPrOnboardDay2: '',
+                    ExPrOnboardName2: '',
+                    BizRegAddrCityName: '',
+                    BizRegAddrAreaName: '',
+                    BizRegAddrRoadName: '',
+                    BizRegAddrRoadType: '',
+                    BizRegAddrSec: '',
+                    BizRegAddrLn: '',
+                    BizRegAddrAly: '',
+                    BizRegAddrNo: '',
+                    BizRegAddrNoExt: '',
+                    BizRegAddrFloor: '',
+                    BizRegAddrFloorExt: '',
+                    BizRegAddrRoom: '',
+                    BizRegAddrOtherMemo: '',
+                    LastPaidInCapitalDate: '',
+                    DirectorAName: '',
+                    DirectorAId: '',
+                    DirectorBName: '',
+                    DirectorBId: '',
+                    DirectorCName: '',
+                    DirectorCId: '',
+                    DirectorDName: '',
+                    DirectorDId: '',
+                    DirectorEName: '',
+                    DirectorEId: '',
+                    DirectorFName: '',
+                    DirectorFId: '',
+                    DirectorGName: '',
+                    DirectorGId: '',
+                    tab2Input: '',
+                    tab3Input: '',
+                }
             }
         },
-        error: function(error) {
-          alert(error);
-        }
-    });
-});
+        mounted() {
+            const url = new URL(location.href);
+            this.pageId = url.searchParams.get('id');
+            this.getData()
+        },
+        methods: {
+            changeTab(tab) {
+                this.tab = tab
+            },
+            doSubmit() {
+                return axios.post('/admin/certification/sendSkbank', {
+                    ...this.formData,
+                    id: this.pageId
+                }).then(({ data }) => {
+                    alert(data.result)
+                    location.reload()
+                })
+            },
+            getData() {
+                axios.get('/admin/certification/getSkbank', {
+                    params: {
+                        id: this.pageId
+                    }
+                }).then(({ data }) => {
+                    mergeDeep(this.formData, data.response)
+                })
+            }
+        },
+    })
 </script>
