@@ -1436,16 +1436,19 @@ class Certification extends MY_Admin_Controller {
 
         if(! isset($post['id']) || empty($post['id'])){
 			echo json_encode(['result'=>'資料更改失敗，缺少參數']);
+			die();
         }
 
         $certification_info = $this->user_certification_model->get_by(['id' => $post['id']]);
 
         if(! $certification_info){
 			echo json_encode(['result'=>'資料更改失敗，找不到資料']);
+			die();
         }
 
         if(isset($certification_info->status) && $certification_info->status != 3){
             echo json_encode(['result'=>'資料更改失敗，狀態未在待人工審核中']);
+			die();
         }
 
         $content = isset($certification_info->content) ? json_decode($certification_info->content,true) : [];
@@ -1456,6 +1459,7 @@ class Certification extends MY_Admin_Controller {
             ['content' => json_encode($content)]
         );
         echo json_encode(['result'=>'資料更新成功']);
+		die();
     }
 
     // 新光送件檢核表回填資料
