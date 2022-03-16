@@ -34,7 +34,7 @@
 				<table id="sme-table">
 					<thead>
 						<tr>
-                            <th>編號</th>
+                            <th>使用者編號</th>
                             <th>案號</th>
                             <th>名稱</th>
 							<th>授信審核表</th>
@@ -52,7 +52,7 @@
                     ?>
                         <tr class="<?=$count%2==0?"odd":"even"; ?> list <?= $value->id??'' ?>">
                             <td>
-                                <?= $value->id ?>
+                                <?= $value->user_id ?>
                             </td>
 							<td>
 								<?= $value->target_no ?>

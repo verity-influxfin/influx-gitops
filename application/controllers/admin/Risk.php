@@ -424,7 +424,8 @@ class Risk extends MY_Admin_Controller {
 		}else{
 			$useCer = [];
 			$target_parm = [
-				'status'	=> $target_status
+                'status' => $target_status,
+                'sub_status != ' => TARGET_SUBSTATUS_WAITING_TRANSFER_INTERNAL
 			];
 			isset($input['company'])
 				? $input['company'] == 1
