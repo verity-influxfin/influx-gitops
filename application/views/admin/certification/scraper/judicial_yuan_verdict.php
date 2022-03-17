@@ -216,7 +216,7 @@
                     $('#spouse').text(judicialyuanInfoData.spouse);
                     $('#address').text(judicialyuanInfoData.address);
                 }
-                return axios.get(`/admin/scraper/judicial_yuan_info?user_id=${this.userId}`).then(({ data }) => {
+                return axios.get(`/admin/scraper/verdict_google_info?user_id=${this.userId}`).then(({ data }) => {
                     if (data.status.code === 200) {
                         fillInfoData(data.response)
                         this.judicialYuanInfo = data.response
@@ -237,7 +237,7 @@
                 this.cases = []
                 this.status = 'loading'
                 this.getStatus()
-                return axios.get('/admin/scraper/judicial_yuan', {
+                return axios.get('/admin/scraper/judicial_yuan_count', {
                     params: {
                         user_id: this.userId,
                         name,

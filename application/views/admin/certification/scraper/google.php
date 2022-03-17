@@ -33,7 +33,7 @@
     function fetchInfoData(user_id) {
         $.ajax({
             type: "GET",
-            url: "/admin/scraper/google_info" + "?user_id=" + user_id,
+            url: "/admin/scraper/verdict_google_info" + "?user_id=" + user_id,
             async: false,
             success: function (response) {
                 if (response.status.code != 200) {
@@ -72,8 +72,6 @@
             },
         });
     }
-
-
 
     // 關鍵字加上標號
     function highlight(content, what, spanClass) {
@@ -145,9 +143,26 @@
         if (!googleInfo) {
             return false;
         }
+        idCardPlace = googleInfo.id_card_place;
+        idCardPlace = idCardPlace.split(')');
         $('#name').text(googleInfo.name);
-        baseUrl = 'https://www.google.com.tw/search?q=' + googleInfo.name + '&num=100';
-        $('#name').attr("href", baseUrl);
+        url = 'https://www.google.com.tw/search?q=' + googleInfo.name + '&num=100';
+        $('#name').attr("href", url);
+        $('#birthday').text(googleInfo.birthday);
+        $('#id-number').text(googleInfo.id_number);
+        $('#id-card-date').text(googleInfo.id_card_date);
+        $('#id_card_place').text(idCardPlace[0].replace('(', ''));
+        $('#replacement').text(idCardPlace[1]);
+        father_url = 'https://www.google.com.tw/search?q=' + googleInfo.father + '&num=100';
+        $('#father').text(googleInfo.father);
+        $('#father').attr("href", father_url);
+        mother_url = 'https://www.google.com.tw/search?q=' + googleInfo.mother + '&num=100';
+        $('#mother').text(googleInfo.mother);
+        $('#mother').attr("href", mother_url);
+        $('#born').text(googleInfo.born);
+        spouse_url = 'https://www.google.com.tw/search?q=' + googleInfo.spouse + '&num=100';
+        $('#spouse').text(googleInfo.spouse);
+        $('#spouse').attr("href", spouse_url);
         $('#address').text(googleInfo.address);
     }
 
@@ -205,7 +220,7 @@
 <div id="page-wrapper">
     <div class="d-flex jcb aic page-header">
         <div>
-            <h1>社群-Google</h1>
+            <h1>Google</h1>
         </div>
 		<div>
 			<scraper-status-icon :column="column"></scraper-status-icon>
@@ -213,27 +228,51 @@
 		</div>
     </div>
     <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-        <tbody>
         <tr>
-            <th class="table-title">資料內容（社交認證）</th>
+            <th class="table-title">資料內容（實名認證）</th>
         </tr>
         <tr>
             <td>
-                <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
+                <table class="table table-bordered table-hover table-striped">
                     <tr>
-                        <td class="table-title">姓名</td>
+                        <th class="table-title">姓名</th>
                         <td style=background-color:white;>
                             <a id="name" target="_blank" href="https://www.google.com/"></a>
                         </td>
+                        <th class="table-title">發證日期</th>
+                        <td style=background-color:white; id="id-card-date"></td>
+                        <th class="table-title">父</th>
+                        <td style=background-color:white;>
+                            <a id="father" target="_blank" href="https://www.google.com/"></a>
+                        </td>
+                        <th class="table-title">出生地</th>
+                        <td style=background-color:white; id="born"></td>
                     </tr>
                     <tr>
-                        <td class="table-title">戶籍地址</td>
-                        <td style=background-color:white; id="address"></td>
+                        <th class="table-title">出生年月日</th>
+                        <td style=background-color:white; id="birthday"></td>
+                        <th class="table-title">發證地點</th>
+                        <td style=background-color:white; id="id_card_place"></td>
+                        <th class="table-title">母</th>
+                        <td style=background-color:white;>
+                            <a id="mother" target="_blank" href="https://www.google.com/"></a>
+                        </td>
+                        <th class="table-title" colspan="2">戶籍地址</th>
+                    </tr>
+                    <tr>
+                        <th class="table-title">身分證字號</th>
+                        <td style=background-color:white; id="id-number"></td>
+                        <th class="table-title">補換證</th>
+                        <td style=background-color:white; id="replacement"></td>
+                        <th class="table-title">配偶</th>
+                        <td style=background-color:white;>
+                            <a id="spouse" target="_blank" href="https://www.google.com/"></a>
+                        </td>
+                        <td style=background-color:white; id="address" colspan="2"></td>
                     </tr>
                 </table>
             </td>
         </tr>
-        </tbody>
     </table>
     <table class="table table-bordered table-hover table-striped">
         <tr>

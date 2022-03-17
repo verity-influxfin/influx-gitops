@@ -183,7 +183,7 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
-    public function judicial_yuan_info()
+    public function verdict_google_info()
     {
         $input = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
@@ -241,7 +241,7 @@ class Scraper extends MY_Admin_Controller
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
 
-    public function judicial_yuan()
+    public function judicial_yuan_count()
     {
         $input = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
@@ -580,38 +580,20 @@ class Scraper extends MY_Admin_Controller
         echo json_encode(['status' => 200]);
     }
 
-    public function google_info()
-    {
+    public function google_status(){
         $input = $this->input->get(NULL, TRUE);
         $this->load->library('output/json_output');
-        $this->load->model('user/user_certification_model');
-
-        if (empty($input) || ! is_array($input))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'data type not correct'])->send();
+        $response = [];
+        if( ! isset($input['name'])){
+            echo json_encode(['message' => 'parameter not correct']);
         }
-
-        if (empty($input['user_id']))
+        $name = $input['name'];
+        $google_status = $this->google_lib->get_google_status($name);
+        if (isset($google_status['response']['status']) && ! empty($google_status['response']['status']))
         {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'parameter not correct'])->send();
+            $response['google_status'] = $google_status['response']['status'];
         }
-
-        $info = $this->user_model->get($input['user_id']);
-        if ( ! isset($info->name) || ! isset($info->address))
-        {
-            $this->json_output->setStatusCode(405)->setResponse(['message' => 'name or address not found'])->send();
-        }
-        $response = [
-            'name' => $info->name,
-            'address' => $info->address
-        ];
-
-        if (empty($response))
-        {
-            $response = isset($response) ? $response : ['message' => 'sql not response'];
-            $this->json_output->setStatusCode(401)->setResponse($response)->send();
-        }
-        $this->json_output->setStatusCode(200)->setResponse($response)->send();
+        echo json_encode($response);
     }
 
     public function google()
