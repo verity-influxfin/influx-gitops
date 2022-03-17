@@ -60,16 +60,10 @@ class Risk extends MY_Admin_Controller {
                 $prev_stage_cert = $this_stage_cert;
                 break;
             default:
-                $this_stage_cert = []; // 這一階段的徵信項
-                $prev_stage_cert = []; // 前一階段的徵信項
-                break;
+                echo json_encode([]);
+                return TRUE;
         }
 
-        if (empty($this_stage_cert))
-        {
-            echo json_encode([]);
-            return TRUE;
-        }
         $result = ['cols' => [
             ['id' => 'target_no', 'name' => '案號'],
             ['id' => 'user', 'name' => '會員編號'],
@@ -99,6 +93,7 @@ class Risk extends MY_Admin_Controller {
         $userStatusList = $this->target_model->getUserStatusByTargetId(array_keys($target_list));
         $userStatusList = array_column($userStatusList, 'total_count', 'user_id');
 
+        $user_list = [];
         $user_cert_list = [];
         $user_prod_list = [];
         foreach ($target_list as $target)
@@ -112,17 +107,17 @@ class Risk extends MY_Admin_Controller {
                 $user_prod_list[$target->product_id][$target->sub_product_id] = $product_info['name'];
             }
 
-            if ( ! isset($user_cert_list[$target->user_id]))
+            if ( ! isset($user_list[$target->user_id]))
             {
                 if (isset($userStatusList[$target->user_id]) && $userStatusList[$target->user_id] > 0)
                 {
-                    $user_cert_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
+                    $user_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
                         admin_url('User/display?id=' . $target->user_id) . '" >' .
                         $target->user_id . ' 舊戶</a>';
                 }
                 else
                 {
-                    $user_cert_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
+                    $user_list[$target->user_id]['user_name'] = '<a class="fancyframe" href="' .
                         admin_url('User/display?id=' . $target->user_id) . '" >' .
                         $target->user_id . ' 新戶</a>';
                 }
@@ -139,63 +134,81 @@ class Risk extends MY_Admin_Controller {
                     ];
                     return $list;
                 }, []);
-
-                if ($target->product_id == PRODUCT_ID_STUDENT && $target->sub_product_id == SUBPRODUCT_INTELLIGENT_STUDENT)
-                {
-                    array_walk($this_stage_cert, function ($value, $key) use (&$this_stage_cert) {
-                        if ($value == CERTIFICATION_SOCIAL)
-                        {
-                            $this_stage_cert[$key] = CERTIFICATION_SOCIAL_INTELLIGENT;
-                        }
-                    });
-                }
-
                 // 整理出驗證成功的徵信項
                 $tmp_success = $this->certification_lib->filterCertIdsInStatusList($tmp, [CERTIFICATION_STATUS_SUCCEED]);
-                $user_cert_list[$target->user_id]['this_success'] = array_intersect($this_stage_cert, $tmp_success);
-                $user_cert_list[$target->user_id]['this_success_status'] = count($user_cert_list[$target->user_id]['this_success']) == count($this_stage_cert);
-                $user_cert_list[$target->user_id]['prev_success'] = array_intersect($prev_stage_cert, $tmp_success);
-                $user_cert_list[$target->user_id]['prev_success_status'] = count($user_cert_list[$target->user_id]['prev_success']) == count($prev_stage_cert);
+                $user_list[$target->user_id]['success_cert'] = $tmp_success;
+            }
+
+            if ( ! isset($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]))
+            {
+                if ( ! isset($user_list[$target->user_id]['success_cert']))
+                {
+                    continue;
+                }
+
+                $this_stage_cert_tmp = $this_stage_cert;
+                if ($target->product_id == PRODUCT_ID_STUDENT && $target->sub_product_id == SUBPRODUCT_INTELLIGENT_STUDENT)
+                {
+                    $cert_key_tmp = array_search(CERTIFICATION_SOCIAL, $this_stage_cert_tmp);
+                    if ($cert_key_tmp !== FALSE)
+                    {
+                        $this_stage_cert_tmp[$cert_key_tmp] = CERTIFICATION_SOCIAL_INTELLIGENT;
+                    }
+                }
+
+                $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['this_success_status'] =
+                    count(array_intersect($this_stage_cert_tmp, $user_list[$target->user_id]['success_cert'])) == count($this_stage_cert_tmp);
+
+                $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['prev_success_status'] =
+                    count(array_intersect($prev_stage_cert, $user_list[$target->user_id]['success_cert'])) == count($prev_stage_cert);
 
                 // 畫徵信項的狀態按鈕
-                $user_cert_list[$target->user_id]['btn'] = [];
-                foreach ($this_stage_cert as $key => $cert)
+                $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['btn'] = [];
+                foreach ($this_stage_cert_tmp as $key => $cert)
                 {
                     $btn_factory = Certification_btn_factory::get_instance($tmp[$cert]);
 
                     if ($btn_factory)
                     {
-                        $user_cert_list[$target->user_id]['btn']['cert' . $key] = $btn_factory->draw();
+                        $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['btn']['cert' . $key] = $btn_factory->draw();
                     }
                     else
                     {
-                        $user_cert_list[$target->user_id]['btn']['cert' . $key] = '';
+                        $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['btn']['cert' . $key] = '';
                     }
                 }
             }
 
-            // 前一階段徵信項未通過
-            if ( ! $user_cert_list[$target->user_id]['prev_success_status'])
-            {
-                continue;
-            }
-            if ($user_cert_list[$target->user_id]['this_success_status'] && $stage != 2)
-            {
-                continue;
-            }
-
             $additional_btn = [];
-            if ($stage == 2)
+            if ($stage == 0 )
             {
+                if ($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['this_success_status'] || $target->certificate_status == '1')
+                {
+                    continue;
+                }
+            }
+            elseif ($stage == 1)
+            {
+                if ( ! $user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['prev_success_status'] || $target->certificate_status == '1')
+                {
+                    continue;
+                }
+            }
+            else
+            {
+                if ( $target->certificate_status != '1')
+                {
+                    continue;
+                }
                 $additional_btn['report'] = '<a class="btn btn-primary btn-info" href="' .
                     admin_url('Creditmanagement/report') . '?target_id=' . $target->id . '&type=person" target="_blank" >查看<br />授信審核表</a>';
                 $additional_btn['fail'] = '<button class="btn btn-outline btn-danger" onclick="failed(' . $target->id . ',\'' . $target->target_no . '\')" >退件</button>';
             }
 
-            $result['list'][] = array_merge($user_cert_list[$target->user_id]['btn'], [
+            $result['list'][] = array_merge($user_cert_list[$target->user_id][$product_id][$target->sub_product_id]['btn'], [
                 // todo: 因應權限表設定，url可能需要調整
                 'target_no' => '<a class="fancyframe" href="' . admin_url('Target/edit?display=1&id=' . $target->id) . '" >' . $target->target_no . '</a>',
-                'user' => $user_cert_list[$target->user_id]['user_name'],
+                'user' => $user_list[$target->user_id]['user_name'],
                 'product' => $user_prod_list[$target->product_id][$target->sub_product_id],
                 'status' => $this->target_model->status_list[$target->status] ?? '',
                 'updated_at' => date('Y-m-d H:i:s', $target->updated_at)
