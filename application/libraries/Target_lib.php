@@ -2581,7 +2581,7 @@ class Target_lib
                         'status' => [TRANSACTION_STATUS_TO_BE_PAID, TRANSACTION_STATUS_PAID_OFF]]);
                     if (isset($rs))
                     {
-                        $pay_off_date = $rs['limit_date'];
+                        $pay_off_date = $rs->limit_date;
                     }
                     break;
             }
