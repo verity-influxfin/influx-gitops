@@ -1,7 +1,5 @@
-import freshGraduateLoan from "../pages/freshGraduateLoan";
 import engineerLoan from "../pages/engineerLoan";
 import transfer from "../pages/transfer";
-import qa from "../pages/qa";
 import company from "../pages/company";
 import news from "../pages/news";
 import ntu from "../pages/ntu"
@@ -65,7 +63,8 @@ let routers = [
     { path: '/risk', component: risk },
     { path: '/projects', component: projects },
     { path: '/promote-code-intro', component: promoteCodeIntro },
-    { path: '/freshGraduateLoan', component: freshGraduateLoan },
+    // redirect for google搜尋
+    { path: '/freshGraduateLoan', redirect: '/workLoan' },
     { path: '/engineerLoan', component: engineerLoan },
     { path: '/investment', component: invest },
     { path: '/transfer', component: transfer },
@@ -74,7 +73,6 @@ let routers = [
     { path: '/blog', component: blog },
     { path: '/vlog', component: vlog },
     { path: '/invest', component: invest },
-    { path: '/qa', component: qa },
     { path: '/videopage', component: videoPage },
     { path: '/articlepage', component: articlePage },
     { path: '/userTerms', component: userTerms },
