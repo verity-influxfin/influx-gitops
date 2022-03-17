@@ -1016,6 +1016,7 @@ class Product extends REST_Controller {
                     'subloan_target_status'      => intval($subloan_target_status),
                     'subloan_target_sub_status'  => intval($subloan_target_sub_status),
                     'created_at' 		         => intval($value->created_at),
+                    'verify_status' => $this->chk_target_verifying($value->target_data ?? '') ? 1 : 0,
                 ];
 
             }
@@ -3068,24 +3069,30 @@ class Product extends REST_Controller {
 
         $this->load->library('Certification_lib');
 
-        $targetVerifying = TRUE;
-        $targetData = json_decode($target->target_data, true);
-        if(isset($targetData['verify_cetification_list'])) {
-            $targetData['verify_cetification_list'] = json_decode($targetData['verify_cetification_list'], true);
-            $this->load->model('user/user_certification_model');
-            $userCertifications 	= $this->user_certification_model->get_many_by([
-                'id'        => $targetData['verify_cetification_list'],
-                'status '   => [CERTIFICATION_STATUS_AUTHENTICATED, CERTIFICATION_STATUS_FAILED],
-            ]);
-            if(!empty($userCertifications)) {
-                $targetVerifying = FALSE;
-            }
-        }else{
-            $targetVerifying = FALSE;
-        }
+        $targetVerifying = $this->chk_target_verifying($target->target_data);
 
         $this->response(['result' => 'SUCCESS', 'data' => ['status' => $targetVerifying ? 1 : 0]]);
 
+    }
+
+    private function chk_target_verifying($target_data): bool
+    {
+        $data = json_decode($target_data, TRUE);
+        if (isset($data['verify_cetification_list']))
+        {
+            $data['verify_cetification_list'] = json_decode($data['verify_cetification_list'], TRUE);
+            $this->load->model('user/user_certification_model');
+            if ( ! empty($this->user_certification_model->chk_verifying_by_ids($data['verify_cetification_list'])))
+            {
+                return FALSE;
+            }
+        }
+        else
+        {
+            return FALSE;
+        }
+
+        return TRUE;
     }
 
     private function NS2P1($param, $product, $input)

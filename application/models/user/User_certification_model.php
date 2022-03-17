@@ -219,4 +219,14 @@ class User_certification_model extends MY_Model
 
         return $this->_database->get()->row_array();
     }
+
+    public function chk_verifying_by_ids(array $cert_ids)
+    {
+        return $this->db->select('id')
+            ->from('p2p_user.user_certification')
+            ->where_in('id', $cert_ids)
+            ->where_in('status', [CERTIFICATION_STATUS_AUTHENTICATED, CERTIFICATION_STATUS_FAILED])
+            ->get()
+            ->result_array();
+    }
 }
