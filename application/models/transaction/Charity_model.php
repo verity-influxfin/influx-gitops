@@ -140,7 +140,7 @@ class Charity_model extends MY_Model
                 else
                 {
                     $donate_list[$key]['receipt_type'] = $this->recipient_type[0];
-                    $donate_list[$key]['address_data'] = $this->parser_address($address_info);
+                    $donate_list[$key]['address_data'] = $address_info;
                 }
             }
 
@@ -149,23 +149,5 @@ class Charity_model extends MY_Model
         }
 
         return $donate_list;
-    }
-
-    // TODO 處理地址相關參數，待完成
-    public function parser_address($address)
-    {
-        $address_data = [
-            'code' => '',
-            'city' => '',
-            'country' => '',
-            'address' => '',
-        ];
-
-        if (empty($address))
-        {
-            return $address_data;
-        }
-
-        return $address_data;
     }
 }

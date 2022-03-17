@@ -57,16 +57,17 @@ class Charity extends MY_Admin_Controller
         {
             foreach ($data as $key => $value)
             {
+                $address_array = $this->_parser_address($value['address_data'] ?? '');
                 $cell1[] = [
                     $value['name'],
                     $value['id_number'],
                     $value['phone'],
                     $value['phone'],
                     $value['email'],
-                    '郵遞區號',
-                    '縣市',
-                    '鄉鎮市區',
-                    '地址',
+                    $address_array['code'],
+                    $address_array['city'],
+                    $address_array['area'],
+                    $address_array['address'],
                     $value['donate_day'],
                     '普匯APP',
                     '專案捐款',
@@ -148,5 +149,33 @@ class Charity extends MY_Admin_Controller
         }
 
         return $r;
+    }
+
+    // 處理地址相關參數
+    private function _parser_address($address)
+    {
+        $address_data = [
+            'code' => '',
+            'city' => '',
+            'area' => '',
+            'address' => '',
+        ];
+
+        if (empty($address))
+        {
+            return $address_data;
+        }
+
+        $this->load->library('mapping/Address');
+        $split_address = $this->address->splitAddress($address);
+
+        $address_data = [
+            'code' => $this->address->getZipAdrNumber($address),
+            'city' => $split_address['city'],
+            'area' => $split_address['area'],
+            'address' => $split_address['road'] . $split_address['part'] . $split_address['lane'] . $split_address['alley'] . $split_address['number'] . $split_address['sub_number'] . $split_address['floor'] . $split_address['floor'],
+        ];
+
+        return $address_data;
     }
 }
