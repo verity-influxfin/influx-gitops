@@ -13,14 +13,14 @@
                     <button class="btn btn-primary" onclick="get_list()">搜尋</button>
                 </div>
                 <div class="search-btn">
-                    <form action="<?=base_url() . 'admin/Ntu/charity_export'?>" method="post" style="display: inline-block">
-                        <a>捐款日期：</a>
+                    <form action="<?=base_url() . 'admin/Charity/export'?>" method="post" style="display: inline-block">
+                        &nbsp;&nbsp;
+                        捐款日期：
                         <input type="text" value="<?=isset($sdate) && $sdate ? $sdate : ''?>" id="sdate" name="sdate" data-toggle="datepicker"  />
-                        <a> ~ </a>
+                        &nbsp;~&nbsp;
                         <input type="text" value="<?=isset($edate) && $edate ? $edate : ''?>" id="edate" name="edate" data-toggle="datepicker" />
-                        <!-- <button class="btn btn-primary" onclick="get_list()">搜尋</button> -->
+                        &nbsp;&nbsp;
                         <input type="submit" class="btn btn-primary float-right" value="匯出Excel"/>
-
                     </form>
                 </div>
             </div>
@@ -59,7 +59,7 @@
 
 <script type="text/javascript">
     function get_list(){
-        top.location = "<?=base_url();?>"+'admin/Ntu/index?sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
+        top.location = "<?=base_url();?>"+'admin/Charity/index?sdate='+$('#sdate').val()+'&edate='+$('#edate').val();
     }
 </script>
 <style>
@@ -74,7 +74,7 @@
 
     .search-btn {
         display: flex;
-        justify-content: flex-end;
+        justify-content: flex-start;
         flex: 1 0 auto;
     }
 </style>

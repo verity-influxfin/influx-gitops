@@ -34,7 +34,7 @@ class Charity extends MY_Admin_Controller
         $this->load->view('admin/_footer');
     }
 
-    public function charity_export()
+    public function export()
     {
         $export_file_name = '捐款明細_' . date('ymdhis');
 
