@@ -201,11 +201,11 @@ class Sendemail
 		}
 	}
 
-    public function send($email,$subject,$content,$reply_to=false,$reply_to_name='')
+    public function send($emails,$subject,$content,$reply_to=false,$reply_to_name='')
     {
 		$this->CI->email->initialize($this->config);
 		$this->CI->email->clear();
-		$this->CI->email->to($email);
+		$this->CI->email->to($emails);
 		$this->CI->email->from(GMAIL_SMTP_ACCOUNT,GMAIL_SMTP_NAME);
 		$this->CI->email->subject($subject);
 		$this->CI->email->message($content);
@@ -215,14 +215,23 @@ class Sendemail
 		$rs = $this->CI->email->send();
 
         $this->CI->load->model('log/log_send_email_model');
-        $insert_data = [
-            'email_to' => $email,
-            'email_from' => GMAIL_SMTP_ACCOUNT,
-            'subject' => $subject,
-            'content' => $content,
-            'sent_status' => $rs ? 1 : 0
-        ];
-        $this->CI->log_send_email_model->insert($insert_data);
+        if ( ! is_array($emails))
+        {
+            $emails = [$emails];
+        }
+        $insert_data = [];
+        foreach ($emails as $email)
+        {
+            $insert_data[] = [
+                'email_to' => $email,
+                'email_from' => GMAIL_SMTP_ACCOUNT,
+                'subject' => $subject,
+                'content' => $content,
+                'sent_status' => $rs ? 1 : 0
+            ];
+        }
+        $this->CI->log_send_email_model->insert_many($insert_data);
+
 		if($rs){
 			return true;
 		}else{
