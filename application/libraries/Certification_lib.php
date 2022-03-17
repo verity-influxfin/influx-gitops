@@ -517,26 +517,24 @@ class Certification_lib{
         $compare_id_card_faces = $ocr_result['faceComparison']['faceplusplus']['id_card_faces_compare'];
         if ( ! $compare_id_card_faces['is_valid'])
         {
-            $msg .= $compare_id_card_faces['msg'] . '<br/>';
+            $msg .= '[face++] ' . $compare_id_card_faces['msg'] . '<br/>';
         }
         $compare_id_card_vs_person = $ocr_result['faceComparison']['faceplusplus']['id_card_vs_person_faces_compare'];
         if ( ! $compare_id_card_vs_person['is_valid'])
         {
-            $msg .= $compare_id_card_vs_person['msg'] . '<br/>';
+            $msg .= '[face++] ' . $compare_id_card_vs_person['msg'] . '<br/>';
         }
 
         // Azure 人臉比對，以後等 OCR 做完再直接串
         $azure_compare = [
-            'face' => [0, 0],
-            'face_flag' => [FALSE, FALSE],
+            'face' => [], // [0, 0],
+            'face_flag' => [], // [FALSE, FALSE],
         ];
-        $msg .= '[azure] 系統無法辨識人臉相似度.<br/>';
 
         // face8 人臉比對，以後等 OCR 做完再直接串
         $face8_compare = [
             'score' => ['n/a', 'n/a'],
         ];
-        $msg .= '[face8] 系統無法辨識人臉相似度.<br/>';
 
         // 取回資料後解析回傳內容，將資料填入回傳格式中
         $remark = [
