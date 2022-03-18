@@ -2781,6 +2781,15 @@ class Certification_lib{
                 isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
             }
 
+            $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($data['ig_username']);
+            if(isset($verdicts_statuses['status']))
+            {
+                if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
+                    || $verdicts_statuses['status'] == 204)
+                {
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($data['ig_username']);
+                }
+            }
 
             $rs = $this->user_meta_progress($data,$info);
 			if($rs){

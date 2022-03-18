@@ -19,19 +19,29 @@ class Judicial_yuan_lib
         }
     }
 
-    public function requestJudicialYuanVerdicts($name, $address='')
+    public function requestJudicialYuanVerdicts($query, $address='')
     {
-        if ( ! $name || ! $address)
+        if ( ! $query || ! $address)
         {
             return FALSE;
         }
-        $response = [];
-        $url = $this->scraper_url . '/data';
+        if ($address)
+        {
+            $url = $this->scraper_url . '/data';
 
-        $data = [
-            'query' => $name,
-            'address' => $address
-        ];
+            $data = [
+                'query' => $query,
+                'address' => $address
+            ];
+        }
+        else
+        {
+            $url = $this->scraper_url . '/all_city_data';
+
+            $data = [
+                'query' => $query,
+            ];
+        }
 
         $result = curl_get($url, $data);
         $response = json_decode($result, TRUE);
@@ -91,13 +101,13 @@ class Judicial_yuan_lib
 
         $result = curl_get($url);
         $response = json_decode($result, TRUE);
-        return $response;
 
         if ( ! $result || ! isset($response['status']))
         {
             return FALSE;
         }
 
+        return $response;
     }
 
     public function requestJudicialYuanVerdictsCase($query, $case, $address='')
