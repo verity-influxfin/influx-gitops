@@ -44,11 +44,10 @@
                             </div>
                             <form class="form-group" @submit.prevent="doSubmit">
                                 <ul class="nav nav-tabs">
-                                    <li role="presentation" :class="{'active': tab ==='tab-1'}"><a @click="changeTab('tab-1')">新光</a></li>
-                                    <li role="presentation" :class="{'active': tab ==='tab-2'}"><a @click="changeTab('tab-2')">凱基</a></li>
-                                    <li role="presentation" :class="{'active': tab ==='tab-3'}"><a @click="changeTab('tab-3')">其他</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
                                 </ul>
-                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-1'">
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-skbank'">
                                     <tbody>
                                         <tr style="text-align: center;">
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
@@ -236,7 +235,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-2'">
+                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-kgibank'">
                                     <tbody>
                                         <tr style="text-align: center;">
                                             <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
@@ -257,26 +256,6 @@
                                             <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
                                         </tr>
                                     </tbody>
-                                </table>
-                                <table class="table table-striped table-bordered table-hover dataTable" v-show="tab==='tab-3'">
-                                    <tr style="text-align: center;">
-                                        <td colspan="2"><span>普匯微企e秒貸資料確認</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>公司統一編號(變卡)</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.CompId"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>公司戶名(變卡)</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.CompName"></td>
-                                    </tr>
-                                    <tr>
-                                        <td><span>custom tab3</span></td>
-                                        <td><input class="sk-input form-control" type="text" v-model="formData.tab3Input"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button></td>
-                                    </tr>
                                 </table>
                             </form>
                             <div class="form-group">
@@ -368,7 +347,7 @@
         el: '#page-wrapper',
         data() {
             return {
-                tab: 'tab-1',
+                tab: 'tab-skbank',
                 pageId: '',
                 formData: {
                     CompId: '',
@@ -428,7 +407,7 @@
                 this.tab = tab
             },
             doSubmit() {
-                return axios.post('/admin/certification/sendSkbank', {
+                return axios.post('/admin/certification/save_company_cert', {
                     ...this.formData,
                     id: this.pageId
                 }).then(({ data }) => {

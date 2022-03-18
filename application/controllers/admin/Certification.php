@@ -1431,7 +1431,7 @@ class Certification extends MY_Admin_Controller {
     }
 
     // 新光送件檢核表送出資料
-    public function sendSkbank(){
+    public function save_company_cert(){
         $post = json_decode($this->security->xss_clean($this->input->raw_input_stream), TRUE);
 
         if(! isset($post['id']) || empty($post['id'])){

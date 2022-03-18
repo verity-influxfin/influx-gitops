@@ -63,11 +63,10 @@
                             </div>
                             <form class="form-group" @submit.prevent="doSubmit">
                                 <ul class="nav nav-tabs nav-justified mb-1">
-                                    <li role="presentation" :class="{'active': tab ==='tab-1'}"><a @click="changeTab('tab-1')">新光</a></li>
-                                    <li role="presentation" :class="{'active': tab ==='tab-2'}"><a @click="changeTab('tab-2')">凱基</a></li>
-                                    <li role="presentation" :class="{'active': tab ==='tab-3'}"><a @click="changeTab('tab-3')">其他</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
+                                    <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
                                 </ul>
-                                <div id="tab-1" v-show="tab==='tab-1'">
+                                <div id="tab-skbank" v-show="tab==='tab-skbank'">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li role="presentation" class="active">
                                             <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
@@ -357,7 +356,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div id="tab-2" v-show="tab==='tab-2'">
+                                <div id="tab-kgibank" v-show="tab==='tab-kgibank'">
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li role="presentation" class="active">
                                             <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
@@ -652,301 +651,6 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div id="tab-3" v-show="tab==='tab-3'">
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation" class="active">
-                                            <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人甲</a>
-                                        </li>
-                                        <li role="presentation">
-                                            <a @click="changeSubTab('GuTwo')" data-toggle="tab" aria-expanded="false">保證人乙</a>
-                                        </li>
-                                    </ul>
-                                    <div class="table-responsive Pr">
-                                        <table class="table table-striped table-bordered table-hover dataTable">
-                                            <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人聯徵查詢日期</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrJCICQueryDate"
-                                                            placeholder="格式:YYYYMMDD"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人聯徵信用評分</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrCreditScore"
-                                                            placeholder="顯示「此次暫時無法評分」，則傳入 0">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人聯徵J01資料年月</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrJCICDataDate"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(現金卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_CashCard"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(信用卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_CreditCard"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(短放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_ShortTermLn"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(中放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_MidTermLn"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(長放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_LongTermLn"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(短擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_ShortTermGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(中擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_MidTermLnGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人銀行借款餘額(長擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBal_LongTermLnGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>負責人擔任其他企業負責人之企業統編</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.PrBeingOthCompPrId"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="table-responsive Spouse">
-                                        <table class="table table-striped table-bordered table-hover dataTable">
-                                            <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶聯徵查詢日期</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseJCICQueryDate"
-                                                            placeholder="格式:YYYYMMDD">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶聯徵信用評分</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseCreditScore"
-                                                            placeholder="顯示「此次暫時無法評分」，則傳入 0">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶聯徵J01資料年月</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseJCICDataDate"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(現金卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBal_CashCard"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(信用卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBal_CreditCard">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(短放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBal_ShortTermLn">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(中放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBal_MidTermLn">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(長放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBal_LongTermLn">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(短擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBal_ShortTermGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(中擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBal_MidTermLnGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶銀行借款餘額(長擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text"
-                                                            v-model="formData.SpouseBal_LongTermLnGuar"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>配偶擔任其他企業負責人之企業統編</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.SpouseBeingOthCompPrId">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="table-responsive GuOne">
-                                        <table class="table table-striped table-bordered table-hover dataTable">
-                                            <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人聯徵查詢日期</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneJCICQueryDate"
-                                                            placeholder="格式:YYYYMMDD">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人聯徵信用評分</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneCreditScore"
-                                                            placeholder="顯示「此次暫時無法評分」，則傳入 0">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人聯徵J01資料年月</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneJCICDataDate"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(現金卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_CashCard"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(信用卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_CreditCard">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(短放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_ShortTermLn">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(中放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_MidTermLn"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(長放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_LongTermLn">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(短擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_ShortTermGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(中擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_MidTermLnGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>甲保證人銀行借款餘額(長擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuOneBal_LongTermLnGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="table-responsive GuTwo">
-                                        <table class="table table-striped table-bordered table-hover dataTable">
-                                            <tbody>
-                                                <tr style="text-align: center;">
-                                                    <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人聯徵查詢日期</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoJCICQueryDate"
-                                                            placeholder="格式:YYYYMMDD">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人聯徵信用評分</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoCreditScore"
-                                                            placeholder="顯示「此次暫時無法評分」，則傳入 0">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人聯徵J01資料年月</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoJCICDataDate"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(現金卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_CashCard"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(信用卡)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_CreditCard">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(短放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_ShortTermLn">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(中放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_MidTermLn"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(長放)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_LongTermLn">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(短擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_ShortTermGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(中擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_MidTermLnGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>乙保證人銀行借款餘額(長擔)</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoBal_LongTermLnGuar">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><span>costom 3</span></td>
-                                                    <td><input class="sk-input form-control" type="text" v-model="formData.tab3Input">
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
                             </form>
                             <div class="form-group">
                               <? isset($ocr['url']) && !is_array($ocr['url']) ? $ocr['url'] = array($ocr['url']) : '';
@@ -1042,7 +746,7 @@
         el: '#page-wrapper',
         data() {
             return {
-                tab: 'tab-1',
+                tab: 'tab-skbank',
                 pageId: '',
                 formData: {
                     PrJCICQueryDate: '',
@@ -1098,7 +802,7 @@
         },
         mounted() {
             const url = new URL(location.href);
-            this.changeTab('tab-1')
+            this.changeTab('tab-skbank')
             this.pageId = url.searchParams.get('id');
             this.getData()
         },
@@ -1112,7 +816,7 @@
                 $(`#${this.tab} .${show_id}`).show()
             },
             doSubmit() {
-                return axios.post('/admin/certification/sendSkbank', {
+                return axios.post('/admin/certification/save_company_cert', {
                     ...this.formData,
                     id: this.pageId
                 }).then(({ data }) => {

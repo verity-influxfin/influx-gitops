@@ -225,9 +225,14 @@ class Bankdata extends MY_Admin_Controller
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
         $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no'=>$input['msg_no'],'type'=>$input['data_type']]);
 
-        if($mapping_info){
+        if($mapping_info) {
             $mapping_info = $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
         }
-        print_r(json_encode(['result'=>'success']));exit;
+
+        //print_r(json_encode(['result'=>'success']));exit;
+        // print_r($input);exit;
+        $this->load->library('output/json_output');
+        $this->json_output->setStatusCode(200)->setResponse(['result'=>'success'])->send();
+
     }
 }

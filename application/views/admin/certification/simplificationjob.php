@@ -45,11 +45,10 @@
                                     </div>
                                     <form class="form-group" @submit.prevent="doSubmit">
                                         <ul class="nav nav-tabs nav-justified mb-1">
-                                            <li role="presentation" :class="{'active': tab ==='tab-1'}"><a @click="changeTab('tab-1')">新光</a></li>
-                                            <li role="presentation" :class="{'active': tab ==='tab-2'}"><a @click="changeTab('tab-2')">凱基</a></li>
-                                            <li role="presentation" :class="{'active': tab ==='tab-3'}"><a @click="changeTab('tab-3')">其他</a></li>
+                                            <li role="presentation" :class="{'active': tab ==='tab-skbank'}"><a @click="changeTab('tab-skbank')">新光</a></li>
+                                            <li role="presentation" :class="{'active': tab ==='tab-kgibank'}"><a @click="changeTab('tab-kgibank')">凱基</a></li>
                                         </ul>
-                                        <div id="tab-1" v-show="tab==='tab-1'">
+                                        <div id="tab-skbank" v-show="tab==='tab-skbank'">
                                             <ul class="nav nav-tabs" role="tablist">
                                                 <li role="presentation" class="active">
                                                     <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
@@ -175,7 +174,7 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div id="tab-2" v-show="tab==='tab-2'">
+                                        <div id="tab-kgibank" v-show="tab==='tab-kgibank'">
                                             <ul class="nav nav-tabs" role="tablist">
                                                 <li role="presentation" class="active">
                                                     <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
@@ -291,142 +290,6 @@
                                                         <tr>
                                                             <td><span>乙保證人-被保險人勞保異動查詢-最近期投保薪資</span></td>
                                                             <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoLaborInsSalary">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div id="tab-3" v-show="tab==='tab-3'">
-                                            <ul class="nav nav-tabs" role="tablist">
-                                                <li role="presentation" class="active">
-                                                    <a @click="changeSubTab('Pr')" data-toggle="tab" aria-expanded="true">負責人</a>
-                                                </li>
-                                                <li role="presentation">
-                                                    <a @click="changeSubTab('Spouse')" data-toggle="tab" aria-expanded="false">配偶</a>
-                                                </li>
-                                                <li role="presentation">
-                                                    <a @click="changeSubTab('GuOne')" data-toggle="tab" aria-expanded="false">保證人甲</a>
-                                                </li>
-                                                <li role="presentation">
-                                                    <a @click="changeSubTab('GuTwo')" data-toggle="tab" aria-expanded="false">保證人乙</a>
-                                                </li>
-                                            </ul>
-                                            <div class="table-responsive Pr">
-                                                <table class="table table-striped table-bordered table-hover dataTable">
-                                                    <tbody>
-                                                        <tr style="text-align: center;">
-                                                            <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>負責人-被保險人勞保異動查詢日期</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.PrLaborQryDate"
-                                                                    placeholder="格式:YYYYMMDD">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>負責人-被保險人勞保異動查詢-最近期投保薪資</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.PrLaborInsSalary"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="table-responsive Spouse">
-                                                <table class="table table-striped table-bordered table-hover dataTable">
-                                                    <tbody>
-                                                        <tr style="text-align: center;">
-                                                            <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                        </tr>
-                                                        <tr hidden>
-                                                            <td><span>徵提資料ID</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.id"
-                                                                    value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>配偶-被保險人勞保異動查詢日期</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.SpouseLaborQryDate"
-                                                                    placeholder="格式:YYYYMMDD">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>配偶-被保險人勞保異動查詢-最近期投保薪資</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.SpouseLaborInsSalary">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="table-responsive GuOne">
-                                                <table class="table table-striped table-bordered table-hover dataTable">
-                                                    <tbody>
-                                                        <tr style="text-align: center;">
-                                                            <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                        </tr>
-                                                        <tr hidden>
-                                                            <td><span>徵提資料ID</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.id"
-                                                                    value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>甲保證人-被保險人勞保異動查詢日期</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.GuOneLaborQryDate"
-                                                                    placeholder="格式:YYYYMMDD">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>甲保證人-被保險人勞保異動查詢-最近期投保薪資</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.GuOneLaborInsSalary">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>costom 2</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.tab2Input">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="2"><button type="submit" class="btn btn-primary" style="margin:0 45%;">送出</button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div class="table-responsive GuTwo">
-                                                <table class="table table-striped table-bordered table-hover dataTable">
-                                                    <tbody>
-                                                        <tr style="text-align: center;">
-                                                            <td colspan="2"><span>普匯微企e秒貸資料確認3</span></td>
-                                                        </tr>
-                                                        <tr hidden>
-                                                            <td><span>徵提資料ID</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.id"
-                                                                    value="<?= isset($data->id) && is_numeric($data->id) ? $data->id : ""; ?>"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>乙保證人-被保險人勞保異動查詢日期</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoLaborQryDate"
-                                                                    placeholder="格式:YYYYMMDD">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>乙保證人-被保險人勞保異動查詢-最近期投保薪資</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.GuTwoLaborInsSalary">
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><span>costom 3</span></td>
-                                                            <td><input class="sk-input form-control" type="text" v-model="formData.tab3Input">
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -515,7 +378,7 @@
         el: '#page-wrapper',
         data() {
             return {
-                tab: 'tab-1',
+                tab: 'tab-skbank',
                 pageId: '',
                 formData: {
                     PrLaborQryDate: '',
@@ -533,7 +396,7 @@
         },
         mounted() {
             const url = new URL(location.href);
-            this.changeTab('tab-1')
+            this.changeTab('tab-skbank')
             this.pageId = url.searchParams.get('id');
             this.getData()
         },
@@ -547,7 +410,7 @@
                 $(`#${this.tab} .${show_id}`).show()
             },
             doSubmit() {
-                return axios.post('/admin/certification/sendSkbank', {
+                return axios.post('/admin/certification/save_company_cert', {
                     ...this.formData,
                     id: this.pageId
                 }).then(({ data }) => {
