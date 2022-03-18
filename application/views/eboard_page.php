@@ -524,7 +524,7 @@
 									return x.value > 0 ? x.value + `(${Math.ceil(x.value / 166 * 100)}%)` : ''
 								}
 							},
-							data: data.map(x => x.ios_downloads + x.android_downloads)
+							data: data.map(x => Number(x.ios_downloads) + Number(x.android_downloads))
 						}
 					]
 				}
@@ -625,6 +625,27 @@
 							},
 							minInterval: 1
 						},
+						{
+							name: '成交數',
+							type: 'value',
+							axisLabel: { fontSize: '14px' },
+							axisLine: {
+								show: true,
+								lineStyle: {
+									color: '#86A0BE',
+								}
+							},
+							splitLine: {
+								show: false
+							},
+							axisTick: {
+								show: true,
+								lineStyle: {
+									color: '#86A0BE',
+								},
+							},
+							minInterval: 1
+						}
 					],
 					series: [
 						{
@@ -637,7 +658,7 @@
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value + `\n(${Math.ceil(x.value / 5 * 100)}%)`  : ''
+									return x.value > 0 ? x.value  : ''
 								}
 							},
 							itemStyle: {
@@ -655,7 +676,7 @@
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value + `\n(${Math.ceil(x.value / 25 * 100)}%)`: ''
+									return x.value > 0 ? x.value : ''
 								}
 							},
 							itemStyle: {
@@ -673,7 +694,7 @@
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value  + `\n(${Math.ceil(x.value / 7 * 100)}%)` : ''
+									return x.value > 0 ? x.value : ''
 								}
 							},
 							itemStyle: {
@@ -691,13 +712,28 @@
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value  + `\n(${Math.ceil(x.value / 2 * 100)}%)` : ''
+									return x.value > 0 ? x.value : ''
 								}
 							},
 							itemStyle: {
 								borderRadius: [4, 4, 0, 0],
 							},
 							data: data.map(x => x.product_bids['SK_MILLION'])
+						},
+						{
+							name: '成交數',
+							yAxisIndex: 1,
+							type: 'line',
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
+							data: data.map(x => x.deals)
 						},
 					]
 				}
