@@ -64,7 +64,7 @@
                                     <th class="edit th bold-bottom-border">人工檢驗</th>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="31">
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="32">
                                         A-工商登記<br>
                                         (經濟部API)<br>
                                         (主計處)
@@ -3630,7 +3630,7 @@
                                     <th class="edit th bold-bottom-border">人工檢驗</th>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="31">
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="32">
                                         A-工商登記<br>
                                         (經濟部API)<br>
                                         (主計處)
