@@ -1038,11 +1038,10 @@ class Credit_lib{
      * @param int $user_id
      * @param int $product_id
      * @param int $sub_product_id
-     * @param int $instalment
      * @param int $except_target_id
      * @return array
      */
-    public function get_remain_amount(int $user_id, int $product_id, int $sub_product_id, int $instalment = 0, int $except_target_id = 0)
+    public function get_remain_amount(int $user_id, int $product_id, int $sub_product_id, int $except_target_id = 0)
     {
         $result = [
             'credit_amount' => 0, // 核可額度
@@ -1107,7 +1106,7 @@ class Credit_lib{
                 'credit_amount' => $user_max_credit_amount, // 核可額度
                 'target_amount' => $all_used_amount, // 佔用中的額度
                 'remain_amount' => $user_max_credit_amount - $all_used_amount, // 剩餘可用額度
-                'target_list' => $target_list
+                'instalment' => $credit['instalment']
             ];
         }
 

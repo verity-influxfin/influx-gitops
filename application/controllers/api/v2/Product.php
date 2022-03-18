@@ -472,9 +472,9 @@ class Product extends REST_Controller {
                     $this->response(['result' => 'ERROR', 'error' => TARGET_APPLY_NOT_EXIST]);
                 }
                 $this->load->library('credit_lib');
-                $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $product['id'], $sub_product_id, $target->instalment, $target_id);
+                $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $product['id'], $sub_product_id, $target_id);
                 $chk_data = ['remain_amount' => NULL, 'target_id' => NULL];
-                if ($chk_credit['credit_amount'] > 0)
+                if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $target->instalment)
                 {
                     $chk_data['remain_amount'] = $chk_credit['remain_amount'];
                     $chk_target = $this->target_model->order_by('created_at', 'DESC')->get_by([
@@ -743,19 +743,19 @@ class Product extends REST_Controller {
             $method = 'type'.$product['type'].'_apply';
 
             $this->load->library('credit_lib');
-            $chk_credit = $this->credit_lib->get_remain_amount($user_id, $product['id'], $sub_product_id, $input['instalment']);
+            $chk_credit = $this->credit_lib->get_remain_amount($user_id, $product['id'], $sub_product_id);
 
-            if ($chk_credit['credit_amount'] > 0)
-            { // 有效期內的核可額度(條件：同產品、同子產品、同期間)
+            if ($chk_credit['credit_amount'] > 0 && $chk_credit['instalment'] == $input['instalment'])
+            {
+                // 有效期內的核可額度(條件：同產品、同期間)
                 if ($chk_credit['remain_amount'] >= $input['amount'])
                 { // 該產品有未使用額度
                     $param['status'] = TARGET_WAITING_SIGNING;
                 }
                 else
                 { // 該產品已無使用額度
-                    $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT,
-                        'data' => ['text' => '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。']
-                    ]);
+                    $param['status'] = TARGET_WAITING_SIGNING;
+                    $param['loan_amount'] = $chk_credit['remain_amount'];
                 }
             }
 
@@ -3499,10 +3499,16 @@ class Product extends REST_Controller {
         }
 
         $this->load->library('credit_lib');
-        $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $target->product_id, $target->sub_product_id, $target->instalment, $input['target_id']);
+        $chk_credit = $this->credit_lib->get_remain_amount($this->user_info->id, $target->product_id, $target->sub_product_id, $input['target_id']);
 
-        if ($input['amount'] > $chk_credit['remain_amount'])
+        if ($input['amount'] > $chk_credit['remain_amount'] || $chk_credit['instalment'] != $target->instalment)
         {
+            $this->target_model->update($target->id, [
+                'status' => TARGET_FAIL,
+                'sub_status' => TARGET_SUBSTATUS_NORNAL,
+                'loan_amount' => 0,
+                'remark' => '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。'
+            ]);
             $this->response(['result' => 'ERROR', 'error' => PRODUCT_HAS_NO_CREDIT,
                 'data' => ['text' => '經AI系統綜合評估後，暫時無法核准您的申請，感謝您的支持與愛護，希望下次還有機會為您服務。']
             ]);
