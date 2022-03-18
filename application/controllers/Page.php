@@ -64,7 +64,7 @@ class Page extends CI_Controller
     public function get_eboard_data()
     {
         $retval = [];
-        $first_day = (new DateTimeImmutable(date('Y-m-d')))->modify('- 6 day');
+        $first_day = (new DateTimeImmutable(date('Y-m-d')))->modify('- 7 day');
         $weather = $this->_get_today_weather();
 
         $this->load->model('user/sale_dashboard_model');
