@@ -96,14 +96,20 @@
 
 		.rank-content {
 			margin: 60px 16px 16px 16px;
-			height: 240px;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 20px;
+			height: 277px;
 			overflow: hidden;
-			display: flex;
-			justify-content: center;
-			align-items: center;
 			background-image: url('/assets/eboard/firework1.gif');
 			background-repeat: no-repeat;
 			background-position: center center;
+		}
+
+		.rank-title {
+			color: #fff;
+			padding: 4px 0;
+			font-size: 20px;
 		}
 
 		.rank-item {
@@ -147,25 +153,25 @@
 		<div class="col-4">
 			<div class="d-flex table-border position-relative">
 				<div class="table-title">官網 </div>
-				<div id="main" class="mx-auto" style="height: 338px; width: 560px;"></div>
+				<div id="main" class="mx-auto" style="height: 336px; width: 560px;"></div>
 			</div>
 			<div class="d-flex table-border position-relative my-3">
 				<div class="table-title">ＡＰＰ</div>
-				<div id="tb-2" class="mx-auto" style="height: 338px; width: 560px;"></div>
+				<div id="tb-2" class="mx-auto" style="height: 336px; width: 560px;"></div>
 			</div>
 			<div class="d-flex table-border position-relative">
 				<div class="table-title">產品</div>
-				<div id="tb-3" class="mx-auto" style="height: 338px; width: 560px;"></div>
+				<div id="tb-3" class="mx-auto" style="height: 340px; width: 560px;"></div>
 			</div>
 		</div>
 		<div class="col-4">
 			<div class="table-border position-relative">
 				<div class="table-title">成交案件數分佈圖</div>
-				<div id="map-1" class="mx-auto" style="height: 696px;"></div>
+				<div id="map-1" class="mx-auto" style="height: 692px;"></div>
 			</div>
 			<div class="table-border position-relative mt-3">
 				<div class="table-title">即時成交動態</div>
-				<div id="real-1" style="height: 340px; width: 540px;"></div>
+				<div id="real-1" style="height: 340px; width: 625px;"></div>
 			</div>
 		</div>
 		<div class="col-4">
@@ -206,15 +212,22 @@
 			</div>
 			<div class="table-border mt-3 position-relative">
 				<div class="table-title">績效榜</div>
-				<div class="rank-content table-border">
-					<div class="rank-board">
+				<div class="rank-content">
+					<div class="rank-board  table-border">
+						<div class="text-center rank-title">公司員工</div>
 						<div class="rank-item" v-for="(item, i) in state.rank">
-							恭喜 {{item.name}} 取得推薦有賞績效第{{i+1}}名
+							恭喜 {{item.name}} 成功推廣 {{ item.full_member_count }} 人
+						</div>
+					</div>
+					<div class="rank-board  table-border">
+						<div class="text-center rank-title">外部人員</div>
+						<div class="rank-item">
+							尚未啟用
 						</div>
 					</div>
 				</div>
 				<div class="table-title">推薦有賞績效</div>
-				<div id="qr-1" style="height: 490px;"></div>
+				<div id="qr-1" style="height: 447px;"></div>
 			</div>
 		</div>
 	</div>
@@ -222,7 +235,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 	crossorigin="anonymous"></script>
-<script src="https://unpkg.com/vue@3.2.31/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.0/dist/echarts.js"></script>
 <script>
@@ -298,13 +311,6 @@
 				getData()
 			})
 
-			const hours = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
-				'07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
-				'13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
-				'19:00', '20:00', '21:00', '22:00', '23:00'
-			]
-			// const hours = ['00:00', '04:00','08:00', '12:00','16:00','20:00']
-
 			const covertNum = (num) => {
 				return num.toLocaleString()
 			}
@@ -319,7 +325,7 @@
 					state.data = data.data.history.reverse()
 					state.weather = data.data.weather
 					state.qrcode = data.data.qrcode.map(item => {
-						return [item.salary_man_count, item.student_count, item.name]
+						return [item.salary_man_count, item.student_count, item.full_member_count, item.name]
 					})
 					state.rank = [...data.data.qrcode].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
 					setStatisticData(data.data.loan_statistic)
@@ -401,7 +407,8 @@
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
+									// 1300/day
+									return x.value > 0 ? x.value + `(${Math.ceil(x.value / 1300 * 100)}%)` : ''
 								}
 							},
 							data: data.map(x => x.official_site_trends)
@@ -415,7 +422,8 @@
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
+									// 195/day
+									return x.value > 0 ? x.value + `(${Math.ceil(x.value / 195 * 100)}%)` : ''
 								}
 							},
 							data: data.map(x => x.new_member)
@@ -432,6 +440,9 @@
 								formatter: (x) => {
 									return x.value > 0 ? x.value : ''
 								}
+							},
+							rich: {
+
 							},
 							data: data.map(x => x.total_member)
 						}
@@ -499,6 +510,21 @@
 								}
 							},
 							data: data.map(x => x.ios_downloads)
+						},
+						{
+							name: 'APP 總下載數',
+							type: 'line',
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									// 166/day
+									return x.value > 0 ? x.value + `(${Math.ceil(x.value / 166 * 100)}%)` : ''
+								}
+							},
+							data: data.map(x => x.ios_downloads + x.android_downloads)
 						}
 					]
 				}
@@ -599,40 +625,19 @@
 							},
 							minInterval: 1
 						},
-						{
-							name: '成交數',
-							type: 'value',
-							axisLabel: { fontSize: '14px' },
-							axisLine: {
-								show: true,
-								lineStyle: {
-									color: '#86A0BE',
-								}
-							},
-							splitLine: {
-								show: false
-							},
-							axisTick: {
-								show: true,
-								lineStyle: {
-									color: '#86A0BE',
-								},
-							},
-							minInterval: 1
-						}
 					],
 					series: [
 						{
 							name: '3S',
 							type: 'bar',
-							barWidth: 7,
+							barWidth: 9,
 							label: {
 								show: true,
 								position: 'top',
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
+									return x.value > 0 ? x.value + `\n(${Math.ceil(x.value / 5 * 100)}%)`  : ''
 								}
 							},
 							itemStyle: {
@@ -643,14 +648,14 @@
 						{
 							name: '學生貸',
 							type: 'bar',
-							barWidth: 7,
+							barWidth: 9,
 							label: {
 								show: true,
 								position: 'top',
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
+									return x.value > 0 ? x.value + `\n(${Math.ceil(x.value / 25 * 100)}%)`: ''
 								}
 							},
 							itemStyle: {
@@ -661,14 +666,14 @@
 						{
 							name: '上班族貸',
 							type: 'bar',
-							barWidth: 7,
+							barWidth: 9,
 							label: {
 								show: true,
 								position: 'top',
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
+									return x.value > 0 ? x.value  + `\n(${Math.ceil(x.value / 7 * 100)}%)` : ''
 								}
 							},
 							itemStyle: {
@@ -679,14 +684,14 @@
 						{
 							name: '微企貸',
 							type: 'bar',
-							barWidth: 7,
+							barWidth: 9,
 							label: {
 								show: true,
 								position: 'top',
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
+									return x.value > 0 ? x.value  + `\n(${Math.ceil(x.value / 2 * 100)}%)` : ''
 								}
 							},
 							itemStyle: {
@@ -694,22 +699,6 @@
 							},
 							data: data.map(x => x.product_bids['SK_MILLION'])
 						},
-						{
-							name: '成交數',
-							yAxisIndex: 1,
-							type: 'line',
-							label: {
-								show: true,
-								position: 'top',
-								fontSize: '10',
-								color: '#fff',
-								formatter: (x) => {
-									return x.value > 0 ? x.value : ''
-								}
-							},
-							data: data.map(x => x.deals)
-						},
-
 					]
 				}
 				charts.prod.setOption(option)
@@ -759,9 +748,13 @@
 					d.setDate(d.getDate() - i - 1)
 					return `${(d.getMonth() + 1).toString().padStart(2, 0)}/${d.getDate().toString().padStart(2, 0)}`
 				}).concat('').reverse()
+				const hours = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00']
+				const values = state.loan_statistic.map(x => x[2])
+				const max = Math.max(...values)
+				const colors = ['#fff', '#B6FFBD', '#81CEFA', '#EC6E6E', '#F29600']
+				const sizes = [8, 16, 24, 32, 40]
 				option = {
 					...basicOption,
-					color: ['#05D4FF'],
 					grid: {
 						top: '50px',
 						left: '40px',
@@ -784,13 +777,28 @@
 						data: hours,
 					},
 					legend: {
-						show: false,
+						// show: false,
 					},
 					series: [
 						{
 							type: 'scatter',
-							symbolSize: (val) => val[2] * 4,
-							data: state.loan_statistic
+							label: {
+								show: true,
+								fontSize: '14',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value[2]
+								}
+							},
+							symbolSize: (val) => sizes[Math.floor(val[2] / max * 4)],
+							data: state.loan_statistic.map(x => {
+								return {
+									value: x,
+									itemStyle: {
+										color: colors[Math.floor(x[2] / max * 4)]
+									}
+								}
+							})
 						}
 					]
 				}
@@ -808,7 +816,7 @@
 					},
 					dataset: {
 						source: [
-							['salary_man_count', 'student_count', 'product'],
+							['salary_man_count', 'student_count', 'full_member_count', 'product'],
 							...renderQr.value
 						]
 					},
@@ -827,6 +835,27 @@
 						},
 					},
 					series: [
+						{
+							name: '推廣下載人數',
+							type: 'bar',
+							barWidth: 10,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
+							encode: {
+								y: 'full_member_count',
+								x: 'product'
+							}
+						},
 						{
 							name: '上班族貸',
 							type: 'bar',
@@ -903,16 +932,34 @@
 					d.setDate(d.getDate() - i)
 					return `${d.getFullYear()}/${(d.getMonth() + 1).toString().padStart(2, 0)}/${d.getDate().toString().padStart(2, 0)}`
 				}).concat('').reverse()
+				const hours = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
+					'07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+					'13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
+					'19:00', '20:00', '21:00', '22:00', '23:00'
+				]
+				const hoursMap = new Map()
+				hours.forEach((x, i) => {
+					const dur = Math.floor(i / 4)
+					hoursMap.set(x, dur)
+				})
 				let ans = []
 				days.forEach((x, i) => {
 					if (i != 0) {
 						const dataMap = new Map()
-						data.filter(item => item.date === x).forEach(item => dataMap.set(item.time, item.value))
-						hours.forEach((hour, index) => {
-							if (dataMap.has(hour)) {
-								ans.push([i, index, dataMap.get(hour)])
+						data.filter(item => item.date === x).forEach(item => {
+							const index = hoursMap.get(item.time)
+							if (dataMap.has(index)) {
+								const newValue = dataMap.get(index) + dataMap.get(index)
+								dataMap.set(index, newValue)
+							} else {
+								dataMap.set(index, item.value)
 							}
 						})
+						for (let index = 0; index < 6; index++) {
+							if (dataMap.has(index)) {
+								ans.push([i, index, dataMap.get(index)])
+							}
+						}
 					}
 				})
 				state.loan_statistic = ans
