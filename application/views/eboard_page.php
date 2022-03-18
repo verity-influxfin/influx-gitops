@@ -125,6 +125,16 @@
 			}
 		}
 
+		.separator {
+			animation: blinker 1.5s step-start 0s infinite;
+		}
+
+		@keyframes blinker {
+			50% {
+				opacity: 0;
+			}
+		}
+
 
 		tbody>tr:nth-last-child(1) {
 			border-bottom-style: hidden;
@@ -162,7 +172,11 @@
 			<div class="weather" style="height: 50px;">
 				<div>{{ state.time.showDate }}</div>
 				<div>|</div>
-				<div>{{ state.time.time }}</div>
+				<time>
+					<span>{{ state.time.timeHour }}</span>
+					<span class="separator">：</span>
+					<span>{{ state.time.timeMin }}</span>
+				</time>
 				<div>|</div>
 				<div>星期{{ state.time.day }}</div>
 				<div>|</div>
@@ -178,7 +192,7 @@
 					</div>
 					<div class="num-group">
 						<div class="num">{{ covertNum(state.platform_statistic.daily_highest_count) }}</div>
-						<div class="num-title">每日筆數</div>
+						<div class="num-title">單日筆數</div>
 					</div>
 					<div class="num-group">
 						<div class="num">{{ covertNum(state.platform_statistic.total_investment_count) }}</div>
@@ -186,7 +200,7 @@
 					</div>
 					<div class="num-group">
 						<div class="num">{{ covertNum(state.platform_statistic.monthly_highest_count) }}</div>
-						<div class="num-title">每月筆數</div>
+						<div class="num-title">單月筆數</div>
 					</div>
 				</div>
 			</div>
@@ -237,10 +251,6 @@
 				weather: ''
 			})
 			const renderQr = ref([])
-			const intervals = reactive({
-				chart: 0,
-				api: 0
-			})
 			const charts = reactive({
 				flow: {},
 				app: {},
@@ -288,16 +298,12 @@
 				getData()
 			})
 
-			onUnmounted(() => {
-				clearInterval(intervals.api)
-				clearInterval(intervals.chart)
-			})
-
 			const hours = ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00',
 				'07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
 				'13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
 				'19:00', '20:00', '21:00', '22:00', '23:00'
 			]
+			// const hours = ['00:00', '04:00','08:00', '12:00','16:00','20:00']
 
 			const covertNum = (num) => {
 				return num.toLocaleString()
@@ -315,7 +321,7 @@
 					state.qrcode = data.data.qrcode.map(item => {
 						return [item.salary_man_count, item.student_count, item.name]
 					})
-					state.rank = [...data.data.qrcode].sort((a, b) => b.full_member_count - a.full_member_count ).slice(0, 3)
+					state.rank = [...data.data.qrcode].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
 					setStatisticData(data.data.loan_statistic)
 					state.loan_distribution = data.data.loan_distribution
 					state.platform_statistic = data.data.platform_statistic
@@ -326,9 +332,6 @@
 					drawReal()
 					nextQrData()
 					drawGeo()
-					intervals.chart = setInterval(function () {
-						nextQrData()
-					}, 4000)
 					setTimeout(getData, 300000)
 				})
 			}
@@ -751,9 +754,9 @@
 				charts.geoMap.setOption(option)
 			}
 			const drawReal = () => {
-				const days = [...Array(8)].map((_, i) => {
+				const days = [...Array(7)].map((_, i) => {
 					const d = new Date()
-					d.setDate(d.getDate() - i)
+					d.setDate(d.getDate() - i - 1)
 					return `${(d.getMonth() + 1).toString().padStart(2, 0)}/${d.getDate().toString().padStart(2, 0)}`
 				}).concat('').reverse()
 				option = {
@@ -874,18 +877,17 @@
 				var date = new Date();
 				var h = date.getHours(); // 0 - 23
 				var m = date.getMinutes(); // 0 - 59
-				var s = date.getSeconds(); // 0 - 59
 				if (h == 0) {
 					h = 12;
 				}
 				h = (h < 10) ? "0" + h : h
 				m = (m < 10) ? "0" + m : m
-				s = (s < 10) ? "0" + s : s
-				const time = h + ":" + m + ":" + s
+				const timeHour = h
+				const timeMin = m
 				const showDate = date.getFullYear() + '.' + (date.getMonth() + 1).toString().padStart(2, 0) + '.' + (date.getDate()).toString().padStart(2, 0)
 				const day = ['', '一', '二', '三', '四', '五', '六', '日'].at(date.getDay())
-				state.time = { showDate, time, day }
-				setTimeout(showTime, 1000);
+				state.time = { showDate, timeHour, timeMin, day }
+				setTimeout(showTime, 60000);
 			}
 			const nextQrData = () => {
 				if (state.qrcode.length > 0) {
@@ -893,6 +895,7 @@
 				}
 				renderQr.value = state.qrcode.slice(0, 7)
 				drawQr()
+				setTimeout(nextQrData, 5000);
 			}
 			const setStatisticData = (data) => {
 				const days = [...Array(8)].map((_, i) => {
