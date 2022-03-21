@@ -36,18 +36,18 @@ class Charity extends MY_Admin_Controller
 
     public function export()
     {
-        $export_file_name = '捐款明細_' . date('ym');
+        $export_file_name = '捐款明細_' . date('ymd');
 
         $post = $this->input->post(NULL, TRUE);
         $sdate = $post['sdate'] ?? '';
         $edate = $post['edate'] ?? '';
 
-        // 取得區間內的報表資料
+        // 取得區間內的報表資料 & 提款手續費紀錄
         $data_donate = $this->charity_model->get_download_info($sdate, $edate);
+        $data_fees = [];
 
         // 取得捐款單位相關資料
         $this->load->model('user/charity_institution_model');
-        // $charity_list = $this->config->item('charity_user_id_list'); // 好像不用這個 TODO 可以刪掉
         $charity_alias = $this->charity_institution_model->TaiwanUnivHospitalAliasName;
         $institution = $this->charity_institution_model->get_by([
             'alias' => $charity_alias,
@@ -66,20 +66,15 @@ class Charity extends MY_Admin_Controller
             'verify' => 1,
         ]);
 
-        $user_back_acc = ''; // TODO $this->function 重組 payment裡面呈現的 bank_acc
-        $this->load->model('transaction/payment_model');
-        // 另外去 model 裡面寫好了
-        $payment_record = $this->payment_model->get_chraity_withdraw_info($user_back_acc, $sdate, $edate);
-
-        /**
-         * 抓手續費的步驟 !! TODO
-         * charity_institution -> judicial_person_id -> user_id -> user_bankaccount ->
-         * payment.bank_acc -> 同一批 tx_seq_no & tx_datetime -> tx_spec = 跨行費用
-         *
-         * */
+        if ($user_bankaccount)
+        {
+            $user_back_acc = $user_bankaccount->bank_code . str_pad($user_bankaccount->bank_account, 16, '0', STR_PAD_LEFT);
+            $this->load->model('transaction/payment_model');
+            $data_fees = $this->payment_model->get_chraity_payment_info($user_back_acc, $sdate, $edate);
+        }
 
         $cell1 = [];
-        $cell2 = [];
+        $cell2 = $data_fees;
 
         if ($data_donate)
         {
@@ -105,18 +100,6 @@ class Charity extends MY_Admin_Controller
                     $value['name'],
                     $value['name'],
                     $value['upload'],
-                ];
-            }
-        }
-
-        if ($data_fees)
-        {
-            foreach ($data_fees as $key => $value)
-            {
-                $cell2[] = [
-                    date('Y-m-d H:i:s', $value['created_at']), // '20220304',
-                    '跨行轉帳手續費',
-                    $value['amount'], // $transfer_fees
                 ];
             }
         }
@@ -175,7 +158,6 @@ class Charity extends MY_Admin_Controller
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename=' . $export_file_name . '.xlsx');
         header('Cache-Control: max-age=0');
-        header('Cache-Control: max-age=1');
 
         $writer->save('php://output');
         exit;
@@ -215,6 +197,14 @@ class Charity extends MY_Admin_Controller
             'area' => $split_address['area'],
             'address' => $split_address['road'] . $split_address['part'] . $split_address['lane'] . $split_address['alley'] . $split_address['number'] . $split_address['sub_number'] . $split_address['floor'] . $split_address['floor'],
         ];
+
+        // 如果用戶有填寫內容但無法解析出縣市地址，就直接把他寫的東西丟進 address
+        if (empty($address_data['city'])
+            && empty($address_data['area'])
+            && empty($address_data['address']))
+        {
+            $address_data['address'] = $address;
+        }
 
         return $address_data;
     }
