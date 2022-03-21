@@ -215,16 +215,16 @@
 				<div class="rank-content">
 					<div class="rank-board  table-border">
 						<div class="text-center rank-title">公司員工</div>
-						<div class="rank-item" v-for="(item, i) in state.rank">
+						<div class="rank-item" v-for="(item, i) in state.rank.insider">
 							恭喜 {{item.name}} 成功推廣 {{ item.full_member_count }} 人
 						</div>
 					</div>
 					<div class="rank-board  table-border">
 						<div class="text-center rank-title">外部人員</div>
 						<div class="rank-item">
-                            <div class="rank-item" v-for="(item, i) in state.qrcode.outsider">
-                                恭喜 {{item.name}} 成功推廣 {{ item.full_member_count }} 人
-                            </div>
+							<div class="rank-item" v-for="(item, i) in state.rank.outsider">
+								恭喜 {{item.name}} 成功推廣 {{ item.full_member_count }} 人
+							</div>
 						</div>
 					</div>
 				</div>
@@ -254,9 +254,15 @@
 				loan_statistic: [],
 				loan_distribution: [],
 				app_download: [],
-				qrcode: [],
-				qrOut:[],
-				rank: [],
+				qrcode: {
+					insider: [],
+					outsider: []
+				},
+				qrOut: [],
+				rank: {
+					insider: [],
+					outsider: []
+				},
 				real: [],
 				time: {
 					showDate: '',
@@ -310,7 +316,6 @@
 			}
 			onMounted(() => {
 				// init chart
-
 				charts.flow = echarts.init(document.getElementById('main'))
 				charts.app = echarts.init(document.getElementById('tb-2'))
 				charts.prod = echarts.init(document.getElementById('tb-3'))
@@ -338,9 +343,11 @@
 					state.qrcode.insider = data.data.qrcode.insider.map(item => {
 						return [item.salary_man_count, item.student_count, item.full_member_count, item.name]
 					})
-                    state.qrcode.outsider = data.data.qrcode.outsider
-                    state.qrOut = [...state.qrcode.insider]
-					state.rank = [...data.data.qrcode.insider].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
+					state.qrcode.outsider = data.data.qrcode.outsider.map(item => {
+						return [item.salary_man_count, item.student_count, item.full_member_count, item.name]
+					})
+					state.rank.insider = [...data.data.qrcode.insider].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
+					state.rank.outsider = [...data.data.qrcode.outsider].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
 					setStatisticData(data.data.loan_statistic)
 					state.loan_distribution = data.data.loan_distribution
 					state.platform_statistic = data.data.platform_statistic
@@ -1070,11 +1077,11 @@
 				if (state.qrcode.insider.length > 3) {
 					state.qrcode.insider.push(state.qrcode.insider.shift(), state.qrcode.insider.shift(), state.qrcode.insider.shift())
 				}
-				if (state.qrOut.length > 3) {
-					state.qrOut.push(state.qrOut.shift(), state.qrOut.shift(), state.qrOut.shift())
+				if (state.qrcode.outsider.length > 3) {
+					state.qrcode.outsider.push(state.qrcode.outsider.shift(), state.qrcode.outsider.shift(), state.qrcode.outsider.shift())
 				}
 				renderQr.value = state.qrcode.insider.slice(0, 3)
-				renderQrOut.value = state.qrOut.slice(0, 3)
+				renderQrOut.value = state.qrcode.outsider.slice(0, 3)
 				drawQr()
 				drawQr2()
 				setTimeout(nextQrData, 15000);
