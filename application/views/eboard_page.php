@@ -222,7 +222,9 @@
 					<div class="rank-board  table-border">
 						<div class="text-center rank-title">外部人員</div>
 						<div class="rank-item">
-							尚未啟用
+                            <div class="rank-item" v-for="(item, i) in state.qrcode.outsider">
+                                恭喜 {{item.name}} 成功推廣 {{ item.full_member_count }} 人
+                            </div>
 						</div>
 					</div>
 				</div>
@@ -333,11 +335,12 @@
 					state.data = data.data.history.reverse()
 					state.weather = data.data.weather
 					state.data.app_download = data.data.app_download
-					state.qrcode = data.data.qrcode.map(item => {
+					state.qrcode.insider = data.data.qrcode.insider.map(item => {
 						return [item.salary_man_count, item.student_count, item.full_member_count, item.name]
 					})
-					state.qrOut = [...state.qrcode]
-					state.rank = [...data.data.qrcode].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
+                    state.qrcode.outsider = data.data.qrcode.outsider
+                    state.qrOut = [...state.qrcode.insider]
+					state.rank = [...data.data.qrcode.insider].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
 					setStatisticData(data.data.loan_statistic)
 					state.loan_distribution = data.data.loan_distribution
 					state.platform_statistic = data.data.platform_statistic
@@ -1064,13 +1067,13 @@
 				setTimeout(showTime, 60000);
 			}
 			const nextQrData = () => {
-				if (state.qrcode.length > 3) {
-					state.qrcode.push(state.qrcode.shift(), state.qrcode.shift(), state.qrcode.shift())
+				if (state.qrcode.insider.length > 3) {
+					state.qrcode.insider.push(state.qrcode.insider.shift(), state.qrcode.insider.shift(), state.qrcode.insider.shift())
 				}
 				if (state.qrOut.length > 3) {
 					state.qrOut.push(state.qrOut.shift(), state.qrOut.shift(), state.qrOut.shift())
 				}
-				renderQr.value = state.qrcode.slice(0, 3)
+				renderQr.value = state.qrcode.insider.slice(0, 3)
 				renderQrOut.value = state.qrOut.slice(0, 3)
 				drawQr()
 				drawQr2()

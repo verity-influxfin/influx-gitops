@@ -267,13 +267,13 @@ class Page extends CI_Controller
         $user_list = $this->config->item('influx_user_list');
         $user_ids = array_column($user_list, 'user_id');
 
+        // 公司【內】部人員
         $this->load->library('user_lib');
         $data_list = $this->user_lib->getPromotedRewardInfo(['user_id' => $user_ids]);
-
-        $result = [];
+        $insider = [];
         foreach ($data_list as $data)
         {
-            $result[] = [
+            $insider[] = [
                 'user_id' => $data['info']['user_id'] ?? '',
                 'name' => $data['info']['name'] ?? '',
                 'full_member_count' => $data['fullMemberCount'] ?? 0,
@@ -282,7 +282,29 @@ class Page extends CI_Controller
             ];
         }
 
-        return $result;
+        // 公司【外】部人員
+        $data_list = $this->user_lib->getPromotedRewardInfo(['user_id NOT' => $user_ids]);
+        $outsider = [];
+        foreach ($data_list as $data)
+        {
+            $outsider[] = [
+                'user_id' => $data['info']['user_id'] ?? '',
+                'name' => $data['info']['name'] ?? '',
+                'full_member_count' => $data['info']['user_id']/10,//$data['fullMemberCount'] ?? 0,
+                'student_count' => $value['loanedCount']['student'] ?? 0,
+                'salary_man_count' => $value['loanedCount']['salary_man'] ?? 0,
+            ];
+        }
+        usort($outsider, function ($a, $b) {
+            if ($a['full_member_count'] == $b['full_member_count']) return 0;
+            return ($a['full_member_count'] > $b['full_member_count']) ? -1 : 1;
+        });
+
+
+        return [
+            'insider' => $insider,
+            'outsider' => array_slice($outsider, 0, 20)
+        ];
     }
 
     // get ios downloads at daily report infos
