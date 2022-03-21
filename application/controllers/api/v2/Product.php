@@ -1340,6 +1340,12 @@ class Product extends REST_Controller {
             }
 
                 $credit = $this->credit_lib->get_credit($user_id, $target->product_id, $target->sub_product_id, $target);
+            if (isset($credit['amount']))
+            {
+                $this->load->library('credit_lib');
+                $remain_amount = $this->credit_lib->get_remain_amount($target->user_id, $target->product_id, $target->sub_product_id, $target->id);
+                $credit['amount'] = $remain_amount['instalment'] == $target->instalment ? $remain_amount['remain_amount'] : 0;
+            }
 
             $contract = '';
             if($target->contract_id){

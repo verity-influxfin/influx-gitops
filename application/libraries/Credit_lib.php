@@ -1054,7 +1054,8 @@ class Credit_lib{
         ];
 
         // 撈取同產品的最新一筆核可資訊
-        $credit = $this->get_credit($user_id, $product_id, $sub_product_id);
+        $credit = $this->get_credit($user_id, $product_id,
+            $sub_product_id == STAGE_CER_TARGET ? 0 : $sub_product_id);
         if ($credit)
         {
             $used_amount = 0;
