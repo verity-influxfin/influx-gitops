@@ -377,11 +377,11 @@ class Credit_lib{
         if ($sub_product_id) {
             //techie
             if ($sub_product_id == 1) {
-                $job_license_point =  isset($data['job_license']) ? $data['job_license'] * 50 : 0;
+                $job_license_point =  isset($data['job_license']) ? (int) $data['job_license'] * 50 : 0;
                 $total += $job_license_point;
                 $this->scoreHistory[] = '工程師貸提供專業證書: ' . $job_license_point . ' * 50';
 
-                $job_pro_level_point = isset($data['job_pro_level']) ? $data['job_pro_level'] * 100 : 0;
+                $job_pro_level_point = isset($data['job_pro_level']) ? (int) $data['job_pro_level'] * 100 : 0;
                 $total += $job_pro_level_point;
                 $this->scoreHistory[] = '工程師貸專家調整: ' . $job_pro_level_point . ' * 100';
             }
@@ -943,9 +943,12 @@ class Credit_lib{
                             $rate -= isset($data['student_license_level'])?$data['student_license_level']*0.5:0;
                             $rate -= isset($data['student_game_work_level'])?$data['student_game_work_level']*0.5:0;
                         }elseif ($product_id == 3){
-                            $rate -= isset($data['job_license'])?$data['job_license']*0.5:0;
+                            $rate -= isset($data['job_license']) ? (int) $data['job_license'] * 0.5 : 0;
                             //工作認證減免%
-                            $rate -= isset($data['job_title'])?$sub_product->titleList->{$data['job_title']}->level:0;
+                            if (isset($sub_product->titleList->{$data['job_title']}))
+                            {
+                                $rate -= isset($data['job_title']) ? $sub_product->titleList->{$data['job_title']}->level : 0;
+                            }
                         }
                     }
                     $product_info 	= $this->CI->config->item('product_list')[$target->product_id];
