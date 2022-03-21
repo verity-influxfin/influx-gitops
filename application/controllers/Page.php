@@ -290,7 +290,7 @@ class Page extends CI_Controller
             $outsider[] = [
                 'user_id' => $data['info']['user_id'] ?? '',
                 'name' => $data['info']['name'] ?? '',
-                'full_member_count' => $data['info']['user_id']/10,//$data['fullMemberCount'] ?? 0,
+                'full_member_count' => $data['fullMemberCount'] ?? 0,
                 'student_count' => $value['loanedCount']['student'] ?? 0,
                 'salary_man_count' => $value['loanedCount']['salary_man'] ?? 0,
             ];
