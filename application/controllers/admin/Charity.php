@@ -198,14 +198,6 @@ class Charity extends MY_Admin_Controller
             'address' => $split_address['road'] . $split_address['part'] . $split_address['lane'] . $split_address['alley'] . $split_address['number'] . $split_address['sub_number'] . $split_address['floor'] . $split_address['floor'],
         ];
 
-        // 如果用戶有填寫內容但無法解析出縣市地址，就直接把他寫的東西丟進 address
-        if (empty($address_data['city'])
-            && empty($address_data['area'])
-            && empty($address_data['address']))
-        {
-            $address_data['address'] = $address;
-        }
-
         return $address_data;
     }
 }
