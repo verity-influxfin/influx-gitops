@@ -143,6 +143,9 @@
 
 
         $('#follow').on('click', () => {
+            if (!confirm('是否確定重新送出追蹤請求？')){
+                return
+            }
             axios.post('/admin/scraper/autoFollowIG', {
                 userId: user_id,
                 followed_account: $('#ig-username').text(),
