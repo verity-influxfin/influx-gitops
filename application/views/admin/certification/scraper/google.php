@@ -18,214 +18,24 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-	.d-flex{
-		display: flex;
-	}
-	.jcb{
-		justify-content: space-between;
-	}
-	.aic{
-		align-items: center;
-	}
+
+    .d-flex {
+        display: flex;
+    }
+
+    .jcb {
+        justify-content: space-between;
+    }
+
+    .aic {
+        align-items: center;
+    }
 </style>
-<script type="text/javascript">
-    // SQL資料抓取
-    function fetchInfoData(user_id) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/scraper/verdict_google_info" + "?user_id=" + user_id,
-            async: false,
-            success: function (response) {
-                if (response.status.code != 200) {
-                    console.log(response.status.code)
-                    return false;
-                }
-                googleInfo = response.response;
-                fillInfoData(googleInfo);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest.status);
-                console.log(XMLHttpRequest.readyState);
-                console.log(textStatus);
-            },
-        });
-    }
-
-    // 爬蟲資料抓取
-    function fetchGoogleData(user_id) {
-        name = $('#name').text();
-        $.ajax({
-            type: "GET",
-            url: "/admin/scraper/google" + "?user_id=" + user_id + "&name=" + name,
-            success: function (response) {
-                if (response.status.code != 200) {
-                    console.log(response.status.code)
-                    return false;
-                }
-                googelData = response.response.results;
-                fillGoogleData(googelData);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest.status);
-                console.log(XMLHttpRequest.readyState);
-                console.log(textStatus);
-            },
-        });
-    }
-
-    // 關鍵字加上標號
-    function highlight(content, what, spanClass) {
-        pattern = new RegExp('([<.]*)(' + what + ')([<.]*)', 'gi'),
-            replaceWith = '$1<span ' + (spanClass ? 'class="' + spanClass + '"' : '') + '">$2</span>$3',
-            highlighted = content.replace(pattern, replaceWith);
-        return highlighted;
-    }
-
-    function watchContent(id) {
-        if (isClick == true) {
-            $('#' + id).addClass('table-ellipsis');
-            isClick = false;
-        } else {
-            $('#' + id).removeClass('table-ellipsis');
-            isClick = true;
-        }
-    }
-
-    // todo:分頁
-    function create_case_html(name, url, title, content, contentAll, i) {
-        content = highlight(content, name, 'f-red');
-        html = `<div class="form-group">
-                    <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
-                        <tbody>
-                            <tr>
-                                <td class="table-title">標題</td>
-                                <td style=background-color:white;>
-                                    <a class="fancyframe" target="_blank" href="${url}">${title}</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="table-title">內容</td>
-                                <td>${content}</td>
-                            </tr>
-                            <tr>
-                                <td class="table-title">
-                                    <a onclick="watchContent('${i}')">內容(點我展開)</a>
-                                </td>
-                                <td class="table-content table-ellipsis" id="${i}">
-                                    ${contentAll}
-                                </td>
-                            </tr>
-                        </tbody>
-                    <table>
-                </div>`
-        return html;
-    }
-
-    function create_risk_level_html(level, time, content) {
-        html = `<div class="form-group">
-                <table class="table table-bordered table-hover table-striped">
-                    <tr>
-                        <th class="table-title">風險等級</td>
-                        <th class="table-title">事件時間</td>
-                        <th class="table-title">指標內容</td>
-                    </tr>
-                    <tr>
-                        <td>${level}</td>
-                        <td>${time}</td>
-                        <td>${content}</td>
-                    </tr>
-                </table>
-            </div>`
-        return html;
-    }
-
-    function fillInfoData(googleInfo) {
-        if (!googleInfo) {
-            return false;
-        }
-        idCardPlace = googleInfo.id_card_place;
-        idCardPlace = idCardPlace.split(')');
-        $('#name').text(googleInfo.name);
-        url = 'https://www.google.com.tw/search?q=' + googleInfo.name + '&num=100';
-        $('#name').attr("href", url);
-        $('#birthday').text(googleInfo.birthday);
-        $('#id-number').text(googleInfo.id_number);
-        $('#id-card-date').text(googleInfo.id_card_date);
-        $('#id_card_place').text(idCardPlace[0].replace('(', ''));
-        $('#replacement').text(idCardPlace[1]);
-        father_url = 'https://www.google.com.tw/search?q=' + googleInfo.father + '&num=100';
-        $('#father').text(googleInfo.father);
-        $('#father').attr("href", father_url);
-        mother_url = 'https://www.google.com.tw/search?q=' + googleInfo.mother + '&num=100';
-        $('#mother').text(googleInfo.mother);
-        $('#mother').attr("href", mother_url);
-        $('#born').text(googleInfo.born);
-        spouse_url = 'https://www.google.com.tw/search?q=' + googleInfo.spouse + '&num=100';
-        $('#spouse').text(googleInfo.spouse);
-        $('#spouse').attr("href", spouse_url);
-        $('#address').text(googleInfo.address);
-    }
-
-    function fillRiskLevelData(riskLevelResponse) {
-        if (!riskLevelResponse) {
-            return false;
-        }
-        riskLevelResponse.forEach((item) => {
-            level_html = create_risk_level_html(item.level, item.time, item.content);
-            $('#risk-level').append(level_html);
-        })
-    }
-
-    function fillGoogleData(googleData) {
-        name = $('#name').text();
-        console.log(name);
-        console.log(googleData);
-        if (!name || !googleData) {
-            return false;
-        }
-        i = 0;
-        googleData.forEach((item) => {
-            console.log(item.url);
-            console.log(item.title);
-            console.log(item.content);
-            case_html = create_case_html(name, item.url, item.title, item.content, item.contentAll, i);
-            $('#content').append(case_html);
-            i += 1;
-        });
-    }
-
-    $(document).ready(function () {
-        let urlString = window.location.href;
-        let url = new URL(urlString);
-        let user_id = url.searchParams.get("user_id");
-        setTimeout(fetchInfoData(user_id), 1000);
-        setTimeout(fetchGoogleData(user_id), 1000);
-
-		$('#redo').on('click', () => {
-			if (confirm('是否確定重新執行爬蟲？')) {
-				axios.post('/admin/scraper/request_google', {
-					keyword: $('#name').text(),
-				}).then(({ data }) => {
-					if (data.status == 200) {
-						location.reload()
-					}
-					else{
-						alert(data.response.message)
-					}
-				})
-			}
-		})
-    });
-</script>
 <div id="page-wrapper">
     <div class="d-flex jcb aic page-header">
         <div>
             <h1>Google</h1>
         </div>
-		<div>
-			<scraper-status-icon :column="column"></scraper-status-icon>
-			<button class="btn btn-danger" id="redo">重新執行爬蟲</button>
-		</div>
     </div>
     <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped">
         <tr>
@@ -274,24 +84,172 @@
             </td>
         </tr>
     </table>
+    <ul class="nav nav-pills mb-3">
+        <li role="presentation" v-for="tab in tabs" :class="{active: tab===chooseTab}">
+            <a @click="clickTab(tab)" :href="'#'+ tab">{{tab}}</a>
+        </li>
+    </ul>
     <table class="table table-bordered table-hover table-striped">
         <tr>
-            <th class="table-title">Google資訊</th>
+            <th class="table-title d-flex aic">
+                <div class="mr-4">Google資訊</div>
+                <div>
+                    <scraper-status-icon :show-status="status"></scraper-status-icon>
+                    <button class="btn btn-danger" @click="doRedo" :disabled="status == 'loading'">重新執行爬蟲</button>
+                </div>
+            </th>
         </tr>
         <tr>
             <td>
-                <div id="content"></div>
+                <div>
+                    <div class="form-group">
+                        <table style="table-layout:fixed;" class="table table-bordered table-hover table-striped"
+                            v-for="(item,index) in googleInfos">
+                            <tbody>
+                                <tr>
+                                    <td class="table-title">標題</td>
+                                    <td style=background-color:white;>
+                                        <a class="fancyframe" target="_blank" :href="item.url">{{item.title}}</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="table-title">內容</td>
+                                    <td>{{item.content}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-title">
+                                        <a @click="watchContent(`case_content_${index}`)">內容(點我展開)</a>
+                                    </td>
+                                    <td class="table-content table-ellipsis" :id="`case_content_${index}`"
+                                        v-html="highlight(item.contentAll, chooseTab,'f-red')">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </td>
         </tr>
     </table>
 </div>
 <script>
-	const v = new Vue({
-		el:'#page-wrapper',
-		computed: {
-			column(){
-				return 'google_status'
-			}
-		},
-	})
+    const v = new Vue({
+        el: '#page-wrapper',
+        computed: {
+            column() {
+                return 'google_status'
+            }
+        },
+        mounted() {
+            const url = new URL(location.href)
+            this.userId = url.searchParams.get('user_id')
+            const hash = decodeURI(location.hash.slice(1))
+            this.chooseTab = decodeURI(location.hash.slice(1))
+            this.getInfoData().then(() => {
+                this.getTabData()
+            })
+        },
+        data() {
+            return {
+                tabs: [],
+                status: 'loading',
+                googleInfos: '',
+                chooseTab: ''
+
+            }
+        },
+        methods: {
+            watchContent(id) {
+                $('#' + id).toggleClass('table-ellipsis');
+            },
+            clickTab(tab) {
+                this.chooseTab = tab
+                this.googleInfos = []
+                this.getTabData()
+            },
+            highlight(content, what, spanClass) {
+                pattern = new RegExp('([<.]*)(' + what + ')([<.]*)', 'gi'),
+                    replaceWith = '$1<span ' + (spanClass ? 'class="' + spanClass + '"' : '') + '">$2</span>$3',
+                    highlighted = content.replace(pattern, replaceWith);
+                return highlighted;
+            },
+            getInfoData() {
+                const fillInfoData = (judicialyuanInfoData) => {
+                    if (!judicialyuanInfoData) {
+                        return;
+                    }
+                    idCardPlace = judicialyuanInfoData.id_card_place;
+                    idCardPlace = idCardPlace.split(')');
+                    $('#name').text(judicialyuanInfoData.name);
+                    $('#birthday').text(judicialyuanInfoData.birthday);
+                    $('#id-number').text(judicialyuanInfoData.id_number);
+                    $('#id-card-date').text(judicialyuanInfoData.id_card_date);
+                    $('#id_card_place').text(idCardPlace[0].replace('(', ''));
+                    $('#replacement').text(idCardPlace[1]);
+                    $('#father').text(judicialyuanInfoData.father);
+                    $('#mother').text(judicialyuanInfoData.mother);
+                    $('#born').text(judicialyuanInfoData.born);
+                    $('#spouse').text(judicialyuanInfoData.spouse);
+                    $('#address').text(judicialyuanInfoData.address);
+                }
+                return axios.get(`/admin/scraper/verdict_google_info?user_id=${this.userId}`).then(({ data }) => {
+                    if (data.status.code === 200) {
+                        fillInfoData(data.response)
+                        this.judicialYuanInfo = data.response
+                        // tabs
+                        const tabs = [data.response.name, data.response.father, data.response.mother, data.response.spouse]
+                        this.tabs = tabs.filter(x => x.length > 0)
+                        if (!this.chooseTab) {
+                            this.chooseTab = data.response.name
+                        }
+                    }
+                })
+            },
+            getTabData() {
+                let name = null
+                if (this.chooseTab) {
+                    name = this.chooseTab
+                }
+                this.googleInfos = []
+                this.status = 'loading'
+                this.getStatus()
+                return axios.get('/admin/scraper/google', {
+                    params: {
+                        user_id: this.userId,
+                        name,
+                    }
+                }).then(({ data }) => {
+                    if (data.status.code === 200) {
+                        this.googleInfos = data.response.results
+                    }
+                    else {
+                        alert(data.status.code + ' ' + data.status.message)
+                    }
+                })
+            },
+            getStatus() {
+                return axios.get('/admin/scraper/google_status', {
+                    params: {
+                        name: this.chooseTab,
+                    }
+                }).then(({ data }) => {
+                    this.status = data.google_status
+                })
+            },
+            doRedo() {
+                if (confirm('是否確定重新執行爬蟲？')) {
+                    axios.post('/admin/scraper/request_google', {
+                        keyword: this.chooseTab,
+                    }).then(({ data }) => {
+                        if (data.status == 200) {
+                            location.reload()
+                        }
+                        else {
+                            alert(data.message)
+                        }
+                    })
+                }
+            }
+        },
+    })
 </script>
