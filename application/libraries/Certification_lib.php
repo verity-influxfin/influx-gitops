@@ -2991,6 +2991,18 @@ class Certification_lib{
         $certificationsStageList = isset($target->product_id) &&
         isset($productList[$target->product_id]['certifications_stage']) ?
             $productList[$target->product_id]['certifications_stage'] : null;
+
+        $option_cert = $productList['option_certifications'] ?? [];
+        if ($target->sub_product_id != 0)
+        {
+            $this->CI->load->library('loanmanager/product_lib.php');
+            $sub_product_list = $this->CI->product_lib->getProductInfo($target->product_id, $target->sub_product_id);
+            $certificationsStageList = ! empty($sub_product_list['certifications_stage'])
+                ? $sub_product_list['certifications_stage']
+                : $certificationsStageList;
+            $option_cert = $sub_product_list['option_certifications'];
+        }
+
         if(!isset($target) || !isset($certificationsStageList[$stage]))
             return FALSE;
 
@@ -3001,6 +3013,7 @@ class Certification_lib{
             ]);
         if(!empty($userCertifications)) {
             $validateCertificationList = call_user_func_array('array_merge', $certificationsStageList);
+            $validateCertificationList = array_diff($validateCertificationList, $option_cert);
             $doneCertifications = array_reduce($userCertifications, function ($list, $item) {
                 if(!isset($list[$item->certification_id]))
                     $list[$item->certification_id] = $item;
