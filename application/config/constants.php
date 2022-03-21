@@ -486,6 +486,10 @@ defined('VESTA_ENDPOINT')           OR define('VESTA_ENDPOINT'          , getenv
 defined('SKBANK_API_SOURCE')        OR define('SKBANK_API_SOURCE'       , getenv('ENV_SKBANK_API_SOURCE'));
 defined('SKBANK_LOAN_ENDPOINT')     OR define('SKBANK_LOAN_ENDPOINT'    , getenv('ENV_SKBANK_LOAN_ENDPOINT'));
 
+//凱基
+defined('KGIBANK_LOAN_ENDPOINT')     OR define('KGIBANK_LOAN_ENDPOINT'    , getenv('ENV_KGIBANK_LOAN_ENDPOINT'));
+defined('KGIBANK_LOAN_KEYID')     OR define('KGIBANK_LOAN_KEYID'    , getenv('ENV_KGIBANK_LOAN_KEYID'));
+
 //台新
 defined('TAISHIN_VIRTUAL_CODE')     OR define('TAISHIN_VIRTUAL_CODE'	, getenv('ENV_TAISHIN_VIRTUAL_CODE'));
 defined('TAISHIN_CUST_ACCNO')     OR define('TAISHIN_CUST_ACCNO'	, getenv('ENV_TAISHIN_CUST_ACCNO'));
@@ -738,3 +742,8 @@ defined('CHECK_SECOND_INSTANCE')   OR define('CHECK_SECOND_INSTANCE', 1);
 defined('MONTAGE_USER_STATUS_EXISTS') or define('MONTAGE_USER_STATUS_EXISTS', 1); // 已上傳過
 defined('MONTAGE_USER_STATUS_NO_REFERENCE') or define('MONTAGE_USER_STATUS_NO_REFERENCE', 2); // 找不到reference的圖
 defined('MONTAGE_USER_STATUS_NO_USER') or define('MONTAGE_USER_STATUS_NO_USER', 3); // 找不到user的圖
+
+// target loan mapping msg_no bank
+defined('MAPPING_MSG_NO_NO_BANK') or define('MAPPING_MSG_NO_NO_BANK', 0);
+defined('MAPPING_MSG_NO_BANK_NUM_SKBANK') or define('MAPPING_MSG_NO_BANK_NUM_SKBANK', 1);
+defined('MAPPING_MSG_NO_BANK_NUM_KGIBANK') or define('MAPPING_MSG_NO_BANK_NUM_KGIBANK', 2);

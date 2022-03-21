@@ -50,7 +50,7 @@
                 <a class="nav-link" id="nav-tab-kgibank" >凱基</a>
             </li>
         </ul>
-        <div id="page-tab-skbank" class="nav-page">
+        <div id="page-tab-skbank" class="nav-page" data-bankid="1">
             <div class="page">
                 <div class="subpage api_data_page">
                     <h3 style="text-align: center;">百萬信保檢核表</h3>
@@ -138,7 +138,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">公司型態</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="CompType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3616,7 +3616,7 @@
                 </div>
             </div>
         </div>
-        <div id="page-tab-kgibank" class="nav-page">
+        <div id="page-tab-kgibank" class="nav-page" data-bankid="2">
             <div class="page">
                 <div class="subpage api_data_page">
                     <h3 style="text-align: center;">百萬信保檢核表</h3>
@@ -3630,7 +3630,7 @@
                                     <th class="edit th bold-bottom-border">人工檢驗</th>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="26">
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="14">
                                         工商登記<br>
                                         (經濟部API)<br>
                                         (主計處)
@@ -3660,7 +3660,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">組織類型</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="CompType2_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3695,7 +3695,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">依法核准情形</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="RegisterType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3713,7 +3713,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否公開發行</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="IsPublic_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3742,7 +3742,10 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="bold-right-border">公司最後核准變更實收資本額日期</td>
+                                    <td class="bold-right-border">
+                                        <div>公司最後核准變更實收資本額日期</div>
+                                        <div style="color:red;">格式:YYYYMMDD</div>
+                                    </td>
                                     <td colspan="3"><input name="LastPaidInCapitalDate_content" type="text" class="table-input"
                                                            disabled>
                                     </td>
@@ -3755,175 +3758,21 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="bold-right-border">營業登記地址_選擇縣市</td>
-                                    <td colspan="3"><input name="BizRegAddrCityName_content" type="text" class="table-input"
+                                    <td class="bold-right-border">營業登記地址</td>
+                                    <td colspan="3"><input name="BizRegAddress_content" type="text" class="table-input"
                                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrCityName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_選擇鄉鎮市區</td>
-                                    <td colspan="3"><input name="BizRegAddrAreaName_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrAreaName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_路街名稱(不含路、街)</td>
-                                    <td colspan="3"><input name="BizRegAddrAreaName_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrRoadName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_路 OR 街</td>
-                                    <td colspan="3"><input name="BizRegAddrAreaName_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrRoadType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_段</td>
-                                    <td colspan="3"><input name="BizRegAddrSec_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrSec_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_巷</td>
-                                    <td colspan="3"><input name="BizRegAddrLn_content" type="text" class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_弄</td>
-                                    <td colspan="3"><input name="BizRegAddrAly_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrAly_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_號(不含之號)</td>
-                                    <td colspan="3"><input name="BizRegAddrNo_content" type="text" class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrNo_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_之號</td>
-                                    <td colspan="3"><input name="BizRegAddrNoExt_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrNoExt_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_樓(不含之樓、室)</td>
-                                    <td colspan="3"><input name="BizRegAddrFloor_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrFloor_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_之樓</td>
-                                    <td colspan="3"><input name="BizRegAddrFloorExt_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrFloorExt_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_室</td>
-                                    <td colspan="3"><input name="BizRegAddrRoom_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrRoom_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">營業登記地址_其他備註</td>
-                                    <td colspan="3"><input name="BizRegAddrOtherMemo_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('BizRegAddrOtherMemo_content')" value="Edit">
+                                                   onclick="edit_click('BizRegAddress_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否有法人投資</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="HasJuridicalInvest_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -3984,7 +3833,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">是否屬於製造業、營造業或礦業或土石採集業</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="IsManufacturing_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4070,7 +3919,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="43">
+                                    <td class="title input-center bold-bottom-border bold-right-border" rowspan="31">
                                         企業資料表
                                     </td>
 
@@ -4186,7 +4035,6 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">受嚴重特殊傳染性肺炎影響之企業</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
                                     <td colspan="3">
                                         <select name="IsCovidAffected_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4253,8 +4101,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="bold-right-border">實際營業地址_選擇縣市</td>
-                                    <td colspan="3"><input id="RealBizAddrCityName_content" name="RealBizAddrCityName_content"
+                                    <td class="bold-right-border">實際營業地址</td>
+                                        <td colspan="3"><input id="RealBizAddress_content" name="RealBizAddrCityName_content"
                                                            type="text" class="table-input" disabled>
                                     </td>
 
@@ -4262,161 +4110,6 @@
                                         <center>
                                             <input class="input-width" type="button"
                                                    onclick="edit_click('RealBizAddrCityName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_選擇鄉鎮市區</td>
-                                    <td colspan="3"><input id="RealBizAddrAreaName_content" name="RealBizAddrAreaName_content"
-                                                           type="text" class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrAreaName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_路街名稱(不含路、街)</td>
-                                    <td colspan="3"><input id="RealBizAddrRoadName_content" name="RealBizAddrRoadName_content"
-                                                           type="text" class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrRoadName_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_路 OR 街</td>
-                                    <td colspan="3"><input id="RealBizAddrRoadType_content" name="RealBizAddrRoadType_content"
-                                                           type="text" class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrRoadType_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_段</td>
-                                    <td colspan="3"><input id="RealBizAddrSec_content" name="RealBizAddrSec_content" type="text"
-                                                           class="table-input" disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrSec_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_巷</td>
-                                    <td colspan="3"><input name="RealBizAddrLn_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrLn_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_弄</td>
-                                    <td colspan="3"><input name="RealBizAddrAly_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrAly_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_號(不含之號)</td>
-                                    <td colspan="3"><input name="RealBizAddrNo_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrNo_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_之號</td>
-                                    <td colspan="3"><input name="RealBizAddrNoExt_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrNoExt_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_樓(不含之樓、室)</td>
-                                    <td colspan="3"><input name="RealBizAddrFloor_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrFloor_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_之樓</td>
-                                    <td colspan="3"><input name="RealBizAddrFloorExt_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrFloorExt_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_室</td>
-                                    <td colspan="3"><input name="RealBizAddrRoom_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrRoom_content')" value="Edit">
-                                        </center>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="bold-right-border">實際營業地址_其他備註</td>
-                                    <td colspan="3"><input name="RealBizAddrOtherMemo_content" type="text" class="table-input"
-                                                           disabled>
-                                    </td>
-
-                                    <td>
-                                        <center>
-                                            <input class="input-width" type="button"
-                                                   onclick="edit_click('RealBizAddrOtherMemo_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -4620,7 +4313,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(A)組織型態</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="RelatedCompAType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4673,7 +4366,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(B)組織型態</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="RelatedCompBType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -4726,7 +4419,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">關係企業(C)組織型態</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="RelatedCompCType_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5058,7 +4751,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">負責人身分證字號</td>
-                                    <td colspan="3"><input name="PrincipalId_content" type="text" class="table-input" disabled>
+                                    <td colspan="3"><input name="_content" type="text" class="table-input" disabled>
                                     </td>
         
                                     <td>
@@ -5214,7 +4907,7 @@
                                     </td>
 
                                     <td class="bold-right-border">實際負責人是否等於登記負責人</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="IsPrRegister_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5337,7 +5030,7 @@
                                     </td>
 
                                     <td class="bold-right-border">是否有徵提保證人</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="HasGuarantor_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5438,7 +5131,7 @@
                                     <td class="title input-center bold-bottom-border bold-right-border" rowspan="6">公司聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="JcCompDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5529,7 +5222,7 @@
                                     <td class="title input-center bold-bottom-border bold-right-border" rowspan="13">負責人聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="PrDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5550,14 +5243,14 @@
                                         <div>聯徵J02資料年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="PrJCICDataDate_content" type="text" class="table-input"
+                                    <td colspan="3"><input name="PrJ02YM_content" type="text" class="table-input"
                                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('PrJCICDataDate_content')" value="Edit">
+                                                   onclick="edit_click('PrJ02YM_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5713,7 +5406,7 @@
                                     <td class="title input-center bold-bottom-border bold-right-border" rowspan="4">負責人配偶聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="SpouseDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5734,14 +5427,14 @@
                                         <div>聯徵J02資料年月</div>
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
-                                    <td colspan="3"><input name="SpouseJCICDataDate_content" type="text" class="table-input"
+                                    <td colspan="3"><input name="SpouseJ02YM_content" type="text" class="table-input"
                                                            disabled>
                                     </td>
 
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('SpouseJCICDataDate_content')" value="Edit">
+                                                   onclick="edit_click('SpouseJ02YM_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -5773,7 +5466,7 @@
                                     <td class="title input-center bold-bottom-border bold-right-border" rowspan="3">保證人聯徵報告</td>
 
                                     <td class="bold-right-border">票債信情形是否異常</td>
-                                    <!-- <input id="CompType_content" type="text" class="table-input" disabled> -->
+                                    
                                     <td colspan="3">
                                         <select name="GuarantorDebtLog_content" class="table-input" disabled>
                                             <option value="" selected></option>
@@ -5795,12 +5488,12 @@
                                         <div style="color:red;">格式:YYYYMM</div>
                                     </td>
                                     <td colspan="3">
-                                        <input name="GuOneJCICDataDate_content" type="text" class="table-input" disabled>
+                                        <input name="GuarantorJ02YM_content" type="text" class="table-input" disabled>
                                     </td>
                                     <td>
                                         <center>
                                             <input class="input-width" type="button"
-                                                   onclick="edit_click('GuOneJCICDataDate_content')" value="Edit">
+                                                   onclick="edit_click('GuarantorJ02YM_content')" value="Edit">
                                         </center>
                                     </td>
                                 </tr>
@@ -6230,7 +5923,7 @@
                                 </tr>
                                 <tr>
                                     <td class="bold-right-border">
-                                        <div>甲保證人-被保險人勞保異動查詢日期</div>
+                                        <div>保證人-被保險人勞保異動查詢日期</div>
                                         <div style="color:red;">格式:YYYYMMDD</div>
                                     </td>
                                     <td colspan="3">
@@ -6244,7 +5937,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="bold-right-border">甲保證人-被保險人勞保異動查詢-最近期投保薪資</td>
+                                    <td class="bold-right-border">保證人-被保險人勞保異動查詢-最近期投保薪資</td>
                                     <td colspan="3">
                                         <input name="GuOneLaborInsSalary_content" type="text" class="table-input" disabled>
                                     </td>
@@ -6431,13 +6124,18 @@
     // 下拉選單列表
     let select_array = ['CompType_content', 'BusinessType_content', 'CompDuType_content', 'BizRegAddrOwner_content', 'IsBizAddrEqToBizRegAddr_content', 'BizTaxFileWay_content',
         'IsPrMarried_content', 'IsPrSpouseGu_content', 'RealPr_content', 'IsBizRegAddrSelfOwn_content', 'IsRealBizAddrSelfOwn_content', 'RealBizAddrOwner_content', 'OthRealPrRelWithPr_content',
-        'GuOneRelWithPr_content', 'GuOneCompany_content', 'GuTwoRelWithPr_content', 'GuTwoCompany_content', 'PrEduLevel_content', 'CompMajorOwnership_content', 'CompMajorSetting_content'];
+        'GuOneRelWithPr_content', 'GuOneCompany_content', 'GuTwoRelWithPr_content', 'GuTwoCompany_content', 'PrEduLevel_content', 'CompMajorOwnership_content', 'CompMajorSetting_content',
+        'CompType2_content', 'RegisterType_content', 'IsPublic_content', 'HasJuridicalInvest_content', 'IsManufacturing_content', 'IsCovidAffected_content', 'HasForeignInvestment_content', 'HasRelatedCompany_content',
+        'RelatedCompAType_content', 'RelatedCompBType_content', 'RelatedCompCType_content', 'IsPrRegister_content', 'OthRealPrRelWithPr_content', 'HasGuarantor_content', 'IsPrSpouseGu_content',
+        'JcCompDebtLog_content', 'PrDebtLog_content', 'PrHasWeekMonthDelay_content', 'PrHasLastThreeMonthDelay_content', 'SpouseDebtLog_content', 'GuarantorDebtLog_content'];
     // 原始檔案圖片-附件資料表
     let rawData_array = [
-        'A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08'
+        'A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'B02', 'B03', 'B08', 'B09', 'B10', 'B11', 'B13', 'B14', 'B15', 'B16',
     ];
     // 送出時為數字欄位
-    let is_int_array = ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'IsPrMarried', 'IsBizRegAddrSelfOwn', 'IsBizAddrEqToBizRegAddr', 'IsRealBizAddrSelfOwn', 'OthRealPrSHRatio'];
+    let is_int_array = ['CompCapital', 'AnnualIncome1', 'AnnualIncome2', 'AnnualIncome3', 'NumOfInsured1', 'NumOfInsured2', 'NumOfInsured3', 'NumOfInsured4', 'NumOfInsured5', 'NumOfInsured6', 'NumOfInsured7', 'NumOfInsured8', 'NumOfInsured9', 'NumOfInsured10', 'NumOfInsured11', 'NumOfInsured12', 'MidTermLnBal', 'ShortTermLnBal', 'CompCreditScore', 'PrLaborInsSalary', 'SpouseLaborInsSalary', 'GuOneLaborInsSalary', 'GuTwoLaborInsSalary', 'PrCreditScore', 'PrBal_CashCard', 'PrBal_CreditCard', 'PrBal_ShortTermLn', 'PrBal_MidTermLn', 'PrBal_LongTermLn', 'PrBal_ShortTermGuar', 'PrBal_MidTermLnGuar', 'PrBal_LongTermLnGuar', 'SpouseCreditScore', 'SpouseBal_CashCard', 'SpouseBal_CreditCard', 'SpouseBal_ShortTermLn', 'SpouseBal_MidTermLn', 'SpouseBal_LongTermLn', 'SpouseBal_ShortTermGuar', 'SpouseBal_MidTermLnGuar', 'SpouseBal_LongTermLnGuar', 'GuOneCreditScore', 'GuOneBal_CashCard', 'GuOneBal_CreditCard', 'GuOneBal_ShortTermLn', 'GuOneBal_MidTermLn', 'GuOneBal_LongTermLn', 'GuOneBal_ShortTermGuar', 'GuOneBal_MidTermLnGuar', 'GuOneBal_LongTermLnGuar', 'GuTwoCreditScore', 'GuTwoBal_CashCard', 'GuTwoBal_CreditCard', 'GuTwoBal_ShortTermLn', 'GuTwoBal_MidTermLn', 'GuTwoBal_LongTermLn', 'GuTwoBal_ShortTermGuar', 'GuTwoBal_MidTermLnGuar', 'GuTwoBal_LongTermLnGuar', 'IsPrMarried', 'IsBizRegAddrSelfOwn', 'IsBizAddrEqToBizRegAddr', 'IsRealBizAddrSelfOwn', 'OthRealPrSHRatio',
+    'HasJuridicalInvest',  'IsManufacturing', 'LastYearRevenue', 'DailyWorkingCapital', 'OperatingCycle', 'LiabilitiesAmount', 'EquityAmount', 'IsCovidAffected', 'EmployeeNum', 'HasForeignInvestment', 'HasRelatedCompany', 'BusinessTaxLastOneYear', 'BusinessTaxLastTwoYear', 'BusinessTaxLastThreeYear',
+    'LastOneYearInvoiceAmountM1M2', 'LastOneYearInvoiceAmountM3M4'];
     function edit_click(id_content) {
         $(`[name=${id_content}]`).each((i, e) => { $(e).prop('disabled', function (i, v) { return !v; }) })
     }
@@ -6484,10 +6182,10 @@
         });
     }
 
-    function getMappingMsgNo(target_id, action, data_type, result) {
+    function getMappingMsgNo(target_id, action, data_type, bank, result) {
         $.ajax({
             type: "GET",
-            url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
+            url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}&bank=${bank}`,
             success: function (response) {
                 response = response.response;
                 result(response);
@@ -6535,10 +6233,10 @@
     }
 
     //儲存送出資料
-    function saveCheckListData(msg_no, data_type, data) {
+    function saveCheckListData(msg_no, data_type, data, bank=1) {
         $.ajax({
             type: "POST",
-            url: `/admin/bankdata/saveCheckListData?msg_no=${msg_no}&data_type=${data_type}`,
+            url: `/admin/bankdata/saveCheckListData?msg_no=${msg_no}&data_type=${data_type}&bank=${bank}`,
             data: request_data,
             dataType: "json",
             success: function (response) {
@@ -6550,13 +6248,13 @@
         });
     }
 
-    function save(send_type) {
+    function save(send_type, bank_num) {
         // 收件檢核表資料傳送
         if (send_type == 'text_list') {
             $("#text_list").val("資料處理中");
             all_data = getCheckLisTexttData();
             data_type = 'text';
-            getMappingMsgNo(target_id, 'send', data_type, function (data) {
+            getMappingMsgNo(target_id, 'send', data_type, bank_num, function (data) {
                 msg_data = data;
 
                 if (!msg_data) {
@@ -6618,7 +6316,7 @@
                 Object.keys(all_data).forEach((key) => {
                     new_string = key.split('_');
                     data_type = new_string[0];
-                    getMappingMsgNo(target_id, 'send', key, (data) => {
+                    getMappingMsgNo(target_id, 'send', key, bank_num, (data) => {
                         msg_data = data;
                         msg_no = msg_data.data.msg_no;
                         request_data.push({
@@ -6668,7 +6366,7 @@
                 alert('can\'t not get response');
                 return;
             }
-            // console.log(data);
+            console.log(data);
             if (data.status.code != '200') {
                 alert(data.response); return;
             }
@@ -6699,7 +6397,9 @@
 
         $('.sendBtn').click(function () {
             $(".sendBtn").prop("disabled", true);
-            save(this.id);
+            let bank = $(this).parents('.nav-page').data('bankid');
+            //console.log(bank);
+            save(this.id, bank);
         });
 
     });

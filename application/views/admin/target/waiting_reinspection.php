@@ -320,7 +320,7 @@
                         $.ajax({
                            type: "POST",
                            data: JSON.stringify(response.response),
-                           url: '/api/skbank/v1/LoanRequest/apply_text',
+                           url: '/api/kgibank/v1/LoanRequest/apply_text',
                            dataType: "json",
                            success: function (response) {
                                let skbank_response = response.success ? '成功' : '失敗';

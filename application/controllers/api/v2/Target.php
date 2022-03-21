@@ -321,6 +321,7 @@ class Target extends REST_Controller {
                         }
 
                         // 撈新光回應資料
+                        // TODO: APP案件列表要取得保證成數，故需尋訪所有 target_id 的 msg_no
                         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
                         $loanTargetMappingInfo = $this->LoanTargetMappingMsgNo_model->order_by('id','desc')->limit(1)->get_by(['target_id' => $value->id, 'type' => 'text']);
                         if(!empty($loanTargetMappingInfo) && isset($loanTargetMappingInfo->msg_no)){

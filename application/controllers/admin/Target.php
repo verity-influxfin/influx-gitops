@@ -2208,6 +2208,7 @@ class Target extends MY_Admin_Controller {
             $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
         }
         $response = [];
+        // TODO: 要改成總集合
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
         $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
         $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'']);
@@ -2244,6 +2245,7 @@ class Target extends MY_Admin_Controller {
             $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
         }
 
+        // TODO:取得總集合
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
         $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
         $skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'']);

@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'/libraries/MY_Admin_Controller.php');
 
+
 class Bankdata extends MY_Admin_Controller
 {
 
@@ -95,6 +96,7 @@ class Bankdata extends MY_Admin_Controller
 				}
 
                 // 新光收件檢核表儲存資料
+                // TODO: 應該要儲存一個總集合的表格，再分別存 mapping msg_no
                 $this->load->model('skbank/LoanTargetMappingMsgNo_model');
                 $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
     			$skbank_save_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$target_id,'type'=>'text','content !='=>'']);
@@ -192,6 +194,7 @@ class Bankdata extends MY_Admin_Controller
 		$action_user = isset($this->login_info->id) ? $this->login_info->id : '';
 		$action = isset($input['action']) ? $input['action'] : '';
 		$data_type = isset($input['data_type']) ? $input['data_type'] : 'text';
+		$bank_num = $input['bank'] ?? MAPPING_MSG_NO_BANK_NUM_SKBANK;
 
 		$this->load->library('mapping/sk_bank/msgno');
 		$response = $this->msgno->getSKBankInfoByTargetId($target_id, $data_type);
@@ -200,9 +203,10 @@ class Bankdata extends MY_Admin_Controller
 			$this->load->model('skbank/LoanTargetMappingMsgNo_model');
 			$data = [
 				'target_id' => $target_id,
-				'msg_no' => isset($response['data']['msg_no']) ? $response['data']['msg_no'] : '',
+				'msg_no' => $response['data']['msg_no'] ?? '',
 				'action_user_id' => $action_user,
 				'type' => $data_type,
+				'bank' => $bank_num,
 				'date' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],0,8) : '',
 				'serial_number' => isset($response['data']['msg_no']) ? substr($response['data']['msg_no'],8) : '',
 
@@ -223,10 +227,11 @@ class Bankdata extends MY_Admin_Controller
         // $request_data = $this->input->post(NULL, TRUE);
         $request_data = $this->input->raw_input_stream;
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
-        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['msg_no'=>$input['msg_no'],'type'=>$input['data_type']]);
+        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by([
+            'msg_no' => $input['msg_no'], 'type' => $input['data_type']]);
 
         if($mapping_info) {
-            $mapping_info = $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
+            $this->LoanTargetMappingMsgNo_model->update($mapping_info->id,['content'=>$request_data]);
         }
 
         //print_r(json_encode(['result'=>'success']));exit;

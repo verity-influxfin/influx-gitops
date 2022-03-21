@@ -1,23 +1,21 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require_once(APPPATH.'/libraries/REST_Controller.php');
+require(APPPATH.'/libraries/REST_Controller.php');
+use Adapter\Adapter_factory;
 
 class LoanRequest extends REST_Controller {
 
     // crypto url
-    private $vestaSkbankCryptoUrl = VESTA_ENDPOINT . "/vesta/api/v1.0/skbank";
-
-    // skbank request header info
-    private $skbApiSource = SKBANK_API_SOURCE;
+    private $vestaKgibankCryptoUrl = VESTA_ENDPOINT . "/vesta/api/v1.0/kgibank";
 
     // send text url
-    private $skbankRequestUrl = SKBANK_LOAN_ENDPOINT . "/P2PLoan/v1.0/P2PLoan/Apply";
+    private $kgibankRequestUrl = KGIBANK_LOAN_ENDPOINT . "/eCredit/v1/order";
 
     // send image url
-    private $skbankImageUrl = SKBANK_LOAN_ENDPOINT . "/P2PLoan/v1.0/P2PLoan/UploadAttachment";
+    private $kgibankImageUrl = KGIBANK_LOAN_ENDPOINT . "/eCredit/v1/attach";
 
     // send image completed url
-    private $skbankImageCompleteUrl = SKBANK_LOAN_ENDPOINT . "/P2PLoan/v1.0/P2PLoan/CompleteUpload";
+    private $kgibankImageCompleteUrl = KGIBANK_LOAN_ENDPOINT . "/eCredit/v1/finish";
 
     // image compress url
     private $ocrCompressImageUrl = INFLUX_OCR_ENDPOINT . "/ocr/api/v1.0/image-process/compress";
@@ -299,8 +297,7 @@ END:
             $checkInputParamsArr = [
                 // necessary items
                 [$inputArr, 'MsgNo'       , true, '/^[\d]{15}$/'],
-                [$inputArr, 'CompId'      , true, '/^[\d]{8,11}$/'],
-                [$inputArr, 'PrincipalId' , true, '/^[A-Z][\d]{9,10}$/']
+                [$inputArr, 'CompId'      , true, '/^[\d]{8,11}$/']
             ];
             foreach ($checkInputParamsArr as $key => $value) {
                 $checkResult = $this->checkDataFormat($value[0], $value[1], $value[2], $value[3]);
@@ -310,9 +307,19 @@ END:
                 }
             }
 
-            $dataJsonStr = json_encode($inputArr["Data"]);
+            $this->load->model('skbank/LoanTargetMappingMsgNo_model');
+            $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by([
+                'msg_no' => $inputArr['MsgNo'], 'type' => 'text']);
+
+            if($mapping_info)
+            {
+                $adapter = Adapter_factory::getInstance($mapping_info->bank);
+                $inputArr = $adapter->convert_text($inputArr);
+            }
+
+            $dataJsonStr = json_encode($inputArr["data"]);
             // extra check data
-            if (!isset($inputArr["Data"])) {
+            if (!isset($inputArr["data"])) {
                 $result['error'] = sprintf("parameter 'Data' is not found");
                 goto END;
             } else if (!$this->isJson($dataJsonStr)) {
@@ -320,34 +327,20 @@ END:
                 goto END;
             }
 
-            $msgNo = $inputArr["MsgNo"];
-            $compId = $inputArr["CompId"];
-            $principalId = $inputArr["PrincipalId"];
+            $msgNo = $inputArr["msgNo"];
+            $compId = $inputArr["compId"];
             $sendTime = $this->getCurrentSendTime();
-            $contentData = $inputArr["Data"];
-
-            $text = $msgNo . $compId . $sendTime;
-
-            // TODO:
-            $signatureValue = $this->getSignature($text);
-
-            // check signature process
-            if (!$signatureValue) {
-                $result['error'] = "get signature failed";
-                goto END;
-            }
+            $contentData = $inputArr["data"];
 
             $request = [
                 // necessary
-                "MsgNo"       => $msgNo,
-                "CompId"      => $compId,
-                "PrincipalId" => $principalId,
-                "SendTime"    => $sendTime,
-                "Sign"        => $signatureValue
+                "msgNo"       => $msgNo,
+                "compId"      => $compId,
+                "sendTime"    => $sendTime,
             ];
 
             $unencryptedRequest = $request;
-            $unencryptedRequest["Data"] = $contentData;
+            $unencryptedRequest["data"] = $contentData;
 
             // check encrypt process
             $encryptedContentData = $this->getEncryptedContent($contentData);
@@ -357,13 +350,10 @@ END:
             }
 
             $encryptedRequest = $request;
-            $encryptedRequest["Data"] = $encryptedContentData;
-
-            // set headers
-            $skbApiSource = $this->skbApiSource;
+            $encryptedRequest["data"] = $encryptedContentData;
 
             // check checksum process
-            $checksum = $this->getSkbApiDataCheckSum($encryptedRequest, $skbApiSource);
+            $checksum = $this->getKgibApiDataCheckSum($encryptedRequest, $this->kgibankRequestUrl);
             if (!$checksum) {
                 $result['error'] = "get checksum failed";
                 goto END;
@@ -371,14 +361,15 @@ END:
 
             $headers = [
                 'Content-Type: application/json; charset=UTF-8',
-                'SkbApi_Source: ' . $skbApiSource,
-                'SkbApi_DataCheckSum: ' . $checksum
+                'KeyId: ' . KGIBANK_LOAN_KEYID,
+                'checkSum: ' . $checksum
             ];
 
-            $skbankRequestUrl = $this->skbankRequestUrl;
-            $postJsonData = json_encode($encryptedRequest);
-            $sendResult = curl_get($skbankRequestUrl, $postJsonData, $headers);
-            $responseResult = json_decode($sendResult, true);
+            exit(1);
+//            $kgibankRequestUrl = $this->kgibankRequestUrl;
+//            $postJsonData = json_encode($encryptedRequest);
+//            $sendResult = curl_get($kgibankRequestUrl, $postJsonData, $headers);
+//            $responseResult = json_decode($sendResult, true);
 
             // log request
             $requestContent = [
@@ -402,7 +393,7 @@ END:
                     $result['error'] = sprintf("response 'ReturnCode' not exist");
                 }
             } else {
-                $result['error'] = sprintf("endpoint '%s' no response", $skbankRequestUrl);
+                $result['error'] = sprintf("endpoint '%s' no response", $kgibankRequestUrl);
             }
         } catch (Exception $e) {
             $result['error'] = 'server internal error, please contact administrator';
@@ -577,35 +568,20 @@ END:
                 goto END;
             }
 
-            $text = $msgNo . $compId . $sendTime;
-
-            // TODO:
-            $signatureValue = $this->getSignature($text);
-
-            // check signature process
-            if (!$signatureValue) {
-                $result['error'] = "get signature failed";
-                goto END;
-            }
-
             $outputRequest = [
                 // necessary
-                "MsgNo"       => $msgNo,
-                "CompId"      => $compId,
-                "CaseNo"      => $caseNo,
-                "DocType"     => $docType,
-                "DocFileType" => $docFileType,
-                "DocSeq"      => $docSeq,
-                "SendTime"    => $sendTime,
-                "DocCont"     => $docImgBase64,
-                "Sign"        => $signatureValue
+                "msgNo"       => $msgNo,
+                "compId"      => $compId,
+                "caseNo"      => $caseNo,
+                "docType"     => $docType,
+                "docFileType" => $docFileType,
+                "docSeq"      => $docSeq,
+                "sendTime"    => $sendTime,
+                "docCont"     => $docImgBase64
             ];
 
-            // set headers
-            $skbApiSource = $this->skbApiSource;
-
             // check checksum process
-            $checksum = $this->getSkbApiDataCheckSum($outputRequest, $skbApiSource);
+            $checksum = $this->getKgibApiDataCheckSum($outputRequest, $this->kgibankImageUrl);
             if (!$checksum) {
                 $result['error'] = "get checksum failed";
                 goto END;
@@ -613,28 +589,27 @@ END:
 
             $headers = [
                 'Content-Type: application/json; charset=UTF-8',
-                'SkbApi_Source: ' . $skbApiSource,
-                'SkbApi_DataCheckSum: ' . $checksum
+                'KeyId: ' . KGIBANK_LOAN_KEYID,
+                'checkSum: ' . $checksum
             ];
 
-            $skbankImageUrl = $this->skbankImageUrl;
+            $kgibankImageUrl = $this->kgibankImageUrl;
             $postJsonData = json_encode($outputRequest);
-            $sendResult = curl_get($skbankImageUrl, $postJsonData, $headers);
+            $sendResult = curl_get($kgibankImageUrl, $postJsonData, $headers);
             $responseResult = json_decode($sendResult, true);
 
             // log request
             $requestContent = [
                 'request_type'  => 'send_image',
                 'output_body'     => [
-                    "MsgNo"       => $msgNo,
-                    "CompId"      => $compId,
-                    "CaseNo"      => $caseNo,
-                    "DocType"     => $docType,
-                    "DocFileType" => $docFileType,
-                    "DocSeq"      => $docSeq,
-                    "SendTime"    => $sendTime,
-                    "DocUrl"      => $docUrl,
-                    "Sign"        => $signatureValue
+                    "msgNo"       => $msgNo,
+                    "compId"      => $compId,
+                    "caseNo"      => $caseNo,
+                    "docType"     => $docType,
+                    "docFileType" => $docFileType,
+                    "docSeq"      => $docSeq,
+                    "sendTime"    => $sendTime,
+                    "docUrl"      => $docUrl
                 ],
                 'output_header' => $headers
             ];
@@ -652,7 +627,7 @@ END:
                     $result['error'] = sprintf("response 'ReturnCode' not exist");
                 }
             } else {
-                $result['error'] = sprintf("endpoint '%s' no response", $skbankImageUrl);
+                $result['error'] = sprintf("endpoint '%s' no response", $kgibankImageUrl);
             }
         } catch (Exception $e) {
             $result['error'] = 'server internal error, please contact administrator';
@@ -686,9 +661,9 @@ END:
             // check input parameter
             $checkInputParamsArr = [
                 // necessary items
-                [$inputArr, 'MsgNo'    , true, '/^[\d]{15}$/'],
-                [$inputArr, 'CompId'   , true, '/^[\d]{8,11}$/'],
-                [$inputArr, 'CaseNo'   , true, '/^[\d]{16}$/']
+                [$inputArr, 'msgNo'    , true, '/^[\d]{15}$/'],
+                [$inputArr, 'compId'   , true, '/^[\d]{8,11}$/'],
+                [$inputArr, 'caseNo'   , true, '/^[\d]{16}$/']
             ];
             foreach ($checkInputParamsArr as $key => $value) {
                 $checkResult = $this->checkDataFormat($value[0], $value[1], $value[2], $value[3]);
@@ -703,31 +678,16 @@ END:
             $caseNo = $inputArr["CaseNo"];
             $sendTime = $this->getCurrentSendTime();
 
-            $text = $msgNo . $compId . $sendTime;
-
-            // TODO:
-            $signatureValue = $this->getSignature($text);
-
-            // check signature process
-            if (!$signatureValue) {
-                $result['error'] = "get signature failed";
-                goto END;
-            }
-
             $outputRequest = [
                 // necessary
-                "MsgNo"    => $msgNo,
-                "CompId"   => $compId,
-                "CaseNo"   => $caseNo,
-                "SendTime" => $sendTime,
-                "Sign"     => $signatureValue
+                "msgNo"    => $msgNo,
+                "compId"   => $compId,
+                "caseNo"   => $caseNo,
+                "sendTime" => $sendTime
             ];
 
-            // set headers
-            $skbApiSource = $this->skbApiSource;
-
             // check checksum process
-            $checksum = $this->getSkbApiDataCheckSum($outputRequest, $skbApiSource);
+            $checksum = $this->getKgibApiDataCheckSum($outputRequest, $this->kgibankImageCompleteUrl);
             if (!$checksum) {
                 $result['error'] = "get checksum failed";
                 goto END;
@@ -735,13 +695,13 @@ END:
 
             $headers = [
                 'Content-Type: application/json; charset=UTF-8',
-                'SkbApi_Source: ' . $skbApiSource,
-                'SkbApi_DataCheckSum: ' . $checksum
+                'KeyId: ' . KGIBANK_LOAN_KEYID,
+                'checkSum: ' . $checksum
             ];
 
-            $skbankImageCompleteUrl = $this->skbankImageCompleteUrl;
+            $kgibankImageCompleteUrl = $this->kgibankImageCompleteUrl;
             $postJsonData = json_encode($outputRequest);
-            $sendResult = curl_get($skbankImageCompleteUrl, $postJsonData, $headers);
+            $sendResult = curl_get($kgibankImageCompleteUrl, $postJsonData, $headers);
             $responseResult = json_decode($sendResult, true);
 
             // log request
@@ -763,7 +723,7 @@ END:
                     $result['error'] = sprintf("response 'ReturnCode' not exist");
                 }
             } else {
-                $result['error'] = sprintf("endpoint '%s' no response", $skbankImageCompleteUrl);
+                $result['error'] = sprintf("endpoint '%s' no response", $kgibankImageCompleteUrl);
             }
         } catch (Exception $e) {
             $result['error'] = 'server internal error, please contact administrator';
@@ -810,19 +770,19 @@ END:
         return $this->writeSendImageLog($msgNo, $caseNo, $sendResult, $errMsg, $requestContent, $responseContent);
     }
 
-    private function getSkbApiDataCheckSum($content=[], $skbApiSource='')
+    private function getKgibApiDataCheckSum($content=[], $skbApiSource='')
     {
-        $skbankChecsumkUrl = $this->vestaSkbankCryptoUrl;
+        $kgibankChecsumkUrl = $this->vestaKgibankCryptoUrl;
         $postData = json_encode([
             "action" => "checksum",
-            "type" => "SKBANK-DATA-CHECKSUM",
+            "type" => "KGIBANK-DATA-CHECKSUM",
             "data" => [
                 "message" => json_encode($content),
-                "skb_api_source" => $skbApiSource
+                "kgib_api_source" => $skbApiSource
             ]
         ]);
 
-        $result = curl_get($skbankChecsumkUrl, $postData, ["Content-Type: application/json; charset=utf-8"]);
+        $result = curl_get($kgibankChecsumkUrl, $postData, ["Content-Type: application/json; charset=utf-8"]);
 
         $response = json_decode($result);
         if (isset($response->status) && $response->status == 200) {
@@ -834,7 +794,7 @@ END:
 
     private function getEncryptedContent($content=[])
     {
-        $skbankEncryptUrl = $this->vestaSkbankCryptoUrl;
+        $kgibankEncryptUrl = $this->vestaKgibankCryptoUrl;
         $postData = json_encode([
             "action" =>  "encrypt",
             "type" => "AES256-EBC-PKCS7",
@@ -843,31 +803,11 @@ END:
             ]
         ]);
 
-        $result = curl_get($skbankEncryptUrl, $postData, ["Content-Type: application/json; charset=utf-8"]);
+        $result = curl_get($kgibankEncryptUrl, $postData, ["Content-Type: application/json; charset=utf-8"]);
 
         $response = json_decode($result);
         if (isset($response->status) && $response->status == 200) {
             return $response->response->encrypted_data;
-        }
-
-        return '';
-    }
-
-    private function getSignature($contentText='')
-    {
-        $skbankSignatureUrl = $this->vestaSkbankCryptoUrl;
-        $postData = json_encode([
-            "action" => "signature",
-            "type" => "SKBANK-DATA-SIGNATURE",
-            "data" => [
-                "message" => $contentText
-            ]
-        ]);
-
-        $result = curl_get($skbankSignatureUrl, $postData, ["Content-Type: application/json; charset=utf-8"]);
-        $response = json_decode($result);
-        if (isset($response->status) && $response->status == 200) {
-            return $response->response->signature;
         }
 
         return '';
