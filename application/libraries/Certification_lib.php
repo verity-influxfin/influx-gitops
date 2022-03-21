@@ -2450,7 +2450,6 @@ class Certification_lib{
 				'school_system'			 => $content['system'],
 				'school_department'		 => $content['department'],
 				'school_major'			 => $content['major'],
-				'school_email'			 => $content['email'],
 				'school_grade'			 => $content['grade'],
 				'student_id'			 => $content['student_id'],
 				'student_card_front'	 => $content['front_image'],

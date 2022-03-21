@@ -734,20 +734,6 @@ class Certification extends REST_Controller {
      *       "error": "510"
      *     }
 	 *
-     * @apiError 511 此學生Email已被使用過
-     * @apiErrorExample {Object} 511
-     *     {
-     *       "result": "ERROR",
-     *       "error": "511"
-     *     }
-	 *
-     * @apiError 204 Email格式錯誤
-     * @apiErrorExample {Object} 204
-     *     {
-     *       "result": "ERROR",
-     *       "error": "204"
-     *     }
-	 *
      */
 	public function student_post()
     {
@@ -774,7 +760,11 @@ class Certification extends REST_Controller {
 			];
 			foreach ($fields as $field) {
 				if (empty($input[$field])) {
-					$this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+					$this->response(array(
+					    'result'  => 'ERROR',
+                        'error'   => INPUT_NOT_CORRECT,
+                        'err_msg' => $field . 'is empty!'
+                    ));
 				}else{
 					$content[$field] = $input[$field];
 				}
@@ -808,7 +798,11 @@ class Certification extends REST_Controller {
             foreach ($file_fields as $field) {
                 $image_id = intval($input[$field]);
                 if (!$image_id) {
-                    $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                    $this->response(array(
+                        'result' => 'ERROR',
+                        'error' => INPUT_NOT_CORRECT,
+                        'err_msg' => $field . 'is empty!'
+                    ));
                 }else{
                     $rs = $this->log_image_model->get_by([
                         'id'		=> $image_id,
@@ -819,7 +813,11 @@ class Certification extends REST_Controller {
                         $content[$field . '_id'] = $rs->id;
                         $content[$field] = $rs->url;
                     }else{
-                        $this->response(array('result' => 'ERROR','error' => INPUT_NOT_CORRECT ));
+                        $this->response(array(
+                            'result' => 'ERROR',
+                            'error' => INPUT_NOT_CORRECT,
+                            'err_msg' => $image_id . 'not found in db!'
+                        ));
                     }
                 }
             }
