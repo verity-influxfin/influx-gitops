@@ -49,4 +49,35 @@ class Payment_model extends MY_Model
             ->join("($sub_query) as `p`", "`p`.`virtual_account` = `va`.`virtual_account`");
         return $this->db->get()->result();
     }
+
+    public function get_chraity_withdraw_info($user_bank_acc, $sdate = '', $edate = '')
+    {
+        $this->_database->select('')
+            ->where('bank_acc', $user_bank_acc)
+            ->where('status', 1)
+            ->from('payments');
+
+        if ( ! empty($sdate))
+        {
+            $this->_database->where('tx_datetime >= ', "{$sdate} 00:00:00");
+        }
+        if ( ! empty($edate))
+        {
+            $this->_database->where('tx_datetime <= ', "{$edate} 23:59:59");
+        }
+
+        $payments = $this->_database->get()->result_array();
+        $fees = $this->_get_fee_from_same_spec($payments);
+        return $this->_parser_fees($fees);
+    }
+
+    private function _get_fee_from_same_spec($payments)
+    {
+        // TODO
+    }
+
+    private function _parser_fees($fees)
+    {
+        // TODO
+    }
 }
