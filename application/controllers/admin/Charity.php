@@ -2,6 +2,7 @@
 
 require APPPATH . '/libraries/MY_Admin_Controller.php';
 
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
@@ -130,26 +131,28 @@ class Charity extends MY_Admin_Controller
             $sheet > 0 ? $spreadsheet->createSheet() : '';
             $row = 1;
 
-            foreach ($contents['title'] as $titleIndex => $title)
+            foreach ($contents['title'] as $title_index => $title)
             {
-                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->_num2alpha($titleIndex) . ($row), $title);
-                $spreadsheet->getActiveSheet($sheet)->getStyle($this->_num2alpha($titleIndex) . ($row))->getAlignment()->setHorizontal('center');
+                $column = Coordinate::stringFromColumnIndex($title_index + 1); // A = 1
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $title);
+                $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $title);
+                $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
             }
             $row++;
 
-            foreach ($contents['content'] as $rowInddex => $rowContent)
+            foreach ($contents['content'] as $key => $page_content)
             {
-                foreach ($rowContent as $rowContentInddex => $rowValue)
+                foreach ($page_content as $content_index => $value)
                 {
-                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($this->_num2alpha($rowContentInddex) . ($row), $rowValue);
-                    $spreadsheet->getActiveSheet($sheet)->getStyle($this->_num2alpha($rowContentInddex) . ($row))->getAlignment()->setHorizontal('center');
+                    $column = Coordinate::stringFromColumnIndex($content_index + 1); // A = 1
+                    $spreadsheet->setActiveSheetIndex($sheet)->setCellValue($column . $row, $value);
+                    $spreadsheet->getActiveSheet($sheet)->getStyle($column . $row)->getAlignment()->setHorizontal('center');
                 }
                 $row++;
             }
 
             $spreadsheet->setActiveSheetIndex($sheet)->setTitle($contents['sheet']);
             $spreadsheet->getActiveSheet($sheet)->getDefaultColumnDimension()->setWidth(20);
-
         }
         $spreadsheet->setActiveSheetIndex(0);
 
@@ -161,16 +164,6 @@ class Charity extends MY_Admin_Controller
 
         $writer->save('php://output');
         exit;
-    }
-
-    private function _num2alpha($n)
-    {
-        for ($r = ''; $n >= 0; $n = intval($n / 26) - 1)
-        {
-            $r = chr($n % 26 + 0x41) . $r;
-        }
-
-        return $r;
     }
 
     // 處理地址相關參數
