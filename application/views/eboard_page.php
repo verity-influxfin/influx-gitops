@@ -215,19 +215,24 @@
 				<div class="rank-content">
 					<div class="rank-board  table-border">
 						<div class="text-center rank-title">公司員工</div>
-						<div class="rank-item" v-for="(item, i) in state.rank">
+						<div class="rank-item" v-for="(item, i) in state.rank.insider">
 							恭喜 {{item.name}} 成功推廣 {{ item.full_member_count }} 人
 						</div>
 					</div>
 					<div class="rank-board  table-border">
 						<div class="text-center rank-title">外部人員</div>
 						<div class="rank-item">
-							尚未啟用
+							<div class="rank-item" v-for="(item, i) in state.rank.outsider">
+								恭喜 {{item.name}} 成功推廣 {{ item.full_member_count }} 人
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="table-title">推薦有賞績效</div>
-				<div id="qr-1" style="height: 447px;"></div>
+				<div class="d-flex">
+					<div id="qr-1" style="height: 447px; width: 50%;"></div>
+					<div id="qr-2" style="height: 447px; width: 50%;"></div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -248,8 +253,16 @@
 				geoJson: {},
 				loan_statistic: [],
 				loan_distribution: [],
-				qrcode: [],
-				rank: [],
+				app_download: [],
+				qrcode: {
+					insider: [],
+					outsider: []
+				},
+				qrOut: [],
+				rank: {
+					insider: [],
+					outsider: []
+				},
 				real: [],
 				time: {
 					showDate: '',
@@ -264,6 +277,7 @@
 				weather: ''
 			})
 			const renderQr = ref([])
+			const renderQrOut = ref([])
 			const charts = reactive({
 				flow: {},
 				app: {},
@@ -271,6 +285,7 @@
 				geoMap: {},
 				real: {},
 				qr: {},
+				qr2: {},
 			})
 			const basicOption = {
 				color: ['#fff', '#42E5F3', '#F29600', '#1edf90', '#e9e54e'],
@@ -301,13 +316,13 @@
 			}
 			onMounted(() => {
 				// init chart
-
 				charts.flow = echarts.init(document.getElementById('main'))
 				charts.app = echarts.init(document.getElementById('tb-2'))
 				charts.prod = echarts.init(document.getElementById('tb-3'))
 				charts.geoMap = echarts.init(document.getElementById('map-1'))
 				charts.real = echarts.init(document.getElementById('real-1'))
 				charts.qr = echarts.init(document.getElementById('qr-1'))
+				charts.qr2 = echarts.init(document.getElementById('qr-2'))
 				getData()
 			})
 
@@ -324,10 +339,15 @@
 				axios.get("/page/get_eboard_data").then(function ({ data }) {
 					state.data = data.data.history.reverse()
 					state.weather = data.data.weather
-					state.qrcode = data.data.qrcode.map(item => {
+					state.data.app_download = data.data.app_download
+					state.qrcode.insider = data.data.qrcode.insider.map(item => {
 						return [item.salary_man_count, item.student_count, item.full_member_count, item.name]
 					})
-					state.rank = [...data.data.qrcode].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
+					state.qrcode.outsider = data.data.qrcode.outsider.map(item => {
+						return [item.salary_man_count, item.student_count, item.full_member_count, item.name]
+					})
+					state.rank.insider = [...data.data.qrcode.insider].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
+					state.rank.outsider = [...data.data.qrcode.outsider].sort((a, b) => b.full_member_count - a.full_member_count).slice(0, 3)
 					setStatisticData(data.data.loan_statistic)
 					state.loan_distribution = data.data.loan_distribution
 					state.platform_statistic = data.data.platform_statistic
@@ -338,6 +358,7 @@
 					drawReal()
 					nextQrData()
 					drawGeo()
+					drawQr2()
 					setTimeout(getData, 300000)
 				})
 			}
@@ -457,7 +478,7 @@
 					xAxis: {
 						type: 'category',
 						axisLabel: { fontSize: '14px' },
-						data: data.map(x => x.date.replace('/', '\n'))
+						data: data.app_download.map(x => x.date.replace('/', '\n'))
 					},
 					yAxis: [
 						{
@@ -495,7 +516,7 @@
 									return x.value > 0 ? x.value : ''
 								}
 							},
-							data: data.map(x => x.android_downloads)
+							data: data.app_download.map(x => x.android_downloads)
 						},
 						{
 							name: 'APP IOS',
@@ -509,7 +530,7 @@
 									return x.value > 0 ? x.value : ''
 								}
 							},
-							data: data.map(x => x.ios_downloads)
+							data: data.app_download.map(x => x.ios_downloads)
 						},
 						{
 							name: 'APP 總下載數',
@@ -524,7 +545,7 @@
 									return x.value > 0 ? x.value + `(${Math.ceil(x.value / 166 * 100)}%)` : ''
 								}
 							},
-							data: data.map(x => Number(x.ios_downloads) + Number(x.android_downloads))
+							data: data.app_download.map(x => Number(x.ios_downloads) + Number(x.android_downloads))
 						}
 					]
 				}
@@ -658,7 +679,7 @@
 								fontSize: '10',
 								color: '#fff',
 								formatter: (x) => {
-									return x.value > 0 ? x.value  : ''
+									return x.value > 0 ? x.value : ''
 								}
 							},
 							itemStyle: {
@@ -938,6 +959,104 @@
 				}
 				charts.qr.setOption(option)
 			}
+			const drawQr2 = () => {
+				option = {
+					...basicOption,
+					grid: {
+						top: '80px',
+						left: '6%',
+						right: '6%',
+						bottom: '30px',
+						containLabel: true
+					},
+					dataset: {
+						source: [
+							['salary_man_count', 'student_count', 'full_member_count', 'product'],
+							...renderQrOut.value
+						]
+					},
+					xAxis: {
+						type: 'category',
+						boundaryGap: [0, 0.01]
+					},
+					yAxis: {
+						type: 'value',
+						minInterval: 1,
+						splitLine: {
+							show: true,
+							lineStyle: {
+								color: '#63656E'
+							}
+						},
+					},
+					series: [
+						{
+							name: '推廣下載人數',
+							type: 'bar',
+							barWidth: 10,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
+							encode: {
+								y: 'full_member_count',
+								x: 'product'
+							}
+						},
+						{
+							name: '上班族貸',
+							type: 'bar',
+							barWidth: 10,
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
+							encode: {
+								y: 'salary_man_count',
+								x: 'product'
+							}
+						},
+						{
+							name: '學生貸',
+							type: 'bar',
+							barWidth: 10,
+							itemStyle: {
+								borderRadius: [4, 4, 0, 0],
+							},
+							label: {
+								show: true,
+								position: 'top',
+								fontSize: '10',
+								color: '#fff',
+								formatter: (x) => {
+									return x.value > 0 ? x.value : ''
+								}
+							},
+							encode: {
+								y: 'student_count',
+								x: 'product'
+							}
+						}
+					]
+				}
+				charts.qr2.setOption(option)
+			}
 			const showTime = () => {
 				var date = new Date();
 				var h = date.getHours(); // 0 - 23
@@ -955,12 +1074,17 @@
 				setTimeout(showTime, 60000);
 			}
 			const nextQrData = () => {
-				if (state.qrcode.length > 0) {
-					state.qrcode.push(state.qrcode.shift())
+				if (state.qrcode.insider.length > 3) {
+					state.qrcode.insider.push(state.qrcode.insider.shift(), state.qrcode.insider.shift(), state.qrcode.insider.shift())
 				}
-				renderQr.value = state.qrcode.slice(0, 7)
+				if (state.qrcode.outsider.length > 3) {
+					state.qrcode.outsider.push(state.qrcode.outsider.shift(), state.qrcode.outsider.shift(), state.qrcode.outsider.shift())
+				}
+				renderQr.value = state.qrcode.insider.slice(0, 3)
+				renderQrOut.value = state.qrcode.outsider.slice(0, 3)
 				drawQr()
-				setTimeout(nextQrData, 5000);
+				drawQr2()
+				setTimeout(nextQrData, 15000);
 			}
 			const setStatisticData = (data) => {
 				const days = [...Array(8)].map((_, i) => {

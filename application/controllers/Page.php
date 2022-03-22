@@ -64,6 +64,7 @@ class Page extends CI_Controller
     public function get_eboard_data()
     {
         $retval = [];
+        $download = [];
         $first_day = (new DateTimeImmutable(date('Y-m-d')))->modify('- 7 day');
         $weather = $this->_get_today_weather();
 
@@ -72,7 +73,7 @@ class Page extends CI_Controller
         for ($i = 0; $i < 7; $i++)
         {
             $date = $i > 0 ? $first_day->modify("+ {$i} day") : $first_day;
-            $amounts = $this->sale_dashboard_model->get_amounts_at($date);
+            $amounts_ga = $this->sale_dashboard_model->get_amounts_at($date);
 
             $retval[] = [
 
@@ -80,7 +81,7 @@ class Page extends CI_Controller
                 'date' => $tx_date = $date->format('Y/m/d'),
 
                 // 官網流量
-                'official_site_trends' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
+                'official_site_trends' => $amounts_ga[Sale_dashboard_model::PLATFORM_TYPE_GOOGLE_ANALYTICS] ?? 0,
 
                 // 新增會員
                 'new_member' => $this->_get_new_member($date),
@@ -88,15 +89,20 @@ class Page extends CI_Controller
                 // 會員總數
                 'total_member' => $this->_get_total_member($date),
 
-                // APP下載
-                'android_downloads' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
-                'ios_downloads' => $amounts[Sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
-
                 // 各產品每月申貸數
                 'product_bids' => $this->_get_product_bids($date),
 
                 // 成交
                 'deals' => $this->_get_deals($date),
+            ];
+
+            // APP下載的時間區間要提前，所以api分開放
+            $download_date = $date->modify("-3 day");
+            $amounts_app = $this->sale_dashboard_model->get_amounts_at($download_date);
+            $download[] = [
+                'date' => $download_date->format('Y/m/d'),
+                'android_downloads' => $amounts_app[Sale_dashboard_model::PLATFORM_TYPE_ANDROID] ?? 0,
+                'ios_downloads' => $amounts_app[Sale_dashboard_model::PLATFORM_TYPE_IOS] ?? 0,
             ];
         }
         $qr = $this->_get_total_qrcode_apply();
@@ -111,6 +117,7 @@ class Page extends CI_Controller
                 'result' => 'success',
                 'data' => [
                     'history' => $retval,
+                    'app_download' => $download,
                     'qrcode' => $qr,
                     'weather' => $weather,
                     'loan_distribution' => $this->_get_loan_distribution(),
@@ -260,13 +267,13 @@ class Page extends CI_Controller
         $user_list = $this->config->item('influx_user_list');
         $user_ids = array_column($user_list, 'user_id');
 
+        // 公司【內】部人員
         $this->load->library('user_lib');
         $data_list = $this->user_lib->getPromotedRewardInfo(['user_id' => $user_ids]);
-
-        $result = [];
+        $insider = [];
         foreach ($data_list as $data)
         {
-            $result[] = [
+            $insider[] = [
                 'user_id' => $data['info']['user_id'] ?? '',
                 'name' => $data['info']['name'] ?? '',
                 'full_member_count' => $data['fullMemberCount'] ?? 0,
@@ -275,7 +282,29 @@ class Page extends CI_Controller
             ];
         }
 
-        return $result;
+        // 公司【外】部人員
+        $data_list = $this->user_lib->getPromotedRewardInfo(['user_id NOT' => $user_ids]);
+        $outsider = [];
+        foreach ($data_list as $data)
+        {
+            $outsider[] = [
+                'user_id' => $data['info']['user_id'] ?? '',
+                'name' => $data['info']['name'] ?? '',
+                'full_member_count' => $data['fullMemberCount'] ?? 0,
+                'student_count' => $value['loanedCount']['student'] ?? 0,
+                'salary_man_count' => $value['loanedCount']['salary_man'] ?? 0,
+            ];
+        }
+        usort($outsider, function ($a, $b) {
+            if ($a['full_member_count'] == $b['full_member_count']) return 0;
+            return ($a['full_member_count'] > $b['full_member_count']) ? -1 : 1;
+        });
+
+
+        return [
+            'insider' => $insider,
+            'outsider' => array_slice($outsider, 0, 20)
+        ];
     }
 
     // get ios downloads at daily report infos
