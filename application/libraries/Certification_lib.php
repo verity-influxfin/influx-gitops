@@ -2780,14 +2780,15 @@ class Certification_lib{
                 isset($content['meta']['posts_in_3months']) ? $data['posts_in_3months'] = $content['meta']['posts_in_3months'] : '';
                 isset($content['meta']['key_word']) ? $data['key_word'] = $content['meta']['key_word'] : '';
             }
-
+            
+            # 社交認證完成，觸發 ig 司法院爬蟲
             $verdicts_statuses = $this->CI->judicial_yuan_lib->requestJudicialYuanVerdictsStatuses($data['ig_username']);
             if(isset($verdicts_statuses['status']))
             {
                 if (($verdicts_statuses['status'] == 200 && $verdicts_statuses['response']['updatedAt'] < strtotime('- 1 week'))
                     || $verdicts_statuses['status'] == 204)
                 {
-                    $this->CI->judicial_yuan_lib->requestJudicialYuanVerdicts($data['ig_username']);
+                    $this->CI->judicial_yuan_lib->requestJudicialYuanAllCityVerdicts($data['ig_username']);
                 }
             }
 
