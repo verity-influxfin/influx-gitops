@@ -31,7 +31,15 @@
                 </div>
                 <div class="p-2">
                     <button type="button" class="btn btn-danger btn-circle"><i class="fa fa-times"></i></button>
-                    已退回
+                    未符合授信標準
+                </div>
+                <div class="p-2">
+                    <button type="button" class="btn btn-danger btn-circle"><i class="fa fa-exclamation"></i></button>
+                    未提交
+                </div>
+                <div class="p-2">
+                    <button type="button" class="btn btn-danger btn-circle"><i class="fa fa-minus"></i></button>
+                    資料逾期
                 </div>
                 <div class="p-2">
                     <a id="fontchange" class="btn btn-default" style="margin-top: 6px;">Font mode</a>

@@ -123,12 +123,13 @@ class Risk extends MY_Admin_Controller {
                 }
 
                 // 撈user每個徵信項的最新狀態
-                $tmp = $this->certification_lib->get_last_status($target->user_id, BORROWER, USER_NOT_COMPANY, $target);
+                $tmp = $this->certification_lib->get_last_status($target->user_id, BORROWER, USER_NOT_COMPANY, $target, FALSE, TRUE, TRUE);
                 $tmp = array_reduce($tmp, function ($list, $item) {
                     $list[$item['id']] = [
                         'id' => $item['certification_id'], // =user_certification.id
                         'certification_id' => $item['id'], // =user_certification.certification_id
                         'status' => $item['user_status'],  // =user_certification.status
+                        'sub_status' => $item['user_sub_status'],
                         'sys_check' => $item['sys_check'], // =user_certification.sys_check
                         'expire_time' => $item['expire_time']
                     ];

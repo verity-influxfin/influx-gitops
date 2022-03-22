@@ -58,13 +58,14 @@ class Cert_investigation extends Certification_base
      */
     public function parse()
     {
-        $parsed_content = [];
+        $parsed_content = $this->content ?? [];
         $url = $this->content['pdf_file'] ?? '';
 
         $mime = get_mime_by_extension($url);
         if (is_image($mime))
         {
             $this->result->addMessage('需人工驗證', CERTIFICATION_STATUS_PENDING_TO_REVIEW, MessageDisplay::Backend);
+            $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_WRONG_FORMAT);
         }
         else if (is_pdf($mime))
         {
@@ -88,8 +89,6 @@ class Cert_investigation extends Certification_base
             }
             else
             {
-                $parsed_content = $this->content ?? [];
-
                 // 資料轉 result
                 $this->CI->load->library('mapping/user/Certification_data');
                 $this->transform_data = $this->CI->certification_data->transformJointCreditToResult($response);
@@ -148,7 +147,8 @@ class Cert_investigation extends Certification_base
         $this->CI->load->library('verify/data_legalize_lib');
         $this->result = $this->CI->data_legalize_lib->legalize_investigation($this->result, $this->certification['user_id'],
             $this->transform_data, $this->certification['created_at']);
-        if($this->result->getStatus() == CERTIFICATION_STATUS_FAILED) {
+        if ($this->result->getStatus() == CERTIFICATION_STATUS_FAILED && $this->result->getSubStatus() == 0)
+        {
             $this->result->setSubStatus(CERTIFICATION_SUBSTATUS_VERIFY_FAILED);
             return FALSE;
         }

@@ -72,7 +72,7 @@ class Certification_lib{
             == count($certificationsStageList[$stage]));
     }
 
-	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false){
+	public function get_certification_info($user_id,$certification_id,$investor=0,$get_fail=false, $get_expired = FALSE){
 		if($user_id && $certification_id){
 			$param = array(
 				'user_id'			=> $user_id,
@@ -84,7 +84,7 @@ class Certification_lib{
                 CERTIFICATION_STATUS_NOT_COMPLETED, CERTIFICATION_STATUS_AUTHENTICATED] : '';
 			$certification = $this->CI->user_certification_model->order_by('created_at','desc')->get_by($param);
 			if(!empty($certification)){
-			    if($certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
+                if ($get_expired == FALSE && $certification->expire_time <= time()&&$investor==0&&!in_array($certification_id,[CERTIFICATION_IDENTITY,CERTIFICATION_DEBITCARD,CERTIFICATION_EMERGENCY,CERTIFICATION_EMAIL])){
                     return false;
                 }
 			    else{
@@ -2901,7 +2901,7 @@ class Certification_lib{
         return false;
     }
 
-    public function get_last_status($user_id, $investor = 0, $company = 0, $target = false, $product_info = false)
+    public function get_last_status($user_id, $investor = 0, $company = 0, $target = false, $product_info = false, $target_get_failed = FALSE, $target_get_expired = FALSE)
     {
 		if($user_id){
 			$certification = [];
@@ -2956,7 +2956,7 @@ class Certification_lib{
                     {
                         $get_failed = FALSE;
                     }
-                    $user_certification = $this->get_certification_info($ruser_id, $key, $investor, $get_failed);
+                    $user_certification = $this->get_certification_info($ruser_id, $key, $investor, $get_failed || $target_get_failed, $target_get_expired);
                 }else {
                     // 沒有過期判斷
                     $user_certification = $this->get_last_certification_info($ruser_id,$key,$investor);
@@ -2964,12 +2964,14 @@ class Certification_lib{
 				if($user_certification){
 				    $key == CERTIFICATION_JUDICIALGUARANTEE ? $value['judicialPersonId'] = isset($user_certification->content['judicialPersonId']) ? $user_certification->content['judicialPersonId'] : '' : '';
 					$value['user_status'] 		= intval($user_certification->status);
+                    $value['user_sub_status'] = (int) $user_certification->sub_status;
                     $value['certification_id'] 	= intval($user_certification->id);
                     $value['updated_at'] 		= intval($user_certification->updated_at);
                     $value['expire_time'] 		= $user_certification->expire_time;
                     $value['sys_check'] 		= intval($user_certification->sys_check);
                 }else{
 					$value['user_status'] 		= null;
+                    $value['user_sub_status'] = NULL;
 					$value['certification_id'] 	= null;
 					$value['updated_at'] 		= null;
 					$value['expire_time'] 		= 0;

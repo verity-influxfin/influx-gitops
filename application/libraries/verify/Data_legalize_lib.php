@@ -465,6 +465,7 @@ class Data_legalize_lib{
 			$validReportTime = strtotime(date('Y-m-d H:i:s', $created_at) . " - 1 month");
 			if($reportTime < $validReportTime) {
 				$verifiedResult->addMessage('聯徵報告非近一個月申請', 2, MessageDisplay::Client);
+                $verifiedResult->setSubStatus(CERTIFICATION_SUBSTATUS_NOT_ONE_MONTH);
 			}
 		}
 
@@ -587,6 +588,7 @@ class Data_legalize_lib{
 			$diffDate = $certificationSubmitDate->diff($reportDate);
 			if($diffDate->m >= 1) {
 				$res->addMessage('勞保非近一個月申請', 2, MessageDisplay::Client);
+                $res->setSubStatus(CERTIFICATION_SUBSTATUS_NOT_ONE_MONTH);
 			}
 		}else{
 			$res->addMessage('解析失敗：勞保印表日期解析失敗', 3, MessageDisplay::Backend);
