@@ -365,11 +365,10 @@ END:
                 'checkSum: ' . $checksum
             ];
 
-            exit(1);
-//            $kgibankRequestUrl = $this->kgibankRequestUrl;
-//            $postJsonData = json_encode($encryptedRequest);
-//            $sendResult = curl_get($kgibankRequestUrl, $postJsonData, $headers);
-//            $responseResult = json_decode($sendResult, true);
+            $kgibankRequestUrl = $this->kgibankRequestUrl;
+            $postJsonData = json_encode($encryptedRequest);
+            $sendResult = curl_get($kgibankRequestUrl, $postJsonData, $headers);
+            $responseResult = json_decode($sendResult, true);
 
             // log request
             $requestContent = [
@@ -481,7 +480,7 @@ END:
                 // necessary items
                 [$inputArr, 'MsgNo'       , true, '/^[\d]{15}$/'],
                 [$inputArr, 'CompId'      , true, '/^[\d]{8,11}$/'],
-                [$inputArr, 'CaseNo'      , true, '/^[\d]{16}$/'],
+                [$inputArr, 'CaseNo'      , true, '/^[\d]{15}$/'],
                 [$inputArr, 'DocType'     , true, '/^[A-Z][0-9][0-9]$/'],
                 [$inputArr, 'DocSeq'      , true, '/^[\d]{1,2}$/'],
                 [$inputArr, 'DocUrl'      , true, '/^https:\/\/.*$/'],
@@ -661,9 +660,9 @@ END:
             // check input parameter
             $checkInputParamsArr = [
                 // necessary items
-                [$inputArr, 'msgNo'    , true, '/^[\d]{15}$/'],
-                [$inputArr, 'compId'   , true, '/^[\d]{8,11}$/'],
-                [$inputArr, 'caseNo'   , true, '/^[\d]{16}$/']
+                [$inputArr, 'MsgNo'    , true, '/^[\d]{15}$/'],
+                [$inputArr, 'CompId'   , true, '/^[\d]{8,11}$/'],
+                [$inputArr, 'CaseNo'   , true, '/^[\d]{15}$/']
             ];
             foreach ($checkInputParamsArr as $key => $value) {
                 $checkResult = $this->checkDataFormat($value[0], $value[1], $value[2], $value[3]);

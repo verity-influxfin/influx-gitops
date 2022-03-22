@@ -65,6 +65,7 @@
         var userId = <?=isset($targetInfo)?$targetInfo->user_id:''?>;
         var targetInfoAjaxLock = false;
         var relatedUserAjaxLock = false;
+        let bank = 1;
 
         fillFakeBrookesiaUserHitRule();
         fillFakeRelatedUsers();
@@ -313,7 +314,7 @@
             $("#skbank_text_send_btn").text("資料處理中");
             $.ajax({
                 type: "GET",
-                url: "/admin/target/skbank_text_send" + "?target_id=" + caseId,
+                url: "/admin/target/skbank_text_send" + "?target_id=" + caseId + "&bank=1",
                 success: function (response) {
                     if(response.status.code == 200){
                         $('#skbankCompId').text(response.response.CompId);
@@ -341,7 +342,7 @@
                              alert(error);
                            }
                        });
-                       $("#skbank_text_send_btn").text("收件檢核表送出");
+                       $("#skbank_text_send_btn").text("新光 收件檢核表送出");
                     }
                 }
             });
@@ -351,9 +352,10 @@
         $(document).off("click","#skbank_img_send_btn").on("click","#skbank_img_send_btn" ,  function(){
             $("#skbank_img_send_btn").prop("disabled", true);
             $("#skbank_img_send_btn").text("資料處理中");
+            bank = 1;
             $.ajax({
                 type: "GET",
-                url: "/admin/target/skbank_image_get" + "?target_id=" + caseId,
+                url: "/admin/target/skbank_image_get" + "?target_id=" + caseId + "&bank=" + bank,
                 success: function (response) {
                   if(response.status.code == 200){
                       let case_no = $('#skbankCaseNo').text();
@@ -399,7 +401,7 @@
                                             doc_file_type = 2;
                                             break;
                                     }
-                                  getMappingMsgNo(caseId, 'send', image_type_key,  (data) => {
+                                  getMappingMsgNo(caseId, 'send', image_type_key, bank, (data) => {
                                       msg_data = data;
                                       msg_no = msg_data.data.msg_no;
                                       request_data.push({
@@ -427,7 +429,7 @@
                                               }
                                           });
                                           $("#skbank_img_send_btn").prop("disabled", false);
-                                          $("#skbank_img_send_btn").text("圖片送出");
+                                          $("#skbank_img_send_btn").text("新光 圖片送出");
                                       }
                                   });
                               })
@@ -441,10 +443,10 @@
             });
         });
 
-        function getMappingMsgNo(target_id,action,data_type,result){
+        function getMappingMsgNo(target_id,action,data_type,bank,result){
             $.ajax({
                 type: "GET",
-                url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
+                url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}&bank=${bank}`,
                 success: function (response) {
                     response = response.response;
                     result(response);
@@ -462,7 +464,7 @@
             let case_no = $('#skbankCaseNo').text();
             let comp_id = $('#skbankCompId').text();
             if(case_no && comp_id){
-                getMappingMsgNo(caseId, 'send', 'image_complete',  (data) => {
+                getMappingMsgNo(caseId, 'send', 'image_complete', bank,  (data) => {
                     msg_data = data;
                     msg_no = msg_data.data.msg_no;
 
@@ -487,7 +489,7 @@
                     }else {
                         alert(`新光發送交易序號生成失敗`);
                     }
-                    $("#skbank_approve_send_btn").text("通過");
+                    $("#skbank_approve_send_btn").text("新光 通過");
                 });
             }
         });
@@ -498,7 +500,7 @@
             $("#kgibank_text_send_btn").text("凱基 資料處理中");
             $.ajax({
                 type: "GET",
-                url: "/admin/target/kgibank_text_send" + "?target_id=" + caseId,
+                url: "/admin/target/skbank_text_send" + "?target_id=" + caseId + "&bank=2",
                 success: function (response) {
                     if (response.status.code == 200) {
                         $('#kgibankCompId').text(response.response.CompId);
@@ -520,7 +522,7 @@
                                 } else {
                                     $("#kgibank_text_send_btn").prop("disabled", false);
                                 }
-                                alert(`凱基送出結果 ： ${kgibank_response}\n回應內容 ： ${response.error}\n凱基案件編號 ： ${response.case_no}\n凱基交易序號 ： ${response.msg_no}\n凱基送出資料資訊 ： ${response.meta_info}\n`);
+                                alert(`凱基送出結果 ： ${bank_response}\n回應內容 ： ${response.error}\n凱基案件編號 ： ${response.case_no}\n凱基交易序號 ： ${response.msg_no}\n凱基送出資料資訊 ： ${response.meta_info}\n`);
                             },
                             error: function (error) {
                                 alert(error);
@@ -536,13 +538,16 @@
         $(document).off("click", "#kgibank_img_send_btn").on("click", "#kgibank_img_send_btn", function () {
             $("#kgibank_img_send_btn").prop("disabled", true);
             $("#kgibank_img_send_btn").text("凱基 資料處理中");
+            bank = 2;
             $.ajax({
                 type: "GET",
-                url: "/admin/target/kgibank_image_get" + "?target_id=" + caseId,
+                url: "/admin/target/skbank_image_get" + "?target_id=" + caseId + "&bank="+bank,
                 success: function (response) {
+                    console.log(response);
                     if (response.status.code == 200) {
                         let case_no = $('#kgibankCaseNo').text();
                         let comp_id = $('#kgibankCompId').text();
+                        console.log(case_no);
                         if (case_no && comp_id) {
                             let request_data = [];
                             let data_count = 0;
@@ -584,7 +589,7 @@
                                             doc_file_type = 2;
                                             break;
                                     }
-                                    getMappingMsgNo(caseId, 'send', image_type_key, (data) => {
+                                    getMappingMsgNo(caseId, 'send', image_type_key, bank, (data) => {
                                         msg_data = data;
                                         msg_no = msg_data.data.msg_no;
                                         request_data.push({
@@ -612,7 +617,7 @@
                                                 }
                                             });
                                             $("#kgibank_img_send_btn").prop("disabled", false);
-                                            $("#kgibank_img_send_btn").text("圖片送出");
+                                            $("#kgibank_img_send_btn").text("凱基 圖片送出");
                                         }
                                     });
                                 })
@@ -630,10 +635,11 @@
         $(document).off("click", "#kgibank_approve_send_btn").on("click", "#kgibank_approve_send_btn", function () {
             $("#kgibank_approve_send_btn").prop("disabled", true);
             $("#kgibank_approve_send_btn").text("資料處理中");
+            bank = 2;
             let case_no = $('#kgibankCaseNo').text();
             let comp_id = $('#kgibankCompId').text();
             if (case_no && comp_id) {
-                getMappingMsgNo(caseId, 'send', 'image_complete', (data) => {
+                getMappingMsgNo(caseId, 'send', 'image_complete', bank, (data) => {
                     msg_data = data;
                     msg_no = msg_data.data.msg_no;
 
@@ -658,20 +664,20 @@
                     } else {
                         alert(`凱基發送交易序號生成失敗`);
                     }
-                    $("#kgibank_approve_send_btn").text("通過");
+                    $("#kgibank_approve_send_btn").text("凱基 通過");
                 });
             }
         });
 
-        skbank_text_get(caseId);
-        kgibank_text_get(caseId)
+        skbank_text_get(caseId, 1);
+        kgibank_text_get(caseId, 2);
     });
 
-    // 取得新光手賤檢核表成功紀錄
-    function skbank_text_get(target_id){
+    // 取得新光收件檢核表成功紀錄
+    function skbank_text_get(target_id, bank){
         $.ajax({
               type: "GET",
-              url: `/admin/target/skbank_text_get?target_id=${target_id}`,
+              url: `/admin/target/skbank_text_get?target_id=${target_id}&bank=${bank}`,
               success: function (response) {
                   response = response.response;
                   if(response && response.length != 0){
@@ -698,11 +704,12 @@
               }
           });
     }
+
     // 凱基
-    function kgibank_text_get(target_id){
+    function kgibank_text_get(target_id, bank){
         $.ajax({
             type: "GET",
-            url: `/admin/target/kgibank_text_get?target_id=${target_id}`,
+            url: `/admin/target/skbank_text_get?target_id=${target_id}&bank=${bank}`,
             success: function (response) {
                 response = response.response;
                 if (response && response.length != 0) {

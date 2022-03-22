@@ -2202,16 +2202,16 @@ class Target extends MY_Admin_Controller {
     // 新光收件檢核表送件紀錄 api
     public function skbank_text_get(){
         $get = $this->input->get(NULL, TRUE);
+        $bank = $get['bank'] ?? MAPPING_MSG_NO_BANK_NUM_SKBANK;
         $this->load->library('output/json_output');
 
         if(!$this->input->is_ajax_request() || !isset($get['target_id']) || empty($get) || !is_numeric($get['target_id'])){
             $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
         }
         $response = [];
-        // TODO: 要改成總集合
         $this->load->model('skbank/LoanTargetMappingMsgNo_model');
         $this->LoanTargetMappingMsgNo_model->limit(1)->order_by("id", "desc");
-        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'']);
+        $mapping_info = $this->LoanTargetMappingMsgNo_model->get_by(['target_id'=>$get['target_id'],'type'=>'text','content !='=>'','bank' => $bank]);
 
         if(empty($mapping_info)){
             $this->json_output->setStatusCode(200)->setResponse($response)->send();
@@ -2223,15 +2223,16 @@ class Target extends MY_Admin_Controller {
             $this->json_output->setStatusCode(200)->setResponse($response)->send();
         }
 
-        $response['skbankMsgNo'] = isset($msg_no_info->msg_no) ? $msg_no_info->msg_no : '';
-        $response['skbankCaseNo'] = isset($msg_no_info->case_no) ? $msg_no_info->case_no: '';
+        $prefix = get_bank_prefix($bank);
+        $response[$prefix.'MsgNo'] = $msg_no_info->msg_no ?? '';
+        $response[$prefix.'CaseNo'] = $msg_no_info->case_no ?? '';
 
         if(!empty($msg_no_info->request_content)){
             $request_content = json_decode($msg_no_info->request_content,true);
             $return_msg = json_decode($msg_no_info->response_content,true);
-            $response['skbankCompId'] = isset($request_content['unencrypted']['CompId']) ? $request_content['unencrypted']['CompId'] : '';
-            $response['skbankMetaInfo'] = isset($return_msg['ReturnMsg']) ? $return_msg['ReturnMsg'] : '';
-            $response['skbankReturn'] = '成功';
+            $response[$prefix.'CompId'] = $request_content['unencrypted']['CompId'] ?? '';
+            $response[$prefix.'MetaInfo'] = $return_msg['ReturnMsg'] ?? '';
+            $response[$prefix.'Return'] = '成功';
         }
         $this->json_output->setStatusCode(200)->setResponse($response)->send();
     }
@@ -2269,7 +2270,7 @@ class Target extends MY_Admin_Controller {
             $this->json_output->setStatusCode(400)->setErrorCode(RequiredArguments)->send();
         }
         $this->load->library('mapping/sk_bank/check_list');
-        $image_url = $this->check_list->get_raw_data($target_info, $get['bank'] ?? '', $get_api_attach_no = TRUE);
+        $image_url = $this->check_list->get_raw_data($target_info, $get['bank'] ?? MAPPING_MSG_NO_BANK_NUM_SKBANK, $get_api_attach_no = TRUE);
 
         $this->load->library('S3_lib');
         foreach($image_url as $image_type => $images){

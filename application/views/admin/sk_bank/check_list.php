@@ -6393,6 +6393,56 @@
                 });
             })
         }
+        const sendImageList = (bank_num) => {
+            return new Promise((resolve) => {
+                $("#image_list").val("資料處理中");
+                all_data = getCheckListImagesData();
+                request_data = [];
+                image_list_data = [];
+                case_no = $('#case_no').val();
+                data_count = Object.keys(all_data).length;
+                let compId_imput = $('#CompId_content').val();
+
+                if (case_no) {
+                    Object.keys(all_data).forEach((key) => {
+                        new_string = key.split('_');
+                        data_type = new_string[0];
+                        getMappingMsgNo(target_id, 'send', key, bank_num, (data) => {
+                            msg_data = data;
+                            msg_no = msg_data.data.msg_no;
+                            request_data.push({
+                                'MsgNo': msg_no,
+                                'CompId': compId_imput,
+                                'CaseNo': case_no,
+                                'DocType': new_string[0],
+                                'DocSeq': parseInt(new_string[1]) + 1,
+                                'DocFileType': 4,
+                                'DocUrl': all_data[key]
+                            });
+                            // if(Object.keys(request_data).length == data_count){
+                            //     image_list_data = JSON.stringify({"request_image_list":request_data});
+                            //     $.ajax({
+                            //         type: "POST",
+                            //         data: image_list_data,
+                            //         url: '/api/skbank/v1/LoanRequest/apply_image_list',
+                            //         dataType: "json",
+                            //         success: function (response) {
+                            //           alert(response);
+                            //         },
+                            //         error: function(error) {
+                            //           alert(error);
+                            //         }
+                            //     });
+                            //     $("#image_list").val("儲存資料");
+                            //     $(".sendBtn").prop("disabled", false);
+                            // }
+                            resolve()
+                        });
+                    })
+
+                }
+            })
+        }
         if (send_type == 'text_list') {
 			// 1=sk 2=kgi
 			for (const bank of [1,2]) {
@@ -6400,50 +6450,8 @@
 			}
         }
         if (send_type == 'image_list') {
-            $("#image_list").val("資料處理中");
-            all_data = getCheckListImagesData();
-            request_data = [];
-            image_list_data = [];
-            case_no = $('#case_no').val();
-            data_count = Object.keys(all_data).length;
-            let compId_imput = $('#CompId_content').val();
-
-            if (case_no) {
-                Object.keys(all_data).forEach((key) => {
-                    new_string = key.split('_');
-                    data_type = new_string[0];
-                    getMappingMsgNo(target_id, 'send', key, bank_num, (data) => {
-                        msg_data = data;
-                        msg_no = msg_data.data.msg_no;
-                        request_data.push({
-                            'MsgNo': msg_no,
-                            'CompId': compId_imput,
-                            'CaseNo': case_no,
-                            'DocType': new_string[0],
-                            'DocSeq': parseInt(new_string[1]) + 1,
-                            'DocFileType': 4,
-                            'DocUrl': all_data[key]
-                        });
-                        // if(Object.keys(request_data).length == data_count){
-                        //     image_list_data = JSON.stringify({"request_image_list":request_data});
-                        //     $.ajax({
-                        //         type: "POST",
-                        //         data: image_list_data,
-                        //         url: '/api/skbank/v1/LoanRequest/apply_image_list',
-                        //         dataType: "json",
-                        //         success: function (response) {
-                        //           alert(response);
-                        //         },
-                        //         error: function(error) {
-                        //           alert(error);
-                        //         }
-                        //     });
-                        //     $("#image_list").val("儲存資料");
-                        //     $(".sendBtn").prop("disabled", false);
-                        // }
-                    });
-                })
-
+            for (const bank of [1,2]) {
+                await sendImageList(bank)
             }
         }
     }

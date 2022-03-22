@@ -45,3 +45,15 @@ function convertARSourceToChargeSource($ARSource) : int {
             return 0;
     }
 }
+
+function get_bank_prefix($bank_num): string
+{
+    switch ($bank_num) {
+        case MAPPING_MSG_NO_BANK_NUM_KGIBANK:
+            return 'kgibank';
+        case MAPPING_MSG_NO_BANK_NUM_SKBANK:
+        default:
+            return 'skbank';
+
+    }
+}
