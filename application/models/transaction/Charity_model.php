@@ -75,8 +75,8 @@ class Charity_model extends MY_Model
     public function get_donor_list($sdate, $edate)
     {
         $this->_database->select('ch.tx_datetime, ch.user_id, us.id_number AS id_number, us.name AS name, ch.receipt_type, ch.amount, ch.data')
-            ->from("`p2p_transaction`.`charity` AS ch")
-            ->join("`p2p_user`.`users` AS us", "ch.user_id=us.id");
+            ->from('`p2p_transaction`.`charity` AS ch')
+            ->join('`p2p_user`.`users` AS us', 'ch.user_id=us.id');
         if ( ! empty($sdate))
         {
             $this->_database->where("ch.created_at >= ", "{$sdate} 00:00:00");
@@ -106,8 +106,8 @@ class Charity_model extends MY_Model
     public function get_download_info($sdate, $edate)
     {
         $this->_database->select('us.name AS name, us.id_number AS id_number, us.phone AS phone, ch.tx_datetime, ch.amount, ch.user_id, ch.receipt_type, ch.data')
-            ->from("`p2p_transaction`.`charity` AS ch")
-            ->join("`p2p_user`.`users` AS us", "ch.user_id=us.id");
+            ->from('`p2p_transaction`.`charity` AS ch')
+            ->join('`p2p_user`.`users` AS us', 'ch.user_id=us.id');
         if ( ! empty($sdate))
         {
             $this->_database->where("ch.created_at >= ", "{$sdate} 00:00:00");
