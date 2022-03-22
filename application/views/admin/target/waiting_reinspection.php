@@ -442,7 +442,7 @@
         });
 
         function getMappingMsgNo(target_id,action,data_type,result){
-      	  $.ajax({
+            $.ajax({
                 type: "GET",
                 url: `/admin/bankdata/getMappingMsgNo?target_id=${target_id}&action=${action}&data_type=${data_type}`,
                 success: function (response) {
@@ -492,7 +492,179 @@
             }
         });
 
+        //凱基收件檢核表送出
+        $(document).off("click", "#kgibank_text_send_btn").on("click", "#kgibank_text_send_btn", function () {
+            $("#kgibank_text_send_btn").prop("disabled", true);
+            $("#kgibank_text_send_btn").text("凱基 資料處理中");
+            $.ajax({
+                type: "GET",
+                url: "/admin/target/kgibank_text_send" + "?target_id=" + caseId,
+                success: function (response) {
+                    if (response.status.code == 200) {
+                        $('#kgibankCompId').text(response.response.CompId);
+                        $.ajax({
+                            type: "POST",
+                            data: JSON.stringify(response.response),
+                            url: '/api/kgibank/v1/LoanRequest/apply_text',
+                            dataType: "json",
+                            success: function (response) {
+                                let bank_response = response.success ? '成功' : '失敗';
+                                $('#kgibankMsgNo').text(response.msg_no);
+                                $('#kgibankReturn').text(bank_response);
+                                $('#kgibankCaseNo').text(response.case_no);
+                                $('#kgibankMetaInfo').text(response.meta_info);
+
+                                if (bank_response == '成功') {
+                                    $("#kgibank_img_send_btn").prop("disabled", false);
+                                    $("#kgibank_approve_send_btn").prop("disabled", false);
+                                } else {
+                                    $("#kgibank_text_send_btn").prop("disabled", false);
+                                }
+                                alert(`凱基送出結果 ： ${kgibank_response}\n回應內容 ： ${response.error}\n凱基案件編號 ： ${response.case_no}\n凱基交易序號 ： ${response.msg_no}\n凱基送出資料資訊 ： ${response.meta_info}\n`);
+                            },
+                            error: function (error) {
+                                alert(error);
+                            }
+                        });
+                        $("#kgibank_text_send_btn").text("凱基 收件檢核表送出");
+                    }
+                }
+            });
+        });
+
+        // 凱基圖片附件送出
+        $(document).off("click", "#kgibank_img_send_btn").on("click", "#kgibank_img_send_btn", function () {
+            $("#kgibank_img_send_btn").prop("disabled", true);
+            $("#kgibank_img_send_btn").text("凱基 資料處理中");
+            $.ajax({
+                type: "GET",
+                url: "/admin/target/kgibank_image_get" + "?target_id=" + caseId,
+                success: function (response) {
+                    if (response.status.code == 200) {
+                        let case_no = $('#kgibankCaseNo').text();
+                        let comp_id = $('#kgibankCompId').text();
+                        if (case_no && comp_id) {
+                            let request_data = [];
+                            let data_count = 0;
+                            Object.keys(response.response).forEach((image_type_key) => {
+                                data_count += Object.keys(response.response[image_type_key]).length;
+                            });
+                            Object.keys(response.response).forEach((image_type_key) => {
+                                Object.keys(response.response[image_type_key]).forEach((key) => {
+                                    console.log(response.response[image_type_key][key]);
+                                    let kgibank_image_type = image_type_key;
+                                    let kgibank_image_url = response.response[image_type_key][key];
+                                    let image_count = key;
+                                    let doc_file_type = 0;
+
+                                    let img_type = kgibank_image_url.replace(/.*\./, '');
+                                    switch (img_type) {
+                                        case 'pdf':
+                                            doc_file_type = 1;
+                                            break;
+                                        case 'jpg':
+                                            doc_file_type = 2;
+                                            break;
+                                        case 'jpeg':
+                                            doc_file_type = 3;
+                                            break;
+                                        case 'png':
+                                            doc_file_type = 4;
+                                            break;
+                                        case 'tiff':
+                                            doc_file_type = 5;
+                                            break;
+                                        case 'heic':
+                                            doc_file_type = 6;
+                                            break;
+                                        case 'heif':
+                                            doc_file_type = 7;
+                                            break;
+                                        default:
+                                            doc_file_type = 2;
+                                            break;
+                                    }
+                                    getMappingMsgNo(caseId, 'send', image_type_key, (data) => {
+                                        msg_data = data;
+                                        msg_no = msg_data.data.msg_no;
+                                        request_data.push({
+                                            'MsgNo': msg_no,
+                                            'CompId': comp_id,
+                                            'CaseNo': case_no,
+                                            'DocType': image_type_key,
+                                            'DocSeq': parseInt(image_count) + 1,
+                                            'DocFileType': doc_file_type,
+                                            'DocUrl': kgibank_image_url
+                                        });
+                                        if (Object.keys(request_data).length == data_count) {
+                                            image_list_data = JSON.stringify({ "request_image_list": request_data });
+                                            $.ajax({
+                                                type: "POST",
+                                                data: image_list_data,
+                                                url: '/api/kgibank/v1/LoanRequest/apply_image_list',
+                                                dataType: "json",
+                                                success: function (response) {
+                                                    let bank_response = response.success ? '成功' : '失敗';
+                                                    alert(`凱基送出結果 ： ${bank_response}\n回應內容 ： ${response.error}\n凱基送出圖片總數 ： ${response.total_image_count}\n`);
+                                                },
+                                                error: function (error) {
+                                                    alert(error);
+                                                }
+                                            });
+                                            $("#kgibank_img_send_btn").prop("disabled", false);
+                                            $("#kgibank_img_send_btn").text("圖片送出");
+                                        }
+                                    });
+                                })
+                            })
+                        }
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+
+        //凱基附件上傳完成 API
+        $(document).off("click", "#kgibank_approve_send_btn").on("click", "#kgibank_approve_send_btn", function () {
+            $("#kgibank_approve_send_btn").prop("disabled", true);
+            $("#kgibank_approve_send_btn").text("資料處理中");
+            let case_no = $('#kgibankCaseNo').text();
+            let comp_id = $('#kgibankCompId').text();
+            if (case_no && comp_id) {
+                getMappingMsgNo(caseId, 'send', 'image_complete', (data) => {
+                    msg_data = data;
+                    msg_no = msg_data.data.msg_no;
+
+                    if (msg_no) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/api/kgibank/v1/LoanRequest/apply_image_complete",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                'CaseNo': case_no,
+                                'CompId': comp_id,
+                                'MsgNo': msg_no,
+                            }),
+                            success: function (response) {
+                                let kgibank_response = response.success ? '成功' : '失敗';
+                                if (kgibank_response == '失敗') {
+                                    $("#kgibank_approve_send_btn").prop("disabled", true);
+                                }
+                                alert(`送出結果 ： ${kgibank_response}\n回應內容 ： ${response.error}`);
+                            }
+                        });
+                    } else {
+                        alert(`凱基發送交易序號生成失敗`);
+                    }
+                    $("#kgibank_approve_send_btn").text("通過");
+                });
+            }
+        });
+
         skbank_text_get(caseId);
+        kgibank_text_get(caseId)
     });
 
     // 取得新光手賤檢核表成功紀錄
@@ -526,20 +698,51 @@
               }
           });
     }
+    // 凱基
+    function kgibank_text_get(target_id){
+        $.ajax({
+            type: "GET",
+            url: `/admin/target/kgibank_text_get?target_id=${target_id}`,
+            success: function (response) {
+                response = response.response;
+                if (response && response.length != 0) {
+                    Object.keys(response).forEach((key) => {
+                        $(`#${key}`).text(response[key]);
+                        if (key == 'kgibankMetaInfo') {
+                            if (response[key] == '成功') {
+                                $("#kgibank_text_send_btn").prop("disabled", true);
+                                $("#kgibank_img_send_btn").prop("disabled", false);
+                                $("#skbank_approve_send_btn").prop("disabled", false);
+                            } else {
+                                $("#kgibank_img_send_btn").prop("disabled", true);
+                                $("#kgibank_approve_send_btn").prop("disabled", true);
+                            }
+                        }
+                    })
+                } else {
+                    $("#kgibank_img_send_btn").prop("disabled", true);
+                    $("#kgibank_approve_send_btn").prop("disabled", true);
+                }
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    }
 </script>
 <div id="page-wrapper">
-	<div class="row">
-		<div class="col-lg-12">
-			<h1 class="page-header"><?=$productList[$targetInfo->product_id]['name'] ?> - 二審</h1>
-		</div>
-		<!-- /.col-lg-12 -->
-	</div>
-	<!-- /.row -->
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="panel panel-default">
-				<!-- /.panel-heading -->
-				<div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header"><?=$productList[$targetInfo->product_id]['name'] ?> - 二審</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <!-- /.panel-heading -->
+                <div class="panel-body">
                     <iframe id="creditManagementTable" src="../creditmanagementtable/report?target_id=<?=$get['target_id']?>&table_type=management" scrolling='no' ></iframe>
                     <iframe id="riskPage" src="../Risk/index?target_id=<?=$get['target_id']?>&investor=0&company=1" scrolling='no' ></iframe>
                     <div class="col-lg-12">
@@ -788,21 +991,80 @@
                         </div>
                     </div>
                     <? } ?>
+                     <? if($targetInfo->product_id == 1002){ ?>
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">凱基送出回應</div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-responsive center-text">
+                                            <table class="table table-bordered table-hover table-striped">
+                                                <thead>
+                                                <tr class="odd list">
+                                                    <th width="20%" hidden>統一編號</th>
+                                                    <th width="20%">申請序號</th>
+                                                    <th width="20%">案件編號</th>
+                                                    <th width="20%">送出結果</th>
+                                                    <th width="40%">回應內容</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="odd list">
+                                                    <td class="center-text fake-fields" hidden>
+                                                        <p class="form-control-static" id="kgibankCompId"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="kgibankMsgNo"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="kgibankCaseNo"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="kgibankReturn"></p>
+                                                    </td>
+                                                    <td class="center-text fake-fields">
+                                                        <p class="form-control-static" id="kgibankMetaInfo"></p>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <? } ?>
                     <div class="targetAction">
-                        <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
-                        <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
+                        <? if($active){ ?>
+                        <div class="mb-2">
+                            <button id="manual_handling" class="btn btn-primary btn-warning" onclick="">轉人工</button>
+                            <button id="closeWindow" class="btn btn-primary btn-danger" onclick="">關閉視窗</button>
+                        </div>
+                        <? } ?>
                         <? if($targetInfo->product_id == 1002){ ?>
-                            <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">收件檢核表送出</button>
-                            <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">圖片送出</button>
-                            <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">通過</button>
+                            <div>
+                                <div>
+                                    <button id="skbank_text_send_btn" class="btn btn-primary btn-info" onclick="">新光 收件檢核表送出</button>
+                                    <button id="skbank_img_send_btn" class="btn btn-primary btn-info" onclick="">新光 圖片送出</button>
+                                    <button id="skbank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">新光 通過</button>
+
+                                </div>
+                                <div class="mt-2">
+                                    <button id="kgibank_text_send_btn" class="btn btn-primary btn-info" onclick="">凱基 收件檢核表送出</button>
+                                    <button id="kgibank_img_send_btn" class="btn btn-primary btn-info" onclick="">凱基 圖片送出</button>
+                                    <button id="kgibank_approve_send_btn" class="btn btn-primary btn-primary" onclick="">凱基 通過</button>
+                                </div>
+                            </div>
                         <? } ?>
                     </div>
                 </div>
-				<!-- /.panel-body -->
-			</div>
-			<!-- /.panel -->
-		</div>
-		<!-- /.col-lg-12 -->
-	</div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
 </div>
 <!-- /#page-wrapper -->
