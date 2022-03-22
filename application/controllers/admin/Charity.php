@@ -24,10 +24,7 @@ class Charity extends MY_Admin_Controller
         $page_data['list'] = $this->charity_model->get_donor_list($sdate, $edate);
         $page_data['sdate'] = $sdate;
         $page_data['edate'] = $edate;
-        $page_data['receipt_type_list'] = [
-            0 => '單筆收據',
-            1 => '不寄收據',
-        ];
+        $page_data['receipt_type_list'] = $this->charity_model->recipient_type;
 
         $this->load->view('admin/_header');
         $this->load->view('admin/_title', $this->menu);
