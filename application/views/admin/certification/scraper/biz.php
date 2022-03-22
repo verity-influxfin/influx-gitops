@@ -329,43 +329,6 @@
                     </td>
                 </tr>
             </table>
-            <table class="table table-bordered table-hover table-striped">
-                <tr>
-                    <th class="table-title">反詐欺管理指標</th>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="col-lg-12" id="risk-level"></div>
-                    </td>
-                </tr>
-            </table>
-            <table class="table table-bordered table-hover table-striped">
-                <tr>
-                    <th class="table-title">狀態調整</th>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="d-flex justify-content-evenly">
-                            <center>
-                                <select class="form-select" aria-label="Default select example" name="block_level">
-                                    <option selected>請選擇風險</option>
-                                    <option value="6">永久封鎖</option>
-                                    <option value="5">封鎖六個月</option>
-                                    <option value="4">封鎖三個月</option>
-                                    <option value="3">總經理</option>
-                                    <option value="2">轉二審</option>
-                                    <option value="1">通過</option>
-                                </select>
-                                <label>
-                                    註記：
-                                    <input style="min-width: 350px;" type="text" id="commit">
-                                </label>
-                                <button onclick="approved()" value="核定" class="btn btn-danger btn-sm">核定</button>
-                            </center>
-                        </div>
-                    </td>
-                </tr>
-            </table>
         </table>
     </table>
 </div>
